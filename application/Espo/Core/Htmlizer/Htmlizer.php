@@ -105,6 +105,86 @@ class Htmlizer
         $this->injectableFactory = $injectableFactory;
     }
 
+/**
+     * Generate an HTML for entity by a given template.
+     *
+     * @param $cacheId @deprecated To be skipped..
+     * @param $additionalData Data will be passed to the template.
+     * @param $skipLinks Do not process related records.
+     */
+    public function render(
+        ?Entity $entity,
+        string $template,
+        ?string $cacheId = null,
+        ?array $additionalData = null,
+        bool $skipLinks = false
+    ): string {
+
+        $template = str_replace('<tcpdf ', '', $template);
+
+        $helpers = $this->getHelpers();
+
+        $code = LightnCandy::compile($template, [
+            'flags' => LightnCandy::FLAG_HANDLEBARSJS | LightnCandy::FLAG_ERROR_EXCEPTION,
+            'helpers' => $this->getHelpers(),
+        ]);
+
+        $renderer = LightnCandy::prepare($code);
+
+        if ($additionalData === null) {
+            $additionalData = $additionalData ?? [];
+        }
+
+        $data = $entity ?
+            $this->getDataFromEntity($entity, $skipLinks, 0, $template, $additionalData) :
+            $additionalData;
+
+        if (!array_key_exists('today', $data)) {
+            $data['today'] = $this->dateTime->getTodayString();
+            $data['today_RAW'] = date('Y-m-d');
+        }
+
+        if (!array_key_exists('now', $data)) {
+            $data['now'] = $this->dateTime->getNowString();
+            $data['now_RAW'] = date('Y-m-d H:i:s');
+        }
+
+        $data['__injectableFactory'] = $this->injectableFactory;
+        $data['__config'] = $this->config;
+        $data['__dateTime'] = $this->dateTime;
+        $data['__metadata'] = $this->metadata;
+        $data['__entityManager'] = $this->entityManager;
+        $data['__language'] = $this->language;
+        $data['__serviceFactory'] = $this->serviceFactory;
+        $data['__log'] = $this->log;
+        $data['__entityType'] = $entity->getEntityType();
+
+        $html = $renderer($data);
+
+        $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
+
+        if ($this->entityManager) {
+            $html = preg_replace_callback(
+                '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
+                function ($matches) {
+                    $id = $matches[1];
+                    $attachment = $this->entityManager->getEntity('Attachment', $id);
+
+                    if ($attachment) {
+                        $filePath = $this->entityManager
+                            ->getRepository('Attachment')
+                            ->getFilePath($attachment);
+
+                        return $filePath;
+                    }
+                },
+                $html
+            );
+        }
+
+        return $html;
+    }
+
     protected function format($value)
     {
         if (is_float($value)) {
@@ -631,83 +711,6 @@ class Htmlizer
         }
 
         return $helpers;
-    }
-
-    /**
-     * Generate an HTML for entity by a given template.
-     *
-     * @param $cacheId @deprecated Skip or specify NULL.
-     * @param $additionalData Data will be passed to the template.
-     * @param $skipLinks Do not process related records.
-     */
-    public function render(
-        Entity $entity,
-        string $template,
-        ?string $cacheId = null,
-        ?array $additionalData = null,
-        bool $skipLinks = false
-    ): string {
-
-        $template = str_replace('<tcpdf ', '', $template);
-
-        $helpers = $this->getHelpers();
-
-        $code = LightnCandy::compile($template, [
-            'flags' => LightnCandy::FLAG_HANDLEBARSJS | LightnCandy::FLAG_ERROR_EXCEPTION,
-            'helpers' => $this->getHelpers(),
-        ]);
-
-        $renderer = LightnCandy::prepare($code);
-
-
-        $additionalData = $additionalData ?? [];
-
-        $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template, $additionalData);
-
-        if (!array_key_exists('today', $data)) {
-            $data['today'] = $this->dateTime->getTodayString();
-            $data['today_RAW'] = date('Y-m-d');
-        }
-
-        if (!array_key_exists('now', $data)) {
-            $data['now'] = $this->dateTime->getNowString();
-            $data['now_RAW'] = date('Y-m-d H:i:s');
-        }
-
-        $data['__injectableFactory'] = $this->injectableFactory;
-        $data['__config'] = $this->config;
-        $data['__dateTime'] = $this->dateTime;
-        $data['__metadata'] = $this->metadata;
-        $data['__entityManager'] = $this->entityManager;
-        $data['__language'] = $this->language;
-        $data['__serviceFactory'] = $this->serviceFactory;
-        $data['__log'] = $this->log;
-        $data['__entityType'] = $entity->getEntityType();
-
-        $html = $renderer($data);
-
-        $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
-
-        if ($this->entityManager) {
-            $html = preg_replace_callback(
-                '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
-                function ($matches) {
-                    $id = $matches[1];
-                    $attachment = $this->entityManager->getEntity('Attachment', $id);
-
-                    if ($attachment) {
-                        $filePath = $this->entityManager
-                            ->getRepository('Attachment')
-                            ->getFilePath($attachment);
-
-                        return $filePath;
-                    }
-                },
-                $html
-            );
-        }
-
-        return $html;
     }
 
     protected function getFieldType(string $entityType, string $field)

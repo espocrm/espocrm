@@ -30,9 +30,11 @@
 namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\Utils\Config;
-use Espo\Core\Htmlizer\Htmlizer as Htmlizer;
-use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
+use Espo\Core\Htmlizer\TemplateRendererFactory;
+use Espo\Core\Htmlizer\TemplateRenderer;
+
 use Espo\ORM\Entity;
+
 use Espo\Tools\Pdf\Template;
 use Espo\Tools\Pdf\Data;
 use Espo\Tools\Pdf\Params;
@@ -46,21 +48,21 @@ class EntityProcessor
 
     private $config;
 
-    private $htmlizerFactory;
+    private $templateRendererFactory;
 
-    public function __construct(Config $config, HtmlizerFactory $htmlizerFactory)
+    public function __construct(Config $config, TemplateRendererFactory $templateRendererFactory)
     {
         $this->config = $config;
-        $this->htmlizerFactory = $htmlizerFactory;
+        $this->templateRendererFactory = $templateRendererFactory;
     }
 
     public function process(Tcpdf $pdf, Template $template, Entity $entity, Params $params, Data $data): void
     {
-        $additionalData = get_object_vars($data->getAdditionalTemplateData());
-
-        $htmlizer = $params->applyAcl() ?
-            $this->htmlizerFactory->create() :
-            $this->htmlizerFactory->createNoAcl();
+        $renderer = $this->templateRendererFactory
+            ->create()
+            ->setApplyAcl($params->applyAcl())
+            ->setEntity($entity)
+            ->setData($data->getAdditionalTemplateData());
 
         $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
         $fontSize = $this->config->get('pdfFontSize', $this->fontSize);
@@ -103,7 +105,7 @@ class EntityProcessor
         }
 
         if ($template->hasFooter()) {
-            $htmlFooter = $this->render($htmlizer, $entity, $template->getFooter(), $additionalData);
+            $htmlFooter = $this->render($renderer, $template->getFooter());
 
             $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
             $pdf->setFooterPosition($template->getFooterPosition());
@@ -115,7 +117,7 @@ class EntityProcessor
         }
 
         if ($template->hasHeader()) {
-            $htmlHeader = $this->render($htmlizer, $entity, $template->getHeader(), $additionalData);
+            $htmlHeader = $this->render($renderer, $template->getHeader());
 
             $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
             $pdf->setHeaderPosition($template->getHeaderPosition());
@@ -128,21 +130,16 @@ class EntityProcessor
 
         $pdf->addPage($pageOrientationCode, $pageFormat);
 
-        $htmlBody = $this->render($htmlizer, $entity, $template->getBody(), $additionalData);
+        $htmlBody = $this->render($renderer, $template->getBody());
 
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
     }
 
-    private function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData): string
+    private function render(TemplateRenderer $renderer, string $template): string
     {
-        $html = $htmlizer->render(
-            $entity,
-            $template,
-            null,
-            $additionalData
-        );
+        $html = $renderer->renderTemplate($template);
 
-        $html = preg_replace_callback(
+        return preg_replace_callback(
             '/<barcodeimage data="([^"]+)"\/>/',
             function ($matches) {
                 $dataString = $matches[1];
@@ -153,8 +150,6 @@ class EntityProcessor
             },
             $html
         );
-
-        return $html;
     }
 
     private function composeBarcodeTag(array $data): string
