@@ -29,67 +29,63 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FilterParams;
 use Espo\Core\Select\Text\FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
-
+use Espo\Core\Select\Text\FilterData;
+use Espo\Core\Select\Text\FilterFactory;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Part\Where\AndGroup;
-use Espo\ORM\Query\Part\Where\OrGroup;
-use Espo\ORM\Query\Part\Where\OrGroupBuilder;
-use Espo\ORM\Query\Part\Where\Comparison as Cmp;
-use Espo\ORM\Query\Part\Expression as Expr;
-
-use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
 class TextFilter
 {
-    protected $useContainsAttributeList = [];
+    /** @todo Move to metadata. */
+    private $fullTextRelevanceThreshold = null;
 
-    protected $fullTextRelevanceThreshold = null;
+    /** @todo Move to metadata. */
+    private $fullTextOrderRelevanceDivider = 5;
 
-    protected $fullTextOrderType = self::FT_ORDER_COMBINTED;
+    private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINTED;
 
-    protected $fullTextOrderRelevanceDivider = 5;
+    private const FT_ORDER_COMBINTED = 0;
 
-    const FT_ORDER_COMBINTED = 0;
+    private const FT_ORDER_RELEVANCE = 1;
 
-    const FT_ORDER_RELEVANCE = 1;
+    private const FT_ORDER_ORIGINAL = 3;
 
-    const FT_ORDER_ORIGINAL = 3;
+    private $entityType;
 
-    const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
+    private $user;
 
-    protected $entityType;
+    private $config;
 
-    protected $user;
+    private $metadataProvider;
 
-    protected $config;
+    private $fullTextSearchDataComposerFactory;
 
-    protected $metadataProvider;
-
-    protected $fullTextSearchDataComposerFactory;
+    private $filterFactory;
 
     public function __construct(
         string $entityType,
         User $user,
         Config $config,
         MetadataProvider $metadataProvider,
-        FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory
+        FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
+        FilterFactory $filterFactory
     ) {
         $this->entityType = $entityType;
         $this->user = $user;
         $this->config = $config;
         $this->metadataProvider = $metadataProvider;
         $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
+        $this->filterFactory = $filterFactory;
     }
 
     public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
@@ -107,10 +103,10 @@ class TextFilter
 
         $filterOriginal = $filter;
 
-        $skipWidlcards = false;
+        $skipWildcards = false;
 
         if (mb_strpos($filter, '*') !== false) {
-            $skipWidlcards = true;
+            $skipWildcards = true;
 
             $filter = str_replace('*', '%', $filter);
         }
@@ -138,7 +134,8 @@ class TextFilter
             $fullTextSearchIsAuxiliary = !$preferFullTextSearch;
 
             $fullTextSearchData = $this->getFullTextSearchData(
-                $filterForFullTextSearch, $fullTextSearchIsAuxiliary
+                $filterForFullTextSearch,
+                $fullTextSearchIsAuxiliary
             );
         }
 
@@ -159,10 +156,9 @@ class TextFilter
             }
 
             $fullTextSearchFieldList = $fullTextSearchData->getFieldList();
-
             $relevanceExpression = $fullTextSearchData->getExpression();
 
-            $fullTextOrderType = $this->fullTextOrderType;
+            $fullTextOrderType = self::DEFAULT_FT_ORDER;
 
             $orderTypeMap = [
                 'combined' => self::FT_ORDER_COMBINTED,
@@ -204,7 +200,7 @@ class TextFilter
         }
 
         $fieldList = array_filter(
-            $this->metadataProvider->getTextFilterFieldList($this->entityType) ?? ['name'],
+            $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
             function ($field) use ($fullTextSearchFieldList, $forceFullTextSearch) {
                 if ($forceFullTextSearch) {
                     return false;
@@ -219,147 +215,19 @@ class TextFilter
             }
         );
 
-        $orGroupBuilder = OrGroup::createBuilder();
-
-        foreach ($fieldList as $field) {
-            $this->applyFieldToOrGroup(
-                $queryBuilder,
-                $filter,
-                $orGroupBuilder,
-                $field,
-                $skipWidlcards
+        $filterData = FilterData::create($filter, $fieldList)
+            ->withSkipWildcards($skipWildcards)
+            ->withForceFullTextSearch($forceFullTextSearch)
+            ->withFullTextSearchWhereItem(
+                $hasFullTextSearch ? AndGroup::fromRaw($fullTextGroup) : null
             );
-        }
 
-        if (!$forceFullTextSearch) {
-            $orGroupBuilder = $this->modifyOrGroup($queryBuilder, $filter, $orGroupBuilder, $hasFullTextSearch);
-        }
-
-        if (count($fullTextGroup)) {
-            $orGroupBuilder->add(
-                AndGroup::fromRaw($fullTextGroup)
-            );
-        }
-
-        $orGroup = $orGroupBuilder->build();
-
-        if ($orGroup->getItemCount() === 0) {
-            $queryBuilder->where(['id' => null]);
-
-            return;
-        }
-
-        $queryBuilder->where($orGroup);
+        $this->filterFactory
+            ->create($this->entityType, $this->user)
+            ->apply($queryBuilder, $filterData);
     }
 
-    protected function applyFieldToOrGroup(
-        QueryBuilder $queryBuilder,
-        string $filter,
-        OrGroupBuilder $orGroupBuilder,
-        string $field,
-        bool $skipWidlcards
-    ): void {
-
-        $attributeType = null;
-
-        if (strpos($field, '.') !== false) {
-            list($link, $foreignField) = explode('.', $field);
-
-            $foreignEntityType = $this->metadataProvider->getRelationEntityType($this->entityType, $link);
-
-            if (!$foreignEntityType) {
-                throw new Error("Bad relation in text filter field '{$field}'.");
-            }
-
-            if ($this->metadataProvider->getRelationType($this->entityType, $link) === Entity::HAS_MANY) {
-                $queryBuilder->distinct();
-            }
-
-            $queryBuilder->leftJoin($link);
-
-            $attributeType = $this->metadataProvider->getAttributeType($foreignEntityType, $foreignField);
-        }
-        else {
-            $attributeType = $this->metadataProvider->getAttributeType($this->entityType, $field);
-
-            if ($attributeType === Entity::FOREIGN) {
-                $link = $this->metadataProvider->getAttributeRelationParam($this->entityType, $field);
-
-                if ($link) {
-                    $queryBuilder->leftJoin($link);
-                }
-            }
-        }
-
-        if ($attributeType === Entity::INT) {
-            if (is_numeric($filter)) {
-                //$orGroup[$field] = intval($filter);
-                $orGroupBuilder->add(
-                    Cmp::equal(Expr::column($field), intval($filter))
-                );
-            }
-
-            return;
-        }
-
-        if (!$skipWidlcards) {
-            if ($this->checkWhetherToUseContains($field, $filter, $attributeType)) {
-                $expression = '%' . $filter . '%';
-            }
-            else {
-                $expression = $filter . '%';
-            }
-        }
-        else {
-            $expression = $filter;
-        }
-
-        $orGroupBuilder->add(
-            Cmp::like(Expr::column($field), $expression)
-        );
-
-        //$orGroup[$field . '*'] = $expression;
-    }
-
-    protected function checkWhetherToUseContains(string $field, string $filter, string $attributeType): bool
-    {
-        $textFilterContainsMinLength =
-            $this->config->get('textFilterContainsMinLength') ??
-            self::MIN_LENGTH_FOR_CONTENT_SEARCH;
-
-        if (mb_strlen($filter) < $textFilterContainsMinLength) {
-            return false;
-        }
-
-        if ($attributeType === Entity::TEXT) {
-            return true;
-        }
-
-        if (in_array($field, $this->useContainsAttributeList)) {
-            return true;
-        }
-
-        if (
-            $attributeType === Entity::VARCHAR &&
-            $this->config->get('textFilterUseContainsForVarchar')
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function modifyOrGroup(
-        QueryBuilder $queryBuilder,
-        string $filter,
-        OrGroupBuilder $orGroupBuilder,
-        bool $hasFullTextSearch
-    ): OrGroupBuilder {
-
-        return $orGroupBuilder;
-    }
-
-    protected function getFullTextSearchData(string $filter, bool $isAuxiliaryUse = false): ?FullTextSearchData
+    private function getFullTextSearchData(string $filter, bool $isAuxiliaryUse = false): ?FullTextSearchData
     {
         $composer = $this->fullTextSearchDataComposerFactory->create($this->entityType);
 

@@ -27,83 +27,88 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\Appliers;
+namespace Espo\Classes\Select\Email;
 
-use Espo\Core\{
-    Select\Applier\Appliers\TextFilter as TextFilterApplierBase,
-    Di\EntityManagerAware,
-    Di\EntityManagerSetter,
-};
+use Espo\Core\Select\Text\Filter;
+use Espo\Core\Select\Text\FilterData;
+use Espo\Core\Select\Text\DefaultFilter;
+use Espo\Core\Select\Text\ConfigProvider;
 
+use Espo\ORM\EntityManager;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-
 use Espo\ORM\Query\Part\Where\OrGroup;
-use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\Where\Comparison as Cmp;
 use Espo\ORM\Query\Part\Expression as Expr;
 
-class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAware
+use Espo\Entities\EmailAddress;
+
+class TextFilter implements Filter
 {
-    use EntityManagerSetter;
+    private $defaultFilter;
 
-    protected $fullTextOrderType = self::FT_ORDER_ORIGINAL;
+    private $config;
 
-    protected $useContainsAttributeList = ['name'];
+    private $entityManager;
 
-    protected function modifyOrGroup(
-        QueryBuilder $queryBuilder,
-        string $filter,
-        OrGroupBuilder $orGroupBuilder,
-        bool $hasFullTextSearch
-    ): OrGroupBuilder {
+    public function __construct(
+        DefaultFilter $defaultFilter,
+        ConfigProvider $config,
+        EntityManager $entityManager
+    ) {
+        $this->defaultFilter = $defaultFilter;
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
 
-        if (strlen($filter) < self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
-            return $orGroupBuilder;
-        }
+    public function apply(QueryBuilder $queryBuilder, FilterData $filterData): void
+    {
+        $filter = $filterData->getFilter();
 
-        if (strpos($filter, '@') === false) {
-            return $orGroupBuilder;
-        }
+        if (
+            mb_strlen($filter) < $this->config->getMinLengthForContentSearch() ||
+            strpos($filter, '@') === false ||
+            $filterData->forceFullTextSearch() ||
+            $filterData->getFullTextSearchWhereItem()
+        ) {
+            $this->defaultFilter->apply($queryBuilder, $filterData);
 
-        if ($hasFullTextSearch) {
-            return $orGroupBuilder;
+            return;
         }
 
         $emailAddressId = $this->getEmailAddressIdByValue($filter);
 
         if (!$emailAddressId) {
-            return OrGroup::createBuilder();
+            $queryBuilder->where(['id' => null]);
+
+            return;
         }
 
         $this->leftJoinEmailAddress($queryBuilder);
 
-        $newOrGroupBuilder = OrGroup::createBuilder();
-
-        $newOrGroupBuilder->add(
-            Cmp::equal(
-                Expr::column('fromEmailAddressId'),
-                $emailAddressId
+        $orGroupBuilder = OrGroup::createBuilder()
+            ->add(
+                Cmp::equal(
+                    Expr::column('fromEmailAddressId'),
+                    $emailAddressId
+                )
             )
-        );
+            ->add(
+                Cmp::equal(
+                    Expr::column('emailEmailAddress.emailAddressId'),
+                    $emailAddressId
+                )
+            );
 
-        $newOrGroupBuilder->add(
-            Cmp::equal(
-                Expr::column('emailEmailAddress.emailAddressId'),
-                $emailAddressId
-            )
-        );
-
-        return $newOrGroupBuilder;
+        $queryBuilder->where($orGroupBuilder->build());
     }
 
-    protected function leftJoinEmailAddress(QueryBuilder $queryBuilder): void
+    private function leftJoinEmailAddress(QueryBuilder $queryBuilder): void
     {
         if ($queryBuilder->hasLeftJoinAlias('emailEmailAddress')) {
             return;
         }
 
         $queryBuilder->distinct();
-
         $queryBuilder->leftJoin(
             'EmailEmailAddress',
             'emailEmailAddress',
@@ -114,10 +119,10 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
         );
     }
 
-    protected function getEmailAddressIdByValue(string $value): ?string
+    private function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
-            ->getRDBRepository('EmailAddress')
+            ->getRDBRepository(EmailAddress::ENTITY_TYPE)
             ->select('id')
             ->where([
                 'lower' => strtolower($value),
@@ -128,6 +133,6 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
             return null;
         }
 
-        return $emailAddress->id;
+        return $emailAddress->getId();
     }
 }

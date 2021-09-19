@@ -23,9 +23,8 @@
     "boolFilterClassNameMap": {
         "onlyMy": "Espo\\Classes\\Select\\Email\\BoolFilters\\OnlyMy"
     },
-    "applierClassNameMap": {
-        "textFilter": "Espo\\Classes\\Select\\Email\\Appliers\\TextFilterApplier"
-    },
+    "textFilterClassName": "Espo\\Classes\\Select\\Email\\TextFilter",
+    "textFilterUseContainsAttributeList": ["name"],
     "selectAttributesDependencyMap": {
         "subject": ["name"],
         "personStringData": ["fromString", "fromEmailAddressId"]

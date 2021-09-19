@@ -38,17 +38,22 @@ use Espo\Core\{
     Select\Text\FullTextSearchDataComposer,
     Select\Text\FullTextSearchDataComposerFactory,
     Select\Text\FullTextSearchDataComposerParams,
+    Select\Text\FilterFactory,
+    Select\Text\DefaultFilter,
+    Select\Text\ConfigProvider,
 };
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereClause,
+    ORM\Query\Part\Where\OrGroup,
     ORM\Entity,
     Entities\User,
 };
 
 class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
@@ -56,6 +61,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->filterParams = $this->createMock(FilterParams::class);
         $this->config = $this->createMock(Config::class);
         $this->fullTextSearchDataComposerFactory = $this->createMock(FullTextSearchDataComposerFactory::class);
+        $this->filterFactory = $this->createMock(FilterFactory::class);
 
         $this->entityType = 'Test';
 
@@ -64,7 +70,8 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
             $this->user,
             $this->config,
             $this->metadataProvider,
-            $this->fullTextSearchDataComposerFactory
+            $this->fullTextSearchDataComposerFactory,
+            $this->filterFactory
         );
     }
 
@@ -111,6 +118,21 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
+        $configProvider = new ConfigProvider($this->config);
+
+        $defaultFilter = new DefaultFilter(
+            $this->entityType,
+            $this->metadataProvider,
+            $configProvider
+        );
+
+        $this->filterFactory
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn(
+                $defaultFilter
+            );
+
         $this->metadataProvider
             ->expects($this->any())
             ->method('getFullTextSearchOrderType')
@@ -153,7 +175,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
         $this->metadataProvider
             ->expects($this->any())
-            ->method('getTextFilterFieldList')
+            ->method('getTextFilterAttributeList')
             ->with($this->entityType)
             ->willReturn(
                 ['fieldVarchar', 'fieldText', 'fieldFullText', 'fieldInt', 'fieldForeign', 'link2.field']
@@ -164,32 +186,32 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         }
 
         $expectedWhere = [
-            'OR' => [
-                'fieldVarchar*' => $filter . '%',
-                'fieldText*' => '%' . $filter . '%',
-                'fieldForeign*' => $filter . '%',
-                'link2.field*' => $filter . '%',
-            ],
+            ['fieldVarchar*' => $filter . '%'],
+            ['fieldText*' => '%' . $filter . '%']
         ];
 
-        if (!$noFullTextSearch) {
-            $expectedWhere['OR']['AND'] = [
-                'TEST:(test)',
-            ];
-        }
+
 
         if (is_numeric($filter)) {
-            $expectedWhere['OR']['fieldInt'] = intval($filter);
+            $expectedWhere[] = ['fieldInt=' => intval($filter)];
         }
 
         if ($noFullTextSearch) {
-            $expectedWhere['OR']['fieldFullText*'] = '%' . $filter . '%';
+            $expectedWhere[] = ['fieldFullText*' => '%' . $filter . '%'];
+        }
+
+        $expectedWhere[] = ['fieldForeign*' => $filter . '%'];
+        $expectedWhere[] = ['link2.field*' => $filter . '%'];
+
+
+        if (!$noFullTextSearch) {
+            $expectedWhere[] = 'TEST:(test)';
         }
 
         $this->queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with($expectedWhere);
+            ->with(OrGroup::fromRaw($expectedWhere));
 
         $this->queryBuilder
             ->expects($this->exactly(2))

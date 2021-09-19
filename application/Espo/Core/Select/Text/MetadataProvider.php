@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Defs;
 
@@ -54,7 +52,7 @@ class MetadataProvider
         ]);
     }
 
-    public function getTextFilterFieldList(string $entityType): ?array
+    public function getTextFilterAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'textFilterFields'
@@ -84,6 +82,13 @@ class MetadataProvider
         return (bool) $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'fullTextSearch'
         ]);
+    }
+
+    public function getUseContainsAttributeList(string $entityType): array
+    {
+        return $this->metadata->get([
+            'selectDefs', $entityType, 'textFilterUseContainsAttributeList'
+        ]) ?? [];
     }
 
     public function getFullTextSearchColumnList(string $entityType): ?array

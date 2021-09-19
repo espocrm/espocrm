@@ -108,7 +108,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->metadataProvider
             ->expects($this->any())
-            ->method('getTextFilterFieldList')
+            ->method('getTextFilterAttributeList')
             ->with($this->entityType)
             ->willReturn(
                 ['field1', 'field2', 'field3']

@@ -184,6 +184,6 @@ class FullTextSearchDataComposer
 
     protected function getTextFilterFieldList(): array
     {
-        return $this->metadataProvider->getTextFilterFieldList($this->entityType) ?? ['name'];
+        return $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'];
     }
 }

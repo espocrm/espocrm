@@ -517,7 +517,8 @@
         "order": "desc",
         "textFilterFields": ["name", "bodyPlain", "body"],
         "countDisabled": true,
-        "fullTextSearch": true
+        "fullTextSearch": true,
+        "fullTextSearchOrderType": "original"
     },
     "indexes": {
         "createdById": {
