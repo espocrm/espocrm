@@ -219,8 +219,6 @@ class TextFilter
             }
         );
 
-        //$orGroup = [];
-
         $orGroupBuilder = OrGroup::createBuilder();
 
         foreach ($fieldList as $field) {
