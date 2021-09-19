@@ -303,10 +303,14 @@ class Pdf
     }
 
     /**
-     * Generate PDF. ACL check is processed if `$data` is null.
+     * Generate PDF. ACL check is processed if `$params` is null.
      */
     public function generate(Entity $entity, Template $template, ?Params $params = null, ?Data $data = null): string
     {
+        if ($params === null) {
+            $params = Params::create()->withAcl();
+        }
+
         return $this->buildFromTemplateInternal($entity, $template, false, null, $params, $data);
     }
 
