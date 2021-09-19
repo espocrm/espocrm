@@ -29,22 +29,26 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Config,
-    Select\Text\MetadataProvider,
-    Select\Text\FilterParams,
-    Select\Text\FullTextSearchData,
-    Select\Text\FullTextSearchDataComposerFactory,
-    Select\Text\FullTextSearchDataComposerParams,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config;
+use Espo\Core\Select\Text\MetadataProvider;
+use Espo\Core\Select\Text\FilterParams;
+use Espo\Core\Select\Text\FullTextSearchData;
+use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
+use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\Order as OrderExpr,
-    ORM\Entity,
-    Entities\User,
-};
+
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\Part\Order as OrderExpr;
+use Espo\ORM\Query\Part\Where\AndGroup;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\Where\Comparison as Cmp;
+use Espo\ORM\Query\Part\Expression as Expr;
+
+use Espo\ORM\Entity;
+
+use Espo\Entities\User;
 
 class TextFilter
 {
@@ -90,8 +94,6 @@ class TextFilter
 
     public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
     {
-        $fullTextSearchData = null;
-
         $forceFullTextSearch = false;
 
         $preferFullTextSearch = $params->preferFullTextSearch();
@@ -103,7 +105,7 @@ class TextFilter
             $forceFullTextSearch = true;
         }
 
-        $filterForFullTextSearch = $filter;
+        $filterOriginal = $filter;
 
         $skipWidlcards = false;
 
@@ -113,7 +115,7 @@ class TextFilter
             $filter = str_replace('*', '%', $filter);
         }
 
-        $filterForFullTextSearch = str_replace('%', '*', $filterForFullTextSearch);
+        $filterForFullTextSearch = str_replace('%', '*', $filterOriginal);
 
         $skipFullTextSearch = false;
 
@@ -201,10 +203,8 @@ class TextFilter
             $hasFullTextSearch = true;
         }
 
-        $fieldList = $this->metadataProvider->getTextFilterFieldList($this->entityType) ?? ['name'];
-
         $fieldList = array_filter(
-            $fieldList,
+            $this->metadataProvider->getTextFilterFieldList($this->entityType) ?? ['name'],
             function ($field) use ($fullTextSearchFieldList, $forceFullTextSearch) {
                 if ($forceFullTextSearch) {
                     return false;
@@ -219,39 +219,45 @@ class TextFilter
             }
         );
 
-        $orGroup = [];
+        //$orGroup = [];
+
+        $orGroupBuilder = OrGroup::createBuilder();
 
         foreach ($fieldList as $field) {
             $this->applyFieldToOrGroup(
-                $queryBuilder, $filter, $orGroup, $field, $skipWidlcards
+                $queryBuilder,
+                $filter,
+                $orGroupBuilder,
+                $field,
+                $skipWidlcards
             );
         }
 
         if (!$forceFullTextSearch) {
-            $this->modifyOrGroup($queryBuilder, $filter, $orGroup, $hasFullTextSearch);
+            $orGroupBuilder = $this->modifyOrGroup($queryBuilder, $filter, $orGroupBuilder, $hasFullTextSearch);
         }
 
-        if (!empty($fullTextGroup)) {
-            $orGroup['AND'] = $fullTextGroup;
+        if (count($fullTextGroup)) {
+            $orGroupBuilder->add(
+                AndGroup::fromRaw($fullTextGroup)
+            );
         }
 
-        if (count($orGroup) === 0) {
-            $queryBuilder->where([
-                'id' => null
-            ]);
+        $orGroup = $orGroupBuilder->build();
+
+        if ($orGroup->getItemCount() === 0) {
+            $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->where([
-            'OR' => $orGroup
-        ]);
+        $queryBuilder->where($orGroup);
     }
 
     protected function applyFieldToOrGroup(
         QueryBuilder $queryBuilder,
         string $filter,
-        array &$orGroup,
+        OrGroupBuilder $orGroupBuilder,
         string $field,
         bool $skipWidlcards
     ): void {
@@ -289,7 +295,10 @@ class TextFilter
 
         if ($attributeType === Entity::INT) {
             if (is_numeric($filter)) {
-                $orGroup[$field] = intval($filter);
+                //$orGroup[$field] = intval($filter);
+                $orGroupBuilder->add(
+                    Cmp::equal(Expr::column($field), intval($filter))
+                );
             }
 
             return;
@@ -307,7 +316,11 @@ class TextFilter
             $expression = $filter;
         }
 
-        $orGroup[$field . '*'] = $expression;
+        $orGroupBuilder->add(
+            Cmp::like(Expr::column($field), $expression)
+        );
+
+        //$orGroup[$field . '*'] = $expression;
     }
 
     protected function checkWhetherToUseContains(string $field, string $filter, string $attributeType): bool
@@ -339,9 +352,13 @@ class TextFilter
     }
 
     protected function modifyOrGroup(
-        QueryBuilder $queryBuilder, string $filter, array &$orGroup, bool $hasFullTextSearch
-    ): void {
+        QueryBuilder $queryBuilder,
+        string $filter,
+        OrGroupBuilder $orGroupBuilder,
+        bool $hasFullTextSearch
+    ): OrGroupBuilder {
 
+        return $orGroupBuilder;
     }
 
     protected function getFullTextSearchData(string $filter, bool $isAuxiliaryUse = false): ?FullTextSearchData

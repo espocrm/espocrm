@@ -35,9 +35,12 @@ use Espo\Core\{
     Di\EntityManagerSetter,
 };
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-};
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\Where\Comparison as Cmp;
+use Espo\ORM\Query\Part\Expression as Expr;
 
 class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAware
 {
@@ -48,35 +51,49 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
     protected $useContainsAttributeList = ['name'];
 
     protected function modifyOrGroup(
-        QueryBuilder $queryBuilder, string $filter, array &$orGroup, bool $hasFullTextSearch
-    ): void {
+        QueryBuilder $queryBuilder,
+        string $filter,
+        OrGroupBuilder $orGroupBuilder,
+        bool $hasFullTextSearch
+    ): OrGroupBuilder {
 
         if (strlen($filter) < self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
-            return;
+            return $orGroupBuilder;
         }
 
         if (strpos($filter, '@') === false) {
-            return;
+            return $orGroupBuilder;
         }
 
         if ($hasFullTextSearch) {
-            return;
+            return $orGroupBuilder;
         }
 
         $emailAddressId = $this->getEmailAddressIdByValue($filter);
 
         if (!$emailAddressId) {
-            $orGroup = [];
-
-            return;
+            return OrGroup::createBuilder();
         }
 
         $this->leftJoinEmailAddress($queryBuilder);
 
-        $orGroup = [];
+        $newOrGroupBuilder = OrGroup::createBuilder();
 
-        $orGroup['fromEmailAddressId'] = $emailAddressId;
-        $orGroup['emailEmailAddress.emailAddressId'] = $emailAddressId;
+        $newOrGroupBuilder->add(
+            Cmp::equal(
+                Expr::column('fromEmailAddressId'),
+                $emailAddressId
+            )
+        );
+
+        $newOrGroupBuilder->add(
+            Cmp::equal(
+                Expr::column('emailEmailAddress.emailAddressId'),
+                $emailAddressId
+            )
+        );
+
+        return $newOrGroupBuilder;
     }
 
     protected function leftJoinEmailAddress(QueryBuilder $queryBuilder): void
@@ -100,7 +117,7 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
     protected function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
-            ->getRepository('EmailAddress')
+            ->getRDBRepository('EmailAddress')
             ->select('id')
             ->where([
                 'lower' => strtolower($value),

@@ -60,6 +60,14 @@ class OrGroup implements WhereItem
         return $this->rawValue;
     }
 
+    /**
+     * Get a number of items.
+     */
+    public function getItemCount(): int
+    {
+        return count($this->rawValue);
+    }
+
     public static function fromRaw(array $whereClause): self
     {
         $obj = new self();

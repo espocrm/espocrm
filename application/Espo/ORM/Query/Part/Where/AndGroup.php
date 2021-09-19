@@ -59,6 +59,14 @@ class AndGroup implements WhereItem
         return $this->rawValue;
     }
 
+    /**
+     * Get a number of items.
+     */
+    public function getItemCount(): int
+    {
+        return count($this->rawValue);
+    }
+
     public static function fromRaw(array $whereClause): self
     {
         if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
