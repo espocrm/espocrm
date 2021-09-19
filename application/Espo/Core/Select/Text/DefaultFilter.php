@@ -45,8 +45,6 @@ use Espo\ORM\Entity;
 
 class DefaultFilter implements Filter
 {
-    private const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
-
     private $entityType;
 
     private $metadataProvider;
