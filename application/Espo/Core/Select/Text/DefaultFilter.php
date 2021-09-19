@@ -88,6 +88,9 @@ class DefaultFilter implements Filter
         $queryBuilder->where($orGroup);
     }
 
+    /**
+     * @todo AttributeFilterFactory.
+     */
     private function applyAttribute(
         QueryBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
