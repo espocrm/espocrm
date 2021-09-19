@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Htmlizer;
 
-use Espo\Core\AclManager;
-
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
@@ -43,8 +41,6 @@ class TemplateRenderer
 {
     private $htmlizerFactory;
 
-    private $aclManager;
-
     private $data;
 
     private $user = null;
@@ -55,12 +51,9 @@ class TemplateRenderer
 
     private $applyAcl = false;
 
-    public function __construct(
-        HtmlizerFactory $htmlizerFactory,
-        AclManager $aclManager
-    ) {
+    public function __construct(HtmlizerFactory $htmlizerFactory)
+    {
         $this->htmlizerFactory = $htmlizerFactory;
-        $this->aclManager = $aclManager;
     }
 
     /**
