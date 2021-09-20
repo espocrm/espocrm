@@ -154,12 +154,11 @@ class GoogleMaps
             return null;
         }
 
-        $filePath = tempnam(sys_get_temp_dir(), 'google_maps_image');
-        file_put_contents($filePath, $image);
-
         list($width, $height) = explode('x', $size);
 
-        $tag = "<img src=\"{$filePath}\" width=\"{$width}\" height=\"{$height}\">";
+        $src = '@' . base64_encode($image);
+
+        $tag = "<img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\">";
 
         return new LightnCandy\SafeString($tag);
     }
