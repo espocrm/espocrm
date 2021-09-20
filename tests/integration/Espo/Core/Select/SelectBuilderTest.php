@@ -784,8 +784,8 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $expectedWhereClause = [
             'OR' => [
-                'fromEmailAddressId' => $emailAddressId,
-                'emailEmailAddress.emailAddressId' => $emailAddressId,
+                ['fromEmailAddressId=' => $emailAddressId],
+                ['emailEmailAddress.emailAddressId=' => $emailAddressId],
             ],
         ];
 
