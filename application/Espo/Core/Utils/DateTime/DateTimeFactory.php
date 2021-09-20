@@ -73,6 +73,9 @@ class DateTimeFactory
     {
         return $this->injectableFactory->createWith(DateTime::class, [
             'timeZone' => $timeZone,
+            'dateFormat' => $this->config->get('dateFormat'),
+            'timeFormat' => $this->config->get('timeFormat'),
+            'language' => $this->config->get('language'),
         ]);
     }
 }

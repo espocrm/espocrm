@@ -56,28 +56,30 @@ use const JSON_PRESERVE_ZERO_FRACTION;
 
 /**
  * Generates an HTML for an entity. Used by Print-to-PDF, system email notifications.
+ * Not for direct use. Use `TemplateRenderer`.
+ * @internal
  */
 class Htmlizer
 {
-    protected $fileManager;
+    private $fileManager;
 
-    protected $dateTime;
+    private $dateTime;
 
-    protected $config;
+    private $config;
 
-    protected $acl;
+    private $acl;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $language;
+    private $language;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
     private $log;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
     public function __construct(
         FileManager $fileManager,
@@ -105,7 +107,7 @@ class Htmlizer
         $this->injectableFactory = $injectableFactory;
     }
 
-/**
+    /**
      * Generate an HTML for entity by a given template.
      *
      * @param $cacheId @deprecated To be skipped..

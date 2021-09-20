@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Htmlizer;
 
-use Espo\Entities\User;
-
+use Espo\Core\ApplicationState;
 use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 use stdClass;
 use InvalidArgumentException;
@@ -39,8 +39,6 @@ use LogicException;
 
 class TemplateRenderer
 {
-    private $htmlizerFactory;
-
     private $data;
 
     private $user = null;
@@ -51,19 +49,21 @@ class TemplateRenderer
 
     private $applyAcl = false;
 
-    public function __construct(HtmlizerFactory $htmlizerFactory)
+    private $useUserTimezone = false;
+
+    private $htmlizerFactory;
+
+    private $applicationState;
+
+    public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
     {
         $this->htmlizerFactory = $htmlizerFactory;
+        $this->applicationState = $applicationState;
     }
 
-    /**
-     * Setting a user also sets applyAcl.
-     */
     public function setUser(User $user): self
     {
         $this->user = $user;
-
-        $this->setApplyAcl();
 
         return $this;
     }
@@ -103,6 +103,13 @@ class TemplateRenderer
     public function setApplyAcl(bool $applyAcl = true): self
     {
         $this->applyAcl = $applyAcl;
+
+        return $this;
+    }
+
+    public function setUseUserTimezone(bool $useUserTimezone = true): self
+    {
+        $this->useUserTimezone = $useUserTimezone;
 
         return $this;
     }
@@ -150,8 +157,13 @@ class TemplateRenderer
 
     private function createHtmlizer(): Htmlizer
     {
-        return $this->user ?
-            $this->htmlizerFactory->createForUser($this->user) :
-            $this->htmlizerFactory->create(!$this->applyAcl);
+        $user = $this->user ?? $this->applicationState->getUser();
+
+        $params = new CreateForUserParams();
+
+        $params->applyAcl = $this->applyAcl;
+        $params->useUserTimezone = $this->useUserTimezone;
+
+        return $this->htmlizerFactory->createForUser($user, $params);
     }
 }

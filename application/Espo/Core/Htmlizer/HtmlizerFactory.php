@@ -35,6 +35,10 @@ use Espo\Core\AclManager;
 
 use Espo\Entities\User;
 
+/**
+ * Not for direct use. Use `TemplateRenderer`.
+ * @internal
+ */
 class HtmlizerFactory
 {
     private $injectableFactory;
@@ -73,14 +77,24 @@ class HtmlizerFactory
         return $this->create(true);
     }
 
-    public function createForUser(User $user): Htmlizer
+    public function createForUser(User $user, ?CreateForUserParams $params = null): Htmlizer
     {
-        $dateTime = $this->dateTimeFactory->createWithUserTimeZone($user);
-        $acl = $this->aclManager->createUserAcl($user);
+        if (!$params) {
+            $params = new CreateForUserParams();
+            $params->useUserTimezone = true;
+            $params->applyAcl = true;
+        }
 
-        return $this->injectableFactory->createWith(Htmlizer::class, [
-            'dateTime' => $dateTime,
-            'acl' => $acl,
-        ]);
+        $deps = [];
+
+        if ($params->useUserTimezone) {
+            $deps['dateTime'] = $this->dateTimeFactory->createWithUserTimeZone($user);
+        }
+
+        if ($params->applyAcl) {
+            $deps['acl'] = $this->aclManager->createUserAcl($user);
+        }
+
+        return $this->injectableFactory->createWith(Htmlizer::class, $deps);
     }
 }
