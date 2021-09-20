@@ -61,7 +61,7 @@ use Espo\Core\{
     Acl\Exceptions\NotImplemented,
 };
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 
 /**
@@ -186,7 +186,7 @@ class AclManager
     /**
      * Get a full access data map (for front-end).
      */
-    public function getMapData(User $user): StdClass
+    public function getMapData(User $user): stdClass
     {
         return $this->getMap($user)->getData();
     }
@@ -253,7 +253,9 @@ class AclManager
      * Check a scope or entity. If $action is omitted, it will check whether
      * a scope level is set to 'enabled'.
      *
+     * @param User $user A user to check for.
      * @param string|Entity $subject An entity type or entity.
+     * @param string|null Action to check. Constants are available in the `Table` class.
      *
      * @throws NotImplemented
      */
@@ -275,7 +277,28 @@ class AclManager
     }
 
     /**
+     * The same as `check` but does not throw NotImplemented exception.
+     *
+     * @param User $user A user to check for.
+     * @param string|Entity $subject An entity type or entity.
+     * @param string|null Action to check. Constants are available in the `Table` class.
+     */
+    public function tryCheck(User $user, $subject, ?string $action = null): bool
+    {
+        try {
+            return $this->check($user, $subject, $action);
+        }
+        catch (NotImplemented $e) {
+            return false;
+        }
+    }
+
+    /**
      * Check access to a specific entity.
+     *
+     * @param User $user A user to check for.
+     * @param Entity $entity An entity to check.
+     * @param string|null Action to check. Constants are available in the `Table` class.
      *
      * @throws NotImplemented
      */

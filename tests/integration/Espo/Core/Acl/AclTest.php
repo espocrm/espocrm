@@ -29,9 +29,8 @@
 
 namespace tests\integration\Espo\Core\Acl;
 
-use Espo\Core\{
-    AclManager,
-};
+use Espo\Core\AclManager;
+use Espo\Core\Acl;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
@@ -59,5 +58,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'users',
             $aclManager->getReadOwnerUserField('Meeting')
         );
+    }
+
+    public function testTryCheck(): void
+    {
+        /* @var $Acl Acl */
+        $acl = $this->getContainer()->get('acl');
+
+        $this->assertFalse($acl->tryCheck('NonExistingEntityType'));
     }
 }

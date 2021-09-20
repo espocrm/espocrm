@@ -37,7 +37,7 @@ use Espo\Core\{
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 
-use StdClass;
+use stdClass;
 
 /**
  * A wrapper for `AclManager` for a current user. A central access point for access checking.
@@ -57,7 +57,7 @@ class Acl
     /**
      * Get a full access data map.
      */
-    public function getMapData(): StdClass
+    public function getMapData(): stdClass
     {
         return $this->aclManager->getMapData($this->user);
     }
@@ -114,11 +114,25 @@ class Acl
      * Check a scope or entity. If $action is omitted, it will check
      * whether a scope level is set to 'enabled'.
      *
+     * @param string|Entity $subject An entity type or entity.
+     * @param string|null Action to check. Constants are available in the `Table` class.
+     *
      * @throws NotImplemented
      */
     public function check($subject, ?string $action = null): bool
     {
         return $this->aclManager->check($this->user, $subject, $action);
+    }
+
+    /**
+     * The same as `check` but does not throw NotImplemented exception.
+     *
+     * @param string|Entity $subject An entity type or entity.
+     * @param string|null Action to check. Constants are available in the `Table` class.
+     */
+    public function tryCheck($subject, ?string $action = null): bool
+    {
+        return $this->aclManager->tryCheck($this->user, $subject, $action);
     }
 
     /**
@@ -134,6 +148,9 @@ class Acl
 
     /**
      * Check access to a specific entity.
+     *
+     * @param Entity $entity An entity to check.
+     * @param string|null Action to check. Constants are available in the `Table` class.
      */
     public function checkEntity(Entity $entity, string $action = Table::ACTION_READ): bool
     {
