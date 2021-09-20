@@ -40,6 +40,18 @@ class Account extends Entity
 {
     public const ENTITY_TYPE = 'Account';
 
+    public function getName(): ?string
+    {
+        return $this->get('name');
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->set('name', $name);
+
+        return $this;
+    }
+
     public function getEmailAddressGroup(): EmailAddressGroup
     {
         return $this->getValueObject('emailAddress');
@@ -50,14 +62,18 @@ class Account extends Entity
         return $this->getValueObject('phoneNumber');
     }
 
-    public function setEmailAddressGroup(EmailAddressGroup $group): void
+    public function setEmailAddressGroup(EmailAddressGroup $group): self
     {
         $this->setValueObject('emailAddress', $group);
+
+        return $this;
     }
 
-    public function setPhoneNumberGroup(PhoneNumberGroup $group): void
+    public function setPhoneNumberGroup(PhoneNumberGroup $group): self
     {
         $this->setValueObject('phoneNumber', $group);
+
+        return $this;
     }
 
     public function getBillingAddress(): Address
@@ -65,9 +81,11 @@ class Account extends Entity
         return $this->getValueObject('billingAddress');
     }
 
-    public function setBillingAddress(Address $address): void
+    public function setBillingAddress(Address $address): self
     {
         $this->setValueObject('billingAddress', $address);
+
+        return $this;
     }
 
     public function getShippingAddress(): Address
@@ -75,8 +93,10 @@ class Account extends Entity
         return $this->getValueObject('shippingAddress');
     }
 
-    public function setShippingAddress(Address $address): void
+    public function setShippingAddress(Address $address): self
     {
         $this->setValueObject('shippingAddress', $address);
+
+        return $this;
     }
 }

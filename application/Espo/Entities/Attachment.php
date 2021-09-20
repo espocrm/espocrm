@@ -31,10 +31,15 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
+use Espo\Core\Field\LinkParent;
+
 class Attachment extends Entity
 {
     public const ENTITY_TYPE = 'Attachment';
 
+    /**
+     * Multiple attachment can refer to one file. Source ID is an original attachment.
+     */
     public function getSourceId(): ?string
     {
         $sourceId = $this->get('sourceId');
@@ -49,5 +54,87 @@ class Attachment extends Entity
     public function getStorage(): ?string
     {
         return $this->get('storage');
+    }
+
+    public function getName(): ?string
+    {
+        return $this->get('name');
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->get('size');
+    }
+
+    public function getType(): ?string
+    {
+        return $this->get('type');
+    }
+
+    public function getTargetField(): ?string
+    {
+        return $this->get('field');
+    }
+
+    public function getParent(): ?LinkParent
+    {
+        return $this->getValueObject('parent');
+    }
+
+    public function getRelated(): ?LinkParent
+    {
+        return $this->getValueObject('related');
+    }
+
+    /**
+     * Multiple attachment can refer to one file. Source ID is an original attachment.
+     */
+    public function setSourceId(?string $sourceId): self
+    {
+        $this->set('sourceId', $sourceId);
+
+        return $this;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->set('name', $name);
+
+        return $this;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->set('type', $type);
+
+        return $this;
+    }
+
+    public function setContents(?string $contents): self
+    {
+        $this->set('contents', $contents);
+
+        return $this;
+    }
+
+    public function setTargetField(?string $field): self
+    {
+        $this->set('field', $field);
+
+        return $this;
+    }
+
+    public function setParent(?LinkParent $parent): self
+    {
+        $this->setValueObject('parent', $parent);
+
+        return $this;
+    }
+
+    public function setRelated(?LinkParent $related): self
+    {
+        $this->setValueObject('related', $related);
+
+        return $this;
     }
 }

@@ -31,6 +31,9 @@ namespace Espo\Entities;
 
 use Espo\Core\Entities\Person;
 
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+
 class User extends Person
 {
     public const ENTITY_TYPE = 'User';
@@ -96,12 +99,48 @@ class User extends Person
         return $this->get('type') === 'super-admin';
     }
 
+    public function getRoles(): LinkMultiple
+    {
+        return $this->getValueObject('roles');
+    }
+
+    public function getDefaultTeam(): ?Link
+    {
+        return $this->getValueObject('defaultTeam');
+    }
+
+    public function getTeams(): LinkMultiple
+    {
+        return $this->getValueObject('teams');
+    }
+
     public function getTeamIdList(): array
     {
         return $this->getLinkMultipleIdList('teams');
     }
 
-    public function loadAccountField()
+    public function setDefaultTeam(?Link $defaultTeam): self
+    {
+        $this->setValueObject('defaultTeam', $defaultTeam);
+
+        return $this;
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
+    }
+
+    public function setRoles(LinkMultiple $roles): self
+    {
+        $this->setValueObject('roles', $roles);
+
+        return $this;
+    }
+
+    public function loadAccountField(): void
     {
         if ($this->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $this->get('contactId'));
@@ -111,6 +150,23 @@ class User extends Person
                 $this->set('accountName', $contact->get('accountName'));
             }
         }
+    }
+
+    public function setTitle(?string $title): ?string
+    {
+        $this->set('title', $title);
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->get('title');
+    }
+
+    public function getUserName(): ?string
+    {
+        return $this->get('userName');
     }
 
     protected function _getName()

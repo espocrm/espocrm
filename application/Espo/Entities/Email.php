@@ -37,6 +37,8 @@ use Espo\Entities\Attachment;
 use Espo\Services\Email as EmailService;
 use Espo\Repositories\Email as EmailRepository;
 
+use Espo\Core\Field\LinkParent;
+
 class Email extends Entity
 {
     public const ENTITY_TYPE = 'Email';
@@ -312,9 +314,11 @@ class Email extends Entity
         return $this->get('subject');
     }
 
-    public function setSubject(?string $subject): void
+    public function setSubject(?string $subject): self
     {
         $this->set('subject', $subject);
+
+        return $this;
     }
 
     public function getBody(): ?string
@@ -322,9 +326,11 @@ class Email extends Entity
         return $this->get('body');
     }
 
-    public function setBody(?string $body): void
+    public function setBody(?string $body): self
     {
         $this->set('body', $body);
+
+        return $this;
     }
 
     public function isHtml(): ?bool
@@ -332,55 +338,69 @@ class Email extends Entity
         return $this->get('isHtml');
     }
 
-    public function setIsHtml(bool $isHtml = true): void
+    public function setIsHtml(bool $isHtml = true): self
     {
         $this->set('isHtml', $isHtml);
+
+        return $this;
     }
 
-    public function setIsPlain(bool $isPlain = true): void
+    public function setIsPlain(bool $isPlain = true): self
     {
         $this->set('isHtml', !$isPlain);
+
+        return $this;
     }
 
-    public function setFromAddress(?string $address): void
+    public function setFromAddress(?string $address): self
     {
         $this->set('from', $address);
+
+        return $this;
     }
 
-    public function addToAddress(string $address): void
+    public function addToAddress(string $address): self
     {
         $list = $this->getToAddressList();
 
         $list[] = $address;
 
         $this->set('to', implode(';', $list));
+
+        return $this;
     }
 
-    public function addCcAddress(string $address): void
+    public function addCcAddress(string $address): self
     {
         $list = $this->getCcAddressList();
 
         $list[] = $address;
 
         $this->set('cc', implode(';', $list));
+
+        return $this;
     }
 
-    public function addBccAddress(string $address): void
+    public function addBccAddress(string $address): self
     {
         $list = $this->getBccAddressList();
 
         $list[] = $address;
 
         $this->set('bcc', implode(';', $list));
+
+        return $this;
     }
 
-    public function addReplyToAddress(string $address): void
+    public function addReplyToAddress(string $address): self
     {
         $list = $this->getReplyToAddressList();
 
         $list[] = $address;
 
         $this->set('replyTo', implode(';', $list));
+
+        return $this;
     }
 
     public function getFromAddress(): ?string
@@ -464,14 +484,28 @@ class Email extends Entity
         return explode(';', $value);
     }
 
-    public function setDummyMessageId(): void
+    public function setDummyMessageId(): self
     {
         $this->set('messageId', 'dummy:' . Util::generateId());
+
+        return $this;
     }
 
     public function getMessageId(): ?string
     {
         return $this->get('messageId');
+    }
+
+    public function getParent(): ?LinkParent
+    {
+        return $this->getValueObject('parent');
+    }
+
+    public function setParent(?LinkParent $parent): self
+    {
+        $this->setValueObject('parent', $parent);
+
+        return $this;
     }
 
     private function getEmailRepository(): EmailRepository

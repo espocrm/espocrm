@@ -67,23 +67,29 @@ class Sms extends Entity implements SmsInterface
         return $this->get('status');
     }
 
-    public function setBody(?string $body): void
+    public function setBody(?string $body): self
     {
         $this->set('body', $body);
+
+        return $this;
     }
 
-    public function setFromNumber(?string $number): void
+    public function setFromNumber(?string $number): self
     {
         $this->set('from', $number);
+
+        return $this;
     }
 
-    public function addToNumber(string $number): void
+    public function addToNumber(string $number): self
     {
         $list = $this->getToNumberList();
 
         $list[] = $number;
 
         $this->set('to', implode(';', $list));
+
+        return $this;
     }
 
     public function getFromNumber(): ?string
@@ -118,13 +124,15 @@ class Sms extends Entity implements SmsInterface
         return explode(';', $value);
     }
 
-    public function setAsSent(): void
+    public function setAsSent(): self
     {
         $this->set('status', self::STATUS_SENT);
 
         if (!$this->get('dateSent')) {
             $this->set('dateSent', DateTime::createNow()->getString());
         }
+
+        return $this;
     }
 
     private function getSmsRepository(): SmsRepository
