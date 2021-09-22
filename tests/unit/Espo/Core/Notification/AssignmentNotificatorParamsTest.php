@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\FieldProcessing;
+namespace tests\unit\Espo\Core\Notification;
 
 use Espo\Core\{
-    Notification\AssignmentNotificatorParams,
+    Notification\AssignmentNotificator\Params,
 };
 
 class AssignmentNotificatorParamsTest extends \PHPUnit\Framework\TestCase
@@ -41,7 +41,7 @@ class AssignmentNotificatorParamsTest extends \PHPUnit\Framework\TestCase
             'silent' => true,
         ];
 
-        $params = AssignmentNotificatorParams
+        $params = Params
             ::create()
             ->withRawOptions($options);
 

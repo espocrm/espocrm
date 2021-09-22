@@ -31,10 +31,12 @@ namespace Espo\Core\Notification;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Notification\AssignmentNotificator\Params;
+
 /**
  * Processes assignment notifications. Called after entity is saved.
  */
 interface AssignmentNotificator
 {
-    public function process(Entity $entity, AssignmentNotificatorParams $params): void;
+    public function process(Entity $entity, Params $params): void;
 }

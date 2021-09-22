@@ -31,7 +31,7 @@ namespace Espo\Tools\Notification;
 
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
-use Espo\Core\Notification\AssignmentNotificatorParams;
+use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;

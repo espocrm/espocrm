@@ -33,6 +33,7 @@ use Espo\Services\Email as EmailService;
 use Espo\Services\Stream as StreamService;
 
 use Espo\Core\Notification\AssignmentNotificator;
+use Espo\Core\Notification\AssignmentNotificator\Params;
 use Espo\Core\Notification\UserEnabledChecker;
 use Espo\Core\Notification\AssignmentNotificatorParams;
 use Espo\Core\ServiceFactory;
@@ -77,7 +78,7 @@ class Email implements AssignmentNotificator
         $this->aclManager = $aclManager;
     }
 
-    public function process(Entity $entity, AssignmentNotificatorParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;

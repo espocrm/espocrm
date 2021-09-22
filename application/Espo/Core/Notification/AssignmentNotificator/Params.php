@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace Espo\Core\Notification\AssignmentNotificator;
 
-class AssignmentNotificatorParams
+class Params
 {
     private $options = [];
 

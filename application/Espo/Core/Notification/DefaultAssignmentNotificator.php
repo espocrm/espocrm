@@ -35,6 +35,8 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Notification;
 
+use Espo\Core\Notification\AssignmentNotificator\Params;
+
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
     protected $user;
@@ -50,7 +52,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
         $this->userChecker = $userChecker;
     }
 
-    public function process(Entity $entity, AssignmentNotificatorParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
