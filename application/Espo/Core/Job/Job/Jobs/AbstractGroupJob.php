@@ -27,32 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Core\Job\Job\Jobs;
 
-use RuntimeException;
+use Espo\Core\Utils\Config;
+use Espo\Core\Job\Job;
+use Espo\Core\Job\Job\Data;
+use Espo\Core\Job\JobManager;
 
-abstract class AbstractQueueJob implements JobDataLess
+abstract class AbstractGroupJob implements Job
 {
-    protected $queue = null;
+    private const PORTION_NUMBER = 100;
 
     private $jobManager;
 
-    private $portionNumberProvider;
+    private $config;
 
-    public function __construct(JobManager $jobManager, QueuePortionNumberProvider $portionNumberProvider)
-    {
+    public function __construct(
+        JobManager $jobManager,
+        Config $config
+    ) {
         $this->jobManager = $jobManager;
-        $this->portionNumberProvider = $portionNumberProvider;
+        $this->config = $config;
     }
 
-    public function run(): void
+    public function run(Data $data): void
     {
-        if (!$this->queue) {
-            throw new RuntimeException("No queue name.");
-        }
+        $limit = $this->config->get('jobGroupMaxPortion') ?? self::PORTION_NUMBER;
 
-        $limit = $this->portionNumberProvider->get($this->queue);
+        $group = $data->get('group');
 
-        $this->jobManager->processQueue($this->queue, $limit);
+        $this->jobManager->processGroup($group, $limit);
     }
 }

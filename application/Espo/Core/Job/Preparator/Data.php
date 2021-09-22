@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Core\Job\Preparator;
 
-class ScheduledJobData
+class Data
 {
     private $id;
 
@@ -41,11 +41,17 @@ class ScheduledJobData
         $this->name = $name;
     }
 
+    /**
+     * A scheduled job ID.
+     */
     public function getId(): string
     {
         return $this->id;
     }
 
+    /**
+     * A scheduled job name.
+     */
     public function getName(): string
     {
         return $this->name;

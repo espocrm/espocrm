@@ -27,58 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
+use Espo\Core\InjectableFactory;
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\{
-    Job\Job,
-    Job\Job\Data,
-    ServiceFactory,
-    ORM\EntityManager,
-};
-
-use Throwable;
-
-class CheckInboundEmails implements Job
+class PreparatorFactory
 {
-    private $serviceFactory;
+    private $metadataProvider;
 
-    private $entityManager;
+    private $injectableFactory;
 
-    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    public function __construct(MetadataProvider $metadataProvider, InjectableFactory $injectableFactory)
     {
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
+        $this->metadataProvider = $metadataProvider;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function run(Data $data): void
+    /**
+     * Create a preparator.
+     *
+     * @throws Error
+     */
+    public function create(string $name): Preparator
     {
-        $targetId = $data->getTargetId();
+        $className = $this->metadataProvider->getPreparatorClassName($name);
 
-        if (!$targetId) {
-            throw new Error("No target.");
+        if (!$className) {
+            throw new Error("Preparator for job '{$name}' not found.");
         }
 
-        $service = $this->serviceFactory->create('InboundEmail');
-
-        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
-
-        if (!$entity) {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail does not exist.", -1);
-        }
-
-        if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail is not active.", -1);
-        }
-
-        try {
-            $service->fetchFromMailServer($entity);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
+        return $this->injectableFactory->create($className);
     }
 }

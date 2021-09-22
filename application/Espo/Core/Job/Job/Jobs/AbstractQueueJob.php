@@ -27,17 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Core\Job\Job\Jobs;
 
-use DateTimeImmutable;
+use RuntimeException;
+use Espo\Core\Job\JobDataLess;
+use Espo\Core\Job\JobManager;
+use Espo\Core\Job\QueuePortionNumberProvider;
 
-/**
- * Can create multiple jobs for different targets according scheduling.
- */
-interface JobPreparable extends Job
+abstract class AbstractQueueJob implements JobDataLess
 {
-    /**
-     * Create multiple job records for a scheduled job.
-     */
-    public function prepare(ScheduledJobData $data, DateTimeImmutable $executeTime): void;
+    protected $queue = null;
+
+    private $jobManager;
+
+    private $portionNumberProvider;
+
+    public function __construct(JobManager $jobManager, QueuePortionNumberProvider $portionNumberProvider)
+    {
+        $this->jobManager = $jobManager;
+        $this->portionNumberProvider = $portionNumberProvider;
+    }
+
+    public function run(): void
+    {
+        if (!$this->queue) {
+            throw new RuntimeException("No queue name.");
+        }
+
+        $limit = $this->portionNumberProvider->get($this->queue);
+
+        $this->jobManager->processQueue($this->queue, $limit);
+    }
 }

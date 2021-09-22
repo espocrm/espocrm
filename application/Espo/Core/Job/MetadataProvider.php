@@ -59,4 +59,14 @@ class MetadataProvider
 
         return $list;
     }
+
+    public function isJobPreparable(string $name): bool
+    {
+        return (bool) $this->metadata->get(['app', 'scheduledJobs', $name, 'isPreparable']);
+    }
+
+    public function getPreparatorClassName(string $name): ?string
+    {
+        return $this->metadata->get(['app', 'scheduledJobs', $name, 'preparatorClassName']);
+    }
 }

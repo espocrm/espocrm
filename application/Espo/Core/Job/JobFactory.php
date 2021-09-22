@@ -76,26 +76,6 @@ class JobFactory
         return $job;
     }
 
-    /**
-     * Whether a job has prepare method. Prepare method creates job records from a scheduled job record.
-     *
-     * @throws Error
-     */
-    public function isPreparable(string $name): bool
-    {
-        $className = $this->getClassName($name);
-
-        if (!$className) {
-            throw new Error("Job '{$name}' not found.");
-        }
-
-        if (method_exists($className, 'prepare')) {
-            return true;
-        }
-
-        return false;
-    }
-
     private function getClassName(string $name): ?string
     {
         return $this->classFinder->find('Jobs', ucfirst($name));

@@ -31,7 +31,7 @@ namespace Espo\Jobs;
 
 use Espo\Core\{
     Job\QueueName,
-    Job\AbstractQueueJob,
+    Job\Job\Jobs\AbstractQueueJob,
 };
 
 class ProcessJobQueueQ0 extends AbstractQueueJob

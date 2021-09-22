@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\Preparator\Data as PreparatorData;
+
 use Espo\Core\{
     ORM\EntityManager,
     Utils\Log,
@@ -70,20 +72,24 @@ class ScheduleProcessor
 
     private $scheduleUtil;
 
-    private $jobFactory;
+    private $metadataProvider;
+
+    private $preparatorFactory;
 
     public function __construct(
         Log $log,
         EntityManager $entityManager,
         QueueUtil $queueUtil,
         ScheduleUtil $scheduleUtil,
-        JobFactory $jobFactory
+        PreparatorFactory $preparatorFactory,
+        MetadataProvider $metadataProvider
     ) {
         $this->log = $log;
         $this->entityManager = $entityManager;
         $this->queueUtil = $queueUtil;
         $this->scheduleUtil = $scheduleUtil;
-        $this->jobFactory = $jobFactory;
+        $this->preparatorFactory = $preparatorFactory;
+        $this->metadataProvider = $metadataProvider;
     }
 
     public function process(): void
@@ -126,15 +132,15 @@ class ScheduleProcessor
 
         $jobName = $scheduledJob->getJob();
 
-        if ($this->jobFactory->isPreparable($jobName)) {
-            $jobObj = $this->jobFactory->create($jobName);
+        if ($this->metadataProvider->isJobPreparable($jobName)) {
+            $preparator = $this->preparatorFactory->create($jobName);
 
-            $data = new ScheduledJobData($scheduledJob->getId(), $scheduledJob->getName());
+            $data = new PreparatorData($scheduledJob->getId(), $scheduledJob->getName());
 
             $executeTimeObj = DateTimeImmutable
                 ::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $executeTime);
 
-            $jobObj->prepare($data, $executeTimeObj);
+            $preparator->prepare($data, $executeTimeObj);
 
             return;
         }

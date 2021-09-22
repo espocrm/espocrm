@@ -27,58 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\Preparator\Data;
 
-use Espo\Core\{
-    Job\Job,
-    Job\Job\Data,
-    ServiceFactory,
-    ORM\EntityManager,
-};
+use DateTimeImmutable;
 
-use Throwable;
-
-class CheckInboundEmails implements Job
+/**
+ * Creates multiple jobs for different targets according scheduling.
+ */
+interface Preparator
 {
-    private $serviceFactory;
-
-    private $entityManager;
-
-    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
-    {
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
-    }
-
-    public function run(Data $data): void
-    {
-        $targetId = $data->getTargetId();
-
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
-
-        $service = $this->serviceFactory->create('InboundEmail');
-
-        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
-
-        if (!$entity) {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail does not exist.", -1);
-        }
-
-        if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail is not active.", -1);
-        }
-
-        try {
-            $service->fetchFromMailServer($entity);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
-    }
+    /**
+     * Create multiple job records for a scheduled job.
+     */
+    public function prepare(Data $data, DateTimeImmutable $executeTime): void;
 }

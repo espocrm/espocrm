@@ -29,6 +29,6 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Job\AbstractGroupJob;
+use Espo\Core\Job\Job\Jobs\AbstractGroupJob;
 
 class ProcessJobGroup extends AbstractGroupJob {}

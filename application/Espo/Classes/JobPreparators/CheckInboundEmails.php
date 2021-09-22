@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+namespace Espo\Classes\JobPreparators;
 
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Utils\Config;
-use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
+use Espo\Core\Job\Preparator;
+use Espo\Core\Job\Preparator\Data;
 
 use Espo\ORM\EntityManager;
 
@@ -40,98 +40,68 @@ use Espo\Entities\Job as JobEntity;
 
 use DateTimeImmutable;
 
-abstract class AbstractGroupJob implements JobPreparable
+class CheckInboundEmails implements Preparator
 {
-    private const PORTION_NUMBER = 100;
-
-    private $jobManager;
-
     private $entityManager;
 
-    private $config;
-
-    public function __construct(
-        JobManager $jobManager,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->jobManager = $jobManager;
+    public function __construct(EntityManager $entityManager)
+    {
         $this->entityManager = $entityManager;
-        $this->config = $config;
     }
 
-    public function run(Data $data): void
+    public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {
-        $limit = $this->config->get('jobGroupMaxPortion') ?? self::PORTION_NUMBER;
-
-        $group = $data->get('group');
-
-        $this->jobManager->processGroup($group, $limit);
-    }
-
-    public function prepare(ScheduledJobData $data, DateTimeImmutable $executeTime): void
-    {
-        $groupList = [];
-
-        $query = $this->entityManager
-            ->getQueryBuilder()
-            ->select('group')
-            ->from(JobEntity::ENTITY_TYPE)
+        $collection = $this->entityManager
+            ->getRDBRepository('InboundEmail')
             ->where([
-                'status' => Status::PENDING,
-                'queue' => null,
-                'group!=' => null,
-                'executeTime<=' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
+                'status' => 'Active',
+                'useImap' => true,
             ])
-            ->group('group')
-            ->build();
+            ->find();
 
-        $sth = $this->entityManager->getQueryExecutor()->execute($query);
-
-        while ($row = $sth->fetch()) {
-            $group = $row['group'];
-
-            if ($group === null) {
-                continue;
-            }
-
-            $groupList[] = $group;
-        }
-
-        if (!count($groupList)) {
-            return;
-        }
-
-        foreach ($groupList as $group) {
-            $existingJob = $this->entityManager
+        foreach ($collection as $entity) {
+            $running = $this->entityManager
                 ->getRDBRepository(JobEntity::ENTITY_TYPE)
-                ->select('id')
                 ->where([
                     'scheduledJobId' => $data->getId(),
-                    'targetGroup' => $group,
                     'status' => [
                         Status::RUNNING,
                         Status::READY,
-                        Status::PENDING,
                     ],
+                    'targetType' => 'InboundEmail',
+                    'targetId' => $entity->getId(),
                 ])
                 ->findOne();
 
-            if ($existingJob) {
+            if ($running) {
                 continue;
             }
 
-            $name = $data->getName() . ' :: ' . $group;
+            $countPending = $this->entityManager
+                ->getRDBRepository(JobEntity::ENTITY_TYPE)
+                ->where([
+                    'scheduledJobId' => $data->getId(),
+                    'status' => Status::PENDING,
+                    'targetType' => 'InboundEmail',
+                    'targetId' => $entity->getId(),
+                ])
+                ->count();
 
-            $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
+            if ($countPending > 1) {
+                continue;
+            }
+
+            $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE);
+
+            $jobEntity->set([
+                'name' => $data->getName(),
                 'scheduledJobId' => $data->getId(),
                 'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                'name' => $name,
-                'data' => [
-                    'group' => $group,
-                ],
-                'targetGroup' => $group,
+                'targetType' => 'InboundEmail',
+                'targetId' => $entity->getId(),
             ]);
+
+            $this->entityManager->saveEntity($jobEntity);
         }
     }
 }
