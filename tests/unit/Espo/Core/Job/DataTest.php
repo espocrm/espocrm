@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Job;
 
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 class DataTest extends \PHPUnit\Framework\TestCase
 {

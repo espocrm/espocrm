@@ -36,6 +36,8 @@ use Espo\Core\{
     Utils\DateTime as DateTimeUtil,
 };
 
+use Espo\Core\Job\Job\Status;
+
 use Espo\Entities\Job as JobEntity;
 
 use Espo\ORM\Collection;

@@ -39,6 +39,8 @@ use Espo\{
     Entities\Job as JobEntity,
 };
 
+use Espo\Core\Job\Job\Status;
+
 use Spatie\Async\Pool as AsyncPool;
 
 class QueueProcessor

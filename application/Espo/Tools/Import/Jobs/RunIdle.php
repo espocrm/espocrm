@@ -30,7 +30,7 @@
 namespace Espo\Tools\Import\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Tools\Import\ImportFactory;

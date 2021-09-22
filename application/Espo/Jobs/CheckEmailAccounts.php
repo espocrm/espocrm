@@ -32,9 +32,9 @@ namespace Espo\Jobs;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
-    Job\Status,
+    Job\Job\Status,
     Job\JobPreparable,
-    Job\Data,
+    Job\Job\Data,
     Job\ScheduledJobData,
     ServiceFactory,
     ORM\EntityManager,

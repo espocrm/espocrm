@@ -31,7 +31,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Job\Status;
+use Espo\Core\Job\Job\Status;
 
 class ScheduledJob extends \Espo\Core\Repositories\Database
 {

@@ -30,7 +30,7 @@
 namespace tests\integration\testClasses\Job;
 
 use Espo\Core\Job\Job as JobInterface;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 class Job implements JobInterface
 {

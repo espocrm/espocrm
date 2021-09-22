@@ -31,7 +31,7 @@ namespace tests\integration\Espo\Core\Job;
 
 use Espo\Core\{
     Job\JobManager,
-    Job\Status,
+    Job\Job\Status,
     Job\JobSchedulerFactory,
     Job\QueueName,
     ORM\EntitManager,

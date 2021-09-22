@@ -30,7 +30,7 @@
 namespace tests\unit\testClasses\Core\Job;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 class TestJob implements Job
 {

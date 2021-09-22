@@ -35,6 +35,8 @@ use Espo\Core\{
     Utils\DateTime as DateTimeUtil,
 };
 
+use Espo\Core\Job\Job\Status;
+
 use Espo\Entities\{
     ScheduledJob as ScheduledJobEntity,
     Job as JobEntity,

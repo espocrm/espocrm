@@ -32,6 +32,7 @@ namespace Espo\Core\Job;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\Utils\DateTime;
+use Espo\Core\Job\Job\Data;
 
 use Espo\Entities\Job as JobEntity;
 
@@ -180,7 +181,7 @@ class JobScheduler
             $time = $time->add($this->delay);
         }
 
-        $data = $this->data ?? Data::create();       
+        $data = $this->data ?? Data::create();
 
         return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $this->className,

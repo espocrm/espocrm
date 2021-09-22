@@ -30,7 +30,7 @@
 namespace Espo\Tools\Stream\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 use Espo\Core\AclManager;
 use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;

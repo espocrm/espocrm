@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Job;
 use Espo\Core\Job\JobScheduler;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 use Espo\ORM\EntityManager;
 

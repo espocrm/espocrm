@@ -30,7 +30,7 @@
 namespace Espo\Tools\EmailNotification\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\Data;
+use Espo\Core\Job\Job\Data;
 
 use Espo\Tools\EmailNotification\AssignmentProcessor;
 use Espo\Tools\EmailNotification\AssignmentProcessorData;

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\Job\Data;
+
 /**
  * A job.
  */

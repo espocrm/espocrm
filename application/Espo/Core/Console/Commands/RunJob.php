@@ -36,7 +36,7 @@ use Espo\Core\{
 };
 
 use Espo\Core\Job\JobManager;
-use Espo\Core\Job\Status;
+use Espo\Core\Job\Job\Status;
 use Espo\Core\Utils\Util;
 
 use Espo\ORM\EntityManager;

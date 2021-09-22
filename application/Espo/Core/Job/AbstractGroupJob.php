@@ -31,6 +31,8 @@ namespace Espo\Core\Job;
 
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Config;
+use Espo\Core\Job\Job\Data;
+use Espo\Core\Job\Job\Status;
 
 use Espo\ORM\EntityManager;
 
