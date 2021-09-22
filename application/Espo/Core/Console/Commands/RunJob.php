@@ -36,7 +36,7 @@ use Espo\Core\{
 };
 
 use Espo\Core\Job\JobManager;
-use Espo\Core\Job\JobStatus;
+use Espo\Core\Job\Status;
 use Espo\Core\Utils\Util;
 
 use Espo\ORM\EntityManager;
@@ -96,7 +96,7 @@ class RunJob implements Command
             'targetType' => $targetType,
             'targetId' => $targetId,
             'attempts' => 0,
-            'status' => JobStatus::READY,
+            'status' => Status::READY,
         ]);
 
         try {

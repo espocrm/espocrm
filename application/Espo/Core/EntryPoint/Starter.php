@@ -30,7 +30,7 @@
 namespace Espo\Core\EntryPoint;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Application\RunnerParams;
+use Espo\Core\Application\Runner\Params as RunnerParams;
 use Espo\Core\EntryPoint\EntryPointManager;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Portal\Application as PortalApplication;

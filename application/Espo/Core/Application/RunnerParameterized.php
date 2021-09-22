@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Application;
 
+use Espo\Core\Application\Runner\Params;
+
 /**
  * Runs an application with parameters.
  */
 interface RunnerParameterized
 {
-    public function run(RunnerParams $params): void;
+    public function run(Params $params): void;
 }

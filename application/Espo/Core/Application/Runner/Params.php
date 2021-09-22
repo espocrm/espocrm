@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Application;
+namespace Espo\Core\Application\Runner;
 
 /**
  * Parameters for an application runner.
  */
-class RunnerParams
+class Params
 {
     private $data = [];
 

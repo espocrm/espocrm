@@ -151,7 +151,7 @@ class ScheduleProcessor
 
         $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $scheduledJob->getName(),
-            'status' => JobStatus::PENDING,
+            'status' => Status::PENDING,
             'scheduledJobId' => $id,
             'executeTime' => $executeTime,
         ]);

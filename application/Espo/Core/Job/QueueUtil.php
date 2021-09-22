@@ -83,7 +83,7 @@ class QueueUtil
             return false;
         }
 
-        return $job->get('status') === JobStatus::PENDING;
+        return $job->get('status') === Status::PENDING;
     }
 
     /**
@@ -108,7 +108,7 @@ class QueueUtil
                 'data',
             ])
             ->where([
-                'status' => JobStatus::PENDING,
+                'status' => Status::PENDING,
                 'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'queue' => $queue,
                 'group' => $group,
@@ -131,7 +131,7 @@ class QueueUtil
 
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => [JobStatus::RUNNING, JobStatus::READY],
+            'status' => [Status::RUNNING, Status::READY],
         ];
 
         if ($targetId && $targetType) {
@@ -160,8 +160,8 @@ class QueueUtil
             ->leftJoin('scheduledJob')
             ->where([
                 'status' => [
-                    JobStatus::RUNNING,
-                    JobStatus::READY,
+                    Status::RUNNING,
+                    Status::READY,
                 ],
                 'scheduledJobId!=' => null,
                 'scheduledJob.job!=' => $this->metadataProvider->getPreparableJobNameList(),
@@ -189,10 +189,10 @@ class QueueUtil
             ->where([
                 'scheduledJobId' => $scheduledJobId,
                 'status' => [ // This forces usage of an appropriate index.
-                    JobStatus::PENDING,
-                    JobStatus::READY,
-                    JobStatus::RUNNING,
-                    JobStatus::SUCCESS,
+                    Status::PENDING,
+                    Status::READY,
+                    Status::RUNNING,
+                    Status::SUCCESS,
                 ],
                 'executeTime>=' => $fromString,
                 'executeTime<=' => $toString,
@@ -208,7 +208,7 @@ class QueueUtil
             ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->where([
                 'scheduledJobId' => $scheduledJobId,
-                'status' => JobStatus::PENDING,
+                'status' => Status::PENDING,
             ])
             ->count();
 
@@ -244,7 +244,7 @@ class QueueUtil
                 'startedAt',
             ])
             ->where([
-                'status' => JobStatus::RUNNING,
+                'status' => Status::RUNNING,
                 'startedAt<' => $dateTimeThreshold,
             ])
             ->find();
@@ -279,7 +279,7 @@ class QueueUtil
                 'startedAt',
             ])
             ->where([
-                'status' => JobStatus::READY,
+                'status' => Status::READY,
                 'startedAt<' => $dateTimeThreshold,
             ])
             ->find();
@@ -311,7 +311,7 @@ class QueueUtil
                 'startedAt'
             ])
             ->where([
-                'status' => JobStatus::RUNNING,
+                'status' => Status::RUNNING,
                 'executeTime<' => $dateTimeThreshold,
             ])
             ->find();
@@ -349,7 +349,7 @@ class QueueUtil
             ->update()
             ->in(JobEntity::ENTITY_TYPE)
             ->set([
-                'status' => JobStatus::FAILED,
+                'status' => Status::FAILED,
                 'attempts' => 0,
             ])
             ->where([
@@ -366,7 +366,7 @@ class QueueUtil
 
             $this->scheduleUtil->addLogRecord(
                 $job->get('scheduledJobId'),
-                JobStatus::FAILED,
+                Status::FAILED,
                 $job->get('startedAt'),
                 $job->get('targetId'),
                 $job->get('targetType')
@@ -385,7 +385,7 @@ class QueueUtil
             ->leftJoin('scheduledJob')
             ->where([
                 'scheduledJobId!=' => null,
-                'status' => JobStatus::PENDING,
+                'status' => Status::PENDING,
                 'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'scheduledJob.job!=' => $this->metadataProvider->getPreparableJobNameList(),
                 'targetId' => null,
@@ -413,7 +413,7 @@ class QueueUtil
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
-                    'status' => JobStatus::PENDING,
+                    'status' => Status::PENDING,
                 ])
                 ->order('executeTime')
                 ->limit(0, 1000)
@@ -454,7 +454,7 @@ class QueueUtil
                 'failedAttempts',
             ])
             ->where([
-                'status' => JobStatus::FAILED,
+                'status' => Status::FAILED,
                 'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'attempts>' => 0,
             ])
@@ -465,7 +465,7 @@ class QueueUtil
             $attempts = $job->get('attempts');
 
             $job->set([
-                'status' => JobStatus::PENDING,
+                'status' => Status::PENDING,
                 'attempts' => $attempts - 1,
                 'failedAttempts' => $failedAttempts + 1,
             ]);

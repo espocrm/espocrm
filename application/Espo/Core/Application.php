@@ -34,7 +34,7 @@ use Espo\Core\Container\ContainerBuilder;
 use Espo\Core\InjectableFactory;
 
 use Espo\Core\Application\RunnerRunner;
-use Espo\Core\Application\RunnerParams;
+use Espo\Core\Application\Runner\Params as RunnerParams;
 use Espo\Core\Application\Exceptions\RunnerException;
 use Espo\Core\ApplicationUser;
 

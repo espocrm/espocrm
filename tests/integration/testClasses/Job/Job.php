@@ -30,11 +30,11 @@
 namespace tests\integration\testClasses\Job;
 
 use Espo\Core\Job\Job as JobInterface;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 
 class Job implements JobInterface
 {
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
 
     }

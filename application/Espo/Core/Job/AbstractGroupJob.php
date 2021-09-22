@@ -58,7 +58,7 @@ abstract class AbstractGroupJob implements JobPreparable
         $this->config = $config;
     }
 
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
         $limit = $this->config->get('jobGroupMaxPortion') ?? self::PORTION_NUMBER;
 
@@ -76,7 +76,7 @@ abstract class AbstractGroupJob implements JobPreparable
             ->select('group')
             ->from(JobEntity::ENTITY_TYPE)
             ->where([
-                'status' => JobStatus::PENDING,
+                'status' => Status::PENDING,
                 'queue' => null,
                 'group!=' => null,
                 'executeTime<=' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
@@ -108,9 +108,9 @@ abstract class AbstractGroupJob implements JobPreparable
                     'scheduledJobId' => $data->getId(),
                     'targetGroup' => $group,
                     'status' => [
-                        JobStatus::RUNNING,
-                        JobStatus::READY,
-                        JobStatus::PENDING,
+                        Status::RUNNING,
+                        Status::READY,
+                        Status::PENDING,
                     ],
                 ])
                 ->findOne();

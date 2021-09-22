@@ -31,7 +31,7 @@ namespace tests\integration\Espo\Core\Job;
 
 use Espo\Core\{
     Job\JobManager,
-    Job\JobStatus,
+    Job\Status,
     Job\JobSchedulerFactory,
     Job\QueueName,
     ORM\EntitManager,
@@ -81,7 +81,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
 
-        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testProcessQueueNoGroup(): void
@@ -95,7 +95,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testProcessQueueGroupAll(): void
@@ -121,9 +121,9 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
         $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
 
-        $this->assertEquals(JobStatus::SUCCESS, $job1Reloaded->getStatus());
-        $this->assertEquals(JobStatus::SUCCESS, $job2Reloaded->getStatus());
-        $this->assertEquals(JobStatus::SUCCESS, $job3Reloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job1Reloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job2Reloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job3Reloaded->getStatus());
     }
 
     public function testProcessQueueGroupSeparate(): void
@@ -149,29 +149,29 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
         $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
 
-        $this->assertEquals(JobStatus::PENDING, $job1Reloaded->getStatus());
-        $this->assertEquals(JobStatus::SUCCESS, $job2Reloaded->getStatus());
-        $this->assertEquals(JobStatus::SUCCESS, $job3Reloaded->getStatus());
+        $this->assertEquals(Status::PENDING, $job1Reloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job2Reloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job3Reloaded->getStatus());
 
         $this->jobManager->processGroup('group-0', 100);
 
         $job1Reloaded2 = $this->entityManager->getEntity('Job', $job1->getId());
 
-        $this->assertEquals(JobStatus::SUCCESS, $job1Reloaded2->getStatus());
+        $this->assertEquals(Status::SUCCESS, $job1Reloaded2->getStatus());
     }
 
     public function testRunJobById(): void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'status' => JobStatus::READY,
+            'status' => Status::READY,
         ]);
 
         $this->jobManager->runJobById($job->id);
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testRunJobByEntity(): void
@@ -184,7 +184,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testRunJobWithClassName(): void
@@ -200,6 +200,6 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
 
-        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }
 }

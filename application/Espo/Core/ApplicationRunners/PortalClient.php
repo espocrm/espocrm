@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Application\RunnerParameterized,
-    Application\RunnerParams,
+    Application\Runner\Params,
     Exceptions\NotFound,
     Utils\ClientManager,
     Utils\Config,
@@ -74,7 +74,7 @@ class PortalClient implements RunnerParameterized
         $this->errorOutput = $errorOutput;
     }
 
-    public function run(RunnerParams $params): void
+    public function run(Params $params): void
     {
         $id = $params->get('id') ??
             Url::detectPortalId() ??

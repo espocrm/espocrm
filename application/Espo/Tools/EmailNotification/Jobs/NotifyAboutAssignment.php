@@ -30,7 +30,7 @@
 namespace Espo\Tools\EmailNotification\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 
 use Espo\Tools\EmailNotification\AssignmentProcessor;
 use Espo\Tools\EmailNotification\AssignmentProcessorData;
@@ -44,7 +44,7 @@ class NotifyAboutAssignment implements Job
         $this->assignmentProcessor = $assignmentProcessor;
     }
 
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
         $this->assignmentProcessor->process(
             AssignmentProcessorData::create()

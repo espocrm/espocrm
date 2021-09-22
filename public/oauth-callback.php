@@ -32,12 +32,12 @@ include "../bootstrap.php";
 use Espo\Core\{
     Application,
     ApplicationRunners\EntryPoint,
-    Application\RunnerParams,
+    Application\Runner\Params,
 };
 
 $app = new Application();
 
 $app->run(
     EntryPoint::class,
-    RunnerParams::create()->with('entryPoint', 'oauthCallback')
+    Params::create()->with('entryPoint', 'oauthCallback')
 );

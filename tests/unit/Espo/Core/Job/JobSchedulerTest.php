@@ -32,7 +32,7 @@ namespace tests\unit\Espo\Core\Job;
 use Espo\Core\Job\JobScheduler;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 
 use Espo\ORM\EntityManager;
 
@@ -123,7 +123,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             )
             ->willReturn($jobEntity);
 
-        $data = JobData
+        $data = Data
             ::create([
                 'test' => '1',
             ])

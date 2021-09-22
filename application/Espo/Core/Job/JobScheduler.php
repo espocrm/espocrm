@@ -54,7 +54,7 @@ class JobScheduler
     private $group = null;
 
     /**
-     * @var JobData|null
+     * @var Data|null
      */
     private $data = null;
 
@@ -147,16 +147,16 @@ class JobScheduler
     /**
      * Set data to be passed to the job.
      *
-     * @param JobData|array|null $data
+     * @param Data|array|null $data
      */
     public function setData($data): self
     {
-        if (!is_null($data) && !is_array($data) && !$data instanceof JobData) {
+        if (!is_null($data) && !is_array($data) && !$data instanceof Data) {
             throw new TypeError();
         }
 
-        if (!$data instanceof JobData) {
-            $data = JobData::create($data);
+        if (!$data instanceof Data) {
+            $data = Data::create($data);
         }
 
         $this->data = $data;
@@ -180,7 +180,7 @@ class JobScheduler
             $time = $time->add($this->delay);
         }
 
-        $data = $this->data ?? JobData::create();       
+        $data = $this->data ?? Data::create();       
 
         return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $this->className,

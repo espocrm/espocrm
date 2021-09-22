@@ -30,7 +30,7 @@
 namespace Espo\Tools\Stream\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 
 use Espo\Core\AclManager;
 use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
@@ -65,7 +65,7 @@ class AutoFollow implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
         $userIdList = $data->get('userIdList') ?? [];
         $entityType = $data->get('entityType');

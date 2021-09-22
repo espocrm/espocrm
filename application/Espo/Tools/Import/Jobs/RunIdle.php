@@ -30,7 +30,7 @@
 namespace Espo\Tools\Import\Jobs;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Tools\Import\ImportFactory;
@@ -52,7 +52,7 @@ class RunIdle implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
         $raw = $data->getRaw();
 

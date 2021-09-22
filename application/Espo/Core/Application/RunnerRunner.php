@@ -33,6 +33,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\ApplicationUser;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Application\Exceptions\RunnerException;
+use Espo\Core\Application\Runner\Params;
 
 use ReflectionClass;
 
@@ -57,7 +58,7 @@ class RunnerRunner
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function run(string $className, ?RunnerParams $params = null): void
+    public function run(string $className, ?Params $params = null): void
     {
         if (!$className || !class_exists($className)) {
             $this->log->error("Application runner '{$className}' does not exist.");
@@ -88,7 +89,7 @@ class RunnerRunner
 
         if ($runner instanceof RunnerParameterized) {
             $runner->run(
-                $params ?? RunnerParams::create()
+                $params ?? Params::create()
             );
 
             return;

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Job;
 
-class JobStatus
+class Status
 {
     public const PENDING = 'Pending';
 

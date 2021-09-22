@@ -32,9 +32,9 @@ namespace Espo\Jobs;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
-    Job\JobStatus,
+    Job\Status,
     Job\JobPreparable,
-    Job\JobData,
+    Job\Data,
     Job\ScheduledJobData,
     ServiceFactory,
     ORM\EntityManager,
@@ -56,7 +56,7 @@ class CheckInboundEmails implements JobPreparable
         $this->entityManager = $entityManager;
     }
 
-    public function run(JobData $data): void
+    public function run(Data $data): void
     {
         $targetId = $data->getTargetId();
 
@@ -102,8 +102,8 @@ class CheckInboundEmails implements JobPreparable
                 ->where([
                     'scheduledJobId' => $data->getId(),
                     'status' => [
-                        JobStatus::RUNNING,
-                        JobStatus::READY,
+                        Status::RUNNING,
+                        Status::READY,
                     ],
                     'targetType' => 'InboundEmail',
                     'targetId' => $entity->getId(),
@@ -118,7 +118,7 @@ class CheckInboundEmails implements JobPreparable
                 ->getRDBRepository('Job')
                 ->where([
                     'scheduledJobId' => $data->getId(),
-                    'status' => JobStatus::PENDING,
+                    'status' => Status::PENDING,
                     'targetType' => 'InboundEmail',
                     'targetId' => $entity->getId(),
                 ])

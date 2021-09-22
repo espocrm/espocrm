@@ -30,9 +30,9 @@
 namespace tests\unit\testClasses\Core\Job;
 
 use Espo\Core\Job\Job;
-use Espo\Core\Job\JobData;
+use Espo\Core\Job\Data;
 
 class TestJob implements Job
 {
-    public function run(JobData $data): void {}
+    public function run(Data $data): void {}
 }

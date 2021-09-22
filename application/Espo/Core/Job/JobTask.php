@@ -32,7 +32,7 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     Application,
     ApplicationRunners\Job as JobRunner,
-    Application\RunnerParams,
+    Application\Runner\Params as RunnerParams,
 };
 
 use Spatie\Async\Task as AsyncTask;

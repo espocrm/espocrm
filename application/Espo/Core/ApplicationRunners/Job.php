@@ -31,7 +31,7 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\RunnerParameterized,
-    Application\RunnerParams,
+    Application\Runner\Params,
     Job\JobManager,
 };
 
@@ -50,7 +50,7 @@ class Job implements RunnerParameterized
         $this->jobManager = $jobManager;
     }
 
-    public function run(RunnerParams $params): void
+    public function run(Params $params): void
     {
         $id = $params->get('id');
 

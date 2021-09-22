@@ -31,7 +31,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Job\JobStatus;
+use Espo\Core\Job\Status;
 
 class ScheduledJob extends \Espo\Core\Repositories\Database
 {
@@ -46,7 +46,7 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
                 ->getRepository('Job')
                 ->where([
                     'scheduledJobId' => $entity->id,
-                    'status' => JobStatus::PENDING,
+                    'status' => Status::PENDING,
                 ])
                 ->find();
 
