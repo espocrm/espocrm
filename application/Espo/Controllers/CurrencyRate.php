@@ -29,31 +29,30 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    ServiceFactory,
-    Api\Request,
-};
+use Espo\Services\CurrencyRate as Service;
 
-use StdClass;
+use Espo\Core\Api\Request;
+
+use stdClass;
 
 class CurrencyRate
 {
-    private $serviceFactory;
+    private $service;
 
-    public function __construct(ServiceFactory $serviceFactory)
+    public function __construct(Service $service)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
-    public function getActionIndex(): StdClass
+    public function getActionIndex(): stdClass
     {
-        return $this->serviceFactory->create('CurrencyRate')->get();
+        return $this->service->get();
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        return $this->serviceFactory->create('CurrencyRate')->set($data);
+        return $this->service->set($data);
     }
 }

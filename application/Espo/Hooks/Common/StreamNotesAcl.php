@@ -31,9 +31,7 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    ServiceFactory,
-};
+use Espo\Services\Stream as Service;
 
 /**
  * Notes having `related` or `superParent` are subjects to access control
@@ -44,18 +42,16 @@ use Espo\Core\{
  */
 class StreamNotesAcl
 {
-    private $streamService = null;
-
     public static $order = 10;
 
-    private $serviceFactory;
+    private $service;
 
-    public function __construct(ServiceFactory $serviceFactory)
+    public function __construct(Service $service)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
-    public function afterSave(Entity $entity, array $options = [])
+    public function afterSave(Entity $entity, array $options = []): void
     {
         if (!empty($options['noStream'])) {
             return;
@@ -73,12 +69,8 @@ class StreamNotesAcl
             return;
         }
 
-        if (!$this->streamService) {
-            $this->streamService = $this->serviceFactory->create('Stream');
-        }
-
         $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);
 
-        $this->streamService->processNoteAcl($entity, $forceProcessNoteNotifications);
+        $this->service->processNoteAcl($entity, $forceProcessNoteNotifications);
     }
 }

@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Modules\Crm\Services\Campaign as Service;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
@@ -42,7 +44,6 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Utils\Hasher,
-    ServiceFactory,
 };
 
 class Unsubscribe implements EntryPoint
@@ -61,7 +62,7 @@ class Unsubscribe implements EntryPoint
 
     protected $hasher;
 
-    protected $serviceFactory;
+    protected $service;
 
     public function __construct(
         EntityManager $entityManager,
@@ -70,7 +71,7 @@ class Unsubscribe implements EntryPoint
         Config $config,
         Metadata $metadata,
         Hasher $hasher,
-        ServiceFactory $serviceFactory
+        Service $service
     ) {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
@@ -78,7 +79,7 @@ class Unsubscribe implements EntryPoint
         $this->config = $config;
         $this->metadata = $metadata;
         $this->hasher = $hasher;
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
     public function run(Request $request, Response $response): void
@@ -187,10 +188,13 @@ class Unsubscribe implements EntryPoint
         }
 
         if ($campaign && $target) {
-            $campaignService = $this->serviceFactory->create('Campaign');
-
-            $campaignService->logOptedOut(
-                $campaignId, $queueItemId, $target, $queueItem->get('emailAddress'), null, $queueItem->get('isTest')
+            $this->service->logOptedOut(
+                $campaignId,
+                $queueItemId,
+                $target,
+                $queueItem->get('emailAddress'),
+                null,
+                $queueItem->get('isTest')
             );
         }
     }

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Services\Stream as StreamService;
+
 use Espo\Core\{
     MassAction\QueryBuilder,
     MassAction\Params,
@@ -36,7 +38,6 @@ use Espo\Core\{
     MassAction\Data,
     MassAction\MassAction,
     Acl,
-    ServiceFactory,
     ORM\EntityManager,
     Exceptions\Forbidden,
 };
@@ -47,26 +48,26 @@ use Espo\{
 
 class MassUnfollow implements MassAction
 {
-    protected $queryBuilder;
+    private $queryBuilder;
 
-    protected $acl;
+    private $acl;
 
-    protected $serviceFactory;
+    private $streamService;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $user;
+    private $user;
 
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
-        ServiceFactory $serviceFactory,
+        StreamService $streamService,
         EntityManager $entityManager,
         User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
-        $this->serviceFactory = $serviceFactory;
+        $this->streamService = $streamService;
         $this->entityManager = $entityManager;
         $this->user = $user;
     }
@@ -83,13 +84,10 @@ class MassUnfollow implements MassAction
 
         $userId = $passedUserId ?? $this->user->id;
 
-        $service = $this->serviceFactory->create('Stream');
-
-        $repository = $this->entityManager->getRepository($entityType);
-
         $query = $this->queryBuilder->build($params);
 
-        $collection = $repository
+        $collection = $this->entityManager
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->sth()
             ->find();
@@ -99,9 +97,9 @@ class MassUnfollow implements MassAction
         $count = 0;
 
         foreach ($collection as $entity) {
-            $service->unfollowEntity($entity, $userId);
+            $this->streamService->unfollowEntity($entity, $userId);
 
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $count++;
         }

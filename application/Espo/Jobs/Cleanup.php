@@ -29,6 +29,8 @@
 
 namespace Espo\Jobs;
 
+use Espo\Core\Record\ServiceContainer;
+
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
@@ -37,7 +39,6 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     InjectableFactory,
     Select\SelectBuilderFactory,
-    ServiceFactory,
     Utils\Log,
 };
 
@@ -50,39 +51,39 @@ use Throwable;
 
 class Cleanup implements JobDataLess
 {
-    protected $cleanupJobPeriod = '10 days';
+    private $cleanupJobPeriod = '10 days';
 
-    protected $cleanupActionHistoryPeriod = '15 days';
+    private $cleanupActionHistoryPeriod = '15 days';
 
-    protected $cleanupAuthTokenPeriod = '1 month';
+    private $cleanupAuthTokenPeriod = '1 month';
 
-    protected $cleanupAuthLogPeriod = '2 months';
+    private $cleanupAuthLogPeriod = '2 months';
 
-    protected $cleanupNotificationsPeriod = '2 months';
+    private $cleanupNotificationsPeriod = '2 months';
 
-    protected $cleanupAttachmentsPeriod = '15 days';
+    private $cleanupAttachmentsPeriod = '15 days';
 
-    protected $cleanupAttachmentsFromPeriod = '3 months';
+    private $cleanupAttachmentsFromPeriod = '3 months';
 
-    protected $cleanupBackupPeriod = '2 month';
+    private $cleanupBackupPeriod = '2 month';
 
-    protected $cleanupDeletedRecordsPeriod = '3 months';
+    private $cleanupDeletedRecordsPeriod = '3 months';
 
-    protected $config;
+    private $config;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $fileManager;
+    private $fileManager;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $selectBuilderFactory;
+    private $selectBuilderFactory;
 
-    protected $serviceFactory;
+    private $recordServiceContainer;
 
-    protected $log;
+    private $log;
 
     public function __construct(
         Config $config,
@@ -91,7 +92,7 @@ class Cleanup implements JobDataLess
         FileManager $fileManager,
         InjectableFactory $injectableFactory,
         SelectBuilderFactory $selectBuilderFactory,
-        ServiceFactory $serviceFactory,
+        ServiceContainer $recordServiceContainer,
         Log $log
     ) {
         $this->config = $config;
@@ -100,7 +101,7 @@ class Cleanup implements JobDataLess
         $this->fileManager = $fileManager;
         $this->injectableFactory = $injectableFactory;
         $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->serviceFactory = $serviceFactory;
+        $this->recordServiceContainer = $recordServiceContainer;
         $this->log = $log;
     }
 
@@ -141,7 +142,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupJobs()
+    private function cleanupJobs(): void
     {
         $delete = $this->entityManager->getQueryBuilder()->delete()
             ->from('Job')
@@ -165,9 +166,11 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function cleanupUniqueIds()
+    private function cleanupUniqueIds(): void
     {
-        $delete = $this->entityManager->getQueryBuilder()->delete()
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
             ->from('UniqueId')
             ->where([
                 'terminateAt!=' => null,
@@ -178,7 +181,7 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function cleanupScheduledJobLog()
+    private function cleanupScheduledJobLog(): void
     {
         $scheduledJobList = $this->entityManager->getRepository('ScheduledJob')
             ->select(['id'])
@@ -205,7 +208,9 @@ class Cleanup implements JobDataLess
                 $ignoreIdList[] = $logRecord->get('id');
             }
 
-            $delete = $this->entityManager->getQueryBuilder()->delete()
+            $delete = $this->entityManager
+                ->getQueryBuilder()
+                ->delete()
                 ->from('ScheduledJobLogRecord')
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -218,7 +223,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupActionHistory()
+    private function cleanupActionHistory(): void
     {
         $period = '-' . $this->config->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
 
@@ -236,14 +241,16 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function cleanupAuthToken()
+    private function cleanupAuthToken(): void
     {
         $period = '-' . $this->config->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
 
         $datetime = new DateTime();
         $datetime->modify($period);
 
-        $delete = $this->entityManager->getQueryBuilder()->delete()
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
             ->from('AuthToken')
             ->where([
                 'DATE:modifiedAt<' => $datetime->format('Y-m-d'),
@@ -254,7 +261,7 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function cleanupAuthLog()
+    private function cleanupAuthLog(): void
     {
         $period = '-' . $this->config->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
 
@@ -262,7 +269,9 @@ class Cleanup implements JobDataLess
 
         $datetime->modify($period);
 
-        $delete = $this->entityManager->getQueryBuilder()->delete()
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
             ->from('AuthLogRecord')
             ->where([
                 'DATE:createdAt<' => $datetime->format('Y-m-d'),
@@ -272,18 +281,17 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function getCleanupJobFromDate()
+    private function getCleanupJobFromDate(): string
     {
         $period = '-' . $this->config->get('cleanupJobPeriod', $this->cleanupJobPeriod);
 
         $datetime = new DateTime();
-
         $datetime->modify($period);
 
         return $datetime->format('Y-m-d');
     }
 
-    protected function cleanupAttachments()
+    private function cleanupAttachments(): void
     {
         $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
 
@@ -439,7 +447,7 @@ class Cleanup implements JobDataLess
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    protected function cleanupEmails()
+    private function cleanupEmails(): void
     {
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
 
@@ -495,7 +503,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupNotifications()
+    private function cleanupNotifications(): void
     {
         $period = '-' . $this->config->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
 
@@ -513,7 +521,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupUpgradeBackups()
+    private function cleanupUpgradeBackups(): void
     {
         $path = 'data/.backup/upgrades';
 
@@ -535,7 +543,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupDeletedEntity(Entity $entity)
+    private function cleanupDeletedEntity(Entity $entity): void
     {
         $scope = $entity->getEntityType();
 
@@ -658,7 +666,7 @@ class Cleanup implements JobDataLess
         }
     }
 
-    protected function cleanupDeletedRecords()
+    private function cleanupDeletedRecords(): void
     {
         if (!$this->config->get('cleanupDeletedRecords')) {
             return;
@@ -667,8 +675,6 @@ class Cleanup implements JobDataLess
         $period = '-' . $this->config->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
 
         $datetime = new DateTime($period);
-
-        $serviceFactory = $this->serviceFactory;
 
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
@@ -698,14 +704,11 @@ class Cleanup implements JobDataLess
             if (!method_exists($repository, 'deleteFromDb')) continue;
 
             $hasCleanupMethod = false;
-            $service = null;
 
-            if ($serviceFactory->checkExists($scope)) {
-                $service = $serviceFactory->create($scope);
+            $service = $this->recordServiceContainer->get($scope);
 
-                if (method_exists($service, 'cleanup')) {
-                    $hasCleanupMethod = true;
-                }
+            if (method_exists($service, 'cleanup')) {
+                $hasCleanupMethod = true;
             }
 
             $whereClause = [
@@ -714,8 +717,8 @@ class Cleanup implements JobDataLess
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format('Y-m-d H:i:s');
-            } else
-            if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            }
+            else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
                 $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
             }
 

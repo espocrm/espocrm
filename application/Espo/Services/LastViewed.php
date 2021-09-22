@@ -30,7 +30,6 @@
 namespace Espo\Services;
 
 use Espo\Core\{
-    ServiceFactory,
     Utils\Metadata,
     Utils\Util,
     ORM\EntityManager,
@@ -41,24 +40,20 @@ use Espo\Entities\User;
 
 class LastViewed
 {
-    protected $serviceFactory;
+    private $metadata;
 
-    protected $metadata;
+    private $entityManager;
 
-    protected $entityManager;
-
-    protected $user;
+    private $user;
 
     private $listLoadProcessor;
 
     public function __construct(
-        ServiceFactory $serviceFactory,
         Metadata $metadata,
         EntityManager $entityManager,
         User $user,
         ListLoadProcessor $listLoadProcessor
     ) {
-        $this->serviceFactory = $serviceFactory;
         $this->metadata = $metadata;
         $this->entityManager = $entityManager;
         $this->user = $user;

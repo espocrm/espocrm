@@ -44,13 +44,13 @@ use Throwable;
 
 class PopupNotification
 {
-    protected $metadata;
+    private $metadata;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $user;
+    private $user;
 
-    protected $log;
+    private $log;
 
     public function __construct(Metadata $metadata, ServiceFactory $serviceFactory, User $user, Log $log)
     {

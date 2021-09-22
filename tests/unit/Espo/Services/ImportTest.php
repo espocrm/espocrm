@@ -29,8 +29,6 @@
 
 namespace tests\unit\Espo\Core;
 
-use tests\unit\ReflectionHelper;
-
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;

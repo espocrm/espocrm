@@ -29,25 +29,21 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    ServiceFactory,
-};
+use Espo\Services\PopupNotification as Service;
 
-use StdClass;
+use stdClass;
 
 class PopupNotification
 {
-    private $serviceFactory;
+    private $service;
 
-    public function __construct(ServiceFactory $serviceFactory)
+    public function __construct(Service $service)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
-    public function getActionGrouped(): StdClass
+    public function getActionGrouped(): stdClass
     {
-        return $this->serviceFactory
-            ->create('PopupNotification')
-            ->getGroupedList();
+        return $this->service->getGroupedList();
     }
 }

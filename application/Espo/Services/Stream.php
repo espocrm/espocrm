@@ -35,6 +35,8 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Tools\Stream\NoteAccessControl;
 
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+
 use Espo\ORM\{
     Entity,
     EntityCollection,
@@ -53,7 +55,6 @@ use Espo\Core\{
     Acl,
     AclManager,
     Acl\Exceptions\NotImplemented as AclNotImplemented,
-    ServiceFactory,
     Utils\FieldUtil,
     Record\Collection as RecordCollection,
     Select\SelectBuilderFactory,
@@ -99,13 +100,13 @@ class Stream
 
     private $aclManager;
 
-    private $serviceFactory;
-
     private $fieldUtil;
 
     private $selectBuilderFactory;
 
     private $noteAccessControl;
+
+    private $recordServiceContainer;
 
     private const NOTE_ACL_PERIOD = '1 hour';
 
@@ -116,11 +117,11 @@ class Stream
         Metadata $metadata,
         Acl $acl,
         AclManager $aclManager,
-        ServiceFactory $serviceFactory,
         FieldUtil $fieldUtil,
         SelectBuilderFactory $selectBuilderFactory,
         UserAclManagerProvider $userAclManagerProvider,
-        NoteAccessControl $noteAccessControl
+        NoteAccessControl $noteAccessControl,
+        RecordServiceContainer $recordServiceContainer
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -128,11 +129,11 @@ class Stream
         $this->metadata = $metadata;
         $this->acl = $acl;
         $this->aclManager = $aclManager;
-        $this->serviceFactory = $serviceFactory;
         $this->fieldUtil = $fieldUtil;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->userAclManagerProvider = $userAclManagerProvider;
         $this->noteAccessControl = $noteAccessControl;
+        $this->recordServiceContainer = $recordServiceContainer;
     }
 
     private function getStatusStyles(): array
@@ -1777,7 +1778,7 @@ class Stream
             ->clone($query)
             ->count();
 
-        $userService = $this->serviceFactory->create('User');
+        $userService = $this->recordServiceContainer->get('User');
 
         foreach ($collection as $e) {
             $userService->prepareEntityForOutput($e);

@@ -29,27 +29,24 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    ServiceFactory,
-    Api\Request,
-};
+use Espo\Services\Integration as Service;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Api\Request;
 
-use StdClass;
+use Espo\Entities\User;
+
+use stdClass;
 
 class Integration
 {
-    private $serviceFactory;
+    private $service;
 
     private $user;
 
-    public function __construct(ServiceFactory $serviceFactory, User $user)
+    public function __construct(Service $service, User $user)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
         $this->user = $user;
 
         if (!$this->user->isAdmin()) {
@@ -57,20 +54,16 @@ class Integration
         }
     }
 
-    public function getActionRead(Request $request): StdClass
+    public function getActionRead(Request $request): stdClass
     {
-        $entity = $this->serviceFactory
-            ->create('Integration')
-            ->read($request->getRouteParam('id'));
+        $entity = $this->service->read($request->getRouteParam('id'));
 
         return $entity->getValueMap();
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request): stdClass
     {
-        $entity = $this->serviceFactory
-            ->create('Integration')
-            ->update($request->getRouteParam('id'), $request->getParsedBody());
+        $entity = $this->service->update($request->getRouteParam('id'), $request->getParsedBody());
 
         return $entity->getValueMap();
     }

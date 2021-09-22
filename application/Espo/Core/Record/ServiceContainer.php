@@ -42,11 +42,15 @@ use Espo\Core\{
  */
 class ServiceContainer
 {
-    private $data = [];
+    private const RECORD_SERVICE_NAME = 'Record';
+
+    private const RECORD_TREE_SERVICE_NAME = 'RecordTree';
 
     private $defaultTypeMap = [
-        'CategoryTree' => 'RecordTree',
+        'CategoryTree' => self::RECORD_TREE_SERVICE_NAME,
     ];
+
+    private $data = [];
 
     private $serviceFactory;
 
@@ -70,16 +74,29 @@ class ServiceContainer
     private function load(string $entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
-            throw new Error("Can't create record service {$entityType}, there's no such entity type.");
+            throw new Error("Can't create record service '{$entityType}', there's no such entity type.");
         }
 
         if ($this->serviceFactory->checkExists($entityType)) {
-            $this->data[$entityType] = $this->serviceFactory->create($entityType);
+            $service = $this->serviceFactory->create($entityType);
+
+            if (!$service instanceof Service) {
+                $this->loadDefault($entityType);
+
+                return;
+            }
+
+            $this->data[$entityType] = $service;
 
             return;
         }
 
-        $default = 'Record';
+        $this->loadDefault($entityType);
+    }
+
+    private function loadDefault(string $entityType): void
+    {
+        $default = self::RECORD_SERVICE_NAME;
 
         $type = $this->metadata->get(['scopes', $entityType, 'type']);
 

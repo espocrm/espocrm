@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Modules\Crm\Services\Campaign as Service;
+
 use Espo\{
     Modules\Crm\Entities\EmailQueueItem,
     Modules\Crm\Entities\CampaignTrackingUrl,
@@ -42,7 +44,6 @@ use Espo\Core\{
     Api\Request,
     Api\Response,
     ORM\EntityManager,
-    ServiceFactory,
     Utils\Hasher,
     HookManager,
     Utils\ClientManager,
@@ -55,7 +56,7 @@ class CampaignUrl implements EntryPoint
 
     protected $entityManager;
 
-    protected $serviceFactory;
+    protected $service;
 
     protected $hasher;
 
@@ -67,14 +68,14 @@ class CampaignUrl implements EntryPoint
 
     public function __construct(
         EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
+        Service $service,
         Hasher $hasher,
         HookManager $hookManager,
         ClientManager $clientManager,
         Metadata $metadata
     ) {
         $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
         $this->hasher = $hasher;
         $this->hookManager = $hookManager;
         $this->clientManager = $clientManager;
@@ -160,10 +161,13 @@ class CampaignUrl implements EntryPoint
         }
 
         if ($campaign && $target) {
-            $campaignService = $this->serviceFactory->create('Campaign');
-
-            $campaignService->logClicked(
-                $campaignId, $queueItem->id, $target, $trackingUrl, null, $queueItem->get('isTest')
+            $this->service->logClicked(
+                $campaignId,
+                $queueItem->id,
+                $target,
+                $trackingUrl,
+                null,
+                $queueItem->get('isTest')
             );
         }
     }

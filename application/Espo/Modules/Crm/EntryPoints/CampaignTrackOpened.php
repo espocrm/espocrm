@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Modules\Crm\Services\Campaign as Service;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
@@ -37,7 +39,6 @@ use Espo\Core\{
     Api\Request,
     Api\Response,
     ORM\EntityManager,
-    ServiceFactory,
 };
 
 class CampaignTrackOpened implements EntryPoint
@@ -46,12 +47,12 @@ class CampaignTrackOpened implements EntryPoint
 
     protected $entityManager;
 
-    protected $serviceFactory;
+    protected $service;
 
-    public function __construct(EntityManager $entityManager, ServiceFactory $serviceFactory)
+    public function __construct(EntityManager $entityManager, Service $service)
     {
         $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
     public function run(Request $request, Response $response): void
@@ -71,7 +72,6 @@ class CampaignTrackOpened implements EntryPoint
         }
 
         $target = null;
-        $campaign = null;
 
         $targetType = $queueItem->get('targetType');
         $targetId = $queueItem->get('targetId');
@@ -108,9 +108,7 @@ class CampaignTrackOpened implements EntryPoint
             return;
         }
 
-        $campaignService = $this->serviceFactory->create('Campaign');
-
-        $campaignService->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
+        $this->service->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
 
         header('Content-Type: image/png');
 

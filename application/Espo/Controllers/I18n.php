@@ -29,24 +29,23 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    ServiceFactory,
-    Api\Request,
-};
+use Espo\Services\Language as Service;
+
+use Espo\Core\Api\Request;
 
 class I18n
 {
-    private $serviceFactory;
+    private $service;
 
-    public function __construct(ServiceFactory $serviceFactory)
+    public function __construct(Service $service)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
     public function getActionRead(Request $request): array
     {
         $default = $request->getQueryParam('default') === 'true';
 
-        return $this->serviceFactory->create('Language')->getDataForFrontend($default);
+        return $this->service->getDataForFrontend($default);
     }
 }

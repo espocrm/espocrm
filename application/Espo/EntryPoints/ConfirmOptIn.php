@@ -29,13 +29,14 @@
 
 namespace Espo\EntryPoints;
 
+use Espo\Services\LeadCapture as Service;
+
 use Espo\Core\{
     Exceptions\BadRequest,
     Exceptions\Error,
     EntryPoint\EntryPoint,
     EntryPoint\Traits\NoAuth,
     Utils\ClientManager,
-    ServiceFactory,
     Api\Request,
     Api\Response,
 };
@@ -44,14 +45,14 @@ class ConfirmOptIn implements EntryPoint
 {
     use NoAuth;
 
-    protected $clientManager;
+    private $clientManager;
 
-    protected $serviceFactory;
+    private $service;
 
-    public function __construct(ClientManager $clientManager, ServiceFactory $serviceFactory)
+    public function __construct(ClientManager $clientManager, Service $service)
     {
         $this->clientManager = $clientManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
     public function run(Request $request, Response $response): void
@@ -62,7 +63,7 @@ class ConfirmOptIn implements EntryPoint
             throw new BadRequest();
         }
 
-        $data = $this->serviceFactory->create('LeadCapture')->confirmOptIn($id);
+        $data = $this->service->confirmOptIn($id);
 
         if ($data->status === 'success') {
             $action = 'optInConfirmationSuccess';

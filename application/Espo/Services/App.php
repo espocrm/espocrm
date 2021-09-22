@@ -29,13 +29,14 @@
 
 namespace Espo\Services;
 
+use Espo\Services\Settings as SettingsService;
+
 use Espo\Core\{
     Acl,
     AclManager,
     Select\SelectBuilderFactory,
     DataManager,
     InjectableFactory,
-    ServiceFactory,
     Utils\Metadata,
     Utils\Config,
     Utils\Language,
@@ -57,31 +58,31 @@ use Throwable;
 
 class App
 {
-    protected $config;
+    private $config;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $acl;
+    private $acl;
 
-    protected $aclManager;
+    private $aclManager;
 
-    protected $dataManager;
+    private $dataManager;
 
-    protected $selectBuilderFactory;
+    private $selectBuilderFactory;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $serviceFactory;
+    private $settingsService;
 
-    protected $user;
+    private $user;
 
-    protected $preferences;
+    private $preferences;
 
-    protected $fieldUtil;
+    private $fieldUtil;
 
-    protected $log;
+    private $log;
 
     public function __construct(
         Config $config,
@@ -92,7 +93,7 @@ class App
         DataManager $dataManager,
         SelectBuilderFactory $selectBuilderFactory,
         InjectableFactory $injectableFactory,
-        ServiceFactory $serviceFactory,
+        SettingsService $settingsService,
         User $user,
         Preferences $preferences,
         FieldUtil $fieldUtil,
@@ -106,7 +107,7 @@ class App
         $this->dataManager = $dataManager;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->injectableFactory = $injectableFactory;
-        $this->serviceFactory = $serviceFactory;
+        $this->settingsService = $settingsService;
         $this->user = $user;
         $this->preferences = $preferences;
         $this->fieldUtil = $fieldUtil;
@@ -130,7 +131,7 @@ class App
             $user->loadLinkMultipleField('accounts');
         }
 
-        $settings = $this->serviceFactory->create('Settings')->getConfigData();
+        $settings = $this->settingsService->getConfigData();
 
         if ($user->get('dashboardTemplateId')) {
             $dashboardTemplate = $this->entityManager
@@ -193,7 +194,7 @@ class App
         ];
     }
 
-    protected function getUserDataForFrontend()
+    private function getUserDataForFrontend()
     {
         $user = $this->user;
 
@@ -233,7 +234,7 @@ class App
         return $data;
     }
 
-    protected function getAclDataForFrontend()
+    private function getAclDataForFrontend()
     {
         $data = $this->acl->getMapData();
 
@@ -254,7 +255,7 @@ class App
         return $data;
     }
 
-    protected function getEmailAddressData()
+    private function getEmailAddressData()
     {
         $user = $this->user;
 
@@ -540,7 +541,7 @@ class App
         }
     }
 
-    protected function filterPreferencesData(StdClass $data)
+    private function filterPreferencesData(StdClass $data)
     {
         $passwordFieldList = $this->fieldUtil->getFieldByTypeList('Preferences', 'password');
 
