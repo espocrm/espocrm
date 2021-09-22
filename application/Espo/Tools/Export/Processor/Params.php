@@ -27,25 +27,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export;
+namespace Espo\Tools\Export\Processor;
 
-class ProcessorData
+class Params
 {
-    private $resource;
+    private $fileName;
 
-    public function __construct($resource)
+    private $attributeList = null;
+
+    private $fieldList = null;
+
+    private $name = null;
+
+    private $entityType = null;
+
+    public function __construct(string $fileName, array $attributeList, ?array $fieldList)
     {
-        $this->resource = $resource;
+        $this->fileName = $fileName;
+        $this->attributeList = $attributeList;
+        $this->fieldList = $fieldList;
     }
 
-    public function readRow(): ?array
+    public function withEntityType(string $entityType): self
     {
-        $line = fgets($this->resource);
+        $obj = clone $this;
 
-        if ($line === false) {
-            return null;
-        }
+        $obj->entityType = $entityType;
 
-        return unserialize(base64_decode($line));
+        return $obj;
+    }
+
+    public function withName(?string $name): self
+    {
+        $obj = clone $this;
+
+        $obj->name = $name;
+
+        return $obj;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+
+    public function getAttributeList(): array
+    {
+        return $this->attributeList;
+    }
+
+    public function getFieldList(): ?array
+    {
+        return $this->fieldList;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getEntityType(): string
+    {
+        return $this->entityType;
     }
 }

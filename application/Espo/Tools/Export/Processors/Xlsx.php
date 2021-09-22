@@ -43,8 +43,8 @@ use Espo\Core\{
 };
 
 use Espo\Tools\Export\{
-    ProcessorParams,
-    ProcessorData,
+    Processor\Params,
+    Processor\Data,
     Processor,
 };
 
@@ -102,7 +102,7 @@ class Xlsx implements Processor
         $this->addressFormatterFactory = $addressFormatterFactory;
     }
 
-    public function process(ProcessorParams $params, ProcessorData $data): StreamInterface
+    public function process(Params $params, Data $data): StreamInterface
     {
         $entityType = $params->getEntityType();
 
@@ -819,7 +819,7 @@ class Xlsx implements Processor
         }
     }
 
-    private function getSheetNameFromParams(ProcessorParams $params): string
+    private function getSheetNameFromParams(Params $params): string
     {
         $exportName =
             $params->getName() ??

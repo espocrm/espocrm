@@ -31,7 +31,10 @@ namespace Espo\Tools\Export;
 
 use Psr\Http\Message\StreamInterface;
 
+use Espo\Tools\Export\Processor\Params;
+use Espo\Tools\Export\Processor\Data;
+
 interface Processor
 {
-    public function process(ProcessorParams $params, ProcessorData $data): StreamInterface;
+    public function process(Params $params, Data $data): StreamInterface;
 }

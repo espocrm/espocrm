@@ -40,8 +40,8 @@ use Espo\Core\{
 use Espo\Entities\Preferences;
 
 use Espo\Tools\Export\{
-    ProcessorParams,
-    ProcessorData,
+    Processor\Params,
+    Processor\Data,
     Processor,
 };
 
@@ -64,7 +64,7 @@ class Csv implements Processor
         $this->metadata = $metadata;
     }
 
-    public function process(ProcessorParams $params, ProcessorData $data): StreamInterface
+    public function process(Params $params, Data $data): StreamInterface
     {
         $attributeList = $params->getAttributeList();
 
