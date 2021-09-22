@@ -187,7 +187,7 @@ class Htmlizer
         return $html;
     }
 
-    protected function format($value)
+    private function format($value)
     {
         if (is_float($value)) {
             return $this->number->format($value, 2);
@@ -204,7 +204,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(
+    private function getDataFromEntity(
         Entity $entity,
         bool $skipLinks = false,
         int $level = 0,
@@ -443,7 +443,7 @@ class Htmlizer
         return $data;
     }
 
-    protected function getHelpers()
+    private function getHelpers(): array
     {
         $helpers = [
             'file' => function () {
@@ -610,63 +610,6 @@ class Htmlizer
 
                 return $context['inverse'] ? $context['inverse']() : '';
             },
-            'tableTag' => function () {
-                $args = func_get_args();
-
-                $context = $args[count($args) - 1];
-
-                $border = $context['hash']['border'] ?? '0.5pt';
-                $cellpadding = $context['hash']['cellpadding'] ?? '2';
-
-                $width = $context['hash']['width'] ?? null;
-
-                $attributesPart = "";
-
-                if ($width) {
-                    $attributesPart .= " width=\"{$width}\"";
-                }
-
-                return
-                    new LightnCandy\SafeString(
-                        "<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>"
-                    ) .
-                    $context['fn']() .
-                    new LightnCandy\SafeString("</table>");
-            },
-            'tdTag' => function () {
-                $args = func_get_args();
-
-                $context = $args[count($args) - 1];
-
-                $align = strtolower($context['hash']['align'] ?? 'left');
-
-                if (!in_array($align, ['left', 'right', 'center'])) {
-                    $align = 'left';
-                }
-
-                $width = $context['hash']['width'] ?? null;
-
-                $attributesPart = "align=\"{$align}\"";
-
-                if ($width) {
-                    $attributesPart .= " width=\"{$width}\"";
-                }
-
-                return
-                    new LightnCandy\SafeString("<td {$attributesPart}>") .
-                    $context['fn']() .
-                    new LightnCandy\SafeString("</td>");
-            },
-            'trTag' => function () {
-                $args = func_get_args();
-
-                $context = $args[count($args) - 1];
-
-                return
-                    new LightnCandy\SafeString("<tr>") .
-                    $context['fn']() .
-                    new LightnCandy\SafeString("</tr>");
-            },
             'checkboxTag' => function () {
                 $args = func_get_args();
 
@@ -706,16 +649,73 @@ class Htmlizer
             },
         ];
 
+        $customHelper = function () {
+            $args = func_get_args();
+            $agumentList = array_slice($args, 0, -1);
+            $context = $args[count($args) - 1];
+
+            $options = $context['hash'];
+            $rootData = $context['data']['root'];
+
+            $injectableFactory = $rootData['__injectableFactory'];
+            $metadata = $rootData['__metadata'];
+
+            $name = $context['name'];
+
+            $className = $metadata->get(['app', 'templateHelpers', $name]);
+
+            $data = new \Espo\Core\Htmlizer\Helper\Data(
+                $name,
+                $agumentList,
+                (object) $options,
+                $context['_this'],
+                $rootData,
+                $context['fn.blockParams'],
+                $context['fn'] ?? null,
+                $context['inverse'] ?? null
+            );
+
+            $helper = $injectableFactory->create($className);
+
+            $result = $helper->render($data);
+
+            $value = $result->getValue();
+
+            if ($value instanceof \Espo\Core\Htmlizer\Helper\SafeString) {
+                return $value->getWrappee();
+            }
+
+            return $value;
+        };
+
         if ($this->metadata) {
-            $additionalHelpers = $this->metadata->get(['app', 'templateHelpers']) ?? [];
+            $additionalHelpers = array_filter(
+                $this->metadata->get(['app', 'templateHelpers']) ?? [],
+                function (string $item) {
+                    return strpos($item, '::') !== false;
+                }
+            );
 
             $helpers = array_merge($helpers, $additionalHelpers);
+
+            $additionalHelper2NameList = array_keys(
+                array_filter(
+                    $this->metadata->get(['app', 'templateHelpers']) ?? [],
+                    function (string $item) {
+                        return strpos($item, '::') == false;
+                    }
+                )
+            );
+
+            foreach ($additionalHelper2NameList as $name) {
+                $helpers[$name] = $customHelper;
+            }
         }
 
         return $helpers;
     }
 
-    protected function getFieldType(string $entityType, string $field)
+    private function getFieldType(string $entityType, string $field)
     {
         if (!$this->metadata) {
             return null;

@@ -1,3 +1,6 @@
 {
-    "googleMapsImage": "Espo\\Classes\\TemplateHelpers\\GoogleMaps::image"
+    "googleMapsImage": "Espo\\Classes\\TemplateHelpers\\GoogleMaps",
+    "tableTag": "Espo\\Classes\\TemplateHelpers\\TableTag",
+    "trTag": "Espo\\Classes\\TemplateHelpers\\TrTag",
+    "tdTag": "Espo\\Classes\\TemplateHelpers\\TdTag"
 }

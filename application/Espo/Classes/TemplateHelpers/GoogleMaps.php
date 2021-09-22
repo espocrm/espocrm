@@ -29,61 +29,79 @@
 
 namespace Espo\Classes\TemplateHelpers;
 
-class GoogleMaps
+use Espo\Core\Htmlizer\Helper;
+use Espo\Core\Htmlizer\Helper\Data;
+use Espo\Core\Htmlizer\Helper\Result;
+
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+
+class GoogleMaps implements Helper
 {
-    public static function image()
+    private const DEFAULT_SIZE = '400x400';
+
+    private $metadata;
+
+    private $config;
+
+    private $log;
+
+    public function __construct(
+        Metadata $metadata,
+        Config $config,
+        Log $log
+    ) {
+        $this->metadata = $metadata;
+        $this->config = $config;
+        $this->log = $log;
+    }
+
+    public function render(Data $data): Result
     {
-        $args = func_get_args();
-        $context = $args[count($args) - 1];
-        $hash = $context['hash'];
-        $data = $context['data']['root'];
+        $rootContext = $data->getRootContext();
 
-        $em = $data['__entityManager'];
-        $metadata = $data['__metadata'];
-        $config = $data['__config'];
-        $log = $data['__log'];
+        $entityType = $rootContext['__entityType'];
 
-        $entityType = $data['__entityType'];
-
-        $field = $hash['field'] ?? null;
-
-        $size = $hash['size'] ?? '400x400';
-        $zoom = $hash['zoom'] ?? null;
-        $language = $hash['language'] ?? $config->get('language');
+        $field = $data->getOption('field');
+        $size = $data->getOption('size') ?? self::DEFAULT_SIZE;
+        $zoom = $data->getOption('zoom');
+        $language = $data->getOption('language') ?? $this->config->get('language');
 
         if (strpos($size, 'x') === false) {
-            $size = $size .'x' . $size;
+            $size = $size . 'x' . $size;
         }
 
-        if ($field && $metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']) !== 'address') {
-            $log->warning("Template helper _googleMapsImage: Specified field is not of address type.");
+        if ($field && $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']) !== 'address') {
+            $this->log->warning("Template helper _googleMapsImage: Specified field is not of address type.");
 
-            return null;
+            return Result::createEmpty();
         }
 
         if (
             !$field &&
-            !array_key_exists('street', $hash) &&
-            !array_key_exists('city', $hash) &&
-            !array_key_exists('country', $hash) &&
-            !array_key_exists('state', $hash) &&
-            !array_key_exists('postalCode', $hash)
+            !$data->hasOption('street') &&
+            !$data->hasOption('city') &&
+            !$data->hasOption('country') &&
+            !$data->hasOption('state') &&
+            !$data->hasOption('postalCode')
         ) {
             $field = ($entityType === 'Account') ? 'billingAddress' : 'address';
         }
 
         if ($field) {
-            $street = $data[$field . 'Street'] ?? null;
-            $city = $data[$field . 'City'] ?? null;
-            $country = $data[$field . 'Country'] ?? null;
-            $state = $data[$field . 'State'] ?? null;
-            $postalCode = $data[$field . 'postalCode'] ?? null;
-        } else {
-            $street = $hash['street'] ?? null;
-            $city = $hash['city'] ?? null;
-            $country = $hash['country'] ?? null;
-            $state = $hash['state'] ?? null;
-            $postalCode = $hash['postalCode'] ?? null;
+            $street = $rootContext[$field . 'Street'] ?? null;
+            $city = $rootContext[$field . 'City'] ?? null;
+            $country = $rootContext[$field . 'Country'] ?? null;
+            $state = $rootContext[$field . 'State'] ?? null;
+            $postalCode = $rootContext[$field . 'postalCode'] ?? null;
+        }
+        else {
+            $street = $data->getOption('street');
+            $city = $data->getOption('city');
+            $country = $data->getOption('country');
+            $state = $data->getOption('state');
+            $postalCode = $data->getOption('postalCode');
         }
 
         $address = '';
@@ -96,6 +114,7 @@ class GoogleMaps
             if ($address != '') {
                 $address .= ', ';
             }
+
             $address .= $city;
         }
 
@@ -103,16 +122,16 @@ class GoogleMaps
             if ($address != '') {
                 $address .= ', ';
             }
+
             $address .= $state;
         }
 
         if ($postalCode) {
             if ($state || $city) {
                 $address .= ' ';
-            } else {
-                if ($address) {
-                    $address .= ', ';
-                }
+            }
+            else  if ($address) {
+                $address .= ', ';
             }
 
             $address .= $postalCode;
@@ -126,26 +145,26 @@ class GoogleMaps
             $address .= $country;
         }
 
-        $address = urlencode($address);
-
-        $apiKey = $config->get('googleMapsApiKey');
+        $apiKey = $this->config->get('googleMapsApiKey');
 
         if (!$apiKey) {
-            $log->error("Template helper _googleMapsImage: No Google Maps API key.");
+            $this->log->error("Template helper _googleMapsImage: No Google Maps API key.");
 
-            return null;
+            return Result::createEmpty();
         }
 
-        if (!$address) {
-            $log->debug("Template helper _googleMapsImage: No address to display.");
+        $addressEncoded = urlencode($address);
 
-            return null;
+        if (!$addressEncoded) {
+            $this->log->debug("Template helper _googleMapsImage: No address to display.");
+
+            return Result::createEmpty();
         }
 
         $format = 'jpg;';
 
         $url = "https://maps.googleapis.com/maps/api/staticmap?" .
-            'center=' . $address .
+            'center=' . $addressEncoded .
             'format=' . $format .
             '&size=' . $size .
             '&key=' . $apiKey;
@@ -158,13 +177,12 @@ class GoogleMaps
             $url .= '&language=' . $language;
         }
 
-        $log->debug("Template helper _googleMapsImage: URL: {$url}.");
+        $this->log->debug("Template helper _googleMapsImage: URL: {$url}.");
 
-        // Need to use fully-qualified class name.
-        $image = \Espo\Classes\TemplateHelpers\GoogleMaps::getImage($url);
+        $image = $this->getImage($url);
 
         if (!$image) {
-            return null;
+            return Result::createEmpty();
         }
 
         list($width, $height) = explode('x', $size);
@@ -173,14 +191,18 @@ class GoogleMaps
 
         $tag = "<img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\">";
 
-        return new LightnCandy\SafeString($tag);
+        return Result::createSafeString($tag);
     }
 
-    public static function getImage(string $url)
+    /**
+     * @return string|bool
+     */
+    private function getImage(string $url)
     {
-        $headers = [];
-        $headers[] = 'Accept: image/jpeg, image/pjpeg';
-        $headers[] = 'Connection: Keep-Alive';
+        $headers = [
+            'Accept: image/jpeg, image/pjpeg',
+            'Connection: Keep-Alive',
+        ];
 
         $agent = 'Mozilla/5.0';
 
@@ -195,8 +217,8 @@ class GoogleMaps
         curl_setopt($c, \CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($c, \CURLOPT_BINARYTRANSFER, 1);
 
-
         $raw = curl_exec($c);
+
         curl_close($c);
 
         return $raw;
