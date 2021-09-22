@@ -31,10 +31,11 @@ namespace Espo\Jobs;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Services\EmailAccount as Service;
+
 use Espo\Core\{
     Job\Job,
     Job\Job\Data,
-    ServiceFactory,
     ORM\EntityManager,
 };
 
@@ -42,13 +43,13 @@ use Throwable;
 
 class CheckEmailAccounts implements Job
 {
-    private $serviceFactory;
+    private $service;
 
     private $entityManager;
 
-    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    public function __construct(Service $service, EntityManager $entityManager)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
         $this->entityManager = $entityManager;
     }
 
@@ -59,8 +60,6 @@ class CheckEmailAccounts implements Job
         if (!$targetId) {
             throw new Error("No target.");
         }
-
-        $service = $this->serviceFactory->create('EmailAccount');
 
         $entity = $this->entityManager->getEntity('EmailAccount', $targetId);
 
@@ -73,7 +72,7 @@ class CheckEmailAccounts implements Job
         }
 
         try {
-            $service->fetchFromMailServer($entity);
+            $this->service->fetchFromMailServer($entity);
         }
         catch (Throwable $e) {
             throw new Error(
