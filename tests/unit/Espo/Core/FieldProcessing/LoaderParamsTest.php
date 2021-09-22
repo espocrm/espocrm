@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\FieldProcessing;
 
 use Espo\Core\{
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params as LoaderParams,
 };
 
 class LoaderParamsTest extends \PHPUnit\Framework\TestCase

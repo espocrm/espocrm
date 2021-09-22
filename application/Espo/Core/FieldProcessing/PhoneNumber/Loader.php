@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
 };
 
 use Espo\ORM\Defs as OrmDefs;
@@ -51,7 +51,7 @@ class Loader implements LoaderInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
 

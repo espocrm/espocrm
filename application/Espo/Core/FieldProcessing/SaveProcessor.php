@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\Entity;
 
+use Espo\Core\FieldProcessing\Saver\Params;
+
 use Espo\Core\{
     InjectableFactory,
     Utils\Metadata,
@@ -55,7 +57,7 @@ class SaveProcessor
 
     public function process(Entity $entity, array $options): void
     {
-        $params = SaverParams::create()->withRawOptions($options);
+        $params = Params::create()->withRawOptions($options);
 
         foreach ($this->getSaverList($entity->getEntityType()) as $processor) {
             $processor->process($entity, $params);

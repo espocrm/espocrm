@@ -30,11 +30,12 @@
 namespace Espo\Core\FieldProcessing;
 
 use Espo\ORM\Entity;
+use Espo\Core\FieldProcessing\Saver\Params;
 
 /**
  * Processes saving special fields.
  */
 interface Saver
 {
-    public function process(Entity $entity, SaverParams $params): void;
+    public function process(Entity $entity, Params $params): void;
 }

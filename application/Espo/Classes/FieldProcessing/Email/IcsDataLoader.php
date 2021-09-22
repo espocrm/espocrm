@@ -37,7 +37,7 @@ use Espo\Entities\Email;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     Mail\Event\Event as EspoEvent,
     Mail\Event\EventFactory,
     Utils\Log,
@@ -66,7 +66,7 @@ class IcsDataLoader implements Loader
         $this->log = $log;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $icsContents = $entity->get('icsContents');
 

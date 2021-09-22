@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     ORM\EntityManager,
     Acl,
     Field\Currency\CurrencyConfigDataProvider,
@@ -61,7 +61,7 @@ class StatsLoader implements Loader
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $sentCount = $this->entityManager
             ->getRDBRepository('CampaignLogRecord')

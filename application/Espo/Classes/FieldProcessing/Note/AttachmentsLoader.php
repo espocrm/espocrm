@@ -33,14 +33,14 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
 };
 
 use Espo\Entities\Note;
 
 class AttachmentsLoader implements Loader
 {
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         /* @var $entity Note */
         $entity->loadAttachments();

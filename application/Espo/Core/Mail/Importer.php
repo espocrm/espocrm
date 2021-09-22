@@ -39,7 +39,7 @@ use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificator
 use Espo\Core\Mail\MessageWrapper;
 use Espo\Core\Utils\Config;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
-use Espo\Core\FieldProcessing\SaverParams;
+use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
 
 use Espo\Modules\Crm\Entities\Lead;

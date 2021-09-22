@@ -27,37 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing;
+namespace Espo\Core\FieldProcessing\Saver;
 
-class LoaderParams
+class Params
 {
-    private $select = null;
+    private $options = [];
 
     public function __construct()
     {
 
     }
 
-    public function hasInSelect(string $field): bool
+    public function hasOption(string $option): bool
     {
-        return $this->hasSelect() && in_array($field, $this->select);
+        return array_key_exists($option, $this->options);
     }
 
-    public function hasSelect(): bool
+    /**
+     * @return mixed
+     */
+    public function getOption(string $option)
     {
-        return $this->select !== null;
+        return $this->options[$option] ?? null;
     }
 
-    public function getSelect(): ?array
+    public function getRawOptions(): array
     {
-        return $this->select;
+        return $this->options;
     }
 
-    public function withSelect(?array $select): self
+    public function withRawOptions(array $options): self
     {
         $obj = clone $this;
 
-        $obj->select = $select;
+        $obj->options = $options;
 
         return $obj;
     }

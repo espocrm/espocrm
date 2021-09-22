@@ -38,7 +38,7 @@ use Espo\Core\{
     ApplicationState,
     Utils\Metadata,
     FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\SaverParams,
+    FieldProcessing\Saver\Params,
 };
 
 class Saver implements SaverInterface
@@ -63,7 +63,7 @@ class Saver implements SaverInterface
         $this->metadata = $metadata;
     }
 
-    public function process(Entity $entity, SaverParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $entityType = $entity->getEntityType();
 

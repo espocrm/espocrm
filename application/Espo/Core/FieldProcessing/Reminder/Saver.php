@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\SaverParams,
+    FieldProcessing\Saver\Params,
     Utils\Util,
 };
 
@@ -56,7 +56,7 @@ class Saver implements SaverInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, SaverParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $entityType = $entity->getEntityType();
 

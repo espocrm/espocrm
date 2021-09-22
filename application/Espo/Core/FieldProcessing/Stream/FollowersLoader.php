@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader as LoaderInterface,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     Utils\Metadata,
     Utils\Config,
     Acl,
@@ -71,7 +71,7 @@ class FollowersLoader implements LoaderInterface
         $this->config = $config;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $this->processIsFollowed($entity);
         $this->processFollowers($entity);

@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\Entity;
 
+use Espo\Core\FieldProcessing\Loader\Params;
+
 use Espo\Core\{
     InjectableFactory,
     Utils\Metadata,
@@ -53,10 +55,10 @@ class ReadLoadProcessor
         $this->metadata = $metadata;
     }
 
-    public function process(Entity $entity, ?LoaderParams $params = null): void
+    public function process(Entity $entity, ?Params $params = null): void
     {
         if (!$params) {
-            $params = new LoaderParams();
+            $params = new Params();
         }
 
         foreach ($this->getLoaderList($entity->getEntityType()) as $processor) {

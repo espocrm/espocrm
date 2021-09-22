@@ -34,7 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver as SaverInterface,
-    FieldProcessing\SaverParams,
+    FieldProcessing\Saver\Params,
 };
 
 class Saver implements SaverInterface
@@ -57,14 +57,14 @@ class Saver implements SaverInterface
         $this->linkMultipleSaver = $linkMultipleSaver;
     }
 
-    public function process(Entity $entity, SaverParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $this->processMany($entity, $params);
         $this->processHasOne($entity);
         $this->processBelongsToHasOne($entity);
     }
 
-    private function processMany(Entity $entity, SaverParams $params): void
+    private function processMany(Entity $entity, Params $params): void
     {
         $entityType = $entity->getEntityType();
 
@@ -73,7 +73,7 @@ class Saver implements SaverInterface
         }
     }
 
-    private function processManyItem(Entity $entity, string $name, SaverParams $params): void
+    private function processManyItem(Entity $entity, string $name, Params $params): void
     {
         $idListAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';

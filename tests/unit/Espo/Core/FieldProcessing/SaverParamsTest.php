@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\FieldProcessing;
 
 use Espo\Core\{
-    FieldProcessing\SaverParams,
+    FieldProcessing\Saver\Params,
 };
 
 class SaverParamsTest extends \PHPUnit\Framework\TestCase
@@ -41,7 +41,7 @@ class SaverParamsTest extends \PHPUnit\Framework\TestCase
             'silent' => true,
         ];
 
-        $params = SaverParams
+        $params = Params
             ::create()
             ->withRawOptions($options);
 

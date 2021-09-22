@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     ORM\EntityManager,
     Acl,
     Acl\Table,
@@ -54,7 +54,7 @@ class LastAccessLoader implements Loader
         $this->acl = $acl;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $forbiddenFieldList = $this->acl
             ->getScopeForbiddenFieldList($entity->getEntityType(), Table::ACTION_READ);

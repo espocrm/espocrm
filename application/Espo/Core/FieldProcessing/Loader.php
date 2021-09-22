@@ -31,10 +31,12 @@ namespace Espo\Core\FieldProcessing;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\FieldProcessing\Loader\Params;
+
 /**
  * Processes loading special fields before output.
  */
 interface Loader
 {
-    public function process(Entity $entity, LoaderParams $params): void;
+    public function process(Entity $entity, Params $params): void;
 }

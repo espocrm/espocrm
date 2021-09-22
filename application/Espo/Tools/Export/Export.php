@@ -40,7 +40,7 @@ use Espo\Core\{
     Utils\Metadata,
     FileStorage\Manager as FileStorageManager,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params as LoaderParams,
     Utils\FieldUtil,
 };
 

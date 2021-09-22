@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     ORM\EntityManager,
-    FieldProcessing\SaverParams,
+    FieldProcessing\Saver\Params,
 };
 
 class LinkMultipleSaver
@@ -45,7 +45,7 @@ class LinkMultipleSaver
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, string $name, SaverParams $params): void
+    public function process(Entity $entity, string $name, Params $params): void
     {
         $entityType = $entity->getEntityType();
 

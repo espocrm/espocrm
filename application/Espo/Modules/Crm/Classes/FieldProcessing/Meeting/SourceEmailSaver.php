@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\FieldProcessing\Saver;
-use Espo\Core\FieldProcessing\SaverParams;
+use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\Mail\Event\EventFactory;
 
 use ICal\ICal;
@@ -47,7 +47,7 @@ class SourceEmailSaver implements Saver
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, SaverParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         if (!$entity->isNew()) {
             return;

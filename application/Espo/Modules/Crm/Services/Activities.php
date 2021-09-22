@@ -46,7 +46,7 @@ use Espo\Core\{
     Select\Where\ConverterFactory as WhereConverterFactory,
     Select\SelectBuilderFactory,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoaderParams as FieldLoaderParams,
+    FieldProcessing\Loader\Params as FieldLoaderParams,
     Di,
     Record\ServiceContainer as RecordServiceContainer,
 };

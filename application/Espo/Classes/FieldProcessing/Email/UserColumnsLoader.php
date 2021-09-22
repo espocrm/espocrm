@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     ORM\EntityManager,
 };
 
@@ -51,7 +51,7 @@ class UserColumnsLoader implements Loader
         $this->user = $user;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $emailUser = $this->entityManager
             ->getRepository('EmailUser')

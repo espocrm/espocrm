@@ -63,7 +63,7 @@ use Espo\Core\{
     FieldValidation\FieldValidationParams as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoaderParams as FieldLoaderParams,
+    FieldProcessing\Loader\Params as FieldLoaderParams,
     Duplicate\Finder as DuplicateFinder,
 };
 

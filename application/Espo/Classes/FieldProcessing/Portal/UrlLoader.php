@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     FieldProcessing\Loader,
-    FieldProcessing\LoaderParams,
+    FieldProcessing\Loader\Params,
     ORM\EntityManager,
 };
 
@@ -46,7 +46,7 @@ class UrlLoader implements Loader
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoaderParams $params): void
+    public function process(Entity $entity, Params $params): void
     {
         $this->entityManager
             ->getRepository('Portal')
