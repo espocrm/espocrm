@@ -50,14 +50,14 @@ class MetadataProviderTest extends \PHPUnit\Framework\TestCase
             ->with(['app', 'scheduledJobs'])
             ->willReturn([
                 'Test1' => [
-                    'isPreparable' => true,
+                    'preparatorClassName' => "Test",
                 ],
                 'Test2' => [
-                    'isPreparable' => true,
+                    'preparatorClassName' => "Test",
                 ],
                 'Test3' => [],
                 'Test4' => [
-                    'isPreparable' => false,
+                    'preparatorClassName' => null,
                 ],
             ]);
 
