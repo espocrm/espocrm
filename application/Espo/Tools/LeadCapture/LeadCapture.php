@@ -29,6 +29,10 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Modules\Crm\Services\Campaign as CampaignService;
+use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Services\InboundEmail as InboundEmailService;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\NotFound,
@@ -40,7 +44,6 @@ use Espo\Core\{
     Mail\EmailSender,
     Utils\Config,
     Utils\DateTime as DateTimeUtil,
-    ServiceFactory,
     Utils\Log,
     Job\QueueName,
 };
@@ -62,8 +65,6 @@ class LeadCapture
 
     protected $defaultLanguage;
 
-    protected $serviceFactory;
-
     protected $hookManager;
 
     protected $emailSender;
@@ -74,32 +75,42 @@ class LeadCapture
 
     protected $log;
 
+    private $campaignService;
+
+    private $emailTemplateService;
+
+    private $inboundEmailService;
+
     public function __construct(
         EntityManager $entityManager,
         FieldUtil $fieldUtil,
         Language $defaultLanguage,
-        ServiceFactory $serviceFactory,
         HookManager $hookManager,
         EmailSender $emailSender,
         Config $config,
         DateTimeUtil $dateTime,
-        Log $log
+        Log $log,
+        CampaignService $campaignService,
+        EmailTemplateService $emailTemplateService,
+        InboundEmailService $inboundEmailService
     ) {
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
         $this->defaultLanguage = $defaultLanguage;
-        $this->serviceFactory = $serviceFactory;
         $this->hookManager = $hookManager;
         $this->emailSender = $emailSender;
         $this->config = $config;
         $this->dateTime = $dateTime;
         $this->log = $log;
+        $this->campaignService = $campaignService;
+        $this->emailTemplateService = $emailTemplateService;
+        $this->inboundEmailService = $inboundEmailService;
     }
 
     public function capture(string $apiKey, StdClass $data)
     {
         $leadCapture = $this->entityManager
-            ->getRepository('LeadCapture')
+            ->getRDBRepository('LeadCapture')
             ->where([
                 'apiKey' => $apiKey,
                 'isActive' => true,
@@ -216,8 +227,6 @@ class LeadCapture
 
         $campaign = null;
 
-        $campaignService = $this->serviceFactory->create('Campaign');
-
         if ($leadCapture->get('campaignId')) {
             $campaign = $this->entityManager->getEntity('Campaign', $leadCapture->get('campaignId'));
         }
@@ -267,7 +276,7 @@ class LeadCapture
                     $isAlreadyOptedIn = true;
 
                     if ($campaign) {
-                        $campaignService->logOptedIn($campaign->id, null, $contact);
+                        $this->campaignService->logOptedIn($campaign->id, null, $contact);
                     }
 
                     $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
@@ -321,10 +330,8 @@ class LeadCapture
 
             $this->entityManager->saveEntity($lead);
 
-            if (!$duplicate) {
-                if ($campaign) {
-                    $campaignService->logLeadCreated($campaign->id, $lead);
-                }
+            if (!$duplicate && $campaign) {
+                $this->campaignService->logLeadCreated($campaign->id, $lead);
             }
         }
 
@@ -336,7 +343,7 @@ class LeadCapture
                 ]);
 
             if ($campaign) {
-                $campaignService->logOptedIn($campaign->id, null, $targetLead);
+                $this->campaignService->logOptedIn($campaign->id, null, $targetLead);
             }
 
             $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
@@ -370,7 +377,7 @@ class LeadCapture
     public function confirmOptIn(string $id): StdClass
     {
         $uniqueId = $this->entityManager
-            ->getRepository('UniqueId')
+            ->getRDBRepository('UniqueId')
             ->where([
                 'name' => $id
             ])
@@ -431,7 +438,7 @@ class LeadCapture
     public function sendOptInConfirmation(string $id)
     {
         $uniqueId = $this->entityManager
-            ->getRepository('UniqueId')
+            ->getRDBRepository('UniqueId')
             ->where([
                 'name' => $id,
             ])
@@ -487,7 +494,7 @@ class LeadCapture
             $lead->set($data);
         }
 
-        $emailData = $this->serviceFactory->create('EmailTemplate')
+        $emailData = $this->emailTemplateService
             ->parseTemplate($emailTemplate, [
                 'Person' => $lead,
                 'Lead' => $lead,
@@ -558,15 +565,13 @@ class LeadCapture
             }
 
             if (
-                $inboundEmail->get('status') !== 'Active'
-                ||
+                $inboundEmail->get('status') !== 'Active' ||
                 !$inboundEmail->get('useSmtp')
             ) {
                 throw new Error("Lead Capture:  Group Email Account {$inboundEmailId} can't be used for Lead Capture.");
             }
 
-            $inboundEmailService = $this->serviceFactory->create('InboundEmail');
-            $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
+            $smtpParams = $this->inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
 
             if (!$smtpParams) {
                 throw new Error("Lead Capture: Group Email Account {$inboundEmailId} has no SMTP params.");
@@ -665,14 +670,14 @@ class LeadCapture
 
             if ($lead->isNew() && $leadCapture->get('duplicateCheck')) {
                 $duplicate = $this->entityManager
-                    ->getRepository('Lead')
+                    ->getRDBRepository('Lead')
                     ->where(['OR' => $groupOr])
                     ->findOne();
             }
 
             if ($leadCapture->isToSubscribeContactIfExists()) {
                 $contact = $this->entityManager
-                    ->getRepository('Contact')
+                    ->getRDBRepository('Contact')
                     ->where(['OR' => $groupOr])
                     ->findOne();
             }
@@ -715,7 +720,7 @@ class LeadCapture
         }
 
         $targetFound = $this->entityManager
-            ->getRepository('TargetList')
+            ->getRDBRepository('TargetList')
             ->getRelation($targetList, $link)
             ->where([
                 'id' => $target->id,
