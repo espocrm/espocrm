@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\Email;
 
 use Espo\Core\Select\Text\Filter;
-use Espo\Core\Select\Text\FilterData;
+use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\DefaultFilter;
 use Espo\Core\Select\Text\ConfigProvider;
 
@@ -60,17 +60,17 @@ class TextFilter implements Filter
         $this->entityManager = $entityManager;
     }
 
-    public function apply(QueryBuilder $queryBuilder, FilterData $filterData): void
+    public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
-        $filter = $filterData->getFilter();
+        $filter = $data->getFilter();
 
         if (
             mb_strlen($filter) < $this->config->getMinLengthForContentSearch() ||
             strpos($filter, '@') === false ||
-            $filterData->forceFullTextSearch() ||
-            $filterData->getFullTextSearchWhereItem()
+            $data->forceFullTextSearch() ||
+            $data->getFullTextSearchWhereItem()
         ) {
-            $this->defaultFilter->apply($queryBuilder, $filterData);
+            $this->defaultFilter->apply($queryBuilder, $data);
 
             return;
         }

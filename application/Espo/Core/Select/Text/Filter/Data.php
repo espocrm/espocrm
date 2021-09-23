@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Text;
+namespace Espo\Core\Select\Text\Filter;
 
 use Espo\ORM\Query\Part\WhereItem;
 
-class FilterData
+class Data
 {
     private $filter;
 

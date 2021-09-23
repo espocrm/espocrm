@@ -35,7 +35,7 @@ use Espo\Core\Select\Text\FilterParams;
 use Espo\Core\Select\Text\FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
-use Espo\Core\Select\Text\FilterData;
+use Espo\Core\Select\Text\Filter\Data as FilterData;
 use Espo\Core\Select\Text\FilterFactory;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;

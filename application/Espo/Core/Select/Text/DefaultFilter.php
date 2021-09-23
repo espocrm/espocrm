@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Text;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Select\Text\MetadataProvider;
-use Espo\Core\Select\Text\FilterData;
+use Espo\Core\Select\Text\Filter\Data;
 use Espo\Core\Select\Text\ConfigProvider;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -61,17 +61,17 @@ class DefaultFilter implements Filter
         $this->config = $config;
     }
 
-    public function apply(QueryBuilder $queryBuilder, FilterData $filterData): void
+    public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $orGroupBuilder = OrGroup::createBuilder();
 
-        foreach ($filterData->getAttributeList() as $attribute) {
-            $this->applyAttribute($queryBuilder, $orGroupBuilder, $attribute, $filterData);
+        foreach ($data->getAttributeList() as $attribute) {
+            $this->applyAttribute($queryBuilder, $orGroupBuilder, $attribute, $data);
         }
 
-        if ($filterData->getFullTextSearchWhereItem()) {
+        if ($data->getFullTextSearchWhereItem()) {
             $orGroupBuilder->add(
-                $filterData->getFullTextSearchWhereItem()
+                $data->getFullTextSearchWhereItem()
             );
         }
 
@@ -93,11 +93,11 @@ class DefaultFilter implements Filter
         QueryBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
         string $attribute,
-        FilterData $filterData
+        Data $data
     ): void {
 
-        $filter = $filterData->getFilter();
-        $skipWildcards = $filterData->skipWildcards();
+        $filter = $data->getFilter();
+        $skipWildcards = $data->skipWildcards();
 
         $attributeType = null;
 
