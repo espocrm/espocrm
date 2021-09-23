@@ -463,19 +463,25 @@ class ItemGeneralConverter implements ItemConverter
                 $value = [$value];
             }
 
+            $whereList = [];
+
             foreach ($value as $arrayValue) {
-                return [
-                    $idPart .'=s' => [
-                        'select' => ['entityId'],
-                        'from' => 'ArrayValue',
-                        'whereClause' => [
+                $whereList[] = [
+                    $idPart .'=s' => QueryBuilder::create()
+                        ->from('ArrayValue')
+                        ->select('entityId')
+                        ->where([
                             'value' => $arrayValue,
                             'attribute' => $arrayAttribute,
                             'entityType' => $arrayEntityType,
-                        ],
-                    ]
+                            'deleted' => false,
+                        ])
+                        ->build()
+                        ->getRaw()
                 ];
             }
+
+            return $whereList;
         }
 
         throw new Error("Bad where item 'array'.");
