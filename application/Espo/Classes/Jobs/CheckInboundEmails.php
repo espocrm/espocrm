@@ -27,74 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
+
+use Espo\Core\Exceptions\Error;
+
+use Espo\Services\InboundEmail as Service;
 
 use Espo\Core\{
-    Utils\Config,
+    Job\Job,
+    Job\Job\Data,
     ORM\EntityManager,
-    Job\JobDataLess,
 };
 
-use DateTime;
-use DateTimeZone;
+use Throwable;
 
-class CheckNewVersion implements JobDataLess
+class CheckInboundEmails implements Job
 {
-    protected $config;
+    private $service;
 
-    protected $entityManager;
+    private $entityManager;
 
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function __construct(Service $service, EntityManager $entityManager)
     {
-        $this->config = $config;
+        $this->service = $service;
         $this->entityManager = $entityManager;
     }
 
-    public function run(): void
+    public function run(Data $data): void
     {
-        if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewVersion')) {
-            return;
+        $targetId = $data->getTargetId();
+
+        if (!$targetId) {
+            throw new Error("No target.");
         }
 
-        $job = $this->entityManager->getEntity('Job');
+        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
 
-        $job->set([
-            'name' => 'Check for New Version (job)',
-            'serviceName' => 'AdminNotifications',
-            'methodName' => 'jobCheckNewVersion',
-            'executeTime' => $this->getRunTime(),
-        ]);
-
-        $this->entityManager->saveEntity($job);
-
-        return;
-    }
-
-    protected function getRunTime()
-    {
-        $hour = rand(0, 4);
-        $minute = rand(0, 59);
-
-        $nextDay = new DateTime('+ 1 day');
-        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
-
-        $timeZone = $this->config->get('timeZone');
-
-        if (empty($timeZone)) {
-            $timeZone = 'UTC';
+        if (!$entity) {
+            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail does not exist.", -1);
         }
 
-        $datetime = new DateTime($time, new DateTimeZone($timeZone));
+        if ($entity->get('status') !== 'Active') {
+            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail is not active.", -1);
+        }
 
-        return $datetime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-    }
-
-    /**
-     * For backward compatibility.
-     * @deprecated
-     */
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
+        try {
+            $this->service->fetchFromMailServer($entity);
+        }
+        catch (Throwable $e) {
+            throw new Error(
+                'Job CheckInboundEmails ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
+            );
+        }
     }
 }

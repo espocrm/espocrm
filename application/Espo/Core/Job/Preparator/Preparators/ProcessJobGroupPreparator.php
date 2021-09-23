@@ -40,7 +40,7 @@ use Espo\Entities\Job as JobEntity;
 
 use DateTimeImmutable;
 
-class GroupPreparator implements Preparator
+class ProcessJobGroupPreparator implements Preparator
 {
     private $entityManager;
 

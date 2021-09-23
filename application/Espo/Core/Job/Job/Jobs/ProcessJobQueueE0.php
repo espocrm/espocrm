@@ -27,24 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job\Job\Jobs;
 
 use Espo\Core\{
-    Job\JobDataLess,
-    Webhook\Queue,
+    Job\QueueName,
+    Job\Job\Jobs\AbstractQueueJob,
 };
 
-class ProcessWebhookQueue implements JobDataLess
+class ProcessJobQueueE0 extends AbstractQueueJob
 {
-    private $queue;
-
-    public function __construct(Queue $queue)
-    {
-        $this->queue = $queue;
-    }
-
-    public function run(): void
-    {
-        $this->queue->process();
-    }
+    protected $queue = QueueName::E0;
 }

@@ -27,57 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\JobDataLess;
 
-use Espo\Services\InboundEmail as Service;
+use Espo\Tools\EmailNotification\Processor;
 
-use Espo\Core\{
-    Job\Job,
-    Job\Job\Data,
-    ORM\EntityManager,
-};
-
-use Throwable;
-
-class CheckInboundEmails implements Job
+class SendEmailNotifications implements JobDataLess
 {
-    private $service;
+    private $processor;
 
-    private $entityManager;
-
-    public function __construct(Service $service, EntityManager $entityManager)
+    public function __construct(Processor $processor)
     {
-        $this->service = $service;
-        $this->entityManager = $entityManager;
+        $this->processor = $processor;
     }
 
-    public function run(Data $data): void
+    public function run(): void
     {
-        $targetId = $data->getTargetId();
-
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
-
-        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
-
-        if (!$entity) {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail does not exist.", -1);
-        }
-
-        if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail is not active.", -1);
-        }
-
-        try {
-            $this->service->fetchFromMailServer($entity);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
+        $this->processor->process();
     }
 }

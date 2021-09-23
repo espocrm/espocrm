@@ -27,23 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
 
-use Espo\Core\Job\JobDataLess;
+use Espo\Core\{
+    Job\JobDataLess,
+    Webhook\Queue,
+};
 
-use Espo\Tools\EmailNotification\Processor;
-
-class SendEmailNotifications implements JobDataLess
+class ProcessWebhookQueue implements JobDataLess
 {
-    private $processor;
+    private $queue;
 
-    public function __construct(Processor $processor)
+    public function __construct(Queue $queue)
     {
-        $this->processor = $processor;
+        $this->queue = $queue;
     }
 
     public function run(): void
     {
-        $this->processor->process();
+        $this->queue->process();
     }
 }

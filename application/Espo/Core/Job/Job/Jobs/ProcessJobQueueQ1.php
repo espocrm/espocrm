@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job\Job\Jobs;
 
 use Espo\Core\{
     Job\QueueName,
     Job\Job\Jobs\AbstractQueueJob,
 };
 
-class ProcessJobQueueE0 extends AbstractQueueJob
+class ProcessJobQueueQ1 extends AbstractQueueJob
 {
-    protected $queue = QueueName::E0;
+    protected $queue = QueueName::Q1;
 }

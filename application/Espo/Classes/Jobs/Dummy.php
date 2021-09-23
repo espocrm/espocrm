@@ -27,57 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\JobDataLess;
 
-use Espo\Services\EmailAccount as Service;
-
-use Espo\Core\{
-    Job\Job,
-    Job\Job\Data,
-    ORM\EntityManager,
-};
-
-use Throwable;
-
-class CheckEmailAccounts implements Job
+class Dummy implements JobDataLess
 {
-    private $service;
-
-    private $entityManager;
-
-    public function __construct(Service $service, EntityManager $entityManager)
-    {
-        $this->service = $service;
-        $this->entityManager = $entityManager;
-    }
-
-    public function run(Data $data): void
-    {
-        $targetId = $data->getTargetId();
-
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
-
-        $entity = $this->entityManager->getEntity('EmailAccount', $targetId);
-
-        if (!$entity) {
-            throw new Error("Job CheckEmailAccounts '{$targetId}': EmailAccount does not exist.", -1);
-        }
-
-        if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckEmailAccounts '{$targetId}': EmailAccount is not active.", -1);
-        }
-
-        try {
-            $this->service->fetchFromMailServer($entity);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckEmailAccounts ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
-    }
+    public function run(): void {}
 }

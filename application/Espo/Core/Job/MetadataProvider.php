@@ -50,7 +50,7 @@ class MetadataProvider
         $items = $this->metadata->get(['app', 'scheduledJobs']) ?? [];
 
         foreach ($items as $name => $item) {
-            $isPreparable = $item['isPreparable'] ?? false;
+            $isPreparable = (bool) ($item['preparatorClassName'] ?? null);
 
             if ($isPreparable) {
                 $list[] = $name;
@@ -60,13 +60,40 @@ class MetadataProvider
         return $list;
     }
 
+    public function isJobSystem(string $name): bool
+    {
+        return (bool) $this->metadata->get(['app', 'scheduledJobs', $name, 'isSystem']);
+    }
+
     public function isJobPreparable(string $name): bool
     {
-        return (bool) $this->metadata->get(['app', 'scheduledJobs', $name, 'isPreparable']);
+        return (bool) $this->metadata->get(['app', 'scheduledJobs', $name, 'preparatorClassName']);
     }
 
     public function getPreparatorClassName(string $name): ?string
     {
         return $this->metadata->get(['app', 'scheduledJobs', $name, 'preparatorClassName']);
+    }
+
+    public function getJobClassName(string $name): ?string
+    {
+        return $this->metadata->get(['app', 'scheduledJobs', $name, 'jobClassName']);
+    }
+
+    public function getScheduledJobNameList(): array
+    {
+        return array_keys($this->metadata->get(['app', 'scheduledJobs']) ?? []);
+    }
+
+    public function getNonSystemScheduledJobNameList(): array
+    {
+        return array_filter(
+            $this->getScheduledJobNameList(),
+            function (string $item) {
+                $isSystem = (bool) $this->metadata->get(['app', 'scheduledJobs', $item, 'isSystem']);
+
+                return !$isSystem;
+            }
+        );
     }
 }

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\MetadataProvider;
+
 use Espo\Core\{
     Exceptions\Error,
     Utils\ClassFinder,
@@ -41,14 +43,20 @@ class JobFactory
 
     private $injectableFactory;
 
-    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
-    {
+    private $metadataProvider;
+
+    public function __construct(
+        ClassFinder $classFinder,
+        InjectableFactory $injectableFactory,
+        MetadataProvider $metadataProvider
+    ) {
         $this->classFinder = $classFinder;
         $this->injectableFactory = $injectableFactory;
+        $this->metadataProvider = $metadataProvider;
     }
 
     /**
-     * Create a job.
+     * Create a job by a scheduled job name.
      *
      * @return Job|JobDataLess
      * @throws Error
@@ -65,7 +73,7 @@ class JobFactory
     }
 
     /**
-     * Create a job by class name.
+     * Create a job by a class name.
 
      * @return Job|JobDataLess
      */
@@ -78,6 +86,12 @@ class JobFactory
 
     private function getClassName(string $name): ?string
     {
+        $className = $this->metadataProvider->getJobClassName($name);
+
+        if ($className) {
+            return $className;
+        }
+
         return $this->classFinder->find('Jobs', ucfirst($name));
     }
 }

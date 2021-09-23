@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Job\MetadataProvider;
+
 use Espo\Core\{
     Utils\ClassFinder,
     Utils\Language,
@@ -59,28 +61,45 @@ class ScheduledJob
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
     ];
 
-    protected $classFinder;
+    private $classFinder;
 
-    protected $language;
+    private $language;
 
-    protected $entityManager;
+    private $entityManager;
 
-    public function __construct(ClassFinder $classFinder, EntityManager $entityManager, Language $language)
-    {
+    private $metadataProvider;
+
+    public function __construct(
+        ClassFinder $classFinder,
+        EntityManager $entityManager,
+        Language $language,
+        MetadataProvider $metadataProvider
+    ) {
         $this->classFinder = $classFinder;
         $this->entityManager = $entityManager;
         $this->language = $language;
+        $this->metadataProvider = $metadataProvider;
 
         $this->systemUtil = new System();
     }
 
     public function getAvailableList(): array
     {
-        $map = $this->classFinder->getMap('Jobs');
+        $list = array_filter(
+            array_merge(
+                $this->metadataProvider->getNonSystemScheduledJobNameList(),
+                array_keys(
+                    $this->classFinder->getMap('Jobs')
+                )
+            ),
+            function (string $item) {
+                return !$this->metadataProvider->isJobSystem($item);
+            }
+        );
 
-        $list = array_keys($map);
+        asort($list);
 
-        return $list;
+        return array_values($list);
     }
 
     public function getSetupMessage(): array

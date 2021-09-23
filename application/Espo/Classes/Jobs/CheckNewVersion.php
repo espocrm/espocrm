@@ -27,27 +27,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
 
-class CheckNewExtensionVersion extends CheckNewVersion
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+    Job\JobDataLess,
+};
+
+use DateTime;
+use DateTimeZone;
+
+class CheckNewVersion implements JobDataLess
 {
+    protected $config;
+
+    protected $entityManager;
+
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
     public function run(): void
     {
-        if (
-            !$this->config->get('adminNotifications') ||
-            !$this->config->get('adminNotificationsNewExtensionVersion')
-        ) {
+        if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewVersion')) {
             return;
         }
 
         $job = $this->entityManager->getEntity('Job');
+
         $job->set([
-            'name' => 'Check for new versions of installed extensions (job)',
+            'name' => 'Check for New Version (job)',
             'serviceName' => 'AdminNotifications',
-            'methodName' => 'jobCheckNewExtensionVersion',
+            'methodName' => 'jobCheckNewVersion',
             'executeTime' => $this->getRunTime(),
         ]);
 
         $this->entityManager->saveEntity($job);
+
+        return;
+    }
+
+    protected function getRunTime()
+    {
+        $hour = rand(0, 4);
+        $minute = rand(0, 59);
+
+        $nextDay = new DateTime('+ 1 day');
+        $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
+
+        $timeZone = $this->config->get('timeZone');
+
+        if (empty($timeZone)) {
+            $timeZone = 'UTC';
+        }
+
+        $datetime = new DateTime($time, new DateTimeZone($timeZone));
+
+        return $datetime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * For backward compatibility.
+     * @deprecated
+     */
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 }

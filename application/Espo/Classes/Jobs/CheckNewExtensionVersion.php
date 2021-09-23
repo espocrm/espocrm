@@ -27,15 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Classes\Jobs;
 
-use Espo\Core\{
-    Job\JobDataLess,
-};
-
-class Dummy implements JobDataLess
+class CheckNewExtensionVersion extends CheckNewVersion
 {
     public function run(): void
     {
+        if (
+            !$this->config->get('adminNotifications') ||
+            !$this->config->get('adminNotificationsNewExtensionVersion')
+        ) {
+            return;
+        }
+
+        $job = $this->entityManager->getEntity('Job');
+        $job->set([
+            'name' => 'Check for new versions of installed extensions (job)',
+            'serviceName' => 'AdminNotifications',
+            'methodName' => 'jobCheckNewExtensionVersion',
+            'executeTime' => $this->getRunTime(),
+        ]);
+
+        $this->entityManager->saveEntity($job);
     }
 }

@@ -31,14 +31,18 @@ namespace Espo\Classes\AppInfo;
 
 use Espo\Core\Console\Params;
 use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Job\MetadataProvider;
 
 class Jobs
 {
     private $classFinder;
 
-    public function __construct(ClassFinder $classFinder)
+    private $metadataProvider;
+
+    public function __construct(ClassFinder $classFinder, MetadataProvider $metadataProvider)
     {
         $this->classFinder = $classFinder;
+        $this->metadataProvider = $metadataProvider;
     }
 
     public function process(Params $params): string
@@ -47,9 +51,14 @@ class Jobs
 
         $list = array_map(
             function ($item) {
-                return ' '. $item;
+                return ' ' . $item;
             },
-            array_keys($this->classFinder->getMap('Jobs'))
+            array_unique(
+                array_merge(
+                    array_keys($this->classFinder->getMap('Jobs')),
+                    $this->metadataProvider->getScheduledJobNameList()
+                )
+            )
         );
 
         asort($list);

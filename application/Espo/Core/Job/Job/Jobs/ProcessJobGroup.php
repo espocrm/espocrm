@@ -34,7 +34,7 @@ use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\JobManager;
 
-abstract class AbstractGroupJob implements Job
+class ProcessJobGroup implements Job
 {
     private const PORTION_NUMBER = 100;
 

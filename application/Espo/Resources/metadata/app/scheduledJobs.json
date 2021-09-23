@@ -3,44 +3,62 @@
         "name": "Process Job Group",
         "isSystem": true,
         "scheduling": "* * * * *",
-        "isPreparable": true,
-        "preparatorClassName": "Espo\\Core\\Job\\Preparator\\Preparators\\GroupPreparator"
+        "jobClassName": "Espo\\Core\\Job\\Job\\Jobs\\ProcessJobGroup",
+        "preparatorClassName": "Espo\\Core\\Job\\Preparator\\Preparators\\ProcessJobGroupPreparator"
     },
     "ProcessJobQueueQ0": {
         "name": "Process Job Queue q0",
         "isSystem": true,
-        "scheduling": "* * * * *"
+        "scheduling": "* * * * *",
+        "jobClassName": "Espo\\Core\\Job\\Job\\Jobs\\ProcessJobQueueQ0"
     },
     "ProcessJobQueueQ1": {
         "name": "Process Job Queue q1",
         "isSystem": true,
-        "scheduling": "*/1 * * * *"
+        "scheduling": "*/1 * * * *",
+        "jobClassName": "Espo\\Core\\Job\\Job\\Jobs\\ProcessJobQueueQ1"
     },
     "ProcessJobQueueE0": {
         "name": "Process Job Queue e0",
         "isSystem": true,
-        "scheduling": "* * * * *"
+        "scheduling": "* * * * *",
+        "jobClassName": "Espo\\Core\\Job\\Job\\Jobs\\ProcessJobQueueE0"
     },
     "Dummy": {
         "isSystem": true,
-        "scheduling": "1 */12 * * *"
+        "scheduling": "1 */12 * * *",
+        "jobClassName": "Espo\\Classes\\Jobs\\Dummy"
     },
     "CheckNewVersion": {
         "name": "Check for New Version",
         "isSystem": true,
-        "scheduling": "15 5 * * *"
+        "scheduling": "15 5 * * *",
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckNewVersion"
     },
     "CheckNewExtensionVersion": {
         "name": "Check for New Versions of Installed Extensions",
         "isSystem": true,
-        "scheduling": "25 5 * * *"
+        "scheduling": "25 5 * * *",
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckNewExtensionVersion"
+    },
+    "Cleanup": {
+        "jobClassName": "Espo\\Classes\\Jobs\\Cleanup"
+    },
+    "AuthTokenControl": {
+        "jobClassName": "Espo\\Classes\\Jobs\\AuthTokenControl"
+    },
+    "SendEmailNotifications": {
+        "jobClassName": "Espo\\Classes\\Jobs\\SendEmailNotifications"
+    },
+    "ProcessWebhookQueue": {
+        "jobClassName": "Espo\\Classes\\Jobs\\ProcessWebhookQueue"
     },
     "CheckEmailAccounts": {
-        "isPreparable": true,
-        "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckEmailAccounts"
+        "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckEmailAccounts",
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckEmailAccounts"
     },
     "CheckInboundEmails": {
-        "isPreparable": true,
-        "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckInboundEmails"
+        "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckInboundEmails",
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckInboundEmails"
     }
 }
