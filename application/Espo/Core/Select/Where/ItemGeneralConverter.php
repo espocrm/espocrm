@@ -1151,4 +1151,67 @@ class ItemGeneralConverter implements ItemConverter
 
         throw new Error("Bad where item. Not supported relation type.");
     }
+
+    protected function processLinkedWithAll(QueryBuilder $queryBuilder, string $attribute, $value): array
+    {
+        $link = $attribute;
+
+        if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
+            throw new Error("Not existing link '{$link}' in where item.");
+        }
+
+        if (is_null($value) || !$value && !is_array($value)) {
+            throw new Error("Bad where item. Empty value.");
+        }
+
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
+
+        $relationType = $defs->getType();
+
+        if ($relationType === Entity::MANY_MANY) {
+            $key = $defs->getForeignMidKey();
+
+            $whereList = [];
+
+            foreach ($value as $targetId) {
+                $sq = QueryBuilder::create()
+                    ->from($this->entityType)
+                    ->select('id')
+                    ->leftJoin($link)
+                    ->where([
+                        $link . 'Middle.' . $key => $targetId,
+                    ])
+                    ->build();
+
+                $whereList[] = ['id=s' => $sq->getRaw()];
+            }
+
+            return $whereList;
+        }
+
+        if ($relationType === Entity::HAS_MANY) {
+            $whereList = [];
+
+            foreach ($value as $targetId) {
+                $sq = QueryBuilder::create()
+                    ->from($this->entityType)
+                    ->select('id')
+                    ->leftJoin($link)
+                    ->where([
+                        $link . '.id' => $targetId,
+                    ])
+                    ->build();
+
+                $whereList[] = ['id=s' => $sq->getRaw()];
+            }
+
+            return $whereList;
+        }
+
+        throw new Error("Bad where item. Not supported relation type.");
+    }
 }

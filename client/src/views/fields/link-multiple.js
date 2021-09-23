@@ -56,7 +56,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         sortable: false,
 
-        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
+        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf', 'allOf'],
 
         selectFilterList: null,
 
@@ -173,7 +173,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         handleSearchType: function (type) {
-            if (~['anyOf', 'noneOf'].indexOf(type)) {
+            if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 this.$el.find('div.link-group-container').removeClass('hidden');
             }
             else {
@@ -499,7 +499,27 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'noneOf') {
+
+             if (type === 'allOf') {
+                var idList = this.ids || [];
+
+                var data = {
+                    type: 'linkedWithAll',
+                    value: idList,
+                    data: {
+                        type: type,
+                        nameHash: this.nameHash,
+                    },
+                };
+
+                if (!idList.length) {
+                    data.value = null;
+                }
+
+                return data;
+            }
+
+            if (type === 'noneOf') {
                 var data = {
                     type: 'notLinkedWith',
                     value: this.ids || [],
@@ -511,7 +531,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isEmpty') {
+
+            if (type === 'isEmpty') {
                 var data = {
                     type: 'isNotLinked',
                     data: {
@@ -521,7 +542,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isNotEmpty') {
+
+            if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isLinked',
                     data: {

@@ -72,6 +72,7 @@ class Checker
         'isNotLinked',
         'linkedWith',
         'notLinkedWith',
+        'linkedWithAll',
         'isUserFromTeams',
     ];
 
