@@ -3,7 +3,8 @@
     "username": "Tên đăng nhập",
     "ipAddress": "Địa chỉ IP",
     "requestTime": "Thời gian yêu cầu kết nối",
-    "createdAt": "Đã kết nối tại"
+    "createdAt": "Đã kết nối tại",
+    "authenticationMethod": "Phương thức xác thực"
   },
   "links": {
     "user": "Người dùng",

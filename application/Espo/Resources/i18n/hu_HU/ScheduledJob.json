@@ -30,8 +30,5 @@
       "Active": "Aktív",
       "Inactive": "tétlen"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab jelölés. Meghatározza a munkák gyakoriságát.\n\n* / 5 * * * * - 5 percenként\n\n0 * / 2 * * * - 2 óránként\n\n30 1 * * * - 01: 30-ban naponta egyszer\n\n0 0 1 * * - a hónap első napján"
   }
 }

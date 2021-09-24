@@ -3,10 +3,10 @@
     "parent": "Szülő",
     "contacts": "Kapcsolatok",
     "opportunities": "lehetőségek",
-    "leads": "vezet",
+    "leads": "Leadek\n",
     "meetings": "találkozók",
     "calls": "felhívja",
-    "tasks": "feladatok",
+    "tasks": "Feladatok",
     "emails": "e-mailek",
     "accounts": "Fiókok",
     "cases": "Olyan esetek,",
@@ -18,7 +18,6 @@
   "scopeNames": {
     "Account": "számla",
     "Contact": "Kapcsolatba lépni",
-    "Lead": "Vezet",
     "Target": "Cél",
     "Opportunity": "Lehetőség",
     "Meeting": "Találkozó",
@@ -41,13 +40,13 @@
   "scopeNamesPlural": {
     "Account": "Fiókok",
     "Contact": "Kapcsolatok",
-    "Lead": "vezet",
+    "Lead": "Lead",
     "Target": "célok",
     "Opportunity": "lehetőségek",
     "Meeting": "találkozók",
     "Calendar": "Naptár",
     "Call": "felhívja",
-    "Task": "feladatok",
+    "Task": "Feladatok",
     "Case": "Olyan esetek,",
     "Document": "Dokumentumok",
     "DocumentFolder": "Dokumentummappák",
@@ -62,7 +61,7 @@
     "CampaignLogRecord": "Kampánynaplórekordok"
   },
   "dashlets": {
-    "Leads": "Az én vezetem",
+    "Leads": "Az én leadjeim",
     "Opportunities": "Lehetőségek",
     "Tasks": "Saját feladatok",
     "Cases": "Az én ügyeim",
@@ -72,7 +71,7 @@
     "OpportunitiesByStage": "Lehetőségek színpadon",
     "OpportunitiesByLeadSource": "Lehetőségek a vezető forrásból",
     "SalesByMonth": "Havi eladások",
-    "SalesPipeline": "Értékesítési csővezeték",
+    "SalesPipeline": "Pipeline",
     "Activities": "Tevékenységem"
   },
   "labels": {
@@ -87,7 +86,7 @@
     "Log Call": "Naplóhívás",
     "Archive Email": "Archívum e-mailben",
     "Create Task": "Feladat létrehozása",
-    "Tasks": "feladatok"
+    "Tasks": "Feladatok"
   },
   "fields": {
     "billingAddressCity": "Város",

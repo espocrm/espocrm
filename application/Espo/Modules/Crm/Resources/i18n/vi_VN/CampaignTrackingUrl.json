@@ -1,6 +1,17 @@
 {
   "fields": {
     "url": "Địa chỉ",
+    "campaign": "Chiến dịch",
+    "action": "Hành động",
+    "message": "Tin nhắn"
+  },
+  "links": {
     "campaign": "Chiến dịch"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Chuyển hướng",
+      "Show Message": "Hiển thị tin nhắn"
+    }
   }
 }

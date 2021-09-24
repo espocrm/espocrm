@@ -19,7 +19,8 @@
     "revenue": "收入",
     "revenueConverted": "收入（转换）",
     "budget": "预算",
-    "budgetConverted": "预算（转换）"
+    "budgetConverted": "预算（转换）",
+    "usersTemplate": "用户模板"
   },
   "links": {
     "targetLists": "目标列表",

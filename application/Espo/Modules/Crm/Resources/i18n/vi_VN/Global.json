@@ -11,7 +11,10 @@
     "Task": "Nhiệm vụ",
     "Case": "Trường hợp",
     "Document": "Tài liệu",
-    "Campaign": "Chiến dịch"
+    "Campaign": "Chiến dịch",
+    "TargetList": "Danh sách mục tiêu",
+    "CampaignTrackingUrl": "Địa chỉ theo dõi",
+    "Activities": "Hoạt động"
   },
   "scopeNamesPlural": {
     "Account": "Tài khoản",
@@ -24,7 +27,12 @@
     "Call": "Cuộc gọi",
     "Task": "Nhiệm vụ",
     "Case": "Trường hợp",
-    "Document": "Tài liệu"
+    "Document": "Tài liệu",
+    "Campaign": "Chiến dịch",
+    "TargetList": "Danh sách mục tiêu",
+    "CampaignTrackingUrl": "Địa chỉ theo dõi",
+    "Activities": "Hoạt động",
+    "KnowledgeBaseArticle": "Hướng dẫn sử dụng"
   },
   "dashlets": {
     "Leads": "Chỉ dẫn của tôi",
@@ -32,24 +40,28 @@
     "Tasks": "Nhiệm vụ của tôi",
     "Cases": "Công việc của tôi",
     "Calendar": "Lịch",
+    "Calls": "Cuộc gọi của tôi",
+    "Meetings": "Cuộc hẹn của tôi",
     "OpportunitiesByStage": "Chia mức cơ hội",
     "OpportunitiesByLeadSource": "Phân chia cơ hội theo người chỉ dẫn",
     "SalesByMonth": "Doanh thu hàng tháng",
-    "SalesPipeline": "Doanh thu đường ống"
+    "SalesPipeline": "Doanh thu gối",
+    "Activities": "Hoạt động của tôi"
   },
   "labels": {
     "Create InboundEmail": "Tạo email đến",
-    "Activities": "Hành động",
+    "Activities": "Hoạt động",
     "History": "Lịch sử",
     "Attendees": "Người dự",
     "Schedule Meeting": "Lên lịch hẹn",
     "Schedule Call": "Lên lịch gọi",
     "Compose Email": "Tạo email",
-    "Log Meeting": "Log cuộc hẹn",
-    "Log Call": "Log cuộc gọi",
+    "Log Meeting": "Nhật ký cuộc hẹn",
+    "Log Call": "Ghi nhận cuộc gọi",
     "Archive Email": "Email lưu trữ",
     "Create Task": "Tạo nhiệm vụ",
-    "Tasks": "Nhiệm vụ"
+    "Tasks": "Nhiệm vụ",
+    "Scheduler": "Người lập kế hoạch"
   },
   "fields": {
     "billingAddressCity": "Quận - huyện",
@@ -64,6 +76,9 @@
     "addressStreet": "Đường",
     "billingAddressMap": "Bản đồ",
     "addressMap": "Bản đồ",
+    "shippingAddressCity": "Thành phố (Gửi đi)",
+    "shippingAddressStreet": "Đường (Gửi đi)",
+    "shippingAddressCountry": "Quốc gia (Gửi đi)",
     "shippingAddressMap": "Bản đồ (Địa chỉ thanh toán)"
   },
   "links": {
@@ -74,6 +89,8 @@
     "calls": "Cuộc gọi",
     "tasks": "Nhiệm vụ",
     "emails": "Địa chỉ email",
+    "documents": "Tài liệu",
+    "opportunity": "Cơ hội",
     "contact": "Danh bạ"
   }
 }

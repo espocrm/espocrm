@@ -2,7 +2,8 @@
   "fields": {
     "name": "Tên",
     "description": "Mô tả",
-    "endDate": "Ngày kết thúc"
+    "endDate": "Ngày kết thúc",
+    "targetLists": "Danh sách mục tiêu"
   },
   "links": {
     "accounts": "Tài khoản",
@@ -12,8 +13,11 @@
   "options": {
     "type": {
       "Web": "Trang web",
-      "Television": "Tivi",
+      "Television": "Truyền hình",
       "Newsletter": "Thư"
     }
+  },
+  "labels": {
+    "Create TargetList": "Tạo danh sách mục tiêu"
   }
 }

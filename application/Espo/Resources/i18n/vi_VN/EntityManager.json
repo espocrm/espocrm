@@ -1,7 +1,10 @@
 {
   "labels": {
     "Fields": "Trường",
-    "Relationships": "Mối quan hệ"
+    "Relationships": "Mối quan hệ",
+    "Schedule": "Lên lịch",
+    "Log": "Nhật ký",
+    "Formula": "Công thức toán học"
   },
   "fields": {
     "name": "Tên",
@@ -24,7 +27,8 @@
     "type": {
       "": "Trống",
       "Person": "Con người",
-      "CategoryTree": "Cây thư mục"
+      "CategoryTree": "Cây thư mục",
+      "Company": "Công ty"
     },
     "sortDirection": {
       "asc": "Tăng dần",

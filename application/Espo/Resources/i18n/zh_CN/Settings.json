@@ -84,7 +84,6 @@
     "historyEntityList": "历史功能列表",
     "currencyFormat": "货币格式",
     "currencyDecimalPlaces": "货币小数位",
-    "aclStrictMode": "ACL 限制模式",
     "followCreatedEntities": "跟踪创建的记录",
     "aclAllowDeleteCreated": "允许删除创建的记录",
     "adminNotifications": "管理面板中的系统通知",
@@ -100,17 +99,6 @@
     "outboundEmailBccAddress": "外部BCC地址",
     "adminNotificationsNewExtensionVersion": "扩展有新版本可用时通知",
     "cleanupDeletedRecords": "清理已删除的记录"
-  },
-  "options": {
-    "weekStart": {
-      "0": "星期日",
-      "1": "星期一"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "收到消息",
-      "Status": "状态更新",
-      "EmailReceived": "收到邮件"
-    }
   },
   "tooltips": {
     "recordsPerPage": "列表视图中最初显示的记录数。",
@@ -166,5 +154,12 @@
   },
   "messages": {
     "ldapTestConnection": "连接已成功建立。"
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "收到消息",
+      "Status": "状态更新",
+      "EmailReceived": "收到邮件"
+    }
   }
 }

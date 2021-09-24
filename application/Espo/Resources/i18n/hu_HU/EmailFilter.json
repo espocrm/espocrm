@@ -15,7 +15,6 @@
     "from": "E-mailek küldése a megadott címről. Hagyja üresen, ha nem szükséges. Használhat helyettesítőt *.",
     "to": "E-mailek küldése a megadott címre. Hagyja üresen, ha nem szükséges. Használhat helyettesítőt *.",
     "name": "Adja meg a szűrőnek egy leíró nevet.",
-    "subject": "Használjon helyettesítőt *:\n\nszöveg * - szöveggel kezdődik,\n* szöveg * - szöveg,\n* szöveg - szöveggel végződik.",
     "bodyContains": "Az e-mail teste tartalmazza a megadott szavakat vagy kifejezéseket.",
     "isGlobal": "Ez a szűrő a rendszerbe érkező összes e-mailre vonatkozik."
   },

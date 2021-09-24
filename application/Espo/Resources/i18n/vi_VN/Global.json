@@ -22,7 +22,12 @@
     "Attachment": "Đính kèm",
     "LastViewed": "Đã xem gần đây",
     "Settings": "Cài đặt",
+    "FieldManager": "Quản lý trường",
+    "LayoutManager": "Quản lý bố cục",
+    "EntityManager": "Quản lý Entity",
     "Export": "Xuất ra",
+    "Admin": "Quản trị viên",
+    "EmailAddress": "Địa chỉ Email",
     "LeadCaptureLogRecord": "Lịch sử thu thập khách tiềm năng"
   },
   "scopeNamesPlural": {
@@ -48,10 +53,13 @@
     "Attachment": "Đính kèm",
     "PasswordChangeRequest": "Yêu cầu thay đổi mật khẩu",
     "ActionHistoryRecord": "Lịch sử hoạt động",
+    "LastViewed": "Đã xem gần đây",
     "Import": "Nhập dữ liệu",
     "LeadCapture": "Thu thập khách tiềm năng",
     "LeadCaptureLogRecord": "Nhật ký thu thập khách tiềm năng",
-    "ApiUser": "API User"
+    "ApiUser": "API User",
+    "PhoneNumber": "Số điện thoại",
+    "Currency": "Tiền tệ"
   },
   "labels": {
     "Misc": "Khác",
@@ -93,7 +101,7 @@
     "Created": "Đã tạo",
     "Create": "Tạo",
     "create": "tạo",
-    "Overview": "Sơ lược",
+    "Overview": "Tổng quan",
     "Details": "Chi tiết",
     "Add Field": "Thêm trường",
     "Add Dashlet": "Thêm module",
@@ -155,6 +163,7 @@
     "Change": "Thay đổi",
     "Primary": "Chính",
     "Save Filter": "Lưu bộ lọc",
+    "Administration": "Quản trị",
     "Run Import": "Bắt đầu nhập",
     "Duplicate": "Tạo bản sao",
     "Notifications": "Thông báo",
@@ -186,9 +195,11 @@
     "Skip": "Bỏ qua",
     "New notifications": "Thông báo mới",
     "Manage Folders": "Quản lý thư mục",
+    "Convert to": "Chuyển đổi sang",
     "Erase": "Xóa",
     "Restore": "Khôi phục",
-    "View Followers": "Xem người đã theo dõi"
+    "View Followers": "Xem người đã theo dõi",
+    "View on Map": "Xem trên bản đồ"
   },
   "messages": {
     "pleaseWait": "Xin chờ...",
@@ -201,6 +212,7 @@
     "fieldShouldBeBetween": "{field} cần đặt giữa {min} và {max}",
     "fieldBadPasswordConfirm": "{field} không hợp lệ",
     "confirmation": "Bạn chắc chắn thực hiện thao tác này?",
+    "resetPreferencesConfirmation": "Bạn có chắc chắn muốn khôi phục tuỳ chỉnh về mặc định?",
     "removeRecordConfirmation": "Bạn muốn xoá nội dung này?",
     "removeSelectedRecordsConfirmation": "Bạn muốn xoá các mục đã chọn?",
     "massUpdateResult": "{count} mục đã được cập nhật",
@@ -226,7 +238,7 @@
     "fieldShouldBeLess": "{field} cần nhỏ hơn {value}",
     "fieldShouldBeGreater": "{field} cần lớn hơn {value}",
     "fieldValueDuplicate": "Giá trị bị trùng",
-    "maintenanceMode": "Ứng dụng đang được bảo trì. Chỉ có quản trị viên mới được phép truy cập phần này.\n\nNếu là quản trị viên, bạn có thể tắt tại Administration → Settings."
+    "maintenanceMode": "Ứng dụng đang được bảo trì. Chỉ có quản trị viên mới được phép truy cập phần này.\n\nNếu là quản trị viên, bạn có thể tắt tại Quản trị → Cài đặt."
   },
   "boolFilters": {
     "onlyMy": "Chỉ mình tôi",
@@ -251,9 +263,9 @@
     "firstName": "Tên",
     "lastName": "Họ",
     "salutationName": "Chào đón",
-    "assignedUser": "Phân công",
-    "assignedUsers": "Phân công",
-    "assignedUserName": "Thành viên được phân công",
+    "assignedUser": "Người phụ trách",
+    "assignedUsers": "Người phụ trách",
+    "assignedUserName": "Thành viên được phụ trách",
     "teams": "Nhóm",
     "createdAt": "Tạo lúc",
     "modifiedAt": "Sửa lúc",
@@ -279,7 +291,8 @@
     "team": "Nhóm",
     "roles": "Quyền",
     "teams": "Nhóm",
-    "users": "Người dùng"
+    "users": "Người dùng",
+    "children": "Trẻ em"
   },
   "dashlets": {
     "Stream": "Luồng",
@@ -302,6 +315,9 @@
     "postTargetYou": "{user} đã đăng đến bạn",
     "postTargetYouAndOthers": " {user} đã đăng đến {target} và bạn",
     "postTargetAll": " {user} đã đăng đến tất cả mọi người",
+    "mentionYouInPost": "{user} nhắc đến bạn trong {entityType} {entity}",
+    "mentionInPostTarget": "{user} đã nhắc {mentioned} trong bài",
+    "mentionYouInPostTargetAll": "{user} đã nhắc đến bạn trong tất cả bài",
     "create": "{user} tạo {entityType} {entity}",
     "createThis": "{user} tạo {entityType}",
     "createAssignedThis": "{user} tạo {entityType} phân công cho {assignee}",
@@ -319,9 +335,40 @@
     "emailReceivedThis": "{entity} đã được nhận",
     "emailReceivedInitialThis": "Đã nhận email, {entityType} đã được tạo",
     "emailReceived": "{entity} đã được nhận bởi {entityType} {entity}",
-    "emailSentThis": "{by} gửi email"
+    "emailSentThis": "{by} gửi email",
+    "createAssignedYou": "{user} đã tạo {entityType} {entity} và giao cho bạn",
+    "createAssignedThisSelf": "{user} đã tạo {entityType} này và tự giao cho mình",
+    "createAssignedSelf": "{user} đã tạo {entityType} {entity} và tự giao cho mình"
   },
   "lists": {
+    "monthNames": [
+      "Tháng Một",
+      "Tháng Hai",
+      "Tháng Ba",
+      "Tháng Tư",
+      "Tháng Năm",
+      "Tháng Sáu",
+      "Tháng Bảy",
+      "Tháng Tám",
+      "Tháng Chín",
+      "Tháng Mười",
+      "Tháng Mười Một",
+      "Tháng Mười Hai"
+    ],
+    "monthNamesShort": [
+      "Th1",
+      "Th2",
+      "Th3",
+      "Th4",
+      "Th5",
+      "Th6",
+      "Th7",
+      "Th8",
+      "Th9",
+      "Th10",
+      "Th11",
+      "Th12"
+    ],
     "dayNames": [
       "Chủ Nhật",
       "Thứ Hai",
@@ -394,6 +441,8 @@
       "0": "Trống"
     },
     "phoneNumber": {
+      "Mobile": "Di động",
+      "Office": "Văn phòng",
       "Other": "Khác"
     },
     "intSearchRanges": {

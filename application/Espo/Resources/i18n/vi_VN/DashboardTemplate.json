@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "layout": "Bố cục"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Tạo template"
+  }
+}

@@ -84,7 +84,6 @@
     "historyEntityList": "歷史模組列表",
     "currencyFormat": "貨幣格式",
     "currencyDecimalPlaces": "貨幣小數位數",
-    "aclStrictMode": "ACL嚴格模式",
     "followCreatedEntities": "跟蹤新增的記錄",
     "aclAllowDeleteCreated": "允許刪除新增的記錄",
     "adminNotifications": "管理員通知",
@@ -128,20 +127,6 @@
     "passwordStrengthBothCases": "啟用兩因素認證",
     "auth2FA": "可用的2FA方法",
     "auth2FAMethodList": "TOTP"
-  },
-  "options": {
-    "weekStart": {
-      "0": "星期日",
-      "1": "星期一"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "狀態更新",
-      "Status": "收到的郵件",
-      "EmailReceived": "有跟蹤動態更新紀錄的電子郵件通知。使用者將僅收到有指定選單的電子郵件通知。"
-    },
-    "auth2FAMethodList": {
-      "Totp": "密碼"
-    }
   },
   "tooltips": {
     "recordsPerPage": "清單檢視一開始顯示的資料筆數。",
@@ -192,7 +177,16 @@
     "daemonProcessTimeout": "預設團隊",
     "cronDisabled": "只有管理員可以存取系統。",
     "maintenanceMode": "搜索",
-    "ldapAccountCanonicalForm": "輸入**@username** 用來在發文中提及使用者。"
+    "ldapAccountCanonicalForm": "輸入**@username** 用來在發文中提及使用者。",
+    "useCache": "除非因開發目的，否則不建議停用",
+    "useWebSocket": "WebSocket在伺服器和瀏覽器之間啟用雙向交互式通信。需要在伺服器上設定WebSocket守護程序。查看檔案以獲得更多信息。",
+    "passwordRecoveryForInternalUsersDisabled": "只有入口網站使用者能回覆密碼。",
+    "passwordRecoveryNoExposure": "無法判斷是否在系統中註冊了特定的電子郵件地址。",
+    "emailAddressLookupEntityTypeList": "自動完成郵件地址。",
+    "emailNotificationsDelay": "在發送通知之前，可以在指定的時間範圍內編輯消息。",
+    "outboundEmailFromAddress": "系統電子郵件地址",
+    "smtpServer": "如果空白，則將使用對應的群組電子郵件地址。",
+    "busyRangesEntityList": "當行事曆及時間軸上顯示忙碌時，將考慮什麼。"
   },
   "labels": {
     "System": "系統",
@@ -210,9 +204,20 @@
     "Search": "綜合",
     "Misc": "開始日期 (全天)",
     "Passwords": "兩因素認證",
-    "2-Factor Authentication": "您當前的密碼"
+    "2-Factor Authentication": "您當前的密碼",
+    "Group Tab": "群組分頁標籤"
   },
   "messages": {
     "ldapTestConnection": "連接成功建立。"
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "狀態更新",
+      "Status": "收到的郵件",
+      "EmailReceived": "有跟蹤動態更新紀錄的電子郵件通知。使用者將僅收到有指定選單的電子郵件通知。"
+    },
+    "auth2FAMethodList": {
+      "Totp": "密碼"
+    }
   }
 }

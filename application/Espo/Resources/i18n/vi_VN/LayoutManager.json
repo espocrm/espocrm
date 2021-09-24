@@ -2,6 +2,8 @@
   "fields": {
     "width": "Chiều ngang (%)",
     "link": "Liên kết",
+    "align": "Căn chỉnh",
+    "style": "Giao diện",
     "isLarge": "Cỡ chữ lớn"
   },
   "options": {

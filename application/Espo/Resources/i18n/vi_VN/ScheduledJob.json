@@ -14,7 +14,9 @@
   "options": {
     "job": {
       "Cleanup": "Dọn dẹp",
-      "CheckInboundEmails": "Kiểm tra hộp thư đến"
+      "CheckInboundEmails": "Kiểm tra hộp thư đến",
+      "SendEmailReminders": "Gửi email nhắc hẹn",
+      "CheckNewVersion": "Kiểm tra phiên bản mới"
     },
     "status": {
       "Active": "Đang hoạt động",

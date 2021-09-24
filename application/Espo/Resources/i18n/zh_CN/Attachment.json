@@ -5,6 +5,7 @@
   "fields": {
     "role": "角色",
     "related": "相关",
+    "file": "文件",
     "type": "类型",
     "field": "字段",
     "sourceId": "源ID",

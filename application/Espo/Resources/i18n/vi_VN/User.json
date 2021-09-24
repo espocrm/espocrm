@@ -7,6 +7,8 @@
     "defaultTeam": "Nhóm mặc định",
     "phoneNumber": "Điện thoại",
     "roles": "Vai trò",
+    "portalRoles": "Quyền Portal",
+    "teamRole": "Vị trí",
     "password": "Mật khẩu",
     "currentPassword": "Mật khẩu hiện tại",
     "passwordConfirm": "Xác thực mật khẩu",
@@ -16,21 +18,29 @@
     "isActive": "Được kích hoạt",
     "contact": "Danh bạ",
     "accounts": "Tài khoản",
+    "account": "Tài khoản (chính)",
+    "gender": "Giới tính",
     "ipAddress": "Địa chỉ IP",
+    "passwordPreview": "Xem trước mật khẩu",
     "lastAccess": "Lần truy cập gần nhất",
     "type": "Loại",
     "apiKey": "Khóa API",
     "yourPassword": "Mật khẩu hiện tại của bạn",
-    "auth2FAEnable": "Bật xác minh 2 bước"
+    "auth2FAEnable": "Bật xác minh 2 bước",
+    "auth2FAMethod": "Phương thức xác thực 2FA"
   },
   "links": {
     "teams": "Nhóm",
     "roles": "Vai trò",
     "notes": "Ghi chú",
+    "portalRoles": "Quyền Portal",
     "contact": "Danh bạ",
     "accounts": "Tài khoản",
+    "account": "Tài khoản (Chính)",
     "tasks": "Nhiệm vụ",
-    "defaultTeam": "Nhóm mặc định"
+    "defaultTeam": "Nhóm mặc định",
+    "dashboardTemplate": "Quản lý giao diện mẫu",
+    "userData": "Dữ liệu người dùng"
   },
   "labels": {
     "Create User": "Tạo người dùng",
@@ -38,18 +48,32 @@
     "Access": "Truy cập",
     "Preferences": "Tùy chỉnh",
     "Change Password": "Đổi mật khẩu",
+    "Teams and Access Control": "Nhóm và kiểm soát truy cập",
     "Forgot Password?": "Quên mật khẩu?",
+    "Password Change Request": "Yêu cầu đổi mật khẩu",
+    "Email Address": "Địa chỉ email",
+    "External Accounts": "Tài khoản bên ngoài",
+    "Email Accounts": "Tài khoản email",
+    "Portal": "Cổng thông tin",
     "Generate New Password": "Tự động tạo mật khẩu",
     "Back to login form": "Quay lại trang đăng nhập",
-    "Security": "Bảo mật"
+    "Security": "Bảo mật",
+    "Reset 2FA": "Đặt lại 2FA"
+  },
+  "tooltips": {
+    "userName": "Ký tự a-z, số 0-9, dấu chấm, gạch nối, @-tên và gạch dưới được cho phép.",
+    "isAdmin": "Tài khoản Admin được truy cập vào mọi thứ."
   },
   "messages": {
     "passwordWillBeSent": "Mật khẩu sẽ được gửi tới email tài khoản",
     "passwordChanged": "Mật khẩu đã được đổi",
+    "userCantBeEmpty": "Tên đăng nhập không thể bỏ trống",
     "wrongUsernamePasword": "Sai tên đăng nhập hoặc mật khẩu",
     "userNameEmailAddressNotFound": "Tên đăng nhập hoặc email không tồn tại",
     "forbidden": "Từ chối truy cập, xin thử lại sau",
-    "passwordChangedByRequest": "Mật khẩu đã được thay đổi"
+    "passwordChangedByRequest": "Mật khẩu đã được thay đổi",
+    "wrongCode": "Sai mã",
+    "codeIsRequired": "Bắt buộc sử dụng mã"
   },
   "boolFilters": {
     "onlyMyTeam": "Chỉ nhóm của tôi"
@@ -58,6 +82,12 @@
     "active": "Kích hoạt"
   },
   "options": {
+    "gender": {
+      "": "Chưa đặt",
+      "Male": "Nam",
+      "Female": "Nữ",
+      "Neutral": "Chưa xác định"
+    },
     "type": {
       "system": "Hệ thống",
       "super-admin": "Quản trị viên cao nhất"

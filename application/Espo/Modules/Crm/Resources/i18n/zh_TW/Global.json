@@ -87,7 +87,8 @@
     "Log Call": "記錄通話",
     "Archive Email": "封存信箱",
     "Create Task": "新增任務",
-    "Tasks": "任務"
+    "Tasks": "任務",
+    "Scheduler": "排程器"
   },
   "fields": {
     "billingAddressCity": "城市",

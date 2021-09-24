@@ -2,7 +2,11 @@
   "fields": {
     "name": "Tên",
     "status": "Tình trạng",
-    "sentAt": "Ngày gửi"
+    "sentAt": "Ngày gửi",
+    "emailAddress": "Địa chỉ email"
+  },
+  "links": {
+    "target": " "
   },
   "options": {
     "status": {

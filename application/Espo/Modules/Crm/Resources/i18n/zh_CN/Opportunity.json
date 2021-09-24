@@ -15,7 +15,8 @@
     "campaign": "营销活动",
     "originalLead": "原始潜在客户",
     "amountCurrency": "金额货币",
-    "contactRole": "联系人角色"
+    "contactRole": "联系人角色",
+    "lastStage": "最后阶段"
   },
   "links": {
     "contacts": "联系人",

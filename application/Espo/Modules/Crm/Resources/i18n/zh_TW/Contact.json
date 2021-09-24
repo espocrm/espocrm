@@ -19,8 +19,7 @@
     "acceptanceStatus": "接受狀態",
     "accountIsInactive": "帳戶無效",
     "acceptanceStatusMeetings": "接受狀態 (會議)",
-    "acceptanceStatusCalls": "接受狀態 (通話)",
-    "title": "切割高度 (像素)"
+    "acceptanceStatusCalls": "接受狀態 (通話)"
   },
   "links": {
     "opportunities": "商機",

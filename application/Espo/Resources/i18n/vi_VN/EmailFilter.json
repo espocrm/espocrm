@@ -3,14 +3,21 @@
     "from": "Từ",
     "to": "Đến",
     "subject": "Chủ đề",
-    "bodyContains": "Nội dung"
+    "bodyContains": "Nội dung",
+    "action": "Hành động",
+    "emailFolder": "Thư mục"
   },
   "labels": {
     "Create EmailFilter": "Tạo bộ lọc thư"
   },
+  "tooltips": {
+    "from": "Email được gửi từ địa chỉ được chỉ định. Để trống nếu không cần thiết. Bạn có thể sử dụng ký tự đại diện *.",
+    "to": "Email được gửi đến địa chỉ được chỉ định. Để trống nếu không cần thiết. Bạn có thể sử dụng ký tự đại diện *."
+  },
   "options": {
     "action": {
-      "Skip": "Đồng ý"
+      "Skip": "Đồng ý",
+      "Move to Folder": "Đặt tại thư mục"
     }
   }
 }

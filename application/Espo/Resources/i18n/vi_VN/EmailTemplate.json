@@ -12,6 +12,9 @@
     "Create EmailTemplate": "Tạo mẫu email",
     "Info": "Thông tin"
   },
+  "presetFilters": {
+    "actual": "Hiện thời"
+  },
   "placeholderTexts": {
     "today": "Ngày hôm nay",
     "currentYear": "Năm hiện tại"

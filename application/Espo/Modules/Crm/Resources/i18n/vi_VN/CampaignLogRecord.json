@@ -9,13 +9,15 @@
     "application": "Ứng dụng"
   },
   "links": {
-    "object": "Chủ đề"
+    "object": "Chủ đề",
+    "campaign": "Chiến dịch"
   },
   "options": {
     "action": {
       "Sent": "Gửi",
       "Opened": "Đã mở",
-      "Clicked": "Đã nhấp chuột"
+      "Clicked": "Đã nhấp chuột",
+      "Lead Created": "Đã tạo khách tiềm năng"
     }
   },
   "labels": {

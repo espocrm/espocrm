@@ -61,7 +61,8 @@
   "messages": {
     "entityCreated": "模組已新增",
     "linkAlreadyExists": "鏈接名稱衝突。",
-    "linkConflict": "名稱衝突：鏈結或欄位有重覆。"
+    "linkConflict": "名稱衝突：鏈結或欄位有重覆。",
+    "confirmRemove": "你確定要從系統中移除模組型態?"
   },
   "tooltips": {
     "statusField": "此欄位的更新己在動態中紀錄。",

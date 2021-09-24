@@ -1,4 +1,39 @@
 {
+  "options": {
+    "dateTimeDefault": {
+      "": "Trống",
+      "javascript: return this.dateTime.getNow(1);": "Ngay bây giờ",
+      "javascript: return this.dateTime.getNow(5);": "Ngay bây giờ (5 phút)",
+      "javascript: return this.dateTime.getNow(15);": "Ngay bây giờ (15 phút)",
+      "javascript: return this.dateTime.getNow(30);": "Ngay bây giờ (30 phút)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 giờ",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 ngày",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 tuần"
+    },
+    "dateDefault": {
+      "": "Trống",
+      "javascript: return this.dateTime.getToday();": "Hôm nay"
+    },
+    "barcodeType": {
+      "QRcode": "Mã QR"
+    }
+  },
   "fieldParts": {
     "address": {
       "street": "Tên đường",
@@ -13,6 +48,9 @@
     },
     "datetimeOptional": {
       "date": "Ngày"
+    },
+    "personName": {
+      "middle": "Giữa"
     }
   },
   "labels": {

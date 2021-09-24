@@ -1,5 +1,6 @@
 {
   "labels": {
+    "Fields": "Mezők",
     "Relationships": "Kapcsolatok",
     "Schedule": "Menetrend",
     "Log": "Bejelentkezés",
@@ -43,7 +44,7 @@
     "linkType": {
       "manyToMany": "Sok-sok",
       "oneToMany": "Egy a sokhoz",
-      "manyToOne": "Sok-to-One",
+      "manyToOne": "Sok az egyhez",
       "parentToChildren": "Szülő-to-Children",
       "childrenToParent": "Gyermek-to-Parent"
     },

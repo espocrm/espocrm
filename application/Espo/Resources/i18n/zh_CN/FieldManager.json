@@ -86,8 +86,12 @@
       "map": "地图"
     },
     "personName": {
+      "salutation": "称呼",
       "first": "名",
       "last": "姓"
+    },
+    "currency": {
+      "converted": "已换算"
     },
     "datetimeOptional": {
       "date": "日期"

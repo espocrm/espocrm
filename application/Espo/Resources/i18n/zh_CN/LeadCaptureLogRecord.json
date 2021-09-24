@@ -1,5 +1,7 @@
 {
   "fields": {
+    "number": "号码",
+    "data": "数据",
     "target": "目标"
   },
   "links": {

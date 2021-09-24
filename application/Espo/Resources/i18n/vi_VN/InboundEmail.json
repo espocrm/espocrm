@@ -17,12 +17,19 @@
     "replyFromAddress": "Địa chỉ email trả lời",
     "replyToAddress": "Trả lời sang mail",
     "replyFromName": "Tên người gửi",
+    "addAllTeamUsers": "Cho tất cả thành viên trong nhóm",
     "team": "Nhóm",
     "teams": "Nhóm",
     "smtpHost": "Máy chủ SMTP",
     "smtpPort": "Cổng SMTP",
     "smtpUsername": "Tên đăng nhập SMTP",
     "smtpPassword": "Mật khẩu SMTP"
+  },
+  "tooltips": {
+    "createCase": "Tự động tạo trường hợp khi có email gửi đến."
+  },
+  "links": {
+    "filters": "Bộ lọc"
   },
   "options": {
     "status": {

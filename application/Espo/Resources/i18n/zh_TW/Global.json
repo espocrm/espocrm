@@ -310,7 +310,8 @@
     "recalculateFormulaConfirmation": "取消連結",
     "fieldExceedsMaxCount": "保留收到的電子郵件未讀",
     "notUpdated": "我的團隊",
-    "maintenanceMode": "顯示成列表"
+    "maintenanceMode": "顯示成列表",
+    "fieldInvalid": "{field} 錯誤"
   },
   "boolFilters": {
     "onlyMy": "只有我的",

@@ -26,7 +26,8 @@
     "Create Meeting": "Tạo buổi hẹn",
     "Set Held": "Tổ chức",
     "Set Not Held": "Không tổ chức",
-    "Send Invitations": "Gửi giấy mời"
+    "Send Invitations": "Gửi giấy mời",
+    "before": "trước"
   },
   "presetFilters": {
     "planned": "Đã lên kế hoạch",

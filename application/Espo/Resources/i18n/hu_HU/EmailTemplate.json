@@ -6,7 +6,6 @@
     "body": "Test",
     "subject": "Tantárgy",
     "attachments": "Mellékletek",
-    "insertField": "Terület beillesztése",
     "oneOff": "Egyszeri"
   },
   "labels": {
@@ -19,11 +18,7 @@
   "presetFilters": {
     "actual": "Tényleges"
   },
-  "messages": {
-    "infoText": "Rendelkezésre álló helyőrzők:\n\n{optOutUrl} & # 8211; A megtagadási link URL-je;\n\n{optOutLink} & # 8211; leiratkozási link."
-  },
   "placeholderTexts": {
-    "optOutUrl": "A le nem adható link URL-je",
     "optOutLink": "leiratkozási link"
   }
 }

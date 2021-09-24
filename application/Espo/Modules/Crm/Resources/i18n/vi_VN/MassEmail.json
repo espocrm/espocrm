@@ -3,11 +3,27 @@
     "name": "Tên",
     "status": "Tình trạng",
     "startAt": "Ngày bắt đầu",
+    "fromAddress": "Từ địa chỉ",
+    "fromName": "Từ tên",
+    "replyToAddress": "Trả lời đến địa chỉ",
+    "replyToName": "Trả lời đến tên",
+    "campaign": "Chiến dịch",
+    "emailTemplate": "Thư mẫu",
+    "targetLists": "Danh sách mục tiêu",
     "smtpAccount": "Tài khoản SMTP"
+  },
+  "links": {
+    "targetLists": "Danh sách mục tiêu",
+    "inboundEmail": "Tài khoản email"
   },
   "options": {
     "status": {
-      "Draft": "Bản nháp"
+      "Draft": "Bản nháp",
+      "Pending": "Đang chờ",
+      "In Process": "Đang thực hiện",
+      "Complete": "Hoàn thành",
+      "Canceled": "Đã hủy",
+      "Failed": "Lỗi"
     }
   },
   "labels": {
@@ -17,6 +33,7 @@
     "group": "nhóm"
   },
   "presetFilters": {
+    "actual": "Hiện thời",
     "complete": "Hoàn thành"
   }
 }

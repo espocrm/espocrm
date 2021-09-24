@@ -2,6 +2,9 @@
   "fields": {
     "status": "Tình trạng",
     "executeTime": "Thực thi lúc",
+    "serviceName": "Dịch vụ",
+    "methodName": "Phương thức",
+    "scheduledJob": "Bộ định thời công việc",
     "data": "Dữ liệu",
     "startedAt": "Bắt đầu lúc",
     "number": "Số"

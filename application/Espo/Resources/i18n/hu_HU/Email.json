@@ -15,8 +15,8 @@
     "fromAddress": "Címtől",
     "emailAddress": "Email cím",
     "deliveryDate": "Kiszállítási dátum",
-    "account": "számla",
-    "users": "felhasználók",
+    "account": "Számla",
+    "users": "Felhasználók",
     "replied": "válaszolt",
     "replies": "Válaszok",
     "isRead": "Olvasson",
@@ -94,7 +94,6 @@
     "Folders": "mappák"
   },
   "messages": {
-    "noSmtpSetup": "Nincs SMTP beállítás. {link}.",
     "testEmailSent": "A tesztüzenet elküldésre került",
     "emailSent": "Az e-mail el lett küldve",
     "savedAsDraft": "Mentve mint tervezet",
@@ -104,7 +103,7 @@
     "sent": "Küldött",
     "archived": "Archivált",
     "inbox": "Bejövő",
-    "drafts": "Dámajáték",
+    "drafts": "Vázlatok",
     "trash": "Szemét",
     "important": "Fontos"
   },

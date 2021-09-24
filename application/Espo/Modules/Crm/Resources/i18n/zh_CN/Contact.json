@@ -32,7 +32,8 @@
     "casesPrimary": "工单（主要）",
     "portalUser": "门户用户",
     "originalLead": "原始潜在客户",
-    "documents": "文件"
+    "documents": "文件",
+    "tasksPrimary": "任务（扩展）"
   },
   "labels": {
     "Create Contact": "创建联系人"

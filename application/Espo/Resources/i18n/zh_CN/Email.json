@@ -39,7 +39,9 @@
     "ccEmailAddresses": "CC地址",
     "messageId": "信息 ID",
     "messageIdInternal": "信息 ID (内部)",
+    "folderId": "文件夹编号",
     "fromName": "发件人",
+    "fromString": "从字符串",
     "toEmailAddresses": "收件人地址",
     "bccEmailAddresses": "BCC地址"
   },

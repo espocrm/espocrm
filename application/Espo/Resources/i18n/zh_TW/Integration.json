@@ -14,7 +14,7 @@
     "GoogleMaps": "Google 地圖"
   },
   "help": {
-    "Google": "在[此處] (https://developers.google.com/maps/documentation/javascript/get-api-key)獲取API密鑰。",
+    "Google": "在[此處](https://developers.google.com/maps/documentation/javascript/get-api-key)獲取API密鑰。",
     "GoogleMaps": "建立潛在客戶前確認"
   }
 }

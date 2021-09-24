@@ -2,13 +2,25 @@
   "fields": {
     "post": "Gửi",
     "attachments": "Đính kèm",
+    "targetType": "Đối tượng",
     "teams": "Nhóm",
     "users": "Người dùng",
-    "type": "Loại"
+    "portals": "Cổng thông tin",
+    "type": "Loại",
+    "data": "Dữ liệu",
+    "number": "Số"
   },
   "filters": {
     "all": "Tất cả",
     "posts": "Bài viết",
     "updates": "Cập nhật"
+  },
+  "messages": {
+    "writeMessage": "Để lại lời nhắn của bạn tại đây"
+  },
+  "options": {
+    "targetType": {
+      "self": "tới tôi"
+    }
   }
 }

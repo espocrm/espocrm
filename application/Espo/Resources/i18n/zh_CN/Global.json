@@ -44,7 +44,8 @@
     "PhoneNumber": "电话号码",
     "AuthLogRecord": "身份验证日志记录",
     "AuthFailLogRecord": "认证失败日志记录",
-    "EmailTemplateCategory": "邮件模板类别"
+    "EmailTemplateCategory": "邮件模板类别",
+    "ArrayValue": "数组值"
   },
   "scopeNamesPlural": {
     "Email": "电子邮件",
@@ -78,7 +79,9 @@
     "AuthLogRecord": "身份验证登录",
     "AuthFailLogRecord": "身份验证失败的日志",
     "EmailTemplateCategory": "邮件模板类别",
-    "Import": "导入结果"
+    "Import": "导入结果",
+    "LeadCapture": "潜在客户捕获",
+    "LeadCaptureLogRecord": "潜在客户捕获日志"
   },
   "labels": {
     "Misc": "杂项",
@@ -223,6 +226,7 @@
     "Self-Assigned": "指派给自己",
     "Return to Application": "返回至应用",
     "Select All Results": "选择所有结果",
+    "Expand": "扩展",
     "Collapse": "折叠",
     "New notifications": "新通知",
     "Manage Categories": "管理类别",
@@ -281,9 +285,12 @@
     "internalPostTitle": "邮件只能由内部用户看到",
     "loading": "载入中...",
     "saving": "保存中…",
+    "fieldMaxFileSizeError": "文件大小不超过{max}Mb",
     "fieldShouldBeLess": "{field}应小于{value}",
     "fieldShouldBeGreater": "{field}应大于{value}",
-    "fieldIsUploading": "正在上传"
+    "fieldIsUploading": "正在上传",
+    "erasePersonalDataConfirmation": "选中的字段将被永久删除。你确定？",
+    "massPrintPdfMaxCountError": "无法打印超过 {maxCount} 条记录。"
   },
   "boolFilters": {
     "onlyMy": "仅自己",
@@ -299,7 +306,9 @@
     "massUpdate": "批量更新",
     "export": "导出",
     "follow": "跟踪",
-    "unfollow": "取消跟踪"
+    "unfollow": "取消跟踪",
+    "convertCurrency": "转换货币",
+    "printPdf": "打印为PDF"
   },
   "fields": {
     "name": "名称",
@@ -325,7 +334,12 @@
     "phoneNumberOther": "电话（其他）",
     "order": "订购",
     "parent": "上级目录",
-    "children": "下级目录"
+    "children": "下级目录",
+    "emailAddressData": "电子邮件地址数据",
+    "phoneNumberData": "电话号码数据",
+    "ids": "身份证",
+    "names": "姓名",
+    "type": "类型"
   },
   "links": {
     "assignedUser": "已指派用于",
@@ -702,6 +716,9 @@
     "h": "小时",
     "m": "分",
     "s": "秒"
+  },
+  "listViewModes": {
+    "list": "列表"
   },
   "themes": {
     "Espo": "Espo",

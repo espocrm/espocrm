@@ -1,6 +1,7 @@
 {
   "fields": {
     "status": "Állapot",
+    "executeTime": "Végrehajtás óta",
     "attempts": "Kísérletek balra",
     "failedAttempts": "Sikertelen kísérletek",
     "serviceName": "Szolgáltatás",

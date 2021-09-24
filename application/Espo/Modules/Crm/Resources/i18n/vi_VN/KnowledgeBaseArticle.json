@@ -25,6 +25,7 @@
   "options": {
     "status": {
       "Draft": "Bản nháp",
+      "Archived": "Đã lưu trữ",
       "Published": "Đã xuất bản"
     }
   },

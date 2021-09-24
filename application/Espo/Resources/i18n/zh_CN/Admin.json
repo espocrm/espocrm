@@ -82,10 +82,13 @@
   "fieldTypes": {
     "address": "动作",
     "url": "URL",
+    "varchar": "字符串",
     "currencyConverted": "货币（已转换）",
     "colorpicker": "拾色器",
     "int": "Int",
     "number": "数字",
+    "jsonArray": "JSON 数组",
+    "jsonObject": "Json 对象",
     "datetime": "DateTime",
     "datetimeOptional": "Date/DateTime"
   },

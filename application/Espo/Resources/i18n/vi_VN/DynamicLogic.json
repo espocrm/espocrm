@@ -5,9 +5,19 @@
       "notEquals": "KHÔNG BẰNG",
       "greaterThan": "LỚN HƠN",
       "lessThan": "NHỎ HƠN",
+      "in": "trong",
+      "notIn": "không trong",
+      "inPast": "Trong quá khứ",
+      "inFuture": "Trong tương lai",
       "isToday": "Là hôm nay",
+      "isTrue": "Là đúng",
+      "isFalse": "Là sai",
+      "isEmpty": "Bị bỏ trống",
+      "isNotEmpty": "Không bị bỏ trống",
       "contains": "Có chứa",
-      "has": "Có chứa"
+      "has": "Có chứa",
+      "notContains": "Không có chứa",
+      "notHas": "Không có chứa"
     }
   },
   "labels": {

@@ -79,7 +79,6 @@
     "historyEntityList": "Történelem entitás listája",
     "currencyFormat": "Valuta formátum",
     "currencyDecimalPlaces": "Valuta tizedes helyek",
-    "aclStrictMode": "ACL szigorú üzemmód",
     "followCreatedEntities": "Kövesse a létrehozott rekordokat",
     "aclAllowDeleteCreated": "Lehetővé teszi a létrehozott rekordok eltávolítását",
     "adminNotifications": "Rendszer értesítések az adminisztrációs panelben",
@@ -93,20 +92,6 @@
     "tabIconsDisabled": "Letiltja a fül ikont",
     "textFilterUseContainsForVarchar": "A varchar mezők szűrésénél a \"contains\" operátort használja",
     "emailAddressIsOptedOutByDefault": "Jelöljön ki új e-mail címeket, mint opciót"
-  },
-  "options": {
-    "weekStart": {
-      "0": "vasárnap",
-      "1": "hétfő"
-    },
-    "currencyFormat": {
-      "2": "$ 10"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Hozzászólások",
-      "Status": "Státusz frissítések",
-      "EmailReceived": "Fogadott e-mailek"
-    }
   },
   "tooltips": {
     "recordsPerPage": "A listanézetben eredetileg megjelenített bejegyzések száma.",
@@ -161,5 +146,15 @@
   },
   "messages": {
     "ldapTestConnection": "A kapcsolat sikeresen létrejött."
+  },
+  "options": {
+    "currencyFormat": {
+      "2": "$ 10"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "Hozzászólások",
+      "Status": "Státusz frissítések",
+      "EmailReceived": "Fogadott e-mailek"
+    }
   }
 }

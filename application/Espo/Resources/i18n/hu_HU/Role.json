@@ -48,7 +48,7 @@
     "edit": "szerkesztése",
     "delete": "Töröl",
     "stream": "Folyam",
-    "create": "Teremt"
+    "create": "Létrehoz"
   },
   "messages": {
     "changesAfterClearCache": "A hozzáférés-vezérlés minden módosítását a gyorsítótár letiltása után alkalmazzák."

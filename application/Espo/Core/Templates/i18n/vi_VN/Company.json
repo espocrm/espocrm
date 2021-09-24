@@ -1,7 +1,8 @@
 {
   "fields": {
     "billingAddress": "Địa chỉ thanh toán",
-    "shippingAddress": "Địa chỉ giao hàng"
+    "shippingAddress": "Địa chỉ giao hàng",
+    "website": "Trang web"
   },
   "links": {
     "meetings": "Cuộc hẹn",

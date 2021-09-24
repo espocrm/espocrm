@@ -1,1 +1,9 @@
-{}
+{
+  "messages": {
+    "infoMention": "Gõ **@username** để nhắc đến thành viên trong bài đăng"
+  },
+  "syntaxItems": {
+    "deletedText": "đã xóa văn bản",
+    "link": "liên kết"
+  }
+}

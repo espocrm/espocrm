@@ -20,11 +20,7 @@
   "presetFilters": {
     "actual": "所有"
   },
-  "messages": {
-    "infoText": "可用变量：\n\n{optOutUrl} &#8211; URL为一个退订链接;\n\n{optOutLink} &#8211;一个退订链接。"
-  },
   "placeholderTexts": {
-    "optOutUrl": "取消订阅地址",
     "optOutLink": "取消订阅链接"
   }
 }

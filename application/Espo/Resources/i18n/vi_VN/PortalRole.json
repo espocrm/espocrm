@@ -4,5 +4,8 @@
   },
   "labels": {
     "Access": "Truy cập"
+  },
+  "fields": {
+    "exportPermission": "Quyền xuất dữ liệu"
   }
 }

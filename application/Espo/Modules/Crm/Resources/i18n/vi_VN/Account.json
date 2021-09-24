@@ -2,20 +2,26 @@
   "fields": {
     "name": "Tên",
     "phoneNumber": "Điện thoại",
-    "billingAddress": "Địa chủ thanh toán",
+    "billingAddress": "Địa chỉ thanh toán",
     "shippingAddress": "Địa chỉ vận chuyển",
     "description": "Mô tả",
     "sicCode": "Mã Sic",
     "type": "Loại",
     "contactRole": "Vai trò",
-    "campaign": "Chiến dịch"
+    "campaign": "Chiến dịch",
+    "targetLists": "Danh sách mục tiêu",
+    "targetList": "Danh sách mục tiêu",
+    "originalLead": "Nguồn gốc khách tiềm năng"
   },
   "links": {
     "contacts": "Sổ liên lạc",
     "opportunities": "Cơ hội",
     "cases": "Trường hợp",
     "documents": "Tài liệu",
-    "campaign": "Chiến dịch"
+    "callsPrimary": "Cuộc gọi (mở rộng)",
+    "targetLists": "Danh sách mục tiêu",
+    "campaign": "Chiến dịch",
+    "originalLead": "Nguồn gốc khách tiềm năng"
   },
   "options": {
     "type": {
@@ -25,27 +31,66 @@
       "Reseller": "Đại lý"
     },
     "industry": {
+      "Agriculture": "Nông nghiệp",
+      "Advertising": "Quảng cáo",
+      "Apparel & Accessories": "Thời trang và phụ kiện",
+      "Automotive": "Ô tô",
       "Banking": "Ngân hàng",
+      "Biotechnology": "Công nghệ sinh học",
+      "Building Materials & Equipment": "Vật liệu & thiết bị xây dựng",
+      "Chemical": "Hóa chất",
       "Computer": "Máy tính",
       "Education": "Giáo dục",
       "Electronics": "Điện máy",
+      "Energy": "Năng lượng",
+      "Entertainment & Leisure": "Giải trí",
       "Finance": "Tín dụng",
+      "Food & Beverage": "Thực phẩm & nước giải khát",
+      "Grocery": "Tạp hóa",
+      "Healthcare": "Chăm sóc sức khỏe",
       "Insurance": "Bảo hiểm",
-      "Publishing": "Đang xuất bản",
+      "Legal": "Pháp luật",
+      "Manufacturing": "Chế tạo",
+      "Publishing": "Nhà xuất bản",
       "Real Estate": "Bất động sản",
       "Service": "Dịch vụ",
       "Sports": "Thể thao",
       "Software": "Phần mềm",
       "Technology": "Công nghệ",
+      "Telecommunications": "Viễn thông",
+      "Television": "Truyền hình",
+      "Transportation": "Vận tải",
+      "Venture Capital": "Đầu tư mạo hiểm",
+      "Aerospace": "Hàng không vũ trụ",
+      "Architecture": "Kiến trúc",
+      "Construction": "Xây dựng",
+      "Defense": "Bảo vệ",
+      "Creative": "Sáng tạo",
+      "Culture": "Văn hóa",
+      "Consulting": "Tư vấn",
+      "Electric Power": "Điện lực",
+      "Hospitality": "Bệnh viện",
+      "Mass Media": "Truyền thông đại chúng",
+      "Mining": "Khai thác mỏ",
+      "Music": "Âm nhạc",
+      "Marketing": "Tiếp thị",
+      "Petroleum": "Dầu mỏ",
+      "Retail": "Bán lẻ",
+      "Shipping": "Vận chuyển",
       "Support": "Hỗ trợ",
-      "Water": "Nước"
+      "Testing, Inspection & Certification": "Thử nghiệm, Kiểm tra & Chứng nhận",
+      "Wholesale": "Nhà phân phối",
+      "Water": "Nước",
+      "Travel": "Du lịch"
     }
   },
   "labels": {
-    "Create Account": "Tạo tài khoản"
+    "Create Account": "Tạo tài khoản",
+    "Copy Billing": "Sao chép từ địa chỉ thanh toán"
   },
   "presetFilters": {
     "customers": "Khách hàng",
-    "partners": "Đối tác"
+    "partners": "Đối tác",
+    "recentlyCreated": "Đã tạo gần đây"
   }
 }

@@ -38,7 +38,8 @@
   },
   "labels": {
     "Create Task": "新增任務",
-    "Complete": "完成"
+    "Complete": "完成",
+    "overdue": "逾期"
   },
   "presetFilters": {
     "actual": "實際",

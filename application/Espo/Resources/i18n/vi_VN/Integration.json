@@ -1,5 +1,6 @@
 {
   "fields": {
-    "enabled": "Đã bật"
+    "enabled": "Đã bật",
+    "clientId": "ID khách"
   }
 }

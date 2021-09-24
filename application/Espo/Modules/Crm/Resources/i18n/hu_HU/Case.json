@@ -9,7 +9,6 @@
     "priority": "Kiemelten fontos",
     "type": "típus",
     "description": "Leírás",
-    "lead": "Vezet",
     "attachments": "Mellékletek",
     "inboundEmail": "Csoportos e-mail fiók"
   },
@@ -19,10 +18,9 @@
     "Contacts": "Kapcsolatok",
     "meetings": "találkozók",
     "calls": "felhívja",
-    "tasks": "feladatok",
+    "tasks": "Feladatok",
     "emails": "e-mailek",
     "articles": "Tudásbázis-cikkek",
-    "lead": "Vezet",
     "attachments": "Mellékletek",
     "inboundEmail": "Csoportos e-mail fiók"
   },

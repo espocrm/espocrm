@@ -2,7 +2,7 @@
   "links": {
     "meetings": "találkozók",
     "calls": "felhívja",
-    "tasks": "feladatok"
+    "tasks": "Feladatok"
   },
   "labels": {
     "Create {entityType}": "{EntityTypeTranslated} létrehozása"

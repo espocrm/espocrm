@@ -20,11 +20,7 @@
   "presetFilters": {
     "actual": "實際"
   },
-  "messages": {
-    "infoText": "取消訂閱鏈接的URL"
-  },
   "placeholderTexts": {
-    "optOutUrl": "退訂鏈接",
     "optOutLink": "電子郵件地址已選擇排除",
     "today": "當前日期和時間",
     "now": "重複值",

@@ -14,6 +14,7 @@
     "selectTemplate": "Chọn mẫu",
     "fromAddress": "Địa chỉ gửi",
     "emailAddress": "Địa chỉ email",
+    "deliveryDate": "Ngày giao",
     "account": "Tài khoản",
     "users": "Người dùng",
     "replied": "Đã trả lời",
@@ -23,7 +24,13 @@
     "isImportant": "Quan trọng",
     "inTrash": "Trong thùng rác",
     "name": "Chủ đề",
-    "sentBy": "Gửi bởi"
+    "folder": "Thư mục",
+    "sentBy": "Gửi bởi",
+    "folderId": "ID thư mục",
+    "fromName": "Từ tên",
+    "fromEmailAddress": "Từ địa chỉ (liên kết)",
+    "replyToName": "Trả lời đến tên",
+    "replyToAddress": "Trả lời đến địa chỉ"
   },
   "links": {
     "replied": "Đã trả lời",
@@ -65,12 +72,15 @@
     "Unmark Importance": "Bỏ đánh dấu quan trọng",
     "Move to Trash": "Di chuyển đến thùng rác",
     "Retrieve from Trash": "Khôi phục từ thùng rác",
-    "View Users": "Xem thành viên"
+    "Folders": "Thư mục",
+    "View Users": "Xem thành viên",
+    "No Subject": "Không chủ đề"
   },
   "messages": {
     "testEmailSent": "Thư kiểm tra đã được gửi",
     "emailSent": "Thư đã được gửi",
-    "savedAsDraft": "Đã lưu nháp"
+    "savedAsDraft": "Đã lưu nháp",
+    "sendConfirm": "Gửi thư này?"
   },
   "presetFilters": {
     "sent": "Đã gửi",
@@ -84,6 +94,10 @@
     "markAsNotRead": "Đánh dấu không đọc",
     "markAsImportant": "Đánh dấu quan trọng",
     "markAsNotImportant": "Ngưng đánh dấu quan trọng",
-    "moveToTrash": "Di chuyển vào thùng rác"
+    "moveToTrash": "Di chuyển vào thùng rác",
+    "moveToFolder": "Di chuyển đến thư mục"
+  },
+  "strings": {
+    "sendingFailed": "Gửi email lỗi"
   }
 }

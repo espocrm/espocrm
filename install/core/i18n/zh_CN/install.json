@@ -96,21 +96,5 @@
     "extension": "{0}扩展名缺失",
     "option": "建议值为{0}",
     "mysqlSettingError": "EspoCRM需要MySQL设置\"{NAME}\"设置为{VALUE}"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "结果 <pre>1. 查找httpd.conf文件（通常你会发现一个名为CONF，配置或类似的规定文件夹中）结果\n2.里面的httpd.conf文件注释行的LoadModule rewrite_module模块/ mod_rewrite.so（从行前面删除井'＃'号）结果\n3.又找到行ClearModuleList下面是注释掉然后查找并确保该行加入AddModule mod_rewrite.c没有被注释掉。\n</pre>"
-      },
-      "nginx": {
-        "linux": "<br>将此代码添加入你的网页服务器配置文件<code>{NGINX_PATH}</code> 在里面 \"服务器\" 部分:<pre>{NGINX}</pre> <br> 为获取更多信息，请访问帮助 <a href=\"{NGINX_LINK}\" target=\"_blank\">EspoCRM的网页服务器配置</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.</h3><br> 可能出现的问题: 禁用 \"mod_rewrite\" 在Apache 服务器, 禁用 .分布式配置文件支持或者重写数据问题.<br>仅执行必要操作.完成每一步需确认问题是否被解决.",
-      "nginx": "<h3>应用程序编程接口错误: EspoCRM 应用程序编程接口是不可用的.</h3>",
-      "microsoft-iis": "<h3>应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.</h3><br>可能出现的问题: 禁用 \"网址重写\". 请核对并启用\"网址重写\" 模块在IIS服务器",
-      "default": "<h3>应用程序编程接口错误: EspoCRM应用程序编程接口是不可用的.</h3><br>可能出现的问题: 禁用重写模块.请在你的服务器核对并启用重写模块 (e.g. mod_重写 在 Apache) 和.htaccess 支持."
-    }
   }
 }

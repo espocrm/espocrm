@@ -2,7 +2,8 @@
   "fields": {
     "name": "名稱",
     "roles": "權限",
-    "positionList": "職位清單"
+    "positionList": "職位清單",
+    "layoutSet": "版面設定"
   },
   "links": {
     "users": "使用者",

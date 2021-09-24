@@ -2,9 +2,13 @@
   "fields": {
     "name": "Tên",
     "campaign": "Chiến dịch",
-    "isActive": "Được kích hoạt"
+    "isActive": "Được kích hoạt",
+    "targetList": "Danh sách mục tiêu",
+    "leadSource": "Nguồn gốc khách tiềm năng",
+    "skipOptInConfirmationIfSubscribed": "Bỏ qua bước xác nhận nếu dữ liệu đã có trong danh sách mục tiêu"
   },
   "links": {
+    "targetList": "Danh sách mục tiêu",
     "campaign": "Chiến dịch",
     "logRecords": "Nhật ký"
   }

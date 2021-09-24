@@ -1,7 +1,9 @@
 {
   "fields": {
     "name": "Tên",
-    "roles": "Vai trò"
+    "roles": "Vai trò",
+    "portalPermission": "Phân quyền cổng thông tin",
+    "exportPermission": "Quyền xuất dữ liệu"
   },
   "links": {
     "users": "Người dùng",
@@ -24,13 +26,15 @@
       "contact": "liên hệ",
       "own": "sở hữu",
       "no": "không",
-      "yes": "đồng ý"
+      "yes": "đồng ý",
+      "not-set": "chưa đặt"
     }
   },
   "actions": {
     "read": "Đọc",
     "edit": "Sửa",
     "delete": "Xóa",
+    "stream": "Thông tin cập nhật",
     "create": "Tạo"
   }
 }

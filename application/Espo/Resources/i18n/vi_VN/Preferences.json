@@ -17,7 +17,11 @@
     "smtpPassword": "Mật khẩu",
     "smtpEmailAddress": "Địa chỉ email",
     "exportDelimiter": "Xuất dấu phân cách",
+    "signature": "Chữ ký email",
+    "defaultReminders": "Lời nhắc mặc định",
     "theme": "Chủ đề",
+    "autoFollowEntityTypeList": "Tự động theo dõi toàn bộ",
+    "followEntityOnStreamPost": "Tự động theo dõi danh mục sau khi đăng tại Thông tin cập nhật",
     "followCreatedEntities": "Tự động theo dõi mục đã được tạo"
   },
   "options": {
@@ -27,6 +31,7 @@
     }
   },
   "labels": {
-    "Notifications": "Thông báo"
+    "Notifications": "Thông báo",
+    "User Interface": "Giao diện người dùng"
   }
 }

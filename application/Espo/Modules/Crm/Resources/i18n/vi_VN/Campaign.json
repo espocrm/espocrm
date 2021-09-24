@@ -1,19 +1,25 @@
 {
   "fields": {
     "name": "Tên",
+    "description": "Mô tả",
     "status": "Tình trạng",
     "type": "Phân loại",
     "startDate": "Ngày bắt đầu",
     "endDate": "Ngày kết thúc",
+    "targetLists": "Danh sách mục tiêu",
+    "sentCount": "Gửi",
     "openedCount": "Đã mở",
     "clickedCount": "Đã nhấp",
     "leadCreatedCount": "Tạo khách hàng tiềm năng"
   },
   "links": {
+    "targetLists": "Danh sách mục tiêu",
+    "accounts": "Tài khoản",
     "contacts": "Danh bạ",
     "leads": "Khách hàng tiềm năng",
     "opportunities": "Cơ hội",
-    "campaignLogRecords": "Nhật ký"
+    "campaignLogRecords": "Nhật ký",
+    "trackingUrls": "Địa chỉ theo dõi"
   },
   "options": {
     "type": {
@@ -21,6 +27,7 @@
       "Newsletter": "Báo"
     },
     "status": {
+      "Planning": "Lập kế hoạch",
       "Active": "Kích hoạt",
       "Inactive": "Không kích hoạt",
       "Complete": "Hoàn thành"
@@ -28,10 +35,12 @@
   },
   "labels": {
     "Create Campaign": "Tạo chiến dịch",
+    "Target Lists": "Danh sách mục tiêu",
     "Statistics": "Thống kê",
     "hard": "cứng",
     "soft": "mềm",
-    "Unsubscribe": "`"
+    "Unsubscribe": "`",
+    "Create Target List": "Tạo danh sách mục tiêu"
   },
   "presetFilters": {
     "active": "Kích hoạt"

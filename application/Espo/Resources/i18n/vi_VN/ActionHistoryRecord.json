@@ -7,6 +7,9 @@
   "links": {
     "user": "Người dùng"
   },
+  "presetFilters": {
+    "onlyMy": "Chỉ mình tôi"
+  },
   "options": {
     "action": {
       "read": "Đọc",

@@ -11,7 +11,9 @@
     "users": "Người dùng",
     "contacts": "Sổ liên lạc",
     "leads": "Trưởng nhóm",
-    "reminders": "Nhắc nhở"
+    "reminders": "Nhắc nhở",
+    "account": "Tài khoản",
+    "acceptanceStatus": "Trạng thái chấp nhận"
   },
   "options": {
     "status": {
@@ -26,7 +28,8 @@
     "acceptanceStatus": {
       "None": "Trống",
       "Accepted": "Đã đồng ý",
-      "Declined": "Không đồng ý"
+      "Declined": "Không đồng ý",
+      "Tentative": "Dự định"
     }
   },
   "labels": {

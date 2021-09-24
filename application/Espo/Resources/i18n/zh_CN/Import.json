@@ -54,7 +54,12 @@
   "messages": {
     "utf8": "应该为UTF-8编码",
     "duplicatesRemoved": "去重",
-    "inIdle": "空闲时执行"
+    "inIdle": "空闲时执行",
+    "revert": "这将永久删除所有导入的记录。",
+    "removeDuplicates": "这将永久删除所有被识别为重复的导入记录。",
+    "confirmRevert": "这将永久删除所有导入的记录。你确定？",
+    "confirmRemoveDuplicates": "这将永久删除所有被识别为重复的导入记录。你确定？",
+    "removeImportLog": "这将删除导入日志。将保留所有导入的记录。如果您确定导入没问题，请使用它。"
   },
   "fields": {
     "file": "文件",

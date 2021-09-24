@@ -3,6 +3,7 @@
     "title": "Tiêu đề",
     "dateFrom": "Từ ngày",
     "dateTo": "Đến ngày",
+    "autorefreshInterval": "Thời gian tự động tải lại",
     "displayRecords": "Số dòng hiển thị",
     "isDoubleHeight": "Cao 2x",
     "enabledScopeList": "Những gì sẽ được hiển thị",

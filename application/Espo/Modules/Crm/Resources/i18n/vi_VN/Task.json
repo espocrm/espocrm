@@ -33,9 +33,11 @@
   },
   "labels": {
     "Create Task": "Tạo nhiệm vụ",
-    "Complete": "Hoàn thành"
+    "Complete": "Hoàn thành",
+    "overdue": "quá hạn"
   },
   "presetFilters": {
+    "actual": "Hiện thời",
     "completed": "Hoàn thành",
     "todays": "Hôm nay",
     "overdue": "Quá hạn"
