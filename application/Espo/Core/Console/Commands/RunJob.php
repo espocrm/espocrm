@@ -31,7 +31,7 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

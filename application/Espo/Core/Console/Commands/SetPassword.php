@@ -33,7 +33,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\PasswordHash,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

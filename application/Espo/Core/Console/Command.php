@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Console;
 
+use Espo\Core\Console\Command\Params;
+
 /**
  * A command.
  */

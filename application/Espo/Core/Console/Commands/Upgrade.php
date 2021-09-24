@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Log,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

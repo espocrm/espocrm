@@ -33,7 +33,7 @@ use Espo\Tools\Import\Service;
 
 use Espo\Core\{
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

@@ -32,7 +32,7 @@ namespace Espo\Classes\AppInfo;
 use Espo\Core\{
     Container as ContainerService,
     Utils\Metadata,
-    Console\Params,
+    Console\Command\Params,
 };
 
 class Container

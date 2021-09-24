@@ -33,7 +33,7 @@ use Espo\Core\{
     Utils\Module,
     Binding\EspoBindingLoader,
     Binding\Binding as BindingItem,
-    Console\Params,
+    Console\Command\Params,
 };
 
 class Binding

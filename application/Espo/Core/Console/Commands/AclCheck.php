@@ -33,7 +33,7 @@ use Espo\Core\{
     Portal\Application as PortalApplication,
     Container,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

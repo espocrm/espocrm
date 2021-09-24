@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console;
+namespace Espo\Core\Console\Command;
 
 use Espo\Core\Utils\Util;
 

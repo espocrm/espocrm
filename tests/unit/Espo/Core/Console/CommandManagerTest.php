@@ -33,7 +33,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Console\CommandManager;
 use Espo\Core\Console\Command;
-use Espo\Core\Console\Params;
+use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 
 class CommandManagerTest extends \PHPUnit\Framework\TestCase

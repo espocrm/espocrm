@@ -34,6 +34,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Console\Exceptions\CommandNotSpecified;
 use Espo\Core\Console\Exceptions\CommandNotFound;
+use Espo\Core\Console\Command\Params;
 
 /**
  * Processes console commands.

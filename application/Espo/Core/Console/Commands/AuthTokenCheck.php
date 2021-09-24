@@ -33,7 +33,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Authentication\AuthToken\AuthTokenManager,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

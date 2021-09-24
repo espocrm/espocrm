@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\AppInfo;
 
-use Espo\Core\Console\Params;
+use Espo\Core\Console\Command\Params;
 use Espo\Core\Utils\ClassFinder;
 use Espo\Core\Job\MetadataProvider;
 

@@ -32,7 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     DataManager,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

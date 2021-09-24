@@ -34,7 +34,7 @@ use Espo\Core\{
     Application,
     Upgrades\UpgradeManager,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 

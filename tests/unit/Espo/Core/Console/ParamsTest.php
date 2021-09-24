@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Console;
 
-use Espo\Core\Console\Params;
+use Espo\Core\Console\Command\Params;
 
 class ParamsTest extends \PHPUnit\Framework\TestCase
 {

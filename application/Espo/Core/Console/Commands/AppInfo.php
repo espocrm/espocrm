@@ -33,7 +33,7 @@ use Espo\Core\{
     InjectableFactory,
     Utils\File\Manager as FileManager,
     Console\Command,
-    Console\Params,
+    Console\Command\Params,
     Console\IO,
 };
 
