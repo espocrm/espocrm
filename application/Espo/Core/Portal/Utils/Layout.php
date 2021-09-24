@@ -32,7 +32,7 @@ namespace Espo\Core\Portal\Utils;
 use Espo\Core\{
     Utils\Layout as LayoutBase,
     Exceptions\Error,
-    Utils\Resource\FileReaderParams,
+    Utils\Resource\FileReader\Params as FileReaderParams,
 };
 
 class Layout extends LayoutBase

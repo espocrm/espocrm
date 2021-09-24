@@ -35,7 +35,7 @@ use Espo\Core\InjectableFactory;
 
 use Espo\Core\{
     Utils\Resource\FileReader,
-    Utils\Resource\FileReaderParams,
+    Utils\Resource\FileReader\Params as FileReaderParams,
 };
 
 class LayoutTest extends \PHPUnit\Framework\TestCase
@@ -57,7 +57,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     private $fileReader;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = $this->createMock(FileManager::class);
 

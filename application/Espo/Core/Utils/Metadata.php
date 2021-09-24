@@ -36,7 +36,7 @@ use Espo\Core\{
     Utils\Metadata\Helper,
     Utils\DataCache,
     Utils\Resource\Reader as ResourceReader,
-    Utils\Resource\ReaderParams as ResourceReaderParams,
+    Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
 use StdClass;

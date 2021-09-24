@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Resource;
 
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\UnifierObj;
+use Espo\Core\Utils\Resource\Reader\Params;
 
 use stdClass;
 
@@ -54,7 +55,7 @@ class Reader
      *
      * @return stdClass|array
      */
-    public function read(string $path, ReaderParams $params)
+    public function read(string $path, Params $params)
     {
         if ($params->asArray()) {
             return $this->unifier->unify($path, $params->noCustom());

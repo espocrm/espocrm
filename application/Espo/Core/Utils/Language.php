@@ -37,7 +37,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\DataCache,
     Utils\Resource\Reader as ResourceReader,
-    Utils\Resource\ReaderParams as ResourceReaderParams,
+    Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
 use Espo\{
@@ -368,16 +368,6 @@ class Language
         $cacheKey = $this->getCacheKey($language);
 
         if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
-            /*$paths = $this->paths;
-
-            foreach ($paths as $k => &$path) {
-                $path = str_replace('{language}', $language, $path);
-            }
-
-            if ($this->noCustom) {
-                unset($paths['customPath']);
-            }*/
-
             $readerParams = ResourceReaderParams::create()
                 ->withAsArray()
                 ->withNoCustom($this->noCustom);
@@ -385,8 +375,6 @@ class Language
             $path = str_replace('{language}', $language, $this->resourcePath);
 
             $data = $this->resourceReader->read($path, $readerParams);
-
-            //$data = $this->unifier->unify($paths, true);
 
             if (is_array($data)) {
                 $this->sanitizeData($data);
@@ -412,7 +400,7 @@ class Language
 
     private function sanitizeData(array &$data): void
     {
-        foreach ($data as $key => &$subData) {
+        foreach ($data as &$subData) {
             if (is_array($subData)) {
                 $this->sanitizeData($subData);
             }

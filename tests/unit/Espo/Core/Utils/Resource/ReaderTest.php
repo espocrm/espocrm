@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Utils\Resource;
 
 use Espo\Core\Utils\Resource\Reader;
-use Espo\Core\Utils\Resource\ReaderParams;
+use Espo\Core\Utils\Resource\Reader\Params as ReaderParams;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\UnifierObj;
 

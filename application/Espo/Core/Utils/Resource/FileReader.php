@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Resource;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Resource\FileReader\Params;
 
 use RuntimeException;
 
@@ -57,7 +58,7 @@ class FileReader
      *
      * @throws RuntimeException If the resource does not exist.
      */
-    public function read(string $path, FileReaderParams $params): string
+    public function read(string $path, Params $params): string
     {
         $exactPath = $this->findExactPath($path, $params);
 
@@ -71,12 +72,12 @@ class FileReader
     /**
      * Whether a resource file exists.
      */
-    public function exists(string $path, FileReaderParams $params): bool
+    public function exists(string $path, Params $params): bool
     {
         return $this->findExactPath($path, $params) !== null;
     }
 
-    private function findExactPath(string $path, FileReaderParams $params): ?string
+    private function findExactPath(string $path, Params $params): ?string
     {
         $customPath = $this->pathProvider->getCustom() . $path;
 

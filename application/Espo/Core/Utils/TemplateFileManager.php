@@ -33,7 +33,7 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Exceptions\Error,
     Utils\Resource\FileReader,
-    Utils\Resource\FileReaderParams,
+    Utils\Resource\FileReader\Params as FileReaderParams,
 };
 
 class TemplateFileManager

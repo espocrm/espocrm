@@ -27,42 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Resource;
+namespace Espo\Core\Utils\Resource\Reader;
 
-class FileReaderParams
+class Params
 {
-    private $scope = null;
+    private $noCustom = false;
 
-    private $moduleName = null;
+    private $asArray = false;
 
     public static function create(): self
     {
         return new self();
     }
 
-    public function withScope(?string $scope): self
+    public function withNoCustom(bool $noCustom = true): self
     {
         $obj = clone $this;
-        $obj->scope = $scope;
+        $obj->noCustom = $noCustom;
 
         return $obj;
     }
 
-    public function withModuleName(?string $moduleName): self
+    public function withAsArray(bool $asArray = true): self
     {
         $obj = clone $this;
-        $obj->moduleName = $moduleName;
+        $obj->asArray = $asArray;
 
         return $obj;
     }
 
-    public function getScope(): ?string
+    public function noCustom(): bool
     {
-        return $this->scope;
+        return $this->noCustom;
     }
 
-    public function getModuleName(): ?string
+    public function asArray(): bool
     {
-        return $this->moduleName;
+        return $this->asArray;
     }
 }
