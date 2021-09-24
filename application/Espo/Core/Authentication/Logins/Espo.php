@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication\Logins;
 
 use Espo\Core\{
     Api\Request,
     Utils\PasswordHash,
     Authentication\Login,
-    Authentication\LoginData,
+    Authentication\Login\Data,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
     Authentication\FailReason,
@@ -51,11 +51,11 @@ class Espo implements Login
         $this->passwordHash = $passwordHash;
     }
 
-    public function login(LoginData $loginData, Request $request): Result
+    public function login(Data $data, Request $request): Result
     {
-        $username = $loginData->getUsername();
-        $password = $loginData->getPassword();
-        $authToken = $loginData->getAuthToken();
+        $username = $data->getUsername();
+        $password = $data->getPassword();
+        $authToken = $data->getAuthToken();
 
         if (!$password) {
             return Result::fail(FailReason::NO_PASSWORD);

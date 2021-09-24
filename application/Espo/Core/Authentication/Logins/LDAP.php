@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication\Logins;
 
 use Espo\Core\{
     ORM\EntityManager,
@@ -37,7 +37,7 @@ use Espo\Core\{
     Utils\Language,
     Utils\Log,
     Authentication\Login,
-    Authentication\LoginData,
+    Authentication\Login\Data,
     Authentication\Result,
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
@@ -107,11 +107,11 @@ class LDAP implements Login
         'portalRolesIds' => 'portalUserRolesIds',
     ];
 
-    public function login(LoginData $loginData, Request $request): Result
+    public function login(Data $data, Request $request): Result
     {
-        $username = $loginData->getUsername();
-        $password = $loginData->getPassword();
-        $authToken = $loginData->getAuthToken();
+        $username = $data->getUsername();
+        $password = $data->getPassword();
+        $authToken = $data->getAuthToken();
 
         $isPortal = $this->isPortal;
 
@@ -134,7 +134,7 @@ class LDAP implements Login
             $useLdapAuthForPortalUser = $this->utils->getOption('portalUserLdapAuth');
 
             if (!$useLdapAuthForPortalUser) {
-                return $this->baseLogin->login($loginData, $request);
+                return $this->baseLogin->login($data, $request);
             }
         }
 

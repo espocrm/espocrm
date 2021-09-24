@@ -27,43 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace Espo\Core\Authentication\Logins;
 
 use Espo\Core\{
-    Authentication\AuthToken\AuthToken,
+    Api\Request,
+    Utils\ApiKey,
+    Authentication\Login,
+    Authentication\Login\Data,
+    Authentication\Result,
+    Authentication\Helpers\UserFinder,
+    Exceptions\Error,
+    Authentication\FailReason,
 };
 
-class LoginDataBuilder
+class Hmac implements Login
 {
-    private $username = null;
+    private $userFinder;
 
-    private $password = null;
+    private $apiKeyUtil;
 
-    private $authToken = null;
-
-    public function setUsername(?string $username): self
+    public function __construct(UserFinder $userFinder, ApiKey $apiKeyUtil)
     {
-        $this->username = $username;
-
-        return $this;
+        $this->userFinder = $userFinder;
+        $this->apiKeyUtil = $apiKeyUtil;
     }
 
-    public function setPassword(?string $password): self
+    public function login(Data $data, Request $request): Result
     {
-        $this->password = $password;
+        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
 
-        return $this;
-    }
+        list($apiKey, $hash) = explode(':', $authString, 2);
 
-    public function setAuthToken(?AuthToken $authToken): self
-    {
-        $this->authToken = $authToken;
+        $user = $this->userFinder->findApiHmac($apiKey);
 
-        return $this;
-    }
+        if (!$user) {
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
+        }
 
-    public function build(): LoginData
-    {
-        return new LoginData($this->username, $this->password, $this->authToken);
+        $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->getId());
+
+        if (!$secretKey) {
+            throw new Error("No secret key for API user '" . $user->getId() . "'.");
+        }
+
+        $string = $request->getMethod() . ' ' . $request->getResourcePath();
+
+        if ($hash === ApiKey::hash($secretKey, $string)) {
+            return Result::success($user);
+        }
+
+        return Result::fail(FailReason::HASH_NOT_MATCHED);
     }
 }

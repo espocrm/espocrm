@@ -50,6 +50,7 @@ use Espo\Core\Authentication\{
     AuthToken\AuthTokenData,
     AuthToken\AuthToken,
     Hook\Manager as HookManager,
+    Login\Data as LoginData,
 };
 
 use Espo\Core\{

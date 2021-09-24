@@ -29,11 +29,9 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\{
-    Api\Request,
-    Authentication\Result,
-    Authentication\LoginData,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Authentication\Login\Data;
 
 /**
  * Performs credentials checking. For the basic authorization a username & password are used.
@@ -44,5 +42,5 @@ interface Login
     /**
      * Check credentials.
      */
-    public function login(LoginData $loginData, Request $request): Result;
+    public function login(Data $data, Request $request): Result;
 }

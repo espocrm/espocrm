@@ -29,34 +29,58 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Core\{
-    Api\Request,
-    Authentication\Login,
-    Authentication\LoginData,
-    Authentication\Result,
-    Authentication\Helpers\UserFinder,
-    Authentication\FailReason,
-};
+use Espo\Core\Authentication\AuthToken\AuthToken;
 
-class ApiKey implements Login
+/**
+ * Login data to be passed to the 'login' method.
+ */
+class Data
 {
-    private $userFinder;
+    private $username;
 
-    public function __construct(UserFinder $userFinder)
+    private $password;
+
+    private $authToken;
+
+    public function __construct(?string $username, ?string $password, ?AuthToken $authToken = null)
     {
-        $this->userFinder = $userFinder;
+        $this->username = $username;
+        $this->password = $password;
+        $this->authToken = $authToken;
     }
 
-    public function login(LoginData $loginData, Request $request): Result
+    public function getUsername(): ?string
     {
-        $apiKey = $request->getHeader('X-Api-Key');
+        return $this->username;
+    }
 
-        $user = $this->userFinder->findApiApiKey($apiKey);
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
 
-        if (!$user) {
-            return Result::fail(FailReason::WRONG_CREDENTIALS);
-        }
+    public function getAuthToken(): ?AuthToken
+    {
+        return $this->authToken;
+    }
 
-        return Result::success($user);
+    public function hasUsername(): bool
+    {
+        return !is_null($this->username);
+    }
+
+    public function hasPassword(): bool
+    {
+        return !is_null($this->password);
+    }
+
+    public function hasAuthToken(): bool
+    {
+        return !is_null($this->authToken);
+    }
+
+    public static function createBuilder(): DataBuilder
+    {
+        return new DataBuilder();
     }
 }

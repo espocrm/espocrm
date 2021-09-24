@@ -57,10 +57,8 @@ class LoginFactory
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-            $className = "Espo\\Custom\\Core\\Authentication\\Login\\" . $sanitizedName;
-
             if (!class_exists($className)) {
-                $className = "Espo\\Core\\Authentication\\Login\\" . $sanitizedName;
+                $className = "Espo\\Core\\Authentication\\Logins\\" . $sanitizedName;
             }
         }
 

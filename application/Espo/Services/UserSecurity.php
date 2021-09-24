@@ -45,7 +45,7 @@ use Espo\Core\{
     Utils\Config,
     Authentication\LoginFactory,
     Authentication\TwoFactor\UserSetupFactory as TwoFactorUserSetupFactory,
-    Authentication\LoginData,
+    Authentication\Login\Data as LoginData,
     Api\RequestNull,
 };
 

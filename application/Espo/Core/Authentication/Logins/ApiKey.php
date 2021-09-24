@@ -27,62 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace Espo\Core\Authentication\Logins;
 
 use Espo\Core\{
-    Authentication\AuthToken\AuthToken,
+    Api\Request,
+    Authentication\Login,
+    Authentication\Login\Data,
+    Authentication\Result,
+    Authentication\Helpers\UserFinder,
+    Authentication\FailReason,
 };
 
-/**
- * Login data to be passed to the 'login' method.
- */
-class LoginData
+class ApiKey implements Login
 {
-    private $username;
+    private $userFinder;
 
-    private $password;
-
-    private $authToken;
-
-    public function __construct(?string $username, ?string $password, ?AuthToken $authToken = null)
+    public function __construct(UserFinder $userFinder)
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->authToken = $authToken;
+        $this->userFinder = $userFinder;
     }
 
-    public function getUsername(): ?string
+    public function login(Data $data, Request $request): Result
     {
-        return $this->username;
-    }
+        $apiKey = $request->getHeader('X-Api-Key');
 
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
+        $user = $this->userFinder->findApiApiKey($apiKey);
 
-    public function getAuthToken(): ?AuthToken
-    {
-        return $this->authToken;
-    }
+        if (!$user) {
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
+        }
 
-    public function hasUsername(): bool
-    {
-        return !is_null($this->username);
-    }
-
-    public function hasPassword(): bool
-    {
-        return !is_null($this->password);
-    }
-
-    public function hasAuthToken(): bool
-    {
-        return !is_null($this->authToken);
-    }
-
-    public static function createBuilder(): LoginDataBuilder
-    {
-        return new LoginDataBuilder();
+        return Result::success($user);
     }
 }

@@ -29,53 +29,39 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Core\{
-    Api\Request,
-    Utils\ApiKey,
-    Authentication\Login,
-    Authentication\LoginData,
-    Authentication\Result,
-    Authentication\Helpers\UserFinder,
-    Exceptions\Error,
-    Authentication\FailReason,
-};
+use Espo\Core\Authentication\AuthToken\AuthToken;
 
-class Hmac implements Login
+class DataBuilder
 {
-    private $userFinder;
+    private $username = null;
 
-    private $apiKeyUtil;
+    private $password = null;
 
-    public function __construct(UserFinder $userFinder, ApiKey $apiKeyUtil)
+    private $authToken = null;
+
+    public function setUsername(?string $username): self
     {
-        $this->userFinder = $userFinder;
-        $this->apiKeyUtil = $apiKeyUtil;
+        $this->username = $username;
+
+        return $this;
     }
 
-    public function login(LoginData $loginData, Request $request): Result
+    public function setPassword(?string $password): self
     {
-        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+        $this->password = $password;
 
-        list($apiKey, $hash) = explode(':', $authString, 2);
+        return $this;
+    }
 
-        $user = $this->userFinder->findApiHmac($apiKey);
+    public function setAuthToken(?AuthToken $authToken): self
+    {
+        $this->authToken = $authToken;
 
-        if (!$user) {
-            return Result::fail(FailReason::WRONG_CREDENTIALS);
-        }
+        return $this;
+    }
 
-        $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->getId());
-
-        if (!$secretKey) {
-            throw new Error("No secret key for API user '" . $user->getId() . "'.");
-        }
-
-        $string = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        if ($hash === ApiKey::hash($secretKey, $string)) {
-            return Result::success($user);
-        }
-
-        return Result::fail(FailReason::HASH_NOT_MATCHED);
+    public function build(): Data
+    {
+        return new Data($this->username, $this->password, $this->authToken);
     }
 }
