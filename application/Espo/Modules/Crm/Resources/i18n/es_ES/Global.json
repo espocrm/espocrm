@@ -87,7 +87,8 @@
     "Log Call": "Registrar llamada",
     "Archive Email": "Nuevo Correo Archivado",
     "Create Task": "Crear tarea",
-    "Tasks": "Tareas"
+    "Tasks": "Tareas",
+    "Scheduler": "Programador"
   },
   "fields": {
     "billingAddressCity": "Ciudad",

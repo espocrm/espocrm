@@ -5,7 +5,9 @@
     "status": "Statut",
     "account": "Compte",
     "priority": "Priorité",
-    "lead": "Prospect"
+    "lead": "Prospect",
+    "attachments": "Les pièces jointes",
+    "inboundEmail": "Compte de messagerie de groupe"
   },
   "links": {
     "account": "Compte",
@@ -14,7 +16,9 @@
     "calls": "Appels",
     "tasks": "Tâches",
     "articles": "Articles base de connaissance",
-    "lead": "Prospect"
+    "lead": "Prospect",
+    "attachments": "Les pièces jointes",
+    "inboundEmail": "Compte de messagerie de groupe"
   },
   "options": {
     "status": {

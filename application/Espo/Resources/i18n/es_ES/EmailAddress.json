@@ -3,5 +3,11 @@
     "Primary": "Principal",
     "Opted Out": "Se dieron de baja",
     "Invalid": "Inválido"
+  },
+  "fields": {
+    "invalid": "Inválido"
+  },
+  "presetFilters": {
+    "orphan": "Huérfano"
   }
 }

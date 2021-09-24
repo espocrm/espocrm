@@ -7,7 +7,10 @@
     "displayRecords": "Afficher les enregistrements",
     "isDoubleHeight": "Hauteur 2x",
     "enabledScopeList": "Afficher",
-    "users": "Utilisateurs"
+    "users": "Utilisateurs",
+    "entityType": "Type de Fonctionnalités",
+    "dateFilter": "Filtre de date",
+    "skipOwn": "Ne pas montrer ses propres dossiers"
   },
   "options": {
     "mode": {
@@ -18,5 +21,11 @@
       "agendaDay": "Jour (calendrier)",
       "timeline": "Plage de temps"
     }
+  },
+  "messages": {
+    "selectEntityType": "Sélectionnez un Type de Fonctionnalité parmi les options."
+  },
+  "tooltips": {
+    "skipOwn": "Les actions effectuées par votre compte d'utilisateur ne seront pas affichées."
   }
 }

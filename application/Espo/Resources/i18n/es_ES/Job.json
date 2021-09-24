@@ -8,7 +8,15 @@
     "methodName": "Método",
     "scheduledJob": "Tarea Programada",
     "data": "Datos",
-    "method": "Método"
+    "method": "Método",
+    "scheduledJobJob": "Nombre de trabajo programado",
+    "executedAt": "Ejecutado en",
+    "startedAt": "Empezó a las",
+    "targetType": "Tipo de objetivo",
+    "targetId": "ID Objetivo",
+    "number": "Numero",
+    "queue": "Cola",
+    "job": "Trabajo"
   },
   "options": {
     "status": {

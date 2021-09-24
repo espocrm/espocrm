@@ -6,7 +6,8 @@
     "target": "Ziel",
     "targetType": "Zieltyp",
     "ipAddress": "IP-Adresse",
-    "authLogRecord": "Auth Log-Datensatz"
+    "authLogRecord": "Auth Log-Datensatz",
+    "userType": "Benutzer-Typ"
   },
   "links": {
     "user": "Benutzer",

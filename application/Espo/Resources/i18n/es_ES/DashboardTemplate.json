@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "layout": "Diseño",
+    "append": "Agregar (no elimina las pestañas del usuario)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Crear plantilla",
+    "Deploy to Users": "Implementar a los usuarios",
+    "Deploy to Team": "Implementar en equipo"
+  }
+}

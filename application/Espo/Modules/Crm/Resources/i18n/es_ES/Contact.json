@@ -19,7 +19,9 @@
     "acceptanceStatus": "Estado de Aceptación",
     "accountIsInactive": "Cuenta inactiva",
     "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
-    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)"
+    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)",
+    "title": "Titulo de cuenta",
+    "hasPortalUser": "Tiene usuario del portal"
   },
   "links": {
     "opportunities": "Oportunidades",
@@ -32,7 +34,9 @@
     "casesPrimary": "Tickets (principal)",
     "portalUser": "Usuario del portal",
     "originalLead": "Posible cliente de origen",
-    "documents": "Documentos"
+    "documents": "Documentos",
+    "tasksPrimary": "Tareas (ampliadas)",
+    "opportunitiesPrimary": "Oportunidades (primaria)"
   },
   "labels": {
     "Create Contact": "Crear contacto"

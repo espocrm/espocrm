@@ -1,8 +1,13 @@
 {
   "fields": {
-    "dateStart": "Date de début"
+    "dateStart": "Date de début",
+    "dateStartDate": "Date de début (toute la journée)",
+    "dateEndDate": "Date de fin (toute la journée)",
+    "isAllDay": "Est toute la journée"
   },
   "labels": {
-    "Create {entityType}": "Créer un {entityTypeTranslated}"
+    "Create {entityType}": "Créer un {entityTypeTranslated}",
+    "Schedule {entityType}": "Programmer un {entityTypeTranslated}",
+    "Log {entityType}": "Log de {entityTypeTranslated}"
   }
 }

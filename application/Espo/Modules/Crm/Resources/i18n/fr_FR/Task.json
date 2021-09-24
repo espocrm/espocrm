@@ -13,7 +13,8 @@
     "attachments": "Pièces jointes"
   },
   "links": {
-    "attachments": "Pièces jointes"
+    "attachments": "Pièces jointes",
+    "account": "Compte"
   },
   "options": {
     "status": {
@@ -32,7 +33,8 @@
   },
   "labels": {
     "Create Task": "Créer une tâche",
-    "Complete": "Clôturer"
+    "Complete": "Clôturer",
+    "overdue": "dépassé"
   },
   "presetFilters": {
     "actual": "En cours",

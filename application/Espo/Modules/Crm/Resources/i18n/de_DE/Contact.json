@@ -19,7 +19,8 @@
     "accountIsInactive": "Inaktives Konto",
     "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
     "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)",
-    "title": "Primärer Zugangstitel"
+    "title": "Konto-Titel",
+    "hasPortalUser": "Hat Portal-Benutzer"
   },
   "links": {
     "opportunities": "Verkaufschancen",
@@ -33,7 +34,8 @@
     "portalUser": "Portal Benutzer",
     "originalLead": "Ursprünglicher Interessent",
     "documents": "Dokumente",
-    "tasksPrimary": "Aufgaben (erweitert)"
+    "tasksPrimary": "Aufgaben (erweitert)",
+    "opportunitiesPrimary": "Chancen (primär)"
   },
   "labels": {
     "Create Contact": "Kontakt erstellen"

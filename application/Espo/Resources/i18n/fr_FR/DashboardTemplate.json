@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "layout": "Disposition",
+    "append": "Ajouter (ne pas supprimer les onglets de l'utilisateur)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Créer un modèle",
+    "Deploy to Users": "Déployer vers les utilisateurs",
+    "Deploy to Team": "Déployer en équipe"
+  }
+}

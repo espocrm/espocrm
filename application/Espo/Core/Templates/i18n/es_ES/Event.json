@@ -5,7 +5,10 @@
     "dateEnd": "Fecha de finalización",
     "duration": "Duración",
     "status": "Estado",
-    "reminders": "Recordatorios"
+    "reminders": "Recordatorios",
+    "dateStartDate": "Fecha de inicio (todo el día)",
+    "dateEndDate": "Fecha de finalización (todo el día)",
+    "isAllDay": "Es todo el día"
   },
   "links": {
     "parent": "Padre"

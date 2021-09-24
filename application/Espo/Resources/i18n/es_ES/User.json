@@ -25,7 +25,17 @@
     "position": "Puesto en el equipo",
     "ipAddress": "Dirección IP",
     "passwordPreview": "Vista previa de la contraseña",
-    "isSuperAdmin": "Es superadministrador"
+    "isSuperAdmin": "Es superadministrador",
+    "lastAccess": "Último acceso",
+    "type": "Tipo",
+    "apiKey": "Clave de API",
+    "secretKey": "Clave de secreto",
+    "authMethod": "Método de autenticación",
+    "yourPassword": "Tu contraseña actual",
+    "dashboardTemplate": "Plantilla de escritorio",
+    "auth2FAEnable": "Habilitar autenticación de 2 factores",
+    "auth2FAMethod": "Método 2FA",
+    "auth2FATotpSecret": "2FA TOTP Secreto"
   },
   "links": {
     "teams": "Equipos",
@@ -35,7 +45,10 @@
     "contact": "Contacto",
     "accounts": "Cuentas",
     "account": "Cuenta (principal)",
-    "tasks": "Tareas"
+    "tasks": "Tareas",
+    "defaultTeam": "Equipo predeterminado",
+    "dashboardTemplate": "Plantilla de escritorio",
+    "userData": "Datos del usuario"
   },
   "labels": {
     "Create User": "Crear usuario",
@@ -50,7 +63,15 @@
     "External Accounts": "Cuentas externas",
     "Email Accounts": "Cuentas de correo",
     "Create Portal User": "Crear usuario del portal",
-    "Proceed w/o Contact": "Continuar sin contacto"
+    "Proceed w/o Contact": "Continuar sin contacto",
+    "Generate New API Key": "Generar una nueva clave de API",
+    "Generate New Password": "Generar nueva contraseña",
+    "Code": "Código",
+    "Back to login form": "Volver al formulario de inicio de sesión",
+    "Requirements": "Requisitos",
+    "Security": "Seguridad",
+    "Reset 2FA": "Reiniciar 2FA",
+    "Secret": "Secreto"
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
@@ -71,20 +92,45 @@
     "userNameEmailAddressNotFound": "Nombre de Usuario/Correo no encontrado",
     "forbidden": "Prohibido, por favor intente después",
     "uniqueLinkHasBeenSent": "El enlace único ha sido enviado a la dirección de correo electrónico especificada.",
-    "passwordChangedByRequest": "La contraseña ha sido cambiada."
+    "passwordChangedByRequest": "La contraseña ha sido cambiada.",
+    "userNameExists": "Nombre de usuario ya existe",
+    "setupSmtpBefore": "Debe configurar [Configuración SMTP]({url}) para que el sistema pueda enviar la contraseña por correo electrónico.",
+    "passwordStrengthLength": "Debe tener al menos {length} caracteres de longitud.",
+    "passwordStrengthLetterCount": "Debe contener al menos {count} letras.",
+    "passwordStrengthNumberCount": "Debe contener al menos {count} dígito(s).",
+    "passwordStrengthBothCases": "Debe contener letras en mayúscula y minúscula.",
+    "wrongCode": "Código incorrecto",
+    "codeIsRequired": "El código es obligatorio",
+    "enterTotpCode": "Ingrese un código de su aplicación de autenticación.",
+    "verifyTotpCode": "Escanee el código QR con su aplicación de autenticación móvil. Si tiene problemas para escanear, puede ingresar el secreto manualmente. Después de eso, verá un código de 6 dígitos en su aplicación. Ingresar este código en el campo de abajo.",
+    "generateAndSendNewPassword": "Se generará una nueva contraseña y se enviará a la dirección de correo electrónico del usuario.",
+    "security2FaResetConfimation": "¿Está seguro de que desea restablecer la configuración actual de 2FA?",
+    "ldapUserInEspoNotFound": "El usuario no se encuentra en EspoCRM. Póngase en contacto con su administrador para crear el usuario.",
+    "passwordRecoverySentIfMatched": "Suponiendo que los datos ingresados coincidieran con cualquier cuenta de usuario.",
+    "auth2FARequiredHeader": "Se requiere autenticación de 2 factores",
+    "auth2FARequired": "Debe configurar la autenticación de 2 factores. Utilice una aplicación de autenticación en su teléfono móvil (por ejemplo, Google Authenticator)."
   },
   "boolFilters": {
     "onlyMyTeam": "Solo de mi equipo"
   },
   "presetFilters": {
     "active": "Activo",
-    "activePortal": "Portales activos"
+    "activePortal": "Portales activos",
+    "activeApi": "API Activa"
   },
   "options": {
     "gender": {
       "": "No definido",
       "Male": "Masculino",
       "Female": "Femenino"
+    },
+    "type": {
+      "admin": "Administrador",
+      "system": "SIstema",
+      "super-admin": "Superadministrador"
+    },
+    "authMethod": {
+      "ApiKey": "Clave de API"
     }
   }
 }

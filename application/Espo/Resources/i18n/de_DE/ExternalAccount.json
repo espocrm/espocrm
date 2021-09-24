@@ -1,6 +1,8 @@
 {
   "labels": {
     "Connect": "Verbinden",
-    "Connected": "Verbunden"
+    "Connected": "Verbunden",
+    "Disconnect": "Verbindung trennen",
+    "Disconnected": "Getrennt"
   }
 }

@@ -40,7 +40,9 @@
     "Success": "Erfolgreich",
     "Fail": "Fehlgeschlagen",
     "is recommended": "wird empfohlen",
-    "extension is missing": "Erweiterung fehlt"
+    "extension is missing": "Erweiterung fehlt",
+    "Crontab setup instructions": "Ohne die Ausführung geplanter Jobs werden eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht funktionieren. Hier können Sie die {SETUP_INSTRUCTIONS} lesen.",
+    "Setup instructions": "Setup-Anweisungen"
   },
   "fields": {
     "Choose your language": "Wählen Sie Ihre Sprache",
@@ -99,24 +101,10 @@
     "option": "Empfohlener Wert ist {0}",
     "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist",
     "requiredMariadbVersion": "6",
-    "Ajax failed": "Es ist ein unerwarteter Fehler aufgetreten"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Finden Sie die httpd.conf Datei (normalerweise in einem Verzeichnis conf, config oder ähnlich)<br>2. Innerhalb der httpd.conf Datei aktivieren Sie die Zeile <code>{WINDOWS_APACHE1}</code> (entfernen Sie das # Zeichen vom Anfang der Zeile)<br>3. Stellen Sie sicher, dass die Zeile ClearModuleList nicht auskommentiert ist, genauso wie die Zeile AddModule mod_rewrite.c. </pre>\n</pre>",
-        "linux": "<br>1. Aktivieren Sie mod_rewrite. Dafür führen Sie folgende Kommandos in einem Terminalfenster aus: <pre>{APACHE1}</pre><br>2. Aktivieren Sie .htaccess Unterstützung Ändern oder fügen Sie folgendes Kommando zu Ihrer Apache Konfiguration hinzu (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Anschließend führen Sie dieses Kommando in einem Terminalfenster aus: <pre>{APACHE3}</pre><br>3. Um den RewriteBase Pfad hinzuzufügen, öffnen Sie die Datei {API_PATH}.htaccess und ersetzen Sie die folgende Zeile:<pre>{APACHE4}</pre>zu<pre>{APACHE5}</pre><br> For more information please visit the guideline <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>"
-      },
-      "nginx": {
-        "linux": "<br>Fügen Sie diesen Code zu Nginx Host Config <code>{NGINX_PATH}</code> (innerhalb des \"server\" Blocks) hinzu:<pre>{NGINX}</pre> <br> Weitere Informationen sind in der Dokumentation unter <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a> zu finden.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API Fehler: EspoCRM API nicht verfügbar</h3><br>Führen Sie nur die notwendigen Schritte durch. Nach jedem Schritt prüfen Sie bitte, ob das Problem gelöst ist.",
-      "nginx": "<h3>API Fehler: EspoCRM API nicht verfügbar.</h3>",
-      "microsoft-iis": "<h3>API Fehler: EspoCRM API nicht verfügbar</h3><br>Mögliches Problem: deaktiviertes \"URL Rewrite\". Bitte überprüfen und aktivieren Sie das \"URL Rewrite\" Modul im IIS Server.",
-      "default": "<h3>API Fehler: EspoCRM API nicht verfügbar</h3><br>Mögliches Problem: deaktiviertes Rewrite Modul. Bitte überprüfen und aktivieren Sie das Rewrite Modul (z.B. mod_rewrite im Apache Server) und die .htaccess Unterstützung."
-    }
+    "Ajax failed": "Es ist ein unerwarteter Fehler aufgetreten",
+    "Bad init Permission": "Die Zugriff auf das Verzeichnis \"{*}\" wurde verweigert. Bitte setzen Sie 775 für \"{*}\" oder führen Sie diesen Befehl einfach im Terminal aus <pre><b>{C}</b></pre> Operation ist nicht erlaubt? Versuchen Sie diesen: {CSU}",
+    "permissionInstruction": "<br>Führen Sie diesen Befehl im Terminal aus:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Operation ist nicht erlaubt? Versuchen Sie diese: <br><<br>{CSU}"
   },
   "systemRequirements": {
     "host": "Hostname",

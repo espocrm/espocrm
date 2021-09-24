@@ -60,6 +60,9 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 meses",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 meses",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 año"
+    },
+    "barcodeType": {
+      "QRcode": "Código QR"
     }
   },
   "tooltips": {
@@ -74,7 +77,9 @@
     "before": "El valor de fecha debe ser anterior al valor de fecha del campo especificado.",
     "after": "El valor de fecha debe ser posterior al valor de fecha del campo especificado.",
     "readOnly": "El usuario no puede especificar el valor del campo. Pero se puede calcular por fórmula.",
-    "maxFileSize": "Si está vacío o es 0, entonces no limitar"
+    "maxFileSize": "Si está vacío o es 0, entonces no limitar",
+    "fileAccept": "Qué tipos de archivos aceptar. Es posible agregar elementos personalizados.",
+    "barcodeLastChar": "Para el tipo EAN-13."
   },
   "fieldParts": {
     "address": {
@@ -88,13 +93,43 @@
     "personName": {
       "salutation": "Saludo",
       "first": "Nombre",
-      "last": "Apellido"
+      "last": "Apellido",
+      "middle": "Medio"
     },
     "currency": {
-      "converted": "(Convertido)"
+      "converted": "(Convertido)",
+      "currency": "(Moneda)"
     },
     "datetimeOptional": {
       "date": "Fecha"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Un texto de una sola línea.",
+    "enum": "En la casilla de selección, solo se puede seleccionar un valor.",
+    "text": "Un texto de varias líneas con soporte de rebajas.",
+    "date": "Fecha sin hora.",
+    "datetime": "Fecha y hora",
+    "currency": "Un valor de moneda. Un número flotante con un código de moneda.",
+    "int": "Un número entero.",
+    "float": "Un número con una parte decimal.",
+    "bool": "Una casilla de verificación. Dos valores posibles: verdadero y falso.",
+    "multiEnum": "Se puede seleccionar una lista de valores, múltiples valores. La lista está ordenada.",
+    "checklist": "Una lista de casillas de verificación.",
+    "array": "Una lista de valores, similar al campo Multi-Enum.",
+    "address": "Una dirección con calle, ciudad, estado, código postal y país.",
+    "url": "Para almacenar enlaces.",
+    "wysiwyg": "Un texto con soporte HTML.",
+    "file": "Para cargar archivos.",
+    "image": "Para cargar imágenes.",
+    "attachmentMultiple": "Permite cargar varios archivos.",
+    "number": "Un número de tipo de cadena que se incrementa automáticamente con un posible prefijo y una longitud específica.",
+    "autoincrement": "Un número entero generado de solo lectura que se incrementa automáticamente.",
+    "barcode": "Un código de barras. Puede imprimirse en PDF.",
+    "email": "Un conjunto de direcciones de correo electrónico con sus parámetros: inhabilitado, no válido, principal.",
+    "phone": "Un conjunto de números de teléfono con sus parámetros: tipo, inhabilitado, no válido, principal.",
+    "foreign": "Un campo de un registro relacionado. Solo lectura.",
+    "link": "Un registro relacionado a través de la relación Pertenece a (varios a uno o uno a uno).",
+    "linkParent": "Un registro relacionado a través de la relación Pertenece a los padres. Puede ser de diferentes tipos de entidad."
   }
 }

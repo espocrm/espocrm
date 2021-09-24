@@ -19,7 +19,16 @@
     "accounts": "Comptes",
     "account": "Compte (principal)",
     "sendAccessInfo": "Envoyer un email avec ses accès à l'utilisateur",
-    "portal": "Portail"
+    "portal": "Portail",
+    "isSuperAdmin": "Est super admin",
+    "lastAccess": "Dernier accès",
+    "apiKey": "clé API",
+    "secretKey": "Clef secrète",
+    "authMethod": "Méthode d'authentification",
+    "yourPassword": "Votre mot de passe actuel",
+    "dashboardTemplate": "Modèle de tableau de bord",
+    "auth2FAEnable": "Activer l'authentification à 2 facteurs",
+    "auth2FAMethod": "Méthode 2FA"
   },
   "links": {
     "teams": "Équipes",
@@ -27,7 +36,9 @@
     "portals": "Portails",
     "portalRoles": "Rôles Portail",
     "accounts": "Comptes",
-    "account": "Compte (principal)"
+    "account": "Compte (principal)",
+    "defaultTeam": "Équipe par défaut",
+    "dashboardTemplate": "Modèle de tableau de bord"
   },
   "labels": {
     "Create User": "Créer un utilisateur",
@@ -42,7 +53,13 @@
     "External Accounts": "Comptes externes",
     "Email Accounts": "Comptes email",
     "Portal": "Portail",
-    "Create Portal User": "Créer un utilisateur de Portail"
+    "Create Portal User": "Créer un utilisateur de Portail",
+    "Generate New API Key": "Générer une nouvelle clé API",
+    "Generate New Password": "Générer un nouveau mot de passe",
+    "Back to login form": "Retour au formulaire de connexion",
+    "Requirements": "Exigences",
+    "Security": "Sécurité",
+    "Reset 2FA": "Réinitialiser 2FA"
   },
   "tooltips": {
     "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
@@ -63,13 +80,40 @@
     "userNameEmailAddressNotFound": "Cette combinaison utilisateur/adresse email n'a pas été retrouvée.",
     "forbidden": "Erreur, veuillez réessayer plus tard.",
     "uniqueLinkHasBeenSent": "Un lien unique et temporaire a été envoyé à votre adresse email.",
-    "passwordChangedByRequest": "Le mot de passe a été modifié."
+    "passwordChangedByRequest": "Le mot de passe a été modifié.",
+    "userNameExists": "Ce nom d'utilisateur existe déjà",
+    "setupSmtpBefore": "Vous devez configurer [Paramètres SMTP]({url}) pour que le système puisse envoyer un mot de passe par courrier électronique.",
+    "passwordStrengthLength": "Doit comporter au moins {longueur} caractères.",
+    "passwordStrengthLetterCount": "Doit contenir au moins {count} lettre (s).",
+    "passwordStrengthNumberCount": "Doit contenir au moins {count} digit (s).",
+    "passwordStrengthBothCases": "Doit contenir des lettres des majuscules et des minuscules.",
+    "wrongCode": "Mauvais code",
+    "codeIsRequired": "Le code est requis",
+    "enterTotpCode": "Entrez un code de votre application d'authentification.",
+    "verifyTotpCode": "Scannez le code QR avec votre application d'authentificateur mobile. Si vous rencontrez des problèmes de numérisation, vous pouvez entrer le secret manuellement. Après cela, vous verrez un code à 6 chiffres dans votre application. Entrez ce code dans le champ ci-dessous.",
+    "generateAndSendNewPassword": "Un nouveau mot de passe sera généré et envoyé à l'adresse électronique de l'utilisateur.",
+    "security2FaResetConfimation": "Êtes-vous sûr de vouloir réinitialiser les paramètres 2FA actuels?",
+    "ldapUserInEspoNotFound": "Utilisateur introuvable dans EspoCRM. Veuillez contacter votre administrateur pour en créer un.",
+    "auth2FARequiredHeader": "Authentification à deux facteurs exigée",
+    "auth2FARequired": "Activez l'authentification à deux facteurs. Utilisez une application d'authentification dans votre mobile (comme Google Authentificator)."
   },
   "boolFilters": {
     "onlyMyTeam": "De mon équipe"
   },
   "presetFilters": {
     "active": "Actif",
-    "activePortal": "Portail actif"
+    "activePortal": "Portail actif",
+    "activeApi": "API active"
+  },
+  "options": {
+    "type": {
+      "regular": "Ordinaire",
+      "portal": "Portail",
+      "system": "Système",
+      "super-admin": "Super-admin"
+    },
+    "authMethod": {
+      "ApiKey": "clé API"
+    }
   }
 }

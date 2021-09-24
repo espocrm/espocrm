@@ -14,11 +14,13 @@
     "timeZone": "Fuseau",
     "weekStart": "Premier jour de la semaine",
     "defaultCurrency": "Devise par défaut",
-    "customUrl": "Lien personnalisé"
+    "customUrl": "Lien personnalisé",
+    "layoutSet": "Agencements des champs"
   },
   "links": {
     "users": "Utilisateurs",
-    "portalRoles": "Rôles"
+    "portalRoles": "Rôles",
+    "layoutSet": "Agencements des champs"
   },
   "labels": {
     "Create Portal": "Créer un Portail",

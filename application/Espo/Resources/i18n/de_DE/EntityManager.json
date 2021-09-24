@@ -29,7 +29,10 @@
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
     "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
-    "fullTextSearch": "Volltextsuche"
+    "fullTextSearch": "Volltextsuche",
+    "countDisabled": "Deaktivieren der Datensatzzählung",
+    "parentEntityTypeList": "Übergeordnete Entitätstypen",
+    "foreignLinkEntityTypeList": "Fremde Links"
   },
   "options": {
     "type": {
@@ -45,7 +48,9 @@
       "oneToMany": "1:n",
       "manyToOne": "n:1",
       "parentToChildren": "Eltern zu Kind",
-      "childrenToParent": "Kind zu Eltern"
+      "childrenToParent": "Kind zu Eltern",
+      "oneToOneRight": "Eins-zu-eins Rechts",
+      "oneToOneLeft": "Eins-zu-eins Links"
     },
     "sortDirection": {
       "asc": "Aufsteigend",
@@ -55,7 +60,8 @@
   "messages": {
     "entityCreated": "Entität wurde erstellt",
     "linkAlreadyExists": "Relationsnamenkonflikt",
-    "linkConflict": "Eine Relation mit diesem Namen existiert bereits"
+    "linkConflict": "Eine Relation mit diesem Namen existiert bereits",
+    "confirmRemove": "Sind Sie sicher, dass Sie den Entitätstyp aus dem System entfernen möchten?"
   },
   "tooltips": {
     "statusField": "Updates dieses Feldes werden im Stream protokolliert.",
@@ -65,6 +71,7 @@
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Stream protokolliert.",
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
-    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich."
+    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich.",
+    "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist."
   }
 }

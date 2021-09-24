@@ -49,12 +49,24 @@
     "Imported": "Importado",
     "Duplicates": "Duplicados",
     "Skip searching for duplicates": "Omitir la búsqueda de duplicados",
-    "Timezone": "Zona horaria"
+    "Timezone": "Zona horaria",
+    "Remove Import Log": "Eliminar registro de importación",
+    "New Import": "Nueva importación",
+    "Import Results": "Importar resultados",
+    "Silent Mode": "Modo silencioso",
+    "New import with same params": "Nueva importación con los mismos parámetros",
+    "Run Manually": "Ejecutar manualmente"
   },
   "messages": {
     "utf8": "Debe ser codificado en UTF-8",
     "duplicatesRemoved": "Duplicados eliminados",
-    "inIdle": "Ejecutar en segundo plano (para gran cantidad de datos, vía cron)"
+    "inIdle": "Ejecutar en segundo plano (para gran cantidad de datos, vía cron)",
+    "revert": "Esto eliminará todos los registros importados de forma permanente.",
+    "removeDuplicates": "Esto eliminará permanentemente todos los registros importados que fueron reconocidos como duplicados.",
+    "confirmRevert": "Esto eliminará todos los registros importados de forma permanente. ¿Estás seguro?",
+    "confirmRemoveDuplicates": "Esto eliminará permanentemente todos los registros importados que fueron reconocidos como duplicados. ¿Estás seguro?",
+    "removeImportLog": "Esto eliminará el registro de importación. Todos los registros importados se mantendrán. Úselo si está seguro de que la importación está bien.",
+    "confirmRemoveImportLog": "Esto eliminará el registro de importación. Se conservarán todos los registros importados. No podrá revertir los resultados de la importación. ¿Está seguro?"
   },
   "fields": {
     "file": "Archivo",
@@ -68,7 +80,24 @@
     "status": {
       "Failed": "Falló",
       "In Process": "En proceso",
-      "Complete": "Completo"
+      "Complete": "Completo",
+      "Standby": "Apoyar",
+      "Pending": "Pendiente"
+    },
+    "personNameFormat": {
+      "f l": "Primero último",
+      "l f": "Último primero",
+      "f m l": "Primero Segundo Nombre Apellido",
+      "l f m": "Último primero medio",
+      "l, f": "Último primero"
     }
+  },
+  "strings": {
+    "commandToRun": "Comando para ejecutar (desde CLI)",
+    "saveAsDefault": "Guardar por defecto"
+  },
+  "tooltips": {
+    "manualMode": "Si está marcado, deberá ejecutar la importación manualmente desde CLI. El comando se mostrará después de configurar la importación.",
+    "silentMode": "Se omitirá la mayoría de los scripts posteriores a guardar, no se crearán notas de transmisión. La importación se ejecutará más rápido."
   }
 }

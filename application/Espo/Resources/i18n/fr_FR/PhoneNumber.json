@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "optOut": "Désinscrit",
+    "invalid": "Invalide"
+  },
+  "presetFilters": {
+    "orphan": "Orphelin"
+  }
+}

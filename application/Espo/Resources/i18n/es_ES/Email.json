@@ -34,7 +34,21 @@
     "hasAttachment": "Tiene adjunto",
     "sentBy": "Enviado por",
     "assignedUsers": "Usuarios asignados",
-    "bodyPlain": "Cuerpo (plano)"
+    "bodyPlain": "Cuerpo (plano)",
+    "ccEmailAddresses": "Correos electrónicos CC",
+    "messageId": "ID del mensaje",
+    "messageIdInternal": "ID del mensaje (interno)",
+    "folderId": "ID de carpeta",
+    "fromName": "De Nombre",
+    "fromString": "De cadena",
+    "isSystem": "¿Es sistema?",
+    "toEmailAddresses": "A dirección de correo electrónico",
+    "bccEmailAddresses": "Correos electrónicos BBC",
+    "replyToEmailAddresses": "Responder a la dirección de correo electrónico",
+    "personStringData": "Datos de cadena de personas",
+    "fromEmailAddress": "De dirección (enlace)",
+    "replyToName": "Responder a nombre",
+    "replyToAddress": "Responder a la dirección"
   },
   "links": {
     "replied": "Es una respuesta a:",
@@ -42,7 +56,13 @@
     "inboundEmails": "Cuentas grupales",
     "emailAccounts": "Cuentas personales",
     "assignedUsers": "Usuarios asignados",
-    "sentBy": "Enviado por"
+    "sentBy": "Enviado por",
+    "attachments": "Adjuntos",
+    "fromEmailAddress": "De correo electrónico",
+    "toEmailAddresses": "A dirección de correo electrónico",
+    "ccEmailAddresses": "Correos electrónicos CC",
+    "bccEmailAddresses": "Correos electrónicos BBC",
+    "replyToEmailAddresses": "Responder a la dirección de correo electrónico"
   },
   "options": {
     "status": {
@@ -80,13 +100,20 @@
     "Retrieve from Trash": "Recuperar de la papelera",
     "Move to Folder": "Mover a la carpeta",
     "Filters": "Filtros",
-    "Folders": "Ir a carpetas de correo"
+    "Folders": "Ir a carpetas de correo",
+    "View Users": "Ver usuarios",
+    "No Subject": "Sin asunto",
+    "Insert Field": "Insertar campo"
   },
   "messages": {
-    "noSmtpSetup": "Sin configuración SMTP. {link}.",
     "testEmailSent": "El correo de prueba ha sido enviado.",
     "emailSent": "El correo electrónico ha sido enviada",
-    "savedAsDraft": "Guardado como borrador"
+    "savedAsDraft": "Guardado como borrador",
+    "confirmInsertTemplate": "El cuerpo del correo electrónico se perderá. ¿Seguro que quieres insertar la plantilla?",
+    "noSmtpSetup": "SMTP no está configurado: {link}",
+    "sendConfirm": "¿Enviar el correo electrónico?",
+    "removeSelectedRecordsConfirmation": "¿Está seguro de que desea eliminar los correos electrónicos seleccionados?\n\nTambién se eliminarán para otros usuarios.",
+    "removeRecordConfirmation": "¿Estás seguro de que deseas eliminar el correo electrónico?\n\nTambién se eliminará para otros usuarios."
   },
   "presetFilters": {
     "sent": "Enviados",
@@ -104,5 +131,8 @@
     "moveToTrash": "Mover a la papelera",
     "moveToFolder": "Mover a la carpeta",
     "retrieveFromTrash": "Recuperar de la papelera"
+  },
+  "strings": {
+    "sendingFailed": "Error al enviar el correo electrónico"
   }
 }

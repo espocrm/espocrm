@@ -35,7 +35,8 @@
   },
   "labels": {
     "Create Task": "Neue Aufgabe",
-    "Complete": "Fertig"
+    "Complete": "Fertig",
+    "overdue": "überfällig"
   },
   "presetFilters": {
     "actual": "Aktuell",

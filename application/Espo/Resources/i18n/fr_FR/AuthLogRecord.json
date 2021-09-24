@@ -1,1 +1,36 @@
-{}
+{
+  "fields": {
+    "username": "Nom d'utilisateur",
+    "ipAddress": "Adresse IP",
+    "requestTime": "Temps de demande",
+    "createdAt": "Demandé à",
+    "isDenied": "Est refusé",
+    "denialReason": "Motif de refus",
+    "portal": "Portail",
+    "user": "Utilisateur",
+    "authToken": "Jeton d'authentification créé",
+    "requestUrl": "URL de demande",
+    "requestMethod": "Méthode de demande",
+    "authTokenIsActive": "Le jeton d'authentification est actif",
+    "authenticationMethod": "Méthode d'authentification"
+  },
+  "links": {
+    "authToken": "Jeton d'authentification créé",
+    "user": "Utilisateur",
+    "portal": "Portail",
+    "actionHistoryRecords": "Histoire d'action"
+  },
+  "presetFilters": {
+    "denied": "Refusé",
+    "accepted": "Accepté"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "les informations d'identification invalides",
+      "INACTIVE_USER": "Utilisateur inactif",
+      "IS_PORTAL_USER": "Utilisateur du portail",
+      "IS_NOT_PORTAL_USER": "Pas un utilisateur du portail",
+      "USER_IS_NOT_IN_PORTAL": "L'utilisateur n'est pas lié au portail"
+    }
+  }
+}

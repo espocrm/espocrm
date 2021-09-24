@@ -15,13 +15,16 @@
     "campaign": "Campaña",
     "originalLead": "Posible cliente de origen",
     "amountCurrency": "Monto de la Moneda",
-    "contactRole": "Rol de contacto"
+    "contactRole": "Rol de contacto",
+    "lastStage": "Última etapa",
+    "contact": "Contacto (principal)"
   },
   "links": {
     "contacts": "Contactos",
     "documents": "Documentos",
     "campaign": "Campaña",
-    "originalLead": "Posible cliente de origen"
+    "originalLead": "Posible cliente de origen",
+    "contact": "Contacto (principal)"
   },
   "options": {
     "stage": {

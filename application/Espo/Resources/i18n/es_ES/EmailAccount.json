@@ -7,7 +7,6 @@
     "password": "Contraseña",
     "port": "Puerto",
     "monitoredFolders": "Carpetas sincronizadas",
-    "ssl": "¿Usa SSL?",
     "fetchSince": "Traer correos desde",
     "emailAddress": "Correo electrónico",
     "sentFolder": "Carpeta de enviados",
@@ -20,7 +19,10 @@
     "smtpAuth": "Autentificación SMTP",
     "smtpSecurity": "Seguridad SMTP",
     "smtpUsername": "Usuario SMTP",
-    "smtpPassword": "Contraseña SMTP"
+    "smtpPassword": "Contraseña SMTP",
+    "useImap": "Obtener correos electrónicos",
+    "smtpAuthMechanism": "Mecanismo de autenticación SMTP",
+    "security": "Seguridad"
   },
   "links": {
     "filters": "Filtros",
@@ -30,6 +32,10 @@
     "status": {
       "Active": "Activo",
       "Inactive": "Inactivo"
+    },
+    "smtpAuthMechanism": {
+      "login": "Entrar",
+      "crammd5": "RAM-MD5"
     }
   },
   "labels": {
@@ -44,6 +50,8 @@
   },
   "tooltips": {
     "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos electrónicos enviados desde un cliente externo.",
-    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo electrónico debe coincidir con la dirección desde donde se enviarán los correos electrónicos."
+    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo electrónico debe coincidir con la dirección desde donde se enviarán los correos electrónicos.",
+    "useSmtp": "La capacidad de enviar correos electrónicos.",
+    "emailAddress": "El registro de usuario (usuario asignado) debe tener la misma dirección de correo electrónico para poder utilizar esta cuenta de correo electrónico para enviar."
   }
 }

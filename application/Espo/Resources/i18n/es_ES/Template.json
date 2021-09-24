@@ -11,7 +11,13 @@
     "bottomMargin": "Margen Inferior",
     "printFooter": "Imprimir Pié",
     "footerPosition": "Posición del Pié",
-    "variables": "Etiquetas disponibles."
+    "variables": "Etiquetas disponibles.",
+    "pageOrientation": "Oriteción de página",
+    "pageFormat": "Formato de papel",
+    "fontFace": "Fuente",
+    "pageWidth": "Ancho de página (mm)",
+    "pageHeight": "Altura de página (mm)",
+    "headerPosition": "Posición del encabezado"
   },
   "labels": {
     "Create Template": "Crear plantilla"
@@ -19,5 +25,26 @@
   "tooltips": {
     "footer": "Use {pageNumber} para imprimir el número de página.",
     "variables": "Copie y Pegue la etiqueta necesaria en el encabezado, cuerpo o pie de página."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Vertical",
+      "Landscape": "Horizontal"
+    },
+    "placeholders": {
+      "today": "Hoy (fecha)",
+      "now": "Ahora (fecha/hora)",
+      "pagebreak": "Salto de página"
+    },
+    "fontFace": {
+      "kozgopromedium": "\nKozgo Pro Medium",
+      "kozminproregular": "\nKozmin Pro Regular",
+      "msungstdlight": "\nMsung Std Light",
+      "stsongstdlight": "\nSTSong Std Light",
+      "symbol": "Símbolo"
+    },
+    "pageFormat": {
+      "Custom": "Personalizada"
+    }
   }
 }

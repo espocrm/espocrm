@@ -1,12 +1,23 @@
 {
   "fields": {
     "width": "Largeur (%)",
-    "link": "Lien"
+    "link": "Lien",
+    "panelName": "Nom du volet",
+    "isLarge": "Grande taille de police",
+    "dynamicLogicVisible": "Conditions rendant le volet visible",
+    "hidden": "Caché"
   },
   "options": {
     "align": {
       "left": "Gauche",
       "right": "Droite"
     }
+  },
+  "labels": {
+    "New panel": "Nouveau volet",
+    "Layout": "Disposition"
+  },
+  "tooltips": {
+    "link": "Si cette case est cochée, une valeur de champ sera affichée sous forme de lien pointant vers la vue détaillée de l'enregistrement. Habituellement, il est utilisé pour les champs * Nom *."
   }
 }

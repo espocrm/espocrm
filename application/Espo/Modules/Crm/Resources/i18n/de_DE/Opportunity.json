@@ -15,13 +15,15 @@
     "originalLead": "Ursprünglicher Interessent",
     "amountCurrency": "Währungsbetrag",
     "contactRole": "Kontaktrolle",
-    "lastStage": "Letzte Verkaufsphase"
+    "lastStage": "Letzte Verkaufsphase",
+    "contact": "Kontakt (primär)"
   },
   "links": {
     "contacts": "Kontakte",
     "documents": "Dokumente",
     "campaign": "Kampagne",
-    "originalLead": "Ursprünglicher Interessent"
+    "originalLead": "Ursprünglicher Interessent",
+    "contact": "Kontakt (primär)"
   },
   "options": {
     "stage": {

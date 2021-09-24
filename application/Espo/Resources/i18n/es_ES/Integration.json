@@ -4,10 +4,14 @@
     "clientId": "ID Cliente",
     "clientSecret": "Secreto del cliente",
     "redirectUri": "Redireccionar URI",
-    "apiKey": " Clave para el API de JavaScript"
+    "apiKey": "Clave de API"
   },
   "messages": {
     "selectIntegration": "Seleccionar una integración en menú",
     "noIntegrations": "No hay integraciones disponibles"
+  },
+  "help": {
+    "Google": "**Obtenga las credenciales de OAuth 2.0 de la Consola de desarrolladores de Google.**\n\nVisite [Google Developers Console](https://console.developers.google.com/project) para obtener las credenciales de OAuth 2.0, como un ID de cliente y un secreto de cliente que son conocidos tanto por Google como por la aplicación EspoCRM.",
+    "GoogleMaps": "Obtener Clave de API [aquí](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

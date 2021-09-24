@@ -62,7 +62,12 @@
     "Success": "Erfolgreich",
     "Fail": "Fehlgeschlagen",
     "is recommended": "wird empfohlen",
-    "extension is missing": "Erweiterung fehlt"
+    "extension is missing": "Erweiterung fehlt",
+    "PDF Templates": "PDF-Vorlagen",
+    "Dashboard Templates": "Dashboard-Vorlagen",
+    "Email Addresses": "E-Mail-Adressen",
+    "Phone Numbers": "Telefonnummern",
+    "Layout Sets": "Layout-Sätze"
   },
   "layouts": {
     "list": "Liste",
@@ -78,7 +83,12 @@
     "detailSmallPortal": "Detail (Klein, Portal)",
     "listSmallPortal": "Liste (Klein, Portal)",
     "listPortal": "Liste (Portal)",
-    "relationshipsPortal": "Beziehungen (Portal)"
+    "relationshipsPortal": "Beziehungen (Portal)",
+    "defaultSidePanel": "Felder des seitlichen Panel",
+    "bottomPanelsDetail": "Untere Felder",
+    "bottomPanelsEdit": "Untere Felder (Bearbeiten)",
+    "bottomPanelsDetailSmall": "Untere Felder (Detail klein)",
+    "bottomPanelsEditSmall": "Untere Felder (Bearbeiten klein)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -116,7 +126,9 @@
     "number": "Nummer",
     "jsonObject": "Json Objekt",
     "datetime": "Datum-Uhrzeit",
-    "datetimeOptional": "Datum/Datum-Uhrzeit"
+    "datetimeOptional": "Datum/Datum-Uhrzeit",
+    "checklist": "Checkliste",
+    "linkOne": "Link Eins"
   },
   "fields": {
     "type": "Typ",
@@ -156,8 +168,20 @@
     "isPersonalData": "Ist Persönliche Daten",
     "useIframe": "Iframe verwenden",
     "useNumericFormat": "Verwenden Sie das numerische Format",
+    "cutHeight": "Höhe abkürzen",
     "minuteStep": "Minutenschritte",
-    "allowCustomOptions": "Benutzerdefinierte Optionen zulassen"
+    "inlineEditDisabled": "Inline Editierung abschalten",
+    "displayAsLabel": "Anzeige als Label",
+    "allowCustomOptions": "Benutzerdefinierte Optionen zulassen",
+    "maxCount": "Max. Anzahl Elemente",
+    "displayRawText": "Rohtext anzeigen (keine Abschrift)",
+    "accept": "Annehmen",
+    "displayAsList": "Als Liste anzeigen",
+    "viewMap": "Schaltfläche \"Karte\" anzeigen",
+    "codeType": "Code-Typ",
+    "lastChar": "Letztes Zeichen",
+    "listPreviewSize": "Vorschaugröße in der Listenansicht",
+    "onlyDefaultCurrency": "Nur Standardwährung"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -169,13 +193,17 @@
     "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die EspoCRM Dateien sowie die Datenbank zu sichern.",
     "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
-    "newVersionIsAvailable": "Die neue EspoCRM-Version {latestVersion} ist verfügbar.",
     "uninstallConfirmation": "Möchten Sie die Erweiterung wirklich deinstallieren?",
-    "cronIsNotConfigured": "Geplante Jobs werden nicht ausgeführt. Daher funktionieren eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht. Bitte folgen Sie den [instructions] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), um den Cron-Job einzurichten.",
+    "cronIsNotConfigured": "Geplante Jobs werden nicht ausgeführt. Daher funktionieren eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht. Bitte folgen Sie den [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), um den Cron-Job einzurichten.",
     "newExtensionVersionIsAvailable": "Die neue {extensionName} Version {latestVersion} ist verfügbar.",
     "upgradeVersion": "Ihr EspoCRM wird nun auf Version **{version}** aktualisiert. Dies kann einige Zeit dauern.",
     "upgradeDone": "Ihr EspoCRM wurde auf Version **{version}** aktualisiert.",
-    "downloadUpgradePackage": "Aktualisierungspaket(e) [here]({url}) herunterladen."
+    "downloadUpgradePackage": "Aktualisierungspaket(e) [here]({url}) herunterladen.",
+    "upgradeInfo": "Lesen Sie in der [documentation]({url}) nach, wie Sie Ihre EspoCRM-Instanz aktualisieren können.",
+    "upgradeRecommendation": "Diese Art der Aktualisierung wird nicht empfohlen. Es ist besser, ein Upgrade per CLI durchzuführen.",
+    "newVersionIsAvailable": "Es ist eine neue EspoCRM-Version {latestVersion} verfügbar. Bitte folgen Sie den [instructions](https://www.espocrm.com/documentation/administration/upgrading/), um Ihre Instanz zu aktualisieren.",
+    "formulaFunctions": "Weitere Funktionen finden Sie in [documentation]({documentationUrl}).",
+    "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",
@@ -211,14 +239,23 @@
     "leadCapture": "API-Einstiegspunkte für Web-zu-Interessent.",
     "attachments": "Alle Dateianhänge, die im System gespeichert sind.",
     "templateManager": "Nachrichten Templates anpassen",
-    "systemRequirements": "Systemanforderungen für EspoCRM"
+    "systemRequirements": "Systemanforderungen für EspoCRM",
+    "apiUsers": "Benutzer trennen um diese zu integrieren",
+    "jobs": "Jobs führen Aufgaben im Hintergrund aus.",
+    "pdfTemplates": "Vorlagen für den Druck im PDF-Format.",
+    "webhooks": "Webhooks verwalten.",
+    "dashboardTemplates": "Stellen Sie Dashboards für Benutzer bereit.",
+    "phoneNumbers": "Alle im System gespeicherten Telefonnummern.",
+    "emailAddresses": "Alle im System gespeicherten E-Mail-Adressen.",
+    "layoutSets": "Sammlungen von Layouts, die den Teams und Portalen zugeordnet werden können."
   },
   "options": {
     "previewSize": {
       "x-small": "Sehr klein",
       "small": "Klein",
       "medium": "Mittel",
-      "large": "Groß"
+      "large": "Groß",
+      "": "Standardmäßig"
     }
   },
   "systemRequirements": {
@@ -234,10 +271,18 @@
     "accessInfoPortal": "Zugriffsinfo für Portale",
     "assignment": "Zuweisung",
     "mention": "Erwähnen",
-    "noteEmailReceived": "Hinweis zu empfangenen E-Mails",
     "notePost": "Hinweis zum Beitrag",
     "notePostNoParent": "Hinweis zum Beitrag (no Parent)",
     "noteStatus": "Benachrichtigung über Statusupdates",
-    "passwordChangeLink": "Link zum Ändern des Passwords"
+    "passwordChangeLink": "Link zum Ändern des Passwords",
+    "noteEmailReceived": "Hinweis zu empfangenen E-Mails"
+  },
+  "strings": {
+    "rebuildRequired": "Neuaufbau ist erforderlich"
+  },
+  "keywords": {
+    "settings": "System",
+    "authentication": "Passwort",
+    "templateManager": "Benachrichtigungen"
   }
 }

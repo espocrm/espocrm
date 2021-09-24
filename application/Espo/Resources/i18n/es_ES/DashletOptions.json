@@ -14,7 +14,9 @@
     "boolFilterList": "Filtros adicionales",
     "sortBy": "Ordenar (campo)",
     "sortDirection": "Ordenar (dirección)",
-    "expandedLayout": "Diseño"
+    "expandedLayout": "Diseño",
+    "dateFilter": "Filtro de fecha",
+    "skipOwn": "No mostrar registros propios"
   },
   "options": {
     "mode": {
@@ -28,5 +30,8 @@
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en las opciones de la caja."
+  },
+  "tooltips": {
+    "skipOwn": "Las acciones realizadas por su cuenta de usuario no se mostrarán."
   }
 }

@@ -29,6 +29,13 @@
       "teams": "Para determinado/s equipo/s",
       "all": "Para todos los usuarios",
       "portals": "Para los usuarios del portal"
+    },
+    "type": {
+      "Post": "Entrada"
     }
+  },
+  "links": {
+    "superParent": "Super padre",
+    "related": "Relacionado"
   }
 }

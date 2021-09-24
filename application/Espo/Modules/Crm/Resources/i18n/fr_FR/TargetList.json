@@ -4,7 +4,10 @@
     "entryCount": "Compteur d'entrées",
     "campaigns": "Campagnes",
     "endDate": "Date de fin",
-    "targetLists": "Listes de cibles"
+    "targetLists": "Listes de cibles",
+    "optedOutCount": "Décompté",
+    "targetStatus": "Statut cible",
+    "isOptedOut": "Est exclu"
   },
   "links": {
     "accounts": "Comptes",
@@ -15,6 +18,10 @@
   "options": {
     "type": {
       "Television": "Télévision"
+    },
+    "targetStatus": {
+      "Opted Out": "Choisi de se retirer",
+      "Listed": "Listé"
     }
   },
   "labels": {

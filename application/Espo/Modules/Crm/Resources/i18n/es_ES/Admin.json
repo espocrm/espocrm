@@ -1,6 +1,11 @@
 {
   "layouts": {
     "detailConvert": "Convertir posible cliente",
-    "listForAccount": "Listado (por Cuentas)"
+    "listForAccount": "Listado (por Cuentas)",
+    "listForContact": "Lista (para contacto)"
+  },
+  "templates": {
+    "invitation": "Invitación",
+    "reminder": "Recordatorio"
   }
 }

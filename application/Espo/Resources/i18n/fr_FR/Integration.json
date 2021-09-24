@@ -5,5 +5,9 @@
   "messages": {
     "selectIntegration": "Sélectionnez une intégration à partir du menu.",
     "noIntegrations": "Aucune intégration n'est disponible."
+  },
+  "help": {
+    "Google": "** Obtenez les informations d'identification OAuth 2.0 auprès de Google Developers Console. ** \n\nVisitez [Console Google Developers](https://console.developers.google.com/project) pour obtenir des informations d'identification OAuth 2.0, telles qu'un ID client et un client. Des secrets connus des applications Google et EspoCRM.",
+    "GoogleMaps": "Obtenir la clé d'API [ici](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

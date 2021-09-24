@@ -19,7 +19,8 @@
     "createdOpportunity": "Opportunité",
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles"
+    "targetList": "Liste de cibles",
+    "convertedAt": "Converti à"
   },
   "links": {
     "targetLists": "Listes de cibles",

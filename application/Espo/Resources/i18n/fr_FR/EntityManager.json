@@ -1,39 +1,56 @@
 {
   "labels": {
     "Fields": "Champs",
-    "Relationships": "Relations"
+    "Relationships": "Relations",
+    "Schedule": "Emploi du temps",
+    "Formula": "Formule",
+    "Layouts": "Dispositions d'écran"
   },
   "fields": {
     "name": "Nom",
-    "labelSingular": "Libellé singulier",
-    "labelPlural": "Libellé pluriel",
+    "labelSingular": "Libellé au singulier",
+    "labelPlural": "Libellé au pluriel",
     "stream": "Flux",
     "label": "Libellé",
     "linkType": "Type de lien",
-    "entityForeign": "Entité étrangère",
-    "linkForeign": "Lien étranger",
+    "entityForeign": "Fonctionnalité externe",
+    "linkForeign": "Lien externe",
     "link": "Lien",
-    "labelForeign": "Libellé étranger",
-    "sortBy": "Tri par défaut (champs)",
-    "sortDirection": "Tri par défaut (sens)",
+    "labelForeign": "Libellé externe",
+    "sortBy": "Tri par défaut (champ)",
+    "sortDirection": "Tri par défaut (direction)",
     "relationName": "Nom de table intermédiaire",
     "linkMultipleField": "Lier un champ multiple",
-    "linkMultipleFieldForeign": "Lier un champ multiple étranger",
+    "linkMultipleFieldForeign": "Lien externe vers un champ multiple",
     "disabled": "Désactivé",
-    "textFilterFields": "Champs de filtre textuel"
+    "textFilterFields": "Champs de filtre textuel",
+    "audited": "Contrôlé",
+    "statusField": "Champ d'État",
+    "color": "Couleur",
+    "kanbanViewMode": "Vue Kanban",
+    "kanbanStatusIgnoreList": "Groupes ignorés dans la vue Kanban",
+    "iconClass": "Icône",
+    "fullTextSearch": "Recherche du texte complet",
+    "countDisabled": "Désactiver le compteur de lignes",
+    "parentEntityTypeList": "Types de Fonctionnalités parentes",
+    "foreignLinkEntityTypeList": "Liens externes"
   },
   "options": {
     "type": {
       "": "Aucun",
-      "Person": "Personne",
-      "CategoryTree": "Arborescence catégories"
+      "Person": "Individu",
+      "CategoryTree": "Arborescence des catégories",
+      "Event": "Évènement",
+      "Company": "Structure"
     },
     "linkType": {
       "manyToMany": "Plusieurs-à-Plusieurs",
       "oneToMany": "Un-à-Plusieurs",
       "manyToOne": "Plusieurs-à-Un",
       "parentToChildren": "Parent-Enfant",
-      "childrenToParent": "Enfant-Parent"
+      "childrenToParent": "Enfant-Parent",
+      "oneToOneRight": "Un-à-Un Droite",
+      "oneToOneLeft": "Un-à-Un Gauche"
     },
     "sortDirection": {
       "asc": "Croissant",
@@ -41,8 +58,19 @@
     }
   },
   "messages": {
-    "entityCreated": "L'entité a bien été créée",
-    "linkAlreadyExists": "Conflit: lien déjà existant.",
-    "linkConflict": "Conflit de nom : un lien ou un champ portant ce nom existe déjà. "
+    "entityCreated": "La Fonctionnalités a bien été créée",
+    "linkAlreadyExists": "Conflit : lien déjà existant.",
+    "linkConflict": "Conflit de nom : un lien ou un champ portant ce nom existe déjà.",
+    "confirmRemove": "Êtes-vous sûr de vouloir supprimer ce type de Fonctionnalité du système ?"
+  },
+  "tooltips": {
+    "statusField": "Les mises à jour de ce champ sont inscrites dans le Flux.",
+    "textFilterFields": "Champs utilisés lors de recherches textuelles.",
+    "stream": "Quand la Fonctionnalité a un Flux.",
+    "disabled": "Vérifiez que vous n'ayez pas besoin de cette Fonctionnalité dans votre système.",
+    "linkMultipleField": "Le champ de Liens multiples est très utile à la création de relations. Mais ne l'utilisez pas si un trop grand nombre d'éléments sont reliés.",
+    "entityType": "Base Plus - ajoute les volets Activités, Historique et Tâches.\n\nÉvènement - est disponible dans les volets Calendrier and Activités.",
+    "fullTextSearch": "Une reconstruction est requise.",
+    "countDisabled": "Le nombre total ne sera pas affiché en vue Liste. Cela peut faire baisser les temps de chargement quand la base de données est grande."
   }
 }

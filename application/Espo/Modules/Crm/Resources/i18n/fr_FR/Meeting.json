@@ -8,7 +8,11 @@
     "users": "Utilisateurs",
     "leads": "Prospects",
     "reminders": "Notifications",
-    "account": "Compte"
+    "account": "Compte",
+    "dateStartDate": "Date de début (toute la journée)",
+    "dateEndDate": "Date de fin (toute la journée)",
+    "isAllDay": "Est toute la journée",
+    "Acceptance": "Acceptation"
   },
   "options": {
     "status": {
@@ -32,7 +36,8 @@
     "Set Not Held": "Définir comme non effectué",
     "Send Invitations": "Envoyer des Invitations",
     "on time": "à l'heure",
-    "before": "en avance"
+    "before": "en avance",
+    "All-Day": "Toute la journée"
   },
   "presetFilters": {
     "planned": "Prévu",
@@ -40,6 +45,7 @@
     "todays": "Aujourd'hui"
   },
   "messages": {
-    "nothingHasBeenSent": "Aucun envoi effectué"
+    "nothingHasBeenSent": "Aucun envoi effectué",
+    "selectAcceptanceStatus": "Définissez votre statut d'acceptation."
   }
 }

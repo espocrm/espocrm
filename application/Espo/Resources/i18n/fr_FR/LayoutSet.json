@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "Dispositions d'écrans"
+  },
+  "labels": {
+    "Create LayoutSet": "Créer des Dispositions d'écrans",
+    "Edit Layouts": "Modifier les Dispositions d'écrans"
+  }
+}

@@ -3,5 +3,11 @@
     "Primary": "Primär",
     "Opted Out": "Opt-Out gesetzt",
     "Invalid": "Ungültig"
+  },
+  "fields": {
+    "invalid": "Ungültig"
+  },
+  "presetFilters": {
+    "orphan": "Verwaist"
   }
 }

@@ -4,14 +4,22 @@
     "roles": "Rôles",
     "assignmentPermission": "Assignation de permissions",
     "userPermission": "Permission utilisateur",
-    "portalPermission": "Permission portail"
+    "portalPermission": "Permission portail",
+    "groupEmailAccountPermission": "Autorisation de compte de messagerie de groupe",
+    "exportPermission": "Permission d'exportation",
+    "dataPrivacyPermission": "Permission de confidentialité des données",
+    "massUpdatePermission": "Autorisation de mise à jour en masse"
   },
   "links": {
     "users": "Utilisateurs",
     "teams": "Équipes"
   },
   "tooltips": {
-    "assignmentPermission": "Permet de restreindre la capacité pour les utilisateurs d'attribuer des enregistrements aux autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peuvent assigner aux utilisateurs de l'équipe\n\nnon - seulement à soi"
+    "assignmentPermission": "Permet de restreindre la capacité pour les utilisateurs d'attribuer des enregistrements aux autres utilisateurs.\n\ntous - aucune restriction\n\néquipe - peuvent assigner aux utilisateurs de l'équipe\n\nnon - seulement à soi",
+    "groupEmailAccountPermission": "Définit un accès aux comptes de messagerie du groupe, une possibilité d'envoyer des courriels à partir du groupe SMTP.",
+    "dataPrivacyPermission": "Permet d'afficher et d'effacer des données personnelles.",
+    "exportPermission": "Définit si les utilisateurs ont la possibilité d'exporter des enregistrements.",
+    "massUpdatePermission": "Définit si les utilisateurs ont la possibilité d'effectuer une mise à jour en masse des enregistrements."
   },
   "labels": {
     "Access": "Accès",

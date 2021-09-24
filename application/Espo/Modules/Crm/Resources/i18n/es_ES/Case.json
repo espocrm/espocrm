@@ -10,7 +10,8 @@
     "type": "Tipo",
     "description": "Descripción",
     "lead": "Posible cliente",
-    "attachments": "Adjuntos"
+    "attachments": "Adjuntos",
+    "inboundEmail": "Cuenta de correo electrónico grupal"
   },
   "links": {
     "account": "Cuenta",
@@ -22,7 +23,8 @@
     "emails": "Correos",
     "articles": "Artículos de la base de conocimiento",
     "lead": "Posible cliente",
-    "attachments": "Adjuntos"
+    "attachments": "Adjuntos",
+    "inboundEmail": "Cuenta de correo electrónico grupal"
   },
   "options": {
     "status": {

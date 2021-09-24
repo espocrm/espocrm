@@ -26,7 +26,7 @@
     "Header Row Value": "Valeur de la ligne d'entête",
     "Field": "Champs",
     "What to Import?": "Importer quoi ?",
-    "Entity Type": "Type d’entité",
+    "Entity Type": "Type de Fonctionnalité",
     "What to do?": "Faire quoi ?",
     "Properties": "Propriétés",
     "Header Row": "Ligne d’entête ",
@@ -47,17 +47,44 @@
     "Double Quote": "Guillemet",
     "Single Quote": "Apostrophe",
     "Imported": "Importé",
-    "Duplicates": "Doublons"
+    "Duplicates": "Doublons",
+    "Remove Import Log": "Supprimer le journal d'importation",
+    "New Import": "Nouvelle importation",
+    "Import Results": "Résultats d'importation",
+    "Silent Mode": "Mode silencieux",
+    "Run Manually": "Déclencher manuellement"
   },
   "messages": {
     "utf8": "Devrait être en UTF-8",
-    "duplicatesRemoved": "Doublons supprimés"
+    "duplicatesRemoved": "Doublons supprimés",
+    "revert": "Cela supprimera définitivement tous les enregistrements importés.",
+    "removeDuplicates": "Cela supprimera définitivement tous les enregistrements importés qui ont été reconnus comme des doublons.",
+    "confirmRevert": "Cela supprimera définitivement tous les enregistrements importés. Êtes-vous sûr?",
+    "confirmRemoveDuplicates": "Cela supprimera définitivement tous les enregistrements importés qui ont été reconnus comme des doublons. Êtes-vous sûr?",
+    "removeImportLog": "Cela supprimera le journal d'importation. Tous les enregistrements importés seront conservés. Utilisez-le si vous êtes sûr que l'importation est correcte."
   },
   "fields": {
     "file": "Fichier",
-    "entityType": "Type d'entité",
+    "entityType": "Type de Fonctionnalité",
     "imported": "Enregistrements importés",
     "duplicates": "Enregistrements doublons",
     "updated": "Enregistrements mis à jour"
+  },
+  "options": {
+    "personNameFormat": {
+      "f l": "Prénom Nom",
+      "l f": "Nom Prénom",
+      "f m l": "Prénom Nom de jeune fille Nom de famille",
+      "l f m": "Nom de famille Nom de jeune fille Prénom",
+      "l, f": "Nom, Prénom"
+    },
+    "status": {
+      "Standby": "Pause",
+      "Pending": "Attente"
+    }
+  },
+  "strings": {
+    "commandToRun": "Ligne de commande à opérer (depuis l'interface",
+    "saveAsDefault": "Enregistrer comme élément par défaut"
   }
 }

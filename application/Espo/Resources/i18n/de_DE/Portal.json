@@ -13,15 +13,18 @@
     "weekStart": "Erster Tag der Woche",
     "defaultCurrency": "Standardwährung",
     "customUrl": "Benutzerdefinierte URL",
-    "customId": "Benutzerdefinierte ID"
+    "customId": "Benutzerdefinierte ID",
+    "layoutSet": "Layout-Set"
   },
   "links": {
     "users": "Benutzer",
     "portalRoles": "Rollen",
-    "notes": "Notizen"
+    "notes": "Notizen",
+    "layoutSet": "Layout-Set"
   },
   "tooltips": {
-    "portalRoles": "Die spezifizierten Portal Rollen werden auf alle Benutzer dieses Portals angewendet."
+    "portalRoles": "Die spezifizierten Portal Rollen werden auf alle Benutzer dieses Portals angewendet.",
+    "layoutSet": "Bietet die Möglichkeit, von Standard-Layouts abweichende Layouts zu haben."
   },
   "labels": {
     "Create Portal": "Portal erstellen",

@@ -24,12 +24,13 @@
     "createdOpportunity": "Oportunidad",
     "campaign": "Campaña",
     "targetLists": "Listas de objetivos",
-    "targetList": "Lista objetivo",
+    "targetList": "Lista de objetivos",
     "industry": "Industria",
     "acceptanceStatus": "Estado de aceptación",
     "opportunityAmountCurrency": "Moneda del costo de oportunidad",
     "acceptanceStatusMeetings": "Estado de aceptación (Reuniones)",
-    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)"
+    "acceptanceStatusCalls": "Estado de aceptación (Llamadas)",
+    "convertedAt": "Convertido en"
   },
   "links": {
     "targetLists": "Lista de objetivos",

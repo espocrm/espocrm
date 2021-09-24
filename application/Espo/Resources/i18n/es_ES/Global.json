@@ -19,7 +19,7 @@
     "Job": "Trabajo",
     "EmailFilter": "Filtro de correo",
     "PortalRole": "Rol del portal",
-    "Attachment": "Adjuntos",
+    "Attachment": "Adjunto",
     "EmailFolder": "Carpeta de correo electrónico",
     "PortalUser": "Usuario del portal",
     "ScheduledJobLogRecord": "Registro del registro de trabajo programado",
@@ -39,7 +39,17 @@
     "Admin": "Administrador",
     "Preferences": "Preferencias",
     "EmailAddress": "Correo electrónico",
-    "PhoneNumber": "Número de teléfono"
+    "PhoneNumber": "Número de teléfono",
+    "AuthLogRecord": "Entrada del registro de autenticación",
+    "AuthFailLogRecord": "Entrada de registros de fallos de autenticación ",
+    "EmailTemplateCategory": "Categorías de plantillas de correo electrónico",
+    "LeadCapture": "Punto de entrada de captura de clientes potenciales",
+    "LeadCaptureLogRecord": "Entrada del registro de captura de clientes potenciales",
+    "ArrayValue": "Valor de matriz",
+    "ApiUser": "Usuario de API",
+    "DashboardTemplate": "Plantilla de escritorio",
+    "Currency": "Divisa",
+    "LayoutSet": "Conjunto de diseño"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -68,7 +78,20 @@
     "ActionHistoryRecord": "Histórico",
     "AuthToken": "Tokens",
     "UniqueId": "ID Únicos",
-    "LastViewed": "Historial de acciones"
+    "LastViewed": "Historial de acciones",
+    "AuthLogRecord": "Registros de autenticación",
+    "AuthFailLogRecord": "Registros de fallos de autenticación",
+    "EmailTemplateCategory": "Categorías de plantillas de correo electrónico",
+    "Import": "Importar",
+    "LeadCapture": "Captura de clientes potenciales",
+    "LeadCaptureLogRecord": "Registros de captura de clientes potenciales",
+    "ArrayValue": "Valor de matriz",
+    "ApiUser": "Usuarios de API",
+    "DashboardTemplate": "Plantilla de escritorio",
+    "EmailAddress": "Correos electrónicos",
+    "PhoneNumber": "Números de teléfono",
+    "Currency": "Divisa",
+    "LayoutSet": "Conjuntos de diseño"
   },
   "labels": {
     "Misc": "Misceláneos",
@@ -85,7 +108,7 @@
     "Uploading...": "Subiendo...",
     "Sending...": "Enviando...",
     "Merging...": "Fusionando...",
-    "Merged": "Fusionado\t",
+    "Merged": "Fusionado",
     "Removed": "Eliminado",
     "Posted": "Publicado",
     "Linked": "Enlazado",
@@ -213,7 +236,20 @@
     "Collapse": "Contraer",
     "New notifications": "Nuevas notificaciones",
     "Manage Categories": "Administrar categorías",
-    "Manage Folders": "Administrar carpetas"
+    "Manage Folders": "Administrar carpetas",
+    "Convert to": "Convertir a",
+    "View Personal Data": "Ver datos personales",
+    "Personal Data": "Información personal",
+    "Erase": "Borrar",
+    "Move Over": "Moverse",
+    "Restore": "Restaurar",
+    "View Followers": "Ver seguidores",
+    "Convert Currency": "Convertir moneda",
+    "Middle Name": "Segundo nombre",
+    "View on Map": "Ver en el mapa",
+    "Proceed": "Continuar",
+    "Attached": "Adjunto",
+    "Preview": "Avance"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -267,11 +303,22 @@
     "saving": "Guardando...",
     "fieldMaxFileSizeError": "El archivo no puede exeder los {max} Mb",
     "fieldShouldBeLess": "{field} no debería ser mayor que {value}",
-    "fieldShouldBeGreater": "{field} no debería ser menor que {value}"
+    "fieldShouldBeGreater": "{field} no debería ser menor que {value}",
+    "fieldIsUploading": "Subida en progreso",
+    "erasePersonalDataConfirmation": "Los campos marcados se borrarán permanentemente. ¿Estás seguro?",
+    "massPrintPdfMaxCountError": "No se puede imprimir más que {maxCount} registros.",
+    "fieldValueDuplicate": "Valor duplicado",
+    "unlinkSelectedRecordsConfirmation": "¿Está seguro de que desea desvincular los registros seleccionados?",
+    "recalculateFormulaConfirmation": "¿Está seguro de que desea volver a calcular la fórmula para los registros seleccionados?",
+    "fieldExceedsMaxCount": "El recuento excede el máximo permitido {maxCount}",
+    "notUpdated": "No actualizado",
+    "maintenanceMode": "La aplicación actualmente está en modo de mantenimiento. Solo los usuarios administradores tienen acceso.\n\nEl modo de mantenimiento se puede deshabilitar en Administración → Ajustes.",
+    "fieldInvalid": "{campo} no es válido"
   },
   "boolFilters": {
     "onlyMy": "Solo míos",
-    "followed": "Siguiendo"
+    "followed": "Siguiendo",
+    "onlyMyTeam": "Mi equipo"
   },
   "presetFilters": {
     "followed": "Siguiendo",
@@ -283,7 +330,11 @@
     "massUpdate": "Actualización masiva",
     "export": "Exportar",
     "follow": "Seguir",
-    "unfollow": "Dejar de seguir"
+    "unfollow": "Dejar de seguir",
+    "convertCurrency": "Convertir moneda",
+    "printPdf": "Print to PDF\n",
+    "unlink": "Desvincular",
+    "recalculateFormula": "Recalcular fórmula"
   },
   "fields": {
     "name": "Nombre",
@@ -309,7 +360,16 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos"
+    "children": "Hijos",
+    "emailAddressData": "Datos de Correos electrónicos",
+    "phoneNumberData": "Datos del número de teléfono",
+    "names": "Nombres",
+    "emailAddressIsOptedOut": "La dirección de correo electrónico está dada de baja",
+    "targetListIsOptedOut": "Se dieró de baja",
+    "type": "Tipo",
+    "phoneNumberIsOptedOut": "El teléfono está excluido",
+    "types": "Tipos",
+    "middleName": "Segundo nombre"
   },
   "links": {
     "assignedUser": "Usuario asignado",
@@ -369,10 +429,10 @@
     "emailReceivedThis": "Correo recibido",
     "emailReceivedInitialThis": "Correo recibido, se ha creado: {entityType}",
     "emailReceivedFrom": "Correo recibido de {from}, relacionado a: {entityType} {entity}",
-    "emailReceivedFromInitial": "Correo recibido de {from}, se ha creado: {entityType} {entityType}",
-    "emailReceivedInitialFrom": "Correo recibido de {from}, se ha creado: {entityType} {entityType}",
+    "emailReceivedFromInitial": "Correo recibido de {from}, se ha creado: {entityType} {entity}",
+    "emailReceivedInitialFrom": "Correo recibido de {from}, se ha creado: {entityType} {entity}",
     "emailReceived": "El correo {email} ha sido recibido para el {entityType} {entity}",
-    "emailReceivedInitial": "Correo recibido, se ha creado: {entityType} {entityType}",
+    "emailReceivedInitial": "Correo recibido, se ha creado: {entityType} {entity}",
     "emailSent": "{by} ha enviado un correo relacionado a: {entityType} {entity}",
     "emailSentThis": "{by} ha enviado un correo",
     "postTargetSelf": "{user} se ha enviado un mensaje a sí mismo",
@@ -542,7 +602,11 @@
       "isEmpty": "Está Vacío",
       "olderThanXDays": "Más de X Días",
       "afterXDays": "Después de X días",
-      "nextMonth": "Siguiente mes"
+      "nextMonth": "Siguiente mes",
+      "currentFiscalYear": "Año fiscal actual",
+      "lastFiscalYear": "Último año fiscal",
+      "currentFiscalQuarter": "Trimestre fiscal actual",
+      "lastFiscalQuarter": "Último trimestre fiscal"
     },
     "searchRanges": {
       "is": "Es",
@@ -553,7 +617,9 @@
       "anyOf": "Cualquiera de",
       "isNot": "No es",
       "isNotOneOf": "Ninguno de",
-      "noneOf": "Ninguno de"
+      "noneOf": "Ninguno de",
+      "allOf": "Todo de",
+      "any": "Alguno"
     },
     "varcharSearchRanges": {
       "equals": "Equivale",
@@ -698,5 +764,8 @@
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí misma"
+  },
+  "themes": {
+    "VioletVertical": "\nVertical Violet"
   }
 }

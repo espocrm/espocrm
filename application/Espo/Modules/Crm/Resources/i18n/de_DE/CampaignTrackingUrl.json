@@ -1,12 +1,24 @@
 {
   "fields": {
     "urlToUse": "Code zum Einfügen anstelle einer URL",
-    "campaign": "Kampagne"
+    "campaign": "Kampagne",
+    "action": "Aktion",
+    "message": "Nachricht"
   },
   "links": {
     "campaign": "Kampagne"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Tracking URL erstellen"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Weiterleitung",
+      "Show Message": "Nachricht anzeigen"
+    }
+  },
+  "tooltips": {
+    "url": "Der Empfänger wird zu diesem Ort weitergeleitet, nachdem er dem Link gefolgt ist.",
+    "message": "Die Nachricht wird dem Empfänger angezeigt, nachdem er dem Link gefolgt ist. Die Funktion Markdown wird unterstützt."
   }
 }

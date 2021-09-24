@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "append": "Anhängen (Tabs der Benutzer nicht entfernen)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Vorlage erstellen",
+    "Deploy to Users": "Für Benutzer bereitstellen",
+    "Deploy to Team": "Dem Team bereitstellen"
+  }
+}

@@ -79,7 +79,6 @@
     "historyEntityList": "Verlaufsentitätenliste",
     "currencyFormat": "Währungsformat",
     "currencyDecimalPlaces": "Dezimalstellen der Währung",
-    "aclStrictMode": "ACL Strict-Modus",
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "aclAllowDeleteCreated": "Erlauben erstellten Einträge zu löschen",
     "adminNotifications": "Systembenachrichtigungen im Administrationspanel",
@@ -102,23 +101,35 @@
     "addressCountryList": "Adresse Land Autovervollständigungsliste",
     "fiscalYearShift": "Beginn des Geschäftsjahres",
     "jobRunInParallel": "Jobs werden parallel ausgeführt",
+    "jobMaxPortion": "Arbeitsplätze max. Anteil",
+    "jobPoolConcurrencyNumber": "Anzahl der Gleichzeitigkeit im Stellenpool",
     "daemonInterval": "Daemon Intervall",
+    "daemonMaxProcessNumber": "Daemon max. Prozessnummer",
+    "daemonProcessTimeout": "Daemon-Prozess-Timeout",
     "addressCityList": "Adresse Stadt Autovervollständigungsliste",
     "addressStateList": "Adresse Bundesland Autovervollständigungsliste",
     "cronDisabled": "Cron deaktivieren",
     "maintenanceMode": "Wartungsmodus",
     "useWebSocket": "WebSocket verwenden",
-    "emailNotificationsDelay": "Verzögerung von E-Mail-Benachrichtigungen (in Sekunden)"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sonntag",
-      "1": "Montag"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Status": "Statusaktualisierungen",
-      "EmailReceived": "Empfangene E-Mails"
-    }
+    "emailNotificationsDelay": "Verzögerung von E-Mail-Benachrichtigungen (in Sekunden)",
+    "massEmailOpenTracking": "Offene Verfolgung von E-Mails",
+    "passwordRecoveryDisabled": "Passwort-Wiederherstellung deaktivieren",
+    "passwordRecoveryForAdminDisabled": "Deaktivieren Sie die Passwort-Wiederherstellung für Admin-Benutzer",
+    "passwordGenerateLength": "Länge der generierten Kennwörter",
+    "passwordStrengthLength": "Minimale Passwortlänge",
+    "passwordStrengthLetterCount": "Anzahl der erforderlichen Buchstaben im Passwort",
+    "passwordStrengthNumberCount": "Anzahl der erforderlichen Ziffern im Passwort",
+    "passwordStrengthBothCases": "Das Passwort muss sowohl Groß- als auch Kleinbuchstaben enthalten",
+    "auth2FA": "2-Faktor-Authentifizierung aktivieren",
+    "auth2FAMethodList": "Verfügbare 2FA-Methoden",
+    "personNameFormat": "Format des Personennamens",
+    "newNotificationCountInTitle": "Neue Benachrichtigungsnummer im Seitentitel anzeigen\n",
+    "massEmailVerp": "VERP verwenden",
+    "emailAddressLookupEntityTypeList": "Suchbereiche für E-Mail-Adressen",
+    "busyRangesEntityList": "Liste der Frei/Gebucht-Einheiten",
+    "passwordRecoveryForInternalUsersDisabled": "Deaktivieren der Passwort-Wiederherstellung für interne Benutzer",
+    "passwordRecoveryNoExposure": "Verhindern Sie die Preisgabe von E-Mail-Adressen im Passwort-Wiederherstellungsformular",
+    "auth2FAForced": "Regelmäßige Benutzer zur Einrichtung von 2FA zwingen"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -169,7 +180,28 @@
     "daemonProcessTimeout": "Maximale Ausführungszeit (in Sekunden) für einen einzelnen Cron-Prozess.",
     "cronDisabled": "Cron läuft nicht.",
     "maintenanceMode": "Nur Administratoren haben Zugriff auf das System.",
-    "ldapAccountCanonicalForm": "Format der Accountinformationen. Es gibt vier Optionen:\n\n- 'Dn' - LDAP DN im Format 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username' - im Format 'tester'.\n\n- 'Backslash' - im Format 'COMPANY\\tester'.\n\n- 'Principal' - im Format 'tester@company.com'."
+    "ldapAccountCanonicalForm": "Format der Accountinformationen. Es gibt vier Optionen:\n\n- 'Dn' - LDAP DN im Format 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username' - im Format 'tester'.\n\n- 'Backslash' - im Format 'COMPANY\\tester'.\n\n- 'Principal' - im Format 'tester@company.com'.",
+    "massEmailVerp": "Variabler Rücklaufpfad für Rückläufer. Zur besseren Behandlung von zurückgewiesenen Nachrichten. Stellen Sie sicher, dass Ihr SMTP-Provider dies unterstützt.",
+    "displayListViewRecordCount": "Eine Gesamtzahl von Datensätzen wird in der Listenansicht angezeigt.",
+    "currencyList": "Welche Währungen im System verfügbar sein werden.",
+    "activitiesEntityList": "Welche Aufzeichnungen werden im Aktivitäten-Panel zur Verfügung stehen.",
+    "historyEntityList": "Welche Aufzeichnungen im Geschichtspanel verfügbar sein werden.",
+    "calendarEntityList": "Welche Datensätze im Kalender verfügbar sein werden.",
+    "addressStateList": "Nennen Sie Vorschläge für Adressfelder.",
+    "addressCityList": "Stadtvorschläge für Adressfelder.",
+    "addressCountryList": "Ländervorschläge für Adressfelder.",
+    "exportDisabled": "Benutzer können keine Datensätze exportieren. Nur Admin wird erlaubt sein.",
+    "globalSearchEntityList": "Welche Datensätze mit der Globalen Suche durchsucht werden können.",
+    "siteUrl": "Eine URL dieser EspoCRM-Instanz. Sie müssen sie ändern, wenn Sie in eine andere Domäne umziehen.",
+    "useCache": "Eine Deaktivierung wird nicht empfohlen, es sei denn zu Entwicklungszwecken.",
+    "useWebSocket": "WebSocket ermöglicht die interaktive Zwei-Wege-Kommunikation zwischen einem Server und einem Browser. Erfordert die Einrichtung des WebSocket-Daemons auf Ihrem Server. Weitere Informationen finden Sie in der Dokumentation.",
+    "passwordRecoveryForInternalUsersDisabled": "Nur Portalbenutzer können das Passwort wiederherstellen.",
+    "passwordRecoveryNoExposure": "Es wird nicht möglich sein, festzustellen, ob eine bestimmte E-Mail-Adresse im System registriert ist.",
+    "emailAddressLookupEntityTypeList": "Für E-Mail-Adresse automatisch ausfüllen.",
+    "emailNotificationsDelay": "Eine Nachricht kann innerhalb des angegebenen Zeitrahmens bearbeitet werden, bevor die Benachrichtigung gesendet wird.",
+    "outboundEmailFromAddress": "Die E-Mail-Adresse des Systems.",
+    "smtpServer": "Wenn leer, dann wird das Gruppen-E-Mail-Konto mit der entsprechenden E-Mail-Adresse verwendet.",
+    "busyRangesEntityList": "Was wird bei der Anzeige belegter Zeitbereiche in Scheduler & Timeline berücksichtigt."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",
@@ -184,9 +216,24 @@
     "Activities": "Aktivitäten",
     "Admin Notifications": "Admin-Benachrichtigungen",
     "Search": "Suche",
-    "Misc": "Verschiedenes"
+    "Misc": "Verschiedenes",
+    "Passwords": "Kennwörter",
+    "2-Factor Authentication": "2-Faktor-Authentifizierung",
+    "Group Tab": "Registerkarte Gruppe"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Status": "Statusaktualisierungen",
+      "EmailReceived": "Empfangene E-Mails"
+    },
+    "personNameFormat": {
+      "firstLast": "Vorname Nachname",
+      "lastFirst": "Nachname Vorname\n",
+      "firstMiddleLast": "Vorname 2. Vorname Nachname",
+      "lastFirstMiddle": "Nachname Vorname 2. Vorname"
+    }
   }
 }

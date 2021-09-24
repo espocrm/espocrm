@@ -12,7 +12,7 @@
     "from": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
     "to": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *",
     "name": "Juste un nom de filtre",
-    "subject": "Utilisez un caractère générique [ * ]:\n\ntexte* = commence par \"texte\"\n*texte* = contient \"texte\"\n*texte = fini par \"texte\"",
-    "bodyContains": "Le corps de l'email contient l'un des mots ou phrases"
+    "bodyContains": "Le corps de l'email contient l'un des mots ou phrases",
+    "subject": "* `texte*` – commence par texte,\n* `*texte*` – contient texte,\n* `*texte` – finit par texte."
   }
 }

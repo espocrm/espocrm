@@ -20,7 +20,17 @@
     "Attachment": "Pièce jointe",
     "LastViewed": "Dernier enregistrement",
     "Settings": "Paramètres",
-    "Export": "Exporter"
+    "EntityManager": "Gestionnaire de Fonctionnalités",
+    "Export": "Exporter",
+    "AuthLogRecord": "Enregistrement du journal d'authentification",
+    "AuthFailLogRecord": "Enregistrement du journal d'échec d'authentification",
+    "EmailTemplateCategory": "Catégories de modèles de courrier électronique",
+    "LeadCapture": "Point d'entrée de capture de plomb",
+    "LeadCaptureLogRecord": "Enregistrement du journal de capture de plomb",
+    "ArrayValue": "Valeur du tableau",
+    "ApiUser": "API utilisateur",
+    "DashboardTemplate": "Modèle de tableau de bord",
+    "Currency": "Devise"
   },
   "scopeNamesPlural": {
     "User": "Utilisateurs",
@@ -41,7 +51,19 @@
     "Portal": "Portails",
     "PortalRole": "Roles Portail",
     "Attachment": "Pièces jointes",
-    "LastViewed": "Dernières vues"
+    "LastViewed": "Dernières vues",
+    "AuthLogRecord": "Journal d'authentification",
+    "AuthFailLogRecord": "Journal d'échec d'authentification",
+    "EmailTemplateCategory": "Catégories de modèles de courrier électronique",
+    "Import": "Importation",
+    "LeadCapture": "Capture de plomb",
+    "LeadCaptureLogRecord": "Journal de capture de plomb",
+    "ArrayValue": "Valeurs de tableau",
+    "ApiUser": "Utilisateurs d'API",
+    "DashboardTemplate": "Modèles de tableau de bord",
+    "EmailAddress": "Adresses email",
+    "PhoneNumber": "Numéros de téléphone",
+    "Currency": "Devise"
   },
   "labels": {
     "Misc": "Divers",
@@ -171,7 +193,23 @@
     "Next Entry": "Suivant",
     "View List": "Vue en liste",
     "Attach File": "Attacher un fichier",
-    "Return to Application": "Retour à l'application"
+    "Return to Application": "Retour à l'application",
+    "Expand": "Développer",
+    "Collapse": "Effondrer",
+    "New notifications": "Nouvelles notifications",
+    "Manage Categories": "Gérer les catégories",
+    "Manage Folders": "Gérer les dossiers",
+    "Convert to": "Convertir en",
+    "View Personal Data": "Voir les données personnelles",
+    "Personal Data": "Données personnelles",
+    "Erase": "Effacer",
+    "Move Over": "Bouge",
+    "Restore": "Restaurer",
+    "View Followers": "Voir les abonnés",
+    "Convert Currency": "Convertir la monnaie",
+    "Middle Name": "Second prénom",
+    "View on Map": "Voir sur la carte",
+    "Preview": "Prévisualisation"
   },
   "messages": {
     "pleaseWait": "Veuillez patienter...",
@@ -203,12 +241,24 @@
     "checkForNewNotifications": "Vérifier les nouvelles notifications",
     "loading": "Chargement...",
     "saving": "Sauvegarde...",
+    "fieldMaxFileSizeError": "Le fichier ne doit pas dépasser {max} Mo",
     "fieldShouldBeLess": "{field} doit être moins élevé que {value}",
-    "fieldShouldBeGreater": "{field} doit être plus grand que {value}"
+    "fieldShouldBeGreater": "{field} doit être plus grand que {value}",
+    "fieldIsUploading": "En cours de téléchargement",
+    "erasePersonalDataConfirmation": "Les champs cochés seront effacés de façon permanente. Êtes-vous sûr?",
+    "massPrintPdfMaxCountError": "Impossible d'imprimer plus que {maxCount} enregistrements.",
+    "fieldValueDuplicate": "Dupliquer la valeur",
+    "unlinkSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir dissocier les enregistrements sélectionnés?",
+    "recalculateFormulaConfirmation": "Êtes-vous sûr de vouloir recalculer la formule pour les enregistrements sélectionnés?",
+    "fieldExceedsMaxCount": "Le nombre dépasse le maximum autorisé {maxCount}",
+    "notUpdated": "Pas à jour",
+    "maintenanceMode": "L'application est actuellement en mode maintenance. Seuls les utilisateurs administrateurs ont accès. \n\nLe mode maintenance peut être désactivé dans Administration → Paramètres.",
+    "fieldInvalid": "{field} n'est pas valide"
   },
   "boolFilters": {
     "onlyMy": "Perso",
-    "followed": "Suivi"
+    "followed": "Suivi",
+    "onlyMyTeam": "Mon équipe"
   },
   "presetFilters": {
     "followed": "Suivi",
@@ -220,7 +270,11 @@
     "massUpdate": "Mise à jour groupée",
     "export": "Exporter",
     "follow": "Suivre",
-    "unfollow": "Ne plus suivre"
+    "unfollow": "Ne plus suivre",
+    "convertCurrency": "Convertir la monnaie",
+    "printPdf": "Imprimer en PDF",
+    "unlink": "Dissocier",
+    "recalculateFormula": "Recalculer la formule"
   },
   "fields": {
     "name": "Nom",
@@ -242,7 +296,16 @@
     "phoneNumberOffice": "Téléphone (Bureau)",
     "phoneNumberOther": "Téléphone (Autre)",
     "order": "Tri",
-    "children": "Enfants"
+    "children": "Enfants",
+    "emailAddressData": "Adresse électronique",
+    "phoneNumberData": "Numéro de téléphone",
+    "ids": "Identifiants",
+    "names": "Des noms",
+    "emailAddressIsOptedOut": "L'adresse e-mail est désactivée",
+    "targetListIsOptedOut": "Est désinscrit (liste cible)",
+    "phoneNumberIsOptedOut": "Le numéro de téléphone est désactivé",
+    "types": "Les types",
+    "middleName": "Second prénom"
   },
   "links": {
     "assignedUser": "Utilisateur assigné",
@@ -306,7 +369,15 @@
     "emailReceived": "Email reçu relié à {entityType} {entity}",
     "emailReceivedInitial": "Email reçu: {entityType} {entity} créé",
     "emailSent": "{by} a envoyé un email lié à {entityType} {entity}",
-    "emailSentThis": "{by} a envoyé un email"
+    "emailSentThis": "{by} a envoyé un email",
+    "createAssignedYou": "{user} a créé {entityType} {entity} et vous l'a attribué",
+    "createAssignedThisSelf": "{user} a créé {entityType} avec auto-attribution",
+    "createAssignedSelf": "{user} a créé {entityType} {entity} avec auto-attribution",
+    "assignYou": "{user} vous a attribué {entityType} {entity}",
+    "assignThisVoid": "{user} a retiré l'attribution de {entityType}",
+    "assignVoid": "{user} a retiré l'attribution de {entityType} {entity}",
+    "assignThisSelf": "{user} a mis {entityType} en auto-attribution",
+    "assignSelf": "{user} a mis {entityType} {entity} en auto-attribution"
   },
   "lists": {
     "monthNames": [
@@ -377,7 +448,7 @@
       "after": "Après",
       "before": "Avant",
       "between": "Entre",
-      "today": "Aujourd'ui",
+      "today": "Aujourd'hui",
       "past": "Passé",
       "future": "Futur",
       "currentMonth": "Mois en cours",
@@ -389,13 +460,20 @@
       "lastSevenDays": "7 derniers jours",
       "lastXDays": "Derniers X jours",
       "nextXDays": "Prochains X jours",
-      "ever": "Toujours"
+      "ever": "Toujours",
+      "nextMonth": "Le mois prochain",
+      "currentFiscalYear": "Année fiscale en cours",
+      "lastFiscalYear": "Dernier exercice financier",
+      "currentFiscalQuarter": "Trimestre financier en cours",
+      "lastFiscalQuarter": "Dernier trimestre fiscal"
     },
     "searchRanges": {
       "is": "Est",
       "isEmpty": "Est vide",
       "isNotEmpty": "Non vide",
-      "isFromTeams": "Provient de l’équipe"
+      "isFromTeams": "Provient de l’équipe",
+      "allOf": "Tous de",
+      "any": "Parmi"
     },
     "varcharSearchRanges": {
       "equals": "Égale",
@@ -525,5 +603,20 @@
         "redo": "Aller en avant"
       }
     }
+  },
+  "durationUnits": {
+    "d": "ré"
+  },
+  "listViewModes": {
+    "list": "liste"
+  },
+  "themes": {
+    "Espo": "Espo Classique",
+    "Sakura": "Sakura classique",
+    "EspoVertical": "Espo Vertical",
+    "SakuraVertical": "Sakura vertical",
+    "Violet": "Violet classique",
+    "VioletVertical": "Violet vertical",
+    "Hazyblue": "Hazyblue classique"
   }
 }

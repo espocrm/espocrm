@@ -1,7 +1,8 @@
 {
   "fields": {
     "name": "Nom",
-    "isInstalled": "Installé"
+    "isInstalled": "Installé",
+    "checkVersionUrl": "Une URL pour vérifier les nouvelles versions"
   },
   "labels": {
     "Uninstall": "Désinstaller",

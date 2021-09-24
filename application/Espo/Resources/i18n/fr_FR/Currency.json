@@ -1,0 +1,29 @@
+{
+  "names": {
+    "AED": "United Arab Emirates Dirham\n",
+    "AFN": "Afghani Afghan",
+    "ALL": "Lek Albanais",
+    "AMD": "Dram Arménien",
+    "AOA": "Kwanza Angolais",
+    "ARS": "Peso Argentin",
+    "AUD": "Dollar Australien",
+    "BBD": "Dollar Barbadien",
+    "CAD": "Dollar canadien",
+    "CDF": "Franc congolais",
+    "CHE": "Euro WIR",
+    "CHF": "Franc suisse",
+    "CHW": "Franc WIR",
+    "CLP": "Peso chilien",
+    "GNF": "Franc guinéen",
+    "JPY": "Yen japonais",
+    "KMF": "Franc comorien",
+    "KPW": "Won nord-koréen",
+    "KRW": "Won sud-coréen",
+    "NAD": "Dollar namibien",
+    "PLN": "Złoty polonais",
+    "QAR": "Rial qatari",
+    "RSD": "Dinar serbe",
+    "USD": "Dollar US",
+    "XOF": "Franc CFA d'Afrique de l'Ouest"
+  }
+}

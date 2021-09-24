@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nom",
     "body": "Corps de texte",
-    "entityType": "Type d’entité",
+    "entityType": "Type de Fonctionnalité",
     "header": "Entête",
     "footer": "Pied de page",
     "leftMargin": "Marge gauche",
@@ -10,12 +10,37 @@
     "rightMargin": "Marge droite",
     "bottomMargin": "Marge du bas",
     "printFooter": "Imprimer les pieds de page",
-    "footerPosition": "Position des pieds de page"
+    "footerPosition": "Position des pieds de page",
+    "pageOrientation": "Orientation de la page",
+    "pageFormat": "Format de papier",
+    "fontFace": "Police de caractère",
+    "pageWidth": "Largeur de page (mm)",
+    "pageHeight": "Hauteur de la page (mm)",
+    "headerPosition": "Position de l'entête"
   },
   "labels": {
     "Create Template": "Créer un modèle"
   },
   "tooltips": {
     "footer": "Utiliser {pageNumber} pour imprimer la page."
+  },
+  "options": {
+    "pageOrientation": {
+      "Landscape": "Paysage"
+    },
+    "placeholders": {
+      "today": "La date d'aujourd'hui)",
+      "now": "Maintenant (date-heure)"
+    },
+    "fontFace": {
+      "courier": "Courrier",
+      "pdfacourier": "PDFA Courrier",
+      "pdfasymbol": "Symbole PDFA",
+      "symbol": "symbole",
+      "times": "Fois"
+    },
+    "pageFormat": {
+      "Custom": "Douane"
+    }
   }
 }

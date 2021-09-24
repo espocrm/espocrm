@@ -14,5 +14,14 @@
   },
   "messages": {
     "writeMessage": "Écrivez votre message ici"
+  },
+  "options": {
+    "type": {
+      "Post": "Poster"
+    }
+  },
+  "links": {
+    "superParent": "Super parent",
+    "related": "Apparenté, relié, connexe"
   }
 }

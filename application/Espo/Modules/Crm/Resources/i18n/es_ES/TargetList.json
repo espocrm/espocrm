@@ -7,7 +7,10 @@
     "endDate": "Fecha de finalización",
     "targetLists": "Lista de objetivos",
     "includingActionList": "Incluyendo",
-    "excludingActionList": "Excluyendo"
+    "excludingActionList": "Excluyendo",
+    "optedOutCount": "Contador de bajas",
+    "targetStatus": "Estado del objetivo",
+    "isOptedOut": "Se dieró de baja"
   },
   "links": {
     "accounts": "Cuentas",
@@ -21,6 +24,10 @@
       "Email": "Correo electrónico",
       "Television": "Televisión",
       "Newsletter": "Boletín de noticias"
+    },
+    "targetStatus": {
+      "Opted Out": "Se dieron de baja",
+      "Listed": "Listados"
     }
   },
   "labels": {

@@ -1,5 +1,26 @@
 {
   "insertFromSourceLabels": {
     "Document": "Ajouter un document"
+  },
+  "fields": {
+    "role": "Rôle",
+    "related": "Apparenté, relié, connexe",
+    "file": "Fichier",
+    "field": "Champ",
+    "sourceId": "ID source",
+    "storage": "Espace de rangement",
+    "size": "Taille (octets)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Attachement",
+      "Inline Attachment": "Attachement en ligne",
+      "Import File": "Importer le fichier",
+      "Export File": "Fichier d'exportation",
+      "Mail Merge": "Fusion et publipostage"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Orphelin"
   }
 }

@@ -16,13 +16,34 @@
     "replyFromAddress": "Adresse de réponse",
     "replyToAddress": "Adresse de  destination",
     "replyFromName": "Nom pour répondre",
-    "addAllTeamUsers": "Pour tous les membres de l'équipe"
+    "addAllTeamUsers": "Pour tous les membres de l'équipe",
+    "sentFolder": "Dossier envoyé",
+    "storeSentEmails": "Stocker les emails envoyés",
+    "useSmtp": "Utiliser SMTP",
+    "smtpHost": "Hôte SMTP",
+    "smtpPort": "Port SMTP",
+    "smtpAuth": "Authentification SMTP",
+    "smtpSecurity": "Sécurité SMTP",
+    "smtpUsername": "Nom d'utilisateur SMTP",
+    "smtpPassword": "Mot de passe SMTP\n",
+    "fromName": "De nom",
+    "smtpIsShared": "SMTP est partagé",
+    "smtpIsForMassEmail": "SMTP est pour le courrier électronique en masse",
+    "useImap": "Récupérer des emails",
+    "keepFetchedEmailsUnread": "Conserver les e-mails non lus",
+    "smtpAuthMechanism": "Mécanisme d'authentification SMTP",
+    "security": "Sécurité"
   },
   "tooltips": {
-    "createCase": "Création automatique de tickets à partir des emails entrant"
+    "createCase": "Création automatique de tickets à partir des emails entrant",
+    "smtpIsShared": "Si cette case est cochée, les utilisateurs pourront envoyer des courriels à l'aide de ce protocole SMTP. La disponibilité est contrôlée par les rôles via l'autorisation Compte de groupe électronique.",
+    "smtpIsForMassEmail": "Si cette case est cochée, SMTP sera disponible pour le courrier électronique en masse.",
+    "storeSentEmails": "Les emails envoyés seront stockés sur le serveur IMAP.",
+    "useSmtp": "Capacité à envoyer des courriels"
   },
   "links": {
-    "filters": "Filtre"
+    "filters": "Filtre",
+    "assignToUser": "Attribuer à l'utilisateur"
   },
   "options": {
     "status": {
@@ -31,6 +52,10 @@
     },
     "caseDistribution": {
       "": "Aucun"
+    },
+    "smtpAuthMechanism": {
+      "plain": "PLAINE",
+      "login": "S'IDENTIFIER"
     }
   },
   "labels": {

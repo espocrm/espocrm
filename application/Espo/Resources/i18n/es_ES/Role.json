@@ -5,7 +5,9 @@
     "userPermission": "Permisos de Usuario",
     "portalPermission": "Permisos del portal",
     "groupEmailAccountPermission": "Permiso de la cuenta de correo grupal",
-    "exportPermission": "Permisos de exportación"
+    "exportPermission": "Permisos de exportación",
+    "dataPrivacyPermission": "Permiso de privacidad de datos",
+    "massUpdatePermission": "Permiso de actualización masiva"
   },
   "links": {
     "users": "Usuarios",
@@ -15,7 +17,10 @@
     "assignmentPermission": "Permite restringir la capacidad de los usuarios para que asignen registros y publicaciones a otros usuarios.\n\ntodo - sin restricción\n\nequipo - puede asignar a usuarios de su propio equipo\n\nno - solo puede asignarse a sí mismo",
     "userPermission": "Permite restringir la capacidad de los usuarios para ver tareas, calendarios y la historia de otros usuarios.\n\ntodo - pueden ver todo\n\nequipo - pueden ver las actividades de su equipo\n\nno - solo las propias",
     "portalPermission": "Define un acceso a la información del portal, la capacidad de publicar mensajes a los usuarios del portal.\n",
-    "groupEmailAccountPermission": "Define el acceso a las cuentas de correo grupales, la capacidad de enviar correos a través del SMTP grupal."
+    "groupEmailAccountPermission": "Define el acceso a las cuentas de correo grupales, la capacidad de enviar correos a través del SMTP grupal.",
+    "dataPrivacyPermission": "Permite ver y borrar datos personales.",
+    "exportPermission": "Define si los usuarios tienen la capacidad de exportar registros.",
+    "massUpdatePermission": "Define si los usuarios tienen la capacidad de realizar actualizaciones masivas de registros."
   },
   "labels": {
     "Access": "Acceso",

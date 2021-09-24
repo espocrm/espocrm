@@ -6,17 +6,28 @@
     "body": "Cuerpo",
     "subject": "Asunto",
     "attachments": "Adjuntos",
-    "insertField": "Insertar campo",
-    "oneOff": "Único"
+    "oneOff": "Único",
+    "category": "Categoría",
+    "insertField": "Marcadores de posición"
   },
   "labels": {
     "Create EmailTemplate": "Crear plantilla de correo",
-    "Info": "Información"
+    "Info": "Información",
+    "Available placeholders": "Placeholders disponibles"
   },
   "tooltips": {
     "oneOff": "Marque la casilla si usted va a utilizar esta plantilla solo una vez. Por ejemplo para correo masivo."
   },
   "presetFilters": {
     "actual": "Actuales"
+  },
+  "placeholderTexts": {
+    "optOutLink": "un enlace para darse de baja",
+    "today": "El día de hoy",
+    "now": "Fecha y hora actual",
+    "currentYear": "Año actual"
+  },
+  "messages": {
+    "infoText": "Marcadores de posición disponibles:\n\n{optOutUrl} & # 8211; URL para un enlace para darse de baja;\n\n{optOutLink} & # 8211; un enlace para darse de baja."
   }
 }

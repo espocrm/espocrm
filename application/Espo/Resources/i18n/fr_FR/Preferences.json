@@ -20,7 +20,13 @@
     "tabList": "Liste des onglets",
     "defaultReminders": "Notifications par défaut",
     "theme": "Thème",
-    "useCustomTabList": "Liste d'onglets personnalisé"
+    "useCustomTabList": "Liste d'onglets personnalisé",
+    "followCreatedEntityTypeList": "Suivre automatiquement les éléments créés parmi les Fonctionnalités sélectionnées",
+    "emailUseExternalClient": "Utiliser un client de messagerie externe",
+    "scopeColorsDisabled": "Désactiver les couleurs de la portée",
+    "tabColorsDisabled": "Désactiver les couleurs des onglets",
+    "assignmentNotificationsIgnoreEntityTypeList": "Notifications d'affectation dans l'application",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifications d'attribution de courrier électronique"
   },
   "options": {
     "weekStart": {
@@ -30,6 +36,12 @@
   },
   "labels": {
     "User Interface": "Interface utilisateurs",
-    "Misc": "Divers"
+    "Misc": "Divers",
+    "Reset Dashboard to Default": "Réinitialiser le tableau de bord par défaut"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Suivre automatiquement TOUS les nouveaux éléments parmi la sélection de Type de Fonctionnalités, quelqu'en soit le créateur. Les voir dans le Flux et recevoir des notifications pour TOUS les éléments du système.",
+    "followCreatedEntities": "Lors de la création de nouveaux enregistrements, ils seront automatiquement suivis même s'ils sont attribués à un autre utilisateur.",
+    "followCreatedEntityTypeList": "Vous suivrez automatiquement les éléments que vous créerez s'ils font partie de votre sélection de Fonctionnalités, même s’ils sont attribués à un autre utilisateur."
   }
 }

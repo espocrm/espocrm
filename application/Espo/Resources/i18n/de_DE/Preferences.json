@@ -34,7 +34,9 @@
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "emailUseExternalClient": "Verwenden einen externen E-Mail-Client",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
-    "tabColorsDisabled": "Tabfarben deaktivieren"
+    "tabColorsDisabled": "Tabfarben deaktivieren",
+    "assignmentNotificationsIgnoreEntityTypeList": "In-App-Benachrichtigungen über Zuweisungen",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-Mail-Benachrichtigungen über Zuweisungen\n"
   },
   "options": {
     "weekStart": {

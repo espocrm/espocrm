@@ -48,6 +48,7 @@
     "todays": "Heutige"
   },
   "messages": {
-    "nothingHasBeenSent": "Es wurde nicht gesendet"
+    "nothingHasBeenSent": "Es wurde nicht gesendet",
+    "selectAcceptanceStatus": "Setzen Sie Ihren Annahmestatus."
   }
 }

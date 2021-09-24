@@ -16,9 +16,9 @@
     "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
     "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
     "name": "Ein Name für den Filter",
-    "subject": "Verwendung des Platzhalters *:\n\ntext* - beginnt mit text,\n*text* - enthält text,\n*text - endet mit text.",
     "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
-    "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an."
+    "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an.",
+    "subject": "Verwenden Sie einen Platzhalter *: \n\n * `text*` - beginnt mit Text,\n * `*text*` - enthält Text,\n * `*text` - endet mit Text."
   },
   "options": {
     "action": {

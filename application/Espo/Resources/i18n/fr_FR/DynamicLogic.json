@@ -5,5 +5,8 @@
       "notContains": "Ne contient pas",
       "notHas": "Ne contient pas"
     }
+  },
+  "labels": {
+    "Field": "Champ"
   }
 }

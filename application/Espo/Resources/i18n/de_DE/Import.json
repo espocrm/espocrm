@@ -50,7 +50,9 @@
     "Remove Import Log": "Importprotokoll entfernen",
     "New Import": "Neuer Import",
     "Import Results": "Importergebnisse",
-    "Silent Mode": "Silent-Modus"
+    "Silent Mode": "Silent-Modus",
+    "New import with same params": "Neuer Import mit gleichen Parametern",
+    "Run Manually": "Manuell ausführen"
   },
   "messages": {
     "utf8": "Sollte UTF-8 kodiert sein",
@@ -60,8 +62,8 @@
     "removeDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt.",
     "confirmRevert": "Dadurch werden alle importierten Datensätze dauerhaft entfernt. Sind Sie sicher?",
     "confirmRemoveDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt. Sind Sie sicher?",
-    "confirmRemoveImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Sie können den Import rückgängig nicht machen. Sind Sie sicher?",
-    "removeImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Verwenden Sie es, wenn Sie sicher sind, dass der Import in Ordnung ist."
+    "removeImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Verwenden Sie es, wenn Sie sicher sind, dass der Import in Ordnung ist.",
+    "confirmRemoveImportLog": "Dadurch wird das Importprotokoll entfernt. Alle importierten Aufzeichnungen werden aufbewahrt. Sie können die Importergebnisse nicht rückgängig machen. Sind Sie sicher?"
   },
   "fields": {
     "file": "Datei",
@@ -74,7 +76,23 @@
     "status": {
       "Failed": "Fehler",
       "In Process": "In Arbeit",
-      "Complete": "Fertig"
+      "Complete": "Fertig",
+      "Pending": "Ausstehend"
+    },
+    "personNameFormat": {
+      "f l": "Vorname Nachname",
+      "l f": "Nachname Vorname",
+      "f m l": "Vorname 2. Vorname Nachname",
+      "l f m": "Nachname Vorname 2. Vorname",
+      "l, f": "Nachname, Vorname"
     }
+  },
+  "strings": {
+    "commandToRun": "Befehl zum Ausführen (von CLI)",
+    "saveAsDefault": "Als Standard speichern"
+  },
+  "tooltips": {
+    "manualMode": "Wenn dieses Kontrollkästchen markiert ist, müssen Sie den Import manuell aus der CLI ausführen. Der Befehl wird nach dem Einrichten des Imports angezeigt.",
+    "silentMode": "Ein Großteil der After-Save-Skripte wird übersprungen, Stream-Notizen werden nicht erstellt. Der Import wird schneller ablaufen."
   }
 }

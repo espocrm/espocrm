@@ -38,7 +38,10 @@
     "LeadCapture": "Einstiegspunkt der Erfassung des Interessenten",
     "LeadCaptureLogRecord": "Logeintrag der Erfassung des Interessenten",
     "ArrayValue": "Array-Wert",
-    "ApiUser": "API Benutzer"
+    "ApiUser": "API Benutzer",
+    "DashboardTemplate": "Dashboard-Vorlage",
+    "Currency": "Währung",
+    "LayoutSet": "Layout-Set"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -71,7 +74,12 @@
     "LeadCapture": "Erfassung des Interessenten",
     "LeadCaptureLogRecord": "Erfassung des Interessenten Log",
     "ArrayValue": "Array-Werte",
-    "ApiUser": "API Benutzer"
+    "ApiUser": "API Benutzer",
+    "DashboardTemplate": "Dashboard-Vorlagen",
+    "EmailAddress": "E-Mail-Adressen",
+    "PhoneNumber": "Telefonnummern",
+    "Currency": "Währung",
+    "LayoutSet": "Layout-Sätze"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -218,8 +226,15 @@
     "View Personal Data": "Persönliche Daten anzeigen",
     "Personal Data": "Persönliche Daten",
     "Erase": "Löschen",
+    "Move Over": "Verschiebe nach",
     "Restore": "Wiederherstellen",
-    "View Followers": "Abonnenten anzeigen"
+    "View Followers": "Abonnenten anzeigen",
+    "Convert Currency": "Währung umrechnen",
+    "Middle Name": "Zweiter Vorname",
+    "View on Map": "Ansicht auf Karte",
+    "Proceed": "Fortfahren",
+    "Attached": "Beigefügt",
+    "Preview": "Vorschau"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -280,11 +295,15 @@
     "fieldValueDuplicate": "Doppelter Wert",
     "unlinkSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die Beziehungen zu ausgewählten Datensätzen  entfernen möchten?",
     "recalculateFormulaConfirmation": "Sind Sie sicher, dass Sie Formel für ausgewählte Datensätze neu berechnen möchten?",
-    "fieldExceedsMaxCount": "Anzahl überschreitet die maximal zulässige Anzahl {maxCount}"
+    "fieldExceedsMaxCount": "Anzahl überschreitet die maximal zulässige Anzahl {maxCount}",
+    "notUpdated": "Nicht aktualisiert",
+    "maintenanceMode": "Die Anwendung befindet sich derzeit im Wartungsmodus. Nur Admin-Benutzer haben Zugriff.\n\nDer Wartungsmodus kann unter Administration → Einstellungen deaktiviert werden.",
+    "fieldInvalid": "{field} ist ungültig"
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
-    "followed": "Abonniert"
+    "followed": "Abonniert",
+    "onlyMyTeam": "Mein Team"
   },
   "presetFilters": {
     "followed": "Abonniert",
@@ -332,7 +351,8 @@
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
     "type": "Typ",
     "phoneNumberIsOptedOut": "Telefonnummer ist Opt-Out gesetzt",
-    "types": "Typen"
+    "types": "Typen",
+    "middleName": "Zweiter Vorname"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -575,7 +595,9 @@
       "anyOf": "Irgendein von",
       "isNot": "Ist nicht",
       "isNotOneOf": "Keiner von",
-      "noneOf": "Keiner von"
+      "noneOf": "Keiner von",
+      "allOf": "Alle von",
+      "any": "Alle"
     },
     "varcharSearchRanges": {
       "equals": "Gleich",

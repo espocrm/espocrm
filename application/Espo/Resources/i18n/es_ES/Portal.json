@@ -16,14 +16,17 @@
     "weekStart": "Primer día de la semana",
     "defaultCurrency": "Moneda por defecto",
     "customUrl": "URL personalizada",
-    "customId": "ID personalizado"
+    "customId": "ID personalizado",
+    "layoutSet": "Conjunto de diseño"
   },
   "links": {
     "users": "Usuarios",
-    "notes": "Notas"
+    "notes": "Notas",
+    "layoutSet": "Conjunto de diseño"
   },
   "tooltips": {
-    "portalRoles": "Los roles del portal indicados se aplicarán a todos los usuarios de este portal."
+    "portalRoles": "Los roles del portal indicados se aplicarán a todos los usuarios de este portal.",
+    "layoutSet": "Proporciona la capacidad de tener diseños que difieran de los estándar."
   },
   "labels": {
     "Create Portal": "Crear portal",

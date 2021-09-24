@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "number": "Número",
+    "data": "Datos",
+    "target": "Objetivo",
+    "leadCapture": "Captura de clientes potenciales",
+    "createdAt": "Entró en",
+    "isCreated": "¿Se creó el cliente potencial?"
+  },
+  "links": {
+    "leadCapture": "Captura de clientes potenciales",
+    "target": "Objetivo"
+  }
+}

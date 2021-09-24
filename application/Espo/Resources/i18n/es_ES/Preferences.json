@@ -34,7 +34,12 @@
     "doNotFillAssignedUserIfNotRequired": "No precompletar usuario asignado en la creación de registros",
     "followEntityOnStreamPost": "Seguimiento automático después de publicar en la historia",
     "followCreatedEntities": "Seguimiento automático de registros creados",
-    "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos"
+    "followCreatedEntityTypeList": "Seguimiento automático de registros creados de tipos de entidades específicos",
+    "emailUseExternalClient": "Use un cliente de correo electrónico externo",
+    "scopeColorsDisabled": "Deshabilitar color de los ámbitos",
+    "tabColorsDisabled": "Deshabilitar colores de pestañas",
+    "assignmentNotificationsIgnoreEntityTypeList": "Asignación de notificaciones del sistema",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificaciones de asignación de correo electrónico"
   },
   "options": {
     "weekStart": {
@@ -46,10 +51,13 @@
     "Notifications": "Notificaciones",
     "User Interface": "Interfaz de usuario",
     "Misc": "Misceláneos",
-    "Locale": "Localización"
+    "Locale": "Localización",
+    "Reset Dashboard to Default": "Reiniciar al escritorio por defecto"
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Siguirá automáticamente todos los registros nuevos (creados por cualquier usuario) de los tipos de entidad seleccionados. Para poder ver información en la historia y recibir notificaciones sobre todos los registros en el sistema.",
-    "doNotFillAssignedUserIfNotRequired": "Cuando cree un registro, el usuario asignado no se completará con su propio usuario a menos que el campo sea obligatorio."
+    "doNotFillAssignedUserIfNotRequired": "Cuando cree un registro, el usuario asignado no se completará con su propio usuario a menos que el campo sea obligatorio.",
+    "followCreatedEntities": "Al crear nuevos registros, se seguirán automáticamente incluso si se asignan a otro usuario.",
+    "followCreatedEntityTypeList": "Al crear nuevos registros de los tipos de entidades seleccionados, se seguirán automáticamente incluso si se asignan a otro usuario."
   }
 }

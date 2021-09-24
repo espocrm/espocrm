@@ -1,1 +1,47 @@
-{}
+{
+  "fields": {
+    "name": "Nom",
+    "campaign": "Campagne",
+    "isActive": "C'est actif",
+    "subscribeToTargetList": "S'abonner à la liste des cibles",
+    "subscribeContactToTargetList": "S'abonner Contact si existe",
+    "targetList": "Liste de cibles",
+    "fieldList": "Champs de charge utile",
+    "optInConfirmation": "Double opt-in",
+    "optInConfirmationEmailTemplate": "Modèle d'e-mail de confirmation d'adhésion",
+    "optInConfirmationLifetime": "Opt-in confirmation à vie (heures)",
+    "optInConfirmationSuccessMessage": "Texte à afficher après la confirmation d'adhésion",
+    "leadSource": "Source principale",
+    "apiKey": "clé API",
+    "targetTeam": "Équipe cible",
+    "exampleRequestMethod": "Méthode",
+    "exampleRequestPayload": "Charge utile",
+    "createLeadBeforeOptInConfirmation": "Créer un prospect avant confirmation",
+    "duplicateCheck": "Contrôle en double",
+    "skipOptInConfirmationIfSubscribed": "Ignorer la confirmation si le prospect est déjà dans la liste des cibles",
+    "smtpAccount": "Compte SMTP",
+    "inboundEmail": "Compte de messagerie de groupe"
+  },
+  "links": {
+    "targetList": "Liste de cibles",
+    "campaign": "Campagne",
+    "optInConfirmationEmailTemplate": "Modèle d'e-mail de confirmation d'adhésion",
+    "targetTeam": "Équipe cible",
+    "logRecords": "Bûche",
+    "inboundEmail": "Compte de messagerie de groupe"
+  },
+  "labels": {
+    "Create LeadCapture": "Créer un point d'entrée",
+    "Generate New API Key": "Générer une nouvelle clé API",
+    "Request": "Demande",
+    "Confirm Opt-In": "Confirmer la participation"
+  },
+  "messages": {
+    "generateApiKey": "Créer une nouvelle clé API",
+    "optInConfirmationExpired": "Le lien de confirmation d'adhésion a expiré.",
+    "optInIsConfirmed": "L'inscription est confirmée."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown est pris en charge."
+  }
+}

@@ -22,11 +22,29 @@
     "isNotRead": "Non lu",
     "isImportant": "Important",
     "isUsers": "Utilisateurs",
-    "inTrash": "Supprimé"
+    "inTrash": "Supprimé",
+    "bodyPlain": "Corps (plaine)",
+    "ccEmailAddresses": "Adresses mail CC",
+    "messageId": "ID du message",
+    "messageIdInternal": "Identifiant du message (interne)",
+    "folderId": "ID de dossier",
+    "fromName": "De nom",
+    "fromString": "De la corde",
+    "isSystem": "Est système",
+    "toEmailAddresses": "À EmailAddresses",
+    "replyToEmailAddresses": "Répondre à EmailAddresses",
+    "personStringData": "Données de chaîne de personne",
+    "fromEmailAddress": "De l'adresse (lien)",
+    "replyToName": "Nom de réponse",
+    "replyToAddress": "Répondre à l'adresse"
   },
   "links": {
     "replied": "Répondu",
-    "replies": "Réponses"
+    "replies": "Réponses",
+    "attachments": "Les pièces jointes",
+    "fromEmailAddress": "De l'adresse e-mail",
+    "toEmailAddresses": "À EmailAddresses",
+    "replyToEmailAddresses": "Répondre à EmailAddresses"
   },
   "options": {
     "status": {
@@ -61,13 +79,20 @@
     "Mark as Important": "Marquer comme important",
     "Unmark Importance": "Marquer comme non important",
     "Move to Trash": "Mettre à la corbeille",
-    "Retrieve from Trash": "Enlever de la corbeille"
+    "Retrieve from Trash": "Enlever de la corbeille",
+    "View Users": "Afficher les utilisateurs",
+    "No Subject": "Aucun Objet",
+    "Insert Field": "Insère un champ"
   },
   "messages": {
-    "noSmtpSetup": "Aucun compte SMTP n'a été installé. {link}.",
     "testEmailSent": "L'email de test a été envoyé",
     "emailSent": "L'email a été envoyé",
-    "savedAsDraft": "Sauvegardé en tant que brouillon"
+    "savedAsDraft": "Sauvegardé en tant que brouillon",
+    "confirmInsertTemplate": "Le corps de l'e-mail sera perdu. Êtes-vous sûr de vouloir insérer le modèle?",
+    "noSmtpSetup": "SMTP n'est pas configuré: {link}",
+    "sendConfirm": "Envoyer l'email ?",
+    "removeSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer les courriels sélectionnés ?\n\nIls seront supprimés pour tous les utilisateurs.",
+    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer ce courriel ?\n\nIl sera supprimé pour tous les utilisateurs."
   },
   "presetFilters": {
     "sent": "Envoyé",
@@ -84,5 +109,8 @@
     "moveToTrash": "Mettre à la corbeille",
     "moveToFolder": "Deplacer vers",
     "retrieveFromTrash": "Récupérer de la corbeille"
+  },
+  "strings": {
+    "sendingFailed": "Échec d'envoi du courriel"
   }
 }

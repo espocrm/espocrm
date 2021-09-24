@@ -16,7 +16,14 @@
     "leadCreatedCount": "Prospects créés",
     "revenue": "Revenu",
     "revenueConverted": "Revenu (converti)",
-    "budgetConverted": "Budget (converti)"
+    "budgetConverted": "Budget (converti)",
+    "contactsTemplate": "Modèle de contacts",
+    "leadsTemplate": "Modèle de pistes",
+    "accountsTemplate": "Modèle de comptes",
+    "usersTemplate": "Modèle d'utilisateurs",
+    "mailMergeOnlyWithAddress": "Ignorer les enregistrements sans adresse renseignée",
+    "optedInCount": "A opté pour",
+    "budgetCurrency": "Devise Budget"
   },
   "links": {
     "targetLists": "Listes de cibles",
@@ -25,7 +32,11 @@
     "leads": "Prospects",
     "opportunities": "Opportunités",
     "campaignLogRecords": "Logs",
-    "massEmails": "Emails groupés"
+    "massEmails": "Emails groupés",
+    "contactsTemplate": "Modèle de contacts",
+    "leadsTemplate": "Modèle de pistes",
+    "accountsTemplate": "Modèle de comptes",
+    "usersTemplate": "Modèle d'utilisateurs"
   },
   "options": {
     "type": {
@@ -47,7 +58,9 @@
     "Mass Emails": "Emails groupés",
     "Email Templates": "Modèles d'email",
     "Unsubscribe again": "Se re-désabonner",
-    "Subscribe again": "Se réinscrire"
+    "Subscribe again": "Se réinscrire",
+    "Mail Merge": "Fusion et publipostage",
+    "Generate Mail Merge PDF": "Générer un PDF de publipostage"
   },
   "presetFilters": {
     "active": "Actif"

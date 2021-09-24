@@ -25,7 +25,8 @@
       "Opted Out": "Se dieron de baja",
       "Bounced": "Rebotados",
       "Clicked": "Cliqueados",
-      "Lead Created": "Posible cliente creado"
+      "Lead Created": "Posible cliente creado",
+      "Opted In": "Se dieron de alta"
     }
   },
   "labels": {
@@ -37,6 +38,7 @@
     "optedOut": "Se dieron de baja",
     "bounced": "Rebotados",
     "clicked": "Cliqueados",
-    "leadCreated": "Posible cliente creado"
+    "leadCreated": "Posible cliente creado",
+    "optedIn": "Se dieron de alta"
   }
 }

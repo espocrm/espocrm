@@ -10,10 +10,13 @@
     "closeDate": "Date de fermeture",
     "amountConverted": "Montant (converti)",
     "amountWeightedConverted": "Montant pondéré",
-    "campaign": "Campagne"
+    "campaign": "Campagne",
+    "lastStage": "Dernière étape",
+    "contact": "Contact (Parent)"
   },
   "links": {
-    "campaign": "Campagne"
+    "campaign": "Campagne",
+    "contact": "Contact (Parent)"
   },
   "options": {
     "stage": {

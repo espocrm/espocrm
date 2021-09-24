@@ -13,7 +13,10 @@
     "variables": "Verfügbare Platzhalter",
     "pageOrientation": "Seitenausrichtung",
     "pageFormat": "Papierformat",
-    "fontFace": "Schriftart"
+    "fontFace": "Schriftart",
+    "pageWidth": "Seitenbreite (mm)",
+    "pageHeight": "Seitenhöhe (mm)",
+    "headerPosition": "Kopfzeilen-Position"
   },
   "labels": {
     "Create Template": "Vorlage erstellen"
@@ -29,7 +32,11 @@
     },
     "placeholders": {
       "today": "Heute (Datum)",
-      "now": "Jetzt (Datum-Uhrzeit)"
+      "now": "Jetzt (Datum-Uhrzeit)",
+      "pagebreak": "Seitenumbruch"
+    },
+    "pageFormat": {
+      "Custom": "Benutzer"
     }
   }
 }

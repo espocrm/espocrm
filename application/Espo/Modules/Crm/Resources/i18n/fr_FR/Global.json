@@ -63,7 +63,8 @@
     "Log Call": "Rapporter un appel",
     "Archive Email": "Archiver l'Email",
     "Create Task": "Créer une tâche",
-    "Tasks": "Tâches"
+    "Tasks": "Tâches",
+    "Scheduler": "Emploi du temps"
   },
   "fields": {
     "billingAddressCity": "Ville",

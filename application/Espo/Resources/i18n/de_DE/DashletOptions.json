@@ -14,7 +14,8 @@
     "boolFilterList": "Zusätzliche Filter",
     "sortBy": "Reihenfolge (Feld)",
     "sortDirection": "Reihenfolge (Richtung)",
-    "dateFilter": "Datumsfilter"
+    "dateFilter": "Datumsfilter",
+    "skipOwn": "Eigene Einträge nicht zeigen"
   },
   "options": {
     "mode": {
@@ -28,5 +29,8 @@
   },
   "messages": {
     "selectEntityType": "Wählen Sie Entitätstyp in Dashlet-Optionen."
+  },
+  "tooltips": {
+    "skipOwn": "Von Ihrem Benutzerkonto durchgeführte Aktionen werden nicht angezeigt."
   }
 }

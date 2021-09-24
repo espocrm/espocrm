@@ -69,7 +69,11 @@
     "Fail": "Falló",
     "is recommended": "es recomendado",
     "extension is missing": "no se encuentra la extensión",
-    "PDF Templates": "Plantillas PDF"
+    "PDF Templates": "Plantillas PDF",
+    "Dashboard Templates": "Plantilla de escritorio",
+    "Email Addresses": "Correos electrónicos",
+    "Phone Numbers": "Números de teléfono",
+    "Layout Sets": "Conjuntos de diseño"
   },
   "layouts": {
     "list": "Lista",
@@ -82,7 +86,17 @@
     "sidePanelsDetail": "Paneles laterales (detalle)",
     "sidePanelsEdit": "Paneles laterales (editar)",
     "sidePanelsDetailSmall": "Paneles laterales (detalle pequeño)",
-    "sidePanelsEditSmall": "Paneles laterales (editar pequeño)"
+    "sidePanelsEditSmall": "Paneles laterales (editar pequeño)",
+    "detailPortal": "Detalle (portal)",
+    "detailSmallPortal": "Detalle (pequeño, portal)",
+    "listSmallPortal": "Lusta (pequeña, portal)",
+    "listPortal": "Lista (portal)",
+    "relationshipsPortal": "Paneles de relaciones (Portal)",
+    "defaultSidePanel": "Campos del panel lateral",
+    "bottomPanelsDetail": "Paneles inferiores",
+    "bottomPanelsEdit": "Paneles inferiores (editar)",
+    "bottomPanelsDetailSmall": "Paneles inferiores (detalle pequeño)",
+    "bottomPanelsEditSmall": "Paneles inferiores (Editar pequeño)"
   },
   "fieldTypes": {
     "address": "Dirección",
@@ -118,7 +132,14 @@
     "currencyConverted": "Moneda (convertido)",
     "colorpicker": "Selector de color",
     "int": "Entero",
-    "number": "Número"
+    "number": "Número",
+    "jsonArray": "Array JSON",
+    "jsonObject": "Objeto JSON",
+    "datetime": "Fecha y hora",
+    "datetimeOptional": "Fecha / Fecha-Hora",
+    "checklist": "Lista de verificación",
+    "linkOne": "Enlace uno",
+    "barcode": "Código de barras"
   },
   "fields": {
     "type": "Tipo",
@@ -161,7 +182,26 @@
     "probabilityMap": "Probabilidades de la etapa (%)",
     "readOnly": "Solo lectura",
     "noEmptyString": "No están permitidos los valores de cadenas vacías",
-    "maxFileSize": "Tamaño máximo de archivo (MB)"
+    "maxFileSize": "Tamaño máximo de archivo (MB)",
+    "isPersonalData": "¿Es un dato personal?",
+    "useIframe": "Usar iframe",
+    "useNumericFormat": "Usar formato numérico",
+    "strip": "Banda",
+    "cutHeight": "Altura de corte (px)",
+    "minuteStep": "Paso de minutos",
+    "inlineEditDisabled": "Desactivar edición en línea",
+    "displayAsLabel": "Mostrar como etiqueta",
+    "allowCustomOptions": "Permitir opciones personalizadas",
+    "maxCount": "Cantidad máxima de items",
+    "displayRawText": "Mostrar texto sin formato (sin markdown)",
+    "notActualOptions": "Opciones no reales",
+    "accept": "Aceptar",
+    "displayAsList": "Mostrar como lista",
+    "viewMap": "Botón Ver mapa",
+    "codeType": "Tipo de código",
+    "lastChar": "Último personaje",
+    "listPreviewSize": "Vista previa del tamaño en la vista de lista",
+    "onlyDefaultCurrency": "Única moneda predeterminada"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -172,7 +212,18 @@
     "installExtension": "La extensión {name} {version} está lista para ser instalada.",
     "upgradeBackup": "Recomendamos hacer una copia de seguridad de los archivos y datos de EspoCRM antes de actualizar.",
     "thousandSeparatorEqualsDecimalMark": "El símbolo de separador de miles no puede ser el mismo que el de punto decimal.",
-    "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico."
+    "userHasNoEmailAddress": "El usuario no tiene dirección de correo electrónico.",
+    "uninstallConfirmation": "¿Seguro que quieres desinstalar la extensión?",
+    "cronIsNotConfigured": "Los trabajos programados no se están ejecutando. Por lo tanto, los correos electrónicos entrantes, las notificaciones y los recordatorios no funcionan. Siga las [instrucciones](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) para configurar el trabajo cron.",
+    "newExtensionVersionIsAvailable": "La nueva versión {latestVersion} de {extensionName} está disponible.",
+    "upgradeVersion": "EspoCRM se actualizará a la versión **{version}**. Tenga paciencia ya que esto puede llevar un tiempo.",
+    "upgradeDone": "EspoCRM se ha actualizado a la versión **{version}**.",
+    "downloadUpgradePackage": "Descargue los paquetes de actualización [aquí]({url}).",
+    "upgradeInfo": "Consulte la [documentación]({url}) sobre cómo actualizar su instancia de EspoCRM.",
+    "upgradeRecommendation": "No se recomienda esta forma de actualización. Es mejor actualizar desde CLI.",
+    "newVersionIsAvailable": "La nueva versión de EspoCRM {latestVersion} está disponible. Siga las [instrucciones](https://www.espocrm.com/documentation/administration/upgrading/) para actualizar su instancia.",
+    "formulaFunctions": "Se pueden encontrar más funciones en [documentación] ({documentationUrl}).",
+    "rebuildRequired": "Necesita ejecutar la reconstrucción desde CLI."
   },
   "descriptions": {
     "settings": "Ajustes generales del sistema.",
@@ -212,15 +263,19 @@
     "apiUsers": "Usuarios separados para propósitos de integraciones.",
     "jobs": "Los trabajos que ejecutan tareas en segundo plano.",
     "pdfTemplates": "Plantillas para impresión en PDF.",
-    "webhooks": "Administre webhooks.",
-    "dashboardTemplates": "Implemente paneles para los usuarios."
+    "webhooks": "Administrar webhooks.",
+    "dashboardTemplates": "Implemente paneles para los usuarios.",
+    "phoneNumbers": "Todos los números de teléfono almacenados en el sistema.",
+    "emailAddresses": "Todas las direcciones de correo electrónico almacenadas en el sistema.",
+    "layoutSets": "Colecciones de diseños que se pueden asignar a equipos y portales."
   },
   "options": {
     "previewSize": {
       "x-small": "Muy Pequeño",
       "small": "Pequeño",
       "medium": "Mediano",
-      "large": "Grande"
+      "large": "Grande",
+      "": "Defecto"
     }
   },
   "logicalOperators": {
@@ -229,9 +284,38 @@
     "not": "NO"
   },
   "systemRequirements": {
-    "requiredMysqlVersion": "Versión MySQL",
+    "requiredPhpVersion": "Versión de PHP",
+    "requiredMysqlVersion": "Versión de MySQL",
     "host": "Nombre de host",
     "dbname": "Nombre de la Base de Datos",
-    "user": "Nombre de usuario"
+    "user": "Nombre de usuario",
+    "writable": "Escribible",
+    "readable": "Legible",
+    "requiredMariadbVersion": "Version de MariaDB"
+  },
+  "templates": {
+    "accessInfo": "Información de acceso",
+    "accessInfoPortal": "Información de acceso para portales",
+    "assignment": "Asignación",
+    "mention": "Mencionar",
+    "notePost": "Nota sobre la publicación",
+    "notePostNoParent": "Nota sobre la publicación (sin padre)",
+    "noteStatus": "Nota sobre la actualización de estado",
+    "passwordChangeLink": "Enlace de cambio de contraseña",
+    "noteEmailReceived": "Nota sobre el correo electrónico recibido"
+  },
+  "strings": {
+    "rebuildRequired": "Se requiere reconstrucción"
+  },
+  "keywords": {
+    "settings": "sistema",
+    "userInterface": "interfaz de usuario, tema, pestañas, logotipo, tablero",
+    "authentication": "contraseña",
+    "scheduledJob": "cron, trabajos",
+    "integrations": "google, mapas, mapas de google",
+    "authLog": "registro, historia",
+    "authTokens": "historial, acceso, registro",
+    "entityManager": "campos, relaciones, relaciones",
+    "templateManager": "notificaciones"
   }
 }

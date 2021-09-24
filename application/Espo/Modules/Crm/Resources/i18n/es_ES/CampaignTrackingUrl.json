@@ -1,12 +1,24 @@
 {
   "fields": {
     "urlToUse": "Código para insertar en lugar de la URL",
-    "campaign": "Campaña"
+    "campaign": "Campaña",
+    "action": "Acción",
+    "message": "Mensaje"
   },
   "links": {
     "campaign": "Campaña"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Crear URL de seguimiento"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Redirigir",
+      "Show Message": "Mostrar mensaje"
+    }
+  },
+  "tooltips": {
+    "url": "El destinatario será redirigido a esta ubicación después de seguir el enlace.",
+    "message": "El mensaje se mostrará al destinatario después de que sigan el enlace. Se admite Markdown."
   }
 }

@@ -1,1 +1,15 @@
-{}
+{
+  "messages": {
+    "infoMention": "Geben Sie **@username** ein, um den Benutzer im Beitrag zu erwähnen.",
+    "infoSyntax": "Verfügbare Abschriftensyntax"
+  },
+  "syntaxItems": {
+    "code": "Code",
+    "multilineCode": "mehrzeiliger Code",
+    "strongText": "Fettschrift",
+    "emphasizedText": "Hervorgehobener Text",
+    "deletedText": "gelöschter Text",
+    "blockquote": "Zitat",
+    "link": "Link"
+  }
+}

@@ -4,14 +4,17 @@
     "action": "Acción",
     "createdAt": "Fecha",
     "target": "Entidad objetivo",
-    "targetType": "Tipo de entidad",
+    "targetType": "Tipo de objetivo",
     "authToken": "Token de autenticación",
-    "ipAddress": "Dirección IP"
+    "ipAddress": "Dirección IP",
+    "authLogRecord": "Entrada del registro de autenticación",
+    "userType": "Tipo de usuario"
   },
   "links": {
     "authToken": "Token de autenticación",
     "user": "Usuario",
-    "target": "Objetivo"
+    "target": "Objetivo",
+    "authLogRecord": "Entrada del registro de autenticación"
   },
   "presetFilters": {
     "onlyMy": "Solo míos"

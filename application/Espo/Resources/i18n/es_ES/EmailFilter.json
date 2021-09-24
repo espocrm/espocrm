@@ -16,9 +16,9 @@
     "from": "Filtra los correos enviados desde esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
     "to": "Filtra los correos enviados a esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
     "name": "Dé al filtro un nombre descriptivo.",
-    "subject": "Filtra los correos con el asunto. Dejar en blanco si no es necesario. Puede usar el comodín *:\n\ntexto* - empieza con texto,\n*texot* - contiene texto,\n*texto - termina con texto.",
     "bodyContains": "Filtra los correos que en el cuerpo contengan cualquiera de estas palabras o frases.",
-    "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema."
+    "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema.",
+    "subject": "Utilice un comodín *:\n\n * `texto *` - comienza con texto,\n * `* texto *` - contiene texto,\n * `* texto` - termina con texto."
   },
   "options": {
     "action": {

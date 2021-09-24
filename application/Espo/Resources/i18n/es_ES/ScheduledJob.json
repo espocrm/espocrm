@@ -9,7 +9,8 @@
     "log": "Registro"
   },
   "labels": {
-    "Create ScheduledJob": "Crear tarea programada"
+    "Create ScheduledJob": "Crear tarea programada",
+    "As often as possible": "Tan seguido como sea posible"
   },
   "options": {
     "job": {
@@ -18,7 +19,9 @@
       "CheckEmailAccounts": "Comprobar cuentas de correo personales",
       "SendEmailReminders": "Enviar Recordatorios por Email",
       "AuthTokenControl": "Control del Token de Autenticación",
-      "SendEmailNotifications": "Enviar notificaciones por correo electrónico"
+      "SendEmailNotifications": "Enviar notificaciones por correo electrónico",
+      "CheckNewVersion": "Verificar nueva versión",
+      "ProcessWebhookQueue": "Procesar cola de webhook"
     },
     "cronSetup": {
       "linux": "Nota: añada esta línea al archivo crontab para que EspoCRM pueda ejecutar las tareas programadas:",
@@ -32,6 +35,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Define cuándo y cada cuánto el trabajo será ejecutado\n\n`*/5 * * * *` - cada 5 minutos\n\n`0 */2 * * *` - cada 2 horas\n\n`30 1 * * *` - a las 01:30 cada día\n\n`0 0 1 * *` - el primer día del mes"
+    "scheduling": "Notación crontab. Define la frecuencia de ejecución de trabajos.\n\n`* / 5 * * * *` - cada 5 minutos\n\n`0 * / 2 * * *` - cada 2 horas\n\n`30 1 * * *` - a las 01:30 una vez al día\n\n`0 0 1 * *` - el primer día del mes"
   }
 }

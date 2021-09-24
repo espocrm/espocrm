@@ -13,14 +13,20 @@
     "leadSource": "Quelle",
     "targetTeam": "Zielteam",
     "exampleRequestMethod": "Methode",
-    "exampleRequestPayload": "Nutzlast"
+    "exampleRequestPayload": "Nutzlast",
+    "createLeadBeforeOptInConfirmation": "Lead vor Bestätigung erstellen",
+    "duplicateCheck": "Dublettenprüfung",
+    "skipOptInConfirmationIfSubscribed": "Bestätigung überspringen, wenn Lead bereits in der Zielliste ist",
+    "smtpAccount": "SMTP-Konto",
+    "inboundEmail": "Gruppen-E-Mail-Konto"
   },
   "links": {
     "targetList": "Kontaktliste",
     "campaign": "Kampagne",
     "optInConfirmationEmailTemplate": "E-Mail-Vorlage zur Opt-In-Bestätigung",
     "targetTeam": "Zielteam",
-    "logRecords": "Protokoll"
+    "logRecords": "Protokoll",
+    "inboundEmail": "Gruppen-E-Mail-Konto"
   },
   "labels": {
     "Create LeadCapture": "Einstiegspunkt erstellen",

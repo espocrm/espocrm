@@ -13,10 +13,13 @@
     "account": "Cuenta",
     "dateCompleted": "Fecha de completado",
     "attachments": "Adjuntos",
-    "reminders": "Recordatorios"
+    "reminders": "Recordatorios",
+    "contact": "Contacto"
   },
   "links": {
-    "attachments": "Adjuntos"
+    "attachments": "Adjuntos",
+    "account": "Cuenta",
+    "contact": "Contacto"
   },
   "options": {
     "status": {
@@ -34,7 +37,8 @@
   },
   "labels": {
     "Create Task": "Crear tarea",
-    "Complete": "Completada"
+    "Complete": "Completada",
+    "overdue": "atrasado"
   },
   "presetFilters": {
     "actual": "Actuales",

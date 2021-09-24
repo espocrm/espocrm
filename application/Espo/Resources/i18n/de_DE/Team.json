@@ -1,17 +1,20 @@
 {
   "fields": {
     "roles": "Rollen",
-    "positionList": "Positionsbezeichnungen"
+    "positionList": "Positionsbezeichnungen",
+    "layoutSet": "Layout-Set"
   },
   "links": {
     "users": "Benutzer",
     "notes": "Notizen",
     "roles": "Rollen",
-    "inboundEmails": "Gruppen E-Mail Konten"
+    "inboundEmails": "Gruppen E-Mail Konten",
+    "layoutSet": "Layout-Set"
   },
   "tooltips": {
     "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
-    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc."
+    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc.",
+    "layoutSet": "Bietet die Möglichkeit, von Standard-Layouts abweichende Layouts zu haben. Layoutsatz wird auf Benutzer angewendet, die dieses Team als Standardteam festgelegt haben."
   },
   "labels": {
     "Create Team": "Team erstellen"

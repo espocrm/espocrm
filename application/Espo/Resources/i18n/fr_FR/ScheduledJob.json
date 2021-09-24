@@ -6,14 +6,17 @@
     "scheduling": "Planification (crontab notation)"
   },
   "labels": {
-    "Create ScheduledJob": "Créer une tâche planifiée"
+    "Create ScheduledJob": "Créer une tâche planifiée",
+    "As often as possible": "Aussi souvent que possible"
   },
   "options": {
     "job": {
       "Cleanup": "Nettoyer",
       "CheckInboundEmails": "Vérifier les emails entrants",
       "CheckEmailAccounts": "Vérifier ses comptes emails personnels",
-      "SendEmailReminders": "Envoyer des notifications par email"
+      "SendEmailReminders": "Envoyer des notifications par email",
+      "CheckNewVersion": "Vérifier la nouvelle version",
+      "ProcessWebhookQueue": "Traiter la file d'attente Webhook"
     },
     "cronSetup": {
       "linux": "Note: Ajoutez cette ligne dans le fichier crontab pour lancer les tâches planifiées:",

@@ -27,7 +27,8 @@
     "acceptanceStatus": "Akzeptanzstatus",
     "opportunityAmountCurrency": "Währungsbetrag der Verkaufschance",
     "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
-    "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)"
+    "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)",
+    "convertedAt": "Konvertiert am"
   },
   "links": {
     "targetLists": "Kontaktlisten",

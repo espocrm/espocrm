@@ -13,7 +13,9 @@
     "smtpSecurity": "SMTP Transportsicherheit",
     "smtpUsername": "SMTP Benutzername",
     "smtpPassword": "SMTP Passwort",
-    "useImap": "E-Mails abholen"
+    "useImap": "E-Mails abholen",
+    "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
+    "security": "Sicherheit"
   },
   "links": {
     "filters": "Filter",
@@ -37,6 +39,8 @@
   },
   "tooltips": {
     "monitoredFolders": "Sie können einen 'Gesendet' Ordner hinzufügen um E-Mails zu synchronisieren, die von einem externen Programm gesendet wurden.",
-    "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde."
+    "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde.",
+    "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
+    "emailAddress": "Der Benutzerdatensatz (zugeordneter Benutzer) sollte die gleiche E-Mail-Adresse haben, um dieses E-Mail-Konto zum Senden verwenden zu können."
   }
 }

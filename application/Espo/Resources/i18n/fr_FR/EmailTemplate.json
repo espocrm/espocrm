@@ -6,13 +6,21 @@
     "body": "Corps",
     "subject": "Objet",
     "attachments": "Pièces-jointes",
-    "insertField": "Ajouter un champ",
-    "oneOff": "Une seule fois"
+    "oneOff": "Une seule fois",
+    "category": "Catégorie",
+    "insertField": "Emplacements"
   },
   "labels": {
-    "Create EmailTemplate": "Créer un modèle d'email"
+    "Create EmailTemplate": "Créer un modèle d'email",
+    "Available placeholders": "Espaces réservés disponibles"
   },
   "presetFilters": {
     "actual": "Réel"
+  },
+  "placeholderTexts": {
+    "optOutLink": "un lien de désabonnement",
+    "today": "La date d'aujourd'hui",
+    "now": "Date et heure actuelles",
+    "currentYear": "Année actuelle"
   }
 }

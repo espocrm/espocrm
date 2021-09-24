@@ -29,7 +29,12 @@
     "type": "Art",
     "apiKey": "API Schlüssel",
     "secretKey": "Geheime Phrase",
-    "authMethod": "Authentifizierungsmethode"
+    "authMethod": "Authentifizierungsmethode",
+    "yourPassword": "Ihr aktuelles Passwort",
+    "dashboardTemplate": "Dashboard-Vorlage",
+    "auth2FAEnable": "2-Faktor-Authentifizierung aktivieren",
+    "auth2FAMethod": "2FA Methode",
+    "auth2FATotpSecret": "2FA TOTP Geheimnis"
   },
   "links": {
     "roles": "Rollen",
@@ -40,7 +45,9 @@
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
     "tasks": "Aufgaben",
-    "defaultTeam": "Standard Team"
+    "defaultTeam": "Standard Team",
+    "dashboardTemplate": "Dashboard-Vorlage",
+    "userData": "Benutzerdaten"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -56,7 +63,13 @@
     "Email Accounts": "E-Mail Konten",
     "Create Portal User": "Portalbenutzer erstellen",
     "Proceed w/o Contact": "Weiter mit Kontakt",
-    "Generate New API Key": "Neuen API Schlüssel erstellen"
+    "Generate New API Key": "Neuen API Schlüssel erstellen",
+    "Generate New Password": "Neues Passwort generieren",
+    "Back to login form": "Zurück zum Anmeldeformular",
+    "Requirements": "Anforderungen",
+    "Security": "Sicherheit",
+    "Reset 2FA": "2FA zurücksetzen",
+    "Secret": "Geheimnis"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -79,14 +92,29 @@
     "uniqueLinkHasBeenSent": "Ein einmaliger Link wurde an die angegebene E-Mail Adresse gesendet.",
     "passwordChangedByRequest": "Das Passwort wurde geändert",
     "userNameExists": "Benutzername existiert bereits",
-    "setupSmtpBefore": "Sie müssen die [SMTP Einstellungen]({url}) setzen damit das System Passwörter in E-Mails senden kann."
+    "setupSmtpBefore": "Sie müssen die [SMTP Einstellungen]({url}) setzen damit das System Passwörter in E-Mails senden kann.",
+    "passwordStrengthLength": "Muss mindestens {lenght} Zeichen lang sein.",
+    "passwordStrengthLetterCount": "Muss mindestens {count} Buchstabe(n) enthalten.",
+    "passwordStrengthNumberCount": "Muss mindestens {count} Ziffer(n) enthalten.",
+    "passwordStrengthBothCases": "Muss sowohl Groß- als auch Kleinbuchstaben enthalten.",
+    "wrongCode": "Falscher Code",
+    "codeIsRequired": "Code ist erforderlich",
+    "enterTotpCode": "Geben Sie den Code aus Ihrer Authenticator-App ein.",
+    "verifyTotpCode": "Scannen Sie den QR-Code mit Ihrer mobilen Authentifizierungs-App. Wenn Sie Probleme mit dem Scannen haben, können Sie den Schlüssel auch manuell eingeben. Danach sehen Sie einen 6-stelligen Code in Ihrer Anwendung. Geben Sie diesen Code in das Feld unten ein.",
+    "generateAndSendNewPassword": "Es wird ein neues Passwort generiert und an die E-Mail-Adresse des Benutzers geschickt.",
+    "security2FaResetConfimation": "Sind Sie sicher, dass Sie die aktuellen 2FA-Einstellungen zurücksetzen möchten?",
+    "ldapUserInEspoNotFound": "Benutzer wird in EspoCRM nicht gefunden. Wenden Sie sich an Ihren Administrator, um den Benutzer anzulegen.",
+    "passwordRecoverySentIfMatched": "Angenommen, die eingegebenen Daten stimmen mit einem beliebigen Benutzerkonto überein.",
+    "auth2FARequiredHeader": "2-Faktor-Authentifizierung erforderlich",
+    "auth2FARequired": "Sie müssen eine 2-Faktor-Authentifizierung einrichten. Verwenden Sie eine Authentifizierungsanwendung auf Ihrem Mobiltelefon (z.B. Google Authenticator)."
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"
   },
   "presetFilters": {
     "active": "Aktiv",
-    "activePortal": "Portal Aktiv"
+    "activePortal": "Portal Aktiv",
+    "activeApi": "API aktiv"
   },
   "options": {
     "gender": {

@@ -5,7 +5,8 @@
     "align": "Ausrichten",
     "sticked": "Gepinnt",
     "isLarge": "Große Schriftgröße",
-    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen"
+    "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen",
+    "hidden": "Versteckt"
   },
   "options": {
     "align": {
@@ -22,5 +23,9 @@
   },
   "labels": {
     "New panel": "Neues Panel"
+  },
+  "tooltips": {
+    "link": "Wenn diese Option aktiviert ist, wird ein Feldwert als Link angezeigt, der auf die Detailansicht des Datensatzes verweist. Normalerweise wird er für *Name*-Felder verwendet.",
+    "hiddenPanel": "Klicken Sie auf 'mehr anzeigen', um das Panel zu sehen."
   }
 }

@@ -33,7 +33,11 @@
     "smtpPassword": "Contraseña SMTP",
     "fromName": "De (nombre):",
     "smtpIsShared": "SMTP ¿Es compartido?",
-    "smtpIsForMassEmail": "SMTP es para envíos masivos"
+    "smtpIsForMassEmail": "SMTP es para envíos masivos",
+    "useImap": "Obtener correos electrónicos",
+    "keepFetchedEmailsUnread": "Mantenga los correos electrónicos recuperados como no leídos",
+    "smtpAuthMechanism": "Mecanismo de autenticación SMTP",
+    "security": "Seguridad"
   },
   "tooltips": {
     "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\nSolo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
@@ -48,11 +52,13 @@
     "monitoredFolders": "Las carpetas deben estar separadas por comas.",
     "smtpIsShared": "Si se marca, entonces los usuarios podrán enviar correos usando este SMTP. La disponibilidad está controlada por Roles a través de los permisos de la cuenta de correo grupal.",
     "smtpIsForMassEmail": "Si está marcado, SMTP estará disponible para correo masivo.",
-    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP."
+    "storeSentEmails": "Los correos electrónicos enviados se almacenarán en el servidor IMAP.",
+    "useSmtp": "La capacidad de enviar correos electrónicos."
   },
   "links": {
     "filters": "Filtros",
-    "emails": "Correos"
+    "emails": "Correos",
+    "assignToUser": "Asignar al usuario"
   },
   "options": {
     "status": {
@@ -64,6 +70,9 @@
       "Direct-Assignment": "Asignación directa",
       "Round-Robin": "Todos contra todos",
       "Least-Busy": "Menos ocupado"
+    },
+    "smtpAuthMechanism": {
+      "login": "Entrar"
     }
   },
   "labels": {

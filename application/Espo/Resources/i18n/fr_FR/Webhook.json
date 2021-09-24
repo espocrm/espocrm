@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Créer un crochet Web"
+  },
+  "fields": {
+    "event": "un événement",
+    "isActive": "C'est actif",
+    "user": "API utilisateur",
+    "entityType": "Type de Fonctionnalité",
+    "field": "Champ",
+    "secretKey": "Clef secrète"
+  },
+  "links": {
+    "user": "Utilisateur"
+  }
+}

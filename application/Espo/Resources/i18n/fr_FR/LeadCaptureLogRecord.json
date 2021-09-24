@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "number": "Nombre",
+    "data": "Les données",
+    "target": "Cible",
+    "leadCapture": "Capture de plomb",
+    "createdAt": "Entré à",
+    "isCreated": "Le plomb est-il créé?"
+  },
+  "links": {
+    "leadCapture": "Capture de plomb",
+    "target": "Cible"
+  }
+}

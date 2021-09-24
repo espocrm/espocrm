@@ -30,7 +30,17 @@
     "dbHostName": "Nom d'hôte",
     "dbName": "Nom de la base de donnée",
     "dbUserName": "Nom d'utilisateur de la base de données",
-    "Permission Requirements": "Les permissions"
+    "SetupConfirmation page title": "Configuration requise",
+    "PHP Configuration": "Paramètres PHP",
+    "MySQL Configuration": "Paramètres de base de données",
+    "Permission Requirements": "Les permissions",
+    "Success": "Succès",
+    "Fail": "Échouer",
+    "is recommended": "est recommandé",
+    "extension is missing": "l'extension est manquante",
+    "headerTitle": "Installation EspoCRM",
+    "Crontab setup instructions": "Sans exécuter les e-mails entrants des travaux planifiés, les notifications et les rappels ne fonctionneront pas. Ici vous pouvez lire {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "instructions d'installation"
   },
   "fields": {
     "Choose your language": "Choisissez votre langue",
@@ -82,11 +92,21 @@
     "Can not save settings": "Impossible d'enregistrer les paramètres",
     "Cannot save preferences": "Impossible d'enregistrer les préférences",
     "extension": "l'extension {0} est manquante",
-    "option": "la valeur recommandée est {0}"
+    "option": "la valeur recommandée est {0}",
+    "requiredMariadbVersion": "Votre version de MariaDB n’est pas supportée par EspoCRM, veuillez mettre à jour au moins vers MariaDB {minVersion}",
+    "Ajax failed": "une erreur inattendue est apparue",
+    "Bad init Permission": "Autorisation refusée pour le répertoire \\ \"{*} \". Veuillez définir 77 \"pour \" {*} \\ \"ou simplement exécuter cette commande dans le terminal <pre> <b> {C} </ b> </ pre> L'opération n'est pas autorisée? Essayez celui-ci: {CSU}",
+    "permissionInstruction": "<br> Exécutez cette commande dans le terminal: <pre> <b> \\ \"{C} \" </ b> </ pre>",
+    "operationNotPermitted": "L'opération n'est pas autorisée? Essayez celui-ci: <br> <br> {CSU}"
   },
   "systemRequirements": {
+    "requiredPhpVersion": "Version PHP",
+    "requiredMysqlVersion": "Version MySQL",
     "host": "Nom d'hôte",
     "dbname": "Nom de la base de données",
-    "user": "Nom d'utilisateur"
+    "user": "Nom d'utilisateur",
+    "writable": "Enregistrable",
+    "readable": "Lisible",
+    "requiredMariadbVersion": "Version de MariaDB"
   }
 }

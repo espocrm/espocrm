@@ -10,7 +10,10 @@
     "emailAddress": "Adresse email",
     "sentFolder": "Dossier d'envoi",
     "storeSentEmails": "Conserver les emails envoyés",
-    "keepFetchedEmailsUnread": "Conserver les emails reçu non lus"
+    "keepFetchedEmailsUnread": "Conserver les emails reçu non lus",
+    "useImap": "Récupérer des emails",
+    "smtpAuthMechanism": "Mécanisme d'authentification SMTP",
+    "security": "Sécurité"
   },
   "links": {
     "filters": "Filtres"
@@ -19,6 +22,10 @@
     "status": {
       "Active": "Actif",
       "Inactive": "Inactif"
+    },
+    "smtpAuthMechanism": {
+      "plain": "PLAINE",
+      "login": "S'IDENTIFIER"
     }
   },
   "labels": {
@@ -30,5 +37,8 @@
   "messages": {
     "couldNotConnectToImap": "Impossible de se connecter au serveur IMAP",
     "connectionIsOk": "Connexion établie"
+  },
+  "tooltips": {
+    "useSmtp": "Possibilité d'envoyer des courriels."
   }
 }

@@ -1,1 +1,47 @@
-{}
+{
+  "fields": {
+    "name": "Nombre",
+    "campaign": "Campaña",
+    "isActive": "Está activo",
+    "subscribeToTargetList": "Suscríbase a la lista de objetivos",
+    "subscribeContactToTargetList": "Suscribir contacto si existe",
+    "targetList": "Lista de objetivos",
+    "fieldList": "Campos de carga útil",
+    "optInConfirmation": "Doble confirmación de suscripción",
+    "optInConfirmationEmailTemplate": "Plantilla de email de cofirmación de suscripción",
+    "optInConfirmationLifetime": "Tiempo de vida del enlace de confirmación de suscripción (horas)",
+    "optInConfirmationSuccessMessage": "Texto para mostrar después de la confirmación de correo electrónico",
+    "leadSource": "Toma de contacto del posible cliente",
+    "apiKey": "Clave de API",
+    "targetTeam": "Equipo objetivo",
+    "exampleRequestMethod": "Método",
+    "exampleRequestPayload": "Carga útil",
+    "createLeadBeforeOptInConfirmation": "Crear cliente potencial antes de la confirmación",
+    "duplicateCheck": "Duplicar verificación",
+    "skipOptInConfirmationIfSubscribed": "Omitir confirmación si el cliente potencial ya está en la lista de objetivos",
+    "smtpAccount": "Cuenta SMTP",
+    "inboundEmail": "Cuenta de correo electrónico grupal"
+  },
+  "links": {
+    "targetList": "Lista de objetivos",
+    "campaign": "Campaña",
+    "optInConfirmationEmailTemplate": "Plantilla de email de cofirmación de suscripción",
+    "targetTeam": "Equipo objetivo",
+    "logRecords": "Registro",
+    "inboundEmail": "Cuenta de correo electrónico grupal"
+  },
+  "labels": {
+    "Create LeadCapture": "Crear punto de entrada",
+    "Generate New API Key": "Generar una nueva clave de API",
+    "Request": "Solicitud",
+    "Confirm Opt-In": "Confirmar suscripción"
+  },
+  "messages": {
+    "generateApiKey": "Crear nueva clave de API",
+    "optInConfirmationExpired": "El enlace de confirmación de suscripción ha caducado.",
+    "optInIsConfirmed": "Correo electrónico está confirmado"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown es soportado"
+  }
+}

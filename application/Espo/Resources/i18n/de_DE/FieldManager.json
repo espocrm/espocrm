@@ -59,6 +59,9 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 Monate",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 Monate",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 Jahr"
+    },
+    "barcodeType": {
+      "QRcode": "QR Code"
     }
   },
   "tooltips": {
@@ -73,7 +76,9 @@
     "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
     "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
     "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
-    "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung."
+    "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
+    "fileAccept": "Welche Dateitypen akzeptiert werden sollen. Es ist möglich, benutzerdefinierte Elemente hinzuzufügen.",
+    "barcodeLastChar": "Für den Typ EAN-13."
   },
   "fieldParts": {
     "address": {
@@ -87,7 +92,8 @@
     "personName": {
       "salutation": "Anrede",
       "first": "Vorname",
-      "last": "Nachname"
+      "last": "Nachname",
+      "middle": "zweiter Vorname"
     },
     "currency": {
       "converted": "(Konvertiert)",
@@ -96,5 +102,33 @@
     "datetimeOptional": {
       "date": "Datum"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Ein einzeiliger Text.",
+    "enum": "Selectbox, es kann nur ein Wert ausgewählt werden.",
+    "text": "Ein mehrzeiliger Text mit Unterstützung für Abschriften.",
+    "date": "Datum ohne Uhrzeit.",
+    "datetime": "Datum und Uhrzeit",
+    "currency": "Ein Währungswert. Eine Gleitkommazahl mit einem Währungscode.",
+    "int": "Eine ganze Zahl.",
+    "float": "Eine Zahl mit einem Dezimalteil.",
+    "bool": "Ein Kontrollkästchen. Zwei mögliche Werte: wahr und falsch.",
+    "multiEnum": "Eine Liste von Werten, mehrere Werte können ausgewählt werden. Die Liste ist geordnet.",
+    "checklist": "Eine Liste von Ankreuzfeldern.",
+    "array": "Eine Liste von Werten, ähnlich dem Multi-Enum-Feld.",
+    "address": "Eine Adresse mit Straße, Stadt, Bundesland, Postleitzahl und Land.",
+    "url": "Zum Speichern von Links.",
+    "wysiwyg": "Ein Text mit HTML-Unterstützung.",
+    "file": "Für das Hochladen von Dateien.",
+    "image": "Für das Hochladen von Bildern.",
+    "attachmentMultiple": "Ermöglicht das Hochladen mehrerer Dateien.",
+    "number": "Eine automatisch inkrementierende Nummer des Zeichenkettentyps mit einem möglichen Präfix und einer bestimmten Länge.",
+    "autoincrement": "Eine generierte schreibgeschützte, automatisch inkrementierende Ganzzahl.",
+    "barcode": "Ein Strichcode. Kann als PDF ausgedruckt werden.",
+    "email": "Eine Reihe von E-Mail-Adressen mit ihren Parametern: Ausgewählt, Ungültig, Primär.",
+    "phone": "Eine Reihe von Telefonnummern mit ihren Parametern: Typ, Ausgewählt, Ungültig, Primär.",
+    "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt",
+    "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Mann-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
+    "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein."
   }
 }

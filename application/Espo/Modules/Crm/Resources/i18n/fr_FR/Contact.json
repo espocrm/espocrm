@@ -12,7 +12,9 @@
     "campaign": "Campagne",
     "targetLists": "Listes de cibles",
     "targetList": "Liste de cibles",
-    "portalUser": "Utilisateur Portail"
+    "portalUser": "Utilisateur Portail",
+    "title": "Titre du Compte",
+    "hasPortalUser": "Dispose d'un utilisateur de Portail"
   },
   "links": {
     "opportunities": "Opportunités",
@@ -23,7 +25,9 @@
     "account": "Compte (principal)",
     "accounts": "Comptes",
     "casesPrimary": "Tickets (principal)",
-    "portalUser": "Utilisateur Portail"
+    "portalUser": "Utilisateur Portail",
+    "tasksPrimary": "Tâches (développées)",
+    "opportunitiesPrimary": "Opportunités (Parentes)"
   },
   "labels": {
     "Create Contact": "Créer un Contact"

@@ -43,6 +43,7 @@
     "toEmailAddresses": "An E-Mail Adressen",
     "bccEmailAddresses": "BCC E-Mail Adressen",
     "replyToEmailAddresses": "Antwort-an E-Mail Adressen",
+    "personStringData": "Personenstring-Daten",
     "fromEmailAddress": "Absenderadresse (link)",
     "replyToName": "Antwort-an Name",
     "replyToAddress": "Antwort-an Adresse"
@@ -98,14 +99,19 @@
     "Move to Folder": "In Ordner verschieben",
     "Filters": "Filter",
     "Folders": "Ordner",
-    "View Users": "Benutzer anzeigen"
+    "View Users": "Benutzer anzeigen",
+    "No Subject": "Kein Betreff",
+    "Insert Field": "Feld einfügen"
   },
   "messages": {
-    "noSmtpSetup": "Keine SMTP Einstellungen {link}.",
     "testEmailSent": "Eine Test E-Mail wurde gesendet",
     "emailSent": "E-Mail wurde gesendet",
     "savedAsDraft": "Als Entwurf gepeichert",
-    "confirmInsertTemplate": "Der E-Mail Text wird gelöscht. Möchten Sie die Vorlage wirklich einfügen?"
+    "confirmInsertTemplate": "Der E-Mail Text wird gelöscht. Möchten Sie die Vorlage wirklich einfügen?",
+    "noSmtpSetup": "SMTP ist nicht konfiguriert: {link}",
+    "sendConfirm": "Die E-Mail senden?",
+    "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie ausgewählte E-Mails entfernen möchten?\n\nSie werden auch für andere Benutzer entfernt.",
+    "removeRecordConfirmation": "Sind Sie sicher, dass Sie die E-Mail entfernen möchten?\n\nSie wird auch für andere Benutzer entfernt."
   },
   "presetFilters": {
     "sent": "Gesendet",
@@ -123,5 +129,8 @@
     "moveToTrash": "In den Papierkorb verschieben",
     "moveToFolder": "In Ordner verschieben",
     "retrieveFromTrash": "Aus dem Papierkorb holen"
+  },
+  "strings": {
+    "sendingFailed": "E-Mail-Versand fehlgeschlagen"
   }
 }

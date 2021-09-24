@@ -18,7 +18,8 @@
       "Opted Out": "Désinscrit",
       "Bounced": "Renvoyé",
       "Clicked": "Cliqué",
-      "Lead Created": "Prospect créé"
+      "Lead Created": "Prospect créé",
+      "Opted In": "A opté pour"
     }
   },
   "labels": {
@@ -29,6 +30,7 @@
     "opened": "Ouvert",
     "optedOut": "Désinscrit",
     "clicked": "Cliqué",
-    "leadCreated": "Prospect créé"
+    "leadCreated": "Prospect créé",
+    "optedIn": "A opté pour"
   }
 }

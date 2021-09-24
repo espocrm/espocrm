@@ -4,9 +4,9 @@
     "body": "Inhalt",
     "subject": "Betreff",
     "attachments": "Anhänge",
-    "insertField": "Feld einfügen",
     "oneOff": "Ein-Aus",
-    "category": "Kategorie"
+    "category": "Kategorie",
+    "insertField": "Platzhalter"
   },
   "labels": {
     "Create EmailTemplate": "E-Mail Vorlage erstellen",
@@ -18,14 +18,13 @@
   "presetFilters": {
     "actual": "Aktuell"
   },
-  "messages": {
-    "infoText": "Verfügbare Platzhalter:\n\n{optOutUrl} &#8211; URL für einen Abmeldelink;\n\n{optOutLink} &#8211; ein Abmeldelink."
-  },
   "placeholderTexts": {
-    "optOutUrl": "URL für einen Abmeldelink\n",
     "optOutLink": "ein Abmeldelink",
     "today": "Heutiges Datum",
     "now": "Aktuelles Datum & Uhrzeit",
     "currentYear": "Laufendes Jahr"
+  },
+  "messages": {
+    "infoText": "Verfügbare Platzhalter:\n\n{optOutUrl} &#8211; URL für einen Abmeldelink;\n\n{optOutLink} &#8211; ein Link zum Abbestellen des Abonnements."
   }
 }

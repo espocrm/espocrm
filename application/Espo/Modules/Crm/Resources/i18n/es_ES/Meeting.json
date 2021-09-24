@@ -12,7 +12,11 @@
     "leads": "Posibles clientes",
     "reminders": "Recordatorios",
     "account": "Cuenta",
-    "acceptanceStatus": "Estado de aceptación"
+    "acceptanceStatus": "Estado de aceptación",
+    "dateStartDate": "Fecha de inicio (todo el día)",
+    "dateEndDate": "Fecha de finalización (todo el día)",
+    "isAllDay": "Es todo el día",
+    "Acceptance": "Aceptación"
   },
   "options": {
     "status": {
@@ -37,7 +41,8 @@
     "Set Not Held": "Marcar como No celebrada",
     "Send Invitations": "Enviar Invitaciones",
     "on time": "a tiempo",
-    "before": "antes"
+    "before": "antes",
+    "All-Day": "Todo el día"
   },
   "presetFilters": {
     "planned": "Planeadas",
@@ -45,6 +50,7 @@
     "todays": "De hoy"
   },
   "messages": {
-    "nothingHasBeenSent": "No se ha enviado nada"
+    "nothingHasBeenSent": "No se ha enviado nada",
+    "selectAcceptanceStatus": "Establece tu estado de aceptación."
   }
 }

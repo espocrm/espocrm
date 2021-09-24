@@ -1,1 +1,45 @@
-{}
+{
+  "tooltips": {
+    "maxFileSize": "Si vide ou 0 alors pas de limite.",
+    "fileAccept": "Quels types de fichiers accepter? Il est possible d'ajouter des éléments personnalisés.",
+    "barcodeLastChar": "Pour le type EAN-13."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Rue",
+      "city": "Ville",
+      "state": "Etat",
+      "country": "Pays",
+      "postalCode": "Code Postal",
+      "map": "Carte"
+    },
+    "personName": {
+      "first": "Première",
+      "last": "Dernier",
+      "middle": "Milieu"
+    },
+    "currency": {
+      "converted": "(Converti)",
+      "currency": "(Devise)"
+    }
+  },
+  "labels": {
+    "Name": "Nom",
+    "Label": "Étiquette"
+  },
+  "fieldInfo": {
+    "varchar": "Texte sur une seule ligne.",
+    "date": "Date sans horaire.",
+    "datetime": "Date et horaire",
+    "currency": "Une valeur de change. Une valeur à virgule variable avec un code de devise.",
+    "int": "Un nombre entier.",
+    "float": "Un nombre suivi de décimales.",
+    "bool": "Une case à cocher. Deux valeurs possibles : vrai ou faux.",
+    "multiEnum": "Une liste de valeurs, éventuellement multiples, peuvent être sélectionnées. Cette liste est soumise à un tri.",
+    "checklist": "Une liste de cases à cocher.",
+    "array": "Une liste de valeurs, semblables au champ Multi-Enum (énumération multiple).",
+    "autoincrement": "Un nombre entier généré automatiquement et en lecture seule.",
+    "barcode": "Un code-barre. Peut être enregistré en PDF.",
+    "foreign": "Un champ d'éléments liés. En lecture seule."
+  }
+}

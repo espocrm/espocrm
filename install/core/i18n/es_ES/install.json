@@ -33,7 +33,17 @@
     "dbHostName": "Servidor (usualmente localhost)",
     "dbName": "Nombre de la Base de Datos",
     "dbUserName": "Usuario de la Base de Datos",
-    "Permission Requirements": "Permisos"
+    "SetupConfirmation page title": "Requerimientos del Sistema",
+    "PHP Configuration": "Configuración PHP",
+    "MySQL Configuration": "Configuraciones de base de datos",
+    "Permission Requirements": "Permisos",
+    "Success": "Éxito",
+    "Fail": "Falló",
+    "is recommended": "¿Es recomendado?",
+    "extension is missing": "falta la extensión",
+    "headerTitle": "Instalación de EspoCRM",
+    "Crontab setup instructions": "Sin ejecutar trabajos programados, los correos electrónicos entrantes, las notificaciones y los recordatorios no funcionarán. Aquí puede leer {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "instrucciones de configuración"
   },
   "fields": {
     "Choose your language": "Seleccione su idioma",
@@ -93,29 +103,21 @@
     "Thousand Separator and Decimal Mark equal": "El separador de miles y el separador decimal no pueden ser iguales",
     "extension": "{0} extensión está perdida",
     "option": "El valor recomendado es {0}",
-    "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea <code>{WINDOWS_APACHE1}</code> (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>",
-        "linux": "<br>1. Habilita \"mod_rewrite\". Para hacerlo, ejecute esos comandos en un Terminal: <pre>{APACHE1}</pre><br> 2. Habilita el soporte de .htaccess. Agregue/edite los ajustes de configuración del Servidor <code>{APACHE2_PATH1}</code> o <code>{APACHE2_PATH2}</code> (o <code>{APACHE2_PATH3}</code>): <pre>{APACHE2}</pre>\nLuego ejecuta este comando en un Terminal: <pre>{APACHE3}</pre> <br>3. Intente agregar la ruta RewriteBase, abra un archivo {API_PATH} .htaccess y reemplace la siguiente línea: <pre>{APACHE4}</pre> a <pre>{APACHE5}</pre> <br> Para obtener más información, visite la guía <a href=\"{APACHE_LINK}\" target=\"_blank\"> configuración del servidor Apache para EspoCRM </a>. <br> <br>"
-      },
-      "nginx": {
-        "linux": "<br> Agregar este código a su Configuración de Servidor Nginx <code>{NGINX_PATH}</code> (inside \"server\" block):\n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, visite la guía <a href=\"{NGINX_LINK}\" target=\"_blank\"> configuración del servidor Nginx para EspoCRM </a>. <br> <br> <br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API Error: EspoCRM API inaccesible.</h3><br> Posibles problemas: se requiere RewriteBase , \"mod_rewrite\" desactivado en el servidor  Apache o en el soporte .htaccess.",
-      "nginx": "<h3>API Error: EspoCRM API inaccesible.</h3>",
-      "microsoft-iis": "<h3>API Error: EspoCRM API inaccesible.</h3><br> Problema posible: \"URL Rewrite\" desactivado. Por favor revisar y activar \"URL Rewrite\" Módulo en Servidor IIS",
-      "default": "<h3>API Error: EspoCRM API inaccesible.</h3><br> Problema posible: Módulo Rewrite desactivado.Por favor revisar y activar el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y en el soporte .htaccess"
-    }
+    "mysqlSettingError": "EspoCRM requiere que la configuración de MySQL \"{NAME}\" sea establecido a {VALUE}",
+    "requiredMariadbVersion": "EspoCRM no admite su versión de MariaDB, actualice al menos a MariaDB {minVersion}",
+    "Ajax failed": "Ocurrió un error inesperado",
+    "Bad init Permission": "Permiso denegado para el directorio \"{*}\". Configure 775 para \"{*}\" o simplemente ejecute este comando en el terminal <pre><b>{C}</b> </pre> ¿No se permite la operación? Pruebe este: {CSU}",
+    "permissionInstruction": "<br>Ejecute este comando en la Terminal:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "¿La operación no está permitida? Pruebe este: <br><br> {CSU}"
   },
   "systemRequirements": {
-    "requiredMysqlVersion": "Versión MySQL",
+    "requiredPhpVersion": "Versión de PHP",
+    "requiredMysqlVersion": "Versión de MySQL",
     "host": "Nombre de host",
     "dbname": "Nombre de la Base de Datos",
-    "user": "Nombre de usuario"
+    "user": "Nombre de usuario",
+    "writable": "Escribible",
+    "readable": "Legible",
+    "requiredMariadbVersion": "Version de MariaDB"
   }
 }
