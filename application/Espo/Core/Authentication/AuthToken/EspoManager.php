@@ -29,33 +29,32 @@
 
 namespace Espo\Core\Authentication\AuthToken;
 
-use Espo\{
-    ORM\EntityManager,
-};
+use Espo\ORM\EntityManager;
+use Espo\Entities\AuthToken as AuthTokenEntity;
 
 use RuntimeException;
 
 use const MCRYPT_DEV_URANDOM;
 
-class EspoAuthTokenManager implements AuthTokenManager
+class EspoManager implements Manager
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $repository;
+    private $repository;
 
-    const TOKEN_RANDOM_LENGTH = 16;
+    private const TOKEN_RANDOM_LENGTH = 16;
 
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
 
-        $this->repository = $entityManager->getRepository('AuthToken');
+        $this->repository = $entityManager->getRepository(AuthTokenEntity::ENTITY_TYPE);
     }
 
     public function get(string $token): ?AuthToken
     {
         $authToken = $this->entityManager
-            ->getRepository('AuthToken')
+            ->getRDBRepository(AuthTokenEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'isActive',
@@ -76,20 +75,20 @@ class EspoAuthTokenManager implements AuthTokenManager
         return $authToken;
     }
 
-    public function create(AuthTokenData $authTokenData): AuthToken
+    public function create(Data $data): AuthToken
     {
         $authToken = $this->repository->getNew();
 
         $authToken->set([
-            'userId' => $authTokenData->getUserId(),
-            'portalId' => $authTokenData->getPortalId(),
-            'hash' => $authTokenData->getHash(),
-            'ipAddress' => $authTokenData->getIpAddress(),
+            'userId' => $data->getUserId(),
+            'portalId' => $data->getPortalId(),
+            'hash' => $data->getHash(),
+            'ipAddress' => $data->getIpAddress(),
             'lastAccess' => date('Y-m-d H:i:s'),
             'token' => $this->generateToken(),
         ]);
 
-        if ($authTokenData->toCreateSecret()) {
+        if ($data->toCreateSecret()) {
             $authToken->set('secret', $this->generateToken());
         }
 

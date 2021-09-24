@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * An auth token data. Used for auth token creation.
  */
-class AuthTokenData
+class Data
 {
     private $userId;
 

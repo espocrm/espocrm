@@ -35,7 +35,7 @@ use Espo\Core\EntryPoint\EntryPointManager;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Authentication\AuthenticationFactory;
-use Espo\Core\Authentication\AuthToken\AuthTokenManager;
+use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
 use Espo\Core\Api\ErrorOutput;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;

@@ -1,6 +1,6 @@
 {
     "authTokenManager": {
-        "className": "Espo\\Core\\Authentication\\AuthToken\\EspoAuthTokenManager"
+        "className": "Espo\\Core\\Authentication\\AuthToken\\EspoManager"
     },
     "schema": {
         "className": "Espo\\Core\\Utils\\Database\\Schema\\Schema"

@@ -32,7 +32,7 @@ namespace Espo\Core\Authentication\AuthToken;
 /**
  * Fetches and stores auth tokens.
  */
-interface AuthTokenManager
+interface Manager
 {
     /**
      * Get an auth token. If does not exist then returns NULL.
@@ -42,7 +42,7 @@ interface AuthTokenManager
     /**
      * Create an auth token and store it.
      */
-    public function create(AuthTokenData $authTokenData): AuthToken;
+    public function create(Data $data): AuthToken;
 
     /**
      * Make an auth token inactive (invalid).

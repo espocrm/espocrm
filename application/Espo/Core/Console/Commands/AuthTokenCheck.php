@@ -31,7 +31,7 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Authentication\AuthToken\AuthTokenManager,
+    Authentication\AuthToken\Manager as AuthTokenManager,
     Console\Command,
     Console\Command\Params,
     Console\IO,
@@ -39,9 +39,9 @@ use Espo\Core\{
 
 class AuthTokenCheck implements Command
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $authTokenManager;
+    private $authTokenManager;
 
     public function __construct(EntityManager $entityManager, AuthTokenManager $authTokenManager)
     {

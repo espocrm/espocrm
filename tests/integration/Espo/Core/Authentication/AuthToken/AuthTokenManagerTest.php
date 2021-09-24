@@ -29,7 +29,7 @@
 
 namespace tests\integration\Espo\Core\Authentication\AuthToken;
 
-use Espo\Core\Authentication\AuthToken\AuthTokenData;
+use Espo\Core\Authentication\AuthToken\Data;
 
 class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 {
@@ -37,7 +37,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
     {
         $authTokenManager = $this->getContainer()->get('authTokenManager');
 
-        $authTokenData = AuthTokenData::create([
+        $authTokenData = Data::create([
             'hash' => 'test-hash',
             'ipAddress' => 'ip-address',
             'userId' => 'user-id',
@@ -63,7 +63,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
     {
         $authTokenManager = $this->getContainer()->get('authTokenManager');
 
-        $authTokenData = AuthTokenData::create([
+        $authTokenData = Data::create([
             'hash' => 'test-hash',
             'ipAddress' => 'ip-address',
             'userId' => 'user-id',
@@ -86,7 +86,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
     {
         $authTokenManager = $this->getContainer()->get('authTokenManager');
 
-        $authTokenData = AuthTokenData::create([
+        $authTokenData = Data::create([
             'hash' => 'test-hash',
             'userId' => 'user-id',
         ]);
@@ -104,7 +104,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
     {
         $authTokenManager = $this->getContainer()->get('authTokenManager');
 
-        $authTokenData = AuthTokenData::create([
+        $authTokenData = Data::create([
             'hash' => 'test-hash',
             'userId' => 'user-id',
         ]);

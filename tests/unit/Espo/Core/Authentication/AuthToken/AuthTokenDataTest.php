@@ -29,13 +29,13 @@
 
 namespace tests\unit\Espo\Core\Authentication\AuthToken;
 
-use Espo\Core\Authentication\AuthToken\AuthTokenData;
+use Espo\Core\Authentication\AuthToken\Data;
 
 class AuthTokenDataTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
-        $authTokenData = AuthTokenData::create([
+        $authTokenData = Data::create([
             'hash' => 'hash',
             'ipAddress' => 'ip-address',
             'userId' => 'user-id',

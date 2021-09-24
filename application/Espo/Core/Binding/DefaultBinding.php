@@ -94,7 +94,7 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Authentication\\AuthToken\\AuthTokenManager',
+            'Espo\\Core\\Authentication\\AuthToken\\Manager',
             'authTokenManager'
         );
 
