@@ -90,7 +90,7 @@ class AuthTokenData
         return $object;
     }
 
-    protected function validate()
+    private function validate(): void
     {
         // @todo Use typed properties when php 7.4 is a min supported version.
         if (
