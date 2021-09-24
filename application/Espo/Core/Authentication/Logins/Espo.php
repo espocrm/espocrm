@@ -35,7 +35,7 @@ use Espo\Core\{
     Authentication\Login,
     Authentication\Login\Data,
     Authentication\Result,
-    Authentication\Helpers\UserFinder,
+    Authentication\Helper\UserFinder,
     Authentication\Result\FailReason,
 };
 

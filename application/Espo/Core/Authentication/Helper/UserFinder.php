@@ -27,17 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Helpers;
+namespace Espo\Core\Authentication\Helper;
 
-use Espo\Core\{
-    ORM\EntityManager,
-};
+use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
 
 class UserFinder
 {
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -47,7 +45,7 @@ class UserFinder
     public function find(string $username, string $hash): ?User
     {
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'userName' => $username,
                 'password' => $hash,
@@ -61,7 +59,7 @@ class UserFinder
     public function findApiHmac(string $apiKey): ?User
     {
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'type' => 'api',
                 'apiKey' => $apiKey,
@@ -75,7 +73,7 @@ class UserFinder
     public function findApiApiKey(string $apiKey): ?User
     {
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'type' => 'api',
                 'apiKey' => $apiKey,
