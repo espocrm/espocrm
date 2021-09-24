@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "name": "Namn",
+    "isHtml": "Är HTML",
+    "body": "Text",
+    "subject": "Ämne",
+    "attachments": "Bilagor",
+    "oneOff": "Engångs",
+    "category": "Kategori",
+    "insertField": "Platshållare"
+  },
+  "labels": {
+    "Create EmailTemplate": "Skapa e-postmall",
+    "Available placeholders": "Tillgängliga platshållare"
+  },
+  "tooltips": {
+    "oneOff": "Kontrollera om du bara ska använda denna mall en gång. T ex för massmail."
+  },
+  "presetFilters": {
+    "actual": "Faktist"
+  },
+  "placeholderTexts": {
+    "optOutLink": "en avanmälningslänk",
+    "today": "Dagens datum",
+    "now": "Nuvarande datum & tid",
+    "currentYear": "Nuvarande år"
+  },
+  "messages": {
+    "infoText": "Tillgängliga platshållare:\n\n{optOutUrl} &#8211; URL för en avanmälningslänk;\n\n{optOutLink} &#8211; en avanmälningslänk."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "type": "Typ",
+    "optOut": "Opt-out",
+    "invalid": "Ogiltig"
+  },
+  "presetFilters": {
+    "orphan": "Föräldralös"
+  }
+}

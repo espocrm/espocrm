@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "Namn",
+    "roles": "Roller",
+    "assignmentPermission": "Arbetsuppgift behörighet",
+    "userPermission": "Användarbehörighet",
+    "portalPermission": "Portalbehörighet",
+    "groupEmailAccountPermission": "Behörighet för grupp e-postkonto",
+    "exportPermission": "Exportera behörigheter",
+    "dataPrivacyPermission": "Dataskyddstillstånd",
+    "massUpdatePermission": "Massuppdatera behörigheter"
+  },
+  "links": {
+    "users": "Användare"
+  },
+  "tooltips": {
+    "assignmentPermission": "Tillåter att begränsa möjligheten att tilldela poster och skicka meddelanden till andra användare.\n\nalla - ingen begränsning\n\nteam - kan tilldela och skicka till teammedlemmar\n\nno - kan tilldela och skicka bara till sig själv",
+    "userPermission": "Tillåter att begränsa användarnas möjligheter att visa aktiviteter, kalender och flöden av andra användare.\n\nalla - ingen begränsning\n\nteam - kan se aktiviteter till teammedlemmar\n\nno - kan inte se",
+    "portalPermission": "Definierar åtkomst till portalinformation, möjlighet att skicka meddelanden till portalanvändare.",
+    "groupEmailAccountPermission": "Definierar åtkomst till grupp-e-postkonton, en möjlighet att skicka e-post från grupp-SMTP.",
+    "dataPrivacyPermission": "Tillåts att visa och radera personlig data.",
+    "exportPermission": "Definierar om användare kan exportera poster.",
+    "massUpdatePermission": "Definierar om användare kan göra massuppdatering av poster."
+  },
+  "labels": {
+    "Access": "Tillgång",
+    "Create Role": "Skapa roll",
+    "Scope Level": "Omfattningsnivå ",
+    "Field Level": "Fältnivå"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "inte inställd",
+      "enabled": "aktiv",
+      "disabled": "inaktiv"
+    },
+    "levelList": {
+      "all": "alla",
+      "account": "konto",
+      "contact": "kontakt",
+      "own": "egen",
+      "no": "nej",
+      "yes": "ja",
+      "not-set": "inte inställd"
+    }
+  },
+  "actions": {
+    "read": "Läs",
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "stream": "Flöde",
+    "create": "Skapa"
+  },
+  "messages": {
+    "changesAfterClearCache": "Alla ändringar i en åtkomstkontroll kommer att tillämpas efter att cachen har rensats. "
+  }
+}

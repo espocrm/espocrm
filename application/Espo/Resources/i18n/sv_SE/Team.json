@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "name": "Namn",
+    "roles": "Roller",
+    "positionList": "Positionslista",
+    "layoutSet": "Layoutuppsättning"
+  },
+  "links": {
+    "users": "Användare",
+    "notes": "Noteringar",
+    "roles": "Roller",
+    "inboundEmails": "Grupp e-postkonton",
+    "layoutSet": "Layoutuppsättning"
+  },
+  "tooltips": {
+    "roles": "Åtkomstroller. Användare av detta team får åtkomstkontrollnivå från utvalda roller.",
+    "positionList": "Tillgängliga positioner i detta team. T.ex. Säljare, chef.",
+    "layoutSet": "Ger möjligheten att ha layouter som skiljer sig från standard. Layoutuppsättning kommer att tillämpas på användare som har laget som standardteam."
+  },
+  "labels": {
+    "Create Team": "Skapa team"
+  }
+}

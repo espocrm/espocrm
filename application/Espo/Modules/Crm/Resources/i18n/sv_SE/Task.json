@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "name": "Namn",
+    "parent": "Förälder",
+    "dateStart": "Startdatum",
+    "dateEnd": "Förfallodatum",
+    "dateStartDate": "Startdatum (hela dagen)",
+    "dateEndDate": "Slutdatum (hela dagen)",
+    "priority": "Prioritet",
+    "description": "Beskrivning",
+    "isOverdue": "Är försenad",
+    "account": "Konto",
+    "dateCompleted": "Datum slutfört",
+    "attachments": "Bilagor",
+    "reminders": "Påminnelser",
+    "contact": "Kontakt"
+  },
+  "links": {
+    "attachments": "Bilagor",
+    "account": "Konto",
+    "contact": "Kontakt"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Inte påbörjad",
+      "Started": "Påbörjad",
+      "Completed": "Avslutad",
+      "Canceled": "Avbruten",
+      "Deferred": "Uppskjuten"
+    },
+    "priority": {
+      "Low": "Låg",
+      "High": "Hög",
+      "Urgent": "Brådskande"
+    }
+  },
+  "labels": {
+    "Create Task": "Skapa uppgift",
+    "Complete": "Slutförd",
+    "overdue": "försenad"
+  },
+  "presetFilters": {
+    "actual": "Aktuell",
+    "completed": "Slutförd",
+    "todays": "Idag",
+    "overdue": "Försenad",
+    "deferred": "Uppskjuten"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Namn",
+    "emailAddress": "E-post",
+    "accountRole": "Titel",
+    "account": "Konto",
+    "accounts": "Konton",
+    "phoneNumber": "Telefon",
+    "accountType": "Kontotyp",
+    "doNotCall": "Ring Inte",
+    "address": "Adress",
+    "opportunityRole": "Möjlighetsroll",
+    "description": "Beskrivning",
+    "campaign": "Kampanj",
+    "targetLists": "Mållistor",
+    "targetList": "Mållista",
+    "portalUser": "Portalanvändare",
+    "originalLead": "Original lead",
+    "acceptanceStatus": "Godkännandestatus",
+    "accountIsInactive": "Konto inaktivt",
+    "acceptanceStatusMeetings": "Godkännandestatus (möten)",
+    "acceptanceStatusCalls": "Godkännandestatus (samtal)",
+    "title": "Kontotitel",
+    "hasPortalUser": "Har portalanvändare"
+  },
+  "links": {
+    "opportunities": "Möjligheter",
+    "cases": "Ärenden",
+    "targetLists": "Mållistor",
+    "campaignLogRecords": "Kampanjlogg",
+    "campaign": "Kampanj",
+    "account": "Konto (primärt)",
+    "accounts": "Konton",
+    "casesPrimary": "Ärenden (primära)",
+    "portalUser": "Portalanvändare",
+    "originalLead": "Original lead",
+    "documents": "Dokument",
+    "tasksPrimary": "Uppgifter",
+    "opportunitiesPrimary": "Möjligheter (primär)"
+  },
+  "labels": {
+    "Create Contact": "Skapa kontakt"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Beslutsfattare",
+      "Evaluator": "Utvärderare"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Portalanvändare",
+    "notPortalUsers": "Inte portalanvändare",
+    "accountActive": "Aktiv"
+  }
+}

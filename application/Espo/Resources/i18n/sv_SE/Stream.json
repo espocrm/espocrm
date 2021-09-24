@@ -1,0 +1,15 @@
+{
+  "messages": {
+    "infoMention": "Skriv **@användarnamn** för att nämna användaren i posten.",
+    "infoSyntax": "Tillgänglig markdown syntax"
+  },
+  "syntaxItems": {
+    "code": "Kod",
+    "multilineCode": "Flerradig kod",
+    "strongText": "Fet text",
+    "emphasizedText": "Betonad text",
+    "deletedText": "Borttagen text",
+    "blockquote": "Block citat",
+    "link": "Länk"
+  }
+}

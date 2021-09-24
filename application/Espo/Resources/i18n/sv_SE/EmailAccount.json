@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Namn",
+    "host": "Värd",
+    "username": "Användarnamn",
+    "password": "Lösenord",
+    "monitoredFolders": "Övervakade mappar",
+    "fetchSince": "Senast hämtat",
+    "emailAddress": "E-postadress",
+    "sentFolder": "Skickat mapp",
+    "storeSentEmails": "Lagra skickad e-post",
+    "keepFetchedEmailsUnread": "Håll hämtad e-post oläst",
+    "emailFolder": "Lägg i mapp",
+    "useSmtp": "Använd SMTP",
+    "smtpHost": "SMTP host",
+    "smtpAuth": "SMTP auth",
+    "smtpSecurity": "SMTP säkerhet",
+    "smtpUsername": "SMTP användarnamn",
+    "smtpPassword": "SMTP lösenord",
+    "useImap": "Hämta e-postmeddelanden",
+    "smtpAuthMechanism": "SMTP-autentiseringsmekanism",
+    "security": "Säkerhet"
+  },
+  "links": {
+    "filters": "Filter",
+    "emails": "E-post"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Skapa e-postkonto",
+    "Main": "Huvud",
+    "Test Connection": "Testa anslutning",
+    "Send Test Email": "Skicka testmeddelande"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Fick ingen kontakt med IMAP-servern",
+    "connectionIsOk": "Anslutningen är OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Flera mappar ska separeras med komma.\n\nDu kan lägga till en 'Skickad' mapp för att synkronisera e-postmeddelanden som skickas från en extern e-postklient.",
+    "storeSentEmails": "Skickade e-postmeddelanden lagras på IMAP-servern. E-postadressfältet ska matcha adressen e-postmeddelanden kommer att skickas från.",
+    "useSmtp": "Möjligheten att skicka e-post.",
+    "emailAddress": "Användarposten (tilldelad användare) ska ha samma e-postadress för att kunna använda detta e-postkonto för att skicka."
+  }
+}

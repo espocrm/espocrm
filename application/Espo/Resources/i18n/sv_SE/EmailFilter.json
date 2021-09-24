@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Från",
+    "to": "Till",
+    "subject": "Ämne",
+    "bodyContains": "Text innehåller",
+    "action": "Åtgärd",
+    "isGlobal": "Är global",
+    "emailFolder": "Mapp"
+  },
+  "labels": {
+    "Create EmailFilter": "Skapa e-postfilter",
+    "Emails": "E-post"
+  },
+  "tooltips": {
+    "from": "E-post som skickats från den specificerade adressen. Lämna tom om den inte behövs. Du kan använda wildcard *.",
+    "to": "E-post som skickats från den specificerade adressen. Lämna tom om den inte behövs. Du kan använda wildcard *.",
+    "name": "Ge filtret ett beskrivande namn.",
+    "bodyContains": "Innehållet i meddelandet innehåller något av de angivna orden eller fraserna.",
+    "isGlobal": "Implementerar detta filter på all inkommande e-post till systemet.",
+    "subject": "Använd wildcard *:\n\n* `text*` – börjar med text,\n * `*text*` – innehåller text,\n * `*text` – slutar med text."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignorera",
+      "Move to Folder": "Lägg i mapp"
+    }
+  }
+}

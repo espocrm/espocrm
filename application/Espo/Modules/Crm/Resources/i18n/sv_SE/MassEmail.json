@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Namn",
+    "storeSentEmails": "Lagra skickade e-postmeddelanden",
+    "startAt": "Startdatum",
+    "fromAddress": "Från adress",
+    "fromName": "Från namn",
+    "replyToAddress": "Svara till adress",
+    "replyToName": "Svara till namn",
+    "campaign": "Kampanj",
+    "emailTemplate": "E-postmall",
+    "inboundEmail": "E-poskonto",
+    "targetLists": "Mållistor",
+    "excludingTargetLists": "Exkludera mållistor",
+    "optOutEntirely": "Helt opt-out",
+    "smtpAccount": "SMTP-konto"
+  },
+  "links": {
+    "targetLists": "Mållistor",
+    "excludingTargetLists": "Exkludera Mållistor",
+    "queueItems": "Köa objekt",
+    "campaign": "Kampanj",
+    "emailTemplate": "E-postmall",
+    "inboundEmail": "E-postkonto"
+  },
+  "options": {
+    "status": {
+      "Draft": "Utkast",
+      "Pending": "Väntande",
+      "In Process": "Pågående",
+      "Complete": "Klar",
+      "Canceled": "Avbruten",
+      "Failed": "Misslyckad"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Skapa massutskick",
+    "Send Test": "Skicka test",
+    "group": "grupp"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Välj minst ett mål.",
+    "testSent": "Test e-postmeddelanden som ska skickas"
+  },
+  "tooltips": {
+    "optOutEntirely": "E-postadresser till mottagare som avslutar prenumerationen kommer att markeras som borttagna och de kommer inte att få några utskick längre. ",
+    "targetLists": "Mål som ska ta emot meddelanden.",
+    "excludingTargetLists": "Mål som inte ska ta emot meddelanden.",
+    "storeSentEmails": "E-postmeddelande kommer att lagras i CRM"
+  },
+  "presetFilters": {
+    "actual": "Aktuell",
+    "complete": "Klar"
+  }
+}

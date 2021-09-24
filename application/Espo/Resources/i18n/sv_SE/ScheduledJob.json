@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Namn",
+    "job": "Jobb",
+    "scheduling": "Schemläggning"
+  },
+  "links": {
+    "log": "Logg"
+  },
+  "labels": {
+    "Create ScheduledJob": "Skapa schemalagt jobb",
+    "As often as possible": "Så ofta som möjligt"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Städa upp",
+      "CheckInboundEmails": "Kolla grupp e-postkonton",
+      "CheckEmailAccounts": "Kolla personliga e-postkonton",
+      "SendEmailReminders": "Skicka e-postpåminnelser",
+      "AuthTokenControl": "Auth token kontroll",
+      "SendEmailNotifications": "Skicka e-postaviseringar",
+      "CheckNewVersion": "Kolla om det finns en ny Version",
+      "ProcessWebhookQueue": "Bearbeta Webhook-kö"
+    },
+    "cronSetup": {
+      "linux": "OBS: Lägg till denna rad i din crontab för att köra Espo schemalagda jobb:",
+      "mac": "OBS: Lägg till denna rad i din crontab för att köra Espo schemalagda jobb:",
+      "windows": "OBS: Skapa en batch-fil med följande kommando för att köra Espo schemalagda jobb vid användande av Windows Schemaläggare:",
+      "default": "OBS: Lägg till detta kommando till Cron Job (Schemalagda aktiviteter):"
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Crontab-notation. Definierar frekvensen för jobbkörningar.\n\n`*/5 * * * *` - var 5 minut\n\n`0 */2 * * *` - varannan timme\n\n`30 1 * * *` - klockan 01:30 varje dag\n\n`0 0 1 * *` - första dagen i månaden"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "fields": {
+    "name": "Namn",
+    "description": "Beskrivning",
+    "type": "Typ",
+    "startDate": "Startdatum",
+    "endDate": "Slutdatum",
+    "targetLists": "Mållista",
+    "excludingTargetLists": "Exkluderingslista",
+    "sentCount": "Skickat",
+    "openedCount": "Öppnat",
+    "clickedCount": "Klickat",
+    "optedOutCount": "Bortvald",
+    "bouncedCount": "Studsat",
+    "hardBouncedCount": "Studsat (hårt)",
+    "softBouncedCount": "Studsat (mjukt)",
+    "leadCreatedCount": "Skapade leads",
+    "revenue": "Intäkter",
+    "revenueConverted": "Intäkter (konverterade)",
+    "budgetConverted": "Budget (konverterad)",
+    "contactsTemplate": "Kontaktmall",
+    "leadsTemplate": "Leadmall",
+    "accountsTemplate": "Kontomall",
+    "usersTemplate": "Användarmall",
+    "mailMergeOnlyWithAddress": "Hoppa över poster utan ifylld adress",
+    "optedInCount": "Opt-in",
+    "budgetCurrency": "Budgetvaluta"
+  },
+  "links": {
+    "targetLists": "Mållista",
+    "excludingTargetLists": "Exkluderad mållista",
+    "accounts": "Konton",
+    "contacts": "Kontakter",
+    "opportunities": "Möjligheter",
+    "campaignLogRecords": "Logg",
+    "massEmails": "Massutskick",
+    "trackingUrls": "Spårnings-URL:er",
+    "contactsTemplate": "Kontaktmall",
+    "leadsTemplate": "Leadmall",
+    "accountsTemplate": "Kontomall",
+    "usersTemplate": "Användarmall"
+  },
+  "options": {
+    "type": {
+      "Email": "E-post",
+      "Web": "Webb",
+      "Newsletter": "Nyhetsbrev",
+      "Mail": "E-post"
+    },
+    "status": {
+      "Planning": "Planering",
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv",
+      "Complete": "Slutförd"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Skapa kampanj",
+    "Target Lists": "Mållista",
+    "Statistics": "Statistik",
+    "hard": "hård",
+    "soft": "mjuk",
+    "Unsubscribe": "Avbryt prenumeration",
+    "Mass Emails": "Massutskick",
+    "Email Templates": "E-postmallar",
+    "Unsubscribe again": "Ta bort prenumeration igen",
+    "Subscribe again": "Prenumerera igen",
+    "Create Target List": "Skapa mållista",
+    "Mail Merge": "Sammanslagning av e-post",
+    "Generate Mail Merge PDF": "Generera sammanslagning av e-post PDF"
+  },
+  "presetFilters": {
+    "active": "Aktiv"
+  },
+  "messages": {
+    "unsubscribed": "Du har valt att avbryta prenumerationen från vår e-postlista.",
+    "subscribedAgain": "Du prenumererar igen."
+  },
+  "tooltips": {
+    "targetLists": "Mål som ska ta emot meddelanden.",
+    "excludingTargetLists": "Mål som inte ska ta emot meddelanden."
+  }
+}

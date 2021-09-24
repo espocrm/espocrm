@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "width": "Bred (%)",
+    "link": "Länk",
+    "notSortable": "Ej sorterbar",
+    "align": "Justera",
+    "panelName": "Panelnamn",
+    "style": "Stil",
+    "sticked": "Fäst",
+    "isLarge": "Stor fontstorlek",
+    "dynamicLogicVisible": "Villkor som gör panelen synlig",
+    "hidden": "Gömd"
+  },
+  "options": {
+    "align": {
+      "left": "Vänster",
+      "right": "Höger"
+    },
+    "style": {
+      "default": "Standard",
+      "success": "Framgångsrikt",
+      "danger": "Fara",
+      "warning": "Varning",
+      "primary": "Primär"
+    }
+  },
+  "labels": {
+    "New panel": "Ny panel"
+  },
+  "tooltips": {
+    "link": "Om det är markerat visas ett fältvärde som en länk som pekar på detaljvyn för posten. Vanligtvis används den för *Namn* -fält.",
+    "hiddenPanel": "Behöver klicka på 'visa mer' för att se panelen."
+  }
+}

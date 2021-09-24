@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create Lead": "Skapa lead",
+    "Create Contact": "Skapa kontakt",
+    "Create Task": "Skapa uppgift",
+    "Create Case": "Skapa ärende",
+    "Add to Contact": "Lägg till kontakt",
+    "Add to Lead": "Lägg till lead"
+  }
+}

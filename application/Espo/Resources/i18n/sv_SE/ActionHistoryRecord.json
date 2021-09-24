@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "user": "Användare",
+    "action": "Åtgärd",
+    "createdAt": "Datum",
+    "target": "Mål",
+    "targetType": "Måltyp",
+    "authToken": "Auth-token",
+    "ipAddress": "IP-adress",
+    "authLogRecord": "Auth-loggpost",
+    "userType": "Användartyp"
+  },
+  "links": {
+    "authToken": "Auth-token",
+    "user": "Användare",
+    "target": "Mål",
+    "authLogRecord": "Auth-loggpost"
+  },
+  "presetFilters": {
+    "onlyMy": "Bara min"
+  },
+  "options": {
+    "action": {
+      "read": "Läs",
+      "update": "Uppdatera",
+      "delete": "Ta bort",
+      "create": "Skapa"
+    }
+  }
+}

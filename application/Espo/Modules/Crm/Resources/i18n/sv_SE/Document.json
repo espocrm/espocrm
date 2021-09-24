@@ -1,0 +1,39 @@
+{
+  "labels": {
+    "Create Document": "Skapa dokument",
+    "Details": "Detaljer"
+  },
+  "fields": {
+    "name": "Namn",
+    "file": "Fil",
+    "type": "Typ",
+    "publishDate": "Publikationsdatum",
+    "expirationDate": "Utgångsdatum",
+    "description": "Beskrivning",
+    "accounts": "Konton",
+    "folder": "Mapp"
+  },
+  "links": {
+    "accounts": "Konton",
+    "opportunities": "Möjligheter",
+    "folder": "Mapp",
+    "contacts": "Kontakter"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Draft": "Utkast",
+      "Expired": "Utgått",
+      "Canceled": "Avbruten"
+    },
+    "type": {
+      "": "Inga",
+      "Contract": "Kontrakt",
+      "License Agreement": "Licensavtal"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "draft": "Utkast"
+  }
+}

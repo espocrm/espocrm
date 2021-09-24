@@ -1,0 +1,48 @@
+{
+  "fields": {
+    "name": "Namn",
+    "parent": "Förälder",
+    "dateStart": "Startdatum",
+    "dateEnd": "Slutdatum",
+    "direction": "Riktning",
+    "duration": "Varaktighet",
+    "description": "Beskrivning",
+    "users": "Användare",
+    "contacts": "Kontakter",
+    "reminders": "Påminnelser",
+    "account": "Konto",
+    "acceptanceStatus": "Godkännandestatus"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planerat",
+      "Held": "Stoppad",
+      "Not Held": "Inte stoppad"
+    },
+    "direction": {
+      "Outbound": "Utgående",
+      "Inbound": "Ingående"
+    },
+    "acceptanceStatus": {
+      "None": "Inga",
+      "Accepted": "Accepterad",
+      "Declined": "Avvisad",
+      "Tentative": "Preliminär"
+    }
+  },
+  "massActions": {
+    "setHeld": "Stoppa",
+    "setNotHeld": "Stoppa inte"
+  },
+  "labels": {
+    "Create Call": "Skapa samtal",
+    "Set Held": "Stoppa",
+    "Set Not Held": "Stoppa inte",
+    "Send Invitations": "Skicka inbjudningar"
+  },
+  "presetFilters": {
+    "planned": "Planerat",
+    "held": "Stoppad",
+    "todays": "Idag"
+  }
+}

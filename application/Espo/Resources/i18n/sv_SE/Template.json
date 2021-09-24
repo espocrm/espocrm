@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "Namn",
+    "body": "Innehåll",
+    "entityType": "Enhetstyp",
+    "header": "Sidhuvud",
+    "footer": "Sidfot",
+    "leftMargin": "Vänstermarginal",
+    "topMargin": "Toppmarginal",
+    "rightMargin": "Högermarginal",
+    "bottomMargin": "Bottenmarginal",
+    "printFooter": "Skriv ut sidfot",
+    "footerPosition": "Sidfot position",
+    "variables": "Tillgängliga platshållare",
+    "pageOrientation": "Sidorientering",
+    "pageFormat": "Pappersformat",
+    "fontFace": "Typsnitt",
+    "pageWidth": "Sidobredd (mm)",
+    "pageHeight": "Sidohöjd (mm)",
+    "headerPosition": "Huvudposition"
+  },
+  "labels": {
+    "Create Template": "Skapa mall"
+  },
+  "tooltips": {
+    "footer": "Använd {pageNumber} för att skriva ut sidnummret.",
+    "variables": "Kopiera och klistra in nödvändig platshållare till sidhuvud, innehåll eller sidfot."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Porträtt",
+      "Landscape": "Landskap"
+    },
+    "placeholders": {
+      "today": "Idag (datum)",
+      "now": "Nu (datum/tid)",
+      "pagebreak": "Radbrytning"
+    },
+    "fontFace": {
+      "aealarabiya": "AlArabya"
+    },
+    "pageFormat": {
+      "Custom": "Anpassa"
+    }
+  }
+}

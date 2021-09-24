@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "title": "Titel",
+    "dateFrom": "Datum från",
+    "dateTo": "Datum till",
+    "autorefreshInterval": "Auto-förnya intervall",
+    "displayRecords": "Visa uppgifter",
+    "isDoubleHeight": "Höjd 2x",
+    "mode": "Läge",
+    "enabledScopeList": "Vad som skall visas",
+    "users": "Användare",
+    "entityType": "Enhetstyp",
+    "primaryFilter": "Primärt filter",
+    "boolFilterList": "Ytterligare filter",
+    "sortBy": "Sortering (fält)",
+    "sortDirection": "Sortering (riktning)",
+    "dateFilter": "Datumfilter",
+    "skipOwn": "Visa inte egna poster"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Vecka (agenda)",
+      "basicWeek": "Vecka",
+      "month": "Månad",
+      "basicDay": "Dag",
+      "agendaDay": "Dag (agenda)",
+      "timeline": "Tidslinje"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Välj enhetstyp i dashlet inställningar."
+  },
+  "tooltips": {
+    "skipOwn": "Åtgärder som görs av ditt användarkonto visas inte."
+  }
+}

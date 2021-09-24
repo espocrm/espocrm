@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "attachments": "Bilagor",
+    "targetType": "Mål",
+    "users": "Användare",
+    "portals": "Portaler",
+    "type": "Typ",
+    "isGlobal": "Är global",
+    "isInternal": "Är intern (för interna användare)",
+    "related": "Relaterade",
+    "createdByGender": "Skapad av kön",
+    "number": "Nummer"
+  },
+  "filters": {
+    "all": "Alla",
+    "posts": "Poster",
+    "updates": "Uppdateringar"
+  },
+  "messages": {
+    "writeMessage": "Skriv ditt meddelande här"
+  },
+  "options": {
+    "targetType": {
+      "self": "till mig själv",
+      "users": "till vissa användare",
+      "teams": "till vissa team",
+      "all": "till alla interna användare",
+      "portals": "till portalanvändare"
+    }
+  },
+  "links": {
+    "superParent": "Super förälder",
+    "related": "Relaterad"
+  }
+}

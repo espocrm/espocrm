@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "executeTime": "Kör",
+    "attempts": "Försök kvar",
+    "failedAttempts": "Misslyckade försök",
+    "methodName": "Metod",
+    "scheduledJob": "Schemalagt jobb",
+    "method": "Metod (utfasad)",
+    "scheduledJobJob": "Schemalagt jobbnamn",
+    "executedAt": "Exekverad",
+    "startedAt": "Startad",
+    "targetType": "Måltyp",
+    "targetId": "Mål-ID",
+    "number": "Nummer",
+    "queue": "Kö",
+    "job": "Jobb"
+  },
+  "options": {
+    "status": {
+      "Pending": "I väntan på",
+      "Success": "Framgångsrikt",
+      "Running": "Körs",
+      "Failed": "Misslyckades"
+    }
+  }
+}

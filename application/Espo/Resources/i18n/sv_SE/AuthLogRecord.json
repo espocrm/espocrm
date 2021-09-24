@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "username": "Användarnamn",
+    "ipAddress": "IP-adress",
+    "requestTime": "Tid för förfrågan",
+    "createdAt": "Begärd den",
+    "isDenied": "Är nekad",
+    "denialReason": "Skäl för nekande",
+    "user": "Användare",
+    "authToken": "Auth-token skapad",
+    "requestUrl": "Förfrågan URL",
+    "requestMethod": "Förfrågan metod",
+    "authTokenIsActive": "Auth-token är aktiv",
+    "authenticationMethod": "Autentiseringsmetod"
+  },
+  "links": {
+    "authToken": "Auth-token skapad",
+    "user": "Användare",
+    "actionHistoryRecords": "Åtgärdshistorik"
+  },
+  "presetFilters": {
+    "denied": "Nekad",
+    "accepted": "Accepterad"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Felaktiga uppgifter",
+      "INACTIVE_USER": "Inaktiv användare",
+      "IS_PORTAL_USER": "Portalanvändare",
+      "IS_NOT_PORTAL_USER": "Inte en portalanvändare",
+      "USER_IS_NOT_IN_PORTAL": "Användaren är inte relaterad till portalen"
+    }
+  }
+}

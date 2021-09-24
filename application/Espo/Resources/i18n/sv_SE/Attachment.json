@@ -1,0 +1,27 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Infoga dokument"
+  },
+  "fields": {
+    "role": "Roll",
+    "related": "Relaterad",
+    "file": "Fil",
+    "type": "Typ",
+    "field": "Fält",
+    "sourceId": "Käll-ID",
+    "storage": "Lagring",
+    "size": "Storlek (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Bilaga",
+      "Inline Attachment": "Inline bilaga",
+      "Import File": "Importera fil",
+      "Export File": "Exportera fil",
+      "Mail Merge": "Sammanslagning av e-post"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Föräldralös"
+  }
+}

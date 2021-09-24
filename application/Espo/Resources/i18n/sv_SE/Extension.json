@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Namn",
+    "description": "Beskrivning",
+    "isInstalled": "Installerad",
+    "checkVersionUrl": "En URL för att kontrollera nya versioner"
+  },
+  "labels": {
+    "Uninstall": "Avinstallera",
+    "Install": "Installera"
+  },
+  "messages": {
+    "uninstalled": "Tillägget {name} har avinstallerats"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "labels": {
+    "Fields": "Fält",
+    "Relationships": "Förhållande",
+    "Schedule": "Schema",
+    "Log": "Logg",
+    "Formula": "Formel",
+    "Layouts": "Layouter"
+  },
+  "fields": {
+    "name": "Namn",
+    "type": "Typ",
+    "labelSingular": "Etikett singular",
+    "labelPlural": "Etikett plural",
+    "stream": "Flöde",
+    "label": "Etikett",
+    "linkType": "Typ av länk",
+    "entityForeign": "Främmande enhet",
+    "linkForeign": "Främmande länk",
+    "link": "Länk",
+    "labelForeign": "Främmande etikett",
+    "sortBy": "Standard sortering (fält)",
+    "sortDirection": "Standard sortering (riktning)",
+    "relationName": "Mellantabell namn",
+    "linkMultipleField": "Länka flera fält",
+    "linkMultipleFieldForeign": "Främmande länka flera fält",
+    "disabled": "Inaktiverad",
+    "textFilterFields": "Textfilterfält",
+    "audited": "Granskad",
+    "auditedForeign": "Främmande granskning",
+    "statusField": "Statusfält",
+    "beforeSaveCustomScript": "Innan lagring av anpassat script",
+    "color": "Färg",
+    "kanbanViewMode": "Kanban vy",
+    "kanbanStatusIgnoreList": "Ignorerade grupper i Kanban-vyn",
+    "iconClass": "Ikon",
+    "fullTextSearch": "Fulltextsökning",
+    "countDisabled": "Inaktivera räkning av poster",
+    "parentEntityTypeList": "Föräldraenhetstyper",
+    "foreignLinkEntityTypeList": "Främmande länkar"
+  },
+  "options": {
+    "type": {
+      "": "Inga",
+      "Base": "Bas",
+      "CategoryTree": "Kategoriträd",
+      "Event": "Händelse",
+      "BasePlus": "Base plus",
+      "Company": "Företag"
+    },
+    "linkType": {
+      "manyToMany": "Många-till-många",
+      "oneToMany": "En-till-många",
+      "manyToOne": "Många-till-en",
+      "parentToChildren": "Föräldrar-till-barn",
+      "childrenToParent": "Barn-till-föräldrar",
+      "oneToOneRight": "Ett-till-ett höger",
+      "oneToOneLeft": "Ett-till-ett vänster"
+    },
+    "sortDirection": {
+      "asc": "Stigande",
+      "desc": "Fallande"
+    }
+  },
+  "messages": {
+    "entityCreated": "Enhet har skapats",
+    "linkAlreadyExists": "Länknamnkonflikt.",
+    "linkConflict": "Namnkonflikt: länk eller fält med samma namn finns redan.",
+    "confirmRemove": "Är du säker på att du vill ta bort enhetstypen från systemet?"
+  },
+  "tooltips": {
+    "statusField": "Uppdateringar av detta fält loggas i flödet.",
+    "textFilterFields": "Fält som används av söktest.",
+    "stream": "Oavsett om enheten har ett flöde.",
+    "disabled": "Kolla om du inte behöver den här enheten i ditt system.",
+    "linkAudited": "Att skapa relaterad post och länka till befintlig post loggas i flödet.",
+    "linkMultipleField": "Länk flera fält ger ett praktiskt sätt att redigera relationer. Använd inte den om du kan ha ett stort antal relaterade poster.",
+    "entityType": "Base Plus - har paneler för aktiviteter, historik och uppgifter.\n\nHändelse - tillgängligt i panelen Kalender och aktiviteter.",
+    "fullTextSearch": "Återskapning krävs.",
+    "countDisabled": "Totalt antal visas inte i listvyn. Kan minska laddningstiden när DB-tabellen är stor."
+  }
+}

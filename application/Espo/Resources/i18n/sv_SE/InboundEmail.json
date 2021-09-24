@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "name": "Namn",
+    "emailAddress": "E-postadress",
+    "assignToUser": "Tilldela till användare",
+    "host": "Värd",
+    "username": "Användarnamn",
+    "password": "Lösenord",
+    "monitoredFolders": "Övervakade mappar",
+    "trashFolder": "Papperskorg",
+    "createCase": "Skapa ärende",
+    "reply": "Autosvar",
+    "caseDistribution": "Ärendefördelning",
+    "replyEmailTemplate": "Svara e-postmall",
+    "replyFromAddress": "Svara från adress",
+    "replyToAddress": "Svara till adress",
+    "replyFromName": "Svara från namn",
+    "targetUserPosition": "Mål användarposition",
+    "fetchSince": "Hämtat sedan",
+    "addAllTeamUsers": "För alla teamanvändare",
+    "team": "Målteam",
+    "teams": "Team",
+    "sentFolder": "Mappen skickat",
+    "storeSentEmails": "Lagra skickade e-postmeddelanden",
+    "useSmtp": "Använd SMTP",
+    "smtpPort": "STP Port",
+    "smtpAuth": "SMTP-värd",
+    "smtpSecurity": "SMTP säkerhet",
+    "smtpUsername": "SMTP användarnamn",
+    "smtpPassword": "SMTP lösenord",
+    "fromName": "Från namn",
+    "smtpIsShared": "SMTP är delad",
+    "smtpIsForMassEmail": "SMTP är för massutskick",
+    "useImap": "Hämta e-postmeddelanden",
+    "keepFetchedEmailsUnread": "Behåll hämtade E-postmeddelanden som olästa",
+    "smtpAuthMechanism": "SMTP-autentiseringsmekanism",
+    "security": "Säkerhet"
+  },
+  "tooltips": {
+    "reply": "Meddela e-postavsändare att deras e-post har mottagits.\n\nEndast ett e-postmeddelande skickas till en viss mottagare under en viss tidsperiod för att förhindra loopning.",
+    "createCase": "Skapa ärende automatiskt från inkommande e-postmeddelanden.",
+    "replyToAddress": "Ange e-postadressen för den här brevlådan för att få svar här.",
+    "caseDistribution": "Hur ärenden tilldelas. Tilldelas direkt till användaren eller till någon i teamet.",
+    "assignToUser": "Användarcase kommer att tilldelas.",
+    "team": "Teamcase kommer att tilldelas.",
+    "teams": "Teamets e-post kommer att tilldelas.",
+    "addAllTeamUsers": "E-postmeddelanden kommer att visas i inkorgen för alla användare av angivna team.",
+    "targetUserPosition": "Användare med angiven position kommer att distribueras med ärenden.",
+    "monitoredFolders": "Flera mappar ska separeras med komma.",
+    "smtpIsShared": "Om det är markerat kan användare skicka e-postmeddelanden med denna SMTP. Tillgänglighet styrs av roller via behörigheten för gruppens e-postkonto.",
+    "smtpIsForMassEmail": "Om markerat är SMTP tillgängligt för massutskick.",
+    "storeSentEmails": "Skickade e-postmeddelanden lagras på IMAP-servern.",
+    "useSmtp": "Möjligheten att skicka e-post."
+  },
+  "links": {
+    "filters": "Filter",
+    "emails": "E-post",
+    "assignToUser": "Tilldela till användare"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    },
+    "caseDistribution": {
+      "": "Ingen",
+      "Direct-Assignment": "Direkttilldelning",
+      "Least-Busy": "Minst upptagen"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Skapa e-postadress",
+    "Actions": "Åtgärder",
+    "Main": "Huvud"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Kan inte ansluta till IMAP-server"
+  }
+}

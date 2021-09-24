@@ -1,0 +1,28 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Är lika med",
+      "notEquals": "Är inte lika med",
+      "greaterThan": "Större än",
+      "lessThan": "Mindre än",
+      "greaterThanOrEquals": "Större än eller lika med",
+      "lessThanOrEquals": "Mindre än eller lika med",
+      "in": "Inne",
+      "notIn": "Inte inne",
+      "inPast": "Tidigare",
+      "inFuture": "Är framtid",
+      "isToday": "Är idag",
+      "isTrue": "Är sant",
+      "isFalse": "Är falskt",
+      "isEmpty": "Är tom",
+      "isNotEmpty": "Är inte tom",
+      "contains": "Innehåller",
+      "has": "Innehåller",
+      "notContains": "Innehåller inte",
+      "notHas": "Innehåller inte"
+    }
+  },
+  "labels": {
+    "Field": "Fält"
+  }
+}

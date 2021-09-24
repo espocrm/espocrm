@@ -1,0 +1,46 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Skapa artikel",
+    "Any": "Något",
+    "Send in Email": "Skicka med e-post",
+    "Move Up": "Flytta upp",
+    "Move Down": "Flytta ner",
+    "Move to Top": "Flytta till toppen",
+    "Move to Bottom": "Flytta till botten"
+  },
+  "fields": {
+    "name": "Namn",
+    "type": "Typ",
+    "attachments": "Bilaga",
+    "publishDate": "Publiceringsdatum",
+    "expirationDate": "Utgångsdatum",
+    "description": "Beskrivning",
+    "body": "Innehåll",
+    "categories": "Kategorier",
+    "language": "Språk",
+    "portals": "Portaler"
+  },
+  "links": {
+    "cases": "Ärenden",
+    "opportunities": "Möjligheter",
+    "categories": "Kategorier",
+    "portals": "Portaler"
+  },
+  "options": {
+    "status": {
+      "In Review": "Under utvärdering",
+      "Draft": "Utkast",
+      "Archived": "Arkiverad",
+      "Published": "Publicerad"
+    },
+    "type": {
+      "Article": "Artikel"
+    }
+  },
+  "presetFilters": {
+    "published": "Publicerad"
+  },
+  "tooltips": {
+    "portals": "Artikeln kommer bara att vara tillgänglig i specificerade portaler."
+  }
+}

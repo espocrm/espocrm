@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "Hoppa över aviseringar"
+  },
+  "labels": {
+    "Create EmailFolder": "Skapa mapp",
+    "Manage Folders": "Hantera mappar",
+    "Emails": "E-post"
+  }
+}

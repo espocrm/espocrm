@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Mållista"
+  },
+  "fields": {
+    "acceptanceStatus": "Godkännandestatus",
+    "acceptanceStatusMeetings": "Godkännandestatus (möten)",
+    "acceptanceStatusCalls": "Godkännandestatus (samtal)"
+  }
+}

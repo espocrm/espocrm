@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "Adress"
+  },
+  "links": {
+    "meetings": "Möten",
+    "calls": "Samtal",
+    "tasks": "Uppgifter"
+  },
+  "labels": {
+    "Create {entityType}": "Skapa {entityTypeTranslated}"
+  }
+}

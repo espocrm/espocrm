@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "Namn",
+    "number": "Nummer",
+    "account": "Konto",
+    "contact": "Kontakt",
+    "contacts": "Kontakter",
+    "priority": "Prioritet",
+    "type": "Typ",
+    "description": "Beskrivning",
+    "attachments": "Bilagor",
+    "inboundEmail": "Grupp e-postkonto"
+  },
+  "links": {
+    "account": "Konto",
+    "contact": "Kontakt (primär)",
+    "Contacts": "Kontakter",
+    "meetings": "Möten",
+    "calls": "Samtal",
+    "tasks": "Uppgifter",
+    "emails": "E-post",
+    "articles": "Kunskapsbasartiklar",
+    "attachments": "Bilagor",
+    "inboundEmail": "Grupp e-postkonto"
+  },
+  "options": {
+    "status": {
+      "New": "Ny",
+      "Assigned": "Tilldelad",
+      "Pending": "Pågående",
+      "Closed": "Stängd",
+      "Rejected": "Avslagen",
+      "Duplicate": "Duplicera"
+    },
+    "priority": {
+      "Low": "Låg",
+      "High": "Hög",
+      "Urgent": "Bråttom"
+    },
+    "type": {
+      "Question": "Fråga"
+    }
+  },
+  "labels": {
+    "Create Case": "Skapa ärende",
+    "Close": "Stäng",
+    "Reject": "Avslå",
+    "Closed": "Stängd",
+    "Rejected": "Avslagen"
+  },
+  "presetFilters": {
+    "open": "Öppen",
+    "closed": "Stängd"
+  }
+}

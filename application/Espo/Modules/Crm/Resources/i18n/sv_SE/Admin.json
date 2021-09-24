@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "Konvertera lead",
+    "listForAccount": "Lista (konton)",
+    "listForContact": "Lista (för kontakter)"
+  },
+  "templates": {
+    "invitation": "Inbjudan",
+    "reminder": "Påminnelse"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "append": "Lägg till (ta inte bort användarens flikar)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Skapa Mall",
+    "Deploy to Users": "Distribuera till användare",
+    "Deploy to Team": "Distribuera till team"
+  }
+}

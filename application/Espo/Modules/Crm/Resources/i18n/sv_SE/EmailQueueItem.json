@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "name": "Namn",
+    "target": "Mål",
+    "sentAt": "Datum skickat",
+    "attemptCount": "Försök",
+    "emailAddress": "E-postadress",
+    "massEmail": "Massutskick",
+    "isTest": "Är test"
+  },
+  "links": {
+    "target": "Mål",
+    "massEmail": "Massutskick"
+  },
+  "options": {
+    "status": {
+      "Pending": "Väntande",
+      "Sent": "Skickat",
+      "Failed": "Misslyckad",
+      "Sending": "Skickar"
+    }
+  },
+  "presetFilters": {
+    "pending": "Väntande",
+    "sent": "Skickat",
+    "failed": "Misslyckad"
+  }
+}

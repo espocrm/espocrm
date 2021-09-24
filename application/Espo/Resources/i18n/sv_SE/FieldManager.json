@@ -1,0 +1,137 @@
+{
+  "labels": {
+    "Dynamic Logic": "Dynamisk logik",
+    "Name": "Namn",
+    "Label": "Etikett",
+    "Type": "Typ"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Ingen",
+      "javascript: return this.dateTime.getNow(1);": "Nu",
+      "javascript: return this.dateTime.getNow(5);": "Nu (5 min)",
+      "javascript: return this.dateTime.getNow(15);": "Nu (15 min)",
+      "javascript: return this.dateTime.getNow(30);": "Nu (30 min)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 timme",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 timmar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 dag",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dagar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dagar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dagar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dagar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dagar",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 vecka"
+    },
+    "dateDefault": {
+      "": "Ingen",
+      "javascript: return this.dateTime.getToday();": "Idag",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dag",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dagar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 vecka",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+ 2 veckor",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 veckor",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 månad",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 månader",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 år"
+    },
+    "barcodeType": {
+      "UPCE": "UPC (C)",
+      "pharmacode": "Farmakod",
+      "QRcode": "QR kod"
+    }
+  },
+  "tooltips": {
+    "audited": "Uppdateringar kommer att loggas i flödet.",
+    "required": "Fältet är obligatoriskt. Kan inte vara tomt.",
+    "default": "Värdet kommer att sättas till standard när det skapas.",
+    "min": "Min accepterat värde",
+    "max": "Max accepterat värde",
+    "seeMoreDisabled": "Om inte ifylld då kommer långa texter att bli förkortade.",
+    "lengthOfCut": "Hur lång en text kan vara innan den den kortas av.",
+    "maxLength": "Max accepterad textlängd.",
+    "before": "Datumet måste vara före datumet i det specifika fältet.",
+    "after": "Datumet måste vara efter datumet av det specificerade fältet.",
+    "readOnly": "Fältvärde kan inte specificeras av en användare. Men kan räknas med en formel.",
+    "maxFileSize": "Om tom eller 0, obegränsat.",
+    "fileAccept": "Vilka filtyper är accepterade. Det är möjligt att lägga till egna objekt.",
+    "barcodeLastChar": "För EAN-13-typ."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Gata",
+      "city": "Stad",
+      "state": "Stat",
+      "country": "Land",
+      "postalCode": "Postnummer",
+      "map": "Karta"
+    },
+    "personName": {
+      "salutation": "Hälsning",
+      "first": "Först",
+      "last": "Sist",
+      "middle": "Mitten"
+    },
+    "currency": {
+      "converted": "(konverterad)",
+      "currency": "(Valuta)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
+  },
+  "fieldInfo": {
+    "varchar": "En enradig text.",
+    "enum": "Rullgardinsmeny, endast ett värde kan väljas.",
+    "text": "En text med flera rader med markdown-stöd.",
+    "date": "Datum utan tid",
+    "datetime": "Datum och tid",
+    "currency": "Ett valutavärde. Ett flytnummer med en valutakod.",
+    "int": "Ett heltal.",
+    "float": "Ett tal med en decimaldel.",
+    "bool": "En kryssruta. Två möjliga värden: sant och falskt.",
+    "multiEnum": "En lista med värden, flera värden kan väljas. Listan är ordnad.",
+    "checklist": "En lista med kryssrutor.",
+    "array": "En lista med värden, som liknar fältet Multi-Enum.",
+    "address": "En adress med gata, stad, stat, postnummer och land.",
+    "url": "För att lagra länkar.",
+    "wysiwyg": "En text med HTML stöd.",
+    "file": "För filuppladdning.",
+    "image": "För bilduppladdning.",
+    "attachmentMultiple": "Gör det möjligt att ladda upp flera filer.",
+    "number": "Ett automatiskt ökande antal strängtyper med ett möjligt prefix och specifik längd.",
+    "autoincrement": "Ett genererat skrivskyddat automatiskt ökande heltal.",
+    "barcode": "En streckkod. Kan skrivas ut till PDF.",
+    "email": "En uppsättning e-postadresser med deras parametrar: Opted-out, Ogiltig, Primär.",
+    "phone": "En uppsättning telefonnummer med deras parametrar: Typ, Opted-out, Ogiltig, Primär.",
+    "foreign": "Ett fält med en relaterad post. Skrivskyddad.",
+    "link": "En post relaterad genom tillhör-till-förhållande (många-till-en eller en-till-en).",
+    "linkParent": "En post relaterad till förhållandet mellan föräldrar. Kan vara av olika enhetstyper."
+  }
+}

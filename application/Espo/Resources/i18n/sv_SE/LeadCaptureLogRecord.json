@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "number": "Nummer",
+    "target": "Mål",
+    "createdAt": "Gick med",
+    "isCreated": "Är lead skapad"
+  },
+  "links": {
+    "target": "Mål"
+  }
+}

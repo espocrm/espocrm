@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "name": "Namn",
+    "parent": "Förälder",
+    "dateStart": "Startdatum",
+    "dateEnd": "Slutdatum",
+    "duration": "Varaktighet",
+    "description": "Beskrivning",
+    "users": "Användare",
+    "contacts": "Kontakter",
+    "reminders": "Påminnelser",
+    "account": "Konto",
+    "acceptanceStatus": "Godkännandestatus",
+    "dateStartDate": "Startdatum",
+    "dateEndDate": "Slutdatum",
+    "isAllDay": "Är heldag",
+    "Acceptance": "Godkännande"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planerat",
+      "Held": "Stoppade",
+      "Not Held": "Inte stoppad"
+    },
+    "acceptanceStatus": {
+      "None": "Inga",
+      "Accepted": "Accepterade",
+      "Declined": "Avvisade",
+      "Tentative": "Preliminär"
+    }
+  },
+  "massActions": {
+    "setHeld": "Stoppa",
+    "setNotHeld": "Stoppa inte"
+  },
+  "labels": {
+    "Create Meeting": "Skapa möte",
+    "Set Held": "Stoppa",
+    "Set Not Held": "Stoppa inte",
+    "Send Invitations": "Skicka inbjudan",
+    "on time": "i tid",
+    "before": "före",
+    "All-Day": "Heldag"
+  },
+  "presetFilters": {
+    "planned": "Planerat",
+    "held": "Stoppad",
+    "todays": "Idag"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Ingenting skickades",
+    "selectAcceptanceStatus": "Ställ in din acceptansstatus."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Namn",
+    "description": "Beskrivning",
+    "entryCount": "Deltagarantal",
+    "campaigns": "Kampanjer",
+    "endDate": "Slutdatum",
+    "targetLists": "Mållistor",
+    "includingActionList": "Inkluderar",
+    "excludingActionList": "Exkluderar",
+    "optedOutCount": "Opt-out antal",
+    "targetStatus": "Målstatus",
+    "isOptedOut": "Är opt-out"
+  },
+  "links": {
+    "accounts": "Konton",
+    "contacts": "Kontakter",
+    "campaigns": "Kampanjer",
+    "massEmails": "Massutskick"
+  },
+  "options": {
+    "type": {
+      "Email": "E-post",
+      "Web": "Webb",
+      "Newsletter": "Nyhetsbrev"
+    },
+    "targetStatus": {
+      "Opted Out": "Opt-out",
+      "Listed": "Listad"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Skapa mållista",
+    "Opted Out": "Valt bort",
+    "Cancel Opt-Out": "Avbryt opt-out",
+    "Opt-Out": "Opt-out"
+  }
+}

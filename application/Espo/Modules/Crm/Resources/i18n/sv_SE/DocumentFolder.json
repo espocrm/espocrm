@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Skapa dokumentmapp",
+    "Manage Categories": "Hantera mappar",
+    "Documents": "Dokument"
+  },
+  "links": {
+    "documents": "Dokument"
+  }
+}

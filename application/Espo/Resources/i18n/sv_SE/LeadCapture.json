@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "Namn",
+    "campaign": "Kampanj",
+    "isActive": "Är aktiv",
+    "subscribeToTargetList": "Prenumerera på målista",
+    "subscribeContactToTargetList": "Prenumerera på kontakter om de existerar",
+    "targetList": "Mållista",
+    "fieldList": "Nyttolastfält",
+    "optInConfirmation": "Dubbel opt-in",
+    "optInConfirmationEmailTemplate": "Opt-in e-postmall för bekräftelse",
+    "optInConfirmationLifetime": "Opt-in bekräftelse livslängd (timmar)",
+    "optInConfirmationSuccessMessage": "Text som ska visas efter bekräftelse av opt-in",
+    "leadSource": "Lead källa",
+    "apiKey": "API-nyckel",
+    "targetTeam": "Målteam",
+    "exampleRequestMethod": "Metod",
+    "exampleRequestPayload": "Nyttolast",
+    "createLeadBeforeOptInConfirmation": "Skapa lead innan bekräftelse",
+    "duplicateCheck": "Dublettkontroll",
+    "skipOptInConfirmationIfSubscribed": "Hoppa över bekräftelse om lead redan finns i mållistan",
+    "smtpAccount": "SMTP-konto",
+    "inboundEmail": "E-post guppkonto"
+  },
+  "links": {
+    "targetList": "Mållista",
+    "campaign": "Kampanj",
+    "optInConfirmationEmailTemplate": "Opt-in e-postmall för bekräftelse",
+    "targetTeam": "Målteam",
+    "logRecords": "Logg",
+    "inboundEmail": "E-post gruppkonto"
+  },
+  "labels": {
+    "Create LeadCapture": "Skapa startpunkt",
+    "Generate New API Key": "Generera en ny API-nyckel",
+    "Request": "Förfrågan",
+    "Confirm Opt-In": "Bekräfta opt-in"
+  },
+  "messages": {
+    "generateApiKey": "Skapa en ny API-nyckel",
+    "optInConfirmationExpired": "Länken för bekräftelse av opt-in har upphört.",
+    "optInIsConfirmed": "Opt-in har bekräftats."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown stöds"
+  }
+}

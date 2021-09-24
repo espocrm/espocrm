@@ -1,0 +1,98 @@
+{
+  "labels": {
+    "Revert Import": "Återställ import",
+    "Return to Import": "Återvänd till import",
+    "Run Import": "Kör import",
+    "Back": "Tillbaka",
+    "Field Mapping": "Fältmappning",
+    "Default Values": "Standardvärden",
+    "Add Field": "Lägg till fält",
+    "Created": "Skapad",
+    "Updated": "Uppdaterad",
+    "Result": "Resultat",
+    "Show records": "Visa poster",
+    "Remove Duplicates": "Ta bort dubletter",
+    "importedCount": "Importera (antal)",
+    "duplicateCount": "Duplicera (antal)",
+    "updatedCount": "Uppdaterad (antal)",
+    "Create Only": "Skapa endast",
+    "Create and Update": "Skapa & uppdatera",
+    "Update Only": "Uppdatera endast",
+    "Update by": "Uppdaterad av",
+    "Set as Not Duplicate": "Ställ in som Inte duplikat",
+    "File (CSV)": "Fil (CSV)",
+    "First Row Value": "Första radens värde",
+    "Skip": "Hoppa över",
+    "Header Row Value": "Huvudrad värde",
+    "Field": "Fält",
+    "What to Import?": "Vad ska importeras?",
+    "Entity Type": "Enhetstyp",
+    "What to do?": "Vad ska man göra?",
+    "Properties": "Egenskaper",
+    "Header Row": "Huvudrad",
+    "Person Name Format": "Format för personnamn",
+    "Field Delimiter": "Fältavskiljare",
+    "Date Format": "Datumformat",
+    "Decimal Mark": "Decimaltecken",
+    "Text Qualifier": "Text",
+    "Time Format": "Tidsformat",
+    "Currency": "Valuta",
+    "Preview": "Förhandsgranskning",
+    "Next": "Nästa",
+    "Step 1": "Steg 1",
+    "Step 2": "Steg 2",
+    "Double Quote": "Dubbla citat",
+    "Single Quote": "Enkelt citat",
+    "Imported": "Importerad",
+    "Duplicates": "Dubbletter",
+    "Skip searching for duplicates": "Hoppa över sökningar efter dupletter",
+    "Timezone": "Tidszon",
+    "Remove Import Log": "Ta bort importloggen",
+    "New Import": "Ny import",
+    "Import Results": "Importeringsresultat",
+    "Silent Mode": "Tyst läge",
+    "New import with same params": "Ny import med samma parametrar",
+    "Run Manually": "Kör manuellt"
+  },
+  "messages": {
+    "utf8": "Ska vara UTF-8 kodad",
+    "duplicatesRemoved": "Dubbletter raderade",
+    "inIdle": "Kör i viloläge (för större data; via cron)",
+    "revert": "Detta kommer att ta bort importerade poster permanent.",
+    "removeDuplicates": "Detta kommer att ta bort importerade poster som känns igen som dubletter",
+    "confirmRevert": "Detta kommer att ta bort importerade poster permanent. Är du säker?",
+    "confirmRemoveDuplicates": "Detta kommer att ta bort importerade poster som känns igen som dubletter. Är du säker?",
+    "removeImportLog": "Detta kommer att ta bort importloggen. Alla importerade poster kommer att sparas. Använd om du är säker på att importen är OK.",
+    "confirmRemoveImportLog": "Detta tar bort importloggen. Alla importerade register sparas. Du kommer inte att kunna återställa importresultaten. Är du säker?"
+  },
+  "fields": {
+    "file": "Fil",
+    "entityType": "Enhetstyp",
+    "imported": "Importerade poster",
+    "duplicates": "Dublettposter",
+    "updated": "Uppdaterade poster"
+  },
+  "options": {
+    "status": {
+      "Failed": "Fel",
+      "In Process": "Pågående",
+      "Complete": "Klar",
+      "Pending": "Väntande"
+    },
+    "personNameFormat": {
+      "f l": "Först sist",
+      "l f": "Sist först",
+      "f m l": "Först mellan sist",
+      "l f m": "Sist först mellan",
+      "l, f": "Sist, först"
+    }
+  },
+  "strings": {
+    "commandToRun": "Kommando att köra (från CLI)",
+    "saveAsDefault": "Spara som standard"
+  },
+  "tooltips": {
+    "manualMode": "Om markerad måste du köra importen manuellt från CLI. Kommandot visas efter att importen har konfigurerats.",
+    "silentMode": "En majoritet av sparade skript hoppas över, flödesanteckningar skapas inte. Importen körs snabbare."
+  }
+}

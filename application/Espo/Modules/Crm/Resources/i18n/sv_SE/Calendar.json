@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "Månad",
+    "week": "Vecka",
+    "agendaWeek": "Vecka",
+    "day": "Dag",
+    "agendaDay": "Dag",
+    "timeline": "Tidslinje"
+  },
+  "labels": {
+    "Today": "Idag",
+    "Create": "Skapa",
+    "Shared": "Delat",
+    "Add User": "Lägg till användare",
+    "current": "Nuvarande",
+    "time": "Tid",
+    "User List": "Användarlista",
+    "Manage Users": "Administrera användare",
+    "View Calendar": "Visa kalender",
+    "Create Shared View": "Skapa delad vy"
+  }
+}

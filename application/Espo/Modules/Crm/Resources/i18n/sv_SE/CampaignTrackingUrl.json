@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "urlToUse": "Kod som ska infogas istället för URL",
+    "campaign": "Kampanj",
+    "action": "Åtgärd",
+    "message": "Meddelande"
+  },
+  "links": {
+    "campaign": "Kampanj"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Skapa spårnings-URL"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Omdirigera",
+      "Show Message": "Visa meddelande"
+    }
+  },
+  "tooltips": {
+    "url": "Mottagaren kommer att omdirigeras till den här platsen när de följer länken.",
+    "message": "Meddelandet kommer att visas för mottagaren när de följer länken. Markdown stöds."
+  }
+}

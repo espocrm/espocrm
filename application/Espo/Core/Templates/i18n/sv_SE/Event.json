@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "parent": "Förälder",
+    "dateStart": "Startdatum",
+    "dateEnd": "Slutdatum",
+    "duration": "Varaktighet",
+    "reminders": "Påminnelser",
+    "dateStartDate": "Startdatum",
+    "dateEndDate": "Slutdatum",
+    "isAllDay": "Är heldag"
+  },
+  "links": {
+    "parent": "Förälder"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planerad",
+      "Held": "Stoppad",
+      "Not Held": "Inte stoppad"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Skapa {entityTypeTranslated}",
+    "Schedule {entityType}": "Schemalägg {entityTypeTranslated}",
+    "Log {entityType}": "Logga {entityTypeTranslated}",
+    "Set Held": "Stoppa",
+    "Set Not Held": "Stoppa inte"
+  },
+  "massActions": {
+    "setHeld": "Stoppa",
+    "setNotHeld": "Stoppa inte"
+  },
+  "presetFilters": {
+    "planned": "Planerad",
+    "held": "Stoppad",
+    "todays": "Idag"
+  }
+}

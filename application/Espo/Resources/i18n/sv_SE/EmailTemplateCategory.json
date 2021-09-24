@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Skapa kategori",
+    "Manage Categories": "Hantera kategorier",
+    "EmailTemplates": "E-postmallar"
+  },
+  "fields": {
+    "order": "Sortering",
+    "childList": "Barnlista"
+  },
+  "links": {
+    "emailTemplates": "E-postmallar"
+  }
+}

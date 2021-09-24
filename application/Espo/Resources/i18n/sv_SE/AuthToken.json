@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "user": "Användare",
+    "ipAddress": "IP-adress",
+    "lastAccess": "Senaste åtkomstdatum",
+    "createdAt": "Inloggningsdatum",
+    "isActive": "Är aktiv"
+  },
+  "links": {
+    "actionHistoryRecords": "Åtgärdshistorik"
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
+  },
+  "labels": {
+    "Set Inactive": "Gör inaktiv"
+  },
+  "massActions": {
+    "setInactive": "Gör inaktiv"
+  }
+}

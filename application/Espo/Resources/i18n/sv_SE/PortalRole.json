@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "Användare"
+  },
+  "labels": {
+    "Access": "Åtkomst",
+    "Create PortalRole": "Skapa portalroll",
+    "Scope Level": "Omfattningsnivå",
+    "Field Level": "Fältnivå"
+  },
+  "fields": {
+    "exportPermission": "Exportera behörigheter",
+    "massUpdatePermission": "Massuppdatera behörigheter"
+  },
+  "tooltips": {
+    "exportPermission": "Definierar om portalanvändare kan exportera poster.",
+    "massUpdatePermission": "Definierar om portalanvändare har möjlighet att göra massuppdatering av poster."
+  }
+}

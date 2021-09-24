@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Namn",
+    "account": "Konto",
+    "stage": "Fas",
+    "amount": "Antal",
+    "probability": "Trolighet, %",
+    "leadSource": "Lead källa",
+    "doNotCall": "Ring inte",
+    "closeDate": "Stoppdatum",
+    "contacts": "Kontakter",
+    "description": "Beskrivning",
+    "amountConverted": "Antal (konverterade)",
+    "amountWeightedConverted": "Antal (vägda genomsnittliga)",
+    "campaign": "Kampanj",
+    "originalLead": "Original lead",
+    "amountCurrency": "Beloppsvaluta",
+    "contactRole": "Kontaktroll",
+    "lastStage": "Sista stadiet",
+    "contact": "Kontakt (primär)"
+  },
+  "links": {
+    "contacts": "Kontakter",
+    "documents": "Dokument",
+    "campaign": "Kampanj",
+    "originalLead": "Original lead",
+    "contact": "Kontakt (primär)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Prospekt",
+      "Qualification": "Kompetens",
+      "Needs Analysis": "Behöver analyseras",
+      "Value Proposition": "Föreslaget värde",
+      "Id. Decision Makers": "Id. Beslutsfattare",
+      "Perception Analysis": "Mottaglighetsanalys",
+      "Proposal/Price Quote": "Förslag/prissättning",
+      "Negotiation/Review": "Förhandling/utvärdering",
+      "Closed Won": "Stängda vunna",
+      "Closed Lost": "Stängda förlorade",
+      "Proposal": "Förslag",
+      "Negotiation": "Förhandling"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Skapa möjlighet"
+  },
+  "presetFilters": {
+    "open": "Öppen",
+    "won": "Vunnen",
+    "lost": "Förlorad"
+  }
+}

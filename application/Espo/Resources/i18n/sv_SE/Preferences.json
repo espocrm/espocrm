@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "dateFormat": "Datumformat",
+    "timeFormat": "Tidsformat",
+    "timeZone": "Tidszon",
+    "weekStart": "Första veckodagen",
+    "thousandSeparator": "Tusen separator",
+    "decimalMark": "Decimaltecken",
+    "defaultCurrency": "Standardvaluta",
+    "currencyList": "Valutalista",
+    "language": "Språk",
+    "smtpAuth": "Autentisering",
+    "smtpSecurity": "Säkerhet",
+    "smtpUsername": "Användarnamn",
+    "emailAddress": "E-post",
+    "smtpPassword": "Lösenord",
+    "smtpEmailAddress": "E-postadress",
+    "exportDelimiter": "Exporteringsavskiljare",
+    "signature": "E-postsignatur",
+    "dashboardTabList": "Tabblista",
+    "tabList": "Tabblista",
+    "defaultReminders": "Standardpåminnelser",
+    "theme": "Tema",
+    "useCustomTabList": "Anpassad fliklista",
+    "receiveAssignmentEmailNotifications": "E-postaviseringar vid uppdrag",
+    "receiveMentionEmailNotifications": "E-postaviseringar om nämnd i inlägg",
+    "receiveStreamEmailNotifications": "E-postaviseringar om inlägg och statusuppdateringar",
+    "dashboardLayout": "Dashboard layout",
+    "emailReplyForceHtml": "E-postsvar i HTML",
+    "autoFollowEntityTypeList": "Global Auto-följ",
+    "emailReplyToAllByDefault": "Svara alla som standard",
+    "doNotFillAssignedUserIfNotRequired": "Fyll inte tilldelad användare i förväg när posten skapas.",
+    "followEntityOnStreamPost": "Följ automatiskt posten efter publicering i flöde",
+    "followCreatedEntities": "Följ automatiskt skapade poster",
+    "followCreatedEntityTypeList": "Följ automatiskt skapade poster med specifika enhetstyper",
+    "emailUseExternalClient": "Använd en extern e-postklient",
+    "scopeColorsDisabled": "Inaktivera omfångsfärger",
+    "tabColorsDisabled": "Inaktivera flikfärger",
+    "assignmentNotificationsIgnoreEntityTypeList": "I appen tilldelade aviseringar",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-post tilldelade aviseringar"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Söndag",
+      "1": "Måndag"
+    }
+  },
+  "labels": {
+    "Notifications": "Aviseringar",
+    "User Interface": "Användargränssnitt",
+    "Misc": "Övrigt",
+    "Locale": "Plats",
+    "Reset Dashboard to Default": "Återställ dashboard till standard"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Följ automatiskt ALLA nya poster (skapade av alla användare) av de valda enhetstyperna. För att kunna se information i flödet och ta emot aviseringar om alla poster i systemet.",
+    "doNotFillAssignedUserIfNotRequired": "När skapa post tilldelas användaren inte med egen användare om inte fältet krävs.",
+    "followCreatedEntities": "När du skapar nya poster följs de automatiskt även om de tilldelas en annan användare.",
+    "followCreatedEntityTypeList": "När du skapar nya poster för utvalda enhetstyper följs de automatiskt även om de tilldelas en annan användare."
+  }
+}

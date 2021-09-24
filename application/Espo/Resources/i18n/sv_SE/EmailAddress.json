@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "Primär",
+    "Opted Out": "Valt bort",
+    "Invalid": "Ogiltig"
+  },
+  "fields": {
+    "optOut": "Opt-out",
+    "invalid": "Ogiltig"
+  },
+  "presetFilters": {
+    "orphan": "Föräldralös"
+  }
+}

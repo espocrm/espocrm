@@ -1,0 +1,43 @@
+{
+  "fields": {
+    "action": "Åtgärd",
+    "actionDate": "Datum",
+    "campaign": "Kampanj",
+    "parent": "Mål",
+    "object": "Objekt",
+    "application": "Applikation",
+    "queueItem": "Köa objekt",
+    "stringData": "Strängdata",
+    "stringAdditionalData": "Ytterligare strängdata",
+    "isTest": "Är test"
+  },
+  "links": {
+    "queueItem": "Köa objekt",
+    "parent": "Förälder",
+    "object": "Objekt",
+    "campaign": "Kampanj"
+  },
+  "options": {
+    "action": {
+      "Sent": "Skickat",
+      "Opened": "Öppnad",
+      "Opted Out": "Bortvald",
+      "Bounced": "Studsat",
+      "Clicked": "Klickad",
+      "Lead Created": "Lead skapad",
+      "Opted In": "Opt-in"
+    }
+  },
+  "labels": {
+    "All": "Alla"
+  },
+  "presetFilters": {
+    "sent": "Skickat",
+    "opened": "Öppnad",
+    "optedOut": "Bortvald",
+    "bounced": "Studsat",
+    "clicked": "Klickad",
+    "leadCreated": "Lead skapad",
+    "optedIn": "Opt-in"
+  }
+}

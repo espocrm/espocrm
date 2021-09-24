@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Converted To": "Konverterad till",
+    "Create Lead": "Skapa lead",
+    "Convert": "Konvertera",
+    "convert": "Konvertera"
+  },
+  "fields": {
+    "name": "Namn",
+    "emailAddress": "E-post",
+    "title": "Titel",
+    "website": "Hemsida",
+    "phoneNumber": "Telefon",
+    "accountName": "Kontonamn",
+    "doNotCall": "Ring inte",
+    "address": "Adress",
+    "source": "Källa",
+    "opportunityAmount": "Antal möjligheter",
+    "opportunityAmountConverted": "Antal möjligheter (konverterade)",
+    "description": "Beskrivning",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Möjlighet",
+    "campaign": "Kampanj",
+    "targetLists": "Mållistor",
+    "targetList": "Mållista",
+    "industry": "Industri",
+    "acceptanceStatus": "Godkännandestatus",
+    "opportunityAmountCurrency": "Möjlighetsbeloppsvaluta",
+    "acceptanceStatusMeetings": "Godkännandestatus (möten)",
+    "acceptanceStatusCalls": "Godkännandestatus (samtal)",
+    "convertedAt": "Konverterad"
+  },
+  "links": {
+    "targetLists": "Mållistor",
+    "campaignLogRecords": "Kanpanjlogg",
+    "campaign": "Kampanj",
+    "createdAccount": "Konto",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Möjlighet",
+    "cases": "Ärenden",
+    "documents": "Dokument"
+  },
+  "options": {
+    "status": {
+      "New": "Ny",
+      "Assigned": "Tilldelad",
+      "In Process": "Pågående",
+      "Converted": "Konverterad",
+      "Recycled": "Återvunnen",
+      "Dead": "Död"
+    },
+    "source": {
+      "": "Inga",
+      "Call": "Samtal",
+      "Email": "E-post",
+      "Existing Customer": "Existerande kund",
+      "Public Relations": "Public relations",
+      "Web Site": "Hemsida",
+      "Campaign": "Kampanj",
+      "Other": "Annat"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "actual": "Aktuell",
+    "converted": "Konverterad"
+  }
+}

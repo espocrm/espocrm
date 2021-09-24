@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Skicka massutskick",
+      "ControlKnowledgeBaseArticleStatus": "Kontrollera kunskapsbas artikelstatus"
+    }
+  }
+}

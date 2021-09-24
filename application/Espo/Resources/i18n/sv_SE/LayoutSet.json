@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "Layouter"
+  },
+  "labels": {
+    "Create LayoutSet": "Skapa layoutuppsättning",
+    "Edit Layouts": "Redigera layouter"
+  }
+}

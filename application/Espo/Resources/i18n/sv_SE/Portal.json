@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Namn",
+    "logo": "Logotyp",
+    "companyLogo": "Logotyp",
+    "portalRoles": "Roller",
+    "isActive": "Är aktiv",
+    "isDefault": "Är standard",
+    "tabList": "Tabblista",
+    "quickCreateList": "Snabb skapa en lista",
+    "theme": "Tema",
+    "language": "Språk",
+    "dashboardLayout": "Dashboard layout",
+    "dateFormat": "Datumformat",
+    "timeFormat": "Tidsformat",
+    "timeZone": "Tidszon",
+    "weekStart": "Första veckodagen",
+    "defaultCurrency": "Standardvaluta",
+    "customUrl": "Anpassad URL",
+    "customId": "Anpassat-ID",
+    "layoutSet": "Layoutupsättning"
+  },
+  "links": {
+    "users": "Användare",
+    "portalRoles": "Roller",
+    "notes": "Noteringar",
+    "layoutSet": "Layoutupsättning"
+  },
+  "tooltips": {
+    "portalRoles": "Specificerade portalroller kommer att tillämpas på alla användare av denna portal.",
+    "layoutSet": "Ger möjligheten att ha layouter som skiljer sig från standard."
+  },
+  "labels": {
+    "Create Portal": "Skapa portal",
+    "User Interface": "Användargränssnitt",
+    "General": "Allmänt",
+    "Settings": "Inställningar"
+  }
+}

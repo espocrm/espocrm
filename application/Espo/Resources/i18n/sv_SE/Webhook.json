@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create Webhook": "Skapa webhook"
+  },
+  "fields": {
+    "event": "Händelse",
+    "isActive": "Är aktiv",
+    "user": "API-anvädare",
+    "entityType": "Enhetstyp",
+    "field": "Fält",
+    "secretKey": "Hemlig nyckel"
+  },
+  "links": {
+    "user": "Användare"
+  }
+}
