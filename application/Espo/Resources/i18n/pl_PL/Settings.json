@@ -74,7 +74,6 @@
     "historyEntityList": "Historia listy Jednostek",
     "currencyFormat": "Format waluty",
     "currencyDecimalPlaces": "Miejsca dziesiętne waluty",
-    "aclStrictMode": "Tryb ścisły ACL",
     "followCreatedEntities": "Obserwuj utworzone rekordy",
     "aclAllowDeleteCreated": "Zezwól na usuwanie utworzonych przez siebie rekordów",
     "adminNotifications": "Powiadomienia systemowe w panelu administracyjnym",
@@ -126,23 +125,6 @@
     "passwordRecoveryForInternalUsersDisabled": "Wyłącz odzyskiwanie hasła dla użytkowników wewnętrznych",
     "passwordRecoveryNoExposure": "Zapobiegaj ujawnianiu adresu e-mail w formularzu odzyskiwania hasła",
     "auth2FAForced": "Zmuszaj zwykłych użytkowników do konfigurowania 2FA"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Niedziela",
-      "1": "Poniedziałek"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Wpisy",
-      "Status": "Aktualizacje statusów",
-      "EmailReceived": "Otrzymane e-maile"
-    },
-    "personNameFormat": {
-      "firstLast": "Imię Nazwisko",
-      "lastFirst": "Nazwisko Imię",
-      "firstMiddleLast": "Imię Drugie imię Nazwisko",
-      "lastFirstMiddle": "Nazwisko Imię Drugie Imię"
-    }
   },
   "tooltips": {
     "recordsPerPage": "Ilość rekordów wyświetlanych w widoku listy.",
@@ -233,5 +215,18 @@
   },
   "messages": {
     "ldapTestConnection": "Połączenie zostało nawiązane poprawnie."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Wpisy",
+      "Status": "Aktualizacje statusów",
+      "EmailReceived": "Otrzymane e-maile"
+    },
+    "personNameFormat": {
+      "firstLast": "Imię Nazwisko",
+      "lastFirst": "Nazwisko Imię",
+      "firstMiddleLast": "Imię Drugie imię Nazwisko",
+      "lastFirstMiddle": "Nazwisko Imię Drugie Imię"
+    }
   }
 }

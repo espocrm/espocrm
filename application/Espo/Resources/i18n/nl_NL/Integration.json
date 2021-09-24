@@ -1,15 +1,17 @@
 {
   "fields": {
     "enabled": "Ingeschakeld",
+    "clientId": "Cliënt ID",
     "clientSecret": "Geheime Code",
     "redirectUri": "Omleiding URL",
     "apiKey": "API sleutel"
   },
   "messages": {
-    "selectIntegration": "Selecteer een integratie in het menu."
+    "selectIntegration": "Selecteer een integratie in het menu.",
+    "noIntegrations": "Geen integraties beschikbaar."
   },
   "help": {
-    "Google": "**Bevat OAuth 2.0 referenties van de Google Developers Console.**\n\nBezoek [Google Developers Console](https://console.developers.google.com/project) om OAuth 2.0 referenties te verkrijgen zoals een Client ID en Geheime Code die bekend zijn bij zowel Google als EspoCRM applicatie.",
+    "Google": "**Bevat OAuth 2.0 referenties van de Google Developers Console.**\n\nBezoek [Google Developers Console](https://console.developers.google.com/project) om OAuth 2.0 referenties te verkrijgen zoals een Cliënt ID en Geheime Code die bekend zijn bij zowel Google als EspoCRM applicatie.",
     "GoogleMaps": "Verkrijg de API-sleutel [hier](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

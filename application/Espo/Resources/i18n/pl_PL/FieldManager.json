@@ -130,7 +130,6 @@
     "phone": "Zbiór numerów telefonów wraz z ich parametrami: Typ, Zrezygnowano, Nieprawidłowy, Główny.",
     "foreign": "Pole pokrewnego rekordu. Tylko do odczytu.",
     "link": "Rekord związany z relacją należą-do (wiele-do-jednego lub jeden-do-jednego).",
-    "linkParent": "Rekord związany z relacją należy-do-rodzica. Mogą mieć różne typy jednostek.",
-    "linkMultiple": "Zestaw rekordów powiązanych przez relację posiada-wiele (wiele-do-wielu lub jeden-do-wielu). Nie wszystkie relacje mają swoje pola wielokrotnego-łącza. Tylko te, które mają parametr wielokrotnego-łącza włączony."
+    "linkParent": "Rekord związany z relacją należy-do-rodzica. Mogą mieć różne typy jednostek."
   }
 }

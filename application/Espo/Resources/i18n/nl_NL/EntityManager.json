@@ -23,12 +23,12 @@
     "audited": "Gecontroleerd",
     "auditedForeign": "Extern gecontroleerd",
     "statusField": "Statusveld",
-    "beforeSaveCustomScript": "Voordat u Custom Script opslaat",
+    "beforeSaveCustomScript": "Voordat u aangepast script opslaat",
     "color": "Kleur",
     "kanbanViewMode": "Kanban-weergave",
     "kanbanStatusIgnoreList": "Genegeerde groepen in Kanban-weergave",
     "iconClass": "Icoon",
-    "fullTextSearch": "Zoek volledige text",
+    "fullTextSearch": "Zoek volledige tekst",
     "countDisabled": "De recordtelling uitschakelen",
     "parentEntityTypeList": "Bovenliggende entiteit type",
     "foreignLinkEntityTypeList": "Externe links"
@@ -36,8 +36,11 @@
   "options": {
     "type": {
       "": "Geen",
+      "Base": "Basis",
       "Person": "Persoon",
+      "CategoryTree": "Categorie structuur",
       "Event": "Actie",
+      "BasePlus": "Basis plus",
       "Company": "Bedrijf"
     },
     "linkType": {
@@ -50,13 +53,14 @@
       "oneToOneLeft": "Eén op één links"
     },
     "sortDirection": {
+      "asc": "Oplopend",
       "desc": "Aflopend"
     }
   },
   "messages": {
     "entityCreated": "Entiteit is gecreëerd",
     "linkAlreadyExists": "Link naam conflict.",
-    "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al",
+    "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al.",
     "confirmRemove": "Weet u zeker dat u het entiteittype uit het systeem wilt verwijderen?"
   },
   "tooltips": {
@@ -66,7 +70,7 @@
     "disabled": "Controleer of u deze entiteit niet nodig hebt in uw systeem.",
     "linkAudited": "Het maken van gerelateerde records en het linken met bestaande records worden vastgelegd in Stream.",
     "linkMultipleField": "Link Multiple field biedt een handige manier om relaties te bewerken. Gebruik het niet als u een groot aantal gerelateerde records kunt hebben.",
-    "entityType": "Base Plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
+    "entityType": "Basis plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
     "fullTextSearch": "Reconstrueren is vereist.",
     "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is."
   }

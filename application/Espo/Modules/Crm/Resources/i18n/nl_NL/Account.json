@@ -32,7 +32,8 @@
   "options": {
     "type": {
       "Customer": "Klant",
-      "Investor": "Investeerder"
+      "Investor": "Investeerder",
+      "Reseller": "Wederverkoper"
     },
     "industry": {
       "Agriculture": "Landbouw",
@@ -43,7 +44,7 @@
       "Building Materials & Equipment": "Bouwmaterialen en -apparatuur",
       "Chemical": "Chemisch",
       "Education": "Onderwijs",
-      "Electronics": "Electronica",
+      "Electronics": "Elektronica",
       "Energy": "Energie",
       "Entertainment & Leisure": "Amusement & Vrije tijd",
       "Finance": "Financiën",

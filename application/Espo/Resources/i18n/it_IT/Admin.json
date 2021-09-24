@@ -67,7 +67,9 @@
     "is recommended": "E' raccomandato",
     "extension is missing": "Manca l'estensione",
     "PDF Templates": "Modelli PDF",
-    "Webhooks": "Webhooks\n"
+    "Webhooks": "Webhooks\n",
+    "Email Addresses": "Indirizzi Email",
+    "Phone Numbers": "Telefono"
   },
   "layouts": {
     "list": "Elenco",
@@ -162,7 +164,10 @@
     "displayRawText": "Visualizza testo non elaborato (nessun markdown)",
     "notActualOptions": "Opzioni non effettive",
     "accept": "Accettare",
-    "displayAsList": "Visualizza come elenco"
+    "displayAsList": "Visualizza come elenco",
+    "viewMap": "Vedi Pulsante Mappa",
+    "codeType": "Tipo Codice",
+    "lastChar": "Ultimo Carattere"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -175,14 +180,14 @@
     "thousandSeparatorEqualsDecimalMark": "Il separatore delle migliaia non può essere uguale al separatore decimale.",
     "userHasNoEmailAddress": "L'utente non ha un indirizzo email.",
     "uninstallConfirmation": "Sei sicuro di voler disinstallare l'estensione?",
-    "cronIsNotConfigured": "I lavori pianificati non sono in esecuzione. Pertanto, le e-mail in entrata, le notifiche e i promemoria non funzionano. Seguire le [istruzioni] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) per impostare il cron job.",
+    "cronIsNotConfigured": "I lavori pianificati non sono in esecuzione. Pertanto, le e-mail in entrata, le notifiche e i promemoria non funzionano. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) per impostare il cron job.",
     "newExtensionVersionIsAvailable": "Nuova {extensionName} versione {latestVersion} è disponibile.\n",
     "upgradeVersion": "EspoCRM verrà aggiornato alla versione ** {versione} **. Si prega di pazientare poiché ciò potrebbe richiedere del tempo.",
     "upgradeDone": "EspoCRM è stato aggiornato alla versione ** {versione} **.",
-    "downloadUpgradePackage": "Scarica i pacchetti di aggiornamento [qui] ({url}).",
-    "upgradeInfo": "Controlla la [documentazione] ({url}) su come aggiornare l'istanza di EspoCRM.",
+    "downloadUpgradePackage": "Scarica i pacchetti di aggiornamento [qui]({url}).",
+    "upgradeInfo": "Controlla la [documentazione]({url}) su come aggiornare l'istanza di EspoCRM.",
     "upgradeRecommendation": "Questo modo di aggiornamento non è raccomandato. È meglio eseguire l'aggiornamento dalla CLI.",
-    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni] (https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza."
+    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza."
   },
   "descriptions": {
     "settings": "Impostazioni di sistema dell'applicazione.",
@@ -219,11 +224,12 @@
     "attachments": "Tutti gli allegati di file memorizzati nel sistema.",
     "templateManager": "Personalizza i modelli di messaggi.\n",
     "systemRequirements": "Requisiti di sistema per EspoCRM.\n",
-    "apiUsers": "Separare gli utenti a scopo di integrazione.\n\n",
+    "apiUsers": "Utenti separati per integrazione.\n\n",
     "jobs": "I lavori eseguono attività in background.",
     "pdfTemplates": "Modelli per la stampa in PDF.",
     "webhooks": "Gestisci i webhook.",
-    "dashboardTemplates": "Distribuire dashboard agli utenti."
+    "dashboardTemplates": "Distribuire dashboard agli utenti.",
+    "phoneNumbers": "Tutti i numeri telefonici sono archiviati nel sistema."
   },
   "logicalOperators": {
     "and": "And"
@@ -243,10 +249,10 @@
     "accessInfoPortal": "Accedi alle informazioni per i portali",
     "assignment": "Assegnato",
     "mention": "Citare\n",
-    "noteEmailReceived": "Nota sull'e-mail ricevuta",
     "notePost": "Nota su post",
     "notePostNoParent": "Nota su post (nessun genitore)",
     "noteStatus": "Nota sull'aggiornamento dello stato",
-    "passwordChangeLink": "Collegamento per la modifica della password"
+    "passwordChangeLink": "Collegamento per la modifica della password",
+    "noteEmailReceived": "Nota sull'e-mail ricevuta"
   }
 }

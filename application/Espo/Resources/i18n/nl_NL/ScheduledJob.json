@@ -5,7 +5,7 @@
   },
   "labels": {
     "Create ScheduledJob": "Creëer geplande opdracht",
-    "As often as possible": "Biedt de mogelijkheid om lay-outs te hebben die afwijken van de standaard lay-outs."
+    "As often as possible": "Zo vaak als mogelijk"
   },
   "options": {
     "job": {
@@ -13,7 +13,7 @@
       "CheckInboundEmails": "Controleer groep e-mailaccounts",
       "CheckEmailAccounts": "Controleer persoonlijke e-mail accounts",
       "SendEmailReminders": "Stuur herinnering e-mails",
-      "AuthTokenControl": "Auth token control",
+      "AuthTokenControl": "Auth sleutel control",
       "SendEmailNotifications": "Verzend e-mailmeldingen",
       "CheckNewVersion": "Controleer op nieuwe versie",
       "ProcessWebhookQueue": "Wachtrij proces Webhook"

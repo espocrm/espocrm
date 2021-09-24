@@ -8,7 +8,7 @@
     "port": "Poort",
     "monitoredFolders": "Gecontroleerde mappen",
     "trashFolder": "Prullenbak map",
-    "createCase": "Creëer ticket",
+    "createCase": "Creëer Ticket",
     "reply": "Automatisch beantwoorden",
     "caseDistribution": "Ticket verdeling",
     "replyEmailTemplate": "Antwoord e-mail sjabloon",
@@ -69,7 +69,7 @@
     }
   },
   "labels": {
-    "Create InboundEmail": "Creëer E-mail account",
+    "Create InboundEmail": "Creëer E-mail Account",
     "Actions": "Acties",
     "Main": "Hoofd"
   },

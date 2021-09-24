@@ -2,7 +2,7 @@
   "fields": {
     "name": "Naam",
     "roles": "Functies",
-    "assignmentPermission": "Toewijzings rechten",
+    "assignmentPermission": "Toewijzing rechten",
     "userPermission": "Gebruikers rechten",
     "portalPermission": "Portaal rechten",
     "groupEmailAccountPermission": "Groep e-mailaccount rechten",
@@ -38,7 +38,7 @@
     "levelList": {
       "all": "alle",
       "team": "groep",
-      "account": "Relatie",
+      "account": "relatie",
       "own": "eigen",
       "no": "nee",
       "yes": "ja",

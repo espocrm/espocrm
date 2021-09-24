@@ -67,7 +67,7 @@
     "Activities": "Mijn activiteiten"
   },
   "labels": {
-    "Create InboundEmail": "Creëer inkomende E-mail",
+    "Create InboundEmail": "Creëer Inkomende E-mail",
     "Activities": "Activiteiten",
     "History": "Historie",
     "Attendees": "Genodigden",
@@ -103,6 +103,7 @@
   },
   "options": {
     "reminderTypes": {
+      "Popup": "Pop-up",
       "Email": "E-mail"
     }
   }

@@ -7,7 +7,7 @@
     "application": "Applicatie",
     "queueItem": "Wachtrij item",
     "stringData": "Stringgegevens",
-    "stringAdditionalData": "String extra gegevens"
+    "stringAdditionalData": "Extra stringgegevens"
   },
   "links": {
     "queueItem": "Wachtrij item",

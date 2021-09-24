@@ -30,7 +30,8 @@
     "kanbanStatusIgnoreList": "Gruppi ignorati in vista Kanban",
     "iconClass": "Icona",
     "fullTextSearch": "Ricerca tutto il testo",
-    "countDisabled": "Disabilita il conteggio dei record"
+    "countDisabled": "Disabilita il conteggio dei record",
+    "parentEntityTypeList": "Tipo genitore entità"
   },
   "options": {
     "type": {
@@ -45,7 +46,9 @@
       "oneToMany": "Uno-a-Molti",
       "manyToOne": "Molti-a-uno",
       "parentToChildren": "Padre-a-Figlio",
-      "childrenToParent": "Figlio-a-Padre"
+      "childrenToParent": "Figlio-a-Padre",
+      "oneToOneRight": "Uno-a-uno destra",
+      "oneToOneLeft": "Uno-a-uno sinistra"
     },
     "sortDirection": {
       "asc": "Ascendente",

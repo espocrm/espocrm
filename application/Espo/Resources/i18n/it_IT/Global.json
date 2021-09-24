@@ -44,7 +44,8 @@
     "LeadCaptureLogRecord": "Record del registro di acquisizione lead",
     "ArrayValue": "Valore di matrice",
     "ApiUser": "Utente API",
-    "DashboardTemplate": "Modello di dashboard"
+    "DashboardTemplate": "Modello di dashboard",
+    "Currency": "Divisa"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -80,7 +81,10 @@
     "LeadCaptureLogRecord": "Registro acquisizione lead",
     "ArrayValue": "Valori di matrice",
     "ApiUser": "Utenti API",
-    "DashboardTemplate": "Modelli di dashboard"
+    "DashboardTemplate": "Modelli di dashboard",
+    "EmailAddress": "Indirizzo Email",
+    "PhoneNumber": "Telefono",
+    "Currency": "Divisa"
   },
   "labels": {
     "Misc": "Varie",
@@ -221,7 +225,8 @@
     "Move Over": "Spostarsi",
     "Restore": "Ristabilire",
     "View Followers": "Visualizza follower",
-    "Convert Currency": "Converti valuta"
+    "Convert Currency": "Converti valuta",
+    "View on Map": "Vedi su Mappa"
   },
   "messages": {
     "pleaseWait": "Attendere...",

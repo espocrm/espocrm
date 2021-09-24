@@ -1,9 +1,9 @@
 {
   "fields": {
-    "layoutList": "Lay-outs\n"
+    "layoutList": "Lay-outs"
   },
   "labels": {
-    "Create LayoutSet": "Creëer lay-out set",
+    "Create LayoutSet": "Creëer Lay-out set",
     "Edit Layouts": "Bewerk lay-out"
   }
 }

@@ -12,11 +12,11 @@
     "keepFetchedEmailsUnread": "Laat opgehaalde E-mails als ongelezen staan",
     "emailFolder": "Zet in map",
     "useSmtp": "Gebruik SMTP",
-    "smtpHost": "SMTP-host",
-    "smtpPort": "SMTP-poort",
-    "smtpSecurity": "SMTP-beveiliging",
-    "smtpUsername": "SMTP-gebruikersnaam",
-    "smtpPassword": "SMTP-wachtwoord",
+    "smtpHost": "SMTP host",
+    "smtpPort": "SMTP poort",
+    "smtpSecurity": "SMTP beveiliging",
+    "smtpUsername": "SMTP gebruikersnaam",
+    "smtpPassword": "SMTP wachtwoord",
     "useImap": "Ophalen van e-mails",
     "smtpAuthMechanism": "SMTP Auth Mechanisme",
     "security": "Beveiliging"
@@ -45,7 +45,7 @@
     "emails": "E-mails"
   },
   "tooltips": {
-    "monitoredFolders": "Meerdere mappen moeten gescheiden worden door een komma.\n\nU kunt een 'Verzonden' map toevoegen om e-mails te synchroniseren die zijn verzonden vanuit een externe e-mail client.",
+    "monitoredFolders": "Meerdere mappen moeten gescheiden worden door een komma.\n\nU kunt een 'Verzonden' map toevoegen om e-mails te synchroniseren die zijn verzonden vanuit een externe e-mail cliënt.",
     "storeSentEmails": "Verzonden E-mails worden opgeslagen op de IMAP server. E-mailadres veld moet overeenkomen met het E-mailadres waarvan verzonden wordt.",
     "useSmtp": "De mogelijkheid om e-mails te verzenden.",
     "emailAddress": "Het gebruikersrecord (toegewezen gebruiker) moet hetzelfde e-mailadres hebben om dit e-mailaccount te kunnen gebruiken voor verzending."

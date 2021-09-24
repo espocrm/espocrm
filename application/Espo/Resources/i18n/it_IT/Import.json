@@ -71,6 +71,11 @@
       "Failed": "Fallito",
       "In Process": "In corso",
       "Complete": "Completo"
+    },
+    "personNameFormat": {
+      "f l": "Nome",
+      "l f": "Cognome",
+      "l, f": "Cognome, Nome"
     }
   }
 }

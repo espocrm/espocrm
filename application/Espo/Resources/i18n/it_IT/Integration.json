@@ -9,7 +9,7 @@
     "noIntegrations": "Nessuna integrazioni è disponibile ."
   },
   "help": {
-    "Google": "** Ottieni le credenziali di OAuth 2.0 dalla Google Developers Console. **\n\nVisita [Google Developers Console] (https://console.developers.google.com/project) per ottenere credenziali OAuth 2.0 come un ID cliente e un Client Secret  noti sia a Google che a EspoCRM.",
-    "GoogleMaps": "Ottieni chiave API [qui] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "Google": "** Ottieni le credenziali di OAuth 2.0 dalla Google Developers Console. **\n\nVisita [Google Developers Console](https://console.developers.google.com/project) per ottenere credenziali OAuth 2.0 come un ID cliente e un Client Secret  noti sia a Google che a EspoCRM.",
+    "GoogleMaps": "Ottieni chiave API [qui](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

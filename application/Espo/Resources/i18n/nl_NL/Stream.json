@@ -4,10 +4,10 @@
     "infoSyntax": "Beschikbare markering syntaxis"
   },
   "syntaxItems": {
-    "multilineCode": "multi-Line code",
-    "strongText": "vette text",
+    "multilineCode": "meerregelige code",
+    "strongText": "vette tekst",
     "emphasizedText": "benadrukte tekst",
-    "deletedText": "verwijderde text",
+    "deletedText": "verwijderde tekst",
     "blockquote": "blokquote"
   }
 }

@@ -17,11 +17,7 @@
   "presetFilters": {
     "actual": "Attuale"
   },
-  "messages": {
-    "infoText": "Segna posti disponibili:\n\n{optOutUrl} &#8211; URL per link di cancellazione;\n\n{optOutLink} &#8211; un link di cancellazione."
-  },
   "placeholderTexts": {
-    "optOutUrl": "URL per un link di cancellazione dell'iscrizione",
     "optOutLink": "Un link di cancellazione dell'iscrizione",
     "today": "Data odierna",
     "now": "Data e ora attuali\n\n",

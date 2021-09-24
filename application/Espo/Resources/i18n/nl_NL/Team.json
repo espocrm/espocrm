@@ -2,7 +2,7 @@
   "fields": {
     "name": "Naam",
     "roles": "Functies",
-    "positionList": "Overzichtlijst",
+    "positionList": "Overzichtslijst",
     "layoutSet": "Lay-out set"
   },
   "links": {
@@ -15,7 +15,7 @@
   "tooltips": {
     "roles": "Alle gebruikers van deze groep krijgen de rechten uit de geselecteerde rollen.",
     "positionList": "Beschikbare functies in deze groep. Zoals Verkoop, Manager ed.",
-    "layoutSet": "Biedt de mogelijkheid om lay-outs te hebben die verschillen van de standaard lay-outs. Lay-out set zal worden toegepast op gebruikers die dit groep als standaard groep hebben ingesteld.\n"
+    "layoutSet": "Biedt de mogelijkheid om lay-outs te hebben die verschillen van de standaard lay-outs. Lay-out set zal worden toegepast op gebruikers die deze groep als standaard groep hebben ingesteld."
   },
   "labels": {
     "Create Team": "Creëer Groep"

@@ -9,7 +9,7 @@
     "emailFolder": "Map"
   },
   "labels": {
-    "Create EmailFilter": "Creëer e-mail filter",
+    "Create EmailFilter": "Creëer E-mail Filter",
     "Emails": "E-mails"
   },
   "tooltips": {
@@ -18,7 +18,7 @@
     "name": "Geef het filter een beschrijvende naam.",
     "bodyContains": "De inhoud van de e-mail bevat een van de opgegeven woorden of zinnen.",
     "isGlobal": "Past dit filter toe op alle e-mails die binnenkomen op het systeem.",
-    "subject": "Gebruik een wildcard *: \n\n * `text*` - begint met tekst,\n * `*text*` - bevat tekst,\n * `*text` - eindigt met tekst."
+    "subject": "Gebruik een wildcard *: \n\n * `tekst*` - begint met tekst,\n * `*tekst*` - bevat tekst,\n * `*tekst` - eindigt met tekst."
   },
   "options": {
     "action": {

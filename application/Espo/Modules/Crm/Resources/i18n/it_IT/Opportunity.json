@@ -14,13 +14,15 @@
     "originalLead": "Lead originale",
     "amountCurrency": "Valuta dell'importo",
     "contactRole": "Ruolo contatto",
-    "lastStage": "Ultimo Stadio"
+    "lastStage": "Ultimo Stadio",
+    "contact": "Contatto (Primario)"
   },
   "links": {
     "contacts": "Contatti",
     "documents": "Documenti",
     "campaign": "Campagna",
-    "originalLead": "Lead originale"
+    "originalLead": "Lead originale",
+    "contact": "Contatto (Primario)"
   },
   "options": {
     "stage": {

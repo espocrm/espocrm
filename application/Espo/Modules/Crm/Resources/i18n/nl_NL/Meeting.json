@@ -8,7 +8,7 @@
     "description": "Beschrijving",
     "users": "Gebruikers",
     "contacts": "Contacten",
-    "reminders": "Herineringen",
+    "reminders": "Herinneringen",
     "account": "Relatie",
     "acceptanceStatus": "Acceptatiestatus",
     "dateStartDate": "Startdatum (de hele dag)",
@@ -34,7 +34,7 @@
     "setNotHeld": "Niet gedaan"
   },
   "labels": {
-    "Create Meeting": "Creëer vergadering",
+    "Create Meeting": "Creëer Vergadering",
     "Set Held": "Gedaan",
     "Set Not Held": "Niet gedaan",
     "Send Invitations": "Uitnodiging versturen",

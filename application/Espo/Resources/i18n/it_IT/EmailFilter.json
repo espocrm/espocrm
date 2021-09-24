@@ -15,7 +15,6 @@
     "from": "Messaggi di posta elettronica inviati dall'indirizzo specificato. Lascia vuoto se non necessario. È possibile utilizzare caratteri jolly *.",
     "to": "Messaggi di posta elettronica inviati all'indirizzo specificato . Lascia vuoto se non necessario . È possibile utilizzare caratteri jolly *.",
     "name": "Dai al filtro un nome descrittivo.",
-    "subject": "Utilizzo del carattere jolly *:\n\ntesto* - inizia con il testo,\n*testo* - contiene il testo,\n*testo - termina con il testo.",
     "bodyContains": "Il corpo del messaggio contiene una delle parole, o frasi, specificate",
     "isGlobal": "Applica questo filtro a tutte le email in arrivo al sistema."
   },

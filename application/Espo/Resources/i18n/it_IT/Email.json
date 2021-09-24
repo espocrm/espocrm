@@ -99,13 +99,16 @@
     "Move to Folder": "Sposta nella Cartella",
     "Filters": "Filtri",
     "Folders": "Cartelle",
-    "View Users": "Visualizza utenti"
+    "View Users": "Visualizza utenti",
+    "No Subject": "Nessun Oggetto"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",
     "emailSent": "L'email è stata inviata",
     "savedAsDraft": "Salvato come bozza.",
-    "confirmInsertTemplate": "Il corpo dell'email andrà perso. Sei sicuro di voler inserire il modello?"
+    "confirmInsertTemplate": "Il corpo dell'email andrà perso. Sei sicuro di voler inserire il modello?",
+    "noSmtpSetup": "SMTP non configurato: {link}",
+    "sendConfirm": "Invia email?"
   },
   "presetFilters": {
     "sent": "Inviato",

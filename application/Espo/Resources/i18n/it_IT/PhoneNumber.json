@@ -1,1 +1,9 @@
-{}
+{
+  "fields": {
+    "type": "Tipo",
+    "invalid": "Invalido"
+  },
+  "presetFilters": {
+    "orphan": "Orfano"
+  }
+}

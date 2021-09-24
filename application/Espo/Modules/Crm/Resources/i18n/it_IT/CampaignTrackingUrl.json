@@ -1,12 +1,19 @@
 {
   "fields": {
     "urlToUse": "Codice da inserire al posto dell' URL",
-    "campaign": "Campagna"
+    "campaign": "Campagna",
+    "action": "Azione",
+    "message": "Messaggio"
   },
   "links": {
     "campaign": "Campagna"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Creazione URL di monitoraggio"
+  },
+  "options": {
+    "action": {
+      "Show Message": "Vedi messaggio"
+    }
   }
 }

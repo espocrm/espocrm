@@ -77,7 +77,6 @@
     "historyEntityList": "Elenco storico delle entità",
     "currencyFormat": "Formato valuta",
     "currencyDecimalPlaces": "Numero di cifre decimali",
-    "aclStrictMode": "ACL modalità strict",
     "followCreatedEntities": "Segui i record creati",
     "aclAllowDeleteCreated": "Consenti di rimuovere i record creati\n",
     "adminNotifications": "Notifiche di sistema nel pannello di amministrazione",
@@ -119,22 +118,9 @@
     "passwordStrengthNumberCount": "Numero di cifre richieste nella password",
     "passwordStrengthBothCases": "La password deve contenere lettere maiuscole e minuscole",
     "auth2FA": "Abilita autenticazione a 2 fattori",
-    "auth2FAMethodList": "Metodi 2FA disponibili\n"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Domenica",
-      "1": "Lunedi"
-    },
-    "currencyFormat": {
-      "1": "10 EUR",
-      "2": "€ 10"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Articoli",
-      "Status": "Aggiornamenti di stato",
-      "EmailReceived": "E-mail ricevute"
-    }
+    "auth2FAMethodList": "Metodi 2FA disponibili\n",
+    "personNameFormat": "Formato nome persona",
+    "massEmailVerp": "Usa VERP"
   },
   "tooltips": {
     "recordsPerPage": "Numero di records inizialmente mostrati in vista elenco .",
@@ -204,5 +190,20 @@
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"
+  },
+  "options": {
+    "currencyFormat": {
+      "1": "10 EUR",
+      "2": "€ 10"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "Articoli",
+      "Status": "Aggiornamenti di stato",
+      "EmailReceived": "E-mail ricevute"
+    },
+    "personNameFormat": {
+      "firstLast": "Nome",
+      "lastFirst": "Cognome"
+    }
   }
 }

@@ -97,23 +97,6 @@
     "permissionInstruction": "<br> Uruchom to polecenie w Terminalu: <pre> <b> „{C}” </b> </pre>",
     "operationNotPermitted": "Operacja nie jest dozwolona? Spróbuj tego: <br> <br> {CSU}\n"
   },
-  "options": {
-    "modRewriteTitle": {
-      "apache": "Błąd API: API EspoCRM jest niedostępne.<br> Możliwe problemy: wyłączona \"mod_rewrite\" na serwerze Apache, wyłączona obsługa .htaccess lub problem z RewriteBase.<br> Wykonaj tylko niezbędne kroki. Po każdym kroku sprawdź, czy problem został rozwiązany.",
-      "nginx": "Błąd API: API EspoCRM jest niedostępne. <br> Dodaj ten kod do pliku konfiguracyjnego bloku serwera Nginx (/etc/nginx/sites-available/TWOJA_STRONA) w sekcji \"server\":",
-      "microsoft-iis": "Błąd API: API EspoCRM jest niedostępne.<br>Możliwy problem: wyłączone \"URL Rewrite\". Sprawdź i włącz moduł \"URL Rewrite\" na serwerze IIS",
-      "default": "Błąd API: API EspoCRM jest niedostępne.<br> Możliwy problem: wyłączony Rewrite Module. Sprawdź i włącz Rewrite Module na swoim serwerze (np. mod_rewrite w Apache) i obsługę .htaccess."
-    },
-    "modRewriteInstruction": {
-      "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Więcej informacji można znaleźć w dokumentacji <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Konfiguracja serwera Nginx dla EspoCRM</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Więcej informacji można znaleźć w dokumentacji <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Konfiguracja serwera Nginx dla EspoCRM</a>.<br><br>"
-      },
-      "apache": {
-        "linux": "<br><br>1. Włącz \"mod_rewrite\". Aby to zrobić, uruchom te polecenia w terminalu:<pre>{APACHE1}</pre><br>2. Jeśli poprzedni krok nie pomógł, spróbuj włączyć obsługę .htaccess. Dodaj / edytuj ustawienia konfiguracji serwera (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre> {APACHE2}</pre>\n  Następnie uruchom to polecenie w terminalu:<pre>{APACHE3}</pre><br>3. Jeśli poprzedni krok nie pomógł, spróbuj dodać ścieżkę RewriteBase. Otwórz plik {API_PATH}.htaccess i zamień następujący wiersz:<pre>{APACHE4}</pre>Na<pre>{APACHE5}</pre><br> Aby uzyskać więcej informacji, zapoznaj się z dokumentacją <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> Konfiguracja serwera Apache dla EspoCRM</a>.<br><br>"
-      }
-    }
-  },
   "systemRequirements": {
     "requiredPhpVersion": "Wersja PHP",
     "requiredMysqlVersion": "Wersja MySQL",

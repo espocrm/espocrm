@@ -15,7 +15,8 @@
     "pageOrientation": "Orientamento pagina",
     "pageFormat": "Formato carta",
     "pageWidth": "Larghezza pagina",
-    "pageHeight": "Altezza della pagina"
+    "pageHeight": "Altezza della pagina",
+    "headerPosition": "Posizione Intestazione"
   },
   "labels": {
     "Create Template": "Crea Modello"
@@ -31,7 +32,8 @@
     },
     "placeholders": {
       "today": "Oggi (Data)",
-      "now": "Ora (data-ora)"
+      "now": "Ora (data-ora)",
+      "pagebreak": "Interruzione pagina"
     },
     "fontFace": {
       "aealarabiya": "Al Arabiya",

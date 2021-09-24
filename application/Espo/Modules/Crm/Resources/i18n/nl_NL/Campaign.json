@@ -49,14 +49,15 @@
     }
   },
   "labels": {
-    "Create Campaign": "Creëer campagne",
+    "Create Campaign": "Creëer Campagne",
     "Target Lists": "Doellijsten",
+    "Statistics": "Statistieken",
     "Unsubscribe": "Uitschrijven",
     "Mass Emails": "Verzamel e-mails",
     "Email Templates": "E-mail sjablonen",
     "Unsubscribe again": "Weer uitschrijven",
     "Subscribe again": "Abonneer opnieuw",
-    "Create Target List": "Creëer doellijst",
+    "Create Target List": "Creëer Doellijst",
     "Mail Merge": "Mailmerge",
     "Generate Mail Merge PDF": "Genereer Mail Merge PDF"
   },

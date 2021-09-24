@@ -3,7 +3,7 @@
     "name": "Naam",
     "version": "Versie",
     "description": "Beschrijving",
-    "isInstalled": "Geinstalleerd",
+    "isInstalled": "Geïnstalleerd",
     "checkVersionUrl": "Een URL voor het controleren van nieuwe versies"
   },
   "labels": {
@@ -11,6 +11,6 @@
     "Install": "Installeren"
   },
   "messages": {
-    "uninstalled": "Extensie {name} is gedeinstalleerd"
+    "uninstalled": "Extensie {name} is gedeïnstalleerd"
   }
 }

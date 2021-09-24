@@ -15,8 +15,7 @@
     "acceptanceStatus": "Stato accettazione",
     "accountIsInactive": "Account inattivo",
     "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
-    "acceptanceStatusCalls": "Stato accettazione (chiamate)",
-    "title": "Titolo del conto principale"
+    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
   },
   "links": {
     "opportunities": "Opportunita'",
@@ -30,7 +29,8 @@
     "portalUser": "Portale utente",
     "originalLead": "Lead originale",
     "documents": "Documenti",
-    "tasksPrimary": "Attività (espanso)"
+    "tasksPrimary": "Attività (espanso)",
+    "opportunitiesPrimary": "Opportunità (Primaria)"
   },
   "labels": {
     "Create Contact": "Crea Contatto"

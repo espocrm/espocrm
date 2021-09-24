@@ -5,14 +5,16 @@
     "createdAt": "Datum",
     "target": "Doel",
     "targetType": "Doel type",
-    "authToken": "Auth Sleutel",
+    "authToken": "Auth sleutel",
     "ipAddress": "IP adres",
+    "authLogRecord": "Auth log record",
     "userType": "Type gebruiker"
   },
   "links": {
-    "authToken": "Auth Sleutel",
+    "authToken": "Auth sleutel",
     "user": "Gebruiker",
-    "target": "Doel"
+    "target": "Doel",
+    "authLogRecord": "Auth log record"
   },
   "presetFilters": {
     "onlyMy": "Alleen mijn"
