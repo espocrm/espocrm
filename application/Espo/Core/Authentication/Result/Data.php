@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace Espo\Core\Authentication\Result;
 
 use Espo\Entities\User;
 
 use stdClass;
 
-class ResultData
+class Data
 {
     private $message = null;
 
@@ -75,17 +75,6 @@ class ResultData
     {
         return new self($message);
     }
-
-    /*public static function fromArray(array $data): self
-    {
-        return new self(
-            $data['message'] ?? null,
-            $data['failReason'] ?? null,
-            $data['token'] ?? null,
-            $data['view'] ?? null,
-            $data['loggedUser'] ?? null
-        );
-    }*/
 
     public function getLoggedUser(): ?User
     {

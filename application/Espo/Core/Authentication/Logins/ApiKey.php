@@ -35,7 +35,7 @@ use Espo\Core\{
     Authentication\Login\Data,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
-    Authentication\FailReason,
+    Authentication\Result\FailReason,
 };
 
 class ApiKey implements Login

@@ -37,7 +37,7 @@ use Espo\Core\{
     Authentication\Result,
     Authentication\Helpers\UserFinder,
     Exceptions\Error,
-    Authentication\FailReason,
+    Authentication\Result\FailReason,
 };
 
 class Hmac implements Login

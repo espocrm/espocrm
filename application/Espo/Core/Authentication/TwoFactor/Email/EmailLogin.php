@@ -38,8 +38,8 @@ use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Core\Authentication\TwoFactor\Login;
 use Espo\Core\Authentication\Result;
-use Espo\Core\Authentication\ResultData;
-use Espo\Core\Authentication\FailReason;
+use Espo\Core\Authentication\Result\Data as ResultData;
+use Espo\Core\Authentication\Result\FailReason;
 
 use Espo\Core\Api\Request;
 
@@ -62,7 +62,7 @@ class EmailLogin implements Login
         if (!$code) {
             $this->util->sendCode($result->getLoggedUser());
 
-            return Result::secondStepRequired($result->getUser(), $this->getLoginData());
+            return Result::secondStepRequired($result->getUser(), $this->getResultData());
         }
 
         $loggedUser = $result->getLoggedUser();
@@ -74,7 +74,7 @@ class EmailLogin implements Login
         return Result::fail(FailReason::CODE_NOT_VERIFIED);
     }
 
-    private function getLoginData(): ResultData
+    private function getResultData(): ResultData
     {
         return ResultData::createWithMessage('enterCodeSentInEmail');
     }

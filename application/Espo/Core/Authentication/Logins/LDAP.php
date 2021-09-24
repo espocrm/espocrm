@@ -42,7 +42,7 @@ use Espo\Core\{
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
     Authentication\AuthToken\AuthToken,
-    Authentication\FailReason,
+    Authentication\Result\FailReason,
 };
 
 use Exception;

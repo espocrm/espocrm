@@ -44,6 +44,7 @@ use Espo\Entities\{
 
 use Espo\Core\Authentication\{
     Result,
+    Result\FailReason,
     LoginFactory,
     TwoFactor\LoginFactory as TwoFactorLoginFactory,
     AuthToken\AuthTokenManager,

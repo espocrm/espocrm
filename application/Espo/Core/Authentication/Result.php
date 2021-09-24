@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Core\Authentication\Result\Data;
+
 use Espo\Entities\User;
 
 use stdClass;
@@ -60,7 +62,7 @@ class Result
 
     private $data = null;
 
-    private function __construct(string $status, ?User $user = null, ?ResultData $data = null)
+    private function __construct(string $status, ?User $user = null, ?Data $data = null)
     {
         $this->user = $user;
         $this->status = $status;
@@ -90,8 +92,8 @@ class Result
     public static function fail(?string $reason = null): self
     {
         $data = $reason ?
-            ResultData::createWithFailReason($reason) :
-            ResultData::create();
+            Data::createWithFailReason($reason) :
+            Data::create();
 
         return new self(self::STATUS_FAIL, null, $data);
     }
@@ -99,7 +101,7 @@ class Result
     /**
      * Create an instance for a login requiring a second step. E.g. for 2FA.
      */
-    public static function secondStepRequired(User $user, ResultData $data): self
+    public static function secondStepRequired(User $user, Data $data): self
     {
         return new self(self::STATUS_SECOND_STEP_REQUIRED, $user, $data);
     }

@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Authentication;
 
-use Espo\Core\Authentication\ResultData;
+use Espo\Core\Authentication\Result\Data as ResultData;
 
 class ResultDataTest extends \PHPUnit\Framework\TestCase
 {
