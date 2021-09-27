@@ -57,16 +57,20 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
             this.layoutLoadCallbackList.push(callback);
 
-            if (this.layoutIsBeingLoaded) return;
+            if (this.layoutIsBeingLoaded) {
+                return;
+            }
 
             this.layoutIsBeingLoaded = true;
-            this._helper.layoutManager.get(this.collection.name, type, function (listLayout) {
-                this.layoutLoadCallbackList.forEach(function (c) {
-                    c(listLayout)
+
+            this._helper.layoutManager.get(this.collection.name, type, (listLayout) => {
+                this.layoutLoadCallbackList.forEach(c => {
+                    c(listLayout);
+
                     this.layoutLoadCallbackList = [];
                     this.layoutIsBeingLoaded = false;
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         _convertLayout: function (listLayout, model) {
@@ -80,6 +84,7 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
             for (var i in listLayout.rows) {
                 var row = listLayout.rows[i];
                 var layoutRow = [];
+
                 for (var j in row) {
 
                     var e = row[j];
@@ -88,26 +93,32 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
                     var item = {
                         name: e.name + 'Field',
                         field: e.name,
-                        view: e.view || model.getFieldParam(e.name, 'view') || this.getFieldManager().getViewName(type),
+                        view: e.view ||
+                            model.getFieldParam(e.name, 'view') ||
+                            this.getFieldManager().getViewName(type),
                         options: {
                             defs: {
                                 name: e.name,
                                 params: e.params || {}
                             },
-                            mode: 'list'
-                        }
+                            mode: 'list',
+                        },
                     };
+
                     if (e.link) {
                         item.options.mode = 'listLink';
                     }
+
                     layoutRow.push(item);
                 }
+
                 layout.rows.push(layoutRow);
             }
 
             if ('right' in listLayout) {
                 if (listLayout.right != false) {
                     var name = listLayout.right.name || 'right';
+
                     layout.right = {
                         field: name,
                         name: name,
@@ -115,17 +126,19 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
                         options: {
                             defs: {
                                 params: {
-                                    width: listLayout.right.width || '7%'
+                                    width: listLayout.right.width || '7%',
                                 }
                             }
-                        }
+                        },
                     };
                 }
-            } else {
+            }
+            else {
                 if (this.rowActionsView) {
                     layout.right = this.getRowActionsDefs();
                 }
             }
+
             return layout;
         },
 
@@ -143,11 +156,13 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
         prepareInternalLayout: function (internalLayout, model) {
             var rows = internalLayout.rows || [];
-            rows.forEach(function (row) {
-                row.forEach(function (col) {
+
+            rows.forEach((row) => {
+                row.forEach((col) => {
                     col.el = this.getItemEl(model, col);
-                }, this);
-            }, this);
+                });
+            });
+
             if (internalLayout.right) {
                 internalLayout.right.el = this.getItemEl(model, internalLayout.right);
             }
@@ -155,21 +170,33 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
         fetchAttributeListFromLayout: function () {
             var list = [];
+
             if (this.listLayout.rows) {
-                this.listLayout.rows.forEach(function (row) {
-                    row.forEach(function (item) {
-                        if (!item.name) return;
+                this.listLayout.rows.forEach((row) => {
+                    row.forEach(item => {
+                        if (!item.name) {
+                            return;
+                        }
+
                         var field = item.name;
+
                         var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-                        if (!fieldType) return;
-                        this.getFieldManager().getEntityTypeFieldAttributeList(this.scope, field).forEach(function (attribute) {
-                            list.push(attribute);
-                        }, this);
-                    }, this);
-                }, this);
+
+                        if (!fieldType) {
+                            return;
+                        }
+
+                        this.getFieldManager()
+                            .getEntityTypeFieldAttributeList(this.scope, field)
+                            .forEach((attribute) => {
+                                list.push(attribute);
+                            });
+                    });
+                });
             }
+
             return list;
-        }
+        },
 
     });
 });
