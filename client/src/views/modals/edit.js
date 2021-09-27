@@ -117,7 +117,7 @@ define('views/modals/edit', 'views/modal', function (Dep) {
 
             this.waitForView('edit');
 
-            this.getModelFactory().create(this.entityType, function (model) {
+            this.getModelFactory().create(this.entityType, (model) => {
                 if (this.id) {
                     if (this.sourceModel) {
                         model = this.model = this.sourceModel.clone();
@@ -128,26 +128,27 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                         model.id = this.id;
                     }
 
-                    model.once('sync', function () {
+                    model.once('sync', () => {
                         this.createRecordView(model);
-                    }, this);
+                    });
 
                     model.fetch();
+
+                    return;
                 }
-                else {
-                    this.model = model;
 
-                    if (this.options.relate) {
-                        model.setRelate(this.options.relate);
-                    }
+                this.model = model;
 
-                    if (this.options.attributes) {
-                        model.set(this.options.attributes);
-                    }
-
-                    this.createRecordView(model);
+                if (this.options.relate) {
+                    model.setRelate(this.options.relate);
                 }
-            }.bind(this));
+
+                if (this.options.attributes) {
+                    model.set(this.options.attributes);
+                }
+
+                this.createRecordView(model);
+            });
         },
 
         createRecordView: function (model, callback) {
@@ -185,22 +186,22 @@ define('views/modals/edit', 'views/modal', function (Dep) {
 
             var model = editView.model;
 
-            editView.once('after:save', function () {
+            editView.once('after:save', () => {
                 this.trigger('after:save', model);
                 this.dialog.close();
-            }, this);
+            });
 
-            editView.once('before:save', function () {
+            editView.once('before:save', () => {
                 this.trigger('before:save', model);
-            }, this);
+            });
 
             var $buttons = this.dialog.$el.find('.modal-footer button');
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
-            editView.once('cancel:save', function () {
+            editView.once('cancel:save', () => {
                 $buttons.removeClass('disabled').removeAttr('disabled');
-            }, this);
+            });
 
             editView.save();
         },
@@ -223,14 +224,15 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                     returnUrl: this.options.returnUrl || Backbone.history.fragment,
                     returnDispatchParams: this.options.returnDispatchParams || null,
                 };
+
                 if (this.options.rootUrl) {
                     options.rootUrl = this.options.rootUrl;
                 }
 
-                setTimeout(function () {
+                setTimeout(() => {
                     router.dispatch(this.scope, 'create', options);
                     router.navigate(url, {trigger: false});
-                }.bind(this), 10);
+                }, 10);
             }
             else {
                 url = '#' + this.scope + '/edit/' + this.id;
@@ -252,17 +254,16 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                     options.rootUrl = this.options.rootUrl;
                 }
 
-                setTimeout(function () {
+                setTimeout(() => {
                     router.dispatch(this.scope, 'edit', options);
-
                     router.navigate(url, {trigger: false});
-                }.bind(this), 10);
+                }, 10);
             }
 
             this.trigger('leave');
 
             this.dialog.close();
-        }
+        },
     });
 });
 
