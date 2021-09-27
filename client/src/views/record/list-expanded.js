@@ -52,6 +52,20 @@ define('views/record/list-expanded', 'views/record/list', function (Dep) {
 
         listContainerEl: '.list > ul',
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.on('after:save', model => {
+                let view = this.getView(model.id);
+
+                if (!view) {
+                    return;
+                }
+
+                view.reRender();
+            });
+        },
+
         _loadListLayout: function (callback) {
             var type = this.type + 'Expanded';
 
