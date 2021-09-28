@@ -87,7 +87,9 @@ class Daemon implements ApplicationRunner
             if (!$toSkip) {
                 $process = new Process([$phpExecutablePath, 'cron.php']);
                 $process->setTimeout($timeout);
-                $process->run();
+
+                $process->start();
+
                 $processList[] = $process;
             }
             sleep($interval);
