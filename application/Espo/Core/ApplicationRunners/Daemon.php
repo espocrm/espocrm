@@ -100,7 +100,7 @@ class Daemon implements Runner
 
                 $process->setTimeout($timeout);
 
-                $process->run();
+                $process->start();
 
                 $processList[] = $process;
             }
