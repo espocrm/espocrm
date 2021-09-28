@@ -33,6 +33,7 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\File\Permission;
 
 use Espo\ORM\EntityManager;
 
@@ -61,6 +62,10 @@ class AfterUpgrade
             );
         }
         catch (Throwable $e) {}
+
+        $this->setPermissions(
+            $container->get('injectableFactory')->create(Permission::class)
+        );
     }
 
     protected function updateTemplates($entityManager)
@@ -246,5 +251,10 @@ class AfterUpgrade
 
         $configWriter->setMultiple($map);
         $configWriter->save();
+    }
+
+    private function setPermissions(Permission $permission): void
+    {
+        $permission->chmod('bin/command', '0754');
     }
 }
