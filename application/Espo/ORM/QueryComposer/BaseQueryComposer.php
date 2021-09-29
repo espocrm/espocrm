@@ -878,7 +878,9 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_numeric($fiscalShift)) {
                 $fiscalShift = (int) $fiscalShift;
                 $fiscalFirstMonth = $fiscalShift + 1;
-                $fiscalDistractedMonth = 12 - $fiscalFirstMonth;
+                $fiscalDistractedMonth = $fiscalFirstMonth < 4 ?
+                    12 - $fiscalFirstMonth :
+                    12 - $fiscalFirstMonth + 1;
 
                 return
                     "CASE WHEN MONTH({$part}) >= {$fiscalFirstMonth} THEN ".
