@@ -75,6 +75,7 @@ define('controllers/base', 'controller', function (Dep) {
                 acl: data.acl,
                 settings: data.settings,
                 appParams: data.appParams,
+                language: data.language,
             };
         },
 
