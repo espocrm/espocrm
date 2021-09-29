@@ -374,7 +374,8 @@ class Processor
 
             if ($handler) {
                 $handler->prepareEmail($email, $parent, $user);
-                $senderParams = $handler->getSenderParams($parent, $user);
+
+                $senderParams = $handler->getSenderParams($parent, $user) ?? $senderParams;
             }
         }
 
@@ -561,7 +562,8 @@ class Processor
 
             if ($handler) {
                 $handler->prepareEmail($email, $parent, $user);
-                $senderParams = $handler->getSenderParams($parent, $user);
+
+                $senderParams = $handler->getSenderParams($parent, $user) ?? $senderParams;
             }
         }
 
@@ -710,7 +712,8 @@ class Processor
 
         if ($handler) {
             $handler->prepareEmail($email, $parent, $user);
-            $senderParams = $handler->getSenderParams($parent, $user);
+
+            $senderParams = $handler->getSenderParams($parent, $user) ?? $senderParams;
         }
 
         try {
@@ -849,7 +852,8 @@ class Processor
 
         if ($handler) {
             $handler->prepareEmail($email, $parent, $user);
-            $senderParams = $handler->getSenderParams($parent, $user);
+
+            $senderParams = $handler->getSenderParams($parent, $user) ?? $senderParams;
         }
 
         try {
