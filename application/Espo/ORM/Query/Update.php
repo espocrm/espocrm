@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\Query;
 
-use Espo\ORM\Query\Part\WhereClause;
-
 use RuntimeException;
 
 /**
