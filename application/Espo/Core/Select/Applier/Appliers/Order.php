@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
+use Espo\ORM\Query\Part\OrderList;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\Forbidden,
@@ -141,11 +143,13 @@ class Order
         if ($hasItemConverter) {
             $converter = $this->itemConverterFactory->create($this->entityType, $orderBy);
 
-            $resultOrderBy = $converter->convert(
-                OrderItem::fromArray([
-                    'orderBy' => $orderBy,
-                    'order' => $order,
-                ])
+            $resultOrderBy = $this->orderListToArray(
+                $converter->convert(
+                    OrderItem::fromArray([
+                        'orderBy' => $orderBy,
+                        'order' => $order,
+                    ])
+                )
             );
         }
         else if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
@@ -184,5 +188,19 @@ class Order
         }
 
         $queryBuilder->order($resultOrderBy);
+    }
+
+    private function orderListToArray(OrderList $orderList): array
+    {
+        $list = [];
+
+        foreach ($orderList as $order) {
+            $list[] = [
+                $order->getExpression()->getValue(),
+                $order->getDirection(),
+            ];
+        }
+
+        return $list;
     }
 }

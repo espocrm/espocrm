@@ -29,6 +29,9 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
+use Espo\ORM\Query\Part\OrderList;
+use Espo\ORM\Query\Part\Order;
+
 use Espo\Core\{
     Exceptions\Error,
     Select\Applier\Appliers\Order as OrderApplier,
@@ -47,7 +50,7 @@ use Espo\{
 
 class OrderApplierTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
@@ -147,7 +150,11 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
             ->with($this->entityType)
             ->willReturn($orderBy);
 
-        $this->initApplyOrderTest($orderBy, $order, 'varchar', [['hello', SearchParams::ORDER_DESC]]);
+        $converterResult = OrderList::create([
+            Order::fromString('hello')->withDesc(),
+        ]);
+
+        $this->initApplyOrderTest($orderBy, $order, 'varchar', $converterResult);
 
         $this->applier->apply($this->queryBuilder, $this->params);
     }
@@ -184,7 +191,7 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
     }
 
     protected function initApplyOrderTest(
-        string $orderBy, string $order, string $fieldType, ?array $converterResult = null, bool $notExisting = false
+        string $orderBy, string $order, string $fieldType, ?OrderList $converterResult = null, bool $notExisting = false
     ) {
         $this->metadataProvider
             ->expects($this->any())
@@ -246,7 +253,8 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
                 ->willReturn(false);
         }
 
-        $expectedOrderBy = $converterResult ?? [[$orderBy, $order]];
+        $expectedOrderBy = ($converterResult ? $this->orderListToArray($converterResult): null)
+            ?? [[$orderBy, $order]];
 
         $expectedOrderBy[] = ['id', $order];
 
@@ -254,5 +262,19 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('order')
             ->with($expectedOrderBy);
+    }
+
+    private function orderListToArray(OrderList $orderList): array
+    {
+        $list = [];
+
+        foreach ($orderList as $order) {
+            $list[] = [
+                $order->getExpression()->getValue(),
+                $order->getDirection(),
+            ];
+        }
+
+        return $list;
     }
 }

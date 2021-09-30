@@ -27,27 +27,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Order\ItemConverters;
+namespace Espo\ORM\Query\Part;
 
-use Espo\ORM\Query\Part\OrderList;
-use Espo\ORM\Query\Part\Order;
+use InvalidArgumentException;
+use Iterator;
 
-use Espo\Core\{
-    Select\Order\ItemConverter,
-    Select\Order\Item,
-};
-
-class AddressType implements ItemConverter
+/**
+ * A list of order items.
+ */
+class OrderList implements Iterator
 {
-    public function convert(Item $item): OrderList
-    {
-        $orderBy = $item->getOrderBy();
-        $order = $item->getOrder() ?? Order::ASC;
+    private $position = 0;
 
-        return OrderList::create([
-            Order::fromString($orderBy . 'Country')->withDirection($order),
-            Order::fromString($orderBy . 'City')->withDirection($order),
-            Order::fromString($orderBy . 'Street')->withDirection($order),
-        ]);
+    private function __construct(array $list)
+    {
+        foreach ($list as $item) {
+            if (!$item instanceof Order) {
+                throw new InvalidArgumentException();
+            }
+        }
+
+        $this->list = $list;
+    }
+
+    /**
+     * Create an instance.
+     *
+     * @param Order[] $list
+     */
+    public static function create(array $list): self
+    {
+        return new self($list);
+    }
+
+    /**
+     * @return void
+     */
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    /**
+     * @return Order
+     */
+    public function current()
+    {
+        return $this->list[$this->position];
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    /**
+     * @return bool
+     */
+    public function valid()
+    {
+        return isset($this->list[$this->position]);
     }
 }

@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Select\Order\ItemConverters;
 
+use Espo\ORM\Query\Part\OrderList;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Part\Expression;
+
 use Espo\Core\{
     Select\Order\ItemConverter,
     Select\Order\Item,
@@ -50,19 +54,19 @@ class EnumType implements ItemConverter
         $this->metadata = $metadata;
     }
 
-    public function convert(Item $item): array
+    public function convert(Item $item): OrderList
     {
         $orderBy = $item->getOrderBy();
-        $order = $item->getOrder();
+        $order = $item->getOrder() ?? SearchParams::ORDER_ASC;
 
         $list = $this->metadata->get([
             'entityDefs', $this->entityType, 'fields', $orderBy, 'options'
         ]);
 
         if (!$list || !is_array($list) || !count($list)) {
-            return [
-                [$orderBy, $order]
-            ];
+            return OrderList::create([
+                Order::fromString($orderBy)->withDirection($order)
+            ]);
         }
 
         $isSorted = $this->metadata->get([
@@ -77,14 +81,8 @@ class EnumType implements ItemConverter
             $list = array_reverse($list);
         }
 
-        foreach ($list as $i => $listItem) {
-            $list[$i] = str_replace(',', '_COMMA_', $listItem);
-        }
-
-        return [
-            [
-                'LIST:' . $orderBy . ':' . implode(',', $list)
-            ]
-        ];
+        return OrderList::create([
+            Order::createByPositionInList(Expression::column($orderBy), $list),
+        ]);
     }
 }
