@@ -49,6 +49,7 @@ class BeforeUpgrade
         $this->processCheckExtension('Outlook Integration', '1.2.5', $errorMessageList);
         $this->processCheckExtension('MailChimp Integration', '1.0.8', $errorMessageList);
         $this->processCheckExtension('Real Estate', '1.5.0', $errorMessageList);
+        $this->processCheckExtension('VoIP Integration', '1.17.3', $errorMessageList);
 
         if (!count($errorMessageList)) {
             return;
