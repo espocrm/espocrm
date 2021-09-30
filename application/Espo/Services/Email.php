@@ -145,6 +145,8 @@ class Email extends Record implements
 
         if ($fromAddress) {
             $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
+
+            $smtpParams['fromAddress'] = $fromAddress;
         }
 
         return SmtpParams::fromArray($smtpParams);
