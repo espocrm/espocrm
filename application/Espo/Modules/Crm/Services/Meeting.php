@@ -32,6 +32,8 @@ namespace Espo\Modules\Crm\Services;
 use Espo\ORM\Entity;
 use Espo\Modules\Crm\Business\Event\Invitations;
 
+use Espo\Services\Email as EmailService;
+
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
@@ -102,9 +104,7 @@ class Meeting extends \Espo\Services\Record implements
         $smtpParams = null;
 
         if ($useUserSmtp) {
-            $smtpParams = $this->getServiceFactory()
-                ->create('Email')
-                ->getUserSmtpParams($this->getUser()->id);
+            $smtpParams = $this->getEmailService()->getUserSmtpParams($this->user->getId());
         }
 
         return $this->injectableFactory->createWith(Invitations::class, [
@@ -258,5 +258,10 @@ class Meeting extends \Espo\Services\Record implements
         $this->hookManager->process($this->entityType, 'afterConfirmation', $entity, [], $actionData);
 
         return true;
+    }
+
+    private function getEmailService(): EmailService
+    {
+        return $this->injectableFactory->create(EmailService::class);
     }
 }

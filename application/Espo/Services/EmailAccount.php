@@ -600,8 +600,10 @@ class EmailAccount extends Record implements
     {
         if ($email->get('parentType') && $email->get('parentId')) {
             $parent = $this->entityManager->getEntity($email->get('parentType'), $email->get('parentId'));
+
             if ($parent) {
-                $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
+                $this->getStreamService()->noteEmailReceived($parent, $email);
+
                 return;
             }
         }

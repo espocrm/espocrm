@@ -31,6 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Services\DashboardTemplate as Service;
+
 use Espo\Core\{
     Api\Request,
     Controllers\Record,
@@ -55,7 +57,7 @@ class DashboardTemplate extends Record
             throw new BadRequest();
         }
 
-        $this->getServiceFactory()->create('DashboardTemplate')->deployToUsers(
+        $this->getDashboardTemplateService()->deployToUsers(
             $data->id,
             $data->userIdList,
             !empty($data->append)
@@ -76,12 +78,17 @@ class DashboardTemplate extends Record
             throw new BadRequest();
         }
 
-        $this->getServiceFactory()->create('DashboardTemplate')->deployToTeam(
+        $this->getDashboardTemplateService()->deployToTeam(
             $data->id,
             $data->teamId,
             !empty($data->append)
         );
 
         return true;
+    }
+
+    private function getDashboardTemplateService(): Service
+    {
+        return $this->getRecordService();
     }
 }

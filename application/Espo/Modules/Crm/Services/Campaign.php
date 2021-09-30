@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Services\Pdf as PdfService;
+
 use Espo\ORM\{
     Entity,
 };
@@ -457,7 +459,7 @@ class Campaign extends \Espo\Services\Record implements
         $filename = $campaign->get('name') . ' - ' .
             $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
 
-        return $this->getServiceFactory()->create('Pdf')->generateMailMerge(
+        return $this->getPdfService()->generateMailMerge(
             $targetEntityType,
             $targetEntityList,
             $template,
@@ -469,5 +471,10 @@ class Campaign extends \Espo\Services\Record implements
     protected function getDefaultLanguage()
     {
         return $this->defaultLanguage;
+    }
+
+    private function getPdfService(): PdfService
+    {
+        return $this->injectableFactory->create(PdfService::class);
     }
 }

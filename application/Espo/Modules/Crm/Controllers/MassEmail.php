@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Modules\Crm\Services\MassEmail as Service;
+
 use Espo\Core\{
     Exceptions\BadRequest,
     Exceptions\Forbidden,
@@ -46,7 +48,7 @@ class MassEmail extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        $this->getServiceFactory()->create('MassEmail')->processTest($id, $targetList);
+        $this->getMassEmailService()->processTest($id, $targetList);
 
         return true;
     }
@@ -60,6 +62,11 @@ class MassEmail extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()->create('MassEmail')->getSmtpAccountDataList();
+        return $this->getMassEmailService()->getSmtpAccountDataList();
+    }
+
+    private function getMassEmailService(): Service
+    {
+        return $this->getServiceFactory()->create('MassEmail');
     }
 }

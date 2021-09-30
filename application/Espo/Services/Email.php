@@ -31,6 +31,9 @@ namespace Espo\Services;
 
 use Laminas\Mail\Message;
 
+use Espo\Services\EmailAccount as EmailAccountService;
+use Espo\Services\InboundEmail as InboundEmailService;
+
 use Espo\{
     ORM\Entity,
     Entities\User,
@@ -125,7 +128,7 @@ class Email extends Record implements
         }
 
         if (!$smtpParams && $fromAddress) {
-            $emailAccountService = $this->serviceFactory->create('EmailAccount');
+            $emailAccountService = $this->getEmailAccountService();
 
             $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
 
@@ -193,7 +196,7 @@ class Email extends Record implements
                 }
             }
 
-            $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+            $emailAccountService = $this->getEmailAccountService();
 
             $emailAccount = $emailAccountService->findAccountForUser($user, $originalFromAddress);
 
@@ -219,7 +222,7 @@ class Email extends Record implements
         }
 
         if (!$smtpParams) {
-            $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+            $inboundEmailService = $this->getInboundEmailService();
 
             if ($user) {
                 $inboundEmail = $inboundEmailService->findSharedAccountForUser($user, $originalFromAddress);
@@ -318,7 +321,8 @@ class Email extends Record implements
 
             if ($inboundEmail->get('storeSentEmails')) {
                 try {
-                    $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+                    $inboundEmailService = $this->getInboundEmailService();
+
                     $inboundEmailService->storeSentMessage($inboundEmail, $message);
                 }
                 catch (Exception $e) {
@@ -334,7 +338,8 @@ class Email extends Record implements
 
             if ($emailAccount->get('storeSentEmails')) {
                 try {
-                    $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+                    $emailAccountService = $this->getEmailAccountService();
+
                     $emailAccountService->storeSentMessage($emailAccount, $message);
                 }
                 catch (Exception $e) {
@@ -841,7 +846,7 @@ class Email extends Record implements
             $emailAccount = $this->entityManager->getEntity('EmailAccount', $id);
 
             if ($emailAccount && $emailAccount->get('smtpHandler')) {
-                $this->getServiceFactory()->create('EmailAccount')->applySmtpHandler($emailAccount, $smtpParams);
+                $this->getEmailAccountService()->applySmtpHandler($emailAccount, $smtpParams);
             }
         }
 
@@ -849,7 +854,7 @@ class Email extends Record implements
             $inboundEmail = $this->entityManager->getEntity('InboundEmail', $id);
 
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
-                $this->getServiceFactory()->create('InboundEmail')->applySmtpHandler($inboundEmail, $smtpParams);
+                $this->getInboundEmailService()->applySmtpHandler($inboundEmail, $smtpParams);
             }
         }
 
@@ -1005,5 +1010,15 @@ class Email extends Record implements
         }
 
         return $replied->getMessageId();
+    }
+
+    private function getEmailAccountService(): EmailAccountService
+    {
+        return $this->injectableFactory->create(EmailAccountService::class);
+    }
+
+    private function getInboundEmailService(): InboundEmailService
+    {
+        return $this->injectableFactory->create(InboundEmailService::class);
     }
 }

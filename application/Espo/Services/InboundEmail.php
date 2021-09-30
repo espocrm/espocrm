@@ -34,6 +34,9 @@ use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
+use Espo\Services\EmailTemplate as EmailTemplateService;
+use Espo\Modules\Crm\Services\Campaign as CampaignService;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\BadRequest,
@@ -549,7 +552,7 @@ class InboundEmail extends RecordService implements
             $parent = $this->entityManager->getEntity($email->get('parentType'), $email->get('parentId'));
 
             if ($parent) {
-                $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
+                $this->getStreamService()->noteEmailReceived($parent, $email);
 
                 return;
             }
@@ -596,7 +599,7 @@ class InboundEmail extends RecordService implements
                 $this->processCaseToEmailFields($case, $email);
 
                 if (!$email->isFetched()) {
-                    $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                    $this->getStreamService()->noteEmailReceived($case, $email);
                 }
             }
 
@@ -620,7 +623,7 @@ class InboundEmail extends RecordService implements
                 $this->processCaseToEmailFields($case, $email);
 
                 if (!$email->isFetched()) {
-                    $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
+                    $this->getStreamService()->noteEmailReceived($case, $email);
                 }
             }
 
@@ -639,7 +642,7 @@ class InboundEmail extends RecordService implements
 
         $user = $this->entityManager->getEntity('User', $case->get('assignedUserId'));
 
-        $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
+        $this->getStreamService()->noteEmailReceived($case, $email, true);
 
         if ($inboundEmail->get('reply')) {
             $this->autoReply($inboundEmail, $email, $case, $user);
@@ -923,7 +926,7 @@ class InboundEmail extends RecordService implements
                 $entityHash['User'] = $user;
             }
 
-            $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
+            $emailTemplateService = $this->getEmailTemplateService();
 
             $replyData = $emailTemplateService->parse(
                 $replyEmailTemplateId,
@@ -1088,10 +1091,10 @@ class InboundEmail extends RecordService implements
         return true;
     }
 
-    protected function getCampaignService()
+    protected function getCampaignService(): CampaignService
     {
         if (!$this->campaignService) {
-            $this->campaignService = $this->getServiceFactory()->create('Campaign');
+            $this->campaignService = $this->injectableFactory->create(CampaignService::class);
         }
 
         return $this->campaignService;
@@ -1100,7 +1103,7 @@ class InboundEmail extends RecordService implements
     public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
         $inboundEmail = $this->entityManager
-            ->getRepository('InboundEmail')
+            ->getRDBRepository('InboundEmail')
             ->where([
                 'status' => 'Active',
                 'useSmtp' => true,
@@ -1343,5 +1346,10 @@ class InboundEmail extends RecordService implements
         }
 
         return false;
+    }
+
+    private function getEmailTemplateService(): EmailTemplateService
+    {
+        return $this->injectableFactory->create(EmailTemplateService::class);
     }
 }

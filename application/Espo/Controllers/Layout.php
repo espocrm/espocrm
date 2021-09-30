@@ -31,14 +31,27 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Api\Request;
 
-use Espo\Core\{
-    Controllers\Base,
-    Api\Request,
-};
+use Espo\Services\Layout as Service;
 
-class Layout extends Base
+use Espo\Entities\User;
+
+class Layout
 {
+    private $user;
+
+    private $service;
+
+    public function __construct(User $user, Service $service)
+    {
+        $this->user = $user;
+        $this->service = $service;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getActionRead(Request $request)
     {
         $params = $request->getRouteParams();
@@ -46,11 +59,12 @@ class Layout extends Base
         $scope = $params['scope'] ?? null;
         $name = $params['name'] ?? null;
 
-        return $this->getServiceFactory()
-            ->create('Layout')
-            ->getForFrontend($scope, $name);
+        return $this->service->getForFrontend($scope, $name);
     }
 
+    /**
+     * @return mixed
+     */
     public function putActionUpdate(Request $request)
     {
         $params = $request->getRouteParams();
@@ -69,11 +83,12 @@ class Layout extends Base
         $name = $params['name'] ?? null;
         $setId = $params['setId'] ?? null;
 
-        return $this->getServiceFactory()
-            ->create('Layout')
-            ->update($scope, $name, $setId, $data);
+        return $this->service->update($scope, $name, $setId, $data);
     }
 
+    /**
+     * @return mixed
+     */
     public function postActionResetToDefault(Request $request)
     {
         $data = $request->getParsedBody();
@@ -86,23 +101,22 @@ class Layout extends Base
             throw new BadRequest();
         }
 
-        return $this->getServiceFactory()
-            ->create('Layout')
-            ->resetToDefault($data->scope, $data->name, $data->setId ?? null);
+        return $this->service->resetToDefault($data->scope, $data->name, $data->setId ?? null);
     }
 
+    /**
+     * @return mixed
+     */
     public function getActionGetOriginal(Request $request)
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()
-            ->create('Layout')
-            ->getOriginal(
-                $request->getQueryParam('scope'),
-                $request->getQueryParam('name'),
-                $request->getQueryParam('setId')
-            );
+        return $this->service->getOriginal(
+            $request->getQueryParam('scope'),
+            $request->getQueryParam('name'),
+            $request->getQueryParam('setId')
+        );
     }
 }

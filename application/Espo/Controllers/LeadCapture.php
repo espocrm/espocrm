@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Services\LeadCapture as Service;
+
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -60,7 +62,7 @@ class LeadCapture extends Record
 
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
-        $this->getRecordService()->leadCapture($params['apiKey'], $data);
+        $this->getLeadCaptureService()->leadCapture($params['apiKey'], $data);
 
         return true;
     }
@@ -73,11 +75,11 @@ class LeadCapture extends Record
             throw new BadRequest('No API key provided.');
         }
 
-        if (!$this->getRecordService()->isApiKeyValid($params['apiKey'])) {
+        if (!$this->getLeadCaptureService()->isApiKeyValid($params['apiKey'])) {
             throw new NotFound();
         }
 
-        $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
+        $allowOrigin = $this->config->get('leadCaptureAllowOrigin', '*');
 
         $response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
@@ -94,7 +96,7 @@ class LeadCapture extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()
+        return $this->getLeadCaptureService()
             ->generateNewApiKeyForEntity($data->id)
             ->getValueMap();
     }
@@ -105,8 +107,11 @@ class LeadCapture extends Record
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()
-            ->create('LeadCapture')
-            ->getSmtpAccountDataList();
+        return $this->getLeadCaptureService()->getSmtpAccountDataList();
+    }
+
+    private function getLeadCaptureService(): Service
+    {
+        return $this->getRecordService();
     }
 }

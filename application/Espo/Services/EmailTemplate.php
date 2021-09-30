@@ -93,8 +93,6 @@ class EmailTemplate extends Record implements
 
         $result = (object) [];
 
-        $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
-
         $dataList = [];
 
         if ($parentId && $parentType) {
@@ -131,7 +129,7 @@ class EmailTemplate extends Record implements
 
             $entityType = $e->getEntityType();
 
-            $recordService = $this->getServiceFactory()->create($entityType);
+            $recordService = $this->recordServiceContainer->get($entityType);
 
             $recordService->prepareEntityForOutput($e);
 

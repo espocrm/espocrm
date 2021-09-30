@@ -240,8 +240,8 @@ class Lead extends Record implements
             $account->set(get_object_vars($recordsData->Account));
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()
-                    ->create('Account')
+                $rDuplicateList = $this->recordServiceContainer
+                    ->get('Account')
                     ->findDuplicates($account, $recordsData->Account);
 
                 if ($rDuplicateList) {
@@ -270,8 +270,8 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()
-                    ->create('Contact')
+                $rDuplicateList = $this->recordServiceContainer
+                    ->get('Contact')
                     ->findDuplicates($contact, $recordsData->Contact);
 
                 if ($rDuplicateList) {
@@ -304,8 +304,8 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()
-                    ->create('Opportunity')
+                $rDuplicateList = $this->recordServiceContainer
+                    ->get('Opportunity')
                     ->findDuplicates($opportunity, $recordsData->Opportunity);
 
                 if ($rDuplicateList) {

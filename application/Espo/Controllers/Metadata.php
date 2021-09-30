@@ -31,20 +31,20 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Services\Metadata as Service;
+
 use Espo\Core\{
     Controllers\Base,
     Api\Request,
 };
 
-use StdClass;
+use stdClass;
 
 class Metadata extends Base
 {
-    public function getActionRead(): StdClass
+    public function getActionRead(): stdClass
     {
-        return $this->getServiceFactory()
-            ->create('Metadata')
-            ->getDataForFrontend();
+        return $this->getMetadataService()->getDataForFrontend();
     }
 
     public function getActionGet(Request $request)
@@ -56,5 +56,10 @@ class Metadata extends Base
         $key = $request->getQueryParam('key');
 
         return $this->metadata->get($key, false);
+    }
+
+    private function getMetadataService(): Service
+    {
+        return $this->getServiceFactory()->create('Metadata');
     }
 }
