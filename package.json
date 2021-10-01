@@ -1,6 +1,6 @@
 {
   "name": "espocrm",
-  "version": "7.0.0-alpha",
+  "version": "7.0.0",
   "description": "Open-source CRM.",
   "repository": {
     "type": "git",
