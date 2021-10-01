@@ -432,7 +432,7 @@ class Opportunity extends Record
             ->build();
 
         $queryBuilder->where([
-            'id=s' => $subQuery->build()->getRaw(),
+            'id=s' => $subQuery->getRaw(),
         ]);
     }
 

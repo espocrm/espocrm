@@ -1626,14 +1626,14 @@ abstract class BaseQueryComposer implements QueryComposer
             $itemList = $entity->getAttributeList();
         }
 
-        if (empty($params['strictSelect']) && $entity) {
+        if (empty($params['strictSelect']) && $entity && empty($params['groupBy'])) {
             $itemList = array_merge(
                 $itemList,
                 $this->getSelectDependeeAdditionalList($entity, $itemList)
             );
         }
 
-        if (empty($params['strictSelect']) && !empty($params['distinct'])) {
+        if (empty($params['strictSelect']) && !empty($params['distinct']) && empty($params['groupBy'])) {
             $orderByAttributeList = $this->getOrderByAttributeList($params);
 
             $itemList = array_merge(
