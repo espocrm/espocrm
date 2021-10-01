@@ -196,12 +196,14 @@ class Settings
             foreach ($this->access->getAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
-        }
 
-        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
             foreach ($this->access->getSuperAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
+        }
+
+        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
+            // @todo Maybe add restriction level for non-super admins.
         }
 
         foreach ($ignoreItemList as $item) {
