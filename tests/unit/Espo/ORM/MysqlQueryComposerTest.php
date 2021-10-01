@@ -1047,16 +1047,14 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->leftJoin('post')
             ->distinct()
             ->order('LIST:post.name:Test,Hello')
-            ->group('post.name')
             ->build();
 
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT comment.id AS `id`, post.name AS `post.name` FROM `comment` " .
+            "SELECT DISTINCT comment.id AS `id`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
 
         $this->assertEquals($expectedSql, $sql);
