@@ -129,7 +129,7 @@ class Settings
                 $ignoreItemList[] = $item;
             }
 
-            foreach ($this->access->getSuperAdminOnlySystemItemList() as $item) {
+            foreach ($this->access->getSuperAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -203,7 +203,7 @@ class Settings
         }
 
         if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
-            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
+            foreach ($this->access->getSuperAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
