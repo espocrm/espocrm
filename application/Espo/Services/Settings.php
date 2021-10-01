@@ -128,10 +128,6 @@ class Settings
             foreach ($this->access->getSuperAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
-
-            foreach ($this->access->getSuperAdminParamList() as $item) {
-                $ignoreItemList[] = $item;
-            }
         }
 
         foreach ($ignoreItemList as $item) {
