@@ -43,8 +43,6 @@ use Espo\Core\{
     Upgrades\UpgradeManager,
 };
 
-use Exception;
-
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 
 if ($arg == 'version' || $arg == '-v') {
@@ -87,13 +85,13 @@ try {
 
     $upgradeManager->install(['id' => $upgradeId]);
 }
-catch (Exception $e) {
+catch (\Exception $e) {
     die("Error: " . $e->getMessage() . "\n");
 }
 
 try {
     (new Application())->run(Rebuild::class);
 }
-catch (Exception $e) {}
+catch (\Exception $e) {}
 
 echo "Upgrade is complete. Current version is " . $config->get('version') . ". \n";
