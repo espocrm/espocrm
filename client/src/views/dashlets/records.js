@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', function (Dep) {
+define('views/dashlets/records', 'views/dashlets/abstract/record-list', function (Dep) {
 
     return Dep.extend({
 
@@ -40,12 +40,13 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
 
         init: function () {
             Dep.prototype.init.call(this);
+
             this.scope = this.getOption('entityType');
         },
 
         getSearchData: function () {
             var data = {
-                primary: this.getOption('primaryFilter')
+                primary: this.getOption('primaryFilter'),
             };
 
             if (data.primary === 'all') {
@@ -53,9 +54,10 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
             }
 
             var bool = {};
-            (this.getOption('boolFilterList') || []).forEach(function (item) {
+
+            (this.getOption('boolFilterList') || []).forEach(item => {
                 bool[item] = true;
-            }, this);
+            });
 
             data.bool = bool;
 
@@ -64,12 +66,13 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
 
         setupActionList: function () {
             var scope = this.getOption('entityType');
+
             if (scope && this.getAcl().checkScope(scope, 'create')) {
                 this.actionList.unshift({
                     name: 'create',
                     html: this.translate('Create ' + scope, 'labels', scope),
                     iconHtml: '<span class="fas fa-plus"></span>',
-                    url: '#' + scope + '/create'
+                    url: '#' + scope + '/create',
                 });
             }
         },
