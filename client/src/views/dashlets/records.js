@@ -48,6 +48,10 @@ Espo.define('views/dashlets/records', 'views/dashlets/abstract/record-list', fun
                 primary: this.getOption('primaryFilter')
             };
 
+            if (data.primary === 'all') {
+                data.primary = null;
+            }
+
             var bool = {};
             (this.getOption('boolFilterList') || []).forEach(function (item) {
                 bool[item] = true;
