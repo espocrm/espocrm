@@ -37,18 +37,10 @@ class BeforeUpgrade
     {
         $this->container = $container;
 
-        $this->processCheckCli();
-
         $this->processCheckExtensions();
-    }
 
-    private function processCheckCli(): void
-    {
-        $isCli = (substr(php_sapi_name(), 0, 3) == 'cli') ? true : false;
-
-        if (!$isCli) {
-            throw new Error("This upgrade can be run only from CLI.");
-        }
+        // Load to prevent fail if run in a single process.
+        $container->get('entityManager')->getQueryBuilder()->update();
     }
 
     private function processCheckExtensions(): void
