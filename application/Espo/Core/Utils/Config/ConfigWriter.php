@@ -164,11 +164,11 @@ class ConfigWriter
             unset($data[$key]);
         }
 
-        $this->saveData($configPath, $data, 'microtime');
-
         if ($toSaveInternal) {
             $this->saveData($internalConfigPath, $dataInternal, 'microtimeInternal');
         }
+
+        $this->saveData($configPath, $data, 'microtime');
 
         $this->changedData = [];
         $this->removeParamList = [];
