@@ -37,8 +37,6 @@ use Espo\Core\Utils\File\Permission;
 
 use Espo\ORM\EntityManager;
 
-use Throwable;
-
 class AfterUpgrade
 {
     public function run(Container $container): void
@@ -61,7 +59,7 @@ class AfterUpgrade
                 $container->get('injectableFactory')->create(ConfigWriter::class)
             );
         }
-        catch (Throwable $e) {}
+        catch (\Throwable $e) {}
 
         $this->setPermissions(
             $container->get('injectableFactory')->create(Permission::class)
