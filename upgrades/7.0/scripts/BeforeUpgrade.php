@@ -48,12 +48,16 @@ class BeforeUpgrade
     {
         $isCli = (substr(php_sapi_name(), 0, 3) == 'cli') ? true : false;
 
-        $cacheParam = $isCli ? 'opcache.enable_cli' : 'opcache.enable';
+        if (!$isCli) {
+            return;
+        }
+
+        $cacheParam = 'opcache.enable_cli';
 
         $value = ini_get($cacheParam);
 
         if ($value === '1') {
-            throw new Error("PHP parameter {$cacheParam} should be set to '0'.");
+            throw new Error("PHP parameter '{$cacheParam}' should be set to '0'.");
         }
     }
 
