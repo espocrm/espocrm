@@ -314,6 +314,10 @@ class Htmlizer
                 continue;
             }
 
+            if ($additionalData && array_key_exists($attribute, $additionalData)) {
+                continue;
+            }
+
             $type = $entity->getAttributeType($attribute);
 
             $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
