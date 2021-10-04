@@ -38,9 +38,23 @@ class BeforeUpgrade
         $this->container = $container;
 
         $this->processCheckExtensions();
+        $this->processCheckCache();
 
         // Load to prevent fail if run in a single process.
         $container->get('entityManager')->getQueryBuilder()->update();
+    }
+
+    private function processCheckCache()
+    {
+        $isCli = (substr(php_sapi_name(), 0, 3) == 'cli') ? true : false;
+
+        $cacheParam = $isCli ? 'opcache.enable_cli' : 'opcache.enable';
+
+        $value = ini_get($cacheParam);
+
+        if ($value === '1') {
+            throw new Error("PHP parameter {$cacheParam} should be set to '0'.");
+        }
     }
 
     private function processCheckExtensions(): void
