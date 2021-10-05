@@ -72,7 +72,7 @@ class User extends Record implements
 
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
-    public function getEntity(?string $id = null): Entity
+    public function getEntity(?string $id = null): ?Entity
     {
         if (isset($id) && $id == 'system') {
             throw new Forbidden();
