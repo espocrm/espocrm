@@ -219,7 +219,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.searchData.idValue = this.getSearchParamsData().idValue ||
                     this.searchParams.idValue || this.searchParams.value;
 
-                this.searchData.nameValue = this.getSearchParamsData().nameValue |
+                this.searchData.nameValue = this.getSearchParamsData().nameValue ||
                     this.searchParams.nameValue || this.searchParams.valueName;
             }
 
