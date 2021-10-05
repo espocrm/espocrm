@@ -35,6 +35,7 @@ use Espo\Core\{
     Exceptions\Conflict,
     Exceptions\Error,
     Utils\Log,
+    Utils\Config,
 };
 
 use Throwable;
@@ -72,9 +73,12 @@ class ErrorOutput
 
     private $log;
 
-    public function __construct(Log $log)
+    private $config;
+
+    public function __construct(Log $log, Config $config)
     {
         $this->log = $log;
+        $this->config = $config;
     }
 
     public function process(
@@ -137,6 +141,10 @@ class ErrorOutput
         }
 
         $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
+
+        if ($this->toPrintTrace()) {
+            $logMessage .= " :: " . $exception->getTraceAsString();
+        }
 
         $this->log->log($logLevel, $logMessage);
 
@@ -255,5 +263,10 @@ class ErrorOutput
         $logMessage .= implode("; ", $logMessageItemList);
 
         $this->log->log('debug', $logMessage);
+    }
+
+    private function toPrintTrace(): bool
+    {
+        return (bool) $this->config->get('logger.printTrace');
     }
 }
