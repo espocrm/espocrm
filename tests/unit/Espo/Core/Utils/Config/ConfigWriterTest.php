@@ -181,8 +181,8 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->withConsecutive(
                 [$this->configPath],
                 [$this->internalConfigPath],
-                [$this->configPath],
                 [$this->internalConfigPath],
+                [$this->configPath],
             )
             ->willReturnOnConsecutiveCalls(
                 [],
@@ -192,8 +192,8 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
         $this->fileManager
             ->method('putPhpcontents')
             ->withConsecutive(
-                [$this->configPath, ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]],
                 [$this->internalConfigPath, ['k2' => 'v2', 'microtimeInternal' => 1.0]],
+                [$this->configPath, ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]],
             );
 
         $this->configWriter->save();
