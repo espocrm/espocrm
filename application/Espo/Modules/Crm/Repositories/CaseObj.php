@@ -42,7 +42,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
 
     protected $streamService;
 
-    public function afterSave(Entity $entity, array $options = [])
+    protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
