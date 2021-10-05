@@ -234,6 +234,10 @@ class Attachment extends Record
             throw new Error("Field type '{$fieldType}' is not allowed for {$role}.");
         }
 
+        if ($this->getUser()->isAdmin() && $relatedEntityType === 'Settings') {
+            return;
+        }
+
         if (
             !$this->getAcl()->checkScope($relatedEntityType, 'create')
             &&
