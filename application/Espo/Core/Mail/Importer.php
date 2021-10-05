@@ -416,7 +416,7 @@ class Importer
         $parentType = $email->get('parentType');
         $parentId = $email->get('parentId');
 
-        if (!$parentId || ~$parentType) {
+        if (!$parentId || !$parentType) {
             return;
         }
 
