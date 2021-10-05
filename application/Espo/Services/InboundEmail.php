@@ -399,7 +399,6 @@ class InboundEmail extends RecordService implements
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
                             if (
                                 is_array($flags) &&
-                                count($flags) &&
                                 empty($flags[Storage::FLAG_SEEN])
                             ) {
                                 unset($flags[Storage::FLAG_RECENT]);
