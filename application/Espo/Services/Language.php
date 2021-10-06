@@ -123,7 +123,7 @@ class Language
                     continue;
                 }
 
-                if (!$this->acl->check($scope)) {
+                if (!$this->acl->tryCheck($scope)) {
                     unset($data[$scope]);
                     unset($data['Global']['scopeNames'][$scope]);
                     unset($data['Global']['scopeNamesPlural'][$scope]);
@@ -179,7 +179,7 @@ class Language
                     if (!$aclScope) {
                         continue;
                     }
-                    if (!$this->acl->check($aclScope)) {
+                    if (!$this->acl->tryCheck($aclScope)) {
                         continue;
                     }
 

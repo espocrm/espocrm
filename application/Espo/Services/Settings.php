@@ -232,7 +232,7 @@ class Settings
                 continue;
             }
 
-            if ($this->acl->check($scope)) {
+            if ($this->acl->tryCheck($scope)) {
                 continue;
             }
 

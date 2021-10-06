@@ -166,6 +166,7 @@ class Layout
             }
 
             $layout = $this->getRecordFromSet($scope, $nameReal, $layoutSetId, true);
+
             if ($layout) {
                 $data = $layout->get('data');
             }
@@ -173,8 +174,10 @@ class Layout
 
         if (!$data) {
             $dataString = $this->layout->get($scope, $name);
+
             $data = json_decode($dataString);
-        } else {
+        }
+        else {
             $dataString = json_encode($data);
         }
 
@@ -196,11 +199,12 @@ class Layout
                             ->get(['entityDefs', $scope, 'links', $link, 'entity']);
 
                         if ($foreignEntityType) {
-                            if (!$this->acl->check($foreignEntityType)) {
+                            if (!$this->acl->tryCheck($foreignEntityType)) {
                                 unset($data[$i]);
                             }
                         }
                     }
+
                     $data = array_values($data);
                 }
             }
