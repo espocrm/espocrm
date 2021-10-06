@@ -329,7 +329,7 @@ class Activities implements
                     $seed->hasAttribute('dateEndDate') ?
                         ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']
                 ),
-                ['"Meeting"', '_scope'],
+                ['"' . $targetEntityType . '"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
