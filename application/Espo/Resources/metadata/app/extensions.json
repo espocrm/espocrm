@@ -1,0 +1,7 @@
+{
+    "Advanced Pack": {
+        "acceptableVersions": [
+            ">=2.8.0"
+        ]
+    }
+}

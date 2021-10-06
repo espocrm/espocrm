@@ -33,6 +33,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Metadata;
 
 use Espo\Core\{
     Container,
@@ -169,6 +170,11 @@ abstract class Base
     public function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->getContainer()->get('metadata');
     }
 
     public function createConfigWriter(): ConfigWriter
