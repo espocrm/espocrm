@@ -68,6 +68,7 @@ return [
         'level' => 'WARNING', /** DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY */
         'rotation' => true,
         'maxFileNumber' => 30,
+        'printTrace' => false,
     ],
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' => [
