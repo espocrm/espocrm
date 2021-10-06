@@ -164,7 +164,7 @@ class Metadata
         foreach ($dashletList as $item) {
             $aclScope = $this->metadata->get(['dashlets', $item, 'aclScope']);
 
-            if ($aclScope && !$this->acl->check($aclScope)) {
+            if ($aclScope && !$this->acl->tryCheck($aclScope)) {
                 unset($data->dashlets->$item);
             }
         }
@@ -195,7 +195,7 @@ class Metadata
                     continue;
                 }
 
-                if (!$this->acl->check($aclScope)) {
+                if (!$this->acl->tryCheck($aclScope)) {
                     continue;
                 }
 
