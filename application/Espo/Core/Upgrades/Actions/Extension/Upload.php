@@ -35,4 +35,30 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
     {
         return $this->getHelper()->checkDependencies($dependencyList);
     }
+
+    protected function isAcceptable()
+    {
+        parent::isAcceptable();
+
+        $name = $this->getManifestParam('name');
+        $version = $this->getManifestParam('version');
+
+        if (!$name || !$version) {
+            return true;
+        }
+
+        $acceptableVersions = $this->getMetadata()->get(['app', 'extensions', $name, 'acceptableVersions']);
+
+        if (!$acceptableVersions) {
+            return true;
+        }
+
+        $acceptableVersionsString = implode(', ', $acceptableVersions);
+
+        $msg = "Version '{$version}' is not allowed. Acceptable versions: {$acceptableVersionsString}.";
+
+        $this->checkVersions($acceptableVersions, $version, $msg);
+
+        return true;
+    }
 }
