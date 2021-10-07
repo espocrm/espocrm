@@ -630,8 +630,11 @@ class Manager
         $pathParts = pathinfo($filePath);
 
         if (!file_exists($pathParts['dirname'])) {
-            $dirPermission = $defaultPermissions['dir'];
-            $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
+            $dirPermissionOriginal = $defaultPermissions['dir'];
+
+            $dirPermission = is_string($dirPermissionOriginal) ?
+                base_convert($dirPermissionOriginal, 8, 10) :
+                $dirPermissionOriginal;
 
             if (!$this->mkdir($pathParts['dirname'], $dirPermission, true)) {
                 throw new Error(
@@ -640,11 +643,21 @@ class Manager
             }
         }
 
-        if (touch($filePath)) {
-            return $this->getPermissionUtils()->setDefaultPermissions($filePath);
+        $touchResult = touch($filePath);
+
+        if (!$touchResult) {
+            return false;
         }
 
-        return false;
+        $setPrermissionsResult = $this->getPermissionUtils()->setDefaultPermissions($filePath);
+
+        if (!$setPrermissionsResult) {
+            $this->unlink($filePath);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
