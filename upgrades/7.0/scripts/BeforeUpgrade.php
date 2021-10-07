@@ -41,7 +41,12 @@ class BeforeUpgrade
         $this->processCheckCache();
 
         // Load to prevent fail if run in a single process.
-        $container->get('entityManager')->getQueryBuilder()->update();
+        $container->get('entityManager')
+            ->getQueryBuilder()
+            ->update()
+            ->in('Test')
+            ->set(['test' => 'test'])
+            ->build();
     }
 
     private function processCheckCache()
