@@ -218,9 +218,7 @@ class Auth
             return;
         }
 
-        $response->setStatus(500);
-
-        $this->log->error("Auth: " . $e->getMessage());
+        throw $e;
     }
 
     protected function handleUnauthorized(Response $response, bool $showDialog): void
