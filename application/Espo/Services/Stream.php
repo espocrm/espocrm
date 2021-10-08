@@ -108,7 +108,18 @@ class Stream
 
     private $recordServiceContainer;
 
-    private const NOTE_ACL_PERIOD = '1 hour';
+    /**
+     * When a record is re-assigned, ACL will be recalculated for related notes
+     * created within the period.
+     */
+    private const NOTE_ACL_PERIOD = '3 days';
+
+    private const NOTE_ACL_LIMIT = 50;
+
+    /**
+     * Not used currently.
+     */
+    private const NOTE_NOTIFICATION_PERIOD = '1 hour';
 
     public function __construct(
         EntityManager $entityManager,
@@ -2110,6 +2121,8 @@ class Stream
             return;
         }
 
+        $limit = $this->config->get('noteAclLimit', self::NOTE_ACL_LIMIT);
+
         $noteList = $this->entityManager
             ->getRDBRepository('Note')
             ->where([
@@ -2137,6 +2150,8 @@ class Stream
                 'relatedId',
                 'createdAt',
             ])
+            ->order('number', 'DESC')
+            ->limit(0, $limit)
             ->find();
 
         $noteOptions = [];
@@ -2145,9 +2160,11 @@ class Stream
             $noteOptions['forceProcessNotifications'] = true;
         }
 
-        $period = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_ACL_PERIOD);
+        $notificationPeriod = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_NOTIFICATION_PERIOD);
+        $aclPeriod = '-' . $this->config->get('noteAclPeriod', self::NOTE_ACL_PERIOD);
 
-        $threshold = (new DateTime())->modify($period);
+        $notificationThreshold = (new DateTime())->modify($notificationPeriod);
+        $aclThreshold = (new DateTime())->modify($aclPeriod);
 
         foreach ($noteList as $note) {
             $this->processNoteAclItem($entity, $note, [
@@ -2156,7 +2173,8 @@ class Stream
                 'forceProcessNoteNotifications' => $forceProcessNoteNotifications,
                 'teamIdList' => $teamIdList,
                 'userIdList' => $userIdList,
-                'threshold' => $threshold,
+                'notificationThreshold' => $notificationThreshold,
+                'aclThreshold' => $aclThreshold,
             ]);
         }
     }
@@ -2170,21 +2188,21 @@ class Stream
         $teamIdList = $params['teamIdList'];
         $userIdList = $params['userIdList'];
 
-        $threshold = $params['threshold'];
+        $notificationThreshold = $params['notificationThreshold'];
+        $aclThreshold = $params['aclThreshold'];
 
-        $noteOptions = [
-            'forceProcessNotifications' => $forceProcessNoteNotifications,
-        ];
+        $createdAt = $note->getCreatedAt();
 
-        if (!$entity->isNew() && $note->get('createdAt')) {
-            try {
-                $createdAtDt = new DateTime($note->get('createdAt'));
+        if (!$createdAt) {
+            return;
+        }
+
+        if (!$entity->isNew()) {
+            if ($createdAt->getTimestamp() < $notificationThreshold->getTimestamp()) {
+                $forceProcessNoteNotifications = false;
             }
-            catch (Exception $e) {
-                return;
-            }
 
-            if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
+            if ($createdAt->getTimestamp() < $aclThreshold->getTimestamp()) {
                 return;
             }
         }
@@ -2197,7 +2215,9 @@ class Stream
             $note->set('usersIds', $userIdList);
         }
 
-        $this->entityManager->saveEntity($note, $noteOptions);
+        $this->entityManager->saveEntity($note, [
+            'forceProcessNotifications' => $forceProcessNoteNotifications,
+        ]);
     }
 
     public function applyAccessControlToNote(NoteEntity $note, ?User $user = null): void

@@ -31,6 +31,8 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
+use Espo\Core\Field\DateTime;
+
 use stdClass;
 
 class Note extends Entity
@@ -115,6 +117,11 @@ class Note extends Entity
     public function getPost(): ?string
     {
         return $this->get('post');
+    }
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->getValueObject('createdAt');
     }
 
     public function setAclIsProcessed(): void
