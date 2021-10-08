@@ -61,7 +61,7 @@ class EspoFileHandler extends MonologStreamHandler
     {
         if (!$this->url) {
             throw new RuntimeException(
-                "Missing a logger file path. Check logger params in `data/config.php`."
+                "Missing a logger file path. Check logger params in config."
             );
         }
 
