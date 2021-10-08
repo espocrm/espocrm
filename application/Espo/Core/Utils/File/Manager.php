@@ -607,7 +607,7 @@ class Manager
     }
 
     /**
-     * Create a new file if not exists with all folders in the path.
+     * Checks whether a new file can be created. It will also create all needed directories.
      */
     public function checkCreateFile(string $filePath): bool
     {
@@ -654,7 +654,13 @@ class Manager
         if (!$setPrermissionsResult) {
             $this->unlink($filePath);
 
-            return false;
+            /**
+             * Returning true will cause situations when files are created with
+             * a wrong ownership. This is a trade-off for being able to run
+             * Espo under a user that is neither webserver-user nor root. A file
+             * will be created owned by a user running the process.
+             */
+            return true;
         }
 
         return true;
