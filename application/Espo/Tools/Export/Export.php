@@ -455,6 +455,10 @@ class Export
                 continue;
             }
 
+            if (!$entityDefs->hasField($field)) {
+                continue;
+            }
+
             if ($entityDefs->getField($field)->getParam('exportDisabled')) {
                 unset($fieldList[$i]);
             }
