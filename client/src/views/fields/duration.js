@@ -123,12 +123,16 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             return this.stringValue;
         },
 
-        stringifyDuration: function (seconds) {
-            if (!seconds) {
+        stringifyDuration: function (secondsTotal) {
+            if (!secondsTotal) {
                 return '0';
             }
 
-            var d = seconds;
+            if (secondsTotal < 60) {
+                return '0';
+            }
+
+            var d = secondsTotal;
 
             var days = Math.floor(d / (86400));
 
