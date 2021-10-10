@@ -67,11 +67,11 @@ class EspoFileHandler extends MonologStreamHandler
 
         try {
             if (!is_writable($this->url)) {
-                $this->fileManager->checkCreateFile($this->url);
-            }
+                $checkFileResult = $this->fileManager->checkCreateFile($this->url);
 
-            if (!is_writable($this->url)) {
-                return;
+                if (!$checkFileResult) {
+                    return;
+                }
             }
 
             $this->fileManager->appendContents(
