@@ -84,7 +84,7 @@ class Pdf implements EntryPoint
             ->setHeader('Pragma', 'public')
             ->setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT')
             ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
-            ->setHeader('Content', 'inline; filename="' . basename($fileName) . '"');
+            ->setHeader('Content-Disposition', 'inline; filename="' . basename($fileName) . '"');
 
         if (!$request->getServerParam('HTTP_ACCEPT_ENCODING')) {
             $response->setHeader('Content-Length', $contents->getLength());
