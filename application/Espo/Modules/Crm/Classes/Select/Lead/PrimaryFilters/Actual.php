@@ -46,7 +46,7 @@ class Actual implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $notActualStatusList = $this->metadata
-            ->get(['entityDefs', 'Actual', 'fields', 'status', 'notActualOptions']) ?? [];
+            ->get(['entityDefs', 'Lead', 'fields', 'status', 'notActualOptions']) ?? [];
 
         $queryBuilder->where(
             Cond::notIn(
