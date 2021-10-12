@@ -44,15 +44,27 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
         thousandSeparator: ',',
 
-        searchTypeList: ['isNotEmpty', 'isEmpty', 'equals', 'notEquals', 'greaterThan', 'lessThan', 'greaterThanOrEquals', 'lessThanOrEquals', 'between'],
+        searchTypeList: [
+            'isNotEmpty',
+            'isEmpty',
+            'equals',
+            'notEquals',
+            'greaterThan',
+            'lessThan',
+            'greaterThanOrEquals',
+            'lessThanOrEquals',
+            'between',
+        ],
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.setupMaxLength();
 
             if (this.getPreferences().has('thousandSeparator')) {
                 this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
+            }
+            else {
                 if (this.getConfig().has('thousandSeparator')) {
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
@@ -66,21 +78,22 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var $searchType = this.$el.find('select.search-type');
+
                 this.handleSearchType($searchType.val());
 
-                this.$el.find('select.search-type').on('change', function () {
+                this.$el.find('select.search-type').on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
 
-                this.$element.on('input', function () {
+                this.$element.on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
 
-                this.$el.find('input.additional').on('input', function () {
+                this.$el.find('input.additional').on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -90,10 +103,12 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
                 data.isNotEmpty = true;
             }
+
             data.valueIsSet = this.model.has(this.name);
 
             if (this.isSearchMode()) {
                 data.value = this.searchParams.value;
+
                 if (this.getSearchType() === 'between') {
                     data.value = this.getSearchParamsData().value1 || this.searchParams.value1;
                     data.value2 = this.getSearchParamsData().value2 || this.searchParams.value2;
@@ -105,6 +120,7 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
         getValueForDisplay: function () {
             var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+
             return this.formatNumber(value);
         },
 
@@ -112,17 +128,21 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.disableFormatting) {
                 return value;
             }
+
             if (value !== null) {
                 var stringValue = value.toString();
+
                 stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
                 return stringValue;
             }
+
             return '';
         },
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     this.handleSearchType($(e.currentTarget).val());
                 },
             }, this.events || {});
@@ -130,15 +150,18 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
         handleSearchType: function (type) {
             var $additionalInput = this.$el.find('input.additional');
+
             var $input = this.$el.find('input[data-name="'+this.name+'"]');
 
             if (type === 'between') {
                 $additionalInput.removeClass('hidden');
                 $input.removeClass('hidden');
-            } else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            }
+            else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
                 $additionalInput.addClass('hidden');
                 $input.addClass('hidden');
-            } else {
+            }
+            else {
                 $additionalInput.addClass('hidden');
                 $input.removeClass('hidden');
             }
@@ -177,15 +200,19 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
             if (typeof max !== 'undefined' && max !== null) {
                 maxValue = this.formatNumber(maxValue);
+
                 this.params.maxLength = maxValue.toString().length;
             }
         },
 
         validateInt: function () {
             var value = this.model.get(this.name);
+
             if (isNaN(value)) {
                 var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+
                 this.showValidationMessage(msg);
+
                 return true;
             }
         },
@@ -202,25 +229,34 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
             if (minValue !== null && maxValue !== null) {
                 if (value < minValue || value > maxValue ) {
-                    var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{min}', minValue)
-                                                                                .replace('{max}', maxValue);
+                    var msg = this.translate('fieldShouldBeBetween', 'messages')
+                        .replace('{field}', this.getLabelText())
+                        .replace('{min}', minValue)
+                        .replace('{max}', maxValue);
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
-            } else {
+            }
+            else {
                 if (minValue !== null) {
                     if (value < minValue) {
-                        var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{value}', minValue);
+                        var msg = this.translate('fieldShouldBeGreater', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{value}', minValue);
+
                         this.showValidationMessage(msg);
                         return true;
                     }
-                } else if (maxValue !== null) {
+                }
+                else if (maxValue !== null) {
                     if (value > maxValue) {
-                        var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.getLabelText())
-                                                                                    .replace('{value}', maxValue);
+                        var msg = this.translate('fieldShouldBeLess', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{value}', maxValue);
                         this.showValidationMessage(msg);
+
                         return true;
                     }
                 }
@@ -230,9 +266,12 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
+
                 if (value === null || value === false) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -240,22 +279,29 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
         parse: function (value) {
             value = (value !== '') ? value : null;
+
             if (value !== null) {
                 value = value.split(this.thousandSeparator).join('');
+
                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
                     value = NaN;
-                } else {
+                }
+                else {
                     value = parseInt(value);
                 }
             }
+
             return value;
         },
 
         fetch: function () {
             var value = this.$element.val();
             value = this.parse(value);
+
             var data = {};
+
             data[this.name] = value;
+
             return data;
         },
 
@@ -283,17 +329,20 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
                         value2: valueTo
                     }
                 };
-            } else if (type == 'isEmpty') {
+            }
+            else if (type === 'isEmpty') {
                 data = {
                     type: 'isNull',
                     typeFront: 'isEmpty'
                 };
-            } else if (type == 'isNotEmpty') {
+            }
+            else if (type === 'isNotEmpty') {
                 data = {
                     type: 'isNotNull',
                     typeFront: 'isNotEmpty'
                 };
-            } else {
+            }
+            else {
                 data = {
                     type: type,
                     value: value,
@@ -302,12 +351,13 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
                     }
                 };
             }
+
             return data;
         },
 
         getSearchType: function () {
             return this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
 
     });
 });

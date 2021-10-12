@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
+define('views/fields/float', 'views/fields/int', function (Dep) {
 
     return Dep.extend({
 
@@ -43,7 +43,8 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark');
-            } else {
+            }
+            else {
                 if (this.getConfig().has('decimalMark')) {
                     this.decimalMark = this.getConfig().get('decimalMark');
                 }
@@ -52,6 +53,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         getValueForDisplay: function () {
             var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+
             return this.formatNumber(value);
         },
 
@@ -59,11 +61,15 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
             if (this.disableFormatting) {
                 return value;
             }
+
             if (value !== null) {
                 var parts = value.toString().split(".");
+
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
                 return parts.join(this.decimalMark);
             }
+
             return '';
         },
 
@@ -72,29 +78,37 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         validateFloat: function () {
             var value = this.model.get(this.name);
+
             if (isNaN(value)) {
                 var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
+
                 this.showValidationMessage(msg);
+
                 return true;
             }
         },
 
         parse: function (value) {
             value = (value !== '') ? value : null;
+
             if (value !== null) {
                 value = value.split(this.thousandSeparator).join('');
                 value = value.split(this.decimalMark).join('.');
                 value = parseFloat(value);
             }
+
             return value;
         },
 
         fetch: function () {
             var value = this.$element.val();
+
             value = this.parse(value);
 
             var data = {};
+
             data[this.name] = value;
+
             return data;
         },
     });
