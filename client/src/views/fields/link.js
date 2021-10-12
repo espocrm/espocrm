@@ -523,6 +523,16 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
+            if (~['isOneOf', 'isNotOneOf'].indexOf(type) && !this.searchData.oneOfIdList.length) {
+                return {
+                    type: 'isNotNull',
+                    attribute: 'id',
+                    data: {
+                        type: type,
+                    },
+                };
+            }
+
             if (type === 'isEmpty') {
                 var data = {
                     type: 'isNull',
@@ -534,7 +544,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isNotEmpty') {
+
+            if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
                     attribute: this.idName,
@@ -545,7 +556,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isOneOf') {
+
+            if (type === 'isOneOf') {
                 var data = {
                     type: 'in',
                     attribute: this.idName,
@@ -559,7 +571,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isNotOneOf') {
+
+            if (type === 'isNotOneOf') {
                 var data = {
                     type: 'or',
                     value: [
@@ -582,7 +595,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isNotOneOfAndIsNotEmpty') {
+
+            if (type === 'isNotOneOfAndIsNotEmpty') {
                 var data = {
                     type: 'notIn',
                     attribute: this.idName,
@@ -596,7 +610,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type === 'isNot') {
+
+            if (type === 'isNot') {
                 if (!value) {
                     return false;
                 }
@@ -624,7 +639,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 };
                 return data;
             }
-            else if (type === 'isNotAndIsNotEmpty') {
+
+            if (type === 'isNotAndIsNotEmpty') {
                 if (!value) {
                     return false;
                 }
@@ -644,26 +660,25 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else {
-                if (!value) {
-                    return false;
-                }
 
-                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
-
-                var data = {
-                    type: 'equals',
-                    attribute: this.idName,
-                    value: value,
-                    data: {
-                        type: type,
-                        idValue: value,
-                        nameValue: nameValue
-                    }
-                };
-
-                return data;
+            if (!value) {
+                return false;
             }
+
+            var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+
+            var data = {
+                type: 'equals',
+                attribute: this.idName,
+                value: value,
+                data: {
+                    type: type,
+                    idValue: value,
+                    nameValue: nameValue,
+                }
+            };
+
+            return data;
         },
 
         getSearchType: function () {

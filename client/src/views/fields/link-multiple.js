@@ -480,10 +480,19 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
+            var idList = this.ids || [];
+
+            if (~['anyOf', 'allOf', 'noneOf'].indexOf(type) && !idList.length) {
+                return {
+                    type: 'isNotNull',
+                    attribute: 'id',
+                    data: {
+                        type: type,
+                    },
+                };
+            }
 
             if (type === 'anyOf') {
-                var idList = this.ids || [];
-
                 var data = {
                     type: 'linkedWith',
                     value: idList,
@@ -493,16 +502,10 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     },
                 };
 
-                if (!idList.length) {
-                    data.value = null;
-                }
-
                 return data;
             }
 
-             if (type === 'allOf') {
-                var idList = this.ids || [];
-
+            if (type === 'allOf') {
                 var data = {
                     type: 'linkedWithAll',
                     value: idList,
@@ -522,7 +525,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (type === 'noneOf') {
                 var data = {
                     type: 'notLinkedWith',
-                    value: this.ids || [],
+                    value: idList,
                     data: {
                         type: type,
                         nameHash: this.nameHash,
