@@ -38,7 +38,7 @@ define('views/email/list', 'views/list', function (Dep) {
 
         folderScope: 'EmailFolder',
 
-        currentFolderId: null,
+        selectedFolderId: null,
 
         defaultFolderId: 'inbox',
 
@@ -169,6 +169,8 @@ define('views/email/list', 'views/list', function (Dep) {
         },
 
         applyFolder: function () {
+            this.collection.selectedFolderId = this.selectedFolderId;
+
             if (!this.selectedFolderId) {
                 this.collection.whereFunction = null;
 

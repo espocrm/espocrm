@@ -59,7 +59,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     model.set('inTrash', true);
                 }
 
-                if (this.collection.data.folderId !== 'trash' && this.collection.data.folderId !== 'all') {
+                if (this.collection.selectedFolderId !== 'trash' && this.collection.selectedFolderId !== 'all') {
                     this.removeRecordFromList(id);
                 }
             });
@@ -71,7 +71,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     model.set('inTrash', false);
                 }
 
-                if (this.collection.data.folderId === 'trash') {
+                if (this.collection.selectedFolderId === 'trash') {
                     this.removeRecordFromList(id);
                 }
             });
@@ -176,7 +176,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     Espo.Ui.success(this.translate('Done'));
                 });
 
-            if (this.collection.data.folderId === 'trash') {
+            if (this.collection.selectedFolderId === 'trash') {
                 return;
             }
 
@@ -200,7 +200,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     Espo.Ui.success(this.translate('Done'));
                 });
 
-            if (this.collection.data.folderId !== 'trash') {
+            if (this.collection.selectedFolderId !== 'trash') {
                 return;
             }
 
@@ -354,7 +354,7 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                     .then(() => {
                         Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
 
-                        if (this.collection.data.folderId === 'drafts') {
+                        if (this.collection.selectedFolderId === 'drafts') {
                             this.removeRecordFromList(id);
                             this.uncheckRecord(id, null, true);
                             this.collection.trigger('draft-sent');
