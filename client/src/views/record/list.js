@@ -1182,6 +1182,8 @@ define('views/record/list', 'view', function (Dep) {
             if (allResult) {
                 this.checkAllResultMassActionList[method](item);
             }
+
+            this.checkboxes = true;
         },
 
         removeAllResultMassAction: function (item) {
