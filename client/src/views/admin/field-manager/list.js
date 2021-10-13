@@ -140,8 +140,8 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
                 let matched = false;
 
                 if (
-                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.name.toLowerCase().indexOf(lowerCaseText) === 0
+                    item.label.toLowerCase().indexOf(lowerCaseText) !== -1 ||
+                    item.name.toLowerCase().indexOf(lowerCaseText) !== -1
                 ) {
                     matched = true;
                 }
