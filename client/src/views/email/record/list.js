@@ -52,8 +52,9 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
             this.addMassAction('markAsRead', false, true);
             this.addMassAction('moveToTrash', false, true);
 
-            this.listenTo(this.collection, 'moving-to-trash', function (id) {
+            this.listenTo(this.collection, 'moving-to-trash', (id) => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('inTrash', true);
                 }
@@ -61,10 +62,11 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                 if (this.collection.data.folderId !== 'trash' && this.collection.data.folderId !== 'all') {
                     this.removeRecordFromList(id);
                 }
-            }, this);
+            });
 
-            this.listenTo(this.collection, 'retrieving-from-trash', function (id) {
+            this.listenTo(this.collection, 'retrieving-from-trash', (id) => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('inTrash', false);
                 }
@@ -72,167 +74,180 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
                 if (this.collection.data.folderId === 'trash') {
                     this.removeRecordFromList(id);
                 }
-            }, this);
+            });
         },
 
         massActionMarkAsRead: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
-            $.ajax({
-                url: 'Email/action/markAsRead',
-                type: 'POST',
-                data: JSON.stringify({
-                    ids: ids
-                })
-            });
 
-            ids.forEach(function (id) {
+            Espo.Ajax
+                .postRequest('Email/action/markAsRead', {
+                    ids: ids,
+                });
+
+            ids.forEach(id => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('isRead', true);
                 }
-            }, this);
+            });
         },
 
         massActionMarkAsNotRead: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
-            $.ajax({
-                url: 'Email/action/markAsNotRead',
-                type: 'POST',
-                data: JSON.stringify({
-                    ids: ids
-                })
-            });
 
-            ids.forEach(function (id) {
+            Espo.Ajax
+                .postRequest('Email/action/markAsNotRead', {
+                    ids: ids,
+                });
+
+            ids.forEach(id => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('isRead', false);
                 }
-            }, this);
+            });
         },
 
         massActionMarkAsImportant: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
-            $.ajax({
-                url: 'Email/action/markAsImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    ids: ids
-                })
-            });
-            ids.forEach(function (id) {
+
+            Espo.Ajax
+                .postRequest('Email/action/markAsImportant', {
+                    ids: ids,
+                });
+
+            ids.forEach(id => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('isImportant', true);
                 }
-            }, this);
+            });
         },
 
         massActionMarkAsNotImportant: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
-            $.ajax({
-                url: 'Email/action/markAsNotImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    ids: ids
-                })
-            });
-            ids.forEach(function (id) {
+
+            Espo.Ajax
+                .postRequest('Email/action/markAsNotImportant', {
+                    ids: ids,
+                });
+
+            ids.forEach(id => {
                 var model = this.collection.get(id);
+
                 if (model) {
                     model.set('isImportant', false);
                 }
-            }, this);
+            });
         },
 
         massActionMoveToTrash: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
-            this.ajaxPostRequest('Email/action/moveToTrash', {
-                ids: ids
-            }).then(function () {
-                Espo.Ui.success(this.translate('Done'));
-            }.bind(this));
+            Espo.Ajax
+                .postRequest('Email/action/moveToTrash', {
+                    ids: ids
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('Done'));
+                });
 
             if (this.collection.data.folderId === 'trash') {
                 return;
             }
 
-            ids.forEach(function (id) {
+            ids.forEach(id => {
                 this.collection.trigger('moving-to-trash', id);
-            }, this);
+            });
         },
 
         massActionRetrieveFromTrash: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
-            this.ajaxPostRequest('Email/action/retrieveFromTrash', {
-                ids: ids
-            }).then(function () {
-                Espo.Ui.success(this.translate('Done'));
-            }.bind(this));
+            Espo.Ajax
+                .postRequest('Email/action/retrieveFromTrash', {
+                    ids: ids
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('Done'));
+                });
 
             if (this.collection.data.folderId !== 'trash') {
                 return;
             }
 
-            ids.forEach(function (id) {
+            ids.forEach(id => {
                 this.collection.trigger('retrieving-from-trash', id);
-            }, this);
+            });
         },
 
         massActionMoveToFolder: function () {
             var ids = [];
+
             for (var i in this.checkedList) {
                 ids.push(this.checkedList[i]);
             }
 
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
                 view.render();
-                this.listenToOnce(view, 'select', function (folderId) {
+
+                this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
-                    this.ajaxPostRequest('Email/action/moveToFolder', {
-                        ids: ids,
-                        folderId: folderId
-                    }).then(function () {
-                        this.collection.fetch().then(function () {
-                            Espo.Ui.success(this.translate('Done'));
-                        }.bind(this));
-                    }.bind(this));
-                }, this);
-            }, this);
+
+                    Espo.Ajax
+                        .postRequest('Email/action/moveToFolder', {
+                            ids: ids,
+                            folderId: folderId,
+                        })
+                        .then(() => {
+                            this.collection.fetch().then(() => {
+                                Espo.Ui.success(this.translate('Done'));
+                            });
+                        });
+                });
+            });
         },
 
         actionMarkAsImportant: function (data) {
             data = data || {};
+
             var id = data.id;
-            $.ajax({
-                url: 'Email/action/markAsImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: id
-                })
-            });
+
+            Espo.Ajax
+                .postRequest('Email/action/markAsImportant', {
+                    id: id,
+                });
 
             var model = this.collection.get(id);
+
             if (model) {
                 model.set('isImportant', true);
             }
@@ -240,72 +255,81 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
 
         actionMarkAsNotImportant: function (data) {
             data = data || {};
-            var id = data.id;
-            $.ajax({
-                url: 'Email/action/markAsNotImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: id
-                })
-            });
 
+            var id = data.id;
+
+            Espo.Ajax
+                .postRequest('Email/action/markAsNotImportant', {
+                    id: id,
+                });
 
             var model = this.collection.get(id);
+
             if (model) {
                 model.set('isImportant', false);
             }
         },
 
         actionMarkAllAsRead: function () {
-            $.ajax({
-                url: 'Email/action/markAllAsRead',
-                type: 'POST'
-            });
+            Espo.Ajax
+                .postRequest('Email/action/markAllAsRead');
 
-            this.collection.forEach(function (model) {
+            this.collection.forEach(model => {
                 model.set('isRead', true);
-            }, this);
+            });
 
             this.collection.trigger('all-marked-read');
         },
 
         actionMoveToTrash: function (data) {
             var id = data.id;
-            this.ajaxPostRequest('Email/action/moveToTrash', {
-                id: id
-            }).then(function () {
-                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
-                this.collection.trigger('moving-to-trash', id);
-            }.bind(this));
+
+            Espo.Ajax
+                .postRequest('Email/action/moveToTrash', {
+                    id: id
+                })
+                .then(() => {
+                    Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+
+                    this.collection.trigger('moving-to-trash', id);
+                });
         },
 
         actionRetrieveFromTrash: function (data) {
             var id = data.id;
-            this.ajaxPostRequest('Email/action/retrieveFromTrash', {
-                id: id
-            }).then(function () {
-                Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
-                this.collection.trigger('retrieving-from-trash', id);
-            }.bind(this));
+
+            Espo.Ajax
+                .postRequest('Email/action/retrieveFromTrash', {
+                    id: id
+                })
+                .then(() => {
+                    Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+
+                    this.collection.trigger('retrieving-from-trash', id);
+                });
         },
 
         actionMoveToFolder: function (data) {
             var id = data.id;
 
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, view => {
                 view.render();
-                this.listenToOnce(view, 'select', function (folderId) {
+
+                this.listenToOnce(view, 'select', folderId => {
                     this.clearView('dialog');
-                    this.ajaxPostRequest('Email/action/moveToFolder', {
-                        id: id,
-                        folderId: folderId
-                    }).then(function () {
-                        this.collection.fetch().then(function () {
-                            Espo.Ui.success(this.translate('Done'));
-                        }.bind(this));
-                    }.bind(this));
-                }, this);
-            }, this);
+
+                    Espo.Ajax
+                        .postRequest('Email/action/moveToFolder', {
+                            id: id,
+                            folderId: folderId
+                        })
+                        .then(() => {
+                            this.collection.fetch().then(() => {
+                                Espo.Ui.success(this.translate('Done'));
+                            });
+                        });
+                });
+            });
         },
 
         actionSend: function (data) {
@@ -314,27 +338,30 @@ define('views/email/record/list', 'views/record/list', function (Dep) {
             this.confirm({
                 message: this.translate('sendConfirm', 'messages', 'Email'),
                 confirmText: this.translate('Send', 'labels', 'Email'),
-            }).then(
-                function () {
-                    var model = this.collection.get(id);
-                    if (!model) return;
+            }).then(() => {
+                var model = this.collection.get(id);
 
-                    Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
+                if (!model) {
+                    return;
+                }
 
-                    model.save({
+                Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
+
+                model
+                    .save({
                         status: 'Sending',
-                    }).then(
-                        function () {
-                            Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
-                            if (this.collection.data.folderId === 'drafts') {
-                                this.removeRecordFromList(id);
-                                this.uncheckRecord(id, null, true);
-                                this.collection.trigger('draft-sent');
-                            }
-                        }.bind(this)
-                    );
-                }.bind(this)
-            );
+                    })
+                    .then(() => {
+                        Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
+
+                        if (this.collection.data.folderId === 'drafts') {
+                            this.removeRecordFromList(id);
+                            this.uncheckRecord(id, null, true);
+                            this.collection.trigger('draft-sent');
+                        }
+                    }
+                );
+            });
         },
 
     });
