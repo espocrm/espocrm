@@ -106,6 +106,8 @@ define('views/record/list', 'view', function (Dep) {
 
         setupHandlerType: 'record/list',
 
+        checkboxesDisabled: false,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -491,6 +493,8 @@ define('views/record/list', 'view', function (Dep) {
             this.pagination = _.isUndefined(this.options.pagination) ? this.pagination : this.options.pagination;
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
+
+            this.checkboxesDisabled = this.options.checkboxes === false;
 
             this.rowActionsView = _.isUndefined(this.options.rowActionsView) ?
                 this.rowActionsView :
@@ -1183,7 +1187,9 @@ define('views/record/list', 'view', function (Dep) {
                 this.checkAllResultMassActionList[method](item);
             }
 
-            this.checkboxes = true;
+            if (!this.checkboxesDisabled) {
+                this.checkboxes = true;
+            }
         },
 
         removeAllResultMassAction: function (item) {
