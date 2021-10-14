@@ -35,6 +35,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Join;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 trait SelectingBuilderTrait
 {
@@ -128,7 +129,7 @@ trait SelectingBuilderTrait
         }
 
         if (!$orderBy) {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];
