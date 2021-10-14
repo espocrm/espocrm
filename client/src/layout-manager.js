@@ -129,7 +129,7 @@ define('layout-manager', [], function () {
         },
 
         set: function (scope, type, layout, callback, setId) {
-            Espo.Ajax
+            return Espo.Ajax
                 .putRequest(this.getUrl(scope, type, setId), layout)
                 .then(
                     () => {

@@ -101,17 +101,20 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 return false;
             }
 
-            this.getHelper().layoutManager.set(this.scope, this.type, layout, () => {
-                this.notify('Saved', 'success', 2000);
+            this.getHelper()
+                .layoutManager
+                .set(this.scope, this.type, layout, () => {
+                    this.notify('Saved', 'success', 2000);
 
-                this.setIsNotChanged();
+                    this.setIsNotChanged();
 
-                if (typeof callback === 'function') {
-                    callback();
-                }
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
 
-                this.getHelper().broadcastChannel.postMessage('update:layout');
-            }, this.setId);
+                    this.getHelper().broadcastChannel.postMessage('update:layout');
+                }, this.setId)
+                .catch(() => this.enableButtons());
         },
 
         resetToDefault: function () {
