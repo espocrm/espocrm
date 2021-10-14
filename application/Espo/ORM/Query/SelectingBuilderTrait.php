@@ -35,6 +35,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Join;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 trait SelectingBuilderTrait
 {
