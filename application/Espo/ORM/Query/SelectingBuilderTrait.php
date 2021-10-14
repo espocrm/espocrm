@@ -129,7 +129,7 @@ trait SelectingBuilderTrait
         }
 
         if (!$orderBy) {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];
