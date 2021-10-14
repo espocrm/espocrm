@@ -7,7 +7,7 @@
             "type": "link"
         },
         "data": {
-            "type": "jsonObject"
+            "type": "text"
         }
     },
     "links": {

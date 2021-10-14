@@ -38,6 +38,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Metadata,
     DataManager,
+    Utils\Json,
 };
 
 use Espo\{
@@ -89,13 +90,13 @@ class Layout
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
 
-            if ($layout) {
-                $result = $layout->get('data');
+            if ($layout && $layout->get('data') !== null) {
+                $result = Json::decode($layout->get('data'));
             }
         }
 
         if (!$result) {
-            $result = json_decode(
+            $result = Json::decode(
                 $this->layout->get($scope, $name)
             );
         }
@@ -259,21 +260,22 @@ class Layout
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
 
-            $em = $this->entityManager;
-
             if (!$layout) {
-                $layout = $em->getEntity('LayoutRecord');
+                $layout = $this->entityManager->getEntity('LayoutRecord');
+
                 $layout->set([
                     'layoutSetId' => $setId,
                     'name' => $scope . '.' . $name,
                 ]);
             }
 
-            $layout->set('data', $data);
+            $layout->set('data', Json::encode($data));
 
-            $em->saveEntity($layout);
+            $this->entityManager->saveEntity($layout);
 
-            return $layout->get('data');
+            return Json::decode(
+                $layout->get('data')
+            );
         }
 
         $layoutManager = $this->layoutManager;
