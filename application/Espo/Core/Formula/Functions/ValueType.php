@@ -41,7 +41,7 @@ class ValueType extends BaseFunction
     public function process(ArgumentList $args)
     {
         if (!count($args)) {
-            throw Error("Bad value.");
+            throw new Error("Bad value.");
         }
 
         $value = $args[0]->getData();

@@ -35,6 +35,7 @@ use Espo\ORM\{
 };
 
 use Espo\Core\{
+    Exceptions\NotFound,
     Exceptions\Error,
     Exceptions\Forbidden,
     Select\SearchParams,

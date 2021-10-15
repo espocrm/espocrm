@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Upgrades\Actions\Base;
 
+use Espo\Core\Exceptions\Error;
+
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
     public function run($data)

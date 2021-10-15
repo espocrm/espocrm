@@ -34,6 +34,7 @@ use Espo\Modules\Crm\Business\Event\Invitations;
 
 use Espo\Services\Email as EmailService;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;

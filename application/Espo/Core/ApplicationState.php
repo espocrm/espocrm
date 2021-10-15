@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Entities\Portal as PortalEntity;
 use Espo\Entities\User as UserEntity;
 

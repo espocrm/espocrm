@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 class Target extends \Espo\Core\Controllers\Record
 {

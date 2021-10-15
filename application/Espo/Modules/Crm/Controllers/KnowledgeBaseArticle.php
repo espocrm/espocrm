@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+
 class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 {
     public function postActionGetCopiedAttachments($params, $data, $request)
