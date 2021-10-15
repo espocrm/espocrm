@@ -30,6 +30,7 @@
 namespace Espo\Tools\FieldManager;
 
 use Espo\Core\{
+    Exceptions\BadRequest,
     Exceptions\Error,
     Exceptions\Conflict,
     Container,

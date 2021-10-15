@@ -48,6 +48,8 @@ class PrinterController
 
     private $injectableFactory;
 
+    private $engine;
+
     public function __construct(
         Metadata $metadata,
         InjectableFactory $injectableFactory,

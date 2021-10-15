@@ -41,7 +41,7 @@ class VariableType extends BaseFunction
     public function process(ArgumentList $args)
     {
         if (!count($args)) {
-            throw Error("No variable name.");
+            throw new Error("No variable name.");
         }
 
         $name = $args[0]->getData();

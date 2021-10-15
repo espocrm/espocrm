@@ -52,6 +52,8 @@ class Container implements ContainerInterface
 
     private $configuration = null;
 
+    private $bindingContainer;
+
     private $injectableFactory;
 
     public function __construct(

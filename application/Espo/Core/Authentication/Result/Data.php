@@ -43,6 +43,8 @@ class Data
 
     private $loggedUser = null;
 
+    private $status = null;
+
     private $failReason = null;
 
     private $data = [];

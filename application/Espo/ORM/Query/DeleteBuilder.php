@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Query;
 
+use RuntimeException;
+
 class DeleteBuilder implements Builder
 {
     use SelectingBuilderTrait;

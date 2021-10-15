@@ -29,6 +29,9 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+
 class CaseObj extends \Espo\Core\Controllers\Record
 {
     protected $name = 'Case';

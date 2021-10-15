@@ -68,7 +68,7 @@ class ValidatorFactory
         $className = $this->getClassName($entityType, $field);
 
         if (!$className) {
-            throw RuntimeException("Validator for '{$entityType}.{$field}' does not exist.");
+            throw new RuntimeException("Validator for '{$entityType}.{$field}' does not exist.");
         }
 
         return $this->injectableFactory->create($className);

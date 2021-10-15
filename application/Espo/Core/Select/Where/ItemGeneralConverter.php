@@ -355,7 +355,7 @@ class ItemGeneralConverter implements ItemConverter
             }
 
             if (!$arrayAttributeLink || !$arrayAttribute) {
-                throw Error("Bad where item.");
+                throw new Error("Bad where item.");
             }
 
             $arrayEntityType = $entityDefs->getRelation($arrayAttributeLink)->getForeignEntityType();

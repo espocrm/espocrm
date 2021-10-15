@@ -44,6 +44,8 @@ class UserSecurity
 {
     private $service;
 
+    private $user;
+
     public function __construct(Service $service, User $user)
     {
         $this->service = $service;

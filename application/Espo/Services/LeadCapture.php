@@ -35,6 +35,7 @@ use Espo\{
 };
 
 use Espo\Core\{
+    Exceptions\Forbidden,
     Exceptions\NotFound,
     Exceptions\Error,
     Utils\Util,

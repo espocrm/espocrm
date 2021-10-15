@@ -53,6 +53,7 @@ class SelectManagerFactory
 
     private $user;
     private $acl;
+    private $aclManager;
     private $injectableFactory;
     private $classFinder;
 

@@ -37,6 +37,8 @@ class RelationManager
 {
     private $metadata;
 
+    private $config;
+
     public function __construct(Metadata $metadata, Config $config)
     {
         $this->metadata = $metadata;

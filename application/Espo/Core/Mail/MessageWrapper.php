@@ -35,6 +35,8 @@ use Espo\Core\Mail\Mail\Storage\Imap;
 
 class MessageWrapper
 {
+    private $parser;
+
     private $storage;
 
     private $id;
