@@ -43,8 +43,6 @@ class Data
 
     private $loggedUser = null;
 
-    private $status = null;
-
     private $failReason = null;
 
     private $data = [];
@@ -81,11 +79,6 @@ class Data
     public function getLoggedUser(): ?User
     {
         return $this->loggedUser;
-    }
-
-    public function getStatus(): string
-    {
-        return $this->status;
     }
 
     public function getView(): ?string
