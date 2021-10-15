@@ -46,7 +46,7 @@ class FieldProcessing
 
     public function afterSave(Entity $entity, array $options = []): void
     {
-        if (!empty($options['skipFieldProcessng'])) {
+        if (!empty($options['skipFieldProcessing'])) {
             return;
         }
 
