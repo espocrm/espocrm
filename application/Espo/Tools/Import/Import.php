@@ -94,6 +94,8 @@ class Import
 
     private $jobSchedulerFactory;
 
+    private $recordServiceContainer;
+
     private $log;
 
     public function __construct(

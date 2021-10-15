@@ -49,6 +49,8 @@ class Evaluator
 
     private $attributeFetcher;
 
+    private $injectableFactory;
+
     private $parsedHash;
 
     public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [])

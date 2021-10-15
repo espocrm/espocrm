@@ -86,6 +86,8 @@ class Authentication
 
     private $twoFactorLoginFactory;
 
+    private $authTokenManager;
+
     private $hookManager;
 
     private $log;

@@ -49,6 +49,8 @@ class Preferences implements Repository,
     use Di\ConfigSetter;
     use Di\EntityManagerSetter;
 
+    protected $entityFactory;
+
     public function __construct(
         EntityManager $entityManager,
         EntityFactory $entityFactory

@@ -104,6 +104,8 @@ class Stream
 
     private $selectBuilderFactory;
 
+    private $userAclManagerProvider;
+
     private $noteAccessControl;
 
     private $recordServiceContainer;

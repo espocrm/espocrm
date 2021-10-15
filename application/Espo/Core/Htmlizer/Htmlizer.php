@@ -65,6 +65,8 @@ class Htmlizer
 
     private $dateTime;
 
+    private $number;
+
     private $config;
 
     private $acl;
