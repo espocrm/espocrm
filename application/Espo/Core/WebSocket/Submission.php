@@ -32,6 +32,7 @@ namespace Espo\Core\WebSocket;
 use Espo\Core\Utils\Log;
 
 use stdClass;
+use Throwable;
 
 class Submission
 {
