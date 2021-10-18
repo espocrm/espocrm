@@ -42,7 +42,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
-                
+
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
             }
@@ -183,7 +183,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             if (isHtml) {
                 var signature = this.getSignature();
 
-                return  body + '<p><br></p>' + signature;
+                return  body + '' + signature;
             }
 
             var signature = this.getPlainTextSignature();
