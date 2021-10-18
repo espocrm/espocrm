@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Authentication\Logins;
 
+use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
+use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
+
 use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
@@ -40,7 +43,8 @@ use Espo\Core\{
     Authentication\Login\Data,
     Authentication\Result,
     Authentication\LDAP\Utils as LDAPUtils,
-    Authentication\LDAP\Client as LDAPClient,
+    Authentication\LDAP\Client as Client,
+    Authentication\LDAP\ClientFactory as ClientFactory,
     Authentication\AuthToken\AuthToken,
     Authentication\Result\FailReason,
 };
@@ -51,9 +55,7 @@ class LDAP implements Login
 {
     private $utils;
 
-    private $ldapClient;
-
-    private $baseLogin;
+    private $client;
 
     private $isPortal;
 
@@ -67,6 +69,12 @@ class LDAP implements Login
 
     private $log;
 
+    private $baseLogin;
+
+    private $clientFactory;
+
+    private $linkMultipleSaver;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
@@ -74,6 +82,8 @@ class LDAP implements Login
         Language $defaultLanguage,
         Log $log,
         Espo $baseLogin,
+        ClientFactory $clientFactyory,
+        LinkMultipleSaver $linkMultipleSaver,
         bool $isPortal = false
     ) {
         $this->config = $config;
@@ -82,6 +92,8 @@ class LDAP implements Login
         $this->language = $defaultLanguage;
         $this->log = $log;
         $this->baseLogin = $baseLogin;
+        $this->clientFactory = $clientFactyory;
+        $this->linkMultipleSaver = $linkMultipleSaver;
 
         $this->isPortal = $isPortal;
 
@@ -227,20 +239,20 @@ class LDAP implements Login
         return Result::success($user);
     }
 
-    private function getLdapClient()
+    private function getLdapClient(): Client
     {
-        if (!isset($this->ldapClient)) {
+        if (!isset($this->client)) {
             $options = $this->utils->getLdapClientOptions();
 
             try {
-                $this->ldapClient = new LDAPClient($options);
+                $this->client = $this->clientFactory->create($options);
             }
             catch (Exception $e) {
                 $this->log->error('LDAP error: ' . $e->getMessage());
             }
         }
 
-        return $this->ldapClient;
+        return $this->client;
     }
 
     /**
@@ -335,7 +347,15 @@ class LDAP implements Login
             'skipHooks' => true,
         ]);
 
-        return $this->entityManager->getEntity('User', $user->id);
+        $saverParams = SaverParams::create()
+            ->withRawOptions([
+                'skipLinkMultipleHooks' => true,
+            ]);
+
+        $this->linkMultipleSaver->process($user, 'teams', $saverParams);
+        $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
+
+        return $this->entityManager->getEntity('User', $user->getId());
     }
 
     /**
@@ -358,7 +378,7 @@ class LDAP implements Login
             '(' . $options['userNameAttribute'] . '=' . $username . ')' .
             $loginFilterString . ')';
 
-        $result = $ldapClient->search($searchString, null, LDAPClient::SEARCH_SCOPE_SUB);
+        $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');
 

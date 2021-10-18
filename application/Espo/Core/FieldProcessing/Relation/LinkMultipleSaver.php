@@ -59,6 +59,7 @@ class LinkMultipleSaver
         $skipCreate = $params->getOption('skipLinkMultipleCreate') ?? false;
         $skipRemove = $params->getOption('skipLinkMultipleRemove') ?? false;
         $skipUpdate = $params->getOption('skipLinkMultipleUpdate') ?? false;
+        $skipHooks = $params->getOption('skipLinkMultipleHooks') ?? false;
 
         if ($entity->isNew()) {
             $skipRemove = true;
@@ -183,11 +184,15 @@ class LinkMultipleSaver
                 $data = (array) $columnData->$id;
             }
 
-            $repository->getRelation($entity, $name)->relateById($id, $data);
+            $repository->getRelation($entity, $name)->relateById($id, $data, [
+                'skipHooks' => $skipHooks,
+            ]);
         }
 
         foreach ($toRemoveIdList as $id) {
-            $repository->getRelation($entity, $name)->unrelateById($id);
+            $repository->getRelation($entity, $name)->unrelateById($id, [
+                'skipHooks' => $skipHooks,
+            ]);
         }
 
         foreach ($toUpdateIdList as $id) {
