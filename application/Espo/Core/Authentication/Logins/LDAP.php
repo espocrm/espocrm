@@ -32,6 +32,8 @@ namespace Espo\Core\Authentication\Logins;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
@@ -258,7 +260,7 @@ class LDAP implements Login
     /**
      * Login by authorization token.
      */
-    private function loginByToken($username, AuthToken $authToken = null)
+    private function loginByToken($username, AuthToken $authToken = null): ?User
     {
         if (!isset($authToken)) {
             return null;
@@ -267,6 +269,10 @@ class LDAP implements Login
         $userId = $authToken->getUserId();
 
         $user = $this->entityManager->getEntity('User', $userId);
+
+        if (!$user) {
+            return null;
+        }
 
         $tokenUsername = $user->get('userName');
 
