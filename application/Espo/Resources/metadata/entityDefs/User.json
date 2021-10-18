@@ -328,7 +328,8 @@
             "layoutFiltersDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
-            "directAccessDisabled": true
+            "directAccessDisabled": true,
+            "exportDisabled": true
         }
     },
     "links": {
