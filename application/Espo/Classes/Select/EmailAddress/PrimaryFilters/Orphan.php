@@ -36,19 +36,36 @@ class Orphan implements Filter
 {
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $queryBuilder->where([
-            'entityEmailAddress.id' => null,
-        ]);
-
-        $queryBuilder->leftJoin(
-            'EntityEmailAddress',
-            'entityEmailAddress',
-            [
-                'emailAddressId:' => 'id',
-                'deleted' => false,
-            ]
-        );
-
-        $queryBuilder->distinct();
+        $queryBuilder
+            ->distinct()
+            ->leftJoin(
+                'EntityEmailAddress',
+                'entityEmailAddress',
+                [
+                    'emailAddressId:' => 'id',
+                    'deleted' => false,
+                ]
+            )
+            ->leftJoin(
+                'EmailEmailAddress',
+                'emailEmailAddress',
+                [
+                    'emailAddressId:' => 'id',
+                    'deleted' => false,
+                ]
+            )
+            ->leftJoin(
+                'Email',
+                'email',
+                [
+                    'fromEmailAddressId:' => 'id',
+                    'deleted' => false,
+                ]
+            )
+            ->where([
+                'entityEmailAddress.id' => null,
+                'emailEmailAddress.id' => null,
+                'email.id' => null,
+            ]);
     }
 }
