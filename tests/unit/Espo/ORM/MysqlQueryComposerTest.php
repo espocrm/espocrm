@@ -29,6 +29,9 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
+use Espo\ORM\QueryComposer\Part\FunctionConverter;
+
 use Espo\ORM\{
     EntityFactory,
     Metadata,
@@ -48,6 +51,8 @@ use Espo\ORM\Query\{
     LockTableBuilder,
 };
 
+use RuntimeException;
+
 require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
@@ -60,7 +65,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
     protected $entityFactory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->queryBuilder = new QueryBuilder();
 
@@ -2477,5 +2482,75 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql = "LOCK TABLES `account` WRITE";
 
         $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunctionConverter1(): void
+    {
+        $functionConverter = $this->createMock(FunctionConverter::class);
+
+        $functionConverter
+            ->expects($this->once())
+            ->method('convert')
+            ->with('1', '2')
+            ->willReturn('TEST(1, 2)');
+
+        $functionConverterFactory = $this->createMock(FunctionConverterFactory::class);
+
+        $functionConverterFactory
+            ->expects($this->once())
+            ->method('isCreatable')
+            ->with('TEST_HELLO')
+            ->willReturn(true);
+
+        $functionConverterFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with('TEST_HELLO')
+            ->willReturn($functionConverter);
+
+        $query = (new QueryBuilder())
+            ->select('id')
+            ->from('Account')
+            ->where([
+                'TEST_HELLO:(1, 2)' => 'test'
+            ])
+            ->withDeleted()
+            ->build();
+
+        $composer = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata, $functionConverterFactory);
+
+        $sql = $composer->compose($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "WHERE TEST(1, 2) = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testFunctionConverterNoFunction(): void
+    {
+        $functionConverterFactory = $this->createMock(FunctionConverterFactory::class);
+
+        $functionConverterFactory
+            ->expects($this->once())
+            ->method('isCreatable')
+            ->with('TEST_HELLO')
+            ->willReturn(false);
+        $query = (new QueryBuilder())
+            ->select('id')
+            ->from('Account')
+            ->where([
+                'TEST_HELLO:(1, 2)' => 'test'
+            ])
+            ->withDeleted()
+            ->build();
+
+        $composer = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata, $functionConverterFactory);
+
+        $this->expectException(RuntimeException::class);
+
+        $composer->compose($query);
     }
 }

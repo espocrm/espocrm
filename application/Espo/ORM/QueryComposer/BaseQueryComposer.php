@@ -43,6 +43,7 @@ use Espo\ORM\{
     Query\Delete as DeleteQuery,
     Query\Union as UnionQuery,
     Query\LockTable as LockTableQuery,
+    QueryComposer\Part\FunctionConverterFactory,
 };
 
 use PDO;
@@ -151,6 +152,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected $metadata;
 
+    protected $functionConverterFactory;
+
     protected $helper;
 
     protected $attributeDbMapCache = [];
@@ -159,11 +162,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected $seedCache = [];
 
-    public function __construct(PDO $pdo, EntityFactory $entityFactory, Metadata $metadata)
-    {
+    public function __construct(
+        PDO $pdo,
+        EntityFactory $entityFactory,
+        Metadata $metadata,
+        ?FunctionConverterFactory $functionConverterFactory = null
+    ) {
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
         $this->metadata = $metadata;
+        $this->functionConverterFactory = $functionConverterFactory;
 
         $this->helper = new Helper($metadata);
     }
@@ -869,7 +877,15 @@ abstract class BaseQueryComposer implements QueryComposer
         ?array $argumentPartList = null
     ): string {
 
-        if (!in_array($function, Functions::FUNCTION_LIST)) {
+        $isBuiltIn = in_array($function, Functions::FUNCTION_LIST);
+
+        if (
+            !$isBuiltIn &&
+            (
+                !$this->functionConverterFactory ||
+                !$this->functionConverterFactory->isCreatable($function)
+            )
+        ) {
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
@@ -949,6 +965,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (in_array($function, ['OR', 'AND'])) {
             return implode(' ' . $function . ' ', $argumentPartList);
+        }
+
+        if (!$isBuiltIn && $this->functionConverterFactory) {
+            return $this->getFunctionPartFromFactory($function, $argumentPartList);
         }
 
         switch ($function) {
@@ -1048,6 +1068,13 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return $function . '(' . $part . ')';
+    }
+
+    private function getFunctionPartFromFactory(string $function, array $argumentPartList): ?string
+    {
+        $obj = $this->functionConverterFactory->create($function);
+
+        return $obj->convert(...$argumentPartList);
     }
 
     protected function getFunctionPartTZ(?array $argumentPartList = null)
@@ -1176,7 +1203,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $argumentPartList = null;
 
-        if ($function && in_array($function, Functions::MULTIPLE_ARGUMENT_FUNCTION_LIST)) {
+        if ($function) {
             $arguments = $attribute;
 
             $argumentList = Util::parseArgumentListFromFunctionContent($arguments);
@@ -1188,8 +1215,8 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $part = implode(', ', $argumentPartList);
-
-        } else {
+        }
+        else {
             $part = $this->getFunctionArgumentPart($entity, $attribute, $distinct, $params);
         }
 

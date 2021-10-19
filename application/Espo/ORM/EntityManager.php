@@ -49,6 +49,8 @@ use Espo\ORM\Value\AttributeExtractorFactory;
 
 use Espo\ORM\PDO\PDOProvider;
 
+use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
+
 use PDO;
 use RuntimeException;
 
@@ -66,6 +68,8 @@ class EntityManager
     protected $eventDispatcher;
 
     private $mapperFactory = null;
+
+    private $functionConverterFactory = null;
 
     private $mappers = [];
 
@@ -101,15 +105,17 @@ class EntityManager
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
         PDOProvider $pdoProvider,
-        ?MapperFactory $mapperFactory = null
+        ?MapperFactory $mapperFactory = null,
+        ?FunctionConverterFactory $functionConverterFactory = null
     ) {
         $this->databaseParams = $databaseParams;
         $this->metadata = $metadata;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityFactory = $entityFactory;
         $this->repositoryFactory = $repositoryFactory;
-        $this->mapperFactory = $mapperFactory;
         $this->pdoProvider = $pdoProvider;
+        $this->mapperFactory = $mapperFactory;
+        $this->functionConverterFactory = $functionConverterFactory;
 
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -145,7 +151,12 @@ class EntityManager
             throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
         }
 
-        $this->queryComposer = new $className($this->pdoProvider->get(), $this->entityFactory, $this->metadata);
+        $this->queryComposer = new $className(
+            $this->pdoProvider->get(),
+            $this->entityFactory,
+            $this->metadata,
+            $this->functionConverterFactory
+        );
     }
 
     private function initLocker(): void

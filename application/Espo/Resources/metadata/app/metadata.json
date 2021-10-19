@@ -26,6 +26,7 @@
         ["app", "config"],
         ["app", "rebuild"],
         ["app", "smsProviders", "__ANY__", "senderClassName"],
+        ["app", "metadata"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],

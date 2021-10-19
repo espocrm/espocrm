@@ -42,6 +42,9 @@ use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
 use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInteface;
 use Espo\ORM\PDO\PDOProvider;
 use Espo\ORM\PDO\DefaultPDOProvider;
+use Espo\ORM\QueryComposer\Part\FunctionConverterFactory as FunctionConverterFactoryInterface;
+
+use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use RuntimeException;
 
@@ -101,6 +104,13 @@ class EntityManagerFactory
                 ->build()
         );
 
+        $functionConverterFactory = $this->injectableFactory->createWithBinding(
+            FunctionConverterFactory::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(DatabaseParams::class, $databaseParams)
+                ->build()
+        );
+
         $binding = BindingContainerBuilder::create()
             ->bindInstance(DatabaseParams::class, $databaseParams)
             ->bindInstance(Metadata::class, $metadata)
@@ -110,6 +120,7 @@ class EntityManagerFactory
             ->bindInstance(AttributeExtractorFactoryInteface::class, $attributeExtractorFactory)
             ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
             ->bindImplementation(PDOProvider::class, DefaultPDOProvider::class)
+            ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
             ->build();
 
         return $this->injectableFactory->createWithBinding(EntityManager::class, $binding);
