@@ -43,6 +43,8 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
             'notEquals', 'notLike', 'isEmpty', 'isNotEmpty',
         ],
 
+        useAutocompleteUrl: null,
+
         setup: function () {
             this.setupOptions();
 
@@ -78,6 +80,28 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     this.reRender();
                 }
             }
+        },
+
+        getAutocompleteUrl: function (q) {},
+
+        transformAutocompleteResult: function (response) {
+            let responseParsed = JSON.parse(response);
+
+            let list = [];
+
+            responseParsed.list.forEach(item => {
+                list.push({
+                    id: item.id,
+                    name: item.name || item.id,
+                    data: item.id,
+                    value: item.name || item.id,
+                    attributes: item,
+                });
+            });
+
+            return {
+                suggestions: list,
+            };
         },
 
         setupSearch: function () {
@@ -130,11 +154,13 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
             }
 
             if (
-                (this.mode === 'edit' || this.mode === 'search') &&
-                this.params.options &&
-                this.params.options.length
+                (this.isEditMode() || this.isSearchMode()) &&
+                (
+                    this.params.options && this.params.options.length ||
+                    this.useAutocompleteUrl
+                )
             ) {
-                this.$element.autocomplete({
+                let autocompleteOptions = {
                     minChars: 0,
                     lookup: this.params.options,
                     maxHeight: 200,
@@ -160,7 +186,16 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
                     onSelect: () => {
                         this.trigger('change');
                     },
-                });
+                };
+
+                if (this.useAutocompleteUrl) {
+                    autocompleteOptions.serviceUrl = q => this.getAutocompleteUrl(q);
+                    autocompleteOptions.transformResult = response => this.transformAutocompleteResult(response);
+                    autocompleteOptions.noCache = true;
+                    autocompleteOptions.lookup = null;
+                }
+
+                this.$element.autocomplete(autocompleteOptions);
 
                 this.$element.attr('autocomplete', 'espo-' + this.name);
 

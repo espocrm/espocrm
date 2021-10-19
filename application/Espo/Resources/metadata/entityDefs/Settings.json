@@ -179,7 +179,8 @@
             "type": "varchar",
             "default": "crm@example.com",
             "trim": true,
-            "tooltip": true
+            "tooltip": true,
+            "view": "views/settings/fields/outbound-email-from-address"
         },
         "emailAddressLookupEntityTypeList": {
             "type": "multiEnum",
