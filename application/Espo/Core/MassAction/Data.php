@@ -31,7 +31,7 @@ namespace Espo\Core\MassAction;
 
 use Espo\Core\Utils\ObjectUtil;
 
-use StdClass;
+use stdClass;
 
 class Data
 {
@@ -40,12 +40,14 @@ class Data
         $this->data = (object) [];
     }
 
-    public function getRaw(): StdClass
+    public function getRaw(): stdClass
     {
         return ObjectUtil::clone($this->data);
     }
 
     /**
+     * Get an item value.
+     *
      * @return mixed
      */
     public function get(string $name)
@@ -53,17 +55,39 @@ class Data
         return $this->getRaw()->$name ?? null;
     }
 
+    /**
+     * Has an item.
+     */
     public function has(string $name): bool
     {
         return property_exists($this->data, $name);
     }
 
-    public static function fromRaw(StdClass $data): self
+    public static function fromRaw(stdClass $data): self
     {
         $obj = new self();
 
         $obj->data = $data;
 
         return $obj;
+    }
+
+    /**
+     * Clone with an item value.
+     *
+     * @param mixed $value
+     */
+    public function with(string $name, $value): self
+    {
+        $obj = clone $this;
+
+        $obj->data->$name = $value;
+
+        return $obj;
+    }
+
+    public function __clone()
+    {
+        $this->data = ObjectUtil::clone($this->data);
     }
 }
