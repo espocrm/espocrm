@@ -29,73 +29,16 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
+
 use Espo\ORM\Entity;
 
 class Opportunity extends \Espo\Core\Repositories\Database
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isNew()) {
-            if (!$entity->has('probability') && $entity->get('stage')) {
-                $probability = $this->metadata->get(
-                    'entityDefs.Opportunity.fields.stage.probabilityMap.' . $entity->get('stage'), 0
-                );
-                if (!is_null($probability)) {
-                    $entity->set('probability', $probability);
-                }
-            }
-        }
-
-        if (!$entity->isAttributeChanged('lastStage') && $entity->isAttributeChanged('stage')) {
-            $probability = $this->metadata->get(
-                ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('stage')], 0
-            );
-            $probabilityMap =  $this->metadata->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
-
-            if (!$probability) {
-                $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
-                if ($entity->isNew()) {
-                    if (count($stageList)) {
-                        $min = 100;
-                        $minStage = null;
-                        foreach ($stageList as $stage) {
-                            if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] !== 100) {
-                                if ($probabilityMap[$stage] < $min) {
-                                    $min = $probabilityMap[$stage];
-                                    $minStage = $stage;
-                                }
-                            }
-                        }
-                        if ($minStage) {
-                            $entity->set('lastStage', $minStage);
-                        }
-                    }
-                } else {
-                    $lastStageProbability = $this->metadata->get(
-                        ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->get('lastStage')], 0
-                    );
-                    if ($lastStageProbability === 100) {
-                        if (count($stageList)) {
-                            $max = 0;
-                            $maxStage = null;
-                            foreach ($stageList as $stage) {
-                                if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] !== 100) {
-                                    if ($probabilityMap[$stage] > $max) {
-                                        $max = $probabilityMap[$stage];
-                                        $maxStage = $stage;
-                                    }
-                                }
-                            }
-                            if ($maxStage) {
-                                $entity->set('lastStage', $maxStage);
-                            }
-                        }
-                    }
-                }
-            } else {
-                $entity->set('lastStage', $entity->get('stage'));
-            }
-        }
+        $this->processProbability($entity);
+        $this->processLastStage($entity);
 
         parent::beforeSave($entity, $options);
     }
@@ -103,33 +46,160 @@ class Opportunity extends \Espo\Core\Repositories\Database
     public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
+
         if ($entity->isAttributeChanged('amount') || $entity->isAttributeChanged('probability')) {
             $amountConverted = $entity->get('amountConverted');
             $probability = $entity->get('probability');
+
             $amountWeightedConverted = round($amountConverted * $probability / 100, 2);
+
             $entity->set('amountWeightedConverted', $amountWeightedConverted);
         }
 
-        $this->handleAfterSaveContacts($entity, $options);
+        $this->handleAfterSaveContacts($entity);
     }
 
-    protected function handleAfterSaveContacts(Entity $entity, array $options = [])
+    protected function handleAfterSaveContacts(OpportunityEntity $entity): void
     {
-        if ($entity->isAttributeChanged('contactId')) {
-            $contactId = $entity->get('contactId');
-            $contactIdList = $entity->get('contactsIds') ?? [];
-            $fetchedContactId = $entity->getFetched('contactId');
+        if (!$entity->isAttributeChanged('contactId')) {
+            return;
+        }
 
-            if (!$contactId) {
-                if ($fetchedContactId) {
-                    $this->unrelate($entity, 'contacts', $fetchedContactId);
+        $contactId = $entity->get('contactId');
+        $contactIdList = $entity->get('contactsIds') ?? [];
+        $fetchedContactId = $entity->getFetched('contactId');
+
+        if (!$contactId) {
+            if ($fetchedContactId) {
+                $this->unrelate($entity, 'contacts', $fetchedContactId);
+            }
+
+            return;
+        }
+
+        if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
+            $this->relate($entity, 'contacts', $contactId);
+        }
+    }
+
+    private function processProbability(OpportunityEntity $entity): void
+    {
+        if (!$entity->isNew()) {
+            return;
+        }
+
+        if ($entity->has('probability')) {
+            return;
+        }
+
+        if (!$entity->getStage()) {
+            return;
+        }
+
+        $probability = $this->metadata
+            ->get('entityDefs.Opportunity.fields.stage.probabilityMap.' . $entity->getStage()) ?? 0;
+
+        if ($probability === null) {
+            return;
+        }
+
+        $entity->setProbability($probability);
+    }
+
+    private function processLastStage(OpportunityEntity $entity): void
+    {
+        if (
+            $entity->isAttributeChanged('lastStage') ||
+            !$entity->isAttributeChanged('stage')
+        ) {
+            return;
+        }
+
+        $probability = $this->metadata
+            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getStage()]) ?? 0;
+
+        if ($probability) {
+            $entity->set('lastStage', $entity->getStage());
+
+            return;
+        }
+
+        $probabilityMap =  $this->metadata
+            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
+
+        $stageList = $this->metadata->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'options']) ?? [];
+
+        if (!count($stageList)) {
+            return;
+        }
+
+        if ($entity->isNew()) {
+            // Created as Lost.
+
+            $min = 100;
+            $minStage = null;
+
+            foreach ($stageList as $stage) {
+                $itemProbability = $probabilityMap[$stage] ?? null;
+
+                if (
+                    $itemProbability === null ||
+                    $itemProbability === 100 ||
+                    $itemProbability === 0 ||
+                    $itemProbability >= $min
+                ) {
+                    continue;
                 }
+
+                $min = $itemProbability;
+                $minStage = $stage;
+            }
+
+            if (!$minStage) {
                 return;
             }
 
-            if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {
-                $this->relate($entity, 'contacts', $contactId);
-            }
+            $entity->set('lastStage', $minStage);
+
+            return;
         }
+
+        // Won changed to Lost.
+
+        if (!$entity->getLastStage()) {
+            return;
+        }
+
+        $lastStageProbability = $this->metadata
+            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getLastStage()]) ?? 0;
+
+        if ($lastStageProbability !== 100) {
+            return;
+        }
+
+        $max = 0;
+        $maxStage = null;
+
+        foreach ($stageList as $stage) {
+            $itemProbability = $probabilityMap[$stage] ?? null;
+
+            if (
+                $itemProbability === null ||
+                $itemProbability === 100 ||
+                $itemProbability === 0 ||
+                $itemProbability <= $max
+            ) {
+                continue;
+            }
+
+            $max = $itemProbability;
+            $maxStage = $stage;
+        }
+
+        if (!$maxStage) {
+            return;
+        }
+
+        $entity->set('lastStage', $maxStage);
     }
 }
