@@ -1,0 +1,7 @@
+{
+    "massActions": {
+        "update": {
+            "implementationClassName": "Espo\\Modules\\Crm\\Classes\\MassAction\\Opportunity\\MassUpdate"
+        }
+    }
+}
