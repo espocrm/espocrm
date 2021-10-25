@@ -363,17 +363,19 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         getTreeCollection: function (callback) {
-            this.getCollectionFactory().create(this.categoryScope, function (collection) {
+            this.getCollectionFactory().create(this.categoryScope, collection => {
                 collection.url = collection.name + '/action/listTree';
+
+                collection.setOrder(null, null);
 
                 this.collection.treeCollection = collection;
 
-                this.listenToOnce(collection, 'sync', function () {
+                this.listenToOnce(collection, 'sync', () => {
                     callback.call(this, collection);
-                }, this);
+                });
 
                 collection.fetch();
-            }, this);
+            });
         },
 
         applyCategoryToNestedCategoriesCollection: function () {
@@ -396,6 +398,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         getNestedCategoriesCollection: function (callback) {
             this.getCollectionFactory().create(this.categoryScope, collection => {
                 this.nestedCategoriesCollection = collection;
+
+                collection.setOrder(null, null);
 
                 collection.url = collection.name + '/action/listTree';
 

@@ -108,15 +108,19 @@ class RecordTree extends Record
             return null;
         }
 
+        $searchParams = SearchParams::fromRaw($params);
+
         $selectBuilder = $this->selectBuilderFactory
             ->create()
             ->from($this->entityType)
             ->withStrictAccessControl()
-            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withSearchParams($searchParams)
             ->buildQueryBuilder()
             ->where([
                 'parentId' => $parentId,
             ]);
+
+        $selectBuilder->order([]);
 
         if ($this->hasOrder()) {
             $selectBuilder->order('order', 'ASC');
