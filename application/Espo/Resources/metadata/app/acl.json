@@ -58,6 +58,12 @@
         "fieldLevel": {
         },
         "scopeFieldLevel": {
+            "EmailAccount": {
+                "assignedUser": {
+                    "read": "yes",
+                    "edit": "no"
+                }
+            },
             "EmailFolder": {
                 "assignedUser": {
                     "read": "yes",
