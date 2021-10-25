@@ -110,6 +110,7 @@ module.exports = grunt => {
                     'build/tmp/client/custom/*',
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
+                    '!build/tmp/client/custom/modules/dummy.txt',
                 ]
             }
         },
