@@ -41,7 +41,7 @@ class Completed implements Filter
         $queryBuilder->where(
             Cond::equal(
                 Cond::column('status'),
-                'Completer'
+                'Completed'
             )
         );
     }
