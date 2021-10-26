@@ -445,11 +445,15 @@ class Saver implements SaverInterface
                     $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
 
                     if ($phoneNumberOld) {
-                        $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                        $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
+                            'skipHooks' => true,
+                        ]);
                     }
                 }
 
-                $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew);
+                $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew, null, [
+                    'skipHooks' => true,
+                ]);
 
                 if ($entity->has('phoneNumberIsOptedOut')) {
                     $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
@@ -499,7 +503,9 @@ class Saver implements SaverInterface
             $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
 
             if ($phoneNumberOld) {
-                $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld);
+                $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
+                    'skipHooks' => true,
+                ]);
             }
         }
     }

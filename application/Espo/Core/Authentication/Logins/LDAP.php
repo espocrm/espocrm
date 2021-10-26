@@ -30,6 +30,9 @@
 namespace Espo\Core\Authentication\Logins;
 
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
+use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
+use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
+
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 
 use Espo\Entities\User;
@@ -77,6 +80,10 @@ class LDAP implements Login
 
     private $linkMultipleSaver;
 
+    private $emailAddressSaver;
+
+    private $phoneNumberSaver;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
@@ -86,6 +93,8 @@ class LDAP implements Login
         Espo $baseLogin,
         ClientFactory $clientFactyory,
         LinkMultipleSaver $linkMultipleSaver,
+        EmailAddressSaver $emailAddressSaver,
+        PhoneNumberSaver $phoneNumberSaver,
         bool $isPortal = false
     ) {
         $this->config = $config;
@@ -96,6 +105,8 @@ class LDAP implements Login
         $this->baseLogin = $baseLogin;
         $this->clientFactory = $clientFactyory;
         $this->linkMultipleSaver = $linkMultipleSaver;
+        $this->emailAddressSaver = $emailAddressSaver;
+        $this->phoneNumberSaver = $phoneNumberSaver;
 
         $this->isPortal = $isPortal;
 
@@ -351,6 +362,7 @@ class LDAP implements Login
         $this->entityManager->saveEntity($user, [
             // Prevent `user` service being loaded by hooks.
             'skipHooks' => true,
+            'keepNew' => true,
         ]);
 
         $saverParams = SaverParams::create()
@@ -360,6 +372,11 @@ class LDAP implements Login
 
         $this->linkMultipleSaver->process($user, 'teams', $saverParams);
         $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
+        $this->emailAddressSaver->process($user, $saverParams);
+        $this->phoneNumberSaver->process($user, $saverParams);
+
+        $user->setAsNotNew();
+        $user->updateFetchedValues();
 
         return $this->entityManager->getEntity('User', $user->getId());
     }

@@ -97,4 +97,27 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals(1, $group5->getCount());
     }
+
+    public function testEmailAddress2(): void
+    {
+        /* @var $entityManager EntityManager */
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $lead = $entityManager->createEntity('Lead', [
+            'emailAddress' => 'test@test.com',
+        ]);
+
+        $contact = $entityManager->createEntity('Contact', [
+            'emailAddress' => 'test@test.com',
+        ]);
+
+        $contactFetched = $entityManager->getEntity('Contact', $contact->getId());
+
+        /* @var $group EmailAddressGroup */
+        $group = $contactFetched->getEmailAddressGroup();
+
+        $this->assertEquals(1, $group->getCount());
+
+        $this->assertEquals('test@test.com', $group->getPrimary()->getAddress());
+    }
 }

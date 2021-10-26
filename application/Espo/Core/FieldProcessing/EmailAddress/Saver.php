@@ -398,79 +398,8 @@ class Saver implements SaverInterface
             $emailAddressValue = trim($emailAddressValue);
         }
 
-        $entityRepository = $this->entityManager->getRepository($entity->getEntityType());
-
         if (!empty($emailAddressValue)) {
-            if ($emailAddressValue != $entity->getFetched('emailAddress')) {
-                $emailAddressNew = $this->entityManager
-                    ->getRDBRepository('EmailAddress')
-                    ->where([
-                        'lower' => strtolower($emailAddressValue),
-                    ])
-                    ->findOne();
-
-                $isNewEmailAddress = false;
-
-                if (!$emailAddressNew) {
-                    $emailAddressNew = $this->entityManager->getEntity('EmailAddress');
-
-                    $emailAddressNew->set('name', $emailAddressValue);
-
-                    if ($entity->has('emailAddressIsOptedOut')) {
-                        $emailAddressNew->set('optOut', (bool) $entity->get('emailAddressIsOptedOut'));
-                    }
-
-                    $this->entityManager->saveEntity($emailAddressNew);
-
-                    $isNewEmailAddress = true;
-                }
-
-                $emailAddressValueOld = $entity->getFetched('emailAddress');
-
-                if (!empty($emailAddressValueOld)) {
-                    $emailAddressOld = $this->getByAddress($emailAddressValueOld);
-
-                    if ($emailAddressOld) {
-                        $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
-                    }
-                }
-
-                $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew);
-
-                if ($entity->has('emailAddressIsOptedOut')) {
-                    $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
-                }
-
-                $update = $this->entityManager->getQueryBuilder()
-                    ->update()
-                    ->in('EntityEmailAddress')
-                    ->set(['primary' => true])
-                    ->where([
-                        'entityId' => $entity->id,
-                        'entityType' => $entity->getEntityType(),
-                        'emailAddressId' => $emailAddressNew->id,
-                    ])
-                    ->build();
-
-                $this->entityManager->getQueryExecutor()->execute($update);
-
-            } else {
-                if (
-                    $entity->has('emailAddressIsOptedOut')
-                    &&
-                    (
-                        $entity->isNew()
-                        ||
-                        (
-                            $entity->hasFetched('emailAddressIsOptedOut')
-                            &&
-                            $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
-                        )
-                    )
-                ) {
-                    $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
-                }
-            }
+            $this->storePrimaryNotEmpty($entity, $emailAddressValue);
 
             return;
         }
@@ -481,9 +410,92 @@ class Saver implements SaverInterface
             $emailAddressOld = $this->getByAddress($emailAddressValueOld);
 
             if ($emailAddressOld) {
-                $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
+                $this->entityManager
+                    ->getRDBRepository($entity->getEntityType())
+                    ->unrelate($entity, 'emailAddresses', $emailAddressOld, [
+                        'skipHooks' => true,
+                    ]);
             }
         }
+    }
+
+    private function storePrimaryNotEmpty(Entity $entity, string $emailAddressValue): void
+    {
+        if ($emailAddressValue === $entity->getFetched('emailAddress')) {
+             if (
+                $entity->has('emailAddressIsOptedOut') &&
+                (
+                    $entity->isNew() ||
+                    (
+                        $entity->hasFetched('emailAddressIsOptedOut') &&
+                        $entity->get('emailAddressIsOptedOut') !== $entity->getFetched('emailAddressIsOptedOut')
+                    )
+                )
+            ) {
+                $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
+            }
+
+            return;
+        }
+
+        $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
+
+        $emailAddressNew = $this->entityManager
+            ->getRDBRepository('EmailAddress')
+            ->where([
+                'lower' => strtolower($emailAddressValue),
+            ])
+            ->findOne();
+
+        $isNewEmailAddress = false;
+
+        if (!$emailAddressNew) {
+            $emailAddressNew = $this->entityManager->getEntity('EmailAddress');
+
+            $emailAddressNew->set('name', $emailAddressValue);
+
+            if ($entity->has('emailAddressIsOptedOut')) {
+                $emailAddressNew->set('optOut', (bool) $entity->get('emailAddressIsOptedOut'));
+            }
+
+            $this->entityManager->saveEntity($emailAddressNew);
+
+            $isNewEmailAddress = true;
+        }
+
+        $emailAddressValueOld = $entity->getFetched('emailAddress');
+
+        if (!empty($emailAddressValueOld)) {
+            $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+
+            if ($emailAddressOld) {
+                $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld, [
+                    'skipHooks' => true,
+                ]);
+            }
+        }
+
+        $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew, null, [
+            'skipHooks' => true,
+        ]);
+
+        if ($entity->has('emailAddressIsOptedOut')) {
+            $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));
+        }
+
+        $updateQuery = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in('EntityEmailAddress')
+            ->set(['primary' => true])
+            ->where([
+                'entityId' => $entity->getId(),
+                'entityType' => $entity->getEntityType(),
+                'emailAddressId' => $emailAddressNew->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($updateQuery);
     }
 
     private function getByAddress(string $address): ?EmailAddress
