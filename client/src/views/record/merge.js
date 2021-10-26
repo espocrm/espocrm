@@ -37,7 +37,7 @@ define('views/record/merge', 'view', function (Dep) {
         data: function () {
             var rows = [];
 
-            this.fields.forEach(function (field) {
+            this.fields.forEach((field) => {
                 var o = {
                     name: field,
                     scope: this.scope,
@@ -45,16 +45,16 @@ define('views/record/merge', 'view', function (Dep) {
 
                 o.columns = [];
 
-                this.models.forEach(function (m) {
+                this.models.forEach((m) => {
                     o.columns.push({
                         id: m.id,
                         fieldVariable: m.id + '-' + field,
                         isReadOnly: this.readOnlyFields[field] || false,
                     });
-                }, this);
+                });
 
                 rows.push(o);
-            }, this);
+            });
 
             return {
                 rows: rows,
@@ -69,63 +69,65 @@ define('views/record/merge', 'view', function (Dep) {
         events: {
             'change input[type="radio"][name="check-all"]': function (e) {
                 e.stopPropagation();
+
                 var id = e.currentTarget.value;
 
                 $('input[data-id="'+id+'"]').prop('checked', true);
             },
+
             'click button[data-action="cancel"]': function () {
                 this.getRouter().navigate('#' + this.scope, {trigger: true});
             },
+
             'click button[data-action="merge"]': function () {
                 var id = $('input[type="radio"][name="check-all"]:checked').val();
 
                 var model;
 
-                this.models.forEach(function (m) {
+                this.models.forEach(m => {
                     if (m.id === id) {
                         model = m;
                     }
-                }.bind(this));
-
-                var self = this;
+                });
 
                 var attributes = {};
 
-                $('input.field-radio:checked').each(function (i, el) {
+                $('input.field-radio:checked').each((i, el) => {
                     var field = el.name;
-                    var id = $(el).data('id');
+                    var id = $(el).attr('data-id');
 
-                    if (model.id !== id) {
-                        var fieldType = model.getFieldParam(field, 'type');
-                        var fields = self.getFieldManager().getActualAttributeList(fieldType, field);
-
-                        var modelFrom;
-
-                        self.models.forEach(function (m) {
-                            if (m.id === id) {
-                                modelFrom = m;
-
-                                return;
-                            }
-                        });
-
-                        fields.forEach(function (field) {
-                            attributes[field] = modelFrom.get(field);
-                        });
-
+                    if (model.id === id) {
+                        return;
                     }
+
+                    var fieldType = model.getFieldParam(field, 'type');
+                    var fields = this.getFieldManager().getActualAttributeList(fieldType, field);
+
+                    var modelFrom;
+
+                    this.models.forEach(m => {
+                        if (m.id === id) {
+                            modelFrom = m;
+
+                            return;
+                        }
+                    });
+
+                    fields.forEach(field => {
+                        attributes[field] = modelFrom.get(field);
+                    });
                 });
 
-                self.notify('Merging...');
+                this.notify('Merging...');
 
                 var sourceIdList =
                     this.models
-                        .filter(function (m) {
+                        .filter(m => {
                             if (m.id !== model.id) {
                                 return true;
                             }
                         })
-                        .map(function (m) {
+                        .map(m => {
                             return m.id;
                         });
 
@@ -139,7 +141,7 @@ define('views/record/merge', 'view', function (Dep) {
                             attributes: attributes,
                         },
                     })
-                    .then(function () {
+                    .then(() => {
                         this.notify('Merged', 'success');
 
                         this.getRouter().navigate(
@@ -150,7 +152,7 @@ define('views/record/merge', 'view', function (Dep) {
                         if (this.collection) {
                             this.collection.fetch();
                         }
-                    }.bind(this));
+                    });
             }
         },
 
@@ -175,6 +177,7 @@ define('views/record/merge', 'view', function (Dep) {
                 if (type === 'linkMultiple') {
                     continue;
                 }
+
                 if (fieldsDefs[field].disabled) {
                     continue;
                 }
@@ -186,28 +189,27 @@ define('views/record/merge', 'view', function (Dep) {
                 if (field === 'createdAt' || field === 'modifiedAt') {
                     continue;
                 }
-                ;
 
                 if (fieldManager.isMergeable(type)) {
                     var actualAttributeList = fieldManager.getActualAttributeList(type, field);
 
                     var differs = false;
 
-                    actualAttributeList.forEach(function (field) {
+                    actualAttributeList.forEach((field) => {
                         var values = [];
 
-                        this.models.forEach(function (model) {
+                        this.models.forEach((model) => {
                             values.push(model.get(field));
                         });
 
                         var firstValue = values[0];
 
-                        values.forEach(function (value) {
+                        values.forEach((value) => {
                             if (!_.isEqual(firstValue, value)) {
                                 differs = true;
                             }
                         });
-                    }.bind(this));
+                    });
 
                     if (differs) {
                         differentFieldList.push(field);
@@ -219,26 +221,27 @@ define('views/record/merge', 'view', function (Dep) {
                 }
             }
 
-            differentFieldList.sort(function (v1, v2) {
+            differentFieldList.sort((v1, v2) => {
                 return this.translate(v1, 'fields', this.scope)
                     .localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
+            });
 
-            differentFieldList = differentFieldList.sort(function (v1, v2) {
+            differentFieldList = differentFieldList.sort((v1, v2) => {
                 if (!this.readOnlyFields[v1] && this.readOnlyFields[v2]) {
                     return -1;
                 }
 
                 return 1;
-            }.bind(this));
+            });
 
             this.fields = differentFieldList;
 
-            this.fields.forEach(function (field) {
+            this.fields.forEach((field) => {
                 var type = this.models[0].getFieldParam(field, 'type');
 
-                this.models.forEach(function (model) {
-                    var viewName = model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+                this.models.forEach((model) => {
+                    var viewName = model.getFieldParam(field, 'view') ||
+                        this.getFieldManager().getViewName(type);
 
                     this.createView(model.id + '-' + field, viewName, {
                         model: model,
@@ -249,14 +252,13 @@ define('views/record/merge', 'view', function (Dep) {
                         mode: 'detail',
                         readOnly: true,
                     });
-                }.bind(this));
-
-            }.bind(this));
+                });
+            });
 
             this.hasCreatedAt = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'createdAt']);
 
             if (this.hasCreatedAt) {
-                this.models.forEach(function (model) {
+                this.models.forEach((model) => {
                     this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
                         model: model,
                         el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
@@ -266,14 +268,14 @@ define('views/record/merge', 'view', function (Dep) {
                         mode: 'detail',
                         readOnly: true,
                     });
-                }, this);
+                });
             }
         },
 
         getDataList: function () {
             var dataList = [];
 
-            this.models.forEach(function (model, i) {
+            this.models.forEach((model, i) => {
                 var o = {};
 
                 o.id = model.id;
@@ -281,7 +283,7 @@ define('views/record/merge', 'view', function (Dep) {
                 o.createdAtViewName = model.id + '-' + 'createdAt';
 
                 dataList.push(o);
-            }, this);
+            });
 
             return dataList;
         },
