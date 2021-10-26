@@ -169,4 +169,15 @@ interface Entity
      * Get values.
      */
     public function getValueMap(): stdClass;
+
+    /**
+     * Set as not new. Meaning the entity is fetched or already saved.
+     */
+    public function setAsNotNew(): void;
+
+    /**
+     * Copy all current values to fetched values. All current attribute values will beset as those
+     * that are fetched from DB.
+     */
+    public function updateFetchedValues(): void;
 }
