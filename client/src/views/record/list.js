@@ -1975,7 +1975,7 @@ define('views/record/list', 'view', function (Dep) {
             if (this.pagination) {
                 this.createView('pagination', 'views/record/list-pagination', {
                     collection: this.collection,
-                }, func);
+                }, callbackWrapped);
             }
         },
 

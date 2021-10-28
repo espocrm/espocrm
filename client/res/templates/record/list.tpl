@@ -187,7 +187,7 @@
 </div>
 
 {{#if bottomBar}}
-<div>
+<div class="list-bottom-bar">
 {{#if paginationBottom}} {{{pagination}}} {{/if}}
 </div>
 {{/if}}
