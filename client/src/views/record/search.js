@@ -372,9 +372,11 @@ define('views/record/search', 'view', function (Dep) {
 
                     this.listenToOnce(view, 'save', (name) => {
                         this.savePreset(name);
+
                         view.close();
 
                         this.removeFilters();
+
                         this.createFilters(() => {
                             this.render();
                         });
@@ -392,6 +394,7 @@ define('views/record/search', 'view', function (Dep) {
 
             'change .search-row ul.filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
                 e.stopPropagation();
+
                 this.search();
                 this.manageLabels();
             },
@@ -412,6 +415,7 @@ define('views/record/search', 'view', function (Dep) {
 
             var container = this.getView('filter-' + name).$el.closest('div.filter');
             this.clearView('filter-' + name);
+
             container.remove();
 
             delete this.advanced[name];
@@ -429,7 +433,8 @@ define('views/record/search', 'view', function (Dep) {
 
             if (this.isSearchedWithAdvancedFilter) {
                 this.showResetFiltersButton();
-            } else {
+            }
+            else {
                 if (!this.hasAdvancedFilter()) {
                     this.hideApplyFiltersButton();
                 }
@@ -441,30 +446,30 @@ define('views/record/search', 'view', function (Dep) {
 
             this.presetName = this.primary;
 
-            this.createFilter(name, {}, function (view) {
+            this.createFilter(name, {}, (view) => {
                 view.populateDefaults();
+
                 this.fetch();
                 this.updateSearch();
 
                 if (view.getView('field').initialSearchIsNotIdle) {
                     this.showApplyFiltersButton();
                 }
-            }.bind(this));
+            });
 
             this.updateAddFilterButton();
             this.handleLeftDropdownVisibility();
 
             this.manageLabels();
             this.controlResetButtonVisibility();
-
-
         },
 
         refresh: function () {
             this.notify('Loading...');
             this.collection.abortLastFetch();
             this.collection.reset();
-            this.collection.fetch().then(function () {
+
+            this.collection.fetch().then(() => {
                 Espo.Ui.notify(false);
             });
         },
@@ -497,6 +502,7 @@ define('views/record/search', 'view', function (Dep) {
 
         removeFilters: function () {
             this.$advancedFiltersPanel.empty();
+
             for (var name in this.advanced) {
                 this.clearView('filter-' + name);
             }
@@ -521,6 +527,7 @@ define('views/record/search', 'view', function (Dep) {
             this.updateSearch();
 
             var presetFilters = this.getPreferences().get('presetFilters') || {};
+
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
@@ -530,17 +537,17 @@ define('views/record/search', 'view', function (Dep) {
                 name: id,
                 label: name,
                 data: this.advanced,
-                primary: this.primary
+                primary: this.primary,
             };
 
             presetFilters[this.scope].push(data);
 
             this.presetFilterList.push(data);
 
-            this.getPreferences().once('sync', function () {
+            this.getPreferences().once('sync', () => {
                 this.getPreferences().trigger('update');
                 this.updateSearch()
-            }, this);
+            });
 
             this.getPreferences().save({
                 'presetFilters': presetFilters
@@ -560,23 +567,19 @@ define('views/record/search', 'view', function (Dep) {
 
             list = presetFilters[this.scope];
 
-            list.forEach(function (item, i) {
+            list.forEach((item, i) => {
                 if (item.id == id) {
                     list.splice(i, 1);
-
-                    return;
                 }
-            }, this);
+            });
 
             list = this.presetFilterList;
 
-            list.forEach(function (item, i) {
+            list.forEach((item, i) => {
                 if (item.id == id) {
                     list.splice(i, 1);
-
-                    return;
                 }
-            }, this);
+            });
 
 
             this.getPreferences().set('presetFilters', presetFilters);
@@ -598,14 +601,15 @@ define('views/record/search', 'view', function (Dep) {
 
             if ($ul.children().not('.hidden').not('.dropdown-header').length == 0) {
                 this.$el.find('button.add-filter-button').addClass('disabled');
-            } else {
+            }
+            else {
                 this.$el.find('button.add-filter-button').removeClass('disabled');
             }
         },
 
         afterRender: function () {
-        	this.$filtersLabel = this.$el.find('.search-row span.filters-label');
-        	this.$filtersButton = this.$el.find('.search-row button.filters-button');
+            this.$filtersLabel = this.$el.find('.search-row span.filters-label');
+            this.$filtersButton = this.$el.find('.search-row button.filters-button');
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
             this.$resetButton = this.$el.find('[data-action="reset"]');
             this.$applyFiltersContainer = this.$el.find('.advanced-filters-apply-container');
@@ -687,14 +691,14 @@ define('views/record/search', 'view', function (Dep) {
                 var style = 'default';
                 var id = null;
 
-                this.presetFilterList.forEach(function (item) {
+                this.presetFilterList.forEach((item) => {
                     if (item.name == presetName) {
                         label = item.label || false;
                         style = item.style || 'default';
                         id = item.id;
-                        return;
                     }
-                }, this);
+                });
+
                 label = label || this.translate(this.presetName, 'presetFilters', this.entityType);
 
                 filterLabel = label;
@@ -717,36 +721,40 @@ define('views/record/search', 'view', function (Dep) {
                 }
 
                 if (primary) {
-                	var label = this.translate(primary, 'presetFilters', this.entityType);
-                	var style = this.getPrimaryFilterStyle();
+                    var label = this.translate(primary, 'presetFilters', this.entityType);
+                    var style = this.getPrimaryFilterStyle();
 
-                	filterLabel = label;
-                	filterStyle = style;
+                    filterLabel = label;
+                    filterStyle = style;
                 }
             }
 
             this.currentFilterLabelList.push(filterLabel);
 
-            this.$filtersButton.removeClass('btn-default')
-                               .removeClass('btn-primary')
-                               .removeClass('btn-danger')
-                               .removeClass('btn-success')
-                               .removeClass('btn-info');
+            this.$filtersButton
+                .removeClass('btn-default')
+                .removeClass('btn-primary')
+                .removeClass('btn-danger')
+                .removeClass('btn-success')
+                .removeClass('btn-info');
 
             this.$filtersButton.addClass('btn-' + filterStyle);
 
             presetName = presetName || '';
 
-            this.$el.find('ul.filter-menu a.preset[data-name="'+presetName+'"]').prepend('<span class="fas fa-check pull-right"></span>');
+            this.$el
+                .find('ul.filter-menu a.preset[data-name="'+presetName+'"]')
+                .prepend('<span class="fas fa-check pull-right"></span>');
         },
 
         manageBoolFilters: function () {
-            (this.boolFilterList || []).forEach(function (item) {
+            (this.boolFilterList || []).forEach((item) => {
                 if (this.bool[item]) {
-                	var label = this.translate(item, 'boolFilters', this.entityType);
-                	this.currentFilterLabelList.push(label);
+                    var label = this.translate(item, 'boolFilters', this.entityType);
+
+                    this.currentFilterLabelList.push(label);
                 }
-            }, this);
+            });
         },
 
         search: function () {
@@ -782,35 +790,35 @@ define('views/record/search', 'view', function (Dep) {
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            this.collection.fetch().then(function () {
+            this.collection.fetch().then(() => {
                 Espo.Ui.notify(false);
             });
         },
 
-		getPresetFilterList: function () {
-			var arr = [];
+        getPresetFilterList: function () {
+            var arr = [];
 
-            this.presetFilterList.forEach(function (item) {
+            this.presetFilterList.forEach((item) => {
             	if (typeof item == 'string') {
             		item = {name: item};
             	}
 
             	arr.push(item);
-            }, this);
+            });
 
             return arr;
-		},
+        },
 
         getPresetData: function () {
             var data = {};
 
-            this.getPresetFilterList().forEach(function (item) {
+            this.getPresetFilterList().forEach((item) => {
                 if (item.name == this.presetName) {
                     data = Espo.Utils.clone(item.data || {});
 
                     return;
                 }
-            }, this);
+            });
 
             return data;
         },
@@ -818,17 +826,16 @@ define('views/record/search', 'view', function (Dep) {
         getPrimaryFilterName: function () {
             var primaryFilterName = null;
 
-            this.getPresetFilterList().forEach(function (item) {
+            this.getPresetFilterList().forEach(item => {
                 if (item.name == this.presetName) {
                     if (!('data' in item)) {
                         primaryFilterName = item.name;
-                    } else if (item.primary) {
+                    }
+                    else if (item.primary) {
                         primaryFilterName = item.primary;
                     }
-
-                    return;
                 }
-            }, this);
+            });
 
             return primaryFilterName;
         },
@@ -836,13 +843,11 @@ define('views/record/search', 'view', function (Dep) {
         getPrimaryFilterStyle: function () {
             var style = null;
 
-            this.getPresetFilterList().forEach(function (item) {
+            this.getPresetFilterList().forEach(item => {
                 if (item.name == this.primary) {
                     style = item.style || 'default';
-
-                    return;
                 }
-            }, this);
+            });
 
             return style;
         },
@@ -874,7 +879,8 @@ define('views/record/search', 'view', function (Dep) {
                 if (!primaryIsSet) {
                     this.primary = this.getPrimaryFilterName();
                 }
-            } else {
+            }
+            else {
                 this.advanced = Espo.Utils.clone(searchData.advanced);
             }
 
@@ -899,9 +905,9 @@ define('views/record/search', 'view', function (Dep) {
                 model: this.model,
                 params: params,
                 el: this.options.el + ' .filter[data-name="' + name + '"]',
-            }, function (view) {
+            }, (view) => {
                 if (typeof callback === 'function') {
-                    view.once('after:render', function () {
+                    view.once('after:render', () => {
                         callback(view);
                     });
                 }
@@ -910,7 +916,7 @@ define('views/record/search', 'view', function (Dep) {
                     view.render();
                 }
 
-                this.listenTo(view, 'change', function () {
+                this.listenTo(view, 'change', () => {
                     var toShowApply = this.isSearchedWithAdvancedFilter;
 
                     if (!toShowApply) {
@@ -926,7 +932,7 @@ define('views/record/search', 'view', function (Dep) {
                     }
 
                     this.showApplyFiltersButton();
-                }, this);
+                });
             });
         },
 
@@ -935,14 +941,13 @@ define('views/record/search', 'view', function (Dep) {
 
             this.bool = {};
 
-            this.boolFilterList.forEach(function (name) {
-                this.bool[name] = this.$el.find('input[data-name="' + name + '"][data-role="boolFilterCheckbox"]')
+            this.boolFilterList.forEach(name => {
+                this.bool[name] = this.$el
+                    .find('input[data-name="' + name + '"][data-role="boolFilterCheckbox"]')
                     .prop('checked');
-            }, this);
+            });
 
             for (var field in this.advanced) {
-                var data = {};
-                var method = 'fetch';
                 var view = this.getView('filter-' + field).getView('field');
 
                 this.advanced[field] = view.fetchSearch();
