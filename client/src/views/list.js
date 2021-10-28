@@ -362,6 +362,13 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 o.keepCurrentRootUrl = true;
             }
 
+            if (
+                this.getConfig().get('listPagination') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'listPagination'])
+            ) {
+                o.pagination = true;
+            }
+
             this.prepareRecordViewOptions(o);
 
             var listViewName = this.getRecordViewName();

@@ -123,6 +123,10 @@ define('collection', [], function () {
         lastPage: function () {
             let offset = this.total - this.total % this.maxSize;
 
+            if (offset === this.total) {
+                offset = this.total - this.maxSize;
+            }
+
             this.setOffset(offset);
         },
 
@@ -131,7 +135,7 @@ define('collection', [], function () {
                 throw new RangeError('offset can not be less than 0');
             }
 
-            if (offset > this.total) {
+            if (offset > this.total && this.total !== -1 && offset > 0) {
                 throw new RangeError('offset can not be larger than total count');
             }
 

@@ -321,6 +321,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 rowActionsOptions: {
                     unlinkDisabled: this.unlinkDisabled,
                 },
+                pagination: this.getConfig().get('listPagination') ||
+                    this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
+                    null,
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {
                     this.trigger('select', model);

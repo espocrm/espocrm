@@ -420,7 +420,6 @@ define('views/record/list', 'view', function (Dep) {
 
         data: function () {
             var paginationTop = this.pagination === 'both' ||
-                this.pagination === true ||
                 this.pagination === 'top';
 
             var paginationBottom = this.pagination === 'both' ||
@@ -490,7 +489,10 @@ define('views/record/list', 'view', function (Dep) {
                 this.header = false;
             }
 
-            this.pagination = _.isUndefined(this.options.pagination) ? this.pagination : this.options.pagination;
+            this.pagination = _.isUndefined(this.options.pagination) || this.options.pagination === null ?
+                this.pagination :
+                this.options.pagination;
+
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
 

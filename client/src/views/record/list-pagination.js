@@ -34,7 +34,8 @@ define('views/record/list-pagination', 'view', function (Dep) {
 
         data: function () {
             var previous = this.collection.offset > 0;
-            var next = this.collection.total - this.collection.offset > this.collection.maxSize;
+            var next = this.collection.total - this.collection.offset > this.collection.maxSize ||
+                this.collection.total === -1;
 
             return {
                 total: this.collection.total,
@@ -42,8 +43,9 @@ define('views/record/list-pagination', 'view', function (Dep) {
                 to: this.collection.offset + this.collection.length,
                 previous: previous,
                 next: next,
+                noTotal: this.collection.total === -1 || this.collection.total === -2,
             };
-        }
+        },
 
     });
 });
