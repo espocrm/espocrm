@@ -122,6 +122,11 @@ define('collection', [], function () {
 
         lastPage: function () {
             let offset = this.total - this.total % this.maxSize;
+            
+            // handle last page if remainder of last page is 0
+            if (offset === this.total) {
+                offset = this.total - this.maxSize
+            }
 
             this.setOffset(offset);
         },
