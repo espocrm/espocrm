@@ -127,7 +127,7 @@ class Condition
      */
     public static function notLike(Expression $subject, $pattern): Comparison
     {
-        return Comparison::notLike($arg1, $pattern);
+        return Comparison::notLike($subject, $pattern);
     }
 
     /**

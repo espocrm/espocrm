@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class Integration extends Entity
 {
@@ -52,7 +52,7 @@ class Integration extends Entity
                 $data = $this->get('data');
             }
             else {
-                $data = new StdClass();
+                $data = new stdClass();
             }
 
             if (isset($data->$name)) {
@@ -70,7 +70,7 @@ class Integration extends Entity
         $data = $this->get('data');
 
         if (empty($data)) {
-            $data = new StdClass();
+            $data = new stdClass();
         }
 
         unset($data->$name);
@@ -177,7 +177,7 @@ class Integration extends Entity
         );
     }
 
-    public function getValueMap(): StdClass
+    public function getValueMap(): stdClass
     {
         $arr = $this->toArray();
 

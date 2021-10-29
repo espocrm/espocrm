@@ -52,8 +52,6 @@ class LogoImage extends Image implements Di\ConfigAware
         $id = $request->get('id');
         $size = $request->get('size') ?? null;
 
-        $this->imageSizes['small-logo'] = [181, 44];
-
         if (!$id) {
             $id = $this->config->get('companyLogoId');
         }

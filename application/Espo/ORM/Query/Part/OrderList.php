@@ -39,6 +39,8 @@ class OrderList implements Iterator
 {
     private $position = 0;
 
+    private $list;
+
     private function __construct(array $list)
     {
         foreach ($list as $item) {

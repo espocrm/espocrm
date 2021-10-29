@@ -138,9 +138,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Create a record of Extension Entity
-     *
-     * @return bool
+     * Create a record of Extension Entity.
      */
     protected function storeExtension()
     {

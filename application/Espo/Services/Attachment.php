@@ -301,7 +301,7 @@ class Attachment extends Record
 
     public function getAttachmentFromImageUrl($data)
     {
-        $attachment = $this->getEntity();
+        $attachment = $this->getRepository()->getNew();
 
         if (empty($data->url)) {
             throw new BadRequest();

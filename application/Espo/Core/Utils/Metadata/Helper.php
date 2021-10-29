@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Metadata;
+
 use Espo\Core\Utils\Util;
 
 class Helper
@@ -37,7 +38,7 @@ class Helper
     protected $defaultNaming = 'postfix';
 
     /**
-     * List of copied params for metadata -> 'fields' from parent items
+     * List of copied params for metadata -> 'fields' from parent items.
      */
     protected $copiedDefParams = array(
         'readOnly',
@@ -65,10 +66,10 @@ class Helper
     }
 
     /**
-     * Get field definition by type in metadata, "fields" key
+     * Get field definition by type in metadata, "fields" key.
      *
-     * @param  array | string $fieldDef - It can be a string or field definition from entityDefs
-     * @return array | null
+     * @param array|string $fieldDef - It can be a string or field definition from entityDefs
+     * @return array|null
      */
     public function getFieldDefsByType($fieldDef)
     {
@@ -86,6 +87,7 @@ class Helper
     public function getFieldDefsInFieldMeta($fieldDef)
     {
         $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+
         if (isset($fieldDefsByType['fieldDefs'])) {
             return $fieldDefsByType['fieldDefs'];
         }
@@ -94,20 +96,24 @@ class Helper
     }
 
     /**
-     * Get link definition defined in 'fields' metadata. In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}"). Variables should be defined into fieldDefs (in 'entityDefs' metadata).
+     * Get link definition defined in 'fields' metadata.
+     * In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}").
+     * Variables should be defined into fieldDefs (in 'entityDefs' metadata).
      *
-     * @param  string $entityName
-     * @param  array  $fieldDef
-     * @param  array  $linkFieldDefsByType
-     * @return array | null
+     * @param string $entityName
+     * @param array $fieldDef
+     * @param array $linkFieldDefsByType
+     * @return array|null
      */
     public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
     {
         if (!isset($fieldDefsByType)) {
             $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+
             if (!isset($fieldDefsByType['linkDefs'])) {
                 return null;
             }
+
             $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
         }
 
@@ -129,18 +135,18 @@ class Helper
     }
 
     /**
-     * Get additional field list based on field definition in metadata 'fields'
+     * Get additional field list based on field definition in metadata 'fields'.
      *
-     * @param  string     $fieldName
-     * @param  array     $fieldParams
-     * @param  array|null $definitionList
+     * @param string $fieldName
+     * @param array $fieldParams
+     * @param array|null $definitionList
      *
-     * @return array
+     * @return array|null
      */
     public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList)
     {
         if (empty($fieldParams['type']) || empty($definitionList)) {
-            return;
+            return null;
         }
 
         $fieldType = $fieldParams['type'];
@@ -163,6 +169,6 @@ class Helper
             return $additionalFields;
         }
 
+        return null;
     }
-
 }

@@ -86,6 +86,8 @@ class EntityManager
 
     private $queryExecutor;
 
+    private $queryBuilder;
+
     private $sqlExecutor;
 
     private $transactionManager;

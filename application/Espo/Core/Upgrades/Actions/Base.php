@@ -607,9 +607,11 @@ abstract class Base
     }
 
     /**
-     * Get needed file list based on type. E.g. file list for "beforeCopy" action
-     * @param  string $type
-     * @return boolean
+     * Get needed file list based on type. E.g. file list for "beforeCopy" action.
+     *
+     * @param string $type
+     *
+     * @return string|null
      */
     protected function getCopyFilesPath($type = null)
     {
@@ -645,6 +647,8 @@ abstract class Base
                 return $filesPath;
             }
         }
+
+        return null;
     }
 
     protected function getVendorFileList($type = 'copy')

@@ -35,9 +35,11 @@ abstract class Base
 {
     private $container;
 
+    protected $actionManager;
+
     protected $name = null;
 
-    protected $params = array();
+    protected $params = [];
 
     const UPLOAD = 'upload';
 

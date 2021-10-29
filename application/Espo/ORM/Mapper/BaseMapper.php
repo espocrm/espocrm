@@ -71,9 +71,13 @@ class BaseMapper implements RDBMapper
 
     protected $queryComposer;
 
+    protected $entityFactory;
+
     protected $metadata;
 
     protected $sqlExecutor;
+
+    protected $helper;
 
     public function __construct(
         PDO $pdo,

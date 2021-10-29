@@ -63,6 +63,8 @@ class AssignmentProcessor
 
     private $metadata;
 
+    private $language;
+
     private $log;
 
     public function __construct(

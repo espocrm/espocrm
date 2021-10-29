@@ -29,12 +29,11 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Traits\Platforms;
 
+use Doctrine\DBAL\Types\BlobType;
+use Doctrine\DBAL\Types\TextType;
+
 use Doctrine\DBAL\Schema\{
     TableDiff,
-    Index,
-    Table,
-    Constraint,
-    ForeignKeyConstraint,
     ColumnDiff,
     Column,
     Identifier,

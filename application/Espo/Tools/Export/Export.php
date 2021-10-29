@@ -285,7 +285,7 @@ class Export
         }
 
         if (!is_string($foreign)) {
-            return self::VARCHAR;
+            return Entity::VARCHAR;
         }
 
         if (!$entityDefs->getRelation($relation)->hasForeignEntityType()) {

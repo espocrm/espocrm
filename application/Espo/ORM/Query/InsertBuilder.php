@@ -56,7 +56,7 @@ class InsertBuilder implements Builder
      */
     public function clone(Insert $query): self
     {
-        $this->cloneInternal($query);
+        return $this->cloneInternal($query);
     }
 
     /**

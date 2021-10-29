@@ -53,6 +53,8 @@ use Espo\Tools\{
     Export\Params as ExportParams,
 };
 
+use stdClass;
+
 class Record extends RecordService implements
 
     Di\AclManagerAware,
@@ -348,7 +350,7 @@ class Record extends RecordService implements
         Entity $entity,
         string $targetCurrency,
         string $baseCurrency,
-        StdClass $rates,
+        stdClass $rates,
         bool $allFields = false,
         ?array $fieldList = null
     ) {

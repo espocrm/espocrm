@@ -54,6 +54,8 @@ class OrmMetadataData
 
     protected $config;
 
+    private $converter;
+
     public function __construct(
         Metadata $metadata,
         FileManager $fileManager,

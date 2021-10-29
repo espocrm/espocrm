@@ -64,7 +64,7 @@ class ContentsString implements Contents
 
     public static function createFromString(string $contents): ContentsString
     {
-        $obj = new $obj($contents);
+        $obj = new self($contents);
 
         return $obj;
     }

@@ -78,6 +78,8 @@ class Schema
 
     private $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
+    private $schemaConverter;
+
     /**
      * Array of rebuildActions classes in format:
      * [

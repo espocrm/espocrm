@@ -171,4 +171,8 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $additionalParam;
     }
 
+    protected function load($linkName, $entityType)
+    {
+
+    }
 }

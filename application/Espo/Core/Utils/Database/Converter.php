@@ -43,6 +43,8 @@ class Converter
 
     private $config;
 
+    private $ormConverter;
+
     public function __construct(Metadata $metadata, FileManager $fileManager, Config $config = null)
     {
         $this->metadata = $metadata;

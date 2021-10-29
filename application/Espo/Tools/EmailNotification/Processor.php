@@ -87,6 +87,8 @@ class Processor
 
     private $metadata;
 
+    private $language;
+
     private $log;
 
     private $noteAccessControl;
