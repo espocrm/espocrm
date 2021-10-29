@@ -248,7 +248,7 @@ class ErrorOutput
             $logMessageItemList[] = $message;
         }
 
-        $logMessageItemList[] .= $request->getMethod() . ' ' . $request->getResourcePath();
+        $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
 
         if ($requestBodyString) {
             $logMessageItemList[] = "Input data: " . $requestBodyString;

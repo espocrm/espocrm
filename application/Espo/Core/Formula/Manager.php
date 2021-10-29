@@ -43,6 +43,8 @@ use StdClass;
  */
 class Manager
 {
+    private $evaluator;
+
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
         $functionClassNameMap = $metadata->get(['app', 'formula', 'functionClassNameMap'], []);

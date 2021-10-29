@@ -47,4 +47,6 @@ abstract class Base extends BaseFunction
 
         return $this->compare($left, $right);
     }
+
+    abstract protected function compare($left, $right);
 }

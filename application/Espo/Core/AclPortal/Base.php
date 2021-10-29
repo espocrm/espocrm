@@ -35,6 +35,8 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
+use Espo\Core\AclManager;
+
 use Espo\Core\{
     ORM\EntityManager,
     Portal\AclManager as PortalAclManager,

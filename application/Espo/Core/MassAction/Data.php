@@ -35,6 +35,8 @@ use stdClass;
 
 class Data
 {
+    private $data;
+
     private function __construct()
     {
         $this->data = (object) [];

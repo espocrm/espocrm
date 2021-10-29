@@ -38,7 +38,7 @@ use Espo\Core\{
     Mail\MessageWrapper
 };
 
-use StdClass;
+use stdClass;
 
 interface Parser
 {
@@ -48,9 +48,9 @@ interface Parser
 
     public function getMessageMessageId(MessageWrapper $message): ?string;
 
-    public function getAddressNameMap(MessageWrapper $message): StdClass;
+    public function getAddressNameMap(MessageWrapper $message): stdClass;
 
-    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?StdClass;
+    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?stdClass;
 
     /**
      * @return string[]

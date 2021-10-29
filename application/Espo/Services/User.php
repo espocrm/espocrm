@@ -45,7 +45,7 @@ use Espo\Core\{
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 use Exception;
 
 class User extends Record implements
@@ -213,7 +213,7 @@ class User extends Record implements
         $recovery->request($emailAddress, $userName, $url);
     }
 
-    public function changePasswordByRequest(string $requestId, string $password): StdClass
+    public function changePasswordByRequest(string $requestId, string $password): stdClass
     {
         $recovery = $this->injectableFactory->create(Recovery::class);
 
@@ -273,7 +273,7 @@ class User extends Record implements
         }
     }
 
-    public function create(StdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): Entity
     {
         $newPassword = null;
 
@@ -301,7 +301,7 @@ class User extends Record implements
         return $user;
     }
 
-    public function update(string $id, StdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if ($id == 'system') {
             throw new Forbidden();

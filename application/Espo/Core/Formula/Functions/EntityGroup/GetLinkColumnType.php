@@ -42,13 +42,15 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
     {
         $args = $item->value ?? [];
 
-        if (count($args) < 3) throw new Error("Formula: entity\\isRelated: no argument.");
+        if (count($args) < 3) {
+            throw new Error("Formula: entity\\isRelated: no argument.");
+        }
 
         $link = $this->evaluate($args[0]);
         $id = $this->evaluate($args[1]);
         $column = $this->evaluate($args[2]);
 
-        $entityType = $this->getEntity()->getEntityType($entityType);
+        $entityType = $this->getEntity()->getEntityType();
         $repository = $this->entityManager->getRepository($entityType);
 
         return $repository->getRelationColumn($this->getEntity(), $link, $id, $column);

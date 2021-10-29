@@ -55,7 +55,7 @@ use Espo\Core\{
     AclManager as InternalAclManager,
 };
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 
 class AclManager extends InternalAclManager
@@ -131,7 +131,7 @@ class AclManager extends InternalAclManager
         return $this->mapHashMap[$key];
     }
 
-    public function getMapData(User $user): StdClass
+    public function getMapData(User $user): stdClass
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->internalAclManager->getMapData($user);

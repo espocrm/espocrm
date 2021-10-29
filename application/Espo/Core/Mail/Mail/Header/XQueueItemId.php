@@ -36,7 +36,6 @@
 namespace Espo\Core\Mail\Mail\Header;
 
 use Laminas\Mail\Header;
-use Laminas\Mime\Mime;
 
 class XQueueItemId implements Header\HeaderInterface
 {
@@ -47,14 +46,16 @@ class XQueueItemId implements Header\HeaderInterface
     public static function fromString($headerLine)
     {
         list($name, $value) = Header\GenericHeader::splitHeaderLine($headerLine);
-        $value = Header\HeaderWrap::mimeDecodeValue($value);
+
+        $valueDecoded = Header\HeaderWrap::mimeDecodeValue($value);
 
         if (strtolower($name) !== 'x-queue-item-id') {
             throw new Header\Exception\InvalidArgumentException('Invalid header line for x-queue-item-id string');
         }
 
-        $header = new static();
-        $header->setId($value);
+        $header = new self();
+
+        $header->setId($valueDecoded);
 
         return $header;
     }

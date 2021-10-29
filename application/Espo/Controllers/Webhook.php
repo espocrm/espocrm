@@ -35,7 +35,7 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
+use stdClass;
 
 class Webhook extends RecordBase
 {
@@ -48,7 +48,7 @@ class Webhook extends RecordBase
         return true;
     }
 
-    public function postActionCreate(Request $request, Response $response): StdClass
+    public function postActionCreate(Request $request, Response $response): stdClass
     {
         $result = parent::postActionCreate($request, $response);
 

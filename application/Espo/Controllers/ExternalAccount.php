@@ -38,7 +38,7 @@ use Espo\Core\{
     Record\ReadParams,
 };
 
-use StdClass;
+use stdClass;
 
 class ExternalAccount extends RecordBase
 {
@@ -49,7 +49,7 @@ class ExternalAccount extends RecordBase
         return $this->acl->checkScope('ExternalAccount');
     }
 
-    public function getActionList(Request $request, Response $response): StdClass
+    public function getActionList(Request $request, Response $response): stdClass
     {
         $integrations = $this->entityManager->getRepository('Integration')->find();
 
@@ -81,7 +81,7 @@ class ExternalAccount extends RecordBase
         ];
     }
 
-    public function getActionGetOAuth2Info(Request $request): ?StdClass
+    public function getActionGetOAuth2Info(Request $request): ?stdClass
     {
         $id = $request->getQueryParam('id');
 
@@ -104,7 +104,7 @@ class ExternalAccount extends RecordBase
         return null;
     }
 
-    public function getActionRead(Request $request, Response $response): StdClass
+    public function getActionRead(Request $request, Response $response): stdClass
     {
         $id = $request->getRouteParam('id');
 
@@ -113,7 +113,7 @@ class ExternalAccount extends RecordBase
             ->getValueMap();
     }
 
-    public function putActionUpdate(Request $request, Response $response): StdClass
+    public function putActionUpdate(Request $request, Response $response): stdClass
     {
         $id = $request->getRouteParam('id');
 

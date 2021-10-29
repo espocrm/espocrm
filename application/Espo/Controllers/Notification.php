@@ -29,21 +29,19 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
     Api\Response,
 };
 
-use StdClass;
+use stdClass;
 
 class Notification extends RecordBase
 {
     public static $defaultAction = 'list';
 
-    public function getActionList(Request $request, Response $response): StdClass
+    public function getActionList(Request $request, Response $response): stdClass
     {
         $userId = $this->user->getId();
 

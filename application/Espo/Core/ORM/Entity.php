@@ -51,7 +51,7 @@ class Entity extends BaseEntity
     public function hasLinkParentField(string $field): bool
     {
         return
-            $this->hasAttributeType($field . 'Type') == 'foreignType' &&
+            $this->getAttributeType($field . 'Type') == 'foreignType' &&
             $this->hasAttribute($field . 'Id') &&
             $this->hasRelation($field);
     }

@@ -55,6 +55,8 @@ class TemplateRenderer
 
     private $applicationState;
 
+    private $template;
+
     public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
     {
         $this->htmlizerFactory = $htmlizerFactory;
