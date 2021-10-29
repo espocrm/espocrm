@@ -401,7 +401,8 @@ class NoteHookProcessor
     }
 
     /**
-     * @return Collection<User>
+     * @phpstan-return Collection
+     * @return User[]
      */
     private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
