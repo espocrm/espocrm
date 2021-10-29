@@ -46,6 +46,8 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Tools\Stream\Jobs\AutoFollow as AutoFollowJob;
 use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 /**
  * Handles operations with entities.
  */
@@ -331,6 +333,9 @@ class HookProcessor
         $this->afterSaveStreamNotNew($entity, $options);
     }
 
+    /**
+     * @param CoreEntity $entity
+     */
     private function afterSaveStreamNew(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
@@ -401,6 +406,9 @@ class HookProcessor
         $this->afterSaveStreamNotNew2($entity);
     }
 
+    /**
+     * @param CoreEntity $entity
+     */
     private function afterSaveStreamNotNew1(Entity $entity, array $options): void
     {
         if (!empty($options['noStream']) || !empty($options['silent'])) {
@@ -514,6 +522,9 @@ class HookProcessor
         return $this->statusFields;
     }
 
+    /**
+     * @param CoreEntity $entity
+     */
     public function afterRelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
         $entityType = $entity->getEntityType();
@@ -540,6 +551,9 @@ class HookProcessor
         }
     }
 
+    /**
+     * @param CoreEntity $entity
+     */
     public function afterUnrelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
         $entityType = $entity->getEntityType();

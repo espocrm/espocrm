@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\User as UserEntity;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\Error,
@@ -78,6 +80,7 @@ class User extends Record implements
             throw new Forbidden();
         }
 
+        /** @var UserEntity $entity */
         $entity = parent::getEntity($id);
 
         if ($entity && $entity->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {

@@ -401,7 +401,7 @@ class NoteHookProcessor
     }
 
     /**
-     * @return User[]
+     * @return Collection<User>
      */
     private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {

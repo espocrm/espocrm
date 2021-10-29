@@ -246,7 +246,7 @@ class Service
     }
 
     /**
-     * @return Attachment ID.
+     * @return string Attachment ID.
      */
     public function uploadFile(string $contents): string
     {
