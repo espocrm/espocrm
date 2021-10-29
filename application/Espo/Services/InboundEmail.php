@@ -34,6 +34,9 @@ use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
+use Espo\Modules\Crm\Business\Distribution\CaseObj\RoundRobin;
+use Espo\Modules\Crm\Business\Distribution\CaseObj\LeastBusy;
+
 use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Modules\Crm\Services\Campaign as CampaignService;
 
@@ -650,13 +653,7 @@ class InboundEmail extends RecordService implements
 
     protected function assignRoundRobin(Entity $case, Team $team, $targetUserPosition)
     {
-        $className = 'Espo\\Custom\\Business\\Distribution\\CaseObj\\RoundRobin';
-
-        if (!class_exists($className)) {
-            $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
-        }
-
-        $distribution = new $className($this->entityManager);
+        $distribution = new RoundRobin($this->entityManager);
 
         $user = $distribution->getUser($team, $targetUserPosition);
 
@@ -668,13 +665,7 @@ class InboundEmail extends RecordService implements
 
     protected function assignLeastBusy(Entity $case, Team $team, $targetUserPosition)
     {
-        $className = 'Espo\\Custom\\Business\\Distribution\\CaseObj\\LeastBusy';
-
-        if (!class_exists($className)) {
-            $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
-        }
-
-        $distribution = new $className($this->entityManager, $this->getMetadata());
+        $distribution = new LeastBusy($this->entityManager, $this->getMetadata());
 
         $user = $distribution->getUser($team, $targetUserPosition);
 

@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
 class LeastBusy
 {
     protected $entityManager;
+
     protected $metadata;
 
     public function __construct($entityManager, $metadata)
