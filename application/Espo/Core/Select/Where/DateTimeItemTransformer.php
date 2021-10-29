@@ -32,6 +32,7 @@ namespace Espo\Core\Select\Where;
 use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Config;
 
 use DateTime;
 use DateTimeZone;
@@ -44,9 +45,12 @@ class DateTimeItemTransformer
 {
     protected $user;
 
-    public function __construct(User $user)
+    private $config;
+
+    public function __construct(User $user, Config $config)
     {
         $this->user = $user;
+        $this->config = $config;
     }
 
     public function transform(Item $item): Item
@@ -372,7 +376,7 @@ class DateTimeItemTransformer
                 $where['type'] = 'between';
                 $dtToday = new DateTime('now', new DateTimeZone($timeZone));
                 $dt = clone $dtToday;
-                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
                 $dt
                     ->modify('first day of January this year')
@@ -410,7 +414,7 @@ class DateTimeItemTransformer
 
                 $dt = clone $dtToday;
 
-                $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+                $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
                 $dt
                     ->modify('first day of January this year')

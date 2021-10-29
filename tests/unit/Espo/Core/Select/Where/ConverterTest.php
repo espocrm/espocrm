@@ -95,7 +95,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ->willReturn('Random');
 
         $this->dateTimeItemTransformer = new DateTimeItemTransformer(
-            $this->user
+            $this->user,
+            $this->config
         );
 
         $this->itemConverter = new ItemGeneralConverter(
