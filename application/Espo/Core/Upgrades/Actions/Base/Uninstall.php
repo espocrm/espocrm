@@ -116,6 +116,8 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $fileDirs = $this->getFileDirs($packagePath);
 
+        $res = true;
+
         foreach ($fileDirs as $filesPath) {
             if (file_exists($filesPath)) {
                 $res = $this->copy($filesPath, '', true);

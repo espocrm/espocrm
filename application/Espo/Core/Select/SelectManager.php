@@ -982,7 +982,7 @@ class SelectManager
                 // TODO allow alias
                 throw new Forbidden("SelectManager::checkWhere: Unknown relation '{$link}' in where.");
             }
-            $entityType = $this->getSeed($this->getEntityType())->getRelationParam($link, 'entity');
+            $entityType = $this->getSeed()->getRelationParam($link, 'entity');
             if (!$entityType) {
                 throw new Forbidden("SelectManager::checkWhere: Bad relation.");
             }

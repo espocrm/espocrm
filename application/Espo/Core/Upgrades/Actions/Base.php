@@ -296,6 +296,8 @@ abstract class Base
             $versionList = (array) $versionList;
         }
 
+        $version = null;
+
         foreach ($versionList as $version) {
             $isInRange = false;
 
@@ -573,13 +575,13 @@ abstract class Base
         $copyOnlyFiles = false
     ) {
         try {
-            $res = $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
+            return $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
         }
         catch (Throwable $e) {
             $this->throwErrorAndRemovePackage($e->getMessage());
         }
 
-        return $res;
+        return false;
     }
 
     /**

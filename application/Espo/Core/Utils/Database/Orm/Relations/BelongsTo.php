@@ -39,11 +39,14 @@ class BelongsTo extends Base
         $foreignLinkName = $this->getForeignLinkName();
 
         $index = true;
+
         if (!empty($linkParams['noIndex'])) {
             $index = false;
         }
 
         $noForeignName = false;
+        $foreign = null;
+
         if (!empty($linkParams['noForeignName'])) {
             $noForeignName = true;
         } else {

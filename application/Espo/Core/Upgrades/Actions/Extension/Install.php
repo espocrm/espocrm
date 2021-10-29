@@ -113,7 +113,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Get entity of this extension
      *
-     * @return \Espo\Entities\Extension
+     * @return \Espo\Entities\Extension|null
      */
     protected function getExtensionEntity()
     {

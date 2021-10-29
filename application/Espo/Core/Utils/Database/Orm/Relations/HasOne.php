@@ -38,12 +38,17 @@ class HasOne extends Base
         $foreignentityType = $this->getForeignEntityName();
 
         $noForeignName = false;
+
+        $foreign = null;
+
         if (!empty($linkParams['noForeignName'])) {
             $noForeignName = true;
-        } else {
+        }
+        else {
             if (!empty($linkParams['foreignName'])) {
                 $foreign = $linkParams['foreignName'];
-            } else {
+            }
+            else {
                 $foreign = $this->getForeignField('name', $foreignentityType);
             }
         }
