@@ -194,11 +194,11 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getMandatorySelectAttributeList: function () {
-            this.mandatorySelectAttributeList;
+            return this.mandatorySelectAttributeList;
         },
 
         isForceSelectAllAttributes: function () {
-            this.forceSelectAllAttributes;
+            return this.forceSelectAllAttributes;
         },
 
         getAutocompleteMaxCount: function () {
