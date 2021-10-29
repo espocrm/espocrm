@@ -29,6 +29,8 @@
 
 namespace Espo\Entities;
 
+use stdClass;
+
 class UniqueId extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'UniqueId';
@@ -36,5 +38,10 @@ class UniqueId extends \Espo\Core\ORM\Entity
     public function getIdValue(): ?string
     {
         return $this->get('name');
+    }
+
+    public function getData(): stdClass
+    {
+        return $this->get('data') ?? (object) [];
     }
 }

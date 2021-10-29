@@ -44,6 +44,8 @@ use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Entities\Notification;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 /**
  * Handles operations with entities.
  */
@@ -84,6 +86,8 @@ class HookProcessor
     public function afterSave(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
+
+        assert($entity instanceof CoreEntity);
 
         /**
          * No need to process assignment notifications for entity types that have Stream enabled.

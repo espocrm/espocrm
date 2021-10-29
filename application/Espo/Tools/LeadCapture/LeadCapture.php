@@ -33,6 +33,10 @@ use Espo\Modules\Crm\Services\Campaign as CampaignService;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Services\InboundEmail as InboundEmailService;
 
+use Espo\Entities\UniqueId;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\NotFound,
@@ -54,7 +58,7 @@ use Espo\{
     Modules\Crm\Entities\Lead as LeadEntity,
 };
 
-use StdClass;
+use stdClass;
 use DateTime;
 
 class LeadCapture
@@ -107,7 +111,7 @@ class LeadCapture
         $this->inboundEmailService = $inboundEmailService;
     }
 
-    public function capture(string $apiKey, StdClass $data)
+    public function capture(string $apiKey, stdClass $data)
     {
         $leadCapture = $this->entityManager
             ->getRDBRepository('LeadCapture')
@@ -194,9 +198,9 @@ class LeadCapture
         $uniqueId->set([
             'terminateAt' => $terminateAt,
             'data' => (object) [
-                'leadCaptureId' => $leadCapture->id,
+                'leadCaptureId' => $leadCapture->getId(),
                 'data' => $data,
-                'leadId' => $lead->id,
+                'leadId' => $lead->getId(),
                 'isLogged' => $isLogged,
             ],
         ]);
@@ -217,7 +221,7 @@ class LeadCapture
         $this->entityManager->saveEntity($job);
     }
 
-    protected function proceed(Entity $leadCapture, StdClass $data, ?string $leadId = null, bool $isLogged = false)
+    protected function proceed(Entity $leadCapture, stdClass $data, ?string $leadId = null, bool $isLogged = false)
     {
         if ($leadId) {
             $lead = $this->entityManager->getEntity('Lead', $leadId);
@@ -231,8 +235,6 @@ class LeadCapture
             $campaign = $this->entityManager->getEntity('Campaign', $leadCapture->get('campaignId'));
         }
 
-        $duplicate = null;
-        $contact = null;
         $toRelateLead = false;
 
         $target = $lead;
@@ -245,15 +247,23 @@ class LeadCapture
         $targetLead = $duplicateData['lead'] ?? $lead;
 
         if ($contact) {
+            assert($contact instanceof Contact);
+
             $target = $contact;
         }
 
         if ($duplicate) {
+            assert($duplicate instanceof Lead);
+
             $lead = $duplicate;
 
             if (!$contact) {
                 $target = $lead;
             }
+        }
+
+        if ($targetLead) {
+            assert($targetLead instanceof Lead);
         }
 
         $isContactOptedIn = false;
@@ -276,7 +286,7 @@ class LeadCapture
                     $isAlreadyOptedIn = true;
 
                     if ($campaign) {
-                        $this->campaignService->logOptedIn($campaign->id, null, $contact);
+                        $this->campaignService->logOptedIn($campaign->getId(), null, $contact);
                     }
 
                     $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
@@ -284,9 +294,9 @@ class LeadCapture
                     if ($targetList) {
                         $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
                            'link' => 'contacts',
-                           'targetId' => $contact->id,
+                           'targetId' => $contact->getId(),
                            'targetType' => 'Contact',
-                           'leadCaptureId' => $leadCapture->id,
+                           'leadCaptureId' => $leadCapture->getId(),
                         ]);
                     }
                 }
@@ -312,12 +322,12 @@ class LeadCapture
             $leadCapture->get('subscribeContactToTargetList')
         ) {
             $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-               'targetId' => $contact->id,
+               'targetId' => $contact->getId(),
                'targetType' => 'Contact',
             ]);
 
             $this->hookManager->process('Contact', 'afterLeadCapture', $contact, [], [
-               'leadCaptureId' => $leadCapture->id,
+               'leadCaptureId' => $leadCapture->getId(),
             ]);
         }
 
@@ -331,11 +341,11 @@ class LeadCapture
             $this->entityManager->saveEntity($lead);
 
             if (!$duplicate && $campaign) {
-                $this->campaignService->logLeadCreated($campaign->id, $lead);
+                $this->campaignService->logLeadCreated($campaign->getId(), $lead);
             }
         }
 
-        if ($toRelateLead && !empty($targetLead->id)) {
+        if ($toRelateLead && $targetLead->getId()) {
             $this->entityManager
                 ->getRepository('Lead')
                 ->relate($targetLead, 'targetLists', $leadCapture->get('targetListId'), [
@@ -343,7 +353,7 @@ class LeadCapture
                 ]);
 
             if ($campaign) {
-                $this->campaignService->logOptedIn($campaign->id, null, $targetLead);
+                $this->campaignService->logOptedIn($campaign->getId(), null, $targetLead);
             }
 
             $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
@@ -351,21 +361,21 @@ class LeadCapture
             if ($targetList) {
                 $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
                    'link' => 'leads',
-                   'targetId' => $targetLead->id,
+                   'targetId' => $targetLead->getId(),
                    'targetType' => 'Lead',
-                   'leadCaptureId' => $leadCapture->id,
+                   'leadCaptureId' => $leadCapture->getId(),
                 ]);
             }
         }
 
         if ($toRelateLead  || !$leadCapture->get('subscribeToTargetList')) {
             $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-               'targetId' => $targetLead->id,
+               'targetId' => $targetLead->getId(),
                'targetType' => 'Lead',
             ]);
 
             $this->hookManager->process('Lead', 'afterLeadCapture', $targetLead, [], [
-               'leadCaptureId' => $leadCapture->id,
+               'leadCaptureId' => $leadCapture->getId(),
             ]);
         }
 
@@ -374,8 +384,9 @@ class LeadCapture
         }
     }
 
-    public function confirmOptIn(string $id): StdClass
+    public function confirmOptIn(string $id): stdClass
     {
+        /** @var UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository('UniqueId')
             ->where([
@@ -387,7 +398,7 @@ class LeadCapture
             throw new NotFound("LeadCapture Confirm: UniqueId not found.");
         }
 
-        $uniqueIdData = $uniqueId->get('data');
+        $uniqueIdData = $uniqueId->getData();
 
         if (empty($uniqueIdData->data)) {
             throw new Error("LeadCapture Confirm: data not found.");
@@ -431,12 +442,13 @@ class LeadCapture
             'status' => 'success',
             'message' => $leadCapture->get('optInConfirmationSuccessMessage'),
             'leadCaptureName' => $leadCapture->get('name'),
-            'leadCaptureId' => $leadCapture->id,
+            'leadCaptureId' => $leadCapture->getId(),
         ];
     }
 
     public function sendOptInConfirmation(string $id)
     {
+        /** @var UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository('UniqueId')
             ->where([
@@ -448,7 +460,7 @@ class LeadCapture
             throw new Error("LeadCapture: UniqueId not found.");
         }
 
-        $uniqueIdData = $uniqueId->get('data');
+        $uniqueIdData = $uniqueId->getData();
 
         if (empty($uniqueIdData->data)) {
             throw new Error("LeadCapture: data not found.");
@@ -587,7 +599,7 @@ class LeadCapture
         $sender->send($email);
     }
 
-    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, StdClass $data): LeadEntity
+    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): LeadEntity
     {
         $lead = $this->entityManager->getEntity('Lead');
 
@@ -723,7 +735,7 @@ class LeadCapture
             ->getRDBRepository('TargetList')
             ->getRelation($targetList, $link)
             ->where([
-                'id' => $target->id,
+                'id' => $target->getId(),
             ])
             ->findOne();
 
@@ -734,14 +746,14 @@ class LeadCapture
         return true;
     }
 
-    protected function log(LeadCaptureEntity $leadCapture, Entity $target, StdClass $data, bool $isNew = true)
+    protected function log(LeadCaptureEntity $leadCapture, Entity $target, stdClass $data, bool $isNew = true)
     {
         $logRecord = $this->entityManager->getEntity('LeadCaptureLogRecord');
 
         $logRecord->set([
-            'targetId' => $target->id,
+            'targetId' => $target->getId(),
             'targetType' => $target->getEntityType(),
-            'leadCaptureId' => $leadCapture->id,
+            'leadCaptureId' => $leadCapture->getId(),
             'isCreated' => $isNew,
             'data' => $data,
         ]);
