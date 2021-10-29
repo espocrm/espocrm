@@ -59,7 +59,7 @@ use Exception;
 use Throwable;
 use DateTime;
 use DateTimeZone;
-use StdClass;
+use stdClass;
 
 class EmailAccount extends Record implements
 
@@ -227,7 +227,7 @@ class EmailAccount extends Record implements
         return $storage;
     }
 
-    public function create(StdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): Entity
     {
         if (!$this->getUser()->isAdmin()) {
             $count = $this->entityManager

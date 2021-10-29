@@ -55,7 +55,7 @@ use Espo\Core\{
 
 use Exception;
 use Throwable;
-use StdClass;
+use stdClass;
 
 class Email extends Record implements
 
@@ -418,7 +418,7 @@ class Email extends Record implements
         }
     }
 
-    public function create(StdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): Entity
     {
         $entity = parent::create($data, $params);
 
@@ -752,7 +752,7 @@ class Email extends Record implements
         return $fromAddress;
     }
 
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): StdClass
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): stdClass
     {
         $ids = [];
         $names = (object) [];
@@ -937,7 +937,7 @@ class Email extends Record implements
         }
     }
 
-    public function getFoldersNotReadCounts(): StdClass
+    public function getFoldersNotReadCounts(): stdClass
     {
         $data = [];
 

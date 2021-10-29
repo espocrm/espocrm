@@ -46,7 +46,7 @@ use Espo\Core\{
 
 use Espo\Core\Acl\Exceptions\NotImplemented;
 
-use StdClass;
+use stdClass;
 
 class RecordTree extends Record
 {
@@ -200,7 +200,7 @@ class RecordTree extends Record
         return true;
     }
 
-    public function getCategoryData(?string $id): ?StdClass
+    public function getCategoryData(?string $id): ?stdClass
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new Forbidden();
@@ -293,7 +293,7 @@ class RecordTree extends Record
         }
     }
 
-    public function update(string $id, StdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if (!empty($data->parentId) && $data->parentId === $id) {
             throw new Forbidden();
