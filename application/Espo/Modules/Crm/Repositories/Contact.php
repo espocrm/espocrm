@@ -50,6 +50,8 @@ class Contact extends \Espo\Core\Repositories\Database
         $accountIdChanged = $entity->has('accountId') &&
             $entity->get('accountId') != $entity->getFetched('accountId');
 
+        $accountId = null;
+
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');
 
         if ($accountIdChanged) {

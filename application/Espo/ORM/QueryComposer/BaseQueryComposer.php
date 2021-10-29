@@ -657,6 +657,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $fromAlias = $this->sanitize($fromAlias);
         }
 
+        $fromPart = null;
+
         if ($entityType) {
             $fromPart = $this->quoteIdentifier(
                 $this->toDb($entityType)

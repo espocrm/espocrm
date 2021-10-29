@@ -107,15 +107,13 @@ class Helper
      */
     public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
     {
-        if (!isset($fieldDefsByType)) {
-            $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+        $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
 
-            if (!isset($fieldDefsByType['linkDefs'])) {
-                return null;
-            }
-
-            $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
+        if (!isset($fieldDefsByType['linkDefs'])) {
+            return null;
         }
+
+        $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
 
         foreach ($linkFieldDefsByType as $paramName => &$paramValue) {
             if (preg_match('/{(.*?)}/', $paramValue, $matches)) {

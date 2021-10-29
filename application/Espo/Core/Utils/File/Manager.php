@@ -449,7 +449,7 @@ class Manager
 
         $currentContents = $this->getContents($path);
 
-        if (!isset($currentContents) || !$currentContents) {
+        if (!$currentContents) {
             return true;
         }
 
@@ -636,7 +636,7 @@ class Manager
                 base_convert($dirPermissionOriginal, 8, 10) :
                 $dirPermissionOriginal;
 
-            if (!$this->mkdir($pathParts['dirname'], $dirPermission, true)) {
+            if (!$this->mkdir($pathParts['dirname'], $dirPermission)) {
                 throw new Error(
                     'Permission denied: unable to create a folder on the server ' . $pathParts['dirname']
                 );
@@ -957,7 +957,7 @@ class Manager
     /**
      * Wrap data for export to PHP file.
      *
-     * @param array|object $data
+     * @param array|object|null $data
      * @return string|false
      */
     public function wrapForDataExport($data, bool $withObjects = false)

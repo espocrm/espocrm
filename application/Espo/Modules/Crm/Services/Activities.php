@@ -911,7 +911,7 @@ class Activities implements
 
             $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
 
-            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, false);
+            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
@@ -954,7 +954,7 @@ class Activities implements
                 ['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']
             );
 
-            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, true);
+            $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
         $result = $this->getResultFromQueryParts($parts, $scope, $id, $params);

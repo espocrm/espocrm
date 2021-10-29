@@ -249,6 +249,8 @@ class BaseMapper implements RDBMapper
 
         $relEntityType = $entity->getRelationParam($relationName, 'entity');
 
+        $relEntity = null;
+
         if (!$relType) {
             throw new LogicException(
                 "Missing 'type' in definition for relationship '{$relationName}' in {entityType} entity."
@@ -1259,13 +1261,17 @@ class BaseMapper implements RDBMapper
 
         $values = [];
 
+        $entityType = null;
+
         foreach ($collection as $entity) {
             $values[] = $this->getInsertValueMap($entity);
+
+            $entityType = $entity->getEntityType();
         }
 
         $sql = $this->queryComposer->compose(
             Insert::fromRaw([
-                'into' => $entity->getEntityType(),
+                'into' => $entityType,
                 'columns' => $this->getInsertColumnList($collection[0]),
                 'values' => $values,
             ])

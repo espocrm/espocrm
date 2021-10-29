@@ -55,7 +55,23 @@ class Ics
 
     private $sProdid;
 
-    public function __construct($prodid, array $attributes = array())
+    private $startDate;
+
+    private $endDate;
+
+    private $summary;
+
+    private $address;
+
+    private $email;
+
+    private $who;
+
+    private $description;
+
+    private $uid;
+
+    public function __construct($prodid, array $attributes = [])
     {
         if (!is_string($prodid) || $prodid === '') {
             throw new \Exception('PRODID is required');
