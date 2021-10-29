@@ -461,9 +461,11 @@ class Htmlizer
                     return '';
                 }
 
+                /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
             },
             'pagebreak' => function () {
+                /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString('<br pagebreak="true">');
             },
             'imageTag' => function () {
@@ -472,6 +474,8 @@ class Htmlizer
                 $context = $args[count($args) - 1];
 
                 $field = $context['hash']['field'] ?? null;
+
+                $id = null;
 
                 if ($field) {
                     $id = $context['_this'][$field . 'Id'] ?? null;
@@ -499,6 +503,7 @@ class Htmlizer
 
                 $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
 
+                /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
             'var' => function () {
@@ -569,6 +574,7 @@ class Htmlizer
 
                 $paramsString = urlencode(json_encode($params));
 
+                /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString("<barcodeimage data=\"{$paramsString}\"/>");
             },
             'ifEqual' => function () {
@@ -651,6 +657,7 @@ class Htmlizer
                     $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
                 }
 
+                /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
         ];
