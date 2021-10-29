@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Di;
 
-use StdClass;
+use stdClass;
 
 class Webhook extends Record implements
     Di\WebhookManagerAware
@@ -56,7 +56,7 @@ class Webhook extends Record implements
 
     protected $readOnlyAttributeList = ['secretKey'];
 
-    public function populateDefaults(Entity $entity, StdClass $data): void
+    public function populateDefaults(Entity $entity, stdClass $data): void
     {
         parent::populateDefaults($entity, $data);
 
@@ -74,7 +74,7 @@ class Webhook extends Record implements
         unset($data->type);
     }
 
-    public function filterUpdateInput(StdClass $data): void
+    public function filterUpdateInput(stdClass $data): void
     {
         if (!$this->getUser()->isAdmin()) {
             unset($data->event);

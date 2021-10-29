@@ -29,13 +29,13 @@
 
 namespace Espo\Services;
 
-use StdClass;
+use stdClass;
 
 class AuthToken extends Record
 {
     protected $actionHistoryDisabled = true;
 
-    public function filterUpdateInput(StdClass $data): void
+    public function filterUpdateInput(stdClass $data): void
     {
         parent::filterUpdateInput($data);
 

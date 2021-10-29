@@ -36,7 +36,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
-use StdClass;
+use stdClass;
 
 class Attachment extends Record
 {
@@ -88,7 +88,7 @@ class Attachment extends Record
         }
     }
 
-    public function filterUpdateInput(StdClass $data): void
+    public function filterUpdateInput(stdClass $data): void
     {
         parent::filterUpdateInput($data);
 
@@ -99,7 +99,7 @@ class Attachment extends Record
         unset($data->relatedType);
     }
 
-    public function filterCreateInput(StdClass $data): void
+    public function filterCreateInput(stdClass $data): void
     {
         parent::filterCreateInput($data);
 
@@ -460,7 +460,7 @@ class Attachment extends Record
         ];
     }
 
-    public function getFileData(string $id): StdClass
+    public function getFileData(string $id): stdClass
     {
         $attachment = $this->getEntity($id);
 

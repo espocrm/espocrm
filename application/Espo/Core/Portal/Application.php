@@ -45,6 +45,8 @@ use Espo\Core\{
 
 class Application extends BaseApplication
 {
+    private $portal;
+
     public function __construct(?string $portalId)
     {
         date_default_timezone_set('UTC');

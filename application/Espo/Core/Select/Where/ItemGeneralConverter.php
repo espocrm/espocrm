@@ -941,7 +941,7 @@ class ItemGeneralConverter implements ItemConverter
         $dtToday = new DateTime();
         $dt = new DateTime();
 
-        $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+        $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
         $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
 
@@ -971,7 +971,7 @@ class ItemGeneralConverter implements ItemConverter
         $dtToday = new DateTime();
         $dt = new DateTime();
 
-        $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+        $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
         $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
 

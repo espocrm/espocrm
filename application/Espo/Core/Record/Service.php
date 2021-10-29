@@ -69,7 +69,7 @@ use Espo\Core\{
 
 use Espo\Core\Di;
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 
 /**
@@ -434,7 +434,7 @@ class Service implements Crud,
         }
     }
 
-    public function filterCreateInput(StdClass $data): void
+    public function filterCreateInput(stdClass $data): void
     {
         unset($data->deleted);
         unset($data->id);
@@ -452,7 +452,7 @@ class Service implements Crud,
         $this->handleCreateInput($data);
     }
 
-    public function filterUpdateInput(StdClass $data): void
+    public function filterUpdateInput(stdClass $data): void
     {
         unset($data->deleted);
         unset($data->id);
@@ -483,7 +483,7 @@ class Service implements Crud,
     {
     }
 
-    protected function processConcurrencyControl(Entity $entity, StdClass $data, int $versionNumber): void
+    protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
         if ($entity->get('versionNumber') === null) {
             return;
@@ -521,7 +521,7 @@ class Service implements Crud,
         throw ConflictSilent::createWithBody('modified', json_encode($responseData));
     }
 
-    protected function processDuplicateCheck(Entity $entity, StdClass $data): void
+    protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
         $duplicateList = $this->findDuplicates($entity, $data);
 
@@ -538,7 +538,7 @@ class Service implements Crud,
         throw ConflictSilent::createWithBody('duplicate', json_encode($list));
     }
 
-    public function populateDefaults(Entity $entity, StdClass $data): void
+    public function populateDefaults(Entity $entity, stdClass $data): void
     {
         if (!$this->user->isPortal()) {
             $forbiddenFieldList = null;
@@ -598,7 +598,7 @@ class Service implements Crud,
      *
      * @throws ForbiddenSilent If no create access.
      */
-    public function create(StdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent();
@@ -646,7 +646,7 @@ class Service implements Crud,
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
      */
-    public function update(string $id, StdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent();
@@ -1502,7 +1502,7 @@ class Service implements Crud,
         return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
-    public function getDuplicateAttributes(string $id): StdClass
+    public function getDuplicateAttributes(string $id): stdClass
     {
         if (!$id) {
             throw new BadRequest("No ID.");
