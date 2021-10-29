@@ -31,5 +31,19 @@ namespace Espo\Core\Exceptions;
 
 class Error extends InternalServerError
 {
-    use BodyTrait;
+    private $body = null;
+
+    public static function createWithBody(string $reason, string $body): self
+    {
+        $exception = new self($reason);
+
+        $exception->body = $body;
+
+        return $exception;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
 }

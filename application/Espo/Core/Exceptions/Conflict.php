@@ -33,7 +33,21 @@ use Exception;
 
 class Conflict extends Exception
 {
-    use BodyTrait;
-
     protected $code = 409;
+
+    private $body = null;
+
+    public static function createWithBody(string $reason, string $body): self
+    {
+        $exception = new self($reason);
+
+        $exception->body = $body;
+
+        return $exception;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
 }
