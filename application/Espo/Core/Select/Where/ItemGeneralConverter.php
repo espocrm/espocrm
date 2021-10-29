@@ -40,6 +40,7 @@ use Espo\{
     Entities\User,
     Core\Utils\Config,
     Core\Select\Helpers\RandomStringGenerator,
+    Core\Utils\Metadata,
 };
 
 use DateTime;
@@ -68,6 +69,8 @@ class ItemGeneralConverter implements ItemConverter
 
     protected $config;
 
+    protected $metadata;
+
     public function __construct(
         string $entityType,
         User $user,
@@ -77,7 +80,8 @@ class ItemGeneralConverter implements ItemConverter
         RandomStringGenerator $randomStringGenerator,
         EntityManager $entityManager,
         ORMDefs $ormDefs,
-        Config $config
+        Config $config,
+        Metadata $metadata
     ) {
         $this->entityType = $entityType;
         $this->user = $user;
@@ -88,6 +92,7 @@ class ItemGeneralConverter implements ItemConverter
         $this->entityManager = $entityManager;
         $this->ormDefs = $ormDefs;
         $this->config = $config;
+        $this->metadata = $metadata;
     }
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
@@ -264,7 +269,6 @@ class ItemGeneralConverter implements ItemConverter
     ): array {
 
         $link = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
-
         $column = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
 
         $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();

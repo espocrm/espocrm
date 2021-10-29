@@ -39,6 +39,7 @@ use Espo\Core\{
     Select\Where\ItemConverter,
     Select\Helpers\RandomStringGenerator,
     Utils\Config,
+    Utils\Metadata,
 };
 
 use Espo\{
@@ -63,6 +64,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
         $this->user = $this->createMock(User::class);
 
         $this->config = $this->createMock(Config::class);
+        $this->metadata = $this->createMock(Metadata::class);
 
         $this->scanner = $this->createMock(Scanner::class);
         $this->randomStringGenerator = $this->createMock(RandomStringGenerator::class);
@@ -105,7 +107,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             $this->randomStringGenerator,
             $this->entityManager,
             $this->ormDefs,
-            $this->config
+            $this->config,
+            $this->metadata
         );
 
         $this->converter = new Converter(
