@@ -523,7 +523,7 @@ class Service implements Crud,
 
     protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
-        $duplicateList = $this->findDuplicates($entity, $data);
+        $duplicateList = $this->findDuplicates($entity);
 
         if (empty($duplicateList)) {
             return;

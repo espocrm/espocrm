@@ -37,9 +37,12 @@ class ContainerConfiguration extends BaseContainerConfiguration
 {
     public function getLoaderClassName(string $name): ?string
     {
+        $className = null;
+
         try {
             $className = $this->metadata->get(['app', 'portalContainerServices', $name, 'loaderClassName']);
-        } catch (\Exception $e) {}
+        }
+        catch (\Exception $e) {}
 
         if ($className && class_exists($className)) {
             return $className;

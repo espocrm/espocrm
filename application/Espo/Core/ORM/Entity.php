@@ -32,7 +32,7 @@ namespace Espo\Core\ORM;
 use Espo\ORM\BaseEntity;
 
 use LogicException;
-use StdClass;
+use stdClass;
 
 class Entity extends BaseEntity
 {
@@ -183,10 +183,7 @@ class Entity extends BaseEntity
         $ids = [];
         $names = (object) [];
         $types = (object) [];
-
-        if (!empty($columns)) {
-            $columnsData = (object) [];
-        }
+        $columnsData = (object) [];
 
         foreach ($collection as $e) {
             $id = $e->id;
@@ -277,7 +274,7 @@ class Entity extends BaseEntity
 
         $names = $this->get($namesAttribute);
 
-        if ($names instanceof StdClass && isset($names->$id) && isset($names->$id)) {
+        if ($names instanceof stdClass && isset($names->$id) && isset($names->$id)) {
             return $names->$id;
         }
 
@@ -294,7 +291,7 @@ class Entity extends BaseEntity
 
         $object = $this->get($namesAttribute);
 
-        if (!isset($object) || !($object instanceof StdClass)) {
+        if (!isset($object) || !($object instanceof stdClass)) {
             $object = (object) [];
         }
 
@@ -316,7 +313,7 @@ class Entity extends BaseEntity
 
         $columns = $this->get($columnsAttribute);
 
-        if ($columns instanceof StdClass && isset($columns->$id) && isset($columns->$id->$column)) {
+        if ($columns instanceof stdClass && isset($columns->$id) && isset($columns->$id->$column)) {
             return $columns->$id->$column;
         }
 
@@ -333,7 +330,7 @@ class Entity extends BaseEntity
 
         $object = $this->get($columnsAttribute);
 
-        if (!isset($object) || !($object instanceof StdClass)) {
+        if (!isset($object) || !($object instanceof stdClass)) {
             $object = (object) [];
         }
 

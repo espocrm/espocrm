@@ -69,7 +69,7 @@ class Binding
             $keyList = $data->getContextKeyList($context);
 
             foreach ($keyList as $key) {
-                $result .= $this->printItem($key, $data->getContext($context, $key), true);
+                $result .= $this->printItem($key, $data->getContext($context, $key));
             }
         }
 

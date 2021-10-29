@@ -565,6 +565,8 @@ class Sender
         $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
         $textPart->charset = 'utf-8';
 
+        $htmlPart = null;
+
         if ($email->get('isHtml')) {
             $htmlPart = new MimePart($email->getBodyForSending());
 

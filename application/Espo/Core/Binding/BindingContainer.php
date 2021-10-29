@@ -64,13 +64,15 @@ class BindingContainer
     {
         $className = null;
 
+        $key = null;
+
         if ($class) {
             $className = $class->getName();
 
             $key = '$' . $param->getName();
         }
 
-        if ($className && $this->data->hasContext($className, $key)) {
+        if ($className && $this->data->hasContext($className, $key) && $key) {
             return $this->data->getContext($className, $key);
         }
 

@@ -78,7 +78,7 @@ class Client
 
     protected $curlOptions = [];
 
-    public function __construct(array $params = [])
+    public function __construct()
     {
         if (!extension_loaded('curl')) {
             throw new Exception('CURL extension not found.');

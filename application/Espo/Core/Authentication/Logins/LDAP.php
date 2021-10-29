@@ -185,6 +185,8 @@ class LDAP implements Login
             $this->log->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
         }
 
+        $userDn = null;
+
         if (!isset($adminUser)) {
             try {
                 $userDn = $this->findLdapUserDnByUsername($username);

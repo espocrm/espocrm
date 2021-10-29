@@ -115,9 +115,9 @@ class LinkMultipleSaver
 
                 $data = (object) [];
 
-                foreach ($columns as $columnName => $columnField) {
-                    $foreignId = $foreignEntity->id;
+                $foreignId = $foreignEntity->id;
 
+                foreach ($columns as $columnName => $columnField) {
                     $data->$columnName = $foreignEntity->get($columnField);
                 }
 

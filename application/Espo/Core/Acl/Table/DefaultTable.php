@@ -196,6 +196,9 @@ class DefaultTable implements Table
         $aclTableList = [];
         $fieldTableList = [];
 
+        $aclTable = (object) [];
+        $fieldTable = (object) [];
+
         if (!$this->user->isAdmin()) {
             $roleList = $this->roleListProvider->get();
 

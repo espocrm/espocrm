@@ -94,7 +94,7 @@ class MassDelete implements MassAction
             ->find();
 
         foreach ($collection as $entity) {
-            $this->checkEntity($entity, $data);
+            $this->checkEntity($entity);
         }
 
         return $this->massDeleteOriginal->process($params, $data);

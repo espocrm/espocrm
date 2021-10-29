@@ -80,9 +80,9 @@ class Event extends Database implements
             $dateEndDate = $entity->get('dateEndDate');
 
             if (!empty($dateEndDate)) {
-                $dateEnd = $dateEndDate . ' 00:00:00';
+                $dateEnd = $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00');
 
-                $dateEnd = $this->convertDateTimeToDefaultTimezone($dateEnd);
+                $dt = null;
 
                 try {
                     $dt = new DateTime($dateEnd);
@@ -150,6 +150,8 @@ class Event extends Database implements
 
         $tz = new DateTimeZone($timeZone);
 
+        $dt = null;
+
         try {
             $dt = DateTime::createFromFormat(
                 DateTimeUtil::SYSTEM_DATE_TIME_FORMAT,
@@ -159,14 +161,14 @@ class Event extends Database implements
         }
         catch (Exception $e) {}
 
-        if ($dt) {
-            $utcTz = new DateTimeZone('UTC');
-
-            return $dt
-                ->setTimezone($utcTz)
-                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        if (!$dt) {
+            return null;
         }
 
-        return null;
+        $utcTz = new DateTimeZone('UTC');
+
+        return $dt
+            ->setTimezone($utcTz)
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
     }
 }
