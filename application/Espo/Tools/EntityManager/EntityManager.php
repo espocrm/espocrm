@@ -806,6 +806,9 @@ class EntityManager
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];
 
+        $relationName = null;
+        $dataRight = null;
+
         if ($linkType === 'manyToMany') {
             if (!empty($params['relationName'])) {
                 $relationName = $params['relationName'];
@@ -1410,9 +1413,9 @@ class EntityManager
             $this->language->set($entity, 'links', $link, $label);
         }
 
-        if ($linkType !== 'belongsToParent') {
-            $labelForeign = null;
+        $labelForeign = null;
 
+        if ($linkType !== 'belongsToParent') {
             if (isset($params['labelForeign'])) {
                 $labelForeign = $params['labelForeign'];
             }

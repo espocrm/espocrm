@@ -360,6 +360,8 @@ class Xlsx implements Processor
             $foreignField = $name;
             $linkName = null;
 
+            $foreignScope = null;
+
             if (strpos($name, '_') !== false) {
                 list($linkName, $foreignField) = explode('_', $name);
 

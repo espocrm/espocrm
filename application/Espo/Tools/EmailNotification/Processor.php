@@ -315,6 +315,8 @@ class Processor
             return;
         }
 
+        $parent = null;
+
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 

@@ -380,8 +380,6 @@ class Import
 
     private function importRow(array $attributeList, array $row): ?stdClass
     {
-        $id = null;
-
         $params = $this->params;
 
         $action = $params->getAction() ?? self::DEFAULT_ACTION;
@@ -390,10 +388,10 @@ class Import
             return null;
         }
 
-        if (in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE])) {
-            $updateByAttributeList = [];
-            $whereClause = [];
+        $updateByAttributeList = [];
+        $whereClause = [];
 
+        if (in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE])) {
             $updateBy = $params->getUpdateBy();
 
             if (count($updateBy)) {

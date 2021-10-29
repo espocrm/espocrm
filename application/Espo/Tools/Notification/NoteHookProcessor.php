@@ -128,6 +128,9 @@ class NoteHookProcessor
         // This is correct.
         $skipAclCheck = !$note->isAclProcessed();
 
+        $teamIdList = null;
+        $userIdList = null;
+
         if (!$skipAclCheck) {
             $teamIdList = $note->getLinkMultipleIdList('teams');
             $userIdList = $note->getLinkMultipleIdList('users');
@@ -266,6 +269,8 @@ class NoteHookProcessor
         if (!count($targetTeamIdList)) {
             return;
         }
+
+        $notifyUserIdList = [];
 
         foreach ($targetTeamIdList as $teamId) {
             $team = $this->entityManager->getEntity(Team::ENTITY_TYPE, $teamId);
