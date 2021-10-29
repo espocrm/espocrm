@@ -1354,6 +1354,8 @@ class Stream
 
         $user = $this->user;
 
+        $person = null;
+
         if ($user->getId() != 'system') {
             $person = $user;
         }
@@ -2075,6 +2077,7 @@ class Stream
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $userIdList = [];
+        $teamIdList = [];
 
         if ($ownerUserField) {
             if (!$defs->hasField($ownerUserField)) {

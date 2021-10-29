@@ -71,7 +71,7 @@ class RDBSelectBuilder
             throw new RuntimeException("SelectBuilder: Passed query doesn't match the entity type.");
         }
 
-        $this->builder = new SelectBuilder($entityManager->getQueryComposer());
+        $this->builder = new SelectBuilder();
 
         if ($query) {
             $this->builder->clone($query);

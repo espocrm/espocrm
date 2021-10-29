@@ -352,6 +352,9 @@ class InboundEmail extends RecordService implements
                 $message = null;
                 $email = null;
 
+                $isAutoReply = null;
+                $skipAutoReply = null;
+
                 try {
                     $toSkip = false;
 
@@ -378,6 +381,8 @@ class InboundEmail extends RecordService implements
                     $skipAutoReply = $this->checkMessageCannotBeAutoReplied($message);
 
                     $isAutoReply = $this->checkMessageIsAutoReply($message);
+
+                    $flags = null;
 
                     if (!$toSkip) {
                         if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
@@ -1105,49 +1110,55 @@ class InboundEmail extends RecordService implements
         return $inboundEmail;
     }
 
+    /**
+     * @param string $emailAddress
+     * @return InboundEmailEntity|null
+     */
     public function findSharedAccountForUser(User $user, $emailAddress)
     {
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
 
-        $teamIdList = $user->getLinkMultipleIdList('teams');
-
-        $inboundEmail = null;
-
-        $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
-
-        if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
-            if ($groupEmailAccountPermission === 'team') {
-                if (!count($teamIdList)) {
-                    return;
-                }
-
-                $selectParams = [
-                    'whereClause' => [
-                        'status' => 'Active',
-                        'useSmtp' => true,
-                        'smtpIsShared' => true,
-                        'teamsMiddle.teamId' => $teamIdList,
-                        'emailAddress' => $emailAddress,
-                    ],
-                    'joins' => ['teams'],
-                    'distinct' => true,
-                ];
-            } else if ($groupEmailAccountPermission === 'all') {
-                $selectParams = [
-                    'whereClause' => [
-                        'status' => 'Active',
-                        'useSmtp' => true,
-                        'smtpIsShared' => true,
-                        'emailAddress' => $emailAddress,
-                    ]
-                ];
-            }
-
-            $inboundEmail = $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);
-
+        if (!$groupEmailAccountPermission || $groupEmailAccountPermission === 'no') {
+            return null;
         }
 
-        return $inboundEmail;
+        if ($groupEmailAccountPermission === 'team') {
+            $teamIdList = $user->getLinkMultipleIdList('teams');
+
+            if (!count($teamIdList)) {
+                return null;
+            }
+
+            // @todo Use the query builder.
+            $selectParams = [
+                'whereClause' => [
+                    'status' => 'Active',
+                    'useSmtp' => true,
+                    'smtpIsShared' => true,
+                    'teamsMiddle.teamId' => $teamIdList,
+                    'emailAddress' => $emailAddress,
+                ],
+                'joins' => ['teams'],
+                'distinct' => true,
+            ];
+
+            return $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);;
+        }
+
+        if ($groupEmailAccountPermission === 'all') {
+            $selectParams = [
+                'whereClause' => [
+                    'status' => 'Active',
+                    'useSmtp' => true,
+                    'smtpIsShared' => true,
+                    'emailAddress' => $emailAddress,
+                ]
+            ];
+
+            return $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);
+        }
+
+        return null;
     }
 
     protected function getStorage(InboundEmailEntity $emailAccount)
@@ -1177,14 +1188,18 @@ class InboundEmail extends RecordService implements
 
         $handlerClassName = $params['imapHandler'] ?? null;
 
+        $handler = null;
+
         if ($handlerClassName && !empty($params['id'])) {
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $this->log->error(
                     "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
             }
+
             if (method_exists($handler, 'prepareProtocol')) {
                 // for backward compatibility
                 $params['ssl'] = $params['security'];
@@ -1266,11 +1281,15 @@ class InboundEmail extends RecordService implements
             return;
         }
 
+        $handler = null;
+
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->log->error(
-                "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
+                "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
+                    $e->getMessage()
             );
         }
 

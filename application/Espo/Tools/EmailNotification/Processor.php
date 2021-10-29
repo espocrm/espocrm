@@ -492,6 +492,8 @@ class Processor
 
         $data['post'] = $post;
 
+        $parent = null;
+
         if ($parentId && $parentType) {
             $parent = $this->entityManager->getEntity($parentType, $parentId);
 

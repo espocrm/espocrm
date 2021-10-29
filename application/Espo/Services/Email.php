@@ -362,30 +362,36 @@ class Email extends Record implements
     {
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($userId);
 
-        if ($userData) {
-            $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
+        if (!$userData) {
+            return;
+        }
 
-            if (is_object($smtpHandlers)) {
-                if (isset($smtpHandlers->$emailAddress)) {
-                    $handlerClassName = $smtpHandlers->$emailAddress;
+        $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
 
-                    try {
-                        $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
-                    }
-                    catch (Throwable $e) {
-                        $this->log->error(
-                            "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " .
-                            $e->getMessage() . "."
-                        );
-                    }
+        if (!is_object($smtpHandlers)) {
+            return;
+        }
 
-                    if (method_exists($handler, 'applyParams')) {
-                        $handler->applyParams($userId, $emailAddress, $params);
+        if (!isset($smtpHandlers->$emailAddress)) {
+            return;
+        }
 
-                        return;
-                    }
-                }
-            }
+        $handlerClassName = $smtpHandlers->$emailAddress;
+
+        $handler = null;
+
+        try {
+            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
+        }
+        catch (Throwable $e) {
+            $this->log->error(
+                "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " .
+                $e->getMessage() . "."
+            );
+        }
+
+        if (method_exists($handler, 'applyParams')) {
+            $handler->applyParams($userId, $emailAddress, $params);
         }
     }
 

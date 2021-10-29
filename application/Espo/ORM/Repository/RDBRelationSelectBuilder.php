@@ -113,7 +113,7 @@ class RDBRelationSelectBuilder
 
     protected function createSelectBuilder(): SelectBuilder
     {
-        return new SelectBuilder($this->entityManager->getQueryComposer());
+        return new SelectBuilder();
     }
 
     protected function getMapper(): Mapper

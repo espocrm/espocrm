@@ -460,6 +460,7 @@ class EmailAccount extends Record implements
 
                 $message = null;
                 $email = null;
+                $flags = null;
 
                 try {
                     $parser = $this->createParser();
@@ -659,6 +660,8 @@ class EmailAccount extends Record implements
         if (!$handlerClassName) {
             return;
         }
+
+        $handler = null;
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
