@@ -51,7 +51,7 @@ class EmailAddress
         }
 
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
-            throw new RuntimeException("Not valid email address.");
+            throw new RuntimeException("Not valid email address '{$address}'.");
         }
 
         $this->address = $address;

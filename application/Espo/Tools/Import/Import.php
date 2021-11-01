@@ -302,6 +302,8 @@ class Import
             return Result::create()->withId($import->getId());
         }
 
+        $isFailed = false;
+
         try {
             $result = (object) [
                 'importedIds' => [],
@@ -362,13 +364,18 @@ class Import
                     'isDuplicate' => $rowResult->isDuplicate ?? false,
                 ]);
             }
-        } catch (Exception $e) {
-            $this->log->error('Import Error: '. $e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->log->error('Import Error: ' . $e->getMessage());
 
             $import->set('status', ImportEntity::STATUS_FAILED);
+
+            $isFailed = true;
         }
 
-        $import->set('status', ImportEntity::STATUS_COMPLETE);
+        if (!$isFailed) {
+            $import->set('status', ImportEntity::STATUS_COMPLETE);
+        }
 
         $this->entityManager->saveEntity($import);
 
