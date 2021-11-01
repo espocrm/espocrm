@@ -87,7 +87,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float|bool|null $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function equal(Expression $arg1, $arg2): Comparison
     {
@@ -99,7 +98,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float|bool|null $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function notEqual(Expression $arg1, $arg2): Comparison
     {
@@ -111,7 +109,6 @@ class Condition
      *
      * @param Expression $subject What to test.
      * @param Expression|string $pattern A pattern.
-     * @return self
      */
     public static function like(Expression $subject, $pattern): Comparison
     {
@@ -123,7 +120,6 @@ class Condition
      *
      * @param Expression $subject What to test.
      * @param Expression|string $pattern A pattern.
-     * @return self
      */
     public static function notLike(Expression $subject, $pattern): Comparison
     {
@@ -135,7 +131,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function greater(Expression $arg1, $arg2): Comparison
     {
@@ -147,7 +142,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function greaterOrEqual(Expression $arg1, $arg2): Comparison
     {
@@ -159,7 +153,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function less(Expression $arg1, $arg2): Comparison
     {
@@ -171,7 +164,6 @@ class Condition
      *
      * @param Expression $arg1 An expression.
      * @param Expression|string|int|float $arg2 A value (if scalar) or expression.
-     * @return self
      */
     public static function lessOrEqual(Expression $arg1, $arg2): Comparison
     {
@@ -183,7 +175,6 @@ class Condition
      *
      * @param Expression $subject What to test.
      * @param Select|array $set A set of values. A select query or array of scalars.
-     * @return self
      */
     public static function in(Expression $subject, $set): Comparison
     {
@@ -195,7 +186,6 @@ class Condition
      *
      * @param Expression $subject What to test.
      * @param Select|array $set A set of values. A select query or array of scalars.
-     * @return self
      */
     public static function notIn(Expression $subject, $set): Comparison
     {

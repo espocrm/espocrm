@@ -87,7 +87,7 @@ class Expression implements WhereItem
     /**
      * Create an expression from a scalar value or NULL.
      *
-     * @param string|float|int|bool|null A scalar or NULL.
+     * @param string|float|int|bool|null $value A scalar or NULL.
      */
     public static function value($value): self
     {

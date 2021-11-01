@@ -212,7 +212,7 @@ class BaseEntity implements Entity
     /**
      * Get an attribute value.
      *
-     * @param $params @deprecated
+     * @param array $params @deprecated
      *
      * @retrun mixed
      */
@@ -248,6 +248,7 @@ class BaseEntity implements Entity
                 E_USER_DEPRECATED
             );
 
+            /** @phpstan-ignore-next-line */
             return $this->entityManager
                 ->getRepository($this->getEntityType())
                 ->findRelated($this, $attribute, $params);

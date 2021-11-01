@@ -49,5 +49,10 @@ interface Repository
     /**
      * Store an entity.
      */
-    public function save(Entity $entity): void;
+    public function save(Entity $entity, array $options): void;
+
+    /**
+     * Remove an entity.
+     */
+    public function remove(Entity $entity, array $options = []): void;
 }

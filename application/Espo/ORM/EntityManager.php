@@ -293,7 +293,7 @@ class EntityManager
 
         $this->getRepository($entityType)->save($entity, $options);
 
-        return $entity->id;
+        return $entity->getId();
     }
 
     /**

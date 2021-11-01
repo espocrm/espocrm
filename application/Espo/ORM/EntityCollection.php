@@ -266,7 +266,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                     }
                 }
                 else if ($v instanceof Entity) {
-                    if ($value['id'] == $v->id) {
+                    if ($value['id'] == $v->getId()) {
                         return $index;
                     }
                 }
@@ -277,7 +277,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         else if ($value instanceof Entity) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
-                    if ($value->id == $v['id']) {
+                    if ($value->getId() == $v['id']) {
                         return $index;
                     }
                 }

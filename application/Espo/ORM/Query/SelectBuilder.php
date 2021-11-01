@@ -31,6 +31,7 @@ namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Part\WhereItem;
 
 use InvalidArgumentException;
 use RuntimeException;
