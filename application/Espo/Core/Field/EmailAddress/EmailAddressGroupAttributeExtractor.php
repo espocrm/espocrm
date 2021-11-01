@@ -33,7 +33,7 @@ use Espo\ORM\Value\AttributeExtractor;
 
 use Espo\Core\Field\EmailAddressGroup;
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 
 /**
@@ -44,7 +44,7 @@ class EmailAddressGroupAttributeExtractor implements AttributeExtractor
     /**
      * @param EmailAddressGroup $group
      */
-    public function extract(object $group, string $field): StdClass
+    public function extract(object $group, string $field): stdClass
     {
         if (!$group instanceof EmailAddressGroup) {
             throw new InvalidArgumentException();
@@ -70,7 +70,7 @@ class EmailAddressGroupAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field): StdClass
+    public function extractFromNull(string $field): stdClass
     {
         return (object) [
             $field => null,

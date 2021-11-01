@@ -33,7 +33,7 @@ use Espo\ORM\Value\AttributeExtractor;
 
 use Espo\Core\Field\DateTime;
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 
 /**
@@ -44,7 +44,7 @@ class DateTimeAttributeExtractor implements AttributeExtractor
     /**
      * @param DateTime $value
      */
-    public function extract(object $value, string $field): StdClass
+    public function extract(object $value, string $field): stdClass
     {
         if (!$value instanceof DateTime) {
             throw new InvalidArgumentException();
@@ -55,7 +55,7 @@ class DateTimeAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field): StdClass
+    public function extractFromNull(string $field): stdClass
     {
         return (object) [
             $field => null,

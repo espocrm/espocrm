@@ -33,7 +33,7 @@ use Espo\ORM\Value\AttributeExtractor;
 
 use Espo\Core\Field\LinkMultiple;
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 
 /**
@@ -44,7 +44,7 @@ class LinkMultipleAttributeExtractor implements AttributeExtractor
     /**
      * @param LinkMultiple $value
      */
-    public function extract(object $value, string $field): StdClass
+    public function extract(object $value, string $field): stdClass
     {
         if (!$value instanceof LinkMultiple) {
             throw new InvalidArgumentException();
@@ -74,7 +74,7 @@ class LinkMultipleAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field): StdClass
+    public function extractFromNull(string $field): stdClass
     {
         return (object) [
             $field . 'Ids' => [],
