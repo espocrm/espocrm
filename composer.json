@@ -52,7 +52,10 @@
             "Espo\\": "application/Espo/",
             "Espo\\Custom\\": "custom/Espo/Custom/",
             "Espo\\Modules\\": "custom/Espo/Modules/"
-        }
+        },
+        "files": [
+            "application/Espo/Resources/defaults/tcpdf-config.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
