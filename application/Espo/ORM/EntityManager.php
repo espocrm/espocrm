@@ -53,6 +53,7 @@ use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use PDO;
 use RuntimeException;
+use stdClass;
 
 /**
  * A central access point to ORM functionality.
@@ -334,7 +335,7 @@ class EntityManager
     /**
      * Create entity (and store to database).
      *
-     * @param StdClass|array $data Entity attributes.
+     * @param stdClass|array $data Entity attributes.
      */
     public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
