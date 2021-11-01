@@ -32,14 +32,14 @@ namespace Espo\ORM\Value;
 use stdClass;
 
 /**
- * @template AttributeExtractor<T>
+ * @template T of object
  *
  * Extracts attributes from value object by a given field name.
  */
 interface AttributeExtractor
 {
     /**
-     * @param T $value
+     * @phpstan-param T $value
      */
     public function extract(object $value, string $field): stdClass;
 

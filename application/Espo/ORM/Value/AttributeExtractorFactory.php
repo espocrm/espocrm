@@ -29,6 +29,9 @@
 
 namespace Espo\ORM\Value;
 
+/**
+ * @template T of object
+ */
 interface AttributeExtractorFactory
 {
     /**
