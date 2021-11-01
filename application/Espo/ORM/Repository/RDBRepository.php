@@ -33,12 +33,16 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
 use Espo\ORM\SthCollection;
+use Espo\ORM\BaseEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Mapper\BaseMapper;
 
 use stdClass;
 use RuntimeException;
@@ -133,20 +137,30 @@ class RDBRepository implements Repository
     {
         $this->processCheckEntity($entity);
 
-        $entity->setAsBeingSaved();
+        if ($entity instanceof BaseEntity) {
+            $entity->setAsBeingSaved();
+        }
 
         if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
             $this->beforeSave($entity, $options);
         }
 
-        if ($entity->isNew() && !$entity->isSaved()) {
+        $isSaved = false;
+
+        if ($entity instanceof BaseEntity) {
+            $isSaved = $entity->isSaved();
+        }
+
+        if ($entity->isNew() && !$isSaved) {
             $this->getMapper()->insert($entity);
         }
         else {
             $this->getMapper()->update($entity);
         }
 
-        $entity->setAsSaved();
+        if ($entity instanceof BaseEntity) {
+            $entity->setAsSaved();
+        }
 
         if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
             $this->afterSave($entity, $options);
@@ -163,7 +177,9 @@ class RDBRepository implements Repository
             $entity->updateFetchedValues();
         }
 
-        $entity->setAsNotBeingSaved();
+        if ($entity instanceof BaseEntity) {
+            $entity->setAsNotBeingSaved();
+        }
     }
 
     /**
@@ -171,7 +187,11 @@ class RDBRepository implements Repository
      */
     public function restoreDeleted(string $id): void
     {
-        $this->getMapper()->restoreDeleted($this->entityType, $id);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        $mapper->restoreDeleted($this->entityType, $id);
     }
 
     /**
@@ -201,13 +221,17 @@ class RDBRepository implements Repository
      */
     public function deleteFromDb(string $id, bool $onlyDeleted = false): void
     {
-        $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
 
     /**
      * Find records.
      *
-     * @param $params @deprecated
+     * @param ?array $params @deprecated
      */
     public function find(?array $params = []): Collection
     {
@@ -217,7 +241,7 @@ class RDBRepository implements Repository
     /**
      * Find one record.
      *
-     * @param $params @deprecated
+     * @param ?array $params @deprecated
      */
     public function findOne(?array $params = []): ?Entity
     {
@@ -235,7 +259,11 @@ class RDBRepository implements Repository
      */
     public function findBySql(string $sql): SthCollection
     {
-        return $this->getMapper()->selectBySql($this->entityType, $sql);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        return $mapper->selectBySql($this->entityType, $sql);
     }
 
     /**
@@ -249,11 +277,12 @@ class RDBRepository implements Repository
             throw new RuntimeException("Not supported entity type.");
         }
 
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             return null;
         }
 
         $type = $entity->getRelationType($relationName);
+        /** @phpstan-ignore-next-line */
         $entityType = $entity->getRelationParam($relationName, 'entity');
 
         $additionalColumns = $params['additionalColumns'] ?? [];
@@ -300,11 +329,12 @@ class RDBRepository implements Repository
             throw new RuntimeException("Not supported entity type.");
         }
 
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             return 0;
         }
 
         $type = $entity->getRelationType($relationName);
+        /** @phpstan-ignore-next-line */
         $entityType = $entity->getRelationParam($relationName, 'entity');
 
         $additionalColumnsConditions = $params['additionalColumnsConditions'] ?? [];
@@ -338,6 +368,7 @@ class RDBRepository implements Repository
             return $select;
         }
 
+        /** @phpstan-ignore-next-line */
         $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
 
         $selectItemList = $select->getSelect();
@@ -372,6 +403,7 @@ class RDBRepository implements Repository
             return $select;
         }
 
+        /** @phpstan-ignore-next-line */
         $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
 
         $builder = $this->entityManager
@@ -394,7 +426,7 @@ class RDBRepository implements Repository
      */
     public function isRelated(Entity $entity, string $relationName, $foreign): bool
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             return false;
         }
 
@@ -403,7 +435,7 @@ class RDBRepository implements Repository
         }
 
         if ($foreign instanceof Entity) {
-            $id = $foreign->id;
+            $id = $foreign->getId();
         }
         else if (is_string($foreign)) {
             $id = $foreign;
@@ -418,7 +450,7 @@ class RDBRepository implements Repository
 
         if (in_array($entity->getRelationType($relationName), [Entity::BELONGS_TO, Entity::BELONGS_TO_PARENT])) {
             if (!$entity->has($relationName . 'Id')) {
-                $entity = $this->getById($entity->id);
+                $entity = $this->getById($entity->getId());
             }
         }
 
@@ -440,7 +472,7 @@ class RDBRepository implements Repository
      */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't relate an entity w/o ID.");
         }
 
@@ -502,7 +534,7 @@ class RDBRepository implements Repository
      */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't unrelate an entity w/o ID.");
         }
 
@@ -588,7 +620,7 @@ class RDBRepository implements Repository
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't update a relation for an entity w/o ID.");
         }
 
@@ -601,7 +633,7 @@ class RDBRepository implements Repository
         }
 
         if ($foreign instanceof Entity) {
-            $id = $foreign->id;
+            $id = $foreign->getId();
         } else {
             $id = $foreign;
         }
@@ -620,7 +652,7 @@ class RDBRepository implements Repository
      */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't related an entity w/o ID.");
         }
 
@@ -634,7 +666,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @param $params @deprecated Omit it.
+     * @param array $params @deprecated Omit it.
      */
     public function count(array $params = []): int
     {
@@ -772,11 +804,11 @@ class RDBRepository implements Repository
      * Passing non-array will append an item,
      *
      * Usage options:
-     * * `order(OrderExpression $expression)
+     * * `order(Order $expression)
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param OrderExpression|OrderExpression[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.

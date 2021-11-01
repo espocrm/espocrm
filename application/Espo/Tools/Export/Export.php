@@ -32,6 +32,8 @@ namespace Espo\Tools\Export;
 use Espo\Tools\Export\Processor\Data as ProcessorData;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 
+use Espo\Core\ORM\Entity;
+
 use Espo\Core\{
     Exceptions\Error,
     Utils\Json,
@@ -48,7 +50,6 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\Entity,
     ORM\Collection,
     ORM\EntityManager,
 };

@@ -29,18 +29,19 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    Collection,
-    SthCollection,
-    Entity,
-    EntityManager,
-    Query\Select,
-    Query\SelectBuilder,
-    Query\Part\WhereItem,
-    Query\Part\Selection,
-    Query\Part\Join,
-    Mapper\Mapper,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\SthCollection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Mapper\Mapper;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Mapper\BaseMapper;
 
 use RuntimeException;
 
@@ -88,7 +89,7 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param $params @deprecated. Omit it.
+     * @param ?array $params @deprecated. Omit it.
      */
     public function find(?array $params = null): Collection
     {
@@ -100,7 +101,7 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param $params @deprecated
+     * @param ?array $params @deprecated
      */
     public function findOne(?array $params = null): ?Entity
     {
@@ -123,7 +124,7 @@ class RDBSelectBuilder
     /**
      * Get a number of records.
      *
-     * @param $params @deprecated
+     * @param ?array $params @deprecated
      */
     public function count(?array $params = null): int
     {
@@ -146,7 +147,11 @@ class RDBSelectBuilder
     {
         $query = $this->builder->build();
 
-        return $this->getMapper()->max($query, $attribute);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        return $mapper->max($query, $attribute);
     }
 
     /**
@@ -158,7 +163,11 @@ class RDBSelectBuilder
     {
         $query = $this->builder->build();
 
-        return $this->getMapper()->min($query, $attribute);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        return $mapper->min($query, $attribute);
     }
 
     /**
@@ -170,7 +179,11 @@ class RDBSelectBuilder
     {
         $query = $this->builder->build();
 
-        return $this->getMapper()->sum($query, $attribute);
+        $mapper = $this->getMapper();
+
+        assert($mapper instanceof BaseMapper);
+
+        return $mapper->sum($query, $attribute);
     }
 
     /**
@@ -280,7 +293,7 @@ class RDBSelectBuilder
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param OrderExpression|OrderExpression[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.

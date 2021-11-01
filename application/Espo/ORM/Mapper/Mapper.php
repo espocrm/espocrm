@@ -71,4 +71,16 @@ interface Mapper
      * Mark an entity as deleted in DB.
      */
     public function delete(Entity $entity): void;
+
+    /**
+     * Select related entities from DB.
+     *
+     * @return Collection|Entity|null
+     */
+    public function selectRelated(Entity $entity, string $relationName, ?Select $select = null);
+
+    /**
+     * Get a number of related entities in DB.
+     */
+    public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int;
 }

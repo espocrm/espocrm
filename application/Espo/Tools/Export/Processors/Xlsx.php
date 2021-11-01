@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Export\Processors;
 
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity;
 
 use Espo\Core\{
     Utils\Config,
@@ -624,7 +624,7 @@ class Xlsx implements Processor
 
                     $value = implode(', ', $array);
 
-                    $sheet->setCellValue("$col$rowNumber", $value, DataType::TYPE_STRING);
+                    $sheet->setCellValue("$col$rowNumber", $value);
                 }
             }
             else {

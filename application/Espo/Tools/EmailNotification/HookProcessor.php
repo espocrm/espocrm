@@ -31,6 +31,7 @@ namespace Espo\Tools\EmailNotification;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\ApplicationState;
 use Espo\Core\Job\QueueName;
@@ -101,6 +102,8 @@ class HookProcessor
 
     private function checkToProcess(Entity $entity): bool
     {
+        assert($entity instanceof CoreEntity);
+
         if (!$this->config->get('assignmentEmailNotifications')) {
             return false;
         }

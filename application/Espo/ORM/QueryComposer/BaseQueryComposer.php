@@ -29,22 +29,20 @@
 
 namespace Espo\ORM\QueryComposer;
 
-use Espo\ORM\{
-    Entity,
-    EntityFactory,
-    BaseEntity,
-    Metadata,
-    Mapper\Helper,
-    Query\Query as Query,
-    Query\SelectingQuery,
-    Query\Select as SelectQuery,
-    Query\Update as UpdateQuery,
-    Query\Insert as InsertQuery,
-    Query\Delete as DeleteQuery,
-    Query\Union as UnionQuery,
-    Query\LockTable as LockTableQuery,
-    QueryComposer\Part\FunctionConverterFactory,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Metadata;
+use Espo\ORM\Mapper\Helper;
+use Espo\ORM\Query\Query as Query;
+use Espo\ORM\Query\SelectingQuery;
+use Espo\ORM\Query\Select as SelectQuery;
+use Espo\ORM\Query\Update as UpdateQuery;
+use Espo\ORM\Query\Insert as InsertQuery;
+use Espo\ORM\Query\Delete as DeleteQuery;
+use Espo\ORM\Query\Union as UnionQuery;
+use Espo\ORM\Query\LockTable as LockTableQuery;
+use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 
 use PDO;
 use RuntimeException;
@@ -1289,13 +1287,13 @@ abstract class BaseQueryComposer implements QueryComposer
         if ($relName) {
             $part = $relName . '.' . $part;
 
-            $foreignEntityType = $entity->getRelationParam($relName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relName, 'entity');
 
             if ($foreignEntityType) {
                 $foreignSeed = $this->getSeed($foreignEntityType);
 
                 if ($foreignSeed) {
-                    $selectForeign = $foreignSeed->getAttributeParam($attribute, 'selectForeign');
+                    $selectForeign = $this->getAttributeParam($foreignSeed, $attribute, 'selectForeign');
 
                     if (is_array($selectForeign)) {
                         $part = $this->getAttributeSql($foreignSeed, $attribute, 'selectForeign', $params, $relName);
@@ -1306,7 +1304,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $part;
         }
 
-        if ($entity->getAttributeParam($attribute, 'select')) {
+        if ($this->getAttributeParam($entity, $attribute, 'select')) {
             return $this->getAttributeSql($entity, $attribute, 'select', $params);
         }
 
@@ -1341,13 +1339,13 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAttributeOrderSql(
-        BaseEntity $entity,
+        Entity $entity,
         string $attribute,
         ?array &$params,
         string $order
     ): string {
 
-        $defs = $entity->getAttributeParam($attribute, 'order') ?? [];
+        $defs = $this->getAttributeParam($entity, $attribute, 'order') ?? [];
 
         if (is_string($defs)) {
             $defs = [];
@@ -1357,10 +1355,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->applyAttributeCustomParams($defs, $params, $attribute);
         }
 
-        if (is_string($entity->getAttributeParam($attribute, 'order'))) {
+        if (is_string($this->getAttributeParam($entity, $attribute, 'order'))) {
             $defs = [];
 
-            $part = $entity->getAttributeParam($attribute, 'order');
+            $part = $this->getAttributeParam($entity, $attribute, 'order');
 
             $part = str_replace('{direction}', $order, $part);
 
@@ -1423,7 +1421,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $alias = null
     ): string {
 
-        $defs = $entity->getAttributeParam($attribute, $type) ?? [];
+        $defs = $this->getAttributeParam($entity, $attribute, $type) ?? [];
 
         if (is_string($defs)) {
             $defs = [];
@@ -1433,8 +1431,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->applyAttributeCustomParams($defs, $params, $attribute, $alias);
         }
 
-        if (is_string($entity->getAttributeParam($attribute, $type))) {
-            return $entity->getAttributeParam($attribute, $type);
+        if (is_string($this->getAttributeParam($entity, $attribute, $type))) {
+            return $this->getAttributeParam($entity, $attribute, $type);
         }
 
         if (!empty($defs['sql'])) {
@@ -1717,7 +1715,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $selectPart;
     }
 
-    protected function getSelectPartItemPair(?BaseEntity $entity, array &$params, $attribute): ?array
+    protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute): ?array
     {
         $maxTextColumnsLength = $params['maxTextColumnsLength'] ?? null;
         $skipTextColumns = $params['skipTextColumns'] ?? false;
@@ -1781,17 +1779,17 @@ abstract class BaseQueryComposer implements QueryComposer
                 return [$part, $alias];
             }
 
-            if ($entity->getAttributeParam($attribute0, 'select')) {
+            if ($this->getAttributeParam($entity, $attribute0, 'select')) {
                 $part = $this->getAttributeSql($entity, $attribute0, 'select', $params);
 
                 return [$part, $alias];
             }
 
-            if ($entity->getAttributeParam($attribute0, 'noSelect')) {
+            if ($this->getAttributeParam($entity, $attribute0, 'noSelect')) {
                 return null;
             }
 
-            if ($entity->getAttributeParam($attribute0, 'notStorable')) {
+            if ($this->getAttributeParam($entity, $attribute0, 'notStorable')) {
                 return null;
             }
 
@@ -1808,7 +1806,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return [$part, $attribute];
         }
 
-        if ($entity->getAttributeParam($attribute, 'select')) {
+        if ($this->getAttributeParam($entity, $attribute, 'select')) {
             $fieldPath = $this->getAttributeSql($entity, $attribute, 'select', $params);
 
             return [$fieldPath, $attribute];
@@ -1818,7 +1816,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        if ($entity->getAttributeParam($attribute, 'notStorable') && $attributeType !== Entity::FOREIGN) {
+        if ($this->getAttributeParam($entity, $attribute, 'notStorable') && $attributeType !== Entity::FOREIGN) {
             return null;
         }
 
@@ -1835,28 +1833,26 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         $additionalList = [];
 
-        $itemList = array_filter(
+        $itemListFiltered = array_filter(
             $itemList,
             function ($item) use ($entity) {
                 return is_string($item) && $entity->hasAttribute($item);
             }
         );
 
-        foreach ($itemList as $item) {
+        foreach ($itemListFiltered as $item) {
             $additionalList = array_merge(
                 $additionalList,
-                $entity->getAttributeParam($item, 'dependeeAttributeList') ?? []
+                $this->getAttributeParam($entity, $item, 'dependeeAttributeList') ?? []
             );
         }
 
-        $additionalList = array_filter(
+        return array_filter(
             $additionalList,
             function ($item) use ($itemList) {
                 return !in_array($item, $itemList);
             }
         );
-
-        return $additionalList;
     }
 
     protected function getBelongsToJoinItemPart(
@@ -1882,7 +1878,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
         $table = $this->toDb($foreignEntityType);
 
@@ -1929,15 +1925,16 @@ abstract class BaseQueryComposer implements QueryComposer
                     $field = $item[0];
                 }
                 if (
-                    $entity->getAttributeType($field) == 'foreign' && $entity->getAttributeParam($field, 'relation')
+                    $entity->getAttributeType($field) == 'foreign' &&
+                    $this->getAttributeParam($entity, $field, 'relation')
                 ) {
-                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
+                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
                 }
                 else if (
-                    $entity->getAttributeParam($field, 'fieldType') == 'linkOne' &&
-                    $entity->getAttributeParam($field, 'relation')
+                    $this->getAttributeParam($entity, $field, 'fieldType') == 'linkOne' &&
+                    $this->getAttributeParam($entity, $field, 'relation')
                 ) {
-                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
+                    $relationsToJoin[] = $this->getAttributeParam($entity, $field, 'relation');
                 }
             }
         }
@@ -1946,7 +1943,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $type = $entity->getRelationType($relationName);
 
             if ($type === Entity::BELONGS_TO || $type === Entity::HAS_ONE) {
-                if ($entity->getRelationParam($relationName, 'noJoin')) {
+                if ($this->getRelationParam($entity, $relationName, 'noJoin')) {
                     continue;
                 }
 
@@ -2077,7 +2074,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (
             !$noCustom &&
             $entity->hasAttribute($orderBy) &&
-            $entity->getAttributeParam($orderBy, 'order')
+            $this->getAttributeParam($entity, $orderBy, 'order')
         ) {
             return $this->getAttributeOrderSql($entity, $orderBy, $params, $order);
         }
@@ -2111,7 +2108,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAggregationSelectPart(
-        BaseEntity $entity,
+        Entity $entity,
         string $aggregation,
         string $aggregationBy,
         bool $distinct,
@@ -2199,7 +2196,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return null;
     }
 
-    protected function getTableAliases(BaseEntity $entity): array
+    protected function getTableAliases(Entity $entity): array
     {
         $aliases = [];
 
@@ -2232,7 +2229,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $aliases;
     }
 
-    protected function getAttributePath(BaseEntity $entity, string $attribute, array &$params): ?string
+    protected function getAttributePath(Entity $entity, string $attribute, array &$params): ?string
     {
         if (!$entity->hasAttribute($attribute)) {
             return null;
@@ -2242,25 +2239,25 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $attributeType = $entity->getAttributeType($attribute);
 
-        if ($entity->getAttributeParam($attribute, 'source')) {
-            if ($entity->getAttributeParam($attribute, 'source') !== 'db') {
+        if ($this->getAttributeParam($entity, $attribute, 'source')) {
+            if ($this->getAttributeParam($entity, $attribute, 'source') !== 'db') {
                 return null;
             }
         }
 
-        if ($entity->getAttributeParam($attribute, 'notStorable') && $attributeType !== 'foreign') {
+        if ($this->getAttributeParam($entity, $attribute, 'notStorable') && $attributeType !== 'foreign') {
             return null;
         }
 
         switch ($attributeType) {
             case 'foreign':
-                $relationName = $entity->getAttributeParam($attribute, 'relation');
+                $relationName = $this->getAttributeParam($entity, $attribute, 'relation');
 
                 if (!$relationName) {
                     return null;
                 }
 
-                $foreign = $entity->getAttributeParam($attribute, 'foreign');
+                $foreign = $this->getAttributeParam($entity, $attribute, 'foreign');
 
                 if (is_array($foreign)) {
                     $wsCount = 0;
@@ -2327,7 +2324,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getWherePartItem(
-        BaseEntity $entity,
+        Entity $entity,
         $leftKey,
         $value,
         array &$params,
@@ -2441,13 +2438,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (
                 !$noCustomWhere &&
-                $entity->getAttributeParam($field, 'where') &&
-                isset($entity->getAttributeParam($field, 'where')[$operatorModified])
+                $this->getAttributeParam($entity, $field, 'where') &&
+                isset($this->getAttributeParam($entity, $field, 'where')[$operatorModified])
             ) {
                 $whereSqlPart = '';
                 $customWhereClause = null;
 
-                $whereDefs = $entity->getAttributeParam($field, 'where')[$operatorModified];
+                $whereDefs = $this->getAttributeParam($entity, $field, 'where')[$operatorModified];
 
                 if (is_string($whereDefs)) {
                     $whereSqlPart = $whereDefs;
@@ -2515,8 +2512,8 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             if ($entity->getAttributeType($field) === Entity::FOREIGN) {
-                $relationName = $entity->getAttributeParam($field, 'relation');
-                $foreign = $entity->getAttributeParam($field, 'foreign');
+                $relationName = $this->getAttributeParam($entity, $field, 'relation');
+                $foreign = $this->getAttributeParam($entity, $field, 'foreign');
 
                 if ($relationName && $entity->hasRelation($relationName)) {
                     $alias = $this->getAlias($entity, $relationName);
@@ -2885,7 +2882,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getJoinItemPart(
-        BaseEntity $entity,
+        Entity $entity,
         string $name,
         bool $isLeft = false,
         array $conditions = [],
@@ -2943,8 +2940,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $alias = $this->sanitize($alias);
 
-        $relationConditions = $entity->getRelationParam($relationName, 'conditions');
-        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+        $relationConditions = $this->getRelationParam($entity, $relationName, 'conditions');
+        $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
         if ($relationConditions) {
             $conditions = array_merge($conditions, $relationConditions);
@@ -2962,12 +2959,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 $distantKey = $keySet['distantKey'];
 
                 $relTable = $this->toDb(
-                    $entity->getRelationParam($relationName, 'relationName')
+                    $this->getRelationParam($entity, $relationName, 'relationName')
                 );
 
                 $midAlias = lcfirst(
                     $this->sanitize(
-                        $entity->getRelationParam($relationName, 'relationName')
+                        $this->getRelationParam($entity, $relationName, 'relationName')
                     )
                 );
 
@@ -3348,6 +3345,46 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         return implode(', ', $list);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getAttributeParam(Entity $entity, string $attribute, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getAttributeParam($attribute, $param);
+        }
+
+        $entityDefs = $this->metadata
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasAttribute($attribute)) {
+            return null;
+        }
+
+        return $entityDefs->getAttribute($attribute)->getParam($param);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getRelationParam(Entity $entity, string $relation, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, $param);
+        }
+
+        $entityDefs = $this->metadata
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($relation)->getParam($param);
     }
 
     /**

@@ -33,6 +33,8 @@ use Espo\Core\Job\JobSchedulerFactory;
 
 use Espo\Tools\Import\Jobs\RunIdle;
 
+use Espo\Core\ORM\Entity;
+
 use Espo\Core\{
     Exceptions\Error,
     Utils\Json,
@@ -45,7 +47,6 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;

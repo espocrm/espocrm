@@ -29,17 +29,18 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    Collection,
-    Entity,
-    EntityManager,
-    Query\Select,
-    Query\Part\WhereItem,
-    Query\Part\Selection,
-    Query\Part\Join,
-    Mapper\RDBMapper,
-    Repository\RDBRelationSelectBuilder as Builder,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Mapper\RDBMapper;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Repository\RDBRelationSelectBuilder as Builder;
 
 use RuntimeException;
 
@@ -86,9 +87,18 @@ class RDBRelation
 
         $this->relationType = $entity->getRelationType($relationName);
 
-        $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
-
         $this->entityType = $entity->getEntityType();
+
+        if ($entity instanceof BaseEntity) {
+            $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+        }
+        else {
+            $this->foreignEntityType = $this->entityManager
+                ->getDefs()
+                ->getEntity($this->entityType)
+                ->getRelation($relationName)
+                ->getForeignEntityType();
+        }
 
         if ($this->isBelongsToParentType()) {
             $this->noBuilder = true;
@@ -189,7 +199,7 @@ class RDBRelation
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join(string $target, ?string $alias = null, $conditions = null): Builder
+    public function join($target, ?string $alias = null, $conditions = null): Builder
     {
         return $this->createSelectBuilder()->join($target, $alias, $conditions);
     }
@@ -202,7 +212,7 @@ class RDBRelation
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin(string $target, ?string $alias = null, $conditions = null): Builder
+    public function leftJoin($target, ?string $alias = null, $conditions = null): Builder
     {
         return $this->createSelectBuilder()->leftJoin($target, $alias, $conditions);
     }
@@ -260,11 +270,11 @@ class RDBRelation
      * Passing non-array will append an item,
      *
      * Usage options:
-     * * `order(OrderExpression $expression)
+     * * `order(Order $expression)
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param OrderExpression|OrderExpression[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
@@ -344,7 +354,7 @@ class RDBRelation
             throw new RuntimeException("Entity type doesn't match an entity type of the relation.");
         }
 
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
     }
@@ -356,7 +366,7 @@ class RDBRelation
      */
     public function isRelated(Entity $entity): bool
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
 
@@ -372,7 +382,7 @@ class RDBRelation
 
         return (bool) $this->createSelectBuilder()
             ->select(['id'])
-            ->where(['id' => $entity->id])
+            ->where(['id' => $entity->getId()])
             ->findOne();
     }
 
@@ -384,7 +394,7 @@ class RDBRelation
         $typeAttribute = $this->relationName . 'Type';
 
         if (!$fromEntity->has($idAttribute) || !$fromEntity->has($typeAttribute)) {
-            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->id);
+            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->getId());
         }
 
         if (!$fromEntity) {
@@ -392,8 +402,7 @@ class RDBRelation
         }
 
         return
-            $fromEntity->get($idAttribute) === $entity->id
-            &&
+            $fromEntity->get($idAttribute) === $entity->getId() &&
             $fromEntity->get($typeAttribute) === $entity->getEntityType();
     }
 
@@ -404,14 +413,14 @@ class RDBRelation
         $idAttribute = $this->relationName . 'Id';
 
         if (!$fromEntity->has($idAttribute)) {
-            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->id);
+            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->getId());
         }
 
         if (!$fromEntity) {
             return false;
         }
 
-        return $fromEntity->get($idAttribute) === $entity->id;
+        return $fromEntity->get($idAttribute) === $entity->getId();
     }
 
     /**

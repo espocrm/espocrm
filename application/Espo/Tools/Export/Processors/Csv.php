@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Export\Processors;
 
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity;
 
 use Espo\Core\{
     Utils\Config,

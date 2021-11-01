@@ -29,7 +29,8 @@
 
 namespace Espo\Tools\EmailNotification;
 
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity;
+
 use Espo\ORM\EntityManager;
 
 use Espo\Core\{
