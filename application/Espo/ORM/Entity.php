@@ -166,6 +166,11 @@ interface Entity
     public function hasFetched(string $attribute): bool;
 
     /**
+     * Set a fetched value for a specific attribute.
+     */
+    public function setFetched(string $attribute, $value): void;
+
+    /**
      * Get values.
      */
     public function getValueMap(): stdClass;
