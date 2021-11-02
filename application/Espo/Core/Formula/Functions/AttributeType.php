@@ -42,7 +42,7 @@ class AttributeType extends Base
         $this->attributeFetcher = $attributeFetcher;
     }
 
-    public function process(\StdClass $item)
+    public function process(\stdClass $item)
     {
         if (!property_exists($item, 'value')) {
             throw new Error();

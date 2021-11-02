@@ -36,10 +36,9 @@ use Espo\Core\Interfaces\Injectable;
 use Espo\ORM\Entity;
 
 use Espo\Core\Formula\Processor;
-use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Argument;
 
-use StdClass;
+use stdClass;
 
 /**
  * @deprecated Use BaseFormula instead.
@@ -85,7 +84,7 @@ abstract class Base implements Injectable
         return $this->dependencyList;
     }
 
-    public function __construct(string $name, Processor $processor, ?Entity $entity = null, ?StdClass $variables = null)
+    public function __construct(string $name, Processor $processor, ?Entity $entity = null, ?stdClass $variables = null)
     {
         $this->name = $name;
         $this->processor = $processor;
@@ -99,7 +98,7 @@ abstract class Base implements Injectable
     {
     }
 
-    protected function getVariables(): StdClass
+    protected function getVariables(): stdClass
     {
         return $this->variables;
     }
@@ -112,7 +111,7 @@ abstract class Base implements Injectable
         return $this->entity;
     }
 
-    public abstract function process(StdClass $item);
+    public abstract function process(stdClass $item);
 
     protected function evaluate($item)
     {
@@ -120,7 +119,7 @@ abstract class Base implements Injectable
         return $this->processor->process($item);
     }
 
-    protected function fetchArguments(StdClass $item): array
+    protected function fetchArguments(stdClass $item): array
     {
         $args = $item->value ?? [];
 
@@ -132,7 +131,7 @@ abstract class Base implements Injectable
         return $eArgs;
     }
 
-    protected function fetchRawArguments(StdClass $item): array
+    protected function fetchRawArguments(stdClass $item): array
     {
         return $item->value ?? [];
     }

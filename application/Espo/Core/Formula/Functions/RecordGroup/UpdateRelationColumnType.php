@@ -56,11 +56,25 @@ class UpdateRelationColumnType extends BaseFunction implements
         $column = $args[4];
         $value = $args[5];
 
-        if (!$entityType) $this->throwError("Empty entityType.");
-        if (!$id) return null;
-        if (!$link) $this->throwError("Empty link.");
-        if (!$foreignId) return null;
-        if (!$column) $this->throwError("Empty column.");
+        if (!$entityType) {
+            $this->throwError("Empty entityType.");
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        if (!$link) {
+            $this->throwError("Empty link.");
+        }
+
+        if (!$foreignId) {
+            return null;
+        }
+
+        if (!$column) {
+            $this->throwError("Empty column.");
+        }
 
         $em = $this->entityManager;
 
@@ -70,8 +84,10 @@ class UpdateRelationColumnType extends BaseFunction implements
 
         $entity = $em->getEntity($entityType, $id);
 
-        if (!$entity) return null;
+        if (!$entity) {
+            return null;
+        }
 
-        return $em->getRepository($entityType)->updateRelation($entity, $link, $foreignId, [$column => $value]);
+        return $em->getRDBRepository($entityType)->updateRelation($entity, $link, $foreignId, [$column => $value]);
     }
 }

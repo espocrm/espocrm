@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
-use StdClass;
+use stdClass;
 use PDO;
 
 class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
@@ -43,7 +43,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
     use Di\EntityManagerSetter;
     use Di\SelectBuilderFactorySetter;
 
-    public function process(StdClass $item)
+    public function process(stdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("sumRelated: Too few arguments.");

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use Laminas\{
     Mime\Message as MimeMessage,
     Mime\Part as MimePart,
@@ -70,6 +72,9 @@ class Sender
 {
     private $config;
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $serviceFactory;
@@ -376,7 +381,7 @@ class Sender
 
         if (!$this->systemInboundEmailIsCached && $address) {
             $this->systemInboundEmail = $this->entityManager
-                ->getRepository('InboundEmail')
+                ->getRDBRepository('InboundEmail')
                 ->where([
                     'status' => 'Active',
                     'useSmtp' => true,
@@ -482,7 +487,7 @@ class Sender
 
         if (!$email->isNew()) {
             $attachmentCollection = $this->entityManager
-                ->getRepository('Email')
+                ->getRDBRepository('Email')
                 ->getRelation($email, 'attachments')
                 ->find();
             }
@@ -494,14 +499,15 @@ class Sender
         }
 
         if (!empty($attachmentCollection)) {
+            /** @var AttachmentRepository $attachmentRepository */
+            $attachmentRepository = $this->entityManager->getRepository('Attachment');
+
             foreach ($attachmentCollection as $a) {
                 if ($a->get('contents')) {
                     $contents = $a->get('contents');
                 }
                 else {
-                    $fileName = $this->entityManager
-                        ->getRepository('Attachment')
-                        ->getFilePath($a);
+                    $fileName = $attachmentRepository->getFilePath($a);
 
                     if (!is_file($fileName)) {
                         continue;
@@ -527,12 +533,15 @@ class Sender
         $attachmentInlineList = $email->getInlineAttachmentList();
 
         if (!empty($attachmentInlineList)) {
+            /** @var AttachmentRepository $attachmentRepository */
+            $attachmentRepository = $this->entityManager->getRepository('Attachment');
+
             foreach ($attachmentInlineList as $a) {
                 if ($a->get('contents')) {
                     $contents = $a->get('contents');
                 }
                 else {
-                    $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($a);
+                    $fileName = $attachmentRepository->getFilePath($a);
 
                     if (!is_file($fileName)) {
                         continue;

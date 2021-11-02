@@ -127,6 +127,9 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         }
     }
 
+    /**
+     * @return AttachmentEntity
+     */
     public function getCopiedAttachment(AttachmentEntity $entity, $role = null)
     {
         $attachment = $this->get();

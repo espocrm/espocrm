@@ -31,6 +31,8 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\ORM\EntityManager;
+
 use Espo\Core\Di;
 
 class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
@@ -38,7 +40,12 @@ class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("isRelated: roo few arguments.");
@@ -47,6 +54,8 @@ class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
         $link = $this->evaluate($item->value[0]);
         $id = $this->evaluate($item->value[1]);
 
-        return $this->entityManager->getRepository($this->getEntity()->getEntityType())->isRelated($this->getEntity(), $link, $id);
+        return $this->entityManager
+            ->getRDBRepository($this->getEntity()->getEntityType())
+            ->isRelated($this->getEntity(), $link, $id);
     }
 }

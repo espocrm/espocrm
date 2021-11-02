@@ -77,6 +77,9 @@ class Util
      */
     private const CODE_LIMIT_PERIOD = '20 minutes';
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $config;

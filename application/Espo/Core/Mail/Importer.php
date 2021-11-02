@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail;
 
 use Espo\Entities\Email;
+use Espo\Repositories\Email as EmailRepository;
 
 use Espo\ORM\EntityManager;
 
@@ -41,6 +42,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Modules\Crm\Entities\Lead;
 
@@ -53,6 +55,9 @@ use Exception;
  */
 class Importer
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $config;
@@ -96,6 +101,8 @@ class Importer
         $parser = $message->getParser() ?? $this->parserFactory->create();
 
         $email = $this->entityManager->getEntity('Email');
+
+        assert($email instanceof Email);
 
         $email->set('isBeingImported', true);
 
@@ -265,6 +272,7 @@ class Importer
                     $inReplyTo = '<' . $inReplyTo . '>';
                 }
 
+                /** @var Email $replied */
                 $replied = $this->entityManager
                     ->getRDBRepository('Email')
                     ->where([
@@ -273,7 +281,8 @@ class Importer
                     ->findOne();
 
                 if ($replied) {
-                    $email->set('repliedId', $replied->id);
+                    $email->set('repliedId', $replied->getId());
+
                     $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
 
                     foreach ($repliedTeamIdList as $repliedTeamId) {
@@ -364,7 +373,10 @@ class Importer
                 'replyToString' => $email->get('replyToString'),
             ]);
 
-            $this->entityManager->getRepository('Email')->fillAccount($duplicate);
+            /** @var EmailRepository $emailRepository */
+            $emailRepository = $this->entityManager->getRDBRepository('Email');
+
+            $emailRepository->fillAccount($duplicate);
 
             $this->processDuplicate(
                 $duplicate,
@@ -434,6 +446,8 @@ class Importer
         if (!$parent) {
             return;
         }
+
+        assert($parent instanceof CoreEntity);
 
         $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
 
@@ -562,7 +576,7 @@ class Importer
             }
 
             $email->set('parentType', 'Contact');
-            $email->set('parentId', $contact->id);
+            $email->set('parentId', $contact->getId());
 
             return true;
         }
@@ -576,7 +590,7 @@ class Importer
 
         if ($account) {
             $email->set('parentType', 'Account');
-            $email->set('parentId', $account->id);
+            $email->set('parentId', $account->getId());
 
             return true;
         }
@@ -590,7 +604,7 @@ class Importer
 
         if ($lead) {
             $email->set('parentType', 'Lead');
-            $email->set('parentId', $lead->id);
+            $email->set('parentId', $lead->getId());
 
             return true;
         }
@@ -623,9 +637,12 @@ class Importer
         array $teamIdList
     ): void {
 
+        /** @var EmailRepository $emailRepository */
+        $emailRepository = $this->entityManager->getRDBRepository('Email');
+
         if ($duplicate->get('status') == Email::STATUS_ARCHIVED) {
-            $this->entityManager->getRepository('Email')->loadFromField($duplicate);
-            $this->entityManager->getRepository('Email')->loadToField($duplicate);
+            $emailRepository->loadFromField($duplicate);
+            $emailRepository->loadToField($duplicate);
         }
 
         $duplicate->loadLinkMultipleField('users');
@@ -662,7 +679,7 @@ class Importer
             }
 
             $this->entityManager
-                ->getRepository('Email')
+                ->getRDBRepository('Email')
                 ->updateRelation($duplicate, 'users', $uId, [
                     'folderId' => $folderId,
                 ]);
@@ -670,9 +687,7 @@ class Importer
 
         $duplicate->set('isBeingImported', true);
 
-        $this->entityManager
-            ->getRepository('Email')
-            ->applyUsersFilters($duplicate);
+        $emailRepository->applyUsersFilters($duplicate);
 
         $saverParams = SaverParams::create()->withRawOptions([
             'skipLinkMultipleRemove' => true,
@@ -695,7 +710,9 @@ class Importer
             if (!in_array($teamId, $fetchedTeamIdList)) {
                 $processNoteAcl = true;
 
-                $this->entityManager->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                $this->entityManager
+                    ->getRDBRepository('Email')
+                    ->relate($duplicate, 'teams', $teamId);
             }
         }
 
@@ -717,7 +734,7 @@ class Importer
                 'methodName' => 'processNoteAclJob',
                 'data' => [
                     'targetType' => 'Email',
-                    'targetId' => $duplicate->id
+                    'targetId' => $duplicate->getId(),
                 ],
                 'executeAt' => $executeAt,
                 'queue' => QueueName::Q1,

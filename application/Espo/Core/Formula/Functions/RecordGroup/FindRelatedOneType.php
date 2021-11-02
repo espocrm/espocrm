@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -88,11 +90,13 @@ class FindRelatedOneType extends BaseFunction implements
 
         $metadata = $this->metadata;
 
+        assert($entity instanceof CoreEntity);
+
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
             $relatedEntity = $entityManager
-                ->getRepository($entityType)
+                ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
                 ->select(['id'])
                 ->findOne();
@@ -101,7 +105,7 @@ class FindRelatedOneType extends BaseFunction implements
                 return null;
             }
 
-            return $relatedEntity->id;
+            return $relatedEntity->getId();
         }
 
         if (!$orderBy) {
@@ -168,7 +172,7 @@ class FindRelatedOneType extends BaseFunction implements
 
         if ($relationType === 'hasChildren') {
             $queryBuilder->where([
-                $foreignLink . 'Id' => $entity->id,
+                $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),
             ]);
         }
@@ -176,7 +180,7 @@ class FindRelatedOneType extends BaseFunction implements
             $queryBuilder
                 ->join($foreignLink)
                 ->where([
-                    $foreignLink . '.id' => $entity->id,
+                    $foreignLink . '.id' => $entity->getId(),
                 ]);
         }
 
@@ -185,13 +189,13 @@ class FindRelatedOneType extends BaseFunction implements
         }
 
         $relatedEntity = $entityManager
-            ->getRepository($foreignEntityType)
+            ->getRDBRepository($foreignEntityType)
             ->clone($queryBuilder->build())
             ->select(['id'])
             ->findOne();
 
         if ($relatedEntity) {
-            return $relatedEntity->id;
+            return $relatedEntity->getId();
         }
 
         return null;

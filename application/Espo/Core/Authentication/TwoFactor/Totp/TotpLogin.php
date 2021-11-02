@@ -45,6 +45,9 @@ use Espo\Core\Api\Request;
 
 class TotpLogin implements Login
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $totp;

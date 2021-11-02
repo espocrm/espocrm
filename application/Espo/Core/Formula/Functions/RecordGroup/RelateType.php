@@ -55,12 +55,15 @@ class RelateType extends BaseFunction implements
         if (!$entityType || !is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
         }
+
         if (!$id) {
             return null;
         }
+
         if (!$link || !is_string($link)) {
             $this->throwBadArgumentType(3, 'string');
         }
+
         if (!$foreignId) {
             return null;
         }
@@ -72,20 +75,25 @@ class RelateType extends BaseFunction implements
         }
 
         $entity = $em->getEntity($entityType, $id);
-        if (!$entity) return null;
+
+        if (!$entity) {
+            return null;
+        }
 
         if (is_array($foreignId)) {
             foreach ($foreignId as $itemId) {
-                $em->getRepository($entityType)->relate($entity, $link, $itemId);
+                $em->getRDBRepository($entityType)->relate($entity, $link, $itemId);
             }
+
             return true;
         }
 
         if (is_string($foreignId)) {
-            if ($em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
+            if ($em->getRDBRepository($entityType)->isRelated($entity, $link, $foreignId)) {
                 return true;
             }
-            return $em->getRepository($entityType)->relate($entity, $link, $foreignId);
+
+            return $em->getRDBRepository($entityType)->relate($entity, $link, $foreignId);
         }
 
         $this->throwError("foreignId type is wrong.");

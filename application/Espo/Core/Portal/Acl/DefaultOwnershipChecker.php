@@ -74,6 +74,9 @@ class DefaultOwnershipChecker implements
 
     private const FIELD_PARENT = 'parent';
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -116,7 +119,7 @@ class DefaultOwnershipChecker implements
             $entity->hasRelation(self::FIELD_ACCOUNTS) &&
             $this->getRelationParam($entity, self::FIELD_ACCOUNTS, 'entity') === self::ENTITY_ACCOUNT
         ) {
-            $repository = $this->entityManager->getRepository($entity->getEntityType());
+            $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
             foreach ($accountIdList as $accountId) {
                 if ($repository->isRelated($entity, self::FIELD_ACCOUNTS, $accountId)) {
@@ -158,7 +161,7 @@ class DefaultOwnershipChecker implements
             $entity->hasRelation(self::FIELD_CONTACTS) &&
             $this->getRelationParam($entity, self::FIELD_CONTACTS, 'entity') === self::ENTITY_CONTACT
         ) {
-            $repository = $this->entityManager->getRepository($entity->getEntityType());
+            $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
             if ($repository->isRelated($entity, self::FIELD_CONTACTS, $contactId)) {
                 return true;

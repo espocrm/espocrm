@@ -80,6 +80,9 @@ class Authentication
 
     private $configDataProvider;
 
+    /**
+     * @var EntityManagerProxy
+     */
     private $entityManager;
 
     private $loginFactory;
@@ -410,7 +413,7 @@ class Authentication
 
         if ($this->isPortal()) {
             $isPortalRelatedToUser = $this->entityManager
-                ->getRepository('Portal')
+                ->getRDBRepository('Portal')
                 ->isRelated($this->getPortal(), 'users', $user);
 
             if (!$isPortalRelatedToUser) {

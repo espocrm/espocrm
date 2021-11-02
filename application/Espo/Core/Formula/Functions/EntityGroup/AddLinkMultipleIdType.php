@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 class AddLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
 {
-    public function process(\StdClass $item)
+    public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("addLinkMultipleId function: Too few arguments.");

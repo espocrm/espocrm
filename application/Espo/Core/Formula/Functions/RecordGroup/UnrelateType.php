@@ -80,11 +80,11 @@ class UnrelateType extends BaseFunction implements
             return null;
         }
 
-        if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
+        if (!$em->getRDBRepository($entityType)->isRelated($entity, $link, $foreignId)) {
             return true;
         }
 
-        $em->getRepository($entityType)->unrelate($entity, $link, $foreignId);
+        $em->getRDBRepository($entityType)->unrelate($entity, $link, $foreignId);
 
         return true;
     }

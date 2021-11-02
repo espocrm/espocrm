@@ -45,6 +45,9 @@ use Espo\Core\Api\Request;
 
 class EmailLogin implements Login
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $util;

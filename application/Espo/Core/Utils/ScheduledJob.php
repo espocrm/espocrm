@@ -65,6 +65,9 @@ class ScheduledJob
 
     private $language;
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $metadataProvider;
@@ -162,6 +165,6 @@ class ScheduledJob
             ]
         ];
 
-        return (bool) $this->entityManager->getRepository('Job')->findOne($selectParams);
+        return (bool) $this->entityManager->getRDBRepository('Job')->findOne($selectParams);
     }
 }

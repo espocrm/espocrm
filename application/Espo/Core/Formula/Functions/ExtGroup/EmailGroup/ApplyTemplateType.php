@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
+use Espo\Entities\Email;
+
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -74,13 +76,17 @@ class ApplyTemplateType extends BaseFunction implements
 
         $em = $this->entityManager;
 
+        /** @var Email $email */
         $email = $em->getEntity('Email', $id);
+
         $emailTemplate = $em->getEntity('EmailTemplate', $templateId);
 
         if (!$email) {
             $this->log("Email {$id} does not exist.");
+
             return false;
         }
+
         if (!$emailTemplate) {
             $this->log("EmailTemplate {$templateId} does not exist.");
             return false;
@@ -108,6 +114,7 @@ class ApplyTemplateType extends BaseFunction implements
         }
 
         $emailAddressList = $email->get('toEmailAddresses');
+
         if (count($emailAddressList)) {
             $params['emailAddress'] = $emailAddressList[0]->get('name');
         }
@@ -115,6 +122,7 @@ class ApplyTemplateType extends BaseFunction implements
         $data = $emailTemplateService->parseTemplate($emailTemplate, $params, true, true);
 
         $attachmentsIds = $email->getLinkMultipleIdList('attachments');
+
         $attachmentsIds = array_merge($attachmentsIds, $data['attachmentsIds']);
 
         $email->set([

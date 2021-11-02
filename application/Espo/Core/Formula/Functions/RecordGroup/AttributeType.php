@@ -38,7 +38,7 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    public function process(\stdClass $item)
     {
         if (count($item->value) < 3) {
             throw new Error("record\\attribute: too few arguments.");

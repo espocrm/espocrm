@@ -30,11 +30,12 @@
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\Entities\PhoneNumber;
+use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Core\{
-    ORM\EntityManager,
     ApplicationState,
     Utils\Metadata,
     FieldProcessing\Saver as SaverInterface,
@@ -43,6 +44,9 @@ use Espo\Core\{
 
 class Saver implements SaverInterface
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $applicationState;
@@ -125,9 +129,10 @@ class Saver implements SaverInterface
         $previousPhoneNumberData = [];
 
         if (!$entity->isNew()) {
-            $previousPhoneNumberData = $this->entityManager
-                ->getRepository('PhoneNumber')
-                ->getPhoneNumberData($entity);
+            /** @var PhoneNumberRepository $repository */
+            $repository = $this->entityManager->getRepository('PhoneNumber');
+
+            $previousPhoneNumberData = $repository->getPhoneNumberData($entity);
         }
 
         $hash = (object) [];

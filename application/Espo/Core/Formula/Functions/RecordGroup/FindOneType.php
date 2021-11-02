@@ -100,12 +100,12 @@ class FindOneType extends BaseFunction implements
         $queryBuilder->select(['id']);
 
         $entity = $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($queryBuilder->build())
             ->findOne();
 
         if ($entity) {
-            return $entity->id;
+            return $entity->getId();
         }
 
         return null;

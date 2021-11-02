@@ -71,7 +71,7 @@ class CreateType extends BaseFunction implements
         $entity = $this->entityManager->createEntity($entityType, $data);
 
         if ($entity) {
-            return $entity->id;
+            return $entity->getId();
         }
 
         return null;

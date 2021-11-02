@@ -71,7 +71,7 @@ class CountType extends BaseFunction implements
             }
 
             return $this->entityManager
-                ->getRepository($entityType)
+                ->getRDBRepository($entityType)
                 ->clone($builder->build())
                 ->count();
         }
@@ -90,7 +90,7 @@ class CountType extends BaseFunction implements
         }
 
         return $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->where($whereClause)
             ->count();
     }

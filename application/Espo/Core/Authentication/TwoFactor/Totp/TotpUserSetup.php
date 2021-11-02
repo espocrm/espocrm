@@ -49,6 +49,9 @@ class TotpUserSetup implements UserSetup
 
     private $config;
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(Util $totp, Config $config, EntityManager $entityManager)

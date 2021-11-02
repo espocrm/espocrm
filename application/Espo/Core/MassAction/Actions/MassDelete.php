@@ -49,6 +49,9 @@ class MassDelete implements MassAction
 
     protected $recordServiceContainer;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(
@@ -77,7 +80,7 @@ class MassDelete implements MassAction
 
         $service = $this->recordServiceContainer->get($entityType);
 
-        $repository = $this->entityManager->getRepository($entityType);
+        $repository = $this->entityManager->getRDBRepository($entityType);
 
         $query = $this->queryBuilder->build($params);
 

@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 class HasLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
 {
-    public function process(\StdClass $item)
+    public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("hasLinkMultipleId: too few arguments.");

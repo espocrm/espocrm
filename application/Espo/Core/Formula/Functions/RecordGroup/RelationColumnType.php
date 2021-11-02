@@ -58,15 +58,19 @@ class RelationColumnType extends BaseFunction implements
         if (!$entityType) {
             $this->throwError("Empty entityType.");
         }
+
         if (!$id) {
             return null;
         }
+
         if (!$link) {
             $this->throwError("Empty link.");
         }
+
         if (!$foreignId) {
             return null;
         }
+
         if (!$column) {
             $this->throwError("Empty column.");
         }
@@ -78,8 +82,11 @@ class RelationColumnType extends BaseFunction implements
         }
 
         $entity = $em->getEntity($entityType, $id);
-        if (!$entity) return null;
 
-        return $em->getRepository($entityType)->getRelationColumn($entity, $link, $foreignId, $column);
+        if (!$entity) {
+            return null;
+        }
+
+        return $em->getRDBRepository($entityType)->getRelationColumn($entity, $link, $foreignId, $column);
     }
 }

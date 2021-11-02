@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
 use Espo\Entities\EmailAddress;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Entity;
 
@@ -42,6 +43,9 @@ use Espo\Core\{
 
 class Saver implements SaverInterface
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $applicationState;
@@ -119,9 +123,10 @@ class Saver implements SaverInterface
         $previousEmailAddressData = [];
 
         if (!$entity->isNew()) {
-            $previousEmailAddressData = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEmailAddressData($entity);
+            /** @var EmailAddressRepository $repository */
+            $repository = $this->entityManager->getRepository('EmailAddress');
+
+            $previousEmailAddressData = $repository->getEmailAddressData($entity);
         }
 
         $hash = (object) [];

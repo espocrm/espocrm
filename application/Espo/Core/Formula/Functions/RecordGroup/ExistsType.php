@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\ORM\EntityManager;
+
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -40,6 +42,11 @@ class ExistsType extends BaseFunction implements
     Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     public function process(ArgumentList $args)
     {
@@ -59,6 +66,9 @@ class ExistsType extends BaseFunction implements
             $i = $i + 2;
         }
 
-        return (bool) $this->entityManager->getRepository($entityType)->where($whereClause)->findOne();
+        return (bool) $this->entityManager
+            ->getRDBRepository($entityType)
+            ->where($whereClause)
+            ->findOne();
     }
 }

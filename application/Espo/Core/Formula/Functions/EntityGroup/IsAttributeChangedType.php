@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
 {
-    public function process(\StdClass $item)
+    public function process(\stdClass $item)
     {
         if (count($item->value) < 1) {
             throw new Error("isAttributeChanged: too few arguments.");

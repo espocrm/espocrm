@@ -44,6 +44,9 @@ use Espo\Core\Api\Request;
 
 class SmsLogin implements Login
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $util;

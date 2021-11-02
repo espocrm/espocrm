@@ -31,9 +31,11 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\ORM\EntityManager;
+
 use Espo\Core\Di;
 
-use StdClass;
+use stdClass;
 
 class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
@@ -42,7 +44,12 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
     use Di\EntityManagerSetter;
     use Di\SelectBuilderFactorySetter;
 
-    public function process(StdClass $item)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function process(stdClass $item)
     {
         if (count($item->value) < 1) {
             throw new Error("countRelated: roo few arguments.");
@@ -78,7 +85,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
               $builder->withPrimaryFilter($filter);
         }
 
-        return $entityManager->getRepository($entity->getEntityType())
+        return $entityManager->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, $link)
             ->clone($builder->build())
             ->count();

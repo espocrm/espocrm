@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
@@ -113,6 +115,8 @@ class FindRelatedManyType extends BaseFunction implements
             $order = $order ?? 'asc';
         }
 
+        assert($entity instanceof CoreEntity);
+
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
@@ -191,7 +195,7 @@ class FindRelatedManyType extends BaseFunction implements
         }
 
         $collection = $entityManager
-            ->getRepository($foreignEntityType)
+            ->getRDBRepository($foreignEntityType)
             ->clone($queryBuilder->build())
             ->select(['id'])
             ->find();

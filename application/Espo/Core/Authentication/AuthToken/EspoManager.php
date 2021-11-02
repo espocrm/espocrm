@@ -38,6 +38,9 @@ use const MCRYPT_DEV_URANDOM;
 
 class EspoManager implements Manager
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $repository;

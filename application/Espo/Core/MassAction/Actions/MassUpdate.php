@@ -29,6 +29,8 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use Espo\Core\{
     MassAction\QueryBuilder,
     MassAction\Params,
@@ -44,7 +46,7 @@ use Espo\Core\{
 };
 
 use Exception;
-use StdClass;
+use stdClass;
 
 class MassUpdate implements MassAction
 {
@@ -54,6 +56,9 @@ class MassUpdate implements MassAction
 
     protected $recordServiceContainer;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     protected $fieldUtil;
@@ -88,7 +93,7 @@ class MassUpdate implements MassAction
 
         $service = $this->recordServiceContainer->get($entityType);
 
-        $repository = $this->entityManager->getRepository($entityType);
+        $repository = $this->entityManager->getRDBRepository($entityType);
 
         $service->filterUpdateInput($valueMap);
 
@@ -147,10 +152,10 @@ class MassUpdate implements MassAction
 
     protected function prepareItemValueMap(
         string $entityType,
-        StdClass $valueMap,
+        stdClass $valueMap,
         int $i,
         array $fieldToCopyList
-    ): StdClass {
+    ): stdClass {
 
         $clonedValueMap = ObjectUtil::clone($valueMap);
 
@@ -181,7 +186,7 @@ class MassUpdate implements MassAction
         return $clonedValueMap;
     }
 
-    protected function copyFileField(string $field, StdClass $valueMap): void
+    protected function copyFileField(string $field, stdClass $valueMap): void
     {
         $idAttribute = $field . 'Id';
 
@@ -199,14 +204,15 @@ class MassUpdate implements MassAction
             return;
         }
 
-        $copiedAttachment = $this->entityManager
-            ->getRepository('Attachment')
-            ->getCopiedAttachment($attachment);
+        /** @var AttachmentRepository $attachmentRepository */
+        $attachmentRepository = $this->entityManager->getRepository('Attachment');
 
-        $valueMap->$idAttribute = $copiedAttachment->id;
+        $copiedAttachment = $attachmentRepository->getCopiedAttachment($attachment);
+
+        $valueMap->$idAttribute = $copiedAttachment->getId();
     }
 
-    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap): void
+    protected function copyAttachmentMultipleField(string $field, stdClass $valueMap): void
     {
         $idsAttribute = $field . 'Ids';
 
@@ -215,6 +221,9 @@ class MassUpdate implements MassAction
         if (!count($ids)) {
             return;
         }
+
+        /** @var AttachmentRepository $attachmentRepository */
+        $attachmentRepository = $this->entityManager->getRepository('Attachment');
 
         $copiedIds = [];
 
@@ -225,17 +234,15 @@ class MassUpdate implements MassAction
                 continue;
             }
 
-            $copiedAttachment = $this->entityManager
-                ->getRepository('Attachment')
-                ->getCopiedAttachment($attachment);
+            $copiedAttachment = $attachmentRepository->getCopiedAttachment($attachment);
 
-            $copiedIds[] = $copiedAttachment->id;
+            $copiedIds[] = $copiedAttachment->getId();
         }
 
         $valueMap->$idsAttribute = $copiedIds;
     }
 
-    protected function detectFieldToCopyList(string $entityType, StdClass $valueMap): array
+    protected function detectFieldToCopyList(string $entityType, stdClass $valueMap): array
     {
         $resultFieldList = [];
 

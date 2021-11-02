@@ -31,6 +31,8 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\ORM\EntityManager;
+
 use Espo\Core\Di;
 
 class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
@@ -38,7 +40,12 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
 {
     use Di\EntityManagerSetter;
 
-    public function process(\StdClass $item)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function process(\stdClass $item)
     {
         $args = $item->value ?? [];
 
@@ -51,7 +58,7 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
         $column = $this->evaluate($args[2]);
 
         $entityType = $this->getEntity()->getEntityType();
-        $repository = $this->entityManager->getRepository($entityType);
+        $repository = $this->entityManager->getRDBRepository($entityType);
 
         return $repository->getRelationColumn($this->getEntity(), $link, $id, $column);
     }
