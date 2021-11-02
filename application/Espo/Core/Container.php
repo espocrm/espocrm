@@ -36,6 +36,7 @@ use Espo\Core\Binding\BindingContainer;
 
 use ReflectionClass;
 use RuntimeException;
+use ReflectionNamedType;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
@@ -146,16 +147,14 @@ class Container implements ContainerInterface
             return;
         }
 
-        $loadMethodName = 'load' . ucfirst($name);
+        if ($name === 'container') {
+            $this->classCache[$name] = new ReflectionClass(Container::class);
 
-        if (method_exists($this, $loadMethodName)) {
-            $loaderClass = new ReflectionClass($this);
+            return;
+        }
 
-            $loadMethod = $loaderClass->getMethod($loadMethodName);
-
-            $className = $loadMethod->getReturnType()->getName();
-
-            $this->classCache[$name] = new ReflectionClass($className);
+        if ($name === 'injectableFactory') {
+            $this->classCache[$name] = new ReflectionClass(InjectableFactory::class);
 
             return;
         }
@@ -163,22 +162,33 @@ class Container implements ContainerInterface
         $loaderClassName = $this->getLoaderClassName($name);
 
         if ($loaderClassName) {
-            $loaderClass = new ReflectionClass($loaderClassName);
-
-            $loadMethod = $loaderClass->getMethod('load');
-
-            if (!$loadMethod->hasReturnType()) {
-                throw new RuntimeException("Loader method for service '{$name}' does not have a return type.");
-            }
-
-            $className = $loadMethod->getReturnType()->getName();
-
-            $this->classCache[$name] = new ReflectionClass($className);
+            $this->initClassByLoader($name, $loaderClassName);
 
             return;
         }
 
         $className = $this->configuration->getServiceClassName($name);
+
+        $this->classCache[$name] = new ReflectionClass($className);
+    }
+
+    private function initClassByLoader(string $name, string $loaderClassName): void
+    {
+        $loaderClass = new ReflectionClass($loaderClassName);
+
+        $loadMethod = $loaderClass->getMethod('load');
+
+        if (!$loadMethod->hasReturnType()) {
+            throw new RuntimeException("Loader method for service '{$name}' does not have a return type.");
+        }
+
+        $returnType = $loadMethod->getReturnType();
+
+        if (!$returnType instanceof ReflectionNamedType) {
+            throw new RuntimeException("Loader method for service '{$name}' does not have a named return type.");
+        }
+
+        $className = $returnType->getName();
 
         $this->classCache[$name] = new ReflectionClass($className);
     }
