@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use Espo\Core\Exceptions\{
     Error,
     BadRequest,
@@ -39,13 +43,11 @@ use Espo\Core\Exceptions\{
     ConflictSilent,
 };
 
-use Espo\ORM\{
-    Entity,
-    Repository\RDBRepository,
-    Collection,
-    EntityManager,
-    Query\Part\WhereClause,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Collection;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\WhereClause;
 
 use Espo\Entities\User;
 
@@ -238,7 +240,7 @@ class Service implements Crud,
         $historyRecord = $this->entityManager->getEntity('ActionHistoryRecord');
 
         $historyRecord->set('action', $action);
-        $historyRecord->set('userId', $this->user->id);
+        $historyRecord->set('userId', $this->user->getId());
         $historyRecord->set('authTokenId', $this->user->get('authTokenId'));
         $historyRecord->set('ipAddress', $this->user->get('ipAddress'));
         $historyRecord->set('authLogRecordId', $this->user->get('authLogRecordId'));
@@ -246,7 +248,7 @@ class Service implements Crud,
         if ($entity) {
             $historyRecord->set([
                 'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->id
+                'targetId' => $entity->getId()
             ]);
         }
 
@@ -548,12 +550,15 @@ class Service implements Crud,
                     ->getScopeForbiddenFieldList($this->entityType, AclTable::ACTION_EDIT);
 
                 if (in_array('assignedUser', $forbiddenFieldList)) {
-                    $entity->set('assignedUserId', $this->user->id);
+                    $entity->set('assignedUserId', $this->user->getId());
                     $entity->set('assignedUserName', $this->user->get('name'));
                 }
             }
 
-            if ($entity->hasLinkMultipleField('teams')) {
+            if (
+                $entity instanceof CoreEntity &&
+                $entity->hasLinkMultipleField('teams')
+            ) {
                 if (is_null($forbiddenFieldList)) {
                     $forbiddenFieldList = $this->acl
                         ->getScopeForbiddenFieldList($this->entityType, AclTable::ACTION_EDIT);
@@ -844,7 +849,7 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        $this->getRepository()->restoreDeleted($entity->id);
+        $this->getRepository()->restoreDeleted($entity->getId());
     }
 
     public function getMaxSelectTextAttributeLength(): ?int
@@ -948,7 +953,7 @@ class Service implements Crud,
         $query = $selectBuilder->build();
 
         $collection = $this->entityManager
-            ->getRepository($this->entityType)
+            ->getRDBRepository($this->entityType)
             ->getRelation($entity, $link)
             ->clone($query)
             ->find();
@@ -961,7 +966,7 @@ class Service implements Crud,
 
         if (!$disableCount) {
             $total = $this->entityManager
-                ->getRepository($this->entityType)
+                ->getRDBRepository($this->entityType)
                 ->getRelation($entity, $link)
                 ->clone($query)
                 ->count();
@@ -1003,6 +1008,8 @@ class Service implements Crud,
         if (!$entity) {
             throw new NotFound();
         }
+
+        assert($entity instanceof CoreEntity);
 
         if ($this->noEditAccessRequiredForLink) {
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
@@ -1074,6 +1081,8 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        assert($entity instanceof CoreEntity);
+
         if ($this->noEditAccessRequiredForLink) {
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
                 throw new Forbidden();
@@ -1140,6 +1149,8 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        assert($user instanceof User);
+
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No 'edit' access.");
         }
@@ -1192,6 +1203,8 @@ class Service implements Crud,
         if (!$user) {
             throw new NotFound();
         }
+
+        assert($user instanceof User);
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No 'edit' access.");
@@ -1248,6 +1261,8 @@ class Service implements Crud,
             return $this->$methodName($id, $searchParams);
         }
 
+        assert($entity instanceof CoreEntity);
+
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
@@ -1281,7 +1296,7 @@ class Service implements Crud,
         $countRelated = 0;
 
         $foreignCollection = $this->entityManager
-            ->getRepository($foreignEntityType)
+            ->getRDBRepository($foreignEntityType)
             ->clone($query)
             ->find();
 
@@ -1355,8 +1370,8 @@ class Service implements Crud,
     /**
      * Follow a record.
      *
-     * @param $id A record ID.
-     * @param $userId A user ID. If not specified then a current user will be used.
+     * @param string $id A record ID.
+     * @param string|null $userId A user ID. If not specified then a current user will be used.
      *
      * @throws NotFoundSilent
      * @throws Forbidden
@@ -1378,7 +1393,7 @@ class Service implements Crud,
         }
 
         if (empty($userId)) {
-            $userId = $this->user->id;
+            $userId = $this->user->getId();
         }
 
         $this->getStreamService()->followEntity($entity, $userId);
@@ -1387,8 +1402,8 @@ class Service implements Crud,
     /**
      * Unfollow a record.
      *
-     * @param $id A record ID.
-     * @param string|null A user ID. If not specified then a current user will be used.
+     * @param string $id A record ID.
+     * @param string|null $userId A user ID. If not specified then a current user will be used.
      *
      * @throws NotFoundSilent
      */
@@ -1401,7 +1416,7 @@ class Service implements Crud,
         }
 
         if (empty($userId)) {
-            $userId = $this->user->id;
+            $userId = $this->user->getId();
         }
 
         $this->getStreamService()->unfollowEntity($entity, $userId);
@@ -1551,17 +1566,19 @@ class Service implements Crud,
                 $attachment = $entity->get($field);
 
                 if ($attachment) {
-                    $attachment = $this->entityManager
-                        ->getRepository('Attachment')
-                        ->getCopiedAttachment($attachment);
+                    /** @var AttachmentRepository $attachmentRepository */
+                    $attachmentRepository = $this->entityManager->getRepository('Attachment');
+
+                    $attachment = $attachmentRepository->getCopiedAttachment($attachment);
 
                     $idAttribute = $field . 'Id';
 
                     if ($attachment) {
-                        $attributes->$idAttribute = $attachment->id;
+                        $attributes->$idAttribute = $attachment->getId();
                     }
                 }
-            } else if (in_array($type, ['attachmentMultiple'])) {
+            }
+            else if (in_array($type, ['attachmentMultiple'])) {
                 $attachmentList = $entity->get($field);
 
                 if (count($attachmentList)) {
@@ -1569,19 +1586,21 @@ class Service implements Crud,
                     $nameHash = (object) [];
                     $typeHash = (object) [];
 
+                    /** @var AttachmentRepository $attachmentRepository */
+                    $attachmentRepository = $this->entityManager->getRepository('Attachment');
+
                     foreach ($attachmentList as $attachment) {
-                        $attachment = $this->entityManager
-                            ->getRepository('Attachment')
-                            ->getCopiedAttachment($attachment);
+                        $attachment = $$attachmentRepository->getCopiedAttachment($attachment);
 
                         $attachment->set('field', $field);
 
                         $this->entityManager->saveEntity($attachment);
 
                         if ($attachment) {
-                            $idList[] = $attachment->id;
-                            $nameHash->{$attachment->id} = $attachment->get('name');
-                            $typeHash->{$attachment->id} = $attachment->get('type');
+                            $idList[] = $attachment->getId();
+
+                            $nameHash->{$attachment->getId()} = $attachment->get('name');
+                            $typeHash->{$attachment->getId()} = $attachment->get('type');
                         }
                     }
 
@@ -1589,7 +1608,10 @@ class Service implements Crud,
                     $attributes->{$field . 'Names'} = $nameHash;
                     $attributes->{$field . 'Types'} = $typeHash;
                 }
-            } else if ($type === 'linkMultiple') {
+            }
+            else if ($type === 'linkMultiple') {
+                assert($entity instanceof CoreEntity);
+
                 $foreignLink = $entity->getRelationParam($field, 'foreign');
                 $foreignEntityType = $entity->getRelationParam($field, 'entity');
 
