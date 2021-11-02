@@ -34,6 +34,9 @@ namespace Espo\Core\Container;
  */
 interface Loader
 {
-    // @todo Uncomment when PHP 7.4 is a min supported version.
-    //public function load(): object;
+    /**
+     * @return object
+     * @todo Uncomment when PHP 7.4 is a min supported version.
+     */
+    public function load()/*: object*/;
 }
