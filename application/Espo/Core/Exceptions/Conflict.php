@@ -30,6 +30,7 @@
 namespace Espo\Core\Exceptions;
 
 use Exception;
+use Throwable;
 
 class Conflict extends Exception
 {
@@ -37,9 +38,14 @@ class Conflict extends Exception
 
     private $body = null;
 
+    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
     public static function createWithBody(string $reason, string $body): self
     {
-        $exception = new self($reason);
+        $exception = new static($reason);
 
         $exception->body = $body;
 

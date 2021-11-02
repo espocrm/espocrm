@@ -29,13 +29,20 @@
 
 namespace Espo\Core\Exceptions;
 
+use Throwable;
+
 class Error extends InternalServerError
 {
     private $body = null;
 
+    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
     public static function createWithBody(string $reason, string $body): self
     {
-        $exception = new self($reason);
+        $exception = new static($reason);
 
         $exception->body = $body;
 
