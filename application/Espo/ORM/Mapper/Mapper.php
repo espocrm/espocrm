@@ -83,4 +83,9 @@ interface Mapper
      * Get a number of related entities in DB.
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int;
+
+    /**
+     * Insert an entity into DB, on duplicate key update specified attributes.
+     */
+    public function insertOnDuplicateUpdate(Entity $entity, array $onDuplicateUpdateAttributeList): void;
 }

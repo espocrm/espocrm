@@ -333,12 +333,12 @@ class Saver implements SaverInterface
                 'deleted' => false,
             ]);
 
-            $this->entityManager
-                ->getMapper('RDB')
-                ->insertOnDuplicateUpdate($entityEmailAddress, [
-                    'primary',
-                    'deleted',
-                ]);
+            $mapper = $this->entityManager->getMapper();
+
+            $mapper->insertOnDuplicateUpdate($entityEmailAddress, [
+                'primary',
+                'deleted',
+            ]);
         }
 
         if ($primary) {
@@ -505,16 +505,18 @@ class Saver implements SaverInterface
 
     private function getByAddress(string $address): ?EmailAddress
     {
-        return $this->entityManager
-            ->getRepository('EmailAddress')
-            ->getByAddress($address);
+        /** @var EmailAddressRepository $repository */
+        $repository = $this->entityManager->getRepository('EmailAddress');
+
+        return $repository->getByAddress($address);
     }
 
     private function markAddressOptedOut(string $address, bool $isOptedOut = true): void
     {
-        $this->entityManager
-            ->getRepository('EmailAddress')
-            ->markAddressOptedOut($address, $isOptedOut);
+        /** @var EmailAddressRepository $repository */
+        $repository = $this->entityManager->getRepository('EmailAddress');
+
+        $repository->markAddressOptedOut($address, $isOptedOut);
     }
 
     private function checkChangeIsForbidden(EmailAddress $emailAddress, Entity $entity): bool

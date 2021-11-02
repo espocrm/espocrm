@@ -1203,7 +1203,7 @@ class BaseMapper implements RDBMapper
     /**
      * Insert an entity into DB, on duplicate key update specified attributes.
      */
-    public function insertOnDuplicateUpdate(Entity $entity, array $onDuplicateUpdateAttributeList)
+    public function insertOnDuplicateUpdate(Entity $entity, array $onDuplicateUpdateAttributeList): void
     {
         $this->insertInternal($entity, $onDuplicateUpdateAttributeList);
     }

@@ -34,6 +34,7 @@ use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Mapper\BaseMapper;
 
 use Espo\Core\{
     ApplicationState,
@@ -346,12 +347,13 @@ class Saver implements SaverInterface
                 'deleted' => false,
             ]);
 
-            $this->entityManager
-                ->getMapper('RDB')
-                ->insertOnDuplicateUpdate($entityPhoneNumber, [
-                    'primary',
-                    'deleted',
-                ]);
+            /** @var BaseMapper $mapper */
+            $mapper = $this->entityManager->getMapper();
+
+            $mapper->insertOnDuplicateUpdate($entityPhoneNumber, [
+                'primary',
+                'deleted',
+            ]);
         }
 
         if ($primary) {
@@ -413,7 +415,7 @@ class Saver implements SaverInterface
 
         $phoneNumberValue = trim($entity->get('phoneNumber'));
 
-        $entityRepository = $this->entityManager->getRepository($entity->getEntityType());
+        $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
         if (!empty($phoneNumberValue)) {
             if ($phoneNumberValue !== $entity->getFetched('phoneNumber')) {
@@ -520,16 +522,18 @@ class Saver implements SaverInterface
 
     private function getByNumber(string $number): ?PhoneNumber
     {
-        return $this->entityManager
-            ->getRepository('PhoneNumber')
-            ->getByNumber($number);
+        /** @var PhoneNumberRepository $repository */
+        $repository = $this->entityManager->getRepository('PhoneNumber');
+
+        return $repository->getByNumber($number);
     }
 
     private function markNumberOptedOut(string $number, bool $isOptedOut = true): void
     {
-        $this->entityManager
-            ->getRepository('PhoneNumber')
-            ->markNumberOptedOut($number, $isOptedOut);
+        /** @var PhoneNumberRepository $repository */
+        $repository = $this->entityManager->getRepository('PhoneNumber');
+
+        $repository->markNumberOptedOut($number, $isOptedOut);
     }
 
     private function checkChangeIsForbidden(PhoneNumber $phoneNumber, Entity $entity): bool
