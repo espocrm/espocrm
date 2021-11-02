@@ -83,8 +83,8 @@ class BindingContainer
 
         if (
             $type &&
-            !$type->isBuiltin() &&
-            $type instanceof ReflectionNamedType
+            $type instanceof ReflectionNamedType &&
+            !$type->isBuiltin()
         ) {
             $dependencyClassName = $type->getName();
         }

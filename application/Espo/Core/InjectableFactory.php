@@ -158,8 +158,8 @@ class InjectableFactory
 
         if (
             $type &&
-            !$type->isBuiltin() &&
-            $type instanceof ReflectionNamedType
+            $type instanceof ReflectionNamedType &&
+            !$type->isBuiltin()
         ) {
             try {
                 $dependencyClass = new ReflectionClass($type->getName());
@@ -342,8 +342,8 @@ class InjectableFactory
 
         if (
             $type &&
-            !$type->isBuiltin() &&
-            $type instanceof ReflectionNamedType
+            $type instanceof ReflectionNamedType &&
+            !$type->isBuiltin()
         ) {
             $paramClass = new ReflectionClass($type->getName());
         }

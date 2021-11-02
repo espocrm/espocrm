@@ -165,8 +165,8 @@ class ActionProcessor
 
         if (
             !$type ||
-            $type->isBuiltin() ||
-            !$type instanceof ReflectionNamedType
+            !$type instanceof ReflectionNamedType ||
+            $type->isBuiltin()
         ) {
             return false;
         }
