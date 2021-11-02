@@ -170,7 +170,7 @@ class EmailSender
 
         if (!$this->systemInboundEmailIsCached && $address) {
             $this->systemInboundEmail = $this->entityManager
-                ->getRepository('InboundEmail')
+                ->getRDBRepository('InboundEmail')
                 ->where([
                     'status' => 'Active',
                     'useSmtp' => true,

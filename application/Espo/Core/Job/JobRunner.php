@@ -99,6 +99,7 @@ class JobRunner
             throw new Error();
         }
 
+        /** @var JobEntity $jobEntity */
         $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {

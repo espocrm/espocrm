@@ -228,7 +228,6 @@ class SystemRequirements
                     $actualValue = $this->systemHelper->getPhpParam($name);
 
                     $acceptable = (
-                        isset($actualValue) &&
                         Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)
                     ) ? true : false;
 

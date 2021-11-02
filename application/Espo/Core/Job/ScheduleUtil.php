@@ -86,9 +86,8 @@ class ScheduleUtil
             $runTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        $entityManager = $this->entityManager;
-
-        $scheduledJob = $entityManager->getEntity(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
+        /** @var ScheduledJobEntity $scheduledJob */
+        $scheduledJob = $this->entityManager->getEntity(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
 
         if (!$scheduledJob) {
             return;
@@ -96,9 +95,9 @@ class ScheduleUtil
 
         $scheduledJob->set('lastRun', $runTime);
 
-        $entityManager->saveEntity($scheduledJob, ['silent' => true]);
+        $this->entityManager->saveEntity($scheduledJob, ['silent' => true]);
 
-        $scheduledJobLog = $entityManager->getEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
+        $scheduledJobLog = $this->entityManager->getEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
 
         $scheduledJobLog->set([
             'scheduledJobId' => $scheduledJobId,
@@ -109,6 +108,6 @@ class ScheduleUtil
             'targetType' => $targetType,
         ]);
 
-        $entityManager->saveEntity($scheduledJobLog);
+        $this->entityManager->saveEntity($scheduledJobLog);
     }
 }

@@ -164,7 +164,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v6.2.0.
+     * @deprecated Since v7.0.
      */
     public function set($name, $value = null, bool $dontMarkDirty = false)
     {
@@ -190,7 +190,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v6.2.0.
+     * @deprecated Since v7.0.
      */
     public function remove(string $name): bool
     {
@@ -206,7 +206,7 @@ class Config
     }
 
     /**
-     * @deprecated Since v6.2.0.
+     * @deprecated Since v7.0.
      */
     public function save()
     {
@@ -253,24 +253,14 @@ class Config
 
         $data['microtime'] = $microtime = microtime(true);
 
-        $result = $this->fileManager->putPhpContents($configPath, $data, true);
+        $this->fileManager->putPhpContents($configPath, $data);
 
-        if ($result) {
-            $reloadedData = include($configPath);
+        $this->changedData = [];
+        $this->removeData = [];
 
-            if (!is_array($reloadedData) || $microtime !== ($reloadedData['microtime'] ?? null)) {
-                $result = $this->fileManager->putPhpContents($configPath, $data, false);
-            }
-        }
+        $this->load();
 
-        if ($result) {
-            $this->changedData = [];
-            $this->removeData = [];
-
-            $this->load();
-        }
-
-        return $result;
+        return true;
     }
 
     private function isLoaded(): bool

@@ -29,11 +29,10 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\{
-    Collection as OrmCollection,
-};
+use Espo\ORM\Collection as OrmCollection;
+use Espo\ORM\EntityCollection;
 
-use StdClass;
+use stdClass;
 
 /**
  * Contains an an ORM collection and total number of records.
@@ -73,11 +72,14 @@ class Collection
     /**
      * Get a value map list.
      *
-     * @return StdClass[]
+     * @return stdClass[]
      */
     public function getValueMapList(): array
     {
-        if (!$this->collection->getEntityType()) {
+        if (
+            $this->collection instanceof EntityCollection &&
+            !$this->collection->getEntityType()
+        ) {
             $list = [];
 
             foreach ($this->collection as $e) {
