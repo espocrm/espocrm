@@ -30,12 +30,10 @@
 namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Services\RecordTree as Service;
+use Espo\Core\Api\Request;
 
-use Espo\Core\{
-    Api\Request,
-};
-
-use StdClass;
+use stdClass;
 
 class RecordTree extends Record
 {
@@ -44,19 +42,19 @@ class RecordTree extends Record
     /**
      * Get a category tree.
      */
-    public function getActionListTree(Request $request): StdClass
+    public function getActionListTree(Request $request): stdClass
     {
         if (method_exists($this, 'actionListTree')) {
             // For backward compatibility.
             return (object) $this->actionListTree($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
-        $where = $request->get('where');
-        $parentId = $request->get('parentId');
-        $maxDepth = $request->get('maxDepth');
-        $onlyNotEmpty = $request->get('onlyNotEmpty');
+        $where = $request->getQueryParam('where');
+        $parentId = $request->getQueryParam('parentId');
+        $maxDepth = $request->getQueryParam('maxDepth');
+        $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
 
-        $collection = $this->getRecordService()->getTree(
+        $collection = $this->getRecordTreeService()->getTree(
             $parentId,
             [
                 'where' => $where,
@@ -67,12 +65,12 @@ class RecordTree extends Record
 
         return (object) [
             'list' => $collection->getValueMapList(),
-            'path' => $this->getRecordService()->getTreeItemPath($parentId),
-            'data' => $this->getRecordService()->getCategoryData($parentId),
+            'path' => $this->getRecordTreeService()->getTreeItemPath($parentId),
+            'data' => $this->getRecordTreeService()->getCategoryData($parentId),
         ];
     }
 
-    public function getActionLastChildrenIdList($params, $data, $request): array
+    public function getActionLastChildrenIdList(Request $request): array
     {
         if (!$this->acl->check($this->name, 'read')) {
             throw new Forbidden();
@@ -80,6 +78,11 @@ class RecordTree extends Record
 
         $parentId = $request->get('parentId');
 
-        return $this->getRecordService()->getLastChildrenIdList($parentId);
+        return $this->getRecordTreeService()->getLastChildrenIdList($parentId);
+    }
+
+    protected function getRecordTreeService(): Service
+    {
+        return $this->getRecordService();
     }
 }

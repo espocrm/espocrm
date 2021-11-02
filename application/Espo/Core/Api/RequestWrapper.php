@@ -36,7 +36,7 @@ use Psr\Http\Message\{
 
 use Espo\Core\Api\Request as ApiRequest;
 
-use StdClass;
+use stdClass;
 
 /**
  * Adapter for PSR-7 request interface.
@@ -175,7 +175,7 @@ class RequestWrapper implements ApiRequest
         return $contents;
     }
 
-    public function getParsedBody(): StdClass
+    public function getParsedBody(): stdClass
     {
         if ($this->parsedBody === null) {
             $this->initParsedBody();
