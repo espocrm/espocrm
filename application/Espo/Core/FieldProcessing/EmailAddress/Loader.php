@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
+use Espo\Repositories\EmailAddress as Repository;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\{
@@ -63,9 +65,10 @@ class Loader implements LoaderInterface
             return;
         }
 
-        $emailAddressData = $this->entityManager
-            ->getRepository('EmailAddress')
-            ->getEmailAddressData($entity);
+        /** @var Repository $repository */
+        $repository = $this->entityManager->getRepository('EmailAddress');
+
+        $emailAddressData = $repository->getEmailAddressData($entity);
 
         $entity->set('emailAddressData', $emailAddressData);
         $entity->setFetched('emailAddressData', $emailAddressData);

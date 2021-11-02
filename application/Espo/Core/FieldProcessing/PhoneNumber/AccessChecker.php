@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
+use Espo\Repositories\PhoneNumber as Repository;
+
 use Espo\Entities\{
     User,
     PhoneNumber,
@@ -56,9 +58,10 @@ class AccessChecker
 
     public function checkEdit(User $user, PhoneNumber $phoneNumber, Entity $excludeEntity): bool
     {
-        $entityWithSameNumberList = $this->entityManager
-            ->getRepository('PhoneNumber')
-            ->getEntityListByPhoneNumberId($phoneNumber->getId(), $excludeEntity);
+        /** @var Repository $repository */
+        $repository = $this->entityManager->getRepository('PhoneNumber');
+
+        $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($phoneNumber->getId(), $excludeEntity);
 
         foreach ($entityWithSameNumberList as $e) {
             if ($this->aclManager->checkEntityEdit($user, $e)) {

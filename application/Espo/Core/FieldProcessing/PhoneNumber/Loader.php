@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\ORM\Entity;
 
+use Espo\Repositories\PhoneNumber as Repository;
+
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Loader as LoaderInterface,
@@ -63,9 +65,10 @@ class Loader implements LoaderInterface
             return;
         }
 
-        $phoneNumberData = $this->entityManager
-            ->getRepository('PhoneNumber')
-            ->getPhoneNumberData($entity);
+        /** @var Repository $repository */
+        $repository = $this->entityManager->getRepository('PhoneNumber');
+
+        $phoneNumberData = $repository->getPhoneNumberData($entity);
 
         $entity->set('phoneNumberData', $phoneNumberData);
         $entity->setFetched('phoneNumberData', $phoneNumberData);

@@ -51,7 +51,7 @@ class EspoManager implements Manager
     {
         $this->entityManager = $entityManager;
 
-        $this->repository = $entityManager->getRepository(AuthTokenEntity::ENTITY_TYPE);
+        $this->repository = $entityManager->getRDBRepository(AuthTokenEntity::ENTITY_TYPE);
     }
 
     public function get(string $token): ?AuthToken

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
+use Espo\Repositories\EmailAddress as Repository;
+
 use Espo\Entities\{
     User,
     EmailAddress,
@@ -56,9 +58,10 @@ class AccessChecker
 
     public function checkEdit(User $user, EmailAddress $emailAddress, Entity $excludeEntity): bool
     {
-        $entityWithSameAddressList = $this->entityManager
-            ->getRepository('EmailAddress')
-            ->getEntityListByAddressId($emailAddress->getId(), $excludeEntity);
+        /** @var Repository $repository */
+        $repository = $this->entityManager->getRepository('EmailAddress');
+
+        $entityWithSameAddressList = $repository->getEntityListByAddressId($emailAddress->getId(), $excludeEntity);
 
         foreach ($entityWithSameAddressList as $e) {
             if ($this->aclManager->checkEntityEdit($user, $e)) {

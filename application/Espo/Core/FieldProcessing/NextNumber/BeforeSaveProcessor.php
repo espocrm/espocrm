@@ -81,7 +81,7 @@ class BeforeSaveProcessor
         $this->entityManager->getTransactionManager()->start();
 
         $nextNumber = $this->entityManager
-            ->getRepository('NextNumber')
+            ->getRDBRepository('NextNumber')
             ->where([
                 'fieldName' => $field,
                 'entityType' => $entity->getEntityType(),

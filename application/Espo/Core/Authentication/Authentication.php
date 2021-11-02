@@ -289,11 +289,17 @@ class Authentication
                 $this->authTokenManager->renew($authToken);
             }
 
+            $authTokenId = null;
+
+            if (property_exists($authToken, 'id')) {
+                $authTokenId = $authToken->id ?? null;
+            }
+
             $user->set('token', $authToken->getToken());
-            $user->set('authTokenId', $authToken->id ?? null);
+            $user->set('authTokenId', $authTokenId);
 
             if ($authLogRecord) {
-                $authLogRecord->set('authTokenId', $authToken->id ?? null);
+                $authLogRecord->set('authTokenId', $authTokenId);
             }
         }
 

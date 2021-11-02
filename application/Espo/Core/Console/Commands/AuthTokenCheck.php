@@ -74,7 +74,7 @@ class AuthTokenCheck implements Command
         $userId = $authToken->getUserId();
 
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->select('id')
             ->where([
                 'id' => $userId,

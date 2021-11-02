@@ -31,6 +31,8 @@ namespace Espo\Core\Acl;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\Repositories\User as UserRepository;
+
 use Espo\ORM\{
     Entity,
     EntityManager,
@@ -157,15 +159,18 @@ class DefaultAssignmentChecker implements AssignmentChecker
             $teamIdList = $user->get(self::ATTR_TEAMS_IDS);
 
             if (
-                !$this->entityManager
-                    ->getRepository('User')
-                    ->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)
+                !$this->getUserRepository()->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)
             ) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private function getUserRepository(): UserRepository
+    {
+        return $this->entityManager->getRepository('User');
     }
 
     protected function isPermittedTeams(User $user, Entity $entity): bool
@@ -352,9 +357,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             }
 
             if (
-                !$this->entityManager
-                    ->getRepository('User')
-                    ->checkBelongsToAnyOfTeams($userId, $teamIdList)
+                !$this->getUserRepository()->checkBelongsToAnyOfTeams($userId, $teamIdList)
             ) {
                 return false;
             }

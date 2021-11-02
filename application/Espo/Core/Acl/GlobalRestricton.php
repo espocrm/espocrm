@@ -37,7 +37,7 @@ use Espo\Core\{
     Utils\Config,
 };
 
-use StdClass;
+use stdClass;
 
 /**
  * Lists of restricted fields can be obtained from here. Restricted fields
@@ -104,7 +104,7 @@ class GlobalRestricton
 
             $isFromCache = true;
 
-            if (!$this->data instanceof StdClass) {
+            if (!$this->data instanceof stdClass) {
                 $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
 
                 $this->data = null;
@@ -122,7 +122,7 @@ class GlobalRestricton
 
     protected function storeCacheFile(): void
     {
-        $this->dataCache->store($this->cacheKey, $this->data, true);
+        $this->dataCache->store($this->cacheKey, $this->data);
     }
 
     protected function buildData(): void

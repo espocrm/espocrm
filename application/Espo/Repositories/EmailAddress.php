@@ -170,7 +170,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             ];
         }
 
-        $itemList = $this->entityManager->getRepository('EntityEmailAddress')
+        $itemList = $this->entityManager
+            ->getRDBRepository('EntityEmailAddress')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -195,7 +196,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $select[] = 'isActive';
                 }
 
-                $entity = $this->entityManager->getRepository($itemEntityType)
+                $entity = $this->entityManager
+                    ->getRDBRepository($itemEntityType)
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
@@ -232,7 +234,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $where[] = ['entityType' => $entityType];
         }
 
-        $itemList = $this->entityManager->getRepository('EntityEmailAddress')
+        $itemList = $this->entityManager
+            ->getRDBRepository('EntityEmailAddress')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -262,7 +265,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $select[] = 'isActive';
                 }
 
-                $entity = $this->entityManager->getRepository($itemEntityType)
+                $entity = $this->entityManager
+                    ->getRDBRepository($itemEntityType)
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
@@ -292,7 +296,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     ): ?Entity {
 
         $selectBuilder = $this->entityManager
-            ->getRepository('EntityEmailAddress')
+            ->getRDBRepository('EntityEmailAddress')
             ->select();
 
         $selectBuilder

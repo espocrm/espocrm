@@ -61,7 +61,7 @@ class SetPassword implements Command
 
         $em = $this->entityManager;
 
-        $user = $em->getRepository('User')
+        $user = $em->getRDBRepository('User')
             ->where(['userName' => $userName])
             ->findOne();
 

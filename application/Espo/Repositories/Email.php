@@ -237,8 +237,8 @@ class Email extends \Espo\Core\Repositories\Database implements
 
             if (!$p) {
                 $p = $this->entityManager
-                    ->getRepository('InboundEmail')
-                    ->where(array('emailAddress' => $address))
+                    ->getRDBRepository('InboundEmail')
+                    ->where(['emailAddress' => $address])
                     ->findOne();
             }
 

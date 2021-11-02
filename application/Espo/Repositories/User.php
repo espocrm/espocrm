@@ -151,7 +151,7 @@ class User extends Database
         }
 
         return (bool) $this->entityManager
-            ->getRepository('TeamUser')
+            ->getRDBRepository('TeamUser')
             ->where([
                 'deleted' => false,
                 'userId' => $userId,

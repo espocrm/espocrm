@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Field\PhoneNumber;
 
+use Espo\Repositories\PhoneNumber as Repository;
+
 use Espo\ORM\{
     EntityManager,
     Entity,
@@ -99,9 +101,10 @@ class PhoneNumberGroupFactory implements ValueFactory
         }
 
         if (!$dataList) {
-            $dataList = $this->entityManager
-                ->getRepository('PhoneNumber')
-                ->getPhoneNumberData($entity);
+            /** @var Repository $repository */
+            $repository = $this->entityManager->getRepository('PhoneNumber');
+
+            $dataList = $repository->getPhoneNumberData($entity);
         }
 
         foreach ($dataList as $item) {

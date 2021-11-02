@@ -200,7 +200,7 @@ class Extension implements Command
                 return;
             }
 
-            $id = $record->id;
+            $id = $record->getId();
         }
 
         $manager = $this->createExtensionManager();
@@ -244,7 +244,7 @@ class Extension implements Command
     private function printList(IO $io): void
     {
         $collection = $this->entityManager
-            ->getRepository('Extension')
+            ->getRDBRepository('Extension')
             ->find();
 
         if (count($collection) === 0) {

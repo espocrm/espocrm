@@ -56,7 +56,7 @@ class DefaultRoleListProvider implements RoleListProvider
         $roleList = [];
 
         $userRoleList = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($this->user, 'roles')
             ->find();
 
@@ -65,13 +65,13 @@ class DefaultRoleListProvider implements RoleListProvider
         }
 
         $teamList = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($this->user, 'teams')
             ->find();
 
         foreach ($teamList as $team) {
             $teamRoleList = $this->entityManager
-                ->getRepository('Team')
+                ->getRDBRepository('Team')
                 ->getRelation($team, 'roles')
                 ->find();
 

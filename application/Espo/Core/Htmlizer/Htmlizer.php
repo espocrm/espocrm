@@ -31,6 +31,8 @@ namespace Espo\Core\Htmlizer;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\DateTime,
@@ -52,7 +54,7 @@ use Espo\ORM\{
 
 use LightnCandy\LightnCandy as LightnCandy;
 
-use StdClass;
+use stdClass;
 
 use const JSON_PRESERVE_ZERO_FRACTION;
 
@@ -175,15 +177,17 @@ class Htmlizer
                 '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
                 function ($matches) {
                     $id = $matches[1];
+
                     $attachment = $this->entityManager->getEntity('Attachment', $id);
 
-                    if ($attachment) {
-                        $filePath = $this->entityManager
-                            ->getRepository('Attachment')
-                            ->getFilePath($attachment);
-
-                        return $filePath;
+                    if (!$attachment) {
+                        return '';
                     }
+
+                    /** @var AttachmentRepository $repository */
+                    $repository = $this->entityManager->getRepository('Attachment');
+
+                    return $repository->getFilePath($attachment);
                 },
                 $html
             );
@@ -352,7 +356,7 @@ class Htmlizer
                     foreach ($list as $item) {
                         $v = $item;
 
-                        if ($item instanceof StdClass) {
+                        if ($item instanceof stdClass) {
                             $v = json_decode(json_encode($v, JSON_PRESERVE_ZERO_FRACTION), true);
                         }
 
@@ -373,7 +377,7 @@ class Htmlizer
                 if (!empty($data[$attribute])) {
                     $value = $data[$attribute];
 
-                    if ($value instanceof StdClass) {
+                    if ($value instanceof stdClass) {
                         $data[$attribute] = json_decode(json_encode($value, JSON_PRESERVE_ZERO_FRACTION), true);
                     }
 
@@ -437,7 +441,7 @@ class Htmlizer
                     $relationType === 'belongsToParent'
                 ) {
                     $relatedEntity = $this->entityManager
-                        ->getRepository($entity->getEntityType())
+                        ->getRDBRepository($entity->getEntityType())
                         ->getRelation($entity, $relation)
                         ->findOne();
 

@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing\MultiEnum;
 
 use Espo\ORM\Entity;
 
+use Espo\Repositories\ArrayValue as Repository;
+
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver as SaverInterface,
@@ -65,9 +67,10 @@ class Saver implements SaverInterface
             return;
         }
 
-        $this->entityManager
-            ->getRepository('ArrayValue')
-            ->storeEntityAttribute($entity, $name);
+        /** @var Repository $repository */
+        $repository = $this->entityManager->getRepository('ArrayValue');
+
+        $repository->storeEntityAttribute($entity, $name);
     }
 
     private function getFieldList(string $entityType): array

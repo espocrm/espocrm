@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Field\EmailAddress;
 
+use Espo\Repositories\EmailAddress as Repository;
+
 use Espo\ORM\{
     EntityManager,
     Entity,
@@ -99,9 +101,10 @@ class EmailAddressGroupFactory implements ValueFactory
         }
 
         if (!$dataList) {
-            $dataList = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEmailAddressData($entity);
+            /** @var Repository $repository */
+            $repository = $this->entityManager->getRepository('EmailAddress');
+
+            $dataList = $repository->getEmailAddressData($entity);
         }
 
         foreach ($dataList as $item) {

@@ -59,14 +59,14 @@ class RoleListProvider implements RoleListProviderInterface
     }
 
     /**
-     * @return array<int, Role>
+     * @return Role[]
      */
     public function get(): array
     {
         $roleList = [];
 
         $userRoleList = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($this->user, 'portalRoles')
             ->find();
 
@@ -75,7 +75,7 @@ class RoleListProvider implements RoleListProviderInterface
         }
 
         $portalRoleList = $this->entityManager
-            ->getRepository('Portal')
+            ->getRDBRepository('Portal')
             ->getRelation($this->portal, 'portalRoles')
             ->find();
 
