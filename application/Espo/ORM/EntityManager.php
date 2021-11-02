@@ -285,7 +285,7 @@ class EntityManager
      * Store an entity.
      *
      * @return void
-     * @todo Change return type to void in v6.3.
+     * @todo Change return type to void in v7.1.
      */
     public function saveEntity(Entity $entity, array $options = [])
     {

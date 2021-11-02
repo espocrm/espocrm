@@ -32,6 +32,7 @@ namespace Espo\Core\Portal\Acl;
 use Espo\ORM\{
     Entity,
     EntityManager,
+    BaseEntity,
 };
 
 use Espo\Entities\User;
@@ -104,7 +105,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasAttribute(self::ATTR_ACCOUNT_ID) &&
-            $entity->getRelationParam(self::FIELD_ACCOUNT, 'entity') === self::ENTITY_ACCOUNT
+            $this->getRelationParam($entity, self::FIELD_ACCOUNT, 'entity') === self::ENTITY_ACCOUNT
         ) {
             if (in_array($entity->get(self::ATTR_ACCOUNT_ID), $accountIdList)) {
                 return true;
@@ -113,7 +114,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasRelation(self::FIELD_ACCOUNTS) &&
-            $entity->getRelationParam(self::FIELD_ACCOUNTS, 'entity') === self::ENTITY_ACCOUNT
+            $this->getRelationParam($entity, self::FIELD_ACCOUNTS, 'entity') === self::ENTITY_ACCOUNT
         ) {
             $repository = $this->entityManager->getRepository($entity->getEntityType());
 
@@ -146,7 +147,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasAttribute(self::ATTR_CONTACT_ID) &&
-            $entity->getRelationParam(self::FIELD_CONTACT, 'entity') === self::ENTITY_CONTACT
+            $this->getRelationParam($entity, self::FIELD_CONTACT, 'entity') === self::ENTITY_CONTACT
         ) {
             if ($entity->get(self::ATTR_CONTACT_ID) === $contactId) {
                 return true;
@@ -155,7 +156,7 @@ class DefaultOwnershipChecker implements
 
         if (
             $entity->hasRelation(self::FIELD_CONTACTS) &&
-            $entity->getRelationParam(self::FIELD_CONTACTS, 'entity') === self::ENTITY_CONTACT
+            $this->getRelationParam($entity, self::FIELD_CONTACTS, 'entity') === self::ENTITY_CONTACT
         ) {
             $repository = $this->entityManager->getRepository($entity->getEntityType());
 
@@ -174,5 +175,25 @@ class DefaultOwnershipChecker implements
         }
 
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRelationParam(Entity $entity, string $relation, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($relation)->getParam($param);
     }
 }

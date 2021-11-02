@@ -42,6 +42,10 @@ use Espo\ORM\{
 
 use RuntimeException;
 
+/**
+ * @template T of object
+ * @implements AttributeExtractorFactoryInterface<T>
+ */
 class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
 {
     private $metadata;

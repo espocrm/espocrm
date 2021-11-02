@@ -62,11 +62,15 @@ class HookMediator extends EmptyHookMediator
             'relationName' => $relationName,
             'relationData' => $columnData,
             'foreignEntity' => $foreignEntity,
-            'foreignId' => $foreignEntity->id,
+            'foreignId' => $foreignEntity->getId()
         ];
 
         $this->hookManager->process(
-            $entity->getEntityType(), 'afterRelate', $entity, $options, $hookData
+            $entity->getEntityType(),
+            'afterRelate',
+            $entity,
+            $options,
+            $hookData
         );
     }
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
@@ -78,11 +82,15 @@ class HookMediator extends EmptyHookMediator
         $hookData = [
             'relationName' => $relationName,
             'foreignEntity' => $foreignEntity,
-            'foreignId' => $foreignEntity->id,
+            'foreignId' => $foreignEntity->getId(),
         ];
 
         $this->hookManager->process(
-            $entity->getEntityType(), 'afterUnrelate', $entity, $options, $hookData
+            $entity->getEntityType(),
+            'afterUnrelate',
+            $entity,
+            $options,
+            $hookData
         );
     }
 
@@ -98,7 +106,11 @@ class HookMediator extends EmptyHookMediator
         ];
 
         $this->hookManager->process(
-            $entity->getEntityType(), 'afterMassRelate', $entity, $options, $hookData
+            $entity->getEntityType(),
+            'afterMassRelate',
+            $entity,
+            $options,
+            $hookData
         );
     }
 }

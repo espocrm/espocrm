@@ -51,9 +51,6 @@ class RebuildActionProcessor
         }
     }
 
-    /**
-     * @return RebuildAction
-     */
     private function getActionList(): array
     {
         $classNameList = $this->getClassNameList();

@@ -70,7 +70,7 @@ class Entity extends BaseEntity
                 return;
             }
 
-            $repository = $this->entityManager->getRepository($parentType);
+            $repository = $this->entityManager->getRDBRepository($parentType);
 
             $select = ['id', 'name'];
 
@@ -168,7 +168,7 @@ class Entity extends BaseEntity
         }
 
         $selectBuilder = $this->entityManager
-            ->getRepository($this->getEntityType())
+            ->getRDBRepository($this->getEntityType())
             ->getRelation($this, $field)
             ->select($select);
 
@@ -186,7 +186,7 @@ class Entity extends BaseEntity
         $columnsData = (object) [];
 
         foreach ($collection as $e) {
-            $id = $e->id;
+            $id = $e->getId();
 
             $ids[] = $id;
 
@@ -237,7 +237,7 @@ class Entity extends BaseEntity
         $select = ['id', 'name'];
 
         $entity = $this->entityManager
-            ->getRepository($this->getEntityType())
+            ->getRDBRepository($this->getEntityType())
             ->getRelation($this, $field)
             ->select($select)
             ->findOne();
@@ -246,7 +246,7 @@ class Entity extends BaseEntity
         $entityName = null;
 
         if ($entity) {
-            $entityId = $entity->id;
+            $entityId = $entity->getId();
             $entityName = $entity->get('name');
         }
 

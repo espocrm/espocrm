@@ -66,6 +66,8 @@ class EntityManagerProxy
 
     public function saveEntity(Entity $entity, array $options = [])
     {
+        /** Return for backward compatibility. */
+        /** @phpstan-ignore-next-line */
         return $this->getEntityManager()->saveEntity($entity, $options);
     }
 
