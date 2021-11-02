@@ -142,7 +142,7 @@ class Manager
     {
         $implementation = $this->getImplementation($attachment);
 
-        if ($this->isLocal($attachment)) {
+        if ($implementation instanceof Local) {
             return $implementation->getLocalFilePath(self::wrapAttachmentEntity($attachment));
         }
 

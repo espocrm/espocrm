@@ -29,15 +29,14 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\Formula\Exceptions\Error;
-
 use Espo\ORM\Entity;
 
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\InjectableFactory;
-
 use Espo\Core\Formula\Functions\Base as DeprecatedBaseFunction;
 
-use StdClass;
+use InvalidArgumentException;
+use stdClass;
 
 /**
  * An instance of Processor is created for every formula script.
@@ -55,7 +54,7 @@ class Processor
         AttributeFetcher $attributeFetcher,
         ?array $functionClassNameMap = null,
         ?Entity $entity = null,
-        ?StdClass $variables = null
+        ?stdClass $variables = null
     ) {
         $this->functionFactory = new FunctionFactory(
             $this,
@@ -77,6 +76,10 @@ class Processor
     {
         if ($item instanceof ArgumentList) {
             return $this->processList($item);
+        }
+
+        if (!$item instanceof Argument) {
+            throw new InvalidArgumentException();
         }
 
         if (!$item->getType()) {

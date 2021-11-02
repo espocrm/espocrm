@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Htmlizer;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\DateTime,
@@ -112,9 +114,9 @@ class Htmlizer
     /**
      * Generate an HTML for entity by a given template.
      *
-     * @param $cacheId @deprecated To be skipped..
-     * @param $additionalData Data will be passed to the template.
-     * @param $skipLinks Do not process related records.
+     * @param ?string $cacheId @deprecated To be skipped..
+     * @param ?array $additionalData Data will be passed to the template.
+     * @param bool $skipLinks Do not process related records.
      */
     public function render(
         ?Entity $entity,
@@ -163,6 +165,7 @@ class Htmlizer
         $data['__log'] = $this->log;
         $data['__entityType'] = $entity->getEntityType();
 
+        /** @phpstan-ignore-next-line */
         $html = $renderer($data);
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
@@ -247,13 +250,13 @@ class Htmlizer
 
         $relationList = $entity->getRelationList();
 
-        if (!$skipLinks && $level === 0 && $this->entityManager && $entity->id) {
+        if (!$skipLinks && $level === 0 && $this->entityManager && $entity->getId()) {
             foreach ($relationList as $relation) {
                 $collection = null;
 
                 $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
 
-                if ($entity->hasLinkMultipleField($relation)) {
+                if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField($relation)) {
                     $collection = $this->entityManager
                         ->getRDBRepository($entity->getEntityType())
                         ->getRelation($entity, $relation)
@@ -322,7 +325,11 @@ class Htmlizer
 
             $type = $entity->getAttributeType($attribute);
 
-            $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
+            $fieldType = null;
+
+            if ($entity instanceof CoreEntity) {
+                $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
+            }
 
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$attribute])) {
@@ -382,14 +389,17 @@ class Htmlizer
                 unset($data[$attribute]);
             }
 
-            if ($fieldType === 'currency' && $this->metadata) {
-                if ($entity->getAttributeParam($attribute, 'attributeRole') === 'currency') {
-                    $currencyValue = $data[$attribute] ?? null;
+            if (
+                $fieldType === 'currency' &&
+                $this->metadata &&
+                $entity instanceof CoreEntity &&
+                $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
+            ) {
+                $currencyValue = $data[$attribute] ?? null;
 
-                    if ($currencyValue) {
-                        $data[$attribute . 'Symbol'] =
-                            $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
-                    }
+                if ($currencyValue) {
+                    $data[$attribute . 'Symbol'] =
+                        $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
                 }
             }
 

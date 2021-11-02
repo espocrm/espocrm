@@ -142,7 +142,7 @@ class TemplateRenderer
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function renderMultipleTemplates(string ...$templateList): array
     {

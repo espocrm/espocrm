@@ -96,7 +96,7 @@ abstract class BaseFunction
     /**
      * Evaluates an argument or argument list.
      *
-     * @param $item Argument or ArgumentList.
+     * @param Evaluatable $item Argument or ArgumentList.
      * @return mixed A result of evaluation. An array if an argument list was passed.
      */
     protected function evaluate(Evaluatable $item)

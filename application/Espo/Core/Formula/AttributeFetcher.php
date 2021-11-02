@@ -30,6 +30,7 @@
 namespace Espo\Core\Formula;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 /**
  * Fetches attributes from an entity.
@@ -54,7 +55,11 @@ class AttributeFetcher
 
             $relatedEntity = $this->relatedEntitiesCacheMap[$key];
 
-            if ($relatedEntity && ($relatedEntity instanceof Entity) && count($arr) > 0) {
+            if (
+                $relatedEntity &&
+                ($relatedEntity instanceof Entity) &&
+                count($arr) > 0
+            ) {
                 return $this->fetch($relatedEntity, $arr[1]);
             }
 
@@ -67,14 +72,24 @@ class AttributeFetcher
             $methodName = 'getFetched';
         }
 
-        if ($entity->getAttributeParam($attribute, 'isParentName') && $methodName == 'get') {
+        if (
+            $entity instanceof CoreEntity &&
+            $entity->getAttributeParam($attribute, 'isParentName') &&
+            $methodName == 'get'
+        ) {
             $relationName = $entity->getAttributeParam($attribute, 'relation');
 
-            if ($parent = $entity->get($relationName)) {
+            $parent = $parent = $entity->get($relationName);
+
+            if ($parent) {
                 return $parent->get('name');
             }
         }
-        else if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList') && $methodName == 'get') {
+        else if (
+            $entity instanceof CoreEntity &&
+            $entity->getAttributeParam($attribute, 'isLinkMultipleIdList') &&
+            $methodName == 'get'
+        ) {
             $relationName = $entity->getAttributeParam($attribute, 'relation');
 
             if (!$entity->has($attribute)) {
@@ -82,7 +97,11 @@ class AttributeFetcher
             }
         }
 
-        return $entity->$methodName($attribute);
+        if ($methodName === 'getFetched') {
+            return $entity->getFetched($attribute);
+        }
+
+        return $entity->get($attribute);
     }
 
     public function resetRuntimeCache(): void
