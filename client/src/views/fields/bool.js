@@ -74,6 +74,8 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
 
             if (type === 'any') {
                 return {
+                    type: 'isNotNull',
+                    attribute: 'id',
                     data: {
                         type: type,
                     },
