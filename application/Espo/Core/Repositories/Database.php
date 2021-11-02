@@ -32,6 +32,7 @@ namespace Espo\Core\Repositories;
 use Espo\ORM\{
     Repository\RDBRepository,
     Entity,
+    BaseEntity,
 };
 
 use Espo\Core\ORM\{
@@ -120,7 +121,7 @@ class Database extends RDBRepository
         if (
             $entity->isNew() &&
             !$entity->has('id') &&
-            !$entity->getAttributeParam('id', 'autoincrement')
+            !$this->getAttributeParam($entity, 'id', 'autoincrement')
         ) {
             $entity->set('id', $this->recordIdGenerator->generate());
         }
@@ -195,7 +196,7 @@ class Database extends RDBRepository
         if (is_string($foreign)) {
             $foreignId = $foreign;
 
-            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getEntity($foreignEntityType);
@@ -226,11 +227,12 @@ class Database extends RDBRepository
         if (is_string($foreign)) {
             $foreignId = $foreign;
 
-            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+            $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
             if ($foreignEntityType) {
                 $foreign = $this->entityManager->getEntity($foreignEntityType);
-                $foreign->id = $foreignId;
+
+                $foreign->set('id', $foreignId);
                 $foreign->setAsFetched();
             }
         }
@@ -320,5 +322,45 @@ class Database extends RDBRepository
                 $entity->set('createdById', $this->applicationState->getUser()->getId());
             }
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAttributeParam(Entity $entity, string $attribute, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getAttributeParam($attribute, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasAttribute($attribute)) {
+            return null;
+        }
+
+        return $entityDefs->getAttribute($attribute)->getParam($param);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRelationParam(Entity $entity, string $relation, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($relation)->getParam($param);
     }
 }

@@ -279,9 +279,9 @@ class Helper
     }
 
     /**
-     * Get Database version.
+     * Get database version.
      *
-     * @return ?string
+     * @return string|null
      */
     public function getDatabaseVersion()
     {
@@ -290,6 +290,8 @@ class Helper
         if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
             return $match[0];
         }
+
+        return null;
     }
 
     /**

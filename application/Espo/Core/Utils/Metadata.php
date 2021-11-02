@@ -39,7 +39,7 @@ use Espo\Core\{
     Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
-use StdClass;
+use stdClass;
 
 /**
  * Application metadata.
@@ -139,7 +139,7 @@ class Metadata
     /**
     * Get metadata by key.
     *
-    * @param mixed string|array $key
+    * @param string|array $key
     * @param mixed $default
     *
     * @return mixed
@@ -154,10 +154,10 @@ class Metadata
     /**
     * Get all metadata.
     *
-    * @param $isJSON
+    * @param bool $isJSON
     * @param bool $reload
     *
-    * @return json|array
+    * @return array
     */
     public function getAll(bool $isJSON = false, bool $reload = false)
     {
@@ -193,7 +193,7 @@ class Metadata
         }
     }
 
-    private function getObjData(bool $reload = false): object
+    private function getObjData(bool $reload = false): stdClass
     {
         if (!isset($this->objData) || $reload) {
             $this->objInit($reload);
@@ -203,9 +203,9 @@ class Metadata
     }
 
     /**
-    * Get metadata with StdClass items.
+    * Get metadata with stdClass items.
     *
-    * @param mixed string|array $key
+    * @param string|array $key
     * @param mixed $default
     *
     * @return mixed
@@ -228,7 +228,7 @@ class Metadata
         return $objData;
     }
 
-    public function getAllForFrontend(): object
+    public function getAllForFrontend(): stdClass
     {
         $data = $this->getAllObjects();
 
@@ -289,6 +289,9 @@ class Metadata
         }
     }
 
+    /**
+     * @param stdClass $data
+     */
     private function addAdditionalFieldsObj($data)
     {
         if (!isset($data->entityDefs)) {
@@ -299,7 +302,7 @@ class Metadata
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
             if (isset($data->entityDefs->$entityType->collection)) {
-
+                /** @var stdClass $collectionItem */
                 $collectionItem = $data->entityDefs->$entityType->collection;
 
                 if (isset($collectionItem->orderBy)) {
@@ -351,10 +354,11 @@ class Metadata
     /**
      * Get metadata definition in custom directory.
      *
-     * @param string|array $key
+     * @param string $key1
+     * @param string $key2
      * @param mixed $default
      *
-     * @return object
+     * @return stdClass
      */
     public function getCustom($key1, $key2, $default = null)
     {
@@ -375,13 +379,13 @@ class Metadata
      *
      * @param string $key1
      * @param string $key2
-     * @param array|object $data
+     * @param array|stdClass $data
      */
     public function saveCustom(string $key1, string $key2, $data): void
     {
         if (is_object($data)) {
             foreach ($data as $key => $item) {
-                if ($item == new StdClass()) {
+                if ($item == new stdClass()) {
                     unset($data->$key);
                 }
             }

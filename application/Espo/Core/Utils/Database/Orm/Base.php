@@ -29,8 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm;
 
-use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 class Base
 {
@@ -46,7 +46,7 @@ class Base
 
     protected $config;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, array $ormEntityDefs, array $entityDefs, Config $config)
+    public function __construct(Metadata $metadata, array $ormEntityDefs, array $entityDefs, Config $config)
     {
         $this->metadata = $metadata;
         $this->ormEntityDefs = $ormEntityDefs;
@@ -70,9 +70,7 @@ class Base
     }
 
     /**
-     * Set current Field name OR Link name
-     *
-     * @param void
+     * Set current Field name or Link name.
      */
     protected function setItemName($itemName)
     {
@@ -80,7 +78,7 @@ class Base
     }
 
     /**
-     * Get current Field name
+     * Get current Field name.
      *
      * @return string
      */
@@ -100,9 +98,7 @@ class Base
     }
 
     /**
-     * Set current Entity Name
-     *
-     * @param void
+     * Set current Entity Name.
      */
     protected function setEntityName($entityName)
     {
@@ -110,7 +106,7 @@ class Base
     }
 
     /**
-     * Get current Entity Name
+     * Get current Entity Name.
      *
      * @return string
      */
@@ -123,6 +119,7 @@ class Base
     {
         foreach ($keyValueList as $key => $value) {
             $methodName = 'set' . ucfirst($key);
+
             if (method_exists($this, $methodName)) {
                 $this->$methodName($value);
             }
@@ -143,7 +140,7 @@ class Base
     }
 
     /**
-     * Get entity params by name
+     * Get entity params by name.
      *
      * @param  string $entityName
      * @param  bool $isOrmEntityDefs
@@ -166,12 +163,12 @@ class Base
     }
 
     /**
-     * Get field params by name for a specified entity
+     * Get field params by name for a specified entity.
      *
-     * @param  string $fieldName
-     * @param  string $entityName
-     * @param  bool $isOrmEntityDefs
-     * @param  mixed $returns
+     * @param string $fieldName
+     * @param string $entityName
+     * @param bool $isOrmEntityDefs
+     * @param mixed $returns
      * @return mixed
      */
     protected function getFieldParams($fieldName = null, $entityName = null, $isOrmEntityDefs = false, $returns = null)
@@ -193,7 +190,7 @@ class Base
     }
 
     /**
-     * Get relation params by name for a specified entity
+     * Get relation params by name for a specified entity.
      *
      * @param  string $linkName
      * @param  string $entityName
@@ -226,7 +223,7 @@ class Base
     }
 
     /**
-     * Set a value for all elements of array. So, in result all elements will have the same values
+     * Set a value for all elements of array. So, in result all elements will have the same values.
      */
     protected function setArrayValue($inputValue, array $array)
     {

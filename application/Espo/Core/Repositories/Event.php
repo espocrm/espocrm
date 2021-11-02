@@ -136,7 +136,7 @@ class Event extends Database implements
             ->delete()
             ->from('Reminder')
             ->where([
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ])
             ->build();

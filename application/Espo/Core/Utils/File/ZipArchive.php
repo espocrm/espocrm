@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
+
 use Espo\Core\Exceptions\Error;
 
 class ZipArchive
@@ -43,22 +44,11 @@ class ZipArchive
         $this->fileManager = $fileManager;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-
-    public function zip($sourcePath, $file)
-    {
-
-    }
-
     /**
-     * Unzip archive
+     * Unzip archive.
      *
-     * @param  string $file  Path to .zip file
-     * @param  [type] $destinationPath
+     * @param string $file Path to .zip file.
+     * @param string $destinationPath Destination path.
      * @return bool
      */
     public function unzip($file, $destinationPath)
@@ -68,11 +58,11 @@ class ZipArchive
         }
 
         $zip = new \ZipArchive;
+
         $res = $zip->open($file);
 
         if ($res === true) {
-
-            $this->getFileManager()->mkdir($destinationPath);
+            $this->fileManager->mkdir($destinationPath);
 
             $zip->extractTo($destinationPath);
             $zip->close();
@@ -82,6 +72,4 @@ class ZipArchive
 
         return false;
     }
-
-
 }

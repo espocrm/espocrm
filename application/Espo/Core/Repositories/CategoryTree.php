@@ -30,6 +30,7 @@
 namespace Espo\Core\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Mapper\BaseMapper;
 
 class CategoryTree extends Database
 {
@@ -48,7 +49,7 @@ class CategoryTree extends Database
                 $subSelect1 = $em->getQueryBuilder()
                     ->select()
                     ->from($pathEntityType)
-                    ->select(['ascendorId', "'" . $entity->id . "'"])
+                    ->select(['ascendorId', "'" . $entity->getId() . "'"])
                     ->where([
                         'descendorId' => $parentId,
                     ])
@@ -56,7 +57,7 @@ class CategoryTree extends Database
 
                 $subSelect2 = $em->getQueryBuilder()
                     ->select()
-                    ->select(["'" . $entity->id . "'", "'" . $entity->id . "'"])
+                    ->select(["'" . $entity->getId() . "'", "'" . $entity->getId() . "'"])
                     ->build();
 
                 $select = $em->getQueryBuilder()
@@ -83,8 +84,8 @@ class CategoryTree extends Database
                 ->into($pathEntityType)
                 ->columns(['ascendorId', 'descendorId'])
                 ->values([
-                    'ascendorId' => $entity->id,
-                    'descendorId' => $entity->id,
+                    'ascendorId' => $entity->getId(),
+                    'descendorId' => $entity->getId(),
                 ])
                 ->build();
 
@@ -116,7 +117,7 @@ class CategoryTree extends Database
                 ]
             )
             ->where([
-                'd.descendorId' => $entity->id,
+                'd.descendorId' => $entity->getId(),
                 'x.ascendorId' => null,
             ])
             ->build();
@@ -130,7 +131,7 @@ class CategoryTree extends Database
                 ->select(['ascendorId', 's.descendorId'])
                 ->join($pathEntityType, 's')
                 ->where([
-                    's.ascendorId' => $entity->id,
+                    's.ascendorId' => $entity->getId(),
                     'descendorId' => $parentId,
                 ])
                 ->build();
@@ -158,12 +159,18 @@ class CategoryTree extends Database
             ->delete()
             ->from($pathEntityType)
             ->where([
-                'descendorId' => $entity->id,
+                'descendorId' => $entity->getId(),
             ])
             ->build();
 
         $em->getQueryExecutor()->execute($delete);
 
-        $em->getMapper()->deleteFromDb($entity->getEntityType(), $entity->id);
+        $mapper = $em->getMapper();
+
+        if (!$mapper instanceof BaseMapper) {
+            return;
+        }
+
+        $mapper->deleteFromDb($entity->getEntityType(), $entity->getId());
     }
 }

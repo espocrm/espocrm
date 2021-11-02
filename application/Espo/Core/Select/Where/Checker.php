@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Exceptions\Forbidden,
-    Core\Exceptions\BadRequest,
-    Core\Acl,
-    ORM\QueryComposer\BaseQueryComposer as QueryComposer,
-    ORM\QueryComposer\Util as QueryUtil,
-    ORM\EntityManager,
-    ORM\Entity,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Acl;
+
+use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
+use Espo\ORM\QueryComposer\Util as QueryUtil;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
 
 /**
  * Checks Where parameters. Throws an exception if anything not allowed is met.
@@ -163,7 +163,7 @@ class Checker
                 throw new Forbidden("Bad relation '{$link}' in where.");
             }
 
-            $foreignEntityType = $this->getSeed()->getRelationParam($link, 'entity');
+            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, 'entity');
 
             if (!$foreignEntityType) {
                 throw new Forbidden("Bad relation '{$link}' in where.");
@@ -190,7 +190,7 @@ class Checker
                 throw new Forbidden("Bad relation '{$link}' in where.");
             }
 
-            $foreignEntityType = $this->getSeed()->getRelationParam($link, 'entity');
+            $foreignEntityType = $this->getRelationParam($this->getSeed(), $link, 'entity');
 
             if (!$foreignEntityType) {
                 throw new Forbidden("Bad relation '{$link}' in where.");
@@ -215,5 +215,25 @@ class Checker
     private function getSeed(): Entity
     {
         return $this->seed ?? $this->entityManager->getEntity($this->entityType);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRelationParam(Entity $entity, string $relation, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($relation)->getParam($param);
     }
 }

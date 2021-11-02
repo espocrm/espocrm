@@ -29,13 +29,13 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Exceptions\Error,
-    ORM\EntityManager,
-    ORM\Entity,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\QueryComposer\BaseQueryComposer as QueryComposer,
-};
+use Espo\Core\Exceptions\Error;
+
+use Espo\ORM\EntityManager;
+use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 
 class Scanner
 {
@@ -136,7 +136,7 @@ class Scanner
         $attributeType = $seed->getAttributeType($attribute);
 
         if ($attributeType === Entity::FOREIGN) {
-            $relation = $seed->getAttributeParam($attribute, 'relation');
+            $relation = $this->getAttributeParam($seed, $attribute, 'relation');
 
             if ($relation) {
                 $queryBuilder->leftJoin($relation);
@@ -151,5 +151,25 @@ class Scanner
         }
 
         return $this->seedHash[$entityType];
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAttributeParam(Entity $entity, string $attribute, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getAttributeParam($attribute, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasAttribute($attribute)) {
+            return null;
+        }
+
+        return $entityDefs->getAttribute($attribute)->getParam($param);
     }
 }

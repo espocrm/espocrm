@@ -35,7 +35,7 @@ use Espo\Core\{
 };
 
 use InvalidArgumentException;
-use StdClass;
+use stdClass;
 
 class DataCache
 {
@@ -63,7 +63,7 @@ class DataCache
      *
      * @throws Error if is not cached.
      *
-     * @return ?array|StdClass
+     * @return array|stdClass|null
      */
     public function get(string $key)
     {
@@ -85,7 +85,7 @@ class DataCache
     /**
      * Store in cache.
      *
-     * @param ?array|StdClass $data
+     * @param array|stdClass|null $data
      */
     public function store(string $key, $data): void
     {
@@ -105,8 +105,8 @@ class DataCache
     protected function checkDataIsValid($data)
     {
         $isInvalid =
-            ! is_array($data) &&
-            ! $data instanceof StdClass;
+            !is_array($data) &&
+            !$data instanceof stdClass;
 
         return ! $isInvalid;
     }

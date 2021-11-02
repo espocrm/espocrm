@@ -326,9 +326,7 @@ class Permission
     /**
      * Change group permission recursive.
      *
-     * @param string $filename
-     * @param int $fileOctal ex. 0644
-     * @param int $dirOctal ex. 0755
+     * @param int|string $group
      */
     protected function chgrpRecurse(string $path, $group): bool
     {
@@ -351,6 +349,9 @@ class Permission
         return (bool) $result;
     }
 
+    /**
+     * @param int $mode
+     */
     protected function chmodReal(string $filename, $mode): bool
     {
         $result = @chmod($filename, $mode);
@@ -365,6 +366,9 @@ class Permission
         return @chmod($filename, $mode);
     }
 
+    /**
+     * @param int|string $user
+     */
     protected function chownReal(string $path, $user): bool
     {
         return @chown($path, $user);
@@ -372,6 +376,8 @@ class Permission
 
     /**
      * @todo Revise the need of exception handling.
+     *
+     * @param int|string $group
      */
     protected function chgrpReal(string $path, $group): bool
     {

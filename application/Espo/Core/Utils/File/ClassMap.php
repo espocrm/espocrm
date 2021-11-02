@@ -74,7 +74,7 @@ class ClassMap
     /**
      * Return paths to class files.
      *
-     * @param $allowedMethods If specified, classes w/o specified method will be ignored.
+     * @param array|null $allowedMethods If specified, classes w/o specified method will be ignored.
      */
     public function getData(
         string $path,

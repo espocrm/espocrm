@@ -372,8 +372,8 @@ class Util
      *
      * @param string $search
      * @param string $replace
-     * @param string $array
-     * @param string $isKeys
+     * @param string|false $array
+     * @param bool $isKeys
      *
      * @return array
      */
@@ -489,7 +489,7 @@ class Util
      * Return values of defined $key.
      *
      * @param mixed $data
-     * @param mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
+     * @param array|string $key Ex. of key is "entityDefs", "entityDefs.User".
      * @param mixed $default
      * @return mixed
      */

@@ -50,7 +50,6 @@ use Espo\ORM\{
     Entity,
 };
 
-
 use Espo\Entities\User;
 
 use DateTime;
@@ -60,7 +59,7 @@ use DateInterval;
 use ReflectionMethod;
 
 /**
- * @deprecated Since v6.2.0. Use SelectBuilder instead.
+ * @deprecated Since v7.0. Use SelectBuilder instead.
  *
  * Used for generating and managing select parameters which subsequently will be feed to ORM.
  */
@@ -864,7 +863,7 @@ class SelectManager
      * @param $withAcl To apply ACL.
      * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
      * @param forbidComplexExpressions To forbid complex expression usage.
-     * @return Parameters for ORM.
+     * @return array Parameters for ORM.
      */
     public function buildSelectParams(
         array $params,

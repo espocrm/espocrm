@@ -198,7 +198,7 @@ class Manager
     /**
      * Get file contents.
      *
-     * @param string
+     * @param string $path
      *
      * @return string|false
      */
@@ -488,7 +488,7 @@ class Manager
     /**
      * Create a new dir.
      *
-     * @param string|array $path
+     * @param string $path
      * @param int $permission Example: `0755`.
      */
     public function mkdir(string $path, $permission = null): bool

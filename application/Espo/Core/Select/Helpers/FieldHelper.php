@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Select\Helpers;
 
-use Espo\{
-    ORM\EntityManager,
-    ORM\Entity
-};
+use Espo\ORM\EntityManager;
+use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
 
 /**
  * @todo Rewrite using EntityDefs class. Then write unit tests.
@@ -102,14 +101,14 @@ class FieldHelper
     {
         return
             $this->getSeed()->hasAttribute('contactId') &&
-            $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact';
+            $this->getRelationParam($this->getSeed(), 'contact', 'entity') === 'Contact';
     }
 
     public function hasContactsRelation(): bool
     {
         return
             $this->getSeed()->hasRelation('contacts') &&
-            $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact';
+            $this->getRelationParam($this->getSeed(), 'contacts', 'entity') === 'Contact';
     }
 
     public function hasParentField(): bool
@@ -123,13 +122,33 @@ class FieldHelper
     {
         return
             $this->getSeed()->hasAttribute('accountId') &&
-            $this->getSeed()->getRelationParam('account', 'entity') === 'Account';
+            $this->getRelationParam($this->getSeed(), 'account', 'entity') === 'Account';
     }
 
     public function hasAccountsRelation(): bool
     {
         return
             $this->getSeed()->hasRelation('accounts') &&
-            $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account';
+            $this->getRelationParam($this->getSeed(), 'accounts', 'entity') === 'Account';
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRelationParam(Entity $entity, string $relation, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($relation)->getParam($param);
     }
 }

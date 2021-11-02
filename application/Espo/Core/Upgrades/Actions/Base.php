@@ -232,8 +232,7 @@ abstract class Base
     /**
      * Check if version of upgrade/extension is acceptable to current version of EspoCRM
      *
-     * @param  string  $version
-     * @return boolean
+     * @return bool
      */
     protected function isAcceptable()
     {
@@ -404,7 +403,7 @@ abstract class Base
     /**
      * Get package path
      *
-     * @param  string $processId
+     * @param string $name
      * @return string
      */
     protected function getPath($name = 'packagePath', $isPackage = false)
@@ -432,14 +431,16 @@ abstract class Base
                 if (isset($manifest[$type])) {
                     return $manifest[$type];
                 }
+
                 break;
 
             case 'vendor':
                 return $this->getVendorFileList('delete');
+
                 break;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -478,9 +479,8 @@ abstract class Base
     }
 
     /**
-     * Delete files defined in a manifest
-     *
-     * @return boolen
+     * Delete files defined in a manifest.
+     * @return bool
      */
     protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
     {
@@ -516,10 +516,9 @@ abstract class Base
     }
 
     /**
-     * Get file directories (files, beforeInstallFiles, afterInstallFiles)
+     * Get file directories (files, beforeInstallFiles, afterInstallFiles).
      *
-     * @param  sting $parentDirPath
-     *
+     * @param string $parentDirPath
      * @return array
      */
     protected function getFileDirs($parentDirPath = null)
@@ -538,10 +537,9 @@ abstract class Base
     }
 
     /**
-     * Get file list from directories: files, beforeUpgradeFiles, afterUpgradeFiles
+     * Get file list from directories: files, beforeUpgradeFiles, afterUpgradeFiles.
      *
      * @param  string $dirPath
-     *
      * @return array
      */
     protected function getFileList($dirPath, $skipVendorFileList = false)
@@ -585,10 +583,9 @@ abstract class Base
     }
 
     /**
-     * Copy files from upgrade/extension package
+     * Copy files from upgrade/extension package.
      *
      * @param  string $type
-     *
      * @return boolean
      */
     protected function copyFiles($type = null, $dest = '')
@@ -612,7 +609,6 @@ abstract class Base
      * Get needed file list based on type. E.g. file list for "beforeCopy" action.
      *
      * @param string $type
-     *
      * @return string|null
      */
     protected function getCopyFilesPath($type = null)
@@ -722,7 +718,7 @@ abstract class Base
     }
 
     /**
-     * Check if the manifest is correct
+     * Check if the manifest is correct.
      *
      * @param  array  $manifest
      * @return boolean
@@ -821,9 +817,8 @@ abstract class Base
     /**
      * Execute an action. For ex., execute uninstall action in install.
      *
-     * @param  string $actionName
-     * @param  string $data
-     *
+     * @param string $actionName
+     * @param string $data
      * @return void
      */
     protected function executeAction($actionName, $data)

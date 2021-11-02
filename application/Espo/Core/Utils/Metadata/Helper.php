@@ -137,7 +137,7 @@ class Helper
      *
      * @param string $fieldName
      * @param array $fieldParams
-     * @param array|null $definitionList
+     * @param array $definitionList
      *
      * @return array|null
      */
