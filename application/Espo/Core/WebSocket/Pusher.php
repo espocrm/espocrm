@@ -80,6 +80,10 @@ class Pusher implements WampServerInterface
             return;
         }
 
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
         $connectionId = $connection->resourceId;
 
         $userId = $this->getUserIdByConnection($connection);
@@ -104,6 +108,7 @@ class Pusher implements WampServerInterface
 
                 return;
             }
+
             if ($this->isDebugMode) {
                 $this->log("{$connectionId}: check access succeed for topic {$topicId} for user {$userId}");
             }
@@ -129,6 +134,10 @@ class Pusher implements WampServerInterface
         }
 
         if (!$this->isTopicAllowed($topicId)) {
+            return;
+        }
+
+        if (!property_exists($connection, 'resourceId')) {
             return;
         }
 
@@ -251,6 +260,10 @@ class Pusher implements WampServerInterface
 
     protected function getUserIdByConnection(ConnectionInterface $connection)
     {
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
         if (!isset($this->connectionIdUserIdMap[$connection->resourceId])) {
             return;
         }
@@ -260,6 +273,10 @@ class Pusher implements WampServerInterface
 
     protected function subscribeUser(ConnectionInterface $connection, $userId)
     {
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
         $resourceId = $connection->resourceId;
 
         $this->connectionIdUserIdMap[$resourceId] = $userId;
@@ -281,6 +298,10 @@ class Pusher implements WampServerInterface
 
     protected function unsubscribeUser(ConnectionInterface $connection, $userId)
     {
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
         $resourceId = $connection->resourceId;
 
         unset($this->connectionIdUserIdMap[$resourceId]);
@@ -301,11 +322,21 @@ class Pusher implements WampServerInterface
 
     public function onOpen(ConnectionInterface $connection)
     {
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
+        if (!property_exists($connection, 'httpRequest')) {
+            return;
+        }
+
         if ($this->isDebugMode) {
             $this->log("{$connection->resourceId}: open");
         }
 
-        $query = $connection->httpRequest->getUri()->getQuery();
+        $httpRequest = $connection->httpRequest;
+
+        $query = $httpRequest->getUri()->getQuery();
 
         $params = \GuzzleHttp\Psr7\parse_query($query ?: '');
 
@@ -354,6 +385,10 @@ class Pusher implements WampServerInterface
 
     public function onClose(ConnectionInterface $connection)
     {
+        if (!property_exists($connection, 'resourceId')) {
+            return;
+        }
+
         if ($this->isDebugMode) {
             $this->log("{$connection->resourceId}: close");
         }
@@ -369,7 +404,13 @@ class Pusher implements WampServerInterface
 
     public function onCall(ConnectionInterface $connection, $id, $topic, array $params)
     {
-        $connection->callError($id, $topic, 'You are not allowed to make calls')->close();
+        if (!method_exists($connection, 'callError')) {
+            return;
+        }
+
+        $connection
+            ->callError($id, $topic, 'You are not allowed to make calls')
+            ->close();
     }
 
     public function onPublish(ConnectionInterface $connection, $topic, $event, array $exclude, array $eligible)

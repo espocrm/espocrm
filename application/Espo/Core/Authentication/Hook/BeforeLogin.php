@@ -31,6 +31,8 @@ namespace Espo\Core\Authentication\Hook;
 
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ServiceUnavailable;
 
 /**
  * Before logging in, before credentials are checked.

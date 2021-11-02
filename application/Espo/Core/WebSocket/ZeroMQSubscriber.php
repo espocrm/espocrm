@@ -33,6 +33,8 @@ use Espo\Core\Utils\Config;
 
 use React\EventLoop\LoopInterface;
 use React\ZMQ\Context as ZMQContext;
+use Evenement\EventEmitter;
+use React\ZMQ\SocketWrapper;
 
 use ZMQ;
 
@@ -53,6 +55,8 @@ class ZeroMQSubscriber implements Subscriber
 
         $context = new ZMQContext($loop);
 
+        /** @var EventEmitter $pull */
+        /** @var SocketWrapper $pull */
         $pull = $context->getSocket(ZMQ::SOCKET_PULL);
 
         $pull->bind($dsn);
