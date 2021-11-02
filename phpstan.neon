@@ -1,0 +1,7 @@
+parameters:
+	level: 1
+	paths:
+		- application
+	reportUnmatchedIgnoredErrors: false
+	excludePaths:
+		- application/Espo/Core/Select/SelectManager.php
