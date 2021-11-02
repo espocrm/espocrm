@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing\Reminder;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     ORM\EntityManager,
     FieldProcessing\Saver as SaverInterface,
@@ -38,7 +40,7 @@ use Espo\Core\{
     Utils\Util,
 };
 
-use StdClass;
+use stdClass;
 use DateInterval;
 use DateTime;
 
@@ -49,6 +51,9 @@ class Saver implements SaverInterface
 {
     protected $dateAttribute = 'dateStart';
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -68,6 +73,8 @@ class Saver implements SaverInterface
         if (!$hasReminder) {
             return;
         }
+
+        assert($entity instanceof CoreEntity);
 
         $dateAttribute = $this->entityManager
             ->getDefs()
@@ -201,7 +208,7 @@ class Saver implements SaverInterface
     }
 
     /**
-     * @return StdClass[]
+     * @return stdClass[]
      */
     private function getEntityReminderDataList(Entity $entity): array
     {

@@ -31,6 +31,8 @@ namespace Espo\Core\FieldProcessing\LinkParent;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     FieldProcessing\Loader as LoaderInterface,
     FieldProcessing\Loader\Params,
@@ -51,6 +53,10 @@ class Loader implements LoaderInterface
 
     public function process(Entity $entity, Params $params): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         foreach ($this->getFieldList($entity->getEntityType()) as $field) {
             $entity->loadParentNameField($field);
         }

@@ -39,7 +39,7 @@ use Espo\{
 use Espo\Core\{
     Field\LinkMultiple,
     Field\LinkMultipleItem,
-    ORM\Entity as CoreOrmEntity,
+    ORM\Entity as CoreEntity,
 };
 
 use RuntimeException;
@@ -48,8 +48,14 @@ use StdClass;
 
 class LinkMultipleFactory implements ValueFactory
 {
+    /**
+     * @var Defs
+     */
     private $ormDefs;
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     public function __construct(Defs $ormDefs, EntityManager $entityManager)
@@ -77,7 +83,7 @@ class LinkMultipleFactory implements ValueFactory
             throw new RuntimeException();
         }
 
-        if (!$entity instanceof CoreOrmEntity) {
+        if (!$entity instanceof CoreEntity) {
             throw new InvalidArgumentException();
         }
 
@@ -118,7 +124,7 @@ class LinkMultipleFactory implements ValueFactory
         return new LinkMultiple($itemList);
     }
 
-    private function loadLinkMultipleField(Entity $entity, $field): void
+    private function loadLinkMultipleField(CoreEntity $entity, $field): void
     {
         $columns = $this->ormDefs
             ->getEntity($entity->getEntityType())
@@ -148,7 +154,7 @@ class LinkMultipleFactory implements ValueFactory
         }
 
         $collection = $this->entityManager
-            ->getRepository($entity->getEntityType())
+            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, $field)
             ->select($select)
             ->find();

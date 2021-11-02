@@ -255,7 +255,7 @@ class Saver implements SaverInterface
                 ->delete()
                 ->from('EntityPhoneNumber')
                 ->where([
-                    'entityId' => $entity->id,
+                    'entityId' => $entity->getId(),
                     'entityType' => $entity->getEntityType(),
                     'phoneNumberId' => $phoneNumber->getId(),
                 ])
@@ -334,9 +334,9 @@ class Saver implements SaverInterface
             $entityPhoneNumber = $this->entityManager->getEntity('EntityPhoneNumber');
 
             $entityPhoneNumber->set([
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
-                'phoneNumberId' => $phoneNumber->id,
+                'phoneNumberId' => $phoneNumber->getId(),
                 'primary' => $number === $primary,
                 'deleted' => false,
             ]);
@@ -353,7 +353,8 @@ class Saver implements SaverInterface
             $phoneNumber = $this->getByNumber($primary);
 
             if ($phoneNumber) {
-                $update1 = $this->entityManager->getQueryBuilder()
+                $update1 = $this->entityManager
+                    ->getQueryBuilder()
                     ->update()
                     ->in('EntityPhoneNumber')
                     ->set(['primary' => false])
@@ -367,7 +368,8 @@ class Saver implements SaverInterface
 
                 $this->entityManager->getQueryExecutor()->execute($update1);
 
-                $update2 = $this->entityManager->getQueryBuilder()
+                $update2 = $this->entityManager
+                    ->getQueryBuilder()
                     ->update()
                     ->in('EntityPhoneNumber')
                     ->set(['primary' => true])
@@ -459,7 +461,8 @@ class Saver implements SaverInterface
                     $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
                 }
 
-                $update = $this->entityManager->getQueryBuilder()
+                $update = $this->entityManager
+                    ->getQueryBuilder()
                     ->update()
                     ->in('EntityPhoneNumber')
                     ->set(['primary' => true])
