@@ -145,7 +145,7 @@ class EmailSender
      */
     public function withMessage(Message $message): Sender
     {
-        return $this->createSender()->message($message);
+        return $this->createSender()->withMessage($message);
     }
 
     /**

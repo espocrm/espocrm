@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Notification;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -54,6 +56,8 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
 
     public function process(Entity $entity, Params $params): void
     {
+        assert($entity instanceof CoreEntity);
+
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
             $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');

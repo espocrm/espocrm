@@ -43,6 +43,7 @@ use Espo\Core\{
 use ZBateson\MailMimeParser\{
     MailMimeParser as WrappeeParser,
     Message\Part\MessagePart,
+    Message\Part\MimePart,
     Message,
 };
 
@@ -268,6 +269,10 @@ class MailMimeParser implements Parser
         $inlineIds = [];
 
         foreach ($attachmentPartList as $attachmentPart) {
+            if (!$attachmentPart instanceof MimePart) {
+                continue;
+            }
+
             $attachment = $this->entityManager->getEntity('Attachment');
 
             $contentType = $this->detectAttachmentContentType($attachmentPart);
@@ -360,7 +365,7 @@ class MailMimeParser implements Parser
         return $inlineAttachmentList;
     }
 
-    private function detectAttachmentContentType(MessagePart $part): ?string
+    private function detectAttachmentContentType(MimePart $part): ?string
     {
         $contentType = $part->getHeaderValue('Content-Type');
 
@@ -377,7 +382,7 @@ class MailMimeParser implements Parser
         return $this->extMimeTypeMap[$ext] ?? null;
     }
 
-    private function getAttachmentFilenameExtension(MessagePart $part): ?string
+    private function getAttachmentFilenameExtension(MimePart $part): ?string
     {
         $filename = $part->getHeaderParameter('Content-Disposition', 'filename', null);
 

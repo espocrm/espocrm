@@ -406,9 +406,9 @@ class Sender
     /**
      * Send an email.
      *
-     * @param $params @deprecated
-     * @param $message @deprecated
-     * @param $attachmentList @deprecated
+     * @param ?array $params @deprecated
+     * @param ?Message $message @deprecated
+     * @param iterable $attachmentList @deprecated
      */
     public function send(
         Email $email,
