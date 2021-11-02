@@ -43,8 +43,8 @@ class Binder
     /**
      * Bind an interface to an implementation.
      *
-     * @param $key An interface or interface with a parameter name (`Interface $name`).
-     * @param $implementationClassName An implementation class name.
+     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param string $implementationClassName An implementation class name.
      */
     public function bindImplementation(string $key, string $implementationClassName): self
     {
@@ -61,8 +61,8 @@ class Binder
     /**
      * Bind an interface to a specific service.
      *
-     * @param $key An interface or interface with a parameter name (`Interface $name`).
-     * @param $serviceName A service name.
+     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param string $serviceName A service name.
      */
     public function bindService(string $key, string $serviceName): self
     {
@@ -79,8 +79,8 @@ class Binder
     /**
      * Bind an interface to a callback.
      *
-     * @param $key An interface or interface with a parameter name (`Interface $name`).
-     * @param $callback A callback that will resolve a dependency.
+     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param callable $callback A callback that will resolve a dependency.
      */
     public function bindCallback(string $key, callable $callback): self
     {
@@ -97,8 +97,8 @@ class Binder
     /**
      * Bind an interface to a specific instance.
      *
-     * @param $key An interface or interface with a parameter name (`Interface $name`).
-     * @param $instance An instance.
+     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param object $instance An instance.
      */
     public function bindInstance(string $key, object $instance): self
     {
@@ -115,8 +115,8 @@ class Binder
     /**
      * Bind an interface to a factory.
      *
-     * @param $key An interface or interface with a parameter name (`Interface $name`).
-     * @param $factoryClassName A factory class name.
+     * @param string $key An interface or interface with a parameter name (`Interface $name`).
+     * @param string $factoryClassName A factory class name.
      */
     public function bindFactory(string $key, string $factoryClassName): self
     {
@@ -133,7 +133,7 @@ class Binder
     /**
      * Creates a contextual binder.
      *
-     * @param $className A context.
+     * @param string $className A context.
      */
     public function for(string $className): ContextualBinder
     {

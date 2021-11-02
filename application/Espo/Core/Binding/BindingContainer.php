@@ -31,6 +31,7 @@ namespace Espo\Core\Binding;
 
 use ReflectionClass;
 use ReflectionParameter;
+use ReflectionNamedType;
 use LogicException;
 
 class BindingContainer
@@ -80,7 +81,11 @@ class BindingContainer
 
         $type = $param->getType();
 
-        if ($type && !$type->isBuiltin()) {
+        if (
+            $type &&
+            !$type->isBuiltin() &&
+            $type instanceof ReflectionNamedType
+        ) {
             $dependencyClassName = $type->getName();
         }
 

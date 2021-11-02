@@ -76,7 +76,7 @@ class RecordTree extends Record
             throw new Forbidden();
         }
 
-        $parentId = $request->get('parentId');
+        $parentId = $request->getQueryParam('parentId');
 
         return $this->getRecordTreeService()->getLastChildrenIdList($parentId);
     }
