@@ -35,7 +35,7 @@ use Psr\Http\Message\UriInterface;
 
 use Slim\Psr7\Factory\UriFactory;
 
-use StdClass;
+use stdClass;
 
 /**
  * An empty stub for Request.
@@ -48,7 +48,7 @@ class RequestNull implements ApiRequest
     }
 
     /**
-     * @return ?string|array
+     * @return string|array|null
      */
     public function getQueryParam(string $name)
     {
@@ -113,7 +113,7 @@ class RequestNull implements ApiRequest
         return null;
     }
 
-    public function getParsedBody(): StdClass
+    public function getParsedBody(): stdClass
     {
         return (object) [];
     }

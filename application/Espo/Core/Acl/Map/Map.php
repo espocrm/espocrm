@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\ObjectUtil,
 };
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 
 /**
@@ -100,7 +100,7 @@ class Map
     /**
      * Get raw data (for front-end).
      */
-    public function getData(): StdClass
+    public function getData(): stdClass
     {
         return ObjectUtil::clone($this->data);
     }
@@ -108,11 +108,11 @@ class Map
     /**
      * Get a list of forbidden attributes for a scope and action.
      *
-     * @param $scope A scope.
-     * @param $action An action.
-     * @param $thresholdLevel An attribute will be treated as forbidden if the level is
+     * @param string $scope A scope.
+     * @param string $action An action.
+     * @param string $thresholdLevel An attribute will be treated as forbidden if the level is
      * equal to or lower than the threshold.
-     * @return array<int, string>
+     * @return string[]
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -180,11 +180,11 @@ class Map
     /**
      * Get a list of forbidden fields for a scope and action.
      *
-     * @param $scope A scope.
-     * @param $action An action.
-     * @param $thresholdLevel An attribute will be treated as forbidden if the level is
+     * @param string $scope A scope.
+     * @param string $action An action.
+     * @param string $thresholdLevel An attribute will be treated as forbidden if the level is
      * equal to or lower than the threshold.
-     * @return array<int, string>
+     * @return string[]
      */
     public function getScopeForbiddenFieldList(
         string $scope,

@@ -31,7 +31,7 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\UriInterface;
 
-use StdClass;
+use stdClass;
 
 /**
  * Representation of an HTTP request.
@@ -46,7 +46,7 @@ interface Request
     /**
      * Get a query parameter.
      *
-     * @return ?string|array
+     * @return string|array|null
      */
     public function getQueryParam(string $name);
 
@@ -110,7 +110,7 @@ interface Request
     /**
      * Get a parsed body. If JSON array is passed, then will be converted to `{"list": ARRAY}`.
      */
-    public function getParsedBody(): StdClass;
+    public function getParsedBody(): stdClass;
 
     /**
      * Get a cookie param value.

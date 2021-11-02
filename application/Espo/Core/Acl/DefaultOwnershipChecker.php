@@ -30,7 +30,7 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\User;
 
 /**
@@ -67,7 +67,7 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             }
         }
 
-        if ($entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+        if ($entity instanceof CoreEntity && $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
             if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
                 return true;
             }
@@ -78,6 +78,8 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
 
     public function checkTeam(User $user, Entity $entity): bool
     {
+        assert($entity instanceof CoreEntity);
+
         $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         if (

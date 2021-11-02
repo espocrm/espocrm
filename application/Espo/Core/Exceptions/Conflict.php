@@ -32,7 +32,7 @@ namespace Espo\Core\Exceptions;
 use Exception;
 use Throwable;
 
-class Conflict extends Exception
+class Conflict extends Exception implements HasBody
 {
     protected $code = 409;
 

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Exceptions\HasBody;
+
 use Espo\Core\{
     Api\Request,
     Api\Response,
@@ -163,7 +165,7 @@ class ErrorOutput
             $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
-        if ($this->doesExceptionHaveBody($exception)) {
+        if ($exception instanceof HasBody && $this->exceptionHasBody($exception)) {
             $response->writeBody($exception->getBody());
 
             $toPrintBody = false;
@@ -184,20 +186,13 @@ class ErrorOutput
         }
     }
 
-    private function doesExceptionHaveBody(Throwable $exception): bool
+    private function exceptionHasBody(Throwable $exception): bool
     {
-        if (
-            !$exception instanceof Error &&
-            !$exception instanceof Conflict
-        ) {
+        if (!$exception instanceof HasBody) {
             return false;
         }
 
-        $exceptionBody = null;
-
-        if (method_exists($exception, 'getBody')) {
-            $exceptionBody = $exception->getBody();
-        }
+        $exceptionBody = $exception->getBody();
 
         return $exceptionBody !== null;
     }

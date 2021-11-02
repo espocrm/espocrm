@@ -103,7 +103,7 @@ class RequestWrapper implements ApiRequest
     }
 
     /**
-     * @return ?string|array
+     * @return string|array|null
      */
     public function getQueryParam(string $name)
     {

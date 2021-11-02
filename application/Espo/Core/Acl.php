@@ -115,7 +115,7 @@ class Acl
      * whether a scope level is set to 'enabled'.
      *
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string|null $action Action to check. Constants are available in the `Table` class.
      *
      * @throws NotImplemented
      */
@@ -128,7 +128,7 @@ class Acl
      * The same as `check` but does not throw NotImplemented exception.
      *
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string|null $action Action to check. Constants are available in the `Table` class.
      */
     public function tryCheck($subject, ?string $action = null): bool
     {
@@ -150,7 +150,7 @@ class Acl
      * Check access to a specific entity.
      *
      * @param Entity $entity An entity to check.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string $action Action to check. Constants are available in the `Table` class.
      */
     public function checkEntity(Entity $entity, string $action = Table::ACTION_READ): bool
     {
@@ -216,8 +216,8 @@ class Acl
     /**
      * Get attributes forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.     *
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.     *
+     * @return string[]
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -232,8 +232,8 @@ class Acl
     /**
      * Get fields forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
+     * @return string[]
      */
     public function getScopeForbiddenFieldList(
         string $scope,
@@ -248,8 +248,8 @@ class Acl
     /**
      * Get links forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
+     * @return string[]
      */
     public function getScopeForbiddenLinkList(
         string $scope,
@@ -283,8 +283,8 @@ class Acl
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
@@ -294,8 +294,8 @@ class Acl
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
@@ -305,8 +305,8 @@ class Acl
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {

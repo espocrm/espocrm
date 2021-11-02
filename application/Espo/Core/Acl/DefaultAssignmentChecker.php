@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\ORM\{
     Entity,
     EntityManager,
@@ -174,6 +176,10 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return true;
         }
 
+        if (!$entity instanceof CoreEntity) {
+            return true;
+        }
+
         if (!$entity->hasLinkMultipleField(self::FIELD_TEAMS)) {
             return true;
         }
@@ -224,7 +230,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
-    private function isPermittedTeamsEmpty(User $user, Entity $entity): bool
+    private function isPermittedTeamsEmpty(User $user, CoreEntity $entity): bool
     {
         $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
 
@@ -250,6 +256,10 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     protected function isPermittedAssignedUsers(User $user, Entity $entity): bool
     {
+        if (!$entity instanceof CoreEntity) {
+            return true;
+        }
+
         if (!$entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
             return true;
         }
@@ -309,7 +319,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
-    private function isPermittedAssignedUsersLevelNo(User $user, Entity $entity): bool
+    private function isPermittedAssignedUsersLevelNo(User $user, CoreEntity $entity): bool
     {
         $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
 
@@ -328,7 +338,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
         return true;
     }
 
-    private function isPermittedAssignedUsersLevelTeam(User $user, Entity $entity): bool
+    private function isPermittedAssignedUsersLevelTeam(User $user, CoreEntity $entity): bool
     {
         $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
 

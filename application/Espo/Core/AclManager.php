@@ -255,7 +255,7 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string|null $action Action to check. Constants are available in the `Table` class.
      *
      * @throws NotImplemented
      */
@@ -281,7 +281,7 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param string|Entity $subject An entity type or entity.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string|null $action Action to check. Constants are available in the `Table` class.
      */
     public function tryCheck(User $user, $subject, ?string $action = null): bool
     {
@@ -298,7 +298,7 @@ class AclManager
      *
      * @param User $user A user to check for.
      * @param Entity $entity An entity to check.
-     * @param string|null Action to check. Constants are available in the `Table` class.
+     * @param string $action Action to check. Constants are available in the `Table` class.
      *
      * @throws NotImplemented
      */
@@ -478,8 +478,8 @@ class AclManager
     /**
      * Get attributes forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
+     * @return string[]
      */
     public function getScopeForbiddenAttributeList(
         User $user,
@@ -506,8 +506,8 @@ class AclManager
     /**
      * Get fields forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
+     * @return string[]
      */
     public function getScopeForbiddenFieldList(
         User $user,
@@ -534,8 +534,8 @@ class AclManager
     /**
      * Get links forbidden for a user.
      *
-     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<int, string>
+     * @param string $thresholdLevel Should not be used. Stands for possible future enhancements.
+     * @return string[]
      */
     public function getScopeForbiddenLinkList(
         User $user,
@@ -618,8 +618,8 @@ class AclManager
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
@@ -644,8 +644,8 @@ class AclManager
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
@@ -670,8 +670,8 @@ class AclManager
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param string|array<int, string> $type
-     * @return array<int, string>
+     * @param string|string[] $type
+     * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {

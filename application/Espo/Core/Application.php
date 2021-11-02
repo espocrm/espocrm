@@ -67,8 +67,8 @@ class Application
     /**
      * Run an application runner.
      *
-     * @param $className A runner class name.
-     * @param $params Runner parameters.
+     * @param string $className A runner class name.
+     * @param ?RunnerParams $params Runner parameters.
      */
     public function run(string $className, ?RunnerParams $params = null): void
     {

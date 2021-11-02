@@ -103,6 +103,8 @@ class EspoManager implements Manager
     {
         $this->validateNotChanged($authToken);
 
+        assert($authToken instanceof AuthTokenEntity);
+
         $authToken->set('isActive', false);
 
         $this->repository->save($authToken);
@@ -111,6 +113,8 @@ class EspoManager implements Manager
     public function renew(AuthToken $authToken): void
     {
         $this->validateNotChanged($authToken);
+
+        assert($authToken instanceof AuthTokenEntity);
 
         if ($authToken->isNew()) {
             throw new RuntimeException("Can renew only not new auth token.");
@@ -132,7 +136,7 @@ class EspoManager implements Manager
         }
     }
 
-    protected function validateNotChanged(AuthToken $authToken): void
+    protected function validateNotChanged(AuthTokenEntity $authToken): void
     {
         if (
             $authToken->isAttributeChanged('token') ||

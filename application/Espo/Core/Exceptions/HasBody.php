@@ -29,28 +29,7 @@
 
 namespace Espo\Core\Exceptions;
 
-use Throwable;
-
-class Error extends InternalServerError implements HasBody
+interface HasBody
 {
-    private $body = null;
-
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
-
-    public static function createWithBody(string $reason, string $body): self
-    {
-        $exception = new static($reason);
-
-        $exception->body = $body;
-
-        return $exception;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
+    public function getBody(): ?string;
 }

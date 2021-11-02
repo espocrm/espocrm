@@ -35,11 +35,13 @@ use Espo\Core\{
     Utils\Json,
     Api\Request,
     Api\Response,
+    Api\RequestWrapper,
     Exceptions\NotFound,
 };
 
 use ReflectionClass;
-use StdClass;
+use ReflectionNamedType;
+use stdClass;
 
 /**
  * Creates controller instances and processes actions.
@@ -103,7 +105,7 @@ class ActionProcessor
 
         $data = $request->getBodyContents();
 
-        if ($data && $request->getContentType() === 'application/json') {
+        if ($data && $this->getRequestContentType($request) === 'application/json') {
             $data = json_decode($data);
         }
 
@@ -137,7 +139,7 @@ class ActionProcessor
             is_float($result) ||
             is_array($result) ||
             is_bool($result) ||
-            $result instanceof StdClass
+            $result instanceof stdClass
         ) {
             $responseContents = Json::encode($result);
         }
@@ -161,7 +163,11 @@ class ActionProcessor
 
         $type = $params[0]->getType();
 
-        if (!$type || $type->isBuiltin()) {
+        if (
+            !$type ||
+            $type->isBuiltin() ||
+            !$type instanceof ReflectionNamedType
+        ) {
             return false;
         }
 
@@ -197,5 +203,14 @@ class ActionProcessor
         return $this->injectableFactory->createWith($this->getControllerClassName($name), [
             'name' => $name,
         ]);
+    }
+
+    private function getRequestContentType(Request $request): ?string
+    {
+        if ($request instanceof RequestWrapper) {
+            return $request->getContentType();
+        }
+
+        return null;
     }
 }
