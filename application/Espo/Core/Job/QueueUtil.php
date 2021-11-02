@@ -46,8 +46,14 @@ use DateTime;
 
 class QueueUtil
 {
+    /**
+     * @var Config
+     */
     private $config;
 
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     private $scheduleUtil;
@@ -73,7 +79,7 @@ class QueueUtil
     public function isJobPending(string $id): bool
     {
         $job = $this->entityManager
-            ->getRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select(['id', 'status'])
             ->where([
                 'id' => $id,
@@ -90,6 +96,7 @@ class QueueUtil
 
     /**
      * @return JobEntity[]
+     * @phpstan-return Collection
      */
     public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
     {
@@ -146,7 +153,7 @@ class QueueUtil
         }
 
         return (bool) $this->entityManager
-            ->getRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select(['id'])
             ->where($where)
             ->findOne();
@@ -235,7 +242,7 @@ class QueueUtil
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
-            ->getRepository('Job')
+            ->getRDBRepository('Job')
             ->select([
                 'id',
                 'scheduledJobId',
@@ -270,7 +277,7 @@ class QueueUtil
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $failedJobList = $this->entityManager
-            ->getRepository('Job')
+            ->getRDBRepository('Job')
             ->select([
                 'id',
                 'scheduledJobId',
@@ -302,7 +309,7 @@ class QueueUtil
         $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
-            ->getRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -382,7 +389,7 @@ class QueueUtil
     public function removePendingJobDuplicates(): void
     {
         $duplicateJobList = $this->entityManager
-            ->getRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select(['scheduledJobId'])
             ->leftJoin('scheduledJob')
             ->where([
@@ -411,7 +418,7 @@ class QueueUtil
 
         foreach ($scheduledJobIdList as $scheduledJobId) {
             $toRemoveJobList = $this->entityManager
-                ->getRepository(JobEntity::ENTITY_TYPE)
+                ->getRDBRepository(JobEntity::ENTITY_TYPE)
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -431,7 +438,8 @@ class QueueUtil
                 continue;
             }
 
-            $delete = $this->entityManager->getQueryBuilder()
+            $delete = $this->entityManager
+                ->getQueryBuilder()
                 ->delete()
                 ->from(JobEntity::ENTITY_TYPE)
                 ->where([
