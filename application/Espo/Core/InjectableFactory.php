@@ -38,6 +38,7 @@ use Espo\Core\Interfaces\Injectable;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionFunction;
+use ReflectionNamedType;
 use Throwable;
 
 /**
@@ -155,12 +156,16 @@ class InjectableFactory
 
         $type = $param->getType();
 
-        if ($type && !$type->isBuiltin()) {
+        if (
+            $type &&
+            !$type->isBuiltin() &&
+            $type instanceof ReflectionNamedType
+        ) {
             try {
                 $dependencyClass = new ReflectionClass($type->getName());
             }
             catch (Throwable $e) {
-                $badClassName = $param->getType()->getName();
+                $badClassName = $type->getName();
 
                 // This trick allows to log syntax errors.
                 class_exists($badClassName);
@@ -335,7 +340,11 @@ class InjectableFactory
 
         $type = $params[0]->getType();
 
-        if ($type && !$type->isBuiltin()) {
+        if (
+            $type &&
+            !$type->isBuiltin() &&
+            $type instanceof ReflectionNamedType
+        ) {
             $paramClass = new ReflectionClass($type->getName());
         }
 
