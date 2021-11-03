@@ -33,6 +33,8 @@ use Laminas\Mail\Storage;
 
 use Espo\ORM\Entity;
 
+use Espo\Repositories\UserData as UserDataRepository;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\Forbidden,
@@ -50,6 +52,7 @@ use Espo\Entities\{
     EmailAccount as EmailAccountEntity,
     User,
     Email as EmailEntity,
+    UserData,
 };
 
 use Espo\Core\Di;
@@ -100,7 +103,7 @@ class EmailAccount extends Record implements
         $userId = $params['userId'] ?? null;
 
         if ($userId) {
-            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->id) {
+            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->getId()) {
                 throw new Forbidden();
             }
         }
@@ -143,7 +146,7 @@ class EmailAccount extends Record implements
         $userId = $params['userId'] ?? null;
 
         if ($userId) {
-            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->id) {
+            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->getId()) {
                 throw new Forbidden();
             }
         }
@@ -187,20 +190,25 @@ class EmailAccount extends Record implements
         if ($emailAddress && $userId && !$handlerClassName) {
             $emailAddress = strtolower($emailAddress);
 
-            $userData = $this->entityManager->getRepository('UserData')->getByUserId($userId);
+            $userData = $this->getUserDataRepository()->getByUserId($userId);
 
             if ($userData) {
                 $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
+
                 if (is_object($imapHandlers)) {
                     if (isset($imapHandlers->$emailAddress)) {
                         $handlerClassName = $imapHandlers->$emailAddress;
+
                         try {
                             $handler = $this->injectableFactory->create($handlerClassName);
-                        } catch (Throwable $e) {
+                        }
+                        catch (Throwable $e) {
                             $this->log->error(
-                                "EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " . $e->getMessage()
+                                "EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " .
+                                    $e->getMessage()
                             );
                         }
+
                         if (method_exists($handler, 'prepareProtocol')) {
                             $imapParams = $handler->prepareProtocol($userId, $emailAddress, $params);
                         }
@@ -229,11 +237,11 @@ class EmailAccount extends Record implements
 
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             $count = $this->entityManager
-                ->getRepository('EmailAccount')
+                ->getRDBRepository('EmailAccount')
                 ->where([
-                    'assignedUserId' => $this->getUser()->id
+                    'assignedUserId' => $this->getUser()->getId()
                 ])
                 ->count();
 
@@ -246,7 +254,7 @@ class EmailAccount extends Record implements
 
         if ($entity) {
             if (!$this->getUser()->isAdmin()) {
-                $entity->set('assignedUserId', $this->getUser()->id);
+                $entity->set('assignedUserId', $this->getUser()->getId());
             }
 
             $this->entityManager->saveEntity($entity);
@@ -261,7 +269,7 @@ class EmailAccount extends Record implements
 
         $folder = $emailAccount->get('sentFolder');
         if (empty($folder)) {
-            throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
+            throw new Error("No sent folder for Email Account: " . $emailAccount->getId() . ".");
         }
 
         $storage->appendMessage($message->toString(), $folder);
@@ -283,7 +291,7 @@ class EmailAccount extends Record implements
         }
 
         $params['imapHandler'] = $emailAccount->get('imapHandler');
-        $params['id'] = $emailAccount->id;
+        $params['id'] = $emailAccount->getId();
 
         $storage = $this->createStorage($params);
 
@@ -303,7 +311,7 @@ class EmailAccount extends Record implements
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
-            throw new Error("Email Account {$emailAccount->id} is not active.");
+            throw new Error("Email Account {$emailAccount->getId()} is not active.");
         }
 
         $importer = $this->createImporter();
@@ -314,7 +322,7 @@ class EmailAccount extends Record implements
             throw new Error();
         }
 
-        $userId = $user->id;
+        $userId = $user->getId();
         $teamId = $user->get('defaultTeamId');
         $teamIdList = [];
 
@@ -323,13 +331,13 @@ class EmailAccount extends Record implements
         }
 
         $filterCollection = $this->entityManager
-            ->getRepository('EmailFilter')
+            ->getRDBRepository('EmailFilter')
             ->where([
                 'action' => 'Skip',
                 'OR' => [
                     [
                         'parentType' => $emailAccount->getEntityType(),
-                        'parentId' => $emailAccount->id
+                        'parentId' => $emailAccount->getId(),
                     ],
                     [
                         'parentId' => null
@@ -380,16 +388,20 @@ class EmailAccount extends Record implements
             }
             catch (Exception $e) {
                 $this->log->error(
-                    'EmailAccount '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
+                    'EmailAccount '.$emailAccount->getId().' (Select Folder) [' . $e->getCode() . '] ' .
+                    $e->getMessage()
                 );
+
                 continue;
             }
 
             $lastUID = 0;
             $lastDate = 0;
+
             if (!empty($fetchData->lastUID->$folder)) {
                 $lastUID = $fetchData->lastUID->$folder;
             }
+
             if (!empty($fetchData->lastDate->$folder)) {
                 $lastDate = $fetchData->lastDate->$folder;
             }
@@ -489,19 +501,21 @@ class EmailAccount extends Record implements
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
                         if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
                             unset($flags[Storage::FLAG_RECENT]);
+
                             $storage->setFlags($id, $flags);
                         }
                     }
 
                 } catch (Throwable $e) {
                     $this->log->error(
-                        'EmailAccount '.$emailAccount->id.
+                        'EmailAccount '.$emailAccount->getId().
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
                 }
 
                 if (!empty($email)) {
-                    $this->entityManager->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
+                    $this->entityManager->getRDBRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
+
                     if (!$email->isFetched()) {
                         $this->noteAboutEmail($email);
                     }
@@ -585,7 +599,7 @@ class EmailAccount extends Record implements
         }
         catch (Throwable $e) {
             $this->log->error(
-                'EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
+                'EmailAccount '.$emailAccount->getId().' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
 
@@ -613,10 +627,10 @@ class EmailAccount extends Record implements
     public function findAccountForUser(User $user, $address)
     {
         $emailAccount = $this->entityManager
-            ->getRepository('EmailAccount')
+            ->getRDBRepository('EmailAccount')
             ->where([
                 'emailAddress' => $address,
-                'assignedUserId' => $user->id,
+                'assignedUserId' => $user->getId(),
                 'status' => 'Active'
             ])
             ->findOne();
@@ -668,13 +682,13 @@ class EmailAccount extends Record implements
         }
         catch (Throwable $e) {
             $this->log->error(
-                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
+                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->getId()}. Error: " .
                 $e->getMessage()
             );
         }
 
         if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($emailAccount->id, $params);
+            $handler->applyParams($emailAccount->getId(), $params);
         }
     }
 
@@ -693,10 +707,19 @@ class EmailAccount extends Record implements
             return false;
         }
 
+        if (!is_int($size)) {
+            return false;
+        }
+
         if ($size > $maxSize * 1024 * 1024) {
             return true;
         }
 
         return false;
+    }
+
+    private function getUserDataRepository(): UserDataRepository
+    {
+        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

@@ -29,11 +29,11 @@
 
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\Entities\UserData as UserDataEntity;
 
 class UserData extends \Espo\Core\Repositories\Database
 {
-    public function getByUserId(string $userId): ?Entity
+    public function getByUserId(string $userId): ?UserDataEntity
     {
         $userData = $this
             ->where(['userId' => $userId])

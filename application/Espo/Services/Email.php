@@ -33,6 +33,10 @@ use Laminas\Mail\Message;
 
 use Espo\Services\EmailAccount as EmailAccountService;
 use Espo\Services\InboundEmail as InboundEmailService;
+use Espo\Entities\Preferences;
+use Espo\Entities\Attachment;
+use Espo\Entities\UserData;
+use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\{
     ORM\Entity,
@@ -113,6 +117,7 @@ class Email extends Record implements
             $fromAddress = strtolower($fromAddress);
         }
 
+        /** @var Preferences $preferences */
         $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
         if (!$preferences) {
@@ -185,7 +190,8 @@ class Email extends Record implements
             $primaryUserAddress = strtolower($user->get('emailAddress'));
 
             if ($primaryUserAddress === $fromAddress) {
-                $preferences = $this->entityManager->getEntity('Preferences', $user->id);
+                /** @var Preferences $preferences */
+                $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
                 if ($preferences) {
                     $smtpParams = $preferences->getSmtpParams();
@@ -216,7 +222,7 @@ class Email extends Record implements
         if ($user) {
             if ($smtpParams) {
                 if ($fromAddress) {
-                    $this->applySmtpHandler($user->id, $fromAddress, $smtpParams);
+                    $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
                 }
 
                 $emailSender->withSmtpParams($smtpParams);
@@ -309,7 +315,7 @@ class Email extends Record implements
             $this->log->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
             $errorData = [
-                'id' => $entity->id,
+                'id' => $entity->getId(),
                 'message' => $e->getMessage(),
             ];
 
@@ -319,7 +325,7 @@ class Email extends Record implements
         $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
 
         if ($inboundEmail) {
-            $entity->addLinkMultipleId('inboundEmails', $inboundEmail->id);
+            $entity->addLinkMultipleId('inboundEmails', $inboundEmail->getId());
 
             if ($inboundEmail->get('storeSentEmails')) {
                 try {
@@ -329,14 +335,14 @@ class Email extends Record implements
                 }
                 catch (Exception $e) {
                     $this->log->error(
-                        "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
+                        "Email sending: Could not store sent email (Group Email Account {$inboundEmail->getId()}): " .
                         $e->getMessage() . "."
                     );
                 }
             }
         }
         else if ($emailAccount) {
-            $entity->addLinkMultipleId('emailAccounts', $emailAccount->id);
+            $entity->addLinkMultipleId('emailAccounts', $emailAccount->getId());
 
             if ($emailAccount->get('storeSentEmails')) {
                 try {
@@ -346,7 +352,7 @@ class Email extends Record implements
                 }
                 catch (Exception $e) {
                     $this->log->error(
-                        "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
+                        "Email sending: Could not store sent email (Email Account {$emailAccount->getId()}): " .
                         $e->getMessage() . "."
                     );
                 }
@@ -360,7 +366,7 @@ class Email extends Record implements
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
     {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($userId);
+        $userData = $this->getUserDataRepository()->getByUserId($userId);
 
         if (!$userData) {
             return;
@@ -464,7 +470,7 @@ class Email extends Record implements
         $entity = parent::getEntity($id);
 
         if ($entity && $id && !$entity->get('isRead')) {
-            $this->markAsRead($entity->id);
+            $this->markAsRead($entity->getId());
         }
 
         return $entity;
@@ -535,7 +541,7 @@ class Email extends Record implements
 
     public function markAllAsRead(?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -568,7 +574,7 @@ class Email extends Record implements
 
     public function markAsRead(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -589,7 +595,7 @@ class Email extends Record implements
 
     public function markAsNotRead(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -608,7 +614,7 @@ class Email extends Record implements
 
     public function markAsImportant(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -627,7 +633,7 @@ class Email extends Record implements
 
     public function markAsNotImportant(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -646,7 +652,7 @@ class Email extends Record implements
 
     public function moveToTrash(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -667,7 +673,7 @@ class Email extends Record implements
 
     public function retrieveFromTrash(string $id, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -704,7 +710,7 @@ class Email extends Record implements
 
     public function moveToFolder(string $id, ?string $folderId, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         if ($folderId === 'inbox') {
             $folderId = null;
@@ -767,7 +773,8 @@ class Email extends Record implements
             throw new BadRequest();
         }
 
-        $email = $this->entityManager->getEntity('Email', $id);
+        /** @var EmailEntity $email */
+        $email = $this->entityManager->getEntity(EmailEntity::ENTITY_TYPE, $id);
 
         if (!$email) {
             throw new NotFound();
@@ -782,6 +789,7 @@ class Email extends Record implements
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
+            /** @var Attachment $source */
             $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
@@ -807,16 +815,16 @@ class Email extends Record implements
 
                     $this->fileStorageManager->putContents($attachment, $contents);
 
-                    $ids[] = $attachment->id;
+                    $ids[] = $attachment->getId();
 
-                    $names->{$attachment->id} = $attachment->get('name');
+                    $names->{$attachment->getId()} = $attachment->get('name');
                 }
             }
         }
 
         return (object) [
             'ids' => $ids,
-            'names' => $names
+            'names' => $names,
         ];
     }
 
@@ -834,7 +842,7 @@ class Email extends Record implements
         $fromAddress = $data['fromAddress'] ?? null;
 
         if ($userId) {
-            if ($userId !== $this->getUser()->id && !$this->getUser()->isAdmin()) {
+            if ($userId !== $this->getUser()->getId() && !$this->getUser()->isAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -894,6 +902,8 @@ class Email extends Record implements
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
+        /** @var EmailEntity $entity */
+
         $skipFilter = false;
 
         if ($this->getUser()->isAdmin()) {
@@ -964,14 +974,14 @@ class Email extends Record implements
         $folderIdList = ['inbox', 'drafts'];
 
         $emailFolderList = $this->entityManager
-            ->getRepository('EmailFolder')
+            ->getRDBRepository('EmailFolder')
             ->where([
-                'assignedUserId' => $this->getUser()->id,
+                'assignedUserId' => $this->getUser()->getId(),
             ])
             ->find();
 
         foreach ($emailFolderList as $folder) {
-            $folderIdList[] = $folder->id;
+            $folderIdList[] = $folder->getId();
         }
 
         foreach ($folderIdList as $folderId) {
@@ -990,7 +1000,7 @@ class Email extends Record implements
             );
 
             $data[$folderId] = $this->entityManager
-                ->getRepository('Email')
+                ->getRDBRepository('Email')
                 ->clone($itemSelectBuilder->build())
                 ->count();
         }
@@ -1028,5 +1038,10 @@ class Email extends Record implements
     private function getInboundEmailService(): InboundEmailService
     {
         return $this->injectableFactory->create(InboundEmailService::class);
+    }
+
+    private function getUserDataRepository(): UserDataRepository
+    {
+        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }
