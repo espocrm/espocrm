@@ -36,38 +36,36 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
-class EmailFolder extends Record
+use Espo\Core\Di;
+
+class EmailFolder extends Record implements Di\LanguageAware
 {
+    use Di\LanguageSetter;
+
     protected $systemFolderList = ['inbox', 'important', 'sent'];
 
     protected $systemFolderEndList = ['drafts', 'trash'];
-
-    protected function init()
-    {
-        parent::init();
-        $this->addDependency('language');
-    }
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
 
-        if (!$this->getUser()->isAdmin() || !$entity->get('assignedUserId')) {
-            $entity->set('assignedUserId', $this->getUser()->id);
+        if (!$this->user->isAdmin() || !$entity->get('assignedUserId')) {
+            $entity->set('assignedUserId', $this->user->getId());
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
     }
 
     public function moveUp(string $id)
     {
-        $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
+        $entity = $this->entityManager->getEntity('EmailFolder', $id);
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -93,18 +91,18 @@ class EmailFolder extends Record
 
         $previousEntity->set('order', $currentIndex);
 
-        $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($previousEntity);
+        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($previousEntity);
     }
 
     public function moveDown(string $id)
     {
-        $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
+        $entity = $this->entityManager->getEntity('EmailFolder', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -130,17 +128,17 @@ class EmailFolder extends Record
 
         $nextEntity->set('order', $currentIndex);
 
-        $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($nextEntity);
+        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($nextEntity);
     }
 
     public function listAll()
     {
-        $limit = $this->getConfig()->get('emailFolderMaxCount', 100);
+        $limit = $this->config->get('emailFolderMaxCount', 100);
 
         $folderList = $this->getRepository()
             ->where([
-                'assignedUserId' => $this->getUser()->id
+                'assignedUserId' => $this->user->getId()
             ])
             ->order('order')
             ->limit(0, $limit)
@@ -149,11 +147,10 @@ class EmailFolder extends Record
         $list = new EntityCollection();
 
         foreach ($this->systemFolderList as $name) {
-            $folder = $this->getEntityManager()->getEntity('EmailFolder');
+            $folder = $this->entityManager->getEntity('EmailFolder');
 
-            $folder->set('name', $this->getInjection('language')->translate($name, 'presetFilters', 'Email'));
-
-            $folder->id = $name;
+            $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
+            $folder->set('id', $name);
 
             $list[] = $folder;
         }
@@ -163,11 +160,10 @@ class EmailFolder extends Record
         }
 
         foreach ($this->systemFolderEndList as $name) {
-            $folder = $this->getEntityManager()->getEntity('EmailFolder');
+            $folder = $this->entityManager->getEntity('EmailFolder');
 
-            $folder->set('name', $this->getInjection('language')->translate($name, 'presetFilters', 'Email'));
-
-            $folder->id = $name;
+            $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
+            $folder->set('id', $name);
 
             $list[] = $folder;
         }

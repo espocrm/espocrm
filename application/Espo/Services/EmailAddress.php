@@ -29,16 +29,21 @@
 
 namespace Espo\Services;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-};
+use Espo\Repositories\EmailAddress as Repository;
+use Espo\Entities\EmailAddress as EmailAddressEntity;
+
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class EmailAddress extends Record
 {
     const ERASED_PREFIX = 'ERASED:';
 
     protected function findInAddressBookByEntityType(
-        string $filter, int $limit, string $entityType, array &$result, bool $onlyActual = false
+        string $filter,
+        int $limit,
+        string $entityType,
+        array &$result,
+        bool $onlyActual = false
     ) {
 
         $whereClause = [
@@ -74,7 +79,7 @@ class EmailAddress extends Record
         $select = ['id', 'emailAddress', 'name'];
 
         if (
-            $this->getMetadata()->get(
+            $this->metadata->get(
                 ['entityDefs', $entityType, 'fields', 'name', 'type']
             ) === 'personName'
         ) {
@@ -85,16 +90,14 @@ class EmailAddress extends Record
         $builder->select($select);
 
         $collection = $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($builder->build())
             ->find();
 
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');
 
-            $emailAddressData = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEmailAddressData($entity);
+            $emailAddressData = $this->getEmailAddressRepository()->getEmailAddressData($entity);
 
             $skipPrimaryEmailAddress = false;
 
@@ -125,7 +128,7 @@ class EmailAddress extends Record
                     'emailAddress' => $emailAddress,
                     'entityName' => $entity->get('name'),
                     'entityType' => $entityType,
-                    'entityId' => $entity->id,
+                    'entityId' => $entity->getId(),
                 ];
             }
 
@@ -152,7 +155,7 @@ class EmailAddress extends Record
                     'emailAddress' => $item->emailAddress,
                     'entityName' => $entity->get('name'),
                     'entityType' => $entityType,
-                    'entityId' => $entity->id,
+                    'entityId' => $entity->getId(),
                 ];
             }
         }
@@ -173,11 +176,12 @@ class EmailAddress extends Record
 
     protected function findInInboundEmail(string $query, int $limit, array &$result)
     {
-        if ($this->getUser()->isPortal()) {
+        if ($this->user->isPortal()) {
             return [];
         }
 
-        $list = $this->getEntityManager()->getRepository('InboundEmail')
+        $list = $this->entityManager
+            ->getRDBRepository('InboundEmail')
             ->select(['id', 'name', 'emailAddress'])
             ->where([
                 'emailAddress*' => $query . '%',
@@ -259,7 +263,7 @@ class EmailAddress extends Record
     {
         $list = ['Account', 'Contact', 'Lead', 'User'];
 
-        $scopeDefs = $this->getMetadata()->get(['scopes']);
+        $scopeDefs = $this->metadata->get(['scopes']);
 
         foreach ($scopeDefs as $scope => $defs) {
             if (
@@ -272,5 +276,10 @@ class EmailAddress extends Record
         }
 
         return $list;
+    }
+
+    private function getEmailAddressRepository(): Repository
+    {
+        return $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
     }
 }

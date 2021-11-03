@@ -29,12 +29,15 @@
 
 namespace Espo\Services;
 
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+
 use Espo\Tools\EmailTemplate\Processor;
 use Espo\Tools\EmailTemplate\Params;
 use Espo\Tools\EmailTemplate\Data;
 use Espo\Tools\EmailTemplate\Formatter;
 
 use Espo\Entities\EmailTemplate as EmailTemplateEntity;
+use Espo\Entities\EmailAddress;
 
 use Espo\Core\Exceptions\NotFound;
 
@@ -107,9 +110,7 @@ class EmailTemplate extends Record implements
         }
 
         if ($to) {
-            $e = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddress($to, null, ['Contact', 'Lead', 'Account']);
+            $e = $this->getEmailAddressRepository()->getEntityByAddress($to, null, ['Contact', 'Lead', 'Account']);
 
             if ($e && $e->getEntityType() !== 'User' && $this->acl->check($e)) {
                 $dataList[] = [
@@ -186,5 +187,10 @@ class EmailTemplate extends Record implements
     private function createFormatter(): Formatter
     {
         return $this->injectableFactory->create(Formatter::class);
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }
