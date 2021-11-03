@@ -29,20 +29,22 @@
 
 namespace Espo\Controllers;
 
+use Espo\Services\EmailTemplate as Service;
+
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
 };
 
-use StdClass;
+use stdClass;
 
 class EmailTemplate extends Record
 {
-    public function actionParse(Request $request): StdClass
+    public function actionParse(Request $request): stdClass
     {
         $id = $request->getQueryParam('id');
 
-        return (object) $this->getRecordService()->parse(
+        return (object) $this->getEmailTempalteService()->parse(
             $id,
             [
                 'emailAddress' => $request->getQueryParam('emailAddress'),
@@ -53,5 +55,10 @@ class EmailTemplate extends Record
             ],
             true
         );
+    }
+
+    private function getEmailTempalteService(): Service
+    {
+        return $this->getRecordService();
     }
 }

@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Services\User as Service;
+
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
@@ -41,11 +43,11 @@ use Espo\Core\{
     Select\Where\Item as WhereItem,
 };
 
-use StdClass;
+use stdClass;
 
 class User extends Record
 {
-    public function getActionAcl(Request $request): StdClass
+    public function getActionAcl(Request $request): stdClass
     {
         $userId = $request->getQueryParam('id');
 
@@ -53,7 +55,7 @@ class User extends Record
             throw new Error();
         }
 
-        if (!$this->user->isAdmin() && $this->user->getId() != $userId) {
+        if (!$this->user->isAdmin() && $this->user->getId() !== $userId) {
             throw new Forbidden();
         }
 
@@ -77,18 +79,17 @@ class User extends Record
             throw new BadRequest();
         }
 
-        $this->getService('User')
-            ->changePassword(
-                $this->user->getId(),
-                $data->password,
-                true,
-                $data->currentPassword
-            );
+        $this->getUserService()->changePassword(
+            $this->user->getId(),
+            $data->password,
+            true,
+            $data->currentPassword
+        );
 
         return true;
     }
 
-    public function postActionChangePasswordByRequest(Request $request): StdClass
+    public function postActionChangePasswordByRequest(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -96,7 +97,7 @@ class User extends Record
             throw new BadRequest();
         }
 
-        return $this->getService('User')->changePasswordByRequest($data->requestId, $data->password);
+        return $this->getUserService()->changePasswordByRequest($data->requestId, $data->password);
     }
 
     public function postActionPasswordChangeRequest(Request $request): bool
@@ -116,12 +117,12 @@ class User extends Record
             $url = $data->url;
         }
 
-        $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);
+        $this->getUserService()->passwordChangeRequest($userName, $emailAddress, $url);
 
         return true;
     }
 
-    public function postActionGenerateNewApiKey(Request $request): StdClass
+    public function postActionGenerateNewApiKey(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -133,7 +134,7 @@ class User extends Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()
+        return $this->getUserService()
             ->generateNewApiKeyForEntity($data->id)
             ->getValueMap();
     }
@@ -150,7 +151,7 @@ class User extends Record
             throw new Forbidden();
         }
 
-        $this->getRecordService()->generateNewPasswordForUser($data->id);
+        $this->getUserService()->generateNewPasswordForUser($data->id);
 
         return true;
     }
@@ -186,5 +187,10 @@ class User extends Record
                 'value' => $userType,
             ])
         );
+    }
+
+    private function getUserService(): Service
+    {
+        return $this->getServiceFactory()->create('User');
     }
 }

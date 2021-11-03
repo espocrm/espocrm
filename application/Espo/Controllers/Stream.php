@@ -66,9 +66,9 @@ class Stream
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
-        $after = $request->get('after');
-        $filter = $request->get('filter');
-        $skipOwn = $request->get('skipOwn') === 'true';
+        $after = $request->getQueryParam('after');
+        $filter = $request->getQueryParam('filter');
+        $skipOwn = $request->getQueryParam('skipOwn') === 'true';
 
         $result = $this->service->find($scope, $id, [
             'offset' => $offset,
@@ -96,9 +96,8 @@ class Stream
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
-        $after = $request->get('after');
-
-        $where = $request->get('where');
+        $after = $request->getQueryParam('after');
+        $where = $request->getQueryParam('where');
 
         $result = $this->service->find($scope, $id, [
             'offset' => $offset,

@@ -50,7 +50,7 @@ class Notification extends RecordBase
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
-        $after = $request->get('after');
+        $after = $request->getQueryParam('after');
 
         $params = [
             'offset' => $offset,
