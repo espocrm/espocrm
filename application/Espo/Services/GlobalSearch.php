@@ -118,7 +118,7 @@ class GlobalSearch implements
 
         foreach ($rows as $row) {
             $entity = $this->entityManager
-                ->getRepository($row['entityType'])
+                ->getRDBRepository($row['entityType'])
                 ->select(['id', 'name'])
                 ->where(['id' => $row['id']])
                 ->findOne();

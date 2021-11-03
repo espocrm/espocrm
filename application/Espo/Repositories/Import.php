@@ -29,6 +29,8 @@
 
 namespace Espo\Repositories;
 
+use Espo\Entities\Import as ImportEntity;
+
 use Espo\ORM\{
     Entity,
     Query\Select as Query,
@@ -39,22 +41,21 @@ use Espo\Core\Repositories\Database;
 
 class Import extends Database
 {
-    public function findResultRecords(Entity $entity, string $relationName, Query $query): Collection
+    public function findResultRecords(ImportEntity $entity, string $relationName, Query $query): Collection
     {
         $entityType = $entity->get('entityType');
 
         $params = $params ?? [];
 
-
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
         return $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($modifiedQuery)
             ->find();
     }
 
-    protected function addImportEntityJoin(Entity $entity, string $link, Query $query): Query
+    protected function addImportEntityJoin(ImportEntity $entity, string $link, Query $query): Query
     {
         $entityType = $entity->get('entityType');
 
@@ -96,7 +97,7 @@ class Import extends Database
         return $builder->build();
     }
 
-    public function countResultRecords(Entity $entity, string $relationName, ?Query $query = null): int
+    public function countResultRecords(ImportEntity $entity, string $relationName, ?Query $query = null): int
     {
         $entityType = $entity->get('entityType');
 
@@ -110,7 +111,7 @@ class Import extends Database
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
         return $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($modifiedQuery)
             ->count();
     }
@@ -119,6 +120,7 @@ class Import extends Database
     {
         if ($entity->get('fileId')) {
             $attachment = $this->entityManager->getEntity('Attachment', $entity->get('fileId'));
+
             if ($attachment) {
                 $this->entityManager->removeEntity($attachment);
             }

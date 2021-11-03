@@ -43,6 +43,9 @@ use Espo\Core\Record\ReadParams;
 
 use Espo\Core\Di;
 
+use Espo\Entities\ExternalAccount as ExternalAccountEntity;
+use Espo\Entities\Integration as IntegrationEntity;
+
 use Exception;
 
 class ExternalAccount extends Record implements Di\HookManagerAware
@@ -51,31 +54,32 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
     protected function getClient(string $integration, string $id)
     {
-        $integrationEntity = $this->getEntityManager()->getEntity('Integration', $integration);
+        /** @var IntegrationEntity $integrationEntity */
+        $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
 
         if (!$integrationEntity) {
             throw new NotFound();
         }
 
-        $d = $integrationEntity->toArray();
+        $integrationEntity->toArray(); // ?
 
         if (!$integrationEntity->get('enabled')) {
             throw new Error("{$integration} is disabled.");
         }
 
         $factory = new ClientManager(
-            $this->getEntityManager(),
-            $this->getMetadata(),
-            $this->getConfig(),
-            $this->getInjection('injectableFactory')
+            $this->entityManager,
+            $this->metadata,
+            $this->config,
+            $this->injectableFactory
         );
 
         return $factory->create($integration, $id);
     }
 
-    public function getExternalAccountEntity(string $integration, string $userId)
+    public function getExternalAccountEntity(string $integration, string $userId): ?ExternalAccountEntity
     {
-        return $this->getEntityManager()->getEntity('ExternalAccount', $integration . '__' . $userId);
+        return $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
     }
 
     public function ping(string $integration, string $userId)
@@ -104,7 +108,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
         $entity->set('enabled', true);
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->entityManager->saveEntity($entity);
 
         $client = $this->getClient($integration, $userId);
 
@@ -121,7 +125,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
                     $entity->set($name, $value);
                 }
 
-                $this->getEntityManager()->saveEntity($entity);
+                $this->entityManager->saveEntity($entity);
 
                 $this->hookManager->process('ExternalAccount', 'afterConnect', $entity, [
                     'integration' => $integration,
@@ -144,19 +148,19 @@ class ExternalAccount extends Record implements Di\HookManagerAware
     {
         list ($integration, $userId) = explode('__', $id);
 
-        if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
+        if ($this->getUser()->id != $userId && !$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
-        $entity = $this->getEntityManager()->getEntity('ExternalAccount', $id);
+        $entity = $this->entityManager->getEntity('ExternalAccount', $id);
 
         if (!$entity) {
             throw new NotFoundSilent("Record does not exist.");
         }
 
-        list($integration, $id) = explode('__', $entity->id);
+        list($integration, $id) = explode('__', $entity->getId());
 
-        $externalAccountSecretAttributeList = $this->getMetadata()
+        $externalAccountSecretAttributeList = $this->metadata
             ->get(['integrations', $integration, 'externalAccountSecretAttributeList']) ?? [];
 
         foreach ($externalAccountSecretAttributeList as $a) {

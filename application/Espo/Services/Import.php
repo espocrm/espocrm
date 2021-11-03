@@ -29,6 +29,9 @@
 
 namespace Espo\Services;
 
+use Espo\Repositories\Import as Repository;
+use Espo\Entities\Import as ImportEntity;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Record\Collection as RecordCollection,
@@ -46,7 +49,8 @@ class Import extends Record
             return parent::findLinked($id, $link, $searchParams);
         }
 
-        $entity = $this->getRepository()->get($id);
+        /** @var ImportEntity $entity */
+        $entity = $this->getImportRepository()->get($id);
 
         $foreignEntityType = $entity->get('entityType');
 
@@ -65,7 +69,7 @@ class Import extends Record
             ->withSearchParams($searchParams)
             ->build();
 
-        $collection = $this->getRepository()->findResultRecords($entity, $link, $query);
+        $collection = $this->getImportRepository()->findResultRecords($entity, $link, $query);
 
         $listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);
 
@@ -76,8 +80,13 @@ class Import extends Record
             $recordService->prepareEntityForOutput($e);
         }
 
-        $total = $this->getRepository()->countResultRecords($entity, $link, $query);
+        $total = $this->getImportRepository()->countResultRecords($entity, $link, $query);
 
         return new RecordCollection($collection, $total);
+    }
+
+    private function getImportRepository(): Repository
+    {
+        return $this->getRepository();
     }
 }
