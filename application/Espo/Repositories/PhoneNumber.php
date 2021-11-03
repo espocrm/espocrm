@@ -67,7 +67,7 @@ class PhoneNumber extends Database implements
             $exist = [];
 
             foreach ($phoneNumbers as $phoneNumber) {
-                $ids[] = $phoneNumber->id;
+                $ids[] = $phoneNumber->getId();
                 $exist[] = $phoneNumber->get('name');
             }
 
@@ -85,7 +85,7 @@ class PhoneNumber extends Database implements
 
                     $this->save($phoneNumber);
 
-                    $ids[] = $phoneNumber->id;
+                    $ids[] = $phoneNumber->getId();
                 }
             }
         }
@@ -107,7 +107,7 @@ class PhoneNumber extends Database implements
                 ]
             )
             ->where([
-                'en.entityId' => $entity->id,
+                'en.entityId' => $entity->getId(),
                 'en.entityType' => $entity->getEntityType(),
                 'en.deleted' => false,
             ])
@@ -146,13 +146,13 @@ class PhoneNumber extends Database implements
             $where[] = [
                 'OR' => [
                     'entityType!=' => $exceptionEntity->getEntityType(),
-                    'entityId!=' => $exceptionEntity->id,
+                    'entityId!=' => $exceptionEntity->getId(),
                 ]
             ];
         }
 
         $itemList = $this->entityManager
-            ->getRepository('EntityPhoneNumber')
+            ->getRDBRepository('EntityPhoneNumber')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -192,7 +192,8 @@ class PhoneNumber extends Database implements
             $where[] = ['entityType' => $entityType];
         }
 
-        $itemList = $this->entityManager->getRepository('EntityPhoneNumber')
+        $itemList = $this->entityManager
+            ->getRDBRepository('EntityPhoneNumber')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)

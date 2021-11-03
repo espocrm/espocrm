@@ -33,9 +33,15 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
-
 use Espo\Core\Repositories\Database;
 
+use Espo\Repositories\UserData as UserDataRepository;
+use Espo\Entities\UserData;
+
+/**
+ * @template T of \Espo\Entities\User
+ * @extends Database<\Espo\Entities\User>
+ */
 class User extends Database
 {
     protected function beforeSave(Entity $entity, array $options = [])
@@ -62,16 +68,16 @@ class User extends Database
 
         if ($entity->has('type') && !$entity->isPortal()) {
             $entity->set('portalRolesIds', []);
-            $entity->set('portalRolesNames', (object)[]);
+            $entity->set('portalRolesNames', (object) []);
             $entity->set('portalsIds', []);
-            $entity->set('portalsNames', (object)[]);
+            $entity->set('portalsNames', (object) []);
         }
 
         if ($entity->has('type') && $entity->isPortal()) {
             $entity->set('rolesIds', []);
-            $entity->set('rolesNames', (object)[]);
+            $entity->set('rolesNames', (object) []);
             $entity->set('teamsIds', []);
-            $entity->set('teamsNames', (object)[]);
+            $entity->set('teamsNames', (object) []);
             $entity->set('defaultTeamId', null);
             $entity->set('defaultTeamName', null);
         }
@@ -137,7 +143,7 @@ class User extends Database
     {
         parent::afterRemove($entity, $options);
 
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($entity->id);
+        $userData = $this->getUserDataRepository()->getByUserId($entity->getId());
 
         if ($userData) {
             $this->entityManager->removeEntity($userData);
@@ -158,5 +164,10 @@ class User extends Database
                 'teamId' => $teamIds,
             ])
             ->findOne();
+    }
+
+    private function getUserDataRepository(): UserDataRepository
+    {
+        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

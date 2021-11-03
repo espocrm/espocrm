@@ -48,6 +48,10 @@ use stdClass;
 use RuntimeException;
 use PDO;
 
+/**
+ * @template T of Entity
+ * @implements Repository<T>
+ */
 class RDBRepository implements Repository
 {
     protected $entityType;

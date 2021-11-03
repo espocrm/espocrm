@@ -50,7 +50,8 @@ use Espo\Core\{
 };
 
 /**
- * The default repository used for all entities.
+ * @template T of \Espo\Core\ORM\Entity
+ * @extends RDBRepository<\Espo\Core\ORM\Entity>
  */
 class Database extends RDBRepository
 {
@@ -116,6 +117,9 @@ class Database extends RDBRepository
     {
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     public function save(Entity $entity, array $options = []): void
     {
         if (
@@ -135,6 +139,9 @@ class Database extends RDBRepository
         parent::save($entity, $options);
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
@@ -156,6 +163,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -165,6 +175,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         if ($this->hooksDisabled || !empty($options['skipHooks'])) {
@@ -185,6 +198,9 @@ class Database extends RDBRepository
         );
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
@@ -216,6 +232,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
@@ -242,6 +261,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
@@ -251,6 +273,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         if (!empty($this->restoreData)) {
@@ -266,6 +291,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
         if ($entity->isNew()) {
@@ -295,6 +323,9 @@ class Database extends RDBRepository
         }
     }
 
+    /**
+     * @phpstan-param T $entity
+     */
     private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
     {
         $nowString = DateTimeUtil::getSystemNowString();
@@ -325,6 +356,7 @@ class Database extends RDBRepository
     }
 
     /**
+     * @phpstan-param T $entity
      * @return mixed
      */
     private function getAttributeParam(Entity $entity, string $attribute, string $param)
@@ -345,6 +377,7 @@ class Database extends RDBRepository
     }
 
     /**
+     * @phpstan-param T $entity
      * @return mixed
      */
     private function getRelationParam(Entity $entity, string $relation, string $param)

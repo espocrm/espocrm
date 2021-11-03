@@ -43,7 +43,7 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
 
         if ($entity->isAttributeChanged('scheduling')) {
             $jobList = $this->entityManager
-                ->getRepository('Job')
+                ->getRDBRepository('Job')
                 ->where([
                     'scheduledJobId' => $entity->id,
                     'status' => Status::PENDING,

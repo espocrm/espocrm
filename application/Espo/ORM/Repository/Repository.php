@@ -33,26 +33,36 @@ use Espo\ORM\Entity;
 
 /**
  * An access point for fetching and storing records.
+ *
+ * @template T of Entity
  */
 interface Repository
 {
     /**
      * Get a new entity.
+     *
+     * @phpstan-return T
      */
     public function getNew(): Entity;
 
     /**
      * Fetch an entity by ID.
+     *
+     * @phpstan-return ?T
      */
     public function getById(string $id): ?Entity;
 
     /**
      * Store an entity.
+     *
+     * @phpstan-param T $entity
      */
     public function save(Entity $entity, array $options = []): void;
 
     /**
      * Remove an entity.
+     *
+     * @phpstan-param T $entity
      */
     public function remove(Entity $entity, array $options = []): void;
 }

@@ -75,7 +75,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $exist = [];
 
             foreach ($eaCollection as $ea) {
-                $ids[] = $ea->id;
+                $ids[] = $ea->getId();
                 $exist[] = $ea->get('lower');
             }
 
@@ -93,7 +93,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
                     $this->save($ea);
 
-                    $ids[] = $ea->id;
+                    $ids[] = $ea->getId();
                 }
             }
         }
@@ -115,7 +115,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 ]
             )
             ->where([
-                'ee.entityId' => $entity->id,
+                'ee.entityId' => $entity->getId(),
                 'ee.entityType' => $entity->getEntityType(),
                 'ee.deleted' => false,
             ])
@@ -159,7 +159,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $where[] = [
                 'OR' => [
                     'entityType!=' => $exceptionEntity->getEntityType(),
-                    'entityId!=' => $exceptionEntity->id,
+                    'entityId!=' => $exceptionEntity->getId(),
                 ]
             ];
         }

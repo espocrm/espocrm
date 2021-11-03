@@ -35,10 +35,16 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\Core\Utils\Json;
 
+use Espo\Entities\Preferences as PreferencesEntity;
+use Espo\Entities\User;
+
 use stdClass;
 
 use Espo\Core\Di;
 
+/**
+ * @implements Repository<PreferencesEntity>
+ */
 class Preferences implements Repository,
 
     Di\MetadataAware,
@@ -75,9 +81,10 @@ class Preferences implements Repository,
 
     public function getById(string $id): ?Entity
     {
+        /** @var PreferencesEntity $entity */
         $entity = $this->entityFactory->create('Preferences');
 
-        $entity->id = $id;
+        $entity->set('id', $id);
 
         if (!isset($this->data[$id])) {
             $this->loadData($id);
@@ -160,9 +167,9 @@ class Preferences implements Repository,
         $this->data[$id] = $defaults;
     }
 
-    protected function fetchAutoFollowEntityTypeList(Entity $entity)
+    protected function fetchAutoFollowEntityTypeList(PreferencesEntity $entity)
     {
-        $id = $entity->id;
+        $id = $entity->getId();
 
         $autoFollowEntityTypeList = [];
 
@@ -179,12 +186,13 @@ class Preferences implements Repository,
         }
 
         $this->data[$id]['autoFollowEntityTypeList'] = $autoFollowEntityTypeList;
+
         $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
     }
 
     protected function storeAutoFollowEntityTypeList(Entity $entity)
     {
-        $id = $entity->id;
+        $id = $entity->getId();
 
         if (!$entity->isAttributeChanged('autoFollowEntityTypeList')) {
             return;
@@ -192,7 +200,8 @@ class Preferences implements Repository,
 
         $entityTypeList = $entity->get('autoFollowEntityTypeList') ?? [];
 
-        $delete = $this->entityManager->getQueryBuilder()
+        $delete = $this->entityManager
+            ->getQueryBuilder()
             ->delete()
             ->from('Autofollow')
             ->where([
@@ -216,17 +225,17 @@ class Preferences implements Repository,
 
     public function save(Entity $entity, array $options = []): void
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             return;
         }
 
-        $this->data[$entity->id] = $entity->toArray();
+        $this->data[$entity->getId()] = $entity->toArray();
 
         $fields = $fields = $this->metadata->get('entityDefs.Preferences.fields');
 
         $data = [];
 
-        foreach ($this->data[$entity->id] as $field => $value) {
+        foreach ($this->data[$entity->getId()] as $field => $value) {
             if (empty($fields[$field]['notStorable'])) {
                 $data[$field] = $value;
             }
@@ -239,7 +248,7 @@ class Preferences implements Repository,
             ->into('Preferences')
             ->columns(['id', 'data'])
             ->values([
-                'id' => $entity->id,
+                'id' => $entity->getId(),
                 'data' => $dataString,
             ])
             ->updateSet([
@@ -249,7 +258,8 @@ class Preferences implements Repository,
 
         $this->entityManager->getQueryExecutor()->execute($insert);
 
-        $user = $this->entityManager->getEntity('User', $entity->id);
+        /** @var User $user */
+        $user = $this->entityManager->getEntity('User', $entity->getId());
 
         if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
@@ -271,14 +281,14 @@ class Preferences implements Repository,
 
     public function remove(Entity $entity, array $options = []): void
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             return;
         }
 
-        $this->deleteFromDb($entity->id);
+        $this->deleteFromDb($entity->getId());
 
-        if (isset($this->data[$entity->id])) {
-            unset($this->data[$entity->id]);
+        if (isset($this->data[$entity->getId()])) {
+            unset($this->data[$entity->getId()]);
         }
     }
 

@@ -52,7 +52,7 @@ class Portal extends Database implements
 
         $url = $siteUrl . 'portal/';
 
-        if ($entity->id === $this->config->get('defaultPortalId')) {
+        if ($entity->getId() === $this->config->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
         }
@@ -60,7 +60,7 @@ class Portal extends Database implements
             if ($entity->get('customId')) {
                 $url .= $entity->get('customId') . '/';
             } else {
-                $url .= $entity->id . '/';
+                $url .= $entity->getId() . '/';
             }
 
             $entity->set('isDefault', false);
