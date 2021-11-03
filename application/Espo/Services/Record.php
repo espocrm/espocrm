@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\ORM\{
     Entity,
     Collection,
@@ -295,6 +297,10 @@ class Record extends RecordService implements
      */
     public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         foreach ($selectAttributeList as $attribute) {
             if (!$entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
                 continue;

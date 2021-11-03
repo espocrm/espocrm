@@ -32,10 +32,12 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Tools\Stream\NoteAccessControl;
 
-use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\{
     Entity,
@@ -46,6 +48,8 @@ use Espo\ORM\{
 use Espo\{
     Entities\User,
     Entities\Note as NoteEntity,
+    Entities\Email,
+    Entities\EmailAddress,
 };
 
 use Espo\Core\{
@@ -62,7 +66,7 @@ use Espo\Core\{
     Utils\Acl\UserAclManagerProvider,
 };
 
-use StdClass;
+use stdClass;
 use DateTime;
 
 class Stream
@@ -365,7 +369,7 @@ class Stream
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    public function findUserStream(string $userId, array $params = []): StdClass
+    public function findUserStream(string $userId, array $params = []): stdClass
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
@@ -376,6 +380,7 @@ class Stream
             $user = $this->user;
         }
         else {
+            /** @var User $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {
@@ -878,7 +883,7 @@ class Stream
         return $whereClause;
     }
 
-    private function loadNoteAdditionalFields(Entity $e): void
+    private function loadNoteAdditionalFields(NoteEntity $e): void
     {
         if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
             $e->loadAttachments();
@@ -910,7 +915,7 @@ class Stream
         }
     }
 
-    public function find(string $scope, ?string $id, array $params = []): StdClass
+    public function find(string $scope, ?string $id, array $params = []): stdClass
     {
         if ($scope === 'User') {
             if (empty($id)) {
@@ -1132,6 +1137,7 @@ class Stream
             ->limit($params['offset'], $params['maxSize'])
             ->order('number', 'DESC');
 
+        /** @var iterable<NoteEntity> */
         $collection = $this->entityManager
             ->getRDBRepository('Note')
             ->clone($builder->build())
@@ -1189,8 +1195,12 @@ class Stream
      * When users or teams of `related` or `parent` record are changed
      * the note record will be changed too.
      */
-    private function processNoteTeamsUsers(Entity $note, Entity $entity): void
+    private function processNoteTeamsUsers(NoteEntity $note, Entity $entity): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         $note->setAclIsProcessed();
 
         $note->set('teamsIds', []);
@@ -1210,7 +1220,6 @@ class Stream
             return;
         }
 
-        /* @var $defs \Espo\ORM\Defs\EntityDefs */
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         if (!$defs->hasField($ownerUserField)) {
@@ -1249,7 +1258,7 @@ class Stream
         $note->set('usersIds', $userIdList);
     }
 
-    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false): void
+    public function noteEmailReceived(Entity $entity, Email $email, $isInitial = false): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1302,9 +1311,7 @@ class Stream
         $from = $email->get('from');
 
         if ($from) {
-            $person = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddress($from);
+            $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
 
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
@@ -1318,7 +1325,7 @@ class Stream
         $this->entityManager->saveEntity($note);
     }
 
-    public function noteEmailSent(Entity $entity, Entity $email): void
+    public function noteEmailSent(Entity $entity, Email $email): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1363,9 +1370,7 @@ class Stream
             $from = $email->get('from');
 
             if ($from) {
-                $person = $this->entityManager
-                    ->getRepository('EmailAddress')
-                    ->getEntityByAddress($from);
+                $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
             }
         }
 
@@ -2029,7 +2034,7 @@ class Stream
         return $userList;
     }
 
-    public function processNoteAclJob(StdClass $data): void
+    public function processNoteAclJob(stdClass $data): void
     {
         $targetType = $data->targetType;
         $targetId = $data->targetId;
@@ -2054,6 +2059,10 @@ class Stream
      */
     public function processNoteAcl(Entity $entity, bool $forceProcessNoteNotifications = false): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         $entityType = $entity->getEntityType();
 
         if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) {
@@ -2232,5 +2241,10 @@ class Stream
         }
 
         $this->noteAccessControl->apply($note, $user);
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

@@ -135,7 +135,7 @@ class MassUpdate implements MassAction
                 'skipStreamNotesAcl' => true,
             ]);
 
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $count++;
 

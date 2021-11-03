@@ -176,7 +176,7 @@ class FindRelatedManyType extends BaseFunction implements
 
         if ($relationType === 'hasChildren') {
             $queryBuilder->where([
-                $foreignLink . 'Id' => $entity->id,
+                $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),
             ]);
         }
@@ -184,7 +184,7 @@ class FindRelatedManyType extends BaseFunction implements
             $queryBuilder
                 ->join($foreignLink)
                 ->where([
-                    $foreignLink . '.id' => $entity->id,
+                    $foreignLink . '.id' => $entity->getId(),
                 ]);
         }
 
@@ -203,7 +203,7 @@ class FindRelatedManyType extends BaseFunction implements
         $idList = [];
 
         foreach ($collection as $e) {
-            $idList[] = $e->id;
+            $idList[] = $e->getId();
         }
 
         return $idList;

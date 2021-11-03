@@ -431,7 +431,7 @@ class QueueUtil
             $jobIdList = [];
 
             foreach ($toRemoveJobList as $job) {
-                $jobIdList[] = $job->id;
+                $jobIdList[] = $job->getId();
             }
 
             if (!count($jobIdList)) {

@@ -100,7 +100,7 @@ class MassDelete implements MassAction
 
             $repository->remove($entity);
 
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $count++;
 

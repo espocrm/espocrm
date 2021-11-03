@@ -47,6 +47,9 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Config\Access;
 
+use Espo\Entities\Portal;
+use Espo\Repositories\Portal as PortalRepository;
+
 use stdClass;
 
 class Settings
@@ -167,9 +170,7 @@ class Settings
         if ($this->applicationState->isPortal()) {
             $portal = $this->applicationState->getPortal();
 
-            $this->entityManager
-                ->getRepository('Portal')
-                ->loadUrlField($portal);
+            $this->getPortalRepository()->loadUrlField($portal);
 
             $data->siteUrl = $portal->get('url');
         }
@@ -292,5 +293,10 @@ class Settings
     private function processValidation(Entity $entity, stdClass $data): void
     {
         $this->fieldValidationManager->process($entity, $data);
+    }
+
+    private function getPortalRepository(): PortalRepository
+    {
+        return $this->entityManager->getRepository(Portal::class);
     }
 }

@@ -147,7 +147,7 @@ class RecordTree extends Record
         }
 
         foreach ($collection as $entity) {
-            $childList = $this->getTreeInternal($entity->id, $params, $maxDepth, $level + 1);
+            $childList = $this->getTreeInternal($entity->getId(), $params, $maxDepth, $level + 1);
 
             $entity->set('childList', $childList ? $childList->getValueMapList() : null);
         }
@@ -183,13 +183,13 @@ class RecordTree extends Record
                 WhereItem::fromRaw([
                     'type' => 'inCategory',
                     'attribute' => $this->categoryField,
-                    'value' => $entity->id,
+                    'value' => $entity->getId(),
                 ])
             )
             ->build();
 
         $one = $this->entityManager
-            ->getRepository($this->subjectEntityType)
+            ->getRDBRepository($this->subjectEntityType)
             ->clone($query)
             ->findOne();
 
@@ -246,7 +246,7 @@ class RecordTree extends Record
             if ($parent) {
                 $parentId = $parent->get('parentId');
 
-                array_unshift($arr, $parent->id);
+                array_unshift($arr, $parent->getId());
             }
             else {
                 $parentId = null;
@@ -347,7 +347,7 @@ class RecordTree extends Record
                 ->withStrictAccessControl()
                 ->buildQueryBuilder()
                 ->where([
-                    'parentId' => $entity->id,
+                    'parentId' => $entity->getId(),
                 ])
                 ->build();
 
@@ -356,7 +356,7 @@ class RecordTree extends Record
                 ->count();
 
             if (!$count) {
-                $idList[] = $entity->id;
+                $idList[] = $entity->getId();
 
                 continue;
             }
@@ -377,7 +377,7 @@ class RecordTree extends Record
                 }
 
                 if (!$isNotEmpty) {
-                    $idList[] = $entity->id;
+                    $idList[] = $entity->getId();
                 }
             }
         }
