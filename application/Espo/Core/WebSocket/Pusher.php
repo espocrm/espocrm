@@ -80,10 +80,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
+        /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
         $userId = $this->getUserIdByConnection($connection);
@@ -137,10 +134,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
+        /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
         $userId = $this->getUserIdByConnection($connection);
@@ -260,23 +254,18 @@ class Pusher implements WampServerInterface
 
     protected function getUserIdByConnection(ConnectionInterface $connection)
     {
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
+        /** @phpstan-ignore-next-line */
         if (!isset($this->connectionIdUserIdMap[$connection->resourceId])) {
             return;
         }
 
+        /** @phpstan-ignore-next-line */
         return $this->connectionIdUserIdMap[$connection->resourceId];
     }
 
     protected function subscribeUser(ConnectionInterface $connection, $userId)
     {
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
+        /** @phpstan-ignore-next-line */
         $resourceId = $connection->resourceId;
 
         $this->connectionIdUserIdMap[$resourceId] = $userId;
@@ -298,10 +287,7 @@ class Pusher implements WampServerInterface
 
     protected function unsubscribeUser(ConnectionInterface $connection, $userId)
     {
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
+        /** @phpstan-ignore-next-line */
         $resourceId = $connection->resourceId;
 
         unset($this->connectionIdUserIdMap[$resourceId]);
@@ -322,18 +308,12 @@ class Pusher implements WampServerInterface
 
     public function onOpen(ConnectionInterface $connection)
     {
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
-        if (!property_exists($connection, 'httpRequest')) {
-            return;
-        }
-
         if ($this->isDebugMode) {
+            /** @phpstan-ignore-next-line */
             $this->log("{$connection->resourceId}: open");
         }
 
+        /** @phpstan-ignore-next-line */
         $httpRequest = $connection->httpRequest;
 
         $query = $httpRequest->getUri()->getQuery();
@@ -385,11 +365,8 @@ class Pusher implements WampServerInterface
 
     public function onClose(ConnectionInterface $connection)
     {
-        if (!property_exists($connection, 'resourceId')) {
-            return;
-        }
-
         if ($this->isDebugMode) {
+            /** @phpstan-ignore-next-line */
             $this->log("{$connection->resourceId}: close");
         }
 
@@ -399,6 +376,7 @@ class Pusher implements WampServerInterface
             $this->unsubscribeUser($connection, $userId);
         }
 
+        /** @phpstan-ignore-next-line */
         unset($this->connections[$connection->resourceId]);
     }
 
