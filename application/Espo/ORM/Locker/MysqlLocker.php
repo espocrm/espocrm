@@ -29,9 +29,10 @@
 
 namespace Espo\ORM\Locker;
 
+use Espo\ORM\QueryComposer\MysqlQueryComposer;
+
 use Espo\ORM\{
     TransactionManager,
-    QueryComposer\QueryComposer,
     Query\LockTableBuilder,
 };
 
@@ -51,7 +52,7 @@ class MysqlLocker implements Locker
 
     private $isLocked = false;
 
-    public function __construct(PDO $pdo, QueryComposer $queryComposer, TransactionManager $transactionManager)
+    public function __construct(PDO $pdo, MysqlQueryComposer $queryComposer, TransactionManager $transactionManager)
     {
         $this->pdo = $pdo;
         $this->queryComposer = $queryComposer;

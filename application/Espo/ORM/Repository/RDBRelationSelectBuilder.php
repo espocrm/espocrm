@@ -164,9 +164,7 @@ class RDBRelationSelectBuilder
     {
         $transformedWhere = [];
 
-        $middleName = lcfirst(
-            $this->entity->getRelationParam($this->relationName, 'relationName')
-        );
+        $middleName = lcfirst($this->getRelationParam('relationName'));
 
         foreach ($where as $key => $value) {
             $transformedKey = $key;
@@ -429,7 +427,7 @@ class RDBRelationSelectBuilder
         }
 
         if (!$this->middleTableAlias) {
-            $middleName = $this->entity->getRelationParam($this->relationName, 'relationName');
+            $middleName = $this->getRelationParam('relationName');
 
             if (!$middleName) {
                 throw new RuntimeException("No relation name.");
@@ -494,5 +492,25 @@ class RDBRelationSelectBuilder
         }
 
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRelationParam(string $param)
+    {
+        if ($this->entity instanceof BaseEntity) {
+            return $this->entity->getRelationParam($this->relationName, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($this->relationName)) {
+            return null;
+        }
+
+        return $entityDefs->getRelation($this->relationName)->getParam($param);
     }
 }

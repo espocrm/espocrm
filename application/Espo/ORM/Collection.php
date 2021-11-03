@@ -36,7 +36,7 @@ use stdClass;
  * A collection of entities.
  *
  * @template TValue of Entity
- * @extends Traversable<TValue>
+ * @bypass-extends Traversable<TValue>
  *
  * @todo Extend from Traversable once the min supported PHP version is 7.4. Remove bypass.
  */
