@@ -33,11 +33,17 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\Attachment as AttachmentEntity;
 
+use Espo\Core\Repositories\Database;
+
 use Espo\Core\Di;
 
 use Psr\Http\Message\StreamInterface;
 
-class Attachment extends \Espo\Core\Repositories\Database implements
+/**
+ * @template T of \Espo\Entities\Attachment
+ * @extends Database<\Espo\Entities\Attachment>
+ */
+class Attachment extends Database implements
     Di\FileManagerAware,
     Di\FileStorageManagerAware,
     Di\ConfigAware
@@ -92,6 +98,9 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         $this->fileStorageManager->putContents($entity, $contents);
     }
 
+    /**
+     * @param AttachmentEntity $entity
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

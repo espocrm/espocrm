@@ -29,6 +29,7 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
@@ -40,7 +41,7 @@ class ArrayValue extends Database
 {
     protected $hooksDisabled = true;
 
-    public function storeEntityAttribute(Entity $entity, string $attribute, bool $populateMode = false): void
+    public function storeEntityAttribute(CoreEntity $entity, string $attribute, bool $populateMode = false): void
     {
         if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
             throw new Error("ArrayValue: Can't store non array attribute.");
@@ -83,7 +84,7 @@ class ArrayValue extends Database
                 ->select(['id', 'value'])
                 ->where([
                     'entityType' => $entity->getEntityType(),
-                    'entityId' => $entity->id,
+                    'entityId' => $entity->getId(),
                     'attribute' => $attribute,
                 ])
                 ->forUpdate()
@@ -91,7 +92,7 @@ class ArrayValue extends Database
 
             foreach ($existingList as $existing) {
                 if (!in_array($existing->get('value'), $valueList)) {
-                    $this->deleteFromDb($existing->id);
+                    $this->deleteFromDb($existing->getId());
 
                     continue;
                 }
@@ -113,7 +114,7 @@ class ArrayValue extends Database
 
             $arrayValue->set([
                 'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'attribute' => $attribute,
                 'value' => $value,
             ]);
@@ -126,9 +127,9 @@ class ArrayValue extends Database
         }
     }
 
-    public function deleteEntityAttribute(Entity $entity, string $attribute): void
+    public function deleteEntityAttribute(CoreEntity $entity, string $attribute): void
     {
-        if (!$entity->id) {
+        if (!$entity->getId()) {
             throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");
         }
 
@@ -138,14 +139,14 @@ class ArrayValue extends Database
             ->select(['id'])
             ->where([
                 'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'attribute' => $attribute,
             ])
             ->forUpdate()
             ->find();
 
         foreach ($list as $arrayValue) {
-            $this->deleteFromDb($arrayValue->id);
+            $this->deleteFromDb($arrayValue->getId());
         }
 
         $this->entityManager->getTransactionManager()->commit();
