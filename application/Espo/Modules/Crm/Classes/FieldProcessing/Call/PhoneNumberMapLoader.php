@@ -31,13 +31,15 @@ namespace Espo\Modules\Crm\Classes\FieldProcessing\Call;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\Loader\Params,
     ORM\EntityManager,
 };
 
-use StdClass;
+use stdClass;
 
 class PhoneNumberMapLoader implements Loader
 {
@@ -54,6 +56,8 @@ class PhoneNumberMapLoader implements Loader
     {
         $map = (object) [];
 
+        assert($entity instanceof CoreEntity);
+
         $contactIdList = $entity->getLinkMultipleIdList('contacts');
 
         if (count($contactIdList)) {
@@ -69,7 +73,7 @@ class PhoneNumberMapLoader implements Loader
         $entity->set('phoneNumbersMap', $map);
     }
 
-    private function populate(StdClass $map, string $entityType, array $idList): void
+    private function populate(stdClass $map, string $entityType, array $idList): void
     {
         $entityList = $this->entityManager
             ->getRDBRepository($entityType)

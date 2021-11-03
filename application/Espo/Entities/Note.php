@@ -147,7 +147,7 @@ class Note extends Entity
         $attachmentsIds = $data->attachmentsIds;
 
         $collection = $this->entityManager
-            ->getRepository('Attachment')
+            ->getRDBRepository('Attachment')
             ->select(['id', 'name', 'type'])
             ->order('createdAt')
             ->where([

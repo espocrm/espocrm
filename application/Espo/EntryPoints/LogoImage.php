@@ -49,8 +49,8 @@ class LogoImage extends Image implements Di\ConfigAware
 
     public function run(Request $request, Response $response): void
     {
-        $id = $request->get('id');
-        $size = $request->get('size') ?? null;
+        $id = $request->getQueryParam('id');
+        $size = $request->getQueryParam('size') ?? null;
 
         if (!$id) {
             $id = $this->config->get('companyLogoId');

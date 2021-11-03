@@ -69,7 +69,7 @@ class WebSocketSubmit
         }
 
         $scope = $entity->getEntityType();
-        $id = $entity->id;
+        $id = $entity->getId();
 
         if (!$this->metadata->get(['scopes', $scope, 'object'])) {
             return;

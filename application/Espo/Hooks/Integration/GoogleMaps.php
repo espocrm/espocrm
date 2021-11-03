@@ -31,22 +31,27 @@ namespace Espo\Hooks\Integration;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\Integration;
+
 use Espo\Core\{
     Utils\Config\ConfigWriter,
 };
 
 class GoogleMaps
 {
-    protected $configWriter;
+    private $configWriter;
 
     public function __construct(ConfigWriter $configWriter)
     {
         $this->configWriter = $configWriter;
     }
 
+    /**
+     * @param Integration $entity
+     */
     public function afterSave(Entity $entity)
     {
-        if ($entity->id !== 'GoogleMaps') {
+        if ($entity->getId() !== 'GoogleMaps') {
             return;
         }
 

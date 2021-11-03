@@ -31,6 +31,8 @@ namespace Espo\Hooks\Portal;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\Portal;
+
 use Espo\Core\{
     Utils\Config,
     Utils\Config\ConfigWriter,
@@ -38,9 +40,9 @@ use Espo\Core\{
 
 class WriteConfig
 {
-    protected $config;
+    private $config;
 
-    protected $configWriter;
+    private $configWriter;
 
     public function __construct(Config $config, ConfigWriter $configWriter)
     {
@@ -48,6 +50,9 @@ class WriteConfig
         $this->configWriter = $configWriter;
     }
 
+    /**
+     * @param Portal $entity
+     */
     public function afterSave(Entity $entity)
     {
         if (!$entity->has('isDefault')) {
@@ -57,17 +62,16 @@ class WriteConfig
         if ($entity->get('isDefault')) {
             $defaultPortalId = $this->config->get('defaultPortalId');
 
-            if ($defaultPortalId === $entity->id) {
+            if ($defaultPortalId === $entity->getId()) {
                 return;
             }
 
-            $this->configWriter->set('defaultPortalId', $entity->id);
+            $this->configWriter->set('defaultPortalId', $entity->getId());
 
             $this->configWriter->save();
         }
 
         if ($entity->isAttributeChanged('isDefault') && $entity->getFetched('isDefault')) {
-
             $this->configWriter->set('defaultPortalId', null);
 
             $this->configWriter->save();

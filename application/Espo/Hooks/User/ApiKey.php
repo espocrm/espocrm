@@ -31,19 +31,22 @@ namespace Espo\Hooks\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Utils\ApiKey as ApiKeyUtil,
-};
+use Espo\Core\Utils\ApiKey as ApiKeyUtil;
+
+use Espo\Entities\User;
 
 class ApiKey
 {
-    protected $apiKey;
+    private $apiKey;
 
     public function __construct(ApiKeyUtil $apiKey)
     {
         $this->apiKey = $apiKey;
     }
 
+    /**
+     * @param User $entity
+     */
     public function afterSave(Entity $entity)
     {
         if (!$entity->isApi()) {
@@ -57,17 +60,20 @@ class ApiKey
                 $entity->isAttributeChanged('authMethod')
             )
         ) {
-            $this->apiKey->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
+            $this->apiKey->storeSecretKeyForUserId($entity->getId(), $entity->get('secretKey'));
         }
 
         if (
             $entity->isAttributeChanged('authMethod') &&
             $entity->get('authMethod') !== 'Hmac'
         ) {
-            $this->apiKey->removeSecretKeyForUserId($entity->id);
+            $this->apiKey->removeSecretKeyForUserId($entity->getId());
         }
     }
 
+    /**
+     * @param User $entity
+     */
     public function afterRemove(Entity $entity)
     {
         if (!$entity->isApi()) {
@@ -75,7 +81,7 @@ class ApiKey
         }
 
         if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
-            $this->apiKey->removeSecretKeyForUserId($entity->id);
+            $this->apiKey->removeSecretKeyForUserId($entity->getId());
         }
     }
 }

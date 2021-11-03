@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
 use Espo\ORM\Entity;
 
+use Espo\Modules\Crm\Entities\TargetList;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\Loader\Params,
@@ -56,6 +58,8 @@ class OptedOutCountLoader implements Loader
         ) {
             return;
         }
+
+        assert($entity instanceof TargetList);
 
         $count = 0;
 

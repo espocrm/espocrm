@@ -33,6 +33,8 @@ use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     Acl\ScopeData,
     Acl\AccessEntityCREDChecker,
@@ -60,6 +62,8 @@ class AccessChecker implements AccessEntityCREDChecker
         if ($entity->get('status') !== 'Published') {
             return false;
         }
+
+        assert($entity instanceof CoreEntity);
 
         $portalIdList = $entity->getLinkMultipleIdList('portals');
 

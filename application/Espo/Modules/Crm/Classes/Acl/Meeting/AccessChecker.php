@@ -33,6 +33,8 @@ use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     Acl\ScopeData,
     Acl\Table,
@@ -57,6 +59,8 @@ class AccessChecker implements AccessEntityCREDSChecker
         if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
             return true;
         }
+
+        assert($entity instanceof CoreEntity);
 
         if ($data->getRead() === Table::LEVEL_OWN || $data->getRead() === Table::LEVEL_TEAM) {
             if ($entity->hasLinkMultipleId('users', $user->getId())) {

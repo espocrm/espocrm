@@ -79,9 +79,8 @@ class Avatar extends Image implements Di\MetadataAware
 
     public function run(Request $request, Response $response): void
     {
-        $userId = $request->get('id');
-
-        $size = $request->get('size') ?? null;
+        $userId = $request->getQueryParam('id');
+        $size = $request->getQueryParam('size') ?? null;
 
         if (!$userId) {
             throw new BadRequest();
