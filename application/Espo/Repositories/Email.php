@@ -30,21 +30,33 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
+
+use Espo\Core\Repositories\Database;
 
 use Espo\Core\Di;
 
-class Email extends \Espo\Core\Repositories\Database implements
+use Espo\Entities\Email as EmailEntity;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+use Espo\Entities\EmailAddress;
+
+/**
+ * @template T of \Espo\Entities\Email
+ * @extends Database<\Espo\Entities\Email>
+ */
+class Email extends Database implements
+
     Di\EmailFilterManagerAware
 {
     use Di\EmailFilterManagerSetter;
 
-    protected function prepareAddressess(Entity $entity, $type, $addAssignedUser = false)
+    protected function prepareAddressess(EmailEntity $entity, string $type, bool $addAssignedUser = false): void
     {
         if (!$entity->has($type)) {
             return;
         }
 
-        $eaRepository = $this->entityManager->getRepository('EmailAddress');
+        $eaRepository = $this->getEmailAddressRepository();
 
         $addressValue = $entity->get($type);
         $idList = [];
@@ -73,22 +85,25 @@ class Email extends \Espo\Core\Repositories\Database implements
         $entity->setLinkMultipleIdList($type . 'EmailAddresses', $idList);
     }
 
-    protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
-    {
-        $userList = $this->entityManager
-            ->getRepository('EmailAddress')
+    protected function addUserByEmailAddressId(
+        EmailEntity $entity,
+        string $emailAddressId,
+        bool $addAssignedUser = false
+    ): void {
+
+        $userList = $this->getEmailAddressRepository()
             ->getEntityListByAddressId($emailAddressId, null, 'User', true);
 
         foreach ($userList as $user) {
-            $entity->addLinkMultipleId('users', $user->id);
+            $entity->addLinkMultipleId('users', $user->getId());
 
             if ($addAssignedUser) {
-                $entity->addLinkMultipleId('assignedUsers', $user->id);
+                $entity->addLinkMultipleId('assignedUsers', $user->getId());
             }
         }
     }
 
-    public function loadFromField(Entity $entity): void
+    public function loadFromField(EmailEntity $entity): void
     {
         if ($entity->get('fromEmailAddressName')) {
             $entity->set('from', $entity->get('fromEmailAddressName'));
@@ -97,9 +112,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
 
         if ($entity->get('fromEmailAddressId')) {
-            $ea = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->get($entity->get('fromEmailAddressId'));
+            $ea = $this->getEmailAddressRepository()->get($entity->get('fromEmailAddressId'));
 
             if ($ea) {
                 $entity->set('from', $ea->get('name'));
@@ -115,9 +128,10 @@ class Email extends \Espo\Core\Repositories\Database implements
         $entity->set('from', null);
     }
 
-    public function loadToField(Entity $entity): void
+    public function loadToField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('toEmailAddresses');
+
         $names = $entity->get('toEmailAddressesNames');
 
         if (!empty($names)) {
@@ -131,7 +145,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadCcField(Entity $entity): void
+    public function loadCcField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('ccEmailAddresses');
         $names = $entity->get('ccEmailAddressesNames');
@@ -147,7 +161,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadBccField(Entity $entity): void
+    public function loadBccField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('bccEmailAddresses');
         $names = $entity->get('bccEmailAddressesNames');
@@ -163,9 +177,10 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadReplyToField(Entity $entity): void
+    public function loadReplyToField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('replyToEmailAddresses');
+
         $names = $entity->get('replyToEmailAddressesNames');
 
         if (!empty($names)) {
@@ -179,7 +194,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
+    public function loadNameHash(EmailEntity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo']): void
     {
         $addressList = [];
 
@@ -231,9 +246,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         $idHash = (object) [];
 
         foreach ($addressList as $address) {
-            $p = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddress($address);
+            $p = $this->getEmailAddressRepository()->getEntityByAddress($address);
 
             if (!$p) {
                 $p = $this->entityManager
@@ -246,7 +259,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                 $nameHash->$address = $p->get('name');
                 $typeHash->$address = $p->getEntityType();
 
-                $idHash->$address = $p->id;
+                $idHash->$address = $p->getId();
             }
         }
 
@@ -293,9 +306,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                 $from = trim($entity->get('from'));
 
                 if (!empty($from)) {
-                    $ids = $this->entityManager
-                        ->getRepository('EmailAddress')
-                        ->getIds([$from]);
+                    $ids = $this->getEmailAddressRepository()->getIds([$from]);
 
                     if (!empty($ids)) {
                         $entity->set('fromEmailAddressId', $ids[0]);
@@ -304,8 +315,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {
-                            $user = $this->entityManager
-                                ->getRepository('EmailAddress')
+                            $user = $this->getEmailAddressRepository()
                                 ->getEntityByAddressId(
                                     $entity->get('fromEmailAddressId'),
                                     'User',
@@ -313,7 +323,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                                 );
 
                             if ($user) {
-                                $entity->set('sentById', $user->id);
+                                $entity->set('sentById', $user->getId());
                             }
                         }
                     }
@@ -325,12 +335,15 @@ class Email extends \Espo\Core\Repositories\Database implements
             if ($entity->has('to')) {
                 $this->prepareAddressess($entity, 'to', true);
             }
+
             if ($entity->has('cc')) {
                 $this->prepareAddressess($entity, 'cc');
             }
+
             if ($entity->has('bcc')) {
                 $this->prepareAddressess($entity, 'bcc');
             }
+
             if ($entity->has('replyTo')) {
                 $this->prepareAddressess($entity, 'replyTo');
             }
@@ -364,7 +377,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function fillAccount(Entity $entity)
+    public function fillAccount(EmailEntity $entity): void
     {
         if (!$entity->isNew()) {
             $entity->set('accountId', null);
@@ -380,12 +393,13 @@ class Email extends \Espo\Core\Repositories\Database implements
                 $accountId = null;
 
                 if ($parent->getEntityType() == 'Account') {
-                    $accountId = $parent->id;
+                    $accountId = $parent->getId();
                 }
 
                 if (
                     !$accountId &&
                     $parent->get('accountId') &&
+                    $parent instanceof CoreEntity &&
                     $parent->getRelationParam('account', 'entity') == 'Account'
                 ) {
                     $accountId = $parent->get('accountId');
@@ -403,7 +417,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function applyUsersFilters(Entity $entity)
+    public function applyUsersFilters(EmailEntity $entity): void
     {
         foreach ($entity->getLinkMultipleIdList('users') as $userId) {
             if ($entity->get('status') === 'Sent') {
@@ -444,7 +458,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                 $replyList = $this->findRelated($entity, 'replies');
 
                 foreach ($replyList as $reply) {
-                    if ($reply->id === $entity->id) {
+                    if ($reply->getId() === $entity->getId()) {
                         continue;
                     }
 
@@ -461,13 +475,12 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
 
         if (
-            ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent')
-            &&
+            ($entity->get('status') === 'Archived' || $entity->get('status') === 'Sent') &&
             ($entity->isAttributeChanged('status') || $entity->isNew())
         ) {
             if ($entity->get('repliedId')) {
                 $replied = $this->entityManager->getEntity('Email', $entity->get('repliedId'));
-                if ($replied && $replied->id !== $entity->id && !$replied->get('isReplied')) {
+                if ($replied && $replied->getId() !== $entity->getId() && !$replied->get('isReplied')) {
                     $replied->set('isReplied', true);
                     $this->entityManager->saveEntity($replied, ['silent' => true]);
                 }
@@ -482,5 +495,10 @@ class Email extends \Espo\Core\Repositories\Database implements
     protected function getEmailFilterManager()
     {
         return $this->emailFilterManager;
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }
