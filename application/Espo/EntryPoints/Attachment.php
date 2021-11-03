@@ -29,6 +29,8 @@
 
 namespace Espo\EntryPoints;
 
+use Espo\Core\Utils\Metadata;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\Forbidden,
@@ -43,24 +45,24 @@ use Espo\Core\{
 
 class Attachment implements EntryPoint
 {
-    protected $fileStorageManager;
+    private $fileStorageManager;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $acl;
+    private $acl;
 
-    protected $allowedFileTypes = [
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp',
-    ];
+    private $metadata;
 
-    public function __construct(FileStorageManager $fileStorageManager, EntityManager $entityManager, Acl $acl)
-    {
+    public function __construct(
+        FileStorageManager $fileStorageManager,
+        EntityManager $entityManager,
+        Acl $acl,
+        Metadata $metadata
+    ) {
         $this->fileStorageManager = $fileStorageManager;
         $this->entityManager = $entityManager;
         $this->acl = $acl;
+        $this->metadata = $metadata;
     }
 
     public function run(Request $request, Response $response): void
@@ -87,8 +89,8 @@ class Attachment implements EntryPoint
 
         $fileType = $attachment->get('type');
 
-        if (!in_array($fileType, $this->allowedFileTypes)) {
-            throw new Forbidden("EntryPoint Attachment: Not allowed type '{$fileType}'.");
+        if (!in_array($fileType, $this->getAllowedFileTypeList())) {
+            throw new Forbidden("Not allowed file type '{$fileType}'.");
         }
 
         if ($attachment->get('type')) {
@@ -103,5 +105,10 @@ class Attachment implements EntryPoint
             ->setHeader('Pragma', 'public')
             ->setHeader('Content-Length', (string) $size)
             ->setBody($stream);
+    }
+
+    private function getAllowedFileTypeList(): array
+    {
+        return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
     }
 }
