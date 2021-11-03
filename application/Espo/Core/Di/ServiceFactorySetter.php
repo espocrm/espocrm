@@ -34,7 +34,7 @@ use Espo\Core\ServiceFactory;
 trait ServiceFactorySetter
 {
     /**
-     * @var ServicaFactory
+     * @var ServiceFactory
      */
     protected $serviceFactory;
 

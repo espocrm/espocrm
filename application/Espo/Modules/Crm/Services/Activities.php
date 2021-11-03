@@ -33,6 +33,11 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
+use Espo\ORM\Query\UnionBuilder;
+use Espo\ORM\Query\SelectBuilder;
+
 use Espo\ORM\{
     Entity,
     Query\Select,
@@ -116,11 +121,8 @@ class Activities implements
         return in_array($scope, ['Account']) || $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
     }
 
-    protected function getActivitiesUserMeetingQuery(
-        Entity $entity,
-        array $statusList = []
-    ) {
-
+    protected function getActivitiesUserMeetingQuery(UserEntity $entity, array $statusList = [])
+    {
         $builder = $this->selectBuilderFactory
             ->create()
             ->from('Meeting')
@@ -151,7 +153,7 @@ class Activities implements
             );
 
         $where = [
-            'usersLeftMiddle.userId' => $entity->id,
+            'usersLeftMiddle.userId' => $entity->getId(),
         ];
 
         if ($entity->isPortal() && $entity->get('contactId')) {
@@ -177,7 +179,7 @@ class Activities implements
         return $builder->build();
     }
 
-    protected function getActivitiesUserCallQuery(Entity $entity, array $statusList = [])
+    protected function getActivitiesUserCallQuery(UserEntity $entity, array $statusList = [])
     {
         $seed = $this->entityManager->getEntity('Call');
 
@@ -217,7 +219,7 @@ class Activities implements
             );
 
         $where = [
-            'usersLeftMiddle.userId' => $entity->id,
+            'usersLeftMiddle.userId' => $entity->getId(),
         ];
 
         if ($entity->isPortal() && $entity->get('contactId')) {
@@ -243,7 +245,7 @@ class Activities implements
         return $builder->build();
     }
 
-    protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [])
+    protected function getActivitiesUserEmailQuery(UserEntity $entity, array $statusList = [])
     {
         if ($entity->isPortal() && $entity->get('contactId')) {
             $contact = $this->entityManager->getEntity('Contact', $entity->get('contactId'));
@@ -282,7 +284,7 @@ class Activities implements
                 ]
             )
             ->where([
-                'usersLeftMiddle.userId' => $entity->id,
+                'usersLeftMiddle.userId' => $entity->getId(),
             ]);
 
         if (!empty($statusList)) {
@@ -301,7 +303,7 @@ class Activities implements
     ) {
 
         $entityType = $entity->getEntityType();
-        $id = $entity->id;
+        $id = $entity->getId();
 
         $methodName = 'getActivities' . $entityType . $targetEntityType . 'Query';
 
@@ -441,7 +443,7 @@ class Activities implements
     protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [])
     {
         $entityType = $entity->getEntityType();
-        $id = $entity->id;
+        $id = $entity->getId();
 
         $methodName = 'getActivities' . $entityType . 'EmailQuery';
 
@@ -682,7 +684,6 @@ class Activities implements
             $builder->limit($offset, $maxSizeQ);
         }
 
-
         $unionQuery = $builder->build();
 
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
@@ -829,6 +830,7 @@ class Activities implements
             $query = $unionBuilder->build();
         }
 
+        /** @var UnionBuilder|SelectBuilder $builder */
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->clone($query);
@@ -845,7 +847,7 @@ class Activities implements
             ->getCollectionFactory()
             ->createFromSthCollection(
                 $this->entityManager
-                    ->getRepository($entityType)
+                    ->getRDBRepository($entityType)
                     ->findBySql($sql)
             );
 
@@ -1351,12 +1353,12 @@ class Activities implements
 
         if ($entity->getEntityType() === 'User') {
             $builder->where([
-                'assignedUserId' => $entity->id,
+                'assignedUserId' => $entity->getId(),
             ]);
         }
         else {
             $builder->where([
-                'parentId' => $entity->id,
+                'parentId' => $entity->getId(),
                 'parentType' => $entity->getEntityType(),
             ]);
         }
@@ -1523,7 +1525,8 @@ class Activities implements
 
         $userIdList = [];
 
-        $userList = $this->entityManager->getRepository('User')
+        $userList = $this->entityManager
+            ->getRDBRepository('User')
             ->select(['id', 'name'])
             ->leftJoin('teams')
             ->where([
@@ -1536,8 +1539,8 @@ class Activities implements
         $userNames = (object) [];
 
         foreach ($userList as $user) {
-            $userIdList[] = $user->id;
-            $userNames->{$user->id} = $user->get('name');
+            $userIdList[] = $user->getId();
+            $userNames->{$user->getId()} = $user->get('name');
         }
 
         $eventList = [];
@@ -1576,7 +1579,7 @@ class Activities implements
     {
         $rangeList = [];
 
-        $eventList = $this->getEventList($userId, $from, $to, $scopeList, true);
+        $eventListInitial = $this->getEventList($userId, $from, $to, $scopeList, true);
 
         $ignoreHash = (object) [];
 
@@ -1588,7 +1591,10 @@ class Activities implements
 
         $canceledStatusList = $this->metadata->get('app.calendar.canceledStatusList') ?? [];
 
-        foreach ($eventList as $i => $item) {
+        /** @var \stdClass[] $eventList */
+        $eventList = [];
+
+        foreach ($eventListInitial as $i => $item) {
             $eventList[$i] = (object) $item;
         }
 
@@ -1742,7 +1748,8 @@ class Activities implements
 
     public function removeReminder(string $id): void
     {
-        $builder = $this->entityManager->getQueryBuilder()
+        $builder = $this->entityManager
+            ->getQueryBuilder()
             ->delete()
             ->from('Reminder')
             ->where([
@@ -1751,7 +1758,7 @@ class Activities implements
 
         if (!$this->user->isAdmin()) {
             $builder->where([
-                'userId' => $this->user->id,
+                'userId' => $this->user->getId(),
             ]);
         }
 
@@ -1769,8 +1776,9 @@ class Activities implements
         $now = $dt->format('Y-m-d H:i:s');
         $nowShifted = $dt->sub(new DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
 
+        /** @var iterable<\Espo\Modules\Crm\Entities\Reminder> $reminderCollection */
         $reminderCollection = $this->entityManager
-            ->getRepository('Reminder')
+            ->getRDBRepository('Reminder')
             ->select(['id', 'entityType', 'entityId'])
             ->where([
                 'type' => 'Popup',
@@ -1795,7 +1803,10 @@ class Activities implements
                 continue;
             }
 
-            if ($entity->hasLinkMultipleField('users')) {
+            if (
+                $entity instanceof CoreEntity &&
+                $entity->hasLinkMultipleField('users')
+            ) {
                 $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
 
@@ -1807,12 +1818,13 @@ class Activities implements
             }
 
             $dateAttribute = 'dateStart';
+
             if ($entityType === 'Task') {
                 $dateAttribute = 'dateEnd';
             }
 
             $data = [
-                'id' => $entity->id,
+                'id' => $entity->getId(),
                 'entityType' => $entityType,
                 $dateAttribute => $entity->get($dateAttribute),
                 'name' => $entity->get('name'),
@@ -1921,8 +1933,8 @@ class Activities implements
         foreach ($rows as $row) {
             $entity = $this->entityManager->getEntity($row['entityType'], $row['id']);
 
-            $entityData = $entity->toArray();
-            $entityData['_scope'] = $entity->getEntityType();
+            $entityData = $entity->getValueMap();
+            $entityData->_scope = $entity->getEntityType();
 
             $entityDataList[] = $entityData;
         }
@@ -2076,7 +2088,7 @@ class Activities implements
 
     protected function getUserTimeZone(UserEntity $user): string
     {
-        $preferences = $this->entityManager->getEntity('Preferences', $user->id);
+        $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
         if ($preferences) {
             $timeZone = $preferences->get('timeZone');
