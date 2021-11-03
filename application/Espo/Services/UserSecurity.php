@@ -87,6 +87,7 @@ class UserSecurity
             throw new Forbidden();
         }
 
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $id);
 
         if (!$user) {
@@ -113,6 +114,7 @@ class UserSecurity
 
         $isReset = $data->reset ?? false;
 
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $id);
 
         if (!$user) {
@@ -161,6 +163,7 @@ class UserSecurity
             throw new Forbidden();
         }
 
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $id);
 
         if (!$user) {

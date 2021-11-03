@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\Entities\User as UserEntity;
+use Espo\Entities\Email as EmailEntity;
 
 use Espo\Core\{
     Exceptions\Forbidden,
@@ -101,6 +102,7 @@ class User extends Record implements
         ?string $currentPassword = null
     ): void {
 
+        /** @var UserEntity $user */
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         if (!$user) {
@@ -123,9 +125,9 @@ class User extends Record implements
             $passwordHash = new PasswordHash($this->getConfig());
 
             $u = $this->getEntityManager()
-                ->getRepository('User')
+                ->getRDBRepository('User')
                 ->where([
-                    'id' => $user->id,
+                    'id' => $user->getId(),
                     'password' => $passwordHash->hash($currentPassword),
                 ])
                 ->findOne();
@@ -290,6 +292,7 @@ class User extends Record implements
             $data->password = $this->hashPassword($data->password);
         }
 
+        /** @var UserEntity $user */
         $user = parent::create($data, $params);
 
         if (!is_null($newPassword) && !empty($data->sendAccessInfo)) {
@@ -328,6 +331,7 @@ class User extends Record implements
             unset($data->type);
         }
 
+        /** @var UserEntity $user */
         $user = parent::update($id, $data, $params);
 
         if (!is_null($newPassword)) {
@@ -344,6 +348,8 @@ class User extends Record implements
 
     public function prepareEntityForOutput(Entity $entity)
     {
+        assert($entity instanceof UserEntity);
+
         parent::prepareEntityForOutput($entity);
 
         if ($entity->isApi()) {
@@ -368,6 +374,7 @@ class User extends Record implements
 
     public function generateNewApiKeyForEntity(string $id): Entity
     {
+        /** @var UserEntity $entity */
         $entity = $this->getEntity($id);
 
         if (!$entity) {
@@ -407,6 +414,7 @@ class User extends Record implements
             }
         }
 
+        /** @var UserEntity $user */
         $user = $this->getEntity($id);
 
         if (!$user) {
@@ -475,7 +483,7 @@ class User extends Record implements
     protected function getInternalUserCount()
     {
         return $this->getEntityManager()
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->where([
                 'isActive' => true,
                 'type' => ['admin', 'regular'],
@@ -487,7 +495,7 @@ class User extends Record implements
     protected function getPortalUserCount()
     {
         return $this->getEntityManager()
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->where([
                 'isActive' => true,
                 'type' => 'portal',
@@ -497,6 +505,8 @@ class User extends Record implements
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
+        /** @var UserEntity $entity */
+
         if (
             $this->getConfig()->get('userLimit') &&
             !$this->getUser()->isSuperAdmin() &&
@@ -548,6 +558,8 @@ class User extends Record implements
 
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
+        /** @var UserEntity $entity */
+
         if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin()) {
             if (
                 (
@@ -607,7 +619,7 @@ class User extends Record implements
         }
     }
 
-    protected function sendPassword(Entity $user, $password)
+    protected function sendPassword(UserEntity $user, $password)
     {
         $emailAddress = $user->get('emailAddress');
 
@@ -615,6 +627,7 @@ class User extends Record implements
             return;
         }
 
+        /** @var EmailEntity $email */
         $email = $this->getEntityManager()->getEntity('Email');
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
@@ -633,13 +646,13 @@ class User extends Record implements
 
             $urlList = [];
 
-            $portalList = $this->getEntityManager()
-                ->getRepository('Portal')
+            $portalList = $this->entityManager
+                ->getRDBRepository('Portal')
                 ->distinct()
                 ->join('users')
                 ->where([
                     'isActive' => true,
-                    'users.id' => $user->id,
+                    'users.id' => $user->getId(),
                 ])
                 ->find();
 
@@ -650,12 +663,12 @@ class User extends Record implements
                 else {
                     $url = $siteUrl . 'portal/';
 
-                    if ($this->getConfig()->get('defaultPortalId') !== $portal->id) {
+                    if ($this->getConfig()->get('defaultPortalId') !== $portal->getId()) {
                         if ($portal->get('customId')) {
                             $url .= $portal->get('customId');
                         }
                         else {
-                            $url .= $portal->id;
+                            $url .= $portal->getId();
                         }
                     }
 
@@ -724,6 +737,8 @@ class User extends Record implements
 
     public function afterUpdateEntity(Entity $entity, $data)
     {
+        assert($entity instanceof UserEntity);
+
         parent::afterUpdateEntity($entity, $data);
 
         if (
@@ -733,7 +748,7 @@ class User extends Record implements
             property_exists($data, 'portalRolesIds') ||
             property_exists($data, 'portalsIds')
         ) {
-            $this->clearRoleCache($entity->id);
+            $this->clearRoleCache($entity->getId());
         }
 
         if (
@@ -760,7 +775,7 @@ class User extends Record implements
                     $contact->set('firstName', $data->firstName);
                 }
 
-                if (array_key_exists('lastName', $data)) {
+                if (property_exists('lastName', $data)) {
                     $contact->set('lastName', $data->lastName);
                 }
 

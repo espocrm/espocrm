@@ -38,7 +38,7 @@ class NumberType implements Di\EntityManagerAware
     public function onRead($scope, $name, &$defs, $options)
     {
         $number = $this->entityManager
-            ->getRepository('NextNumber')
+            ->getRDBRepository('NextNumber')
             ->where([
                 'entityType' => $scope,
                 'fieldName' => $name,
@@ -68,9 +68,9 @@ class NumberType implements Di\EntityManagerAware
             return;
         }
 
-        $number = $this
-            ->entityManager
-            ->getRepository('NextNumber')->where([
+        $number = $this->entityManager
+            ->getRDBRepository('NextNumber')
+            ->where([
                 'entityType' => $scope,
                 'fieldName' => $name
             ])
@@ -91,7 +91,7 @@ class NumberType implements Di\EntityManagerAware
     public function afterRemove($scope, $name, $defs, $options)
     {
         $number = $this->entityManager
-            ->getRepository('NextNumber')
+            ->getRDBRepository('NextNumber')
             ->where([
                 'entityType' => $scope,
                 'fieldName' => $name

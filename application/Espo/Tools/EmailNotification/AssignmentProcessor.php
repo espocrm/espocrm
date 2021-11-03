@@ -33,6 +33,8 @@ use Espo\Core\ORM\Entity;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     Htmlizer\HtmlizerFactory as HtmlizerFactory,
     Htmlizer\Htmlizer,
@@ -104,6 +106,7 @@ class AssignmentProcessor
             throw new LogicException();
         }
 
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$user) {
@@ -141,6 +144,8 @@ class AssignmentProcessor
         if (!$assignerUser) {
             return;
         }
+
+        assert($entity instanceof Entity);
 
         $this->loadParentNameFields($entity);
 

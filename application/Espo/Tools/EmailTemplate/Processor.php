@@ -45,6 +45,9 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
+use Espo\Entities\EmailAddress;
+
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Exception;
 use DateTime;
@@ -105,9 +108,9 @@ class Processor
         $foundByAddressEntity = null;
 
         if ($data->getEmailAddress()) {
-            $foundByAddressEntity = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddress($data->getEmailAddress(),
+            $foundByAddressEntity = $this->getEmailAddressRepository()
+                ->getEntityByAddress(
+                    $data->getEmailAddress(),
                     null,
                     ['Contact', 'Lead', 'Account', 'User']
                 );
@@ -334,7 +337,7 @@ class Processor
             }
 
             $relatedEntity = $this->entityManager
-                ->getRepository($entity->getEntityType())
+                ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, $relation)
                 ->findOne();
 
@@ -411,5 +414,10 @@ class Processor
         }
 
         return $this->htmlizerFactory->createForUser($user);
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

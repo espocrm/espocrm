@@ -32,6 +32,8 @@ namespace Espo\Tools\EmailNotification;
 use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 
+use Espo\Repositories\Portal as PortalRepository;
+
 use Espo\{
     ORM\Entity,
     ORM\EntityManager,
@@ -187,7 +189,9 @@ class Processor
 
         $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
 
-        $notificationList = $this->entityManager->getRepository('Notification')->findBySql($sql);
+        $notificationList = $this->entityManager
+            ->getRDBRepository('Notification')
+            ->findBySql($sql);
 
         foreach ($notificationList as $notification) {
             $notification->set('emailIsProcessed', true);
@@ -610,7 +614,7 @@ class Processor
             if ($portalId) {
                 $portal = $this->entityManager->getEntity('Portal', $portalId);
 
-                $this->entityManager->getRepository('Portal')->loadUrlField($portal);
+                $this->getPortalRepository()->loadUrlField($portal);
 
                 $this->userIdPortalCacheMap[$user->id] = $portal;
             }
@@ -768,7 +772,7 @@ class Processor
             return;
         }
 
-        $emailRepository = $this->entityManager->getRepository('Email');
+        $emailRepository = $this->entityManager->getRDBRepository('Email');
         $eaList = $user->get('emailAddresses');
 
         foreach ($eaList as $ea) {
@@ -879,5 +883,10 @@ class Processor
         }
 
         return $this->htmlizer;
+    }
+
+    private function getPortalRepository(): PortalRepository
+    {
+        return $this->entityManager->getRepository('Portal');
     }
 }

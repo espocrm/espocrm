@@ -135,6 +135,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->config`.
+     *
+     * @return \Espo\Core\Utils\Config
      */
     protected function getConfig()
     {
@@ -143,6 +145,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->serviceFactory`.
+     *
+     * @return \Espo\Core\ServiceFactory
      */
     protected function getServiceFactory()
     {
@@ -159,6 +163,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->acl`.
+     *
+     * @return \Espo\Core\Acl
      */
     protected function getAcl()
     {
@@ -167,14 +173,17 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->user`.
+     *
+     * @return \Espo\Entities\User
      */
     protected function getUser()
     {
         return $this->user;
     }
 
-/**
+    /**
      * @deprecated Use `$this->aclManager`.
+     * @return \Espo\Core\AclManager
      */
     protected function getAclManager()
     {
@@ -183,6 +192,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->fileManager`.
+     *
+     * @return \Espo\Core\Utils\File\Manager
      */
     protected function getFileManager()
     {
@@ -191,6 +202,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->metadata`.
+     *
+     * @return \Espo\Core\Utils\Metadata
      */
     protected function getMetadata()
     {
@@ -207,6 +220,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->entityManager`.
+     *
+     * @return \Espo\ORM\EntityManager
      */
     protected function getEntityManager()
     {
@@ -243,6 +258,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->recordServiceContainer->get($name)`.
+     *
+     * @return \Espo\Core\Record\Service
      */
     protected function getRecordService($name)
     {
