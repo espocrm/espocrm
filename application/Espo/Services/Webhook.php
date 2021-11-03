@@ -30,10 +30,10 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Di;
+
+use Espo\Entities\User;
 
 use stdClass;
 
@@ -98,7 +98,7 @@ class Webhook extends Record implements
         $maxCount = $this->getConfig()->get('webhookMaxCountPerUser', self::WEBHOOK_MAX_COUNT_PER_USER);
 
         $count = $this->getEntityManager()
-            ->getRepository('Webhook')
+            ->getRDBRepository('Webhook')
             ->where([
                 'userId' => $this->getUser()->id,
             ])
@@ -123,6 +123,7 @@ class Webhook extends Record implements
             return;
         }
 
+        /** @var User $user */
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         if (!$user || !$user->isApi()) {

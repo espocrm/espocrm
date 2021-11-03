@@ -180,7 +180,7 @@ class Stream
     public function checkIsFollowed(Entity $entity, ?string $userId = null): bool
     {
         if (!$userId) {
-            $userId = $this->user->id;
+            $userId = $this->user->getId();
         }
 
         $isFollowed = (bool) $this->entityManager
@@ -189,7 +189,7 @@ class Stream
             ->where([
                 'userId' => $userId,
                 'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
             ])
             ->findOne();
 
@@ -254,7 +254,7 @@ class Stream
             ->from('Subscription')
             ->where([
                 'userId' => $userIdList,
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ])
             ->build();
@@ -268,7 +268,7 @@ class Stream
 
             $subscription->set([
                 'userId' => $userId,
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ]);
 
@@ -318,7 +318,7 @@ class Stream
         }
 
         $this->entityManager->createEntity('Subscription', [
-            'entityId' => $entity->id,
+            'entityId' => $entity->getId(),
             'entityType' => $entity->getEntityType(),
             'userId' => $userId,
         ]);
@@ -337,7 +337,7 @@ class Stream
             ->from('Subscription')
             ->where([
                 'userId' => $userId,
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ])
             ->build();
@@ -372,7 +372,7 @@ class Stream
 
         $sqLimit = $offset + $maxSize + 1;
 
-        if ($userId === $this->user->id) {
+        if ($userId === $this->user->getId()) {
             $user = $this->user;
         }
         else {
@@ -460,7 +460,7 @@ class Stream
                 [
                     'entityType:' => 'parentType',
                     'entityId:' => 'parentId',
-                    'subscription.userId' => $user->id,
+                    'subscription.userId' => $user->getId(),
                 ]
             )
             ->useIndex('number');
@@ -488,7 +488,7 @@ class Stream
                 $orGroup[] = [
                     'relatedId!=' => null,
                     'relatedType' => 'Email',
-                    'noteUser.userId' => $user->id,
+                    'noteUser.userId' => $user->getId(),
                 ];
 
                 $subscriptionBuilder->leftJoin(
@@ -554,7 +554,7 @@ class Stream
                         [
                             'OR' => [
                                 'noteTeam.teamId' => $teamIdList,
-                                'noteUser.userId' => $user->id,
+                                'noteUser.userId' => $user->getId(),
                             ],
                         ],
                     ]);
@@ -580,7 +580,7 @@ class Stream
                             'relatedId!=' => null,
                             'relatedType=' => $onlyOwnEntityTypeList,
                         ],
-                        'noteUser.userId' => $user->id,
+                        'noteUser.userId' => $user->getId(),
                     ]);
 
                 $queryList[] = $subscriptionOwnBuilder->build();
@@ -596,7 +596,7 @@ class Stream
                 [
                     'entityType:' => 'superParentType',
                     'entityId:' => 'superParentId',
-                    'subscription.userId' => $user->id,
+                    'subscription.userId' => $user->getId(),
                 ]
             )
             ->leftJoin(
@@ -605,7 +605,7 @@ class Stream
                 [
                     'entityType:' => 'parentType',
                     'entityId:' => 'parentId',
-                    'subscription.userId' => $user->id,
+                    'subscription.userId' => $user->getId(),
                 ]
             )
             ->where([
@@ -670,7 +670,7 @@ class Stream
                         [
                             'OR' => [
                                 'noteTeam.teamId' => $teamIdList,
-                                'noteUser.userId' => $user->id,
+                                'noteUser.userId' => $user->getId(),
                             ],
                         ]
                     ]);
@@ -696,7 +696,7 @@ class Stream
                             'relatedId!=' => null,
                             'relatedType=' => $onlyOwnEntityTypeList,
                         ],
-                        'noteUser.userId' => $user->id,
+                        'noteUser.userId' => $user->getId(),
                     ]);
 
                 $queryList[] = $subscriptionSuperOwnBuilder->build();
@@ -707,8 +707,8 @@ class Stream
             ->leftJoin('users')
             ->leftJoin('createdBy')
             ->where([
-                'createdById!=' => $user->id,
-                'usersMiddle.userId' => $user->id,
+                'createdById!=' => $user->getId(),
+                'usersMiddle.userId' => $user->getId(),
                 'parentId' => null,
                 'type' => 'Post',
                 'isGlobal' => false,
@@ -753,7 +753,7 @@ class Stream
                     ->select()
                     ->clone($query)
                     ->where([
-                        'createdById!=' => $this->user->id,
+                        'createdById!=' => $this->user->getId(),
                     ])
                     ->build();
             }
@@ -762,7 +762,7 @@ class Stream
         $queryList[] = (clone $baseBuilder)
             ->leftJoin('createdBy')
             ->where([
-                'createdById' => $user->id,
+                'createdById' => $user->getId(),
                 'parentId' => null,
                 'type' => 'Post',
                 'isGlobal' => false,
@@ -914,7 +914,7 @@ class Stream
     {
         if ($scope === 'User') {
             if (empty($id)) {
-                $id = $this->user->id;
+                $id = $this->user->getId();
             }
 
             return $this->findUserStream($id, $params);
@@ -1006,7 +1006,7 @@ class Stream
                 $orGroup[] = [
                     'relatedId!=' => null,
                     'relatedType' => 'Email',
-                    'noteUser.userId' => $this->user->id,
+                    'noteUser.userId' => $this->user->getId(),
                 ];
             }
 
@@ -1056,7 +1056,7 @@ class Stream
                             [
                                 'OR' => [
                                     'teamsMiddle.teamId' => $this->user->getTeamIdList(),
-                                    'usersMiddle.userId' => $this->user->id,
+                                    'usersMiddle.userId' => $this->user->getId(),
                                 ]
                             ]
                         ],
@@ -1071,7 +1071,7 @@ class Stream
                                     'parentType=' => $onlyOwnEntityTypeList,
                                 ]
                             ],
-                            'usersMiddle.userId' => $this->user->id,
+                            'usersMiddle.userId' => $this->user->getId(),
                         ]
                     ]
                 ];
@@ -1258,9 +1258,9 @@ class Stream
                 ->getRDBRepository('Note')
                 ->where([
                     'type' => 'EmailReceived',
-                    'parentId' => $entity->id,
+                    'parentId' => $entity->getId(),
                     'parentType' => $entityType,
-                    'relatedId' => $email->id,
+                    'relatedId' => $email->getId(),
                     'relatedType' => 'Email',
                 ])
                 ->findOne()
@@ -1271,9 +1271,9 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'EmailReceived');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
-        $note->set('relatedId', $email->id);
+        $note->set('relatedId', $email->getId());
         $note->set('relatedType', 'Email');
 
         $this->processNoteTeamsUsers($note, $email);
@@ -1291,7 +1291,7 @@ class Stream
 
         $data = [];
 
-        $data['emailId'] = $email->id;
+        $data['emailId'] = $email->getId();
         $data['emailName'] = $email->get('name');
         $data['isInitial'] = $isInitial;
 
@@ -1309,7 +1309,7 @@ class Stream
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
-                $data['personEntityId'] = $person->id;
+                $data['personEntityId'] = $person->getId();
             }
         }
 
@@ -1325,9 +1325,9 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'EmailSent');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
-        $note->set('relatedId', $email->id);
+        $note->set('relatedId', $email->getId());
         $note->set('relatedType', 'Email');
 
         $this->processNoteTeamsUsers($note, $email);
@@ -1345,7 +1345,7 @@ class Stream
 
         $data = [];
 
-        $data['emailId'] = $email->id;
+        $data['emailId'] = $email->getId();
         $data['emailName'] = $email->get('name');
 
         if ($withContent) {
@@ -1372,7 +1372,7 @@ class Stream
         if ($person) {
             $data['personEntityType'] = $person->getEntityType();
             $data['personEntityName'] = $person->get('name');
-            $data['personEntityId'] = $person->id;
+            $data['personEntityId'] = $person->getId();
         }
 
         $note->set('data', (object) $data);
@@ -1387,7 +1387,7 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'Create');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
@@ -1474,7 +1474,7 @@ class Stream
         $note->set('parentType', $parentType);
         $note->set([
             'relatedType' => $entityType,
-            'relatedId' => $entity->id
+            'relatedId' => $entity->getId(),
         ]);
 
         $this->processNoteTeamsUsers($note, $entity);
@@ -1504,7 +1504,7 @@ class Stream
                 'type' => 'Relate',
                 'parentId' => $parentId,
                 'parentType' => $parentType,
-                'relatedId' => $entity->id,
+                'relatedId' => $entity->getId(),
                 'relatedType' => $entityType,
             ])
             ->findOne();
@@ -1520,7 +1520,7 @@ class Stream
             'parentId' => $parentId,
             'parentType' => $parentType,
             'relatedType' => $entityType,
-            'relatedId' => $entity->id,
+            'relatedId' => $entity->getId(),
         ]);
 
         $this->processNoteTeamsUsers($note, $entity);
@@ -1539,7 +1539,7 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'Assign');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
@@ -1583,7 +1583,7 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'Status');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
         if ($entity->has('accountId') && $entity->get('accountId')) {
@@ -1712,7 +1712,7 @@ class Stream
         $note = $this->entityManager->getEntity('Note');
 
         $note->set('type', 'Update');
-        $note->set('parentId', $entity->id);
+        $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
         $note->set('data', [
@@ -1742,7 +1742,7 @@ class Stream
             ->select(['id'])
             ->join('Subscription', 'subscription', [
                 'subscription.userId=:' => 'user.id',
-                'subscription.entityId' => $entity->id,
+                'subscription.entityId' => $entity->getId(),
                 'subscription.entityType' => $entity->getEntityType(),
             ])
             ->where(['isActive' => true])
@@ -1751,7 +1751,7 @@ class Stream
         $idList = [];
 
         foreach ($userList as $user) {
-            $idList[] = $user->id;
+            $idList[] = $user->getId();
         }
 
         return $idList;
@@ -1816,7 +1816,7 @@ class Stream
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
-                    'subscription.entityId' => $entity->id,
+                    'subscription.entityId' => $entity->getId(),
                     'subscription.entityType' => $entity->getEntityType()
                 ]
             )
@@ -1825,7 +1825,7 @@ class Stream
                 'isActive' => true,
             ])
             ->order([
-                ['LIST:id:' . $this->user->id, 'DESC'],
+                ['LIST:id:' . $this->user->getId(), 'DESC'],
                 ['name'],
             ])
             ->find();
@@ -1836,7 +1836,7 @@ class Stream
         ];
 
         foreach ($userList as $user) {
-            $id = $user->id;
+            $id = $user->getId();
 
             $data['idList'][] = $id;
             $data['nameMap']->$id = $user->get('name');

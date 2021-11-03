@@ -90,6 +90,9 @@ class RDBSelectBuilder
 
     /**
      * @param ?array $params @deprecated. Omit it.
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
      */
     public function find(?array $params = null): Collection
     {

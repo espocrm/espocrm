@@ -38,6 +38,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\ORM\EntityManager;
 
 use Espo\Services\Stream as Service;
+use Espo\Entities\User;
 
 /**
  * Unfollows users that don't have access.
@@ -77,6 +78,7 @@ class ControlFollowers implements Job
 
         $idList = $this->service->getEntityFolowerIdList($entity);
 
+        /** @var iterable<User> $userList */
         $userList = $this->entityManager
             ->getRDBRepository('User')
             ->where([

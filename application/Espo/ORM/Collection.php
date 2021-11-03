@@ -30,16 +30,22 @@
 namespace Espo\ORM;
 
 use Traversable;
+use stdClass;
 
 /**
  * A collection of entities.
  *
- * @todo Extend from Traversable once the min supported PHP version is 7.4.
+ * @template TValue of Entity
+ * @extends Traversable<TValue>
+ *
+ * @todo Extend from Traversable once the min supported PHP version is 7.4. Remove bypass.
  */
 interface Collection/* extends Traversable*/
 {
     /**
-     * Get an array of StdClass objects.
+     * Get an array of stdClass objects.
+     *
+     * @return stdClass[]
      */
     public function getValueMapList(): array;
 }

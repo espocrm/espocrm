@@ -197,6 +197,10 @@ class RDBRelationSelectBuilder
 
     /**
      * Find related records by a criteria.
+     *
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
      */
     public function find(): Collection
     {
