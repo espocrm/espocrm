@@ -359,7 +359,7 @@ class Import
                 $this->entityManager->createEntity('ImportEntity', [
                     'entityType' => $this->entityType,
                     'entityId' => $rowResult->id,
-                    'importId' => $import->id,
+                    'importId' => $import->getId(),
                     'isImported' => $rowResult->isImported ?? false,
                     'isUpdated' => $rowResult->isUpdated ?? false,
                     'isDuplicate' => $rowResult->isDuplicate ?? false,
@@ -421,7 +421,7 @@ class Import
             }
 
             $entity = $this->entityManager
-                ->getRepository($this->entityType)
+                ->getRDBRepository($this->entityType)
                 ->where($whereClause)
                 ->findOne();
 
@@ -447,6 +447,8 @@ class Import
         } else {
             $entity = $this->entityManager->getEntity($this->entityType);
         }
+
+        assert($entity instanceof Entity);
 
         $isNew = $entity->isNew();
 
@@ -501,8 +503,7 @@ class Import
             }
 
             if (
-                $entity->getAttributeType($attribute) === Entity::FOREIGN
-                &&
+                $entity->getAttributeType($attribute) === Entity::FOREIGN &&
                 $entity->getAttributeParam($attribute, 'foreign') === 'name'
             ) {
                 $this->processForeignName($entity, $attribute);
@@ -519,10 +520,10 @@ class Import
             }
         }
 
-        if ($entity->id) {
+        if ($entity->getId()) {
             $this->entityManager
-                ->getRepository($entity->getEntityType())
-                ->deleteFromDb($entity->id, true);
+                ->getRDBRepository($entity->getEntityType())
+                ->deleteFromDb($entity->getId(), true);
         }
 
         try {
@@ -533,7 +534,7 @@ class Import
                 'silent' => $params->isSilentMode(),
             ]);
 
-            $result['id'] = $entity->id;
+            $result['id'] = $entity->getId();
 
             if ($isNew) {
                 $result['isImported'] = true;
@@ -607,13 +608,13 @@ class Import
         }
 
         $found = $this->entityManager
-            ->getRepository($foreignEntityType)
+            ->getRDBRepository($foreignEntityType)
             ->select(['id', 'name'])
             ->where($where)
             ->findOne();
 
         if ($found) {
-            $entity->set($relation . 'Id', $found->id);
+            $entity->set($relation . 'Id', $found->getId());
             $entity->set($relation . 'Name', $found->get('name'));
 
             return;

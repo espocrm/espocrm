@@ -178,7 +178,7 @@ class Kanban
             'groupList' => [],
         ];
 
-        $repository = $this->entityManager->getRepository($this->entityType);
+        $repository = $this->entityManager->getRDBRepository($this->entityType);
 
         foreach ($statusList as $status) {
             if (in_array($status, $statusIgnoreList)) {

@@ -125,7 +125,7 @@ class OrdererProcessor
         $minOrder = null;
 
         $first = $this->entityManager
-            ->getRepository('KanbanOrder')
+            ->getRDBRepository('KanbanOrder')
             ->select(['id', 'order'])
             ->where([
                 'entityType' => $this->entityType,
