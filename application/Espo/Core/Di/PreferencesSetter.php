@@ -33,7 +33,7 @@ use Espo\Entities\Preferences;
 
 trait PreferencesSetter
 {
-    /*
+    /**
      * @var Preferences
      */
     protected $preferences;

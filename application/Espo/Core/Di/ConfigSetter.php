@@ -33,7 +33,7 @@ use Espo\Core\Utils\Config;
 
 trait ConfigSetter
 {
-    /*
+    /**
      * @var Config
      */
     protected $config;

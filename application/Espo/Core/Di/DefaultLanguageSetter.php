@@ -33,7 +33,7 @@ use Espo\Core\Utils\Language;
 
 trait DefaultLanguageSetter
 {
-    /*
+    /**
      * @var Language
      */
     protected $defaultLanguage;

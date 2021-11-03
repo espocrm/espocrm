@@ -33,7 +33,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 
 trait SelectBuilderFactorySetter
 {
-    /*
+    /**
      * @var SelectBuilderFactory
      */
     protected $selectBuilderFactory;

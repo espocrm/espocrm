@@ -33,7 +33,7 @@ use Espo\Core\Utils\EmailFilterManager;
 
 trait EmailFilterManagerSetter
 {
-    /*
+    /**
      * @var EmailFilterManager
      */
     protected $emailFilterManager;

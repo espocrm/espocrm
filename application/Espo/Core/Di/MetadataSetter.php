@@ -33,7 +33,7 @@ use Espo\Core\Utils\Metadata;
 
 trait MetadataSetter
 {
-    /*
+    /**
      * @var Metadata
      */
     protected $metadata;

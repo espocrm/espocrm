@@ -33,7 +33,7 @@ use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 
 trait HtmlizerFactorySetter
 {
-    /*
+    /**
      * @var HtmlizerFactory
      */
     protected $htmlizerFactory;

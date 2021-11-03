@@ -33,7 +33,7 @@ use Espo\Entities\User;
 
 trait UserSetter
 {
-    /*
+    /**
      * @var User
      */
     protected $user;

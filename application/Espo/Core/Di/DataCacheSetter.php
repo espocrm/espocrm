@@ -33,7 +33,7 @@ use Espo\Core\Utils\DataCache;
 
 trait DataCacheSetter
 {
-    /*
+    /**
      * @var DataCache
      */
     protected $dataCache;

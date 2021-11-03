@@ -33,7 +33,7 @@ use Espo\Core\Utils\TemplateFileManager;
 
 trait TemplateFileManagerSetter
 {
-    /*
+    /**
      * @var TemplateFileManager
      */
     protected $templateFileManager;

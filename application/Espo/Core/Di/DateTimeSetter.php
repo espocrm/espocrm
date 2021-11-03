@@ -33,7 +33,7 @@ use Espo\Core\Utils\DateTime;
 
 trait DateTimeSetter
 {
-    /*
+    /**
      * @var DateTime
      */
     protected $dateTime;

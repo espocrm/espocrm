@@ -33,7 +33,7 @@ use Espo\Core\DataManager;
 
 trait DataManagerSetter
 {
-    /*
+    /**
      * @var DataManager
      */
     protected $dataManager;

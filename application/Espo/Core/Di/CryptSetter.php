@@ -33,7 +33,7 @@ use Espo\Core\Utils\Crypt;
 
 trait CryptSetter
 {
-    /*
+    /**
      * @var Crypt
      */
     protected $crypt;

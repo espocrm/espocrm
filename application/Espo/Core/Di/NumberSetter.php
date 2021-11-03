@@ -33,7 +33,7 @@ use Espo\Core\Utils\NumberUtil;
 
 trait NumberSetter
 {
-    /*
+    /**
      * @var NumberUtil
      */
     protected $number;
