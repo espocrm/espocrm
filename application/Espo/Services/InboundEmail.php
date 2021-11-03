@@ -40,6 +40,9 @@ use Espo\Modules\Crm\Business\Distribution\CaseObj\LeastBusy;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 use Espo\Modules\Crm\Services\Campaign as CampaignService;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\BadRequest,
@@ -173,10 +176,10 @@ class InboundEmail extends RecordService implements
         return $this->injectableFactory->create(Importer::class);
     }
 
-    public function fetchFromMailServer(Entity $emailAccount)
+    public function fetchFromMailServer(InboundEmailEntity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
-            throw new Error("Group Email Account {$emailAccount->id} is not active.");
+            throw new Error("Group Email Account {$emailAccount->getId()} is not active.");
         }
 
         $importer = $this->createImporter();
@@ -207,7 +210,7 @@ class InboundEmail extends RecordService implements
                     ->find();
 
                 foreach ($userList as $user) {
-                    $userIdList[] = $user->id;
+                    $userIdList[] = $user->getId();
                 }
             }
         }
@@ -223,7 +226,7 @@ class InboundEmail extends RecordService implements
                 'OR' => [
                     [
                         'parentType' => $emailAccount->getEntityType(),
-                        'parentId' => $emailAccount->id,
+                        'parentId' => $emailAccount->getId(),
                     ],
                     [
                         'parentId' => null,
@@ -274,7 +277,8 @@ class InboundEmail extends RecordService implements
             }
             catch (Exception $e) {
                 $this->log->error(
-                    'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
+                    'InboundEmail '.$emailAccount->getId().' (Select Folder) [' . $e->getCode() . '] ' .
+                    $e->getMessage()
                 );
 
                 continue;
@@ -371,7 +375,7 @@ class InboundEmail extends RecordService implements
                             }
                             catch (Throwable $e) {
                                 $this->log->error(
-                                    'InboundEmail ' . $emailAccount->id .
+                                    'InboundEmail ' . $emailAccount->getId() .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
                                 );
                             }
@@ -418,7 +422,7 @@ class InboundEmail extends RecordService implements
                 }
                 catch (Throwable $e) {
                     $this->log->error(
-                        'InboundEmail '.$emailAccount->id.
+                        'InboundEmail '.$emailAccount->getId().
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
                 }
@@ -438,7 +442,7 @@ class InboundEmail extends RecordService implements
 
                         if ($emailAccount->get('createCase')) {
                             if ($email->isFetched()) {
-                                $email = $this->entityManager->getEntity('Email', $email->id);
+                                $email = $this->entityManager->getEntity('Email', $email->getId());
                             }
                             else {
                                 $email->updateFetchedValues();
@@ -459,7 +463,7 @@ class InboundEmail extends RecordService implements
                 }
                 catch (Exception $e) {
                     $this->log->error(
-                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .
+                        'InboundEmail '.$emailAccount->getId().' (Post Import Logic): [' . $e->getCode() . '] ' .
                         $e->getMessage()
                     );
                 }
@@ -541,7 +545,7 @@ class InboundEmail extends RecordService implements
         }
         catch (Throwable $e) {
             $this->log->error(
-                'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
+                'InboundEmail '.$emailAccount->getId().' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
 
@@ -617,7 +621,7 @@ class InboundEmail extends RecordService implements
             $caseNumber = $m[1];
 
             $case = $this->entityManager
-                ->getRepository('Case')
+                ->getRDBRepository('Case')
                 ->where([
                     'number' => $caseNumber,
                 ])
@@ -625,7 +629,7 @@ class InboundEmail extends RecordService implements
 
             if ($case) {
                 $email->set('parentType', 'Case');
-                $email->set('parentId', $case->id);
+                $email->set('parentId', $case->getId());
 
                 $this->processCaseToEmailFields($case, $email);
 
@@ -642,7 +646,7 @@ class InboundEmail extends RecordService implements
             'teamId' => $inboundEmail->get('teamId'),
             'userId' => $inboundEmail->get('assignToUserId'),
             'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
-            'inboundEmailId' => $inboundEmail->id,
+            'inboundEmailId' => $inboundEmail->getId(),
         ];
 
         $case = $this->emailToCase($email, $params);
@@ -663,7 +667,7 @@ class InboundEmail extends RecordService implements
         $user = $distribution->getUser($team, $targetUserPosition);
 
         if ($user) {
-            $case->set('assignedUserId', $user->id);
+            $case->set('assignedUserId', $user->getId());
             $case->set('status', 'Assigned');
         }
     }
@@ -682,6 +686,7 @@ class InboundEmail extends RecordService implements
 
     protected function emailToCase(EmailEntity $email, array $params = [])
     {
+        /** @var CaseEntity $case */
         $case = $this->entityManager->getEntity('Case');
 
         $case->populateDefaults();
@@ -701,20 +706,19 @@ class InboundEmail extends RecordService implements
         $attachmentIdList = $email->getLinkMultipleIdList('attachments');
         $copiedAttachmentIdList = [];
 
+        /** @var AttachmentRepository $attachmentRepository*/
+        $attachmentRepository = $this->entityManager->getRepository('Attachment');
+
         foreach ($attachmentIdList as $attachmentId) {
-            $attachment = $this->entityManager
-                ->getRepository('Attachment')
-                ->get($attachmentId);
+            $attachment = $attachmentRepository->get($attachmentId);
 
             if (!$attachment) {
                 continue;
             }
 
-            $copiedAttachment = $this->entityManager
-                ->getRepository('Attachment')
-                ->getCopiedAttachment($attachment);
+            $copiedAttachment = $attachmentRepository->getCopiedAttachment($attachment);
 
-            $copiedAttachmentIdList[] = $copiedAttachment->id;
+            $copiedAttachmentIdList[] = $copiedAttachment->getId();
         }
 
         if (count($copiedAttachmentIdList)) {
@@ -795,7 +799,7 @@ class InboundEmail extends RecordService implements
         }
 
         $contact = $this->entityManager
-            ->getRepository('Contact')
+            ->getRDBRepository('Contact')
             ->join('emailAddresses', 'emailAddressesMultiple')
             ->where([
                 'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
@@ -808,7 +812,7 @@ class InboundEmail extends RecordService implements
         else {
             if (!$case->get('accountId')) {
                 $lead = $this->entityManager
-                    ->getRepository('Lead')
+                    ->getRDBRepository('Lead')
                     ->join('emailAddresses', 'emailAddressesMultiple')
                     ->where([
                         'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
@@ -861,9 +865,10 @@ class InboundEmail extends RecordService implements
 
         $threshold = $d->format('Y-m-d H:i:s');
 
-        $emailAddress = $this->entityManager
-            ->getRepository('EmailAddress')
-            ->getByAddress($email->get('from'));
+        /** @var EmailAddressRepository $emailAddressRepository */
+        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+
+        $emailAddress = $emailAddressRepository->getByAddress($email->get('from'));
 
         $sentCount = $this->entityManager
             ->getRDBRepository('Email')
@@ -1066,8 +1071,11 @@ class InboundEmail extends RecordService implements
 
         $emailAddress = $queueItem->get('emailAddress');
 
+        /** @var EmailAddressRepository $emailAddressRepository */
+        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+
         if ($isHard && $emailAddress) {
-            $emailAddressEntity = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
+            $emailAddressEntity = $emailAddressRepository->getByAddress($emailAddress);
 
             if ($emailAddressEntity) {
                 $emailAddressEntity->set('invalid', true);
@@ -1076,7 +1084,7 @@ class InboundEmail extends RecordService implements
             }
         }
 
-        if ($campaignId && $target && $target->id) {
+        if ($campaignId && $target && $target->getId()) {
             $this->getCampaignService()
                 ->logBounced(
                     $campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest')
@@ -1142,7 +1150,7 @@ class InboundEmail extends RecordService implements
                 'distinct' => true,
             ];
 
-            return $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);;
+            return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);;
         }
 
         if ($groupEmailAccountPermission === 'all') {
@@ -1155,7 +1163,7 @@ class InboundEmail extends RecordService implements
                 ]
             ];
 
-            return $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);
+            return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);
         }
 
         return null;
@@ -1294,7 +1302,7 @@ class InboundEmail extends RecordService implements
         }
 
         if (method_exists($handler, 'applyParams')) {
-            $handler->applyParams($emailAccount->id, $params);
+            $handler->applyParams($emailAccount->getId(), $params);
         }
     }
 
@@ -1310,6 +1318,10 @@ class InboundEmail extends RecordService implements
             $size = $storage->getSize($id);
         }
         catch (Throwable $e) {
+            return false;
+        }
+
+        if (!is_int($size)) {
             return false;
         }
 

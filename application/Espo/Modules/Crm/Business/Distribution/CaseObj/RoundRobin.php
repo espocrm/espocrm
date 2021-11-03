@@ -29,20 +29,25 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
 
+use Espo\Entities\User;
+use Espo\Entities\Team;
+
+use Espo\ORM\EntityManager;
+
 class RoundRobin
 {
     protected $entityManager;
 
-    public function __construct($entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
+    /**
+     * @param Team $team
+     * @param ?string $targetUserPosition
+     * @return User|null
+     */
     public function getUser($team, $targetUserPosition = null)
     {
         $selectParams = [
@@ -57,7 +62,7 @@ class RoundRobin
         $userList = $team->get('users', $selectParams);
 
         if (count($userList) == 0) {
-            return false;
+            return null;
         }
 
         $userIdList = [];
@@ -66,23 +71,30 @@ class RoundRobin
             $userIdList[] = $user->id;
         }
 
-        $case = $this->getEntityManager()->getRepository('Case')->where([
-            'assignedUserId' => $userIdList,
-        ])->order('number', 'DESC')->findOne();
+        $case = $this->entityManager
+            ->getRDBRepository('Case')
+            ->where([
+                'assignedUserId' => $userIdList,
+            ])
+            ->order('number', 'DESC')
+            ->findOne();
 
         if (empty($case)) {
             $num = 0;
-        } else {
+        }
+        else {
             $num = array_search($case->get('assignedUserId'), $userIdList);
+
             if ($num === false || $num == count($userIdList) - 1) {
                 $num = 0;
-            } else {
+            }
+            else {
                 $num++;
             }
         }
 
         $id = $userIdList[$num];
 
-        return $this->getEntityManager()->getEntity('User', $id);
+        return $this->entityManager->getEntity('User', $id);
     }
 }

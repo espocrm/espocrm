@@ -32,15 +32,18 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Repositories\User as UserRepository;
+
 use Espo\Core\{
     Acl\Table as AclTable,
 };
 
 use Espo\Entities\Note as NoteEntity;
+use Espo\Entities\User as UserEntity;
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class Note extends Record
 {
@@ -85,7 +88,7 @@ class Note extends Record
 
     /**
      * @param NoteEntity $entity
-     * @param StdClass $data
+     * @param stdClass $data
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
@@ -155,7 +158,7 @@ class Note extends Record
 
     /**
      * @param NoteEntity $entity
-     * @param StdClass $data
+     * @param stdClass $data
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
@@ -192,6 +195,8 @@ class Note extends Record
 
     protected function processAssignmentCheck(Entity $entity): void
     {
+        /** @var NoteEntity $entity */
+
         if (!$entity->isNew()) {
             return;
         }
@@ -208,9 +213,11 @@ class Note extends Record
         $portalIdList = $entity->getLinkMultipleIdList('portals');
         $teamIdList = $entity->getLinkMultipleIdList('teams');
 
+        /** @var iterable<UserEntity> $targetUserList */
         $targetUserList = [];
 
         if ($targetType === NoteEntity::TARGET_USERS) {
+            /** @var iterable<UserEntity> $targetUserList */
             $targetUserList = $this->entityManager
                 ->getRDBRepository('User')
                 ->select(['id', 'type'])
@@ -318,9 +325,7 @@ class Note extends Record
                     continue;
                 }
 
-                $inTeam = $this->entityManager
-                        ->getRepository('User')
-                        ->checkBelongsToAnyOfTeams($user->getId(), $userTeamIdList);
+                $inTeam = $this->getUserRepository()->checkBelongsToAnyOfTeams($user->getId(), $userTeamIdList);
 
                 if (!$inTeam) {
                     throw new Forbidden('Not permitted to post to users from foreign teams.');
@@ -345,5 +350,10 @@ class Note extends Record
         }
 
         parent::unlink($id, $link, $foreignId);
+    }
+
+    private function getUserRepository(): UserRepository
+    {
+        return $this->entityManager->getRepository(UserEntity::ENTITY_TYPE);
     }
 }

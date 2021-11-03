@@ -145,11 +145,12 @@ class LeadCapture extends Record
     public function isApiKeyValid(string $apiKey): bool
     {
         $leadCapture = $this->getEntityManager()
-            ->getRepository('LeadCapture')
+            ->getRDBRepository('LeadCapture')
             ->where([
                 'apiKey' => $apiKey,
                 'isActive' => true,
-            ])->findOne();
+            ])
+            ->findOne();
 
         if ($leadCapture) {
             return true;
@@ -191,7 +192,7 @@ class LeadCapture extends Record
         $dataList = [];
 
         $inboundEmailList = $this->getEntityManager()
-            ->getRepository('InboundEmail')
+            ->getRDBRepository('InboundEmail')
             ->where([
                 'useSmtp' => true,
                 'status' => 'Active',
@@ -203,7 +204,7 @@ class LeadCapture extends Record
         foreach ($inboundEmailList as $inboundEmail) {
             $item = (object) [];
 
-            $key = 'inboundEmail:' . $inboundEmail->id;
+            $key = 'inboundEmail:' . $inboundEmail->getId();
 
             $item->key = $key;
             $item->emailAddress = $inboundEmail->get('emailAddress');

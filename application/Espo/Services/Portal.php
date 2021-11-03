@@ -31,6 +31,9 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 
+use Espo\Repositories\Portal as Repository;
+use Espo\Entities\Portal as PortalEntity;
+
 use Espo\Core\Di;
 
 class Portal extends Record implements
@@ -57,9 +60,9 @@ class Portal extends Record implements
         }
     }
 
-    protected function loadUrlField(Entity $entity)
+    protected function loadUrlField(PortalEntity $entity)
     {
-        $this->getRepository()->loadUrlField($entity);
+        $this->getPortalRepository()->loadUrlField($entity);
     }
 
     protected function clearRolesCache()
@@ -68,5 +71,10 @@ class Portal extends Record implements
         $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
 
         $this->dataManager->updateCacheTimestamp();
+    }
+
+    private function getPortalRepository(): Repository
+    {
+        return $this->getRepository();
     }
 }

@@ -62,7 +62,7 @@ use Espo\{
 use Espo\Entities\Template;
 
 use DateTime;
-use StdClass;
+use stdClass;
 
 class Pdf
 {
@@ -170,7 +170,7 @@ class Pdf
 
         $this->entityManager->saveEntity($attachment);
 
-        return $attachment->id;
+        return $attachment->getId();
     }
 
     public function massGenerate(
@@ -217,7 +217,7 @@ class Pdf
             ->build();
 
         $collection = $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->where([
                 'id' => $idList,
@@ -283,7 +283,7 @@ class Pdf
         return $attachment->getId();
     }
 
-    public function removeMassFileJob(StdClass $data): void
+    public function removeMassFileJob(stdClass $data): void
     {
         if (empty($data->id)) {
             return;

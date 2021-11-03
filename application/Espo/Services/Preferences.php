@@ -31,6 +31,8 @@ namespace Espo\Services;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Repositories\Preferences as Repository;
+
 use Espo\Entities\{
     User,
     Preferences as PreferencesEntity,
@@ -45,7 +47,7 @@ use Espo\Core\{
     Utils\Config,
 };
 
-use StdClass;
+use stdClass;
 
 class Preferences
 {
@@ -86,7 +88,9 @@ class Preferences
     {
         $this->processAccessCheck($userId);
 
+        /** @var PreferencesEntity $entity */
         $entity = $this->entityManager->getEntity('Preferences', $userId);
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$entity || !$user) {
@@ -109,7 +113,7 @@ class Preferences
         return $entity;
     }
 
-    public function update(string $userId, StdClass $data): PreferencesEntity
+    public function update(string $userId, stdClass $data): PreferencesEntity
     {
         $this->processAccessCheck($userId);
 
@@ -152,16 +156,14 @@ class Preferences
     {
         $this->processAccessCheck($userId);
 
-        $result = $this->entityManager
-            ->getRepository('Preferences')
-            ->resetToDefaults($userId);
+        $result = $this->getRepository()->resetToDefaults($userId);
 
         if (!$result) {
             throw new NotFound();
         }
     }
 
-    public function resetDashboard(string $userId): StdClass
+    public function resetDashboard(string $userId): stdClass
     {
         $this->processAccessCheck($userId);
 
@@ -169,6 +171,7 @@ class Preferences
             throw new Forbidden();
         }
 
+        /** @var User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         $preferences = $this->entityManager->getEntity('Preferences', $userId);
@@ -206,5 +209,10 @@ class Preferences
             'dashboardLayout' => $preferences->get('dashboardLayout'),
             'dashletsOptions' => $preferences->get('dashletsOptions'),
         ];
+    }
+
+    private function getRepository(): Repository
+    {
+        return $this->entityManager->getRepository(PreferencesEntity::ENTITY_TYPE);
     }
 }

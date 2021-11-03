@@ -29,18 +29,29 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
 
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Metadata;
+
+use Espo\Entities\User;
+use Espo\Entities\Team;
+
 class LeastBusy
 {
     protected $entityManager;
 
     protected $metadata;
 
-    public function __construct($entityManager, $metadata)
+    public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
     }
 
+    /**
+     * @param Team $team
+     * @param ?string $targetUserPosition
+     * @return User|null
+     */
     public function getUser($team, $targetUserPosition = null)
     {
         $selectParams = [
@@ -55,7 +66,7 @@ class LeastBusy
         $userList = $team->get('users', $selectParams);
 
         if (count($userList) == 0) {
-            return false;
+            return null;
         }
 
         $countHash = [];
@@ -64,20 +75,26 @@ class LeastBusy
             $this->metadata->get(['entityDefs', 'Case', 'fields', 'status', 'notActualOptions']) ?? [];
 
         foreach ($userList as $user) {
-            $count = $this->entityManager->getRepository('Case')->where([
-                'assignedUserId' => $user->id,
-                'status!=' => $notActualStatusList,
-            ])->count();
-            $countHash[$user->id] = $count;
+            $count = $this->entityManager
+                ->getRDBRepository('Case')
+                ->where([
+                    'assignedUserId' => $user->getId(),
+                    'status!=' => $notActualStatusList,
+                ])
+                ->count();
+
+            $countHash[$user->getId()] = $count;
         }
 
         $foundUserId = false;
         $min = false;
+
         foreach ($countHash as $userId => $count) {
             if ($min === false) {
                 $min = $count;
                 $foundUserId = $userId;
-            } else {
+            }
+            else {
                 if ($count < $min) {
                     $min = $count;
                     $foundUserId = $userId;
@@ -88,5 +105,7 @@ class LeastBusy
         if ($foundUserId !== false) {
             return $this->entityManager->getEntity('User', $foundUserId);
         }
+
+        return null;
     }
 }
