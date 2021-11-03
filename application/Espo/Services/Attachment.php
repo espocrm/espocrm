@@ -36,6 +36,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use stdClass;
 
 class Attachment extends Record
@@ -279,7 +281,7 @@ class Attachment extends Record
             throw new NotFound();
         }
 
-        $copied = $this->getRepository()->getCopiedAttachment($attachment);
+        $copied = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
 
         $attachment = $copied;
 
@@ -294,14 +296,14 @@ class Attachment extends Record
         $attachment->set('field', $field);
         $attachment->set('role', 'Attachment');
 
-        $this->getRepository()->save($attachment);
+        $this->getAttachmentRepository()->save($attachment);
 
         return $copied;
     }
 
     public function getAttachmentFromImageUrl($data)
     {
-        $attachment = $this->getRepository()->getNew();
+        $attachment = $this->getAttachmentRepository()->getNew();
 
         if (empty($data->url)) {
             throw new BadRequest();
@@ -367,7 +369,7 @@ class Attachment extends Record
 
         $attachment->set('field', $field);
 
-        $this->getRepository()->save($attachment);
+        $this->getAttachmentRepository()->save($attachment);
 
         $attachment->clear('contents');
 
@@ -471,10 +473,15 @@ class Attachment extends Record
         $data = (object) [
             'name' => $attachment->get('name'),
             'type' => $attachment->get('type'),
-            'stream' => $this->getRepository()->getStream($attachment),
-            'size' => $this->getRepository()->getSize($attachment),
+            'stream' => $this->getAttachmentRepository()->getStream($attachment),
+            'size' => $this->getAttachmentRepository()->getSize($attachment),
         ];
 
         return $data;
+    }
+
+    private function getAttachmentRepository(): AttachmentRepository
+    {
+        return $this->getRepository();
     }
 }

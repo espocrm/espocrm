@@ -31,6 +31,9 @@ namespace Espo\Services;
 
 use Espo\Services\Settings as SettingsService;
 
+use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
+use Espo\Repositories\ArrayValue as ArrayValueRepository;
+
 use Espo\Core\{
     Acl,
     AclManager,
@@ -46,6 +49,8 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
+use Espo\Entities\PhoneNumber;
+use Espo\Entities\ArrayValue;
 
 use Espo\ORM\{
     EntityManager,
@@ -53,7 +58,7 @@ use Espo\ORM\{
     Entity,
 };
 
-use StdClass;
+use stdClass;
 use Throwable;
 
 class App
@@ -263,7 +268,7 @@ class App
         $userEmailAddressList = [];
 
         $emailAddressCollection = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($user, 'emailAddresses')
             ->find();
 
@@ -294,7 +299,8 @@ class App
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
                 if (count($teamIdList)) {
-                    $inboundEmailList = $entityManager->getRepository('InboundEmail')
+                    $inboundEmailList = $entityManager
+                        ->getRDBRepository('InboundEmail')
                         ->where([
                             'status' => 'Active',
                             'useSmtp' => true,
@@ -315,7 +321,8 @@ class App
                 }
             }
             else if ($groupEmailAccountPermission === 'all') {
-                $inboundEmailList = $entityManager->getRepository('InboundEmail')
+                $inboundEmailList = $entityManager
+                    ->getRDBRepository('InboundEmail')
                     ->where([
                         'status' => 'Active',
                         'useSmtp' => true,
@@ -358,14 +365,24 @@ class App
         return $maxSize;
     }
 
+    /**
+     * @param string|false $size
+     * @return int
+     */
     private function convertPHPSizeToBytes($size)
     {
-        if (is_numeric($size)) return $size;
+        if (is_numeric($size)) {
+            return $size;
+        }
+
+        if ($size === false) {
+            return 0;
+        }
 
         $suffix = substr($size, -1);
-        $value = substr($size, 0, -1);
+        $value = (int) substr($size, 0, -1);
 
-        switch(strtoupper($suffix)) {
+        switch (strtoupper($suffix)) {
             case 'P':
                 $value *= 1024;
             case 'T':
@@ -376,8 +393,9 @@ class App
                 $value *= 1024;
             case 'K':
                 $value *= 1024;
+
                 break;
-            }
+        }
 
         return $value;
     }
@@ -397,7 +415,9 @@ class App
      */
     public function jobPopulatePhoneNumberNumeric()
     {
-        $numberList = $this->entityManager->getRepository('PhoneNumber')->find();
+        $numberList = $this->entityManager
+            ->getRDBRepository('PhoneNumber')
+            ->find();
 
         foreach ($numberList as $number) {
             $this->entityManager->saveEntity($number);
@@ -439,7 +459,7 @@ class App
                 $attribute = $attributeDefs->getName();
                 $type = $attributeDefs->getType();
 
-                if (!isset($type) || $type !== Entity::JSON_ARRAY) {
+                if ($type !== Entity::JSON_ARRAY) {
                     continue;
                 }
 
@@ -474,7 +494,8 @@ class App
                 continue;
             }
 
-            $query = $this->entityManager->getQueryBuilder()
+            $query = $this->entityManager
+                ->getQueryBuilder()
                 ->select()
                 ->from($scope)
                 ->select($select)
@@ -494,9 +515,7 @@ class App
                 $entity->setAsFetched();
 
                 foreach ($attributeList as $attribute) {
-                    $this->entityManager
-                        ->getRepository('ArrayValue')
-                        ->storeEntityAttribute($entity, $attribute, true);
+                    $this->getArrayValueRepository()->storeEntityAttribute($entity, $attribute, true);
                 }
             }
         }
@@ -511,7 +530,7 @@ class App
 
         foreach ($entityTypeList as $entityType) {
             $entityList = $this->entityManager
-                ->getRepository($entityType)
+                ->getRDBRepository($entityType)
                 ->where([
                     'doNotCall' => true,
                     'phoneNumber!=' => null,
@@ -526,9 +545,7 @@ class App
                     continue;
                 }
 
-                $phoneNumberEntity = $this->entityManager
-                    ->getRepository('PhoneNumber')
-                    ->getByNumber($phoneNumber);
+                $phoneNumberEntity = $this->getPhoneNumberRepository()->getByNumber($phoneNumber);
 
                 if (!$phoneNumberEntity) {
                     continue;
@@ -541,12 +558,22 @@ class App
         }
     }
 
-    private function filterPreferencesData(StdClass $data)
+    private function filterPreferencesData(stdClass $data)
     {
         $passwordFieldList = $this->fieldUtil->getFieldByTypeList('Preferences', 'password');
 
         foreach ($passwordFieldList as $field) {
             unset($data->$field);
         }
+    }
+
+    private function getPhoneNumberRepository(): PhoneNumberRepository
+    {
+        return $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
+    }
+
+    private function getArrayValueRepository(): ArrayValueRepository
+    {
+        return $this->entityManager->getRepository(ArrayValue::ENTITY_TYPE);
     }
 }

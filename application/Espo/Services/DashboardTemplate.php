@@ -34,6 +34,8 @@ use Espo\ORM\Entity;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Entities\User;
+
 class DashboardTemplate extends Record
 {
     protected function applyLayout(Entity $preferences, Entity $template, bool $append)
@@ -94,6 +96,7 @@ class DashboardTemplate extends Record
         }
 
         foreach ($userIdList as $userId) {
+            /** @var User $user */
             $user = $this->getEntityManager()->getEntity('User', $userId);
 
             if ($user) {
@@ -131,7 +134,7 @@ class DashboardTemplate extends Record
         }
 
         $userList = $this->getEntityManager()
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->join('teams')
             ->distinct()
             ->where([
@@ -140,7 +143,7 @@ class DashboardTemplate extends Record
             ->find();
 
         foreach ($userList as $user) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $user->getId());
 
             if (!$preferences) {
                 continue;
