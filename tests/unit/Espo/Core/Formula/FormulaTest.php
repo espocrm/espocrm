@@ -297,7 +297,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager
             ->expects($this->any())
-            ->method('getRepository')
+            ->method('getRDBRepository')
             ->will($this->returnValue($this->repository));
 
         $result = $this->createProcessor()->process($item);
