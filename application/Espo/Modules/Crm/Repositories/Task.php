@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Event as EventRepository;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 class Task extends EventRepository
 {
@@ -91,7 +92,7 @@ class Task extends EventRepository
             }
 
             $parent = $this->entityManager
-                ->getRepository($parentType)
+                ->getRDBRepository($parentType)
                 ->select($columnList)
                 ->where(['id' => $parentId])
                 ->findOne();
@@ -104,7 +105,7 @@ class Task extends EventRepository
 
         if ($parent) {
             if ($parent->getEntityType() == 'Account') {
-                $accountId = $parent->id;
+                $accountId = $parent->getId();
                 $accountName = $parent->get('name');
             }
             else if ($parent->getEntityType() == 'Lead' && $parent->get('status') == 'Converted') {
@@ -119,20 +120,24 @@ class Task extends EventRepository
                 }
             }
             else if ($parent->getEntityType() == 'Contact') {
-                $contactId = $parent->id;
+                $contactId = $parent->getId();
                 $contactName = $parent->get('name');
             }
 
             if (
                 !$accountId &&
-                $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account'
+                $parent->get('accountId') &&
+                $parent instanceof CoreEntity &&
+                $parent->getRelationParam('account', 'entity') == 'Account'
             ) {
                 $accountId = $parent->get('accountId');
             }
 
             if (
                 !$contactId &&
-                $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact'
+                $parent->get('contactId') &&
+                $parent instanceof CoreEntity &&
+                $parent->getRelationParam('contact', 'entity') == 'Contact'
             ) {
                 $contactId = $parent->get('contactId');
             }
@@ -149,7 +154,7 @@ class Task extends EventRepository
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
-                ->getRepository('Account')
+                ->getRDBRepository('Account')
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('accountId')])
                 ->findOne();
@@ -164,7 +169,7 @@ class Task extends EventRepository
             !$entity->get('contactName')
         ) {
             $contact = $this->entityManager
-                ->getRepository('Contact')
+                ->getRDBRepository('Contact')
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('contactId')])
                 ->findOne();

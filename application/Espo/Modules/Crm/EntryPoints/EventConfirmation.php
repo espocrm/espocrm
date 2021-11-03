@@ -60,8 +60,8 @@ class EventConfirmation implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        $uid = $request->get('uid') ?? null;
-        $action = $request->get('action') ?? null;
+        $uid = $request->getQueryParam('uid') ?? null;
+        $action = $request->getQueryParam('action') ?? null;
 
         if (empty($uid) || empty($action)) {
             throw new BadRequest();

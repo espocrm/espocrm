@@ -57,7 +57,7 @@ class CampaignTrackOpened implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        $id = $request->get('id');
+        $id = $request->getQueryParam('id');
 
         if (!$id) {
             throw new BadRequest();

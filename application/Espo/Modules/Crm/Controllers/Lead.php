@@ -32,10 +32,16 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\Lead as Service;
+
 class Lead extends \Espo\Core\Controllers\Record
 {
-    public function postActionConvert($params, $data, $request)
+    public function postActionConvert(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -48,21 +54,28 @@ class Lead extends \Espo\Core\Controllers\Record
             'skipDuplicateCheck' => $data->skipDuplicateCheck ?? false,
         ];
 
-        $entity = $this->getRecordService()->convert($data->id, $data->records, $additionalData);
+        $entity = $this->getLeadService()->convert($data->id, $data->records, $additionalData);
 
         if (!empty($entity)) {
-            return $entity->toArray();
+            return $entity->getValueMap();
         }
 
         throw new Error();
     }
 
-    public function postActionGetConvertAttributes($params, $data, $request)
+    public function postActionGetConvertAttributes(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->getConvertAttributes($data->id);
+        return $this->getLeadService()->getConvertAttributes($data->id);
+    }
+
+    private function getLeadService(): Service
+    {
+        return $this->getRecordService();
     }
 }

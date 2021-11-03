@@ -84,11 +84,11 @@ class CampaignUrl implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        $queueItemId = $request->get('queueItemId') ?? null;
-        $trackingUrlId = $request->get('id') ?? null;
-        $emailAddress = $request->get('emailAddress') ?? null;
-        $hash = $request->get('hash') ?? null;
-        $uid = $request->get('uid') ?? null;
+        $queueItemId = $request->getQueryParam('queueItemId') ?? null;
+        $trackingUrlId = $request->getQueryParam('id') ?? null;
+        $emailAddress = $request->getQueryParam('emailAddress') ?? null;
+        $hash = $request->getQueryParam('hash') ?? null;
+        $uid = $request->getQueryParam('uid') ?? null;
 
         if (!$trackingUrlId) {
             throw new BadRequest();

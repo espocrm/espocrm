@@ -99,13 +99,13 @@ class SendEmailReminders implements JobDataLess
             }
             catch (Throwable $e) {
                 $this->log->error(
-                    "Email reminder '{$entity->id}': " . $e->getMessage()
+                    "Email reminder '{$entity->getId()}': " . $e->getMessage()
                 );
             }
 
             $this->entityManager
-                ->getRepository('Reminder')
-                ->deleteFromDb($entity->id);
+                ->getRDBRepository('Reminder')
+                ->deleteFromDb($entity->getId());
         }
     }
 }

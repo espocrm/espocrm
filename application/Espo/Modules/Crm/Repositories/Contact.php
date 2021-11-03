@@ -75,11 +75,12 @@ class Contact extends \Espo\Core\Repositories\Database
         }
 
         if ($accountIdChanged || $titleChanged) {
-            $accountContact = $this->entityManager->getRepository('AccountContact')
+            $accountContact = $this->entityManager
+                ->getRDBRepository('AccountContact')
                 ->select(['role'])
                 ->where([
                     'accountId' => $accountId,
-                    'contactId' => $entity->id,
+                    'contactId' => $entity->getId(),
                     'deleted' => false,
                 ])
                 ->findOne();

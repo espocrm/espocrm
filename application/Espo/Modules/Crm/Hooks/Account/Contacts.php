@@ -50,7 +50,7 @@ class Contacts
 
         if ($relationName === 'contacts' && $foreignEntity) {
             if (!$foreignEntity->get('accountId') && $foreignEntity->has('accountId')) {
-                $foreignEntity->set('accountId', $entity->id);
+                $foreignEntity->set('accountId', $entity->getId());
 
                 $this->entityManager->saveEntity($foreignEntity);
             }
@@ -63,7 +63,7 @@ class Contacts
         $foreignEntity = $data['foreignEntity'] ?? null;
 
         if ($relationName === 'contacts' && $foreignEntity) {
-            if ($foreignEntity->get('accountId') && $foreignEntity->get('accountId') === $entity->id) {
+            if ($foreignEntity->get('accountId') && $foreignEntity->get('accountId') === $entity->getId()) {
                 $foreignEntity->set('accountId', null);
 
                 $this->entityManager->saveEntity($foreignEntity);

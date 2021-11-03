@@ -160,6 +160,8 @@ abstract class Base
 
     /**
      * @deprecated Use Aware interfaces to inject dependencies.
+     *
+     * @return \Espo\Core\Container
      */
     protected function getContainer()
     {
@@ -168,6 +170,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Entities\User
      */
     protected function getUser()
     {
@@ -176,6 +180,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Core\Acl
      */
     protected function getAcl()
     {
@@ -184,6 +190,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Core\AclManager
      */
     protected function getAclManager()
     {
@@ -192,6 +200,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Core\Utils\Config
      */
     protected function getConfig()
     {
@@ -208,6 +218,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Core\Utils\Metadata
      */
     protected function getMetadata()
     {
@@ -216,6 +228,8 @@ abstract class Base
 
     /**
      * @deprecated
+     *
+     * @return \Espo\Core\ServiceFactory
      */
     protected function getServiceFactory()
     {

@@ -32,10 +32,16 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\Document as Service;
+
 class Document extends \Espo\Core\Controllers\Record
 {
-    public function postActionGetAttachmentList($params, $data)
+    public function postActionGetAttachmentList(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -46,6 +52,13 @@ class Document extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getAttachmentList($id)->getValueMapList();
+        return $this->getDocumentService()
+            ->getAttachmentList($id)
+            ->getValueMapList();
+    }
+
+    private function getDocumentService(): Service
+    {
+        return $this->getRecordService();
     }
 }

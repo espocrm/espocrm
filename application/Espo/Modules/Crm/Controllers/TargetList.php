@@ -29,65 +29,74 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Api\Request;
+use Espo\Modules\Crm\Services\TargetList as Service;
+use Espo\Core\Controllers\Record;
 
-class TargetList extends \Espo\Core\Controllers\Record
+class TargetList extends Record
 {
-	public function actionUnlinkAll($params, $data, $request)
-	{
-		if (!$request->isPost()) {
-			throw new BadRequest();
-		}
+    public function postActionUnlinkAll(Request $request)
+    {
+        $data = $request->getParsedBody();
 
-		if (empty($data->id)) {
-			throw new BadRequest();
-		}
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
-		if (empty($data->link)) {
-			throw new BadRequest();
-		}
+        if (empty($data->link)) {
+            throw new BadRequest();
+        }
 
-		return $this->getRecordService()->unlinkAll($data->id, $data->link);
-	}
+        return $this->getTargetListService()->unlinkAll($data->id, $data->link);
+    }
 
-	public function postActionOptOut($params, $data)
-	{
-		if (empty($data->id)) {
-			throw new BadRequest();
-		}
+    public function postActionOptOut(Request $request)
+    {
+        $data = $request->getParsedBody();
 
-		if (empty($data->targetType)) {
-			throw new BadRequest();
-		}
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
-		if (empty($data->targetId)) {
-			throw new BadRequest();
-		}
+        if (empty($data->targetType)) {
+            throw new BadRequest();
+        }
 
-		$data->id = strval($data->id);
-		$data->targetId = strval($data->targetId);
+        if (empty($data->targetId)) {
+            throw new BadRequest();
+        }
 
-		return $this->getRecordService()->optOut($data->id, $data->targetType, $data->targetId);
-	}
+        $data->id = strval($data->id);
+        $data->targetId = strval($data->targetId);
 
-	public function postActionCancelOptOut($params, $data)
-	{
-		if (empty($data->id)) {
-			throw new BadRequest();
-		}
+        return $this->getTargetListService()->optOut($data->id, $data->targetType, $data->targetId);
+    }
 
-		if (empty($data->targetType)) {
-			throw new BadRequest();
-		}
+    public function postActionCancelOptOut(Request $request)
+    {
+        $data = $request->getParsedBody();
 
-		if (empty($data->targetId)) {
-			throw new BadRequest();
-		}
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
-		$data->id = strval($data->id);
-		$data->targetId = strval($data->targetId);
+        if (empty($data->targetType)) {
+            throw new BadRequest();
+        }
 
-		return $this->getRecordService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
-	}
+        if (empty($data->targetId)) {
+            throw new BadRequest();
+        }
+
+        $data->id = strval($data->id);
+        $data->targetId = strval($data->targetId);
+
+        return $this->getTargetListService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
+    }
+
+    private function getTargetListService(): Service
+    {
+        return $this->getRecordService();
+    }
 }

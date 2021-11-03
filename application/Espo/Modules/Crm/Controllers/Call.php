@@ -33,15 +33,21 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\Call as Service;
+
 class Call extends \Espo\Core\Controllers\Record
 {
-    public function postActionSendInvitations($params, $data)
+    public function postActionSendInvitations(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        $entity = $this->getRecordService()->getEntity($data->id);
+        $entity = $this->getCallService()->getEntity($data->id);
 
         if (!$entity) {
             throw new NotFound();
@@ -55,33 +61,44 @@ class Call extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->sendInvitations($entity);
+        return $this->getCallService()->sendInvitations($entity);
     }
 
-    public function postActionMassSetHeld($params, $data)
+    public function postActionMassSetHeld(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->ids) || !is_array($data->ids)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->massSetHeld($data->ids);
+        return $this->getCallService()->massSetHeld($data->ids);
     }
 
-    public function postActionMassSetNotHeld($params, $data)
+    public function postActionMassSetNotHeld(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->ids) || !is_array($data->ids)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->massSetNotHeld($data->ids);
+        return $this->getCallService()->massSetNotHeld($data->ids);
     }
 
-    public function postActionSetAcceptanceStatus($params, $data)
+    public function postActionSetAcceptanceStatus(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id) || empty($data->status)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->setAcceptanceStatus($data->id, $data->status);
+        return $this->getCallService()->setAcceptanceStatus($data->id, $data->status);
+    }
+
+    private function getCallService(): Service
+    {
+        return $this->getRecordService();
     }
 }

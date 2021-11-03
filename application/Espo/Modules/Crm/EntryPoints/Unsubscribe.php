@@ -84,9 +84,9 @@ class Unsubscribe implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        $id = $request->get('id') ?? null;
-        $emailAddress = $request->get('emailAddress') ?? null;
-        $hash = $request->get('hash') ?? null;
+        $id = $request->getQueryParam('id') ?? null;
+        $emailAddress = $request->getQueryParam('emailAddress') ?? null;
+        $hash = $request->getQueryParam('hash') ?? null;
 
         if ($emailAddress && $hash) {
             $this->processWithHash($emailAddress, $hash);
@@ -108,6 +108,8 @@ class Unsubscribe implements EntryPoint
 
         $campaign = null;
         $target = null;
+
+        $campaignId = null;
 
         $massEmailId = $queueItem->get('massEmailId');
 

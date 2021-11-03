@@ -32,9 +32,13 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\Opportunity as Service;
+
 class Opportunity extends \Espo\Core\Controllers\Record
 {
-    public function actionReportByLeadSource($params, $data, $request)
+    public function getActionReportByLeadSource(Request $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -42,14 +46,14 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        $dateFrom = $request->get('dateFrom');
-        $dateTo = $request->get('dateTo');
-        $dateFilter = $request->get('dateFilter');
+        $dateFrom = $request->getQueryParam('dateFrom');
+        $dateTo = $request->getQueryParam('dateTo');
+        $dateFilter = $request->getQueryParam('dateFilter');
 
-        return $this->getService('Opportunity')->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function actionReportByStage($params, $data, $request)
+    public function getActionReportByStage(Request $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -57,14 +61,14 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        $dateFrom = $request->get('dateFrom');
-        $dateTo = $request->get('dateTo');
-        $dateFilter = $request->get('dateFilter');
+        $dateFrom = $request->getQueryParam('dateFrom');
+        $dateTo = $request->getQueryParam('dateTo');
+        $dateFilter = $request->getQueryParam('dateFilter');
 
-        return $this->getService('Opportunity')->reportByStage($dateFilter, $dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportByStage($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function actionReportSalesByMonth($params, $data, $request)
+    public function getActionReportSalesByMonth(Request $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -72,14 +76,14 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        $dateFrom = $request->get('dateFrom');
-        $dateTo = $request->get('dateTo');
-        $dateFilter = $request->get('dateFilter');
+        $dateFrom = $request->getQueryParam('dateFrom');
+        $dateTo = $request->getQueryParam('dateTo');
+        $dateFilter = $request->getQueryParam('dateFilter');
 
-        return $this->getService('Opportunity')->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
+        return $this->getOpportunityService()->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function actionReportSalesPipeline($params, $data, $request)
+    public function getActionReportSalesPipeline(Request $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -87,19 +91,19 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        $dateFrom = $request->get('dateFrom');
-        $dateTo = $request->get('dateTo');
-        $dateFilter = $request->get('dateFilter');
-        $useLastStage = $request->get('useLastStage') === 'true';
-        $teamId = $request->get('teamId') ?? null;
+        $dateFrom = $request->getQueryParam('dateFrom');
+        $dateTo = $request->getQueryParam('dateTo');
+        $dateFilter = $request->getQueryParam('dateFilter');
+        $useLastStage = $request->getQueryParam('useLastStage') === 'true';
+        $teamId = $request->getQueryParam('teamId') ?? null;
 
-        return $this->getService('Opportunity')
+        return $this->getOpportunityService()
             ->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
     }
 
-    public function getActionEmailAddressList($params, $data, $request)
+    public function getActionEmailAddressList(Request $request)
     {
-        if (!$request->get('id')) {
+        if (!$request->getQueryParam('id')) {
             throw new BadRequest();
         }
 
@@ -107,6 +111,11 @@ class Opportunity extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->getEmailAddressList($request->get('id'));
+        return $this->getOpportunityService()->getEmailAddressList($request->getQueryParam('id'));
+    }
+
+    private function getOpportunityService(): Service
+    {
+        return $this->getRecordService();
     }
 }

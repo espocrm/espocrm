@@ -31,38 +31,29 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\KnowledgeBaseArticle as Service;
+
 class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 {
-    public function postActionGetCopiedAttachments($params, $data, $request)
+    public function postActionGetCopiedAttachments(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
         $id = $data->id;
 
-        return $this->getRecordService()->getCopiedAttachments($id);
+        return $this->getArticleService()->getCopiedAttachments($id);
     }
 
-    public function postActionMoveToTop($params, $data, $request)
+    public function postActionMoveToTop(Request $request)
     {
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
-        $where = null;
+        $data = $request->getParsedBody();
 
-        if (!empty($data->where)) {
-            $where = $data->where;
-            $where = json_decode(json_encode($where), true);
-        }
-
-        $this->getRecordService()->moveToTop($data->id, $where);
-
-        return true;
-    }
-
-    public function postActionMoveUp($params, $data, $request)
-    {
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -74,13 +65,15 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
             $where = json_decode(json_encode($where), true);
         }
 
-        $this->getRecordService()->moveUp($data->id, $where);
+        $this->getArticleService()->moveToTop($data->id, $where);
 
         return true;
     }
 
-    public function postActionMoveDown($params, $data, $request)
+    public function postActionMoveUp(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -92,13 +85,15 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
             $where = json_decode(json_encode($where), true);
         }
 
-        $this->getRecordService()->moveDown($data->id, $where);
+        $this->getArticleService()->moveUp($data->id, $where);
 
         return true;
     }
 
-    public function postActionMoveToBottom($params, $data, $request)
+    public function postActionMoveDown(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -110,8 +105,33 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
             $where = json_decode(json_encode($where), true);
         }
 
-        $this->getRecordService()->moveToBottom($data->id, $where);
+        $this->getArticleService()->moveDown($data->id, $where);
 
         return true;
+    }
+
+    public function postActionMoveToBottom(Request $request)
+    {
+        $data = $request->getParsedBody();
+
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        $where = null;
+
+        if (!empty($data->where)) {
+            $where = $data->where;
+            $where = json_decode(json_encode($where), true);
+        }
+
+        $this->getArticleService()->moveToBottom($data->id, $where);
+
+        return true;
+    }
+
+    private function getArticleService(): Service
+    {
+        return $this->getRecordService();
     }
 }

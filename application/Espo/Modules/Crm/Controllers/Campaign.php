@@ -32,10 +32,16 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Api\Request;
+
+use Espo\Modules\Crm\Services\Campaign as Service;
+
 class Campaign extends \Espo\Core\Controllers\Record
 {
-    public function postActionGenerateMailMergePdf($params, $data, $request)
+    public function postActionGenerateMailMergePdf(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->campaignId)) {
             throw new BadRequest();
         }
@@ -49,7 +55,12 @@ class Campaign extends \Espo\Core\Controllers\Record
         }
 
         return [
-            'id' => $this->getRecordService()->generateMailMergePdf($data->campaignId, $data->link, true)
+            'id' => $this->getCampaignService()->generateMailMergePdf($data->campaignId, $data->link, true)
         ];
+    }
+
+    private function getCampaignService(): Service
+    {
+        return $this->getRecordService();
     }
 }

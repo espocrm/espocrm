@@ -68,7 +68,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
 
         if ($fetchedContactId) {
             $previousPortalUser = $this->entityManager
-                ->getRepository('User')
+                ->getRDBRepository('User')
                 ->select(['id'])
                 ->where([
                     'contactId' => $fetchedContactId,
@@ -77,7 +77,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
                 ->findOne();
 
             if ($previousPortalUser) {
-                $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->id);
+                $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->getId());
             }
         }
 
@@ -90,7 +90,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
         }
 
         $portalUser = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->select(['id'])
             ->where([
                 'contactId' => $contactId,
@@ -100,7 +100,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
             ->findOne();
 
         if ($portalUser) {
-            $this->getStreamService()->followEntity($entity, $portalUser->id, true);
+            $this->getStreamService()->followEntity($entity, $portalUser->getId(), true);
         }
 
         if (!in_array($contactId, $contactIdList) && !$this->isRelated($entity, 'contacts', $contactId)) {

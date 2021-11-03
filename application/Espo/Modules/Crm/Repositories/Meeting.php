@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Repositories;
 use Espo\ORM\Entity;
 use Espo\Core\Repositories\Event as EventRepository;
 use Espo\Core\Di;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 class Meeting extends EventRepository implements
 
@@ -75,7 +76,7 @@ class Meeting extends EventRepository implements
         }
 
         if ($entity->isNew()) {
-            $currentUserId = $this->user->id;
+            $currentUserId = $this->user->getId();
             if (
                 $entity->hasLinkMultipleId('users', $currentUserId) &&
                 (
@@ -111,7 +112,8 @@ class Meeting extends EventRepository implements
                 $columnList[] = 'createdAccountName';
             }
 
-            $parent = $this->entityManager->getRepository($parentType)
+            $parent = $this->entityManager
+                ->getRDBRepository($parentType)
                 ->select($columnList)
                 ->where(['id' => $parentId])
                 ->findOne();
@@ -122,7 +124,7 @@ class Meeting extends EventRepository implements
 
         if ($parent) {
             if ($parent->getEntityType() == 'Account') {
-                $accountId = $parent->id;
+                $accountId = $parent->getId();
                 $accountName = $parent->get('name');
             }
             else if (
@@ -136,6 +138,7 @@ class Meeting extends EventRepository implements
 
             if (
                 !$accountId && $parent->get('accountId') &&
+                $parent instanceof CoreEntity &&
                 $parent->getRelationParam('account', 'entity') == 'Account'
             ) {
                 $accountId = $parent->get('accountId');
@@ -152,7 +155,7 @@ class Meeting extends EventRepository implements
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
-                ->getRepository('Account')
+                ->getRDBRepository('Account')
                 ->select(['id', 'name'])
                 ->where(['id' => $entity->get('accountId')])
                 ->findOne();

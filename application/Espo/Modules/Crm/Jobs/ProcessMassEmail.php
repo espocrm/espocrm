@@ -63,7 +63,7 @@ class ProcessMassEmail implements JobDataLess
     public function run(): void
     {
         $pendingMassEmailList = $this->entityManager
-            ->getRepository('MassEmail')
+            ->getRDBRepository('MassEmail')
             ->where([
                 'status' => 'Pending',
                 'startAt<=' => date('Y-m-d H:i:s'),
@@ -76,14 +76,14 @@ class ProcessMassEmail implements JobDataLess
             }
             catch (Throwable $e) {
                 $this->log->error(
-                    'Job ProcessMassEmail#createQueue ' . $massEmail->id . ': [' . $e->getCode() . '] ' .
+                    'Job ProcessMassEmail#createQueue ' . $massEmail->getId() . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
                 );
             }
         }
 
         $massEmailList = $this->entityManager
-            ->getRepository('MassEmail')
+            ->getRDBRepository('MassEmail')
             ->where([
                 'status' => 'In Process',
             ])
@@ -95,7 +95,7 @@ class ProcessMassEmail implements JobDataLess
             }
             catch (Throwable $e) {
                 $this->log->error(
-                    'Job ProcessMassEmail#processSending '. $massEmail->id . ': [' . $e->getCode() . '] ' .
+                    'Job ProcessMassEmail#processSending '. $massEmail->getId() . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
                 );
             }

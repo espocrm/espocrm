@@ -45,7 +45,7 @@ use Espo\Core\{
 use DateTime;
 use DateInterval;
 use PDO;
-use StdClass;
+use stdClass;
 
 class Opportunity extends Record
 {
@@ -60,7 +60,7 @@ class Opportunity extends Record
         ?string $dateTo = null,
         bool $useLastStage = false,
         ?string $teamId = null
-    ): StdClass {
+    ): stdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -158,8 +158,10 @@ class Opportunity extends Record
     }
 
     public function reportByLeadSource(
-        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
-    ): StdClass {
+        string $dateFilter,
+        ?string $dateFrom = null,
+        ?string $dateTo = null
+    ): stdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -223,8 +225,10 @@ class Opportunity extends Record
     }
 
     public function reportByStage(
-        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
-    ): StdClass {
+        string $dateFilter,
+        ?string $dateFrom = null,
+        ?string $dateTo = null
+    ): stdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -304,7 +308,7 @@ class Opportunity extends Record
         string $dateFilter,
         ?string $dateFrom = null,
         ?string $dateTo = null
-    ): StdClass {
+    ): stdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -588,7 +592,7 @@ class Opportunity extends Record
         return $list;
     }
 
-    protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList): ?StdClass
+    protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList): ?stdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
 
