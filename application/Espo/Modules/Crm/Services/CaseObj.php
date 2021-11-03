@@ -75,7 +75,7 @@ class CaseObj extends Record
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set(array(
                     'parentType' => 'Case',
-                    'parentId' => $entity->id
+                    'parentId' => $entity->getId(),
                 ));
 
                 $this->getEntityManager()->saveEntity($email);
@@ -217,7 +217,7 @@ class CaseObj extends Record
             ->build();
 
         $contactCollection = $this->entityManager
-            ->getRepository('Contact')
+            ->getRDBRepository('Contact')
             ->clone($query)
             ->find();
 

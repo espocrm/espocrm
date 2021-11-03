@@ -57,13 +57,15 @@ class Contact extends Record
     {
         if (!empty($data->emailId)) {
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
+
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 if ($this->getConfig()->get('b2cMode') || !$entity->get('accountId')) {
                     $email->set([
                         'parentType' => 'Contact',
-                        'parentId' => $entity->id
+                        'parentId' => $entity->getId(),
                     ]);
-                } else {
+                }
+                else {
                     if ($entity->get('accountId')) {
                         $email->set([
                             'parentType' => 'Account',
@@ -71,6 +73,7 @@ class Contact extends Record
                         ]);
                     }
                 }
+
                 $this->getEntityManager()->saveEntity($email);
             }
         }

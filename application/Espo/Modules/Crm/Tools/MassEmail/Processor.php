@@ -121,7 +121,7 @@ class Processor
             ->getRepository('EmailQueueItem')
             ->where([
                 'status' => 'Pending',
-                'massEmailId' => $massEmail->id,
+                'massEmailId' => $massEmail->getId(),
                 'isTest' => $isTest,
             ])
             ->limit(0, $maxBatchSize)
@@ -212,7 +212,7 @@ class Processor
                 ->getRepository('EmailQueueItem')
                 ->where([
                     'status' => 'Pending',
-                    'massEmailId' => $massEmail->id,
+                    'massEmailId' => $massEmail->getId(),
                     'isTest' => false,
                 ])
                 ->count();
@@ -241,7 +241,7 @@ class Processor
 
         $body = $emailData['body'];
 
-        $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+        $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->getId();
 
         $optOutLink =
             '<a href="' . $optOutUrl . '">' .
@@ -253,7 +253,7 @@ class Processor
 
         foreach ($trackingUrlList as $trackingUrl) {
             $url = $this->getSiteUrl() .
-                '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
+                '?entryPoint=campaignUrl&id=' . $trackingUrl->getId() . '&queueItemId=' . $queueItem->getId();
 
             $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
         }
@@ -272,7 +272,7 @@ class Processor
 
         $trackImageAlt = $this->defaultLanguage->translate('Campaign', 'scopeNames');
 
-        $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
+        $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->getId();
 
         $trackOpenedHtml =
             '<img alt="' . $trackImageAlt . '" width="1" height="1" border="0" src="' . $trackOpenedUrl . '">';
@@ -317,14 +317,14 @@ class Processor
 
         $header = new XQueueItemId();
 
-        $header->setId($queueItem->id);
+        $header->setId($queueItem->getId());
 
         $message->getHeaders()->addHeader($header);
 
         $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
 
         if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
-            $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+            $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->getId();
 
             $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
         }
@@ -333,7 +333,7 @@ class Processor
 
         if ($this->config->get('massEmailVerp')) {
             if ($fromAddress && strpos($fromAddress, '@')) {
-                $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
+                $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->getId() .
                     '@' . explode('@', $fromAddress)[1];
 
                 $sender->withEnvelopeOptions([
@@ -353,7 +353,7 @@ class Processor
             ->getRepository('EmailQueueItem')
             ->where([
                 'status' => 'Pending',
-                'massEmailId' => $massEmail->id,
+                'massEmailId' => $massEmail->getId(),
             ])
             ->find();
 
@@ -374,7 +374,7 @@ class Processor
         $smtpParams = null
     ): bool {
 
-        $queueItemFetched = $this->entityManager->getEntity($queueItem->getEntityType(), $queueItem->id);
+        $queueItemFetched = $this->entityManager->getEntity($queueItem->getEntityType(), $queueItem->getId());
 
         if ($queueItemFetched->get('status') !== 'Pending') {
             return false;
@@ -386,7 +386,7 @@ class Processor
 
         $target = $this->entityManager->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
 
-        if (!$target || !$target->id || !$target->get('emailAddress')) {
+        if (!$target || !$target->getId() || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
 
             $this->entityManager->saveEntity($queueItem);
@@ -511,8 +511,8 @@ class Processor
 
         if ($campaign) {
             $this->getCampaignService()->logSent(
-                $campaign->id,
-                $queueItem->id,
+                $campaign->getId(),
+                $queueItem->getId(),
                 $target,
                 $emailObject,
                 $target->get('emailAddress'),

@@ -34,12 +34,16 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Entities\Attachment;
+
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle as KnowledgeBaseArticleEntity;
+
 use Espo\Core\{
     Di,
     Select\SearchParams,
 };
 
-use StdClass;
+use stdClass;
 
 class KnowledgeBaseArticle extends \Espo\Services\Record implements
 
@@ -62,7 +66,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
         return $this->fileStorageManager;
     }
 
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): StdClass
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): stdClass
     {
         $ids = [];
         $names = (object) [];
@@ -71,6 +75,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
             throw new BadRequest();
         }
 
+        /** @var KnowledgeBaseArticleEntity $entity */
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -86,6 +91,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
         $attachmentsIds = $entity->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
+            /** @var Attachment $source */
             $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
 
             if ($source) {
@@ -110,9 +116,9 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
 
                     $this->getFileStorageManager()->putContents($attachment, $contents);
 
-                    $ids[] = $attachment->id;
+                    $ids[] = $attachment->getId();
 
-                    $names->{$attachment->id} = $attachment->get('name');
+                    $names->{$attachment->getId()} = $attachment->get('name');
                 }
             }
         }

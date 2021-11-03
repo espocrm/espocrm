@@ -49,7 +49,7 @@ class Target extends \Espo\Services\Record
         }
 
         $lead = $entityManager->getEntity('Lead');
-        $lead->set($target->toArray());
+        $lead->set($target->getValueMap());
 
         $entityManager->removeEntity($target);
         $entityManager->saveEntity($lead);

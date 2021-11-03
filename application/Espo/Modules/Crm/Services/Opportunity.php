@@ -649,7 +649,7 @@ class Opportunity extends Record
             ->build();
 
         $contactCollection = $this->entityManager
-            ->getRepository('Contact')
+            ->getRDBRepository('Contact')
             ->clone($query)
             ->find();
 

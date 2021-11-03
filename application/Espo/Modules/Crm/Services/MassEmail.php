@@ -67,7 +67,7 @@ class MassEmail extends RecordService
             ->delete()
             ->from('EmailQueueItem')
             ->where([
-                 'massEmailId' => $massEmail->id,
+                 'massEmailId' => $massEmail->getId(),
             ])
             ->build();
 
@@ -144,7 +144,7 @@ class MassEmail extends RecordService
         $dataList = [];
 
         $inboundEmailList = $this->getEntityManager()
-            ->getRepository('InboundEmail')
+            ->getRDBRepository('InboundEmail')
             ->where([
                 'useSmtp' => true,
                 'status' => 'Active',
@@ -157,7 +157,7 @@ class MassEmail extends RecordService
         foreach ($inboundEmailList as $inboundEmail) {
             $item = (object) [];
 
-            $key = 'inboundEmail:' . $inboundEmail->id;
+            $key = 'inboundEmail:' . $inboundEmail->getId();
 
             $item->key = $key;
             $item->emailAddress = $inboundEmail->get('emailAddress');

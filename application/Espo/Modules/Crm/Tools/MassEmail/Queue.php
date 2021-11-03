@@ -29,6 +29,9 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+use Espo\Entities\EmailAddress;
+
 use Espo\Core\{
     Exceptions\Error,
     ORM\EntityManager,
@@ -61,7 +64,7 @@ class Queue
             ->delete()
             ->from('EmailQueueItem')
             ->where([
-                 'massEmailId' => $massEmail->id,
+                 'massEmailId' => $massEmail->getId(),
                  'status' => ['Pending', 'Failed'],
             ])
             ->build();
@@ -72,7 +75,7 @@ class Queue
     public function create(Entity $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
         if (!$isTest && $massEmail->get('status') !== 'Pending') {
-            throw new Error("Mass Email '" . $massEmail->id . "' should be 'Pending'.");
+            throw new Error("Mass Email '" . $massEmail->getId() . "' should be 'Pending'.");
         }
 
         $em = $this->entityManager;
@@ -102,7 +105,7 @@ class Queue
                     );
 
                     foreach ($excludingList as $excludingTarget) {
-                        $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
+                        $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->getId();
 
                         $metTargetHash[$hashId] = true;
 
@@ -116,13 +119,13 @@ class Queue
             }
 
             $targetListCollection = $em
-                ->getRepository('MassEmail')
+                ->getRDBRepository('MassEmail')
                 ->getRelation($massEmail, 'targetLists')
                 ->find();
 
             foreach ($targetListCollection as $targetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $recordList = $em->getRepository('TargetList')
+                    $recordList = $em->getRDBRepository('TargetList')
                         ->getRelation($targetList, $link)
                         ->select(['id', 'emailAddress'])
                         ->sth()
@@ -132,7 +135,7 @@ class Queue
                         ->find();
 
                     foreach ($recordList as $record) {
-                        $hashId = $record->getEntityType() . '-'. $record->id;
+                        $hashId = $record->getEntityType() . '-'. $record->getId();
 
                         $emailAddress = $record->get('emailAddress');
 
@@ -180,9 +183,7 @@ class Queue
                 continue;
             }
 
-            $emailAddressRecord = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getByAddress($emailAddress);
+            $emailAddressRecord = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
             if ($emailAddressRecord) {
                 if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
@@ -193,7 +194,7 @@ class Queue
             $queueItem = $this->entityManager->getEntity('EmailQueueItem');
 
             $queueItem->set([
-                'massEmailId' => $massEmail->id,
+                'massEmailId' => $massEmail->getId(),
                 'status' => 'Pending',
                 'targetId' => $item->id,
                 'targetType' => $item->entityType,
@@ -212,5 +213,10 @@ class Queue
 
             $this->entityManager->saveEntity($massEmail);
         }
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

@@ -31,6 +31,9 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Entities\Attachment;
+
 class Document extends \Espo\Services\Record
 {
     /**
@@ -54,9 +57,7 @@ class Document extends \Espo\Services\Record
             throw new NotFound();
         }
 
-        $attachment = $this->entityManager
-            ->getRepository('Attachment')
-            ->getCopiedAttachment($file, 'Attachment');
+        $attachment = $this->getAttachmentRepository()->getCopiedAttachment($file, 'Attachment');
 
         $attachmentList = $this->entityManager
             ->getCollectionFactory()
@@ -65,5 +66,10 @@ class Document extends \Espo\Services\Record
         $attachmentList[] = $attachment;
 
         return $attachmentList;
+    }
+
+    private function getAttachmentRepository(): AttachmentRepository
+    {
+        return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

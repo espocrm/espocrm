@@ -38,6 +38,9 @@ use Espo\Modules\Crm\Entities\Lead as LeadEntity;
 
 use Espo\Services\Record;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Entities\Attachment;
+
 use Espo\Core\Di;
 
 class Lead extends Record implements
@@ -58,7 +61,7 @@ class Lead extends Record implements
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set([
                     'parentType' => 'Lead',
-                    'parentId' => $entity->id
+                    'parentId' => $entity->getId(),
                 ]);
 
                 $this->getEntityManager()->saveEntity($email);
@@ -74,8 +77,8 @@ class Lead extends Record implements
                     'action' => 'Lead Created',
                     'actionDate' => date('Y-m-d H:i:s'),
                     'parentType' => 'Lead',
-                    'parentId' => $entity->id,
-                    'campaignId' => $campaign->id,
+                    'parentId' => $entity->getId(),
+                    'campaignId' => $campaign->getId(),
                 ]);
 
                 $this->getEntityManager()->saveEntity($log);
@@ -138,15 +141,13 @@ class Lead extends Record implements
                     $attachment = $lead->get($field);
 
                     if ($attachment) {
-                        $attachment = $this->getEntityManager()
-                            ->getRepository('Attachment')
-                            ->getCopiedAttachment($attachment);
+                        $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
 
                         $idAttribute = $field . 'Id';
                         $nameAttribute = $field . 'Name';
 
                         if ($attachment) {
-                            $attributes[$idAttribute] = $attachment->id;
+                            $attributes[$idAttribute] = $attachment->getId();
                             $attributes[$nameAttribute] = $attachment->get('name');
                         }
                     }
@@ -162,15 +163,13 @@ class Lead extends Record implements
                         $typeHash = (object) [];
 
                         foreach ($attachmentList as $attachment) {
-                            $attachment = $this->getEntityManager()
-                                ->getRepository('Attachment')
-                                ->getCopiedAttachment($attachment);
+                            $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
 
                             if ($attachment) {
-                                $idList[] = $attachment->id;
+                                $idList[] = $attachment->getId();
 
-                                $nameHash->{$attachment->id} = $attachment->get('name');
-                                $typeHash->{$attachment->id} = $attachment->get('type');
+                                $nameHash->{$attachment->getId()} = $attachment->get('name');
+                                $typeHash->{$attachment->getId()} = $attachment->get('type');
                             }
                         }
 
@@ -242,7 +241,7 @@ class Lead extends Record implements
             if ($duplicateCheck) {
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Account')
-                    ->findDuplicates($account, $recordsData->Account);
+                    ->findDuplicates($account);
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
@@ -257,7 +256,7 @@ class Lead extends Record implements
             if (!$skipSave) {
                 $entityManager->saveEntity($account);
 
-                $lead->set('createdAccountId', $account->id);
+                $lead->set('createdAccountId', $account->getId());
             }
         }
 
@@ -266,19 +265,21 @@ class Lead extends Record implements
             $contact->set(get_object_vars($recordsData->Contact));
 
             if (isset($account)) {
-                $contact->set('accountId', $account->id);
+                $contact->set('accountId', $account->getId());
             }
 
             if ($duplicateCheck) {
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Contact')
-                    ->findDuplicates($contact, $recordsData->Contact);
+                    ->findDuplicates($contact);
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
                         $item = $e->getValueMap();
                         $item->_entityType = $e->getEntityType();
+
                         $duplicateList[] = $item;
+
                         $skipSave = true;
                     }
                 }
@@ -287,7 +288,7 @@ class Lead extends Record implements
             if (!$skipSave) {
                 $entityManager->saveEntity($contact);
 
-                $lead->set('createdContactId', $contact->id);
+                $lead->set('createdContactId', $contact->getId());
             }
         }
 
@@ -296,17 +297,17 @@ class Lead extends Record implements
             $opportunity->set(get_object_vars($recordsData->Opportunity));
 
             if (isset($account)) {
-                $opportunity->set('accountId', $account->id);
+                $opportunity->set('accountId', $account->getId());
             }
 
             if (isset($contact)) {
-                $opportunity->set('contactId', $contact->id);
+                $opportunity->set('contactId', $contact->getId());
             }
 
             if ($duplicateCheck) {
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Opportunity')
-                    ->findDuplicates($opportunity, $recordsData->Opportunity);
+                    ->findDuplicates($opportunity);
 
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
@@ -322,10 +323,10 @@ class Lead extends Record implements
                 $entityManager->saveEntity($opportunity);
 
                 if (isset($contact)) {
-                    $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
+                    $entityManager->getRDBRepository('Contact')->relate($contact, 'opportunities', $opportunity);
                 }
 
-                $lead->set('createdOpportunityId', $opportunity->id);
+                $lead->set('createdOpportunityId', $opportunity->getId());
             }
         }
 
@@ -342,7 +343,7 @@ class Lead extends Record implements
 
         $entityManager->saveEntity($lead);
 
-        $leadRepisotory = $entityManager->getRepository('Lead');
+        $leadRepisotory = $entityManager->getRDBRepository('Lead');
 
         $meetings = $leadRepisotory
             ->getRelation($lead, 'meetings')
@@ -351,17 +352,17 @@ class Lead extends Record implements
 
         foreach ($meetings as $meeting) {
             if (!empty($contact)) {
-                $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
+                $entityManager->getRDBRepository('Meeting')->relate($meeting, 'contacts', $contact);
             }
 
             if (!empty($opportunity)) {
-                $meeting->set('parentId', $opportunity->id);
+                $meeting->set('parentId', $opportunity->getId());
                 $meeting->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($meeting);
             }
             else if (!empty($account)) {
-                $meeting->set('parentId', $account->id);
+                $meeting->set('parentId', $account->getId());
                 $meeting->set('parentType', 'Account');
 
                 $entityManager->saveEntity($meeting);
@@ -375,17 +376,18 @@ class Lead extends Record implements
 
         foreach ($calls as $call) {
             if (!empty($contact)) {
-                $entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
+                $entityManager->getRDBRepository('Call')
+                    ->relate($call, 'contacts', $contact);
             }
 
             if (!empty($opportunity)) {
-                $call->set('parentId', $opportunity->id);
+                $call->set('parentId', $opportunity->getId());
                 $call->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($call);
             }
             else if (!empty($account)) {
-                $call->set('parentId', $account->id);
+                $call->set('parentId', $account->getId());
                 $call->set('parentType', 'Account');
 
                 $entityManager->saveEntity($call);
@@ -399,13 +401,13 @@ class Lead extends Record implements
 
         foreach ($emails as $email) {
             if (!empty($opportunity)) {
-                $email->set('parentId', $opportunity->id);
+                $email->set('parentId', $opportunity->getId());
                 $email->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($email);
             }
             else if (!empty($account)) {
-                $email->set('parentId', $account->id);
+                $email->set('parentId', $account->getId());
                 $email->set('parentType', 'Account');
 
                 $entityManager->saveEntity($email);
@@ -419,30 +421,35 @@ class Lead extends Record implements
 
         foreach ($documents as $document) {
             if (!empty($account)) {
-                $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
+                $entityManager->getRDBRepository('Document')->relate($document, 'accounts', $account);
             }
 
             if (!empty($opportunity)) {
-                $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
+                $entityManager->getRDBRepository('Document')->relate($document, 'opportunities', $opportunity);
             }
         }
 
         $streamService = $this->getStreamService();
 
-        if ($streamService->checkIsFollowed($lead, $this->getUser()->id)) {
+        if ($streamService->checkIsFollowed($lead, $this->getUser()->getId())) {
             if (!empty($opportunity)) {
-                $streamService->followEntity($opportunity, $this->getUser()->id);
+                $streamService->followEntity($opportunity, $this->getUser()->getId());
             }
 
             if (!empty($account)) {
-                $streamService->followEntity($account, $this->getUser()->id);
+                $streamService->followEntity($account, $this->getUser()->getId());
             }
 
             if (!empty($contact)) {
-                $streamService->followEntity($contact, $this->getUser()->id);
+                $streamService->followEntity($contact, $this->getUser()->getId());
             }
         }
 
         return $lead;
+    }
+
+    private function getAttachmentRepository(): AttachmentRepository
+    {
+        return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

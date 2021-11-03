@@ -1736,18 +1736,30 @@ class Service implements Crud,
         return $searchParams->withSelect($select);
     }
 
+    /**
+     * @param stdClass $data
+     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
     }
 
+    /**
+     * @param stdClass $data
+     */
     protected function afterCreateEntity(Entity $entity, $data)
     {
     }
 
+    /**
+     * @param stdClass $data
+     */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
     }
 
+    /**
+     * @param stdClass $data
+     */
     protected function afterUpdateEntity(Entity $entity, $data)
     {
     }

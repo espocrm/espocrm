@@ -38,6 +38,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
+
 use Espo\Core\{
     Record\Collection as RecordCollection,
     Select\SearchParams,
@@ -75,7 +77,10 @@ class TargetList extends \Espo\Services\Record implements
 
     protected function afterCreateEntity(Entity $entity, $data)
     {
-        if (property_exists($data, 'sourceCampaignId') && !empty($data->includingActionList)) {
+        if (
+            property_exists($data, 'sourceCampaignId') &&
+            !empty($data->includingActionList)
+        ) {
             $excludingActionList = [];
 
             if (!empty($data->excludingActionList)) {
@@ -140,7 +145,7 @@ class TargetList extends \Espo\Services\Record implements
         $notQueryBuilder->select(['id']);
 
         $list = $this->getEntityManager()
-            ->getRepository('CampaignLogRecord')
+            ->getRDBRepository('CampaignLogRecord')
             ->clone($queryBuilder->build())
             ->find();
 
@@ -164,7 +169,7 @@ class TargetList extends \Espo\Services\Record implements
 
                 if (
                     $this->getEntityManager()
-                        ->getRepository('CampaignLogRecord')
+                        ->getRDBRepository('CampaignLogRecord')
                         ->clone($cloneQueryBuilder->build())
                         ->findOne()
                 ) {
@@ -180,6 +185,7 @@ class TargetList extends \Espo\Services\Record implements
 
     public function unlinkAll(string $id, string $link)
     {
+        /** @var TargetListEntity $entity */
         $entity = $this->getRepository()->get($id);
 
         if (!$entity) {
@@ -214,7 +220,7 @@ class TargetList extends \Espo\Services\Record implements
                 'deleted' => true,
             ])
             ->where([
-                'targetListId' => $entity->id,
+                'targetListId' => $entity->getId(),
             ])
             ->build();
 
@@ -227,6 +233,7 @@ class TargetList extends \Espo\Services\Record implements
 
     protected function getOptedOutSelectQueryForLink(string $targetListId, string $link): Select
     {
+        /** @var TargetListEntity $seed */
         $seed = $this->getRepository()->getNew();
 
         $entityType = $seed->getRelationParam($link, 'entity');
@@ -353,7 +360,7 @@ class TargetList extends \Espo\Services\Record implements
         $link = $map[$targetType];
 
         $result = $this->getEntityManager()
-            ->getRepository('TargetList')
+            ->getRDBRepository('TargetList')
             ->relate($targetList, $link, $targetId, [
                 'optedOut' => true,
             ]);
@@ -401,7 +408,7 @@ class TargetList extends \Espo\Services\Record implements
         $link = $map[$targetType];
 
         $result = $this->getEntityManager()
-            ->getRepository('TargetList')
+            ->getRDBRepository('TargetList')
             ->updateRelation($targetList, $link, $targetId, [
                 'optedOut' => false,
             ]);

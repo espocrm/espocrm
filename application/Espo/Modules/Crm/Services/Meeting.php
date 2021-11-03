@@ -34,6 +34,8 @@ use Espo\Modules\Crm\Business\Event\Invitations;
 
 use Espo\Services\Email as EmailService;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
@@ -72,13 +74,13 @@ class Meeting extends \Espo\Services\Record implements
             $existingIdList = [];
 
             $usersCollection = $this->getEntityManager()
-                ->getRepository($entity->getEntityType())
+                ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, 'users')
                 ->select('id')
                 ->find();
 
             foreach ($usersCollection as $user) {
-                $existingIdList[] = $user->id;
+                $existingIdList[] = $user->getId();
             }
 
             foreach ($userIdList as $id) {
@@ -113,7 +115,7 @@ class Meeting extends \Espo\Services\Record implements
         ]);
     }
 
-    public function sendInvitations(Entity $entity, bool $useUserSmtp = true)
+    public function sendInvitations(CoreEntity $entity, bool $useUserSmtp = true)
     {
         $invitationManager = $this->getInvitationManager($useUserSmtp);
 
@@ -122,7 +124,7 @@ class Meeting extends \Espo\Services\Record implements
         $sentCount = 0;
 
         $users = $this->getEntityManager()
-            ->getRepository($entity->getEntityType())
+            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'users')
             ->find();
 
@@ -144,7 +146,7 @@ class Meeting extends \Espo\Services\Record implements
         }
 
         $contacts = $this->getEntityManager()
-            ->getRepository($entity->getEntityType())
+            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'contacts')
             ->find();
 
@@ -162,7 +164,7 @@ class Meeting extends \Espo\Services\Record implements
         }
 
         $leads = $this->getEntityManager()
-            ->getRepository($entity->getEntityType())
+            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, 'leads')
             ->find();
 
@@ -217,7 +219,7 @@ class Meeting extends \Espo\Services\Record implements
 
     public function setAcceptanceStatus(string $id, string $status, ?string $userId = null)
     {
-        $userId = $userId ?? $this->getUser()->id;
+        $userId = $userId ?? $this->getUser()->getId();
 
         $statusList = $this->getMetadata()
                 ->get(['entityDefs', $this->entityType, 'fields', 'acceptanceStatus', 'options'], []);
@@ -232,12 +234,14 @@ class Meeting extends \Espo\Services\Record implements
             throw new NotFound();
         }
 
+        assert($entity instanceof CoreEntity);
+
         if (!$entity->hasLinkMultipleId('users', $userId)) {
             return;
         }
 
         $this->getEntityManager()
-            ->getRepository($this->entityType)
+            ->getRDBRepository($this->entityType)
             ->updateRelation(
                 $entity,
                 'users',
@@ -248,7 +252,7 @@ class Meeting extends \Espo\Services\Record implements
         $actionData = [
             'eventName' => $entity->get('name'),
             'eventType' => $entity->getEntityType(),
-            'eventId' => $entity->id,
+            'eventId' => $entity->getId(),
             'dateStart' => $entity->get('dateStart'),
             'status' => $status,
             'link' => 'users',
