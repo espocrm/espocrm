@@ -250,7 +250,7 @@ class EntityManager
 
         $serviceFactory = $this->serviceFactory;
 
-        if ($serviceFactory && $serviceFactory->checkExists($name)) {
+        if ($serviceFactory->checkExists($name)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 
@@ -1249,7 +1249,7 @@ class EntityManager
         if ($linkType === 'childrenToParent') {
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
 
-            if ($linkForeign && is_array($foreignLinkEntityTypeList)) {
+            if (is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
