@@ -50,19 +50,19 @@ use Espo\{
 
 class MassUpdate implements MassAction
 {
-    protected $massUpdateOriginal;
+    private $massUpdateOriginal;
 
-    protected $queryBuilder;
+    private $queryBuilder;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $acl;
+    private $acl;
 
-    protected $user;
+    private $user;
 
-    protected $fileManager;
+    private $fileManager;
 
-    protected $dataManager;
+    private $dataManager;
 
     public function __construct(
         MassUpdateOriginal $massUpdateOriginal,
@@ -108,7 +108,7 @@ class MassUpdate implements MassAction
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->clone($query)
             ->sth()
             ->select(['id'])
@@ -127,11 +127,11 @@ class MassUpdate implements MassAction
 
     protected function checkEntity(Entity $entity, Data $data): void
     {
-        if ($entity->id === 'system') {
+        if ($entity->getId() === 'system') {
             throw new Forbidden("Can't update 'system' user.");
         }
 
-        if ($entity->id === $this->user->id) {
+        if ($entity->getId() === $this->user->getId()) {
             if ($data->has('isActive')) {
                 throw new Forbidden("Can't change 'isActive' field for own user.");
             }

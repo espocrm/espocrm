@@ -48,15 +48,15 @@ use Espo\{
 
 class MassDelete implements MassAction
 {
-    protected $massDeleteOriginal;
+    private $massDeleteOriginal;
 
-    protected $queryBuilder;
+    private $queryBuilder;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $acl;
+    private $acl;
 
-    protected $user;
+    private $user;
 
     public function __construct(
         MassDeleteOriginal $massDeleteOriginal,
@@ -87,7 +87,7 @@ class MassDelete implements MassAction
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->clone($query)
             ->sth()
             ->select(['id'])
@@ -102,11 +102,11 @@ class MassDelete implements MassAction
 
     protected function checkEntity(Entity $entity): void
     {
-        if ($entity->id === 'system') {
+        if ($entity->getId() === 'system') {
             throw new Forbidden("Can't delete 'system' user.");
         }
 
-        if ($entity->id === $this->user->id) {
+        if ($entity->getId() === $this->user->getId()) {
             throw new Forbidden("Can't delete own user.");
         }
     }

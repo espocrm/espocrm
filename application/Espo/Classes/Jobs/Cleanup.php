@@ -30,6 +30,8 @@
 namespace Espo\Classes\Jobs;
 
 use Espo\Core\Record\ServiceContainer;
+use Espo\ORM\Repository\RDBRepository;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Utils\Config,
@@ -183,14 +185,16 @@ class Cleanup implements JobDataLess
 
     private function cleanupScheduledJobLog(): void
     {
-        $scheduledJobList = $this->entityManager->getRepository('ScheduledJob')
+        $scheduledJobList = $this->entityManager
+            ->getRDBRepository('ScheduledJob')
             ->select(['id'])
             ->find();
 
         foreach ($scheduledJobList as $scheduledJob) {
             $scheduledJobId = $scheduledJob->get('id');
 
-            $ignoreLogRecordList = $this->entityManager->getRepository('ScheduledJobLogRecord')
+            $ignoreLogRecordList = $this->entityManager
+                ->getRDBRepository('ScheduledJobLogRecord')
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -204,6 +208,7 @@ class Cleanup implements JobDataLess
             }
 
             $ignoreIdList = [];
+
             foreach ($ignoreLogRecordList as $logRecord) {
                 $ignoreIdList[] = $logRecord->get('id');
             }
@@ -300,7 +305,7 @@ class Cleanup implements JobDataLess
         $datetime->modify($period);
 
         $collection = $this->entityManager
-            ->getRepository('Attachment')
+            ->getRDBRepository('Attachment')
             ->where([
                 'OR' => [
                     [
@@ -329,7 +334,7 @@ class Cleanup implements JobDataLess
             ]);
 
             $collection = $this->entityManager
-                ->getRepository('Attachment')
+                ->getRDBRepository('Attachment')
                 ->clone($orphanQueryBuilder->build())
                 ->limit(0, 5000)
                 ->find();
@@ -398,7 +403,8 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            $query = $this->entityManager->getQueryBuilder()
+            $query = $this->entityManager
+                ->getQueryBuilder()
                 ->select()
                 ->from($scope)
                 ->withDeleted()
@@ -415,16 +421,16 @@ class Cleanup implements JobDataLess
 
             foreach ($deletedEntityList as $deletedEntity) {
                 $attachmentToRemoveList = $this->entityManager
-                    ->getRepository('Attachment')
+                    ->getRDBRepository('Attachment')
                     ->where([
                         'OR' => [
                             [
                                 'relatedType' => $scope,
-                                'relatedId' => $deletedEntity->id,
+                                'relatedId' => $deletedEntity->getId(),
                             ],
                             [
                                 'parentType' => $scope,
-                                'parentId' => $deletedEntity->id,
+                                'parentId' => $deletedEntity->getId(),
                             ]
                         ]
                     ])
@@ -436,7 +442,9 @@ class Cleanup implements JobDataLess
             }
         }
 
-        $delete = $this->entityManager->getQueryBuilder()->delete()
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
             ->from('Attachment')
             ->where([
                 'deleted' => true,
@@ -451,14 +459,15 @@ class Cleanup implements JobDataLess
     {
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
 
-        $query = $this->entityManager->getQueryBuilder()
+        $query = $this->entityManager
+            ->getQueryBuilder()
             ->select()
             ->from('Email')
             ->withDeleted()
             ->build();
 
         $emailList = $this->entityManager
-            ->getRepository('Email')
+            ->getRDBRepository('Email')
             ->clone($query)
             ->select(['id'])
             ->where([
@@ -471,7 +480,7 @@ class Cleanup implements JobDataLess
             $id = $email->get('id');
 
             $attachments = $this->entityManager
-                ->getRepository('Attachment')
+                ->getRDBRepository('Attachment')
                 ->where([
                     'parentId' => $id,
                     'parentType' => 'Email'
@@ -482,7 +491,9 @@ class Cleanup implements JobDataLess
                 $this->entityManager->removeEntity($attachment);
             }
 
-            $delete = $this->entityManager->getQueryBuilder()->delete()
+            $delete = $this->entityManager
+                ->getQueryBuilder()
+                ->delete()
                 ->from('Email')
                 ->where([
                     'deleted' => true,
@@ -492,7 +503,9 @@ class Cleanup implements JobDataLess
 
             $this->entityManager->getQueryExecutor()->execute($delete);
 
-            $delete = $this->entityManager->getQueryBuilder()->delete()
+            $delete = $this->entityManager
+                ->getQueryBuilder()
+                ->delete()
                 ->from('EmailUser')
                 ->where([
                     'emailId' => $id,
@@ -510,14 +523,17 @@ class Cleanup implements JobDataLess
         $datetime = new DateTime();
         $datetime->modify($period);
 
-        $notificationList = $this->entityManager->getRepository('Notification')
+        $notificationList = $this->entityManager
+            ->getRDBRepository('Notification')
             ->where([
                 'DATE:createdAt<' => $datetime->format('Y-m-d'),
             ])
             ->find();
 
         foreach ($notificationList as $notification) {
-            $this->entityManager->getRepository('Notification')->deleteFromDb($notification->get('id'));
+            $this->entityManager
+                ->getRDBRepository('Notification')
+                ->deleteFromDb($notification->get('id'));
         }
     }
 
@@ -553,7 +569,19 @@ class Cleanup implements JobDataLess
 
         $repository = $this->entityManager->getRepository($scope);
 
-        $repository->deleteFromDb($entity->id);
+        if (!$repository) {
+            return;
+        }
+
+        if (!$repository instanceof RDBRepository) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
+        $repository->deleteFromDb($entity->getId());
 
         $query = $this->entityManager->getQueryComposer();
 
@@ -576,7 +604,7 @@ class Cleanup implements JobDataLess
                 }
 
                 $where = [
-                    $midKey => $entity->id,
+                    $midKey => $entity->getId(),
                 ];
 
                 $conditions = $entity->getRelationParam($relation, 'conditions') ?? [];
@@ -595,7 +623,9 @@ class Cleanup implements JobDataLess
                     continue;
                 }
 
-                $delete = $this->entityManager->getQueryBuilder()->delete()
+                $delete = $this->entityManager
+                    ->getQueryBuilder()
+                    ->delete()
                     ->from($relationEntityType)
                     ->where($where)
                     ->build();
@@ -607,24 +637,25 @@ class Cleanup implements JobDataLess
             }
         }
 
-        $query = $this->entityManager->getQueryBuilder()
+        $query = $this->entityManager
+            ->getQueryBuilder()
             ->select()
             ->from('Note')
             ->withDeleted()
             ->build();
 
         $noteList = $this->entityManager
-            ->getRepository('Note')
+            ->getRDBRepository('Note')
             ->clone($query)
             ->where([
                 'OR' => [
                     [
                         'relatedType' => $scope,
-                        'relatedId' => $entity->id,
+                        'relatedId' => $entity->getId(),
                     ],
                     [
                         'parentType' => $scope,
-                        'parentId' => $entity->id,
+                        'parentId' => $entity->getId(),
                     ]
                 ]
             ])
@@ -640,29 +671,33 @@ class Cleanup implements JobDataLess
 
         if ($scope === 'Note') {
             $attachmentList = $this->entityManager
-                ->getRepository('Attachment')
+                ->getRDBRepository('Attachment')
                 ->where([
-                    'parentId' => $entity->id,
+                    'parentId' => $entity->getId(),
                     'parentType' => 'Note',
                 ])
                 ->find();
 
             foreach ($attachmentList as $attachment) {
                 $this->entityManager->removeEntity($attachment);
-                $this->entityManager->getRepository('Attachment')->deleteFromDb($attachment->id);
+                $this->entityManager
+                    ->getRDBRepository('Attachment')
+                    ->deleteFromDb($attachment->getId());
             }
         }
 
         $arrayValueList = $this->entityManager
-            ->getRepository('ArrayValue')
+            ->getRDBRepository('ArrayValue')
             ->where([
                 'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
             ])
             ->find();
 
         foreach ($arrayValueList as $arrayValue) {
-            $this->entityManager->getRepository('ArrayValue')->deleteFromDb($arrayValue->id);
+            $this->entityManager
+                ->getRDBRepository('ArrayValue')
+                ->deleteFromDb($arrayValue->getId());
         }
     }
 
@@ -697,19 +732,11 @@ class Cleanup implements JobDataLess
                 continue;
             }
 
-            if (!method_exists($repository, 'find')) continue;
-            if (!method_exists($repository, 'clone')) continue;
-            if (!method_exists($repository, 'where')) continue;
-            if (!method_exists($repository, 'select')) continue;
-            if (!method_exists($repository, 'deleteFromDb')) continue;
-
-            $hasCleanupMethod = false;
+            if (!$repository instanceof RDBRepository) {
+                continue;
+            }
 
             $service = $this->recordServiceContainer->get($scope);
-
-            if (method_exists($service, 'cleanup')) {
-                $hasCleanupMethod = true;
-            }
 
             $whereClause = [
                 'deleted' => 1,
@@ -722,7 +749,8 @@ class Cleanup implements JobDataLess
                 $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
             }
 
-            $query = $this->entityManager->getQueryBuilder()
+            $query = $this->entityManager
+                ->getQueryBuilder()
                 ->select()
                 ->from($scope)
                 ->withDeleted()
@@ -735,9 +763,9 @@ class Cleanup implements JobDataLess
                 ->find();
 
             foreach ($deletedEntityList as $entity) {
-                if ($hasCleanupMethod) {
+                if (method_exists($service, 'cleanup')) {
                     try {
-                        $service->cleanup($entity->id);
+                        $service->cleanup($entity->getId());
                     }
                     catch (Throwable $e) {
                         $this->log->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());

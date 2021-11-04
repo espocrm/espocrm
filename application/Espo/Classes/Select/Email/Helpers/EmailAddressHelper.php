@@ -45,7 +45,7 @@ class EmailAddressHelper
     public function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
-            ->getRepository('EmailAddress')
+            ->getRDBRepository('EmailAddress')
             ->where([
                 'lower' => strtolower($value),
             ])
@@ -55,6 +55,6 @@ class EmailAddressHelper
             return null;
         }
 
-        return $emailAddress->id;
+        return $emailAddress->getId();
     }
 }
