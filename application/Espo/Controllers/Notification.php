@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Services\Notification as Service;
+
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
@@ -58,9 +60,7 @@ class Notification extends RecordBase
             'after' => $after,
         ];
 
-        $recordCollection = $this->recordServiceContainer
-            ->get('Notification')
-            ->getList($userId, $params);
+        $recordCollection = $this->getNotificationService()->getList($userId, $params);
 
         return (object) [
             'total' => $recordCollection->getTotal(),
@@ -72,15 +72,20 @@ class Notification extends RecordBase
     {
         $userId = $this->user->getId();
 
-        return $this->recordServiceContainer->get('Notification')->getNotReadCount($userId);
+        return $this->getNotificationService()->getNotReadCount($userId);
     }
 
     public function postActionMarkAllRead(Request $request): bool
     {
         $userId = $this->user->getId();
 
-        $this->recordServiceContainer->get('Notification')->markAllRead($userId);
+        $this->getNotificationService()->markAllRead($userId);
 
         return true;
+    }
+
+    private function getNotificationService(): Service
+    {
+        return $this->recordServiceContainer->get('Notification');
     }
 }

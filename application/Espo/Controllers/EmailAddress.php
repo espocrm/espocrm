@@ -31,6 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Services\EmailAddress as Service;
+
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
@@ -58,6 +60,11 @@ class EmailAddress extends RecordBase
 
         $onlyActual = $request->getQueryParam('onlyActual') === 'true';
 
-        return $this->getRecordService()->searchInAddressBook($q, $maxSize, $onlyActual);
+        return $this->getEmailAddressService()->searchInAddressBook($q, $maxSize, $onlyActual);
+    }
+
+    private function getEmailAddressService(): Service
+    {
+        return $this->getRecordService();
     }
 }

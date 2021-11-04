@@ -31,6 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Services\EmailFolder as Service;
+
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
@@ -46,7 +48,7 @@ class EmailFolder extends RecordBase
             throw new BadRequest();
         }
 
-        $this->getRecordService()->moveUp($data->id);
+        $this->getEmailFolderService()->moveUp($data->id);
 
         return true;
     }
@@ -59,13 +61,18 @@ class EmailFolder extends RecordBase
             throw new BadRequest();
         }
 
-        $this->getRecordService()->moveDown($data->id);
+        $this->getEmailFolderService()->moveDown($data->id);
 
         return true;
     }
 
     public function getActionListAll(): array
     {
-        return $this->getRecordService()->listAll();
+        return $this->getEmailFolderService()->listAll();
+    }
+
+    private function getEmailFolderService(): Service
+    {
+        return $this->getRecordService();
     }
 }

@@ -55,6 +55,8 @@ use Espo\Core\Di;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 
+use Espo\ORM\EntityManager;
+
 use stdClass;
 
 class RecordBase extends Base implements Di\EntityManagerAware
@@ -95,12 +97,17 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
     protected $config;
 
+    /**
+     * @var User
+     */
     protected $user;
 
     protected $acl;
 
     /**
      * @deprecated
+     *
+     * @var EntityManager
      */
     protected $entityManager;
 

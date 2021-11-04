@@ -32,13 +32,20 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Services\EmailAccount as Service;
+
+use Espo\Core\Di\CryptAware;
+use Espo\Core\Di\CryptSetter;
+
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
 };
 
-class EmailAccount extends Record
+class EmailAccount extends Record implements CryptAware
 {
+    use CryptSetter;
+
     protected function checkAccess(): bool
     {
         return $this->acl->check('EmailAccountScope');
@@ -59,7 +66,7 @@ class EmailAccount extends Record
             'userId' => $data->userId ?? null,
         ];
 
-        return $this->getRecordService()->getFolders($params);
+        return $this->getEmailAccountService()->getFolders($params);
     }
 
     public function postActionTestConnection(Request $request): bool
@@ -69,24 +76,27 @@ class EmailAccount extends Record
         if (is_null($data->password)) {
             $emailAccount = $this->entityManager->getEntity('EmailAccount', $data->id);
 
-            if (!$emailAccount || !$emailAccount->id) {
+            if (!$emailAccount || !$emailAccount->getId()) {
                 throw new Error();
             }
 
             if (
-                $emailAccount->get('assignedUserId') != $this->user->id &&
+                $emailAccount->get('assignedUserId') !== $this->user->getId() &&
                 !$this->user->isAdmin()
             ) {
                 throw new Forbidden();
             }
 
-            $data->password = $this->getContainer()
-                ->get('crypt')
-                ->decrypt($emailAccount->get('password'));
+            $data->password = $this->crypt->decrypt($emailAccount->get('password'));
         }
 
-        $this->getRecordService()->testConnection(get_object_vars($data));
+        $this->getEmailAccountService()->testConnection(get_object_vars($data));
 
         return true;
+    }
+
+    private function getEmailAccountService(): Service
+    {
+        return $this->getRecordService();
     }
 }

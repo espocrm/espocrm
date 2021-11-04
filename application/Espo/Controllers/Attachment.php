@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Services\Attachment as Service;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
@@ -37,7 +39,7 @@ use Espo\Core\{
     Controllers\RecordBase,
 };
 
-use StdClass;
+use stdClass;
 
 class Attachment extends RecordBase
 {
@@ -48,7 +50,7 @@ class Attachment extends RecordBase
         }
     }
 
-    public function postActionGetAttachmentFromImageUrl(Request $request): StdClass
+    public function postActionGetAttachmentFromImageUrl(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -57,13 +59,15 @@ class Attachment extends RecordBase
         }
 
         if (empty($data->field)) {
-            throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified');
+            throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified.');
         }
 
-        return $this->getRecordService()->getAttachmentFromImageUrl($data)->getValueMap();
+        return $this->getAttachmentService()
+            ->getAttachmentFromImageUrl($data)
+            ->getValueMap();
     }
 
-    public function postActionGetCopiedAttachment(Request $request): StdClass
+    public function postActionGetCopiedAttachment(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -72,10 +76,12 @@ class Attachment extends RecordBase
         }
 
         if (empty($data->field)) {
-            throw new BadRequest('postActionGetCopiedAttachment copy: No field specified');
+            throw new BadRequest('postActionGetCopiedAttachment copy: No field specified.');
         }
 
-        return $this->getRecordService()->getCopiedAttachment($data)->getValueMap();
+        return $this->getAttachmentService()
+            ->getCopiedAttachment($data)
+            ->getValueMap();
     }
 
     public function getActionFile(Request $request, Response $response): void
@@ -86,12 +92,17 @@ class Attachment extends RecordBase
             throw new BadRequest();
         }
 
-        $fileData = $this->getRecordService()->getFileData($id);
+        $fileData = $this->getAttachmentService()->getFileData($id);
 
         $response
             ->setHeader('Content-Type', $fileData->type)
             ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->name . '"')
             ->setHeader('Content-Length', (string) $fileData->size)
             ->setBody($fileData->stream);
+    }
+
+    private function getAttachmentService(): Service
+    {
+        return $this->getRecordService();
     }
 }

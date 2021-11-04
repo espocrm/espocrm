@@ -31,6 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Services\ExternalAccount as Service;
+
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
@@ -51,18 +53,20 @@ class ExternalAccount extends RecordBase
 
     public function getActionList(Request $request, Response $response): stdClass
     {
-        $integrations = $this->entityManager->getRepository('Integration')->find();
+        $integrations = $this->entityManager
+            ->getRDBRepository('Integration')
+            ->find();
 
         $list = [];
 
         foreach ($integrations as $entity) {
             if (
                 $entity->get('enabled') &&
-                $this->metadata->get('integrations.' . $entity->id .'.allowUserAccounts')
+                $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
             ) {
 
                 $userAccountAclScope = $this->metadata
-                    ->get(['integrations', $entity->id, 'userAccountAclScope']);
+                    ->get(['integrations', $entity->getId(), 'userAccountAclScope']);
 
                 if ($userAccountAclScope) {
                     if (!$this->acl->checkScope($userAccountAclScope)) {
@@ -97,7 +101,7 @@ class ExternalAccount extends RecordBase
             return (object) [
                 'clientId' => $entity->get('clientId'),
                 'redirectUri' => $this->config->get('siteUrl') . '?entryPoint=oauthCallback',
-                'isConnected' => $this->getRecordService()->ping($integration, $userId)
+                'isConnected' => $this->getExternalAccount()->ping($integration, $userId)
             ];
         }
 
@@ -151,8 +155,11 @@ class ExternalAccount extends RecordBase
             throw new Forbidden();
         }
 
-        $service = $this->getRecordService();
+        return $this->getExternalAccount()->authorizationCode($integration, $userId, $code);
+    }
 
-        return $service->authorizationCode($integration, $userId, $code);
+    private function getExternalAccount(): Service
+    {
+        return $this->getRecordService();
     }
 }

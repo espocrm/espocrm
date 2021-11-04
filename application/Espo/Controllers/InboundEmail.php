@@ -29,14 +29,22 @@
 
 namespace Espo\Controllers;
 
+use Espo\Services\InboundEmail as Service;
+
 use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Di\CryptAware;
+use Espo\Core\Di\CryptSetter;
+
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
 };
 
-class InboundEmail extends Record
+class InboundEmail extends Record implements CryptAware
 {
+    use CryptSetter;
+
     protected function checkAccess(): bool
     {
         return $this->getUser()->isAdmin();
@@ -55,7 +63,7 @@ class InboundEmail extends Record
             'id' => $data->id ?? null,
         ];
 
-        return $this->getRecordService()->getFolders($params);
+        return $this->getInboundEmailService()->getFolders($params);
     }
 
     public function postActionTestConnection(Request $request): bool
@@ -65,17 +73,20 @@ class InboundEmail extends Record
         if (is_null($data->password)) {
             $inboundEmail = $this->entityManager->getEntity('InboundEmail', $data->id);
 
-            if (!$inboundEmail || !$inboundEmail->id) {
+            if (!$inboundEmail || !$inboundEmail->getId()) {
                 throw new Error();
             }
 
-            $data->password = $this->getContainer()
-                ->get('crypt')
-                ->decrypt($inboundEmail->get('password'));
+            $data->password = $this->crypt->decrypt($inboundEmail->get('password'));
         }
 
-        $this->getRecordService()->testConnection(get_object_vars($data));
+        $this->getInboundEmailService()->testConnection(get_object_vars($data));
 
         return true;
+    }
+
+    private function getInboundEmailService(): Service
+    {
+        return $this->getRecordService();
     }
 }
