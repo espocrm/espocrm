@@ -97,6 +97,11 @@ class InjectableFactory
         return $this->createInternal($className, null, $bindingContainer);
     }
 
+    /**
+     * @template T of object
+     * @phpstan-param class-string<T> $className
+     * @phpstan-return T
+     */
     private function createInternal(
         string $className,
         ?array $with = null,
