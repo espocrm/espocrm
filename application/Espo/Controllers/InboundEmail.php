@@ -87,6 +87,7 @@ class InboundEmail extends Record implements CryptAware
 
     private function getInboundEmailService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

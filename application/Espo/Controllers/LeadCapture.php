@@ -112,6 +112,7 @@ class LeadCapture extends Record
 
     private function getLeadCaptureService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

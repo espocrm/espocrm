@@ -65,6 +65,7 @@ class EmailAddress extends RecordBase
 
     private function getEmailAddressService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

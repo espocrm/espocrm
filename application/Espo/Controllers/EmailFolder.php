@@ -73,6 +73,7 @@ class EmailFolder extends RecordBase
 
     private function getEmailFolderService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

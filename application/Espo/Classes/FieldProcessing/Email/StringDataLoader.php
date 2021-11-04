@@ -122,6 +122,7 @@ class StringDataLoader implements Loader
 
     private function getEmailAddressRepository(): EmailAddressRepository
     {
+        /** @var EmailAddressRepository */
         return $this->entityManager->getRepository('EmailAddress');
     }
 }

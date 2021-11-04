@@ -103,6 +103,7 @@ class Attachment extends RecordBase
 
     private function getAttachmentService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

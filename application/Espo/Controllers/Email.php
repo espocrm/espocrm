@@ -317,11 +317,13 @@ class Email extends Record
 
     private function getEmailService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 
     private function getEmailTemplateService(): EmailTemplateService
     {
+        /** @var EmailTemplateService */
         return $this->getServiceFactory()->create('EmailTemplate');
     }
 }

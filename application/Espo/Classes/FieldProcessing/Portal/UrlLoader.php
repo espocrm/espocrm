@@ -55,6 +55,7 @@ class UrlLoader implements Loader
 
     private function getPortalRepository(): PortalRepository
     {
+        /** @var PortalRepository */
         return $this->entityManager->getRepository('Portal');
     }
 }

@@ -86,6 +86,7 @@ class Notification extends RecordBase
 
     private function getNotificationService(): Service
     {
+        /** @var Service */
         return $this->recordServiceContainer->get('Notification');
     }
 }

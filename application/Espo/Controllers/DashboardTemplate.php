@@ -89,6 +89,7 @@ class DashboardTemplate extends Record
 
     private function getDashboardTemplateService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

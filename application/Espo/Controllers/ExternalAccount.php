@@ -160,6 +160,7 @@ class ExternalAccount extends RecordBase
 
     private function getExternalAccount(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

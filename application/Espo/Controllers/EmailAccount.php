@@ -97,6 +97,7 @@ class EmailAccount extends Record implements CryptAware
 
     private function getEmailAccountService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

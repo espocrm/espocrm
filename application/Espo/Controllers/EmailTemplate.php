@@ -59,6 +59,7 @@ class EmailTemplate extends Record
 
     private function getEmailTempalteService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }
