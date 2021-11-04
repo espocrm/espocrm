@@ -75,6 +75,7 @@ class Portal extends Record implements
 
     private function getPortalRepository(): Repository
     {
+        /** @var Repository */
         return $this->getRepository();
     }
 }

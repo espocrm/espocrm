@@ -139,6 +139,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
     public function getByAddress(string $address): ?EmailAddressEntity
     {
+        /** @var ?EmailAddressEntity */
         return $this->where(['lower' => strtolower($address)])->findOne();
     }
 

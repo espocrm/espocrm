@@ -1105,6 +1105,7 @@ class InboundEmail extends RecordService implements
 
     public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
+        /** @var ?InboundEmailEntity */
         $inboundEmail = $this->entityManager
             ->getRDBRepository('InboundEmail')
             ->where([
@@ -1150,6 +1151,7 @@ class InboundEmail extends RecordService implements
                 'distinct' => true,
             ];
 
+            /** @var ?InboundEmailEntity */
             return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);;
         }
 
@@ -1163,6 +1165,7 @@ class InboundEmail extends RecordService implements
                 ]
             ];
 
+            /** @var ?InboundEmailEntity */
             return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);
         }
 
@@ -1371,6 +1374,7 @@ class InboundEmail extends RecordService implements
 
     private function getEmailTemplateService(): EmailTemplateService
     {
+        /** @var EmailTemplateService */
         return $this->injectableFactory->create(EmailTemplateService::class);
     }
 }

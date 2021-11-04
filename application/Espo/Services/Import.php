@@ -69,6 +69,7 @@ class Import extends Record
             ->withSearchParams($searchParams)
             ->build();
 
+        /** @var iterable<\Espo\ORM\Entity> */
         $collection = $this->getImportRepository()->findResultRecords($entity, $link, $query);
 
         $listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);
@@ -87,6 +88,7 @@ class Import extends Record
 
     private function getImportRepository(): Repository
     {
+        /** @var Repository */
         return $this->getRepository();
     }
 }

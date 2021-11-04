@@ -191,6 +191,7 @@ class EmailTemplate extends Record implements
 
     private function getEmailAddressRepository(): EmailAddressRepository
     {
+        /** @var EmailAddressRepository */
         return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

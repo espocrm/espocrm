@@ -30,9 +30,7 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\Attachment as AttachmentEntity;
-
 use Espo\Core\Repositories\Database;
 
 use Espo\Core\Di;
@@ -40,8 +38,7 @@ use Espo\Core\Di;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * @template T of \Espo\Entities\Attachment
- * @extends Database<\Espo\Entities\Attachment>
+ * @extends Database<AttachmentEntity>
  */
 class Attachment extends Database implements
     Di\FileManagerAware,
@@ -105,16 +102,18 @@ class Attachment extends Database implements
     {
         parent::afterRemove($entity, $options);
 
-        $duplicateCount = $this->where([
-            'OR' => [
-                [
-                    'sourceId' => $entity->getSourceId()
+        $duplicateCount = $this
+            ->where([
+                'OR' => [
+                    [
+                        'sourceId' => $entity->getSourceId()
+                    ],
+                    [
+                        'id' => $entity->getSourceId()
+                    ]
                 ],
-                [
-                    'id' => $entity->getSourceId()
-                ]
-            ],
-        ])->count();
+            ])
+            ->count();
 
         if ($duplicateCount === 0) {
             $this->fileStorageManager->unlink($entity);
@@ -136,10 +135,7 @@ class Attachment extends Database implements
         }
     }
 
-    /**
-     * @return AttachmentEntity
-     */
-    public function getCopiedAttachment(AttachmentEntity $entity, $role = null)
+    public function getCopiedAttachment(AttachmentEntity $entity, $role = null): AttachmentEntity
     {
         $attachment = $this->get();
 

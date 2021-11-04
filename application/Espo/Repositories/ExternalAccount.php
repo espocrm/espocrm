@@ -31,13 +31,21 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class ExternalAccount extends \Espo\Core\Repositories\Database
+use Espo\Core\Repositories\Database;
+
+use Espo\Entities\ExternalAccount as ExternalAccountEntity;
+
+/**
+ * @extends Database<ExternalAccountEntity>
+ */
+class ExternalAccount extends Database
 {
     public function getById(string $id): ?Entity
     {
         $entity = parent::getById($id);
 
         if (!$entity) {
+            /** @var ExternalAccountEntity */
             $entity = $this->get();
 
             $entity->set('id', $id);

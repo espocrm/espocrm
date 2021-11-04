@@ -720,6 +720,7 @@ class EmailAccount extends Record implements
 
     private function getUserDataRepository(): UserDataRepository
     {
+        /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

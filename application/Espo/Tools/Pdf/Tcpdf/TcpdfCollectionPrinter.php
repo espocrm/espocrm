@@ -49,6 +49,8 @@ class TcpdfCollectionPrinter implements CollectionPrinter
 
     public function print(Template $template, Collection $collection, Params $params, IdDataMap $dataMap): Contents
     {
+        /** @var iterable<\Espo\ORM\Entity> $collection */
+
         $pdf = new Tcpdf();
 
         $pdf->setUseGroupNumbers(true);

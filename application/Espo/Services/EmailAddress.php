@@ -280,6 +280,7 @@ class EmailAddress extends Record
 
     private function getEmailAddressRepository(): Repository
     {
+        /** @var Repository */
         return $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
     }
 }

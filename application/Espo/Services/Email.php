@@ -1032,16 +1032,19 @@ class Email extends Record implements
 
     private function getEmailAccountService(): EmailAccountService
     {
+        /** @var EmailAccountService */
         return $this->injectableFactory->create(EmailAccountService::class);
     }
 
     private function getInboundEmailService(): InboundEmailService
     {
+        /** @var InboundEmailService */
         return $this->injectableFactory->create(InboundEmailService::class);
     }
 
     private function getUserDataRepository(): UserDataRepository
     {
+        /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

@@ -887,6 +887,7 @@ class Processor
 
     private function getPortalRepository(): PortalRepository
     {
+        /** @var PortalRepository */
         return $this->entityManager->getRepository('Portal');
     }
 }

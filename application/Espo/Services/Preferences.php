@@ -134,6 +134,7 @@ class Preferences
 
         $user = $this->entityManager->getEntity('User', $userId);
 
+        /** @var PreferencesEntity */
         $entity = $this->entityManager->getEntity('Preferences', $userId);
 
         if (!$entity || !$user) {
@@ -213,6 +214,7 @@ class Preferences
 
     private function getRepository(): Repository
     {
+        /** @var Repository */
         return $this->entityManager->getRepository(PreferencesEntity::ENTITY_TYPE);
     }
 }

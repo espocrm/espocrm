@@ -401,11 +401,12 @@ class NoteHookProcessor
     }
 
     /**
-     * @phpstan-return Collection
+     * @phpstan-return Collection&iterable<User>
      * @return User[]
      */
     private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
+        /** @var Collection&iterable<User> */
         return $this->streamService->getSubscriberList($parentType, $parentId, $isInternal);
     }
 }

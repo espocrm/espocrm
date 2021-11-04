@@ -263,6 +263,7 @@ class UserSecurity
 
     private function getUserDataRepository(): UserDataRepository
     {
+        /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 
 interface EntityManagerAware
 {

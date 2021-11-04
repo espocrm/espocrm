@@ -482,6 +482,7 @@ class Attachment extends Record
 
     private function getAttachmentRepository(): AttachmentRepository
     {
+        /** @var AttachmentRepository */
         return $this->getRepository();
     }
 }

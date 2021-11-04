@@ -64,7 +64,7 @@ class Export
     private $params;
 
     /**
-     * @var Collection
+     * @phpstan-var (Collection&iterable<Entity>)|null $collection
      */
     private $collection = null;
 
@@ -115,6 +115,9 @@ class Export
         return $this;
     }
 
+    /**
+     * @phpstan-param Collection&iterable<Entity> $collection
+     */
     public function setCollection(Collection $collection): self
     {
         $this->collection = $collection;
@@ -337,6 +340,9 @@ class Export
         return true;
     }
 
+    /**
+     * @phpstan-return Collection&iterable<Entity>
+     */
     private function getCollection(Params $params): Collection
     {
         if ($this->collection) {
@@ -358,8 +364,9 @@ class Export
 
         $query = $builder->build();
 
+        /** @phpstan-var Collection&iterable<Entity> */
         return $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->sth()
             ->find();

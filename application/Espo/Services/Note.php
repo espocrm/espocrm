@@ -354,6 +354,7 @@ class Note extends Record
 
     private function getUserRepository(): UserRepository
     {
+        /** @var UserRepository */
         return $this->entityManager->getRepository(UserEntity::ENTITY_TYPE);
     }
 }

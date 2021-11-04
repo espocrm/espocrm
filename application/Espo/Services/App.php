@@ -372,7 +372,7 @@ class App
     private function convertPHPSizeToBytes($size)
     {
         if (is_numeric($size)) {
-            return $size;
+            return (int) $size;
         }
 
         if ($size === false) {
@@ -569,11 +569,13 @@ class App
 
     private function getPhoneNumberRepository(): PhoneNumberRepository
     {
+        /** @var PhoneNumberRepository */
         return $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
     }
 
     private function getArrayValueRepository(): ArrayValueRepository
     {
+        /** @var ArrayValueRepository */
         return $this->entityManager->getRepository(ArrayValue::ENTITY_TYPE);
     }
 }

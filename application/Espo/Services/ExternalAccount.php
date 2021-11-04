@@ -79,6 +79,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
     public function getExternalAccountEntity(string $integration, string $userId): ?ExternalAccountEntity
     {
+        /** @var ?ExternalAccountEntity */
         return $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
     }
 

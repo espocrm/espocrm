@@ -31,13 +31,21 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-class Integration extends \Espo\Core\Repositories\Database
+use Espo\Core\Repositories\Database;
+
+use Espo\Entities\Integration as IntegrationEntity;
+
+/**
+ * @extends Database<IntegrationEntity>
+ */
+class Integration extends Database
 {
     public function getById(string $id): ?Entity
     {
         $entity = parent::getById($id);
 
         if (!$entity) {
+            /** @var IntegrationEntity */
             $entity = $this->get();
 
             $entity->set('id', $id);

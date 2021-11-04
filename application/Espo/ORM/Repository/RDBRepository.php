@@ -118,7 +118,7 @@ class RDBRepository implements Repository
             ])
             ->build();
 
-        /** @var T $entity */
+        /** @var ?T $entity */
         $entity = $this->getMapper()->selectOne($selectQuery);
 
         return $entity;
@@ -126,6 +126,8 @@ class RDBRepository implements Repository
 
     /**
      * Get an entity. If ID is NULL, a new entity is returned.
+     *
+     * @phpstan-return ?T
      */
     public function get(?string $id = null): ?Entity
     {

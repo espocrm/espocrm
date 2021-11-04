@@ -35,6 +35,7 @@ class UserData extends \Espo\Core\Repositories\Database
 {
     public function getByUserId(string $userId): ?UserDataEntity
     {
+        /** @var ?UserDataEntity */
         $userData = $this
             ->where(['userId' => $userId])
             ->findOne();
@@ -51,6 +52,7 @@ class UserData extends \Espo\Core\Repositories\Database
             return null;
         }
 
+        /** @var ?UserDataEntity */
         $userData = $this->getNew();
 
         $userData->set('userId', $userId);
