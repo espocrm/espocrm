@@ -97,6 +97,7 @@ class TargetList extends Record
 
     private function getTargetListService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

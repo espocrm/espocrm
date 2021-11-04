@@ -294,6 +294,7 @@ class Email extends Entity
 
             $idList[] = $id;
 
+            /** @var Attachment */
             $attachment = $this->entityManager->getEntity('Attachment', $id);
 
             if ($attachment) {
@@ -510,6 +511,7 @@ class Email extends Entity
 
     private function getEmailRepository(): EmailRepository
     {
+        /** @var EmailRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }
 }

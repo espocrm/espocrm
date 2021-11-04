@@ -55,6 +55,7 @@ class CaseObj extends \Espo\Core\Controllers\Record
 
     private function getCaseService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

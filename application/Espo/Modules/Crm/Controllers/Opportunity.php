@@ -116,6 +116,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
     private function getOpportunityService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

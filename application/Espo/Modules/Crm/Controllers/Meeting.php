@@ -99,6 +99,7 @@ class Meeting extends \Espo\Core\Controllers\Record
 
     private function getMeetingService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

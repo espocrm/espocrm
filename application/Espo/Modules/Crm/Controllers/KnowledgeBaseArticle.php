@@ -132,6 +132,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 
     private function getArticleService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

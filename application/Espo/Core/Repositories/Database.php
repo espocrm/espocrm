@@ -51,7 +51,7 @@ use Espo\Core\{
 
 /**
  * @template T of \Espo\Core\ORM\Entity
- * @extends RDBRepository<\Espo\Core\ORM\Entity>
+ * @extends RDBRepository<T>
  */
 class Database extends RDBRepository
 {

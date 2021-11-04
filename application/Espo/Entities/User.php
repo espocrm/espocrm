@@ -152,7 +152,7 @@ class User extends Person
         }
     }
 
-    public function setTitle(?string $title): ?string
+    public function setTitle(?string $title): self
     {
         $this->set('title', $title);
 

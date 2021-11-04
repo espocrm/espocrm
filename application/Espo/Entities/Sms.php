@@ -137,6 +137,7 @@ class Sms extends Entity implements SmsInterface
 
     private function getSmsRepository(): SmsRepository
     {
+        /** @var SmsRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }
 }

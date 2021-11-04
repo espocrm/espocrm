@@ -59,6 +59,7 @@ class Document extends \Espo\Core\Controllers\Record
 
     private function getDocumentService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

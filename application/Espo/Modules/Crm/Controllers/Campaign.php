@@ -61,6 +61,7 @@ class Campaign extends \Espo\Core\Controllers\Record
 
     private function getCampaignService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

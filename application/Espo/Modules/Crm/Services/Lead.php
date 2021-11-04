@@ -40,6 +40,9 @@ use Espo\Services\Record;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Contact;
 
 use Espo\Core\Di;
 
@@ -88,6 +91,7 @@ class Lead extends Record implements
 
     public function getConvertAttributes(string $id): array
     {
+        /** @var LeadEntity */
         $lead = $this->getEntity($id);
 
         if (!$this->getAcl()->check($lead, 'read')) {
@@ -219,6 +223,7 @@ class Lead extends Record implements
 
     public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {
+        /** @var LeadEntity */
         $lead = $this->getEntity($id);
 
         $additionalData = $additionalData ?? (object) [];
@@ -239,6 +244,8 @@ class Lead extends Record implements
             $account->set(get_object_vars($recordsData->Account));
 
             if ($duplicateCheck) {
+                /** @var Account[] */
+                /** @var iterable<Account> */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Account')
                     ->findDuplicates($account);
@@ -269,6 +276,8 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
+                /** @var Contact[] */
+                /** @var iterable<Contact> */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Contact')
                     ->findDuplicates($contact);
@@ -305,6 +314,8 @@ class Lead extends Record implements
             }
 
             if ($duplicateCheck) {
+                /** @var Opportunity[] */
+                /** @var iterable<Opportunity> */
                 $rDuplicateList = $this->recordServiceContainer
                     ->get('Opportunity')
                     ->findDuplicates($opportunity);
@@ -450,6 +461,7 @@ class Lead extends Record implements
 
     private function getAttachmentRepository(): AttachmentRepository
     {
+        /** @var AttachmentRepository */
         return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

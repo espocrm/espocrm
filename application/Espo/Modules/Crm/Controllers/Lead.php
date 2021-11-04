@@ -76,6 +76,7 @@ class Lead extends \Espo\Core\Controllers\Record
 
     private function getLeadService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

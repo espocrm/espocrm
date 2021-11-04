@@ -208,6 +208,8 @@ class RDBRepository implements Repository
 
     /**
      * Get an access point for a specific relation of a record.
+     *
+     * @phpstan-param T $entity
      */
     public function getRelation(Entity $entity, string $relationName): RDBRelation
     {

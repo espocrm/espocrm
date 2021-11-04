@@ -99,6 +99,7 @@ class Call extends \Espo\Core\Controllers\Record
 
     private function getCallService(): Service
     {
+        /** @var Service */
         return $this->getRecordService();
     }
 }

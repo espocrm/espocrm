@@ -75,6 +75,7 @@ class Document extends \Espo\Services\Record
 
     private function getAttachmentRepository(): AttachmentRepository
     {
+        /** @var AttachmentRepository */
         return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

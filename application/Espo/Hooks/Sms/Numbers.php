@@ -106,6 +106,7 @@ class Numbers
 
     private function getPhoneNumberRepository(): PhoneNumberRepository
     {
+        /** @var PhoneNumberRepository */
         return $this->entityManager->getRepository(PhoneNumber::ENTITY_TYPE);
     }
 }
