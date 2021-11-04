@@ -33,6 +33,8 @@ use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     Portal\AclManager,
     Acl\Table,
@@ -71,6 +73,8 @@ class AccessChecker implements AccessEntityCREDSChecker
         if ($data->getRead() === Table::LEVEL_NO) {
             return false;
         }
+
+        assert($entity instanceof CoreEntity);
 
         $userIdList = $entity->getLinkMultipleIdLIst('users');
 

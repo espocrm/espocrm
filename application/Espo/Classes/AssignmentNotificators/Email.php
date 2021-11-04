@@ -43,6 +43,10 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 use Espo\Entities\Notification;
+use Espo\Entities\Email as EmailEntity;
+
+use Espo\Repositories\Email as EmailRepository;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use DateTime;
 use Exception;
@@ -79,6 +83,8 @@ class Email implements AssignmentNotificator
 
     public function process(Entity $entity, Params $params): void
     {
+        /** @var EmailEntity $entity */
+
         if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;
         }
@@ -138,12 +144,17 @@ class Email implements AssignmentNotificator
             'emailName' => $entity->get('name'),
         ];
 
+        /** @var EmailRepository $emailRepository */
+        $emailRepository = $this->entityManager->getRepository('Email');
+        /** @var EmailAddressRepository $emailAddressRepository */
+        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+
         if (!$entity->has('from')) {
-            $this->entityManager->getRepository('Email')->loadFromField($entity);
+            $emailRepository->loadFromField($entity);
         }
 
         if (!$entity->has('to')) {
-            $this->entityManager->getRepository('Email')->loadToField($entity);
+            $emailRepository->loadToField($entity);
         }
 
         $person = null;
@@ -151,9 +162,7 @@ class Email implements AssignmentNotificator
         $from = $entity->get('from');
 
         if ($from) {
-            $person = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
+            $person = $emailAddressRepository->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
 
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
@@ -165,7 +174,7 @@ class Email implements AssignmentNotificator
         $userIdFrom = null;
 
         if ($person && $person->getEntityType() === 'User') {
-            $userIdFrom = $person->id;
+            $userIdFrom = $person->getId();
         }
 
         if (empty($data['personEntityId'])) {
@@ -214,7 +223,7 @@ class Email implements AssignmentNotificator
                 if ($folderId) {
                     if (
                         $this->entityManager
-                            ->getRepository('EmailFolder')
+                            ->getRDBRepository('EmailFolder')
                             ->where([
                                 'id' => $folderId,
                                 'skipNotifications' => true,
@@ -226,6 +235,7 @@ class Email implements AssignmentNotificator
                 }
             }
 
+            /** @var User $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {
@@ -261,7 +271,7 @@ class Email implements AssignmentNotificator
             }
 
             $existing = $this->entityManager
-                ->getRepository(Notification::ENTITY_TYPE)
+                ->getRDBRepository(Notification::ENTITY_TYPE)
                 ->where([
                     'type' => Notification::TYPE_EMAIL_RECEIVED,
                     'userId' => $userId,

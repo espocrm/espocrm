@@ -54,7 +54,7 @@ class UserColumnsLoader implements Loader
     public function process(Entity $entity, Params $params): void
     {
         $emailUser = $this->entityManager
-            ->getRepository('EmailUser')
+            ->getRDBRepository('EmailUser')
             ->select(['isRead', 'isImportant', 'inTrash'])
             ->where([
                 'deleted' => false,

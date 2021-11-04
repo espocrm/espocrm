@@ -50,7 +50,7 @@ class AddressDataLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
-        /* @var $repository EmailRepository */
+        /** @var EmailRepository $repository */
         $repository = $this->entityManager->getRepository('Email');
 
         $repository->loadFromField($entity);

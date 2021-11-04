@@ -62,6 +62,8 @@ class AccessChecker implements AccessEntityCREDSChecker
             return false;
         }
 
+        /** @var User $entity */
+
         if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
@@ -71,6 +73,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var User $entity */
+
         if ($entity->isPortal()) {
             if ($this->aclManager->getPermissionLevel($user, 'portal') === Table::LEVEL_YES) {
                 return true;
@@ -88,6 +92,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var User $entity */
+
         if ($entity->isSystem()) {
             return false;
         }
@@ -107,6 +113,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var User $entity */
+
         if (!$user->isAdmin()) {
             return false;
         }

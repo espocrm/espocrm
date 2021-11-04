@@ -29,6 +29,8 @@
 
 namespace Espo\Classes\DuplicateWhereBuilders;
 
+use Espo\Core\ORM\Entity as CoreEntity;
+
 use Espo\Core\{
     Duplicate\WhereBuilder,
     Field\EmailAddressGroup,
@@ -93,10 +95,10 @@ class Person implements WhereBuilder
         return $orBuilder->build();
     }
 
-    private function getEmailAddressList(Entity $entity): array
+    private function getEmailAddressList(CoreEntity $entity): array
     {
         if ($entity->get('emailAddressData')) {
-            /* @var $eaGroup EmailAddressGroup */
+            /** @var EmailAddressGroup $eaGroup */
             $eaGroup = $entity->getValueObject('emailAddress');
 
             return $eaGroup->getAddressList();

@@ -31,6 +31,8 @@ namespace Espo\Classes\FieldProcessing\Email;
 
 use Espo\ORM\Entity;
 
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\Loader\Params,
@@ -56,6 +58,8 @@ class StringDataLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
+        /** @var Email $entity */
+
         $userEmailAdddressIdList = [];
 
         $emailAddressCollection = $this->entityManager
@@ -84,9 +88,7 @@ class StringDataLoader implements Loader
             $list = [];
 
             foreach ($idList as $emailAddressId) {
-                $person = $this->entityManager
-                    ->getRepository('EmailAddress')
-                    ->getEntityByAddressId($emailAddressId, null, true);
+                $person = $this->getEmailAddressRepository()->getEntityByAddressId($emailAddressId, null, true);
 
                 $list[] = $person ? $person->get('name') : $names->$emailAddressId;
             }
@@ -103,9 +105,7 @@ class StringDataLoader implements Loader
         }
 
         if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
-            $person = $this->entityManager
-                ->getRepository('EmailAddress')
-                ->getEntityByAddressId($fromEmailAddressId, null, true);
+            $person = $this->getEmailAddressRepository()->getEntityByAddressId($fromEmailAddressId, null, true);
 
             $fromName = $person ? $person->get('name') : null;
 
@@ -118,5 +118,10 @@ class StringDataLoader implements Loader
             $entity->get('fromEmailAddressName');
 
         $entity->set('personStringData', $fromName);
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        return $this->entityManager->getRepository('EmailAddress');
     }
 }

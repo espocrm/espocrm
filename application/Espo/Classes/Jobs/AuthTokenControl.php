@@ -83,7 +83,7 @@ class AuthTokenControl implements JobDataLess
         }
 
         $tokenList = $this->entityManager
-            ->getRepository('AuthToken')
+            ->getRDBRepository('AuthToken')
             ->where($whereClause)
             ->limit(0, 500)
             ->find();

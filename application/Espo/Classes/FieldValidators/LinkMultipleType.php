@@ -30,11 +30,16 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 class LinkMultipleType
 {
     public function checkRequired(Entity $entity, string $field): bool
     {
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
+
         return count($entity->getLinkMultipleIdList($field)) > 0;
     }
 }

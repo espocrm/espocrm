@@ -30,6 +30,7 @@
 namespace Espo\Classes\Acl\Email;
 
 use Espo\Entities\User;
+use Espo\Entities\Email;
 
 use Espo\ORM\Entity;
 
@@ -52,6 +53,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var Email $entity */
+
         if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
             return true;
         }
@@ -79,6 +82,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var Email $entity */
+
         if ($user->isAdmin()) {
             return true;
         }

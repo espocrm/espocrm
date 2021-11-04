@@ -114,7 +114,7 @@ class IcsDataLoader implements Loader
             return;
         }
 
-        /* @var $emailAddressRepository EmailAddressRepository */
+        /** @var EmailAddressRepository $emailAddressRepository */
         $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         $attendeeEmailAddressList = $espoEvent->getAttendeeEmailAddressList();

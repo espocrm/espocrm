@@ -30,6 +30,7 @@
 namespace Espo\Classes\Acl\Email;
 
 use Espo\Entities\User;
+use Espo\Entities\Email;
 
 use Espo\ORM\Entity;
 
@@ -50,6 +51,8 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 
     public function checkOwn(User $user, Entity $entity): bool
     {
+        /** @var Email $entity */
+
         if ($user->getId() === $entity->get('assignedUserId')) {
             return true;
         }

@@ -50,7 +50,7 @@ class CountsLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
-        /* @var $repository ImportRepository */
+        /** @var ImportRepository $repository */
         $repository = $this->entityManager->getRepository('Import');
 
         $importedCount = $repository->countResultRecords($entity, 'imported');

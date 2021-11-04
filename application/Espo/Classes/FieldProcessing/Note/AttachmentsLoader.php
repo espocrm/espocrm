@@ -42,7 +42,7 @@ class AttachmentsLoader implements Loader
 {
     public function process(Entity $entity, Params $params): void
     {
-        /* @var $entity Note */
+        /** @var Note $entity */
         $entity->loadAttachments();
     }
 }
