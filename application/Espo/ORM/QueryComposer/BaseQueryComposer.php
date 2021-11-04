@@ -1975,7 +1975,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $joinsArr[] = 'LEFT ' . $join;
                 }
                 else if ($type == Entity::HAS_ONE) {
-                    $join =  $this->getJoinItemPart(
+                    $join = $this->getJoinItemPart(
                         $entity,
                         $relationName,
                         true,
@@ -2640,11 +2640,14 @@ abstract class BaseQueryComposer implements QueryComposer
         return $modified;
     }
 
+    /**
+     * @param array|string $j
+     */
     protected function obtainJoinAlias($j)
     {
         if (is_array($j)) {
-            if (count($j)) {
-                if ($j[1]) {
+            if (isset($j[0])) {
+                if (isset($j[1]) && $j[1]) {
                     $joinAlias = $j[1];
                 }
                 else {
@@ -3103,7 +3106,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return $sql;
         }
 
-        return false;
+        return '';
     }
 
     protected function composeSelectQuery(

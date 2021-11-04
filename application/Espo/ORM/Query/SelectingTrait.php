@@ -74,6 +74,7 @@ trait SelectingTrait
             return null;
         }
 
+        /** @phpstan-ignore-next-line */
         return WhereClause::fromRaw($whereClause);
     }
 

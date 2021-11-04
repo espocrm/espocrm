@@ -1253,6 +1253,8 @@ class BaseMapper implements RDBMapper
      */
     public function massInsert(Collection $collection): void
     {
+        /** @var Collection&iterable<Entity> $collection */
+
         if (!count($collection)) {
             return;
         }

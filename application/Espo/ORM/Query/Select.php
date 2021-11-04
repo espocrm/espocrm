@@ -174,6 +174,7 @@ class Select implements SelectingQuery
             return null;
         }
 
+        /** @phpstan-ignore-next-line */
         return WhereClause::fromRaw($havingClause);
     }
 
