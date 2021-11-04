@@ -198,7 +198,7 @@ class RDBRelationSelectBuilder
      *
      * @phpstan-return iterable<Entity>&Collection
      *
-     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
+     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
      */
     public function find(): Collection
     {
@@ -210,7 +210,9 @@ class RDBRelationSelectBuilder
             return $this->handleReturnCollection($related);
         }
 
+        /** @var iterable<Entity>&\Espo\ORM\EntityCollection $collection */
         $collection = $this->entityManager->getCollectionFactory()->create($this->foreignEntityType);
+
         $collection->setAsFetched();
 
         if ($related instanceof Entity) {
@@ -485,6 +487,11 @@ class RDBRelationSelectBuilder
         return $this->relationType === Entity::MANY_MANY;
     }
 
+    /**
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     */
     protected function handleReturnCollection(SthCollection $collection): Collection
     {
         if ($this->returnSthCollection) {

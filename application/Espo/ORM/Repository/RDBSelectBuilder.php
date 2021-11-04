@@ -92,12 +92,13 @@ class RDBSelectBuilder
      * @param ?array $params @deprecated. Omit it.
      * @phpstan-return iterable<Entity>&Collection
      *
-     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
+     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
      */
     public function find(?array $params = null): Collection
     {
         $query = $this->getMergedParams($params);
 
+        /** @var iterable<Entity>&Collection $collection */
         $collection = $this->getMapper()->select($query);
 
         return $this->handleReturnCollection($collection);
@@ -367,6 +368,11 @@ class RDBSelectBuilder
         return $this->group($groupBy);
     }
 
+    /**
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     */
     protected function handleReturnCollection(SthCollection $collection): Collection
     {
         if ($this->returnSthCollection) {

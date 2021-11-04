@@ -531,6 +531,9 @@ class Service implements Crud,
             return;
         }
 
+        // @todo Remove after php7.4.
+        /** @var Collection&iterable<Entity> $duplicateList */
+
         $list = [];
 
         foreach ($duplicateList as $e) {

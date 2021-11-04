@@ -293,6 +293,7 @@ class EntityManager
 
         $this->getRepository($entityType)->save($entity, $options);
 
+        /** @phpstan-ignore-next-line */
         return $entity->getId();
     }
 

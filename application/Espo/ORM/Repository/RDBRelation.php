@@ -140,11 +140,18 @@ class RDBRelation
 
     private function getMapper(): RDBMapper
     {
-        return $this->entityManager->getMapper();
+        /** @var RDBMapper $mapper */
+        $mapper = $this->entityManager->getMapper();
+
+        return $mapper;
     }
 
     /**
      * Find related records.
+     *
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
      */
     public function find(): Collection
     {

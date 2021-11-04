@@ -236,6 +236,10 @@ class RDBRepository implements Repository
      * Find records.
      *
      * @param ?array $params @deprecated
+     *
+     * @phpstan-return iterable<Entity>&Collection
+     *
+     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
      */
     public function find(?array $params = []): Collection
     {
@@ -913,7 +917,10 @@ class RDBRepository implements Repository
 
     protected function getMapper(): RDBMapper
     {
-        return $this->entityManager->getMapper();
+        /** @var RDBMapper $mapper */
+        $mapper = $this->entityManager->getMapper();
+
+        return $mapper;
     }
 
     /**
