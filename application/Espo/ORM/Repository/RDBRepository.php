@@ -94,9 +94,12 @@ class RDBRepository implements Repository
      */
     public function getNew(): Entity
     {
+        /** @var T $entity */
         $entity = $this->entityFactory->create($this->entityType);
 
-        $entity->populateDefaults();
+        if ($entity instanceof BaseEntity) {
+            $entity->populateDefaults();
+        }
 
         return $entity;
     }
@@ -115,7 +118,10 @@ class RDBRepository implements Repository
             ])
             ->build();
 
-        return $this->getMapper()->selectOne($selectQuery);
+        /** @var T $entity */
+        $entity = $this->getMapper()->selectOne($selectQuery);
+
+        return $entity;
     }
 
     /**
