@@ -181,6 +181,7 @@ class Util
 
     private function findCodeEntity(User $user): ?TwoFactorCode
     {
+        /** @var ?TwoFactorCode */
         return $this->entityManager
             ->getRDBRepository(TwoFactorCode::ENTITY_TYPE)
             ->where([
@@ -315,6 +316,7 @@ class Util
 
     private function getUserDataRepository(): UserDataRepository
     {
+        /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 

@@ -170,6 +170,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function getUserRepository(): UserRepository
     {
+        /** @var UserRepository */
         return $this->entityManager->getRepository('User');
     }
 

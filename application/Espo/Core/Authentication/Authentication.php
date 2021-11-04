@@ -559,6 +559,7 @@ class Authentication
             return null;
         }
 
+        /** @var ?AuthLogRecord */
         $authLogRecord = $this->entityManager->getEntity('AuthLogRecord');
 
         $requestUrl =
@@ -661,6 +662,7 @@ class Authentication
 
     private function getUserDataRepository(): UserDataRepository
     {
+        /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

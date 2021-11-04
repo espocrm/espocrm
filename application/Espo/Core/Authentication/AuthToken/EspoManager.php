@@ -38,9 +38,6 @@ use const MCRYPT_DEV_URANDOM;
 
 class EspoManager implements Manager
 {
-    /**
-     * @var EntityManager
-     */
     private $entityManager;
 
     private $repository;
@@ -56,6 +53,7 @@ class EspoManager implements Manager
 
     public function get(string $token): ?AuthToken
     {
+        /** @var ?AuthTokenEntity */
         $authToken = $this->entityManager
             ->getRDBRepository(AuthTokenEntity::ENTITY_TYPE)
             ->select([
@@ -80,6 +78,7 @@ class EspoManager implements Manager
 
     public function create(Data $data): AuthToken
     {
+        /** @var ?AuthTokenEntity */
         $authToken = $this->repository->getNew();
 
         $authToken->set([

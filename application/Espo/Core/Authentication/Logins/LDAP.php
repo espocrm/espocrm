@@ -299,6 +299,7 @@ class LDAP implements Login
             return null;
         }
 
+        /** @var ?User */
         return $this->entityManager
             ->getRDBRepository('User')
             ->where([

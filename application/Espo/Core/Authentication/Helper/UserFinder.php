@@ -44,6 +44,7 @@ class UserFinder
 
     public function find(string $username, string $hash): ?User
     {
+        /** @var ?User */
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
@@ -58,6 +59,7 @@ class UserFinder
 
     public function findApiHmac(string $apiKey): ?User
     {
+        /** @var ?User */
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
@@ -72,6 +74,7 @@ class UserFinder
 
     public function findApiApiKey(string $apiKey): ?User
     {
+        /** @var ?User */
         $user = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
