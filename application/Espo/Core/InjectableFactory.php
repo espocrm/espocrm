@@ -62,6 +62,10 @@ class InjectableFactory
 
     /**
      * Create an instance by a class name.
+     *
+     * @template T of object
+     * @phpstan-param class-string<T> $className
+     * @phpstan-return T
      */
     public function create(string $className): object
     {
@@ -71,6 +75,10 @@ class InjectableFactory
     /**
      * Create an instance by a class name with specific constructor parameters
      * defined in an associative array. A key should match the parameter name.
+     *
+     * @template T of object
+     * @phpstan-param class-string<T> $className
+     * @phpstan-return T
      */
     public function createWith(string $className, array $with): object
     {
@@ -79,6 +87,10 @@ class InjectableFactory
 
     /**
      * Create an instance by a class name with a specific binding.
+     *
+     * @template T of object
+     * @phpstan-param class-string<T> $className
+     * @phpstan-return T
      */
     public function createWithBinding(string $className, BindingContainer $bindingContainer): object
     {
