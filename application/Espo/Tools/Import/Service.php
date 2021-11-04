@@ -108,7 +108,7 @@ class Service
             throw new Error("Contents is empty.");
         }
 
-        /** @var ImportEntity $source */
+        /** @var ?ImportEntity $source */
         $source = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $importParamsId);
 
         if (!$source) {
@@ -129,7 +129,7 @@ class Service
 
     public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): Result
     {
-        /** @var ImportEntity $import */
+        /** @var ?ImportEntity $import */
         $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {

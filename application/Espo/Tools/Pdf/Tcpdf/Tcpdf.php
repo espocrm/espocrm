@@ -96,6 +96,7 @@ class Tcpdf extends TcpdfOriginal
             $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         }
 
+        /** @phpstan-ignore-next-line */
         if ($this->isUnicodeFont()) {
             $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
         } else {
@@ -124,6 +125,7 @@ class Tcpdf extends TcpdfOriginal
             $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         }
 
+        /** @phpstan-ignore-next-line */
         if ($this->isUnicodeFont()) {
             $html = str_replace('{totalPageNumber}', '{{:ptp:}}', $html);
         } else {

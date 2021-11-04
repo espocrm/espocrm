@@ -56,7 +56,7 @@ class Kanban
     protected $orderDisabled = false;
 
     /**
-     * @var SearchParams
+     * @var ?SearchParams
      */
     protected $searchParams = null;
 

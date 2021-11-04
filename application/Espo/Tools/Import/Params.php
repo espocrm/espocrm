@@ -270,6 +270,8 @@ class Params
             $defaultValues = (object) [];
         }
 
+        /** @var object|scalar $defaultValues */
+
         if (!is_object($defaultValues)) {
             throw new TypeError();
         }
@@ -327,10 +329,6 @@ class Params
     {
         if ($params === null) {
             $params = (object) [];
-        }
-
-        if (is_array($params) && is_object($params)) {
-            throw new TypeError();
         }
 
         $raw = (object) $params;

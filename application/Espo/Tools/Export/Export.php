@@ -59,7 +59,7 @@ use RuntimeException;
 class Export
 {
     /**
-     * @var Params
+     * @var ?Params
      */
     private $params;
 

@@ -386,7 +386,7 @@ class LeadCapture
 
     public function confirmOptIn(string $id): stdClass
     {
-        /** @var UniqueId $uniqueId */
+        /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository('UniqueId')
             ->where([
@@ -448,7 +448,7 @@ class LeadCapture
 
     public function sendOptInConfirmation(string $id)
     {
-        /** @var UniqueId $uniqueId */
+        /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository('UniqueId')
             ->where([

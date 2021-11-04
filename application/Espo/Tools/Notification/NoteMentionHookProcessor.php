@@ -129,7 +129,7 @@ class NoteMentionHookProcessor
         foreach ($matchList as $item) {
             $userName = substr($item, 1);
 
-            /** @var User $user */
+            /** @var ?User $user */
             $user = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->where([
