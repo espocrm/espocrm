@@ -100,9 +100,8 @@ class Importer
 
         $parser = $message->getParser() ?? $this->parserFactory->create();
 
+        /** @var Email $email */
         $email = $this->entityManager->getEntity('Email');
-
-        assert($email instanceof Email);
 
         $email->set('isBeingImported', true);
 
@@ -201,6 +200,7 @@ class Importer
         $duplicate = $this->findDuplicate($email);
 
         if ($duplicate && $duplicate->get('status') !== Email::STATUS_BEING_IMPORTED) {
+            /** @var Email $duplicate */
             $duplicate = $this->entityManager->getEntity('Email', $duplicate->getId());
 
             $this->processDuplicate(
@@ -339,6 +339,7 @@ class Importer
                 $this->entityManager->getLocker()->rollback();
 
                 if ($duplicate->get('status') !== Email::STATUS_BEING_IMPORTED) {
+                    /** @var Email $duplicate */
                     $duplicate = $this->entityManager->getEntity('Email', $duplicate->getId());
 
                     $this->processDuplicate(
@@ -618,6 +619,7 @@ class Importer
             return null;
         }
 
+        /** @var Email $duplicate */
         $duplicate = $this->entityManager
             ->getRDBRepository('Email')
             ->select(['id', 'status'])

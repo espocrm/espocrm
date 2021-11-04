@@ -49,6 +49,9 @@ class EmailFactory
      */
     public function create(): Email
     {
-        return $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+
+        return $email;
     }
 }

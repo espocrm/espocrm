@@ -43,6 +43,9 @@ class XQueueItemId implements Header\HeaderInterface
 
     protected $id = null;
 
+    /**
+     * @return self
+     */
     public static function fromString($headerLine)
     {
         list($name, $value) = Header\GenericHeader::splitHeaderLine($headerLine);

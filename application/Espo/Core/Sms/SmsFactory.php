@@ -49,6 +49,9 @@ class SmsFactory
      */
     public function create(): SmsEntity
     {
-        return $this->entityManager->getNewEntity(SmsEntity::ENTITY_TYPE);
+        /** @var SmsEntity $sms */
+        $sms = $this->entityManager->getNewEntity(SmsEntity::ENTITY_TYPE);
+
+        return $sms;
     }
 }

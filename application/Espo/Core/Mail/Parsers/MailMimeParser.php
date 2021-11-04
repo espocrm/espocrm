@@ -273,6 +273,7 @@ class MailMimeParser implements Parser
                 continue;
             }
 
+            /** @var Attachment $attachment */
             $attachment = $this->entityManager->getEntity('Attachment');
 
             $contentType = $this->detectAttachmentContentType($attachmentPart);

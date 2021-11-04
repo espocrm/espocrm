@@ -380,7 +380,8 @@ class Sender
         $address = $this->config->get('outboundEmailFromAddress');
 
         if (!$this->systemInboundEmailIsCached && $address) {
-            $this->systemInboundEmail = $this->entityManager
+            /** @var ?InboundEmail $systemInboundEmail */
+            $systemInboundEmail = $this->entityManager
                 ->getRDBRepository('InboundEmail')
                 ->where([
                     'status' => 'Active',
@@ -388,6 +389,8 @@ class Sender
                     'emailAddress' => $address,
                 ])
                 ->findOne();
+
+            $this->systemInboundEmail = $systemInboundEmail;
         }
 
         $this->systemInboundEmailIsCached = true;
