@@ -297,6 +297,6 @@ class Settings
 
     private function getPortalRepository(): PortalRepository
     {
-        return $this->entityManager->getRepository(Portal::class);
+        return $this->entityManager->getRepository(Portal::ENTITY_TYPE);
     }
 }
