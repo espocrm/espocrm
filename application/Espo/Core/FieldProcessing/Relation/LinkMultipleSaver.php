@@ -107,7 +107,7 @@ class LinkMultipleSaver
             $foreignEntityList = $repository->getRelation($entity, $name)->find();
 
             foreach ($foreignEntityList as $foreignEntity) {
-                $existingIdList[] = $foreignEntity->id;
+                $existingIdList[] = $foreignEntity->getId();
 
                 if (empty($columns)) {
                     continue;
@@ -115,7 +115,7 @@ class LinkMultipleSaver
 
                 $data = (object) [];
 
-                $foreignId = $foreignEntity->id;
+                $foreignId = $foreignEntity->getId();
 
                 foreach ($columns as $columnName => $columnField) {
                     $data->$columnName = $foreignEntity->get($columnField);

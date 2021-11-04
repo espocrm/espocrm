@@ -377,12 +377,14 @@ class Processor
     {
         $copiedAttachmentList = [];
 
+        /** @var iterable<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getRDBRepository('EmailTemplate')
             ->getRelation($template, 'attachments')
             ->find();
 
         foreach ($attachmentList as $attachment) {
+            /** @var Attachment $clone */
             $clone = $this->entityManager->getEntity('Attachment');
 
             $data = $attachment->getValueMap();
