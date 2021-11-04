@@ -49,9 +49,6 @@ class TotpUserSetup implements UserSetup
 
     private $config;
 
-    /**
-     * @var EntityManager
-     */
     private $entityManager;
 
     public function __construct(Util $totp, Config $config, EntityManager $entityManager)
@@ -113,6 +110,9 @@ class TotpUserSetup implements UserSetup
 
     private function getUserDataRepository(): UserDataRepository
     {
-        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+        /** @var UserDataRepository $repository */
+        $repository = $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+
+        return $repository;
     }
 }

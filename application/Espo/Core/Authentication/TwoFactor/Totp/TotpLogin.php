@@ -107,6 +107,9 @@ class TotpLogin implements Login
 
     private function getUserDataRepository(): UserDataRepository
     {
-        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+        /** @var UserDataRepository $repository */
+        $repository = $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+
+        return $repository;
     }
 }

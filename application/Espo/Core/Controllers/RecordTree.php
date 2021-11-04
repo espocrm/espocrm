@@ -83,6 +83,10 @@ class RecordTree extends Record
 
     protected function getRecordTreeService(): Service
     {
-        return $this->getRecordService();
+        $service = $this->getRecordService();
+
+        assert($service instanceof Service);
+
+        return $service;
     }
 }

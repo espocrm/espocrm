@@ -59,9 +59,10 @@ use Espo\ORM\EntityManager;
 
 use stdClass;
 
-class RecordBase extends Base implements Di\EntityManagerAware
+class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
+    use Di\InjectableFactorySetter;
 
     public static $defaultAction = 'list';
 
@@ -247,7 +248,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
     {
         if (method_exists($this, 'actionDelete')) {
             // For backward compatibility.
-            return (object) $this->actionDelete($request->getRouteParams(), $request->getParsedBody(), $request);
+            return $this->actionDelete($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
         $id = $request->getRouteParam('id');
