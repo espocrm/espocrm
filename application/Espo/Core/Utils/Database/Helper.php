@@ -153,7 +153,7 @@ class Helper
      * Create PDO connection.
      *
      * @param array $params
-     * @return PDO|\PDOException
+     * @return PDO|null
      */
     public function createPdoConnection(array $params = null)
     {

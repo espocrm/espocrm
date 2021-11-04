@@ -387,7 +387,7 @@ class Permission
     /**
      * Get default owner user.
      *
-     * @return int owner id.
+     * @return int|false owner id.
      */
     public function getDefaultOwner(bool $usePosix = false)
     {
@@ -538,7 +538,7 @@ class Permission
      *
      * @param string $search
      * @param array $array
-     * @return bool
+     * @return int
      */
     protected function getSearchCount($search, array $array)
     {

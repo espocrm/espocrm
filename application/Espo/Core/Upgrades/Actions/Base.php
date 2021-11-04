@@ -34,6 +34,8 @@ use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+
 use Espo\Core\{
     Container,
     Upgrades\ActionManager,
@@ -156,6 +158,9 @@ abstract class Base
         return $this->getContainer()->get('log');
     }
 
+    /**
+     * @return FileManager
+     */
     protected function getFileManager()
     {
         return $this->getContainer()->get('fileManager');
@@ -773,11 +778,12 @@ abstract class Base
     /**
      * Delete temporary package files.
      *
-     * @return boolean
+     * @return bool
      */
     protected function deletePackageFiles()
     {
         $packagePath = $this->getPackagePath();
+
         $res = $this->getFileManager()->removeInDir($packagePath, true);
 
         return $res;
@@ -786,11 +792,12 @@ abstract class Base
     /**
      * Delete temporary package archive.
      *
-     * @return boolean
+     * @return bool
      */
     protected function deletePackageArchive()
     {
         $packageArchive = $this->getPackagePath(true);
+
         $res = $this->getFileManager()->removeFile($packageArchive);
 
         return $res;

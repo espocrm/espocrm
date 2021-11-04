@@ -88,14 +88,14 @@ class RelationManager
     }
 
     /**
-    * Get foreign Link
-    *
-    * @param string $parentLinkName
-    * @param array $parentLinkParams
-    * @param array $currentEntityDefs
-    *
-    * @return array - in format array('name', 'params')
-    */
+     * Get foreign link.
+     *
+     * @param string $parentLinkName
+     * @param array $parentLinkParams
+     * @param array $currentEntityDefs
+     *
+     * @return array|false Formatted as ['name', 'params'].
+     */
     private function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
     {
         if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {

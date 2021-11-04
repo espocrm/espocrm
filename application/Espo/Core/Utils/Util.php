@@ -111,9 +111,8 @@ class Util
      * Convert name from Camel Case format.
      * ex. camelCase to camel-case
      *
-     * @param string | array $name
-     *
-     * @return string
+     * @param string|string[] $name
+     * @return string|string[]
      */
     public static function fromCamelCase($name, $symbol = '_')
     {
@@ -139,9 +138,8 @@ class Util
      * Convert name from Camel Case format to underscore.
      * ex. camelCase to camel_case
      *
-     * @param string | array $name
-     *
-     * @return string
+     * @param string|string[] $name
+     * @return string|string[]
      */
     public static function toUnderScore($name)
     {
@@ -220,7 +218,7 @@ class Util
     {
         $doReindex = false;
 
-        foreach($haystack as $key => $value) {
+        foreach ($haystack as $key => $value) {
             if (is_array($value)) {
                 $haystack[$key] = static::unsetInArrayByValue($needle, $value);
             }
@@ -354,13 +352,15 @@ class Util
     * @param string $prePostFix
     * @param string $type
     *
-    * @return string
+    * @return string|null
     */
     public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '_')
     {
         if ($type == 'prefix') {
             return static::toCamelCase($prePostFix.$symbol.$name, $symbol);
-        } else if ($type == 'postfix') {
+        }
+
+        if ($type == 'postfix') {
             return static::toCamelCase($name.$symbol.$prePostFix, $symbol);
         }
 
@@ -372,10 +372,9 @@ class Util
      *
      * @param string $search
      * @param string $replace
-     * @param string|false $array
+     * @param string[]|false $array
      * @param bool $isKeys
-     *
-     * @return array
+     * @return string[]|string
      */
     public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
     {
@@ -383,14 +382,15 @@ class Util
             return str_replace($search, $replace, $array);
         }
 
-        $newArr = array();
+        $newArr = [];
+
         foreach ($array as $key => $value) {
             $addKey = $key;
-            if ($isKeys) { //Replace keys
+
+            if ($isKeys) {
                 $addKey = str_replace($search, $replace, $key);
             }
 
-            // Recurse
             $newArr[$addKey] = static::replaceInArray($search, $replace, $value, $isKeys);
         }
 

@@ -53,14 +53,17 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Delete temporary package files
+     * Delete temporary package files.
      *
-     * @return boolean
+     * @return bool
      */
     protected function deletePackageFiles()
     {
         $res = parent::deletePackageFiles();
+
         $res &= $this->deletePackageArchive();
+
+        /** @var bool @res */
 
         return $res;
     }

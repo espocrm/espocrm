@@ -157,7 +157,7 @@ class Metadata
     * @param bool $isJSON
     * @param bool $reload
     *
-    * @return array
+    * @return array|string
     */
     public function getAll(bool $isJSON = false, bool $reload = false)
     {
@@ -384,6 +384,7 @@ class Metadata
     public function saveCustom(string $key1, string $key2, $data): void
     {
         if (is_object($data)) {
+            /** @phpstan-ignore-next-line */
             foreach ($data as $key => $item) {
                 if ($item == new stdClass()) {
                     unset($data->$key);
