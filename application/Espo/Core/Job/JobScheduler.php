@@ -126,11 +126,15 @@ class JobScheduler
      */
     public function setTime(?DateTimeInterface $time): self
     {
-        $this->time = $time;
+        $timeCopy = $time;
 
         if (!is_null($time) && !$time instanceof DateTimeImmutable) {
-            $this->time = DateTimeImmutable::createFromMutable($time);
+            $timeCopy = DateTimeImmutable::createFromMutable($time);
         }
+
+        /** @var ?DateTimeImmutable $timeCopy */
+
+        $this->time = $timeCopy;
 
         return $this;
     }
@@ -183,7 +187,7 @@ class JobScheduler
 
         $data = $this->data ?? Data::create();
 
-        return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
+        $entity = $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $this->className,
             'className' => $this->className,
             'queue' => $this->queue,
@@ -193,5 +197,8 @@ class JobScheduler
             'data' => $data->getRaw(),
             'executeTime' => $time->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
         ]);
+
+        /** @var JobEntity $entity */
+        return $entity;
     }
 }

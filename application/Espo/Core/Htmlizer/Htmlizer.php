@@ -300,6 +300,7 @@ class Htmlizer
 
                 $skipAttributeList[] = $key;
 
+                /** @var iterable<Entity> $collection */
                 $collection = $value;
 
                 $list = [];

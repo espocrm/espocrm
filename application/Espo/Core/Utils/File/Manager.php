@@ -94,7 +94,7 @@ class Manager
      * If TRUE - returns only file list, if FALSE - only directory list.
      * @param bool $returnSingleArray Return a single array.
      *
-     * @return array<int, string>
+     * @return array<int, string>|array<int, string[]>
      */
     public function getFileList(
         string $path,

@@ -96,7 +96,7 @@ class QueueUtil
 
     /**
      * @return JobEntity[]
-     * @phpstan-return Collection
+     * @phpstan-return Collection&iterable<JobEntity>
      */
     public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
     {
@@ -128,7 +128,10 @@ class QueueUtil
             $builder->limit(0, $limit);
         }
 
-        return $builder->find();
+        /** @var Collection&iterable<JobEntity> $collection */
+        $collection = $builder->find();
+
+        return $collection;
     }
 
     public function isScheduledJobRunning(
@@ -159,6 +162,9 @@ class QueueUtil
             ->findOne();
     }
 
+    /**
+     * @return string[]
+     */
     public function getRunningScheduledJobIdList(): array
     {
         $list = [];

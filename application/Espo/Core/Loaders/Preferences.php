@@ -56,9 +56,12 @@ class Preferences implements Loader
         $id = 'system';
 
         if ($this->applicationState->hasUser()) {
-            $id = $this->applicationState->getUser()->id;
+            $id = $this->applicationState->getUser()->getId();
         }
 
-        return $this->entityManager->getEntity('Preferences', $id);
+        /** @var PreferencesService $entity */
+        $entity = $this->entityManager->getEntity('Preferences', $id);
+
+        return $entity;
     }
 }

@@ -54,10 +54,13 @@ class ScheduleUtil
 
     /**
      * Get active scheduled job list.
+     *
+     * @phpstan-return iterable<ScheduledJobEntity>&Collection
      */
     public function getActiveScheduledJobList(): Collection
     {
-        return $this->entityManager
+        /** @var iterable<ScheduledJobEntity>&Collection $collection */
+        $collection = $this->entityManager
             ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
             ->select([
                 'id',
@@ -69,6 +72,8 @@ class ScheduleUtil
                 'status' => ScheduledJobEntity::STATUS_ACTIVE,
             ])
             ->find();
+
+        return $collection;
     }
 
     /**
