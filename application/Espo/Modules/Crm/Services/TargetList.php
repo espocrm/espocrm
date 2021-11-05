@@ -185,7 +185,7 @@ class TargetList extends \Espo\Services\Record implements
 
     public function unlinkAll(string $id, string $link)
     {
-        /** @var TargetListEntity $entity */
+        /** @var TargetListEntity|null $entity */
         $entity = $this->getRepository()->get($id);
 
         if (!$entity) {

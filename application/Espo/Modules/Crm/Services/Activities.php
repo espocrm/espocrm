@@ -820,7 +820,7 @@ class Activities implements
                 $unionBuilder->query($subQuery);
             }
 
-            if ($order && count($order)) {
+            if ($order !== null && count($order)) {
                 $unionBuilder->order(
                     $order[0]->getExpression()->getValue(),
                     $order[0]->getDirection()
@@ -1712,11 +1712,9 @@ class Activities implements
                 continue;
             }
 
-            $subItem = $this->getCalendarQuery($scope, $userId, $from, $to, $skipAcl);
-
-            if (!is_array($subItem)) {
-                $subItem = [$subItem];
-            }
+            $subItem = [
+                $this->getCalendarQuery($scope, $userId, $from, $to, $skipAcl)
+            ];
 
             $queryList = array_merge($queryList, $subItem);
         }

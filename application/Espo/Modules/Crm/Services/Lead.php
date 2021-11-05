@@ -46,6 +46,8 @@ use Espo\Modules\Crm\Entities\Contact;
 
 use Espo\Core\Di;
 
+use stdClass;
+
 class Lead extends Record implements
 
     Di\FieldUtilAware
@@ -150,10 +152,8 @@ class Lead extends Record implements
                         $idAttribute = $field . 'Id';
                         $nameAttribute = $field . 'Name';
 
-                        if ($attachment) {
-                            $attributes[$idAttribute] = $attachment->getId();
-                            $attributes[$nameAttribute] = $attachment->get('name');
-                        }
+                        $attributes[$idAttribute] = $attachment->getId();
+                        $attributes[$nameAttribute] = $attachment->get('name');
                     }
 
                     continue;
@@ -169,12 +169,10 @@ class Lead extends Record implements
                         foreach ($attachmentList as $attachment) {
                             $attachment = $this->getAttachmentRepository()->getCopiedAttachment($attachment);
 
-                            if ($attachment) {
-                                $idList[] = $attachment->getId();
+                            $idList[] = $attachment->getId();
 
-                                $nameHash->{$attachment->getId()} = $attachment->get('name');
-                                $typeHash->{$attachment->getId()} = $attachment->get('type');
-                            }
+                            $nameHash->{$attachment->getId()} = $attachment->get('name');
+                            $typeHash->{$attachment->getId()} = $attachment->get('type');
                         }
 
                         $attributes[$field . 'Ids'] = $idList;
@@ -221,6 +219,9 @@ class Lead extends Record implements
         return $data;
     }
 
+    /**
+     * @param stdClass|null $additionalData
+     */
     public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {
         /** @var LeadEntity */

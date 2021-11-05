@@ -75,7 +75,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
             throw new BadRequest();
         }
 
-        /** @var KnowledgeBaseArticleEntity $entity */
+        /** @var KnowledgeBaseArticleEntity|null $entity */
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -91,7 +91,7 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
         $attachmentsIds = $entity->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
-            /** @var Attachment $source */
+            /** @var Attachment|null $source */
             $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
 
             if ($source) {

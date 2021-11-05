@@ -77,7 +77,7 @@ class Campaign extends \Espo\Services\Record implements
         string $campaignId,
         ?string $queueItemId,
         Entity $target,
-        Entity $emailOrEmailTemplate,
+        ?Entity $emailOrEmailTemplate,
         $emailAddress,
         $actionDate = null,
         $isTest = false
@@ -87,6 +87,7 @@ class Campaign extends \Espo\Services\Record implements
         }
 
         $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+
         $logRecord->set([
             'campaignId' => $campaignId,
             'actionDate' => $actionDate,
@@ -104,6 +105,7 @@ class Campaign extends \Espo\Services\Record implements
                 'objectType' => $emailOrEmailTemplate->getEntityType()
             ]);
         }
+
         $this->getEntityManager()->saveEntity($logRecord);
     }
 

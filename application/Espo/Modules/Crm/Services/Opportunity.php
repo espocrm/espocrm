@@ -371,18 +371,16 @@ class Opportunity extends Record
             $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
         }
 
-        if ($dt && $dtTo) {
-            $interval = new DateInterval('P1M');
+        $interval = new DateInterval('P1M');
 
-            while ($dt->getTimestamp() < $dtTo->getTimestamp()) {
-                $month = $dt->format('Y-m');
+        while ($dt->getTimestamp() < $dtTo->getTimestamp()) {
+            $month = $dt->format('Y-m');
 
-                if (!array_key_exists($month, $result)) {
-                    $result[$month] = 0;
-                }
-
-                $dt->add($interval);
+            if (!array_key_exists($month, $result)) {
+                $result[$month] = 0;
             }
+
+            $dt->add($interval);
         }
 
         $keyList = array_keys($result);
