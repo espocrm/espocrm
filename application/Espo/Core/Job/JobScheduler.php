@@ -156,6 +156,8 @@ class JobScheduler
      */
     public function setData($data): self
     {
+        /** @var mixed $data */
+
         if (!is_null($data) && !is_array($data) && !$data instanceof Data) {
             throw new TypeError();
         }

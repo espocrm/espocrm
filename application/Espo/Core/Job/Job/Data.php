@@ -55,6 +55,8 @@ class Data
      */
     public static function create($data = null): self
     {
+        /** @var mixed $data */
+
         if ($data !== null && !is_object($data) && !is_array($data)) {
             throw new TypeError();
         }

@@ -218,11 +218,9 @@ class Importer
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
 
-                if ($dt) {
-                    $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 
-                    $email->set('dateSent', $dateSent);
-                }
+                $email->set('dateSent', $dateSent);
             }
             catch (Exception $e) {}
         }
@@ -234,11 +232,9 @@ class Importer
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
 
-                if ($dt) {
-                    $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 
-                    $email->set('delivery-Date', $deliveryDate);
-                }
+                $email->set('delivery-Date', $deliveryDate);
             }
             catch (Exception $e) {}
         }
@@ -272,7 +268,7 @@ class Importer
                     $inReplyTo = '<' . $inReplyTo . '>';
                 }
 
-                /** @var Email $replied */
+                /** @var Email|null $replied */
                 $replied = $this->entityManager
                     ->getRDBRepository('Email')
                     ->where([

@@ -338,13 +338,11 @@ class Sender
             if ($inboundEmail) {
                 $service = $this->getInboundEmailService();
 
-                if ($service) {
-                    $params = $service->getSmtpParamsFromAccount($inboundEmail);
+                $params = $service->getSmtpParamsFromAccount($inboundEmail);
 
-                    $this->applySmtp($params);
+                $this->applySmtp($params);
 
-                    return;
-                }
+                return;
             }
         }
 
@@ -398,12 +396,8 @@ class Sender
         return $this->systemInboundEmail;
     }
 
-    private function getInboundEmailService(): ?InboundEmailService
+    private function getInboundEmailService(): InboundEmailService
     {
-        if (!$this->serviceFactory) {
-            return null;
-        }
-
         if (!$this->inboundEmailService) {
             $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
         }

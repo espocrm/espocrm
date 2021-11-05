@@ -91,7 +91,7 @@ class ScheduleUtil
             $runTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        /** @var ScheduledJobEntity $scheduledJob */
+        /** @var ScheduledJobEntity|null $scheduledJob */
         $scheduledJob = $this->entityManager->getEntity(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
 
         if (!$scheduledJob) {

@@ -107,23 +107,20 @@ class Helper
                 }
 
                 return implode(' ', $arr);
-
-            default:
-                if (!$first && !$last) {
-                    return null;
-                }
-
-                if (!$first) {
-                    return $last;
-                }
-
-                if (!$last) {
-                    return $first;
-                }
-
-                return $first . ' ' . $last;
         }
 
-        return null;
+        if (!$first && !$last) {
+            return null;
+        }
+
+        if (!$first) {
+            return $last;
+        }
+
+        if (!$last) {
+            return $first;
+        }
+
+        return $first . ' ' . $last;
     }
 }

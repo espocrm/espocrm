@@ -99,7 +99,7 @@ class JobRunner
             throw new Error();
         }
 
-        /** @var JobEntity $jobEntity */
+        /** @var JobEntity|null $jobEntity */
         $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
@@ -118,7 +118,6 @@ class JobRunner
     private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
-        $skipLog = false;
 
         $exception = null;
 
@@ -172,7 +171,7 @@ class JobRunner
             throw new $exception($exception->getMessage());
         }
 
-        if ($jobEntity->getScheduledJobId() && !$skipLog) {
+        if ($jobEntity->getScheduledJobId()) {
             $this->scheduleUtil->addLogRecord(
                 $jobEntity->getScheduledJobId(),
                 $status,

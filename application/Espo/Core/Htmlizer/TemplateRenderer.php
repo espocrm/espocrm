@@ -82,6 +82,8 @@ class TemplateRenderer
      */
     public function setData($data): self
     {
+        /** @var mixed $data */
+
         if (!is_array($data) && !$data instanceof stdClass) {
             throw new InvalidArgumentException();
         }

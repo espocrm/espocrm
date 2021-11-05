@@ -165,10 +165,8 @@ class Parser
             }
             else {
                 if (!$isLineComment && !$isComment) {
-                    if (!$isComment) {
-                        if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
-                            $isLineComment = true;
-                        }
+                    if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
+                        $isLineComment = true;
                     }
 
                     if (!$isLineComment) {

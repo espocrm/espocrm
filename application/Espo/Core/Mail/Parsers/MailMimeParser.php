@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail\Parsers;
 
+use Psr\Http\Message\StreamInterface;
+
 use Espo\Entities\{
     Email,
     Attachment,
@@ -134,7 +136,7 @@ class MailMimeParser implements Parser
             return null;
         }
 
-        if ($messageId && strlen($messageId) && $messageId[0] !== '<') {
+        if ($messageId[0] !== '<') {
             $messageId = '<' . $messageId . '>';
         }
 
@@ -280,6 +282,7 @@ class MailMimeParser implements Parser
 
             $disposition = $attachmentPart->getHeaderValue('Content-Disposition');
 
+            /** @var string|null $filename */
             $filename = $attachmentPart->getHeaderParameter('Content-Disposition', 'filename', null);
 
             if ($filename === null) {
@@ -295,6 +298,7 @@ class MailMimeParser implements Parser
 
             $content = '';
 
+            /** @var StreamInterface|null $binaryContentStream */
             $binaryContentStream = $attachmentPart->getBinaryContentStream();
 
             if ($binaryContentStream) {
@@ -353,7 +357,7 @@ class MailMimeParser implements Parser
             $email->set('body', $body);
         }
 
-        /* @var $textCalendarPart MessagePart */
+        /** @var MessagePart|null $textCalendarPart  */
         $textCalendarPart =
             $this->getMessage($message)->getAllPartsByMimeType('text/calendar')[0] ??
             $this->getMessage($message)->getAllPartsByMimeType('application/ics')[0] ??
@@ -385,6 +389,7 @@ class MailMimeParser implements Parser
 
     private function getAttachmentFilenameExtension(MimePart $part): ?string
     {
+        /** @var string|null $filename */
         $filename = $part->getHeaderParameter('Content-Disposition', 'filename', null);
 
         if ($filename === null) {

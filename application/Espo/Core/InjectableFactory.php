@@ -343,7 +343,7 @@ class InjectableFactory
 
         $params = $class->getMethod($methodName)->getParameters();
 
-        if (!$params || !count($params)) {
+        if (!count($params)) {
             return false;
         }
 
