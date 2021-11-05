@@ -180,7 +180,7 @@ class Saver implements SaverInterface
             if ($phoneNumberValue) {
                 $key = $phoneNumberValue;
 
-                if ($key && isset($hash->$key)) {
+                if (isset($hash->$key)) {
                     $hash->{$key}['optOut'] = $entity->get('phoneNumberIsOptedOut');
                 }
             }

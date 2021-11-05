@@ -235,17 +235,12 @@ class EntityManager
             'labelForeign',
         ];
 
-        $additionalParamList = [];
-
         $params = [];
+
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
                 $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
             }
-        }
-
-        foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
         if (array_key_exists('linkMultipleField', $data)) {

@@ -126,10 +126,10 @@ class ClientManager
             throw new Error();
         }
 
-        /** @var IntegrationEntity $integrationEntity */
+        /** @var IntegrationEntity|null $integrationEntity */
         $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
 
-        /** @var ExternalAccountEntity $externalAccountEntity */
+        /** @var ExternalAccountEntity|null $externalAccountEntity */
         $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
 
         if (!$externalAccountEntity) {
@@ -162,10 +162,10 @@ class ClientManager
 
     protected function createOAuth2(string $integration, string $userId): ?object
     {
-        /** @var IntegrationEntity $integrationEntity */
+        /** @var IntegrationEntity|null $integrationEntity */
         $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
 
-        /** @var ExternalAccountEntity $externalAccountEntity */
+        /** @var ExternalAccountEntity|null $externalAccountEntity */
         $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
 
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");

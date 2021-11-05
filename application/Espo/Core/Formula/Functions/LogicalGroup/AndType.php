@@ -41,8 +41,12 @@ class AndType extends BaseFunction
         $result = true;
 
         foreach ($args as $item) {
+            /** @phpstan-ignore-next-line */
             $result = $result && $this->evaluate($item);
-            if (!$result) break;
+
+            if (!$result) {
+                break;
+            }
         }
 
         return $result;

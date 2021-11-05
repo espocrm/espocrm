@@ -41,7 +41,7 @@ use Espo\Core\{
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class Service
 {
@@ -68,7 +68,7 @@ class Service
      * @throws BadRequest
      * @throws NotFound
      */
-    public function process(string $entityType, string $action, string $id, StdClass $data): Entity
+    public function process(string $entityType, string $action, string $id, stdClass $data): Entity
     {
         if (!$this->acl->checkScope($entityType)) {
             throw new ForbiddenSilent();
@@ -90,10 +90,6 @@ class Service
         $service = $this->recordServiceContainer->get($entityType);
 
         $entity = $service->read($id, ReadParams::create());
-
-        if (!$entity) {
-            throw new NotFound();
-        }
 
         return $entity;
     }

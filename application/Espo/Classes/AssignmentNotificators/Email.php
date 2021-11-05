@@ -113,10 +113,6 @@ class Email implements AssignmentNotificator
             return;
         }
 
-        if (!$dt) {
-            return;
-        }
-
         if ($dt->diff(new DateTime())->days > self::DAYS_THRESHOLD) {
             return;
         }
@@ -235,7 +231,7 @@ class Email implements AssignmentNotificator
                 }
             }
 
-            /** @var User $user */
+            /** @var User|null $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {

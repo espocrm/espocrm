@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Acl;
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -150,14 +150,16 @@ class ScopeData
     /**
      * Create from a raw table value.
      *
-     * @param StdClass|bool $raw
+     * @param stdClass|bool $raw
      * @return self
      */
     public static function fromRaw($raw): self
     {
+        /** @var mixed $raw */
+
         $obj = new self();
 
-        if ($raw instanceof StdClass) {
+        if ($raw instanceof stdClass) {
             $obj->isBoolean = false;
 
             $obj->actionData = get_object_vars($raw);

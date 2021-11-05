@@ -58,7 +58,7 @@ class AttributeFetcher
             if (
                 $relatedEntity &&
                 ($relatedEntity instanceof Entity) &&
-                count($arr) > 0
+                count($arr) > 1
             ) {
                 return $this->fetch($relatedEntity, $arr[1]);
             }

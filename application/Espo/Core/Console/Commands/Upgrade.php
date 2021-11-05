@@ -224,6 +224,11 @@ class Upgrade implements Command
         return $params;
     }
 
+    /**
+     * @param \stdClass $params
+     * @param \stdClass|null $versionInfo
+     * @return string|null
+     */
     protected function getPackageFile(object $params, ?object $versionInfo)
     {
         $packageFile = $params->file ?? null;

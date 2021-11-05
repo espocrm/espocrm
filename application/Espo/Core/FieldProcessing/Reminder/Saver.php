@@ -158,10 +158,6 @@ class Saver implements SaverInterface
 
         $dateValueObj = new DateTime($dateValue);
 
-        if (!$dateValueObj) {
-            return;
-        }
-
         foreach ($reminderList as $item) {
             $remindAt = clone $dateValueObj;
             $seconds = intval($item->seconds);

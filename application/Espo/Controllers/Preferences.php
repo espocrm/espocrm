@@ -83,10 +83,6 @@ class Preferences
 
         $data = $request->getParsedBody();
 
-        if (!$userId) {
-            throw new BadRequest();
-        }
-
         return $this->service
             ->update($userId, $data)
             ->getValueMap();

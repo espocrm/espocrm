@@ -58,22 +58,23 @@ class CreateType extends BaseFunction implements
         $data = [];
 
         $i = 1;
+
         while ($i < count($args) - 1) {
             $attribute = $args[$i];
+
             if (!is_string($entityType)) {
                 $this->throwBadArgumentType($i + 1, 'string');
             }
+
             $value = $args[$i + 1];
+
             $data[$attribute] = $value;
+
             $i = $i + 2;
         }
 
         $entity = $this->entityManager->createEntity($entityType, $data);
 
-        if ($entity) {
-            return $entity->getId();
-        }
-
-        return null;
+        return $entity->getId();
     }
 }

@@ -50,7 +50,7 @@ class VariableType extends BaseFunction
             throw new Error("Bad variable name.");
         }
 
-        if (is_null($name) && $name === '') {
+        if ($name === '') {
             throw new Error("Empty variable name.");
         }
 

@@ -61,7 +61,13 @@ class EntryPointManager
             throw new NotFound("Entry point '{$name}' not found.");
         }
 
-        if ($className::$noAuth ?? false) {
+        $noAuth = false;
+
+        if (isset($className::$noAuth)) {
+            $noAuth = $className::$noAuth;
+        }
+
+        if ($noAuth) {
             return false;
         }
 

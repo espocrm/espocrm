@@ -34,8 +34,6 @@ use Espo\Core\Exceptions\HasBody;
 use Espo\Core\{
     Api\Request,
     Api\Response,
-    Exceptions\Conflict,
-    Exceptions\Error,
     Utils\Log,
     Utils\Config,
 };
@@ -137,10 +135,7 @@ class ErrorOutput
         }
 
         $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        if ($messageLineFile) {
-            $logMessageItemList[] = $messageLineFile;
-        }
+        $logMessageItemList[] = $messageLineFile;
 
         $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
 

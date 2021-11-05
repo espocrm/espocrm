@@ -95,9 +95,7 @@ class BindingContainer
         if ($dependencyClassName) {
             $key = $dependencyClassName;
 
-            if ($key) {
-                $keyWithParamName = $key . ' $' . $param->getName();
-            }
+            $keyWithParamName = $key . ' $' . $param->getName();
         }
 
         if ($keyWithParamName) {

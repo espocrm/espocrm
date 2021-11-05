@@ -265,6 +265,7 @@ class AclManager
             return $this->checkScope($user, $subject, $action);
         }
 
+        /** @var mixed */
         $entity = $subject;
 
         if ($entity instanceof Entity) {

@@ -76,7 +76,7 @@ class ApplyTemplateType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        /** @var Email $email */
+        /** @var Email|null $email */
         $email = $em->getEntity('Email', $id);
 
         $emailTemplate = $em->getEntity('EmailTemplate', $templateId);

@@ -569,10 +569,6 @@ class Cleanup implements JobDataLess
 
         $repository = $this->entityManager->getRepository($scope);
 
-        if (!$repository) {
-            return;
-        }
-
         if (!$repository instanceof RDBRepository) {
             return;
         }
@@ -727,10 +723,6 @@ class Cleanup implements JobDataLess
             }
 
             $repository = $this->entityManager->getRepository($scope);
-
-            if (!$repository) {
-                continue;
-            }
 
             if (!$repository instanceof RDBRepository) {
                 continue;

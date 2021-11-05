@@ -60,7 +60,7 @@ class SendType extends BaseFunction implements
             $this->throwBadArgumentType(1, 'string');
         }
 
-        /** @var Sms $sms */
+        /** @var Sms|null $sms */
         $sms = $this->entityManager->getEntity(Sms::ENTITY_TYPE, $id);
 
         if (!$sms) {
