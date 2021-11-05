@@ -1292,12 +1292,10 @@ abstract class BaseQueryComposer implements QueryComposer
             if ($foreignEntityType) {
                 $foreignSeed = $this->getSeed($foreignEntityType);
 
-                if ($foreignSeed) {
-                    $selectForeign = $this->getAttributeParam($foreignSeed, $attribute, 'selectForeign');
+                $selectForeign = $this->getAttributeParam($foreignSeed, $attribute, 'selectForeign');
 
-                    if (is_array($selectForeign)) {
-                        $part = $this->getAttributeSql($foreignSeed, $attribute, 'selectForeign', $params, $relName);
-                    }
+                if (is_array($selectForeign)) {
+                    $part = $this->getAttributeSql($foreignSeed, $attribute, 'selectForeign', $params, $relName);
                 }
             }
 
@@ -1750,13 +1748,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
         // @todo Make VALUE: usage deprecated.
         if (stripos($expression, 'VALUE:') === 0) {
-            $part = substr($expression, 6);
-
-            if ($part !== false) {
-                $part = $this->quote($part);
-            } else {
-                $part = $this->quote('');
-            }
+            $part = $this->quote(
+                substr($expression, 6)
+            );
 
             return [$part, $alias];
         }
@@ -2926,9 +2920,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 );
             }
 
-            if (count($joinSqlList)) {
-                $sql .= " " . implode(" AND ", $joinSqlList);
-            }
+            $sql .= " " . implode(" AND ", $joinSqlList);
 
             return $sql;
         }
@@ -2999,7 +2991,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 $indexPart = '';
 
-                if ($indexKeyList && count($indexKeyList)) {
+                if ($indexKeyList !== null && count($indexKeyList)) {
                     $sanitizedIndexList = [];
 
                     foreach ($indexKeyList as $indexKey) {

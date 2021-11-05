@@ -43,7 +43,7 @@ class ArrayValue extends Database
 
     public function storeEntityAttribute(CoreEntity $entity, string $attribute, bool $populateMode = false): void
     {
-        if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
+        if ($entity->getAttributeType($attribute) !== Entity::JSON_ARRAY) {
             throw new Error("ArrayValue: Can't store non array attribute.");
         }
 
