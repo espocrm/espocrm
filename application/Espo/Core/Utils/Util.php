@@ -78,28 +78,29 @@ class Util
     /**
      * Convert name to Camel Case format, ex. camel_case to camelCase.
      *
-     * @param  string  $name
-     * @param  string | array  $symbol
-     * @param  boolean $capitaliseFirstChar
+     * @param string|string[] $input
+     * @param string $symbol
+     * @param bool $capitaliseFirstChar
      *
-     * @return string
+     * @return string|string[]
      */
-    public static function toCamelCase($name, $symbol = '_', $capitaliseFirstChar = false)
+    public static function toCamelCase($input, $symbol = '_', $capitaliseFirstChar = false)
     {
-        if (is_array($name)) {
-            foreach ($name as &$value) {
+        if (is_array($input)) {
+            foreach ($input as &$value) {
                 $value = static::toCamelCase($value, $symbol, $capitaliseFirstChar);
             }
 
-            return $name;
+            return $input;
         }
 
-        $name = lcfirst($name);
+        $input = lcfirst($input);
+
         if ($capitaliseFirstChar) {
-            $name = ucfirst($name);
+            $input = ucfirst($input);
         }
 
-        return preg_replace_callback('/'.$symbol.'([a-zA-Z])/', 'static::toCamelCaseConversion', $name);
+        return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $input);
     }
 
     protected static function toCamelCaseConversion($matches)
@@ -111,26 +112,27 @@ class Util
      * Convert name from Camel Case format.
      * ex. camelCase to camel-case
      *
-     * @param string|string[] $name
+     * @param string|string[] $input
      * @return string|string[]
      */
-    public static function fromCamelCase($name, $symbol = '_')
+    public static function fromCamelCase($input, $symbol = '_')
     {
-        if (is_array($name)) {
-            foreach ($name as &$value) {
+        if (is_array($input)) {
+            foreach ($input as &$value) {
                 $value = static::fromCamelCase($value, $symbol);
             }
 
-            return $name;
+            return $input;
         }
 
-        $name[0] = strtolower($name[0]);
+        $input[0] = strtolower($input[0]);
+
         return preg_replace_callback(
             '/([A-Z])/',
             function ($matches) use ($symbol) {
                 return $symbol . strtolower($matches[1]);
             },
-            $name
+            $input
         );
     }
 
@@ -138,12 +140,12 @@ class Util
      * Convert name from Camel Case format to underscore.
      * ex. camelCase to camel_case
      *
-     * @param string|string[] $name
+     * @param string|string[] $input
      * @return string|string[]
      */
-    public static function toUnderScore($name)
+    public static function toUnderScore($input)
     {
-        return static::fromCamelCase($name, '_');
+        return static::fromCamelCase($input, '_');
     }
 
     /**
@@ -156,6 +158,9 @@ class Util
      */
     public static function merge($currentArray, $newArray)
     {
+        /** @phpstan-var mixed $currentArray */
+        /** @phpstan-var mixed $newArray */
+
         $mergeIdentifier = '__APPEND__';
 
         if (is_array($currentArray) && !is_array($newArray)) {
@@ -276,7 +281,7 @@ class Util
     /**
      * Fix path separator.
      *
-     * @param  string $path
+     * @param string $path
      * @return string
      */
     public static function fixPath($path)
@@ -292,11 +297,15 @@ class Util
      */
     public static function arrayToObject($array)
     {
+        /** @phpstan-var mixed $array */
+
         if (is_array($array)) {
             return (object) array_map("static::arrayToObject", $array);
-        } else {
-            return $array; // Return an object
         }
+
+        /** @phpstan-var object $array */
+
+        return $array;
     }
 
     /**
@@ -307,6 +316,8 @@ class Util
      */
     public static function objectToArray($object)
     {
+        /** @phpstan-var mixed $object */
+
         if (is_object($object)) {
             $object = (array) $object;
         }
@@ -795,9 +806,9 @@ class Util
 
     /**
      * Sanitize Html code.
-     * @param  string $text
-     * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
-     * @return string
+     * @param string|string[] $text
+     * @param string[] $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
+     * @return string|string[]
      */
     public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
     {
@@ -805,6 +816,7 @@ class Util
             foreach ($text as $key => &$value) {
                 $value = self::sanitizeHtml($value, $permittedHtmlTags);
             }
+
             return $text;
         }
 

@@ -136,43 +136,33 @@ class Ics
         {
             case 'startDate':
                 return $this->dStart;
-                break;
 
             case 'endDate':
                 return $this->dEnd;
-                break;
 
             case 'address':
                 return $this->sAddress;
-                break;
 
             case 'summary':
                 return $this->sSummary;
-                break;
 
             case 'uri':
                 return $this->sUri;
-                break;
 
             case 'who':
                 return $this->sWho;
-                break;
 
             case 'email':
                 return $this->sEmail;
-                break;
 
             case 'uid':
                 return $this->sUid;
-                break;
 
             case 'description':
                 return $this->sDescription;
-                break;
 
             case 'html':
                 return $this->sHtml;
-                break;
         }
     }
 

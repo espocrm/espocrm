@@ -118,10 +118,7 @@ class EmailReminder
         $data['recordUrl'] = $recordUrl;
         $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
-
-        if ($user) {
-            $data['userName'] = $user->get('name');
-        }
+        $data['userName'] = $user->get('name');
 
         $htmlizer = $this->htmlizerFactory->createForUser($user);
 

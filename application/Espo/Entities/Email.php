@@ -294,7 +294,7 @@ class Email extends Entity
 
             $idList[] = $id;
 
-            /** @var Attachment */
+            /** @var Attachment|null */
             $attachment = $this->entityManager->getEntity('Attachment', $id);
 
             if ($attachment) {

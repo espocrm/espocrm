@@ -152,7 +152,7 @@ class Invitations
         $data['declineLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name');
         $data['tentativeLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=tentative&uid=' . $uid->get('name');
 
-        if ($invitee && $invitee->getEntityType() === 'User') {
+        if ($invitee->getEntityType() === 'User') {
             $data['isUser'] = true;
 
             $htmlizer = $this->htmlizerFactory->createForUser($invitee);
@@ -161,10 +161,7 @@ class Invitations
             $htmlizer = $this->htmlizerFactory->createNoAcl();
         }
 
-        if ($invitee) {
-            $data['inviteeName'] = $invitee->get('name');
-        }
-
+        $data['inviteeName'] = $invitee->get('name');
         $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
