@@ -167,6 +167,9 @@ trait SelectingBuilderTrait
             $target = $target->getTarget();
         }
 
+        /** @phpstan-var mixed $conditions */
+        /** @phpstan-var mixed $target */
+
         if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
             throw new InvalidArgumentException("Conditions must be WhereItem or array.");
         }
@@ -225,6 +228,9 @@ trait SelectingBuilderTrait
             $conditions = $conditions ?? $target->getConditions();
             $target = $target->getTarget();
         }
+
+        /** @phpstan-var mixed $conditions */
+        /** @phpstan-var mixed $target */
 
         if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
             throw new InvalidArgumentException("Conditions must be WhereItem or array.");

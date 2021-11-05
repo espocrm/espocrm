@@ -225,6 +225,9 @@ class Comparison implements WhereItem
      */
     private static function createComparison(string $operator, $arg1, $arg2): self
     {
+        /** @phpstan-var mixed $arg1 */
+        /** @phpstan-var mixed $arg2 */
+
         if (is_string($arg1)) {
             $key = $arg1;
 
@@ -271,6 +274,8 @@ class Comparison implements WhereItem
             }
         }
 
+        /** @phpstan-var mixed $arg1 */
+
         if (is_string($arg1)) {
             $key = $arg1;
 
@@ -299,6 +304,8 @@ class Comparison implements WhereItem
      */
     private static function createInOrNotInSubQuery(string $operator, $arg1, Select $query): self
     {
+        /** @phpstan-var mixed $arg1 */
+
         if (is_string($arg1)) {
             $key = $arg1;
 

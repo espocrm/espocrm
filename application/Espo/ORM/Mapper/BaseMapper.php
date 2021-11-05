@@ -566,7 +566,7 @@ class BaseMapper implements RDBMapper
     {
         $type = $entity->getRelationType($relationName);
 
-        if (!$type === Entity::MANY_MANY) {
+        if ($type !== Entity::MANY_MANY) {
             throw new RuntimeException("'getRelationColumn' works only on many-to-many relations.");
         }
 
@@ -1212,7 +1212,7 @@ class BaseMapper implements RDBMapper
     {
         $update = null;
 
-        if ($onDuplicateUpdateAttributeList && count($onDuplicateUpdateAttributeList)) {
+        if ($onDuplicateUpdateAttributeList !== null && count($onDuplicateUpdateAttributeList)) {
             $update = $onDuplicateSetMap = $this->getInsertOnDuplicateSetMap($entity, $onDuplicateUpdateAttributeList);
         }
 

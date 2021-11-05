@@ -60,6 +60,8 @@ class Util
      */
     public static function stringifyArgument($arg): string
     {
+        /** @phpstan-var mixed $arg */
+
         if ($arg instanceof Expr) {
             return $arg->getValue();
         }

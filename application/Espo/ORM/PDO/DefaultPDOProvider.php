@@ -85,9 +85,7 @@ class DefaultPDOProvider implements PDOProvider
             $dsn .= ';' . 'port=' . (string) $port;
         }
 
-        if ($dbname) {
-            $dsn .= ';' . 'dbname=' . $dbname;
-        }
+        $dsn .= ';' . 'dbname=' . $dbname;
 
         if ($charset) {
             $dsn .= ';' . 'charset=' . $charset;

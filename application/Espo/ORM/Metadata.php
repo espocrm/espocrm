@@ -133,10 +133,6 @@ class Metadata
             return $data;
         }
 
-        if (!is_string($key) && !is_array($key)) {
-            throw new InvalidArgumentException();
-        }
-
         $path = $key;
 
         if (is_string($key)) {

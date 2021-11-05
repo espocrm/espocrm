@@ -34,6 +34,9 @@ namespace Espo\ORM;
  */
 class EventDispatcher
 {
+    /**
+     * @var array{'metadataUpdate': callable[]}
+     */
     private $data;
 
     private const METADATA_UPDATE = 'metadataUpdate';

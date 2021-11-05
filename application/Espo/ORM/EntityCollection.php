@@ -186,7 +186,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return null;
     }
 
-    protected function buildEntityFromArray(array $dataArray): ?Entity
+    protected function buildEntityFromArray(array $dataArray): Entity
     {
         if (!$this->entityFactory) {
             throw new RuntimeException("Can't build from array. EntityFactory was not passed to the constructor.");
@@ -194,17 +194,13 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         $entity = $this->entityFactory->create($this->entityType);
 
-        if ($entity) {
-            $entity->set($dataArray);
+        $entity->set($dataArray);
 
-            if ($this->isFetched) {
-                $entity->setAsFetched();
-            }
-
-            return $entity;
+        if ($this->isFetched) {
+            $entity->setAsFetched();
         }
 
-        return null;
+        return $entity;
     }
 
     /**

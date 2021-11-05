@@ -82,12 +82,12 @@ class BaseEntity implements Entity
     private $fetchedValuesContainer = [];
 
     /**
-     * @var ?EntityManager
+     * @var EntityManager|null
      */
     protected $entityManager;
 
     /**
-     * @var Value\ValueAccessor
+     * @var Value\ValueAccessor|null
      */
     private $valueAccessor = null;
 
@@ -157,6 +157,9 @@ class BaseEntity implements Entity
     {
         $p1 = $attribute;
         $p2 = $value;
+
+        /** @phpstan-var mixed $p1 */
+        /** @phpstan-var mixed $p2 */
 
         if (is_array($p1) || is_object($p1)) {
             if (is_object($p1)) {

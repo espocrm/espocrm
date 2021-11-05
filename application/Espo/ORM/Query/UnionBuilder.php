@@ -129,6 +129,8 @@ class UnionBuilder implements Builder
             return $this;
         }
 
+        /** @var object|scalar $orderBy */
+
         if (!is_string($orderBy) && !is_int($orderBy)) {
             throw new InvalidArgumentException("Bad order.");
         }

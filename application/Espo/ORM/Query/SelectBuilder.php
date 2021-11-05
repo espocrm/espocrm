@@ -149,6 +149,8 @@ class SelectBuilder implements Builder
      */
     public function select($select, ?string $alias = null): self
     {
+        /** @phpstan-var mixed $select */
+
         if (is_array($select)) {
             $this->params['select'] = $this->normilizeSelectExpressionArray($select);
 
@@ -189,6 +191,8 @@ class SelectBuilder implements Builder
      */
     public function group($groupBy): self
     {
+        /** @phpstan-var mixed $groupBy */
+
         if (is_array($groupBy)) {
             $this->params['groupBy'] = $this->normilizeExpressionItemArray($groupBy);
 
