@@ -245,12 +245,10 @@ class Service implements Crud,
         $historyRecord->set('ipAddress', $this->user->get('ipAddress'));
         $historyRecord->set('authLogRecordId', $this->user->get('authLogRecordId'));
 
-        if ($entity) {
-            $historyRecord->set([
-                'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->getId()
-            ]);
-        }
+        $historyRecord->set([
+            'targetType' => $entity->getEntityType(),
+            'targetId' => $entity->getId()
+        ]);
 
         $this->entityManager->saveEntity($historyRecord);
     }
@@ -1576,9 +1574,7 @@ class Service implements Crud,
 
                     $idAttribute = $field . 'Id';
 
-                    if ($attachment) {
-                        $attributes->$idAttribute = $attachment->getId();
-                    }
+                    $attributes->$idAttribute = $attachment->getId();
                 }
             }
             else if (in_array($type, ['attachmentMultiple'])) {
@@ -1593,18 +1589,16 @@ class Service implements Crud,
                     $attachmentRepository = $this->entityManager->getRepository('Attachment');
 
                     foreach ($attachmentList as $attachment) {
-                        $attachment = $$attachmentRepository->getCopiedAttachment($attachment);
+                        $attachment = $attachmentRepository->getCopiedAttachment($attachment);
 
                         $attachment->set('field', $field);
 
                         $this->entityManager->saveEntity($attachment);
 
-                        if ($attachment) {
-                            $idList[] = $attachment->getId();
+                        $idList[] = $attachment->getId();
 
-                            $nameHash->{$attachment->getId()} = $attachment->get('name');
-                            $typeHash->{$attachment->getId()} = $attachment->get('type');
-                        }
+                        $nameHash->{$attachment->getId()} = $attachment->get('name');
+                        $typeHash->{$attachment->getId()} = $attachment->get('type');
                     }
 
                     $attributes->{$field . 'Ids'} = $idList;
