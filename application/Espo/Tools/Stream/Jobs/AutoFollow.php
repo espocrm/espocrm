@@ -40,6 +40,8 @@ use Espo\ORM\EntityManager;
 use Espo\Services\Stream as Service;
 use Espo\Tools\Notification\Service as NotificationService;
 
+use Espo\Entities\User;
+
 /**
  * Handles auto-follow.
  */
@@ -82,6 +84,7 @@ class AutoFollow implements Job
         }
 
         foreach ($userIdList as $i => $userId) {
+            /** @var User|null */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {
@@ -118,6 +121,7 @@ class AutoFollow implements Job
 
         $this->service->followEntityMass($entity, $userIdList);
 
+        /** @var iterable<\Espo\Entities\Note> */
         $noteList = $this->entityManager
             ->getRDBRepository('Note')
             ->where([
