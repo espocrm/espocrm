@@ -380,7 +380,7 @@ class Stream
             $user = $this->user;
         }
         else {
-            /** @var User $user */
+            /** @var ?User $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {

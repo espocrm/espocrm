@@ -106,7 +106,7 @@ class AssignmentProcessor
             throw new LogicException();
         }
 
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$user) {

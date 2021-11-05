@@ -252,13 +252,11 @@ class EmailAccount extends Record implements
 
         $entity = parent::create($data, $params);
 
-        if ($entity) {
-            if (!$this->getUser()->isAdmin()) {
-                $entity->set('assignedUserId', $this->getUser()->getId());
-            }
-
-            $this->entityManager->saveEntity($entity);
+        if (!$this->getUser()->isAdmin()) {
+            $entity->set('assignedUserId', $this->getUser()->getId());
         }
+
+        $this->entityManager->saveEntity($entity);
 
         return $entity;
     }

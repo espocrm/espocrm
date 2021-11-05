@@ -258,7 +258,7 @@ class Preferences implements Repository,
 
         $this->entityManager->getQueryExecutor()->execute($insert);
 
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->entityManager->getEntity('User', $entity->getId());
 
         if ($user && !$user->isPortal()) {

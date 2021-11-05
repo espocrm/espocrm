@@ -88,9 +88,9 @@ class Preferences
     {
         $this->processAccessCheck($userId);
 
-        /** @var PreferencesEntity $entity */
+        /** @var ?PreferencesEntity $entity */
         $entity = $this->entityManager->getEntity('Preferences', $userId);
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$entity || !$user) {
@@ -134,7 +134,7 @@ class Preferences
 
         $user = $this->entityManager->getEntity('User', $userId);
 
-        /** @var PreferencesEntity */
+        /** @var ?PreferencesEntity */
         $entity = $this->entityManager->getEntity('Preferences', $userId);
 
         if (!$entity || !$user) {
@@ -172,7 +172,7 @@ class Preferences
             throw new Forbidden();
         }
 
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity('User', $userId);
 
         $preferences = $this->entityManager->getEntity('Preferences', $userId);

@@ -371,7 +371,7 @@ class InboundEmail extends RecordService implements
 
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             try {
-                                $toSkip = $this->processBouncedMessage($message) || $toSkip;
+                                $toSkip = $this->processBouncedMessage($message);
                             }
                             catch (Throwable $e) {
                                 $this->log->error(

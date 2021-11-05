@@ -159,7 +159,7 @@ class Notification extends \Espo\Services\Record
             switch ($entity->get('type')) {
                 case 'Note':
                 case 'MentionInPost':
-                    /** @var Note $note */
+                    /** @var ?Note $note */
                     $note = $this->entityManager->getEntity('Note', $data->noteId);
 
                     if (!$note) {
@@ -242,11 +242,11 @@ class Notification extends \Espo\Services\Record
         $scopes = $this->metadata->get('scopes', []);
 
         foreach ($scopes as $scope => $d) {
-            if (empty($d['entity']) || !$d['entity']) {
+            if (empty($d['entity'])) {
                 continue;
             }
 
-            if (empty($d['object']) || !$d['object']) {
+            if (empty($d['object'])) {
                 continue;
             }
 

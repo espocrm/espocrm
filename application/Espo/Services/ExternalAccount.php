@@ -54,7 +54,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
     protected function getClient(string $integration, string $id)
     {
-        /** @var IntegrationEntity $integrationEntity */
+        /** @var IntegrationEntity|null $integrationEntity */
         $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
 
         if (!$integrationEntity) {

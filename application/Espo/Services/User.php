@@ -81,7 +81,7 @@ class User extends Record implements
             throw new Forbidden();
         }
 
-        /** @var UserEntity $entity */
+        /** @var ?UserEntity $entity */
         $entity = parent::getEntity($id);
 
         if ($entity && $entity->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {
@@ -102,7 +102,7 @@ class User extends Record implements
         ?string $currentPassword = null
     ): void {
 
-        /** @var UserEntity $user */
+        /** @var ?UserEntity $user */
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         if (!$user) {
@@ -374,7 +374,7 @@ class User extends Record implements
 
     public function generateNewApiKeyForEntity(string $id): Entity
     {
-        /** @var UserEntity $entity */
+        /** @var ?UserEntity $entity */
         $entity = $this->getEntity($id);
 
         if (!$entity) {
@@ -414,7 +414,7 @@ class User extends Record implements
             }
         }
 
-        /** @var UserEntity $user */
+        /** @var ?UserEntity $user */
         $user = $this->getEntity($id);
 
         if (!$user) {

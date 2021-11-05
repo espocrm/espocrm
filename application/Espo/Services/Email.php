@@ -117,7 +117,7 @@ class Email extends Record implements
             $fromAddress = strtolower($fromAddress);
         }
 
-        /** @var Preferences $preferences */
+        /** @var Preferences|null $preferences */
         $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
         if (!$preferences) {
@@ -190,7 +190,7 @@ class Email extends Record implements
             $primaryUserAddress = strtolower($user->get('emailAddress'));
 
             if ($primaryUserAddress === $fromAddress) {
-                /** @var Preferences $preferences */
+                /** @var Preferences|null $preferences */
                 $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
                 if ($preferences) {
@@ -221,9 +221,7 @@ class Email extends Record implements
 
         if ($user) {
             if ($smtpParams) {
-                if ($fromAddress) {
-                    $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
-                }
+                $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
 
                 $emailSender->withSmtpParams($smtpParams);
             }
@@ -434,7 +432,7 @@ class Email extends Record implements
     {
         $entity = parent::create($data, $params);
 
-        if ($entity && $entity->get('status') === EmailEntity::STATUS_SENDING) {
+        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->getUser());
         }
 
@@ -452,7 +450,7 @@ class Email extends Record implements
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        if ($entity && $entity->get('status') === EmailEntity::STATUS_SENDING) {
+        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->getUser());
         }
 
@@ -773,7 +771,7 @@ class Email extends Record implements
             throw new BadRequest();
         }
 
-        /** @var EmailEntity $email */
+        /** @var EmailEntity|null $email */
         $email = $this->entityManager->getEntity(EmailEntity::ENTITY_TYPE, $id);
 
         if (!$email) {
@@ -789,7 +787,7 @@ class Email extends Record implements
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
-            /** @var Attachment $source */
+            /** @var Attachment|null $source */
             $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
@@ -1014,7 +1012,7 @@ class Email extends Record implements
             return null;
         }
 
-        /** @var EmailEntity $replied */
+        /** @var EmailEntity|null $replied */
         $replied = $this->entityManager
             ->getRDBRepository('Email')
             ->select(['messageId'])
