@@ -45,7 +45,7 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
             $jobList = $this->entityManager
                 ->getRDBRepository('Job')
                 ->where([
-                    'scheduledJobId' => $entity->id,
+                    'scheduledJobId' => $entity->getId(),
                     'status' => Status::PENDING,
                 ])
                 ->find();

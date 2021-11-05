@@ -67,10 +67,6 @@ class DateTimeItemTransformer
             throw new Error("Bad where item.");
         }
 
-        if ($attribute && !is_string($attribute)) {
-            throw new Error("Bad 'attribute' in where item.");
-        }
-
         if (!$attribute) {
             throw new Error("Bad datetime where item. Empty 'attribute'.");
         }

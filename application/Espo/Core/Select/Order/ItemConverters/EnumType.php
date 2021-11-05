@@ -63,7 +63,7 @@ class EnumType implements ItemConverter
             'entityDefs', $this->entityType, 'fields', $orderBy, 'options'
         ]);
 
-        if (!$list || !is_array($list) || !count($list)) {
+        if (!is_array($list) || !count($list)) {
             return OrderList::create([
                 Order::fromString($orderBy)->withDirection($order)
             ]);

@@ -118,7 +118,7 @@ class Order
             else if ($order === false || strtolower($order) === 'asc') {
                 $order = SearchParams::ORDER_ASC;
             }
-            else if (!$order === null) {
+            else if ($order !== null) {
                 throw new Error("Bad default order.");
             }
         }

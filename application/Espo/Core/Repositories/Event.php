@@ -40,6 +40,9 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 
+/**
+ * @extends Database<\Espo\Core\ORM\Entity>
+ */
 class Event extends Database implements
 
     Di\DateTimeAware,

@@ -67,7 +67,7 @@ class SelectBuilder
     private $sourceQuery = null;
 
     /**
-     * @var SearchParams
+     * @var SearchParams|null
      */
     private $searchParams = null;
 

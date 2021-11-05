@@ -87,7 +87,7 @@ class Import extends Database
             'ImportEntity',
             'importEntity',
             [
-                'importEntity.importId' => $entity->id,
+                'importEntity.importId' => $entity->getId(),
                 'importEntity.entityType' => $entityType,
                 'importEntity.entityId:' => 'id',
                 'importEntity.' . $param => true,
@@ -131,7 +131,7 @@ class Import extends Database
             ->delete()
             ->from('ImportEntity')
             ->where([
-                'importId' => $entity->id,
+                'importId' => $entity->getId(),
             ])
             ->build();
 
