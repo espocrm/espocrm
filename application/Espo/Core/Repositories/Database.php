@@ -50,8 +50,8 @@ use Espo\Core\{
 };
 
 /**
- * @template T of \Espo\ORM\Entity
- * @extends RDBRepository<T>
+ * @template TEntity of \Espo\ORM\Entity
+ * @extends RDBRepository<TEntity>
  */
 class Database extends RDBRepository
 {
@@ -118,7 +118,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     public function save(Entity $entity, array $options = []): void
     {
@@ -140,7 +140,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
@@ -164,7 +164,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function afterRemove(Entity $entity, array $options = [])
     {
@@ -176,7 +176,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
@@ -199,7 +199,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
@@ -233,7 +233,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
@@ -262,7 +262,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -274,7 +274,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -292,7 +292,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
@@ -324,7 +324,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
     {
@@ -356,7 +356,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      * @return mixed
      */
     private function getAttributeParam(Entity $entity, string $attribute, string $param)
@@ -377,7 +377,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      * @return mixed
      */
     private function getRelationParam(Entity $entity, string $relation, string $param)

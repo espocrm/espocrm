@@ -49,8 +49,8 @@ use RuntimeException;
 use PDO;
 
 /**
- * @template T of Entity
- * @implements Repository<T>
+ * @template TEntity of Entity
+ * @implements Repository<TEntity>
  */
 class RDBRepository implements Repository
 {
@@ -94,7 +94,7 @@ class RDBRepository implements Repository
      */
     public function getNew(): Entity
     {
-        /** @var T $entity */
+        /** @var TEntity $entity */
         $entity = $this->entityFactory->create($this->entityType);
 
         if ($entity instanceof BaseEntity) {
@@ -118,7 +118,7 @@ class RDBRepository implements Repository
             ])
             ->build();
 
-        /** @var ?T $entity */
+        /** @var ?TEntity $entity */
         $entity = $this->getMapper()->selectOne($selectQuery);
 
         return $entity;
@@ -127,7 +127,7 @@ class RDBRepository implements Repository
     /**
      * Get an entity. If ID is NULL, a new entity is returned.
      *
-     * @phpstan-return ?T
+     * @phpstan-return ?TEntity
      */
     public function get(?string $id = null): ?Entity
     {
@@ -209,7 +209,7 @@ class RDBRepository implements Repository
     /**
      * Get an access point for a specific relation of a record.
      *
-     * @phpstan-param T $entity
+     * @phpstan-param TEntity $entity
      */
     public function getRelation(Entity $entity, string $relationName): RDBRelation
     {
@@ -247,9 +247,9 @@ class RDBRepository implements Repository
      *
      * @param ?array $params @deprecated
      *
-     * @phpstan-return iterable<Entity>&Collection
+     * @phpstan-return iterable<TEntity>&Collection
      *
-     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     * @todo Fix phpstan-return after php7.4 to Collection<TEntity> or remove.
      */
     public function find(?array $params = []): Collection
     {
@@ -897,9 +897,12 @@ class RDBRepository implements Repository
 
     /**
      * Create a select builder.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     protected function createSelectBuilder(): RDBSelectBuilder
     {
+        /** @var RDBSelectBuilder<TEntity> */
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);
 
         return $builder;

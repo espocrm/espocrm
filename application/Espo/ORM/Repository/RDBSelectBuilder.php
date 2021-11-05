@@ -47,6 +47,8 @@ use RuntimeException;
 
 /**
  * Builds select parameters for an RDB repository. Contains 'find' methods.
+ *
+ * @template TEntity of Entity
  */
 class RDBSelectBuilder
 {
@@ -90,15 +92,15 @@ class RDBSelectBuilder
 
     /**
      * @param ?array $params @deprecated. Omit it.
-     * @phpstan-return iterable<Entity>&Collection
+     * @phpstan-return iterable<TEntity>&Collection
      *
-     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     * @todo Fix phpstan-return after php7.4 to Collection<TEntity> or remove.
      */
     public function find(?array $params = null): Collection
     {
         $query = $this->getMergedParams($params);
 
-        /** @var iterable<Entity>&Collection $collection */
+        /** @var iterable<TEntity>&Collection $collection */
         $collection = $this->getMapper()->select($query);
 
         return $this->handleReturnCollection($collection);
@@ -106,6 +108,8 @@ class RDBSelectBuilder
 
     /**
      * @param ?array $params @deprecated
+     *
+     * @phpstan-return ?TEntity
      */
     public function findOne(?array $params = null): ?Entity
     {
@@ -369,9 +373,9 @@ class RDBSelectBuilder
     }
 
     /**
-     * @phpstan-return iterable<Entity>&Collection
+     * @phpstan-return iterable<TEntity>&Collection
      *
-     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     * @todo Fix phpstan-return after php7.4 to Collection<TEntity> or remove.
      */
     protected function handleReturnCollection(SthCollection $collection): Collection
     {
