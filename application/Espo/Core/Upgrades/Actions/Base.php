@@ -441,8 +441,6 @@ abstract class Base
 
             case 'vendor':
                 return $this->getVendorFileList('delete');
-
-                break;
         }
 
         return [];

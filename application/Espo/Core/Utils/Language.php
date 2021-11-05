@@ -204,7 +204,7 @@ class Language
     {
         $data = $this->getData();
 
-        if (!isset($data) || $data === false) {
+        if (!isset($data)) {
             throw new Error('Language: current language '.$this->currentLanguage.' not found');
         }
 

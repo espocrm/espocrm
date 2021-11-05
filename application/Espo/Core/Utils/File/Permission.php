@@ -170,7 +170,7 @@ class Permission
      * Change permissions.
      *
      * @param string $path
-     * @param int|array $octal ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
+     * @param int|string[]|string $octal ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
      * @param bool $recurse
      */
     public function chmod(string $path, $octal, bool $recurse = false): bool
@@ -178,6 +178,8 @@ class Permission
         if (!file_exists($path)) {
             return false;
         }
+
+        /** @phpstan-var mixed $octal */
 
         $permission = [];
 
@@ -200,14 +202,11 @@ class Permission
                 $count++;
             }
         }
-        else if (is_int((int) $octal)) {
+        else if (is_int((int) $octal)) { // Always true. @todo Fix.
             $permission = [
                 'file' => $octal,
                 'dir' => $octal,
             ];
-        }
-        else {
-            return false;
         }
 
         // Convert to octal value.

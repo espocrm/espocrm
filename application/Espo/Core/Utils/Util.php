@@ -412,16 +412,16 @@ class Util
      * Unset content items defined in the unset.json.
      *
      * @param array $content
-     * @param string | array $unsets in format
-     *   array(
-     *      'EntityName1' => array( 'unset1', 'unset2' ),
-     *      'EntityName2' => array( 'unset1', 'unset2' ),
-     *  )
+     * @param string|array $unsets in format
+     *  [
+     *      'EntityType1' => [ 'unset1', 'unset2'],
+     *      'EntityType2' => ['unset1', 'unset2'],
+     *  ]
      *  OR
-     *  array('EntityName1.unset1', 'EntityName1.unset2', .....)
+     *  ['EntityType1.unset1', 'EntityType2.unset2', ...]
      *  OR
-     *  'EntityName1.unset1'
-     * @param bool $unsetParentEmptyArray - If unset empty parent array after unsets
+     *  'EntityType1.unset1'
+     * @param bool $unsetParentEmptyArray If unset empty parent array after unsets
      *
      * @return array
      */
@@ -450,6 +450,7 @@ class Util
 
                 $elementArr = [];
                 $elementArr[] = &$elem;
+
                 for ($i = 0; $i <= $keyChainCount; $i++) {
 
                     if (is_array($elem) && array_key_exists($keyArr[$i], $elem)) {
@@ -459,15 +460,16 @@ class Util
                             if ($unsetParentEmptyArray) {
                                 for ($j = count($elementArr); $j > 0; $j--) {
                                     $pointer =& $elementArr[$j];
+
                                     if (is_array($pointer) && empty($pointer)) {
                                         $previous =& $elementArr[$j - 1];
                                         unset($previous[$keyArr[$j - 1]]);
                                     }
                                 }
                             }
-
                         } else if (is_array($elem[$keyArr[$i]])) {
                             $elem = &$elem[$keyArr[$i]];
+
                             $elementArr[] = &$elem;
                         }
 

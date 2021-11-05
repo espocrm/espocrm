@@ -80,7 +80,6 @@ trait Comparator
         switch ($dbType) {
             case 'LONGTEXT':
                 return 4294967295;
-                break;
         }
 
         $constName = '\\Doctrine\\DBAL\\Platforms\\MySQLPlatform::LENGTH_LIMIT_' . $dbType;

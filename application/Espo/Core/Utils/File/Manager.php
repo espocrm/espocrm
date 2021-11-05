@@ -199,11 +199,12 @@ class Manager
      * Get file contents.
      *
      * @param string $path
-     *
      * @return string|false
      */
     public function getContents($path)
     {
+        /** @var mixed $path */
+
         if (is_array($path)) {
             // For backward compatibility.
             // @todo Remove support of arrays in v6.4.
@@ -457,10 +458,7 @@ class Manager
 
         $unsettedData = Util::unsetInArray($currentData, $unsets, true);
 
-        if (
-            is_null($unsettedData) ||
-            (is_array($unsettedData) && empty($unsettedData))
-        ) {
+        if (empty($unsettedData)) {
             return $this->unlink($path);
         }
 

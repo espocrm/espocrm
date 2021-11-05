@@ -143,7 +143,7 @@ class Converter
      * Schema conversation process.
      *
      * @param array $ormMeta
-     * @param array|null $entityList
+     * @param array|string|null $entityList
      *
      * @return \Doctrine\DBAL\Schema\Schema
      */
