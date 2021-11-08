@@ -1233,7 +1233,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getFunctionArgumentPart(
-        BaseEntity $entity,
+        Entity $entity,
         string $attribute,
         bool $distinct, array &$params
     ): string {
@@ -1997,7 +1997,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getOrderExpressionPart(
-        BaseEntity $entity,
+        Entity $entity,
         $orderBy = null,
         $order = null,
         ?array &$params = null,
@@ -2021,7 +2021,11 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
 
                     $arr[] = $this->getOrderExpressionPart(
-                        $entity, $orderByInternal, $orderInternal, $params, $noCustom
+                        $entity,
+                        $orderByInternal,
+                        $orderInternal,
+                        $params,
+                        $noCustom
                     );
                 }
             }
@@ -2033,7 +2037,6 @@ abstract class BaseQueryComposer implements QueryComposer
             list($l, $field, $list) = explode(':', $orderBy);
 
             $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params);
-
 
             $listQuoted = [];
 
