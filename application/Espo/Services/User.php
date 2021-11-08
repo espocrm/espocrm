@@ -775,7 +775,7 @@ class User extends Record implements
                     $contact->set('firstName', $data->firstName);
                 }
 
-                if (property_exists('lastName', $data)) {
+                if (property_exists($data, 'lastName')) {
                     $contact->set('lastName', $data->lastName);
                 }
 

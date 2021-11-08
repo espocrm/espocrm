@@ -79,6 +79,7 @@ use RuntimeException;
  * Access control is processed here.
  *
  * @template TEntity of Entity
+ * @implements Crud<TEntity>
  */
 class Service implements Crud,
 

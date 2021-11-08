@@ -33,20 +33,29 @@ use Espo\ORM\Entity;
 
 use stdClass;
 
+/**
+ * @template TEntity of Entity
+ */
 interface Crud
 {
     /**
      * Create a record.
+     *
+     * @phpstan-return TEntity
      */
     public function create(stdClass $data, CreateParams $params): Entity;
 
     /**
      * Read a record.
+     *
+     * @phpstan-return TEntity
      */
     public function read(string $id, ReadParams $params): Entity;
 
     /**
      * Update a record.
+     *
+     * @phpstan-return TEntity
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity;
 
