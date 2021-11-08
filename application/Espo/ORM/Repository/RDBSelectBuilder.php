@@ -305,6 +305,8 @@ class RDBSelectBuilder
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
+     *
+     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy
      */
     public function order($orderBy = 'id', $direction = null): self
     {
@@ -336,7 +338,7 @@ class RDBSelectBuilder
      * * `select(string|Expression $expression, string $alias)`
      * * `select(SelectExpression $selectItem)`
      *
-     * @param array|string|Expression|Selection $select An array of expressions or one expression.
+     * @param Selection|Selection[]|Expression|Expression[]|string[]|string $select An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select, ?string $alias = null): self

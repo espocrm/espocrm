@@ -143,7 +143,7 @@ class SelectBuilder implements Builder
      * * `select([$expr1, $expr2, ...])`
      * * `select(string $expression, string $alias)`
      *
-     * @param Selection|Selection[]|Expression|string $select
+     * @param Selection|Selection[]|Expression|Expression[]|string[]|string $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */
