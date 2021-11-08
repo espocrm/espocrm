@@ -77,6 +77,8 @@ use RuntimeException;
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
  * Access control is processed here.
+ *
+ * @template TEntity of Entity
  */
 class Service implements Crud,
 
@@ -603,6 +605,8 @@ class Service implements Crud,
      * Create a record.
      *
      * @throws ForbiddenSilent If no create access.
+     *
+     * @phpstan-return TEntity
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -651,6 +655,8 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
+     *
+     * @phpstan-return TEntity
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
