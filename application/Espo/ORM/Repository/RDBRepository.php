@@ -723,6 +723,8 @@ class RDBRepository implements Repository
 
     /**
      * Clone an existing query for a further modification and usage by 'find' or 'count' methods.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function clone(Select $query): RDBSelectBuilder
     {
@@ -742,6 +744,8 @@ class RDBRepository implements Repository
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
@@ -755,6 +759,8 @@ class RDBRepository implements Repository
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
@@ -779,6 +785,8 @@ class RDBRepository implements Repository
 
     /**
      * Set to return STH collection. Recommended fetching large number of records.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function sth(): RDBSelectBuilder
     {
@@ -795,6 +803,8 @@ class RDBRepository implements Repository
      *
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function where($clause = [], $value = null): RDBSelectBuilder
     {
@@ -811,6 +821,8 @@ class RDBRepository implements Repository
      *
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function having($clause = [], $value = null): RDBSelectBuilder
     {
@@ -831,7 +843,8 @@ class RDBRepository implements Repository
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy
+     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): RDBSelectBuilder
     {
@@ -840,6 +853,8 @@ class RDBRepository implements Repository
 
     /**
      * Apply OFFSET and LIMIT.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function limit(?int $offset = null, ?int $limit = null): RDBSelectBuilder
     {
@@ -859,6 +874,8 @@ class RDBRepository implements Repository
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function select($select = [], ?string $alias = null): RDBSelectBuilder
     {

@@ -201,6 +201,8 @@ class RDBSelectBuilder
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -216,6 +218,8 @@ class RDBSelectBuilder
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -226,6 +230,8 @@ class RDBSelectBuilder
 
     /**
      * Set DISTINCT parameter.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function distinct(): self
     {
@@ -236,6 +242,8 @@ class RDBSelectBuilder
 
     /**
      * Lock selected rows. To be used within a transaction.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function forUpdate(): self
     {
@@ -248,6 +256,8 @@ class RDBSelectBuilder
      * Set to return STH collection. Recommended for fetching large number of records.
      *
      * @todo Remove.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function sth(): self
     {
@@ -266,6 +276,8 @@ class RDBSelectBuilder
      *
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function where($clause = [], $value = null): self
     {
@@ -284,6 +296,8 @@ class RDBSelectBuilder
      *
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function having($clause = [], $value = null): self
     {
@@ -307,6 +321,7 @@ class RDBSelectBuilder
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      *
      * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): self
     {
@@ -317,6 +332,8 @@ class RDBSelectBuilder
 
     /**
      * Apply OFFSET and LIMIT.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function limit(?int $offset = null, ?int $limit = null): self
     {
@@ -340,6 +357,8 @@ class RDBSelectBuilder
      *
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string $select An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function select($select, ?string $alias = null): self
     {
@@ -358,6 +377,8 @@ class RDBSelectBuilder
      * * `groupBy([$expr1, $expr2, ...])`
      *
      * @param Expression|Expression[]|string|string[] $groupBy
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function group($groupBy): self
     {
@@ -368,6 +389,8 @@ class RDBSelectBuilder
 
     /**
      * @deprecated Use `group` method.
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function groupBy($groupBy): self
     {
