@@ -30,8 +30,8 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Request;
 
 class AuthToken extends Record
 {
@@ -40,12 +40,12 @@ class AuthToken extends Record
         return $this->user->isAdmin();
     }
 
-    public function beforeCreateLink(): void
+    public function postActionCreateLink(Request $request): bool
     {
         throw new Forbidden();
     }
 
-    public function beforeRemoveLink(): void
+    public function deleteActionRemoveLink(Request $request): bool
     {
         throw new Forbidden();
     }

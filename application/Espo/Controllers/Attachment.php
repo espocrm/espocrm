@@ -43,11 +43,13 @@ use stdClass;
 
 class Attachment extends RecordBase
 {
-    public function beforeList(): void
+    public function getActionList(Request $request, Response $response): stdClass
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
+
+        return parent::getActionList($request, $response);
     }
 
     public function postActionGetAttachmentFromImageUrl(Request $request): stdClass

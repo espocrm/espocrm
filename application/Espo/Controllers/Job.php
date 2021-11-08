@@ -30,8 +30,11 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
-
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 use Espo\Core\Controllers\RecordBase;
+
+use stdClass;
 
 class Job extends RecordBase
 {
@@ -40,12 +43,12 @@ class Job extends RecordBase
         return $this->user->isAdmin();
     }
 
-    public function beforeCreate(): void
+    public function postActionCreate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();
     }
 
-    public function beforeUpdate(): void
+    public function putActionUpdate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();
     }

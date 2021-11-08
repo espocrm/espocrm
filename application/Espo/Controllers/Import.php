@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Tools\Import\Params as ImportParams;
 use Espo\Tools\Import\Service as Service;
@@ -143,23 +144,18 @@ class Import extends Record
         return true;
     }
 
-    public function beforePatch(): void
+    public function putActionUpdate(Request $request, Response $response): stdClass
     {
-        throw new BadRequest();
+        throw new Forbidden();
     }
 
-    public function beforeUpdate(): void
+    public function postActionCreateLink(Request $request): bool
     {
-        throw new BadRequest();
+        throw new Forbidden();
     }
 
-    public function beforeCreateLink(): void
+    public function deleteActionRemoveLink(Request $request): bool
     {
-        throw new BadRequest();
-    }
-
-    public function beforeRemoveLink(): void
-    {
-        throw new BadRequest();
+        throw new Forbidden();
     }
 }

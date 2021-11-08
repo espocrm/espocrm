@@ -156,18 +156,22 @@ class User extends Record
         return true;
     }
 
-    public function beforeCreateLink(): void
+    public function postActionCreateLink(Request $request): bool
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
+
+        return parent::postActionCreateLink($request);
     }
 
-    public function beforeRemoveLink(): void
+    public function deleteActionRemoveLink(Request $request): bool
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
+
+        return parent::deleteActionRemoveLink($request);
     }
 
     protected function fetchSearchParamsFromRequest(Request $request): SearchParams

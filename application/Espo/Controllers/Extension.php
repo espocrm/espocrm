@@ -38,7 +38,7 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
+use stdClass;
 
 class Extension extends RecordBase
 {
@@ -47,7 +47,7 @@ class Extension extends RecordBase
         return $this->user->isAdmin();
     }
 
-    public function postActionUpload(Request $request): StdClass
+    public function postActionUpload(Request $request): stdClass
     {
         $body = $request->getBodyContents();
 
@@ -117,12 +117,12 @@ class Extension extends RecordBase
         return true;
     }
 
-    public function beforeCreate(): void
+    public function postActionCreate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();
     }
 
-    public function beforeUpdate(): void
+    public function putActionUpdate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();
     }
