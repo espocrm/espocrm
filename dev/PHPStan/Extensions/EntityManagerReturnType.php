@@ -39,6 +39,8 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\UnionType;
 use PHPStan\Type\NullType;
 use PHPStan\Type\Generic\GenericObjectType;
+use PHPStan\Type\Generic\TemplateGenericObjectType;
+
 use PhpParser\Node\Scalar\String_;
 
 use RuntimeException;
@@ -49,12 +51,16 @@ use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Util;
 
 use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Repository\Repository;
 
 class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
 {
     private $supportedMethodNameList = [
         'getEntity',
+        'getNewEntity',
+        'createEntity',
         'getRDBRepository',
+        'getRepository',
     ];
 
     private $entityNamespaceList = [
@@ -84,8 +90,16 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
             return $this->getGetEntity($methodReflection, $methodCall, $scope);
         }
 
+        if ($methodName === 'getNewEntity' || $methodName === 'createEntity') {
+            return $this->getGetEntityNotNull($methodReflection, $methodCall, $scope);
+        }
+
         if ($methodName === 'getRDBRepository') {
             return $this->getGetRDBRepository($methodReflection, $methodCall, $scope);
+        }
+
+        if ($methodName === 'getRepository') {
+            return $this->getGetRepository($methodReflection, $methodCall, $scope);
         }
 
         throw new RuntimeException("Not supported method.");
@@ -114,6 +128,25 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
             new ObjectType($className),
             new NullType(),
         ]);
+    }
+
+    private function getGetEntityNotNull(
+        MethodReflection $methodReflection,
+        MethodCall $methodCall,
+        Scope $scope
+    ): Type {
+
+        $value = $methodCall->args[0]->value;
+
+        if (!$value instanceof String_) {
+            return new ObjectType(Entity::class);
+        }
+
+        $entityType = $value->value;
+
+        $className = $this->findEntityClassName($entityType) ?? Entity::class;
+
+        return new ObjectType($className);
     }
 
     private function findEntityClassName(string $entityType): ?string
@@ -150,5 +183,28 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
         }
 
         return new ObjectType(RDBRepository::class);
+    }
+
+    private function getGetRepository(
+        MethodReflection $methodReflection,
+        MethodCall $methodCall,
+        Scope $scope
+    ): Type {
+
+        $value = $methodCall->args[0]->value;
+
+        if (!$value instanceof ObjectType) {
+            return new ObjectType(Repository::class);
+        }
+
+        $entityType = $value->value;
+
+        $entityClassName = $this->findEntityClassName($entityType);
+
+        if ($entityClassName) {
+            return new TemplateGenericObjectType(Repository::class, [new ObjectType($entityClassName)]);
+        }
+
+        return new ObjectType(Repository::class);
     }
 }
