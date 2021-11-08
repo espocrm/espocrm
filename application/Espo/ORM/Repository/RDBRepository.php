@@ -472,6 +472,8 @@ class RDBRepository implements Repository
             }
         }
 
+        /** @phpstan-var TEntity $entity */
+
         $relation = $this->getRelation($entity, $relationName);
 
         if ($foreign instanceof Entity) {

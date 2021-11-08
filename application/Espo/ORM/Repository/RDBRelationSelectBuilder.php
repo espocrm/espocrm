@@ -204,6 +204,7 @@ class RDBRelationSelectBuilder
     {
         $query = $this->builder->build();
 
+        /** @var (iterable<Entity>&\Espo\ORM\SthCollection)|Entity */
         $related = $this->getMapper()->selectRelated($this->entity, $this->relationName, $query);
 
         if ($related instanceof Collection) {

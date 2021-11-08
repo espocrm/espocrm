@@ -100,7 +100,7 @@ class RDBSelectBuilder
     {
         $query = $this->getMergedParams($params);
 
-        /** @var iterable<TEntity>&Collection $collection */
+        /** @var iterable<TEntity>&SthCollection $collection */
         $collection = $this->getMapper()->select($query);
 
         return $this->handleReturnCollection($collection);
