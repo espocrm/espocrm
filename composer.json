@@ -59,7 +59,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\": "tests/"
+            "tests\\": "tests/",
+            "EspoDev\\": "dev/"
         }
     },
     "repositories": [

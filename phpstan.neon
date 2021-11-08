@@ -6,3 +6,8 @@ parameters:
 	reportUnmatchedIgnoredErrors: false
 	excludePaths:
 		- application/Espo/Core/Select/SelectManager.php
+services:
+	-
+		class: EspoDev\PHPStan\Extensions\EntityManagerReturnType
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
