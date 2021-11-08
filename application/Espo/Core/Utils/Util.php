@@ -383,9 +383,12 @@ class Util
      *
      * @param string $search
      * @param string $replace
-     * @param string[]|false $array
+     * @param string[]|string|false $array
      * @param bool $isKeys
-     * @return string[]|string
+     * @return string|string[]
+     *
+     * @todo Maybe to remove the method.
+     * @deprecated
      */
     public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
     {
@@ -596,12 +599,14 @@ class Util
 
     public static function generateId(): string
     {
-        return uniqid() . substr(md5(rand()), 0, 4);
+        return uniqid() . substr(md5((string) rand()), 0, 4);
     }
 
     public static function generateMoreEntropyId(): string
     {
-        return substr(md5(uniqid(rand(), true)), 0, 16) . substr(md5(rand()), 0, 4);
+        return
+            substr(md5(uniqid((string) rand(), true)), 0, 16) .
+            substr(md5((string) rand()), 0, 4);
     }
 
     public static function generateCryptId(): string
@@ -624,7 +629,7 @@ class Util
 
     public static function generateKey(): string
     {
-        return md5(uniqid(rand(), true));
+        return md5(uniqid((string) rand(), true));
     }
 
     public static function sanitizeFileName($fileName)
