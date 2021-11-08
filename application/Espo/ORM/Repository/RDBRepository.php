@@ -732,6 +732,7 @@ class RDBRepository implements Repository
             throw new RuntimeException("Can't clone a query of a different entity type.");
         }
 
+        /** @var RDBSelectBuilder<TEntity> */
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType, $query);
 
         return $builder;
@@ -892,6 +893,8 @@ class RDBRepository implements Repository
      * * `groupBy([$expr1, $expr2, ...])`
      *
      * @param Expression|Expression[]|string|string[] $groupBy
+     *
+     * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function group($groupBy): RDBSelectBuilder
     {

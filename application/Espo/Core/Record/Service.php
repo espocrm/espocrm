@@ -224,6 +224,9 @@ class Service implements Crud,
         $this->entityType = $entityType;
     }
 
+    /**
+     * @phpstan-return RDBRepository<TEntity>
+     */
     protected function getRepository(): RDBRepository
     {
         return $this->entityManager->getRDBRepository($this->entityType);
@@ -288,6 +291,8 @@ class Service implements Crud,
      * Get an entity by ID. Access control check is performed.
      *
      * @throws ForbiddenSilent If no read access.
+     *
+     * @phpstan-return TEntity|null
      */
     public function getEntity(string $id): ?Entity
     {
@@ -820,9 +825,13 @@ class Service implements Crud,
         return $this->injectableFactory->create(ApplierClassNameListProvider::class);
     }
 
+    /**
+     * @phpstan-return TEntity|null
+     */
     protected function getEntityEvenDeleted(string $id): ?Entity
     {
-        $query = $this->entityManager->getQueryBuilder()
+        $query = $this->entityManager
+            ->getQueryBuilder()
             ->select()
             ->from($this->entityType)
             ->where([
