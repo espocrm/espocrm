@@ -823,7 +823,7 @@ abstract class Base
      * Execute an action. For ex., execute uninstall action in install.
      *
      * @param string $actionName
-     * @param string $data
+     * @param string|array<string,mixed> $data
      * @return void
      */
     protected function executeAction($actionName, $data)

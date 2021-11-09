@@ -33,6 +33,8 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
+use Espo\Core\Notification\AssignmentNotificator\Params;
+
 use Espo\Core\{
     ORM\EntityManager,
     Notification\DefaultAssignmentNotificator
@@ -60,7 +62,7 @@ class DefaultNotificator
 
     public function process(Entity $entity, array $options = [])
     {
-        $this->base->process($entity, $options);
+        $this->base->process($entity, Params::create()->withRawOptions($options));
     }
 
     /**

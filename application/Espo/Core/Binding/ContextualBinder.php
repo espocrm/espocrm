@@ -85,7 +85,7 @@ class ContextualBinder
      * Bind an interface or parameter name to a specific value.
      *
      * @param string $key Parameter name (`$name`) or interface with a parameter name (`Interface $name`).
-     * @param string $value A value of any type.
+     * @param mixed $value A value of any type.
      */
     public function bindValue(string $key, $value): self
     {

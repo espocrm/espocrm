@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Portal\Loaders;
 
+use Espo\Core\Portal\AclManager as PortalAclManager;
+
 use Espo\Core\{
     Container\Loader,
     AclManager,
@@ -39,12 +41,15 @@ use Espo\Entities\User;
 
 class Acl implements Loader
 {
+    /** @var PortalAclManager */
     private $aclManager;
 
     private $user;
 
     public function __construct(AclManager $aclManager, User $user)
     {
+        assert($aclManager instanceof PortalAclManager);
+
         $this->aclManager = $aclManager;
         $this->user = $user;
     }

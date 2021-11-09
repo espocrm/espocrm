@@ -29,12 +29,10 @@
 
 namespace Espo\Core\Formula;
 
-use Espo\Core\{
-    InjectableFactory,
-    ORM\Entity,
-};
+use Espo\ORM\Entity;
+use Espo\Core\InjectableFactory;
 
-use StdClass;
+use stdClass;
 
 /**
  * Creates an instance of Processor and executes a script.
@@ -68,7 +66,7 @@ class Evaluator
     /**
      * @return mixed
      */
-    public function process(string $expression, ?Entity $entity = null, ?StdClass $variables = null)
+    public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null)
     {
         $this->processor = new Processor(
             $this->injectableFactory, $this->attributeFetcher, $this->functionClassNameMap, $entity, $variables

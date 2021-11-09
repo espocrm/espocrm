@@ -93,7 +93,7 @@ class MessageWrapper
     public function getRawContent(): string
     {
         if (is_null($this->rawContent)) {
-            $this->rawContent = $this->storage->getRawContent($this->id);
+            $this->rawContent = $this->storage->getRawContent((int) $this->id);
         }
 
         return $this->rawContent ?? '';

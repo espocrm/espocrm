@@ -29,8 +29,8 @@
 
 namespace Espo\Core\ORM\Repositories;
 
-use Espo\ORM\EntityManager;
-use Espo\ORM\EntityFactory;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\EntityFactory;
 
 use Espo\Core\Interfaces\Injectable;
 

@@ -51,6 +51,9 @@ use DateTime;
 
 class Recovery
 {
+    /**
+     * Milliseconds.
+     */
     const REQUEST_DELAY = 3000;
 
     const REQUEST_LIFETIME = '3 hours';
@@ -246,7 +249,7 @@ class Recovery
         $timeDiff = $this->getDelay() - floor((microtime(true) - $microtime) / 1000);
 
         if ($noExposure && $timeDiff > 0) {
-            $this->delay($timeDiff);
+            $this->delay((int) $timeDiff);
         }
 
         return true;

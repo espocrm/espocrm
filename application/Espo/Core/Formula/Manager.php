@@ -36,7 +36,7 @@ use Espo\Core\{
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 /**
  * An access point for the formula functionality.
@@ -57,7 +57,7 @@ class Manager
      *
      * @return mixed
      */
-    public function run(string $script, ?Entity $entity = null, ?StdClass $variables = null)
+    public function run(string $script, ?Entity $entity = null, ?stdClass $variables = null)
     {
         return $this->evaluator->process($script, $entity, $variables);
     }

@@ -182,7 +182,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Compare version between installed and a new extensions
+     * Compare version between installed and a new extensions.
      *
      * @return void
      */
@@ -200,7 +200,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * If extension already installed, uninstall an old version
+     * If extension already installed, uninstall an old version.
      *
      * @return void
      */
@@ -208,17 +208,16 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        $this->executeAction(ExtensionManager::UNINSTALL, array(
-                'id' => $extensionEntity->get('id'),
-                'skipSystemRebuild' => true,
-                'skipAfterScript' => true,
-                'parentProcessId' => $this->getProcessId(),
-            )
-        );
+        $this->executeAction(ExtensionManager::UNINSTALL, [
+            'id' => $extensionEntity->get('id'),
+            'skipSystemRebuild' => true,
+            'skipAfterScript' => true,
+            'parentProcessId' => $this->getProcessId(),
+        ]);
     }
 
     /**
-     * Delete extension package
+     * Delete extension package.
      *
      * @return void
      */
@@ -226,10 +225,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        $this->executeAction(ExtensionManager::DELETE, array(
+        $this->executeAction(ExtensionManager::DELETE, [
             'id' => $extensionEntity->get('id'),
             'parentProcessId' => $this->getProcessId(),
-        ));
+        ]);
     }
 
     protected function checkDependencies($dependencyList)
