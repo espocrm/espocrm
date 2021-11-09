@@ -752,25 +752,25 @@ class User extends Record implements
         }
 
         if (
-            property_exists($data, 'portalRolesIds')
-            ||
-            property_exists($data, 'portalsIds')
-            ||
-            property_exists($data, 'contactId')
-            ||
+            property_exists($data, 'portalRolesIds') ||
+            property_exists($data, 'portalsIds') ||
+            property_exists($data, 'contactId') ||
             property_exists($data, 'accountsIds')
         ) {
             $this->clearPortalRolesCache();
         }
 
-        if ($entity->isPortal() && $entity->get('contactId')) {
-            if (
+        if (
+            $entity->isPortal() && $entity->get('contactId') &&
+            (
                 property_exists($data, 'firstName') ||
                 property_exists($data, 'lastName') ||
                 property_exists($data, 'salutationName')
-            ) {
-                $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
+            )
+        ) {
+            $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
 
+            if ($contact) {
                 if (property_exists($data, 'firstName')) {
                     $contact->set('firstName', $data->firstName);
                 }
