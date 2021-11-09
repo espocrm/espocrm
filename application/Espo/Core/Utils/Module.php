@@ -126,29 +126,14 @@ class Module
 
         $moduleNameList = $this->getList();
 
-        $modulesToSort = [];
+        usort($moduleNameList, function (string $m1, string $m2): int {
+            $o1 = $this->get([$m1,  'order'], self::DEFAULT_ORDER);
+            $o2 = $this->get([$m2,  'order'], self::DEFAULT_ORDER);
 
-        foreach ($moduleNameList as $moduleName) {
-            if (empty($moduleName)) {
-                continue;
-            }
+            return $o1 - $o2;
+        });
 
-            if (isset($modulesToSort[$moduleName])) {
-                continue;
-            }
-
-            $modulesToSort[$moduleName] = $this->get([$moduleName,  'order'], self::DEFAULT_ORDER);
-        }
-
-        array_multisort(
-            array_values($modulesToSort),
-            SORT_ASC,
-            array_keys($modulesToSort),
-            SORT_ASC,
-            $modulesToSort
-        );
-
-        $this->orderedList = array_keys($modulesToSort);
+        $this->orderedList = $moduleNameList;
 
         return $this->orderedList;
     }
