@@ -41,7 +41,6 @@ use Espo\Entities\UserData;
 use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Core\{
-    Utils\Metadata,
     Utils\Config,
     Authentication\LoginFactory,
     Authentication\TwoFactor\UserSetupFactory as TwoFactorUserSetupFactory,
@@ -57,8 +56,6 @@ class UserSecurity
 
     private $user;
 
-    private $metadata;
-
     private $config;
 
     private $authLoginFactory;
@@ -68,14 +65,12 @@ class UserSecurity
     public function __construct(
         EntityManager $entityManager,
         User $user,
-        Metadata $metadata,
         Config $config,
         LoginFactory $authLoginFactory,
         TwoFactorUserSetupFactory $twoFactorUserSetupFactory
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
-        $this->metadata = $metadata;
         $this->config = $config;
         $this->authLoginFactory = $authLoginFactory;
         $this->twoFactorUserSetupFactory = $twoFactorUserSetupFactory;

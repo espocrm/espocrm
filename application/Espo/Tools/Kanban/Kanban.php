@@ -204,7 +204,7 @@ class Kanban
 
             $itemQuery = $itemSelectBuilder->build();
 
-            $newOrder = $itemQuery->getOrder() ?? [];
+            $newOrder = $itemQuery->getOrder();
 
             array_unshift($newOrder, [
                 'COALESCE:(kanbanOrder.order, ' . strval($this->maxOrderNumber + 1) . ')',

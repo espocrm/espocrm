@@ -42,7 +42,6 @@ use Espo\Core\{
     Utils\Language,
     Utils\Config,
     Utils\Config\ConfigWriter,
-    Utils\Metadata\Helper as MetadataHelper,
     ORM\EntityManager as OrmEntityManager,
     ServiceFactory,
     DataManager,
@@ -67,8 +66,6 @@ class EntityManager
     private $config;
 
     private $configWriter;
-
-    private $metadataHelper;
 
     private $entityManager;
 
@@ -139,8 +136,6 @@ class EntityManager
         $this->serviceFactory = $serviceFactory;
         $this->dataManager = $dataManager;
         $this->injectableFactory = $injectableFactory;
-
-        $this->metadataHelper = new MetadataHelper($this->metadata);
     }
 
     protected function checkControllerExists(string $name): bool
@@ -547,11 +542,7 @@ class EntityManager
             $this->metadata->set('scopes', $name, $scopeData);
         }
 
-        $isCustom = false;
-
-        if (!empty($scopeData['isCustom'])) {
-            $isCustom = true;
-        }
+        $isCustom = $this->metadata->get(['scopes', $name, 'isCustom']);
 
         if (array_key_exists('statusField', $data)) {
             $scopeData['statusField'] = $data['statusField'];
@@ -714,9 +705,9 @@ class EntityManager
             'scopes',
         ];
 
-        $res = $this->metadata->delete('entityDefs', $name);
-        $res = $this->metadata->delete('clientDefs', $name);
-        $res = $this->metadata->delete('scopes', $name);
+        $this->metadata->delete('entityDefs', $name);
+        $this->metadata->delete('clientDefs', $name);
+        $this->metadata->delete('scopes', $name);
 
         foreach ($this->metadata->get(['entityDefs', $name, 'links'], []) as $link => $item) {
             try {
@@ -1465,7 +1456,7 @@ class EntityManager
         $linkForeign = $this->metadata->get("entityDefs.{$entity}.links.{$link}.foreign");
         $linkType = $this->metadata->get("entityDefs.{$entity}.links.{$link}.type");
 
-        if (!$this->metadata->get('entityDefs', $entity, 'links', $link, 'isCustom')) {
+        if (!$this->metadata->get(['entityDefs', $entity, 'links', $link, 'isCustom'])) {
             throw new Error("Can't remove not custom link.");
         }
 

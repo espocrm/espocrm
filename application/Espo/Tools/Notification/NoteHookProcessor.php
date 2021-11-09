@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\Notification;
 
-use Espo\Core\Utils\Metadata;
 use Espo\Core\AclManager as InternalAclManager;
 use Espo\Core\Acl\Table;
 
@@ -53,8 +52,6 @@ class NoteHookProcessor
 
     private $service;
 
-    private $metadata;
-
     private $entityManager;
 
     private $user;
@@ -64,14 +61,12 @@ class NoteHookProcessor
     public function __construct(
         StreamService $streamService,
         Service $service,
-        Metadata $metadata,
         EntityManager $entityManager,
         User $user,
         InternalAclManager $internalAclManager
     ) {
         $this->streamService = $streamService;
         $this->service = $service;
-        $this->metadata = $metadata;
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->internalAclManager = $internalAclManager;

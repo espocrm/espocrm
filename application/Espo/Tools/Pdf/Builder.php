@@ -31,7 +31,6 @@ namespace Espo\Tools\Pdf;
 
 use Espo\Core\{
     Exceptions\Error,
-    Utils\Metadata,
     InjectableFactory,
 };
 
@@ -41,13 +40,10 @@ class Builder
 
     private $engine;
 
-    private $metadata;
-
     private $injectableFactory;
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->metadata = $metadata;
         $this->injectableFactory = $injectableFactory;
     }
 

@@ -81,7 +81,7 @@ class Layout
     }
 
     /**
-     * @return array|object
+     * @return array|object|null
      */
     public function getOriginal(string $scope, string $name, ?string $setId = null)
     {

@@ -809,7 +809,7 @@ class Email extends Record implements
                 if ($this->fileStorageManager->exists($source)) {
                     $this->entityManager->saveEntity($attachment);
 
-                    $contents = $this->fileStorageManager->getContents($source) ?? '';
+                    $contents = $this->fileStorageManager->getContents($source);
 
                     $this->fileStorageManager->putContents($attachment, $contents);
 

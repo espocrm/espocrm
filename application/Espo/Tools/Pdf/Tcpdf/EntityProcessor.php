@@ -179,7 +179,7 @@ class EntityProcessor
 
             $params = [
                 $value,
-                $typeMap[$codeType] ?? null,
+                $typeMap[$codeType] ?? null, /** @phpstan-ignore-line */
                 '', '',
                 $data['width'] ?? 40,
                 $data['height'] ?? 40,

@@ -420,7 +420,7 @@ class LeadCapture
 
         $terminateAt = $uniqueId->get('terminateAt');
 
-        if (time() > strtotime($terminateAt)) {
+        if (is_string($terminateAt) && time() > strtotime($terminateAt)) {
             return (object) [
                 'status' => 'expired',
                 'message' => $this->defaultLanguage->translate('optInConfirmationExpired', 'messages', 'LeadCapture'),
@@ -481,7 +481,7 @@ class LeadCapture
 
         $terminateAt = $uniqueId->get('terminateAt');
 
-        if (time() > strtotime($terminateAt)) {
+        if (is_string($terminateAt) && time() > strtotime($terminateAt)) {
             throw new Error("LeadCapture: Opt-in cofrmation expired.");
         }
 

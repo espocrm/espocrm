@@ -41,7 +41,6 @@ use Espo\Core\{
     Acl,
     Acl\Table,
     Utils\Config,
-    Utils\Metadata,
     Utils\Language,
     Utils\Util,
     ORM\EntityManager,
@@ -73,8 +72,6 @@ class Pdf
 
     private $config;
 
-    private $metadata;
-
     private $entityManager;
 
     private $acl;
@@ -91,7 +88,6 @@ class Pdf
 
     public function __construct(
         Config $config,
-        Metadata $metadata,
         EntityManager $entityManager,
         Acl $acl,
         Language $defaultLanguage,
@@ -101,7 +97,6 @@ class Pdf
         DataLoaderManager $dataLoaderManager
     ) {
         $this->config = $config;
-        $this->metadata = $metadata;
         $this->entityManager = $entityManager;
         $this->acl = $acl;
         $this->defaultLanguage = $defaultLanguage;

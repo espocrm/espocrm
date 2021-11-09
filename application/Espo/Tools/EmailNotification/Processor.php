@@ -48,7 +48,6 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Utils\Language,
-    Select\SelectBuilderFactory,
     InjectableFactory,
     Utils\TemplateFileManager,
     Mail\EmailSender as EmailSender,
@@ -62,7 +61,7 @@ use Michelf\Markdown;
 
 use Exception;
 use DateTime;
-use StdClass;
+use stdClass;
 use Throwable;
 
 class Processor
@@ -81,8 +80,6 @@ class Processor
 
     private $config;
 
-    private $selectBuilderFactory;
-
     private $injectableFactory;
 
     private $templateFileManager;
@@ -100,7 +97,6 @@ class Processor
         HtmlizerFactory $htmlizerFactory,
         EmailSender $emailSender,
         Config $config,
-        SelectBuilderFactory $selectBuilderFactory,
         InjectableFactory $injectableFactory,
         TemplateFileManager $templateFileManager,
         Metadata $metadata,
@@ -112,7 +108,6 @@ class Processor
         $this->htmlizerFactory = $htmlizerFactory;
         $this->emailSender = $emailSender;
         $this->config = $config;
-        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->injectableFactory = $injectableFactory;
         $this->templateFileManager = $templateFileManager;
         $this->metadata = $metadata;
@@ -758,7 +753,7 @@ class Processor
 
         $noteData = $note->get('data');
 
-        if (!($noteData instanceof StdClass)) {
+        if (!($noteData instanceof stdClass)) {
             return;
         }
 
