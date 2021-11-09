@@ -247,7 +247,7 @@ class Util
      * Get a full path of the file.
      *
      * @param string|array $folderPath
-     * @param string $filePath
+     * @param string|null $filePath
      *
      * @return string
      */

@@ -94,7 +94,7 @@ class Manager
      * If TRUE - returns only file list, if FALSE - only directory list.
      * @param bool $returnSingleArray Return a single array.
      *
-     * @return array<int, string>|array<int, string[]>
+     * @return array<int, string>|array<string, string[]>
      */
     public function getFileList(
         string $path,
@@ -267,7 +267,7 @@ class Manager
                 return $data;
             }
 
-            usleep(self::GET_SAFE_CONTENTS_RETRY_INTERVAL * 1000000);
+            usleep((int) (self::GET_SAFE_CONTENTS_RETRY_INTERVAL * 1000000));
 
             $counter ++;
         }
@@ -370,7 +370,7 @@ class Manager
                 return true;
             }
 
-            usleep(self::RENAME_RETRY_INTERVAL * 1000000);
+            usleep((int) (self::RENAME_RETRY_INTERVAL * 1000000));
 
             $counter++;
         }

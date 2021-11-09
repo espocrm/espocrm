@@ -163,7 +163,7 @@ class Permission
 
         $fileInfo = stat($filePath);
 
-        return substr(base_convert($fileInfo['mode'], 10, 8), -4);
+        return substr(base_convert((string) $fileInfo['mode'], 10, 8), -4);
     }
 
     /**

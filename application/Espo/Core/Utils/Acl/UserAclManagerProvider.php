@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Acl;
 
 use Espo\Entities\User;
+use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
 use Espo\Core\AclManager;
 use Espo\Core\Portal\AclManagerContainer as PortalAclManagerContainer;
@@ -78,6 +79,7 @@ class UserAclManagerProvider
         $aclManager = $this->aclManager;
 
         if ($user->isPortal() && !$this->user->isPortal()) {
+            /** @var ?Portal */
             $portal = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'portals')
