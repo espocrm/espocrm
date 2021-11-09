@@ -58,15 +58,11 @@ class RDBSelectBuilder
 
     private $repository = null;
 
-    private $entityType = null;
-
     private $returnSthCollection = false;
 
     public function __construct(EntityManager $entityManager, string $entityType, ?Select $query = null)
     {
         $this->entityManager = $entityManager;
-
-        $this->entityType = $entityType;
 
         $this->repository = $this->entityManager->getRepository($entityType);
 

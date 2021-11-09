@@ -29,13 +29,10 @@
 
 namespace Espo\ORM\Value;
 
-use StdClass;
-use RuntimeException;
+use stdClass;
 
 class GeneralAttributeExtractor
 {
-    private $defs;
-
     private $factory;
 
     private $cache = [];
@@ -48,7 +45,7 @@ class GeneralAttributeExtractor
     /**
      * Extracts attributes from a value object.
      */
-    public function extract(string $entityType, string $field, ?object $value): StdClass
+    public function extract(string $entityType, string $field, ?object $value): stdClass
     {
         $extractor = $this->getExtractor($entityType, $field);
 

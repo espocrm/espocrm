@@ -55,8 +55,6 @@ class RDBRelationSelectBuilder
 
     private $entity;
 
-    private $entityType;
-
     private $foreignEntityType;
 
     private $relationName;
@@ -86,7 +84,7 @@ class RDBRelationSelectBuilder
 
         $this->relationType = $entity->getRelationType($relationName);
 
-        $this->entityType = $entity->getEntityType();
+        $entityType = $entity->getEntityType();
 
         if ($entity instanceof BaseEntity) {
             $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
@@ -94,7 +92,7 @@ class RDBRelationSelectBuilder
         else {
             $this->foreignEntityType = $this->entityManager
                 ->getDefs()
-                ->getEntity($this->entityType)
+                ->getEntity($entityType)
                 ->getRelation($relationName)
                 ->getForeignEntityType();
         }

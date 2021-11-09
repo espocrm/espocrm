@@ -48,6 +48,9 @@ class MysqlLocker implements Locker
 
     private $queryComposer;
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     private $transactionManager;
 
     private $isLocked = false;

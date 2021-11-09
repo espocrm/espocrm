@@ -74,11 +74,6 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->entityManager->getEntityFactory();
     }
 
-    private function setSql(string $sql): void
-    {
-        $this->sql = $sql;
-    }
-
     private function getSqlExecutor(): SqlExecutor
     {
         return $this->entityManager->getSqlExecutor();
