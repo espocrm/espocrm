@@ -30,10 +30,13 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\Modules\Crm\Entities\Opportunity as OpportunityEntity;
-
 use Espo\ORM\Entity;
+use Espo\Core\Repositories\Database;
 
-class Opportunity extends \Espo\Core\Repositories\Database
+/**
+ * @extends Database<OpportunityEntity>
+ */
+class Opportunity extends Database
 {
     public function beforeSave(Entity $entity, array $options = [])
     {

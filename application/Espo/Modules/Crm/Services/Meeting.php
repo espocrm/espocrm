@@ -31,9 +31,9 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\ORM\Entity;
 use Espo\Modules\Crm\Business\Event\Invitations;
+use Espo\Services\Record;
 
 use Espo\Services\Email as EmailService;
-
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\Exceptions\NotFound;
@@ -41,7 +41,7 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
 
-class Meeting extends \Espo\Services\Record implements
+class Meeting extends Record implements
     Di\HookManagerAware
 {
     use Di\HookManagerSetter;

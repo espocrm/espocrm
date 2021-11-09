@@ -37,6 +37,9 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * @implements Loader<\Espo\Modules\Crm\Entities\TargetList>
+ */
 class EntryCountLoader implements Loader
 {
     private $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];

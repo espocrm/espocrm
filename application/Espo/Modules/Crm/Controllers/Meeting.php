@@ -47,6 +47,7 @@ class Meeting extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
+        /** @var \Espo\Modules\Crm\Entities\Meeting|null */
         $entity = $this->getMeetingService()->getEntity($data->id);
 
         if (!$entity) {
