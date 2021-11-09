@@ -100,7 +100,6 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->object = new Language(
             null,
             $this->fileManager,
-            $this->metadata,
             $reader,
             $this->dataCache,
             false

@@ -134,7 +134,6 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
         if (!$isPortal) {
             $this->resolver = new DefaultFilterResolver(
                 $this->entityType,
-                $this->user,
                 $acl
             );
         }
@@ -142,7 +141,6 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
         if ($isPortal) {
             $this->resolver = new DefaultPortalFilterResolver(
                 $this->entityType,
-                $this->user,
                 $acl
             );
         }

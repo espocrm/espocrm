@@ -52,6 +52,10 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
 
         $this->user->id = 'user-id';
 
+        $this->user
+            ->method('getId')
+            ->willReturn('user-id');
+
         $this->entityType = 'Test';
 
         $this->user
@@ -521,7 +525,6 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
     protected function createFilter(string $className) : AccessControlFilter
     {
         return new $className(
-            $this->entityType,
             $this->user,
             $this->fieldHelper
         );

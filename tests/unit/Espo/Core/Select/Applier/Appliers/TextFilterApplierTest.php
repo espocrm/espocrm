@@ -45,7 +45,6 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
     ORM\Query\Part\Where\OrGroup,
     ORM\Entity,
     Entities\User,
@@ -68,7 +67,6 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->applier = new TextFilterApplier(
             $this->entityType,
             $this->user,
-            $this->config,
             $this->metadataProvider,
             $this->fullTextSearchDataComposerFactory,
             $this->filterFactory
