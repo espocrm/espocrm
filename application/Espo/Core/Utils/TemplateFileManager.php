@@ -40,20 +40,16 @@ class TemplateFileManager
 {
     private $config;
 
-    private $metadata;
-
     private $fileManager;
 
     private $fileReader;
 
     public function __construct(
         Config $config,
-        Metadata $metadata,
         FileManager $fileManager,
         FileReader $fileReader
     ) {
         $this->config = $config;
-        $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->fileReader = $fileReader;
     }

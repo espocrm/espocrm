@@ -406,7 +406,7 @@ class Upgrade implements Command
         try {
             $data = json_decode($result);
         }
-        catch (Exception $e) {
+        catch (Exception $e) { /** @phpstan-ignore-line */
             echo "Could not parse info about next version.\n";
 
             return null;

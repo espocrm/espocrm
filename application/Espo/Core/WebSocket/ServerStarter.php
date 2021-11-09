@@ -60,13 +60,10 @@ class ServerStarter
 
     private $config;
 
-    private $metadata;
-
     public function __construct(Subscriber $subscriber, Config $config, Metadata $metadata)
     {
         $this->subscriber = $subscriber;
         $this->config = $config;
-        $this->metadata = $metadata;
 
         $this->categoriesData = $metadata->get(['app', 'webSocket', 'categories'], []);
 

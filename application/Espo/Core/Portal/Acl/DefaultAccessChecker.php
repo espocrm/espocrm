@@ -34,7 +34,6 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Utils\Config,
     Portal\AclManager as PortalAclManager,
     Portal\Acl\AccessChecker\ScopeChecker,
     Portal\Acl\AccessChecker\ScopeCheckerData,
@@ -59,17 +58,13 @@ class DefaultAccessChecker implements
 {
     private $aclManager;
 
-    private $config;
-
     private $scopeChecker;
 
     public function __construct(
         PortalAclManager $aclManager,
-        Config $config,
         ScopeChecker $scopeChecker
     ) {
         $this->aclManager = $aclManager;
-        $this->config = $config;
         $this->scopeChecker = $scopeChecker;
     }
 

@@ -63,7 +63,7 @@ class EventFactory
             ->withName($event->summary ?? null)
             ->withLocation($event->location ?? null)
             ->withDescription($event->description ?? null)
-            ->withTimezone($ical->calendarTimeZone() ?? null)
+            ->withTimezone($ical->calendarTimeZone() ?? null) /** @phpstan-ignore-line */
             ->withOrganizer($event->organizer ?? null)
             ->withAttendees($event->attendee ?? null);
 

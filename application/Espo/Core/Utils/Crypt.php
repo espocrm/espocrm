@@ -33,8 +33,6 @@ use RuntimeException;
 
 class Crypt
 {
-    private $config;
-
     private $key = null;
 
     private $cryptKey = null;
@@ -43,8 +41,6 @@ class Crypt
 
     public function __construct(Config $config)
     {
-        $this->config = $config;
-
         $this->cryptKey = $config->get('cryptKey', '');
     }
 

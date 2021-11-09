@@ -36,7 +36,6 @@ use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
-    Portal\AclManager,
     Acl\Table,
     Acl\ScopeData,
     Acl\AccessEntityCREDSChecker,
@@ -50,14 +49,10 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     private $defaultAccessChecker;
 
-    private $aclManager;
-
     public function __construct(
-        DefaultAccessChecker $defaultAccessChecker,
-        AclManager $aclManager
+        DefaultAccessChecker $defaultAccessChecker
     ) {
         $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
     }
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool

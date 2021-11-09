@@ -34,18 +34,11 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Portal\Acl\DefaultOwnershipChecker,
     Portal\Acl\OwnershipAccountChecker,
 };
 
 class OwnershipChecker implements OwnershipAccountChecker
 {
-    private $defaultOwnershipChecker;
-
-    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker) {
-        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
-    }
-
     public function checkAccount(User $user, Entity $entity): bool
     {
         $accountIdList = $user->getLinkMultipleIdList('accounts');

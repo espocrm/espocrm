@@ -55,7 +55,10 @@ class TemplateRenderer
 
     private $applicationState;
 
-    private $template;
+    /**
+     * @var ?string
+     */
+    private $template = null;
 
     public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
     {
@@ -114,6 +117,13 @@ class TemplateRenderer
     public function setUseUserTimezone(bool $useUserTimezone = true): self
     {
         $this->useUserTimezone = $useUserTimezone;
+
+        return $this;
+    }
+
+    public function setTemplate(string $template): self
+    {
+        $this->template = $template;
 
         return $this;
     }

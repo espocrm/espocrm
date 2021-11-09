@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Acl;
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 
 /**
@@ -37,6 +37,9 @@ use RuntimeException;
  */
 class FieldData
 {
+    /**
+     * @phpstan-ignore-next-line
+     */
     private $raw;
 
     private $actionData = [];
@@ -77,7 +80,7 @@ class FieldData
     /**
      * Create from a raw table value.
      */
-    public static function fromRaw(StdClass $raw): self
+    public static function fromRaw(stdClass $raw): self
     {
         $obj = new self();
 

@@ -38,15 +38,12 @@ use Espo\{
 
 class OnlyTeam implements Filter
 {
-    private $entityType;
-
     private $user;
 
     private $fieldHelper;
 
-    public function __construct(string $entityType, User $user, FieldHelper $fieldHelper)
+    public function __construct(User $user, FieldHelper $fieldHelper)
     {
-        $this->entityType = $entityType;
         $this->user = $user;
         $this->fieldHelper = $fieldHelper;
     }

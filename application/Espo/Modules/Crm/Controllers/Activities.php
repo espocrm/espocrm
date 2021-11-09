@@ -37,7 +37,6 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     Api\Request,
     Acl,
-    Utils\Config,
     Record\SearchParamsFetcher,
 };
 
@@ -45,7 +44,7 @@ use Espo\Modules\Crm\Services\Activities as Service;
 
 use Espo\Entities\User;
 
-use StdClass;
+use stdClass;
 
 class Activities
 {
@@ -55,8 +54,6 @@ class Activities
 
     private $acl;
 
-    private $config;
-
     private $searchParamsFetcher;
 
     private $service;
@@ -64,13 +61,11 @@ class Activities
     public function __construct(
         User $user,
         Acl $acl,
-        Config $config,
         SearchParamsFetcher $searchParamsFetcher,
         Service $service
     ) {
         $this->user = $user;
         $this->acl = $acl;
-        $this->config = $config;
         $this->searchParamsFetcher = $searchParamsFetcher;
         $this->service = $service;
     }
@@ -257,7 +252,7 @@ class Activities
         ]);
     }
 
-    public function getActionEntityTypeList(Request $request): StdClass
+    public function getActionEntityTypeList(Request $request): stdClass
     {
         $params = $request->getRouteParams();
 

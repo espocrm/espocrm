@@ -33,22 +33,16 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Acl\AssignmentChecker,
-};
+use Espo\Core\Acl\AssignmentChecker;
 
 class AssignmentCheckerManager
 {
     private $checkerCache = [];
 
-    private $metadata;
-
     private $factory;
 
-    public function __construct(Metadata $metadata, AssignmentCheckerFactory $factory)
+    public function __construct(AssignmentCheckerFactory $factory)
     {
-        $this->metadata = $metadata;
         $this->factory = $factory;
     }
 

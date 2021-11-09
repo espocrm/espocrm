@@ -65,6 +65,9 @@ use const JSON_PRESERVE_ZERO_FRACTION;
  */
 class Htmlizer
 {
+    /**
+     * @phpstan-ignore-next-line
+     */
     private $fileManager;
 
     private $dateTime;

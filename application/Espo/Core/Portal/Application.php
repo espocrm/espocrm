@@ -45,8 +45,6 @@ use Espo\Core\{
 
 class Application extends BaseApplication
 {
-    private $portal;
-
     public function __construct(?string $portalId)
     {
         date_default_timezone_set('UTC');
@@ -92,8 +90,6 @@ class Application extends BaseApplication
         if (!$portal->get('isActive')) {
             throw new Forbidden("Portal {$portalId} is not active.");
         }
-
-        $this->portal = $portal;
 
         $this->container->setPortal($portal);
     }

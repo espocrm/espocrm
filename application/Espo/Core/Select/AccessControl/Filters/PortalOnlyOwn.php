@@ -38,15 +38,12 @@ use Espo\{
 
 class PortalOnlyOwn implements Filter
 {
-    private $entityType;
-
     private $user;
 
     private $fieldHelper;
 
-    public function __construct(string $entityType, User $user, FieldHelper $fieldHelper)
+    public function __construct(User $user, FieldHelper $fieldHelper)
     {
-        $this->entityType = $entityType;
         $this->user = $user;
         $this->fieldHelper = $fieldHelper;
     }
@@ -55,7 +52,7 @@ class PortalOnlyOwn implements Filter
     {
         if ($this->fieldHelper->hasCreatedByField()) {
             $queryBuilder->where([
-                'createdById' => $this->user->id,
+                'createdById' => $this->user->getId(),
             ]);
 
             return;

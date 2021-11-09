@@ -66,7 +66,7 @@ class Contact extends Record
                     ]);
                 }
                 else {
-                    if ($entity->get('accountId')) {
+                    if ($entity->get('accountId')) { /** @phpstan-ignore-line */
                         $email->set([
                             'parentType' => 'Account',
                             'parentId' => $entity->get('accountId')

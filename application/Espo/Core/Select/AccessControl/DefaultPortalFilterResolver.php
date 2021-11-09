@@ -29,23 +29,17 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-use Espo\{
-    Core\Portal\Acl,
-    Entities\User,
-};
+use Espo\Core\Portal\Acl;
 
 class DefaultPortalFilterResolver implements FilterResolver
 {
     private $entityType;
 
-    private $user;
-
     private $acl;
 
-    public function __construct(string $entityType, User $user, Acl $acl)
+    public function __construct(string $entityType, Acl $acl)
     {
         $this->entityType = $entityType;
-        $this->user = $user;
         $this->acl = $acl;
     }
 

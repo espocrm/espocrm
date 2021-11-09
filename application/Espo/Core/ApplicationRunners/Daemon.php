@@ -77,7 +77,7 @@ class Daemon implements Runner
 
         $processList = [];
 
-        while (true) {
+        while (true) { /** @phpstan-ignore-line */
             $toSkip = false;
             $runningCount = 0;
 

@@ -109,7 +109,7 @@ class ErrorOutput
         bool $toPrintBody = false
     ): void {
 
-        $message = $exception->getMessage() ?? '';
+        $message = $exception->getMessage();
         $statusCode = $exception->getCode();
 
         if ($route) {
@@ -225,7 +225,7 @@ class ErrorOutput
     {
         $requestBodyString = $this->clearPasswords($request->getBodyContents());
 
-        $message = $exception->getMessage() ?? '';
+        $message = $exception->getMessage();
         $statusCode = $exception->getCode();
 
         $routeParams = $request->getRouteParams();

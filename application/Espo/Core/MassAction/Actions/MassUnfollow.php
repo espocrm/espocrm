@@ -37,7 +37,6 @@ use Espo\Core\{
     MassAction\Result,
     MassAction\Data,
     MassAction\MassAction,
-    Acl,
     ORM\EntityManager,
     Exceptions\Forbidden,
 };
@@ -50,8 +49,6 @@ class MassUnfollow implements MassAction
 {
     private $queryBuilder;
 
-    private $acl;
-
     private $streamService;
 
     private $entityManager;
@@ -60,13 +57,11 @@ class MassUnfollow implements MassAction
 
     public function __construct(
         QueryBuilder $queryBuilder,
-        Acl $acl,
         StreamService $streamService,
         EntityManager $entityManager,
         User $user
     ) {
         $this->queryBuilder = $queryBuilder;
-        $this->acl = $acl;
         $this->streamService = $streamService;
         $this->entityManager = $entityManager;
         $this->user = $user;

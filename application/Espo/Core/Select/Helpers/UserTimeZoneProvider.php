@@ -61,6 +61,6 @@ class UserTimeZoneProvider
             return $this->config->get('timeZone');
         }
 
-        return $preferences->get('timeZone') ?? 'UTC';
+        return $preferences->get('timeZone');
     }
 }

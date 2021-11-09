@@ -33,7 +33,6 @@ use Espo\Core\{
     Exceptions\Error,
     Utils\Util,
     Utils\File\Manager as FileManager,
-    Utils\Metadata,
     Utils\Config,
     Utils\DataCache,
     Utils\Resource\Reader as ResourceReader,
@@ -66,8 +65,6 @@ class Language
 
     private $fileManager;
 
-    private $metadata;
-
     private $resourceReader;
 
     private $dataCache;
@@ -75,7 +72,6 @@ class Language
     public function __construct(
         ?string $language,
         FileManager $fileManager,
-        Metadata $metadata,
         ResourceReader $resourceReader,
         DataCache $dataCache,
         bool $useCache = false,
@@ -84,7 +80,6 @@ class Language
         $this->currentLanguage = $language ?? $this->defaultLanguage;
 
         $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
         $this->resourceReader = $resourceReader;
         $this->dataCache = $dataCache;
 

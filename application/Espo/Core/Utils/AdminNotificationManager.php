@@ -95,7 +95,7 @@ class AdminNotificationManager
         }
 
         if ($this->config->get('adminNotificationsNewExtensionVersion')) {
-            $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade() ?? [];
+            $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
 
             foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
                 $label = 'new' . Util::toCamelCase($extensionName, ' ', true) . 'VersionIsAvailable';

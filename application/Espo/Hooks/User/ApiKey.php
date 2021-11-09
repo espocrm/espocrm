@@ -80,7 +80,7 @@ class ApiKey
             return;
         }
 
-        if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
+        if ($entity->get('authMethod') === 'Hmac') {
             $this->apiKey->removeSecretKeyForUserId($entity->getId());
         }
     }

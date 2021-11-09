@@ -123,7 +123,7 @@ class NamespaceLoader
     {
         $namespaces = $this->getNamespaces();
 
-        return array_keys($namespaces[$type]) ?? [];
+        return array_keys($namespaces[$type]);
     }
 
     private function addNamespace(string $type, string $name, $path): void

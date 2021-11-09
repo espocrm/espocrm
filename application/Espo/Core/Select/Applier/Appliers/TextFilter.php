@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\Utils\Config;
 use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FilterParams;
 use Espo\Core\Select\Text\FullTextSearchData;
@@ -64,8 +63,6 @@ class TextFilter
 
     private $user;
 
-    private $config;
-
     private $metadataProvider;
 
     private $fullTextSearchDataComposerFactory;
@@ -75,14 +72,12 @@ class TextFilter
     public function __construct(
         string $entityType,
         User $user,
-        Config $config,
         MetadataProvider $metadataProvider,
         FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
         FilterFactory $filterFactory
     ) {
         $this->entityType = $entityType;
         $this->user = $user;
-        $this->config = $config;
         $this->metadataProvider = $metadataProvider;
         $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
         $this->filterFactory = $filterFactory;

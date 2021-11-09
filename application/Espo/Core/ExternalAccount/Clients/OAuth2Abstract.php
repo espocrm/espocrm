@@ -249,7 +249,7 @@ abstract class OAuth2Abstract implements IClient
         while (true) {
             usleep($this::LOCK_CHECK_STEP * 1000000);
 
-            if (!$this->isLocked()) {
+            if (!$this->isLocked()) { /** @phpstan-ignore-line */
                 $this->log->debug("Oauth: Waited until unlocked for client {$this->clientId}.");
 
                 $this->reFetch();

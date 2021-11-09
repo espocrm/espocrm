@@ -30,7 +30,6 @@
 namespace Espo\Core\Acl\AssignmentChecker;
 
 use Espo\Core\{
-    Utils\ClassFinder,
     Utils\Metadata,
     InjectableFactory,
     Acl\AssignmentChecker,
@@ -42,18 +41,14 @@ class AssignmentCheckerFactory
 {
     private $defaultClassName = DefaultAssignmentChecker::class;
 
-    private $classFinder;
-
     private $metadata;
 
     private $injectableFactory;
 
     public function __construct(
-        ClassFinder $classFinder,
         Metadata $metadata,
         InjectableFactory $injectableFactory
     ) {
-        $this->classFinder = $classFinder;
         $this->metadata = $metadata;
         $this->injectableFactory = $injectableFactory;
     }

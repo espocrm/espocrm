@@ -44,8 +44,6 @@ use Espo\Core\Utils\Route;
 use Espo\Core\Utils\ClientManager;
 use Espo\Core\ApplicationRunners\EntryPoint as EntryPointRunner;
 
-use Espo\ORM\EntityManager;
-
 use Slim\ResponseEmitter;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Psr7\Response;
@@ -61,8 +59,6 @@ class Starter
 
     private $entryPointManager;
 
-    private $entityManager;
-
     private $clientManager;
 
     private $applicationUser;
@@ -76,7 +72,6 @@ class Starter
     public function __construct(
         AuthenticationFactory $authenticationFactory,
         EntryPointManager $entryPointManager,
-        EntityManager $entityManager,
         ClientManager $clientManager,
         ApplicationUser $applicationUser,
         AuthTokenManager $authTokenManager,
@@ -85,7 +80,6 @@ class Starter
     ) {
         $this->authenticationFactory = $authenticationFactory;
         $this->entryPointManager = $entryPointManager;
-        $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->applicationUser = $applicationUser;
         $this->authTokenManager = $authTokenManager;

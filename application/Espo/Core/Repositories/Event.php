@@ -107,7 +107,6 @@ class Event extends Database implements
             $this->preserveDuration &&
             $entity->isAttributeChanged('dateStart') &&
             $entity->get('dateStart') &&
-            $entity->isAttributeChanged('dateStart') &&
             !$entity->isAttributeChanged('dateEnd')
         ) {
             $dateEndPrevious = $entity->getFetched('dateEnd');

@@ -392,17 +392,13 @@ class Processor
 
         $target = $this->entityManager->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
 
-        if (!$target || !$target->getId() || !$target->get('emailAddress')) {
-            $queueItem->set('status', 'Failed');
-
-            $this->entityManager->saveEntity($queueItem);
-
-            return false;
-        }
-
         $emailAddress = $target->get('emailAddress');
 
-        if (!$emailAddress) {
+        if (
+            !$target ||
+            !$target->getId() ||
+            !$emailAddress
+        ) {
             $queueItem->set('status', 'Failed');
 
             $this->entityManager->saveEntity($queueItem);

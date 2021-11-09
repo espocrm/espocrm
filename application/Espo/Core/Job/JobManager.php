@@ -32,7 +32,6 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
-    ORM\EntityManager,
     Utils\Log,
 };
 
@@ -55,8 +54,6 @@ class JobManager
 
     private $fileManager;
 
-    private $entityManager;
-
     private $jobRunner;
 
     private $log;
@@ -72,7 +69,6 @@ class JobManager
     public function __construct(
         Config $config,
         FileManager $fileManager,
-        EntityManager $entityManager,
         JobRunner $jobRunner,
         Log $log,
         ScheduleProcessor $scheduleProcessor,
@@ -82,7 +78,6 @@ class JobManager
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
-        $this->entityManager = $entityManager;
         $this->jobRunner = $jobRunner;
         $this->log = $log;
         $this->scheduleProcessor = $scheduleProcessor;
