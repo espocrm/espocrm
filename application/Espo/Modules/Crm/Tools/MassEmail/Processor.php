@@ -31,6 +31,10 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Laminas\Mail\Message;
 
+use Espo\Entities\EmailTemplate;
+use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+
 use Espo\Core\{
     Exceptions\Error,
     ORM\EntityManager,
@@ -57,15 +61,15 @@ use DateTime;
 
 class Processor
 {
-    protected $config;
+    private $config;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $defaultLanguage;
+    private $defaultLanguage;
 
-    protected $emailSender;
+    private $emailSender;
 
     protected const MAX_ATTEMPT_COUNT = 3;
 
@@ -93,7 +97,7 @@ class Processor
         $this->log = $log;
     }
 
-    public function process(Entity $massEmail, bool $isTest = false): void
+    public function process(MassEmail $massEmail, bool $isTest = false): void
     {
         $maxBatchSize = $this->config->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
 
@@ -103,7 +107,7 @@ class Processor
             $threshold->modify('-1 hour');
 
             $sentLastHourCount = $this->entityManager
-                ->getRepository('EmailQueueItem')
+                ->getRDBRepository('EmailQueueItem')
                 ->where([
                     'status' => 'Sent',
                     'sentAt>' => $threshold->format('Y-m-d H:i:s'),
@@ -118,7 +122,7 @@ class Processor
         }
 
         $queueItemList = $this->entityManager
-            ->getRepository('EmailQueueItem')
+            ->getRDBRepository('EmailQueueItem')
             ->where([
                 'status' => 'Pending',
                 'massEmailId' => $massEmail->getId(),
@@ -151,8 +155,9 @@ class Processor
             return;
         }
 
+        /** @var iterable<\Espo\Entities\Attachment> */
         $attachmentList = $this->entityManager
-            ->getRepository('EmailTemplate')
+            ->getRDBRepository('EmailTemplate')
             ->getRelation($emailTemplate, 'attachments')
             ->find();
 
@@ -169,10 +174,8 @@ class Processor
             }
 
             if (
-                $inboundEmail->get('status') !== 'Active'
-                ||
-                !$inboundEmail->get('useSmtp')
-                ||
+                $inboundEmail->get('status') !== 'Active' ||
+                !$inboundEmail->get('useSmtp') ||
                 !$inboundEmail->get('smtpIsForMassEmail')
             ) {
                 throw new Error(
@@ -209,7 +212,7 @@ class Processor
 
         if (!$isTest) {
             $countLeft = $this->entityManager
-                ->getRepository('EmailQueueItem')
+                ->getRDBRepository('EmailQueueItem')
                 ->where([
                     'status' => 'Pending',
                     'massEmailId' => $massEmail->getId(),
@@ -226,9 +229,9 @@ class Processor
     }
 
     protected function getPreparedEmail(
-        Entity $queueItem,
-        Entity $massEmail,
-        Entity $emailTemplate,
+        EmailQueueItem $queueItem,
+        MassEmail $massEmail,
+        EmailTemplate $emailTemplate,
         Entity $target,
         iterable $trackingUrlList = []
     ): ?Email {
@@ -350,7 +353,7 @@ class Processor
         $this->entityManager->saveEntity($massEmail);
 
         $queueItemList = $this->entityManager
-            ->getRepository('EmailQueueItem')
+            ->getRDBRepository('EmailQueueItem')
             ->where([
                 'status' => 'Pending',
                 'massEmailId' => $massEmail->getId(),
@@ -364,10 +367,13 @@ class Processor
         }
     }
 
+    /**
+     * @param iterable<\Espo\Entities\Attachment> $attachmentList
+     */
     protected function sendQueueItem(
-        Entity $queueItem,
-        Entity $massEmail,
-        Entity $emailTemplate,
+        EmailQueueItem $queueItem,
+        MassEmail $massEmail,
+        EmailTemplate $emailTemplate,
         $attachmentList = [],
         ?Campaign $campaign = null,
         bool $isTest = false,
@@ -404,9 +410,10 @@ class Processor
             return false;
         }
 
-        $emailAddressRecord = $this->entityManager
-            ->getRepository('EmailAddress')
-            ->getByAddress($emailAddress);
+        /** @var EmailAddressRepository $emailAddressRepository */
+        $emailAddressRepository = $this->entityManager->getRepository('EmailAddress');
+
+        $emailAddressRecord = $emailAddressRepository->getByAddress($emailAddress);
 
         if ($emailAddressRecord) {
             if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
@@ -422,7 +429,7 @@ class Processor
 
         if ($campaign) {
             $trackingUrlList = $this->entityManager
-                ->getRepository('Campaign')
+                ->getRDBRepository('Campaign')
                 ->getRelation($campaign, 'trackingUrls')
                 ->find();
         }
