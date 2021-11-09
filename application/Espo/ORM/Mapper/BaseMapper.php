@@ -525,6 +525,7 @@ class BaseMapper implements RDBMapper
                     $update[$column] = $value;
                 }
 
+                /** @phpstan-ignore-next-line */
                 if (empty($update)) {
                     return;
                 }

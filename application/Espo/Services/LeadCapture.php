@@ -41,7 +41,7 @@ use Espo\Core\{
     Utils\Util,
 };
 
-use StdClass;
+use stdClass;
 
 class LeadCapture extends Record
 {
@@ -164,12 +164,12 @@ class LeadCapture extends Record
         return $this->injectableFactory->create(Tool::class);
     }
 
-    public function leadCapture(string $apiKey, StdClass $data)
+    public function leadCapture(string $apiKey, stdClass $data)
     {
         $this->createTool()->capture($apiKey, $data);
     }
 
-    public function jobOptInConfirmation(StdClass $data)
+    public function jobOptInConfirmation(stdClass $data)
     {
         if (empty($data->id)) {
             throw new Error();
@@ -178,7 +178,7 @@ class LeadCapture extends Record
         $this->createTool()->sendOptInConfirmation($data->id);
     }
 
-    public function confirmOptIn(string $id): StdClass
+    public function confirmOptIn(string $id): stdClass
     {
         return $this->createTool()->confirmOptIn($id);
     }

@@ -94,12 +94,13 @@ class RDBRepository implements Repository
      */
     public function getNew(): Entity
     {
-        /** @var TEntity $entity */
         $entity = $this->entityFactory->create($this->entityType);
 
         if ($entity instanceof BaseEntity) {
             $entity->populateDefaults();
         }
+
+        /** @var TEntity $entity */
 
         return $entity;
     }

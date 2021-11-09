@@ -37,7 +37,7 @@ use Espo\Core\{
     Utils\FieldUtil,
 };
 
-use StdClass;
+use stdClass;
 
 /**
  * A field validation manager.
@@ -63,17 +63,17 @@ class FieldValidationManager
      * Process validation.
      *
      * @param Entity $entity An entity.
-     * @param ?StdClass $data Raw request payload data.
+     * @param ?stdClass $data Raw request payload data.
      * @param ?FieldValidationParams $params Validation additional parameters.
      *
      * @throws BadRequest If data is not valid.
      */
-    public function process(Entity $entity, ?StdClass $data = null, ?FieldValidationParams $params = null): void
+    public function process(Entity $entity, ?stdClass $data = null, ?FieldValidationParams $params = null): void
     {
         $dataIsSet = $data !== null;
 
         if (!$data) {
-            $data = $data ?? (object) [];
+            $data = (object) [];
         }
 
         if (!$params) {
@@ -104,10 +104,10 @@ class FieldValidationManager
     /**
      * Check a specific field for a specific validation type.
      */
-    public function check(Entity $entity, string $field, string $type, ?StdClass $data = null): bool
+    public function check(Entity $entity, string $field, string $type, ?stdClass $data = null): bool
     {
         if (!$data) {
-            $data = $data ?? (object) [];
+            $data = (object) [];
         }
 
         $entityType = $entity->getEntityType();
@@ -138,7 +138,7 @@ class FieldValidationManager
         return true;
     }
 
-    private function processField(Entity $entity, string $field, FieldValidationParams $params, StdClass $data): void
+    private function processField(Entity $entity, string $field, FieldValidationParams $params, stdClass $data): void
     {
         $entityType = $entity->getEntityType();
 
@@ -192,7 +192,7 @@ class FieldValidationManager
     private function processFieldRawCheck(
         string $entityType,
         string $type,
-        StdClass $data,
+        stdClass $data,
         string $field,
         $validationValue
     ): bool {
@@ -236,7 +236,7 @@ class FieldValidationManager
         $this->checkerCache[$key] = $this->factory->create($entityType, $field);
     }
 
-    private function isFieldSetInData(string $entityType, string $field, StdClass $data): bool
+    private function isFieldSetInData(string $entityType, string $field, stdClass $data): bool
     {
         $attributeList = $this->fieldUtil->getActualAttributeList($entityType, $field);
 

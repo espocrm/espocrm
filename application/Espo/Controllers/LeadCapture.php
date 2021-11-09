@@ -41,7 +41,7 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
+use stdClass;
 
 class LeadCapture extends Record
 {
@@ -52,10 +52,6 @@ class LeadCapture extends Record
 
         if (empty($params['apiKey'])) {
             throw new BadRequest('No API key provided.');
-        }
-
-        if (empty($data)) {
-            throw new BadRequest('No payload provided.');
         }
 
         $allowOrigin = $this->config->get('leadCaptureAllowOrigin', '*');
@@ -88,7 +84,7 @@ class LeadCapture extends Record
         return true;
     }
 
-    public function postActionGenerateNewApiKey(Request $request): StdClass
+    public function postActionGenerateNewApiKey(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 

@@ -56,11 +56,7 @@ class Lead extends \Espo\Core\Controllers\Record
 
         $entity = $this->getLeadService()->convert($data->id, $data->records, $additionalData);
 
-        if (!empty($entity)) {
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
+        return $entity->getValueMap();
     }
 
     public function postActionGetConvertAttributes(Request $request)

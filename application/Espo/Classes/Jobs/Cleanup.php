@@ -609,10 +609,6 @@ class Cleanup implements JobDataLess
                     $where[$key] = $value;
                 }
 
-                if (empty($where)) {
-                    continue;
-                }
-
                 $relationEntityType = ucfirst($relationName);
 
                 if (!$this->entityManager->hasRepository($relationEntityType)) {

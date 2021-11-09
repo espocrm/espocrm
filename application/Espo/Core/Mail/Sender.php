@@ -101,6 +101,9 @@ class Sender
 
     private $message = null;
 
+    /**
+     * @var iterable<Attachment>|null
+     */
     private $attachmentList = null;
 
     public function __construct(
@@ -196,6 +199,7 @@ class Sender
      * With specific attachments.
      *
      * @param Attachment[] $attachmentList
+     * @phpstan iterable<Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
@@ -489,7 +493,7 @@ class Sender
                 ->find();
             }
 
-        $attachmentList = $this->attachmentList ?? $attachmentList ?? [];
+        $attachmentList = $this->attachmentList ?? $attachmentList;
 
         foreach ($attachmentList as $attachment) {
             $attachmentCollection[] = $attachment;

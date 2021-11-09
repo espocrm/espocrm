@@ -97,7 +97,7 @@ class BaseEntity implements Entity
         ?EntityManager $entityManager = null,
         ?ValueAccessorFactory $valueAccessorFactory = null
     ) {
-        $this->entityType = $entityType ?? null;
+        $this->entityType = $entityType;
 
         $this->entityManager = $entityManager;
 

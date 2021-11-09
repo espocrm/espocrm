@@ -197,11 +197,8 @@ class TargetList extends \Espo\Services\Record implements
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
-        if (!$foreignEntityType) {
-            throw new Error();
-        }
 
-        if (empty($foreignEntityType)) {
+        if (!$foreignEntityType) {
             throw new Error();
         }
 

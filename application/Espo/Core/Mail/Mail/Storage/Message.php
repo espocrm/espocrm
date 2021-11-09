@@ -30,7 +30,6 @@
 namespace Espo\Core\Mail\Mail\Storage;
 
 use Espo\Core\Mail\Mail\Headers;
-use Laminas\Mail\Header\HeaderInterface;
 use Laminas\Mime;
 use Laminas\Mail\Storage\Exception;
 use Laminas\Mail\Storage\AbstractStorage;
@@ -99,6 +98,7 @@ class Message extends \Laminas\Mail\Storage\Message
     public function __isset($name)
     {
         $headers = $this->getHeaders();
+        /** @phpstan-ignore-next-line */
         if (empty($headers) || !is_object($headers)) {
             return false;
         }

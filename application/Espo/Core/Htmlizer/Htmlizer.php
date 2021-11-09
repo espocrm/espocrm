@@ -140,7 +140,7 @@ class Htmlizer
         $renderer = LightnCandy::prepare($code);
 
         if ($additionalData === null) {
-            $additionalData = $additionalData ?? [];
+            $additionalData = [];
         }
 
         $data = $entity ?

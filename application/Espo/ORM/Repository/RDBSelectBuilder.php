@@ -418,11 +418,9 @@ class RDBSelectBuilder
      */
     protected function getMergedParams(?array $params = null): Select
     {
-        if (!$params || empty($params)) {
+        if ($params === null || empty($params)) {
             return $this->builder->build();
         }
-
-        $params = $params ?? [];
 
         $builtParams = $this->builder->build()->getRaw();
 

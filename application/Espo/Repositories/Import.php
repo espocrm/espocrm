@@ -45,8 +45,6 @@ class Import extends Database
     {
         $entityType = $entity->get('entityType');
 
-        $params = $params ?? [];
-
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
         return $this->entityManager
