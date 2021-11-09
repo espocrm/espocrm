@@ -31,10 +31,8 @@ namespace Espo\Core\Acl\Table;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Entities\{
-    User,
-    Role as RoleEntity,
-};
+use Espo\Entities\User;
+use Espo\Entities\Role as RoleEntity;
 
 class DefaultRoleListProvider implements RoleListProvider
 {
@@ -64,6 +62,7 @@ class DefaultRoleListProvider implements RoleListProvider
             $roleList[] = $role;
         }
 
+        /** @var iterable<\Espo\Entities\Team> */
         $teamList = $this->entityManager
             ->getRDBRepository('User')
             ->getRelation($this->user, 'teams')

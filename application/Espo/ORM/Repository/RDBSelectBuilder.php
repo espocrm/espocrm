@@ -355,7 +355,8 @@ class RDBSelectBuilder
      * * `select(string|Expression $expression, string $alias)`
      * * `select(SelectExpression $selectItem)`
      *
-     * @param Selection|Selection[]|Expression|Expression[]|string[]|string $select An array of expressions or one expression.
+     * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
+     * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>

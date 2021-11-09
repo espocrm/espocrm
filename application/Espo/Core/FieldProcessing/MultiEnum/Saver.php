@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\MultiEnum;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Repositories\ArrayValue as Repository;
 
@@ -69,6 +70,8 @@ class Saver implements SaverInterface
 
         /** @var Repository $repository */
         $repository = $this->entityManager->getRepository('ArrayValue');
+
+        assert($entity instanceof CoreEntity);
 
         $repository->storeEntityAttribute($entity, $name);
     }

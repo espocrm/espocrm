@@ -177,7 +177,7 @@ class Client
             case self::HTTP_METHOD_PUT:
             case self::HTTP_METHOD_PATCH:
                 if (is_array($params)) {
-                    $postFields = http_build_query($params, null, '&');
+                    $postFields = http_build_query($params, '', '&');
                 } else {
                     $postFields = $params;
                 }
@@ -197,7 +197,7 @@ class Client
                 }
 
                 if (is_array($params)) {
-                    $url .= http_build_query($params, null, '&');
+                    $url .= http_build_query($params, '', '&');
                 }
 
                 break;

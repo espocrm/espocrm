@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
 use Espo\Repositories\EmailAddress as Repository;
+use Espo\ORM\Entity;
 
 use Espo\Entities\{
     User,
@@ -37,7 +38,6 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     AclManager,
 };

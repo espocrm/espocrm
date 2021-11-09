@@ -355,6 +355,7 @@ class Authentication
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
+            /** @var ?Portal */
             $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
 
             if ($portal) {

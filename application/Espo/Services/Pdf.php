@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\Exceptions\{
     Forbidden,
     NotFound,
@@ -43,7 +45,6 @@ use Espo\Core\{
     Utils\Language,
     Utils\Util,
     ORM\EntityManager,
-    ORM\Entity,
     Select\SelectBuilderFactory,
     Record\ServiceContainer,
     Job\QueueName,

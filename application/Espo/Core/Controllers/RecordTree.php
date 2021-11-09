@@ -54,6 +54,10 @@ class RecordTree extends Record
         $maxDepth = $request->getQueryParam('maxDepth');
         $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
 
+        if ($maxDepth !== null) {
+            $maxDepth = (int) $maxDepth;
+        }
+
         $collection = $this->getRecordTreeService()->getTree(
             $parentId,
             [

@@ -292,7 +292,7 @@ abstract class OAuth2Abstract implements IClient
     /**
      *
      * @param string $url
-     * @param ?array $params
+     * @param array|string|null $params
      * @param string $httpMethod
      * @param ?string $contentType
      * @param bool $allowRenew

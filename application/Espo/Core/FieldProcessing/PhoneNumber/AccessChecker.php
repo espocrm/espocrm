@@ -31,13 +31,14 @@ namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\Repositories\PhoneNumber as Repository;
 
+use Espo\ORM\Entity;
+
 use Espo\Entities\{
     User,
     PhoneNumber,
 };
 
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     AclManager,
 };
