@@ -34,7 +34,13 @@ use Espo\ORM\{
     Entity,
 };
 
+/**
+ * @template TEntity of Entity
+ */
 interface WhereBuilder
 {
+    /**
+     * @phpstan-param TEntity $entity
+     */
     public function build(Entity $entity): ?WhereItem;
 }

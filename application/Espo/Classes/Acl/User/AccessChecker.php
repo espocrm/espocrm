@@ -42,6 +42,9 @@ use Espo\Core\{
     AclManager,
 };
 
+/**
+ * @implements AccessEntityCREDSChecker<User>
+ */
 class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
@@ -132,6 +135,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var User $entity */
+
         return $this->aclManager->checkUserPermission($user, $entity, 'user');
     }
 }

@@ -35,8 +35,13 @@ use Espo\Core\FieldProcessing\Loader\Params;
 
 /**
  * Processes loading special fields before output.
+ *
+ * @template TEntity of Entity
  */
 interface Loader
 {
+    /**
+     * @phpstan-param TEntity $entity
+     */
     public function process(Entity $entity, Params $params): void;
 }

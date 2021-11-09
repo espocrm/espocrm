@@ -93,6 +93,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($parent->getEntityType() === 'Note') {
+            /** @var Note $parent */
             $result = $this->checkEntityReadNoteParent($user, $parent);
 
             if ($result !== null) {

@@ -87,7 +87,7 @@ class Pdf implements EntryPoint
             ->setHeader('Content-Disposition', 'inline; filename="' . basename($fileName) . '"');
 
         if (!$request->getServerParam('HTTP_ACCEPT_ENCODING')) {
-            $response->setHeader('Content-Length', strlen($contents));
+            $response->setHeader('Content-Length', (string) strlen($contents));
         }
 
         $response->writeBody($contents);

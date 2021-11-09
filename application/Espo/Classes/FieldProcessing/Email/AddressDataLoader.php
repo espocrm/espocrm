@@ -39,6 +39,9 @@ use Espo\Core\{
 
 use Espo\Repositories\Email as EmailRepository;
 
+/**
+ * @implements Loader<\Espo\Entities\Email>
+ */
 class AddressDataLoader implements Loader
 {
     private $entityManager;

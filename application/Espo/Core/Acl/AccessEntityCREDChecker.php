@@ -29,6 +29,11 @@
 
 namespace Espo\Core\Acl;
 
+/**
+ * @template TEntity of \Espo\ORM\Entity
+ * @extends AccessEntityCreateChecker<TEntity>, AccessEntityCreateChecker<TEntity>, AccessEntityReadChecker<TEntity>,
+ * AccessEntityEditChecker<TEntity>, AccessEntityDeleteChecker<TEntity>
+ */
 interface AccessEntityCREDChecker extends
 
     AccessEntityCreateChecker,

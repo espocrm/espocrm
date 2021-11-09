@@ -44,6 +44,8 @@ class Company implements WhereBuilder
 {
     public function build(Entity $entity): ?WhereItem
     {
+        assert($entity instanceof CoreEntity);
+
         $orBuilder = OrGroup::createBuilder();
 
         $toCheck = false;

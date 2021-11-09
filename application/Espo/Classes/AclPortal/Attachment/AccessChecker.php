@@ -45,6 +45,9 @@ use Espo\Core\{
     Portal\Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<User>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
@@ -94,6 +97,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($parent->getEntityType() === 'Note') {
+            /** @var Note $parent */
             $result = $this->checkEntityReadNoteParent($user, $parent);
 
             if ($result !== null) {

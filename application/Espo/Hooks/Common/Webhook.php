@@ -30,6 +30,7 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Utils\Metadata,
@@ -60,6 +61,10 @@ class Webhook
             return;
         }
 
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         if ($entity->isNew()) {
             $this->webhookManager->processCreate($entity);
         }
@@ -75,6 +80,10 @@ class Webhook
         }
 
         if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 

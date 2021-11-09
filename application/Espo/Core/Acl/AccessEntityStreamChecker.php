@@ -30,13 +30,17 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface AccessEntityStreamChecker extends AccessStreamChecker
 {
     /**
      * Check 'stream' access for an entity.
+     *
+     * @phpstan-param TEntity $entity
      */
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool;
 }

@@ -31,6 +31,7 @@ namespace Espo\Hooks\Note;
 
 use Espo\Tools\Notification\NoteMentionHookProcessor;
 use Espo\ORM\Entity;
+use Espo\Entities\Note;
 
 class Mentions
 {
@@ -48,6 +49,8 @@ class Mentions
         if (!empty($options['silent'])) {
             return;
         }
+
+        assert($entity instanceof Note);
 
         $this->processor->beforeSave($entity);
     }

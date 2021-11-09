@@ -39,6 +39,9 @@ use Espo\Core\{
 
 use Espo\Repositories\Import as ImportRepository;
 
+/**
+ * @implements Loader<\Espo\Entities\Import>
+ */
 class CountsLoader implements Loader
 {
     private $entityManager;

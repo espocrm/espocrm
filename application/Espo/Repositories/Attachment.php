@@ -76,7 +76,7 @@ class Attachment extends Database implements
         }
     }
 
-    protected function processBeforeSaveNew(Entity $entity): void
+    protected function processBeforeSaveNew(AttachmentEntity $entity): void
     {
         if (!$entity->get('storage')) {
             $defaultStorage = $this->config->get('defaultFileStorage');

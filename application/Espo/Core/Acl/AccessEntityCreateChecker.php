@@ -30,13 +30,17 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface AccessEntityCreateChecker extends AccessCreateChecker
 {
     /**
      * Check 'create' access for an entity.
+     *
+     * @phpstan-param TEntity $entity
      */
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
 }

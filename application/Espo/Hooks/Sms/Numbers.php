@@ -47,6 +47,8 @@ class Numbers
 
     public function beforeSave(Entity $entity): void
     {
+        assert($entity instanceof Sms);
+
         $this->processNumbers($entity);
     }
 

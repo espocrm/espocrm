@@ -30,8 +30,8 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\FieldProcessing\SaveProcessor;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 class FieldProcessing
 {
@@ -47,6 +47,10 @@ class FieldProcessing
     public function afterSave(Entity $entity, array $options = []): void
     {
         if (!empty($options['skipFieldProcessing'])) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 

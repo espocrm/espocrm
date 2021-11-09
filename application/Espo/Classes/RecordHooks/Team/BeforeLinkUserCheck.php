@@ -36,6 +36,9 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
+/**
+ * @implements LinkHook<\Espo\Entities\Team>
+ */
 class BeforeLinkUserCheck implements LinkHook
 {
     public function process(Entity $entity, string $link, Entity $foreignEntity): void
@@ -43,6 +46,8 @@ class BeforeLinkUserCheck implements LinkHook
         if ($link !== 'users') {
             return;
         }
+
+        assert($foreignEntity instanceof User);
 
         $this->processUserCheck($foreignEntity);
     }

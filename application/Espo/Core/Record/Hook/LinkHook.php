@@ -31,7 +31,13 @@ namespace Espo\Core\Record\Hook;
 
 use Espo\ORM\Entity;
 
+/**
+ * @template TEntity of Entity
+ */
 interface LinkHook
 {
+    /**
+     * @phpstan-param TEntity $entity
+     */
     public function process(Entity $entity, string $link, Entity $foreignEntity): void;
 }

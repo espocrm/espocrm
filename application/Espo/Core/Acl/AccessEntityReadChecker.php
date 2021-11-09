@@ -30,13 +30,17 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface AccessEntityReadChecker extends AccessReadChecker
 {
     /**
      * Check 'read' access for entity.
+     *
+     * @phpstan-param TEntity $entity
      */
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool;
 }

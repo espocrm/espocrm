@@ -31,6 +31,7 @@ namespace Espo\Hooks\Note;
 
 use Espo\ORM\Entity;
 use Espo\Tools\Notification\NoteHookProcessor;
+use Espo\Entities\Note;
 
 class Notifications
 {
@@ -48,6 +49,8 @@ class Notifications
         if (!$entity->isNew() && empty($options['forceProcessNotifications'])) {
             return;
         }
+
+        assert($entity instanceof Note);
 
         $this->processor->afterSave($entity);
     }
