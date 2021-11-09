@@ -34,8 +34,9 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\Integration as IntegrationEntity;
 use Espo\Entities\ExternalAccount as ExternalAccountEntity;
 
+use Espo\ORM\EntityManager;
+
 use Espo\Core\{
-    ORM\EntityManager,
     Utils\Metadata,
     Utils\Config,
     InjectableFactory,

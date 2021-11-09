@@ -316,7 +316,7 @@ class RDBSelectBuilder
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy
+     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): self

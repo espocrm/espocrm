@@ -406,6 +406,7 @@ class Converter
         }
 
         if (!empty($uniqueIndex)) {
+            /** @var string[] $uniqueIndex */
             $uniqueIndexName = implode('_', $uniqueIndex);
 
             $table->addUniqueIndex(

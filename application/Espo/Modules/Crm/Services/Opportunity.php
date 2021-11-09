@@ -364,11 +364,11 @@ class Opportunity extends Record
         $dtTo = new DateTime($dateTo);
 
         if (intval($dtTo->format('d')) !== 1) {
-            $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+            $dtTo->setDate((int) $dtTo->format('Y'), (int) $dtTo->format('m'), 1);
             $dtTo->modify('+ 1 month');
         }
         else {
-            $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
+            $dtTo->setDate((int) $dtTo->format('Y'), (int) $dtTo->format('m'), 1);
         }
 
         $interval = new DateInterval('P1M');
@@ -559,6 +559,7 @@ class Opportunity extends Record
 
     public function getEmailAddressList(string $id): array
     {
+        /** @var OpportunityEntity */
         $entity = $this->getEntity($id);
 
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->getEntityType());

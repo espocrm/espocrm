@@ -79,6 +79,7 @@ class EmailTemplate extends Record implements
 
     public function parse(string $id, array $params = [], bool $copyAttachments = false): array
     {
+        /** @var EmailTemplateEntity|null */
         $emailTemplate = $this->getEntity($id);
 
         if (empty($emailTemplate)) {

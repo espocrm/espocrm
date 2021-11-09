@@ -306,7 +306,7 @@ class EmailAccount extends Record implements
         return $this->injectableFactory->create(Importer::class);
     }
 
-    public function fetchFromMailServer(Entity $emailAccount)
+    public function fetchFromMailServer(EmailAccountEntity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Email Account {$emailAccount->getId()} is not active.");
@@ -622,14 +622,17 @@ class EmailAccount extends Record implements
         }
     }
 
-    public function findAccountForUser(User $user, $address)
+    /**
+     * @return EmailAccountEntity|null
+     */
+    public function findAccountForUser(User $user, string $address)
     {
         $emailAccount = $this->entityManager
             ->getRDBRepository('EmailAccount')
             ->where([
                 'emailAddress' => $address,
                 'assignedUserId' => $user->getId(),
-                'status' => 'Active'
+                'status' => 'Active',
             ])
             ->findOne();
 
@@ -699,7 +702,7 @@ class EmailAccount extends Record implements
         }
 
         try {
-            $size = $storage->getSize($id);
+            $size = $storage->getSize((int) $id);
         }
         catch (Throwable $e) {
             return false;

@@ -113,7 +113,7 @@ trait SelectingBuilderTrait
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction OrderExpression::ASC|OrderExpression::DESC.
      *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]> $orderBy
+     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      */
     public function order($orderBy, $direction = null): self
     {

@@ -53,6 +53,8 @@ class Portal extends Record implements
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
+        /** @var PortalEntity $entity */
+
         $this->loadUrlField($entity);
 
         if (property_exists($data, 'portalRolesIds')) {

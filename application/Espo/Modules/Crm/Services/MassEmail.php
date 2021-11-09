@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Modules\Crm\Entities\MassEmail as MassEmailEntity;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
@@ -118,14 +120,14 @@ class MassEmail extends RecordService
         $this->processTestSending($massEmail);
     }
 
-    protected function createTestQueue(Entity $massEmail, iterable $targetList): void
+    protected function createTestQueue(MassEmailEntity $massEmail, iterable $targetList): void
     {
         $queue = $this->injectableFactory->create(Queue::class);
 
         $queue->create($massEmail, true, $targetList);
     }
 
-    protected function processTestSending(Entity $massEmail): void
+    protected function processTestSending(MassEmailEntity $massEmail): void
     {
         $processor = $this->injectableFactory->create(Processor::class);
 

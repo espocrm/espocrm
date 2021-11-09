@@ -33,6 +33,7 @@ use Espo\Services\Settings as SettingsService;
 
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 use Espo\Repositories\ArrayValue as ArrayValueRepository;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Acl,
@@ -510,6 +511,10 @@ class App
 
             while ($dataRow = $sth->fetch()) {
                 $entity = $this->entityManager->getEntityFactory()->create($scope);
+
+                if (!$entity instanceof CoreEntity) {
+                    continue;
+                }
 
                 $entity->set($dataRow);
                 $entity->setAsFetched();

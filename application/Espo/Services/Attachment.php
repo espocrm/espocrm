@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Entities\Attachment as AttachmentEntity;
 
 use stdClass;
 
@@ -275,6 +276,7 @@ class Attachment extends Record
 
         $this->checkAttachmentField($relatedEntityType, $field);
 
+        /** @var AttachmentEntity|null */
         $attachment = $this->getEntity($data->id);
 
         if (!$attachment) {
@@ -464,6 +466,7 @@ class Attachment extends Record
 
     public function getFileData(string $id): stdClass
     {
+       /** @var AttachmentEntity|null */
         $attachment = $this->getEntity($id);
 
         if (!$attachment) {

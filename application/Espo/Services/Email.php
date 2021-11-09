@@ -430,6 +430,7 @@ class Email extends Record implements
 
     public function create(stdClass $data, CreateParams $params): Entity
     {
+        /** @var EmailEntity */
         $entity = parent::create($data, $params);
 
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
@@ -441,6 +442,8 @@ class Email extends Record implements
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
+        /** @var EmailEntity $entity */
+
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
@@ -450,6 +453,8 @@ class Email extends Record implements
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
+        /** @var EmailEntity $entity */
+
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->getUser());
         }

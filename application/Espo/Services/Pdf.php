@@ -325,7 +325,7 @@ class Pdf
 
     private function buildFromTemplateInternal(
         Entity $entity,
-        Entity $template,
+        Template $template,
         bool $displayInline = false,
         ?array $additionalData = null,
         ?Params $params = null,

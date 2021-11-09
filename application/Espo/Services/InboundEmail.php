@@ -1318,7 +1318,7 @@ class InboundEmail extends RecordService implements
         }
 
         try {
-            $size = $storage->getSize($id);
+            $size = $storage->getSize((int) $id);
         }
         catch (Throwable $e) {
             return false;

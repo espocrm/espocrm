@@ -35,7 +35,7 @@ use Espo\{
     Modules\Crm\Entities\CaseObj as CaseEntity,
 };
 
-use StdClass;
+use stdClass;
 
 class CaseObj extends Record
 {
@@ -85,6 +85,7 @@ class CaseObj extends Record
 
     public function getEmailAddressList(string $id): array
     {
+        /** @var CaseEntity */
         $entity = $this->getEntity($id);
 
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->getEntityType());
@@ -129,7 +130,7 @@ class CaseObj extends Record
         return $list;
     }
 
-    protected function getAccountEmailAddress(CaseEntity $entity, array $dataList): ?StdClass
+    protected function getAccountEmailAddress(CaseEntity $entity, array $dataList): ?stdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
 
@@ -156,7 +157,7 @@ class CaseObj extends Record
         ];
     }
 
-    protected function getLeadEmailAddress(CaseEntity $entity, array $dataList): ?StdClass
+    protected function getLeadEmailAddress(CaseEntity $entity, array $dataList): ?stdClass
     {
         $lead = $this->entityManager->getEntity('Account', $entity->get('leadId'));
 

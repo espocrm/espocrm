@@ -51,6 +51,8 @@ class Note extends Record
     {
         parent::afterCreateEntity($entity, $data);
 
+        /** @var NoteEntity $entity */
+
         $this->processFollowAfterCreate($entity);
     }
 
