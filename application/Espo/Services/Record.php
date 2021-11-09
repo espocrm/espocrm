@@ -277,6 +277,8 @@ class Record extends RecordService implements
      */
     public function exportCollection(array $params, Collection $collection): string
     {
+        /** @var iterable<Entity>&Collection $collection */
+
         if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }

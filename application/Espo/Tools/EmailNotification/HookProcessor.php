@@ -60,6 +60,10 @@ class HookProcessor
 
     public function afterSave(Entity $entity): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         if (!$this->checkToProcess($entity)) {
             return;
         }
@@ -83,7 +87,7 @@ class HookProcessor
         $this->createJob($entity, $userId);
     }
 
-    private function processMultiple(EntityCore $entity): void
+    private function processMultiple(CoreEntity $entity): void
     {
         $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
         $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
@@ -100,10 +104,8 @@ class HookProcessor
         }
     }
 
-    private function checkToProcess(Entity $entity): bool
+    private function checkToProcess(CoreEntity $entity): bool
     {
-        assert($entity instanceof CoreEntity);
-
         if (!$this->config->get('assignmentEmailNotifications')) {
             return false;
         }

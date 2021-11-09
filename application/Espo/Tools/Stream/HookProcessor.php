@@ -324,6 +324,10 @@ class HookProcessor
 
     private function afterSaveStream(Entity $entity, array $options): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         if ($entity->isNew()) {
             $this->afterSaveStreamNew($entity, $options);
 
@@ -333,10 +337,7 @@ class HookProcessor
         $this->afterSaveStreamNotNew($entity, $options);
     }
 
-    /**
-     * @param CoreEntity $entity
-     */
-    private function afterSaveStreamNew(Entity $entity, array $options): void
+    private function afterSaveStreamNew(CoreEntity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
         $hasAssignedUsersField = $entity->hasLinkMultipleField('assignedUsers');
@@ -400,16 +401,13 @@ class HookProcessor
         }
     }
 
-    private function afterSaveStreamNotNew(Entity $entity, array $options): void
+    private function afterSaveStreamNotNew(CoreEntity $entity, array $options): void
     {
         $this->afterSaveStreamNotNew1($entity, $options);
         $this->afterSaveStreamNotNew2($entity);
     }
 
-    /**
-     * @param CoreEntity $entity
-     */
-    private function afterSaveStreamNotNew1(Entity $entity, array $options): void
+    private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
         if (!empty($options['noStream']) || !empty($options['silent'])) {
             return;
@@ -471,7 +469,7 @@ class HookProcessor
         return;
     }
 
-    private function afterSaveStreamNotNew2(Entity $entity): void
+    private function afterSaveStreamNotNew2(CoreEntity $entity): void
     {
         $methodName = 'isChangedWithAclAffect';
 
@@ -522,11 +520,12 @@ class HookProcessor
         return $this->statusFields;
     }
 
-    /**
-     * @param CoreEntity $entity
-     */
     public function afterRelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         $entityType = $entity->getEntityType();
         $foreignEntityType = $foreignEntity->getEntityType();
         $foreignLink = $entity->getRelationParam($link, 'foreign');
@@ -551,11 +550,12 @@ class HookProcessor
         }
     }
 
-    /**
-     * @param CoreEntity $entity
-     */
     public function afterUnrelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         $entityType = $entity->getEntityType();
         $foreignEntityType = $foreignEntity->getEntityType();
         $foreignLink = $entity->getRelationParam($link, 'foreign');

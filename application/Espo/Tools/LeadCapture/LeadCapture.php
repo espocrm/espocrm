@@ -126,7 +126,7 @@ class LeadCapture
         }
 
         if (!$leadCapture->get('optInConfirmation')) {
-            return $this->proceed($leadCapture, $data);
+            $this->proceed($leadCapture, $data);
         }
 
         if (empty($data->emailAddress)) {
@@ -221,8 +221,13 @@ class LeadCapture
         $this->entityManager->saveEntity($job);
     }
 
-    protected function proceed(Entity $leadCapture, stdClass $data, ?string $leadId = null, bool $isLogged = false)
-    {
+    protected function proceed(
+        LeadCaptureEntity $leadCapture,
+        stdClass $data,
+        ?string $leadId = null,
+        bool $isLogged = false
+    ): void {
+
         if ($leadId) {
             $lead = $this->entityManager->getEntity('Lead', $leadId);
         } else {
@@ -386,7 +391,7 @@ class LeadCapture
 
     public function confirmOptIn(string $id): stdClass
     {
-        /** @var ?UniqueId $uniqueId */
+        /** @var UniqueId|null $uniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository('UniqueId')
             ->where([

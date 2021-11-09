@@ -32,7 +32,8 @@ namespace Espo\Tools\Export;
 use Espo\Tools\Export\Processor\Data as ProcessorData;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
+use Espo\ORM\BaseEntity;
 
 use Espo\Core\{
     Exceptions\Error,
@@ -243,7 +244,7 @@ class Export
 
         switch ($type) {
             case Entity::JSON_OBJECT:
-                if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) {
+                if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleNameMap')) {
                     break;
                 }
 
@@ -252,7 +253,7 @@ class Export
                 return Json::encode($value, \JSON_UNESCAPED_UNICODE);
 
             case Entity::JSON_ARRAY:
-                if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+                if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleIdList')) {
                     break;
                 }
 
@@ -277,8 +278,8 @@ class Export
 
         $entityDefs = $defs->getEntity($entity->getEntityType());
 
-        $relation = $entity->getAttributeParam($attribute, 'relation');
-        $foreign = $entity->getAttributeParam($attribute, 'foreign');
+        $relation = $this->getAttributeParam($entity, $attribute, 'relation');
+        $foreign = $this->getAttributeParam($entity, $attribute, 'foreign');
 
         if (!$relation) {
             return null;
@@ -317,7 +318,7 @@ class Export
         bool $exportAllFields = false
     ): bool {
 
-        if ($entity->getAttributeParam($attribute, 'notExportable')) {
+        if ($this->getAttributeParam($entity, $attribute, 'notExportable')) {
             return false;
         }
 
@@ -325,15 +326,15 @@ class Export
             return true;
         }
 
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+        if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleIdList')) {
             return false;
         }
 
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) {
+        if ($this->getAttributeParam($entity, $attribute, 'isLinkMultipleNameMap')) {
             return false;
         }
 
-        if ($entity->getAttributeParam($attribute, 'isLinkStub')) {
+        if ($this->getAttributeParam($entity, $attribute, 'isLinkStub')) {
             return false;
         }
 
@@ -479,5 +480,25 @@ class Export
         }
 
         return array_values($fieldList);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAttributeParam(Entity $entity, string $attribute, string $param)
+    {
+        if ($entity instanceof BaseEntity) {
+            return $entity->getAttributeParam($attribute, $param);
+        }
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasAttribute($attribute)) {
+            return null;
+        }
+
+        return $entityDefs->getAttribute($attribute)->getParam($param);
     }
 }
