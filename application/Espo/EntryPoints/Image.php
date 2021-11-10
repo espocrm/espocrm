@@ -29,6 +29,8 @@
 
 namespace Espo\EntryPoints;
 
+use Espo\Repositories\Attachment as AttachmentRepository;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\NotFoundSilent,
@@ -54,16 +56,22 @@ class Image implements EntryPoint
 
     protected $allowedFieldList = null;
 
+    /** @var FileStorageManager */
     protected $fileStorageManager;
 
+    /** @var Acl */
     protected $acl;
 
+    /** @var EntityManager */
     protected $entityManager;
 
+    /** @var FileManager */
     protected $fileManager;
 
+    /** @var Config */
     protected $config;
 
+    /** @var Metadata */
     private $metadata;
 
     public function __construct(
@@ -172,7 +180,7 @@ class Image implements EntryPoint
             return $this->fileManager->getContents($cacheFilePath);
         }
 
-        $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
+        $filePath = $this->getAttachmentRepository()->getFilePath($attachment);
 
         if (!$this->fileManager->isFile($filePath)) {
             throw new NotFound();
@@ -357,5 +365,11 @@ class Image implements EntryPoint
     protected function getSizes(): array
     {
         return $this->metadata->get(['app', 'image', 'sizes']) ?? [];
+    }
+
+    protected function getAttachmentRepository(): AttachmentRepository
+    {
+        /** @var AttachmentRepository */
+        return $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
     }
 }

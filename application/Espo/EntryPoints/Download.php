@@ -54,10 +54,13 @@ class Download implements EntryPoint
         'application/msexcel',
     ];
 
+    /** @var FileStorageManager */
     protected $fileStorageManager;
 
+    /** @var Acl */
     protected $acl;
 
+    /** @var EntityManager */
     protected $entityManager;
 
     public function __construct(FileStorageManager $fileStorageManager, Acl $acl, EntityManager $entityManager)
