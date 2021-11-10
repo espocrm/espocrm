@@ -113,16 +113,16 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.copyValuesFromModel();
             }
 
-            this.listenTo(this.model, 'change:' + this.idsName, function () {
+            this.listenTo(this.model, 'change:' + this.idsName, () => {
                 this.copyValuesFromModel();
-            }, this);
+            });
 
             this.sortable = this.sortable || this.params.sortable;
 
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
 
             if (this.mode !== 'list') {
-                this.addActionHandler('selectLink', function () {
+                this.addActionHandler('selectLink', () => {
                     self.notify('Loading...');
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
@@ -139,26 +139,26 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
-                    }, function (dialog) {
+                    }, (dialog) => {
                         dialog.render();
 
                         self.notify(false);
 
-                        this.listenToOnce(dialog, 'select', function (models) {
+                        this.listenToOnce(dialog, 'select', (models) => {
                             this.clearView('dialog');
 
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
 
-                            models.forEach(function (model) {
+                            models.forEach((model) => {
                                 self.addLink(model.id, model.get('name'));
                             });
                         });
-                    }, this);
+                    });
                 });
 
-                this.events['click a[data-action="clearLink"]'] = function (e) {
+                this.events['click a[data-action="clearLink"]'] = (e) => {
                     var id = $(e.currentTarget).attr('data-id');
 
                     this.deleteLink(id);
@@ -168,7 +168,6 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         copyValuesFromModel: function () {
             this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-
             this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
         },
 
@@ -183,7 +182,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     var type = $(e.currentTarget).val();
 
                     this.handleSearchType(type);
@@ -195,6 +194,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
@@ -235,57 +235,58 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 if (!this.autocompleteDisabled) {
                     this.$element.autocomplete({
-                        serviceUrl: function (q) {
+                        serviceUrl: (q) => {
                             return this.getAutocompleteUrl(q);
-                        }.bind(this),
+                        },
                         minChars: 1,
                         paramName: 'q',
                         noCache: true,
                         triggerSelectOnValidInput: false,
-                        beforeRender: function ($c) {
+                        beforeRender: ($c) => {
                             if (this.$element.hasClass('input-sm')) {
                                 $c.addClass('small');
                             }
-                        }.bind(this),
-                        formatResult: function (suggestion) {
+                        },
+                        formatResult: (suggestion) => {
                             return this.getHelper().escapeString(suggestion.name);
-                        }.bind(this),
-                        transformResult: function (response) {
+                        },
+                        transformResult: (response) => {
                             var response = JSON.parse(response);
 
                             var list = [];
 
-                            response.list.forEach(function(item) {
+                            response.list.forEach((item) => {
                                 list.push({
                                     id: item.id,
                                     name: item.name || item.id,
                                     data: item.id,
                                     value: item.name || item.id,
                                 });
-                            }, this);
+                            });
+
                             return {
                                 suggestions: list
                             };
-                        }.bind(this),
-                        onSelect: function (s) {
+                        },
+                        onSelect: (s) => {
                             this.addLink(s.id, s.name);
 
                             this.$element.val('');
-                        }.bind(this)
+                        },
                     });
 
                     this.$element.attr('autocomplete', 'espo-' + this.name);
 
-                    this.once('render', function () {
+                    this.once('render', () => {
                         $element.autocomplete('dispose');
-                    }, this);
+                    });
 
-                    this.once('remove', function () {
+                    this.once('remove', () => {
                         $element.autocomplete('dispose');
-                    }, this);
+                    });
                 }
 
-                $element.on('change', function () {
+                $element.on('change', () => {
                     $element.val('');
                 });
 
@@ -294,10 +295,10 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 if (this.mode === 'edit') {
                     if (this.sortable) {
                         this.$el.find('.link-container').sortable({
-                            stop: function () {
+                            stop: () => {
                                 this.fetchFromDom();
                                 this.trigger('change');
-                            }.bind(this)
+                            },
                         });
                     }
                 }
@@ -307,17 +308,17 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                     this.handleSearchType(type);
 
-                    this.$el.find('select.search-type').on('change', function () {
+                    this.$el.find('select.search-type').on('change', () => {
                         this.trigger('change');
-                    }.bind(this));
+                    });
                 }
             }
         },
 
         renderLinks: function () {
-            this.ids.forEach(function (id) {
+            this.ids.forEach((id) => {
                 this.addLinkHtml(id, this.nameHash[id]);
-            }, this);
+            });
         },
 
         deleteLink: function (id) {
@@ -331,6 +332,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (index > -1) {
                 this.ids.splice(index, 1);
             }
+
             delete this.nameHash[id];
 
             this.afterDeleteLink(id);
@@ -405,6 +407,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
+
             var iconHtml = '';
 
             if (this.mode === 'detail') {
@@ -422,13 +425,14 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             var names = [];
 
-            this.ids.forEach(function (id) {
+            this.ids.forEach((id) => {
                 names.push(this.getDetailLinkHtml(id));
-            }, this);
+            });
 
             if (!names.length) {
                 return null;
             }
+
             return names
                 .map(
                     name => $('<div />')
@@ -458,7 +462,6 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             var data = {};
 
             data[this.idsName] = this.ids;
-
             data[this.nameHashName] = this.nameHash;
 
             return data;
@@ -467,7 +470,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         fetchFromDom: function () {
             this.ids = [];
 
-            this.$el.find('.link-container').children().each(function(i, li) {
+            this.$el.find('.link-container').children().each((i, li) => {
                 var id = $(li).attr('data-id');
 
                 if (!id) {
@@ -475,7 +478,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 }
 
                 this.ids.push(id);
-            }.bind(this));
+            });
         },
 
         fetchSearch: function () {
@@ -566,5 +569,3 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
     });
 });
-
-
