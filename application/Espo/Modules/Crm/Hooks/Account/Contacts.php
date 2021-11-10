@@ -36,6 +36,9 @@ use Espo\ORM\{
 
 class Contacts
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)

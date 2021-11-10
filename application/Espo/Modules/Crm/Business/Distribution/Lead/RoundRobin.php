@@ -29,49 +29,64 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\Lead;
 
+use Espo\ORM\EntityManager;
+
+use Espo\Entities\User;
+use Espo\Entities\Team;
+
 class RoundRobin
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
-    public function __construct($entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
+    /**
+     * @param Team $team
+     * @param ?string $targetUserPosition
+     * @return User|null
+     */
     public function getUser($team, $targetUserPosition = null)
     {
-        $params = array();
+        $params = [];
+
         if (!empty($targetUserPosition)) {
-            $params['additionalColumnsConditions'] = array(
+            $params['additionalColumnsConditions'] = [
                 'role' => $targetUserPosition
-            );
+            ];
         }
 
         $userList = $team->get('users', $params);
 
         if (count($userList) == 0) {
-            return false;
+            return null;
         }
 
-        $userIdList = array();
+        $userIdList = [];
 
         foreach ($userList as $user) {
-            $userIdList[] = $user->id;
+            $userIdList[] = $user->getId();
         }
 
-        $lead = $this->getEntityManager()->getRepository('Lead')->where(array(
-            'assignedUserId' => $userIdList
-        ))->order('createdAt', 'DESC')->findOne();
+        $lead = $this->entityManager
+            ->getRDBRepository('Lead')
+            ->where([
+                'assignedUserId' => $userIdList
+            ])
+            ->order('createdAt', 'DESC')
+            ->findOne();
 
         if (empty($lead)) {
             $num = 0;
-        } else {
+        }
+        else {
             $num = array_search($lead->get('assignedUserId'), $userIdList);
+
             if ($num === false || $num == count($userIdList) - 1) {
                 $num = 0;
             } else {
@@ -79,7 +94,6 @@ class RoundRobin
             }
         }
 
-        return $this->getEntityManager()->getEntity('User', $userIdList[$num]);
+        return $this->entityManager->getEntity('User', $userIdList[$num]);
     }
 }
-

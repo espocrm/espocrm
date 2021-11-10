@@ -36,6 +36,9 @@ use Espo\ORM\EntityManager;
 
 class RoundRobin
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)

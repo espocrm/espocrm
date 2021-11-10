@@ -33,18 +33,19 @@ use Espo\ORM\Entity;
 
 class TargetList extends \Espo\Core\Repositories\Database
 {
-    protected $entityTypeLinkMap = array(
+    protected $entityTypeLinkMap = [
         'Lead' => 'leads',
         'Account' => 'accounts',
         'Contact' => 'contacts',
         'User' => 'users',
-    );
+    ];
 
     public function relateTarget(Entity $entity, Entity $target, $data = null)
     {
         if (empty($this->entityTypeLinkMap[$target->getEntityType()])) {
             return;
         }
+
         $relation = $this->entityTypeLinkMap[$target->getEntityType()];
 
         $this->relate($entity, $relation, $target, $data);

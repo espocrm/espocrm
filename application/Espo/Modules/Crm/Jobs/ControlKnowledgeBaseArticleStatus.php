@@ -29,6 +29,9 @@ use Espo\Core\{
 
 class ControlKnowledgeBaseArticleStatus implements JobDataLess
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -39,7 +42,7 @@ class ControlKnowledgeBaseArticleStatus implements JobDataLess
     public function run(): void
     {
         $list = $this->entityManager
-            ->getRepository('KnowledgeBaseArticle')
+            ->getRDBRepository('KnowledgeBaseArticle')
             ->where([
                 'expirationDate<=' => date('Y-m-d'),
                 'status' => 'Published',

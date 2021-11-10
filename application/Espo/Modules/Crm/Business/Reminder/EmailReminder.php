@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Business\Reminder;
 
 use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\Utils\Util;
 
@@ -44,18 +45,34 @@ use Espo\Core\{
 
 class EmailReminder
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var EmailSender
+     */
     protected $emailSender;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
-    protected $dateTime;
-
+    /**
+     * @var TemplateFileManager
+     */
     protected $templateFileManager;
 
+    /**
+     * @var Language
+     */
     protected $language;
 
+    /**
+     * @var HtmlizerFactory
+     */
     protected $htmlizerFactory;
 
     public function __construct(
@@ -86,6 +103,10 @@ class EmailReminder
         $emailAddress = $user->get('emailAddress');
 
         if (!$emailAddress) {
+            return;
+        }
+
+        if (!$entity instanceof CoreEntity) {
             return;
         }
 

@@ -33,8 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
+use Espo\ORM\EntityManager;
+
 use Espo\Core\{
-    ORM\EntityManager,
     Acl,
     Acl\GlobalRestricton,
     Acl\OwnerUserFieldProvider,
@@ -97,18 +98,39 @@ class AclManager
         Table::ACTION_STREAM => AccessStreamChecker::class,
     ];
 
+    /**
+     * @var AccessCheckerFactory|\Espo\Core\Portal\Acl\AccessChecker\AccessCheckerFactory
+     */
     protected $accessCheckerFactory;
 
+    /**
+     * @var OwnershipCheckerFactory|\Espo\Core\Portal\Acl\OwnershipChecker\OwnershipCheckerFactory
+     */
     protected $ownershipCheckerFactory;
 
-    protected $tableFactory;
+    /**
+     * @var TableFactory
+     */
+    private $tableFactory;
 
-    protected $mapFactory;
+    /**
+     * @var MapFactory
+     */
+    private $mapFactory;
 
+    /**
+     * @var GlobalRestricton
+     */
     protected $globalRestricton;
 
+    /**
+     * @var OwnerUserFieldProvider
+     */
     protected $ownerUserFieldProvider;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(
@@ -582,11 +604,10 @@ class AclManager
         if ($permission === Table::LEVEL_TEAM) {
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
-            if (
-                !$this->entityManager
-                    ->getRepository('User')
-                    ->checkBelongsToAnyOfTeams($userId, $teamIdList)
-            ) {
+            /** @var \Espo\Repositories\User $userRepository */
+            $userRepository = $this->entityManager->getRepository('User');
+
+            if (!$userRepository->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                 return false;
             }
         }
