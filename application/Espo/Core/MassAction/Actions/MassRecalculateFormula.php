@@ -39,16 +39,23 @@ use Espo\Core\{
     Exceptions\Forbidden,
 };
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class MassRecalculateFormula implements MassAction
 {
+    /**
+     * @var QueryBuilder
+     */
     protected $queryBuilder;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var User
+     */
     protected $user;
 
     public function __construct(
@@ -72,7 +79,7 @@ class MassRecalculateFormula implements MassAction
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->sth()
             ->find();
@@ -84,7 +91,7 @@ class MassRecalculateFormula implements MassAction
         foreach ($collection as $entity) {
             $this->entityManager->saveEntity($entity);
 
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $count++;
         }

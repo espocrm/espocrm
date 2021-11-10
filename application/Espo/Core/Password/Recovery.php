@@ -58,16 +58,34 @@ class Recovery
 
     const REQUEST_LIFETIME = '3 hours';
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var EmailSender
+     */
     protected $emailSender;
 
+    /**
+     * @var HtmlizerFactory
+     */
     protected $htmlizerFactory;
 
+    /**
+     * @var TemplateFileManager
+     */
     protected $templateFileManager;
 
+    /**
+     * @var Log
+     */
     private $log;
 
     public function __construct(
@@ -96,7 +114,7 @@ class Recovery
         }
 
         $request = $em
-            ->getRepository('PasswordChangeRequest')
+            ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'requestId' => $id,
             ])
@@ -119,7 +137,7 @@ class Recovery
         $em = $this->entityManager;
 
         $request = $em
-            ->getRepository('PasswordChangeRequest')
+            ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'requestId' => $id,
             ])
@@ -142,7 +160,7 @@ class Recovery
         }
 
         $user = $em
-           ->getRepository('User')
+           ->getRDBRepository('User')
             ->where([
                 'userName' => $userName,
                 'emailAddress' => $emailAddress,
@@ -196,9 +214,9 @@ class Recovery
         }
 
         $passwordChangeRequest = $em
-            ->getRepository('PasswordChangeRequest')
+            ->getRDBRepository('PasswordChangeRequest')
             ->where([
-                'userId' => $user->id,
+                'userId' => $user->getId(),
             ])
             ->findOne();
 
@@ -293,12 +311,12 @@ class Recovery
         $siteUrl = $config->getSiteUrl();
 
         if ($user->isPortal()) {
-            $portal = $em->getRepository('Portal')
+            $portal = $em->getRDBRepository('Portal')
                 ->distinct()
                 ->join('users')
                 ->where([
                     'isActive' => true,
-                    'users.id' => $user->id,
+                    'users.id' => $user->getId(),
                 ])
                 ->findOne();
 

@@ -87,10 +87,13 @@ class LeadCapture
     /** @var Log */
     protected $log;
 
+    /** @var CampaignService */
     private $campaignService;
 
+    /** @var EmailTemplateService */
     private $emailTemplateService;
 
+    /** @var InboundEmailService */
     private $inboundEmailService;
 
     public function __construct(

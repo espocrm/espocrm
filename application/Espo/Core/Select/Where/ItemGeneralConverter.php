@@ -53,22 +53,49 @@ class ItemGeneralConverter implements ItemConverter
 {
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var DateTimeItemTransformer
+     */
     protected $dateTimeItemTransformer;
 
+    /**
+     * @var Scanner
+     */
     protected $scanner;
 
+    /**
+     * @var ItemConverterFactory
+     */
     protected $itemConverterFactory;
 
+    /**
+     * @var RandomStringGenerator
+     */
     protected $randomStringGenerator;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var ORMDefs
+     */
     protected $ormDefs;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
     public function __construct(

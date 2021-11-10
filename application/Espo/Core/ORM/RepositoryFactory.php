@@ -48,10 +48,19 @@ class RepositoryFactory implements RepositoryFactoryInterface
 {
     protected $defaultClassName = DatabaseRepository::class;
 
+    /**
+     * @var EntityFactoryInteface
+     */
     protected $entityFactory;
 
+    /**
+     * @var InjectableFactory
+     */
     protected $injectableFactory;
 
+    /**
+     * @var ClassFinder
+     */
     protected $classFinder;
 
     public function __construct(

@@ -50,10 +50,19 @@ use stdClass;
 
 class MassUpdate implements MassAction
 {
+    /**
+     * @var QueryBuilder
+     */
     protected $queryBuilder;
 
+    /**
+     * @var Acl
+     */
     protected $acl;
 
+    /**
+     * @var RecordServiceContainer
+     */
     protected $recordServiceContainer;
 
     /**
@@ -61,6 +70,9 @@ class MassUpdate implements MassAction
      */
     protected $entityManager;
 
+    /**
+     * @var FieldUtil
+     */
     protected $fieldUtil;
 
     public function __construct(
