@@ -254,7 +254,7 @@ class Attachment extends Record
         }
     }
 
-    public function getCopiedAttachment($data)
+    public function getCopiedAttachment(stdClass $data): AttachmentEntity
     {
         if (empty($data->id)) {
             throw new BadRequest();
@@ -303,7 +303,7 @@ class Attachment extends Record
         return $copied;
     }
 
-    public function getAttachmentFromImageUrl($data)
+    public function getAttachmentFromImageUrl(stdClass $data): AttachmentEntity
     {
         $attachment = $this->getAttachmentRepository()->getNew();
 
@@ -331,14 +331,14 @@ class Attachment extends Record
 
         $this->checkAttachmentField($relatedEntityType, $field);
 
-        $data = $this->getImageDataByUrl($url);
+        $imageData = $this->getImageDataByUrl($url);
 
-        if (!$data) {
+        if (!$imageData) {
             throw new Error('Attachment::getAttachmentFromImageUrl: Bad image data.');
         }
 
-        $type = $data['type'];
-        $contents = $data['contents'];
+        $type = $imageData->type;
+        $contents = $imageData->contents;
 
         $size = mb_strlen($contents, '8bit');
 
@@ -378,7 +378,7 @@ class Attachment extends Record
         return $attachment;
     }
 
-    protected function getImageDataByUrl($url)
+    protected function getImageDataByUrl(string $url): ?stdClass
     {
         $type = null;
 
@@ -451,14 +451,14 @@ class Attachment extends Record
         curl_close($ch);
 
         if (!$type) {
-            return;
+            return null;
         }
 
         if (!in_array($type, $this->imageTypeList)) {
-            return;
+            return null;
         }
 
-        return [
+        return (object) [
             'type' => $type,
             'contents' => $body,
         ];
