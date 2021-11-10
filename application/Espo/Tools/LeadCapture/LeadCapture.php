@@ -127,6 +127,8 @@ class LeadCapture
 
         if (!$leadCapture->get('optInConfirmation')) {
             $this->proceed($leadCapture, $data);
+
+            return;
         }
 
         if (empty($data->emailAddress)) {
