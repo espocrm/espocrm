@@ -63,20 +63,28 @@ use DateTime;
 
 class LeadCapture
 {
+    /** @var EntityManager */
     protected $entityManager;
 
+    /** @var FieldUtil */
     protected $fieldUtil;
 
+    /** @var Language */
     protected $defaultLanguage;
 
+    /** @var HookManager */
     protected $hookManager;
 
+    /** @var EmailSender */
     protected $emailSender;
 
+    /** @var Config */
     protected $config;
 
+    /** @var DateTimeUtil */
     protected $dateTime;
 
+    /** @var Log */
     protected $log;
 
     private $campaignService;
@@ -285,7 +293,7 @@ class LeadCapture
 
                 if (!$isAlreadyOptedIn) {
                     $this->entityManager
-                        ->getRepository('Contact')
+                        ->getRDBRepository('Contact')
                         ->relate($contact, 'targetLists', $leadCapture->get('targetListId'), [
                             'optedOut' => false,
                         ]);
@@ -354,7 +362,7 @@ class LeadCapture
 
         if ($toRelateLead && $targetLead->getId()) {
             $this->entityManager
-                ->getRepository('Lead')
+                ->getRDBRepository('Lead')
                 ->relate($targetLead, 'targetLists', $leadCapture->get('targetListId'), [
                     'optedOut' => false,
                 ]);
@@ -711,7 +719,7 @@ class LeadCapture
     protected function isTargetOptedIn(Entity $target, string $targetListId): bool
     {
         $isAlreadyOptedIn = $this->entityManager
-            ->getRepository($target->getEntityType())
+            ->getRDBRepository($target->getEntityType())
             ->isRelated($target, 'targetLists', $targetListId);
 
         if (!$isAlreadyOptedIn) {
