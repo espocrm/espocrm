@@ -61,20 +61,39 @@ class BaseMapper implements RDBMapper
 
     protected $aliasesCache = [];
 
+    /**
+     * @var PDO
+     */
     protected $pdo;
 
-    protected $entityFactroy;
-
-    protected $collectionFactory;
-
-    protected $queryComposer;
-
+    /**
+     * @var EntityFactory
+     */
     protected $entityFactory;
 
+    /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
+     * @var QueryComposer
+     */
+    protected $queryComposer;
+
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var SqlExecutor
+     */
     protected $sqlExecutor;
 
+    /**
+     * @var Helper
+     */
     protected $helper;
 
     public function __construct(
@@ -1237,7 +1256,7 @@ class BaseMapper implements RDBMapper
     {
         $id = $this->pdo->lastInsertId();
 
-        if ($id === '' || $id === null) {
+        if ($id === '' || $id === null) { /** @phpstan-ignore-line */
             return;
         }
 
@@ -1560,7 +1579,7 @@ class BaseMapper implements RDBMapper
 
         $foreignEntity = $this->entityFactory->create($foreignEntityType);
 
-        $map = $foreignEntity->getRelationParam($foreign, 'columnAttributeMap') ?? [];
+        $map = $this->getRelationParam($foreignEntity, $foreign, 'columnAttributeMap') ?? [];
 
         $select = [];
 

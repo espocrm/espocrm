@@ -38,6 +38,9 @@ use Espo\ORM\{
  */
 class CollectionFactory
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)

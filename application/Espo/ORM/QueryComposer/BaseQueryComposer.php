@@ -144,12 +144,24 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected $identifierQuoteCharacter = '`';
 
+    /**
+     * @var EntityFactory
+     */
     protected $entityFactory;
 
+    /**
+     * @var PDO
+     */
     protected $pdo;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var FunctionConverterFactory|null
+     */
     protected $functionConverterFactory;
 
     protected $helper;
@@ -1070,7 +1082,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $function . '(' . $part . ')';
     }
 
-    private function getFunctionPartFromFactory(string $function, array $argumentPartList): ?string
+    private function getFunctionPartFromFactory(string $function, array $argumentPartList): string
     {
         $obj = $this->functionConverterFactory->create($function);
 
