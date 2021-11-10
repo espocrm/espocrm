@@ -40,8 +40,14 @@ use DateTimeZone;
 
 class CheckNewVersion implements JobDataLess
 {
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
