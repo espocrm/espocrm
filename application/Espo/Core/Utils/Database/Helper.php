@@ -39,8 +39,15 @@ use Doctrine\DBAL\{
     Platforms\AbstractPlatform as DbalPlatform,
 };
 
+use Espo\ORM\{
+    DatabaseParams,
+    PDO\DefaultPDOProvider,
+    PDO\Options as PdoOptions,
+};
+
 use PDO;
 use ReflectionClass;
+use RuntimeException;
 
 class Helper
 {
@@ -49,6 +56,11 @@ class Helper
     private $dbalConnection;
 
     private $pdoConnection;
+
+    private $driverPlatformMap = [
+        'pdo_mysql' => 'Mysql',
+        'mysqli' => 'Mysql',
+    ];
 
     protected $dbalDrivers = [
         'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
@@ -95,46 +107,57 @@ class Helper
         $this->pdoConnection = $pdoConnection;
     }
 
-    public function createDbalConnection(array $params = null)
+    public function createDbalConnection(array $params = [])
     {
-        if (!isset($params)) {
-            $config = $this->config;
-
-            if ($config) {
-                $params = $config->get('database');
-            }
+        if (empty($params) && isset($this->config)) {
+            $params = $this->config->get('database');
         }
 
-        if (empty($params['dbname']) || empty($params['user'])) {
-            return null;
+        if (empty($params)) {
+            throw new RuntimeException('Params cannot be empty for Dbal connection.');
         }
 
-        $driverName = isset($params['driver']) ? $params['driver'] : 'pdo_mysql';
+        $databaseParams = $this->createDatabaseParams($params);
 
-        unset($params['driver']);
-
-        if (!isset($this->dbalDrivers[$driverName])) {
-            throw new Error('Unknown database driver.');
-        }
-
-        $driverClass = $this->dbalDrivers[$driverName];
-
-        if (!class_exists($driverClass)) {
-            throw new Error('Unknown database class.');
-        }
-
-        $driver = new $driverClass();
+        $driver = $this->createDbalDriver($params);
 
         $version = $this->getFullDatabaseVersion();
 
         $platform = $driver->createDatabasePlatformForVersion($version);
 
-        $params['platform'] = $this->createDbalPlatform($platform);
-
-        return new DbalConnection($params, $driver);
+        return new DbalConnection(
+            [
+                'platform' => $this->createDbalPlatform($platform),
+                'host' => $databaseParams->getHost(),
+                'port' => $databaseParams->getPort(),
+                'dbname' => $databaseParams->getName(),
+                'charset' => $databaseParams->getCharset(),
+                'user' => $databaseParams->getUsername(),
+                'password' => $databaseParams->getPassword(),
+                'driverOptions' => PdoOptions::getOptionsFromDatabaseParams($databaseParams),
+            ],
+            $driver
+        );
     }
 
-    protected function createDbalPlatform(DbalPlatform $platform)
+    private function createDbalDriver(array $params)
+    {
+        $driverName = $params['driver'] ?? 'pdo_mysql';
+
+        if (!isset($this->dbalDrivers[$driverName])) {
+            throw new RuntimeException('Unknown database driver.');
+        }
+
+        $driverClass = $this->dbalDrivers[$driverName];
+
+        if (!class_exists($driverClass)) {
+            throw new RuntimeException('Unknown database class.');
+        }
+
+        return new $driverClass();
+    }
+
+    private function createDbalPlatform(DbalPlatform $platform)
     {
         $reflect = new ReflectionClass($platform);
 
@@ -155,51 +178,65 @@ class Helper
      * @param array $params
      * @return PDO|null
      */
-    public function createPdoConnection(array $params = null)
+    public function createPdoConnection(array $params = [])
     {
-        if (!isset($params)) {
-            $config = $this->config;
+        $defaultParams = [
+            'driver' => 'pdo_mysql',
+        ];
 
-            if ($config) {
-                $params = $config->get('database');
+        if (isset($this->config) && $this->config instanceof Config) {
+            $defaultParams = array_merge(
+                $defaultParams,
+                $this->config->get('database')
+            );
+        }
+
+        $params = array_merge(
+            $defaultParams,
+            $params
+        );
+
+        $pdoProvider = new DefaultPDOProvider(
+            $this->createDatabaseParams($params)
+        );
+
+        return $pdoProvider->get();
+    }
+
+    private function createDatabaseParams(array $params): DatabaseParams
+    {
+        $databaseParams = DatabaseParams::create()
+            ->withHost($params['host'] ?? null)
+            ->withPort(isset($params['host']) ? (int) $params['host'] : null)
+            ->withName($params['dbname'] ?? null)
+            ->withUsername($params['user'] ?? null)
+            ->withPassword($params['password'] ?? null)
+            ->withCharset($params['charset'] ?? 'utf8')
+            ->withPlatform($params['platform'] ?? null)
+            ->withSslCa($params['sslCA'] ?? null)
+            ->withSslCert($params['sslCert'] ?? null)
+            ->withSslKey($params['sslKey'] ?? null)
+            ->withSslCaPath($params['sslCAPath'] ?? null)
+            ->withSslCipher($params['sslCipher'] ?? null)
+            ->withSslVerifyDisabled($params['sslVerifyDisabled'] ?? false);
+
+        if (!$databaseParams->getPlatform()) {
+            $driver = $params['driver'] ?? null;
+
+            if (!$driver) {
+                throw new RuntimeException('No database driver specified.');
             }
+
+            $platform = $this->driverPlatformMap[$driver] ?? null;
+
+            if (!$platform) {
+                throw new RuntimeException("Database driver '{$driver}' is not supported.");
+            }
+
+            $databaseParams = $databaseParams->withPlatform($platform);
         }
 
-        if (empty($params)) {
-            return null;
-        }
-
-        $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
-        $port = empty($params['port']) ? '' : ';port=' . $params['port'];
-        $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
-
-        $options = [];
-
-        if (isset($params['sslCA'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
-        }
-
-        if (isset($params['sslCert'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
-        }
-
-        if (isset($params['sslKey'])) {
-            $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
-        }
-
-        if (isset($params['sslCAPath'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
-        }
-
-        if (isset($params['sslCipher'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
-        }
-
-        $dsn = $platform . ':host='.$params['host'].$port.$dbname;
-
-        $dbh = new PDO($dsn, $params['user'], $params['password'], $options);
-
-        return $dbh;
+        return $databaseParams;
     }
 
     /**
@@ -304,6 +341,7 @@ class Helper
     protected function getTableEngine($tableName = null, $default = null)
     {
         $connection = $this->getPdoConnection();
+
         if (!$connection) {
             return $default;
         }
