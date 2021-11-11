@@ -45,28 +45,24 @@ use Espo\{
  */
 class Converter
 {
-    protected $entityType;
+    private $entityType;
 
-    protected $user;
+    private $itemConverter;
 
-    protected $itemConverter;
+    private $scanner;
 
-    protected $scanner;
+    private $randomStringGenerator;
 
-    protected $randomStringGenerator;
-
-    protected $ormDefs;
+    private $ormDefs;
 
     public function __construct(
         string $entityType,
-        User $user,
         ItemConverter $itemConverter,
         Scanner $scanner,
         RandomStringGenerator $randomStringGenerator,
         ORMDefs $ormDefs
     ) {
         $this->entityType = $entityType;
-        $this->user = $user;
         $this->itemConverter = $itemConverter;
         $this->scanner = $scanner;
         $this->randomStringGenerator = $randomStringGenerator;
@@ -94,7 +90,7 @@ class Converter
         return WhereClause::fromRaw($whereClause);
     }
 
-    protected function itemToList(Item $item): array
+    private function itemToList(Item $item): array
     {
         if ($item->getType() !== 'and') {
             return [
@@ -111,7 +107,7 @@ class Converter
         return $list;
     }
 
-    protected function processItem(QueryBuilder $queryBuilder, Item $item): ?array
+    private function processItem(QueryBuilder $queryBuilder, Item $item): ?array
     {
         $type = $item->getType();
         $attribute = $item->getAttribute();
@@ -136,7 +132,7 @@ class Converter
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
     }
 
-    protected function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 
@@ -197,7 +193,7 @@ class Converter
         throw new Error("Not supported link '{$link}' in where item.");
     }
 
-    protected function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 

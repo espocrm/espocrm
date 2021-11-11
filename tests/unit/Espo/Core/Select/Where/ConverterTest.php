@@ -114,7 +114,6 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
         $this->converter = new Converter(
             $this->entityType,
-            $this->user,
             $this->itemConverter,
             $this->scanner,
             $this->randomStringGenerator,
