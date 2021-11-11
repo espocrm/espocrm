@@ -32,65 +32,40 @@ namespace Espo\ORM\PDO;
 use Espo\ORM\DatabaseParams;
 
 use PDO;
-use RuntimeException;
 
-class DefaultPDOProvider implements PDOProvider
+class Options
 {
-    private $databaseParams;
-
-    private $pdo = null;
-
-    public function __construct(DatabaseParams $databaseParams)
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getOptionsFromDatabaseParams(DatabaseParams $databaseParams): array
     {
-        $this->databaseParams = $databaseParams;
-    }
+        $options = [];
 
-    public function get(): PDO
-    {
-        if (!$this->pdo) {
-            $this->intPDO();
+        if ($databaseParams->getSslCa()) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $databaseParams->getSslCa();
         }
 
-        return $this->pdo;
-    }
-
-    private function intPDO(): void
-    {
-        $platform = strtolower($this->databaseParams->getPlatform() ?? '');
-
-        $host = $this->databaseParams->getHost();
-        $port = $this->databaseParams->getPort();
-        $dbname = $this->databaseParams->getName();
-        $charset = $this->databaseParams->getCharset();
-        $username = $this->databaseParams->getUsername();
-        $password = $this->databaseParams->getPassword();
-
-        if (!$platform) {
-            throw new RuntimeException("No 'platform' parameter.");
+        if ($databaseParams->getSslCert()) {
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $databaseParams->getSslCert();
         }
 
-        if (!$host) {
-            throw new RuntimeException("No 'host' parameter.");
+        if ($databaseParams->getSslKey()) {
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $databaseParams->getSslKey();
         }
 
-        $dsn = $platform . ':' . 'host=' . $host;
-
-        if ($port) {
-            $dsn .= ';' . 'port=' . (string) $port;
+        if ($databaseParams->getSslCaPath()) {
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $databaseParams->getSslCaPath();
         }
 
-        if ($dbname) {
-            $dsn .= ';' . 'dbname=' . $dbname;
+        if ($databaseParams->getSslCipher()) {
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $databaseParams->getSslCipher();
         }
 
-        if ($charset) {
-            $dsn .= ';' . 'charset=' . $charset;
+        if ($databaseParams->isSslVerifyDisabled()) {
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
         }
 
-        $options = Options::getOptionsFromDatabaseParams($this->databaseParams);
-
-        $this->pdo = new PDO($dsn, $username, $password, $options);
-
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $options;
     }
 }
