@@ -38,6 +38,9 @@ class DefaultPDOProvider implements PDOProvider
 {
     private $databaseParams;
 
+    /**
+     * @var ?PDO
+     */
     private $pdo = null;
 
     public function __construct(DatabaseParams $databaseParams)
