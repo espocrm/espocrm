@@ -57,10 +57,19 @@ class Select
 
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var FieldUtil
+     */
     protected $fieldUtil;
 
+    /**
+     * @var MetadataProvider
+     */
     protected $metadataProvider;
 
     public function __construct(

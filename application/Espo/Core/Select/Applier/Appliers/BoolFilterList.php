@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Select\OrmSelectBuilder;
+
 use Espo\Core\{
     Exceptions\Error,
     Select\SelectManager,
@@ -46,10 +48,19 @@ class BoolFilterList
 {
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var SelectManager
+     */
     protected $selectManager;
 
+    /**
+     * @var BoolFilterFactory
+     */
     protected $boolFilterFactory;
 
     public function __construct(
@@ -86,13 +97,16 @@ class BoolFilterList
         if ($this->boolFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->boolFilterFactory->create($this->entityType, $this->user, $filterName);
 
-            $whereItem = $filter->apply($queryBuilder, $orGroupBuilder);
+            $filter->apply($queryBuilder, $orGroupBuilder);
 
             return;
         }
 
         // For backward compatibility.
-        if ($this->selectManager->hasBoolFilter($filterName)) {
+        if (
+            $this->selectManager->hasBoolFilter($filterName) &&
+            $queryBuilder instanceof OrmSelectBuilder
+        ) {
             $rawWhereClause = $this->selectManager->applyBoolFilterToQueryBuilder($queryBuilder, $filterName);
 
             $whereItem = WhereClause::fromRaw($rawWhereClause);

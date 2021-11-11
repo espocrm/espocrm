@@ -50,10 +50,19 @@ class Order
 {
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var MetadataProvider
+     */
     protected $metadataProvider;
 
+    /**
+     * @var ItemConverterFactory
+     */
     protected $itemConverterFactory;
 
     public function __construct(
@@ -80,10 +89,8 @@ class Order
 
         if ($params->forbidComplexExpressions() && $orderBy) {
             if (
-                !is_string($orderBy)
-                ||
-                strpos($orderBy, '.') !== false
-                ||
+                !is_string($orderBy) ||
+                strpos($orderBy, '.') !== false ||
                 strpos($orderBy, ':') !== false
             ) {
                 throw new Forbidden("Complex expressions are forbidden in 'orderBy'.");
@@ -112,10 +119,10 @@ class Order
         if (!$order) {
             $order = $this->metadataProvider->getDefaultOrder($this->entityType);
 
-            if ($order === true || strtolower($order) === 'desc') {
+            if (strtolower($order) === 'desc') {
                 $order = SearchParams::ORDER_DESC;
             }
-            else if ($order === false || strtolower($order) === 'asc') {
+            else if (strtolower($order) === 'asc') {
                 $order = SearchParams::ORDER_ASC;
             }
             else if ($order !== null) {

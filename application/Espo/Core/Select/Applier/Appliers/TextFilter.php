@@ -61,12 +61,24 @@ class TextFilter
 
     private $entityType;
 
+    /**
+     * @var User
+     */
     private $user;
 
+    /**
+     * @var MetadataProvider
+     */
     private $metadataProvider;
 
+    /**
+     * @var FullTextSearchDataComposerFactory
+     */
     private $fullTextSearchDataComposerFactory;
 
+    /**
+     * @var FilterFactory
+     */
     private $filterFactory;
 
     public function __construct(
