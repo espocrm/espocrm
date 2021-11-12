@@ -41,10 +41,19 @@ use Espo\Core\Notification\AssignmentNotificator\Params;
 
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var UserEnabledChecker
+     */
     protected $userChecker;
 
     public function __construct(User $user, EntityManager $entityManager, UserEnabledChecker $userChecker)

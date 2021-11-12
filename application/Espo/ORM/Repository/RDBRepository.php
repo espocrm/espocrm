@@ -61,12 +61,19 @@ class RDBRepository implements Repository
      */
     protected $entityManager;
 
+    /**
+     * @var EntityFactory
+     */
     protected $entityFactory;
 
-    protected $mapper;
-
+    /**
+     * @var HookMediator|null
+     */
     protected $hookMediator;
 
+    /**
+     * @var RDBTransactionManager
+     */
     protected $transactionManager;
 
     public function __construct(

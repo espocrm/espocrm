@@ -29,11 +29,19 @@
 
 namespace Espo\Modules\Crm\Business\Distribution\Lead;
 
+use Espo\ORM\EntityManager;
+
+use Espo\Entities\User;
+use Espo\Entities\Team;
+
 class LeastBusy
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
-    public function __construct($entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -43,39 +51,52 @@ class LeastBusy
         return $this->entityManager;
     }
 
+    /**
+     * @param Team $team
+     * @param ?string $targetUserPosition
+     * @return User|null
+     */
     public function getUser($team, $targetUserPosition = null)
     {
-        $params = array();
+        $params = [];
+
         if (!empty($targetUserPosition)) {
-            $params['additionalColumnsConditions'] = array(
+            $params['additionalColumnsConditions'] = [
                 'role' => $targetUserPosition
-            );
+            ];
         }
 
         $userList = $team->get('users', $params);
 
         if (count($userList) == 0) {
-            return false;
+            return null;
         }
 
-        $countHash = array();
+        $countHash = [];
 
         foreach ($userList as $user) {
-            $where = array(
+            $where = [
                 'assignedUserId' => $user->id,
                 'status<>' => ['Converted', 'Recycled', 'Dead']
-            );
-            $count = $this->getEntityManager()->getRepository('Lead')->where($where)->count();
-            $countHash[$user->id] = $count;
+            ];
+
+            $count = $this->entityManager
+                ->getRDBRepository('Lead')
+                ->where($where)
+                ->count();
+
+            $countHash[$user->getId()] = $count;
         }
 
         $foundUserId = false;
         $min = false;
+
         foreach ($countHash as $userId => $count) {
             if ($min === false) {
                 $min = $count;
                 $foundUserId = $userId;
-            } else {
+            }
+            else {
                 if ($count < $min) {
                     $min = $count;
                     $foundUserId = $userId;
@@ -84,8 +105,10 @@ class LeastBusy
         }
 
         if ($foundUserId !== false) {
-            return $this->getEntityManager()->getEntity('User', $foundUserId);
+            return $this->entityManager->getEntity('User', $foundUserId);
         }
+
+        return null;
     }
 }
 

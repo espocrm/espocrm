@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\EntryPoints;
 
 use Espo\Modules\Crm\Services\Campaign as Service;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\Core\{
     Exceptions\NotFound,
@@ -50,18 +51,39 @@ class Unsubscribe implements EntryPoint
 {
     use NoAuth;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var ClientManager
+     */
     protected $clientManager;
 
+    /**
+     * @var HookManager
+     */
     protected $hookManager;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var Hasher
+     */
     protected $hasher;
 
+    /**
+     * @var Service
+     */
     protected $service;
 
     public function __construct(
@@ -137,7 +159,7 @@ class Unsubscribe implements EntryPoint
                         $emailAddress = $target->get('emailAddress');
 
                         if ($emailAddress) {
-                            $ea = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
+                            $ea = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
                             if ($ea) {
                                 $ea->set('optOut', true);
@@ -161,14 +183,14 @@ class Unsubscribe implements EntryPoint
 
                     if ($link) {
                         $targetListList = $this->entityManager
-                            ->getRepository('MassEmail')
+                            ->getRDBRepository('MassEmail')
                             ->getRelation($massEmail, 'targetLists')
                             ->find();
 
                         foreach ($targetListList as $targetList) {
                             $optedOutResult = $this->entityManager
-                                ->getRepository('TargetList')
-                                ->updateRelation($targetList, $link, $target->id, ['optedOut' => true]);
+                                ->getRDBRepository('TargetList')
+                                ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => true]);
 
                             if ($optedOutResult) {
                                 $hookData = [
@@ -228,7 +250,7 @@ class Unsubscribe implements EntryPoint
             throw new NotFound();
         }
 
-        $repository = $this->entityManager->getRepository('EmailAddress');
+        $repository = $this->getEmailAddressRepository();
 
         $ea = $repository->getByAddress($emailAddress);
 
@@ -252,5 +274,11 @@ class Unsubscribe implements EntryPoint
         else {
             throw new NotFound();
         }
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        /** @var EmailAddressRepository */
+        return $this->entityManager->getRepository('EmailAddress');
     }
 }

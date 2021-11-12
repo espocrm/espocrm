@@ -38,16 +38,34 @@ use Espo\Core\{
 
 abstract class BaseRebuildActions
 {
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var Log
+     */
     protected $log;
 
+    /**
+     * @var \Doctrine\DBAL\Schema\Schema|null
+     */
     protected $currentSchema = null;
 
+    /**
+     * @var \Doctrine\DBAL\Schema\Schema|null
+     */
     protected $metadataSchema = null;
 
     public function __construct(
@@ -62,17 +80,17 @@ abstract class BaseRebuildActions
         $this->log = $log;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
         return $this->config;
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
@@ -87,12 +105,12 @@ abstract class BaseRebuildActions
         $this->metadataSchema = $metadataSchema;
     }
 
-    protected function getCurrentSchema()
+    protected function getCurrentSchema(): ?\Doctrine\DBAL\Schema\Schema
     {
         return $this->currentSchema;
     }
 
-    protected function getMetadataSchema()
+    protected function getMetadataSchema(): ?\Doctrine\DBAL\Schema\Schema
     {
         return $this->metadataSchema;
     }

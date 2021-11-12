@@ -39,8 +39,14 @@ class FullTextSearchDataComposer
 
     protected $entityType;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var MetadataProvider
+     */
     protected $metadataProvider;
 
     public function __construct(

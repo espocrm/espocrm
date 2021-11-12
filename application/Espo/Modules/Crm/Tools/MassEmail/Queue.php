@@ -32,13 +32,12 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 
+use Espo\Modules\Crm\Entities\TargetList;
+use Espo\Modules\Crm\Entities\MassEmail;
+
 use Espo\Core\{
     Exceptions\Error,
     ORM\EntityManager,
-};
-
-use Espo\{
-    ORM\Entity,
 };
 
 class Queue
@@ -50,6 +49,9 @@ class Queue
         'users',
     ];
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -57,7 +59,7 @@ class Queue
         $this->entityManager = $entityManager;
     }
 
-    protected function cleanupQueueItems(Entity $massEmail): void
+    protected function cleanupQueueItems(MassEmail $massEmail): void
     {
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -72,7 +74,7 @@ class Queue
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    public function create(Entity $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
+    public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
         if (!$isTest && $massEmail->get('status') !== 'Pending') {
             throw new Error("Mass Email '" . $massEmail->getId() . "' should be 'Pending'.");
@@ -90,19 +92,20 @@ class Queue
 
         if (!$isTest) {
             $excludingTargetListList = $this->entityManager
-                   ->getRDBRepository('MassEmail')
-                   ->getRelation($massEmail, 'excludingTargetLists')
-                   ->find();
+                ->getRDBRepository('MassEmail')
+                ->getRelation($massEmail, 'excludingTargetLists')
+                ->find();
 
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $excludingList = $em->getRepository('TargetList')->findRelated(
-                        $excludingTargetList,
-                        $link,
-                        [
-                            'select' => ['id', 'emailAddress'],
-                        ]
-                    );
+                    $excludingList = $em->getRDBRepository('TargetList')
+                        ->findRelated(
+                            $excludingTargetList,
+                            $link,
+                            [
+                                'select' => ['id', 'emailAddress'],
+                            ]
+                        );
 
                     foreach ($excludingList as $excludingTarget) {
                         $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->getId();
@@ -118,6 +121,7 @@ class Queue
                 }
             }
 
+            /** @var iterable<TargetList> */
             $targetListCollection = $em
                 ->getRDBRepository('MassEmail')
                 ->getRelation($massEmail, 'targetLists')
@@ -217,6 +221,7 @@ class Queue
 
     private function getEmailAddressRepository(): EmailAddressRepository
     {
+        /** @var EmailAddressRepository */
         return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }

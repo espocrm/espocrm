@@ -117,7 +117,8 @@ class SystemRequirements
         $databaseTypeName = 'Mysql';
 
         $databaseHelper =  $this->databaseHelper;
-        $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+        $databaseParams = $additionalData['database'] ?? [];
+
         $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);
 
         if ($pdoConnection) {
@@ -254,7 +255,7 @@ class SystemRequirements
 
         $databaseHelper = $this->databaseHelper;
 
-        $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+        $databaseParams = $additionalData['database'] ?? [];
 
         $pdo = $databaseHelper->createPdoConnection($databaseParams);
 

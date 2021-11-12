@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
@@ -48,16 +50,34 @@ class SubscribeAgain implements EntryPoint
 {
     use NoAuth;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var ClientManager
+     */
     protected $clientManager;
 
+    /**
+     * @var HookManager
+     */
     protected $hookManager;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var Hasher
+     */
     protected $hasher;
 
     public function __construct(
@@ -131,7 +151,7 @@ class SubscribeAgain implements EntryPoint
                         $emailAddress = $target->get('emailAddress');
 
                         if ($emailAddress) {
-                            $ea = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
+                            $ea = $this->getEmailAddressRepository()->getByAddress($emailAddress);
 
                             if ($ea) {
                                 $ea->set('optOut', false);
@@ -155,14 +175,14 @@ class SubscribeAgain implements EntryPoint
 
                     if ($link) {
                         $targetListList = $this->entityManager
-                            ->getRepository('MassEmail')
+                            ->getRDBRepository('MassEmail')
                             ->getRelation($massEmail, 'targetLists')
                             ->find();
 
                         foreach ($targetListList as $targetList) {
                             $optedInResult = $this->entityManager
-                                ->getRepository('TargetList')
-                                ->updateRelation($targetList, $link, $target->id, ['optedOut' => false]);
+                                ->getRDBRepository('TargetList')
+                                ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => false]);
 
                             if ($optedInResult) {
                                 $hookData = [
@@ -171,7 +191,8 @@ class SubscribeAgain implements EntryPoint
                                    'targetType' => $targetType,
                                 ];
 
-                                $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
+                                $this->hookManager
+                                    ->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
                             }
                         }
 
@@ -185,7 +206,7 @@ class SubscribeAgain implements EntryPoint
 
         if ($campaign && $target) {
             $logRecord = $this->entityManager
-                ->getRepository('CampaignLogRecord')->where([
+                ->getRDBRepository('CampaignLogRecord')->where([
                     'queueItemId' => $queueItemId,
                     'action' => 'Opted Out',
                 ])
@@ -225,11 +246,12 @@ class SubscribeAgain implements EntryPoint
             throw new NotFound();
         }
 
-        $repository = $this->entityManager->getRepository('EmailAddress');
+        $repository = $this->getEmailAddressRepository();
 
         $ea = $repository->getByAddress($emailAddress);
+
         if ($ea) {
-            $entityList = $repository->getEntityListByAddressId($ea->id);
+            $entityList = $repository->getEntityListByAddressId($ea->getId());
 
             if ($ea->get('optOut')) {
                 $ea->set('optOut', false);
@@ -249,5 +271,11 @@ class SubscribeAgain implements EntryPoint
         else {
             throw new NotFound();
         }
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        /** @var EmailAddressRepository */
+        return $this->entityManager->getRepository('EmailAddress');
     }
 }

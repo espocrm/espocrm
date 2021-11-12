@@ -52,17 +52,17 @@ use Espo\{
 
 class ConvertCurrency implements Action
 {
-    protected $acl;
+    private $acl;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $fieldUtil;
+    private $fieldUtil;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $configDataProvider;
+    private $configDataProvider;
 
-    protected $currencyConverter;
+    private $currencyConverter;
 
     public function __construct(
         Acl $acl,
@@ -125,7 +125,10 @@ class ConvertCurrency implements Action
     }
 
     protected function convertEntity(
-        Entity $entity, array $fieldList, string $targetCurrency, CurrencyRates $rates
+        Entity $entity,
+        array $fieldList,
+        string $targetCurrency,
+        CurrencyRates $rates
     ) {
         foreach ($fieldList as $field) {
             $amount = $entity->get($field);

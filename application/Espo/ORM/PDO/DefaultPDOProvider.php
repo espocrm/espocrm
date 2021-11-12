@@ -38,6 +38,9 @@ class DefaultPDOProvider implements PDOProvider
 {
     private $databaseParams;
 
+    /**
+     * @var ?PDO
+     */
     private $pdo = null;
 
     public function __construct(DatabaseParams $databaseParams)
@@ -73,49 +76,21 @@ class DefaultPDOProvider implements PDOProvider
             throw new RuntimeException("No 'host' parameter.");
         }
 
-        if (!$dbname) {
-            throw new RuntimeException("No 'dbname' parameter.");
-        }
-
-        $dsn =
-            $platform . ':' .
-            'host=' . $host;
+        $dsn = $platform . ':' . 'host=' . $host;
 
         if ($port) {
             $dsn .= ';' . 'port=' . (string) $port;
         }
 
-        $dsn .= ';' . 'dbname=' . $dbname;
+        if ($dbname) {
+            $dsn .= ';' . 'dbname=' . $dbname;
+        }
 
         if ($charset) {
             $dsn .= ';' . 'charset=' . $charset;
         }
 
-        $options = [];
-
-        if ($this->databaseParams->getSslCa()) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $this->databaseParams->getSslCa();
-        }
-
-        if ($this->databaseParams->getSslCert()) {
-            $options[PDO::MYSQL_ATTR_SSL_CERT] = $this->databaseParams->getSslCert();
-        }
-
-        if ($this->databaseParams->getSslKey()) {
-            $options[PDO::MYSQL_ATTR_SSL_KEY] = $this->databaseParams->getSslKey();
-        }
-
-        if ($this->databaseParams->getSslCaPath()) {
-            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $this->databaseParams->getSslCaPath();
-        }
-
-        if ($this->databaseParams->getSslCipher()) {
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $this->databaseParams->getSslCipher();
-        }
-
-        if ($this->databaseParams->isSslVerifyDisabled()) {
-            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
-        }
+        $options = Options::getOptionsFromDatabaseParams($this->databaseParams);
 
         $this->pdo = new PDO($dsn, $username, $password, $options);
 

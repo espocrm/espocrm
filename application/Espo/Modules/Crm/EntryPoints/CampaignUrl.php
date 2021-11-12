@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\EntryPoints;
 
 use Espo\Modules\Crm\Services\Campaign as Service;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\{
     Modules\Crm\Entities\EmailQueueItem,
@@ -54,16 +55,34 @@ class CampaignUrl implements EntryPoint
 {
     use NoAuth;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var Service
+     */
     protected $service;
 
+    /**
+     * @var Hasher
+     */
     protected $hasher;
 
+    /**
+     * @var HookManager
+     */
     protected $hookManager;
 
+    /**
+     * @var ClientManager
+     */
     protected $clientManager;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
     public function __construct(
@@ -180,7 +199,7 @@ class CampaignUrl implements EntryPoint
             throw new NotFoundSilent();
         }
 
-        $eaRepository = $this->entityManager->getRepository('EmailAddress');
+        $eaRepository = $this->getEmailAddressRepository();
 
         $ea = $eaRepository->getByAddress($emailAddress);
 
@@ -228,5 +247,11 @@ class CampaignUrl implements EntryPoint
         ";
 
         $this->clientManager->display($runScript);
+    }
+
+    private function getEmailAddressRepository(): EmailAddressRepository
+    {
+        /** @var EmailAddressRepository */
+        return $this->entityManager->getRepository('EmailAddress');
     }
 }

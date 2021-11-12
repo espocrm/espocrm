@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Select\OrmSelectBuilder;
+
 use Espo\Core\{
     Exceptions\Error,
     Select\SelectManager,
@@ -44,10 +46,19 @@ class PrimaryFilter
 {
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var SelectManager
+     */
     protected $selectManager;
 
+    /**
+     * @var FilterFactory
+     */
     protected $primaryFilterFactory;
 
     public function __construct(
@@ -73,7 +84,10 @@ class PrimaryFilter
         }
 
         // For backward compatibility.
-        if ($this->selectManager->hasPrimaryFilter($filterName)) {
+        if (
+            $this->selectManager->hasPrimaryFilter($filterName) &&
+            $queryBuilder instanceof OrmSelectBuilder
+        ) {
             $this->selectManager->applyPrimaryFilterToQueryBuilder($queryBuilder, $filterName);
 
             return;

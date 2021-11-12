@@ -52,10 +52,19 @@ class ClientManager
      */
     protected $entityManager;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var InjectableFactory|null
+     */
     protected $injectableFactory = null;
 
     protected $clientMap = [];

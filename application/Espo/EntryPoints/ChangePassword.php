@@ -46,10 +46,13 @@ class ChangePassword implements EntryPoint
 {
     use NoAuth;
 
+    /** @var Config */
     protected $config;
 
+    /** @var ClientManager */
     protected $clientManager;
 
+    /** @var EntityManager */
     protected $entityManager;
 
     public function __construct(Config $config, ClientManager $clientManager, EntityManager $entityManager)
@@ -68,7 +71,7 @@ class ChangePassword implements EntryPoint
         }
 
         $passwordChangeRequest = $this->entityManager
-            ->getRepository('PasswordChangeRequest')
+            ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'requestId' => $requestId,
             ])

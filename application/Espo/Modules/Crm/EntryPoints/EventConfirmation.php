@@ -46,10 +46,19 @@ class EventConfirmation implements EntryPoint
 {
     use NoAuth;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var ClientManager
+     */
     protected $clientManager;
 
+    /**
+     * @var HookManager
+     */
     protected $hookManager;
 
     public function __construct(EntityManager $entityManager, ClientManager $clientManager, HookManager $hookManager) {
@@ -71,7 +80,10 @@ class EventConfirmation implements EntryPoint
             throw new BadRequest();
         }
 
-        $uniqueId = $this->entityManager->getRepository('UniqueId')->where(['name' => $uid])->findOne();
+        $uniqueId = $this->entityManager
+            ->getRDBRepository('UniqueId')
+            ->where(['name' => $uid])
+            ->findOne();
 
         if (!$uniqueId) {
             throw new NotFound();
@@ -111,18 +123,21 @@ class EventConfirmation implements EntryPoint
             $data = (object) [
                 'status' => $status
             ];
-            $this->entityManager->getRepository($eventType)->updateRelation($event, $link, $invitee->id, $data);
+
+            $this->entityManager
+                ->getRDBRepository($eventType)
+                ->updateRelation($event, $link, $invitee->getId(), $data);
 
             $actionData = [
                 'eventName' => $event->get('name'),
                 'eventType' => $event->getEntityType(),
-                'eventId' => $event->id,
+                'eventId' => $event->getId(),
                 'dateStart' => $event->get('dateStart'),
                 'action' => $action,
                 'status' => $status,
                 'link' => $link,
                 'inviteeType' => $invitee->getEntityType(),
-                'inviteeId' => $invitee->id
+                'inviteeId' => $invitee->getId(),
             ];
 
             $this->hookManager->process($event->getEntityType(), $hookMethodName, $event, [], $actionData);

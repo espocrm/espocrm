@@ -66,11 +66,21 @@ class AclManager extends InternalAclManager
 
     private $portal = null;
 
+    /**
+     * @var TableFactory
+     */
+    private $portalTableFactory;
+
+    /**
+     * @var MapFactory
+     */
+    private $portalMapFactory;
+
     public function __construct(
         AccessCheckerFactory $accessCheckerFactory,
         OwnershipCheckerFactory $ownershipCheckerFactory,
-        TableFactory $tableFactory,
-        MapFactory $mapFactory,
+        TableFactory $portalTableFactory,
+        MapFactory $portalMapFactory,
         GlobalRestricton $globalRestricton,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager,
@@ -78,8 +88,8 @@ class AclManager extends InternalAclManager
     ) {
         $this->accessCheckerFactory = $accessCheckerFactory;
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
-        $this->tableFactory = $tableFactory;
-        $this->mapFactory = $mapFactory;
+        $this->portalTableFactory = $portalTableFactory;
+        $this->portalMapFactory = $portalMapFactory;
         $this->globalRestricton = $globalRestricton;
         $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->entityManager = $entityManager;
@@ -109,7 +119,7 @@ class AclManager extends InternalAclManager
         }
 
         if (!array_key_exists($key, $this->tableHashMap)) {
-            $this->tableHashMap[$key] = $this->tableFactory->create($user, $this->getPortal());
+            $this->tableHashMap[$key] = $this->portalTableFactory->create($user, $this->getPortal());
         }
 
         return $this->tableHashMap[$key];
@@ -124,8 +134,10 @@ class AclManager extends InternalAclManager
         }
 
         if (!array_key_exists($key, $this->mapHashMap)) {
-            $this->mapHashMap[$key] = $this->mapFactory
-                ->create($user, $this->getTable($user), $this->getPortal());
+            /** @var Table */
+            $table = $this->getTable($user);
+
+            $this->mapHashMap[$key] = $this->portalMapFactory->create($user, $table, $this->getPortal());
         }
 
         return $this->mapHashMap[$key];

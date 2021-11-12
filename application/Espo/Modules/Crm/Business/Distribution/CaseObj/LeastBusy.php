@@ -37,8 +37,14 @@ use Espo\Entities\Team;
 
 class LeastBusy
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)

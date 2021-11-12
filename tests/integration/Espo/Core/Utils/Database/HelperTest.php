@@ -39,6 +39,8 @@ use Espo\Core\Exceptions\Error;
 
 use PDO;
 
+use RuntimeException;
+
 class HelperTest extends \tests\integration\Core\BaseTestCase
 {
     protected $reflection;
@@ -80,7 +82,9 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
     {
         $this->initTest(true);
 
-        $this->assertNull($this->helper->getDbalConnection());
+        $this->expectException(RuntimeException::class);
+
+        $this->helper->getDbalConnection();
     }
 
     public function testGetDbalConnectionWithConfig()
@@ -94,7 +98,9 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
     {
         $this->initTest(true);
 
-        $this->assertNull($this->helper->getPdoConnection());
+        $this->expectException(RuntimeException::class);
+
+        $this->helper->getPdoConnection();
     }
 
     public function testGetPdoConnectionWithConfig()

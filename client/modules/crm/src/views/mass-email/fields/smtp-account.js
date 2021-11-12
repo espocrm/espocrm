@@ -56,20 +56,26 @@ define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function
             if (!this.loadedOptionList) {
                 if (this.model.get('inboundEmailId')) {
                     var item = 'inboundEmail:' + this.model.get('inboundEmailId');
+
                     this.params.options.push(item);
+
                     this.translatedOptions[item] =
-                        (this.model.get('inboundEmailName') || this.model.get('inboundEmailId')) + ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
+                        (this.model.get('inboundEmailName') || this.model.get('inboundEmailId')) +
+                        ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
                 }
             } else {
-                this.loadedOptionList.forEach(function (item) {
+                this.loadedOptionList.forEach((item) => {
                      this.params.options.push(item);
+
                      this.translatedOptions[item] =
-                        (this.loadedOptionTranslations[item] || item) + ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
-                }, this);
+                        (this.loadedOptionTranslations[item] || item) +
+                        ' (' + this.translate('group', 'labels', 'MassEmail') + ')';
+                });
             }
 
             this.translatedOptions['system'] =
-                this.getConfig().get('outboundEmailFromAddress') + ' (' + this.translate('system', 'labels', 'MassEmail') + ')';
+                this.getConfig().get('outboundEmailFromAddress') +
+                ' (' + this.translate('system', 'labels', 'MassEmail') + ')';
         },
 
         getValueForDisplay: function () {
@@ -91,35 +97,49 @@ define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.getAcl().checkScope('MassEmail', 'create') || this.getAcl().checkScope('MassEmail', 'edit')) {
-                this.ajaxGetRequest(this.dataUrl).then(function (dataList) {
-                    if (!dataList.length) return;
+            if (
+                this.getAcl().checkScope('MassEmail', 'create') ||
+                this.getAcl().checkScope('MassEmail', 'edit')
+            ) {
+
+                this.ajaxGetRequest(this.dataUrl).then(dataList => {
+                    if (!dataList.length) {
+                        return;
+                    }
+
                     this.loadedOptionList = [];
+
                     this.loadedOptionTranslations = {};
                     this.loadedOptionAddresses = {};
                     this.loadedOptionFromNames = {};
-                    dataList.forEach(function (item) {
+
+                    dataList.forEach(item => {
                         this.loadedOptionList.push(item.key);
+
                         this.loadedOptionTranslations[item.key] = item.emailAddress;
                         this.loadedOptionAddresses[item.key] = item.emailAddress;
                         this.loadedOptionFromNames[item.key] = item.fromName || '';
-                    }, this);
+                    });
+
                     this.setupOptions();
                     this.reRender();
-                }.bind(this));
+                });
             }
         },
 
         fetch: function () {
             var data = {};
             var value = this.$element.val();
+
             data[this.name] = value;
 
             if (!value || value === 'system') {
                 data.inboundEmailId = null;
                 data.inboundEmailName = null;
-            } else {
+            }
+            else {
                 var arr = value.split(':');
+
                 if (arr.length > 1) {
                     data.inboundEmailId = arr[1];
                     data.inboundEmailName = this.translatedOptions[data.inboundEmailId] || data.inboundEmailId;

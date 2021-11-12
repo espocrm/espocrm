@@ -70,18 +70,39 @@ use RuntimeException;
  */
 class Xlsx implements Processor
 {
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var Language
+     */
     protected $language;
 
+    /**
+     * @var DateTimeUtil
+     */
     protected $dateTime;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var FileStorageManager
+     */
     protected $fileStorageManager;
 
+    /**
+     * @var AddressFormatterFactory
+     */
     protected $addressFormatterFactory;
 
     public function __construct(

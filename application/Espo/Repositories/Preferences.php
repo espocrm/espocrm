@@ -55,6 +55,9 @@ class Preferences implements Repository,
     use Di\ConfigSetter;
     use Di\EntityManagerSetter;
 
+    /**
+     * @var EntityFactory
+     */
     protected $entityFactory;
 
     public function __construct(
@@ -76,6 +79,7 @@ class Preferences implements Repository,
 
     public function getNew(): Entity
     {
+        /** @var PreferencesEntity */
         return $this->entityFactory->create('Preferences');
     }
 

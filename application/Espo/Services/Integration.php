@@ -39,16 +39,28 @@ use Espo\{
     Entities\User,
 };
 
-use StdClass;
+use stdClass;
 
 class Integration
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var ConfigWriter
+     */
     protected $configWriter;
 
     public function __construct(
@@ -83,7 +95,7 @@ class Integration
         return $entity;
     }
 
-    public function update(string $id, StdClass $data): Entity
+    public function update(string $id, stdClass $data): Entity
     {
         $this->processAccessCheck();
 
@@ -99,7 +111,7 @@ class Integration
 
         $integrationsConfigData = $this->config->get('integrations') ?? (object) [];
 
-        if (!($integrationsConfigData instanceof StdClass)) {
+        if (!($integrationsConfigData instanceof stdClass)) {
             $integrationsConfigData = (object) [];
         }
 

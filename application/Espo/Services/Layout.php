@@ -48,18 +48,39 @@ use Espo\{
 
 class Layout
 {
+    /**
+     * @var Acl
+     */
     protected $acl;
 
+    /**
+     * @var LayoutUtil
+     */
     protected $layout;
 
+    /**
+     * @var LayoutManager
+     */
     protected $layoutManager;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var DataManager
+     */
     protected $dataManager;
 
+    /**
+     * @var User
+     */
     protected $user;
 
     public function __construct(
@@ -132,7 +153,7 @@ class Layout
 
             if ($portalId) {
                 $portal = $em
-                    ->getRepository('Portal')
+                    ->getRDBRepository('Portal')
                     ->select(['layoutSetId'])
                     ->where(['id' => $portalId])
                     ->findOne();
@@ -146,7 +167,7 @@ class Layout
 
             if ($teamId) {
                 $team = $em
-                    ->getRepository('Team')
+                    ->getRDBRepository('Team')
                     ->select(['layoutSetId'])
                     ->where(['id' => $teamId])
                     ->findOne();
@@ -245,7 +266,7 @@ class Layout
         }
 
         $layout = $em
-            ->getRepository('LayoutRecord')
+            ->getRDBRepository('LayoutRecord')
             ->where([
                 'layoutSetId' => $setId,
                 'name' => $fullName,

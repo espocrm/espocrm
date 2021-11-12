@@ -40,8 +40,19 @@ use Espo\Core\{
  */
 class TemplateEntityTypeList
 {
+    /**
+     * @var Acl
+     */
     protected $acl;
+
+    /**
+     * @var SelectBuilderFactory
+     */
     protected $selectBuilderFactory;
+
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function __construct(Acl $acl, SelectBuilderFactory $selectBuilderFactory, EntityManager $entityManager)
@@ -51,7 +62,7 @@ class TemplateEntityTypeList
         $this->entityManager = $entityManager;
     }
 
-    public function get() : array
+    public function get(): array
     {
         if (!$this->acl->checkScope('Template')) {
             return [];
@@ -69,7 +80,7 @@ class TemplateEntityTypeList
             ->build();
 
         $templateCollection = $this->entityManager
-            ->getRepository('Template')
+            ->getRDBRepository('Template')
             ->clone($query)
             ->find();
 

@@ -44,11 +44,15 @@ use Espo\{
 
 class FromEquals implements ItemConverter
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var EmailAddressHelper
+     */
     protected $emailAddressHelper;
-
-    protected $randomStringGenerator;
 
     public function __construct(
         EntityManager $entityManager,

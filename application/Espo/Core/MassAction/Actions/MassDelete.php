@@ -43,10 +43,19 @@ use Espo\Core\{
 
 class MassDelete implements MassAction
 {
+    /**
+     * @var QueryBuilder
+     */
     protected $queryBuilder;
 
+    /**
+     * @var Acl
+     */
     protected $acl;
 
+    /**
+     * @var RecordServiceContainer
+     */
     protected $recordServiceContainer;
 
     /**

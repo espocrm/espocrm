@@ -145,6 +145,10 @@ class EntityManagerFactory
             ->withSslCipher($config->get('database.sslCipher'))
             ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
 
+        if (!$databaseParams->getName()) {
+            throw new RuntimeException('No database name specified.');
+        }
+
         if (!$databaseParams->getPlatform()) {
             $driver = $config->get('database.driver');
 

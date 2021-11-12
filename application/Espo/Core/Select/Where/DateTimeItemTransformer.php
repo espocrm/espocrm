@@ -43,6 +43,9 @@ use DateInterval;
  */
 class DateTimeItemTransformer
 {
+    /**
+     * @var User
+     */
     protected $user;
 
     private $config;

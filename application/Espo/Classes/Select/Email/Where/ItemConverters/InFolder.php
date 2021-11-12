@@ -45,10 +45,19 @@ use Espo\{
 
 class InFolder implements ItemConverter
 {
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var JoinHelper
+     */
     protected $joinHelper;
 
     public function __construct(User $user, EntityManager $entityManager, JoinHelper $joinHelper)
@@ -186,7 +195,7 @@ class InFolder implements ItemConverter
     protected function getEmailAddressIdList(): array
     {
         $emailAddressList = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->getRelation($this->user, 'emailAddresses')
             ->select(['id'])
             ->find();
@@ -194,7 +203,7 @@ class InFolder implements ItemConverter
         $emailAddressIdList = [];
 
         foreach ($emailAddressList as $emailAddress) {
-            $emailAddressIdList[] = $emailAddress->id;
+            $emailAddressIdList[] = $emailAddress->getId();
         }
 
         return $emailAddressIdList;

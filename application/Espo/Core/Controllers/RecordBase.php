@@ -96,6 +96,9 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      */
     protected $recordServiceContainer;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
     /**
@@ -103,11 +106,13 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      */
     protected $user;
 
+    /**
+     * @var Acl
+     */
     protected $acl;
 
     /**
      * @deprecated
-     *
      * @var EntityManager
      */
     protected $entityManager;

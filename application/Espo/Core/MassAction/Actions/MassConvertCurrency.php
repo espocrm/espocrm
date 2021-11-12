@@ -53,18 +53,39 @@ use Espo\{
 
 class MassConvertCurrency implements MassAction
 {
+    /**
+     * @var QueryBuilder
+     */
     protected $queryBuilder;
 
+    /**
+     * @var Acl
+     */
     protected $acl;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var FieldUtil
+     */
     protected $fieldUtil;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var CurrencyConfigDataProvider
+     */
     protected $configDataProvider;
 
+    /**
+     * @var CurrencyConverter
+     */
     protected $currencyConverter;
 
     public function __construct(
@@ -128,7 +149,7 @@ class MassConvertCurrency implements MassAction
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRepository($entityType)
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->sth()
             ->find();
@@ -144,7 +165,7 @@ class MassConvertCurrency implements MassAction
 
             $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
 
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $count++;
         }

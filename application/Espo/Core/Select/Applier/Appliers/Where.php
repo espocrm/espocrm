@@ -45,10 +45,19 @@ class Where
 {
     protected $entityType;
 
+    /**
+     * @var User
+     */
     protected $user;
 
+    /**
+     * @var ConverterFactory
+     */
     protected $converterFactory;
 
+    /**
+     * @var CheckerFactory
+     */
     protected $checkerFactory;
 
     public function __construct(

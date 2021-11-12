@@ -27,27 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\ORM\PDO;
 
-use Espo\ORM\Entity;
+use Espo\ORM\DatabaseParams;
 
-class TargetList extends \Espo\Core\Repositories\Database
+use PDO;
+
+class Options
 {
-    protected $entityTypeLinkMap = [
-        'Lead' => 'leads',
-        'Account' => 'accounts',
-        'Contact' => 'contacts',
-        'User' => 'users',
-    ];
-
-    public function relateTarget(Entity $entity, Entity $target, $data = null)
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getOptionsFromDatabaseParams(DatabaseParams $databaseParams): array
     {
-        if (empty($this->entityTypeLinkMap[$target->getEntityType()])) {
-            return;
+        $options = [];
+
+        if ($databaseParams->getSslCa()) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $databaseParams->getSslCa();
         }
 
-        $relation = $this->entityTypeLinkMap[$target->getEntityType()];
+        if ($databaseParams->getSslCert()) {
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $databaseParams->getSslCert();
+        }
 
-        $this->relate($entity, $relation, $target, $data);
+        if ($databaseParams->getSslKey()) {
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $databaseParams->getSslKey();
+        }
+
+        if ($databaseParams->getSslCaPath()) {
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $databaseParams->getSslCaPath();
+        }
+
+        if ($databaseParams->getSslCipher()) {
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $databaseParams->getSslCipher();
+        }
+
+        if ($databaseParams->isSslVerifyDisabled()) {
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        }
+
+        return $options;
     }
 }
