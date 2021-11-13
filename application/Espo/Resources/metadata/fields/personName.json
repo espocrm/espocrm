@@ -37,7 +37,7 @@
     "notMergeable":true,
     "notCreatable":true,
     "filter":true,
-    "skipOrmDefs": true,
+    "skipOrmDefs": false,
     "personalData": true,
     "textFilter": true,
     "fullTextSearch": true,
