@@ -415,7 +415,7 @@ class Xlsx implements Processor
 
             $typesCache[$name] = $type;
 
-            if ($type === 'link') {
+            if ($type === 'link' || $type === 'linkOne') {
                 if (array_key_exists($name.'Name', $row)) {
                     $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                 }
