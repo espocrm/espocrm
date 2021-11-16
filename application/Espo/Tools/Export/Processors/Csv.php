@@ -29,7 +29,9 @@
 
 namespace Espo\Tools\Export\Processors;
 
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
+
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Utils\Config,
@@ -107,6 +109,10 @@ class Csv implements Processor
 
     public function loadAdditionalFields(Entity $entity, array $fieldList): void
     {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
         foreach ($fieldList as $field) {
             $fieldType = $this->metadata
                 ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
