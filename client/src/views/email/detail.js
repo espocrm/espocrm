@@ -222,6 +222,10 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 else if (parentType === 'Contact') {
                     attributes.contactId = parentId;
                     attributes.contactName = parentName;
+
+                    attributes.contactsIds = [parentId];
+                    attributes.contactsNames = {};
+                    attributes.contactsNames[parentId] = parentName;
                 }
             }
 
