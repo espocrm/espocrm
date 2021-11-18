@@ -58,7 +58,8 @@ define('views/admin/formula/modals/add-function', ['views/modal', 'model'], func
 
             this.documentationUrl = 'https://docs.espocrm.com/administration/formula/';
 
-            this.functionDataList = this.getMetadata().get('app.formula.functionList') || [];
+            this.functionDataList = this.options.functionDataList ||
+                this.getMetadata().get('app.formula.functionList') || [];
         },
 
     });

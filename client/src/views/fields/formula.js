@@ -142,7 +142,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     editor.getSession().on('change', () => {
                         this.trigger('change', {ui: true});
                     });
-                    
+
                     editor.getSession().setUseWrapMode(true);
                 }
 
@@ -191,7 +191,8 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         addFunction: function () {
             this.createView('dialog', 'views/admin/formula/modals/add-function', {
-                scope: this.targetEntityType
+                scope: this.targetEntityType,
+                functionDataList: this.getFunctionDataList(),
             }, (view) => {
                 view.render();
 
@@ -203,10 +204,25 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             });
         },
 
+        getFunctionDataList: function () {
+            let list = this.getMetadata().get(['app', 'formula', 'functionList']) || [];
+
+            if (!this.targetEntityType) {
+                list = list.filter(item => {
+                    if (item.name.indexOf('entity\\') === 0) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            }
+
+            return list;
+        },
+
         initAutocomplete: function () {
             var functionItemList =
-                this.getMetadata()
-                    .get(['app', 'formula', 'functionList'], [])
+                this.getFunctionDataList()
                     .filter(item => {
                         return item.insertText;
                     });
