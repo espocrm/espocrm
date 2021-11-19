@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/complex-expression/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -56,10 +56,10 @@ define('views/admin/formula/modals/add-function', ['views/modal', 'model'], func
         setup: function () {
             this.header = this.translate('Function');
 
-            this.documentationUrl = 'https://docs.espocrm.com/administration/formula/';
+            this.documentationUrl = 'https://docs.espocrm.com/user-guide/complex-expressions/';
 
             this.functionDataList = this.options.functionDataList ||
-                this.getMetadata().get('app.formula.functionList') || [];
+                this.getMetadata().get('app.complexExpression.functionList') || [];
         },
 
     });

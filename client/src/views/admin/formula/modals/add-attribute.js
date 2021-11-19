@@ -48,13 +48,18 @@ define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], fun
                 defs: {
                     name: 'attribute',
                     params: {}
-                }
-            }, function (view) {
-                this.listenTo(view, 'change', function () {
+                },
+                attributeList: this.options.attributeList,
+            }, view => {
+                this.listenTo(view, 'change', () => {
                     var list = model.get('attribute') || [];
-                    if (!list.length) return;
+
+                    if (!list.length) {
+                        return;
+                    }
+
                     this.trigger('add', list[0]);
-                }, this);
+                });
             });
         },
 

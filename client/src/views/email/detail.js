@@ -32,9 +32,12 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             var status = this.model.get('status');
-            if (status == 'Draft') {
+
+            if (status === 'Draft') {
                 this.backedMenu = this.menu;
+
                 this.menu = {
                     'buttons': [
                         {
@@ -47,7 +50,8 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     'dropdown': [],
                     'actions': []
                 };
-            } else {
+            }
+            else {
                 this.addMenuItem('buttons', {
                     name: 'reply',
                     label: 'Reply',
@@ -57,7 +61,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 this.addMenuItem('dropdown', false);
 
-                if (status == 'Archived') {
+                if (status === 'Archived') {
                     if (!this.model.get('parentId')) {
                         this.addMenuItem('dropdown', {
                             label: 'Create Lead',
@@ -93,7 +97,8 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 if (this.getAcl().checkScope('Document', 'create')) {
                     if (
-                        this.model.get('attachmentsIds') === undefined || this.model.getLinkMultipleIdList('attachments').length
+                        this.model.get('attachmentsIds') === undefined ||
+                        this.model.getLinkMultipleIdList('attachments').length
                     ) {
                         this.addMenuItem('dropdown', {
                             html: this.translate('Create Document', 'labels', 'Document'),
@@ -104,38 +109,52 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         });
 
                         if (this.model.get('attachmentsIds') === undefined) {
-                            this.listenToOnce(this.model, 'sync', function () {
+                            this.listenToOnce(this.model, 'sync', () => {
                                 if (this.model.getLinkMultipleIdList('attachments').length) {
                                     this.showHeaderActionItem('createDocument');
                                 }
-                            }, this);
+                            });
                         }
                     }
                 }
             }
 
-            this.listenTo(this.model, 'change', function () {
-                if (!this.isRendered()) return;
-                if (!this.model.hasChanged('isImportant') && !this.model.hasChanged('inTrash')) return;
+            this.listenTo(this.model, 'change', () => {
+                if (!this.isRendered()) {
+                    return;
+                }
+
+                if (!this.model.hasChanged('isImportant') && !this.model.hasChanged('inTrash')) {
+                    return;
+                }
 
                 var headerView = this.getView('header');
+
                 if (headerView) {
                     headerView.reRender();
                 }
-            }, this);
+            });
         },
 
         actionCreateLead: function () {
             var attributes = {};
 
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
+            var emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
+
             if (fromString) {
                 var fromName = emailHelper.parseNameFromStringAddress(fromString);
+
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
+
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
                 }
@@ -144,11 +163,15 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             if (this.model.get('replyToString')) {
                 var str = this.model.get('replyToString');
                 var p = (str.split(';'))[0];
+
                 attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
+
                 var fromName = emailHelper.parseNameFromStringAddress(p);
+
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
+
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
                 }
@@ -162,22 +185,26 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
+
             this.createView('quickCreate', viewName, {
                 scope: 'Lead',
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenTo(view, 'before:save', function () {
+
+                this.listenTo(view, 'before:save', () => {
                     this.getView('record').blockUpdateWebSocket(true);
-                }, this);
-                this.listenToOnce(view, 'after:save', function () {
+                });
+
+                this.listenToOnce(view, 'after:save', () => {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
+
                     view.close();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         actionCreateCase: function () {
@@ -188,12 +215,17 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var parentName = this.model.get('parentName');
 
             if (parentId) {
-                if (parentType == 'Account') {
+                if (parentType === 'Account') {
                     attributes.accountId = parentId;
                     attributes.accountName = parentName;
-                } else if (parentType == 'Contact') {
+                }
+                else if (parentType === 'Contact') {
                     attributes.contactId = parentId;
                     attributes.contactName = parentName;
+
+                    attributes.contactsIds = [parentId];
+                    attributes.contactsNames = {};
+                    attributes.contactsNames[parentId] = parentName;
                 }
             }
 
@@ -206,35 +238,42 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
             Espo.Ui.notify(this.translate('loading', 'messsages'));
 
-            (new Promise(function (resolve) {
+            (new Promise(resolve => {
                 if (!(this.model.get('attachmentsIds') || []).length) {
                     resolve();
+
                     return;
                 }
+
                 this.ajaxPostRequest('Email/action/getCopiedAttachments', {
-                    id: this.model.id
-                }).then(function (data) {
+                    id: this.model.id,
+                }).then(data => {
                     attributes.attachmentsIds = data.ids;
                     attributes.attachmentsNames = data.names;
+
                     resolve();
-                }.bind(this));
-            }.bind(this))).then(function () {
+                });
+            })).then(() => {
                 this.createView('quickCreate', viewName, {
                     scope: 'Case',
                     attributes: attributes,
-                }, function (view) {
+                }, view => {
                     view.render();
+
                     Espo.Ui.notify(false);
-                    this.listenToOnce(view, 'after:save', function () {
+
+                    this.listenToOnce(view, 'after:save', () => {
                         this.model.fetch();
                         this.removeMenuItem('createCase');
+
                         view.close();
-                    }, this);
-                    this.listenTo(view, 'before:save', function () {
+                    });
+
+                    this.listenTo(view, 'before:save', () => {
                         this.getView('record').blockUpdateWebSocket(true);
-                    }, this);
+                    });
                 });
-            }.bind(this));
+            });
         },
 
         actionCreateTask: function () {
@@ -254,26 +293,35 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             this.createView('quickCreate', viewName, {
                 scope: 'Task',
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
+
+                this.listenToOnce(view, 'after:save', () => {
                     view.close();
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         actionCreateContact: function () {
             var attributes = {};
 
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
+            var emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
+
             if (fromString) {
                 var fromName = emailHelper.parseNameFromStringAddress(fromString);
+
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
+
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
                 }
@@ -282,11 +330,15 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             if (this.model.get('replyToString')) {
                 var str = this.model.get('replyToString');
                 var p = (str.split(';'))[0];
+
                 attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
+
                 var fromName = emailHelper.parseNameFromStringAddress(p);
+
                 if (fromName) {
                     var firstName = fromName.split(' ').slice(0, -1).join(' ');
                     var lastName = fromName.split(' ').slice(-1).join(' ');
+
                     attributes.firstName = firstName;
                     attributes.lastName = lastName;
                 }
@@ -295,39 +347,47 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             if (!attributes.emailAddress) {
                 attributes.emailAddress = this.model.get('from');
             }
+
             attributes.emailId = this.model.id;
 
             var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
+
             this.createView('quickCreate', viewName, {
                 scope: 'Contact',
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
+
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
+
+                this.listenToOnce(view, 'after:save', () => {
                     this.model.fetch();
                     this.removeMenuItem('createContact');
                     this.removeMenuItem('createLead');
-                    view.close();
-                }.bind(this));
-                    this.listenTo(view, 'before:save', function () {
-                        this.getView('record').blockUpdateWebSocket(true);
-                    }, this);
-            }.bind(this));
 
+                    view.close();
+                });
+
+                this.listenTo(view, 'before:save', () => {
+                    this.getView('record').blockUpdateWebSocket(true);
+                });
+            });
         },
 
         actionSend: function () {
             var recordView = this.getView('record');
 
             var $send = this.$el.find('.header-buttons [data-action="send"]');
+
             $send.addClass('disabled');
 
-            this.listenToOnce(recordView, 'after:send', function () {
+            this.listenToOnce(recordView, 'after:send', () => {
                 this.model.set('status', 'Sent');
+
                 $send.remove();
+
                 this.menu = this.backedMenu;
 
                 if (recordView.mode !== 'detail') {
@@ -341,34 +401,41 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     recordView.setFieldReadOnly('cc');
                     recordView.setFieldReadOnly('bcc');
                 }
+            });
 
-            }, this);
-
-            this.listenToOnce(recordView, 'cancel:save', function () {
+            this.listenToOnce(recordView, 'cancel:save', () => {
                 $send.removeClass('disabled');
-            }, this);
+            });
 
             recordView.send();
         },
 
         actionReply: function (data, e, cc) {
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
+            var emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
 
             var attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
+
+            var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                'views/modals/compose-email';
+
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:save', function () {
+                this.listenToOnce(view, 'after:save', () => {
                     this.model.trigger('reply');
-                }, this);
-            }, this);
+                });
+            });
         },
 
         actionReplyToAll: function (data, e) {
@@ -376,48 +443,55 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
         },
 
         actionForward: function (data, cc) {
-            var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
+            var emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
 
             var attributes = emailHelper.getForwardAttributes(this.model, data, cc);
 
             this.notify('Loading...');
-            $.ajax({
-                url: 'Email/action/getCopiedAttachments',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
+
+            Espo.Ajax
+                .postRequest('Email/action/getCopiedAttachments', {
+                    id: this.model.id,
                 })
-            }).done(function (data) {
-                attributes['attachmentsIds'] = data.ids;
-                attributes['attachmentsNames'] = data.names;
+                .then(() => {
+                    attributes['attachmentsIds'] = data.ids;
+                    attributes['attachmentsNames'] = data.names;
 
-                this.notify('Loading...');
-                var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
-                this.createView('quickCreate', viewName, {
-                    attributes: attributes,
-                }, function (view) {
-                    view.render();
+                    this.notify('Loading...');
 
-                    view.notify(false);
+                    var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                        'views/modals/compose-email';
+
+                    this.createView('quickCreate', viewName, {
+                        attributes: attributes,
+                    }, view => {
+                        view.render();
+
+                        view.notify(false);
+                    });
                 });
-
-            }.bind(this));
-
         },
 
         getHeader: function () {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
-            var nameHtml = '<span class="font-size-flexible title">' + name + '</span>'
+            var nameHtml = '<span class="font-size-flexible title">' + name + '</span>';
 
             var classPart = '';
+
             if (this.model.get('isImportant')) {
                 classPart += ' text-warning';
             }
+
             if (this.model.get('inTrash')) {
                 classPart += ' text-muted';
             }
 
-            nameHtml = '<span class="font-size-flexible title'+classPart+'">' + name + '</span>'
+            nameHtml = '<span class="font-size-flexible title'+classPart+'">' + name + '</span>';
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
@@ -433,25 +507,31 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
         actionNavigateToRoot: function (data, e) {
             e.stopPropagation();
 
-            this.getRouter().checkConfirmLeaveOut(function () {
+            this.getRouter().checkConfirmLeaveOut(() => {
                 var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
                 var options = {
                     isReturn: true,
                     isReturnThroughLink: true
                 };
+
                 this.getRouter().navigate(rootUrl, {trigger: false});
+
                 this.getRouter().dispatch(this.scope, null, options);
-            }, this);
+            });
         },
 
         actionCreateDocument: function () {
             var attachmentIdList = this.model.getLinkMultipleIdList('attachments');
-            if (!attachmentIdList.length) return;
+
+            if (!attachmentIdList.length) {
+                return;
+            }
 
             var names = this.model.get('attachmentsNames') || {};
             var types = this.model.get('attachmentsTypes') || {};
 
-            var proceed = function (id) {
+            var proceed = (id) => {
                 var name = names[id] || id;
                 var type = types[id];
 
@@ -469,47 +549,53 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     id: id,
                     relatedType: 'Document',
                     field: 'file',
-                }).then(
-                    function (attachment) {
-                        attributes.fileId = attachment.id;
-                        attributes.fileName = attachment.name;
-                        attributes.name = attachment.name;
+                }).then((attachment) => {
+                    attributes.fileId = attachment.id;
+                    attributes.fileName = attachment.name;
+                    attributes.name = attachment.name;
 
-                        var viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') || 'views/modals/edit';
-                        this.createView('quickCreate', viewName, {
-                            scope: 'Document',
-                            attributes: attributes,
-                        }, function (view) {
-                            view.render();
-                            Espo.Ui.notify(false);
-                            this.listenToOnce(view, 'after:save', function () {
-                                view.close();
-                            }, this);
+                    var viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') ||
+                        'views/modals/edit';
+
+                    this.createView('quickCreate', viewName, {
+                        scope: 'Document',
+                        attributes: attributes,
+                    }, (view) => {
+                        view.render();
+
+                        Espo.Ui.notify(false);
+
+                        this.listenToOnce(view, 'after:save', () => {
+                            view.close();
                         });
-                    }.bind(this)
-                );
-            }.bind(this);
+                    });
+                });
+            };
 
             if (attachmentIdList.length === 1) {
                 proceed(attachmentIdList[0]);
-            } else {
-                var dataList = [];
-                attachmentIdList.forEach(function (id) {
-                    dataList.push({
-                        id: id,
-                        name: names[id] || id,
-                        type: types[id],
-                    });
-                }, this);
-                this.createView('dialog', 'views/attachment/modals/select-one', {
-                    dataList: dataList,
-                    fieldLabel: this.translate('attachments', 'fields', 'Email'),
-                }, function (view) {
-                    view.render();
-                    this.listenToOnce(view, 'select', proceed.bind(this))
-                });
-            }
-        },
 
+                return;
+            }
+
+            var dataList = [];
+
+            attachmentIdList.forEach((id) => {
+                dataList.push({
+                    id: id,
+                    name: names[id] || id,
+                    type: types[id],
+                });
+            });
+
+            this.createView('dialog', 'views/attachment/modals/select-one', {
+                dataList: dataList,
+                fieldLabel: this.translate('attachments', 'fields', 'Email'),
+            }, (view) => {
+                view.render();
+
+                this.listenToOnce(view, 'select', proceed.bind(this));
+            });
+        },
     });
 });

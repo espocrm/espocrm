@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/formula', 'views/fields/text', function (Dep) {
+define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         editTemplate: 'fields/formula/edit',
 
-        height: 300,
+        height: 50,
 
         maxLineDetailCount: 80,
 
@@ -69,8 +69,6 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 this.params.targetEntityType ||
                 this.targetEntityType;
 
-            this.insertDisabled = this.options.insertDisabled;
-
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
             if (this.mode === 'edit' || this.mode === 'detail') {
@@ -91,9 +89,9 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 Espo.loader.require('lib!ace', () =>
                     Promise
                         .all([
-                            new Promise(resolve =>
+                            /*new Promise(resolve =>
                                 Espo.loader.require('lib!ace-mode-javascript', () => resolve())
-                            ),
+                            ),*/
                             new Promise(resolve =>
                                 Espo.loader.require('lib!ace-ext-language_tools', () => resolve())
                             ),
@@ -101,17 +99,14 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                         .then(() => resolve())
                 )
             );
-
-            /*.then(() => {
-                ace.config.set('basePath', this.getBasePath() + 'client/lib/ace');
-            })*/
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.containerId = this.containerId;
             data.targetEntityType = this.targetEntityType;
-            data.hasInsert = !this.insertDisabled;
+            data.hasInsert = true;
 
             return data;
         },
@@ -157,11 +152,11 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 editor.commands.removeCommand('find');
                 editor.setHighlightActiveLine(false);
 
-                var JavaScriptMode = ace.require('ace/mode/javascript').Mode;
+                //var JavaScriptMode = ace.require('ace/mode/javascript').Mode;
 
-                editor.session.setMode(new JavaScriptMode());
+                //editor.session.setMode(new JavaScriptMode());
 
-                if (!this.insertDisabled && !this.isReadMode()) {
+                if (!this.isReadMode()) {
                     this.initAutocomplete();
                 }
             }
@@ -170,54 +165,13 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         fetch: function () {
             var data = {};
 
-            data[this.name] = this.editor.getValue()
+            data[this.name] = this.editor.getValue();
 
             return data;
         },
 
-        addAttribute: function () {
-            this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
-                scope: this.targetEntityType
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'add', (attribute) => {
-                    this.editor.insert(attribute);
-
-                    this.clearView('dialog');
-                });
-            });
-        },
-
-        addFunction: function () {
-            this.createView('dialog', 'views/admin/formula/modals/add-function', {
-                scope: this.targetEntityType,
-                functionDataList: this.getFunctionDataList(),
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'add', (string) => {
-                    this.editor.insert(string);
-
-                    this.clearView('dialog');
-                });
-            });
-        },
-
         getFunctionDataList: function () {
-            let list = this.getMetadata().get(['app', 'formula', 'functionList']) || [];
-
-            if (!this.targetEntityType) {
-                list = list.filter(item => {
-                    if (item.name.indexOf('entity\\') === 0) {
-                        return false;
-                    }
-
-                    return true;
-                });
-            }
-
-            return list;
+            return this.getMetadata().get(['app', 'complexExpression', 'functionList']) || [];
         },
 
         initAutocomplete: function () {
@@ -246,12 +200,6 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             var text = originalItem.name;
 
                             if (text.indexOf(prefix) === 0) {
-                                return true;
-                            }
-
-                            var parts = text.split('\\');
-
-                            if (parts[parts.length - 1].indexOf(prefix) === 0) {
                                 return true;
                             }
 
@@ -301,6 +249,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 .getEntityTypeAttributeList(this.targetEntityType)
                 .sort();
 
+            attributeList.unshift('id');
+
+            // @todo Skip not storable attributes.
+
             var links = this.getMetadata().get(['entityDefs', this.targetEntityType, 'links']) || {};
 
             var linkList = [];
@@ -312,7 +264,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     return;
                 }
 
-                if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
+                if (~['hasMany', 'hasOne', 'belongsTo'].indexOf(type)) {
                     linkList.push(link);
                 }
             });
@@ -340,6 +292,36 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             });
 
             return attributeList;
+        },
+
+        addAttribute: function () {
+            this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
+                scope: this.targetEntityType,
+                attributeList: this.getAttributeList(),
+            }, view => {
+                view.render();
+
+                this.listenToOnce(view, 'add', attribute => {
+                    this.editor.insert(attribute);
+
+                    this.clearView('dialog');
+                });
+            });
+        },
+
+        addFunction: function () {
+            this.createView('dialog', 'views/admin/complex-expression/modals/add-function', {
+                scope: this.targetEntityType,
+                functionDataList: this.getFunctionDataList(),
+            }, view => {
+                view.render();
+
+                this.listenToOnce(view, 'add', string => {
+                    this.editor.insert(string);
+
+                    this.clearView('dialog');
+                });
+            });
         },
 
     });

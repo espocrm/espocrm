@@ -120,16 +120,19 @@ class Converter
         $this->databaseHelper = new DatabaseHelper($this->config);
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
 
-    protected function getConfig()
+    protected function getConfig(): Config
     {
         return $this->config;
     }
 
+    /**
+     * @return array
+     */
     protected function getEntityDefs($reload = false)
     {
         if (empty($this->entityDefs) || $reload) {
@@ -139,22 +142,22 @@ class Converter
         return $this->entityDefs;
     }
 
-    protected function getFileManager()
+    protected function getFileManager(): FileManager
     {
         return $this->fileManager;
     }
 
-    protected function getRelationManager()
+    protected function getRelationManager(): RelationManager
     {
         return $this->relationManager;
     }
 
-    protected function getMetadataHelper()
+    protected function getMetadataHelper(): MetadataHelper
     {
         return $this->metadataHelper;
     }
 
-    protected function getDatabaseHelper()
+    protected function getDatabaseHelper(): DatabaseHelper
     {
         return $this->databaseHelper;
     }
@@ -396,12 +399,16 @@ class Converter
 
             if (isset($fieldTypeMetadata['linkDefs'])) {
                 $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta(
-                    $entityType, $attributeParams, $fieldTypeMetadata['linkDefs']
+                    $entityType,
+                    $attributeParams,
+                    $fieldTypeMetadata['linkDefs']
                 );
+
                 if (isset($linkDefs)) {
                     if (!isset($entityMetadata['links'])) {
                         $entityMetadata['links'] = [];
                     }
+
                     $entityMetadata['links'] = Util::merge(
                         [$attribute => $linkDefs],
                         $entityMetadata['links']
@@ -508,7 +515,10 @@ class Converter
     }
 
     protected function convertField(
-        string $entityType, string $attribute, array $attributeParams, ?array $fieldTypeMetadata = null
+        string $entityType,
+        string $attribute,
+        array $attributeParams,
+        ?array $fieldTypeMetadata = null
     ) {
 
         if (!isset($fieldTypeMetadata)) {
@@ -585,13 +595,18 @@ class Converter
 
             switch ($espoType) {
                 case 'default':
-                    if (is_array($attributeParams[$espoType]) || !preg_match('/^javascript:/i', $attributeParams[$espoType])) {
+                    if (
+                        is_array($attributeParams[$espoType]) ||
+                        !preg_match('/^javascript:/i', $attributeParams[$espoType])
+                    ) {
                         $values[$ormType] = $attributeParams[$espoType];
                     }
+
                     break;
 
                 default:
                     $values[$ormType] = $attributeParams[$espoType];
+
                     break;
             }
         }
@@ -620,6 +635,7 @@ class Converter
 
         foreach ($fieldList as $field) {
             $defs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
+
             if (empty($defs['type'])) {
                 continue;
             }
