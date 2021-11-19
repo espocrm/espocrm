@@ -1,0 +1,233 @@
+{
+    "functionList": [
+        {
+            "name": "EQUAL",
+            "insertText": "EQUAL:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "NOT_EQUAL",
+            "insertText": "NOT_EQUAL:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "OR",
+            "insertText": "OR:(EXPR1, EXPR2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "AND",
+            "insertText": "AND:(EXPR1, EXPR2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "NOT",
+            "insertText": "NOT:(EXPR)",
+            "returnType": "bool"
+        },
+        {
+            "name": "LIKE",
+            "insertText": "LIKE:(VALUE, 'pattern%')",
+            "returnType": "bool"
+        },
+        {
+            "name": "NOT_LIKE",
+            "insertText": "NOT_LIKE:(VALUE, 'pattern%')",
+            "returnType": "bool"
+        },
+        {
+            "name": "GREATER_THAN",
+            "insertText": "GREATER_THAN:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "LESS_THAN",
+            "insertText": "LESS_THAN:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "GREATER_THAN_OR_EQUAL",
+            "insertText": "GREATER_THAN_OR_EQUAL:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "LESS_THAN_OR_EQUAL",
+            "insertText": "LESS_THAN_OR_EQUAL:(VALUE1, VALUE2)",
+            "returnType": "bool"
+        },
+        {
+            "name": "IS_NULL",
+            "insertText": "IS_NULL:(VALUE)",
+            "returnType": "bool"
+        },
+        {
+            "name": "IS_NOT_NULL",
+            "insertText": "IS_NOT_NULL:(VALUE)",
+            "returnType": "bool"
+        },
+        {
+            "name": "IN",
+            "insertText": "IN:(VALUE, VALUE1, VALUE2, VALUE3)",
+            "returnType": "bool"
+        },
+        {
+            "name": "NOT_IN",
+            "insertText": "NOT_IN:(VALUE, VALUE1, VALUE2, VALUE3)",
+            "returnType": "bool"
+        },
+        {
+            "name": "IF",
+            "insertText": "IF:(CONDITION, THEN_VALUE, ELSE_VALUE)"
+        },
+        {
+            "name": "MONTH_NUMBER",
+            "insertText": "MONTH_NUMBER:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "WEEK_NUMBER_0",
+            "insertText": "WEEK_NUMBER_0:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "WEEK_NUMBER_1",
+            "insertText": "WEEK_NUMBER_1:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "DAYOFWEEK",
+            "insertText": "DAYOFWEEK:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "DAYOFMONTH",
+            "insertText": "DAYOFMONTH:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "YEAR",
+            "insertText": "YEAR:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "HOUR",
+            "insertText": "HOUR:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "MINUTE",
+            "insertText": "MINUTE:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "MONTH",
+            "insertText": "MONTH:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "QUARTER",
+            "insertText": "QUARTER:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "WEEK",
+            "insertText": "WEEK:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "NOW",
+            "insertText": "NOW:()",
+            "returnType": "string"
+        },
+        {
+            "name": "TZ",
+            "insertText": "TZ:(DATE_VALUE, OFFSET)",
+            "returnType": "string"
+        },
+        {
+            "name": "UNIX_TIMESTAMP",
+            "insertText": "UNIX_TIMESTAMP:(DATE_VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "CONCAT",
+            "insertText": "CONCAT:(STRING1, STRING2)",
+            "returnType": "string"
+        },
+        {
+            "name": "LEFT",
+            "insertText": "LEFT:(STRING, NUMBER_OF_CHARACTERS)",
+            "returnType": "string"
+        },
+        {
+            "name": "LOWER",
+            "insertText": "LOWER:(STRING)",
+            "returnType": "string"
+        },
+        {
+            "name": "UPPER",
+            "insertText": "UPPER:(STRING)",
+            "returnType": "string"
+        },
+        {
+            "name": "TRIM",
+            "insertText": "TRIM:(STRING)",
+            "returnType": "string"
+        },
+        {
+            "name": "CHAR_LENGTH",
+            "insertText": "CHAR_LENGTH:(STRING)",
+            "returnType": "int"
+        },
+        {
+            "name": "BINARY",
+            "insertText": "BINARY:(STRING)",
+            "returnType": "string"
+        },
+        {
+            "name": "REPLACE",
+            "insertText": "REPLACE:(HAYSTACK, NEEDLE, REPLACE_WITH)",
+            "returnType": "string"
+        },
+        {
+            "name": "ADD",
+            "insertText": "ADD:(VALUE1, VALUE2)",
+            "returnType": "float"
+        },
+        {
+            "name": "SUB",
+            "insertText": "SUB:(VALUE1, VALUE2)",
+            "returnType": "float"
+        },
+        {
+            "name": "MUL",
+            "insertText": "MUL:(VALUE1, VALUE2)",
+            "returnType": "float"
+        },
+        {
+            "name": "DIV",
+            "insertText": "DIV:(VALUE1, VALUE2)",
+            "returnType": "float"
+        },
+        {
+            "name": "MOD",
+            "insertText": "MOD:(VALUE1, VALUE2)",
+            "returnType": "float"
+        },
+        {
+            "name": "FLOOR",
+            "insertText": "FLOOR:(VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "CEIL",
+            "insertText": "CEIL:(VALUE)",
+            "returnType": "int"
+        },
+        {
+            "name": "ROUND",
+            "insertText": "ROUND:(VALUE, PRECISION)",
+            "returnType": "float"
+        }
+    ]
+}

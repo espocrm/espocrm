@@ -33,6 +33,12 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
 
+            if (this.options.attributeList) {
+                this.params.options = this.options.attributeList;
+
+                return;
+            }
+
             var attributeList = this.getFieldManager()
                 .getEntityTypeAttributeList(this.options.scope)
                 .sort();
@@ -41,7 +47,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
 
             var linkList = [];
 
-            Object.keys(links).forEach(function (link) {
+            Object.keys(links).forEach(link => {
                 var type = links[link].type;
 
                 if (!type) {
@@ -51,11 +57,11 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
                 if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
                     linkList.push(link);
                 }
-            }, this);
+            });
 
             linkList.sort();
 
-            linkList.forEach(function (link) {
+            linkList.forEach(link => {
                 var scope = links[link].entity;
 
                 if (!scope) {
@@ -70,10 +76,10 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
                     .getEntityTypeAttributeList(scope)
                     .sort();
 
-                linkAttributeList.forEach(function (item) {
+                linkAttributeList.forEach((item) => {
                     attributeList.push(link + '.' + item);
-                }, this);
-            }, this);
+                });
+            });
 
             this.params.options = attributeList;
         },

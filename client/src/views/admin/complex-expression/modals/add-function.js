@@ -26,41 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/complex-expression/modals/add-function', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
-        _template: '<div class="attribute" data-name="attribute">{{{attribute}}}</div>',
+        template: 'admin/formula/modals/add-function',
+
+        fitHeight: true,
 
         backdrop: true,
 
+        events: {
+            'click [data-action="add"]': function (e) {
+                this.trigger('add', $(e.currentTarget).data('value'));
+            }
+        },
+
+        data: function () {
+            var text = this.translate('formulaFunctions', 'messages', 'Admin')
+                .replace('{documentationUrl}', this.documentationUrl);
+            text = this.getHelper().transfromMarkdownText(text, {linksInNewTab: true}).toString();
+
+            return {
+                functionDataList: this.functionDataList,
+                text: text,
+            };
+        },
+
         setup: function () {
-            this.header = this.translate('Attribute');
-            this.scope = this.options.scope;
+            this.header = this.translate('Function');
 
-            var model = new Model();
+            this.documentationUrl = 'https://docs.espocrm.com/user-guide/complex-expressions/';
 
-            this.createView('attribute', 'views/admin/formula/fields/attribute', {
-                el: this.getSelector() + ' [data-name="attribute"]',
-                model: model,
-                mode: 'edit',
-                scope: this.scope,
-                defs: {
-                    name: 'attribute',
-                    params: {}
-                },
-                attributeList: this.options.attributeList,
-            }, view => {
-                this.listenTo(view, 'change', () => {
-                    var list = model.get('attribute') || [];
-
-                    if (!list.length) {
-                        return;
-                    }
-
-                    this.trigger('add', list[0]);
-                });
-            });
+            this.functionDataList = this.options.functionDataList ||
+                this.getMetadata().get('app.complexExpression.functionList') || [];
         },
 
     });
