@@ -66,6 +66,7 @@ class AccessChecker implements AccessEntityCREDChecker
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('parentType') === 'Settings') {
+            // Allow the logo.
             return true;
         }
 
