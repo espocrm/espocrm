@@ -32,6 +32,7 @@ namespace Espo\Classes\AclPortal\Attachment;
 use Espo\Entities\{
     User,
     Note,
+    Attachment,
 };
 
 use Espo\ORM\Entity;
@@ -46,7 +47,7 @@ use Espo\Core\{
 };
 
 /**
- * @implements AccessEntityCREDChecker<User>
+ * @implements AccessEntityCREDChecker<Attachment>
  */
 class AccessChecker implements AccessEntityCREDChecker
 {
@@ -70,7 +71,10 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
+        /** @var Attachment $entity */
+
         if ($entity->get('parentType') === 'Settings') {
+            // Allow the logo.
             return true;
         }
 
@@ -105,6 +109,16 @@ class AccessChecker implements AccessEntityCREDChecker
             }
         }
         else if ($this->aclManager->checkEntity($user, $parent)) {
+            if (
+                $entity->getTargetField() &&
+                in_array(
+                    $entity->getTargetField(),
+                    $this->aclManager->getScopeForbiddenFieldList($user, $parent->getEntityType())
+                )
+            ) {
+                return false;
+            }
+
             return true;
         }
 
