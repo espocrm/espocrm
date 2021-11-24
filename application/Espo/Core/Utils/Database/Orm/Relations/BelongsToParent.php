@@ -35,33 +35,32 @@ class BelongsToParent extends Base
     {
         $linkParams = $this->getLinkParams();
 
-        return array(
-            $entityName => array(
-                'fields' => array(
-                    $linkName.'Id' => array(
+        return [
+            $entityName => [
+                'fields' => [
+                    $linkName.'Id' => [
                         'type' => 'foreignId',
                         'index' => $linkName,
-                    ),
-                    $linkName.'Type' => array(
+                    ],
+                    $linkName.'Type' => [
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $linkName,
-                        'len' => 100
-                    ),
-                    $linkName.'Name' => array(
+                        'len' => 100,
+                    ],
+                    $linkName.'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
-                    ),
-                ),
-                'relations' => array(
-                    $linkName => array(
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
                         'type' => 'belongsToParent',
-                        'key' => $linkName.'Id',
-                    ),
-                ),
-            ),
-        );
-
+                        'key' => $linkName .'Id',
+                        'foreign' => $linkParams['foreign'] ?? null,
+                    ],
+                ],
+            ],
+        ];
     }
-
 }
