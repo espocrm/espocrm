@@ -30,19 +30,16 @@
 namespace Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\Select\OrmSelectBuilder;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Select\SelectManager;
+use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\SelectManager,
-    Select\Bool\FilterFactory as BoolFilterFactory,
-};
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\WhereClause;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\Where\OrGroupBuilder,
-    ORM\Query\Part\WhereClause,
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class BoolFilterList
 {
@@ -79,8 +76,18 @@ class BoolFilterList
     {
         $orGroupBuilder = new OrGroupBuilder();
 
+        $isMultiple = count($boolFilterNameList) > 1;
+
+        if ($isMultiple) {
+            $queryBefore = $queryBuilder->build();
+        }
+
         foreach ($boolFilterNameList as $filterName) {
             $this->applyBoolFilter($queryBuilder, $orGroupBuilder, $filterName);
+        }
+
+        if ($isMultiple) {
+            $this->handleMultiple($queryBefore, $queryBuilder);
         }
 
         $queryBuilder->where(
@@ -117,5 +124,17 @@ class BoolFilterList
         }
 
         throw new Error("No bool filter '{$filterName}' for '{$this->entityType}'.");
+    }
+
+    private function handleMultiple(Select $queryBefore, QueryBuilder $queryBuilder): void
+    {
+        $queryAfter = $queryBuilder->build();
+
+        $joinCountBefore = count($queryBefore->getJoins()) + count($queryBefore->getLeftJoins());
+        $joinCountAfter = count($queryAfter->getJoins()) + count($queryAfter->getLeftJoins());
+
+        if ($joinCountBefore < $joinCountAfter) {
+            $queryBuilder->distinct();
+        }
     }
 }
