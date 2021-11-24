@@ -115,6 +115,9 @@ class Base
         return $this->entityName;
     }
 
+    /**
+     * @todo Call methods explicitly.
+     */
     protected function setMethods(array $keyValueList)
     {
         foreach ($keyValueList as $key => $value) {
@@ -127,7 +130,7 @@ class Base
     }
 
     /**
-     * Get Entity Defs by type (entity/orm)
+     * Get Entity Defs by type (entity/orm).
      *
      * @param  boolean $isOrmEntityDefs
      * @return array
