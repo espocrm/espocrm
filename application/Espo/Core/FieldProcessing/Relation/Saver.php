@@ -104,6 +104,10 @@ class Saver implements SaverInterface
             return;
         }
 
+        if (!$entity->isAttributeChanged($idAttribute)) {
+            return;
+        }
+
         $id = $entity->get($idAttribute);
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
