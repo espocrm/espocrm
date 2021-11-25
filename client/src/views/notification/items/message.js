@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/items/message', 'views/notification/items/base', function (Dep) {
+define(
+    'views/notification/items/message',
+    ['views/notification/items/base', 'lib!marked', 'lib!dompurify'],
+    function (Dep, marked, DOMPurify) {
 
     return Dep.extend({
 
@@ -43,18 +46,31 @@ Espo.define('views/notification/items/message', 'views/notification/items/base',
 
             this.style = data.style || 'text-muted';
 
-            this.messageTemplate = this.model.get('message') || data.message || '';
+            let message = marked(
+                (this.model.get('message') || data.message || '')
+            );
+
+            this.messageTemplate = DOMPurify.sanitize(message).toString();
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = this.getHelper().escapeString(Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase()));
+            this.messageData['entityType'] = this.getHelper()
+                .escapeString(
+                    Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase())
+                );
 
-            this.messageData['user'] = '<a href="#User/view/' + this.getHelper().escapeString(data.userId) + '">' + this.getHelper().escapeString(data.userName) + '</a>';
-            this.messageData['entity'] = '<a href="#'+this.getHelper().escapeString(data.entityType)+'/view/' + this.getHelper().escapeString(data.entityId) + '">' + this.getHelper().escapeString(data.entityName) + '</a>';
+            this.messageData['user'] =
+                '<a href="#User/view/' +
+                this.getHelper().escapeString(data.userId) + '">' +
+                this.getHelper().escapeString(data.userName) + '</a>';
+
+            this.messageData['entity'] =
+                '<a href="#' + this.getHelper().escapeString(data.entityType) + '/view/' +
+                this.getHelper().escapeString(data.entityId) + '">' + this.getHelper().escapeString(data.entityName) +
+                '</a>';
 
             this.createMessage();
-        }
+        },
 
     });
 });
-
