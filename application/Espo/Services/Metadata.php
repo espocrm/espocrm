@@ -29,7 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
 
@@ -71,12 +70,7 @@ class Metadata
                 continue;
             }
 
-            try {
-                $isAllowed = $isEntity !== null && $this->acl->check($scope);
-            }
-            catch (NotImplemented $e) {
-                $isAllowed = false;
-            }
+            $isAllowed = $isEntity !== null && $this->acl->tryCheck($scope);
 
             if (!$isAllowed) {
                 unset($data->entityDefs->$scope);
@@ -105,7 +99,7 @@ class Metadata
 
                         if (is_array($parentEntityList)) {
                             foreach ($parentEntityList as $i => $e) {
-                                if (!$this->acl->check($e)) {
+                                if (!$this->acl->tryCheck($e)) {
                                     unset($parentEntityList[$i]);
                                 }
                             }
@@ -122,7 +116,7 @@ class Metadata
                 $foreignEntityType = $defs['entity'] ?? null;
 
                 if ($foreignEntityType) {
-                    if ($this->acl->check($foreignEntityType)) {
+                    if ($this->acl->tryCheck($foreignEntityType)) {
                         continue;
                     }
 
