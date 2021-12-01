@@ -101,10 +101,6 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                         .then(() => resolve())
                 )
             );
-
-            /*.then(() => {
-                ace.config.set('basePath', this.getBasePath() + 'client/lib/ace');
-            })*/
         },
 
         data: function () {
