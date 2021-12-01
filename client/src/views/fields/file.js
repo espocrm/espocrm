@@ -52,6 +52,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
         searchTypeList: ['isNotEmpty', 'isEmpty'],
 
+        ROW_HEIGHT: 35,
+
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
@@ -304,12 +306,18 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             let src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
+            let maxHeight = (this.imageSizes[this.previewSize] || {})[1];
+
+            if (this.isListMode()) {
+                maxHeight = this.ROW_HEIGHT + 'px';
+            }
+
             let $img = $('<img>')
                 .attr('src', src)
                 .addClass('image-preview')
                 .css({
                     maxWidth: (this.imageSizes[this.previewSize] || {})[0],
-                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                    maxHeight: maxHeight,
                 });
 
             if (this.mode === 'listLink') {
@@ -377,8 +385,24 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     classNamePart += ' no-shrink';
                 }
 
-                return'<div class="attachment-preview'+classNamePart+'">' +
+                let item = '<div class="attachment-preview' + classNamePart + '">' +
                     this.getDetailPreview(name, type, id) +
+                    '</div>';
+
+                let containerClassName = 'attachment-block-container';
+
+                if (this.previewSize === 'large') {
+                    containerClassName += ' attachment-block-container-large';
+                }
+
+                if (this.previewSize === 'small') {
+                    containerClassName += ' attachment-block-container-small';
+                }
+
+                return '<div class="' + containerClassName + '">' +
+                    '<div class="attachment-block">' +
+                    item +
+                    '</div>' +
                     '</div>';
             }
 
