@@ -332,6 +332,10 @@ define(
         },
 
         setConfirmLeaveOut: function (value) {
+            if (!this.getRouter()) {
+                return;
+            }
+
             this.getRouter().confirmLeaveOut = value;
         },
 
