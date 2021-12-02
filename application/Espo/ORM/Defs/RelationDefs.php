@@ -70,7 +70,13 @@ class RelationDefs
      */
     public function getType(): string
     {
-        return $this->data['type'];
+        $type = $this->data['type'] ?? null;
+
+        if ($type === null) {
+            throw new RuntimeException("Relation '{$this->name}' has no type.");
+        }
+
+        return $type;
     }
 
     /**

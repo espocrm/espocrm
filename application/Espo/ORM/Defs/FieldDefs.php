@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Defs;
 
+use RuntimeException;
+
 /**
  * Field definitions.
  */
@@ -66,7 +68,13 @@ class FieldDefs
      */
     public function getType(): string
     {
-        return $this->data['type'];
+        $type = $this->data['type'] ?? null;
+
+        if ($type === null) {
+            throw new RuntimeException("Field '{$this->name}' has no type.");
+        }
+
+        return $type;
     }
 
     /**
