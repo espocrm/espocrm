@@ -780,6 +780,10 @@ class Htmlizer
             return [];
         }
 
+        if ($orderBy === null) {
+            $orderBy = 'id';
+        }
+
         return [[$orderBy, $order]];
     }
 }
