@@ -90,7 +90,10 @@ class Language
             unset($data['Global']['options']);
 
             foreach ($data as $k => $item) {
-                if (in_array($k, ['Global', 'User', 'Campaign'])) {
+                if (
+                    in_array($k, ['Global', 'User', 'Campaign']) ||
+                    $this->metadata->get(['scopes', $k, 'languageIsGlobal'])
+                ) {
                     continue;
                 }
 

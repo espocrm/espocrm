@@ -73,10 +73,10 @@ class CaseObj extends Record
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
 
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
-                $email->set(array(
+                $email->set([
                     'parentType' => 'Case',
                     'parentId' => $entity->getId(),
-                ));
+                ]);
 
                 $this->getEntityManager()->saveEntity($email);
             }
@@ -145,7 +145,7 @@ class CaseObj extends Record
         }
 
         foreach ($dataList as $item) {
-            if ($item->emailAddrses === $emailAddress) {
+            if ($item->emailAddress === $emailAddress) {
                 return null;
             }
         }
@@ -172,7 +172,7 @@ class CaseObj extends Record
         }
 
         foreach ($dataList as $item) {
-            if ($item->emailAddrses === $emailAddress) {
+            if ($item->emailAddress === $emailAddress) {
                 return null;
             }
         }

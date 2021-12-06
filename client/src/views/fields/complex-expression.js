@@ -197,9 +197,9 @@ define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
 
                     var matchedFunctionItemList = functionItemList
                         .filter((originalItem) => {
-                            var text = originalItem.name;
+                            var text = originalItem.name.toLowerCase();
 
-                            if (text.indexOf(prefix) === 0) {
+                            if (text.indexOf(prefix.toLowerCase()) === 0) {
                                 return true;
                             }
 

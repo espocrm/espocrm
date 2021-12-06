@@ -214,6 +214,9 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             var parentType = this.model.get('parentType');
             var parentName = this.model.get('parentName');
 
+            var accountId = this.model.get('accountId');
+            var accountName = this.model.get('accountName');
+
             if (parentId) {
                 if (parentType === 'Account') {
                     attributes.accountId = parentId;
@@ -226,6 +229,11 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     attributes.contactsIds = [parentId];
                     attributes.contactsNames = {};
                     attributes.contactsNames[parentId] = parentName;
+
+                    if (accountId) {
+                        attributes.accountId = accountId;
+                        attributes.accountName = accountName || accountId;
+                    }
                 }
             }
 

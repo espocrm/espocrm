@@ -29,24 +29,21 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Acl\Exceptions\NotImplemented;
-
-use Espo\Core\{
-    Acl,
-    Utils\Metadata as MetadataUtil,
-};
+use Espo\Core\Acl;
+use Espo\Core\Utils\Metadata as MetadataUtil;
 
 use Espo\Entities\User;
 
 class Metadata
 {
-    protected $acl;
+    private $acl;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $user;
+    private $user;
 
-    public function __construct(Acl $acl, MetadataUtil $metadata, User $user) {
+    public function __construct(Acl $acl, MetadataUtil $metadata, User $user)
+    {
         $this->acl = $acl;
         $this->metadata = $metadata;
         $this->user = $user;
@@ -73,12 +70,7 @@ class Metadata
                 continue;
             }
 
-            try {
-                $isAllowed = $isEntity !== null && $this->acl->check($scope);
-            }
-            catch (NotImplemented $e) {
-                $isAllowed = false;
-            }
+            $isAllowed = $isEntity !== null && $this->acl->tryCheck($scope);
 
             if (!$isAllowed) {
                 unset($data->entityDefs->$scope);
@@ -107,7 +99,7 @@ class Metadata
 
                         if (is_array($parentEntityList)) {
                             foreach ($parentEntityList as $i => $e) {
-                                if (!$this->acl->check($e)) {
+                                if (!$this->acl->tryCheck($e)) {
                                     unset($parentEntityList[$i]);
                                 }
                             }
@@ -124,7 +116,7 @@ class Metadata
                 $foreignEntityType = $defs['entity'] ?? null;
 
                 if ($foreignEntityType) {
-                    if ($this->acl->check($foreignEntityType)) {
+                    if ($this->acl->tryCheck($foreignEntityType)) {
                         continue;
                     }
 
@@ -146,10 +138,8 @@ class Metadata
                 unset($data->entityDefs->$entityType->links->$link);
 
                 if (
-                    isset($data->clientDefs)
-                    &&
-                    isset($data->clientDefs->$entityType)
-                    &&
+                    isset($data->clientDefs) &&
+                    isset($data->clientDefs->$entityType) &&
                     isset($data->clientDefs->$entityType->relationshipPanels)
                 ) {
                     unset($data->clientDefs->$entityType->relationshipPanels->$link);

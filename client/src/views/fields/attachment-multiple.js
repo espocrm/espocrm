@@ -643,7 +643,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.mode === 'detail' || this.isListMode()) {
                 var nameHash = this.nameHash;
 
                 var typeHash = this.model.get(this.typeHashName) || {};
@@ -678,7 +678,22 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     names.push(line);
                 }
 
-                var string = previews.join('') + names.join('');
+                let containerClassName = 'attachment-block-container';
+
+                if (this.previewSize === 'large') {
+                    containerClassName += ' attachment-block-container-large';
+                }
+
+                if (this.previewSize === 'small') {
+                    containerClassName += ' attachment-block-container-small';
+                }
+
+                if (names.length === 0) {
+                    return '';
+                }
+
+                var string = '<div class="'+ containerClassName + '">' + previews.join('') + '</div>' +
+                    names.join('');
 
                 return string;
             }

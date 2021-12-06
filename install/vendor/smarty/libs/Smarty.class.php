@@ -1537,7 +1537,7 @@ class SmartyCompilerException extends SmartyException
      * The line number of the template error
      * @type int|null
      */
-    public $line = null;
+    //public $line = null;
     /**
      * The template source snippet relating to the error
      * @type string|null

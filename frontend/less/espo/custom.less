@@ -1601,13 +1601,26 @@ label.attach-file-label {
     }
 }
 
-.attachment-preview {
-    display: inline-block;
-    vertical-align: top;
-    margin: 3px 6px 3px 0;
+.attachment-block-container {
+    display: grid;
+    grid-column-gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 256px));
 }
 
-.field > .attachment-preview {
+.attachment-block-container.attachment-block-container-large {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 512px));
+}
+
+.attachment-block-container.attachment-block-container-small {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 128px));
+}
+
+.attachment-preview {
+    vertical-align: top;
+    margin: 3px 0 3px 0;
+}
+
+.field > .attachment-block-container > .attachment-block > .attachment-preview {
     overflow: hidden;
 }
 
@@ -1621,17 +1634,13 @@ label.attach-file-label {
     margin-bottom: 0;
 }
 
-.list-row > .cell > .attachment-preview {
+.list-row > .cell > .attachment-block-container > .attachment-block > .attachment-preview {
     margin-bottom: -@table-cell-padding;
     margin-top: -@table-cell-padding;
 }
 
-.list-row > .cell > .attachment-preview:not(.no-shrink) {
+.list-row > .cell > .attachment-block-container > .attachment-block > .attachment-preview:not(.no-shrink) {
     max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
-
-    a {
-        display: inline-block;
-    }
 
     img {
         max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;

@@ -38,16 +38,17 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
     private $foreignParams;
 
     protected $foreignLinkName = null;
+
     protected $foreignEntityName = null;
 
-    protected $allowedParams = array(
+    protected $allowedParams = [
         'relationName',
         'conditions',
         'additionalColumns',
         'midKeys',
         'noJoin',
         'indexes'
-    );
+    ];
 
     protected function getParams()
     {
@@ -100,12 +101,13 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
     public function process($linkName, $entityName, $foreignLinkName, $foreignEntityName)
     {
-        $inputs = array(
+        $inputs = [
             'itemName' => $linkName,
             'entityName' => $entityName,
             'foreignLinkName' => $foreignLinkName,
             'foreignEntityName' => $foreignEntityName,
-        );
+        ];
+
         $this->setMethods($inputs);
 
         $convertedDefs = $this->load($linkName, $entityName);
@@ -113,6 +115,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         $convertedDefs = $this->mergeAllowedParams($convertedDefs);
 
         $inputs = $this->setArrayValue(null, $inputs);
+
         $this->setMethods($inputs);
 
         return $convertedDefs;
@@ -131,6 +134,7 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
 
                 if (isset($additionalParam)) {
                     $linkParams[$name] = $additionalParam;
+
                     if (isset($linkParams[$name]) && is_array($linkParams[$name])) {
                         $linkParams[$name] = Util::merge($linkParams[$name], $additionalParam);
                     }
@@ -147,7 +151,9 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         $foreignLinkParams = $this->getForeignLinkParams();
 
         $itemLinkParams = isset($linkParams[$allowedItemName]) ? $linkParams[$allowedItemName] : null;
-        $itemForeignLinkParams = isset($foreignLinkParams[$allowedItemName]) ? $foreignLinkParams[$allowedItemName] : null;
+        $itemForeignLinkParams = isset($foreignLinkParams[$allowedItemName]) ?
+            $foreignLinkParams[$allowedItemName] :
+            null;
 
         $additionalParam = null;
 

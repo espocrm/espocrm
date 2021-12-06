@@ -66,23 +66,25 @@ class EntityManager
 
     private $repositoryFactory;
 
+    /** @var EventDispatcher */
     protected $eventDispatcher;
 
     private $mapperFactory = null;
 
     private $functionConverterFactory = null;
 
+    /** @var array<string, Mapper> */
     private $mappers = [];
 
     private $metadata;
 
+    /** @var array<string, Repository<Entity>> */
     private $repositoryHash = [];
 
-    /**
-     * @var DatabaseParams
-     */
+    /** @var DatabaseParams */
     private $databaseParams;
 
+    /** @var QueryComposer */
     private $queryComposer;
 
     private $queryExecutor;
@@ -93,12 +95,17 @@ class EntityManager
 
     private $transactionManager;
 
+    /** @var Locker */
     private $locker;
 
     private $pdoProvider;
 
     private const RDB_MAPPER_NAME = 'RDB';
 
+    /**
+     * @param AttributeExtractorFactory<object> $attributeExtractorFactory
+     * @throws RuntimeException
+     */
     public function __construct(
         DatabaseParams $databaseParams,
         Metadata $metadata,
@@ -284,7 +291,9 @@ class EntityManager
     /**
      * Store an entity.
      *
+     * @param array<string, mixed> $options Options.
      * @return void
+     *
      * @todo Change return type to void in v7.1.
      */
     public function saveEntity(Entity $entity, array $options = [])
@@ -299,6 +308,8 @@ class EntityManager
 
     /**
      * Mark an entity as deleted (in database).
+     *
+     * @param array<string, mixed> $options Options.
      */
     public function removeEntity(Entity $entity, array $options = []): void
     {
@@ -336,7 +347,8 @@ class EntityManager
     /**
      * Create entity (and store to database).
      *
-     * @param stdClass|array $data Entity attributes.
+     * @param stdClass|array<string, mixed> $data Entity attributes.
+     * @param array<string, mixed> $options Options.
      */
     public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
@@ -359,6 +371,8 @@ class EntityManager
 
     /**
      * Get a repository for a specific entity type.
+     *
+     * @return RDBRepository<Entity>
      */
     public function getRepository(string $entityType): Repository
     {
@@ -375,6 +389,8 @@ class EntityManager
 
     /**
      * Get an RDB repository for a specific entity type.
+     *
+     * @return RDBRepository<Entity>
      */
     public function getRDBRepository(string $entityType): RDBRepository
     {
@@ -421,6 +437,9 @@ class EntityManager
 
     /**
      * @deprecated Use `getCollectionFactory`.
+     * @param array<string, mixed> $data
+     *
+     * @return EntityCollection<Entity>
      */
     public function createCollection(?string $entityType = null, array $data = []): EntityCollection
     {
