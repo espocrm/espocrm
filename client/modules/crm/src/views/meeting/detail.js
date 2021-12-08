@@ -26,35 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
+define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.controlSendInvitationsButton();
             this.controlAcceptanceStatusButton();
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 this.controlSendInvitationsButton();
-            }, this);
+            });
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 this.controlAcceptanceStatusButton();
-            }, this);
+            });
         },
 
         controlAcceptanceStatusButton: function () {
-            if (!this.model.has('status')) return;
-            if (!this.model.has('usersIds')) return;
+            if (!this.model.has('status')) {
+                return;
+            }
+
+            if (!this.model.has('usersIds')) {
+                return;
+            }
 
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
                 this.removeMenuItem('setAcceptanceStatus');
+
                 return;
             }
 
             if (!~this.model.getLinkMultipleIdList('users').indexOf(this.getUser().id)) {
                 this.removeMenuItem('setAcceptanceStatus');
+
                 return;
             }
 
@@ -62,10 +70,14 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
             var html;
             var style = 'default';
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
-            } else {
+
+                style = this.getMetadata()
+                    .get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+            }
+            else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
@@ -74,12 +86,12 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
             this.addMenuItem('buttons', {
                 html: html,
                 action: 'setAcceptanceStatus',
-                style: style
+                style: style,
             });
         },
 
         controlSendInvitationsButton: function () {
-            var show = true;;
+            var show = true;
 
             if (
                 ~['Held', 'Not Held'].indexOf(this.model.get('status'))
@@ -87,7 +99,10 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                 show = false;
             }
 
-            if (show && (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create'))) {
+            if (
+                show &&
+                (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create'))
+            ) {
                 show = false;
             }
 
@@ -98,11 +113,10 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
                 if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
                     show = false;
-                } else if (
-                    !contactIdList.length && !leadIdList.length
-                    &&
-                    userIdList.length === 1 && userIdList[0] === this.getUser().id
-                    &&
+                }
+                else if (
+                    !contactIdList.length && !leadIdList.length &&
+                    userIdList.length === 1 && userIdList[0] === this.getUser().id &&
                     this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
                 ) {
                     show = false;
@@ -121,43 +135,46 @@ Espo.define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         },
 
         actionSendInvitations: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.disableMenuItem('sendInvitations');
                 this.notify('Sending...');
-                Espo.Ajax.postRequest(this.model.entityType + '/action/sendInvitations', {
-                    id: this.model.id
-                }).then(function (result) {
-                    if (result) {
-                        this.notify('Sent', 'success');
-                    } else {
-                        Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                    }
-                    this.enableMenuItem('sendInvitations');
-                }.bind(this)).fail(function () {
-                    this.enableMenuItem('sendInvitations');
-                }.bind(this));
-            }, this);
+
+                Espo.Ajax
+                    .postRequest(this.model.entityType + '/action/sendInvitations', {
+                        id: this.model.id,
+                    })
+                    .then(result => {
+                        if (result) {
+                            this.notify('Sent', 'success');
+                        } else {
+                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                        }
+
+                        this.enableMenuItem('sendInvitations');
+                    })
+                    .catch(() => {
+                        this.enableMenuItem('sendInvitations');
+                    });
+            });
         },
 
         actionSetAcceptanceStatus: function () {
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
-
             this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
                 model: this.model
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'set-status', function (status) {
+                this.listenTo(view, 'set-status', (status) => {
                     this.removeMenuItem('setAcceptanceStatus');
+
                     Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
                         id: this.model.id,
-                        status: status
-                    }).then(function () {
+                        status: status,
+                    }).then(() => {
                         this.model.fetch();
-                    }.bind(this));
+                    });
                 });
             });
-        }
-
+        },
     });
 });
