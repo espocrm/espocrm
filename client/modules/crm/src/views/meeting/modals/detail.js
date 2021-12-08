@@ -59,6 +59,12 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 });
             }
 
+            this.addDropdownItem({
+                name: 'sendInvitations',
+                html: this.translate('Send Invitations', 'labels', 'Meeting'),
+                hidden: !this.isSendInvitationsToBeDisplayed(),
+            });
+
             this.initAcceptanceStatus();
 
             this.on('switch-model', (model, previousModel) => {
@@ -66,12 +72,38 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 this.initAcceptanceStatus();
             });
 
-             this.on('after:save', () => {
+            this.on('after:save', () => {
                 if (this.hasAcceptanceStatusButton()) {
                     this.showAcceptanceButton();
                 } else {
                     this.hideAcceptanceButton();
                 }
+
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+                } else {
+                    this.hideActionItem('sendInvitations');
+                }
+            });
+
+            this.listenTo(this.model, 'sync', () => {
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+
+                    return;
+                }
+
+                this.hideActionItem('sendInvitations');
+            });
+
+            this.listenTo(this.model, 'after:save', () => {
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+
+                    return;
+                }
+
+                this.hideActionItem('sendInvitations');
             });
         },
 
@@ -219,6 +251,58 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         actionSetNotHeld: function () {
             this.model.save({status: 'Not Held'});
             this.trigger('after:save', this.model);
+        },
+
+        isSendInvitationsToBeDisplayed: function () {
+            if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                return false;
+            }
+
+            if (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create')) {
+                return false;
+            }
+
+            var userIdList = this.model.getLinkMultipleIdList('users');
+            var contactIdList = this.model.getLinkMultipleIdList('contacts');
+            var leadIdList = this.model.getLinkMultipleIdList('leads');
+
+            if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
+                return false;
+            }
+
+            if (
+                !contactIdList.length && !leadIdList.length &&
+                userIdList.length === 1 && userIdList[0] === this.getUser().id &&
+                this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+            ) {
+                return false;
+            }
+
+            return true;
+        },
+
+        actionSendInvitations: function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                this.hideActionItem('sendInvitations');
+                this.notify('Sending...');
+
+                Espo.Ajax
+                    .postRequest(this.model.entityType + '/action/sendInvitations', {
+                        id: this.model.id,
+                    })
+                    .then(result => {
+                        if (result) {
+                            this.notify('Sent', 'success');
+                        } else {
+                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                        }
+
+                        this.showActionItem('sendInvitations');
+                    })
+                    .catch(() => {
+                        this.showActionItem('sendInvitations');
+                    });
+            });
         },
     });
 });
