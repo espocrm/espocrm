@@ -51,6 +51,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                     html: this.translate('Set Held', 'labels', this.model.entityType),
                     hidden: true,
                 });
+
                 this.addDropdownItem({
                     name: 'setNotHeld',
                     html: this.translate('Set Not Held', 'labels', this.model.entityType),
@@ -59,22 +60,24 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
             }
 
             this.initAcceptanceStatus();
-            this.on('switch-model', function (model, previousModel) {
+
+            this.on('switch-model', (model, previousModel) => {
                 this.stopListening(previousModel, 'sync');
                 this.initAcceptanceStatus();
-            }, this);
+            });
 
-             this.on('after:save', function () {
+             this.on('after:save', () => {
                 if (this.hasAcceptanceStatusButton()) {
                     this.showAcceptanceButton();
                 } else {
                     this.hideAcceptanceButton();
                 }
-            }, this);
+            });
         },
 
         controlRecordButtonsVisibility: function () {
             Dep.prototype.controlRecordButtonsVisibility.call(this);
+
             this.controlStatusActionVisibility();
         },
 
@@ -99,13 +102,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 this.hideAcceptanceButton();
             }
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 if (this.hasAcceptanceStatusButton()) {
                     this.showAcceptanceButton();
                 } else {
                     this.hideAcceptanceButton();
                 }
-            }, this);
+            });
         },
 
         getAcceptanceButtonData: function () {
@@ -113,9 +116,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
             var html;
             var style = 'default';
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+                style = this.getMetadata()
+                    .get(
+                        ['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]
+                    );
             } else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
@@ -131,6 +138,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
             if (!this.isRendered()) {
                 this.once('after:render', this.showAcceptanceButton, this);
+
                 return;
             }
 
@@ -154,8 +162,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         },
 
         hasAcceptanceStatusButton: function () {
-            if (!this.model.has('status')) return;
-            if (!this.model.has('usersIds')) return;
+            if (!this.model.has('status')) {
+                return;
+            }
+
+            if (!this.model.has('usersIds')) {
+                return;
+            }
 
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
                 return;
@@ -168,11 +181,11 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
             var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
             var html;
-            var style = 'default';
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
-            } else {
+            }
+            else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
@@ -180,21 +193,20 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         },
 
         actionSetAcceptanceStatus: function () {
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
-
             this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
-                model: this.model
-            }, function (view) {
+                model: this.model,
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'set-status', function (status) {
+                this.listenTo(view, 'set-status', (status) => {
                     this.hideAcceptanceButton();
+
                     Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
                         id: this.model.id,
-                        status: status
-                    }).then(function () {
+                        status: status,
+                    }).then(() => {
                         this.model.fetch();
-                    }.bind(this));
+                    });
                 });
             });
         },
