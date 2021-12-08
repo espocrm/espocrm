@@ -112,15 +112,20 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->metadata
-            ->expects($this->once())
             ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'boolFilterClassNameMap',
-                'badName',
-            ])
-            ->willReturn(null);
+            ->withConsecutive(
+                [[
+                    'selectDefs',
+                    $entityType,
+                    'boolFilterClassNameMap',
+                    'badName',
+                ]],
+                [['app', 'select', 'boolFilterClassNameMap', 'badName']],
+            )
+            ->willReturnOnConsecutiveCalls(
+                null,
+                null
+            );
 
         $this->assertFalse(
             $this->factory->has($entityType, 'badName')
