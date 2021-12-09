@@ -111,13 +111,13 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 this.layoutName = 'detailPortal';
             }
 
-            if (this.model.id == this.getUser().id) {
-                this.on('after:save', function () {
+            if (this.model.id === this.getUser().id) {
+                this.on('after:save', () => {
                     var data = this.model.toJSON();
                     delete data['smtpPassword'];
                     this.getPreferences().set(data);
                     this.getPreferences().trigger('update');
-                }, this);
+                });
             }
 
             if (!this.getUser().isAdmin() || this.model.isPortal()) {
@@ -131,6 +131,7 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
             var hideNotificationPanel = true;
+
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.isPortal()) {
                 this.hideField('receiveAssignmentEmailNotifications');
                 this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
@@ -138,16 +139,20 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 hideNotificationPanel = false;
 
                 this.controlAssignmentEmailNotificationsVisibility();
-                this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', function () {
+
+                this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', () => {
                     this.controlAssignmentEmailNotificationsVisibility();
-                }, this);
+                });
             }
 
             if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
                 this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
             }
 
-            if ((this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 || this.model.isPortal()) {
+            if (
+                (this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 ||
+                this.model.isPortal()
+            ) {
                 this.hideField('assignmentNotificationsIgnoreEntityTypeList');
             } else {
                 hideNotificationPanel = false;
@@ -188,27 +193,29 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 this.hideField('theme');
             }
 
-            this.listenTo(this.model, 'after:save', function () {
+            this.listenTo(this.model, 'after:save', () => {
                 if (
-                    this.model.get('language') !== this.attributes.language
-                    ||
+                    this.model.get('language') !== this.attributes.language ||
                     this.model.get('theme') !== this.attributes.theme
 
                 ) {
                     window.location.reload();
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change:smtpSecurity', function (model, smtpSecurity, o) {
-                if (!o.ui) return;
-                if (smtpSecurity == 'SSL') {
+            this.listenTo(this.model, 'change:smtpSecurity', (model, smtpSecurity, o) => {
+                if (!o.ui) {
+                    return;
+                }
+
+                if (smtpSecurity === 'SSL') {
                     this.model.set('smtpPort', '465');
-                } else if (smtpSecurity == 'TLS') {
+                } else if (smtpSecurity === 'TLS') {
                     this.model.set('smtpPort', '587');
                 } else {
                     this.model.set('smtpPort', '25');
                 }
-            }, this);
+            });
 
             if (this.getAcl().checkScope('EmailAccount') && !this.model.get('smtpServer')) {
                 this.hideField('smtpServer');
@@ -249,38 +256,44 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
         },
 
         actionReset: function () {
-            this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), function () {
+            this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
                 $.ajax({
                     url: 'Preferences/' + this.model.id,
                     type: 'DELETE',
-                }).done(function (data) {
+                }).then((data) => {
                     Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
+
                     this.model.set(data);
+
                     for (var attribute in data) {
                         this.setInitalAttributeValue(attribute, data[attribute]);
                     }
+
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
 
                     this.setIsNotChanged();
-                }.bind(this));
-            }, this);
+                });
+            });
         },
 
         actionResetDashboard: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.ajaxPostRequest('Preferences/action/resetDashboard', {
                     id: this.model.id
-                }).done(function (data) {
+                }).then((data) =>  {
                     Espo.Ui.success(this.translate('Done'));
+
                     this.model.set(data);
+
                     for (var attribute in data) {
                         this.setInitalAttributeValue(attribute, data[attribute]);
                     }
+
                     this.getPreferences().set(this.model.toJSON());
                     this.getPreferences().trigger('update');
-                }.bind(this));
-            }, this);
+                });
+            });
         },
 
         afterRender: function () {
@@ -288,7 +301,7 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
         },
 
         exit: function (after) {
-            if (after == 'cancel') {
+            if (after === 'cancel') {
                 var url = '#User/view/' + this.model.id;
 
                 if (!this.getAcl().checkModel(this.getUser())) {
