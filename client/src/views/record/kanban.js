@@ -91,6 +91,21 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
             },
+            'mouseenter th.group-header': function (e) {
+                let group = $(e.currentTarget).attr('data-name');
+
+                this.showPlus(group);
+            },
+            'mouseleave th.group-header': function (e) {
+                let group = $(e.currentTarget).attr('data-name');
+
+                this.hidePlus(group);
+            },
+            'click [data-action="createInGroup"]': function (e) {
+                let group = $(e.currentTarget).attr('data-group');
+
+                this.actionCreateInGroup(group);
+            },
         },
 
         showMore: true,
@@ -119,6 +134,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
                 isEmptyList: this.collection.models.length === 0,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
+                isCreatable: this.isCreatable,
             };
         },
 
@@ -249,6 +265,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.statusFieldIsEditable = false;
             }
 
+            this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+
             this.getHelper().processSetupHandlers(this, 'record/kanban');
         },
 
@@ -272,6 +290,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.initStickableHeader();
 
             this.$showMore = this.$el.find('.group-column .show-more');
+
+            this.plusElementMap = {};
+
+            this.statusList.forEach(status => {
+                let value = status.replace(/"/g, '\\"');
+
+                this.plusElementMap[status] = this.$el
+                    .find('.kanban-head .create-button[data-group="' + value + '"]');
+            });
         },
 
         initStickableHeader: function () {
@@ -864,6 +891,48 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             });
 
             return collection;
+        },
+
+        showPlus: function (group) {
+            let $el = this.plusElementMap[group];
+
+            if (!$el) {
+                return;
+            }
+
+            $el.removeClass('hidden');
+        },
+
+        hidePlus: function (group) {
+            let $el = this.plusElementMap[group];
+
+            if (!$el) {
+                return;
+            }
+
+            $el.addClass('hidden');
+        },
+
+        actionCreateInGroup: function (group) {
+            let attributes = {};
+
+            attributes[this.statusField] = group;
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+                'views/modals/edit';
+
+            let options = {
+                attributes: attributes,
+                scope: this.scope,
+            }
+
+            this.createView('quickCreate', viewName, options, (view) => {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', () => {
+                    this.collection.fetch();
+                });
+            });
         },
 
     });
