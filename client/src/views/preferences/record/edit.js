@@ -193,12 +193,14 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                 this.hideField('theme');
             }
 
-            this.listenTo(this.model, 'after:save', () => {
+            this.on('save', (initialAttributes) => {
                 if (
-                    this.model.get('language') !== this.attributes.language ||
-                    this.model.get('theme') !== this.attributes.theme
+                    this.model.get('language') !== initialAttributes.language ||
+                    this.model.get('theme') !== initialAttributes.theme
 
                 ) {
+                    this.setConfirmLeaveOut(false);
+
                     window.location.reload();
                 }
             });

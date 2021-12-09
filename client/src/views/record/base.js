@@ -447,9 +447,9 @@ define(
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', function () {
-                this.attributes = this.model.getClonedAttributes();
-            }, this);
+            this.listenTo(this.model, 'sync', (m, o) => {
+                 this.attributes = this.model.getClonedAttributes();
+            });
 
             this.initDependancy();
             this.initDynamicLogic();
@@ -707,6 +707,8 @@ define(
                         }
                     )
                     .then(() => {
+                        this.trigger('save', initialAttributes);
+
                         this.afterSave();
 
                         var isNew = this.isNew;

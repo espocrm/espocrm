@@ -36,8 +36,17 @@ define('views/admin/user-interface', 'views/settings/record/edit', function (Dep
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.controlColorsField();
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
+
+            this.on('save', (initialAttributes) => {
+                if (this.model.get('theme') !== initialAttributes.theme) {
+                    this.setConfirmLeaveOut(false);
+
+                    window.location.reload();
+                }
+            });
         },
 
         controlColorsField: function () {
@@ -47,6 +56,5 @@ define('views/admin/user-interface', 'views/settings/record/edit', function (Dep
                 this.showField('tabColorsDisabled');
             }
         },
-
     });
 });

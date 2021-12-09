@@ -1166,7 +1166,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', () => {
+            this.listenTo(this.model, 'sync', (m, o, o1) => {
                 this.attributes = this.model.getClonedAttributes();
             });
 
