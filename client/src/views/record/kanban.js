@@ -52,7 +52,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         rowActionsView: 'views/record/row-actions/default-kanban',
 
-        minColumnWidthPx: 125,
+        minColumnWidthPx: 220,
 
         events: {
             'click a.link': function (e) {
@@ -106,6 +106,13 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 this.actionCreateInGroup(group);
             },
+            'mousedown .kanban-columns td': function (e) {
+                if ($(e.originalEvent.target).closest('.item').length) {
+                    return;
+                }
+
+                this.initBackDrag(e.originalEvent);
+            },
         },
 
         showMore: true,
@@ -119,6 +126,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         _internalLayout: null,
 
         buttonsDisabled: false,
+
+        backDragStarted: true,
 
         data: function () {
             return {
@@ -275,6 +284,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
+
+            this.$container = this.$el.find('.list-kanban-container');
 
             $window.off('resize.kanban');
             $window.on('resize.kanban', () => {
@@ -924,7 +935,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             let options = {
                 attributes: attributes,
                 scope: this.scope,
-            }
+            };
 
             this.createView('quickCreate', viewName, options, (view) => {
                 view.render();
@@ -933,6 +944,37 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     this.collection.fetch();
                 });
             });
+        },
+
+        initBackDrag: function (e) {
+            this.backDragStarted = true;
+
+            let containerEl = this.$container.get(0);
+
+            containerEl.style.cursor = 'grabbing';
+            containerEl.style.userSelect = 'none';
+
+            let $document = $(document);
+
+            let startLeft = containerEl.scrollLeft;
+            let startX = e.clientX;
+
+            $document.on('mousemove.' + this.cid, (e) => {
+                let dx = e.originalEvent.clientX - startX;
+
+                containerEl.scrollLeft = startLeft - dx;
+            });
+
+            $document.one('mouseup.' + this.cid, () => {
+                this.stopBackDrag();
+            });
+        },
+
+        stopBackDrag: function () {
+            this.$container.get(0).style.cursor = 'default';
+            this.$container.get(0).style.userSelect = 'none';
+
+            $(document).off('mousemove.' + this.cid);
         },
 
     });

@@ -13,6 +13,7 @@
 </div>
 {{/if}}
 
+<div class="list-kanban-container">
 <div class="list-kanban" data-scope="{{scope}}" style="min-width: {{minTableWidthPx}}px">
     <div class="kanban-head-container">
     <table class="kanban-head">
@@ -67,6 +68,7 @@
         {{/unless}}
     </table>
     </div>
+</div>
 </div>
 
 

@@ -447,7 +447,15 @@ div.list-kanban > div > table {
     }
 }
 
+.list-kanban-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .list-kanban {
+    overflow: hidden;
+    padding-right: 3px;
+
     > .kanban-columns-container {
         margin-left: -@padding-base-horizontal;
         margin-right: -@padding-base-horizontal;
