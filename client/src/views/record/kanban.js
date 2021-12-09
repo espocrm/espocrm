@@ -563,6 +563,12 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var height = containerHeight;
 
+            let containerEl = this.$container.get(0);
+
+            if (containerEl.scrollWidth > containerEl.clientWidth) {
+                height -= 18;
+            }
+
             if (height < 100) {
                 height = 100;
             }
