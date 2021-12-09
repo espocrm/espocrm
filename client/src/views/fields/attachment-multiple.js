@@ -688,7 +688,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     containerClassName += ' attachment-block-container-small';
                 }
 
-                if (names.length === 0) {
+                if (names.length === 0 && previews.length === 0) {
                     return '';
                 }
 
