@@ -389,18 +389,41 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var orderDisabled = this.orderDisabled;
 
+            let $grouoColumnList = this.$el.find('.group-column-list');
+
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
+                containment: this.$el,
+                //scroll: false,
+                //scrollSensitivity: 200,
+                over: function (e, ui) {
+                    $(this).addClass('drop-hover');
+                },
+                out: function (e, ui) {
+                    $(this).removeClass('drop-hover');
+                },
+                sort: (e, ui) => {
+                    if (this.blockScrollControl) {
+                        return;
+                    }
+
+                    this.controlHorizontalScroll(e.originalEvent);
+                },
                 start: (e, ui) => {
-                    this.$el.find('.group-column-list').addClass('drop-active');
+                    $grouoColumnList.addClass('drop-active');
 
                     $list.sortable('refreshPositions');
 
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                     this.$showMore.addClass('hidden');
+
+                    this.sortIsStarted = true;
                 },
                 stop: (e, ui) => {
+                    this.blockScrollControl = false;
+                    this.sortIsStarted = false;
+
                     var $item = $(ui.item);
 
                     this.$el.find('.group-column-list').removeClass('drop-active');
@@ -981,6 +1004,62 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$container.get(0).style.userSelect = 'none';
 
             $(document).off('mousemove.' + this.cid);
+        },
+
+        controlHorizontalScroll: function (e) {
+            if (!this.sortIsStarted) {
+                return;
+            }
+
+            let containerEl = this.$container.get(0);
+
+            let rect = containerEl.getBoundingClientRect();
+
+            let margin = 150;
+            let step = 10;
+            let interval = 50;
+
+            let isRight = rect.right - margin < e.clientX &&
+                containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
+
+            let isLeft = rect.left + margin > e.clientX &&
+                containerEl.scrollLeft > 0;
+
+            if (isRight) {
+                let stepActual = Math.min(step, containerEl.scrollWidth - containerEl.offsetWidth);
+
+                containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
+
+                if (containerEl.scrollLeft + containerEl.offsetWidth === containerEl.scrollWidth) {
+                    return;
+                }
+
+                this.blockScrollControl = true;
+
+                setTimeout(() => this.controlHorizontalScroll(e), interval);
+
+                return;
+            }
+
+            if (isLeft) {
+                let stepActual = Math.min(step, containerEl.scrollLeft);
+
+                containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
+
+                if (containerEl.scrollLeft === 0) {
+                    return;
+                }
+
+                this.blockScrollControl = true;
+
+                setTimeout(() => this.controlHorizontalScroll(e), interval);
+
+                return;
+            }
+
+            if (this.blockScrollControl && !isLeft && !isRight) {
+                this.blockScrollControl = false;
+            }
         },
 
     });
