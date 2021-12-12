@@ -419,10 +419,13 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     this.$showMore.addClass('hidden');
 
                     this.sortIsStarted = true;
+
+                    this.$draggable = ui.item;
                 },
                 stop: (e, ui) => {
                     this.blockScrollControl = false;
                     this.sortIsStarted = false;
+                    this.$draggable = null;
 
                     var $item = $(ui.item);
 
@@ -1011,26 +1014,44 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
+            if (!this.$draggable) {
+                return;
+            }
+
+            let draggableRect = this.$draggable.get(0).getBoundingClientRect();
+
+            let itemLeft = draggableRect.left;
+            let itemRight = draggableRect.right;
+
             let containerEl = this.$container.get(0);
 
             let rect = containerEl.getBoundingClientRect();
 
-            let margin = 150;
-            let step = 10;
-            let interval = 50;
+            let marginSens = 100;
+            let step = 3;
+            let interval = 5;
+            let marginSensStepRatio = 1.5;
 
-            let isRight = rect.right - margin < e.clientX &&
+            let isRight = rect.right - marginSens < itemRight &&
                 containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
 
-            let isLeft = rect.left + margin > e.clientX &&
+            let isLeft = rect.left + marginSens > itemLeft &&
                 containerEl.scrollLeft > 0;
 
             if (isRight) {
-                let stepActual = Math.min(step, containerEl.scrollWidth - containerEl.offsetWidth);
+                let margin = rect.right - itemRight;
+
+                if (margin < marginSens / marginSensStepRatio) {
+                    step *= 2.5;
+                }
+
+                let stepActual = Math.min(step, margin);
 
                 containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
 
                 if (containerEl.scrollLeft + containerEl.offsetWidth === containerEl.scrollWidth) {
+                    this.blockScrollControl = false;
+
                     return;
                 }
 
@@ -1042,11 +1063,19 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             if (isLeft) {
-                let stepActual = Math.min(step, containerEl.scrollLeft);
+                let margin = - (rect.left - itemLeft);
+
+                if (margin < marginSens / marginSensStepRatio) {
+                    step *= 2;
+                }
+
+                let stepActual = Math.min(step, margin);
 
                 containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
 
                 if (containerEl.scrollLeft === 0) {
+                    this.blockScrollControl = false;
+
                     return;
                 }
 
