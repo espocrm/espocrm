@@ -46,11 +46,13 @@
             "options": ["INBOX"],
             "view": "views/email-account/fields/folders",
             "displayAsList": true,
-            "noEmptyString": true
+            "noEmptyString": true,
+            "duplicateIgnore": true
         },
         "sentFolder": {
             "type": "varchar",
-            "view": "views/email-account/fields/folder"
+            "view": "views/email-account/fields/folder",
+            "duplicateIgnore": true
         },
         "storeSentEmails": {
             "type": "bool",
@@ -64,11 +66,13 @@
         },
         "fetchData": {
             "type": "jsonObject",
-            "readOnly": true
+            "readOnly": true,
+            "duplicateIgnore": true
         },
         "emailFolder": {
             "type": "link",
-            "view": "views/email-account/fields/email-folder"
+            "view": "views/email-account/fields/email-folder",
+            "duplicateIgnore": true
         },
         "createdAt": {
             "type": "datetime",
