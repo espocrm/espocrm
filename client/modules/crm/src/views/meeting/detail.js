@@ -75,7 +75,8 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
 
                 style = this.getMetadata()
-                    .get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+                    .get(['entityDefs', this.model.entityType, 'fields',
+                        'acceptanceStatus', 'style', acceptanceStatus]);
             }
             else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');

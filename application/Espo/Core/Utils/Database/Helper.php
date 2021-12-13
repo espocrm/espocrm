@@ -207,7 +207,7 @@ class Helper
     {
         $databaseParams = DatabaseParams::create()
             ->withHost($params['host'] ?? null)
-            ->withPort(isset($params['host']) ? (int) $params['host'] : null)
+            ->withPort(isset($params['port']) ? (int) $params['port'] : null)
             ->withName($params['dbname'] ?? null)
             ->withUsername($params['user'] ?? null)
             ->withPassword($params['password'] ?? null)

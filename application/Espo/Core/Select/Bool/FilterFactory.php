@@ -29,19 +29,18 @@
 
 namespace Espo\Core\Select\Bool;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\Bool\Filter,
-    InjectableFactory,
-    Utils\Metadata,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Exceptions\Error;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Core\Select\Bool\Filter;
+
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingData;
+
+use Espo\Entities\User;
 
 class FilterFactory
 {
@@ -106,6 +105,12 @@ class FilterFactory
 
     protected function getDefaultClassName(string $name): ?string
     {
+        $className1 = $this->metadata->get(['app', 'select', 'boolFilterClassNameMap', $name]);
+
+        if ($className1) {
+            return $className1;
+        }
+
         $className = 'Espo\\Core\\Select\\Bool\\Filters\\' . ucfirst($name);
 
         if (!class_exists($className)) {

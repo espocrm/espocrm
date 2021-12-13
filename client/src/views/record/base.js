@@ -447,9 +447,9 @@ define(
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', function () {
-                this.attributes = this.model.getClonedAttributes();
-            }, this);
+            this.listenTo(this.model, 'sync', (m, o) => {
+                 this.attributes = this.model.getClonedAttributes();
+            });
 
             this.initDependancy();
             this.initDynamicLogic();
@@ -664,7 +664,7 @@ define(
 
                 this.trigger('cancel:save', {reason: 'notModified'});
 
-                return new Promise(function (resolve, reject) {
+                return new Promise((resolve, reject) => {
                     reject('notModified');
                 });
             }
@@ -680,7 +680,7 @@ define(
 
                 this.trigger('cancel:save', {reason: 'invalid'});
 
-                return new Promise(function (resolve, reject) {
+                return new Promise((resolve, reject) => {
                     reject('invalid');
                 });
             }
@@ -695,52 +695,48 @@ define(
             this.beforeSave();
 
             this.trigger('before:save');
-
             model.trigger('before:save');
 
-            return new Promise(function (resolve, reject) {
-                model.save(
-                    setAttributes,
-                    {
-                        patch: !model.isNew(),
-                        headers: headers,
-                    }
-                )
-                    .then(
-                        function () {
-                            this.afterSave();
-
-                            var isNew = this.isNew;
-
-                            if (this.isNew) {
-                                this.isNew = false;
-                            }
-
-                            this.trigger('after:save');
-
-                            model.trigger('after:save');
-
-                            resolve();
-
-                        }.bind(this)
+            return new Promise((resolve, reject) => {
+                model
+                    .save(
+                        setAttributes,
+                        {
+                            patch: !model.isNew(),
+                            headers: headers,
+                        }
                     )
-                    .fail(
-                        function (xhr) {
-                            this.handleSaveError(xhr);
+                    .then(() => {
+                        this.trigger('save', initialAttributes);
 
-                            this.afterSaveError();
+                        this.afterSave();
 
-                            this.setModelAttributes(beforeSaveAttributes);
+                        var isNew = this.isNew;
 
-                            this.lastSaveCancelReason = 'error';
+                        if (this.isNew) {
+                            this.isNew = false;
+                        }
 
-                            this.trigger('error:save');
-                            this.trigger('cancel:save', {reason: 'error'});
+                        this.trigger('after:save');
+                        model.trigger('after:save');
 
-                            reject('error');
-                        }.bind(this)
-                    );
-            }.bind(this));
+                        resolve();
+                    })
+                    .catch((xhr) => {
+                        this.handleSaveError(xhr);
+
+                        this.afterSaveError();
+
+                        this.setModelAttributes(beforeSaveAttributes);
+
+                        this.lastSaveCancelReason = 'error';
+
+                        this.trigger('error:save');
+                        this.trigger('cancel:save', {reason: 'error'});
+
+                        reject('error');
+                    });
+            });
         },
 
         handleSaveError: function (xhr) {
@@ -787,11 +783,11 @@ define(
                     .get(['clientDefs', 'Global', 'saveErrorHandlers', reason]);
 
             if (handlerName) {
-                require(handlerName, function (Handler) {
+                require(handlerName, (Handler) => {
                     var handler = new Handler(this);
 
                     handler.process(response.data);
-                }.bind(this));
+                });
 
                 xhr.errorIsHandled = true;
 
@@ -820,6 +816,7 @@ define(
                     }
                 }
             };
+
             return data;
         },
 
@@ -849,6 +846,7 @@ define(
                     }
 
                     var fillAssignedUser = true;
+
                     if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
                         fillAssignedUser = false;
 
@@ -872,6 +870,7 @@ define(
                             fillAssignedUser = true;
                         }
                     }
+
                     if (fillAssignedUser) {
                         if (assignedUserField === 'assignedUsers') {
                             defaultHash['assignedUsersIds'] = [this.getUser().id];
@@ -886,6 +885,7 @@ define(
                         }
                     }
                 }
+
                 var defaultTeamId = this.getUser().get('defaultTeamId');
 
                 if (defaultTeamId) {
@@ -907,6 +907,7 @@ define(
                         defaultHash['accountName'] = this.getUser().get('accountName');
                     }
                 }
+
                 if (
                     this.model.hasField('contact') &&
                     ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))

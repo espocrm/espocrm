@@ -51,6 +51,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                     html: this.translate('Set Held', 'labels', this.model.entityType),
                     hidden: true,
                 });
+
                 this.addDropdownItem({
                     name: 'setNotHeld',
                     html: this.translate('Set Not Held', 'labels', this.model.entityType),
@@ -58,23 +59,57 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 });
             }
 
+            this.addDropdownItem({
+                name: 'sendInvitations',
+                html: this.translate('Send Invitations', 'labels', 'Meeting'),
+                hidden: !this.isSendInvitationsToBeDisplayed(),
+            });
+
             this.initAcceptanceStatus();
-            this.on('switch-model', function (model, previousModel) {
+
+            this.on('switch-model', (model, previousModel) => {
                 this.stopListening(previousModel, 'sync');
                 this.initAcceptanceStatus();
-            }, this);
+            });
 
-             this.on('after:save', function () {
+            this.on('after:save', () => {
                 if (this.hasAcceptanceStatusButton()) {
                     this.showAcceptanceButton();
                 } else {
                     this.hideAcceptanceButton();
                 }
-            }, this);
+
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+                } else {
+                    this.hideActionItem('sendInvitations');
+                }
+            });
+
+            this.listenTo(this.model, 'sync', () => {
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+
+                    return;
+                }
+
+                this.hideActionItem('sendInvitations');
+            });
+
+            this.listenTo(this.model, 'after:save', () => {
+                if (this.isSendInvitationsToBeDisplayed()) {
+                    this.showActionItem('sendInvitations');
+
+                    return;
+                }
+
+                this.hideActionItem('sendInvitations');
+            });
         },
 
         controlRecordButtonsVisibility: function () {
             Dep.prototype.controlRecordButtonsVisibility.call(this);
+
             this.controlStatusActionVisibility();
         },
 
@@ -99,13 +134,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 this.hideAcceptanceButton();
             }
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 if (this.hasAcceptanceStatusButton()) {
                     this.showAcceptanceButton();
                 } else {
                     this.hideAcceptanceButton();
                 }
-            }, this);
+            });
         },
 
         getAcceptanceButtonData: function () {
@@ -113,9 +148,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
             var html;
             var style = 'default';
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
+                style = this.getMetadata()
+                    .get(
+                        ['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]
+                    );
             } else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
@@ -131,6 +170,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
             if (!this.isRendered()) {
                 this.once('after:render', this.showAcceptanceButton, this);
+
                 return;
             }
 
@@ -154,8 +194,13 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         },
 
         hasAcceptanceStatusButton: function () {
-            if (!this.model.has('status')) return;
-            if (!this.model.has('usersIds')) return;
+            if (!this.model.has('status')) {
+                return;
+            }
+
+            if (!this.model.has('usersIds')) {
+                return;
+            }
 
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
                 return;
@@ -168,11 +213,11 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
             var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
             var html;
-            var style = 'default';
+
             if (acceptanceStatus && acceptanceStatus !== 'None') {
                 html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
-                style = this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'acceptanceStatus', 'style', acceptanceStatus]);
-            } else {
+            }
+            else {
                 html = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
@@ -180,21 +225,20 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         },
 
         actionSetAcceptanceStatus: function () {
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
-
             this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
-                model: this.model
-            }, function (view) {
+                model: this.model,
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'set-status', function (status) {
+                this.listenTo(view, 'set-status', (status) => {
                     this.hideAcceptanceButton();
+
                     Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
                         id: this.model.id,
-                        status: status
-                    }).then(function () {
+                        status: status,
+                    }).then(() => {
                         this.model.fetch();
-                    }.bind(this));
+                    });
                 });
             });
         },
@@ -207,6 +251,58 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
         actionSetNotHeld: function () {
             this.model.save({status: 'Not Held'});
             this.trigger('after:save', this.model);
+        },
+
+        isSendInvitationsToBeDisplayed: function () {
+            if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                return false;
+            }
+
+            if (!this.getAcl().checkModel(this.model, 'edit') || !this.getAcl().checkScope('Email', 'create')) {
+                return false;
+            }
+
+            var userIdList = this.model.getLinkMultipleIdList('users');
+            var contactIdList = this.model.getLinkMultipleIdList('contacts');
+            var leadIdList = this.model.getLinkMultipleIdList('leads');
+
+            if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
+                return false;
+            }
+
+            if (
+                !contactIdList.length && !leadIdList.length &&
+                userIdList.length === 1 && userIdList[0] === this.getUser().id &&
+                this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+            ) {
+                return false;
+            }
+
+            return true;
+        },
+
+        actionSendInvitations: function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                this.hideActionItem('sendInvitations');
+                this.notify('Sending...');
+
+                Espo.Ajax
+                    .postRequest(this.model.entityType + '/action/sendInvitations', {
+                        id: this.model.id,
+                    })
+                    .then(result => {
+                        if (result) {
+                            this.notify('Sent', 'success');
+                        } else {
+                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                        }
+
+                        this.showActionItem('sendInvitations');
+                    })
+                    .catch(() => {
+                        this.showActionItem('sendInvitations');
+                    });
+            });
         },
     });
 });

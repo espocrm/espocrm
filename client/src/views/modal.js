@@ -64,7 +64,7 @@ define('views/modal', 'view', function (Dep) {
         events: {
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
-            }
+            },
         },
 
         init: function () {
@@ -93,16 +93,17 @@ define('views/modal', 'view', function (Dep) {
             // TODO remove it as deprecated
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
-            this.on('render', function () {
+            this.on('render', () => {
                 if (this.dialog) {
                     this.dialog.close();
                 }
 
                 $(containerSelector).remove();
+
                 $('<div />').css('display', 'none').attr('id', id).addClass('modal-container').appendTo('body');
 
-
                 var modalBodyDiffHeight = 92;
+
                 if (this.getThemeManager().getParam('modalBodyDiffHeight') !== null) {
                     modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
                 }
@@ -127,15 +128,17 @@ define('views/modal', 'view', function (Dep) {
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,
                     closeButton: !this.noCloseButton,
-                    onRemove: function () {
+                    onRemove: () => {
                         this.onDialogClose();
-                    }.bind(this)
+                    },
                 });
-                this.setElement(containerSelector + ' .body');
-            }, this);
 
-            this.on('after:render', function () {
+                this.setElement(containerSelector + ' .body');
+            });
+
+            this.on('after:render', () => {
                 $(containerSelector).show();
+
                 this.dialog.show();
 
                 if (this.fixedHeaderHeight && this.flexibleHeaderFontSize) {
@@ -143,10 +146,11 @@ define('views/modal', 'view', function (Dep) {
                 }
             });
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.dialog) {
                     this.dialog.close();
                 }
+
                 $(containerSelector).remove();
             });
         },
@@ -155,17 +159,20 @@ define('views/modal', 'view', function (Dep) {
             var buttonListExt = [];
 
             // TODO remove it as deprecated
-            this.buttons.forEach(function (item) {
+            this.buttons.forEach((item) => {
                 var o = Espo.Utils.clone(item);
+
                 if (!('text' in o) && ('label' in o)) {
                     o.text = this.getLanguage().translate(o.label);
                 }
+
                 buttonListExt.push(o);
-            }, this);
+            });
 
 
-            this.buttonList.forEach(function (item) {
+            this.buttonList.forEach((item) => {
                 var o = {};
+
                 if (typeof item === 'string') {
                     o.name = item;
                 } else if (typeof item === 'object') {
@@ -173,25 +180,33 @@ define('views/modal', 'view', function (Dep) {
                 } else {
                     return;
                 }
+
                 var text = o.text;
+
                 if (!o.text) {
                     if ('label' in o) {
-                        o.text = this.translate(o.label, 'labels', this.scope)
+                        o.text = this.translate(o.label, 'labels', this.scope);
                     } else {
                         o.text = this.translate(o.name, 'modalActions', this.scope);
                     }
                 }
-                o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
+
+                o.onClick = o.onClick || (
+                    this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}
+                ).bind(this);
+
                 buttonListExt.push(o);
-            }, this);
+            });
 
             return buttonListExt;
         },
 
         getDialogDropdownItemList: function () {
             var dropdownItemListExt = [];
-            this.dropdownItemList.forEach(function (item) {
+
+            this.dropdownItemList.forEach((item) => {
                 var o = {};
+
                 if (typeof item === 'string') {
                     o.name = item;
                 } else if (typeof item === 'object') {
@@ -199,7 +214,9 @@ define('views/modal', 'view', function (Dep) {
                 } else {
                     return;
                 }
+
                 var text = o.text;
+
                 if (!o.text) {
                     if ('label' in o) {
                         o.text = this.translate(o.label, 'labels', this.scope)
@@ -207,15 +224,22 @@ define('views/modal', 'view', function (Dep) {
                         o.text = this.translate(o.name, 'modalActions', this.scope);
                     }
                 }
-                o.onClick = o.onClick || (this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}).bind(this);
+
+                o.onClick = o.onClick || (
+                    this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}
+                ).bind(this);
+
                 dropdownItemListExt.push(o);
-            }, this);
+            });
 
             return dropdownItemListExt;
         },
 
         updateDialog: function () {
-            if (!this.dialog) return;
+            if (!this.dialog) {
+                return;
+            }
+
             this.dialog.buttonList = this.getDialogButtonList();
             this.dialog.dropdownItemList = this.getDialogDropdownItemList();
         },
@@ -242,43 +266,69 @@ define('views/modal', 'view', function (Dep) {
         },
 
         disableButton: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
                 d.disabled = true;
-            }, this);
-            if (!this.isRendered()) return;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
                 d.disabled = false;
-            }, this);
-            if (!this.isRendered()) return;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
         },
 
         addButton: function (o, position, doNotReRender) {
             var index = -1;
-            this.buttonList.forEach(function (item, i) {
-                if (item.name === o.name) index = i;
-            }, this);
-            if (~index) return;
+
+            this.buttonList.forEach((item, i) => {
+                if (item.name === o.name) {
+                    index = i;
+                }
+            });
+
+            if (~index) {
+                return;
+            }
 
             if (position === true) {
                 this.buttonList.unshift(o);
-            } else if (typeof position === 'string') {
+            }
+            else if (typeof position === 'string') {
                 index = -1;
-                this.buttonList.forEach(function (item, i) {
-                    if (item.name === position) index = i;
-                }, this);
+
+                this.buttonList.forEach((item, i) => {
+                    if (item.name === position) {
+                        index = i;
+                    }
+                });
+
                 if (~index) {
                     this.buttonList.splice(index, 0, o);
                 } else {
                     this.buttonList.push(o);
                 }
-            } else {
+            }
+            else {
                 this.buttonList.push(o);
             }
 
@@ -289,17 +339,25 @@ define('views/modal', 'view', function (Dep) {
 
         addDropdownItem: function (o, toBeginning, doNotReRender) {
             var method = toBeginning ? 'unshift' : 'push';
+
             if (!o) {
                 this.dropdownItemList[method](false);
+
                 return;
             }
+
             var name = o.name;
-            if (!name) return;
+
+            if (!name) {
+                return;
+            }
+
             for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name == name) {
+                if (this.dropdownItemList[i].name === name) {
                     return;
                 }
             }
+
             this.dropdownItemList[method](o);
 
             if (!doNotReRender && this.isRendered()) {
@@ -308,27 +366,36 @@ define('views/modal', 'view', function (Dep) {
         },
 
         reRenderFooter: function () {
-            if (!this.dialog) return;
+            if (!this.dialog) {
+                return;
+            }
+
             this.updateDialog();
+
             var html = this.dialog.getFooterHtml();
+
             this.$el.find('footer.modal-footer').html(html);
+
             this.dialog.initButtonEvents();
         },
 
         removeButton: function (name, doNotReRender) {
             var index = -1;
-            this.buttonList.forEach(function (item, i) {
+
+            this.buttonList.forEach((item, i) => {
                 if (item.name === name) {
                     index = i;
                 }
-            }, this);
+            });
+
             if (~index) {
                 this.buttonList.splice(index, 1);
             }
 
             for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name == name) {
+                if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList.splice(i, 1);
+
                     break;
                 }
             }
@@ -343,34 +410,58 @@ define('views/modal', 'view', function (Dep) {
         },
 
         showButton: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
                 d.hidden = false;
-            }, this);
-            if (!this.isRendered()) return;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
         },
 
         hideButton: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
                 d.hidden = true;
-            }, this);
-            if (!this.isRendered()) return;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
         },
 
         showActionItem: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
-                d.hidden = false;
-            }, this);
-            this.dropdownItemList.forEach(function (d) {
-                if (d.name !== name) return;
-                d.hidden = false;
-            }, this);
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
 
-            if (!this.isRendered()) return;
+                d.hidden = false;
+            });
+
+            this.dropdownItemList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
+                d.hidden = false;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('footer button[data-name="'+name+'"]').removeClass('hidden');
             this.$el.find('footer li > a[data-name="'+name+'"]').parent().removeClass('hidden');
 
@@ -380,16 +471,24 @@ define('views/modal', 'view', function (Dep) {
         },
 
         hideActionItem: function (name) {
-            this.buttonList.forEach(function (d) {
-                if (d.name !== name) return;
-                d.hidden = true;
-            }, this);
-            this.dropdownItemList.forEach(function (d) {
-                if (d.name !== name) return;
-                d.hidden = true;
-            }, this);
+            this.buttonList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
 
-            if (!this.isRendered()) return;
+                d.hidden = true;
+            });
+            this.dropdownItemList.forEach((d) => {
+                if (d.name !== name) {
+                    return;
+                }
+
+                d.hidden = true;
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
 
             this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
             this.$el.find('footer li > a[data-name="'+name+'"]').parent().addClass('hidden');
@@ -403,12 +502,15 @@ define('views/modal', 'view', function (Dep) {
             if (this.dropdownItemList.length === 0) {
                 return true;
             }
+
             var isEmpty = true;
-            this.dropdownItemList.forEach(function (item) {
+
+            this.dropdownItemList.forEach((item) => {
                 if (!item.hidden) {
                     isEmpty = false;
                 }
-            }, this);
+            });
+
             return isEmpty;
         },
 
@@ -422,22 +524,27 @@ define('views/modal', 'view', function (Dep) {
             var containerWidth = $titleText.width();
 
             var textWidth = 0;
-            $titleText.children().each(function (i, el) {
+
+            $titleText.children().each((i, el) => {
                 textWidth += $(el).outerWidth(true);
             });
 
             if (containerWidth < textWidth) {
                 if (step > 5) {
                     var $title = this.$el.find('.modal-title');
+
                     $title.attr('title', $titleText.text());
                     $title.addClass('overlapped');
-                    $titleText.children().each(function (i, el) {
+
+                    $titleText.children().each((i, el) => {
                        $(el).removeAttr('title');
                     });
+
                     return;
                 }
 
                 var fontSizePercentage = this.fontSizePercentage -= 4;
+
                 this.$el.find('.modal-title .font-size-flexible').css('font-size', this.fontSizePercentage + '%');
 
                 this.adjustHeaderFontSize(step + 1);
