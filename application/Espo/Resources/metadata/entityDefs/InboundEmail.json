@@ -45,14 +45,16 @@
             "options": ["INBOX"],
             "view": "views/inbound-email/fields/folders",
             "displayAsList": true,
-            "noEmptyString": true
+            "noEmptyString": true,
+            "duplicateIgnore": true
         },
         "fetchSince": {
             "type": "date"
         },
         "fetchData": {
             "type": "jsonObject",
-            "readOnly": true
+            "readOnly": true,
+            "duplicateIgnore": true
         },
         "assignToUser": {
             "type": "link",
@@ -73,7 +75,8 @@
         },
         "sentFolder": {
             "type": "varchar",
-            "view": "views/inbound-email/fields/folder"
+            "view": "views/inbound-email/fields/folder",
+            "duplicateIgnore": true
         },
         "storeSentEmails": {
             "type": "bool",
