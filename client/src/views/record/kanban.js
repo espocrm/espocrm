@@ -285,6 +285,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
 
+            this.$groupColumnList = this.$listKanban.find('.group-column-list');
+
             this.$container = this.$el.find('.list-kanban-container');
 
             $window.off('resize.kanban');
@@ -381,7 +383,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initSortable: function () {
-            var $list = this.$listKanban.find('.group-column-list');
+            var $list = this.$groupColumnList;
 
             $list.find('> .item').on('touchstart', (e) => {
                 e.originalEvent.stopPropagation();
@@ -394,9 +396,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
-                containment: this.$el,
-                //scroll: false,
-                //scrollSensitivity: 200,
+                containment: this.getSelector(),
+                scroll: false,
                 over: function (e, ui) {
                     $(this).addClass('drop-hover');
                 },
@@ -404,11 +405,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $(this).removeClass('drop-hover');
                 },
                 sort: (e, ui) => {
-                    if (this.blockScrollControl) {
-                        return;
+                    if (!this.blockScrollControl) {
+                        this.controlHorizontalScroll(e.originalEvent);
                     }
-
-                    this.controlHorizontalScroll(e.originalEvent);
                 },
                 start: (e, ui) => {
                     $grouoColumnList.addClass('drop-active');
@@ -419,6 +418,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     this.$showMore.addClass('hidden');
 
                     this.sortIsStarted = true;
+                    this.sortWasCentered = false;
 
                     this.$draggable = ui.item;
                 },
@@ -1030,7 +1030,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             let marginSens = 100;
             let step = 3;
             let interval = 5;
-            let marginSensStepRatio = 1.5;
+            let marginSensStepRatio = 2.5;
 
             let isRight = rect.right - marginSens < itemRight &&
                 containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
@@ -1038,14 +1038,16 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             let isLeft = rect.left + marginSens > itemLeft &&
                 containerEl.scrollLeft > 0;
 
-            if (isRight) {
+            this.$groupColumnList.sortable('refreshPositions');
+
+            if (isRight && this.sortWasCentered) {
                 let margin = rect.right - itemRight;
 
                 if (margin < marginSens / marginSensStepRatio) {
                     step *= 2.5;
                 }
 
-                let stepActual = Math.min(step, margin);
+                let stepActual = Math.min(step, containerEl.offsetWidth - containerEl.scrollLeft);
 
                 containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
 
@@ -1062,14 +1064,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            if (isLeft) {
+            if (isLeft && this.sortWasCentered) {
                 let margin = - (rect.left - itemLeft);
 
                 if (margin < marginSens / marginSensStepRatio) {
                     step *= 2;
                 }
 
-                let stepActual = Math.min(step, margin);
+                let stepActual = Math.min(step, containerEl.scrollLeft);
 
                 containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
 
@@ -1088,6 +1090,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             if (this.blockScrollControl && !isLeft && !isRight) {
                 this.blockScrollControl = false;
+            }
+
+            if (!isLeft && !isRight) {
+                this.sortWasCentered = true;
             }
         },
 
