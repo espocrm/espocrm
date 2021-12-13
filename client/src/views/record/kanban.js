@@ -1027,10 +1027,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             let rect = containerEl.getBoundingClientRect();
 
-            let marginSens = 100;
-            let step = 3;
+            let marginSens = 70;
+            let step = 2;
             let interval = 5;
-            let marginSensStepRatio = 2.5;
+            let marginSensStepRatio = 4;
+            let stepRatio = 3;
 
             let isRight = rect.right - marginSens < itemRight &&
                 containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
@@ -1044,7 +1045,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 let margin = rect.right - itemRight;
 
                 if (margin < marginSens / marginSensStepRatio) {
-                    step *= 2.5;
+                    step *= stepRatio;
                 }
 
                 let stepActual = Math.min(step, containerEl.offsetWidth - containerEl.scrollLeft);
@@ -1068,7 +1069,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 let margin = - (rect.left - itemLeft);
 
                 if (margin < marginSens / marginSensStepRatio) {
-                    step *= 2;
+                    step *= stepRatio;
                 }
 
                 let stepActual = Math.min(step, containerEl.scrollLeft);

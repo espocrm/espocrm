@@ -533,6 +533,36 @@ div.list-kanban > div > table {
     }
 }
 
+@media screen and (min-width: @screen-sm-min) {
+    .list-kanban {
+
+    }
+
+    .list-kanban {
+        .item {
+            .item-menu-container .dropdown-toggle, {
+                visibility: hidden;
+            }
+
+            .item-menu-container > .open .dropdown-toggle {
+                visibility: visible;
+            }
+        }
+
+        .item:hover {
+            .item-menu-container .dropdown-toggle {
+                visibility: visible;
+            }
+        }
+
+        .item.ui-sortable-helper {
+            .item-menu-container .dropdown-toggle {
+                visibility: hidden;
+            }
+        }
+    }
+}
+
 table.table > thead th > a {
     color: @gray-light;
 }
