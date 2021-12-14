@@ -286,20 +286,22 @@ class Installer
          return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
-    public function checkDatabaseConnection(array $params, bool $createDatabase = false)
-    {
+    public function checkDatabaseConnection(
+        array $params,
+        bool $createDatabase = false
+    ) {
         try {
             $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
         }
         catch (Exception $e) {
+
             if ($createDatabase && $e->getCode() == '1049') {
-                $modParams = $params;
+                $pdo = $this->getDatabaseHelper()
+                    ->createPdoConnection($params, true);
 
-                unset($modParams['dbname']);
-
-                $pdo = $this->getDatabaseHelper()->createPdoConnection($modParams);
-
-                $pdo->query("CREATE DATABASE IF NOT EXISTS `". $params['dbname'] ."`");
+                $pdo->query(
+                    "CREATE DATABASE IF NOT EXISTS `" . $params['dbname'] . "`"
+                );
 
                 return $this->checkDatabaseConnection($params, false);
             }

@@ -178,8 +178,10 @@ class Helper
      * @param array $params
      * @return PDO|null
      */
-    public function createPdoConnection(array $params = [])
-    {
+    public function createPdoConnection(
+        array $params = [],
+        bool $skipDatabaseName = false
+    ) {
         $defaultParams = [
             'driver' => 'pdo_mysql',
         ];
@@ -195,6 +197,10 @@ class Helper
             $defaultParams,
             $params
         );
+
+        if ($skipDatabaseName && isset($params['dbname'])) {
+            unset($params['dbname']);
+        }
 
         $pdoProvider = new DefaultPDOProvider(
             $this->createDatabaseParams($params)
