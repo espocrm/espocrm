@@ -784,14 +784,14 @@
         "kanban": "Kanban"
     },
     "themes": {
-        "Espo": "Classic Espo",
-        "EspoRtl": "RTL Espo",
-        "Sakura": "Classic Sakura",
-        "EspoVertical": "Vertical Espo",
-        "SakuraVertical": "Vertical Sakura",
-        "Violet": "Classic Violet",
-        "VioletVertical": "Vertical Violet",
-        "Hazyblue": "Classic Hazyblue",
-        "HazyblueVertical": "Vertical Hazyblue"
+        "Espo": "Espo Horizontal",
+        "EspoRtl": "RTL Espo Horizontal",
+        "Sakura": "Sakura Horizontal",
+        "EspoVertical": "Espo",
+        "SakuraVertical": "Sakura",
+        "Violet": "Violet Horizontal",
+        "VioletVertical": "Violet",
+        "Hazyblue": "Hazyblue Horizontal",
+        "HazyblueVertical": "Hazyblue"
     }
 }
