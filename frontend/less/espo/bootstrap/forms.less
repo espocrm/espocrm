@@ -127,7 +127,7 @@ output {
   .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
 
   // Customize the `:focus` state to imitate native WebKit styles.
-  .form-control-focus();
+  .form-control-focus-espo();
 
   // Placeholder
   .placeholder();
@@ -426,7 +426,13 @@ input[type="checkbox"] {
 
 // Feedback states
 .has-success {
-  .form-control-validation(@state-success-text; @state-success-text; @state-success-bg);
+  .form-control-validation-espo(
+    @state-success-text;
+    @state-success-text;
+    @state-success-bg;
+    @state-success-text-10;
+    var(--state-success-text-10l)
+  );
 }
 .has-warning {
   .form-control-validation(@state-warning-text; @state-warning-text; @state-warning-bg);
@@ -456,7 +462,8 @@ input[type="checkbox"] {
   display: block; // account for any element using help-block
   margin-top: 5px;
   margin-bottom: 10px;
-  color: lighten(@text-color, 25%); // lighten the text some for contrast
+  //color: lighten(@text-color, 25%); // lighten the text some for contrast
+  color: var(--gray-dark-25l);
 }
 
 

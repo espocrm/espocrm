@@ -64,13 +64,13 @@
 }
 
 .vis-current-time {
-    background-color: lighten(@brand-danger, 20%) !important;
+    background-color: var(--brand-danger-lighten-20) !important;
 }
 
 .calendar-container .timeline .vis-item,
 .calendar-container .timeline .vis-item.vis-selected {
-    border-color: lighten(@brand-primary, 30%);
-    background-color: lighten(@brand-primary, 50%);
+    border-color: var(--brand-primary-lighten-30);
+    background-color: var(--brand-primary-lighten-50);
 }
 
 .calendar-container .timeline .vis-tooltip {
@@ -82,7 +82,7 @@
 }
 
 .vis-item.vis-background.event-range {
-    border-color: lighten(@brand-primary, 10%);
+    border-color: var(--brand-primary-lighten-10);
     border-left-width: 4px ;
     border-right-width: 4px;
     border-left-style: solid;

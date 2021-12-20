@@ -103,10 +103,10 @@ mark,
   color: @text-muted;
 }
 .text-primary {
-  .text-emphasis-variant(@brand-primary);
+  .text-emphasis-variant-espo(@brand-primary, @brand-primary-10);
 }
 .text-success {
-  .text-emphasis-variant(@state-success-text);
+  .text-emphasis-variant-espo(@state-success-text, @state-success-text-10);
 }
 .text-info {
   .text-emphasis-variant(@state-info-text);
@@ -125,13 +125,13 @@ mark,
   // Given the contrast here, this is the only class to have its color inverted
   // automatically.
   color: #fff;
-  .bg-variant(@brand-primary);
+  .bg-variant-espo(@brand-primary, @brand-primary-10);
 }
 .bg-success {
-  .bg-variant(@state-success-bg);
+  .bg-variant-espo(@brand-primary, @state-success-bg-10);
 }
 .bg-info {
-  .bg-variant(@state-info-bg);
+  .bg-variant-espo(@state-info-bg, @state-info-bg-5);
 }
 .bg-warning {
   .bg-variant(@state-warning-bg);

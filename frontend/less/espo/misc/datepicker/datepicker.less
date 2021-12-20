@@ -94,11 +94,19 @@
     }
     &.highlighted {
       @highlighted-bg: @state-info-bg;
-      .button-variant(#000, @highlighted-bg, darken(@highlighted-bg, 20%));
+      .button-variant-espo(
+        var(--state-info-text);
+        var(--state-info-bg);
+        var(--state-info-bg-5);
+        var(--state-info-bg-10);
+        var(--state-info-bg-17);
+        var(--state-info-bg-12);
+        var(--state-info-bg-25)
+      );
       border-radius: 0;
 
       &.focused {
-        background: darken(@highlighted-bg, 10%);
+        background: var(--state-info-bg-10);
       }
 
       &.disabled,
@@ -123,11 +131,19 @@
     }
     &.range {
       @range-bg: @gray-lighter;
-      .button-variant(#000, @range-bg, darken(@range-bg, 20%));
+      .button-variant-espo(
+        #000;
+        @range-bg;
+        var(--gray-lighter-5);
+        var(--gray-lighter-10);
+        var(--gray-lighter-17);
+        var(--gray-lighter-12);
+        var(--gray-lighter-25)
+      );
       border-radius: 0;
 
       &.focused {
-        background: darken(@range-bg, 10%);
+        background: var(--gray-lighter-10);
       }
 
       &.disabled,
@@ -137,11 +153,20 @@
       }
     }
     &.range.highlighted {
-      @range-highlighted-bg: mix(@state-info-bg, @gray-lighter, 50%);
-      .button-variant(#000, @range-highlighted-bg, darken(@range-highlighted-bg, 20%));
+      @range-highlighted-bg: var(--state-info-bg-mix);
+
+      .button-variant-espo(
+        var(--state-info-text);
+        var(--state-info-bg-mix);
+        var(--state-info-bg-mix-5);
+        var(--state-info-bg-mix-10);
+        var(--state-info-bg-mix-17);
+        var(--state-info-bg-mix-12);
+        var(--state-info-bg-mix-25)
+      );
 
       &.focused {
-        background: darken(@range-highlighted-bg, 10%);
+        background: var(--state-info-bg-mix-10);
       }
 
       &.disabled,
@@ -151,8 +176,16 @@
       }
     }
     &.range.today {
-      @range-today-bg: mix(orange, @gray-lighter, 50%);
-      .button-variant(#000, @range-today-bg, darken(@range-today-bg, 20%));
+      @range-today-bg: var(--gray-lighter-orange-mix);
+      .button-variant-espo(
+        #000;
+        @range-today-bg;
+        var(--gray-lighter-orange-mix-5);
+        var(--gray-lighter-orange-mix-10);
+        var(--gray-lighter-orange-mix-12);
+        var(--gray-lighter-orange-mix-17);
+        var(--gray-lighter-orange-mix-25)
+      );
 
       &.disabled,
       &.disabled:active {
@@ -162,12 +195,28 @@
     }
     &.selected,
     &.selected.highlighted {
-      .button-variant(#fff, @gray-light, @gray);
+      .button-variant-espo(
+        #fff;
+        @gray-light;
+        var(--gray-light-5);
+        var(--gray-light-10);
+        var(--gray-light-17);
+        var(--gray-light-12);
+        var(--gray-light-25)
+      );
       text-shadow: 0 -1px 0 rgba(0,0,0,.25);
     }
     &.active,
     &.active.highlighted {
-      .button-variant(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+        .button-variant-espo(
+          var(--brand-primary-text);
+          var(--brand-primary);
+          var(--brand-primary-5);
+          var(--brand-primary-10);
+          var(--brand-primary-17);
+          var(--brand-primary-12);
+          var(--brand-primary-25)
+        );
       text-shadow: 0 -1px 0 rgba(0,0,0,.25);
     }
     span {
@@ -193,7 +242,15 @@
       &.active:hover,
       &.active.disabled,
       &.active.disabled:hover {
-        .button-variant(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+        .button-variant-espo(
+          @btn-primary-color;
+          @btn-primary-bg;
+          @btn-primary-border;
+          @btn-primary-bg-10;
+          @btn-primary-bg-17;
+          @btn-primary-border-12;
+          @btn-primary-border-25
+        );
         text-shadow: 0 -1px 0 rgba(0,0,0,.25);
       }
       &.old,

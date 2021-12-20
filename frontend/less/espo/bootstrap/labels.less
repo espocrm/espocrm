@@ -40,25 +40,25 @@
 // Contextual variations (linked labels get darker on :hover)
 
 .label-default {
-  .label-variant(@label-default-bg);
+  .label-variant-espo(@label-default-bg; var(--gray-light-10));
 }
 
 .label-primary {
-  .label-variant(@label-primary-bg);
+  .label-variant-espo(@label-primary-bg; @brand-primary-10);
 }
 
 .label-success {
-  .label-variant(@label-success-bg);
+  .label-variant-espo(@label-success-bg; @brand-success-10);
 }
 
 .label-info {
-  .label-variant(@label-info-bg);
+  .label-variant-espo(@label-info-bg; @brand-info-10);
 }
 
 .label-warning {
-  .label-variant(@label-warning-bg);
+  .label-variant-espo(@label-warning-bg; @brand-warning-10);
 }
 
 .label-danger {
-  .label-variant(@label-danger-bg);
+  .label-variant-espo(@label-danger-bg; @brand-danger-10);
 }
