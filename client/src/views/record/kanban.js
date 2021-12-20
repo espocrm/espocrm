@@ -52,7 +52,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         rowActionsView: 'views/record/row-actions/default-kanban',
 
-        minColumnWidthPx: 125,
+        minColumnWidthPx: 220,
 
         events: {
             'click a.link': function (e) {
@@ -91,6 +91,28 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
             },
+            'mouseenter th.group-header': function (e) {
+                let group = $(e.currentTarget).attr('data-name');
+
+                this.showPlus(group);
+            },
+            'mouseleave th.group-header': function (e) {
+                let group = $(e.currentTarget).attr('data-name');
+
+                this.hidePlus(group);
+            },
+            'click [data-action="createInGroup"]': function (e) {
+                let group = $(e.currentTarget).attr('data-group');
+
+                this.actionCreateInGroup(group);
+            },
+            'mousedown .kanban-columns td': function (e) {
+                if ($(e.originalEvent.target).closest('.item').length) {
+                    return;
+                }
+
+                this.initBackDrag(e.originalEvent);
+            },
         },
 
         showMore: true,
@@ -104,6 +126,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         _internalLayout: null,
 
         buttonsDisabled: false,
+
+        backDragStarted: true,
 
         data: function () {
             return {
@@ -119,6 +143,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
                 isEmptyList: this.collection.models.length === 0,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
+                isCreatable: this.isCreatable,
             };
         },
 
@@ -249,6 +274,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.statusFieldIsEditable = false;
             }
 
+            this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+
             this.getHelper().processSetupHandlers(this, 'record/kanban');
         },
 
@@ -257,6 +284,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$listKanban = this.$el.find('.list-kanban');
             this.$content = $('#content');
+
+            this.$groupColumnList = this.$listKanban.find('.group-column-list');
+
+            this.$container = this.$el.find('.list-kanban-container');
 
             $window.off('resize.kanban');
             $window.on('resize.kanban', () => {
@@ -272,6 +303,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.initStickableHeader();
 
             this.$showMore = this.$el.find('.group-column .show-more');
+
+            this.plusElementMap = {};
+
+            this.statusList.forEach(status => {
+                let value = status.replace(/"/g, '\\"');
+
+                this.plusElementMap[status] = this.$el
+                    .find('.kanban-head .create-button[data-group="' + value + '"]');
+            });
         },
 
         initStickableHeader: function () {
@@ -343,7 +383,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initSortable: function () {
-            var $list = this.$listKanban.find('.group-column-list');
+            var $list = this.$groupColumnList;
 
             $list.find('> .item').on('touchstart', (e) => {
                 e.originalEvent.stopPropagation();
@@ -351,18 +391,42 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var orderDisabled = this.orderDisabled;
 
+            let $grouoColumnList = this.$el.find('.group-column-list');
+
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
+                containment: this.getSelector(),
+                scroll: false,
+                over: function (e, ui) {
+                    $(this).addClass('drop-hover');
+                },
+                out: function (e, ui) {
+                    $(this).removeClass('drop-hover');
+                },
+                sort: (e, ui) => {
+                    if (!this.blockScrollControl) {
+                        this.controlHorizontalScroll(e.originalEvent);
+                    }
+                },
                 start: (e, ui) => {
-                    this.$el.find('.group-column-list').addClass('drop-active');
+                    $grouoColumnList.addClass('drop-active');
 
                     $list.sortable('refreshPositions');
 
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                     this.$showMore.addClass('hidden');
+
+                    this.sortIsStarted = true;
+                    this.sortWasCentered = false;
+
+                    this.$draggable = ui.item;
                 },
                 stop: (e, ui) => {
+                    this.blockScrollControl = false;
+                    this.sortIsStarted = false;
+                    this.$draggable = null;
+
                     var $item = $(ui.item);
 
                     this.$el.find('.group-column-list').removeClass('drop-active');
@@ -524,6 +588,12 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 .calculateContentContainerHeight(this.$el.find('.kanban-columns-container'));
 
             var height = containerHeight;
+
+            let containerEl = this.$container.get(0);
+
+            if (containerEl.scrollWidth > containerEl.clientWidth) {
+                height -= 18;
+            }
 
             if (height < 100) {
                 height = 100;
@@ -864,6 +934,168 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             });
 
             return collection;
+        },
+
+        showPlus: function (group) {
+            let $el = this.plusElementMap[group];
+
+            if (!$el) {
+                return;
+            }
+
+            $el.removeClass('hidden');
+        },
+
+        hidePlus: function (group) {
+            let $el = this.plusElementMap[group];
+
+            if (!$el) {
+                return;
+            }
+
+            $el.addClass('hidden');
+        },
+
+        actionCreateInGroup: function (group) {
+            let attributes = {};
+
+            attributes[this.statusField] = group;
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+                'views/modals/edit';
+
+            let options = {
+                attributes: attributes,
+                scope: this.scope,
+            };
+
+            this.createView('quickCreate', viewName, options, (view) => {
+                view.render();
+
+                this.listenToOnce(view, 'after:save', () => {
+                    this.collection.fetch();
+                });
+            });
+        },
+
+        initBackDrag: function (e) {
+            this.backDragStarted = true;
+
+            let containerEl = this.$container.get(0);
+
+            containerEl.style.cursor = 'grabbing';
+            containerEl.style.userSelect = 'none';
+
+            let $document = $(document);
+
+            let startLeft = containerEl.scrollLeft;
+            let startX = e.clientX;
+
+            $document.on('mousemove.' + this.cid, (e) => {
+                let dx = e.originalEvent.clientX - startX;
+
+                containerEl.scrollLeft = startLeft - dx;
+            });
+
+            $document.one('mouseup.' + this.cid, () => {
+                this.stopBackDrag();
+            });
+        },
+
+        stopBackDrag: function () {
+            this.$container.get(0).style.cursor = 'default';
+            this.$container.get(0).style.userSelect = 'none';
+
+            $(document).off('mousemove.' + this.cid);
+        },
+
+        controlHorizontalScroll: function (e) {
+            if (!this.sortIsStarted) {
+                return;
+            }
+
+            if (!this.$draggable) {
+                return;
+            }
+
+            let draggableRect = this.$draggable.get(0).getBoundingClientRect();
+
+            let itemLeft = draggableRect.left;
+            let itemRight = draggableRect.right;
+
+            let containerEl = this.$container.get(0);
+
+            let rect = containerEl.getBoundingClientRect();
+
+            let marginSens = 70;
+            let step = 2;
+            let interval = 5;
+            let marginSensStepRatio = 4;
+            let stepRatio = 3;
+
+            let isRight = rect.right - marginSens < itemRight &&
+                containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
+
+            let isLeft = rect.left + marginSens > itemLeft &&
+                containerEl.scrollLeft > 0;
+
+            this.$groupColumnList.sortable('refreshPositions');
+
+            if (isRight && this.sortWasCentered) {
+                let margin = rect.right - itemRight;
+
+                if (margin < marginSens / marginSensStepRatio) {
+                    step *= stepRatio;
+                }
+
+                let stepActual = Math.min(step, containerEl.offsetWidth - containerEl.scrollLeft);
+
+                containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
+
+                if (containerEl.scrollLeft + containerEl.offsetWidth === containerEl.scrollWidth) {
+                    this.blockScrollControl = false;
+
+                    return;
+                }
+
+                this.blockScrollControl = true;
+
+                setTimeout(() => this.controlHorizontalScroll(e), interval);
+
+                return;
+            }
+
+            if (isLeft && this.sortWasCentered) {
+                let margin = - (rect.left - itemLeft);
+
+                if (margin < marginSens / marginSensStepRatio) {
+                    step *= stepRatio;
+                }
+
+                let stepActual = Math.min(step, containerEl.scrollLeft);
+
+                containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
+
+                if (containerEl.scrollLeft === 0) {
+                    this.blockScrollControl = false;
+
+                    return;
+                }
+
+                this.blockScrollControl = true;
+
+                setTimeout(() => this.controlHorizontalScroll(e), interval);
+
+                return;
+            }
+
+            if (this.blockScrollControl && !isLeft && !isRight) {
+                this.blockScrollControl = false;
+            }
+
+            if (!isLeft && !isRight) {
+                this.sortWasCentered = true;
+            }
         },
 
     });

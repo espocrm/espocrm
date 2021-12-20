@@ -13,14 +13,31 @@
 </div>
 {{/if}}
 
+<div class="list-kanban-container">
 <div class="list-kanban" data-scope="{{scope}}" style="min-width: {{minTableWidthPx}}px">
     <div class="kanban-head-container">
     <table class="kanban-head">
         <thead>
             <tr class="kanban-row">
                 {{#each groupDataList}}
-                <th data-name="{{name}}" class="group-header{{#if style}} group-header-{{style}}{{/if}}{{#if nextStyle}} group-header-before-{{nextStyle}}{{/if}}">
-                    <div><span class="kanban-group-label">{{label}}</span></div>
+                <th
+                    data-name="{{name}}"
+                    class="group-header{{#if style}} group-header-{{style}}{{/if}}{{#if nextStyle}} group-header-before-{{nextStyle}}{{/if}}"
+                >
+                    <div>
+                        <span class="kanban-group-label">{{label}}</span>
+                        {{#if ../isCreatable}}
+                        <a
+                            href="javascript:"
+                            title="{{translate 'Create'}}"
+                            class="create-button hidden"
+                            data-action="createInGroup"
+                            data-group="{{name}}"
+                        >
+                            <span class="fas fa-plus fa-sm"></span>
+                        </a>
+                        {{/if}}
+                    </div>
                 </th>
                 {{/each}}
             </tr>
@@ -51,6 +68,7 @@
         {{/unless}}
     </table>
     </div>
+</div>
 </div>
 
 

@@ -19,7 +19,7 @@
 }
 
 .preset > div{
-    padding-right: 20px;
+    padding-right: 24px;
 }
 
 th {
@@ -262,6 +262,18 @@ div.list-kanban > div > table {
             line-height: 28px;
             height: 100%;
             width: 100%;
+
+            .create-button {
+                float: right;
+                position: relative;
+                right: 14px;
+
+                color: @white-color;
+
+                &:hover, &:active {
+                    color: @white-color
+                }
+            }
         }
 
         > div:before,
@@ -390,6 +402,10 @@ div.list-kanban > div > table {
         .group-column-list.drop-active {
             height: ~"calc(100%)";
         }
+
+        .group-column-list.drop-hover {
+            border-top: 2px solid @gray-light;
+        }
     }
 
     .item {
@@ -435,7 +451,14 @@ div.list-kanban > div > table {
     }
 }
 
+.list-kanban-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .list-kanban {
+    overflow: hidden;
+
     > .kanban-columns-container {
         margin-left: -@padding-base-horizontal;
         margin-right: -@padding-base-horizontal;
@@ -505,6 +528,32 @@ div.list-kanban > div > table {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: @screen-sm-min) and (hover: hover) {
+    .list-kanban {
+        .item {
+            .item-menu-container .dropdown-toggle {
+                visibility: hidden;
+            }
+
+            .item-menu-container > .open .dropdown-toggle {
+                visibility: visible;
+            }
+        }
+
+        .item:hover {
+            .item-menu-container .dropdown-toggle {
+                visibility: visible;
+            }
+        }
+
+        .item.ui-sortable-helper {
+            .item-menu-container .dropdown-toggle {
+                visibility: hidden;
             }
         }
     }
