@@ -784,6 +784,7 @@
         "kanban": "Kanban"
     },
     "themes": {
+        "DarkVertical": "Dark",
         "Espo": "Espo Horizontal",
         "EspoRtl": "RTL Espo Horizontal",
         "Sakura": "Sakura Horizontal",
