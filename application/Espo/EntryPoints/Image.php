@@ -161,7 +161,8 @@ class Image implements EntryPoint
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
             ->setHeader('Pragma', 'public')
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
-            ->setHeader('Content-Length', (string) $fileSize);
+            ->setHeader('Content-Length', (string) $fileSize)
+            ->setHeader('Content-Security-Policy', "default-src 'self'");
     }
 
     protected function getThumbContents(Attachment $attachment, string $size): string
