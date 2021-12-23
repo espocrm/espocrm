@@ -1,9 +1,9 @@
 #main > .calendar-container .timeline {
-    border: 1px solid @input-border;
+    border: 1px solid var(--calendar-border);
 }
 
 .calendar-container .timeline {
-    border-bottom: 1px solid @input-border;
+    border-bottom: 1px solid var(--calendar-border);
 }
 
 .vis-content .vis-item.clickable .vis-item-content {
@@ -23,7 +23,7 @@
 
 .vis-foreground .vis-group,
 .vis-labelset .vis-label {
-    border-bottom-color: @input-border !important;
+    border-bottom-color: var(--calendar-border) !important;
 }
 
 .vis-panel.vis-center,
@@ -32,11 +32,11 @@
 .vis-panel.vis-top,
 .vis-panel.vis-bottom,
 .vis-time-axis .vis-grid.vis-major {
-    border-color: @input-border !important;
+    border-color: var(--calendar-border) !important;
 }
 
 .vis-item .vis-item-content {
-    color: #FFF !important;
+    color: var(--white-color) !important;
 }
 
 .vis-item.vis-range .vis-item-content,
@@ -78,7 +78,7 @@
 }
 
 .vis-item.vis-background.busy {
-    background-color: @gray-lighter;
+    background-color: var(--calendar-busy-bg);
 }
 
 .vis-item.vis-background.event-range {
@@ -94,4 +94,8 @@
     .vis-timeline {
         font-size: 93%;
     }
+}
+
+.vis-time-axis .vis-grid.vis-minor {
+    border-color: var(--calendar-border) !important;
 }

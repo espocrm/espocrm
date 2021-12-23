@@ -44,7 +44,15 @@
             font-size: 12px;
             opacity: 0.6;
         }
+
+        li.more {
+            li.open > a {
+                background-color: var(--dropdown-link-hover-bg);
+                color: var(--dropdown-link-hover-color);
+            }
+        }
     }
+
 
     @media screen and (min-width: @screen-sm-min) {
         .tabs > .more {

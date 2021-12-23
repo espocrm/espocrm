@@ -10,19 +10,16 @@
 @gray-dark: var(--gray-dark);
 @gray-light: var(--gray-light);
 @gray-lighter: var(--gray-lighter);
+@gray: var(--gray);
 
 @btn-default-bg: var(--btn-default-bg);
 @btn-default-border: var(--btn-default-border);
+@btn-default-color: var(--btn-default-color);
 
 @btn-danger-bg: var(--brand-danger-5);
 @btn-info-border: var(--brand-info-5);
 @btn-success-border: var(--brand-success-5);
 @btn-warning-border: var(--brand-warning-5);
-
-@btn-default-bg-10: var(--main-gray-5);
-@btn-default-border-12: var(--main-gray-12);
-@btn-default-bg-17: var(--main-gray-17);
-@btn-default-border-25: var(--main-gray-25);
 
 @btn-primary-bg-10: var(--brand-primary-10);
 @btn-primary-border-12: var(--brand-primary-12);
@@ -40,7 +37,7 @@
 @btn-info-border-25: var(--brand-info-25);
 
 @btn-success-bg-10: var(--brand-success-10);
-@btn-success-border-12: var(--success-info-12);
+@btn-success-border-12: var(--brand-success-12);
 @btn-success-bg-17: var(--brand-success-17);
 @btn-success-border-25: var(--brand-success-25);
 
@@ -75,6 +72,8 @@
 
 @list-group-active-text-color: var(--main-gray-lighten-40);
 
+@input-color: var(--input-color);
+@input-bg: var(--input-bg);
 @input-border: var(--input-border);
 @input-border-focus: var(--input-border-focus);
 
@@ -106,7 +105,10 @@
 
 @modal-inner-padding: @panel-padding;
 
-@modal-header-bg: @default-heading-bg-color;
+@modal-header-border-color: var(--modal-header-border-color);
+@modal-header-bg: var(--modal-header-bg);
+@modal-footer-bg: var(--modal-footer-bg);
+@modal-content-bg: var(--modal-content-bg);
 
 .container-fixed() {
     margin-right: auto;
@@ -146,15 +148,16 @@
 @state-success-text-10: var(--state-success-text-10);
 
 @state-danger-border: var(--state-danger-bg-10);
+@state-danger-text: var(--state-danger-text);
 
 @state-info-bg: var(--state-info-bg);
 @state-info-bg-5: var(--state-info-bg-5);
 
 @state-info-border: var(--state-info-bg-10);
 
+@state-warning-text: var(--state-warning-text);
 @state-warning-border: var(--state-warning-bg-10);
-
-@panel-warning-bg: var(--panel-warning-bg);
+@state-warning-bg: var(--state-warning-bg);
 
 @panel-primary-border: var(--panel-primary-border);
 
@@ -186,20 +189,38 @@
 @navbar-inverse-link-disabled-color: var(--navbar-inverse-link-disabled-color);
 @navbar-inverse-link-disabled-bg: var(--navbar-inverse-link-disabled-bg);
 
-@panel-primary-text: @white-color;
-
-@well-bg: @default-heading-bg-color;
 @breadcrumb-bg: @default-heading-bg-color;
 
-@well-border: var(--main-gray-7);
+@well-bg: var(--well-bg);
+@well-border: var(--well-border);
 
 @progress-bg: @default-heading-bg-color;
 @list-group-hover-bg: @default-heading-bg-color;
 @panel-footer-bg: @default-heading-bg-color;
 
+@label-color: var(--label-color);
+
+@panel-default-border: var(--panel-default-border);
+
 @panel-default-text: var(--panel-default-text);
-@panel-default-heading-bg: var(--panel-default-heading-bg);
-@panel-default-border: var(--default-border-color);
+@panel-primary-text: var(--panel-primary-text);
+@panel-warning-text: var(--panel-warning-text);
+@panel-info-text: var(--panel-info-text);
+@panel-success-text: var(--panel-success-text);
+@panel-danger-text: var(--panel-danger-text);
+
+@panel-default-bg: var(--panel-default-bg);
+@panel-primary-bg: var(--panel-primary-bg);
+@panel-warning-bg: var(--panel-warning-bg);
+@panel-info-bg: var(--panel-info-bg);
+@panel-success-bg: var(--panel-success-bg);
+@panel-danger-bg: var(--panel-danger-bg);
+
+@panel-primary-border: @panel-primary-bg;
+@panel-warning-border: @panel-warning-bg;
+@panel-info-border: @panel-info-bg;
+@panel-success-border: @panel-success-bg;
+@panel-danger-border: @panel-danger-bg;
 
 @default-border-color: var(--default-border-color);
 
@@ -208,8 +229,10 @@
 
 @thumbnail-border: @default-border-color;
 @table-border-color: @default-border-color;
+
 @navbar-default-toggle-hover-bg: @default-border-color;
 @navbar-default-toggle-border-color: @default-border-color;
+
 @nav-tabs-border-color: @default-border-color;
 @nav-tabs-active-link-hover-border-color: @default-border-color;
 @nav-tabs-justified-link-border-color: @default-border-color;
@@ -261,7 +284,17 @@
 
 @well-padding: 14px;
 
-@dropdown-link-hover-color: var(--gray-dark-5);
+@dropdown-bg: var(--dropdown-bg);
+@dropdown-link-hover-color: var(--dropdown-link-hover-color);
+@dropdown-link-color: var(--dropdown-link-color);
+@dropdown-link-hover-bg: var(--dropdown-link-hover-bg);
+@dropdown-border: var(--dropdown-border);
+@dropdown-divider-bg: var(--dropdown-divider-bg);
 
-@popover-bg: @white-color;
-@popover-title-bg: var(--white-color-3);
+@popover-bg: var(--popover-bg);
+@popover-title-bg: var(--white-color);
+
+@selectize-color-text: var(--select-item-text-color);
+@selectize-color-item: var(--select-item-bg);
+@selectize-color-item-active: var(--select-item-active-bg);
+@selectize-color-item-active-text: var(--select-item-active-text-color);

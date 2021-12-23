@@ -1,10 +1,11 @@
 @main-gray-value: #E8ECED;
 
-@white-color-value: #fafbfc;
+@white-color-value: #FEFEFE;
 
 @gray-base-value: #000;
 @gray-soft-value: lighten(@gray-base-value, 39.0%);
 @gray-dark-value: lighten(@gray-base-value, 20%);
+@gray-value: lighten(@gray-base, 33.5%);
 @gray-light-value: lighten(@gray-base, 46.7%);
 @gray-lighter-value: lighten(@gray-base-value, 93.5%);
 
@@ -22,7 +23,7 @@
 
 @state-primary-text-value: #5b9aca;
 
-@state-success-bg-value: lighten(spin(@brand-success-value, 5), 31%);
+@state-success-bg-value: lighten(spin(@brand-success-value, 5), 30%);
 @state-success-text-value: darken(spin(@brand-success-value, 7), 17%);
 
 @state-info-bg-value: #e5ddf8;
@@ -36,6 +37,11 @@
 
 @state-info-bg-mix-value: mix(@state-info-bg-value, lighten(@gray-base-value, 93.5%), 50%);
 
+@navbar-bg-value: @gray-lighter-value;
+@navbar-link-color-value: @gray-light-value;
+@navbar-link-hover-color-value: @gray-value;
+@navbar-link-hover-bg-value: @body-bg-value;
+
 @navbar-inverse-color-value: @gray-light-value;
 @navbar-inverse-bg-value: #4A6492;
 @navbar-inverse-border-value: transparent;
@@ -47,10 +53,17 @@
 
 @input-border-value: #D1D5D6;
 @input-border-focus-value: #66afe9;
+@input-color-value: @gray-value;
+@input-bg-value: @white-color-value;
 
 @modal-backdrop-bg-value: #DBDBDB;
+@modal-header-border-color-value: #e5e5e5;
+@modal-header-bg-value: @default-heading-bg-color-value;
+@modal-footer-bg-value: @body-bg-value;
+@modal-content-bg-value: @body-bg-value;
 
 @text-color-value: @gray-dark-value;
+@text-white-color-value: @white-color-value;
 
 @link-color-value: @brand-primary-value;
 @link-hover-color-value: darken(@link-color-value, 15%);
@@ -60,21 +73,65 @@
 @table-bg-value: transparent;
 @table-bg-accent-value: #f9f9f9;
 
-@code-bg-value: #f9f9f9;
-
 @default-border-color-value: @main-gray-value;
 @default-heading-bg-color-value: @main-gray-value;
 
+@code-bg-value: #f9f9f9;
+@code-border-color-value: @default-border-color-value;
+@code-color-value: @gray-dark-value;
+
 @panel-default-text-value: @gray-dark-value;
-@panel-default-heading-bg-value: @default-heading-bg-color;
+
 @panel-default-border-value: @default-border-color-value;
 
-@panel-primary-border-value: darken(@brand-primary-value, 12%);
+@panel-default-bg-value: @main-gray-value;
+@panel-primary-bg-value: darken(@brand-primary-value, 12%);
+@panel-danger-bg-value: @state-danger-bg-value;
 @panel-warning-bg-value: #efda97;
+@panel-success-bg-value: @state-success-bg-value;
+@panel-info-bg-value: @state-info-bg-value;
 
-@btn-default-bg-value: @main-gray;
-@btn-default-border-value: @main-gray;
+@panel-primary-border-value: darken(@brand-primary-value, 12%);
+
+@panel-primary-text-value: @white-color-value;
+@panel-danger-text-value: @state-danger-text-value;
+@panel-success-text-value: @state-success-text-value;
+@panel-warning-text-value: @state-warning-text-value;
+@panel-info-text-value: @state-info-text-value;
+
+@btn-default-color-value: #333;
+@btn-default-bg-value: @main-gray-value;
+@btn-default-border-value: @main-gray-value;
+
+@btn-text-color-value: @gray-dark-value;
+
+@site-footer-bg-value: @gray-lighter-value;
+@site-footer-color-value: @gray-value;
+
+@popover-bg-value: @white-color-value;
+
+@dropdown-bg-value: @white-color-value;
+@dropdown-link-color-value: @gray-dark-value;
+@dropdown-link-hover-color-value: darken(@gray-dark-value, 5%);
+@dropdown-link-hover-bg-value: #f5f5f5;
+@dropdown-border-value: rgba(0,0,0,.15);
+@dropdown-divider-bg-value: #e5e5e5;
 
 @login-panel-heading-bg-value: @navbar-inverse-bg-value;
 
 @gray-lighter-orange-mix-value: mix(orange, @gray-lighter-value, 50%);
+
+@calendar-today-bg-value: #fcf8e3;
+@calendar-border-value: #d1d5d6;
+@calendar-busy-bg-value: @gray-lighter-value;
+
+@select-item-text-color-value: @text-color-value;
+@select-item-bg-value: #efefef;
+@select-item-active-text-color-value: @white-color-value;
+@select-item-active-bg-value: @brand-primary-value;
+@select-item-border-value: @gray-light-value;
+
+@label-color-value: #fff;
+
+@well-bg-value: #f5f5f5;
+@well-border-value: @default-border-color-value;

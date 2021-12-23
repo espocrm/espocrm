@@ -8,7 +8,7 @@
 
     #layout ul li {
         list-style: none;
-        border: 1px solid #CCC;
+        border: 1px solid var(--select-item-border);
         margin: 5px 0;
         padding: 5px;
         height: 32px;
@@ -23,7 +23,8 @@
     }
 
     #layout ul > li {
-        background-color: #FFF;
+        background-color: var(--select-item-bg);
+        color: var(--select-item-text-color);
     }
 
     #layout ul.enabled > li .right {

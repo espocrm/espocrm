@@ -9,7 +9,7 @@
 @media screen and (min-width: @screen-sm-min) {
     #navbar .navbar {
         .navbar-right {
-            background-color: @navbar-bg;
+            background-color: var(--navbar-bg);
         }
     }
 }
@@ -28,20 +28,16 @@
     line-height: 17px;
 }
 
-.modal-content {
-    background-color: @white-color;
-}
-
 .dialog-record .modal-content > .modal-body {
     background-color: @body-bg;
 }
 
 .modal-body > .list-group {
-    background-color: @white-color;
+    background-color: --var(modal-content-bg);
 }
 
 .list-container > .list {
-    background-color: @white-color;
+    background-color: @table-bg;
 }
 
 .panel-heading > .btn-group {
@@ -127,7 +123,7 @@ table.table {
 
 .calendar-container > .calendar,
 .calendar-container > .timeline {
-    background-color: @white-color;
+    background-color: @table-bg;
 }
 
 #main > .calendar-container {
@@ -153,7 +149,7 @@ table.table {
 }
 
 .field .list-group {
-    background-color: @white-color;
+    background-color: var(--default-border-color);
 }
 
 .field .grid-stack-item-content {
@@ -170,7 +166,7 @@ table.table {
 }
 
 .record .stick-sub.button-container {
-    background-color: @navbar-bg !important;
+    background-color: var(--navbar-bg) !important;
     padding-bottom: 0;
 }
 
@@ -184,4 +180,8 @@ table.table {
 
 .list-kanban {
     padding-right: 3px;
+}
+
+.well {
+    border-width: 0;
 }

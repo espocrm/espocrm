@@ -171,7 +171,7 @@
                 left: 0;
                 height: @tob-bar-height;
                 width: 100%;
-                background-color: @top-navbar-bg-color;
+                background-color: var(--navbar-bg);
                 margin-left: @navbar-width;
                 padding-right: @navbar-width;
 
@@ -182,7 +182,11 @@
                 }
 
                 .global-search-container a.global-search-button {
-                    color: @gray-light;
+                    color: var(--navbar-link-color);
+
+                    &:hover {
+                        color: var(--navbar-link-hover-color);
+                    }
                 }
 
                 .quick-create-container {
@@ -200,8 +204,15 @@
                 }
 
                 > li > a {
-                    color: @gray-light;
+                    color: var(--navbar-link-color);
+                    &:hover {
+                        color: var(--navbar-link-hover-color);
+                    }
                     padding: 5px 10px;
+                }
+
+                > li.open > a {
+                    background-color: var(--navbar-link-active-bg);
                 }
 
                 .notifications-badge-container {

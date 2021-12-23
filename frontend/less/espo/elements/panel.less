@@ -74,8 +74,8 @@
     > .panel-heading {
 
         .btn {
-            background-color: @panel-default-heading-bg;
-            border-color: @panel-default-heading-bg;
+            background-color: @panel-default-bg;
+            border-color: @panel-default-bg;
             color: @gray-soft;
         }
 
@@ -122,14 +122,18 @@
 
 body {
     .panel-default {
+        border-color: @panel-default-border;
         > .panel-heading {
+            background-color: @panel-default-bg;
+            border-color: @panel-default-bg;
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-default-heading-bg;
-                        border-color: @panel-default-heading-bg;
+                        background-color: @panel-default-bg;
+                        border-color: @panel-default-bg;
+                        color: @panel-default-text;
                     }
                 }
             }
@@ -161,20 +165,20 @@ body {
     }
     .panel-danger {
         > .panel-heading {
-            background-color: @state-danger-border;
+            background-color: @panel-danger-bg;
             .btn,
             .btn-danger {
                 color: @panel-danger-text;
-                background-color: @state-danger-border;
-                border-color: @state-danger-border;
+                background-color: @panel-danger-bg;
+                border-color: @panel-danger-bg;
             }
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @state-danger-border;
-                        border-color: @state-danger-border;
+                        background-color: @panel-danger-bg;
+                        border-color: @panel-danger-bg;
                         color: @panel-danger-text;
                     }
                 }
@@ -207,19 +211,19 @@ body {
     }
     .panel-success {
         > .panel-heading {
-            background-color: @state-success-border;
+            background-color: @panel-success-bg;
             .btn,
             .btn-success {
                 color: @panel-success-text;
-                background-color: @state-success-border;
-                border-color: @state-success-border;
+                background-color: @panel-success-bg;
+                border-color: @panel-success-bg;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @state-success-border;
-                        border-color: @state-success-border;
+                        background-color: @panel-success-bg;
+                        border-color: @panel-success-bg;
                         color: @panel-success-text;
                     }
                 }
@@ -228,19 +232,19 @@ body {
     }
     .panel-primary {
         > .panel-heading {
-            background-color: @panel-primary-border;
+            background-color: @panel-primary-bg;
             .btn,
             .btn-primary {
                 color: @panel-primary-text;
-                background-color: @panel-primary-border;
-                border-color: @panel-primary-border;
+                background-color: @panel-primary-bg;
+                border-color: @panel-primary-bg;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-primary-border;
-                        border-color: @panel-primary-border;
+                        background-color: @panel-primary-bg;
+                        border-color: @panel-primary-bg;
                         color: @panel-primary-text;
                     }
                 }

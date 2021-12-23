@@ -112,10 +112,10 @@ mark,
   .text-emphasis-variant(@state-info-text);
 }
 .text-warning {
-  .text-emphasis-variant(@state-warning-text);
+  .text-emphasis-variant-espo(@state-warning-text; var(--state-warning-text-10));
 }
 .text-danger {
-  .text-emphasis-variant(@state-danger-text);
+  .text-emphasis-variant-espo(@state-danger-text; var(--state-danger-text-10));
 }
 
 // Contextual backgrounds
@@ -134,10 +134,10 @@ mark,
   .bg-variant-espo(@state-info-bg, @state-info-bg-5);
 }
 .bg-warning {
-  .bg-variant(@state-warning-bg);
+  .bg-variant-espo(@state-warning-bg; var(--state-warning-bg-5));
 }
 .bg-danger {
-  .bg-variant(@state-danger-bg);
+  .bg-variant-espo(@state-danger-bg; var(--state-danger-bg-5));
 }
 
 

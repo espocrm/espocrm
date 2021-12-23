@@ -12,9 +12,9 @@
     "navbarHeight": 30,
     "logo": "client/img/logo-37.png",
     "textColor": "#dedede",
-    "chartGridColor": "#ddd",
-    "chartTickColor": "#e8eced",
-    "chartSuccessColor": "#85b75f",
-    "chartColorList": ["#6FA8D6", "#EDC555", "#DE6666", "#8A7CC2", "#c1834d", "#4E6CAD", "#ED8F42", "#d69cc7", "#bfbfbf"],
-    "chartColorAlternativeList": ["#6FA8D6", "#EDC555", "#DE6666", "#8A7CC2", "#c1834d"]
+    "chartGridColor": "#747272",
+    "chartTickColor": "#6e6b6b",
+    "chartSuccessColor": "#5d8a55",
+    "chartColorList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53", "#3a5691", "#9c7352", "#a17a97", "#858585"],
+    "chartColorAlternativeList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53"]
 }

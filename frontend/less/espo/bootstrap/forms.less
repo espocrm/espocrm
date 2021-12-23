@@ -435,10 +435,22 @@ input[type="checkbox"] {
   );
 }
 .has-warning {
-  .form-control-validation(@state-warning-text; @state-warning-text; @state-warning-bg);
+  .form-control-validation-espo(
+    @state-warning-text;
+    @state-warning-text;
+    @state-warning-bg;
+    var(--state-warning-text-10);
+    var(--state-warning-text-10l)
+  );
 }
 .has-error {
-  .form-control-validation(@state-danger-text; @state-danger-text; @state-danger-bg);
+  .form-control-validation-espo(
+    @state-danger-text;
+    @state-danger-text;
+    @state-danger-bg;
+    var(--state-danger-text-10);
+    var(--state-danger-text-10l)
+  );
 }
 
 // Reposition feedback icon if input has visible label above

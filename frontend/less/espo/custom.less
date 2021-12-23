@@ -247,7 +247,7 @@ div.list-kanban > div > table {
     th.group-header {
         font-weight: normal;
 
-        color: @white-color;
+        color: var(--text-white-color);
         background-color: @gray-light;
 
         position: relative;
@@ -268,10 +268,10 @@ div.list-kanban > div > table {
                 position: relative;
                 right: 14px;
 
-                color: @white-color;
+                color: var(--text-white-color);
 
                 &:hover, &:active {
-                    color: @white-color
+                    color: var(--text-white-color);
                 }
             }
         }
@@ -290,7 +290,7 @@ div.list-kanban > div > table {
 
         > div:after {
             left: ~"calc(100% - 10px)";
-            border-color: transparent transparent transparent @white-color;
+            border-color: transparent transparent transparent var(--body-bg);
             background-color: @gray-light;
         }
 
@@ -1582,20 +1582,25 @@ body .note-editor .panel-heading {
 }
 
 .autocomplete-suggestions {
-    border: 1px solid @input-border;
-    background: @white-color;
+    border: 1px solid var(--dropdown-border);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-link-color);
     cursor: default;
     overflow: auto;
     .box-shadow(0 6px 12px rgba(0,0,0,.175));
+
+    .autocomplete-suggestion.autocomplete-selected {
+        background-color: var(--dropdown-link-hover-bg) !important;
+        color: var(--dropdown-link-hover-color) !important;
+    }
 }
+
 .autocomplete-suggestion {
     padding: 2px 5px;
     white-space: nowrap;
     overflow: hidden;
 }
-.autocomplete-selected {
-    background: @main-gray;
-}
+
 .autocomplete-suggestions strong {
     font-weight: normal; color: @brand-primary;
 }
@@ -1626,7 +1631,7 @@ label.attach-file-label {
 }
 
 .gray-box {
-    background-color: @gray-lighter;
+    background-color: var(--select-item-bg);
     margin: 0 5px 3px 0;
     padding: 2px 3px 2px 5px;
 
@@ -2043,7 +2048,7 @@ stream-head-text-container .span {
             position: absolute;
             bottom: 0;
             left: 0;
-            background: linear-gradient(to bottom, transparent, @white-color);
+            background: linear-gradient(to bottom, transparent, var(--panel-bg));
         }
     }
 }
@@ -2940,6 +2945,12 @@ a.link-gray {
     .far {
         font-size: 100%;
     }
+}
+
+pre {
+    background-color: var(--code-bg);
+    border-color: var(--code-border-color);
+    color: var(--code-color);
 }
 
 @import "elements/site.less";

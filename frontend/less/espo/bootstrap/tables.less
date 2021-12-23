@@ -4,7 +4,7 @@
 
 
 table {
-  background-color: @table-bg;
+  //background-color: @table-bg;
 }
 caption {
   padding-top: @table-cell-padding;
@@ -159,8 +159,8 @@ table {
 
 .table-row-variant-espo(success; @state-success-bg; @state-success-bg-5);
 .table-row-variant-espo(info; @state-info-bg; @state-info-bg-5);
-.table-row-variant(warning; @state-warning-bg);
-.table-row-variant(danger; @state-danger-bg);
+.table-row-variant-espo(warning; @state-warning-bg; var(--state-warning-bg-5));
+.table-row-variant-espo(danger; @state-danger-bg; var(--state-danger-bg-5));
 
 
 // Responsive tables
