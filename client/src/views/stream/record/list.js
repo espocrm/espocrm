@@ -32,6 +32,8 @@ define('views/stream/record/list', 'views/record/list-expanded', function (Dep) 
 
         type: 'listStream',
 
+        massActionsDisabled: true,
+
         setup: function () {
             this.itemViews = this.getMetadata().get('clientDefs.Note.itemViews') || {};
 
@@ -122,7 +124,7 @@ define('views/stream/record/list', 'views/record/list-expanded', function (Dep) 
 
                             $row.append(html);
                             $list.prepend($row);
-                            
+
                             rowsReady++;
 
                             view._afterRender();

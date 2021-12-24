@@ -12,7 +12,7 @@
     <div class="btn-group actions">
         <button
             type="button"
-            class="btn btn-default btn-sm dropdown-toggle actions-button"
+            class="btn btn-default dropdown-toggle actions-button"
             data-toggle="dropdown"
             disabled
         >
