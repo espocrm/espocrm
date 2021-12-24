@@ -60,11 +60,13 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             },
             'keypress textarea[data-name="post"]': function (e) {
-                if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+                if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
                     this.post();
-                } else if (e.keyCode == 9) {
-                    var $text = $(e.currentTarget)
-                    if ($text.val() == '') {
+                }
+                else if (e.keyCode === 9) {
+                    var $text = $(e.currentTarget);
+
+                    if ($text.val() === '') {
                         this.disablePostingMode();
                     }
                 }
@@ -79,14 +81,17 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.postDisabled = this.postDisabled;
             data.placeholderText = this.placeholderText;
             data.allowInternalNotes = this.allowInternalNotes;
+
             return data;
         },
 
         controlPreviewButton: function () {
             this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
+
             if (this.$textarea.val() == '') {
                 this.$previewButton.addClass('hidden');
             } else {
@@ -101,23 +106,43 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 if (this.$textarea.val() && this.$textarea.val().length) {
                     this.getView('postField').controlTextareaHeight();
                 }
+
                 var isClicked = false;
-                $('body').on('click.stream-panel', function (e) {
+
+                $('body').on('click.stream-panel', (e) => {
                     if (byFocus && !isClicked) {
                         isClicked = true;
+
                         return;
                     }
+
                     var $target = $(e.target);
-                    if ($target.parent().hasClass('remove-attachment')) return;
-                    if ($.contains(this.$postContainer.get(0), e.target)) return;
-                    if (this.$textarea.val() !== '') return;
-                    if ($(e.target).closest('.popover-content').get(0)) return;
+
+                    if ($target.parent().hasClass('remove-attachment')) {
+                        return;
+                    }
+
+                    if ($.contains(this.$postContainer.get(0), e.target)) {
+                        return;
+                    }
+
+                    if (this.$textarea.val() !== '') {
+                        return;
+                    }
+
+                    if ($(e.target).closest('.popover-content').get(0)) {
+                        return;
+                    }
 
                     var attachmentsIds = this.seed.get('attachmentsIds') || [];
-                    if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
+
+                    if (
+                        !attachmentsIds.length &&
+                        (!this.getView('attachments') || !this.getView('attachments').isUploading)
+                    ) {
                         this.disablePostingMode();
                     }
-                }.bind(this));
+                });
             }
 
             this.postingMode = true;
@@ -129,9 +154,11 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.postingMode = false;
 
             this.$textarea.val('');
+
             if (this.hasView('attachments')) {
                 this.getView('attachments').empty();
             }
+
             this.$el.find('.buttons-panel').addClass('hide');
 
             $('body').off('click.stream-panel');
@@ -149,6 +176,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
             this.allowInternalNotes = false;
+
             if (!this.getUser().isPortal()) {
                 this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
             }
@@ -218,41 +246,49 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     this.initPostEvents(view);
                 });
 
-                this.createCollection(function () {
+                this.createCollection(() => {
                     this.wait(false);
-                }, this);
+                });
             });
 
             if (!this.defs.hidden) {
                 this.subscribeToWebSocket();
             }
 
-            this.once('show', function () {
+            this.once('show', () => {
                 if (!this.isSubscribedToWebSocked) {
                     this.subscribeToWebSocket();
                 }
-            }, this);
+            });
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.isSubscribedToWebSocked) {
                     this.unsubscribeFromWebSocket();
                 }
-            }.bind(this));
+            });
         },
 
         subscribeToWebSocket: function () {
-            if (!this.getConfig().get('useWebSocket')) return;
-            if (this.model.entityType === 'User') return;
+            if (!this.getConfig().get('useWebSocket')) {
+                return;
+            }
+
+            if (this.model.entityType === 'User') {
+                return;
+            }
 
             var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
             this.streamUpdateWebSocketTopic = topic;
 
             this.isSubscribedToWebSocked = true;
 
-            this.getHelper().webSocketManager.subscribe(topic, function (t, data) {
-                if (data.createdById === this.getUser().id) return;
+            this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
+                if (data.createdById === this.getUser().id) {
+                    return;
+                }
+
                 this.collection.fetchNew();
-            }.bind(this))
+            });
         },
 
         unsubscribeFromWebSocket: function () {
@@ -313,28 +349,28 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         },
 
         createCollection: function (callback, context) {
-            this.getCollectionFactory().create('Note', function (collection) {
+            this.getCollectionFactory().create('Note', (collection) => {
                 this.collection = collection;
+
                 collection.url = this.model.name + '/' + this.model.id + '/stream';
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
                 this.setFilter(this.filter);
 
                 callback.call(context);
-            }, this);
+            });
         },
 
         initPostEvents: function (view) {
-            this.listenTo(view, 'add-files', function (files) {
+            this.listenTo(view, 'add-files', (files) => {
                 this.getView('attachments').uploadFiles(files);
-            }, this);
+            });
         },
 
         afterRender: function () {
             this.$textarea = this.$el.find('textarea[data-name="post"]');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
-
-            var $textarea = this.$textarea;
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
 
@@ -349,76 +385,86 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             var collection = this.collection;
 
-            this.listenToOnce(collection, 'sync', function () {
+            this.listenToOnce(collection, 'sync', () => {
                 this.createView('list', 'views/stream/record/list', {
                     el: this.options.el + ' > .list-container',
                     collection: collection,
                     model: this.model
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
 
                 this.stopListening(this.model, 'all');
                 this.stopListening(this.model, 'destroy');
-                setTimeout(function () {
-                    this.listenTo(this.model, 'all', function (event) {
-                        if (!~['sync', 'after:relate'].indexOf(event)) return;
+
+                setTimeout(() => {
+                    this.listenTo(this.model, 'all', (event) => {
+                        if (!~['sync', 'after:relate'].indexOf(event)) {
+                            return;
+                        }
+
                         collection.fetchNew();
-                    }, this);
+                    });
 
-                    this.listenTo(this.model, 'destroy', function () {
+                    this.listenTo(this.model, 'destroy', () => {
                         this.stopListening(this.model, 'all');
-                    }, this);
-                }.bind(this), 500);
-
-            }, this);
+                    });
+                }, 500);
+            });
 
             if (!this.defs.hidden) {
                 collection.fetch();
-            } else {
-                this.once('show', function () {
+            }
+            else {
+                this.once('show', () => {
                     collection.fetch();
-                }, this);
+                });
             }
 
             var assignmentPermission = this.getAcl().get('assignmentPermission');
 
-            var buildUserListUrl = function (term) {
+            var buildUserListUrl = (term) => {
                 var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
-                if (assignmentPermission == 'team') {
+
+                if (assignmentPermission === 'team') {
                     url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
                 }
+
                 return url;
-            }.bind(this);
+            };
 
             if (assignmentPermission !== 'no') {
                 this.$textarea.textcomplete([{
                     match: /(^|\s)@(\w*)$/,
                     index: 2,
-                    search: function (term, callback) {
-                        if (term.length == 0) {
+                    search: (term, callback) => {
+                        if (term.length === 0) {
                             callback([]);
+
                             return;
                         }
+
                         $.ajax({
                             url: buildUserListUrl(term),
-                        }).done(function (data) {
+                        }).then((data) => {
                             callback(data.list)
                         });
                     },
-                    template: function (mention) {
-                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
-                    }.bind(this),
-                    replace: function (o) {
+                    template: (mention) => {
+                        return this.getHelper()
+                            .escapeString(mention.name) +
+                            ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                    },
+                    replace: (o) => {
                         return '$1@' + o.userName + '';
-                    }
+                    },
                 }]);
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     if (this.$textarea.length) {
                         this.$textarea.textcomplete('destroy');
                     }
-                }, this);
+                });
             }
 
             var $a = this.$el.find('.buttons-panel a.stream-post-info');
@@ -442,42 +488,57 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             var messageItemList = [];
 
-            syntaxItemList.forEach(function (item) {
+            syntaxItemList.forEach((item) => {
                 var text = this.translate(item[0], 'syntaxItems', 'Stream');
                 var result = item[1].replace('{text}', text);
-                messageItemList.push(result);
-            }, this);
 
-            message += '<ul>' + messageItemList.map(function (item) {
+                messageItemList.push(result);
+            });
+
+            message += '<ul>' + messageItemList.map((item) => {
                 return '<li>'+ item + '</li>';
             }).join('') + '</ul>';
-
 
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
                 content: message,
-                html: true
-            }).on('shown.bs.popover', function () {
-                $('body').off('click.popover-' + this.id);
-                $('body').on('click.popover-' + this.id , function (e) {
-                    if (e.target.classList.contains('popover-content')) return;
-                    if ($(e.target).closest('.popover-content').get(0)) return;
-                    if ($.contains($a.get(0), e.target)) return;
-                    $('body').off('click.popover-' + this.id);
+                html: true,
+            }).on('shown.bs.popover', () => {
+                $('body').off('click.popover-' + this.cid);
+
+                $('body').on('click.popover-' + this.cid , (e) => {
+                    if (e.target.classList.contains('popover-content')) {
+                        return;
+                    }
+
+                    if ($(e.target).closest('.popover-content').get(0)) {
+                        return;
+                    }
+
+                    if ($.contains($a.get(0), e.target)) {
+                        return;
+                    }
+
+                    $('body').off('click.popover-' + this.cid);
+
                     $a.popover('hide');
+
                     e.stopPropagation();
-                }.bind(this));
+                });
             });
 
             $a.on('click', function () {
                 $(this).popover('toggle');
             });
 
-            this.on('remove', function () {
-                if ($a) $a.popover('destroy')
-                $('body').off('click.popover-' + this.id);
-            }, this);
+            this.on('remove', () => {
+                if ($a) {
+                    $a.popover('destroy');
+                }
+
+                $('body').off('click.popover-' + this.cid);
+            });
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,
@@ -486,7 +547,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 defs: {
                     name: 'attachments',
                 },
-            }, function (view) {
+            }, (view) => {
                 view.render();
             });
         },
@@ -500,9 +561,9 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             this.$textarea.prop('disabled', true);
 
-            this.getModelFactory().create('Note', function (model) {
+            this.getModelFactory().create('Note', (model) => {
                 if (this.getView('attachments').validateReady()) {
-                    this.$textarea.prop('disabled', false)
+                    this.$textarea.prop('disabled', false);
 
                     return;
                 }
@@ -514,7 +575,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     return;
                 }
 
-                this.listenToOnce(model, 'sync', function () {
+                this.listenToOnce(model, 'sync', () => {
                     this.notify('Posted', 'success');
                     this.collection.fetchNew();
 
@@ -529,7 +590,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     this.getSessionStorage().clear(this.storageTextKey);
                     this.getSessionStorage().clear(this.storageAttachmentsKey);
                     this.getSessionStorage().clear(this.storageIsInernalKey);
-                }, this);
+                });
 
                 model.set('post', message);
                 model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
@@ -539,12 +600,13 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.prepareNoteForPost(model);
 
                 this.notify('Posting...');
+
                 model.save(null, {
-                    error: function () {
+                    error: () => {
                         this.$textarea.prop('disabled', false);
-                    }.bind(this)
+                    }
                 });
-            }.bind(this));
+            });
         },
 
         prepareNoteForPost: function (model) {
@@ -563,26 +625,30 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             this.actionList.push({
                 action: 'viewPostList',
-                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note')
+                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note'),
             });
 
             this.actionList.push(false);
 
-            this.filterList.forEach(function (item) {
+            this.filterList.forEach((item) => {
                 var selected = false;
-                if (item == 'all') {
+
+                if (item === 'all') {
                     selected = !this.filter;
                 } else {
                     selected = item === this.filter;
                 }
+
                 this.actionList.push({
                     action: 'selectFilter',
-                    html: '<span class="check-icon fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') + '</div>',
+                    html: '<span class="check-icon fas fa-check pull-right' +
+                        (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') +
+                        '</div>',
                     data: {
                         name: item
                     }
                 });
-            }, this);
+            });
         },
 
         actionViewPostList: function () {
@@ -594,9 +660,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     url: url,
                     title: this.translate('Stream') +
                         ' @right ' + this.translate('posts', 'filters', 'Note'),
-                    forceSelectAllAttributes: true
-                }
+                    forceSelectAllAttributes: true,
+                },
             };
+
             this.actionViewRelatedList(data);
         },
 
@@ -607,7 +674,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         storeFilter: function (filter) {
             if (filter) {
                 this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
-            } else {
+            }
+            else {
                 this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
             }
         },
@@ -615,6 +683,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         setFilter: function (filter) {
             this.filter = filter;
             this.collection.data.filter = null;
+
             if (filter) {
                 this.collection.data.filter = filter;
             }
@@ -628,11 +697,12 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
         preview: function () {
             this.createView('dialog', 'views/modal', {
-                templateContent: '<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>',
+                templateContent: '<div class="complex-text">' +
+                       '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
                 text: this.$textarea.val(),
                 headerText: this.translate('Preview'),
                 backdrop: true,
-            }, function (view) {
+            }, (view) => {
                 view.render();
             });
         },
