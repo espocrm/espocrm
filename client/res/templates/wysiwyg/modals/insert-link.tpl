@@ -1,3 +1,5 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
 
 <div class="cell form-group">
     <label class="control-label">{{labels.textToDisplay}}</label>
@@ -16,4 +18,7 @@
     <div class="field">
         <input class="" type="checkbox" data-name="openInNewWindow" checked>
     </div>
+</div>
+
+</div>
 </div>

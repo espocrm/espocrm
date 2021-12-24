@@ -30,6 +30,8 @@ define('views/wysiwyg/modals/insert-image', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
+        className: 'dialog dialog-record',
+
         template: 'wysiwyg/modals/insert-image',
 
         events: {

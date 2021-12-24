@@ -30,6 +30,8 @@ define('crm:views/calendar/modals/shared-options', ['views/modal', 'model'], fun
 
     return Dep.extend({
 
+        className: 'dialog dialog-record',
+
         template: 'crm:calendar/modals/shared-options',
 
         buttonList: [

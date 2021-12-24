@@ -1,3 +1,6 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
+
 <div class="row">
     <div class="cell form-group col-md-6" data-name="dashboardTabList">
         <label class="control-label" data-name="dashboardTabList">{{translate 'dashboardTabList' category='fields' scope="Preferences"}}</label>
@@ -5,4 +8,7 @@
             {{{dashboardTabList}}}
         </div>
     </div>
+</div>
+
+</div>
 </div>

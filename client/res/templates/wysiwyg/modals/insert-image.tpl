@@ -1,3 +1,6 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
+
 <div class="cell form-group">
     <label class="control-label">{{labels.selectFromFiles}}</label>
     <div class="field">
@@ -15,4 +18,7 @@
             </span>
         </div>
     </div>
+</div>
+
+</div>
 </div>
