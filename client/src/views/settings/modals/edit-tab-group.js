@@ -30,7 +30,9 @@ define('views/settings/modals/edit-tab-group', ['views/modal', 'model'], functio
 
     return Dep.extend({
 
-        templateContent: '<div class="record">{{{record}}}</div>',
+        className: 'dialog dialog-record',
+
+        templateContent: '<div class="record no-side-margin">{{{record}}}</div>',
 
         setup: function () {
             Dep.prototype.setup.call(this);
