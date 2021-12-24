@@ -126,6 +126,11 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
             this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
+            this.colors = _.extend(
+                this.colors,
+                Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
+            );
+
             this.scopeFilter = false;
 
             this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
