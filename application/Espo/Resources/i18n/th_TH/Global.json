@@ -729,15 +729,5 @@
   },
   "listViewModes": {
     "list": "รายการ"
-  },
-  "themes": {
-    "Espo": "คลาสสิก Espo",
-    "Sakura": "ซากุระคลาสสิก",
-    "EspoVertical": "แนวตั้ง Espo",
-    "SakuraVertical": "ซากุระในแนวตั้ง",
-    "Violet": "คลาสสิกไวโอเล็ต",
-    "VioletVertical": "สีม่วงแนวตั้ง",
-    "Hazyblue": "คลาสสิก Hazyblue",
-    "HazyblueVertical": "แนวตั้ง Hazyblue"
   }
 }

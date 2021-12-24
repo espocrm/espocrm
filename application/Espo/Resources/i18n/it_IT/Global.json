@@ -656,10 +656,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} Ha postato a {target} e se stessa"
   },
-  "themes": {
-    "EspoRtl": "RTL Espo\n",
-    "Espo": "Espo classico"
-  },
   "listViewModes": {
     "list": "Lista"
   }

@@ -728,17 +728,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{Употреба} публикуван {цел} и се"
   },
-  "themes": {
-    "EspoRtl": "RTL ESPO",
-    "Espo": "Класически ESPO",
-    "Sakura": "Класически Сакура",
-    "EspoVertical": "Вертикална ESPO",
-    "SakuraVertical": "Вертикална Сакура",
-    "Violet": "Класически Violet",
-    "VioletVertical": "Вертикална Violet",
-    "Hazyblue": "Класически Hazyblue",
-    "HazyblueVertical": "Вертикална Hazyblue"
-  },
   "durationUnits": {
     "d": "д",
     "h": "з",

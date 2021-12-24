@@ -748,15 +748,5 @@
   },
   "listViewModes": {
     "list": "Lista"
-  },
-  "themes": {
-    "Espo": "Klassisk Espo",
-    "Sakura": "Klassisk Sakura",
-    "EspoVertical": "Vertikal Espo",
-    "SakuraVertical": "Vertikal Sakura",
-    "Violet": "Klassisk Violet",
-    "VioletVertical": "Vertikal Violet",
-    "Hazyblue": "Klassisk Hazyblue",
-    "HazyblueVertical": "Vertikal Hazyblue"
   }
 }

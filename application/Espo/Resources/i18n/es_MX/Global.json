@@ -739,15 +739,5 @@
   "listViewModes": {
     "list": "Lista",
     "kanban": "Tarjetas"
-  },
-  "themes": {
-    "Espo": "Espo Clásico",
-    "Sakura": "Sakura Clásico",
-    "EspoVertical": "Espo Vertical",
-    "SakuraVertical": "Sakura Vertical",
-    "Violet": "Violeta Clásico",
-    "VioletVertical": "Violeta Vertical",
-    "Hazyblue": "Azul Clásico",
-    "HazyblueVertical": "Azul Vertical"
   }
 }

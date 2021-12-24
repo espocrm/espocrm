@@ -609,14 +609,5 @@
   },
   "listViewModes": {
     "list": "liste"
-  },
-  "themes": {
-    "Espo": "Espo Classique",
-    "Sakura": "Sakura classique",
-    "EspoVertical": "Espo Vertical",
-    "SakuraVertical": "Sakura vertical",
-    "Violet": "Violet classique",
-    "VioletVertical": "Violet vertical",
-    "Hazyblue": "Hazyblue classique"
   }
 }

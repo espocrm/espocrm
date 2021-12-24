@@ -786,17 +786,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} оставила сообщение для {target} и для себя"
   },
-  "themes": {
-    "EspoRtl": "RTL Espo уровень регистровых передач",
-    "Espo": "Классический  Espo",
-    "Sakura": "Классический Sakura",
-    "EspoVertical": "Вертикальный Espo",
-    "SakuraVertical": "Вертикальный Sakura",
-    "Violet": "Классический Violet",
-    "VioletVertical": "Вертикальный Violet",
-    "Hazyblue": "Классический Hazyblue",
-    "HazyblueVertical": "Вертикальный Hazyblue"
-  },
   "durationUnits": {
     "d": "д",
     "h": "ч",

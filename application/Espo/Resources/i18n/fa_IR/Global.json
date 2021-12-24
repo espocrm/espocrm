@@ -654,10 +654,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} به {target} ارسال شده و خودش"
   },
-  "themes": {
-    "EspoRtl": "RTL EspoCRM",
-    "Espo": "\n"
-  },
   "listViewModes": {
     "list": "لیست",
     "kanban": "کانبان"

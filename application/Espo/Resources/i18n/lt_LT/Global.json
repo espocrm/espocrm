@@ -705,17 +705,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} paskelbė {target} ir sau"
   },
-  "themes": {
-    "EspoRtl": "Iš dešinės į kairę Espo",
-    "Espo": "Klasikinis espo",
-    "Sakura": "Klasikinė Sakura",
-    "EspoVertical": "Vertikali Espo",
-    "SakuraVertical": "Vertikali Sakura",
-    "Violet": "Klasikinis violetinis",
-    "VioletVertical": "Vertikali violetinė",
-    "Hazyblue": "Klasikinis \"Hazyblue\"",
-    "HazyblueVertical": "Vertikalios bangos"
-  },
   "durationUnits": {
     "h": "H",
     "m": "min"

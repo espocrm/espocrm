@@ -739,15 +739,5 @@
   },
   "listViewModes": {
     "list": "Lijst"
-  },
-  "themes": {
-    "Espo": "Klassiek Espo",
-    "Sakura": "Klassiek Sakura",
-    "EspoVertical": "Verticaal Espo",
-    "SakuraVertical": "Verticaal Sakura",
-    "Violet": "Klassiek Paars",
-    "VioletVertical": "Verticaal Violet",
-    "Hazyblue": "Klassiek Hazyblue",
-    "HazyblueVertical": "Verticaal Hazyblue"
   }
 }

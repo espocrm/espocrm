@@ -719,15 +719,5 @@
   },
   "listViewModes": {
     "list": "列表"
-  },
-  "themes": {
-    "Espo": "Espo",
-    "Sakura": "樱花",
-    "EspoVertical": "Espo w/ 侧边栏",
-    "SakuraVertical": "Sakura w/ 侧边栏",
-    "Violet": "紫色",
-    "VioletVertical": "Violet w/ 侧边栏",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Hazyblue w/ 侧边栏"
   }
 }

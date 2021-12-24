@@ -724,15 +724,5 @@
   "listViewModes": {
     "list": "看板",
     "kanban": "大字體"
-  },
-  "themes": {
-    "Espo": "傳統櫻花",
-    "Sakura": "垂直 Espo",
-    "EspoVertical": "傳統櫻花",
-    "SakuraVertical": "經典紫羅蘭",
-    "Violet": "垂直紫羅蘭",
-    "VioletVertical": "傳統朦朧藍",
-    "Hazyblue": "垂直朦朧藍",
-    "HazyblueVertical": "資料隱私權限"
   }
 }

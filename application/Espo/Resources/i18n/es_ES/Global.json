@@ -764,8 +764,5 @@
   },
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí misma"
-  },
-  "themes": {
-    "VioletVertical": "\nVertical Violet"
   }
 }

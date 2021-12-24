@@ -694,15 +694,5 @@
   },
   "listViewModes": {
     "list": "Lista"
-  },
-  "themes": {
-    "Espo": "Klasszikus Espo",
-    "Sakura": "Klasszikus Sakura",
-    "EspoVertical": "Függőleges Espo",
-    "SakuraVertical": "Függő Sakura",
-    "Violet": "Klasszikus Violet",
-    "VioletVertical": "Függőleges Violet",
-    "Hazyblue": "Klasszikus Hazyblue",
-    "HazyblueVertical": "Függőleges Hazyblue"
   }
 }

@@ -650,11 +650,5 @@
   },
   "listViewModes": {
     "list": "Lista"
-  },
-  "themes": {
-    "Violet": "Klasična Ljubičasta",
-    "VioletVertical": "Okomita Ljubičasta",
-    "Hazyblue": "Klasična Hazyplava",
-    "HazyblueVertical": "Okomita Hazyplava"
   }
 }

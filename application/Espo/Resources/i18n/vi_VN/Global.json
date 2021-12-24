@@ -555,9 +555,5 @@
   "listViewModes": {
     "list": "Danh sách",
     "kanban": "Dạng tiến trình"
-  },
-  "themes": {
-    "Espo": " Classic Espo",
-    "Hazyblue": " Classic Hazyblue"
   }
 }

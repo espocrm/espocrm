@@ -741,9 +741,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
   },
-  "themes": {
-    "EspoRtl": "Espo (rechtsbündig)"
-  },
   "durationUnits": {
     "d": "T",
     "h": "St",

@@ -683,17 +683,6 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} sendte til {target} og sig selv"
   },
-  "themes": {
-    "EspoRtl": "Højre-Venstre Espo",
-    "Espo": "Klassisk Espo",
-    "Sakura": "Klassisk Sakura",
-    "EspoVertical": "Vertikal Espo",
-    "SakuraVertical": "Vertikal Sakura",
-    "Violet": "Klassisk Violet",
-    "VioletVertical": "Vertikal Violet",
-    "Hazyblue": "Klassisk Hazyblue",
-    "HazyblueVertical": "Vertikal Hazyblue"
-  },
   "listViewModes": {
     "list": "Liste"
   }
