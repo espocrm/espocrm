@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/row-actions/relationship-remove-only', 'views/record/row-actions/relationship', function (Dep) {
+define('views/record/row-actions/relationship-remove-only', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
@@ -42,9 +42,7 @@ Espo.define('views/record/row-actions/relationship-remove-only', 'views/record/r
                     }
                 ];
             }
-        }
+        },
 
     });
-
 });
-
