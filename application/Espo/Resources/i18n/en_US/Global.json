@@ -785,6 +785,7 @@
     },
     "themes": {
         "DarkVertical": "Dark",
+        "Dark": "Dark Horizontal",
         "Espo": "Espo Horizontal",
         "EspoRtl": "RTL Espo Horizontal",
         "Sakura": "Sakura Horizontal",

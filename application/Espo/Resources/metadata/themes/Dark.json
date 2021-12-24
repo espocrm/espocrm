@@ -1,0 +1,16 @@
+{
+    "stylesheet": "client/css/espo/dark.css",
+    "stylesheetIframe": "client/css/espo/dark-iframe.css",
+    "dashboardCellHeight": 155,
+    "dashboardCellMargin": 19,
+    "navbarHeight": 43,
+    "modalFooterAtTheTop": true,
+    "modalFullHeight": true,
+    "fontSize": 14,
+    "textColor": "#dedede",
+    "chartGridColor": "#747272",
+    "chartTickColor": "#6e6b6b",
+    "chartSuccessColor": "#5d8a55",
+    "chartColorList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53", "#3a5691", "#9c7352", "#a17a97", "#858585"],
+    "chartColorAlternativeList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53"]
+}
