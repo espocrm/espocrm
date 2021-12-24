@@ -1581,6 +1581,30 @@ body .note-editor .panel-heading {
     }
 }
 
+.note-editor.note-frame {
+    .note-editing-area {
+        .note-editable {
+            background-color: var(--input-bg);
+            color: var(--input-color);
+
+            &[contenteditable="false"] {
+                background-color: var(--text-color);
+            }
+        }
+    }
+
+    .note-statusbar {
+        background-color: var(--input-bg);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        height: 8px;
+    }
+
+    output.note-status-output {
+        padding-top: 0;
+    }
+}
+
 .list > table thead > th {
     border-top-width: 1px !important;
 }
