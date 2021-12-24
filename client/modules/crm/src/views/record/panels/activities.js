@@ -341,7 +341,7 @@ define(
             data = data || {};
 
             var attributes = {
-                status: data.status
+                status: data.status,
             };
 
             if (this.model.name == 'User') {
@@ -403,7 +403,7 @@ define(
                 }
             }
 
-            callback.call(this, attributes);
+            callback.call(this, Espo.Utils.cloneDeep(attributes));
         },
 
         checkParentTypeAvailability: function (scope, parentType) {

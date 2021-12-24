@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/row-actions/default', 'view', function (Dep) {
+define('views/record/row-actions/default', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -37,22 +37,27 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            var $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
+            let $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
-            var isChecked = false;
-            $dd.on('show.bs.dropdown', function () {
-                var $el = this.$el.closest('.list-row');
+            let isChecked = false;
+
+            $dd.on('show.bs.dropdown', () => {
+                let $el = this.$el.closest('.list-row');
+
                 isChecked = false;
+
                 if ($el.hasClass('active')) {
                     isChecked = true;
                 }
+
                 $el.addClass('active');
-            }.bind(this));
-            $dd.on('hide.bs.dropdown', function () {
+            });
+
+            $dd.on('hide.bs.dropdown', () => {
                 if (!isChecked) {
                     this.$el.closest('.list-row').removeClass('active');
                 }
-            }.bind(this));
+            });
         },
 
         getActionList: function () {
@@ -62,8 +67,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id
+                link: '#' + this.model.name + '/view/' + this.model.id,
             }];
+
             if (this.options.acl.edit) {
                 list.push({
                     action: 'quickEdit',
@@ -71,18 +77,20 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     data: {
                         id: this.model.id
                     },
-                    link: '#' + this.model.name + '/edit/' + this.model.id
+                    link: '#' + this.model.name + '/edit/' + this.model.id,
                 });
             }
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
                     label: 'Remove',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
                     }
                 });
             }
+
             return list;
         },
 
@@ -90,9 +98,9 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
             return {
                 acl: this.options.acl,
                 actionList: this.getActionList(),
-                scope: this.model.name
+                scope: this.model.name,
             };
-        }
-    });
+        },
 
+    });
 });

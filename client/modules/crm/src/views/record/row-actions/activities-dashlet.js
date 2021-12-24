@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/record/row-actions/activities-dashlet', 'views/record/row-actions/view-and-edit', function (Dep) {
+define('crm:views/record/row-actions/activities-dashlet', 'views/record/row-actions/view-and-edit', function (Dep) {
 
     return Dep.extend({
 
@@ -37,9 +37,8 @@ Espo.define('crm:views/record/row-actions/activities-dashlet', 'views/record/row
 
             actionList.forEach(function (item) {
                 item.data = item.data || {};
-                item.data.scope = this.model.name
+                item.data.scope = this.model.name;
             }, this);
-
 
             if (scope === 'Task') {
                 if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
@@ -71,6 +70,7 @@ Espo.define('crm:views/record/row-actions/activities-dashlet', 'views/record/row
                     });
                 }
             }
+
             if (this.options.acl.edit) {
                 actionList.push({
                     action: 'quickRemove',
@@ -83,7 +83,7 @@ Espo.define('crm:views/record/row-actions/activities-dashlet', 'views/record/row
             }
 
             return actionList;
-        }
-    });
+        },
 
+    });
 });

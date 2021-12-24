@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions/default', function (Dep) {
+define('views/record/row-actions/default-kanban', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
@@ -39,6 +39,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
+
             if (this.options.statusFieldIsEditable) {
                 list.push({
                     action: 'moveOver',
@@ -48,6 +49,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                     }
                 });
             }
+
             if (this.options.acl.edit) {
                 list.push({
                     action: 'quickEdit',
@@ -58,6 +60,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
             }
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
@@ -68,7 +71,7 @@ Espo.define('views/record/row-actions/default-kanban', 'views/record/row-actions
                 });
             }
             return list;
-        }
-    });
+        },
 
+    });
 });

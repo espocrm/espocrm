@@ -32,7 +32,7 @@ define('views/record/row-actions/empty', 'views/record/row-actions/default', fun
 
         getActionList: function () {
             return [];
-        }
+        },
 
     });
 });

@@ -364,11 +364,15 @@ define('views/admin/link-manager/modals/edit',
         },
 
         toPlural: function (string) {
-            if (string.slice(-1) == 'y') {
+            if (string.slice(-1) === 'y') {
                 return string.substr(0, string.length - 1) + 'ies';
-            } else {
-                return string + 's';
             }
+
+            if (string.slice(-1) === 's') {
+                return string.substr(0, string.length) + 'es';
+            }
+
+            return string + 's';
         },
 
         populateFields: function () {

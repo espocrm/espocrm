@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions/relationship', function (Dep) {
+define('crm:views/record/row-actions/activities', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
@@ -39,6 +39,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
+
             if (this.options.acl.edit) {
                 list.push({
                     action: 'quickEdit',
@@ -48,6 +49,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
                     },
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
+
                 if (this.model.name == 'Meeting' || this.model.name == 'Call') {
                     list.push({
                         action: 'setHeld',
@@ -56,6 +58,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
                             id: this.model.id
                         }
                     });
+
                     list.push({
                         action: 'setNotHeld',
                         html: this.translate('Set Not Held', 'labels', 'Meeting'),
@@ -65,6 +68,7 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
                     });
                 }
             }
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'removeRelated',
@@ -74,10 +78,9 @@ Espo.define('crm:views/record/row-actions/activities', 'views/record/row-actions
                     }
                 });
             }
+
             return list;
-        }
+        },
 
     });
-
 });
-
