@@ -111,24 +111,24 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.panelCollection = this.options.panelCollection;
 
             if (this.panelCollection) {
-                this.listenTo(this.panelCollection, 'sync', function (c, r, o) {
+                this.listenTo(this.panelCollection, 'sync', (c, r, o) => {
                     if (o.skipCollectionSync) {
                         return;
                     }
 
                     this.collection.fetch();
-                }, this);
+                });
 
                 if (this.model) {
-                    this.listenTo(this.model, 'after:unrelate', function () {
+                    this.listenTo(this.model, 'after:unrelate', () => {
                         this.panelCollection.fetch({
                             skipCollectionSync: true,
                         });
-                    }, this);
+                    });
                 }
             }
             else if (this.model) {
-                this.listenTo(this.model, 'after:relate', function () {
+                this.listenTo(this.model, 'after:relate', () => {
                     this.collection.fetch();
                 });
             }
@@ -141,8 +141,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
             if (!this.createDisabled) {
                 if (
-                    !this.getAcl().check(this.scope, 'create')
-                    ||
+                    !this.getAcl().check(this.scope, 'create') ||
                     this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
                 ) {
                     this.createDisabled = true;
@@ -198,7 +197,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
 
             if (this.options.listViewUrl) {
-                this.headerHtml = '<a href="'+this.options.listViewUrl+'">'+this.headerHtml+'</a>';
+                this.headerHtml = '<a href="'+this.options.listViewUrl+'">' + this.headerHtml + '</a>';
             }
 
             this.headerHtml = iconHtml + this.headerHtml;
@@ -209,7 +208,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.waitForView('search');
             }
 
-            this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, (collection) => {
                 collection.maxSize = this.getConfig().get('recordsPerPage');
                 collection.url = this.url;
 
@@ -218,13 +217,13 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.collection = collection;
 
                 if (this.panelCollection) {
-                    this.listenTo(collection, 'change', function (model) {
+                    this.listenTo(collection, 'change', (model) => {
                         var panelModel = this.panelCollection.get(model.id);
 
                         if (panelModel) {
                             panelModel.set(model.attributes);
                         }
-                    }, this);
+                    });
                 }
 
                 this.loadSearch();
@@ -232,7 +231,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.wait(true);
 
                 this.loadList();
-            }, this);
+            });
         },
 
         setFilter: function (filter) {
@@ -256,7 +255,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             var filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
 
             if (this.filterList) {
-                this.filterList.forEach(function (item1) {
+                this.filterList.forEach((item1) => {
                     var isFound = false;
 
                     var name1 = item1.name || item1;
@@ -265,18 +264,18 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                         return;
                     }
 
-                    filterList.forEach(function (item2) {
+                    filterList.forEach((item2) => {
                         var name2 = item2.name || item2;
 
                         if (name1 === name2) {
                             isFound = true;
                         }
-                    }, this);
+                    });
 
                     if (!isFound) {
                         filterList.push(item1);
                     }
-                }, this);
+                });
             }
 
             if (this.options.filtersDisabled) {
@@ -290,10 +289,8 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     searchManager: searchManager,
                     disableSavePreset: true,
                     filterList: filterList,
-                }, function (view) {
-                    this.listenTo(view, 'reset', function () {
-
-                    }, this);
+                }, (view) => {
+                    this.listenTo(view, 'reset', () => {});
                 });
             }
         },
@@ -324,36 +321,36 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 pagination: this.getConfig().get('listPagination') ||
                     this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                     null,
-            }, function (view) {
-                this.listenToOnce(view, 'select', function (model) {
+            }, (view) => {
+                this.listenToOnce(view, 'select', (model) => {
                     this.trigger('select', model);
 
                     this.close();
-                }.bind(this));
+                });
 
                 if (this.multiple) {
-                    this.listenTo(view, 'check', function () {
+                    this.listenTo(view, 'check', () => {
                         if (view.checkedList.length) {
                             this.enableButton('select');
                         } else {
                             this.disableButton('select');
                         }
-                    }, this);
+                    });
 
-                    this.listenTo(view, 'select-all-results', function () {
+                    this.listenTo(view, 'select-all-results', () => {
                         this.enableButton('select');
-                    }, this);
+                    });
                 }
 
                 if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
-                    this.listenToOnce(view, 'after:build-rows', function () {
+                    this.listenToOnce(view, 'after:build-rows', () => {
                         this.wait(false);
-                    }, this);
+                    });
 
                     this.collection.fetch();
                 }
                 else {
-                    view.getSelectAttributeList(function (selectAttributeList) {
+                    view.getSelectAttributeList((selectAttributeList) => {
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
                         }
@@ -361,22 +358,22 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                         var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                             this.mandatorySelectAttributeList || [];
 
-                        mandatorySelectAttributeList.forEach(function (attribute) {
+                        mandatorySelectAttributeList.forEach((attribute) => {
                             if (!~selectAttributeList.indexOf(attribute)) {
                                 selectAttributeList.push(attribute);
                             }
-                        }, this);
+                        });
 
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
-                        this.listenToOnce(view, 'after:build-rows', function () {
+                        this.listenToOnce(view, 'after:build-rows', () => {
                             this.wait(false);
-                        }, this);
+                        });
 
                         this.collection.fetch();
-                    }.bind(this));
+                    });
                 }
             });
         },
@@ -387,19 +384,19 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.confirm({
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
                 confirmText: this.translate('Unlink'),
-            }, function () {
+            }, () => {
                 this.notify('Unlinking...');
 
                 Espo.Ajax.deleteRequest(this.collection.url, {
                     id: id,
-                }).then(function () {
+                }).then(() => {
                     this.notify('Unlinked', 'success');
 
                     this.collection.fetch();
 
                     this.model.trigger('after:unrelate');
-                }.bind(this));
-            }, this);
+                });
+            });
         },
 
         actionCreateRelated: function () {
