@@ -550,6 +550,16 @@ var Espo = Espo || {classMap: {}};
 
             return this._internalModuleMap[moduleName];
         },
+
+        requirePromise: function (subject) {
+            return new Promise((resolve, reject) => {
+                this.require(
+                    subject,
+                    () => resolve(),
+                    () => reject()
+                );
+            });
+        },
     });
 
     Espo.loader = new Espo.Loader();
