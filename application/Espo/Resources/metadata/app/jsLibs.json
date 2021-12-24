@@ -85,10 +85,10 @@
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/ext/language_tools"
     },
-    "ace-theme-pastel_on_dark": {
-        "path": "client/lib/ace-theme-pastel_on_dark.js",
-        "devPath": "node_modules/ace-builds/src-noconflict/theme-pastel_on_dark.js",
+    "ace-theme-tomorrow_night": {
+        "path": "client/lib/ace-theme-tomorrow_night.js",
+        "devPath": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
         "exportsTo": "ace.require.define.modules",
-        "exportsAs": "ace/theme/pastel_on_dark"
+        "exportsAs": "ace/theme/tomorrow_night"
     }
 }

@@ -143,8 +143,8 @@
                 "dest": "client/lib/ace-ext-language_tools.js"
             },
             {
-                "src": "node_modules/ace-builds/src-noconflict/theme-pastel_on_dark.js",
-                "dest": "client/lib/ace-theme-pastel_on_dark.js"
+                "src": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
+                "dest": "client/lib/ace-theme-tomorrow_night.js"
             }
         ]
     },

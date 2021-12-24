@@ -94,7 +94,7 @@ define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
 
                     if (this.getThemeManager().getParam('isDark')) {
                         list.push(
-                            Espo.loader.requirePromise('lib!ace-theme-pastel_on_dark')
+                            Espo.loader.requirePromise('lib!ace-theme-tomorrow_night')
                         );
                     }
 
@@ -136,7 +136,7 @@ define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
 
                 if (this.getThemeManager().getParam('isDark')) {
                     editor.setOptions({
-                        theme: 'ace/theme/pastel_on_dark',
+                        theme: 'ace/theme/tomorrow_night',
                     });
                 }
 
