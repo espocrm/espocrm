@@ -1,3 +1,5 @@
+<div class="panel panel-default no-side-margin"><div class="panel-body">
+
 <div class="row">
 	<div class="cell form-group col-md-6" data-name="name">
 		<label
@@ -186,4 +188,4 @@
 </div>
 {{/unless}}
 
-
+</div></div>

@@ -30,7 +30,12 @@ define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'model'
 
     return Dep.extend({
 
-        _template: '<div class="record">{{{record}}}</div>',
+        className: 'dialog dialog-record',
+
+        _template: '' +
+            '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
+            '<div class="record">{{{record}}}</div>' +
+            '</div></div>',
 
         data: function () {
             return {

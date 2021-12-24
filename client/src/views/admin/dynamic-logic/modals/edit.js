@@ -26,12 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/admin/dynamic-logic/modals/edit', 'views/modal', function (Dep) {
+define('views/admin/dynamic-logic/modals/edit', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/dynamic-logic/modals/edit',
+
+        className: 'dialog dialog-record',
 
         data: function () {
             return {

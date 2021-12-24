@@ -32,6 +32,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
 
         cssName: 'edit-entity',
 
+        className: 'dialog dialog-record',
+
         template: 'admin/entity-manager/modals/edit-entity',
 
         data: function () {

@@ -1,3 +1,5 @@
+<div class="panel panel-default no-side-margin"><div class="panel-body">
+
 <div class="row">
 	<div class="cell form-group col-md-4 col-md-offset-4" data-name="entityForeign">
 		<label class="control-label" data-name="entityForeign">{{translate 'entityForeign' category='fields' scope='EntityManager'}}</label>
@@ -105,3 +107,5 @@
 		</div>
 	</div>
 </div>
+
+</div></div>

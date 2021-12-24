@@ -33,6 +33,8 @@ define('views/admin/link-manager/modals/edit',
 
         cssName: 'edit',
 
+        className: 'dialog dialog-record',
+
         template: 'admin/link-manager/modals/edit',
 
         setup: function () {
