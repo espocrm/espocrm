@@ -87,20 +87,22 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         },
 
         requireAce: function () {
-            return new Promise(resolve =>
-                Espo.loader.require('lib!ace', () =>
-                    Promise
-                        .all([
-                            new Promise(resolve =>
-                                Espo.loader.require('lib!ace-mode-javascript', () => resolve())
-                            ),
-                            new Promise(resolve =>
-                                Espo.loader.require('lib!ace-ext-language_tools', () => resolve())
-                            ),
-                        ])
-                        .then(() => resolve())
-                )
-            );
+            return Espo.loader
+                .requirePromise('lib!ace')
+                .then(() => {
+                    let list = [
+                        Espo.loader.requirePromise('lib!ace-mode-javascript'),
+                        Espo.loader.requirePromise('lib!ace-ext-language_tools'),
+                    ];
+
+                    if (this.getThemeManager().getParam('isDark')) {
+                        list.push(
+                            Espo.loader.requirePromise('lib!ace-theme-pastel_on_dark')
+                        );
+                    }
+
+                    return Promise.all(list);
+                });
         },
 
         data: function () {
@@ -133,6 +135,12 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 editor.setOptions({
                     maxLines: this.mode === 'edit' ? this.maxLineEditCount : this.maxLineDetailCount,
                 });
+
+                if (this.getThemeManager().getParam('isDark')) {
+                    editor.setOptions({
+                        theme: 'ace/theme/pastel_on_dark',
+                    });
+                }
 
                 if (this.isEditMode()) {
                     editor.getSession().on('change', () => {

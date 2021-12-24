@@ -17,5 +17,6 @@
         "Meeting": "#6680b3",
         "Call": "#a1404a",
         "Task": "#5d8a55"
-    }
+    },
+    "isDark": true
 }
