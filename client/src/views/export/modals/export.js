@@ -32,11 +32,12 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
 
         cssName: 'export-modal',
 
+        className: 'dialog dialog-record',
+
         template: 'export/modals/export',
 
         data: function () {
-            return {
-            };
+            return {};
         },
 
         setup: function () {

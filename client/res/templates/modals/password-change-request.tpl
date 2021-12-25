@@ -1,3 +1,5 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
 
 <div class="cell form-group" data-name="userName">
     <label class="control-label" data-name="userName">{{translate 'Username' scope='User'}}</label>
@@ -13,3 +15,6 @@
 </div>
 
 <div class="msg-box hidden"></div>
+
+</div>
+</div>

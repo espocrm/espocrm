@@ -1,6 +1,10 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
+
 {{#unless fieldList}}
     {{translate 'No fields available for Mass Update'}}
 {{else}}
+
 <div class="button-container">
     <button class="btn btn-default pull-right hidden" data-action="reset">{{translate 'Reset'}}</button>
     <div class="btn-group">
@@ -22,7 +26,11 @@
         </ul>
     </div>
 </div>
+
 {{/unless}}
 <div>
     <div class="fields-container grid-auto-fill-md"></div>
+</div>
+
+</div>
 </div>

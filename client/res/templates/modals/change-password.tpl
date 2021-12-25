@@ -1,3 +1,5 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
 
 <div class="cell form-group" data-name="currentPassword">
     <label class="control-label" data-name="currentPassword">{{translate 'currentPassword' scope='User' category='fields'}}</label>
@@ -10,4 +12,7 @@
 <div class="cell form-group" data-name="passwordConfirm">
     <label class="control-label" data-name="passwordConfirm">{{translate 'passwordConfirm' scope='User' category='fields'}}</label>
     <div class="field" data-name="passwordConfirm">{{{passwordConfirm}}}</div>
+</div>
+
+</div>
 </div>

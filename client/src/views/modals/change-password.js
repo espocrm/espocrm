@@ -26,13 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/change-password', 'views/modal', function (Dep) {
+define('views/modals/change-password', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
         cssName: 'change-password',
 
         template: 'modals/change-password',
+
+        className: 'dialog dialog-record',
 
         setup: function () {
             this.buttonList = [

@@ -1,3 +1,6 @@
+<div class="panel panel-default no-side-margin">
+<div class="panel-body">
+
 <div class="row">
     {{#each valuePermissionDataList}}
         <div class="cell col-sm-3 form-group" data-name="{{name}}">
@@ -9,4 +12,7 @@
     {{/each}}
 </div>
 
-<div class="user-access-table">{{{table}}}</div>
+</div>
+</div>
+
+<div class="user-access-table no-side-margin">{{{table}}}</div>

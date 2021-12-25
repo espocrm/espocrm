@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel no-side-margin">
     <div class="panel-body">
 
         <p>{{translate 'verifyTotpCode' category='messages' scope='User'}}</p>
@@ -9,4 +9,4 @@
     </div>
 </div>
 
-<div class="record">{{{record}}}</div>
+<div class="record no-side-margin">{{{record}}}</div>

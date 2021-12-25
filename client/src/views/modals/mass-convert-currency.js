@@ -33,6 +33,8 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
 
         template: 'modals/mass-convert-currency',
 
+        className: 'dialog dialog-record',
+
         data: function () {
             return {
 

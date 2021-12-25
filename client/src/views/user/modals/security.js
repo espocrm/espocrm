@@ -30,7 +30,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
     return Dep.extend({
 
-        templateContent: '<div class="record">{{{record}}}</div>',
+        templateContent: '<div class="record no-side-margin">{{{record}}}</div>',
 
         className: 'dialog dialog-record',
 

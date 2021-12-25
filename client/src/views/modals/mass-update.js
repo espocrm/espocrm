@@ -32,6 +32,8 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
         cssName: 'mass-update',
 
+        className: 'dialog dialog-record',
+
         template: 'modals/mass-update',
 
         layoutName: 'massUpdate',
