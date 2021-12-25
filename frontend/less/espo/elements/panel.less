@@ -31,6 +31,37 @@
     padding-bottom: 0 !important;
 }
 
+.modal-body {
+    .panel.no-side-margin {
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .record.no-side-margin,
+    .record-container.no-side-margin {
+        > .panel {
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .left > .middle > .panel,
+        .left > .bottom > .panel {
+            border-left: 0;
+        }
+
+        .side > .panel {
+            border-right: 0;
+        }
+    }
+
+    .record-grid-wide {
+        .left > .middle > .panel,
+        .left > .bottom > .panel {
+            border-right: 0;
+        }
+    }
+}
+
 .panel-body .no-side-margin {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;
