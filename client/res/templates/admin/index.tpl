@@ -11,7 +11,7 @@
 				{{#each panelDataList}}
 				<div class="admin-content-section" data-index="{{@index}}">
 					<h4>{{label}}</h4>
-					<table class="table table-bordered table-admin-panel" data-name="{{name}}">
+					<table class="table table-admin-panel" data-name="{{name}}">
 					    {{#each itemList}}
 					    <tr class="admin-content-row" data-index="{{@index}}">
 					        <td>

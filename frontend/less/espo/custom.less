@@ -1129,6 +1129,11 @@ section {
 .panel-body > div > .list-expanded {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;
+
+    > .list-group-item {
+        border-left-width: 0;
+        border-right-width: 0;
+    }
 }
 .panel-body > div > .list {
     margin-left: -@panel-padding;
@@ -2520,8 +2525,12 @@ table.table td.cell .html-container {
 table.table-admin-panel {
     table-layout: fixed;
 
+    border: 1px solid var(--default-border-color);
+
     tr > td:first-child {
         width: 230px;
+
+        border-right: 1px solid var(--default-border-color);
 
         > div {
             position: relative;

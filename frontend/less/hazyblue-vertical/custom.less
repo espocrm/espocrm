@@ -81,13 +81,34 @@ table.table {
     }
 }
 
+table.table-admin-panel {
+    border: 0;
+
+    tr:first-child td {
+        border-top: 0;
+    }
+    /*
+    tr td:last-child {
+         border-right: 0;
+    }
+
+    th:first-child,
+    td:first-child {
+        border-left: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+        border-right: 0;
+    }*/
+}
+
 .dashlet-body .list-container > .list,
 .panel-body .list-container > .list,
 .dashlet-container > .panel,
 .note-editor.panel {
     .box-shadow(none);
 }
-
 
 .list-container > .list,
 .panel,
