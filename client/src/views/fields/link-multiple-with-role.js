@@ -109,7 +109,7 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                     style = style || 'muted';
                 }
 
-                roleHtml = '<span class="test-muted small"> &#187; </span>' +
+                roleHtml = '<span class="text-muted chevron-right"></span> ' +
                 '<span class="'+className+'-'+style+' small">' +
                 this.getHelper().escapeString(
                     this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)

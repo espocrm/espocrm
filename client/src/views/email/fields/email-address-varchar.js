@@ -295,7 +295,7 @@ define(
             '<div data-address="'+address+'" class="list-group-item">' +
                 '<a href="javascript:" class="pull-right" data-address="' + address + '" ' +
                 'data-action="clearAddress"><span class="fas fa-times"></a>' +
-                '<span>'+ ((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') +
+                '<span>'+ ((name) ? (name + ' <span class="text-muted chevron-right"></span> ') : '') +
                 '<span>'+address+'</span>'+'</span>' +
             '</div>';
 
@@ -373,12 +373,12 @@ define(
 
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' +
-                    name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
+                    name + '</a> <span class="text-muted chevron-right"></span> ' + addressHtml + '</div>';
             }
             else {
                 if (name) {
                     lineHtml = '<span class="email-address-line">' + name +
-                        ' <span class="text-muted">&#187;</span> <span>' +
+                        ' <span class="text-muted chevron-right"></span> <span>' +
                         addressHtml + '</span></span>';
                 }
                 else {

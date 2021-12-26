@@ -32,7 +32,7 @@ define('views/fields/complex-created', 'views/fields/base', function (Dep) {
 
         detailTemplateContent:
             `<span data-name="{{baseName}}At" class="field">{{{atField}}}</span> `+
-            `<span class="text-muted">&raquo;</span> `+
+            `<span class="text-muted chevron-right"</span> `+
             `<span data-name="{{baseName}}By" class="field">{{{byField}}}</span>`,
 
         baseName: 'created',

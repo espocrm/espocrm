@@ -132,7 +132,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
                 if (value !== '' && value) {
                     if (type === 'enum') {
-                        roleHtml += ' <span class="text-muted small">&#187;</span> ' +
+                        roleHtml += ' <span class="text-muted chevron-right"></span> ' +
                             '<span class="text-muted small">' +
                             this.getHelper()
                                 .escapeString(
@@ -144,7 +144,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                             '</span>';
                     }
                     else if (type === 'varchar') {
-                        roleHtml += ' <span class="text-muted small">&#187;</span> ' +
+                        roleHtml += ' <span class="text-muted chevron-right"></span> ' +
                             '<span class="text-muted small">' +
                             this.getHelper().escapeString(value) +
                             '</span>';

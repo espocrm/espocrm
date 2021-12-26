@@ -93,11 +93,14 @@ define('views/user/fields/teams', 'views/fields/link-multiple-with-role', functi
 
             var role = (this.columns[id] || {})[this.columnName] || '';
             var roleHtml = '';
+
             if (role != '') {
                 role = this.getHelper().escapeString(role);
-                roleHtml = '<span class="text-muted small"> &#187; ' + role + '</span>';
+                roleHtml = ' <span class="text-muted chevron-right"></span> <span class="text-muted">' + role + '</span>';
             }
+
             var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
+
             return lineHtml;
         },
 

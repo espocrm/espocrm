@@ -157,7 +157,7 @@ define(
 
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name +
-                    '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
+                    '</a> <span class="text-muted chevron-right"></span> ' + addressHtml + '</div>';
             }
             else {
                 if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
@@ -166,7 +166,7 @@ define(
 
                 if (name) {
                     lineHtml += '<span class="email-address-line">' + name +
-                        ' <span class="text-muted">&#187;</span> <span>' + addressHtml + '</span></span>';
+                        ' <span class="text-muted chevron-right"></span> <span>' + addressHtml + '</span></span>';
                 } else {
                     lineHtml += '<span class="email-address-line">' + addressHtml + '</span>';
                 }
