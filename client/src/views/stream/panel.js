@@ -73,6 +73,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             },
             'keyup textarea[data-name="post"]': function (e) {
                 this.controlPreviewButton();
+                this.controlPostButtonAvailability(this.$textarea.val());
             },
             'click .action[data-action="preview"]': function () {
                 this.preview();
@@ -249,6 +250,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.createCollection(() => {
                     this.wait(false);
                 });
+
+                this.listenTo(this.seed, 'change:attachmentsIds', () => {
+                    this.controlPostButtonAvailability();
+                });
             });
 
             if (!this.defs.hidden) {
@@ -371,6 +376,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.$textarea = this.$el.find('textarea[data-name="post"]');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
+            this.$postButton = this.$el.find('button.post');
 
             var storedText = this.getSessionStorage().get(this.storageTextKey);
 
@@ -378,6 +384,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.hasStoredText = true;
                 this.$textarea.val(storedText);
             }
+
+            this.controlPostButtonAvailability(storedText);
 
             if (this.isInternalNoteMode) {
                 this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
@@ -705,6 +713,33 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             }, (view) => {
                 view.render();
             });
+        },
+
+        controlPostButtonAvailability: function (postEntered) {
+            let attachmentsIdList = this.seed.get('attachmentsIds') || [];
+            let post = this.seed.get('post');
+
+            if (typeof postEntered !== 'undefined') {
+                post = postEntered;
+            }
+
+            let isEmpty = !post && !attachmentsIdList.length;
+
+            if (isEmpty) {
+                if (this.$postButton.hasClass('disabled')) {
+                    return;
+                }
+
+                this.$postButton.addClass('disabled').attr('disabled', 'disabled');
+
+                return;
+            }
+
+            if (!this.$postButton.hasClass('disabled')) {
+                return;
+            }
+
+            this.$postButton.removeClass('disabled').removeAttr('disabled');
         },
 
     });
