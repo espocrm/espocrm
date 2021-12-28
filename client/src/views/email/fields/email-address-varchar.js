@@ -37,7 +37,7 @@ define(
 
         editTemplate: 'email/fields/email-address-varchar/edit',
 
-        emailAddressRegExp: /([a-zA-Z0-9._\-\+"]+@[a-zA-Z0-9._\-]+\.[a-zA-Z0-9._\-]+)/gi,
+        emailAddressRegExp: /[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/gi,
 
         data: function () {
             var data = Dep.prototype.data.call(this);
