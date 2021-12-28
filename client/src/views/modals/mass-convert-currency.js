@@ -149,7 +149,9 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model', 'helpers/m
                         return;
                     }
 
-                    this.trigger('after:update', result.count);
+                    this.trigger('after:update', {
+                        count: result.count
+                    });
 
                     this.close();
                 })
