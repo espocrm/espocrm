@@ -9,5 +9,8 @@
     },
     "twoFactorCodes": {
         "className": "Espo\\Classes\\Cleanup\\TwoFactorCodes"
+    },
+    "massActions": {
+        "className": "Espo\\Classes\\Cleanup\\MassActions"
     }
 }
