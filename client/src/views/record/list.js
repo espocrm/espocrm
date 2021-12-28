@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list', 'view', function (Dep) {
+define('views/record/list', ['view', 'helpers/mass-action'], function (Dep, MassActionHelper) {
 
     return Dep.extend({
 
@@ -773,28 +773,48 @@ define('views/record/list', 'view', function (Dep) {
             }, () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
+                let params = this.getMassActionSelectionPostData();
+                let helper = new MassActionHelper(this);
+                let idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
+
                 Espo.Ajax.postRequest('MassAction', {
                     entityType: this.entityType,
                     action: 'recalculateFormula',
-                    params: this.getMassActionSelectionPostData(),
+                    params: params,
+                    idle: idle,
                 })
                     .then((result) => {
                         result = result || {};
 
-                        this.collection
-                            .fetch()
-                            .then(() => {
-                                Espo.Ui.success(this.translate('Done'));
+                        let final = () => {
+                            this.collection
+                                .fetch()
+                                .then(() => {
+                                    Espo.Ui.success(this.translate('Done'));
 
-                                if (allResultIsChecked) {
-                                    this.selectAllResult();
-                                }
-                                else {
+                                    if (allResultIsChecked) {
+                                        this.selectAllResult();
+
+                                        return;
+                                    }
+
                                     ids.forEach((id) => {
                                         this.checkRecord(id);
                                     });
-                                }
-                            });
+                                });
+                        };
+
+                        if (result.id) {
+                            helper
+                                .process(result.id, 'recalculateFormula')
+                                .then(view => {
+                                    this.listenToOnce(view, 'close:success', () => final());
+                                });
+
+                            return;
+                        }
+
+                        final();
                     });
             });
         },
@@ -812,50 +832,31 @@ define('views/record/list', 'view', function (Dep) {
             }, () => {
                 this.notify('Removing...');
 
+                let helper = new MassActionHelper(this);
+
+                let params = this.getMassActionSelectionPostData();
+
+                let idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
+
                 Espo.Ajax.postRequest('MassAction', {
                     entityType: this.entityType,
                     action: 'delete',
-                    params: this.getMassActionSelectionPostData(),
+                    params: params,
+                    idle: idle,
                 })
-                .then((result) => {
+                .then(result => {
                     result = result || {};
 
-                    var count = result.count;
-
-                    if (this.allResultIsChecked) {
-                        if (count) {
-                            this.unselectAllResult();
-
-                            this.listenToOnce(this.collection, 'sync', () => {
-                                var msg = 'massRemoveResult';
-
-                                if (count === 1) {
-                                    msg = 'massRemoveResultSingle';
-                                }
-
-                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                            });
-
-                            this.collection.fetch();
-
-                            Espo.Ui.notify(false);
-                        }
-                        else {
+                    let afterAllResult = (count) => {
+                        if (!count) {
                             Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
+
+                            return;
                         }
-                    }
-                    else {
-                        var idsRemoved = result.ids || [];
 
-                        if (count) {
-                            idsRemoved.forEach((id) => {
-                                Espo.Ui.notify(false);
+                        this.unselectAllResult();
 
-                                this.collection.trigger('model-removing', id);
-                                this.removeRecordFromList(id);
-                                this.uncheckRecord(id, null, true);
-                            });
-
+                        this.listenToOnce(this.collection, 'sync', () => {
                             var msg = 'massRemoveResult';
 
                             if (count === 1) {
@@ -863,11 +864,54 @@ define('views/record/list', 'view', function (Dep) {
                             }
 
                             Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        }
-                        else {
-                            Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
-                        }
+                        });
+
+                        this.collection.fetch();
+
+                        Espo.Ui.notify(false);
+                    };
+
+                    if (result.id) {
+                        helper
+                            .process(result.id, 'delete')
+                            .then(view => {
+                                this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
+                            });
+
+                        return;
                     }
+
+                    var count = result.count;
+
+                    if (this.allResultIsChecked) {
+                        afterAllResult(count);
+
+                        return;
+                    }
+
+                    var idsRemoved = result.ids || [];
+
+                    if (!count) {
+                        Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
+
+                        return;
+                    }
+
+                    idsRemoved.forEach((id) => {
+                        Espo.Ui.notify(false);
+
+                        this.collection.trigger('model-removing', id);
+                        this.removeRecordFromList(id);
+                        this.uncheckRecord(id, null, true);
+                    });
+
+                    var msg = 'massRemoveResult';
+
+                    if (count === 1) {
+                        msg = 'massRemoveResultSingle';
+                    }
+
+                    Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
                 });
             });
         },
@@ -972,30 +1016,46 @@ define('views/record/list', 'view', function (Dep) {
             }, () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
+                let params = this.getMassActionSelectionPostData();
+                let helper = new MassActionHelper(this);
+                let idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
+
                 this.ajaxPostRequest('MassAction', {
                     action: 'unfollow',
                     entityType: this.entityType,
-                    params: this.getMassActionSelectionPostData(),
+                    params: params,
+                    idle: idle,
                 })
-                    .then((result) => {
-                        var resultCount = result.count || 0;
+                    .then(result => {
+                        let final = (count) => {
+                            var msg = 'massUnfollowResult';
 
-                        var msg = 'massUnfollowResult';
+                            if (!count) {
+                                Espo.Ui.warning(
+                                    this.translate('massUnfollowZeroResult', 'messages')
+                                );
+                            }
 
-                        if (resultCount) {
-                            if (resultCount === 1) {
+                            if (count === 1) {
                                 msg += 'Single';
                             }
 
                             Espo.Ui.success(
-                                this.translate(msg, 'messages').replace('{count}', resultCount)
+                                this.translate(msg, 'messages').replace('{count}', count)
                             );
+                        };
+
+                        if (result.id) {
+                            helper
+                                .process(result.id, 'unfollow')
+                                .then(view => {
+                                    this.listenToOnce(view, 'close:success', result => final(result.count));
+                                });
+
+                            return;
                         }
-                        else {
-                            Espo.Ui.warning(
-                                this.translate('massUnfollowZeroResult', 'messages')
-                            );
-                        }
+
+                        final(result.count || 0);
                     });
             });
         },
@@ -1056,39 +1116,63 @@ define('views/record/list', 'view', function (Dep) {
                 where: this.collection.getWhere(),
                 searchParams: this.collection.data,
                 byWhere: this.allResultIsChecked,
+                totalCount: this.collection.total,
             }, (view) => {
                 view.render();
 
                 view.notify(false);
 
-                view.once('after:update', (count) => {
+                this.listenToOnce(view, 'after:update', (o) => {
+                    if (o.idle) {
+                        this.listenToOnce(view, 'close', () => {
+                            this.collection
+                                .fetch()
+                                .then(() => {
+                                    if (allResultIsChecked) {
+                                        this.selectAllResult();
+
+                                        return;
+                                    }
+
+                                    ids.forEach((id) => {
+                                        this.checkRecord(id);
+                                    });
+                                });
+                        });
+
+                        return;
+                    }
+
                     view.close();
 
-                    this.listenToOnce(this.collection, 'sync', () => {
-                        if (count) {
-                            var msg = 'massUpdateResult';
+                    count = o.count;
 
-                            if (count === 1) {
-                                msg = 'massUpdateResultSingle';
+                    this.collection
+                        .fetch()
+                        .then(() => {
+                            if (count) {
+                                var msg = 'massUpdateResult';
+
+                                if (count === 1) {
+                                    msg = 'massUpdateResultSingle';
+                                }
+
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            }
+                            else {
+                                Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
                             }
 
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        }
-                        else {
-                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
-                        }
+                            if (allResultIsChecked) {
+                                this.selectAllResult();
 
-                        if (allResultIsChecked) {
-                            this.selectAllResult();
-                        }
-                        else {
+                                return;
+                            }
+
                             ids.forEach((id) => {
                                 this.checkRecord(id);
                             });
-                        }
-                    });
-
-                    this.collection.fetch();
+                        });
                 });
             });
         },
@@ -1133,35 +1217,59 @@ define('views/record/list', 'view', function (Dep) {
                 where: this.collection.getWhere(),
                 searchParams: this.collection.data,
                 byWhere: this.allResultIsChecked,
+                totalCount: this.collection.total,
             }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:update', (count) => {
-                    this.listenToOnce(this.collection, 'sync', () => {
-                        if (count) {
-                            var msg = 'massUpdateResult';
+                this.listenToOnce(view, 'after:update', o => {
+                    if (o.idle) {
+                        this.listenToOnce(view, 'close', () => {
+                            this.collection
+                                .fetch()
+                                .then(() => {
+                                    if (allResultIsChecked) {
+                                        this.selectAllResult();
 
-                            if (count === 1) {
-                                msg = 'massUpdateResultSingle';
+                                        return;
+                                    }
+
+                                    ids.forEach((id) => {
+                                        this.checkRecord(id);
+                                    });
+                                });
+                        });
+
+                        return;
+                    }
+
+                    let count = o.count;
+
+                    this.collection
+                        .fetch()
+                        .then(() => {
+                            if (count) {
+                                var msg = 'massUpdateResult';
+
+                                if (count === 1) {
+                                    msg = 'massUpdateResultSingle';
+                                }
+
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            }
+                            else {
+                                Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
                             }
 
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        }
-                        else {
-                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
-                        }
+                            if (allResultIsChecked) {
+                                this.selectAllResult();
 
-                        if (allResultIsChecked) {
-                            this.selectAllResult();
-                        }
-                        else {
+                                return;
+                            }
+
                             ids.forEach((id) => {
                                 this.checkRecord(id);
                             });
-                        }
-                    });
-
-                    this.collection.fetch();
+                        });
                 });
             });
         },

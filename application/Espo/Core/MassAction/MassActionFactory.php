@@ -29,12 +29,16 @@
 
 namespace Espo\Core\MassAction;
 
-use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\Forbidden,
-    Utils\Metadata,
-    InjectableFactory,
-};
+use Espo\Entities\User;
+
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\InjectableFactory;
+use Espo\Core\AclManager;
+use Espo\Core\Acl;
+
+use Espo\Core\Binding\BindingContainerBuilder;
 
 class MassActionFactory
 {
@@ -42,13 +46,16 @@ class MassActionFactory
 
     private $injectableFactory;
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
+    private $aclManager;
+
+    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory, AclManager $aclManager)
     {
         $this->metadata = $metadata;
         $this->injectableFactory = $injectableFactory;
+        $this->aclManager = $aclManager;
     }
 
-    public function create(string $action, ?string $entityType = null): MassAction
+    public function create(string $action, string $entityType = null): MassAction
     {
         $className = $this->getClassName($action, $entityType);
 
@@ -63,7 +70,23 @@ class MassActionFactory
         return $this->injectableFactory->create($className);
     }
 
-    public function createWith(string $action, ?string $entityType, array $with): MassAction
+    public function createForUser(string $action, string $entityType, User $user): MassAction
+    {
+        $className = $this->getClassName($action, $entityType);
+
+        if (!$className) {
+            throw new NotFound("Mass action '{$action}' not found.");
+        }
+
+        $bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user))
+            ->build();
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
+
+    public function createWith(string $action, string $entityType, array $with): MassAction
     {
         $className = $this->getClassName($action, $entityType);
 
@@ -74,14 +97,12 @@ class MassActionFactory
         return $this->injectableFactory->createWith($className, $with);
     }
 
-    private function getClassName(string $action, ?string $entityType): ?string
+    private function getClassName(string $action, string $entityType): ?string
     {
-        if ($entityType) {
-            $className = $this->getEntityTypeClassName($action, $entityType);
+        $className = $this->getEntityTypeClassName($action, $entityType);
 
-            if ($className) {
-                return $className;
-            }
+        if ($className) {
+            return $className;
         }
 
         return $this->metadata->get(

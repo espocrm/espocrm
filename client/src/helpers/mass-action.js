@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,43 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\MassAction;
+define('helpers/mass-action', ['lib!espo'], function (Espo) {
 
-use Espo\ORM\Query\Select;
-use Espo\Core\Select\SelectBuilderFactory;
-use Espo\Entities\User;
+    return class {
+        constructor(view) {
+            this.view = view;
 
-class QueryBuilder
-{
-    private $selectBuilderFactory;
-
-    private $user;
-
-    public function __construct(SelectBuilderFactory $selectBuilderFactory, User $user)
-    {
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->user = $user;
-    }
-
-    public function build(Params $params): Select
-    {
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from($params->getEntityType())
-            ->forUser($this->user)
-            ->withStrictAccessControl();
-
-        if ($params->hasIds()) {
-            return $builder
-                ->buildQueryBuilder()
-                ->where([
-                    'id' => $params->getIds(),
-                ])
-                ->build();
+            this.config = view.getConfig();
         }
 
-        return $builder
-            ->withSearchParams($params->getSearchParams())
-            ->build();
-    }
-}
+        checkIsIdle(totalCount) {
+            if (this.view.getUser().isPortal()) {
+                return false;
+            }
+
+            if (typeof totalCount === 'undefined') {
+                totalCount = this.view.options.totalCount;
+            }
+
+            return totalCount === -1 || totalCount > this.config.get('massActionIdleCountThreshold');
+        }
+
+        process(id, action) {
+            Espo.Ui.notify(false);
+
+            return new Promise((resolve) => {
+                this.view
+                    .createView('dialog', 'views/modals/mass-action', {
+                        id: id,
+                        action: action,
+                    })
+                    .then(view => {
+                        view.render();
+
+                        resolve(view);
+
+                        this.view.listenToOnce(view, 'success', data => {
+                            resolve(data);
+
+                            this.view.listenToOnce(view, 'close', () => {
+                                view.trigger('close:success', data);
+                            });
+                        });
+                    });
+            });
+        }
+    };
+});

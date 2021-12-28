@@ -29,6 +29,8 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
@@ -88,6 +90,11 @@ class MassConvertCurrency implements MassAction
      */
     protected $currencyConverter;
 
+    /**
+     * @var User
+     */
+    private $user;
+
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
@@ -95,7 +102,8 @@ class MassConvertCurrency implements MassAction
         FieldUtil $fieldUtil,
         Metadata $metadata,
         CurrencyConfigDataProvider $configDataProvider,
-        CurrencyConverter $currencyConverter
+        CurrencyConverter $currencyConverter,
+        User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
@@ -104,6 +112,7 @@ class MassConvertCurrency implements MassAction
         $this->metadata = $metadata;
         $this->configDataProvider = $configDataProvider;
         $this->currencyConverter = $currencyConverter;
+        $this->user = $user;
     }
 
     public function process(Params $params, Data $dataWrapped): Result
@@ -204,7 +213,9 @@ class MassConvertCurrency implements MassAction
             $entity->set($field . 'Currency', $convertedValue->getCode());
         }
 
-        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($entity, [
+            'modifiedById' => $this->user->getId(),
+        ]);
     }
 
     protected function getRatesFromData(Data $data): ?CurrencyRates

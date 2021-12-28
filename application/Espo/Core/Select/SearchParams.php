@@ -33,6 +33,8 @@ use Espo\Core\Select\Where\Item as WhereItem;
 
 use InvalidArgumentException;
 
+use stdClass;
+
 /**
  * Search parameters.
  */
@@ -261,9 +263,19 @@ class SearchParams
 
     /**
      * Create an instance from a raw.
+     *
+     * @params stdClass|array $params
      */
-    public static function fromRaw(array $params): self
+    public static function fromRaw($params): self
     {
+        if (!is_array($params) && !$params instanceof stdClass) {
+            throw new InvalidArgumentException();
+        }
+
+        if ($params instanceof stdClass) {
+            $params = json_decode(json_encode($params), true);
+        }
+
         $object = new self();
 
         $rawParams = [];

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,45 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\MassAction;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+class ServiceParams
+{
+    /**
+     * @var Params
+     */
+    private $params;
 
-    return Dep.extend({
+    /**
+     * @var bool
+     */
+    private $isIdle = false;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    private function __construct(Params $params)
+    {
+        $this->params = $params;
+    }
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public static function create(Params $params): self
+    {
+        return new self($params);
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    public function getParams(): Params
+    {
+        return $this->params;
+    }
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+    public function isIdle(): bool
+    {
+        return $this->isIdle;
+    }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+    public function withIsIdle(bool $isIdle = true): self
+    {
+        $obj = clone $this;
 
-            this
-                .ajaxPostRequest('Action', {
-                    entityType: this.options.entityType,
-                    action: 'convertCurrency',
-                    id: this.options.model.id,
-                    data: {
-                        targetCurrency: currency,
-                        rates: currencyRates,
-                        fieldList: this.options.fieldList || null,
-                    },
-                })
-                .then(attributes => {
-                    this.trigger('after:update', attributes);
+        $obj->isIdle = $isIdle;
 
-                    this.close();
-                })
-                .catch(() => {
-                    this.enableButton('convert');
-                });
-        },
-    });
-});
+        return $obj;
+    }
+}

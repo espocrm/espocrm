@@ -89,7 +89,9 @@ class MassRecalculateFormula implements MassAction
         $count = 0;
 
         foreach ($collection as $entity) {
-            $this->entityManager->saveEntity($entity);
+            $this->entityManager->saveEntity($entity, [
+                'modifiedById' => 'system',
+            ]);
 
             $ids[] = $entity->getId();
 

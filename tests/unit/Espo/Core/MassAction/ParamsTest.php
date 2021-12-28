@@ -153,4 +153,30 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             'Test'
         );
     }
+
+    public function testSerialize1(): void
+    {
+        $params1 = Params::fromRaw(
+            [
+                'searchParams' => [
+                    'primaryFilter' => 'testFilter',
+                    'where' => [
+                        [
+                            'type' => 'equals',
+                            'attribute' => 'name',
+                            'value' => 'test',
+                        ]
+                    ],
+                ],
+            ],
+            'Test'
+        );
+
+        /** @var Params $params2 */
+        $params2 = unserialize(serialize($params1));
+
+        $this->assertEquals($params1, $params2);
+
+        $this->assertEquals('equals', $params2->getSearchParams()->getWhere()->getItemList()[0]->getType());
+    }
 }

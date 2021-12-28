@@ -29,6 +29,8 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     MassAction\QueryBuilder,
     MassAction\Params,
@@ -63,19 +65,26 @@ class MassDelete implements MassAction
      */
     protected $entityManager;
 
+    /**
+     * @var User
+     */
+    private $user;
+
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
         RecordServiceContainer $recordServiceContainer,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->entityManager = $entityManager;
+        $this->user = $user;
     }
 
-    public function process(Params $params, Data $dataWrapped): Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
@@ -107,7 +116,9 @@ class MassDelete implements MassAction
                 continue;
             }
 
-            $repository->remove($entity);
+            $repository->remove($entity, [
+                'modifiedById' => $this->user->getId(),
+            ]);
 
             $ids[] = $entity->getId();
 

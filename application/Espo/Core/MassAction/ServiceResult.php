@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,45 +27,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\MassAction;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+class ServiceResult
+{
+    /**
+     * @var ?Result
+     */
+    private $result = null;
 
-    return Dep.extend({
+    /**
+     * @var ?string
+     */
+    private $id = null;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    private function __construct() {}
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public function hasResult(): bool
+    {
+        return $this->result !== null;
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    public function getId(): string
+    {
+        assert($this->id !== null);
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        return $this->id;
+    }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+    public function getResult(): Result
+    {
+        assert($this->result !== null);
 
-            this
-                .ajaxPostRequest('Action', {
-                    entityType: this.options.entityType,
-                    action: 'convertCurrency',
-                    id: this.options.model.id,
-                    data: {
-                        targetCurrency: currency,
-                        rates: currencyRates,
-                        fieldList: this.options.fieldList || null,
-                    },
-                })
-                .then(attributes => {
-                    this.trigger('after:update', attributes);
+        return $this->result;
+    }
 
-                    this.close();
-                })
-                .catch(() => {
-                    this.enableButton('convert');
-                });
-        },
-    });
-});
+    public static function createWithId(string $id): self
+    {
+        $obj = new self;
+
+        $obj->id = $id;
+
+        return $obj;
+    }
+
+    public static function createWithResult(Result $result): self
+    {
+        $obj = new self;
+
+        $obj->result = $result;
+
+        return $obj;
+    }
+}

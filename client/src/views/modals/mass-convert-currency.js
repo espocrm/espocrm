@@ -27,7 +27,8 @@
  ************************************************************************/
 
 
-define('views/modals/mass-convert-currency', ['views/modal', 'model'], function (Dep, Model) {
+define('views/modals/mass-convert-currency', ['views/modal', 'model', 'helpers/mass-action'],
+    function (Dep, Model, Helper) {
 
     return Dep.extend({
 
@@ -51,6 +52,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
         setup: function () {
             this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') +
                 ' <span class="chevron-right"></span> ' + this.translate('convertCurrency', 'massActions');
+
             this.addButton({
                 name: 'convert',
                 text: this.translate('Update'),
@@ -58,6 +60,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
             }, true);
 
             var model = this.model = new Model();
+
             model.set('currency', this.getConfig().get('defaultCurrency'));
             model.set('baseCurrency', this.getConfig().get('baseCurrency'));
             model.set('currencyRates', this.getConfig().get('currencyRates'));
@@ -106,23 +109,48 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
 
             var hasWhere = !this.options.ids || this.options.ids.length === 0;
 
-            this.ajaxPostRequest('MassAction', {
-                entityType: this.options.entityType,
-                action: 'convertCurrency',
-                params: {
-                   ids: this.options.ids || null,
-                   where: hasWhere ? this.options.where : null,
-                   searchParams: hasWhere ? this.options.searchParams : null,
-                },
-                data: {
-                    fieldList: this.options.fieldList || null,
-                    currency: currency,
-                    targetCurrency: currency,
-                    rates: currencyRates,
-                },
-            })
+
+            let helper = new Helper(this);
+
+            let idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
+
+            this
+                .ajaxPostRequest('MassAction', {
+                    entityType: this.options.entityType,
+                    action: 'convertCurrency',
+                    params: {
+                       ids: this.options.ids || null,
+                       where: hasWhere ? this.options.where : null,
+                       searchParams: hasWhere ? this.options.searchParams : null,
+                    },
+                    data: {
+                        fieldList: this.options.fieldList || null,
+                        currency: currency,
+                        targetCurrency: currency,
+                        rates: currencyRates,
+                    },
+                    idle: idle,
+                })
                 .then(result => {
+                    if (result.id) {
+                        helper
+                            .process(result.id, 'convertCurrency')
+                            .then(view => {
+                                this.listenToOnce(view, 'close', () => this.close());
+
+                                this.listenToOnce(view, 'success', result => {
+                                    this.trigger('after:update', {
+                                        count: result.count,
+                                        idle: true,
+                                    });
+                                });
+                            });
+
+                        return;
+                    }
+
                     this.trigger('after:update', result.count);
+
                     this.close();
                 })
                 .catch(() => {

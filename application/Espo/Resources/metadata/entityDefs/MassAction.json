@@ -1,0 +1,44 @@
+{
+    "fields": {
+        "entityType": {
+            "type": "varchar",
+            "required": true
+        },
+        "action": {
+            "type": "varchar",
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Pending", "Running", "Success", "Failed"],
+            "default": "Pending"
+        },
+        "data": {
+            "type": "jsonObject"
+        },
+        "params": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "required": true
+        },
+        "processedCount": {
+            "type": "int"
+        },
+        "notifyOnFinish": {
+            "type": "bool",
+            "default": false
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

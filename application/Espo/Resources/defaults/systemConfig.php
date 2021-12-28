@@ -290,4 +290,5 @@ return [
     'recommendedMariadbParams' => [],
     'ldapPortalUserLdapAuth' => false,
     'passwordGenerateLength' => 10,
+    'massActionIdleCountThreshold' => 100,
 ];

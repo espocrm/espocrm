@@ -31,6 +31,8 @@ namespace Espo\Core\MassAction\Actions;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     MassAction\QueryBuilder,
     MassAction\Params,
@@ -75,18 +77,25 @@ class MassUpdate implements MassAction
      */
     protected $fieldUtil;
 
+    /**
+     * @var User
+     */
+    private $user;
+
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
         RecordServiceContainer $recordServiceContainer,
         EntityManager $entityManager,
-        FieldUtil $fieldUtil
+        FieldUtil $fieldUtil,
+        User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
+        $this->user = $user;
     }
 
     public function process(Params $params, Data $data): Result
@@ -145,6 +154,7 @@ class MassUpdate implements MassAction
             $repository->save($entity, [
                 'massUpdate' => true,
                 'skipStreamNotesAcl' => true,
+                'modifiedById' => $this->user->getId(),
             ]);
 
             $ids[] = $entity->getId();

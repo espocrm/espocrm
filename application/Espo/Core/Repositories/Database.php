@@ -157,8 +157,14 @@ class Database extends RDBRepository
         }
 
         if ($entity->hasAttribute('modifiedById')) {
-            if ($this->applicationState->hasUser()) {
-                $entity->set('modifiedById', $this->applicationState->getUser()->id);
+            $modifiedById = $options['modifiedById'] ?? null;
+
+            if (!$modifiedById && $this->applicationState->hasUser()) {
+                $modifiedById = $this->applicationState->getUser()->getId();
+            }
+
+            if ($modifiedById) {
+                $entity->set('modifiedById', $modifiedById);
             }
         }
     }

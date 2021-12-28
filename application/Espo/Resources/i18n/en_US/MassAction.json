@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "status": "Status",
+        "processedCount": "Processed Count"
+    },
+    "options": {
+        "status": {
+            "Pending": "Pending",
+            "Running": "Running",
+            "Success": "Success",
+            "Failed": "Failed"
+        }
+    },
+    "messages": {
+        "infoText": "The mass action is processed in idle by cron. It can take some time to finish. Closing this modal dialog won't affect the execution process."
+    }
+}

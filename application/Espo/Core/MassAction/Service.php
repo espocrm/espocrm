@@ -29,12 +29,21 @@
 
 namespace Espo\Core\MassAction;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\ForbiddenSilent,
-    Exceptions\BadRequest,
-    Acl,
-};
+use Espo\ORM\EntityManager;
+
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
+
+use Espo\Core\Acl;
+use Espo\Core\MassAction\Jobs\Process;
+use Espo\Core\Job\JobScheduler;
+use Espo\Core\Job\Job\Data as JobData;
+
+use Espo\Entities\User;
+
+use Espo\Entities\MassAction as MassActionEntity;
 
 use stdClass;
 
@@ -44,12 +53,24 @@ class Service
 
     private $acl;
 
+    private $jobScheduler;
+
+    private $entityManager;
+
+    private $user;
+
     public function __construct(
         MassActionFactory $factory,
-        Acl $acl
+        Acl $acl,
+        JobScheduler $jobScheduler,
+        EntityManager $entityManager,
+        User $user
     ) {
         $this->factory = $factory;
         $this->acl = $acl;
+        $this->jobScheduler = $jobScheduler;
+        $this->entityManager = $entityManager;
+        $this->user = $user;
     }
 
     /**
@@ -58,10 +79,25 @@ class Service
      * @throws Forbidden
      * @throws BadRequest
      */
-    public function process(string $entityType, string $action, Params $params, stdClass $data): Result
-    {
+    public function process(
+        string $entityType,
+        string $action,
+        ServiceParams $serviceParams,
+        stdClass $data
+    ): ServiceResult {
+
         if (!$this->acl->checkScope($entityType)) {
             throw new ForbiddenSilent();
+        }
+
+        $params = $serviceParams->getParams();
+
+        if ($serviceParams->isIdle()) {
+            if ($this->user->isPortal()) {
+                throw new Forbidden("Idle mass actions are not allowed for portal users.");
+            }
+
+            return $this->schedule($entityType, $action, $params, $data);
         }
 
         $massAction = $this->factory->create($action, $entityType);
@@ -72,9 +108,51 @@ class Service
         );
 
         if ($params->hasIds()) {
-            return $result;
+            return ServiceResult::createWithResult($result);
         }
 
-        return $result->withNoIds();
+        return ServiceResult::createWithResult(
+            $result->withNoIds()
+        );
+    }
+
+    public function getStatusData(string $id): stdClass
+    {
+        /** @var MassActionEntity|null $entity */
+        $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if ($entity->getCreatedBy()->getId() !== $this->user->getId()) {
+            throw new Forbidden();
+        }
+
+        return (object) [
+            'status' => $entity->getStatus(),
+            'processedCount' => $entity->getProcessedCount(),
+        ];
+    }
+
+    private function schedule(string $entityType, string $action, Params $params, stdClass $data): ServiceResult
+    {
+        $entity = $this->entityManager->createEntity(MassActionEntity::ENTITY_TYPE, [
+            'entityType' => $entityType,
+            'action' => $action,
+            'params' => serialize($params),
+            'data' => $data,
+        ]);
+
+        $this->jobScheduler
+            ->setClassName(Process::class)
+            ->setData(
+                JobData::create()
+                    ->withTargetId($entity->getId())
+                    ->withTargetType($entity->getEntityType())
+            )
+            ->schedule();
+
+        return ServiceResult::createWithId($entity->getId());
     }
 }

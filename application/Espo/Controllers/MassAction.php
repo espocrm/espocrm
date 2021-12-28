@@ -29,13 +29,14 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Exceptions\BadRequest,
-    MassAction\Service,
-    MassAction\Result,
-    MassAction\Params,
-    Api\Request,
-};
+use Espo\Core\Exceptions\BadRequest;
+
+use Espo\Core\MassAction\Service;
+use Espo\Core\MassAction\ServiceResult;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\ServiceParams;
+
+use Espo\Core\Api\Request;
 
 use stdClass;
 use RuntimeException;
@@ -60,6 +61,7 @@ class MassAction
         $action = $body->action ?? null;
         $params = $body->params ?? null;
         $data = $body->data ?? (object) [];
+        $isIdle = $body->idle ?? false;
 
         if (!$entityType || !$action || !$params) {
             throw new BadRequest();
@@ -74,14 +76,28 @@ class MassAction
             throw new BadRequest($e->getMessage());
         }
 
+        $serviceParams = ServiceParams::create($massActionParams)
+            ->withIsIdle($isIdle);
+
         $result = $this->service->process(
             $entityType,
             $action,
-            $massActionParams,
+            $serviceParams,
             $data
         );
 
         return $this->convertResult($result);
+    }
+
+    public function getActionStatus(Request $request): stdClass
+    {
+        $id = $request->getQueryParam('id');
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        return $this->service->getStatusData($id);
     }
 
     private function prepareMassActionParams(stdClass $data): array
@@ -113,8 +129,16 @@ class MassAction
         throw new BadRequest("Bad search params for mass action.");
     }
 
-    private function convertResult(Result $result): stdClass
+    private function convertResult(ServiceResult $serviceResult): stdClass
     {
+        if (!$serviceResult->hasResult()) {
+            return (object) [
+                'id' => $serviceResult->getId(),
+            ];
+        }
+
+        $result = $serviceResult->getResult();
+
         $data = (object) [];
 
         if ($result->hasCount()) {

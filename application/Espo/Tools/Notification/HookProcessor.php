@@ -67,6 +67,8 @@ class HookProcessor
 
     private $user;
 
+    private $userNameHash = [];
+
     public function __construct(
         Metadata $metadata,
         Config $config,
@@ -117,7 +119,7 @@ class HookProcessor
         $notificator->process($entity, $params);
     }
 
-    public function beforeRemove(Entity $entity): void
+    public function beforeRemove(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
 
@@ -129,8 +131,13 @@ class HookProcessor
 
         $userIdList = $followersData['idList'];
 
+        $removedById = $options['modifiedById'] ?? $this->user->getId();
+        $removedByName = $this->getUserNameById($removedById);
+
+        echo $removedByName . ' ';
+
         foreach ($userIdList as $userId) {
-            if ($userId === $this->user->getId()) {
+            if ($userId === $removedById) {
                 continue;
             }
 
@@ -141,8 +148,8 @@ class HookProcessor
                     'entityType' => $entity->getEntityType(),
                     'entityId' => $entity->getId(),
                     'entityName' => $entity->get('name'),
-                    'userId' => $this->user->getId(),
-                    'userName' => $this->user->get('name'),
+                    'userId' => $removedById,
+                    'userName' => $removedByName,
                 ],
             ]);
         }
@@ -193,5 +200,23 @@ class HookProcessor
         }
 
         return $this->notifatorsHash[$entityType];
+    }
+
+    private function getUserNameById(string $id): string
+    {
+        if ($id === $this->user->getId()) {
+            return $this->user->get('name');
+        }
+
+        if (!array_key_exists($id, $this->userNameHash)) {
+            /** @var User|null $user */
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
+
+            if ($user) {
+                $this->userNameHash[$id] = $user->getName();
+            }
+        }
+
+        return $this->userNameHash[$id] ?? $id;
     }
 }

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/mass-update', 'views/modal', function (Dep) {
+define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], function (Dep, MassActionHelper) {
 
     return Dep.extend({
 
@@ -80,6 +80,12 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.where = this.options.where;
             this.searchParams = this.options.searchParams;
             this.byWhere = this.options.byWhere;
+
+            let totalCount = this.options.totalCount;
+
+            this.helper = new MassActionHelper(this);
+
+            this.idle = this.byWhere && this.helper.checkIsIdle(totalCount);
 
             this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
                 ' <span class="chevron-right"></span> ' + this.translate('Mass Update');
@@ -157,12 +163,10 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
         actionUpdate: function () {
             this.disableButton('update');
 
-            var self = this;
-
             var attributes = {};
 
             this.addedFieldList.forEach((field) => {
-                var view = self.getView(field);
+                var view = this.getView(field);
 
                 _.extend(attributes, view.fetch());
             });
@@ -172,7 +176,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             var notValid = false;
 
             this.addedFieldList.forEach((field) => {
-                var view = self.getView(field);
+                var view = this.getView(field);
 
                 notValid = view.validate() || notValid;
             });
@@ -182,32 +186,49 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                     this.translate('Saving...')
                 );
 
-                Espo.Ajax.postRequest('MassAction', {
-                    action: 'update',
-                    entityType: this.entityType,
-                    params: {
-                        ids: self.ids || null,
-                        where: (!self.ids || self.ids.length === 0) ? self.options.where : null,
-                        searchParams: (!self.ids || self.ids.length === 0) ? self.options.searchParams : null,
-                    },
-                    data: attributes,
-                })
-                    .then(
-                        (result) => {
-                            var result = result || {};
-                            var count = result.count;
+                Espo.Ajax
+                    .postRequest('MassAction', {
+                        action: 'update',
+                        entityType: this.entityType,
+                        params: {
+                            ids: this.ids || null,
+                            where: (!this.ids || this.ids.length === 0) ? this.options.where : null,
+                            searchParams: (!this.ids || this.ids.length === 0) ? this.options.searchParams : null,
+                        },
+                        data: attributes,
+                        idle: this.idle,
+                    })
+                    .then(result => {
+                        var result = result || {};
 
-                            self.trigger('after:update', count);
-                        }
-                    )
-                    .catch(
-                        () =>{
-                            self.notify('Error occurred', 'error');
+                        if (result.id) {
+                            this.helper
+                                .process(result.id, 'update')
+                                .then(view => {
+                                    this.listenToOnce(view, 'close', () => this.close());
 
-                            self.enableButton('update');
+                                    this.listenToOnce(view, 'success', result => {
+                                        this.trigger('after:update', {
+                                            count: result.count,
+                                            idle: true,
+                                        });
+                                    });
+                                });
+
+                            return;
                         }
-                    );
-            } else {
+
+                        this.trigger('after:update', {
+                            count: result.count,
+                        });
+                    })
+                    .catch(() => {
+                        this.notify('Error occurred', 'error');
+
+                        this.enableButton('update');
+                    });
+            }
+            else {
                 this.notify('Not valid', 'error');
 
                 this.enableButton('update');

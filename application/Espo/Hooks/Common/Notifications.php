@@ -58,7 +58,7 @@ class Notifications
             return;
         }
 
-        $this->processor->beforeRemove($entity);
+        $this->processor->beforeRemove($entity, $options);
     }
 
     public function afterRemove(Entity $entity, array $options): void

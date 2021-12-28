@@ -29,9 +29,7 @@
 
 namespace Espo\Core\MassAction;
 
-use Espo\Core\{
-    Select\SearchParams,
-};
+use Espo\Core\Select\SearchParams;
 
 use RuntimeException;
 
@@ -157,5 +155,34 @@ class Params
         }
 
         return $obj;
+    }
+
+    /**
+     * @return void
+     */
+    public function __clone()
+    {
+        if ($this->searchParams) {
+            $this->searchParams = clone $this->searchParams;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
+            'entityType' => $this->entityType,
+            'ids' => $this->ids,
+            'searchParams' => serialize($this->searchParams),
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->entityType = $data['entityType'];
+        $this->ids = $data['ids'];
+        $this->searchParams = unserialize($data['searchParams']);
     }
 }
