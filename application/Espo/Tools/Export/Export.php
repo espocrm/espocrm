@@ -392,9 +392,8 @@ class Export
 
         $attributeListToSkip[] = 'deleted';
 
+        /** @var Entity $seed */
         $seed = $this->entityManager->getNewEntity($entityType);
-
-        assert($seed instanceof Entity);
 
         $initialAttributeList = $params->getAttributeList();
 
