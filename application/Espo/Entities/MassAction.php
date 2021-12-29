@@ -155,4 +155,11 @@ class MassAction extends Entity
 
         return $this;
     }
+
+    public function setNotifyOnFinish(bool $notifyOnFinish = true): self
+    {
+        $this->set('notifyOnFinish', $notifyOnFinish);
+
+        return $this;
+    }
 }

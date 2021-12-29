@@ -105,6 +105,16 @@ define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Mode
                 ],
             });
 
+            this.on('close', () => {
+                if (this.model.get('status') !== 'Pending') {
+                    return;
+                }
+
+                Espo.Ajax.postRequest('MassAction/action/subscribeToNotificationOnSuccess', {
+                    id: this.id,
+                });
+            });
+
             this.checkStatus();
         },
 

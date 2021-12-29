@@ -119,6 +119,7 @@ class Process implements Job
         $message = $this->language->translate('massActionProcessed', 'messages');
 
         $notification
+            ->setType(Notification::TYPE_MESSAGE)
             ->setMessage($message)
             ->setUserId($entity->getCreatedBy()->getId());
 

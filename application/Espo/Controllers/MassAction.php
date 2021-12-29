@@ -38,6 +38,7 @@ use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\ServiceParams;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 use stdClass;
 use RuntimeException;
@@ -99,6 +100,19 @@ class MassAction
         }
 
         return $this->service->getStatusData($id);
+    }
+
+    public function postActionSubscribeToNotificationOnSuccess(Request $request, Response $response): void
+    {
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest();
+        }
+
+        $this->service->subscribeToNotificationOnSuccess($id);
+
+        $response->writeBody('true');
     }
 
     private function prepareMassActionParams(stdClass $data): array

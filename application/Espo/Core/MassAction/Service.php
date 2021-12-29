@@ -135,6 +135,24 @@ class Service
         ];
     }
 
+    public function subscribeToNotificationOnSuccess(string $id): void
+    {
+        /** @var MassActionEntity|null $entity */
+        $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if ($entity->getCreatedBy()->getId() !== $this->user->getId()) {
+            throw new Forbidden();
+        }
+
+        $entity->setNotifyOnFinish();
+
+        $this->entityManager->saveEntity($entity);
+    }
+
     private function schedule(string $entityType, string $action, Params $params, stdClass $data): ServiceResult
     {
         $entity = $this->entityManager->createEntity(MassActionEntity::ENTITY_TYPE, [
