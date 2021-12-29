@@ -134,8 +134,6 @@ class HookProcessor
         $removedById = $options['modifiedById'] ?? $this->user->getId();
         $removedByName = $this->getUserNameById($removedById);
 
-        echo $removedByName . ' ';
-
         foreach ($userIdList as $userId) {
             if ($userId === $removedById) {
                 continue;
