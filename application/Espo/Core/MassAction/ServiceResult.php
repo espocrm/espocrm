@@ -48,17 +48,13 @@ class ServiceResult
         return $this->result !== null;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
-        assert($this->id !== null);
-
         return $this->id;
     }
 
-    public function getResult(): Result
+    public function getResult(): ?Result
     {
-        assert($this->result !== null);
-
         return $this->result;
     }
 

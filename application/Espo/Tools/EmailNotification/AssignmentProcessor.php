@@ -145,7 +145,9 @@ class AssignmentProcessor
             return;
         }
 
-        assert($entity instanceof Entity);
+        if (!$entity instanceof Entity) {
+            return;
+        }
 
         $this->loadParentNameFields($entity);
 

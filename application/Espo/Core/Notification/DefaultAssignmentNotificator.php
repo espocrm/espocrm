@@ -65,7 +65,9 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
 
     public function process(Entity $entity, Params $params): void
     {
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
 
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');

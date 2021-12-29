@@ -103,7 +103,9 @@ class EspoManager implements Manager
 
     public function inactivate(AuthToken $authToken): void
     {
-        assert($authToken instanceof AuthTokenEntity);
+        if (!$authToken instanceof AuthTokenEntity) {
+            throw new RuntimeException();
+        }
 
         $this->validateNotChanged($authToken);
 
@@ -114,7 +116,9 @@ class EspoManager implements Manager
 
     public function renew(AuthToken $authToken): void
     {
-        assert($authToken instanceof AuthTokenEntity);
+        if (!$authToken instanceof AuthTokenEntity) {
+            throw new RuntimeException();
+        }
 
         $this->validateNotChanged($authToken);
 

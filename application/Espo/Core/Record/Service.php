@@ -1026,7 +1026,9 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            throw new Error("Only core entities are supported");
+        }
 
         if ($this->noEditAccessRequiredForLink) {
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
@@ -1098,7 +1100,9 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            throw new Error("Only core entities are supported");
+        }
 
         if ($this->noEditAccessRequiredForLink) {
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
@@ -1160,13 +1164,12 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        /** @var User|null $user */
         $user = $this->entityManager->getEntity('User', $foreignId);
 
         if (!$user) {
             throw new NotFound();
         }
-
-        assert($user instanceof User);
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No 'edit' access.");
@@ -1215,13 +1218,12 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        /** @var User|null $user */
         $user = $this->entityManager->getEntity('User', $foreignId);
 
         if (!$user) {
             throw new NotFound();
         }
-
-        assert($user instanceof User);
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No 'edit' access.");
@@ -1278,7 +1280,9 @@ class Service implements Crud,
             return $this->$methodName($id, $searchParams);
         }
 
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            throw new Error("Only core entities are supported");
+        }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
@@ -1623,7 +1627,9 @@ class Service implements Crud,
                 }
             }
             else if ($type === 'linkMultiple') {
-                assert($entity instanceof CoreEntity);
+                if (!$entity instanceof CoreEntity) {
+                    throw new Error("Only core entities are supported");
+                }
 
                 $foreignLink = $entity->getRelationParam($field, 'foreign');
                 $foreignEntityType = $entity->getRelationParam($field, 'entity');

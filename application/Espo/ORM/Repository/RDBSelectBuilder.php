@@ -153,7 +153,9 @@ class RDBSelectBuilder
 
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'max'.");
+        }
 
         return $mapper->max($query, $attribute);
     }
@@ -169,7 +171,9 @@ class RDBSelectBuilder
 
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'min'.");
+        }
 
         return $mapper->min($query, $attribute);
     }
@@ -185,7 +189,9 @@ class RDBSelectBuilder
 
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'sum'.");
+        }
 
         return $mapper->sum($query, $attribute);
     }

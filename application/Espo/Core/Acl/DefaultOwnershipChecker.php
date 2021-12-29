@@ -78,7 +78,9 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
 
     public function checkTeam(User $user, Entity $entity): bool
     {
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
 
         $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 

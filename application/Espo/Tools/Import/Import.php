@@ -448,7 +448,9 @@ class Import
             $entity = $this->entityManager->getEntity($this->entityType);
         }
 
-        assert($entity instanceof Entity);
+        if (!$entity instanceof Entity) {
+            throw new Error("Import supports only `Espo\Core\ORM\Entity`.");
+        }
 
         $isNew = $entity->isNew();
 

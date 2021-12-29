@@ -115,7 +115,11 @@ class FindRelatedManyType extends BaseFunction implements
             $order = $order ?? 'asc';
         }
 
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            $this->throwError("Only core entities are supported.");
+
+            return;
+        }
 
         $relationType = $entity->getRelationParam($link, 'type');
 

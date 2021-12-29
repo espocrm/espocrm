@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 use Espo\Core\MassAction\Service;
 use Espo\Core\MassAction\ServiceResult;
@@ -138,6 +139,10 @@ class MassAction
         }
 
         $result = $serviceResult->getResult();
+
+        if (!$result) {
+            throw new Error();
+        }
 
         $data = (object) [];
 

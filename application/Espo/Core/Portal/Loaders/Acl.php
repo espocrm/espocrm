@@ -31,6 +31,8 @@ namespace Espo\Core\Portal\Loaders;
 
 use Espo\Core\Portal\AclManager as PortalAclManager;
 
+use InvalidArgumentException;
+
 use Espo\Core\{
     Container\Loader,
     AclManager,
@@ -48,7 +50,9 @@ class Acl implements Loader
 
     public function __construct(AclManager $aclManager, User $user)
     {
-        assert($aclManager instanceof PortalAclManager);
+        if (!$aclManager instanceof PortalAclManager) {
+            throw new InvalidArgumentException();
+        }
 
         $this->aclManager = $aclManager;
         $this->user = $user;

@@ -66,8 +66,6 @@ class Process implements Job
     {
         $id = $data->getTargetId();
 
-        assert($id !== null);
-
         if ($id === null) {
             throw new Error("ID not passed to the mass action job.");
         }

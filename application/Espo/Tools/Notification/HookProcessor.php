@@ -89,7 +89,9 @@ class HookProcessor
     {
         $entityType = $entity->getEntityType();
 
-        assert($entity instanceof CoreEntity);
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
 
         /**
          * No need to process assignment notifications for entity types that have Stream enabled.

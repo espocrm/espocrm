@@ -36,6 +36,8 @@ use Espo\Core\Field\Link;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\Params;
 
+use Espo\Core\Exceptions\Error;
+
 use stdClass;
 
 class MassAction extends Entity
@@ -54,11 +56,12 @@ class MassAction extends Entity
     {
         $raw = $this->get('params');
 
-        assert(is_string($raw));
+        if (!is_string($raw)) {
+            throw new Error("No 'params'.");
+        }
 
+        /** @var Params $params */
         $params = unserialize($raw);
-
-        assert($params instanceof Params);
 
         return $params;
     }
@@ -67,7 +70,9 @@ class MassAction extends Entity
     {
         $raw = $this->get('data');
 
-        assert($raw instanceof stdClass);
+        if (!$raw instanceof stdClass) {
+            throw new Error("No 'data'.");
+        }
 
         return Data::fromRaw($raw);
     }
@@ -76,7 +81,9 @@ class MassAction extends Entity
     {
         $value = $this->get('entityType');
 
-        assert(is_string($value));
+        if (!is_string($value)) {
+            throw new Error("No 'entityType'.");
+        }
 
         return $value;
     }
@@ -85,7 +92,9 @@ class MassAction extends Entity
     {
         $value = $this->get('action');
 
-        assert(is_string($value));
+        if (!is_string($value)) {
+            throw new Error("No 'action'.");
+        }
 
         return $value;
     }
@@ -94,7 +103,9 @@ class MassAction extends Entity
     {
         $value = $this->get('status');
 
-        assert(is_string($value));
+        if (!is_string($value)) {
+            throw new Error("No 'status'.");
+        }
 
         return $value;
     }
@@ -108,7 +119,9 @@ class MassAction extends Entity
     {
         $value = $this->getValueObject('createdAt');
 
-        assert($value instanceof DateTime);
+        if (!$value instanceof DateTime) {
+            throw new Error("No 'createdAt'.");
+        }
 
         return $value;
     }
@@ -117,7 +130,9 @@ class MassAction extends Entity
     {
         $value = $this->getValueObject('createdBy');
 
-        assert($value instanceof Link);
+        if (!$value instanceof Link) {
+            throw new Error("No 'createdBy'.");
+        }
 
         return $value;
     }

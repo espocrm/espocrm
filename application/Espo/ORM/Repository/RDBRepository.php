@@ -209,7 +209,9 @@ class RDBRepository implements Repository
     {
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'restoreDeleted'.");
+        }
 
         $mapper->restoreDeleted($this->entityType, $id);
     }
@@ -245,7 +247,9 @@ class RDBRepository implements Repository
     {
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'deleteFromDb'.");
+        }
 
         $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
@@ -287,7 +291,9 @@ class RDBRepository implements Repository
     {
         $mapper = $this->getMapper();
 
-        assert($mapper instanceof BaseMapper);
+        if (!$mapper instanceof BaseMapper) {
+            throw new RuntimeException("Not supported 'findBySql'.");
+        }
 
         return $mapper->selectBySql($this->entityType, $sql);
     }

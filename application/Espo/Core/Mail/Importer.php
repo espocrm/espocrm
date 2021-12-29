@@ -444,7 +444,9 @@ class Importer
             return;
         }
 
-        assert($parent instanceof CoreEntity);
+        if (!$parent instanceof CoreEntity) {
+            return;
+        }
 
         $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
 
