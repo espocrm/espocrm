@@ -165,7 +165,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             'data' => [
                 'Account' => [
                     'create' => 'no',
-                    'read' => 'own',
+                    'read' => 'all',
                     'edit' => 'own',
                     'delete' => 'no',
                 ],
@@ -199,11 +199,14 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             )
             ->withIsIdle();
 
-        $data = (object) [
-            'type' => 'Customer',
-        ];
-
-        $serviceResult = $service->process('Account', 'update', $serviceParams, $data);
+        $serviceResult = $service->process(
+            'Account',
+            'update',
+            $serviceParams,
+            (object) [
+                'type' => 'Customer',
+            ]
+        );
 
         $this->assertFalse($serviceResult->hasResult());
 
@@ -227,5 +230,75 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('Customer', $account1->get('type'));
         $this->assertEquals(null, $account2->get('type'));
+    }
+
+    public function testAcl2()
+    {
+        /** @var EntityManager $em */
+        $em = $this->getApplication()->getContainer()->get('entityManager');
+
+        $user = $this->createUser('tester', [
+            'massUpdatePermission' => 'yes',
+            'data' => [
+                'User' => [
+                    'create' => 'no',
+                    'read' => 'all',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+            ],
+        ]);
+
+        $user1 = $this->createUser('tester-1', []);
+
+        $this->auth('tester');
+
+        $app = $this->createApplication();
+
+        /** @var InjectableFactory $injectableFactory */
+        $injectableFactory = $app->getContainer()->get('injectableFactory');
+
+        $this->assertEquals($user->getId(), $app->getContainer()->get('user')->getId());
+
+        /** @var Service $service */
+        $service = $injectableFactory->create(Service::class);
+
+        $serviceParams = ServiceParams
+            ::create(
+                MassActionParams::createWithSearchParams('User', SearchParams::create())
+            )
+            ->withIsIdle();
+
+        $serviceResult = $service->process(
+            'User',
+            'update',
+            $serviceParams,
+            (object) [
+                'title' => 'Tester',
+            ]
+        );
+
+        $this->assertFalse($serviceResult->hasResult());
+
+        $massActionId = $serviceResult->getId();
+
+        $this->auth(null);
+
+        $app1 = $this->getApplication();
+
+        $this->assertEquals('system', $app1->getContainer()->get('user')->getId());
+
+        /** @var InjectableFactory $injectableFactory1 */
+        $injectableFactory1 = $app1->getContainer()->get('injectableFactory');
+
+        $process = $injectableFactory1->create(JobProcess::class);
+
+        $process->run(JobData::create()->withTargetId($massActionId));
+
+        $em->refreshEntity($user);
+        $em->refreshEntity($user1);
+
+        $this->assertEquals('Tester', $user->get('title'));
+        $this->assertEquals(null, $user1->get('title'));
     }
 }
