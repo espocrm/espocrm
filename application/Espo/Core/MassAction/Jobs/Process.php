@@ -68,6 +68,10 @@ class Process implements Job
 
         assert($id !== null);
 
+        if ($id === null) {
+            throw new Error("ID not passed to the mass action job.");
+        }
+
         /** @var MassActionEntity|null $entity */
         $entity = $this->entityManager->getEntity(MassActionEntity::ENTITY_TYPE, $id);
 

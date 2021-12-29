@@ -29,6 +29,18 @@
 
 namespace tests\integration\Espo\Actions;
 
+use Espo\Modules\Crm\Entities\Account;
+
+use Espo\Core\MassAction\ServiceParams;
+use Espo\Core\MassAction\Service;
+use Espo\Core\MassAction\Params as MassActionParams;
+use Espo\Core\MassAction\Jobs\Process as JobProcess;
+use Espo\Core\Job\Job\Data as JobData;
+
+use Espo\Core\Select\SearchParams;
+
+use Espo\Core\InjectableFactory;
+
 use Espo\Core\{
     Api\ActionProcessor,
     Api\Response,
@@ -141,5 +153,79 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->expectException(Forbidden::class);
 
         $this->actionProcessor->process('MassAction', 'process', $request, $response);
+    }
+
+    public function testAcl1()
+    {
+        /** @var EntityManager $em */
+        $em = $this->getApplication()->getContainer()->get('entityManager');
+
+        $user = $this->createUser('tester', [
+            'massUpdatePermission' => 'yes',
+            'data' => [
+                'Account' => [
+                    'create' => 'no',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+            ],
+        ]);
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => '1',
+            'assignedUserId' => $user->getId(),
+        ]);
+
+        $account2 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => '2',
+        ]);
+
+        $this->auth('tester');
+
+        $app = $this->createApplication();
+
+        /** @var InjectableFactory $injectableFactory */
+        $injectableFactory = $app->getContainer()->get('injectableFactory');
+
+        $this->assertEquals($user->getId(), $app->getContainer()->get('user')->getId());
+
+        /** @var Service $service */
+        $service = $injectableFactory->create(Service::class);
+
+        $serviceParams = ServiceParams
+            ::create(
+                MassActionParams::createWithSearchParams('Account', SearchParams::create())
+            )
+            ->withIsIdle();
+
+        $data = (object) [
+            'type' => 'Customer',
+        ];
+
+        $serviceResult = $service->process('Account', 'update', $serviceParams, $data);
+
+        $this->assertFalse($serviceResult->hasResult());
+
+        $massActionId = $serviceResult->getId();
+
+        $this->auth(null);
+
+        $app1 = $this->getApplication();
+
+        $this->assertEquals('system', $app1->getContainer()->get('user')->getId());
+
+        /** @var InjectableFactory $injectableFactory1 */
+        $injectableFactory1 = $app1->getContainer()->get('injectableFactory');
+
+        $process = $injectableFactory1->create(JobProcess::class);
+
+        $process->run(JobData::create()->withTargetId($massActionId));
+
+        $em->refreshEntity($account1);
+        $em->refreshEntity($account2);
+
+        $this->assertEquals('Customer', $account1->get('type'));
+        $this->assertEquals(null, $account2->get('type'));
     }
 }
