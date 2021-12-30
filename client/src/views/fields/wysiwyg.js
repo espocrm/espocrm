@@ -527,10 +527,43 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             continue;
                         }
 
-                        var blob = items[i].getAsFile();
+                        let file = items[i].getAsFile();
 
                         e.preventDefault();
                         e.stopPropagation();
+
+                        let fileReader = new FileReader();
+
+                        fileReader.onload = e => {
+                            this.getModelFactory().create('Attachment', attachment => {
+
+                                attachment.set('name', file.name);
+                                attachment.set('type', file.type);
+                                attachment.set('role', 'Inline Attachment');
+                                attachment.set('global', true);
+                                attachment.set('size', file.size);
+
+                                if (this.model.id) {
+                                    attachment.set('relatedId', this.model.id);
+                                }
+
+                                attachment.set('relatedType', this.model.name);
+                                attachment.set('file', e.target.result);
+                                attachment.set('field', this.name);
+
+                                attachment
+                                    .save()
+                                    .then(() => {
+                                        let url = '?entryPoint=attachment&id=' + attachment.id;
+                                        this.$summernote.summernote('insertImage', url);
+
+                                        this.notify(false);
+                                    });
+
+                            });
+                        };
+
+                        fileReader.readAsDataURL(file);
                     }
                 }
             });
