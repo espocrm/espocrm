@@ -458,17 +458,21 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.getAcl()
             );
 
-            var attributes = emailHelper.getForwardAttributes(this.model, data, cc);
-
             this.notify('Loading...');
 
             Espo.Ajax
-                .postRequest('Email/action/getCopiedAttachments', {
+                .postRequest('Email/action/getDuplicateAttributes', {
                     id: this.model.id,
                 })
-                .then(() => {
-                    attributes['attachmentsIds'] = data.ids;
-                    attributes['attachmentsNames'] = data.names;
+                .then(duplicateAttributes => {
+                    model = this.model.clone();
+
+                    model.set('body', duplicateAttributes.body);
+
+                    var attributes = emailHelper.getForwardAttributes(model, data, cc);
+
+                    attributes.attachmentsIds = data.attachmentsIds;
+                    attributes.attachmentsNames = data.attachmentsNames;
 
                     this.notify('Loading...');
 

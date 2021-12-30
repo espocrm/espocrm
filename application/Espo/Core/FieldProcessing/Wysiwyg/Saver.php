@@ -90,7 +90,7 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            if ($attachment->get('relatedId') || $attachment->get('sourceId')) {
+            if ($attachment->get('relatedId')) {
                 continue;
             }
 
