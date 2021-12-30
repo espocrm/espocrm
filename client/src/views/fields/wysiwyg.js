@@ -40,7 +40,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         height: 250,
 
-        rowsDefault: 15,
+        rowsDefault: 10000,
 
         seeMoreDisabled: true,
 
