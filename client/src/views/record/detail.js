@@ -1584,10 +1584,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 scope: this.entityType,
                 duplicates: duplicates,
                 model: this.model,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'save', function () {
+                this.listenToOnce(view, 'save', () => {
                     this.actionSave({
                         options: {
                             headers: {
@@ -1595,8 +1595,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             }
                         }
                     });
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         errorHandlerModified: function (data) {

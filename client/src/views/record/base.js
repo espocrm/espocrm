@@ -692,6 +692,10 @@ define(
                 headers['X-Version-Number'] = this.model.get('versionNumber');
             }
 
+            if (this.model.isNew() && this.options.duplicateSourceId) {
+                headers['X-Duplicate-Source-Id'] = this.options.duplicateSourceId;
+            }
+
             this.beforeSave();
 
             this.trigger('before:save');

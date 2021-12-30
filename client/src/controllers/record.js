@@ -69,15 +69,16 @@ define('controllers/record', 'controller', function (Dep) {
 
             if (!isReturn) {
                 var stored = this.getStoredMainView(key);
+
                 if (stored) {
                     this.clearStoredMainView(key);
                 }
             }
 
             this.getCollection(function (collection) {
-                this.listenToOnce(this.baseController, 'action', function () {
+                this.listenToOnce(this.baseController, 'action', () => {
                     collection.abortLastFetch();
-                }, this);
+                });
 
                 this.main(this.getViewName('list'), {
                     scope: this.name,
@@ -121,11 +122,11 @@ define('controllers/record', 'controller', function (Dep) {
 
             this.lastViewActionOptions = options;
 
-            var createView = function (model) {
+            var createView = (model) => {
                 this.prepareModelView(model, options);
 
                 this.createViewView.call(this, options, model);
-            }.bind(this);
+            };
 
             if ('model' in options) {
                 var model = options.model;
@@ -134,43 +135,47 @@ define('controllers/record', 'controller', function (Dep) {
 
                 this.showLoadingNotification();
 
-                model.fetch().then(function () {
-                    this.hideLoadingNotification();
-                }.bind(this));
+                model
+                    .fetch()
+                    .then(() => {
+                        this.hideLoadingNotification();
+                    });
 
-                this.listenToOnce(this.baseController, 'action', function () {
+                this.listenToOnce(this.baseController, 'action', () => {
                     model.abortLastFetch();
-                }, this);
+                });
 
                 return;
             }
 
-            this.getModel().then(function (model) {
+            this.getModel().then(model => {
                 model.id = id;
 
                 this.showLoadingNotification();
 
-                model.fetch({main: true}).then(function () {
-                    this.hideLoadingNotification();
+                model
+                    .fetch({main: true})
+                    .then(() => {
+                        this.hideLoadingNotification();
 
-                    if (model.get('deleted')) {
-                        this.listenToOnce(model, 'after:restore-deleted', function () {
-                            createView(model);
-                        }, this);
+                        if (model.get('deleted')) {
+                            this.listenToOnce(model, 'after:restore-deleted', () => {
+                                createView(model);
+                            });
 
-                        this.prepareModelView(model, options);
-                        this.createViewView(options, model, 'views/deleted-detail');
+                            this.prepareModelView(model, options);
+                            this.createViewView(options, model, 'views/deleted-detail');
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    createView(model);
-                }.bind(this));
+                        createView(model);
+                    });
 
-                this.listenToOnce(this.baseController, 'action', function () {
+                this.listenToOnce(this.baseController, 'action', () => {
                     model.abortLastFetch();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         beforeCreate: function () {
@@ -188,34 +193,40 @@ define('controllers/record', 'controller', function (Dep) {
                 }
             }, this);
 
-            this.listenToOnce(model, 'after:save', function () {
+            this.listenToOnce(model, 'after:save', () => {
                 var key = this.name + 'List';
 
                 var stored = this.getStoredMainView(key);
 
                 if (stored && stored.storeViewAfterCreate && stored.collection) {
-                    this.listenToOnce(stored, 'after:render', function () {
+                    this.listenToOnce(stored, 'after:render', () => {
                         stored.collection.fetch();
                     });
                 }
-            }, this);
+            });
         },
 
         create: function (options) {
             options = options || {};
 
-            this.getModel().then(function (model) {
+            let optionsOptions = options.options || {};
+
+            this.getModel().then((model) => {
                 if (options.relate) {
                     model.setRelate(options.relate);
                 }
 
-                var o = {
+                let o = {
                     scope: this.name,
                     model: model,
                     returnUrl: options.returnUrl,
                     returnDispatchParams: options.returnDispatchParams,
                     params: options,
                 };
+
+                for (let k in optionsOptions) {
+                    o[k] = optionsOptions[k];
+                }
 
                 if (options.attributes) {
                     model.set(options.attributes);
@@ -224,7 +235,7 @@ define('controllers/record', 'controller', function (Dep) {
                 this.prepareModelCreate(model, options);
 
                 this.main(this.getViewName('edit'), o);
-            }.bind(this));
+            });
         },
 
         actionCreate: function (options) {
@@ -236,7 +247,7 @@ define('controllers/record', 'controller', function (Dep) {
         },
 
         prepareModelEdit: function (model, options) {
-            this.listenToOnce(model, 'before:save', function () {
+            this.listenToOnce(model, 'before:save', () => {
                 var key = this.name + 'List';
 
                 var stored = this.getStoredMainView(key);
@@ -244,13 +255,15 @@ define('controllers/record', 'controller', function (Dep) {
                 if (stored && !stored.storeViewAfterUpdate) {
                     this.clearStoredMainView(key);
                 }
-            }, this);
+            });
         },
 
         actionEdit: function (options) {
             var id = options.id;
 
-            this.getModel().then(function (model) {
+            let optionsOptions = options.options || {};
+
+            this.getModel().then(model => {
                 model.id = id;
 
                 if (options.model) {
@@ -261,29 +274,34 @@ define('controllers/record', 'controller', function (Dep) {
 
                 this.showLoadingNotification();
 
-                this.listenToOnce(model, 'sync', function () {
-                    this.hideLoadingNotification();
+                model
+                    .fetch({main: true})
+                    .then(() => {
+                        this.hideLoadingNotification();
 
-                    var o = {
-                        scope: this.name,
-                        model: model,
-                        returnUrl: options.returnUrl,
-                        returnDispatchParams: options.returnDispatchParams,
-                        params: options,
-                    };
+                        var o = {
+                            scope: this.name,
+                            model: model,
+                            returnUrl: options.returnUrl,
+                            returnDispatchParams: options.returnDispatchParams,
+                            params: options,
+                        };
 
-                    if (options.attributes) {
-                        o.attributes = options.attributes;
-                    }
+                        for (let k in optionsOptions) {
+                            o[k] = optionsOptions[k];
+                        }
 
-                    this.main(this.getViewName('edit'), o);
-                }, this);
-                model.fetch({main: true});
+                        if (options.attributes) {
+                            o.attributes = options.attributes;
+                        }
 
-                this.listenToOnce(this.baseController, 'action', function () {
+                        this.main(this.getViewName('edit'), o);
+                    });
+
+                this.listenToOnce(this.baseController, 'action', () => {
                     model.abortLastFetch();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         beforeMerge: function () {
@@ -293,35 +311,36 @@ define('controllers/record', 'controller', function (Dep) {
         actionMerge: function (options) {
             var ids = options.ids.split(',');
 
-            this.getModel().then(function (model) {
+            this.getModel().then((model) => {
                 var models = [];
 
-                var proceed = function () {
+                var proceed = () => {
                     this.main('views/merge', {
                         models: models,
                         scope: this.name,
                         collection: options.collection
                     });
-                }.bind(this);
+                };
 
                 var i = 0;
 
-                ids.forEach(function (id) {
+                ids.forEach((id) => {
                     var current = model.clone();
 
                     current.id = id;
                     models.push(current);
 
-                    this.listenToOnce(current, 'sync', function () {
+                    this.listenToOnce(current, 'sync', () => {
                         i++;
+
                         if (i === ids.length) {
                             proceed();
                         }
                     });
 
                     current.fetch();
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         /**
@@ -346,6 +365,7 @@ define('controllers/record', 'controller', function (Dep) {
                     return;
                 }
             }
+
             return this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
 

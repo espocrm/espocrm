@@ -38,7 +38,13 @@ define('views/edit', 'views/main', function (Dep) {
 
         menu: null,
 
-        optionsToPass: ['returnUrl', 'returnDispatchParams', 'attributes', 'rootUrl'],
+        optionsToPass: [
+            'returnUrl',
+            'returnDispatchParams',
+            'attributes',
+            'rootUrl',
+            'duplicateSourceId',
+        ],
 
         headerView: 'views/header',
 
