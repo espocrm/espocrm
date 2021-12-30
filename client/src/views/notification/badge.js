@@ -158,11 +158,14 @@ define('views/notification/badge', 'view', function (Dep) {
         },
 
         checkBypass: function () {
-            var last = this.getRouter().getLast() || {};
+            let last = this.getRouter().getLast() || {};
+
+            let pageAction = (last.options || {}).page || null;
 
             if (
                 last.controller === 'Admin' &&
-                ~['upgrade', 'extensions'].indexOf(last.action)
+                last.action === 'page' &&
+                ~['upgrade', 'extensions'].indexOf(pageAction)
             ) {
                 return true;
             }
