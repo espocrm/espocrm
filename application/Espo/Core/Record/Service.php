@@ -31,8 +31,6 @@ namespace Espo\Core\Record;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
-use Espo\Repositories\Attachment as AttachmentRepository;
-
 use Espo\Core\Exceptions\{
     Error,
     BadRequest,
@@ -62,6 +60,7 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
     Record\HookManager as RecordHookManager,
     Record\Select\ApplierClassNameListProvider,
+    Record\Duplicator\EntityDuplicator,
     FieldValidation\FieldValidationParams as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
@@ -171,8 +170,6 @@ class Service implements Crud,
      * @todo Move to metadata.
      */
     protected $validateRequiredSkipFieldList = [];
-
-    protected $duplicateIgnoreFieldList = [];
 
     protected $duplicateIgnoreAttributeList = [];
 
@@ -1538,6 +1535,11 @@ class Service implements Crud,
         return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
+    private function createEntityDuplicator(): EntityDuplicator
+    {
+        return $this->injectableFactory->create(EntityDuplicator::class);
+    }
+
     public function getDuplicateAttributes(string $id): stdClass
     {
         if (!$id) {
@@ -1558,95 +1560,7 @@ class Service implements Crud,
             throw new NotFound("Record not found.");
         }
 
-        $attributes = $entity->getValueMap();
-
-        unset($attributes->id);
-
-        $fields = $this->metadata->get(['entityDefs', $this->entityType, 'fields'], []);
-
-        $fieldManager = $this->fieldUtil;
-
-        foreach ($fields as $field => $item) {
-            if (!empty($item['duplicateIgnore']) || in_array($field, $this->duplicateIgnoreFieldList)) {
-                $attributeToIgnoreList = $fieldManager->getAttributeList($this->entityType, $field);
-
-                foreach ($attributeToIgnoreList as $attribute) {
-                    unset($attributes->$attribute);
-                }
-
-                continue;
-            }
-
-            if (empty($item['type'])) {
-                continue;
-            }
-
-            $type = $item['type'];
-
-            if (in_array($type, ['file', 'image'])) {
-                $attachment = $entity->get($field);
-
-                if ($attachment) {
-                    /** @var AttachmentRepository $attachmentRepository */
-                    $attachmentRepository = $this->entityManager->getRepository('Attachment');
-
-                    $attachment = $attachmentRepository->getCopiedAttachment($attachment);
-
-                    $idAttribute = $field . 'Id';
-
-                    $attributes->$idAttribute = $attachment->getId();
-                }
-            }
-            else if (in_array($type, ['attachmentMultiple'])) {
-                $attachmentList = $entity->get($field);
-
-                if (count($attachmentList)) {
-                    $idList = [];
-                    $nameHash = (object) [];
-                    $typeHash = (object) [];
-
-                    /** @var AttachmentRepository $attachmentRepository */
-                    $attachmentRepository = $this->entityManager->getRepository('Attachment');
-
-                    foreach ($attachmentList as $attachment) {
-                        $attachment = $attachmentRepository->getCopiedAttachment($attachment);
-
-                        $attachment->set('field', $field);
-
-                        $this->entityManager->saveEntity($attachment);
-
-                        $idList[] = $attachment->getId();
-
-                        $nameHash->{$attachment->getId()} = $attachment->get('name');
-                        $typeHash->{$attachment->getId()} = $attachment->get('type');
-                    }
-
-                    $attributes->{$field . 'Ids'} = $idList;
-                    $attributes->{$field . 'Names'} = $nameHash;
-                    $attributes->{$field . 'Types'} = $typeHash;
-                }
-            }
-            else if ($type === 'linkMultiple') {
-                if (!$entity instanceof CoreEntity) {
-                    throw new Error("Only core entities are supported");
-                }
-
-                $foreignLink = $entity->getRelationParam($field, 'foreign');
-                $foreignEntityType = $entity->getRelationParam($field, 'entity');
-
-                if ($foreignEntityType && $foreignLink) {
-                    $foreignRelationType = $this->metadata->get(
-                        ['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']
-                    );
-
-                    if ($foreignRelationType !== 'hasMany') {
-                        unset($attributes->{$field . 'Ids'});
-                        unset($attributes->{$field . 'Names'});
-                        unset($attributes->{$field . 'Columns'});
-                    }
-                }
-            }
-        }
+        $attributes = $this->createEntityDuplicator()->duplicate($entity);
 
         foreach ($this->duplicateIgnoreAttributeList as $attribute) {
             unset($attributes->$attribute);

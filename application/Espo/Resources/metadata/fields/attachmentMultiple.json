@@ -53,5 +53,6 @@
    },
    "notSortable": true,
    "filter": true,
-   "personalData": true
+   "personalData": true,
+    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple"
 }

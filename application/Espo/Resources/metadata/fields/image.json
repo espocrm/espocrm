@@ -46,5 +46,6 @@
       "skipOrmDefs": true,
       "disabled": true
    },
-   "personalData": true
+   "personalData": true,
+    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\File"
 }
