@@ -30,7 +30,11 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
 
     return Dep.extend({
 
-        _template: '<div class="edit-container">{{{edit}}}</div>',
+        _template: '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
+            '<div class="edit-container">{{{edit}}}</div>' +
+            '</div></div>',
+
+        className: 'dialog dialog-record',
 
         setup: function () {
             this.buttonList = [
