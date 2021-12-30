@@ -46,7 +46,10 @@ class CreateParamsFetcher
             $data->forceDuplicate ?? // legacy
             false;
 
+        $duplicateSourceId = $request->getHeader('X-Duplicate-Source-Id');
+
         return CreateParams::create()
-            ->withSkipDuplicateCheck($skipDuplicateCheck);
+            ->withSkipDuplicateCheck($skipDuplicateCheck)
+            ->withDuplicateSourceId($duplicateSourceId);
     }
 }

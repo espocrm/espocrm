@@ -31,7 +31,15 @@ namespace Espo\Core\Record;
 
 class CreateParams
 {
+    /**
+     * @var bool
+     */
     private $skipDuplicateCheck = false;
+
+    /**
+     * @var ?string
+     */
+    private $duplicateSourceId = null;
 
     public function __construct() {}
 
@@ -44,9 +52,23 @@ class CreateParams
         return $obj;
     }
 
+    public function withDuplicateSourceId(?string $duplicateSourceId): self
+    {
+        $obj = clone $this;
+
+        $obj->duplicateSourceId = $duplicateSourceId;
+
+        return $obj;
+    }
+
     public function skipDuplicateCheck(): bool
     {
         return $this->skipDuplicateCheck;
+    }
+
+    public function getDuplicateSourceId(): ?string
+    {
+        return $this->duplicateSourceId;
     }
 
     public static function create(): self

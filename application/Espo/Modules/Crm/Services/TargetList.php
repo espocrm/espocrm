@@ -428,16 +428,16 @@ class TargetList extends \Espo\Services\Record implements
     /**
      * @todo Don't use additionalColumnsConditions.
      */
-    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
         $repository = $this->getRepository();
 
         foreach ($this->duplicatingLinkList as $link) {
-            $linkedList = $repository->findRelated($duplicatingEntity, $link, array(
-                'additionalColumnsConditions' => array(
-                    'optedOut' => false
-                )
-            ));
+            $linkedList = $repository->findRelated($duplicatingEntity, $link, [
+                'additionalColumnsConditions' => [
+                    'optedOut' => false,
+                ]
+            ]);
 
             foreach ($linkedList as $linked) {
                 $repository->relate($entity, $link, $linked, [

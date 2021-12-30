@@ -40,12 +40,17 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('hasHeader')
+            ->with('X-Skip-Duplicate-Check')
             ->willReturn(true);
 
         $request
             ->method('getHeader')
-            ->with('X-Skip-Duplicate-Check')
-            ->willReturn('true');
+            ->will(
+                $this->returnValueMap([
+                    ['X-Skip-Duplicate-Check', 'true'],
+                    ['X-Duplicate-Source-Id', null],
+                ])
+            );
 
         $params = (new CreateParamsFetcher())->fetch($request);
 
@@ -62,8 +67,12 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('getHeader')
-            ->with('X-Skip-Duplicate-Check')
-            ->willReturn('false');
+            ->will(
+                $this->returnValueMap([
+                    ['X-Skip-Duplicate-Check', 'false'],
+                    ['X-Duplicate-Source-Id', null],
+                ])
+            );
 
         $params = (new CreateParamsFetcher())->fetch($request);
 
@@ -93,8 +102,12 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('getHeader')
-            ->with('X-Skip-Duplicate-Check')
-            ->willReturn('TRUE');
+            ->will(
+                $this->returnValueMap([
+                    ['X-Skip-Duplicate-Check', 'TRUE'],
+                    ['X-Duplicate-Source-Id', null],
+                ])
+            );
 
         $params = (new CreateParamsFetcher())->fetch($request);
 

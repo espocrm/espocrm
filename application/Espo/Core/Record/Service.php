@@ -644,7 +644,7 @@ class Service implements Crud,
         $this->entityManager->saveEntity($entity);
 
         $this->afterCreateEntity($entity, $data);
-        $this->afterCreateProcessDuplicating($entity, $data);
+        $this->afterCreateProcessDuplicating($entity, $params);
         $this->loadAdditionalFields($entity);
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord('create', $entity);
@@ -1566,18 +1566,12 @@ class Service implements Crud,
             unset($attributes->$attribute);
         }
 
-        $attributes->_duplicatingEntityId = $id;
-
         return $attributes;
     }
 
-    protected function afterCreateProcessDuplicating(Entity $entity, $data)
+    protected function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
-        if (!isset($data->_duplicatingEntityId)) {
-            return;
-        }
-
-        $duplicatingEntityId = $data->_duplicatingEntityId;
+        $duplicatingEntityId = $params->getDuplicateSourceId();
 
         if (!$duplicatingEntityId) {
             return;
@@ -1596,7 +1590,7 @@ class Service implements Crud,
         $this->duplicateLinks($entity, $duplicatingEntity);
     }
 
-    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity)
+    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
         $repository = $this->getRepository();
 
