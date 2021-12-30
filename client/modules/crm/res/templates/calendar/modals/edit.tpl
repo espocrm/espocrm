@@ -9,4 +9,4 @@
 </div>
 {{/if}}
 
-<div class="edit-container record">{{{edit}}}</div>
+<div class="edit-container record no-side-margin">{{{edit}}}</div>
