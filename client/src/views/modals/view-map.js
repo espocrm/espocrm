@@ -34,7 +34,7 @@ define('views/modals/view-map', 'views/modal', function (Dep) {
 
         fitHeight: true,
 
-        templateContent: '<div class="map-container">{{{map}}}</div>',
+        templateContent: '<div class="map-container no-side-margin">{{{map}}}</div>',
 
         setup: function () {
             this.buttonList = [
