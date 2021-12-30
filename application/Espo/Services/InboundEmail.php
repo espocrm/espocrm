@@ -268,7 +268,7 @@ class InboundEmail extends RecordService implements
         }
 
         foreach ($monitoredFolders as $folder) {
-            $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
+            $folder = mb_convert_encoding($folder, 'UTF7-IMAP', 'UTF-8');
 
             $portionLimit = $this->config->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
 
