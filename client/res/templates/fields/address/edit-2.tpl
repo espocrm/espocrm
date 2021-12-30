@@ -1,4 +1,11 @@
-<textarea class="form-control auto-height" data-name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}" autocomplete="espo-street" maxlength="{{streetMaxLength}}">{{streetValue}}</textarea>
+<textarea
+    class="form-control auto-height"
+    data-name="{{name}}Street"
+    rows="1" placeholder="{{translate 'Street'}}"
+    autocomplete="espo-street"
+    maxlength="{{streetMaxLength}}"
+    style="resize: none;"
+>{{streetValue}}</textarea>
 <div class="row">
     <div class="col-sm-6 col-xs-6">
         <input type="text" class="form-control" data-name="{{name}}PostalCode" value="{{postalCodeValue}}" placeholder="{{translate 'PostalCode'}}" autocomplete="espo-postalCode" maxlength="{{postalCodeMaxLength}}">

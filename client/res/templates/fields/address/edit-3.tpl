@@ -1,4 +1,3 @@
-
 <input type="text" class="form-control auto-height" data-name="{{name}}Country" value="{{countryValue}}" placeholder="{{translate 'Country'}}" autocomplete="espo-country" maxlength="{{countryMaxLength}}">
 <div class="row">
     <div class="col-sm-4 col-xs-4">
@@ -11,4 +10,11 @@
         <input type="text" class="form-control" data-name="{{name}}City" value="{{cityValue}}" placeholder="{{translate 'City'}}" autocomplete="espo-city" maxlength="{{cityMaxLength}}">
     </div>
 </div>
-<textarea class="form-control" data-name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}" autocomplete="espo-street" maxlength="{{streetMaxLength}}">{{streetValue}}</textarea>
+<textarea
+    class="form-control auto-height"
+    data-name="{{name}}Street"
+    rows="1" placeholder="{{translate 'Street'}}"
+    autocomplete="espo-street"
+    maxlength="{{streetMaxLength}}"
+    style="resize: none;"
+>{{streetValue}}</textarea>

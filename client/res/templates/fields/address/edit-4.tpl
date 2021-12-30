@@ -1,5 +1,11 @@
-
-<textarea class="form-control auto-height" data-name="{{name}}Street" rows="1" placeholder="{{translate 'Street'}}" autocomplete="espo-street" maxlength="{{streetMaxLength}}">{{streetValue}}</textarea>
+<textarea
+    class="form-control auto-height"
+    data-name="{{name}}Street"
+    rows="1" placeholder="{{translate 'Street'}}"
+    autocomplete="espo-street"
+    maxlength="{{streetMaxLength}}"
+    style="resize: none;"
+>{{streetValue}}</textarea>
 <input type="text" class="form-control" data-name="{{name}}City" value="{{cityValue}}" placeholder="{{translate 'City'}}" autocomplete="espo-city" maxlength="{{cityMaxLength}}">
 <div class="row">
     <div class="col-sm-5 col-xs-5">
