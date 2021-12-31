@@ -33,26 +33,23 @@ define('crm:views/meeting/modals/acceptance-status', 'views/modal', function (De
         backdrop: true,
 
         templateContent: `
+            <div class="margin-bottom">
             <p>{{viewObject.message}}</p>
+            </div>
             {{#each viewObject.statusDataList}}
-                <div class="margin-bottom">
-                    <div>
-                        <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
-                        {{label}}
-                        </button>
-                        {{#if selected}}<span class="check-icon fas fa-check" style="vertical-align: middle; margin: 0 10px;"></span>{{/if}}
-                    </div>
+            <div class="margin-bottom">
+                <div>
+                    <button class="action btn btn-{{style}} btn-x-wide" type="button" data-action="setStatus" data-status="{{name}}">
+                    {{label}}
+                    </button>
+                    {{#if selected}}<span class="check-icon fas fa-check" style="vertical-align: middle; margin: 0 10px;"></span>{{/if}}
                 </div>
+            </div>
             {{/each}}
         `,
 
         setup: function () {
             Dep.prototype.setup.call(this);
-
-            this.addButton({
-                name: 'close',
-                label: 'Close',
-            });
 
             this.headerHtml = this.escapeString(this.translate(this.model.entityType, 'scopeNames')) +
                 ' <span class="chevron-right"></span> ' +
