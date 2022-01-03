@@ -50,7 +50,19 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
         cutHeight: 200,
 
-        searchTypeList: ['contains', 'startsWith', 'equals', 'endsWith', 'like', 'notContains', 'notLike', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: [
+            'contains',
+            'startsWith',
+            'equals',
+            'endsWith',
+            'like',
+            'notContains',
+            'notLike',
+            'isEmpty',
+            'isNotEmpty',
+        ],
+
+        noResize: false,
 
         events: {
             'click a[data-action="seeMoreText"]': function (e) {
@@ -64,11 +76,15 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.params.rows = this.params.rows || this.rowsDefault;
+
+            this.noResize = this.options.noResize || this.params.noResize || this.noResize;
 
             this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
 
-            this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled || this.autoHeightDisabled;
+            this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
+                this.autoHeightDisabled;
 
             if (this.params.cutHeight) {
                 this.cutHeight = this.params.cutHeight;
@@ -80,9 +96,9 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.rowsMin = this.params.rows;
             }
 
-            this.on('remove', function () {
+            this.on('remove', () => {
                 $(window).off('resize.see-more-' + this.cid);
-            }, this);
+            });
         },
 
         setupSearch: function () {
@@ -96,20 +112,21 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             if (
-                this.model.get(this.name) !== null
-                &&
-                this.model.get(this.name) !== ''
-                &&
+                this.model.get(this.name) !== null &&
+                this.model.get(this.name) !== '' &&
                 this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
             }
+
             if (this.mode === 'search') {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
             }
+
             if (this.mode === 'edit') {
                 if (this.autoHeightDisabled) {
                     data.rows = this.params.rows;
@@ -117,6 +134,7 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                     data.rows = this.rowsMin;
                 }
             }
+
             data.valueIsSet = this.model.has(this.name);
 
             if (this.isReadMode()) {
@@ -128,6 +146,8 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
                 data.displayRawText = this.params.displayRawText;
             }
+
+            data.noResize = this.noResize;
 
             return data;
         },
@@ -142,6 +162,7 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
         getValueForDisplay: function () {
             var text = this.model.get(this.name);
+
             return text || '';
         },
 
@@ -151,19 +172,25 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
             if (typeof lastHeight === 'undefined' && clientHeight === 0) {
                 setTimeout(this.controlTextareaHeight.bind(this), 10);
+
                 return;
             }
 
-            if (clientHeight === lastHeight) return;
+            if (clientHeight === lastHeight) {
+                return;
+            }
 
             if (scrollHeight > clientHeight + 1) {
                 var rows = this.$element.prop('rows');
 
-                if (this.params.rows && rows >= this.params.rows) return;
+                if (this.params.rows && rows >= this.params.rows) {
+                    return;
+                }
 
                 this.$element.attr('rows', rows + 1);
                 this.controlTextareaHeight(clientHeight);
             }
+
             if (this.$element.val().length === 0) {
                 this.$element.attr('rows', this.rowsMin);
             }
@@ -174,7 +201,9 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         controlSeeMore: function () {
-            if (!this.isCut()) return;
+            if (!this.isCut()) {
+                return;
+            }
 
             if (this.$text.height() > this.cutHeight) {
                 this.$seeMoreContainer.removeClass('hidden');
@@ -197,47 +226,53 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
                 if (this.isCut()) {
                     this.controlSeeMore();
+
                     if (this.model.get(this.name) && this.$text.height() === 0) {
                         this.$textContainer.addClass('cut');
+
                         setTimeout(this.controlSeeMore.bind(this), 50);
                     }
 
-                    $(window).on('resize.see-more-' + this.cid, function () {
+                    $(window).on('resize.see-more-' + this.cid, () => {
                         this.controlSeeMore();
-                    }.bind(this));
+                    });
                 }
             }
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 var text = this.getValueForDisplay();
                 if (text) {
                     this.$element.val(text);
                 }
             }
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
 
-                this.$el.find('select.search-type').on('change', function () {
+                this.$el.find('select.search-type').on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
 
-                this.$element.on('input', function () {
+                this.$element.on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
 
             if (this.mode === 'edit' && !this.autoHeightDisabled) {
                 this.controlTextareaHeight();
-                this.$element.on('input', function () {
+
+                this.$element.on('input', () => {
                     this.controlTextareaHeight();
-                }.bind(this));
+                });
             }
         },
 
         fetch: function () {
             var data = {};
+
             data[this.name] = this.$element.val() || null;
+
             return data;
         },
 
@@ -247,7 +282,7 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
             var data;
 
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type == 'isEmpty') {
+                if (type === 'isEmpty') {
                     data = {
                         type: 'or',
                         value: [
@@ -264,7 +299,7 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                         data: {
                             type: type
                         }
-                    }
+                    };
                 } else {
                     data = {
                         type: 'and',
@@ -283,20 +318,26 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                         data: {
                             type: type
                         }
-                    }
+                    };
                 }
+
                 return data;
-            } else {
+            }
+            else {
                 var value = this.$element.val().toString().trim();
+
                 value = value.trim();
+
                 if (value) {
                     data = {
                         value: value,
                         type: type
-                    }
+                    };
+
                     return data;
                 }
             }
+
             return false;
         },
 
@@ -315,18 +356,22 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                 this.getPreferences().get('emailUseExternalClient') ||
                 !this.getAcl().checkScope('Email', 'create')
             ) {
-                require('email-helper', function (EmailHelper) {
+                require('email-helper', (EmailHelper) => {
                     var emailHelper = new EmailHelper();
+
                     var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+
                     document.location.href = link;
-                }.bind(this));
+                });
 
                 return;
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+                'views/modals/compose-email';
 
             this.notify('Loading...');
+
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
             }, function (view) {

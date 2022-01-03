@@ -176,6 +176,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 required: true,
                 rowsMin: 1,
                 rows: 25,
+                noResize: true,
             });
 
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});

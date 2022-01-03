@@ -4,5 +4,5 @@
 	{{#if params.maxLength}}maxlength="{{params.maxLength}}"{{/if}}
 	rows="{{rows}}"
 	autocomplete="espo-{{name}}"
-	style="resize: vertical;"
+	style="resize: {{#unless noResize}} vertical{{else}}none{{/unless}};"
 >{{value}}</textarea>

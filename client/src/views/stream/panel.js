@@ -242,7 +242,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                         rows: 25,
                     },
                     model: this.seed,
-                    placeholderText: this.placeholderText
+                    placeholderText: this.placeholderText,
+                    noResize: true,
                 }, (view) => {
                     this.initPostEvents(view);
                 });
