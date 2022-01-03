@@ -42,6 +42,9 @@ use PDO;
  * Entities are fetched on each iteration while traversing a collection.
  *
  * STH stands for Statement Handle.
+ *
+ * @template TEntity of Entity
+ * @implements IteratorAggregate<TEntity>
  */
 class SthCollection implements Collection, IteratorAggregate, Countable
 {

@@ -39,6 +39,9 @@ use InvalidArgumentException;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
+ *
+ * @template TEntity of Entity
+ * @implements Iterator<TEntity>
  */
 class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
