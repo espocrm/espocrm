@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Laminas\Mail\Storage;
+use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
@@ -98,6 +99,9 @@ class EmailAccount extends Record implements
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getFolders(array $params): array
     {
         $userId = $params['userId'] ?? null;
@@ -112,6 +116,7 @@ class EmailAccount extends Record implements
 
         if (!empty($params['id'])) {
             $entity = $this->entityManager->getEntity('EmailAccount', $params['id']);
+
             if ($entity) {
                 $params['password'] = $this->crypt->decrypt($entity->get('password'));
                 $params['imapHandler'] = $entity->get('imapHandler');
@@ -151,14 +156,12 @@ class EmailAccount extends Record implements
             }
         }
 
-        if ($storage->getFolders()) {
-            return true;
-        }
+        $storage->getFolders();
 
-        throw new Error();
+        return true;
     }
 
-    protected function createStorage(array $params)
+    protected function createStorage(array $params): Imap
     {
         $emailAddress = $params['emailAddress'] ?? null;
 
@@ -173,7 +176,8 @@ class EmailAccount extends Record implements
         if ($handlerClassName && !empty($params['id'])) {
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $this->log->error(
                     "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
@@ -261,11 +265,12 @@ class EmailAccount extends Record implements
         return $entity;
     }
 
-    public function storeSentMessage(Entity $emailAccount, $message)
+    public function storeSentMessage(Entity $emailAccount, Message $message): void
     {
         $storage = $this->getStorage($emailAccount);
 
         $folder = $emailAccount->get('sentFolder');
+
         if (empty($folder)) {
             throw new Error("No sent folder for Email Account: " . $emailAccount->getId() . ".");
         }
@@ -273,7 +278,7 @@ class EmailAccount extends Record implements
         $storage->appendMessage($message->toString(), $folder);
     }
 
-    protected function getStorage(Entity $emailAccount)
+    protected function getStorage(Entity $emailAccount): Imap
     {
         $params = [
             'host' => $emailAccount->get('host'),

@@ -94,21 +94,16 @@ class InboundEmail extends RecordService implements
 
     protected const PORTION_LIMIT = 20;
 
-    protected function getCrypt()
-    {
-        return $this->crypt;
-    }
-
     protected function filterInput($data)
     {
         parent::filterInput($data);
 
         if (property_exists($data, 'password')) {
-            $data->password = $this->getCrypt()->encrypt($data->password);
+            $data->password = $this->crypt->encrypt($data->password);
         }
 
         if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
+            $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
         }
     }
 
@@ -123,13 +118,16 @@ class InboundEmail extends RecordService implements
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getFolders($params): array
     {
         if (!empty($params['id'])) {
             $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
 
             if ($account) {
-                $params['password'] = $this->getCrypt()->decrypt($account->get('password'));
+                $params['password'] = $this->crypt->decrypt($account->get('password'));
                 $params['imapHandler'] = $account->get('imapHandler');
             }
         }
@@ -159,11 +157,9 @@ class InboundEmail extends RecordService implements
 
         $storage = $this->createStorage($params);
 
-        if ($storage->getFolders()) {
-            return true;
-        }
+        $storage->getFolders();
 
-        throw new Error();
+        return true;
     }
 
     protected function createParser(): Parser
@@ -1013,7 +1009,7 @@ class InboundEmail extends RecordService implements
             $smtpParams['password'] = $emailAccount->get('smtpPassword');
 
             if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
             }
 
             return $smtpParams;
@@ -1138,47 +1134,44 @@ class InboundEmail extends RecordService implements
                 return null;
             }
 
-            // @todo Use the query builder.
-            $selectParams = [
-                'whereClause' => [
+            /** @var ?InboundEmailEntity */
+            return $this->entityManager
+                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->distinct()
+                ->join('teams')
+                ->where([
                     'status' => 'Active',
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                     'teamsMiddle.teamId' => $teamIdList,
                     'emailAddress' => $emailAddress,
-                ],
-                'joins' => ['teams'],
-                'distinct' => true,
-            ];
-
-            /** @var ?InboundEmailEntity */
-            return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);;
+                ])
+                ->findOne();
         }
 
         if ($groupEmailAccountPermission === 'all') {
-            $selectParams = [
-                'whereClause' => [
+            /** @var ?InboundEmailEntity */
+            return $this->entityManager
+                ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+                ->where([
                     'status' => 'Active',
                     'useSmtp' => true,
                     'smtpIsShared' => true,
                     'emailAddress' => $emailAddress,
-                ]
-            ];
-
-            /** @var ?InboundEmailEntity */
-            return $this->entityManager->getRDBRepository('InboundEmail')->findOne($selectParams);
+                ])
+                ->findOne();
         }
 
         return null;
     }
 
-    protected function getStorage(InboundEmailEntity $emailAccount)
+    protected function getStorage(InboundEmailEntity $emailAccount): Imap
     {
         $params = [
             'host' => $emailAccount->get('host'),
             'port' => $emailAccount->get('port'),
             'username' => $emailAccount->get('username'),
-            'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
+            'password' => $this->crypt->decrypt($emailAccount->get('password')),
         ];
 
         if ($emailAccount->get('security')) {
@@ -1193,7 +1186,7 @@ class InboundEmail extends RecordService implements
         return $storage;
     }
 
-    protected function createStorage(array $params)
+    protected function createStorage(array $params): Imap
     {
         $imapParams = null;
 
@@ -1235,7 +1228,7 @@ class InboundEmail extends RecordService implements
         return new $this->storageClassName($imapParams);
     }
 
-    public function storeSentMessage(InboundEmailEntity $emailAccount, $message)
+    public function storeSentMessage(InboundEmailEntity $emailAccount, Message $message): void
     {
         $storage = $this->getStorage($emailAccount);
 
@@ -1273,7 +1266,7 @@ class InboundEmail extends RecordService implements
             }
 
             if (array_key_exists('password', $smtpParams) && is_string($smtpParams['password'])) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
             }
 
             $this->applySmtpHandler($emailAccount, $smtpParams);
