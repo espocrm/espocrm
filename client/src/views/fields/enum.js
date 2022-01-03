@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
+define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!underscore'], function (Dep, Selectize, _) {
 
     return Dep.extend({
 
@@ -183,13 +183,17 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
         },
 
         setOptionList: function (optionList) {
+            let previousOptions = this.params.options;
+
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
             }
 
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode === 'edit') {
+            let isChanged = !_(previousOptions).isEqual(optionList);
+
+            if (this.mode === 'edit' && isChanged) {
                 if (this.isRendered()) {
                     this.reRender();
 
