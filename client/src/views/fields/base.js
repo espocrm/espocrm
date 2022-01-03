@@ -86,13 +86,17 @@ define('views/fields/base', 'view', function (Dep) {
 
         setDisabled: function (locked) {
             this.disabled = true;
+
             if (locked) {
                 this.disabledLocked = true;
             }
         },
 
         setNotDisabled: function () {
-            if (this.disabledLocked) return;
+            if (this.disabledLocked) {
+                return;
+            }
+
             this.disabled = false;
         },
 
@@ -104,9 +108,9 @@ define('views/fields/base', 'view', function (Dep) {
                     this.showRequiredSign();
                 }
                 else {
-                    this.once('after:render', function () {
+                    this.once('after:render', () => {
                         this.showRequiredSign();
-                    }, this);
+                    });
                 }
             }
         },
@@ -120,9 +124,9 @@ define('views/fields/base', 'view', function (Dep) {
                     this.hideRequiredSign();
                 }
                 else {
-                    this.once('after:render', function () {
+                    this.once('after:render', () => {
                         this.hideRequiredSign();
-                    }, this);
+                    });
                 }
             }
         },
@@ -138,12 +142,15 @@ define('views/fields/base', 'view', function (Dep) {
                 this.readOnlyLocked = true;
             }
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (this.isInlineEditMode()) {
                     this.inlineEditClose();
+
                     return;
                 }
+
                 this.setMode('detail');
+
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -176,6 +183,7 @@ define('views/fields/base', 'view', function (Dep) {
         hide: function () {
             this.$el.addClass('hidden');
             var $cell = this.getCellElement();
+
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
         },
@@ -259,9 +267,9 @@ define('views/fields/base', 'view', function (Dep) {
                     this.compiledTemplatesCache = this.compiledTemplatesCache || {};
 
                     this._templateCompiled =
-                    this.compiledTemplatesCache[contentProperty] =
-                        this.compiledTemplatesCache[contentProperty] ||
-                        this._templator.compileTemplate(this[contentProperty]);
+                        this.compiledTemplatesCache[contentProperty] =
+                            this.compiledTemplatesCache[contentProperty] ||
+                            this._templator.compileTemplate(this[contentProperty]);
                 }
             }
 
@@ -287,8 +295,10 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.getFieldManager().getParamList(this.type).forEach(function (d) {
                 var name = d.name;
+
                 if (!(name in this.params)) {
                     this.params[name] = this.model.getFieldParam(this.name, name);
+
                     if (typeof this.params[name] === 'undefined') {
                         this.params[name] = null;
                     }
@@ -336,20 +346,20 @@ define('views/fields/base', 'view', function (Dep) {
                 this.setupSearch();
             }
 
-            this.on('highlight', function () {
+            this.on('highlight', () => {
                 var $cell = this.getCellElement();
+
                 $cell.addClass('highlighted');
                 $cell.addClass('transition');
 
-                setTimeout(function () {
+                setTimeout(() => {
                     $cell.removeClass('highlighted');
                 }, this.highlightPeriod || 3000);
 
                 setTimeout(function () {
                     $cell.removeClass('transition');
                 }, (this.highlightPeriod || 3000) + 2000);
-
-            }, this);
+            });
 
             this.on('invalid', function () {
                 var $cell = this.getCellElement();
@@ -365,7 +375,7 @@ define('views/fields/base', 'view', function (Dep) {
                 });
             }, this);
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 if (this.mode === 'edit') {
                     if (this.hasRequiredMarker()) {
                         this.showRequiredSign();
@@ -377,8 +387,7 @@ define('views/fields/base', 'view', function (Dep) {
                         this.hideRequiredSign();
                     }
                 }
-
-            }, this);
+            });
 
             if ((this.isDetailMode() || this.isEditMode()) && this.tooltip) {
                 this.initTooltip();
@@ -393,17 +402,19 @@ define('views/fields/base', 'view', function (Dep) {
             if (this.mode !== 'search') {
                 this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
-                this.listenTo(this.model, 'change', function (model, options) {
+                this.listenTo(this.model, 'change', (model, options) => {
                     if (this.isRendered() || this.isBeingRendered()) {
                         if (options.ui) {
                             return;
                         }
+
                         var changed = false;
-                        this.getAttributeList().forEach(function (attribute) {
+
+                        this.getAttributeList().forEach((attribute) => {
                             if (model.hasChanged(attribute)) {
                                 changed = true;
                             }
-                        }, this);
+                        });
 
                         if (changed && !options.skipReRender) {
                             this.reRender();
@@ -413,10 +424,11 @@ define('views/fields/base', 'view', function (Dep) {
                             this.trigger('highlight');
                         }
                     }
-                }.bind(this));
+                });
 
-                this.listenTo(this, 'change', function () {
+                this.listenTo(this, 'change', () => {
                     var attributes = this.fetch();
+
                     this.model.set(attributes, {ui: true});
                 });
             }
@@ -703,9 +715,9 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.setMode('detail');
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 this.removeInlineEditLinks();
-            }, this);
+            });
 
             if (!dontReset) {
                 this.model.set(this.initialAttributes);
@@ -717,8 +729,6 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEdit: function () {
-            var self = this;
-
             this.trigger('edit', this);
             this.setMode('edit');
 
@@ -813,6 +823,7 @@ define('views/fields/base', 'view', function (Dep) {
                     return true;
                 }
             }
+
             return false;
         },
 
