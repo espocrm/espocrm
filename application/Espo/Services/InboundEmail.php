@@ -172,7 +172,7 @@ class InboundEmail extends RecordService implements
         return $this->injectableFactory->create(Importer::class);
     }
 
-    public function fetchFromMailServer(InboundEmailEntity $emailAccount)
+    public function fetchFromMailServer(InboundEmailEntity $emailAccount): void
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Group Email Account {$emailAccount->getId()} is not active.");
@@ -309,19 +309,9 @@ class InboundEmail extends RecordService implements
                     $fetchSince = $lastDate;
                 }
 
-                $dt = null;
+                $dt = new DateTime($fetchSince);
 
-                try {
-                    $dt = new DateTime($fetchSince);
-                }
-                catch (Exception $e) {}
-
-                if ($dt) {
-                    $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
-                }
-                else {
-                    return false;
-                }
+                $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
             }
 
             if ((count($idList) == 1) && !empty($lastUID)) {
@@ -525,8 +515,6 @@ class InboundEmail extends RecordService implements
         }
 
         $storage->close();
-
-        return true;
     }
 
     protected function importMessage(

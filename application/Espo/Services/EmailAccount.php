@@ -311,7 +311,7 @@ class EmailAccount extends Record implements
         return $this->injectableFactory->create(Importer::class);
     }
 
-    public function fetchFromMailServer(EmailAccountEntity $emailAccount)
+    public function fetchFromMailServer(EmailAccountEntity $emailAccount): void
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Email Account {$emailAccount->getId()} is not active.");
@@ -427,19 +427,9 @@ class EmailAccount extends Record implements
                     $fetchSince = $lastDate;
                 }
 
-                $dt = null;
+                $dt = new DateTime($fetchSince);
 
-                try {
-                    $dt = new DateTime($fetchSince);
-                }
-                catch (Exception $e) {}
-
-                if ($dt) {
-                    $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
-                }
-                else {
-                    return false;
-                }
+                $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
             }
 
             if (count($idList) === 1 && !empty($lastUID)) {
@@ -586,8 +576,6 @@ class EmailAccount extends Record implements
         }
 
         $storage->close();
-
-        return true;
     }
 
     protected function importMessage(
