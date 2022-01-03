@@ -50,12 +50,13 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         },
 
         getTranslatedOptions: function () {
-            return (this.params.options || []).map(function (item) {
-                if (this.translatedOptions != null) {
+            return (this.params.options || []).map((item) => {
+                if (this.translatedOptions !== null) {
                     if (item in this.translatedOptions) {
                         return this.translatedOptions[item];
                     }
                 }
+
                 return item;
             });
         },
@@ -69,8 +70,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         },
 
         loadRestoreOnBackspavePlugin: function () {
-
-            Selectize.define('restore_on_backspace_espo', function(options) {
+            Selectize.define('restore_on_backspace_espo', function (options) {
                 var self = this;
 
                 Selectize.restoreOnBackspacePluginLoaded = true;
@@ -81,25 +81,33 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 this.onKeyDown = (function() {
                     var original = self.onKeyDown;
+
                     return function(e) {
                         var index, option;
+
                         if (e.keyCode === 8 && this.$control_input.val() === '' && !this.$activeItems.length) {
                             index = this.caretPos - 1;
+
                             if (index >= 0 && index < this.items.length) {
                                 option = this.options[this.items[index]];
+
                                 option = {
                                     value: option.value,
                                     $order: option.$order,
                                     label: option.value,
                                 };
+
                                 if (this.deleteSelection(e)) {
                                     this.setTextboxValue(options.text.apply(this, [option]));
                                     this.refreshOptions(true);
                                 }
+
                                 e.preventDefault();
+
                                 return;
                             }
                         }
+
                         return original.apply(this, arguments);
                     };
                 })();
@@ -118,6 +126,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     label = this.translatedOptions[value];
                 }
             }
+
             if (label === '') {
                 label = this.translate('None');
             }
@@ -126,18 +135,21 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 var $element = this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
                 var data = [];
 
                 var valueList = Espo.Utils.clone(this.selected);
+
                 for (var i in valueList) {
                     var value = valueList[i];
                     var originalValue = value;
+
                     if (value === '') {
                         value = valueList[i] = '__emptystring__';
                     }
+
                     if (!~(this.params.options || []).indexOf(value)) {
                         data.push({
                             value: value,
@@ -148,16 +160,18 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 this.$element.val(valueList.join(this.itemDelimiter));
 
-                (this.params.options || []).forEach(function (value) {
+                (this.params.options || []).forEach((value) => {
                     var originalValue = value;
+
                     if (value === '') {
                         value = '__emptystring__';
                     }
+
                     data.push({
                         value: value,
                         label: this.translateValueToEditLabel(originalValue),
                     });
-                }, this);
+                });
 
                 var pluginList = ['remove_button', 'drag_drop'];
 
@@ -179,11 +193,14 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 if (!this.matchAnyWord) {
                     selectizeOptions.score = function (search) {
                         var score = this.getScoreFunction(search);
+
                         search = search.toLowerCase();
+
                         return function (item) {
                             if (item.label.toLowerCase().indexOf(search) === 0) {
                                 return score(item);
                             }
+
                             return 0;
                         };
                     };
@@ -191,12 +208,14 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 if (this.allowCustomOptions) {
                     selectizeOptions.persist = false;
+
                     selectizeOptions.create = function (input) {
                         return {
                             value: input,
-                            label: input
-                        }
+                            label: input,
+                        };
                     };
+
                     selectizeOptions.render = {
                         option_create: function (data, escape) {
                             return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
@@ -206,21 +225,23 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 this.$element.selectize(selectizeOptions);
 
-                this.$element.on('change', function () {
+                this.$element.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 this.renderSearch();
             }
         },
 
         fetch: function () {
             var list = this.$element.val().split(this.itemDelimiter);
-            if (list.length == 1 && list[0] == '') {
+
+            if (list.length === 1 && list[0] === '') {
                 list = [];
             }
+
             for (var i in list) {
                 if (list[i] === '__emptystring__') {
                     list[i] = '';
@@ -228,22 +249,27 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
             }
 
             if (this.params.isSorted && this.translatedOptions) {
-                list = list.sort(function (v1, v2) {
+                list = list.sort((v1, v2) => {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                }.bind(this));
+                });
             }
 
             var data = {};
+
             data[this.name] = list;
+
             return data;
         },
 
         validateRequired: function () {
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
-                if (!value || value.length == 0) {
+
+                if (!value || value.length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '.selectize-control');
+
                     return true;
                 }
             }
@@ -252,12 +278,15 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         validateMaxCount: function () {
             if (this.params.maxCount) {
                 var itemList = this.model.get(this.name) || [];
+
                 if (itemList.length > this.params.maxCount) {
                     var msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());
+
                     this.showValidationMessage(msg, '.selectize-control');
+
                     return true;
                 }
             }

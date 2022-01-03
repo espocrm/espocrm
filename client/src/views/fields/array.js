@@ -52,9 +52,10 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         data: function () {
             var itemHtmlList = [];
-            (this.selected || []).forEach(function (value) {
+
+            (this.selected || []).forEach((value) => {
                 itemHtmlList.push(this.getItemHtml(value));
-            }, this);
+            });
 
             return _.extend({
                 selected: this.selected,
@@ -84,11 +85,12 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             this.noEmptyString = this.params.noEmptyString;
 
-            this.listenTo(this.model, 'change:' + this.name, function () {
+            this.listenTo(this.model, 'change:' + this.name, () => {
                 this.selected = Espo.Utils.clone(this.model.get(this.name)) || [];
-            }, this);
+            });
 
             this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
+
             if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
                 this.selected = [];
             }
@@ -113,9 +115,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options);
-                this.params.options = this.params.options.sort(function (v1, v2) {
+                this.params.options = this.params.options.sort((v1, v2) => {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                }.bind(this));
+                });
             }
 
             if (this.options.customOptionList) {
@@ -129,7 +131,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     this.handleSearchType($(e.currentTarget).val());
                 }
             }, this.events || {});
@@ -153,13 +155,13 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
                 var pointer = this.getLanguage().data;
 
-                arr.forEach(function (key) {
+                arr.forEach((key) => {
                     if (key in pointer) {
                         pointer = pointer[key];
 
                         t = pointer;
                     }
-                }, this);
+                });
             }
             else {
                 t = this.translate(this.name, 'options', this.model.name);
@@ -170,22 +172,19 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var translatedOptions = {};
 
             if (this.params.options) {
-
-                this.params.options.forEach(function (o) {
+                this.params.options.forEach((o) => {
                     if (typeof t === 'object' && o in t) {
                         translatedOptions[o] = t[o];
                     } else {
                         translatedOptions[o] = o;
                     }
-                }.bind(this));
+                });
 
                 this.translatedOptions = translatedOptions;
             }
         },
 
-        setupOptions: function () {
-
-        },
+        setupOptions: function () {},
 
         setOptionList: function (optionList, silent) {
             if (!this.originalOptionList) {
@@ -194,14 +193,14 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode == 'edit' && !silent) {
+            if (this.mode === 'edit' && !silent) {
                 var selectedOptionList = [];
 
-                this.selected.forEach(function (option) {
+                this.selected.forEach(option => {
                     if (~optionList.indexOf(option)) {
                         selectedOptionList.push(option);
                     }
-                }, this);
+                });
 
                 this.selected = selectedOptionList;
 
@@ -211,9 +210,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     this.trigger('change');
                 }
                 else {
-                    this.once('after:render', function () {
+                    this.once('after:render', () => {
                         this.trigger('change');
-                    }, this);
+                    });
                 }
             }
         },
@@ -264,7 +263,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 if (this.allowCustomOptions) {
                     this.$addButton = this.$el.find('button[data-action="addItem"]');
 
-                    this.$addButton.on('click', function () {
+                    this.$addButton.on('click', () => {
                         var value = this.$select.val().toString();
 
                         this.addValue(value);
@@ -272,34 +271,38 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         $select.val('');
 
                         this.controlAddItemButton();
-                    }.bind(this));
+                    });
 
-                    $select.on('input', function () {
+                    $select.on('input', () => {
                         this.controlAddItemButton();
-                    }.bind(this));
+                    });
 
-                    $select.on('keypress', function (e) {
-                        if (e.keyCode == 13) {
+                    $select.on('keypress', (e) => {
+                        if (e.keyCode === 13) {
                             var value = $select.val().toString();
+
                             if (this.noEmptyString) {
-                                if (value == '') {
+                                if (value === '') {
                                     return;
                                 }
                             }
+
                             this.addValue(value);
+
                             $select.val('');
+
                             this.controlAddItemButton();
                         }
-                    }.bind(this));
+                    });
 
                     this.controlAddItemButton();
                 }
 
                 this.$list.sortable({
-                    stop: function () {
+                    stop: () => {
                         this.fetchFromDom();
                         this.trigger('change');
-                    }.bind(this)
+                    }
                 });
             }
 
@@ -317,7 +320,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             var data = [];
 
-            (this.params.options || []).forEach(function (value) {
+            (this.params.options || []).forEach((value) => {
                 var label = this.getLanguage().translateOption(value, this.name, this.scope);
 
                 if (this.translatedOptions) {
@@ -334,7 +337,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     value: value,
                     label: label,
                 });
-            }, this);
+            });
 
             var selectizeOptions = {
                 options: data,
@@ -369,8 +372,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     return {
                         value: input,
                         label: input,
-                    }
+                    };
                 };
+
                 selectizeOptions.render = {
                     option_create: function (data, escape) {
                         return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
@@ -386,19 +390,19 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             this.handleSearchType(type);
 
-            this.$el.find('select.search-type').on('change', function () {
+            this.$el.find('select.search-type').on('change', () => {
                 this.trigger('change');
-            }.bind(this));
+            });
 
-            this.$element.on('change', function () {
+            this.$element.on('change', () => {
                 this.trigger('change');
-            }.bind(this));
+            });
         },
 
         fetchFromDom: function () {
             var selected = [];
 
-            this.$el.find('.list-group .list-group-item').each(function (i, el) {
+            this.$el.find('.list-group .list-group-item').each((i, el) => {
                 var value = $(el).attr('data-value').toString();
 
                 selected.push(value);
@@ -408,7 +412,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         },
 
         getValueForDisplay: function () {
-            var list = this.selected.map(function (item) {
+            var list = this.selected.map(item => {
                 var label = null;
 
                 if (this.translatedOptions !== null) {
@@ -433,14 +437,13 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     label = '<span class="label label-md label-'+style+'">' + label + '</span>';
                 }
                 else {
-                    if (style && style != 'default') {
+                    if (style && style !== 'default') {
                         label = '<span class="text-'+style+'">' + label + '</span>';
                     }
                 }
 
                 return label;
-            }, this)
-
+            });
 
             if (this.displayAsList) {
                 if (!list.length) {
@@ -460,7 +463,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 return list.join(' ');
             }
             else {
-                return list.join(', ')
+                return list.join(', ');
             }
         },
 
@@ -531,9 +534,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var list = Espo.Utils.clone(this.selected || []);
 
             if (this.params.isSorted && this.translatedOptions) {
-                list = list.sort(function (v1, v2) {
+                list = list.sort((v1, v2) => {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                }.bind(this));
+                });
             }
 
             data[this.name] = list;
@@ -690,11 +693,11 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         getAddItemModalOptions: function () {
             var options = [];
 
-            this.params.options.forEach(function (item) {
+            this.params.options.forEach((item) => {
                 if (!~this.selected.indexOf(item)) {
                     options.push(item);
                 }
-            }, this);
+            });
 
             return {
                 options: options,
@@ -703,23 +706,23 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         },
 
         actionAddItem: function () {
-            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), function (view) {
+            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), (view) => {
                 view.render();
 
-                view.once('add', function (item) {
+                view.once('add', (item) => {
                     this.addValue(item);
 
                     view.close();
-                }.bind(this));
+                });
 
-                view.once('add-mass', function (items) {
-                    items.forEach(function (item) {
+                view.once('add-mass', (items) => {
+                    items.forEach((item) => {
                         this.addValue(item);
-                    }.bind(this));
+                    });
 
                     view.close();
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
     });
 });
