@@ -50,7 +50,9 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.translatedOptions = this.translatedOptions;
+
             var value = this.model.get(this.name);
 
             if (this.isReadMode() && this.styleMap && (value || value === '')) {
@@ -66,13 +68,11 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             }
 
             if (
-                typeof value !== 'undefined'
-                &&
-                value !== null
-                &&
-                value !== ''
+                typeof value !== 'undefined' && value !== null &&  value !== ''
                 ||
-                value === '' && (value in (this.translatedOptions || {}) && (this.translatedOptions || {})[value] !== '')
+                value === '' && (
+                    value in (this.translatedOptions || {}) && (this.translatedOptions || {})[value] !== ''
+                )
             ) {
                 data.isNotEmpty = true;
             }
@@ -85,7 +85,8 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
         setup: function () {
             if (!this.params.options) {
                 var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
-                if (typeof this.model[methodName] == 'function') {
+
+                if (typeof this.model[methodName] === 'function') {
                     this.params.options = this.model[methodName].call(this.model);
                 }
             }
@@ -106,6 +107,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
             if (this.translatedOptions === null) {
                 this.translatedOptions = this.getLanguage().translate(this.name, 'options', this.model.name) || {};
+
                 if (this.translatedOptions === this.name) {
                     this.translatedOptions = null;
                 }
@@ -113,9 +115,10 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options) || [];
-                this.params.options = this.params.options.sort(function (v1, v2) {
+
+                this.params.options = this.params.options.sort((v1, v2) => {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
-                }.bind(this));
+                });
             }
 
             if (this.options.customOptionList) {
@@ -134,12 +137,12 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             var arr = this.params.translation.split('.');
             var pointer = this.getLanguage().data;
 
-            arr.forEach(function (key) {
+            arr.forEach((key) => {
                 if (key in pointer) {
                     pointer = pointer[key];
                     translationObj = pointer;
                 }
-            }, this);
+            });
 
             this.translatedOptions = null;
 
@@ -149,7 +152,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                 return;
             }
 
-            this.params.options.forEach(function (item) {
+            this.params.options.forEach((item) => {
                 if (typeof translationObj === 'object' && item in translationObj) {
                     translatedOptions[item] = translationObj[item];
                 }
@@ -163,7 +166,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                 else {
                     translatedOptions[item] = item;
                 }
-            }, this);
+            });
 
             var value = this.model.get(this.name);
 
@@ -183,20 +186,23 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
             }
+
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     this.reRender();
+
                     if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
                         this.trigger('change');
                     }
-                } else {
-                    this.once('after:render', function () {
+                }
+                else {
+                    this.once('after:render', () => {
                         if (~(this.params.options || []).indexOf(this.model.get(this.name))) {
                             this.trigger('change');
                         }
-                    }, this);
+                    });
                 }
             }
         },
@@ -206,7 +212,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
             }
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -215,7 +221,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     this.handleSearchType($(e.currentTarget).val());
                 },
             }, this.events || {});
@@ -234,8 +240,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'search') {
-
+            if (this.mode === 'search') {
                 var $element = this.$element = this.$el.find('.main-element');
 
                 var type = this.$el.find('select.search-type').val();
@@ -248,7 +253,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
                 var data = [];
 
-                (this.params.options || []).forEach(function (value) {
+                (this.params.options || []).forEach((value) => {
                     var label = this.getLanguage().translateOption(value, this.name, this.scope);
 
                     if (this.translatedOptions) {
@@ -265,7 +270,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                         value: value,
                         label: label,
                     });
-                }, this);
+                });
 
                 this.$element.selectize({
                     options: data,
@@ -292,13 +297,13 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
                 this.$el.find('.selectize-dropdown-content').addClass('small');
 
-                this.$el.find('select.search-type').on('change', function () {
+                this.$el.find('select.search-type').on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
 
-                this.$element.on('change', function () {
+                this.$element.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -306,7 +311,9 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -320,6 +327,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             }
 
             var data = {};
+
             data[this.name] = value;
 
             return data;
@@ -437,7 +445,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
-        }
+        },
 
     });
 });
