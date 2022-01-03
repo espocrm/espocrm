@@ -31,8 +31,5 @@ namespace Espo\Core\Binding;
 
 interface Factory
 {
-    /**
-     * @todo Uncomment when PHP 7.4 is a min supported version.
-     */
-    public function create()/*: object*/;
+    public function create(): object;
 }

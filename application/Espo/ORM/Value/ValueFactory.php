@@ -41,9 +41,7 @@ interface ValueFactory
     /**
      * Create a field value from an entity.
      *
-     * @todo Un-comment return type when PHP 7.4 is a min supported version.
-     *
      * @return object|null A value object or NULL if it can't be created.
      */
-    public function createFromEntity(Entity $entity, string $field) /*: ?object*/;
+    public function createFromEntity(Entity $entity, string $field): ?object;
 }

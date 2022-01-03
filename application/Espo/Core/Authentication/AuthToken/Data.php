@@ -36,15 +36,15 @@ use RuntimeException;
  */
 class Data
 {
-    private $userId;
+    private string $userId;
 
-    private $portalId = null;
+    private ?string $portalId = null;
 
-    private $hash = null;
+    private ?string $hash = null;
 
-    private $ipAddress = null;
+    private ?string $ipAddress = null;
 
-    private $createSecret = false;
+    private bool $createSecret = false;
 
     private function __construct()
     {
@@ -92,17 +92,6 @@ class Data
 
     private function validate(): void
     {
-        // @todo Use typed properties when php 7.4 is a min supported version.
-        if (
-            isset($this->userId) && !is_string($this->userId) ||
-            isset($this->portalId) && !is_string($this->portalId) ||
-            isset($this->hash) && !is_string($this->hash) ||
-            isset($this->ipAddress) && !is_string($this->ipAddress) ||
-            !is_bool($this->createSecret)
-        ) {
-            throw new RuntimeException("Invalid data.");
-        }
-
         if (!$this->userId) {
             throw new RuntimeException("No user ID.");
         }
