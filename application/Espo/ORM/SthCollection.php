@@ -29,10 +29,8 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    Query\Select as SelectQuery,
-    QueryComposer\QueryComposer as QueryComposer,
-};
+use Espo\ORM\Query\Select as SelectQuery;
+use Espo\ORM\QueryComposer\QueryComposer as QueryComposer;
 
 use IteratorAggregate;
 use Countable;
@@ -167,8 +165,11 @@ class SthCollection implements Collection, IteratorAggregate, Countable
             if ($itemsAsObjects) {
                 $item = $entity->getValueMap();
             }
-            else {
+            else if (method_exists($entity, 'toArray')) {
                 $item = $entity->toArray();
+            }
+            else {
+                $item = get_object_vars($entity->getValueMap());
             }
 
             $arr[] = $item;

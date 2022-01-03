@@ -35,12 +35,10 @@ use stdClass;
 /**
  * A collection of entities.
  *
- * @template TValue of Entity
- * @bypass-extends Traversable<TValue>
- *
- * @todo Extend from Traversable once the min supported PHP version is 7.4. Remove bypass.
+ * @template TEntity of Entity
+ * @extends Traversable<TEntity>
  */
-interface Collection/* extends Traversable*/
+interface Collection extends Traversable
 {
     /**
      * Get an array of stdClass objects.

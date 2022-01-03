@@ -247,7 +247,9 @@ class Extension implements Command
             ->getRDBRepository('Extension')
             ->find();
 
-        if (count($collection) === 0) {
+        $count = is_countable($collection) ? count($collection) : iterator_count($collection);
+
+        if ($count === 0) {
             $io->writeLine("");
             $io->writeLine("No extensions.");
             $io->writeLine("");

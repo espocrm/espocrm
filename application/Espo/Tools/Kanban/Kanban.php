@@ -240,7 +240,11 @@ class Kanban
                 $totalSub = $repository->clone($itemQuery)->count();
             }
             else {
-                if ($maxSize && count($collectionSub) > $maxSize) {
+                if (
+                    $maxSize &&
+                    is_countable($collectionSub) &&
+                    count($collectionSub) > $maxSize
+                ) {
                     $totalSub = -1;
 
                     unset($collectionSub[count($collectionSub) - 1]);

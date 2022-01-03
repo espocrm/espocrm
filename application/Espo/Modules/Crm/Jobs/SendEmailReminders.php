@@ -87,7 +87,7 @@ class SendEmailReminders implements JobDataLess
             ->limit(0, $maxPortionSize)
             ->find();
 
-        if (count($collection) === 0) {
+        if (is_countable($collection) && count($collection) === 0) {
             return;
         }
 

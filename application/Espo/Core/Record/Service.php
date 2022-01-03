@@ -806,7 +806,11 @@ class Service implements Crud,
                 ->clone($query)
                 ->count();
         }
-        else if ($maxSize && count($collection) > $maxSize) {
+        else if (
+            $maxSize &&
+            is_countable($collection) &&
+            count($collection) > $maxSize
+        ) {
             $total = RecordCollection::TOTAL_HAS_MORE;
 
             unset($collection[count($collection) - 1]);
@@ -985,7 +989,11 @@ class Service implements Crud,
                 ->clone($query)
                 ->count();
         }
-        else if ($maxSize && count($collection) > $maxSize) {
+        else if (
+            $maxSize &&
+            is_countable($collection) &&
+            count($collection) > $maxSize
+        ) {
             $total = RecordCollection::TOTAL_HAS_MORE;
 
             unset($collection[count($collection) - 1]);

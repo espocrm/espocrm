@@ -99,7 +99,7 @@ class LastViewed
             $entity->set('id', Util::generateId());
         }
 
-        if ($maxSize && count($collection) > $maxSize) {
+        if ($maxSize && is_countable($collection) && count($collection) > $maxSize) {
             $total = -1;
 
             unset($collection[count($collection) - 1]);

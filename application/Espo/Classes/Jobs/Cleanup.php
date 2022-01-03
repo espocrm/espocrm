@@ -203,6 +203,10 @@ class Cleanup implements JobDataLess
                 ->limit(0, 10)
                 ->find();
 
+            if (!is_countable($ignoreLogRecordList)) {
+                continue;
+            }
+
             if (!count($ignoreLogRecordList)) {
                 continue;
             }

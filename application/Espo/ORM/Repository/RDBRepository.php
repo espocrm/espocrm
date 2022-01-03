@@ -258,10 +258,7 @@ class RDBRepository implements Repository
      * Find records.
      *
      * @param ?array $params @deprecated
-     *
-     * @phpstan-return iterable<TEntity>&Collection
-     *
-     * @todo Fix phpstan-return after php7.4 to Collection<TEntity> or remove.
+     * @phpstan-return Collection<TEntity>
      */
     public function find(?array $params = []): Collection
     {

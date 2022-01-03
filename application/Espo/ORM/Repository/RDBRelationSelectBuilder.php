@@ -194,9 +194,7 @@ class RDBRelationSelectBuilder
     /**
      * Find related records by a criteria.
      *
-     * @phpstan-return iterable<Entity>&Collection
-     *
-     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     * @return Collection<Entity>
      */
     public function find(): Collection
     {
@@ -489,12 +487,14 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * @phpstan-return iterable<Entity>&Collection
-     *
-     * @todo Fix phpstan-return after php7.4 to Collection<Entity> or remove.
+     * @phpstan-return Collection<Entity>
      */
-    protected function handleReturnCollection(SthCollection $collection): Collection
+    protected function handleReturnCollection(Collection $collection): Collection
     {
+        if (!$collection instanceof SthCollection) {
+            return $collection;
+        }
+
         if ($this->returnSthCollection) {
             return $collection;
         }

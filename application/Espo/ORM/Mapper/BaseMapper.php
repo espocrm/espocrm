@@ -186,9 +186,8 @@ class BaseMapper implements RDBMapper
 
     /**
      * {@inheritdoc}
-     * @todo Change return type to SthCollection once PHP 7.4 is a min version.
      */
-    public function select(Select $select): Collection
+    public function select(Select $select): SthCollection
     {
         $entityType = $select->getFrom();
 
@@ -1273,9 +1272,11 @@ class BaseMapper implements RDBMapper
      */
     public function massInsert(Collection $collection): void
     {
-        /** @var Collection&iterable<Entity> $collection */
+        $count = is_countable($collection) ?
+            count($collection) :
+            iterator_count($collection);
 
-        if (!count($collection)) {
+        if ($count === 0) {
             return;
         }
 

@@ -29,11 +29,9 @@
 
 namespace Espo\ORM\Mapper;
 
-use Espo\ORM\{
-    Entity,
-    Collection,
-    Query\Select,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Collection;
+use Espo\ORM\Query\Select;
 
 interface Mapper
 {
@@ -44,6 +42,8 @@ interface Mapper
 
     /**
      * Select entities from DB.
+     *
+     * @phpstan-return Collection<Entity>
      */
     public function select(Select $select): Collection;
 
@@ -59,6 +59,8 @@ interface Mapper
 
     /**
      * Insert a collection into DB.
+     *
+     * @phpstan-param Collection<Entity> $collection
      */
     public function massInsert(Collection $collection): void;
 
@@ -76,6 +78,7 @@ interface Mapper
      * Select related entities from DB.
      *
      * @return Collection|Entity|null
+     * @phpstan-return Collection<Entity>|Entity|null
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null);
 
@@ -86,6 +89,8 @@ interface Mapper
 
     /**
      * Insert an entity into DB, on duplicate key update specified attributes.
+     *
+     * @param string[] $onDuplicateUpdateAttributeList
      */
     public function insertOnDuplicateUpdate(Entity $entity, array $onDuplicateUpdateAttributeList): void;
 }
