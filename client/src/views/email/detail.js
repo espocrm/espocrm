@@ -255,6 +255,8 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                 this.ajaxPostRequest('Email/action/getCopiedAttachments', {
                     id: this.model.id,
+                    parentType: 'Case',
+                    field: 'attachments',
                 }).then(data => {
                     attributes.attachmentsIds = data.ids;
                     attributes.attachmentsNames = data.names;

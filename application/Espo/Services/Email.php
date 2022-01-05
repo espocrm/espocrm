@@ -767,8 +767,13 @@ class Email extends Record implements
         return $fromAddress;
     }
 
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): stdClass
-    {
+    public function getCopiedAttachments(
+        string $id,
+        ?string $parentType = null,
+        ?string $parentId = null,
+        ?string $field = null
+    ): stdClass {
+
         $ids = [];
         $names = (object) [];
 
@@ -806,8 +811,15 @@ class Email extends Record implements
                 $attachment->set('sourceId', $source->getSourceId());
                 $attachment->set('storage', $source->get('storage'));
 
-                if (!empty($parentType) && !empty($parentId)) {
+                if ($field) {
+                    $attachment->set('field', $field);
+                }
+
+                if ($parentType) {
                     $attachment->set('parentType', $parentType);
+                }
+
+                if ($parentType && $parentType) {
                     $attachment->set('parentId', $parentId);
                 }
 
