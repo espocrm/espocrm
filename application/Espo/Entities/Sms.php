@@ -47,6 +47,8 @@ class Sms extends Entity implements SmsInterface
 
     public const STATUS_DRAFT = 'Draft';
 
+    public const STATUS_FAILED = 'Failed';
+
     public function getDateSent(): ?DateTime
     {
         return $this->getValueObject('dateTime');
@@ -131,6 +133,13 @@ class Sms extends Entity implements SmsInterface
         if (!$this->get('dateSent')) {
             $this->set('dateSent', DateTime::createNow()->getString());
         }
+
+        return $this;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
 
         return $this;
     }

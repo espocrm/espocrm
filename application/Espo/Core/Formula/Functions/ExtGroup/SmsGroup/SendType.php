@@ -77,11 +77,17 @@ class SendType extends BaseFunction implements
 
         try {
             $this->createSender()->send($sms);
+
+            $this->entityManager->saveEntity($sms);
         }
         catch (Exception $e) {
             $message = $e->getMessage();
 
             $this->log("Error while sending SMS. Message: {$message}." , 'error');
+
+            $sms->setStatus(Sms::STATUS_FAILED);
+
+            $this->entityManager->saveEntity($sms);
 
             return false;
         }
