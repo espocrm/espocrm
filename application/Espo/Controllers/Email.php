@@ -52,8 +52,10 @@ class Email extends Record
         }
 
         $id = $data->id;
+        $parentType = $data->parentType ?? null;
+        $field = $data->field ?? null;
 
-        return $this->getEmailService()->getCopiedAttachments($id);
+        return $this->getEmailService()->getCopiedAttachments($id, $parentType, null, $field);
     }
 
     /**
