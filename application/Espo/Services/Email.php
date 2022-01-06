@@ -819,7 +819,7 @@ class Email extends Record implements
                     $attachment->set('parentType', $parentType);
                 }
 
-                if ($parentType && $parentType) {
+                if ($parentType && $parentId) {
                     $attachment->set('parentId', $parentId);
                 }
 
