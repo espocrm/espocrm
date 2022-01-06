@@ -29,68 +29,56 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Mail\Account\PersonalAccountService as Service;
+use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
-use Espo\Services\EmailAccount as Service;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Request;
 
-use Espo\Core\Di\CryptAware;
-use Espo\Core\Di\CryptSetter;
-
-use Espo\Core\{
-    Controllers\Record,
-    Api\Request,
-};
-
-class EmailAccount extends Record implements CryptAware
+class EmailAccount extends Record
 {
-    use CryptSetter;
-
     protected function checkAccess(): bool
     {
         return $this->acl->check('EmailAccountScope');
     }
 
+    /**
+     * @return string[]
+     */
     public function postActionGetFolders(Request $request): array
     {
         $data = $request->getParsedBody();
 
-        $params = [
-            'host' => $data->host ?? null,
-            'port' => $data->port ?? null,
-            'security' =>  $data->security ?? null,
-            'username' => $data->username ?? null,
-            'password' => $data->password ?? null,
-            'id' => $data->id ?? null,
-            'emailAddress' => $data->emailAddress ?? null,
-            'userId' => $data->userId ?? null,
-        ];
+        $params = StorageParams::createBuilder()
+            ->setHost($data->host ?? null)
+            ->setPort($data->port ?? null)
+            ->setSecurity($data->security ?? null)
+            ->setUsername($data->username ?? null)
+            ->setPassword($data->password ?? null)
+            ->setId($data->id ?? null)
+            ->setEmailAddress($data->emailAddress ?? null)
+            ->setUserId($data->userId ?? null)
+            ->build();
 
-        return $this->getEmailAccountService()->getFolders($params);
+        return $this->getEmailAccountService()->getFolderList($params);
     }
 
     public function postActionTestConnection(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (is_null($data->password)) {
-            $emailAccount = $this->entityManager->getEntity('EmailAccount', $data->id);
+        $params = StorageParams::createBuilder()
+            ->setHost($data->host ?? null)
+            ->setPort($data->port ?? null)
+            ->setSecurity($data->security ?? null)
+            ->setUsername($data->username ?? null)
+            ->setPassword($data->password ?? null)
+            ->setId($data->id ?? null)
+            ->setEmailAddress($data->emailAddress ?? null)
+            ->setUserId($data->userId ?? null)
+            ->build();
 
-            if (!$emailAccount || !$emailAccount->getId()) {
-                throw new Error();
-            }
-
-            if (
-                $emailAccount->get('assignedUserId') !== $this->user->getId() &&
-                !$this->user->isAdmin()
-            ) {
-                throw new Forbidden();
-            }
-
-            $data->password = $this->crypt->decrypt($emailAccount->get('password'));
-        }
-
-        $this->getEmailAccountService()->testConnection(get_object_vars($data));
+        $this->getEmailAccountService()->testConnection($params);
 
         return true;
     }
@@ -98,6 +86,6 @@ class EmailAccount extends Record implements CryptAware
     private function getEmailAccountService(): Service
     {
         /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

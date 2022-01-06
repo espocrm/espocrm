@@ -222,5 +222,19 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\Sms\\Sender',
             'Espo\\Core\\Sms\\SenderFactory'
         );
+
+        $binder
+            ->for('Espo\\Core\\Mail\\Account\\PersonalAccountService')
+            ->bindFactory(
+                'Espo\\Core\\Mail\\Account\\Fetcher',
+                'Espo\\Core\\Mail\\Account\\PersonalAccountFetcherFactory'
+            );
+
+        $binder
+            ->for('Espo\\Core\\Mail\\Account\\GroupAccountService')
+            ->bindFactory(
+                'Espo\\Core\\Mail\\Account\\Fetcher',
+                'Espo\\Core\\Mail\\Account\\GroupAccountFetcherFactory'
+            );
     }
 }

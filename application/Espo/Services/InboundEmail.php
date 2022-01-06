@@ -34,6 +34,8 @@ use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Mail\Account\GroupAccountService as AccountService;
+
 use Espo\Modules\Crm\Business\Distribution\CaseObj\RoundRobin;
 use Espo\Modules\Crm\Business\Distribution\CaseObj\LeastBusy;
 
@@ -70,7 +72,6 @@ use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
 
 use Espo\Core\Di;
 
-use RecursiveIteratorIterator;
 use Exception;
 use Throwable;
 use DateTime;
@@ -116,50 +117,6 @@ class InboundEmail extends RecordService implements
                 throw new BadRequest("EmailAccount validation: fetchSince is required.");
             }
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getFolders($params): array
-    {
-        if (!empty($params['id'])) {
-            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
-
-            if ($account) {
-                $params['password'] = $this->crypt->decrypt($account->get('password'));
-                $params['imapHandler'] = $account->get('imapHandler');
-            }
-        }
-
-        $foldersArr = [];
-
-        $storage = $this->createStorage($params);
-
-        $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
-
-        foreach ($folders as $folder) {
-            $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
-        }
-
-        return $foldersArr;
-    }
-
-    public function testConnection(array $params)
-    {
-        if (!empty($params['id'])) {
-            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
-
-            if ($account) {
-                $params['imapHandler'] = $account->get('imapHandler');
-            }
-        }
-
-        $storage = $this->createStorage($params);
-
-        $storage->getFolders();
-
-        return true;
     }
 
     protected function createParser(): Parser
@@ -1218,15 +1175,10 @@ class InboundEmail extends RecordService implements
 
     public function storeSentMessage(InboundEmailEntity $emailAccount, Message $message): void
     {
-        $storage = $this->getStorage($emailAccount);
+        /** @var AccountService $service */
+        $service = $this->injectableFactory->create(AccountService::class);
 
-        $folder = $emailAccount->get('sentFolder');
-
-        if (empty($folder)) {
-            throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
-        }
-
-        $storage->appendMessage($message->toString(), $folder);
+        $service->storeSentMessage($emailAccount->getId(), $message);
     }
 
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array

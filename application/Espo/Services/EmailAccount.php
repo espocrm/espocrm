@@ -34,6 +34,8 @@ use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Mail\Account\PersonalAccountService as AccountService;
+
 use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Core\{
@@ -58,7 +60,6 @@ use Espo\Entities\{
 
 use Espo\Core\Di;
 
-use RecursiveIteratorIterator;
 use Exception;
 use Throwable;
 use DateTime;
@@ -97,68 +98,6 @@ class EmailAccount extends Record implements
                 throw new BadRequest("EmailAccount validation: fetchSince is required.");
             }
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getFolders(array $params): array
-    {
-        $userId = $params['userId'] ?? null;
-
-        if ($userId) {
-            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->getId()) {
-                throw new Forbidden();
-            }
-        }
-
-        $password = $params['password'];
-
-        if (!empty($params['id'])) {
-            $entity = $this->entityManager->getEntity('EmailAccount', $params['id']);
-
-            if ($entity) {
-                $params['password'] = $this->crypt->decrypt($entity->get('password'));
-                $params['imapHandler'] = $entity->get('imapHandler');
-            }
-        }
-
-        $storage = $this->createStorage($params);
-
-        $foldersArr = [];
-
-        $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
-
-        foreach ($folders as $name => $folder) {
-            $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
-        }
-
-        return $foldersArr;
-    }
-
-    public function testConnection(array $params)
-    {
-        if (!empty($params['id'])) {
-            $account = $this->entityManager->getEntity('EmailAccount', $params['id']);
-
-            if ($account) {
-                $params['imapHandler'] = $account->get('imapHandler');
-            }
-        }
-
-        $storage = $this->createStorage($params);
-
-        $userId = $params['userId'] ?? null;
-
-        if ($userId) {
-            if (!$this->getUser()->isAdmin() && $userId !== $this->getUser()->getId()) {
-                throw new Forbidden();
-            }
-        }
-
-        $storage->getFolders();
-
-        return true;
     }
 
     protected function createStorage(array $params): Imap
@@ -265,17 +204,12 @@ class EmailAccount extends Record implements
         return $entity;
     }
 
-    public function storeSentMessage(Entity $emailAccount, Message $message): void
+    public function storeSentMessage(EmailAccountEntity $emailAccount, Message $message): void
     {
-        $storage = $this->getStorage($emailAccount);
+        /** @var AccountService $service */
+        $service = $this->injectableFactory->create(AccountService::class);
 
-        $folder = $emailAccount->get('sentFolder');
-
-        if (empty($folder)) {
-            throw new Error("No sent folder for Email Account: " . $emailAccount->getId() . ".");
-        }
-
-        $storage->appendMessage($message->toString(), $folder);
+        $service->storeSentMessage($emailAccount->getId(), $message);
     }
 
     protected function getStorage(Entity $emailAccount): Imap

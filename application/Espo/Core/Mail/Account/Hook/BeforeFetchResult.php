@@ -27,39 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+namespace Espo\Core\Mail\Account\Hook;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccountService as Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
-
-use Throwable;
-
-class CheckInboundEmails implements Job
+class BeforeFetchResult
 {
-    private $service;
+    private bool $toSkip = false;
 
-    public function __construct(Service $service)
+    private $data = [];
+
+    public static function create(): self
     {
-        $this->service = $service;
+        return new self();
     }
 
-    public function run(Data $data): void
+    public function withToSkip(bool $toSkip = true): self
     {
-        $targetId = $data->getTargetId();
+        $obj = clone $this;
+        $obj->toSkip = $toSkip;
 
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
+        return $obj;
+    }
 
-        try {
-            $this->service->fetch($targetId);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $targetId . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
+    /**
+     * @param mixed $value
+     */
+    public function with(string $name, $value): self
+    {
+        $obj = clone $this;
+        $obj->data[$name] = $value;
+
+        return $obj;
+    }
+
+    public function toSkip(): bool
+    {
+        return $this->toSkip;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get(string $name)
+    {
+        return $this->data[$name] ?? null;
+    }
+
+    public function has(string $name): bool
+    {
+        return array_key_exists($name, $this->data);
     }
 }

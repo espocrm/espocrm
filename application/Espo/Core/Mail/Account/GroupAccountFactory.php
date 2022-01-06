@@ -27,73 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\Distribution\CaseObj;
+namespace Espo\Core\Mail\Account;
 
-use Espo\Entities\User;
-use Espo\Entities\Team;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\BindingContainerBuilder;
+
+use Espo\Entities\InboundEmail;
 
 use Espo\ORM\EntityManager;
 
-class RoundRobin
+class GroupAccountFactory
 {
+    private InjectableFactory $injectableFactory;
+
     private EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
     {
+        $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
     }
 
-    public function getUser(Team $team, ?string $targetUserPosition = null): ?User
+    public function create(string $id): GroupAccount
     {
-        $where = [
-            'isActive' => true,
-        ];
+        $entity = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
 
-        if (!empty($targetUserPosition)) {
-            $where['@relation.role'] = $targetUserPosition;
+        if (!$entity) {
+            throw new Error("InboundEmail '{$id}' not found.");
         }
 
-        $userList = $this->entityManager
-            ->getRDBRepository(Team::ENTITY_TYPE)
-            ->getRelation($team, 'users')
-            ->where($where)
-            ->order('id')
-            ->find();
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(InboundEmail::class, $entity)
+            ->build();
 
-        if (is_countable($userList) && count($userList) == 0) {
-            return null;
-        }
-
-        $userIdList = [];
-
-        foreach ($userList as $user) {
-            $userIdList[] = $user->getId();
-        }
-
-        $case = $this->entityManager
-            ->getRDBRepository('Case')
-            ->where([
-                'assignedUserId' => $userIdList,
-            ])
-            ->order('number', 'DESC')
-            ->findOne();
-
-        if (empty($case)) {
-            $num = 0;
-        }
-        else {
-            $num = array_search($case->get('assignedUserId'), $userIdList);
-
-            if ($num === false || $num == count($userIdList) - 1) {
-                $num = 0;
-            }
-            else {
-                $num++;
-            }
-        }
-
-        $id = $userIdList[$num];
-
-        return $this->entityManager->getEntity('User', $id);
+        return $this->injectableFactory->createWithBinding(GroupAccount::class, $binding);
     }
 }

@@ -37,15 +37,9 @@ use Espo\Entities\Team;
 
 class LeastBusy
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private EntityManager $entityManager;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
@@ -53,25 +47,24 @@ class LeastBusy
         $this->metadata = $metadata;
     }
 
-    /**
-     * @param Team $team
-     * @param ?string $targetUserPosition
-     * @return User|null
-     */
-    public function getUser($team, $targetUserPosition = null)
+    public function getUser(Team $team, ?string $targetUserPosition = null): ?User
     {
-        $selectParams = [
-            'whereClause' => ['isActive' => true],
-            'orderBy' => 'id',
+        $where = [
+            'isActive' => true,
         ];
 
         if (!empty($targetUserPosition)) {
-            $selectParams['additionalColumnsConditions'] = ['role' => $targetUserPosition];
+            $where['@relation.role'] = $targetUserPosition;
         }
 
-        $userList = $team->get('users', $selectParams);
+        $userList = $this->entityManager
+            ->getRDBRepository(Team::ENTITY_TYPE)
+            ->getRelation($team, 'users')
+            ->where($where)
+            ->order('id')
+            ->find();
 
-        if (count($userList) == 0) {
+        if (is_countable($userList) && count($userList) == 0) {
             return null;
         }
 
@@ -100,11 +93,9 @@ class LeastBusy
                 $min = $count;
                 $foundUserId = $userId;
             }
-            else {
-                if ($count < $min) {
-                    $min = $count;
-                    $foundUserId = $userId;
-                }
+            else if ($count < $min) {
+                $min = $count;
+                $foundUserId = $userId;
             }
         }
 

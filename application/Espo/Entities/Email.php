@@ -307,7 +307,7 @@ class Email extends Entity
 
     public function getDateSent(): ?DateTime
     {
-        return $this->getValueObject('dateTime');
+        return $this->getValueObject('dateSent');
     }
 
     public function getSubject(): ?string

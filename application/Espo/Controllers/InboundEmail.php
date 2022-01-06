@@ -29,58 +29,52 @@
 
 namespace Espo\Controllers;
 
-use Espo\Services\InboundEmail as Service;
+use Espo\Core\Mail\Account\GroupAccountService as Service;
+use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Request;
 
-use Espo\Core\Di\CryptAware;
-use Espo\Core\Di\CryptSetter;
-
-use Espo\Core\{
-    Controllers\Record,
-    Api\Request,
-};
-
-class InboundEmail extends Record implements CryptAware
+class InboundEmail extends Record
 {
-    use CryptSetter;
-
     protected function checkAccess(): bool
     {
         return $this->getUser()->isAdmin();
     }
 
+    /**
+     * @return string[]
+     */
     public function postActionGetFolders(Request $request): array
     {
         $data = $request->getParsedBody();
 
-        $params = [
-            'host' => $data->host ?? null,
-            'port' => $data->port ?? null,
-            'security' =>  $data->security ?? null,
-            'username' => $data->username ?? null,
-            'password' => $data->password ?? null,
-            'id' => $data->id ?? null,
-        ];
+        $params = StorageParams::createBuilder()
+            ->setHost($data->host ?? null)
+            ->setPort($data->port ?? null)
+            ->setSecurity($data->security ?? null)
+            ->setUsername($data->username ?? null)
+            ->setPassword($data->password ?? null)
+            ->setId($data->id ?? null)
+            ->build();
 
-        return $this->getInboundEmailService()->getFolders($params);
+        return $this->getInboundEmailService()->getFolderList($params);
     }
 
     public function postActionTestConnection(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if (is_null($data->password)) {
-            $inboundEmail = $this->entityManager->getEntity('InboundEmail', $data->id);
+        $params = StorageParams::createBuilder()
+            ->setHost($data->host ?? null)
+            ->setPort($data->port ?? null)
+            ->setSecurity($data->security ?? null)
+            ->setUsername($data->username ?? null)
+            ->setPassword($data->password ?? null)
+            ->setId($data->id ?? null)
+            ->build();
 
-            if (!$inboundEmail || !$inboundEmail->getId()) {
-                throw new Error();
-            }
-
-            $data->password = $this->crypt->decrypt($inboundEmail->get('password'));
-        }
-
-        $this->getInboundEmailService()->testConnection(get_object_vars($data));
+        $this->getInboundEmailService()->testConnection($params);
 
         return true;
     }
@@ -88,6 +82,6 @@ class InboundEmail extends Record implements CryptAware
     private function getInboundEmailService(): Service
     {
         /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

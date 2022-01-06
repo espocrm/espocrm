@@ -27,39 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+namespace Espo\Core\Mail\Account;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccountService as Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
+use Espo\Core\Binding\Factory;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
 
-use Throwable;
+use Espo\Core\Mail\Account\Hook\BeforeFetch;
+use Espo\Core\Mail\Account\Hook\AfterFetch;
+use Espo\Core\Mail\Account\Hook\Hooks\GroupAccountBeforeFetch;
+use Espo\Core\Mail\Account\Hook\Hooks\GroupAccountAfterFetch;
 
-class CheckInboundEmails implements Job
+class GroupAccountFetcherFactory implements Factory
 {
-    private $service;
+    private InjectableFactory $injectableFactory;
 
-    public function __construct(Service $service)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->service = $service;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function run(Data $data): void
+    public function create(): Fetcher
     {
-        $targetId = $data->getTargetId();
+        $binding = BindingContainerBuilder::create()
+            ->bindImplementation(BeforeFetch::class, GroupAccountBeforeFetch::class)
+            ->bindImplementation(AfterFetch::class, GroupAccountAfterFetch::class)
+            ->bindImplementation(StorageFactory::class, GroupAccountStorageFactory::class)
+            ->build();
 
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
-
-        try {
-            $this->service->fetch($targetId);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $targetId . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
+        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
     }
 }

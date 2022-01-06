@@ -27,39 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+namespace Espo\Core\Mail\Account;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccountService as Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
+use Espo\Core\Mail\Mail\Storage\Imap;
 
-use Throwable;
-
-class CheckInboundEmails implements Job
+interface StorageFactory
 {
-    private $service;
-
-    public function __construct(Service $service)
-    {
-        $this->service = $service;
-    }
-
-    public function run(Data $data): void
-    {
-        $targetId = $data->getTargetId();
-
-        if (!$targetId) {
-            throw new Error("No target.");
-        }
-
-        try {
-            $this->service->fetch($targetId);
-        }
-        catch (Throwable $e) {
-            throw new Error(
-                'Job CheckInboundEmails ' . $targetId . ': [' . $e->getCode() . '] ' .$e->getMessage()
-            );
-        }
-    }
+    public function create(Account $account): Imap;
 }
