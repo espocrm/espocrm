@@ -50,10 +50,9 @@ define('views/email-account/fields/folder', 'views/fields/base', function (Dep) 
                 if (this.model.has('password')) {
                     data.password = this.model.get('password');
                 }
-                else {
-                    if (!this.model.isNew()) {
-                        data.id = this.model.id;
-                    }
+
+                if (!this.model.isNew()) {
+                    data.id = this.model.id;
                 }
 
                 Espo.Ajax.postRequest(this.getFoldersUrl, data).then(function (folders) {

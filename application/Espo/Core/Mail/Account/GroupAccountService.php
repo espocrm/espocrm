@@ -80,7 +80,7 @@ class GroupAccountService
 
             $params = $params
                 ->withPassword(
-                    $this->crypt->decrypt($account->getPassword())
+                    $params->getPassword() ?? $this->crypt->decrypt($account->getPassword())
                 )
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
