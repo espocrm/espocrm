@@ -63,7 +63,7 @@ class EmailTemplate extends Record implements
             ->withCopyAttachments($copyAttachments);
 
         $data = Data::create()
-            ->withEmailAddress($params['emailAddress'])
+            ->withEmailAddress($params['emailAddress'] ?? null)
             ->withEntityHash($params['entityHash'] ?? [])
             ->withParent($params['parent'] ?? null)
             ->withParentId($params['parentId'] ?? null)
