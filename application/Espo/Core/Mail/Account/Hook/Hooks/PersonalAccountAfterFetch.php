@@ -27,31 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\Hook\Hooks;
 
-use Espo\Core\Binding\Factory;
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\InjectableFactory;
-
+use Espo\Core\Mail\Account\Account;
+use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 use Espo\Core\Mail\Account\Hook\AfterFetch;
-use Espo\Core\Mail\Account\Hook\Hooks\PersonalAccountAfterFetch;
 
-class PersonalAccountFetcherFactory implements Factory
+use Espo\Services\Stream as StreamService;
+use Espo\Entities\Email;
+
+use Espo\ORM\EntityManager;
+
+class PersonalAccountAfterFetch implements AfterFetch
 {
-    private InjectableFactory $injectableFactory;
+    private EntityManager $entityManager;
 
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
+    private StreamService $streamService;
+
+    public function __construct(
+        EntityManager $entityManager,
+        StreamService $streamService
+    ) {
+        $this->entityManager = $entityManager;
+        $this->streamService = $streamService;
     }
 
-    public function create(): Fetcher
+    public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
     {
-        $binding = BindingContainerBuilder::create()
-            ->bindImplementation(StorageFactory::class, PersonalAccountStorageFactory::class)
-            ->bindImplementation(AfterFetch::class, PersonalAccountAfterFetch::class)
-            ->build();
+        if (!$email->isFetched()) {
+            $this->noteAboutEmail($email);
+        }
+    }
 
-        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
+    private function noteAboutEmail(Email $email): void
+    {
+        $parentLink = $email->getParent();
+
+        if (!$parentLink) {
+            return;
+        }
+
+        $parent = $this->entityManager->getEntity($parentLink->getEntityType(), $parentLink->getId());
+
+        if (!$parent) {
+            return;
+        }
+
+        $this->streamService->noteEmailReceived($parent, $email);
     }
 }
