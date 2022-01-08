@@ -143,6 +143,7 @@ class Message extends \Laminas\Mail\Storage\Message
         // find an empty line between headers and body
         // default is set new line
         if (strpos($message, $EOL . $EOL)) {
+            /** @phpstan-ignore-next-line */
             list($headers, $body) = explode($EOL . $EOL, $message, 2);
         // next is the standard new line
         } elseif ($EOL != "\r\n" && strpos($message, "\r\n\r\n")) {

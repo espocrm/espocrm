@@ -807,6 +807,7 @@ class Import
     {
         $params = $this->params;
 
+        /** @var non-empty-string */
         $decimalMark = $params->getDecimalMark() ?? self::DEFAULT_DECIMAL_MARK;
 
         $dateFormat = DateTimeUtil::convertFormatToSystem(
