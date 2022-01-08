@@ -34,7 +34,7 @@ use Espo\Entities\Email;
 
 use Espo\Core\{
     Mail\Importer,
-    Mail\ImporterData,
+    Mail\Importer\Data as ImporterData,
     Mail\MessageWrapper,
     Mail\ParserFactory,
     Mail\Parsers\MailMimeParser,

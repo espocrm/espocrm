@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail;
+namespace Espo\Core\Mail\Importer;
 
 use Espo\Entities\EmailFilter;
 
-class ImporterData
+class Data
 {
     private $assignedUserId = null;
 

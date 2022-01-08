@@ -29,22 +29,47 @@
 
 namespace Espo\Core\Mail;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Mail\Parsers\MailMimeParser;
-
-class ParserFactory
+interface Message
 {
-    private $injectableFactory;
+    /**
+     * Whether has a specific header.
+     */
+    public function hasHeader(string $name): bool;
 
-    protected const DEFAULT_PARSER_CLASS_NAME = MailMimeParser::class;
+    /**
+     * Get a specific header.
+     */
+    public function getHeader(string $attribute): ?string;
 
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    /**
+     * Get a raw header part.
+     */
+    public function getRawHeader(): string;
 
-    public function create(): Parser
-    {
-        return $this->injectableFactory->create(self::DEFAULT_PARSER_CLASS_NAME);
-    }
+    /**
+     * Get a raw content part.
+     */
+    public function getRawContent(): string;
+
+    /**
+     * Get a full raw message.
+     */
+    public function getFullRawContent(): string;
+
+    /**
+     * Set a full raw message.
+     */
+    public function setFullRawContent(string $content): void;
+
+    /**
+     * Get flags.
+     *
+     * @return string[]
+     */
+    public function getFlags(): array;
+
+    /**
+     * Whether contents is fetched.
+     */
+    public function isFetched(): bool;
 }

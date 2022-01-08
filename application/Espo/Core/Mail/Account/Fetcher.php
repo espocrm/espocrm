@@ -33,7 +33,7 @@ use Laminas\Mail\Storage;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Importer;
-use Espo\Core\Mail\ImporterData;
+use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\ParserFactory;
 use Espo\Core\Mail\MessageWrapper;

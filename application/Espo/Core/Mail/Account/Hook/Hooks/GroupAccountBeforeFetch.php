@@ -33,7 +33,7 @@ use Espo\Core\Mail\Account\Hook\BeforeFetch;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 
 use Espo\Core\Mail\Account\Account;
-use Espo\Core\Mail\MessageWrapper;
+use Espo\Core\Mail\Message;
 
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
@@ -43,7 +43,6 @@ use Espo\ORM\EntityManager;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
-
 use Espo\Modules\Crm\Services\Campaign as CampaignService;
 
 use Throwable;
@@ -65,11 +64,11 @@ class GroupAccountBeforeFetch implements BeforeFetch
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function process(Account $account, MessageWrapper $message): BeforeFetchResult
+    public function process(Account $account, Message $message): BeforeFetchResult
     {
         if (
-            $message->hasAttribute('from') &&
-            preg_match('/MAILER-DAEMON|POSTMASTER/i', $message->getAttribute('from'))
+            $message->hasHeader('from') &&
+            preg_match('/MAILER-DAEMON|POSTMASTER/i', $message->getHeader('from'))
         ) {
             try {
                 $toSkip = $this->processBounced($message);
@@ -93,7 +92,7 @@ class GroupAccountBeforeFetch implements BeforeFetch
             ->with('isAutoReply', $this->checkMessageIsAutoReply($message));
     }
 
-    private function processBounced(MessageWrapper $message): bool
+    private function processBounced(Message $message): bool
     {
         $content = $message->getRawContent();
 
@@ -111,7 +110,7 @@ class GroupAccountBeforeFetch implements BeforeFetch
             $queueItemId = $arr[0];
         }
         else {
-            $to = $message->getAttribute('to');
+            $to = $message->getHeader('to');
 
             if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to, $m)) {
                 $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
@@ -187,19 +186,19 @@ class GroupAccountBeforeFetch implements BeforeFetch
         return $this->campaignService;
     }
 
-    private function checkMessageIsAutoReply(MessageWrapper $message): bool
+    private function checkMessageIsAutoReply(Message $message): bool
     {
-        if ($message->getAttribute('X-Autoreply')) {
+        if ($message->getHeader('X-Autoreply')) {
             return true;
         }
 
-        if ($message->getAttribute('X-Autorespond')) {
+        if ($message->getHeader('X-Autorespond')) {
             return true;
         }
 
         if (
-            $message->getAttribute('Auto-submitted') &&
-            strtolower($message->getAttribute('Auto-submitted')) !== 'no'
+            $message->getHeader('Auto-submitted') &&
+            strtolower($message->getHeader('Auto-submitted')) !== 'no'
         ) {
             return true;
         }
@@ -207,13 +206,13 @@ class GroupAccountBeforeFetch implements BeforeFetch
         return false;
     }
 
-    private function checkMessageCannotBeAutoReplied(MessageWrapper $message): bool
+    private function checkMessageCannotBeAutoReplied(Message $message): bool
     {
-        if ($message->getAttribute('X-Auto-Response-Suppress') === 'AutoReply') {
+        if ($message->getHeader('X-Auto-Response-Suppress') === 'AutoReply') {
             return true;
         }
 
-        if ($message->getAttribute('X-Auto-Response-Suppress') === 'All') {
+        if ($message->getHeader('X-Auto-Response-Suppress') === 'All') {
             return true;
         }
 

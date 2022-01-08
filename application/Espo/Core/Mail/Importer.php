@@ -38,6 +38,9 @@ use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
 use Espo\Core\Mail\MessageWrapper;
+use Espo\Core\Mail\Message;
+use Espo\Core\Mail\Importer\Data;
+
 use Espo\Core\Utils\Config;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
@@ -90,7 +93,7 @@ class Importer
         $this->filtersMatcher = new FiltersMatcher();
     }
 
-    public function import(MessageWrapper $message, ImporterData $data): ?Email
+    public function import(Message $message, Data $data): ?Email
     {
         $assignedUserId = $data->getAssignedUserId();
         $teamIdList = $data->getTeamIdList();
@@ -98,7 +101,9 @@ class Importer
         $filterList = $data->getFilterList();
         $folderData = $data->getFolderData();
 
-        $parser = $message->getParser() ?? $this->parserFactory->create();
+        $parser = $message instanceof MessageWrapper ?
+            $message->getParser() :
+            $this->parserFactory->create();
 
         /** @var Email $email */
         $email = $this->entityManager->getEntity('Email');
@@ -107,8 +112,8 @@ class Importer
 
         $subject = '';
 
-        if ($parser->hasMessageAttribute($message, 'subject')) {
-            $subject = $parser->getMessageAttribute($message, 'subject');
+        if ($parser->hasHeader($message, 'subject')) {
+            $subject = $parser->getHeader($message, 'subject');
         }
 
         if (!empty($subject) && is_string($subject)) {
@@ -134,7 +139,7 @@ class Importer
             $email->addLinkMultipleId('users', $uId);
         }
 
-        $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
+        $fromAddressData = $parser->getAddressData($message, 'from');
 
         if ($fromAddressData) {
             $fromString = ($fromAddressData->name ? ($fromAddressData->name . ' ') : '') . '<' .
@@ -143,7 +148,7 @@ class Importer
             $email->set('fromString', $fromString);
         }
 
-        $replyToData = $parser->getAddressDataFromMessage($message, 'reply-To');
+        $replyToData = $parser->getAddressData($message, 'reply-To');
 
         if ($replyToData) {
             $replyToString = ($replyToData->name ? ($replyToData->name . ' ') : '') .
@@ -152,10 +157,10 @@ class Importer
             $email->set('replyToString', $replyToString);
         }
 
-        $fromArr = $parser->getAddressListFromMessage($message, 'from');
-        $toArr = $parser->getAddressListFromMessage($message, 'to');
-        $ccArr = $parser->getAddressListFromMessage($message, 'cc');
-        $replyToArr = $parser->getAddressListFromMessage($message, 'reply-To');
+        $fromArr = $parser->getAddressList($message, 'from');
+        $toArr = $parser->getAddressList($message, 'to');
+        $ccArr = $parser->getAddressList($message, 'cc');
+        $replyToArr = $parser->getAddressList($message, 'reply-To');
 
         if (count($fromArr)) {
             $email->set('from', $fromArr[0]);
@@ -178,17 +183,17 @@ class Importer
         }
 
         if (
-            $parser->hasMessageAttribute($message, 'message-Id') &&
-            $parser->getMessageAttribute($message, 'message-Id')
+            $parser->hasHeader($message, 'message-Id') &&
+            $parser->getHeader($message, 'message-Id')
         ) {
-            $messageId = $parser->getMessageMessageId($message);
+            $messageId = $parser->getMessageId($message);
 
             $email->set('messageId', $messageId);
 
-            if ($parser->hasMessageAttribute($message, 'delivered-To')) {
+            if ($parser->hasHeader($message, 'delivered-To')) {
                 $email->set(
                     'messageIdInternal',
-                    $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To')
+                    $messageId . '-' . $parser->getHeader($message, 'delivered-To')
                 );
             }
 
@@ -214,9 +219,9 @@ class Importer
             return $duplicate;
         }
 
-        if ($parser->hasMessageAttribute($message, 'date')) {
+        if ($parser->hasHeader($message, 'date')) {
             try {
-                $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
+                $dt = new DateTime($parser->getHeader($message, 'date'));
 
                 $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 
@@ -228,9 +233,9 @@ class Importer
             $email->set('dateSent', date('Y-m-d H:i:s'));
         }
 
-        if ($parser->hasMessageAttribute($message, 'delivery-Date')) {
+        if ($parser->hasHeader($message, 'delivery-Date')) {
             try {
-                $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
+                $dt = new DateTime($parser->getHeader($message, 'delivery-Date'));
 
                 $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 
@@ -242,7 +247,7 @@ class Importer
         $inlineAttachmentList = [];
 
         if (!$data->fetchOnlyHeader()) {
-            $inlineAttachmentList = $parser->fetchContentParts($message, $email);
+            $inlineAttachmentList = $parser->getInlineAttachmentList($message, $email);
 
             if ($this->filtersMatcher->match($email, $filterList)) {
                 return null;
@@ -256,10 +261,10 @@ class Importer
         $replied = null;
 
         if (
-            $parser->hasMessageAttribute($message, 'in-Reply-To') &&
-            $parser->getMessageAttribute($message, 'in-Reply-To')
+            $parser->hasHeader($message, 'in-Reply-To') &&
+            $parser->getHeader($message, 'in-Reply-To')
         ) {
-            $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
+            $arr = explode(' ', $parser->getHeader($message, 'in-Reply-To'));
 
             $inReplyTo = $arr[0];
 
@@ -455,16 +460,16 @@ class Importer
         }
     }
 
-    private function processReferences(Parser $parser, MessageWrapper $message, Email $email): bool
+    private function processReferences(Parser $parser, Message $message, Email $email): bool
     {
         if (
-            !$parser->hasMessageAttribute($message, 'references') ||
-            !$parser->getMessageAttribute($message, 'references')
+            !$parser->hasHeader($message, 'references') ||
+            !$parser->getHeader($message, 'references')
         ) {
             return false;
         }
 
-        $references = $parser->getMessageAttribute($message, 'references');
+        $references = $parser->getHeader($message, 'references');
 
         $delimiter = strpos($references, '>,') ? ',' : ' ';
 

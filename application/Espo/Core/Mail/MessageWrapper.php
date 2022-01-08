@@ -29,11 +29,9 @@
 
 namespace Espo\Core\Mail;
 
-use Laminas\Mail\Storage\Message;
-
 use Espo\Core\Mail\Mail\Storage\Imap;
 
-class MessageWrapper
+class MessageWrapper implements Message
 {
     private $parser;
 
@@ -45,11 +43,9 @@ class MessageWrapper
 
     private $rawContent = null;
 
-    private $message = null;
+    private $fullRawContent = null;
 
-    protected $fullRawContent = null;
-
-    protected $flagList = null;
+    private $flagList = null;
 
     public function __construct(?Imap $storage = null, ?string $id = null, ?Parser $parser = null)
     {
@@ -80,14 +76,14 @@ class MessageWrapper
         return $this->parser;
     }
 
-    public function hasAttribute(string $attribute): bool
+    public function hasHeader(string $name): bool
     {
-        return $this->getParser()->hasMessageAttribute($this, $attribute);
+        return $this->getParser()->hasHeader($this, $name);
     }
 
-    public function getAttribute(string $attribute): ?string
+    public function getHeader(string $attribute): ?string
     {
-        return $this->getParser()->getMessageAttribute($this, $attribute);
+        return $this->getParser()->getHeader($this, $attribute);
     }
 
     public function getRawContent(): string
@@ -106,36 +102,6 @@ class MessageWrapper
         }
 
         return $this->getRawHeader() . "\n" . $this->getRawContent();
-    }
-
-    public function getMessage(): Message
-    {
-        if (!$this->message) {
-            $data = [];
-
-            if ($this->storage) {
-                $data['handler'] = $this->storage;
-            }
-
-            if ($this->flagList) {
-                $data['flags'] = $this->flagList;
-            }
-
-            if ($this->fullRawContent) {
-                $data['raw'] = $this->fullRawContent;
-            }
-            else if ($this->rawHeader) {
-                $data['headers'] = $this->rawHeader;
-            }
-
-            if ($this->id) {
-                $data['id'] = $this->id;
-            }
-
-            $this->message = new Message($data);
-        }
-
-        return $this->message;
     }
 
     public function getFlags(): array

@@ -31,23 +31,17 @@ namespace Espo\Core\Mail\Parsers;
 
 use Psr\Http\Message\StreamInterface;
 
-use Espo\Entities\{
-    Email,
-    Attachment,
-};
+use Espo\Entities\Email;
+use Espo\Entities\Attachment;
 
-use Espo\Core\{
-    Mail\MessageWrapper,
-    Mail\Parser,
-    ORM\EntityManager,
-};
+use Espo\Core\Mail\Message;
+use Espo\Core\Mail\Parser;
+use Espo\ORM\EntityManager;
 
-use ZBateson\MailMimeParser\{
-    MailMimeParser as WrappeeParser,
-    Message\Part\MessagePart,
-    Message\Part\MimePart,
-    Message,
-};
+use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
+use ZBateson\MailMimeParser\Message\Part\MessagePart;
+use ZBateson\MailMimeParser\Message\Part\MimePart;
+use ZBateson\MailMimeParser\Message as ParserMessage;
 
 use stdClass;
 
@@ -68,7 +62,7 @@ class MailMimeParser implements Parser
 
     private $parser = [];
 
-    protected $messageHash = [];
+    private $messageHash = [];
 
     public function __construct(EntityManager $entityManager)
     {
@@ -84,7 +78,7 @@ class MailMimeParser implements Parser
         return $this->parser;
     }
 
-    protected function loadContent(MessageWrapper $message): void
+    protected function loadContent(Message $message): void
     {
         $raw = $message->getFullRawContent();
 
@@ -95,9 +89,9 @@ class MailMimeParser implements Parser
 
 
     /**
-     * @return Message
+     * @return ParserMessage
      */
-    protected function getMessage(MessageWrapper $message)
+    protected function getMessage(Message $message)
     {
         $key = spl_object_hash($message);
 
@@ -114,23 +108,23 @@ class MailMimeParser implements Parser
         return $this->messageHash[$key];
     }
 
-    public function hasMessageAttribute(MessageWrapper $message, string $attribute): bool
+    public function hasHeader(Message $message, string $name): bool
     {
-        return $this->getMessage($message)->getHeaderValue($attribute) !== null;
+        return $this->getMessage($message)->getHeaderValue($name) !== null;
     }
 
-    public function getMessageAttribute(MessageWrapper $message, string $attribute): ?string
+    public function getHeader(Message $message, string $name): ?string
     {
-        if (!$this->hasMessageAttribute($message, $attribute)) {
+        if (!$this->hasHeader($message, $name)) {
             return null;
         }
 
-        return $this->getMessage($message)->getHeaderValue($attribute);
+        return $this->getMessage($message)->getHeaderValue($name);
     }
 
-    public function getMessageMessageId(MessageWrapper $message): ?string
+    public function getMessageId(Message $message): ?string
     {
-        $messageId = $this->getMessageAttribute($message, 'Message-ID');
+        $messageId = $this->getHeader($message, 'Message-ID');
 
         if (!$messageId) {
             return null;
@@ -143,7 +137,7 @@ class MailMimeParser implements Parser
         return $messageId;
     }
 
-    public function getAddressNameMap(MessageWrapper $message): stdClass
+    public function getAddressNameMap(Message $message): stdClass
     {
         $map = (object) [];
 
@@ -169,7 +163,7 @@ class MailMimeParser implements Parser
         return $map;
     }
 
-    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?stdClass
+    public function getAddressData(Message $message, string $type): ?stdClass
     {
         $header = $this->getMessage($message)->getHeader($type);
 
@@ -188,7 +182,7 @@ class MailMimeParser implements Parser
     /**
      * @return string[]
      */
-    public function getAddressListFromMessage(MessageWrapper $message, string $type): array
+    public function getAddressList(Message $message, string $type): array
     {
         $addressList = [];
 
@@ -208,7 +202,7 @@ class MailMimeParser implements Parser
     /**
      * @return Attachment[]
      */
-    public function fetchContentParts(MessageWrapper $message, Email $email): array
+    public function getInlineAttachmentList(Message $message, Email $email): array
     {
         $inlineAttachmentList = [];
 

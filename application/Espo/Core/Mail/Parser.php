@@ -29,36 +29,31 @@
 
 namespace Espo\Core\Mail;
 
-use Espo\Entities\{
-    Email,
-    Attachment,
-};
-
-use Espo\Core\{
-    Mail\MessageWrapper
-};
+use Espo\Entities\Email;
+use Espo\Entities\Attachment;
+use Espo\Core\Mail\Message;
 
 use stdClass;
 
 interface Parser
 {
-    public function hasMessageAttribute(MessageWrapper $message, string $attribute): bool;
+    public function hasHeader(Message $message, string $name): bool;
 
-    public function getMessageAttribute(MessageWrapper $message, string $attribute): ?string;
+    public function getHeader(Message $message, string $name): ?string;
 
-    public function getMessageMessageId(MessageWrapper $message): ?string;
+    public function getMessageId(Message $message): ?string;
 
-    public function getAddressNameMap(MessageWrapper $message): stdClass;
+    public function getAddressNameMap(Message $message): stdClass;
 
-    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?stdClass;
+    public function getAddressData(Message $message, string $type): ?stdClass;
 
     /**
      * @return string[]
      */
-    public function getAddressListFromMessage(MessageWrapper $message, string $type): array;
+    public function getAddressList(Message $message, string $type): array;
 
     /**
      * @return Attachment[] A list of inline attachments.
      */
-    public function fetchContentParts(MessageWrapper $message, Email $email): array;
+    public function getInlineAttachmentList(Message $message, Email $email): array;
 }
