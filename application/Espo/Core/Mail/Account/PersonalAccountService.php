@@ -59,7 +59,7 @@ class PersonalAccountService
         Crypt $crypt,
         GroupAccountStorageFactory $storageFactory,
         User $user
-    ){
+    ) {
         $this->fetcher = $fetcher;
         $this->accountFactory = $accountFactory;
         $this->crypt = $crypt;
