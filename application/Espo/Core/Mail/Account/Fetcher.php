@@ -215,10 +215,7 @@ class Fetcher
             if (count($idList)) {
                 $uid1 = $storage->getUniqueId($idList[0]);
 
-                if (
-                    $uid1 &&
-                    (int) $uid1 > (int) $previousLastUniqueId
-                ) {
+                if ((int) $uid1 > (int) $previousLastUniqueId) {
                     $fetchData->setForceByDate($folder, false);
                 }
             }
