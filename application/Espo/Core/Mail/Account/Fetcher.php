@@ -41,7 +41,6 @@ use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchHook;
 use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchHook;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult as BeforeFetchHookResult;
 
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Field\DateTime as DateTimeField;
@@ -142,18 +141,24 @@ class Fetcher
             return;
         }
 
-        $lastUID = $fetchData->lastUID->$folder ?? 0;
-        $lastDate = $fetchData->lastDate->$folder ?? 0;
-        $forceByDate = !empty($fetchData->byDate->$folder);
+        $lastUniqueId = $fetchData->getLastUniqueId($folder);
+        $lastDate = $fetchData->getLastDate($folder);
+        $forceByDate = $fetchData->getForceByDate($folder);
 
         $portionLimit = $forceByDate ? 0 : $account->getPortionLimit();
 
-        $previousLastUID = $lastUID;
+        $previousLastUniqueId = $lastUniqueId;
 
-        $idList = $this->getIdList($account, $storage, $lastUID, $lastDate, $forceByDate);
+        $idList = $this->getIdList(
+            $account,
+            $storage,
+            $lastUniqueId,
+            $lastDate,
+            $forceByDate
+        );
 
-        if (count($idList) === 1 && !empty($lastUID)) {
-            if ($storage->getUniqueId($idList[0]) === $lastUID) {
+        if (count($idList) === 1 && $lastUniqueId) {
+            if ($storage->getUniqueId($idList[0]) === $lastUniqueId) {
                 return;
             }
         }
@@ -162,13 +167,13 @@ class Fetcher
 
         foreach ($idList as $id) {
             if ($counter == count($idList) - 1) {
-                $lastUID = $storage->getUniqueId($id);
+                $lastUniqueId = $storage->getUniqueId($id);
             }
 
-            if ($forceByDate && $previousLastUID) {
+            if ($forceByDate && $previousLastUniqueId) {
                 $uid = $storage->getUniqueId($id);
 
-                if ($uid <= $previousLastUID) {
+                if ((int) $uid <= (int) $previousLastUniqueId) {
                     $counter++;
 
                     continue;
@@ -181,18 +186,14 @@ class Fetcher
             $isLastInPortion = $counter === $portionLimit - 1;
 
             if ($isLast || $isLastInPortion) {
-                $lastUID = $storage->getUniqueId($id);
+                $lastUniqueId = $storage->getUniqueId($id);
 
                 if ($email && $email->getDateSent()) {
-                    $dt = $email->getDateSent()->getDateTime();
+                    $lastDate = $email->getDateSent();
 
-                    $nowDt = new DateTime();
-
-                    if ($dt->getTimestamp() >= $nowDt->getTimestamp()) {
-                        $dt = $nowDt;
+                    if ($lastDate->getTimestamp() >= (new DateTime())->getTimestamp()) {
+                        $lastDate = DateTimeField::createNow();
                     }
-
-                    $lastDate = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                 }
 
                 break;
@@ -202,29 +203,35 @@ class Fetcher
         }
 
         if ($forceByDate) {
-            $nowDt = new DateTime();
-
-            $lastDate = $nowDt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+            $lastDate = DateTimeField::createNow();
         }
 
-        $fetchData->lastDate->$folder = $lastDate;
-        $fetchData->lastUID->$folder = $lastUID;
+        $fetchData->setLastDate($folder, $lastDate);
+        $fetchData->setLastUniqueId($folder, $lastUniqueId);
 
-        if ($forceByDate) {
-            if ($previousLastUID) {
-                $idList = $storage->getIdsFromUniqueId($previousLastUID);
+        if ($forceByDate && $previousLastUniqueId) {
+            $idList = $storage->getIdsFromUniqueId($previousLastUniqueId);
 
-                if (count($idList)) {
-                    $uid1 = $storage->getUniqueId($idList[0]);
+            if (count($idList)) {
+                $uid1 = $storage->getUniqueId($idList[0]);
 
-                    if ($uid1 && $uid1 > $previousLastUID) {
-                        unset($fetchData->byDate->$folder);
-                    }
+                if (
+                    $uid1 &&
+                    (int) $uid1 > (int) $previousLastUniqueId
+                ) {
+                    $fetchData->setForceByDate($folder, false);
                 }
             }
         }
-        else if ($previousLastUID && count($idList) && $previousLastUID >= $lastUID) {
-            $fetchData->byDate->$folder = true;
+
+        if (
+            !$forceByDate &&
+            $previousLastUniqueId &&
+            count($idList) &&
+            (int) $previousLastUniqueId >= (int) $lastUniqueId
+        ) {
+            // Handling broken numbering. Next time fetch since the last date rather than the last UID.
+            $fetchData->setForceByDate($folder, true);
         }
 
         $account->updateFetchData($fetchData);
@@ -237,7 +244,7 @@ class Fetcher
         Account $account,
         Storage $storage,
         ?string $lastUID,
-        ?string $lastDate,
+        ?DateTimeField $lastDate,
         bool $forceByDate
     ): array {
 
@@ -246,9 +253,7 @@ class Fetcher
         }
 
         if ($lastDate) {
-            return $storage->getIdsSinceDate(
-                DateTimeField::fromString($lastDate)
-            );
+            return $storage->getIdsSinceDate($lastDate);
         }
 
         if (!$account->getFetchSince()) {

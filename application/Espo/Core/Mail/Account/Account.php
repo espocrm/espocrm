@@ -35,14 +35,12 @@ use Espo\Core\Field\LinkMultiple;
 
 use Espo\Entities\Email;
 
-use stdClass;
-
 interface Account
 {
     /**
      * Update fetch-data.
      */
-    public function updateFetchData(stdClass $fetchData): void;
+    public function updateFetchData(FetchData $fetchData): void;
 
     /**
      * Relate an email with the account.
@@ -92,7 +90,7 @@ interface Account
     /**
      * Get fetch-data.
      */
-    public function getFetchData(): stdClass;
+    public function getFetchData(): FetchData;
 
     /**
      * Fetch email since a specific date.

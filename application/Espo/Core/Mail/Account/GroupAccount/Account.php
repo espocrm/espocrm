@@ -41,6 +41,7 @@ use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\Mail\Account\Account as AccountInterface;
+use Espo\Core\Mail\Account\FetchData;
 
 use stdClass;
 
@@ -61,9 +62,9 @@ class Account implements AccountInterface
         $this->config = $config;
     }
 
-    public function updateFetchData(stdClass $fetchData): void
+    public function updateFetchData(FetchData $fetchData): void
     {
-        $this->entity->set('fetchData', $fetchData);
+        $this->entity->set('fetchData', $fetchData->getRaw());
 
         $this->entityManager->saveEntity($this->entity, ['silent' => true]);
     }
@@ -152,9 +153,11 @@ class Account implements AccountInterface
         return $this->entity->keepFetchedEmailsUnread();
     }
 
-    public function getFetchData(): stdClass
+    public function getFetchData(): FetchData
     {
-        return $this->entity->getFetchData();
+        return FetchData::fromRaw(
+            $this->entity->getFetchData()
+        );
     }
 
     public function getFetchSince(): ?Date
