@@ -41,7 +41,7 @@ define('views/email-account/modals/select-folder', 'views/modal', function (Dep)
         },
 
         events: {
-            'click button[data-action="select"]': function (e) {
+            'click [data-action="select"]': function (e) {
                 var value = $(e.currentTarget).data('value');
 
                 this.trigger('select', value);
@@ -49,13 +49,7 @@ define('views/email-account/modals/select-folder', 'views/modal', function (Dep)
         },
 
         setup: function () {
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-
+            this.headerHtml = this.translate('Select');
         },
 
     });

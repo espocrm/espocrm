@@ -1,11 +1,12 @@
 {{#unless folders}}
     {{translate 'No Data'}}
 {{/unless}}
-<ul class="list-group">
+<ul class="list-group no-side-margin array-add-list-group">
 {{#each folders}}
-    <li class="list-group-item clearfix">
+    <li class="list-group-item">
+        <a href="javascript:" data-value="{{./this}}" data-action="select" class="text-bold">
         {{./this}}
-        <button class="btn btn-default pull-right" data-value="{{./this}}" data-action="select">{{translate 'Select'}}</button>
+        </a>
     </li>
 {{/each}}
 </ul>
