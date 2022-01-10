@@ -46,13 +46,13 @@ class GroupAccountService
 
     private Crypt $crypt;
 
-    private GroupAccountStorageFactory $storageFactory;
+    private StorageFactory $storageFactory;
 
     public function __construct(
         Fetcher $fetcher,
         GroupAccountFactory $accountFactory,
         Crypt $crypt,
-        GroupAccountStorageFactory $storageFactory
+        StorageFactory $storageFactory
     ) {
         $this->fetcher = $fetcher;
         $this->accountFactory = $accountFactory;

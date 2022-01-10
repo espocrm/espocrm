@@ -249,6 +249,10 @@ class DefaultBinding implements BindingProcessor
             ->bindFactory(
                 'Espo\\Core\\Mail\\Account\\Fetcher',
                 'Espo\\Core\\Mail\\Account\\PersonalAccountFetcherFactory'
+            )
+            ->bindImplementation(
+                'Espo\\Core\\Mail\\Account\\StorageFactory',
+                'Espo\\Core\\Mail\\Account\\PersonalAccountStorageFactory'
             );
 
         $binder
@@ -256,6 +260,10 @@ class DefaultBinding implements BindingProcessor
             ->bindFactory(
                 'Espo\\Core\\Mail\\Account\\Fetcher',
                 'Espo\\Core\\Mail\\Account\\GroupAccountFetcherFactory'
+            )
+            ->bindImplementation(
+                'Espo\\Core\\Mail\\Account\\StorageFactory',
+                'Espo\\Core\\Mail\\Account\\GroupAccountStorageFactory'
             );
     }
 }
