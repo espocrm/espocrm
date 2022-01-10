@@ -43,8 +43,6 @@ use Espo\ORM\EntityManager;
 use Espo\Core\Mail\Account\Account as AccountInterface;
 use Espo\Core\Mail\Account\FetchData;
 
-use stdClass;
-
 class Account implements AccountInterface
 {
     private InboundEmail $entity;
