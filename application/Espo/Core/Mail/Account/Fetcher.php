@@ -246,18 +246,19 @@ class Fetcher
         }
 
         if ($lastDate) {
-            $fetchSince = $lastDate;
+            return $storage->getIdsSinceDate(
+                DateTimeField::fromString($lastDate)
+            );
         }
-        else {
-            if (!$account->getFetchSince()) {
-                throw new Error("{$account->getEntityType()} {$account->getId()}, no fetch-since.");
-            }
 
-            $fetchSince = $account->getFetchSince()->getString();
+        if (!$account->getFetchSince()) {
+            throw new Error("{$account->getEntityType()} {$account->getId()}, no fetch-since.");
         }
+
+        $fetchSince = $account->getFetchSince()->getDateTime();
 
         return $storage->getIdsSinceDate(
-            DateTimeField::fromString($fetchSince)
+            DateTimeField::fromDateTime($fetchSince)
         );
     }
 
