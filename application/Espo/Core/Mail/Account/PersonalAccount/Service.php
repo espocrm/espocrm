@@ -42,8 +42,6 @@ use Espo\Core\Utils\Crypt;
 
 use Espo\Entities\User;
 
-use RecursiveIteratorIterator;
-
 class Service
 {
     private Fetcher $fetcher;
@@ -107,18 +105,7 @@ class Service
 
         $storage = $this->storageFactory->createWithParams($params);
 
-        $folderIterator = new RecursiveIteratorIterator(
-            $storage->getFolders(),
-            RecursiveIteratorIterator::SELF_FIRST
-        );
-
-        $list = [];
-
-        foreach ($folderIterator as $folder) {
-            $list[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
-        }
-
-        return $list;
+        return $storage->getFolderNames();
     }
 
     public function testConnection(Params $params): void
@@ -156,7 +143,7 @@ class Service
 
         $storage = $this->storageFactory->createWithParams($params);
 
-        $storage->getFolders();
+        $storage->getFolderNames();
     }
 
     /**

@@ -29,12 +29,9 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
-use Espo\Core\{
-    Mail\ImporterData,
-};
+use Espo\Core\Mail\Importer\Data as ImporterData;
 
 use Espo\Entities\EmailFilter;
-
 
 class ImporterDataTest extends \PHPUnit\Framework\TestCase
 {

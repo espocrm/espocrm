@@ -102,7 +102,9 @@ class Importer
         $folderData = $data->getFolderData();
 
         $parser = $message instanceof MessageWrapper ?
-            $message->getParser() :
+            (
+                $message->getParser() ?? $this->parserFactory->create()
+            ) :
             $this->parserFactory->create();
 
         /** @var Email $email */

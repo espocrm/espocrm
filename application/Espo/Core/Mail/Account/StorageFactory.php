@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Mail\Account;
 
-use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\Account\Storage\Params;
+use Espo\Core\Mail\Account\Storage;
 
 interface StorageFactory
 {
-    public function create(Account $account): Imap;
+    public function create(Account $account): Storage;
 
-    public function createWithParams(Params $params): Imap;
+    public function createWithParams(Params $params): Storage;
 }

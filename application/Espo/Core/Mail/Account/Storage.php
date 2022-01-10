@@ -27,47 +27,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Mail\Storage;
+namespace Espo\Core\Mail\Account;
 
-class Imap extends \Laminas\Mail\Storage\Imap
+use Espo\Core\Field\DateTime;
+
+interface Storage
 {
     /**
-     * @return int[]
+     * Set message flags.
+     *
+     * @param string[] $flags
      */
-    public function getIdsFromUniqueId(string $uid): array
-    {
-        $nextUid = strval(intval($uid) + 1);
-
-        return $this->protocol->search(['UID ' . $nextUid . ':*']);
-    }
+    public function setFlags(int $id, array $flags): void;
 
     /**
-     * @return int[]
+     * Get a message size.
      */
-    public function getIdsSinceDate(string $date): array
-    {
-        return $this->protocol->search(['SINCE "' . $date . '"']);
-    }
+    public function getSize(int $id): int;
 
     /**
-     * @param int $id
+     * Get message raw content.
+     */
+    public function getRawContent(int $id): string;
+
+    /**
+     * Get a message unique ID.
+     */
+    public function getUniqueId(int $id): string;
+
+    /**
+     * Get IDs from unique ID.
+     *
+     * @return int[]
+     */
+    public function getIdsFromUniqueId(string $uniqueId): array;
+
+    /**
+     * Get IDs since a specific date.
+     *
+     * @return int[]
+     */
+    public function getIdsSinceDate(DateTime $since): array;
+
+    /**
+     * Get only header and flags. Won't fetch the whole email.
+     *
      * @return array{header: string, flags: string[]}
      */
-    public function getHeaderAndFlags(int $id): array
-    {
-        $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
+    public function getHeaderAndFlags(int $id): array;
 
-        $header = $data['RFC822.HEADER'];
+    /**
+     * Close the resource.
+     */
+    public function close(): void;
 
-        $flags = [];
+    /**
+     * @retrun string[]
+     */
+    public function getFolderNames(): array;
 
-        foreach ($data['FLAGS'] as $flag) {
-            $flags[] = isset(static::$knownFlags[$flag]) ? static::$knownFlags[$flag] : $flag;
-        }
+    /**
+     * Select a folder.
+     */
+    public function selectFolder(string $name): void;
 
-        return [
-            'flags' => $flags,
-            'header' => $header,
-        ];
-    }
+    /**
+     * Store a message.
+     */
+    public function appendMessage(string $content, ?string $folder = null): void;
 }

@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Mail;
 
-use Espo\Core\Mail\Mail\Storage\Imap;
+use Espo\Core\Mail\Account\Storage;
 
 class MessageWrapper implements Message
 {
+    private int $id;
+
     private $parser;
 
     private $storage;
-
-    private $id;
 
     private $rawHeader = null;
 
@@ -47,8 +47,12 @@ class MessageWrapper implements Message
 
     private $flagList = null;
 
-    public function __construct(?Imap $storage = null, ?string $id = null, ?Parser $parser = null)
-    {
+    public function __construct(
+        int $id,
+        ?Storage $storage = null,
+        ?Parser $parser = null,
+        ?string $fullRawContent = null
+    ) {
         if ($storage) {
             $data = $storage->getHeaderAndFlags($id);
 
@@ -59,11 +63,7 @@ class MessageWrapper implements Message
         $this->id = $id;
         $this->storage = $storage;
         $this->parser = $parser;
-    }
-
-    public function setFullRawContent(string $content): void
-    {
-        $this->fullRawContent = $content;
+        $this->fullRawContent = $fullRawContent;
     }
 
     public function getRawHeader(): string
@@ -89,7 +89,7 @@ class MessageWrapper implements Message
     public function getRawContent(): string
     {
         if (is_null($this->rawContent)) {
-            $this->rawContent = $this->storage->getRawContent((int) $this->id);
+            $this->rawContent = $this->storage->getRawContent($this->id);
         }
 
         return $this->rawContent ?? '';

@@ -34,6 +34,7 @@ use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Account;
 
 use Espo\Core\Mail\Mail\Storage\Imap;
+use Espo\Core\Mail\Account\Storage\LaminasStorage;
 
 use Espo\Core\Utils\Crypt;
 use Espo\Core\Utils\Log;
@@ -56,8 +57,6 @@ class StorageFactory implements StorageFactoryInterface
 
     private EntityManager $entityManager;
 
-    private string $storageClassName = Imap::class;
-
     public function __construct(
         Crypt $crypt,
         Log $log,
@@ -70,7 +69,7 @@ class StorageFactory implements StorageFactoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function create(Account $account): Imap
+    public function create(Account $account): LaminasStorage
     {
         $params = Params::createBuilder()
             ->setHost($account->getHost())
@@ -89,7 +88,7 @@ class StorageFactory implements StorageFactoryInterface
         return $this->createWithParams($params);
     }
 
-    public function createWithParams(Params $params): Imap
+    public function createWithParams(Params $params): LaminasStorage
     {
         $rawParams = [
             'host' => $params->getHost(),
@@ -172,7 +171,9 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        return new $this->storageClassName($imapParams);
+        return new LaminasStorage(
+            new Imap($imapParams)
+        );
     }
 
     private function getUserDataRepository(): UserDataRepository

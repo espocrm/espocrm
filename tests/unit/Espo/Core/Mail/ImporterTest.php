@@ -165,9 +165,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             $this->linkMultipleSaver
         );
 
-        $message = new MessageWrapper();
-
-        $message->setFullRawContent($contents);
+        $message = new MessageWrapper(0, null, null, $contents);
 
         $data = ImporterData
             ::create()

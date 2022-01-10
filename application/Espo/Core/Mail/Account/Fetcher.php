@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Mail\Account;
 
-use Laminas\Mail\Storage;
-
 use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Mail\Account\Storage\Flag;
+use Espo\Core\Mail\Account\Storage;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
-use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Mail\ParserFactory;
 use Espo\Core\Mail\MessageWrapper;
 use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchHook;
@@ -44,6 +44,7 @@ use Espo\Core\Mail\Account\Hook\BeforeFetchResult as BeforeFetchHookResult;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
+use Espo\Core\Field\DateTime as DateTimeField;
 
 use Espo\Entities\EmailFilter;
 use Espo\Entities\Email;
@@ -121,7 +122,7 @@ class Fetcher
     private function fetchFolder(
         Account $account,
         string $folderOriginal,
-        Imap $storage,
+        Storage $storage,
         Collection $filterList
     ): void {
 
@@ -130,7 +131,7 @@ class Fetcher
         $folder = mb_convert_encoding($folderOriginal, 'UTF7-IMAP', 'UTF-8');
 
         try {
-            $storage->selectFolder($folder);
+            $storage->selectFolder($folderOriginal);
         }
         catch (Throwable $e) {
             $this->log->error(
@@ -211,7 +212,7 @@ class Fetcher
 
         if ($forceByDate) {
             if ($previousLastUID) {
-                $idList = $storage->getIdsFromUID($previousLastUID);
+                $idList = $storage->getIdsFromUniqueId($previousLastUID);
 
                 if (count($idList)) {
                     $uid1 = $storage->getUniqueId($idList[0]);
@@ -234,14 +235,14 @@ class Fetcher
      */
     private function getIdList(
         Account $account,
-        Imap $storage,
+        Storage $storage,
         ?string $lastUID,
         ?string $lastDate,
         bool $forceByDate
     ): array {
 
         if (!empty($lastUID) && !$forceByDate) {
-            return $storage->getIdsFromUID($lastUID);
+            return $storage->getIdsFromUniqueId($lastUID);
         }
 
         if ($lastDate) {
@@ -255,8 +256,8 @@ class Fetcher
             $fetchSince = $account->getFetchSince()->getString();
         }
 
-        return $storage->getIdsFromDate(
-            (new DateTime($fetchSince))->format('d-M-Y')
+        return $storage->getIdsSinceDate(
+            DateTimeField::fromString($fetchSince)
         );
     }
 
@@ -265,7 +266,7 @@ class Fetcher
      */
     private function fetchEmail(
         Account $account,
-        Imap $storage,
+        Storage $storage,
         int $id,
         Collection $filterList
     ): ?Email {
@@ -297,7 +298,7 @@ class Fetcher
             ->withAssignedUserId($assignedUserId);
 
         try {
-            $message = new MessageWrapper($storage, (string) $id, $parser);
+            $message = new MessageWrapper($id, $storage, $parser);
 
             $hookResult = null;
 
@@ -318,9 +319,9 @@ class Fetcher
             if (
                 $account->keepFetchedEmailsUnread() &&
                 is_array($flags) &&
-                empty($flags[Storage::FLAG_SEEN])
+                empty($flags[Flag::SEEN])
             ) {
-                unset($flags[Storage::FLAG_RECENT]);
+                unset($flags[Flag::RECENT]);
 
                 $storage->setFlags($id, $flags);
             }
@@ -395,7 +396,7 @@ class Fetcher
             ->find();
     }
 
-    private function checkFetchOnlyHeader(Imap $storage, int $id): bool
+    private function checkFetchOnlyHeader(Storage $storage, int $id): bool
     {
         $maxSize = $this->config->get('emailMessageMaxSize');
 

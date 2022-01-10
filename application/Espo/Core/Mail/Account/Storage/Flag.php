@@ -27,47 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Mail\Storage;
+namespace Espo\Core\Mail\Account\Storage;
 
-class Imap extends \Laminas\Mail\Storage\Imap
+class Flag
 {
-    /**
-     * @return int[]
-     */
-    public function getIdsFromUniqueId(string $uid): array
-    {
-        $nextUid = strval(intval($uid) + 1);
+    public const PASSED = 'Passed';
 
-        return $this->protocol->search(['UID ' . $nextUid . ':*']);
-    }
+    public const SEEN = '\Seen';
 
-    /**
-     * @return int[]
-     */
-    public function getIdsSinceDate(string $date): array
-    {
-        return $this->protocol->search(['SINCE "' . $date . '"']);
-    }
+    public const UNSEEN = '\Unseen';
 
-    /**
-     * @param int $id
-     * @return array{header: string, flags: string[]}
-     */
-    public function getHeaderAndFlags(int $id): array
-    {
-        $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
+    public const ANSWERED = '\Answered';
 
-        $header = $data['RFC822.HEADER'];
+    public const FLAGGED = '\Flagged';
 
-        $flags = [];
+    public const DELETED = '\Deleted';
 
-        foreach ($data['FLAGS'] as $flag) {
-            $flags[] = isset(static::$knownFlags[$flag]) ? static::$knownFlags[$flag] : $flag;
-        }
+    public const DRAFT = '\Draft';
 
-        return [
-            'flags' => $flags,
-            'header' => $header,
-        ];
-    }
+    public const RECENT = '\Recent';
 }

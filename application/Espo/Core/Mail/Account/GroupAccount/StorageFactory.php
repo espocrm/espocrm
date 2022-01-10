@@ -32,7 +32,7 @@ namespace Espo\Core\Mail\Account\GroupAccount;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
-
+use Espo\Core\Mail\Account\Storage\LaminasStorage;
 use Espo\Core\Mail\Mail\Storage\Imap;
 
 use Espo\Core\Utils\Crypt;
@@ -49,8 +49,6 @@ class StorageFactory implements StorageFactoryInterface
 
     private InjectableFactory $injectableFactory;
 
-    private string $storageClassName = Imap::class;
-
     public function __construct(Crypt $crypt, Log $log, InjectableFactory $injectableFactory)
     {
         $this->crypt = $crypt;
@@ -58,7 +56,7 @@ class StorageFactory implements StorageFactoryInterface
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(Account $account): Imap
+    public function create(Account $account): LaminasStorage
     {
         $params = Params::createBuilder()
             ->setHost($account->getHost())
@@ -75,7 +73,7 @@ class StorageFactory implements StorageFactoryInterface
         return $this->createWithParams($params);
     }
 
-    public function createWithParams(Params $params): Imap
+    public function createWithParams(Params $params): LaminasStorage
     {
         $rawParams = [
             'host' => $params->getHost(),
@@ -127,6 +125,8 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        return new $this->storageClassName($imapParams);
+        return new LaminasStorage(
+            new Imap($imapParams)
+        );
     }
 }

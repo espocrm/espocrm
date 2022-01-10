@@ -57,11 +57,6 @@ interface Message
     public function getFullRawContent(): string;
 
     /**
-     * Set a full raw message.
-     */
-    public function setFullRawContent(string $content): void;
-
-    /**
      * Get flags.
      *
      * @return string[]
