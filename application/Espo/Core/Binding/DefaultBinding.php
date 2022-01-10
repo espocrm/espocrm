@@ -33,6 +33,15 @@ class DefaultBinding implements BindingProcessor
 {
     public function process(Binder $binder): void
     {
+        $this->bindServices($binder);
+        $this->bindMisc($binder);
+        $this->bindAcl($binder);
+        $this->bindWebSocket($binder);
+        $this->bindEmailAccount($binder);
+    }
+
+    private function bindServices(Binder $binder): void
+    {
         $binder->bindService(
             'Espo\\Core\\InjectableFactory',
             'injectableFactory'
@@ -197,17 +206,31 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\ExternalAccount\\ClientManager',
             'externalAccountClientManager'
         );
+    }
 
-        $binder->bindImplementation(
-            'Espo\\Core\\Acl\\Table\\TableFactory',
-            'Espo\\Core\\Acl\\Table\\DefaultTableFactory'
-        );
-
+    private function bindMisc(Binder $binder): void
+    {
         $binder->bindImplementation(
             'Espo\\Core\\Utils\\Id\\RecordIdGenerator',
             'Espo\\Core\\Utils\\Id\\DefaultRecordIdGenerator'
         );
 
+        $binder->bindFactory(
+            'Espo\\Core\\Sms\\Sender',
+            'Espo\\Core\\Sms\\SenderFactory'
+        );
+    }
+
+    private function bindAcl(Binder $binder): void
+    {
+        $binder->bindImplementation(
+            'Espo\\Core\\Acl\\Table\\TableFactory',
+            'Espo\\Core\\Acl\\Table\\DefaultTableFactory'
+        );
+    }
+
+    private function bindWebSocket(Binder $binder): void
+    {
         $binder->bindFactory(
             'Espo\\Core\\WebSocket\\Subscriber',
             'Espo\\Core\\WebSocket\\SubscriberFactory'
@@ -217,12 +240,10 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\WebSocket\\Sender',
             'Espo\\Core\\WebSocket\\SenderFactory'
         );
+    }
 
-        $binder->bindFactory(
-            'Espo\\Core\\Sms\\Sender',
-            'Espo\\Core\\Sms\\SenderFactory'
-        );
-
+    private function bindEmailAccount(Binder $binder): void
+    {
         $binder
             ->for('Espo\\Core\\Mail\\Account\\PersonalAccountService')
             ->bindFactory(
