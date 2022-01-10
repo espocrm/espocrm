@@ -35,7 +35,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Account\PersonalAccountService as AccountService;
+use Espo\Core\Mail\Account\PersonalAccount\Service as AccountService;
 use Espo\Core\Record\CreateParams;
 
 use Espo\Entities\EmailAccount as EmailAccountEntity;

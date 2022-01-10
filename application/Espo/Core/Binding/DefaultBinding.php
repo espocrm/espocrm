@@ -245,25 +245,25 @@ class DefaultBinding implements BindingProcessor
     private function bindEmailAccount(Binder $binder): void
     {
         $binder
-            ->for('Espo\\Core\\Mail\\Account\\PersonalAccountService')
+            ->for('Espo\\Core\\Mail\\Account\\PersonalAccount\\Service')
             ->bindFactory(
                 'Espo\\Core\\Mail\\Account\\Fetcher',
-                'Espo\\Core\\Mail\\Account\\PersonalAccountFetcherFactory'
+                'Espo\\Core\\Mail\\Account\\PersonalAccount\\FetcherFactory'
             )
             ->bindImplementation(
                 'Espo\\Core\\Mail\\Account\\StorageFactory',
-                'Espo\\Core\\Mail\\Account\\PersonalAccountStorageFactory'
+                'Espo\\Core\\Mail\\Account\\PersonalAccount\\StorageFactory'
             );
 
         $binder
-            ->for('Espo\\Core\\Mail\\Account\\GroupAccountService')
+            ->for('Espo\\Core\\Mail\\Account\\GroupAccount\\Service')
             ->bindFactory(
                 'Espo\\Core\\Mail\\Account\\Fetcher',
-                'Espo\\Core\\Mail\\Account\\GroupAccountFetcherFactory'
+                'Espo\\Core\\Mail\\Account\\GroupAccount\\FetcherFactory'
             )
             ->bindImplementation(
                 'Espo\\Core\\Mail\\Account\\StorageFactory',
-                'Espo\\Core\\Mail\\Account\\GroupAccountStorageFactory'
+                'Espo\\Core\\Mail\\Account\\GroupAccount\\StorageFactory'
             );
     }
 }

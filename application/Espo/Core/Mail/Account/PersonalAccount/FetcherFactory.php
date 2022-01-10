@@ -27,40 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\PersonalAccount;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\Factory;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
 
-use Espo\Entities\InboundEmail;
+use Espo\Core\Mail\Account\Hook\AfterFetch;
+use Espo\Core\Mail\Account\PersonalAccount\Hooks\AfterFetch as PersonalAccountAfterFetch;
 
-use Espo\ORM\EntityManager;
+use Espo\Core\Mail\Account\Fetcher;
+use Espo\Core\Mail\Account\StorageFactory;
+use Espo\Core\Mail\Account\PersonalAccount\StorageFactory as PersonalAccountStorageFactory;
 
-class GroupAccountFactory
+class FetcherFactory implements Factory
 {
     private InjectableFactory $injectableFactory;
 
-    private EntityManager $entityManager;
-
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
+    public function __construct(InjectableFactory $injectableFactory)
     {
         $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
     }
 
-    public function create(string $id): GroupAccount
+    public function create(): Fetcher
     {
-        $entity = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
-
-        if (!$entity) {
-            throw new Error("InboundEmail '{$id}' not found.");
-        }
-
         $binding = BindingContainerBuilder::create()
-            ->bindInstance(InboundEmail::class, $entity)
+            ->bindImplementation(StorageFactory::class, PersonalAccountStorageFactory::class)
+            ->bindImplementation(AfterFetch::class, PersonalAccountAfterFetch::class)
             ->build();
 
-        return $this->injectableFactory->createWithBinding(GroupAccount::class, $binding);
+        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
     }
 }

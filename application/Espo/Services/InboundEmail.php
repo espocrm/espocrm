@@ -34,7 +34,7 @@ use Laminas\Mail\Message;
 use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Account\GroupAccountService as AccountService;
+use Espo\Core\Mail\Account\GroupAccount\Service as AccountService;
 
 use Espo\Services\Record as RecordService;
 

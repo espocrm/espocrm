@@ -27,31 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\PersonalAccount;
 
-use Espo\Core\Binding\Factory;
-use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\BindingContainerBuilder;
 
-use Espo\Core\Mail\Account\Hook\AfterFetch;
-use Espo\Core\Mail\Account\Hook\Hooks\PersonalAccountAfterFetch;
+use Espo\Entities\EmailAccount;
 
-class PersonalAccountFetcherFactory implements Factory
+use Espo\ORM\EntityManager;
+
+class AccountFactory
 {
     private InjectableFactory $injectableFactory;
 
-    public function __construct(InjectableFactory $injectableFactory)
+    private EntityManager $entityManager;
+
+    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
     {
         $this->injectableFactory = $injectableFactory;
+        $this->entityManager = $entityManager;
     }
 
-    public function create(): Fetcher
+    public function create(string $id): Account
     {
+        $entity = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);
+
+        if (!$entity) {
+            throw new Error("EmailAccount '{$id}' not found.");
+        }
+
         $binding = BindingContainerBuilder::create()
-            ->bindImplementation(StorageFactory::class, PersonalAccountStorageFactory::class)
-            ->bindImplementation(AfterFetch::class, PersonalAccountAfterFetch::class)
+            ->bindInstance(EmailAccount::class, $entity)
             ->build();
 
-        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
+        return $this->injectableFactory->createWithBinding(Account::class, $binding);
     }
 }

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\GroupAccount;
 
 use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
@@ -40,9 +40,11 @@ use Espo\Entities\Email;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Core\Mail\Account\Account as AccountInterface;
+
 use stdClass;
 
-class GroupAccount implements Account
+class Account implements AccountInterface
 {
     private InboundEmail $entity;
 

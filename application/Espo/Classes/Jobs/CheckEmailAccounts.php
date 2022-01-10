@@ -31,7 +31,7 @@ namespace Espo\Classes\Jobs;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\Mail\Account\PersonalAccountService as Service;
+use Espo\Core\Mail\Account\PersonalAccount\Service;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 

@@ -27,52 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\Hook\Hooks;
+namespace Espo\Core\Mail\Account\GroupAccount;
 
-use Espo\Core\Mail\Account\Account;
-use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
-use Espo\Core\Mail\Account\Hook\AfterFetch;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\BindingContainerBuilder;
 
-use Espo\Services\Stream as StreamService;
-use Espo\Entities\Email;
+use Espo\Entities\InboundEmail;
 
 use Espo\ORM\EntityManager;
 
-class PersonalAccountAfterFetch implements AfterFetch
+class AccountFactory
 {
+    private InjectableFactory $injectableFactory;
+
     private EntityManager $entityManager;
 
-    private StreamService $streamService;
-
-    public function __construct(
-        EntityManager $entityManager,
-        StreamService $streamService
-    ) {
+    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
+    {
+        $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
-        $this->streamService = $streamService;
     }
 
-    public function process(Account $account, Email $email, BeforeFetchResult $beforeFetchResult): void
+    public function create(string $id): Account
     {
-        if (!$email->isFetched()) {
-            $this->noteAboutEmail($email);
-        }
-    }
+        $entity = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
 
-    private function noteAboutEmail(Email $email): void
-    {
-        $parentLink = $email->getParent();
-
-        if (!$parentLink) {
-            return;
+        if (!$entity) {
+            throw new Error("InboundEmail '{$id}' not found.");
         }
 
-        $parent = $this->entityManager->getEntity($parentLink->getEntityType(), $parentLink->getId());
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(InboundEmail::class, $entity)
+            ->build();
 
-        if (!$parent) {
-            return;
-        }
-
-        $this->streamService->noteEmailReceived($parent, $email);
+        return $this->injectableFactory->createWithBinding(Account::class, $binding);
     }
 }

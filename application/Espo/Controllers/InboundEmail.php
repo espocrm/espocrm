@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Mail\Account\GroupAccountService as Service;
+use Espo\Core\Mail\Account\GroupAccount\Service;
 use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
 use Espo\Core\Controllers\Record;

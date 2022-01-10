@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Espo\Core\Exceptions\Error;
 
@@ -43,9 +43,11 @@ use Espo\Entities\Email;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Core\Mail\Account\Account as AccountInterface;
+
 use stdClass;
 
-class PersonalAccount implements Account
+class Account implements AccountInterface
 {
     private EmailAccount $entity;
 

@@ -27,37 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Laminas\Mail\Message;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
+use Espo\Core\Mail\Account\StorageFactory;
+
 use Espo\Core\Utils\Crypt;
+
+use Espo\Entities\User;
 
 use RecursiveIteratorIterator;
 
-class GroupAccountService
+class Service
 {
     private Fetcher $fetcher;
 
-    private GroupAccountFactory $accountFactory;
+    private AccountFactory $accountFactory;
 
     private Crypt $crypt;
 
     private StorageFactory $storageFactory;
 
+    private User $user;
+
     public function __construct(
         Fetcher $fetcher,
-        GroupAccountFactory $accountFactory,
+        AccountFactory $accountFactory,
         Crypt $crypt,
-        StorageFactory $storageFactory
+        StorageFactory $storageFactory,
+        User $user
     ) {
         $this->fetcher = $fetcher;
         $this->accountFactory = $accountFactory;
         $this->crypt = $crypt;
         $this->storageFactory = $storageFactory;
+        $this->user = $user;
     }
 
     /**
@@ -75,6 +85,16 @@ class GroupAccountService
      */
     public function getFolderList(Params $params): array
     {
+        $userId = $params->getUserId();
+
+        if (
+            $userId &&
+            !$this->user->isAdmin() &&
+            $userId !== $this->user->getId()
+        ) {
+            throw new Forbidden();
+        }
+
         if ($params->getId()) {
             $account = $this->accountFactory->create($params->getId());
 
@@ -103,8 +123,29 @@ class GroupAccountService
 
     public function testConnection(Params $params): void
     {
+        $userId = $params->getUserId();
+
+        if (
+            $userId &&
+            !$this->user->isAdmin() &&
+            $userId !== $this->user->getId()
+        ) {
+            throw new Forbidden();
+        }
+
+        if (!$params->getId() && $params->getPassword() === null) {
+            throw new Forbidden();
+        }
+
         if ($params->getId()) {
             $account = $this->accountFactory->create($params->getId());
+
+            if (
+                !$this->user->isAdmin() &&
+                $account->getAssignedUser()->getId() !== $this->user->getId()
+            ) {
+                throw new Forbidden();
+            }
 
             $params = $params
                 ->withPassword(
@@ -128,7 +169,7 @@ class GroupAccountService
         $folder = $account->getSentFolder();
 
         if (!$folder) {
-            throw new Error("No sent folder for Group Email Account {$id}.");
+            throw new Error("No sent folder for Email Account {$id}.");
         }
 
         $storage = $this->storageFactory->create($account);

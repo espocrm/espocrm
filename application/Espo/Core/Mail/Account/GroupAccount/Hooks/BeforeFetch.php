@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\Hook\Hooks;
+namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
-use Espo\Core\Mail\Account\Hook\BeforeFetch;
+use Espo\Core\Mail\Account\Hook\BeforeFetch as BeforeFetchInterface;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 
 use Espo\Core\Mail\Account\Account;
@@ -47,7 +47,7 @@ use Espo\Modules\Crm\Services\Campaign as CampaignService;
 
 use Throwable;
 
-class GroupAccountBeforeFetch implements BeforeFetch
+class BeforeFetch implements BeforeFetchInterface
 {
     private Log $log;
 

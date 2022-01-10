@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account\Hook\Hooks;
+namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Laminas\Mail\Message;
 
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
-use Espo\Core\Mail\Account\Hook\AfterFetch;
-use Espo\Core\Mail\Account\GroupAccount;
+use Espo\Core\Mail\Account\Hook\AfterFetch as AfterFetchInterface;
+use Espo\Core\Mail\Account\GroupAccount\Account as GroupAccount;
 use Espo\Core\Mail\EmailSender;
 
 use Espo\Core\Utils\Config;
@@ -66,7 +66,7 @@ use Espo\Modules\Crm\Business\Distribution\CaseObj\LeastBusy;
 use Throwable;
 use DateTime;
 
-class GroupAccountAfterFetch implements AfterFetch
+class AfterFetch implements AfterFetchInterface
 {
     private EntityManager $entityManager;
 

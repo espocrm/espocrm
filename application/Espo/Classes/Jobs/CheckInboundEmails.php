@@ -30,7 +30,7 @@
 namespace Espo\Classes\Jobs;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccountService as Service;
+use Espo\Core\Mail\Account\GroupAccount\Service;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 

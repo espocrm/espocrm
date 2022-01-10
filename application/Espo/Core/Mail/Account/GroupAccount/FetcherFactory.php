@@ -27,40 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\GroupAccount;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\Factory;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
 
-use Espo\Entities\EmailAccount;
+use Espo\Core\Mail\Account\Hook\BeforeFetch;
+use Espo\Core\Mail\Account\Hook\AfterFetch;
+use Espo\Core\Mail\Account\GroupAccount\Hooks\BeforeFetch as GroupAccountBeforeFetch;
+use Espo\Core\Mail\Account\GroupAccount\Hooks\AfterFetch as GroupAccountAfterFetch;
 
-use Espo\ORM\EntityManager;
+use Espo\Core\Mail\Account\StorageFactory;
+use Espo\Core\Mail\Account\GroupAccount\StorageFactory as GroupAccountStorageFactory;
+use Espo\Core\Mail\Account\Fetcher;
 
-class PersonalAccountFactory
+class FetcherFactory implements Factory
 {
     private InjectableFactory $injectableFactory;
 
-    private EntityManager $entityManager;
-
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
+    public function __construct(InjectableFactory $injectableFactory)
     {
         $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
     }
 
-    public function create(string $id): PersonalAccount
+    public function create(): Fetcher
     {
-        $entity = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);
-
-        if (!$entity) {
-            throw new Error("EmailAccount '{$id}' not found.");
-        }
-
         $binding = BindingContainerBuilder::create()
-            ->bindInstance(EmailAccount::class, $entity)
+            ->bindImplementation(BeforeFetch::class, GroupAccountBeforeFetch::class)
+            ->bindImplementation(AfterFetch::class, GroupAccountAfterFetch::class)
+            ->bindImplementation(StorageFactory::class, GroupAccountStorageFactory::class)
             ->build();
 
-        return $this->injectableFactory->createWithBinding(PersonalAccount::class, $binding);
+        return $this->injectableFactory->createWithBinding(Fetcher::class, $binding);
     }
 }

@@ -27,10 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail\Account;
+namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Espo\Core\Mail\Account\Storage\Params;
+use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
+use Espo\Core\Mail\Account\Account;
+
 use Espo\Core\Mail\Mail\Storage\Imap;
+
 use Espo\Core\Utils\Crypt;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
@@ -42,7 +46,7 @@ use Espo\ORM\EntityManager;
 
 use Throwable;
 
-class PersonalAccountStorageFactory implements StorageFactory
+class StorageFactory implements StorageFactoryInterface
 {
     private Crypt $crypt;
 
