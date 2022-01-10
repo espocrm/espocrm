@@ -63,12 +63,12 @@ class FetchData
     {
         $value = $this->data->lastDate->$folder ?? null;
 
-        if ($value !== null && !is_string($value)) {
-            throw new RuntimeException("Bad value in fetch-data.");
-        }
-
         if ($value === null) {
             return null;
+        }
+
+        if (!is_string($value)) {
+            throw new RuntimeException("Bad value in fetch-data.");
         }
 
         return DateTime::fromString($value);
@@ -88,19 +88,19 @@ class FetchData
         $this->data->lastUID->$folder = $uniqueId;
     }
 
-    public function setLastDate(string $folder, ?DateTime $dateTime): void
+    public function setLastDate(string $folder, ?DateTime $lastDate): void
     {
         if (!property_exists($this->data, 'lastDate')) {
             $this->data->lastDate = (object) [];
         }
 
-        if ($dateTime === null) {
+        if ($lastDate === null) {
             $this->data->lastDate->$folder = null;
 
             return;
         }
 
-        $this->data->lastDate->$folder = $dateTime->getString();
+        $this->data->lastDate->$folder = $lastDate->getString();
     }
 
     public function setForceByDate(string $folder, bool $forceByDate): void
