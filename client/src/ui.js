@@ -388,7 +388,9 @@ define('ui', [], function () {
 
         this.$el.on('click.dismiss.bs.modal', (e) => {
             if (e.target === e.currentTarget) {
-                return this.backdrop === 'static' ? this.$el[0].focus() : this.close();
+                if (this.backdrop !== 'static') {
+                    this.close();
+                }
             }
         });
 
