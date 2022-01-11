@@ -33,8 +33,6 @@ use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Utils\Config;
 use Espo\ORM\EntityManager;
 
-//use DateTime;
-
 use Espo\Core\Field\DateTime;
 
 class MassActions implements Cleanup
