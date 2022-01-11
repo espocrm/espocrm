@@ -559,7 +559,6 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 .get(['entityDefs', this.scope, 'fields', statusField, 'translation']) ||
                 this.scope + '.options.' + statusField;
 
-            fieldView.params.options = optionList;
             fieldView.params.translation = translation;
 
             fieldView.setupTranslation();
