@@ -38,7 +38,7 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Acl;
 use Espo\Core\MassAction\Jobs\Process;
-use Espo\Core\Job\JobScheduler;
+use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Entities\User;
@@ -53,7 +53,7 @@ class Service
 
     private $acl;
 
-    private $jobScheduler;
+    private JobSchedulerFactory $jobSchedulerFactory;
 
     private $entityManager;
 
@@ -62,13 +62,13 @@ class Service
     public function __construct(
         MassActionFactory $factory,
         Acl $acl,
-        JobScheduler $jobScheduler,
+        JobSchedulerFactory $jobSchedulerFactory,
         EntityManager $entityManager,
         User $user
     ) {
         $this->factory = $factory;
         $this->acl = $acl;
-        $this->jobScheduler = $jobScheduler;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
         $this->entityManager = $entityManager;
         $this->user = $user;
     }
@@ -162,7 +162,8 @@ class Service
             'data' => $data,
         ]);
 
-        $this->jobScheduler
+        $this->jobSchedulerFactory
+            ->create()
             ->setClassName(Process::class)
             ->setData(
                 JobData::create()
