@@ -321,12 +321,10 @@ class Fetcher
 
             if (
                 $account->keepFetchedEmailsUnread() &&
-                is_array($flags) &&
-                empty($flags[Flag::SEEN])
+                $flags !== null &&
+                !in_array(Flag::SEEN, $flags)
             ) {
-                unset($flags[Flag::RECENT]);
-
-                $storage->setFlags($id, $flags);
+                $storage->setFlags($id, self::flagsWithoutRecent($flags));
             }
         }
         catch (Throwable $e) {
@@ -446,5 +444,16 @@ class Fetcher
         }
 
         return null;
+    }
+
+    /**
+     * @param string[] $flags
+     * @return string[]
+     */
+    private static function flagsWithoutRecent(array $flags): array
+    {
+        return array_values(
+            array_diff($flags, [Flag::RECENT])
+        );
     }
 }
