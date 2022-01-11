@@ -387,7 +387,7 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             }
 
             text = text.replace(
-                /<a href="mailto:(.*!\")"/gm,
+                /<a href="mailto:(.*)"/gm,
                 '<a href="javascript:" data-email-address="$1" data-action="mailTo"'
             );
 
