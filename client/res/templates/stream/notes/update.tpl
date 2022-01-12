@@ -19,7 +19,11 @@
         <ul>
             {{#each fieldsArr}}
             <li>
-                <span>{{translate field category='fields' scope=../parentType}}</span> <span class="text-soft">&raquo;</span> </span> <span class="inline-block-child-div">{{{var was ../this}}}</span> <span class="text-soft">&rarr;</span> <span class="inline-block-child-div">{{{var became ../this}}}</span>
+                <span>{{translate field category='fields' scope=../parentType}}</span>
+                &nbsp;<span class="text-muted">&#8211;</span>&nbsp;
+                <span class="inline-block-child-div">{{{var was ../this}}}</span>
+                &nbsp;<span class="text-muted small fas fa-arrow-right"></span>&nbsp;
+                <span class="inline-block-child-div">{{{var became ../this}}}</span>
             </li>
             {{/each}}
         </ul>
