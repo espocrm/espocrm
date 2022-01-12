@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,40 +26,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export;
+define('helpers/export', ['lib!espo'], function (Espo) {
 
-use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
+    return class {
+        constructor(view) {
+            this.view = view;
 
-use Espo\Core\AclManager;
-use Espo\Core\Acl;
+            this.config = view.getConfig();
+        }
 
-use Espo\Core\Binding\BindingContainerBuilder;
+        checkIsIdle(totalCount) {
+            if (this.view.getUser().isPortal()) {
+                return false;
+            }
 
-class Factory
-{
-    private InjectableFactory $injectableFactory;
+            if (typeof totalCount === 'undefined') {
+                totalCount = this.view.options.totalCount;
+            }
 
-    private AclManager $aclManager;
+            return totalCount === -1 || totalCount > this.config.get('exportIdleCountThreshold');
+        }
 
-    public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
-    }
+        process(id) {
+            Espo.Ui.notify(false);
 
-    public function create(): Export
-    {
-        return $this->injectableFactory->create(Export::class);
-    }
+            return new Promise((resolve) => {
+                this.view
+                    .createView('dialog', 'views/export/modals/idle', {
+                        id: id,
+                    })
+                    .then(view => {
+                        view.render();
 
-    public function createForUser(User $user): Export
-    {
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user))
-            ->build();
+                        resolve(view);
 
-        return $this->injectableFactory->createWithBinding(Export::class, $bindingContainer);
-    }
-}
+                        this.view.listenToOnce(view, 'success', data => {
+                            resolve(data);
+
+                            this.view.listenToOnce(view, 'close', () => {
+                                view.trigger('close:success', data);
+                            });
+                        });
+                    });
+            });
+        }
+    };
+});

@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "status": {
+            "type": "enum",
+            "options": ["Pending", "Running", "Success", "Failed"],
+            "default": "Pending"
+        },
+        "params": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "required": true
+        },
+        "notifyOnFinish": {
+            "type": "bool",
+            "default": false
+        },
+        "attachment": {
+            "type": "link",
+            "entity": "Attachment"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    }
+}

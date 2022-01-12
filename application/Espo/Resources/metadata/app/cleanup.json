@@ -12,5 +12,8 @@
     },
     "massActions": {
         "className": "Espo\\Classes\\Cleanup\\MassActions"
+    },
+    "exports": {
+        "className": "Espo\\Classes\\Cleanup\\Exports"
     }
 }

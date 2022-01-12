@@ -27,40 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export;
+namespace Espo\Classes\Cleanup;
 
-use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
+use Espo\Core\Cleanup\Cleanup;
+use Espo\Core\Utils\Config;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\AclManager;
-use Espo\Core\Acl;
+use Espo\Core\Field\DateTime;
 
-use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Entities\Export;
 
-class Factory
+class Exports implements Cleanup
 {
-    private InjectableFactory $injectableFactory;
+    private $config;
 
-    private AclManager $aclManager;
+    private $entityManager;
 
-    public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
+    private $cleanupPeriod = '2 days';
+
+    public function __construct(Config $config, EntityManager $entityManager)
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
+        $this->config = $config;
+        $this->entityManager = $entityManager;
     }
 
-    public function create(): Export
+    public function process(): void
     {
-        return $this->injectableFactory->create(Export::class);
-    }
+        $period = '-' . $this->config->get('cleanupExportsPeriod', $this->cleanupPeriod);
 
-    public function createForUser(User $user): Export
-    {
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user))
+        $before = DateTime::createNow()
+            ->modify($period)
+            ->getString();
+
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
+            ->from(Export::ENTITY_TYPE)
+            ->where([
+                'createdAt<' => $before,
+            ])
             ->build();
 
-        return $this->injectableFactory->createWithBinding(Export::class, $bindingContainer);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 }

@@ -29,17 +29,15 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Api\Request,
-    Exceptions\BadRequest,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Tools\Export\{
-    Service,
-    Params,
-};
+use Espo\Tools\Export\Service;
+use Espo\Tools\Export\ServiceParams;
+use Espo\Tools\Export\Params;
 
-use StdClass;
+use stdClass;
 
 class Export
 {
@@ -50,15 +48,50 @@ class Export
         $this->service = $service;
     }
 
-    public function postActionProcess(Request $request): StdClass
+    public function postActionProcess(Request $request): stdClass
     {
         $params = $this->fetchRawParamsFromRequest($request);
 
-        $result = $this->service->process($params);
+        $serviceParams = ServiceParams::create()
+            ->withIsIdle(
+                $request->getParsedBody()->idle ?? false
+            );
+
+        $result = $this->service->process($params, $serviceParams);
+
+        if ($result->hasResult()) {
+            return (object) [
+                'id' => $result->getResult()->getAttachmentId(),
+            ];
+        }
 
         return (object) [
-            'id' => $result->getAttachmentId(),
+            'exportId' => $result->getId(),
         ];
+    }
+
+    public function getActionStatus(Request $request): stdClass
+    {
+        $id = $request->getQueryParam('id');
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        return $this->service->getStatusData($id);
+    }
+
+    public function postActionSubscribeToNotificationOnSuccess(Request $request, Response $response): void
+    {
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest();
+        }
+
+        $this->service->subscribeToNotificationOnSuccess($id);
+
+        $response->writeBody('true');
     }
 
     private function fetchRawParamsFromRequest(Request $request): Params

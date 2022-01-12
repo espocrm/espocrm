@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list', ['view', 'helpers/mass-action'], function (Dep, MassActionHelper) {
+define(
+    'views/record/list',
+    ['view', 'helpers/mass-action', 'helpers/export', 'lib!espo'],
+    function (Dep, MassActionHelper, ExportHelper, Espo) {
 
     return Dep.extend({
 
@@ -589,7 +592,7 @@ define('views/record/list', ['view', 'helpers/mass-action'], function (Dep, Mass
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
-                    data.searchParams = this.collection.data || {};
+                    data.searchParams = this.collection.data || null;
                     data.searchData = this.collection.data || {}; // for bc;
                 }
                 else {
@@ -618,6 +621,13 @@ define('views/record/list', ['view', 'helpers/mass-action'], function (Dep, Mass
                 o.fieldList = layoutFieldList;
             }
 
+            let helper = new ExportHelper(this);
+            let idle = this.allResultIsChecked && helper.checkIsIdle(this.collection.total);
+
+            let proceedDownload = (attachmentId) => {
+                window.location = this.getBasePath() + '?entryPoint=download&id=' + attachmentId;
+            };
+
             this.createView('dialogExport', 'views/export/modals/export', o, (view) => {
                 view.render();
 
@@ -627,18 +637,35 @@ define('views/record/list', ['view', 'helpers/mass-action'], function (Dep, Mass
                         data.fieldList = dialogData.fieldList;
                     }
 
+                    data.idle = idle;
                     data.format = dialogData.format;
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
                     Espo.Ajax
                         .postRequest(url, data, {timeout: 0})
-                        .then((data) => {
+                        .then(response => {
                             Espo.Ui.notify(false);
 
-                            if ('id' in data) {
-                                window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
+                            if (response.exportId) {
+                                helper
+                                    .process(response.exportId)
+                                    .then(view => {
+                                        this.listenToOnce(view, 'download', id => {
+                                            proceedDownload(id);
+                                        });
+                                    });
+
+                                return;
                             }
+
+                            if (!response.id) {
+                                throw new Error("No attachment-id.");
+                            }
+
+                            window.location = this.getBasePath() + '?entryPoint=download&id=' + response.id;
+
+                            proceedDownload(response.id);
                         });
                 });
             });

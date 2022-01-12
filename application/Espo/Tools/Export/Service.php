@@ -29,43 +29,60 @@
 
 namespace Espo\Tools\Export;
 
-use Espo\Core\{
-    Exceptions\ForbiddenSilent,
-    Acl,
-    Acl\Table,
-    Utils\Config,
-    Utils\Metadata,
-};
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFoundSilent;
 
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Job\Job\Data as JobData;
+
+use Espo\Tools\Export\Jobs\Process;
+
+use Espo\ORM\EntityManager;
+
+use Espo\Entities\Export as ExportEntity;
 use Espo\Entities\User;
+
+use stdClass;
 
 class Service
 {
-    private $factory;
+    private Factory $factory;
 
-    private $config;
+    private Config $config;
 
-    private $acl;
+    private Acl $acl;
 
-    private $user;
+    private User $user;
 
-    private $metadata;
+    private Metadata $metadata;
+
+    private EntityManager $entityManager;
+
+    private JobSchedulerFactory $jobSchedulerFactory;
 
     public function __construct(
         Factory $factory,
         Config $config,
         Acl $acl,
         User $user,
-        Metadata $metadata
+        Metadata $metadata,
+        EntityManager $entityManager,
+        JobSchedulerFactory $jobSchedulerFactory
     ) {
         $this->factory = $factory;
         $this->config = $config;
         $this->acl = $acl;
         $this->user = $user;
         $this->metadata = $metadata;
+        $this->entityManager = $entityManager;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
     }
 
-    public function process(Params $params): Result
+    public function process(Params $params, ServiceParams $serviceParams): ServiceResult
     {
         if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
             throw new ForbiddenSilent("Export disabled for non-admin users.");
@@ -85,10 +102,76 @@ class Service
             throw new ForbiddenSilent("Export disabled for '{$entityType}'.");
         }
 
+        if ($serviceParams->isIdle()) {
+            if ($this->user->isPortal()) {
+                throw new ForbiddenSilent("Idle export is not allowed for portal users.");
+            }
+
+            return $this->schedule($params);
+        }
+
         $export = $this->factory->create();
 
-        return $export
+        $result = $export
             ->setParams($params)
             ->run();
+
+        return ServiceResult::createWithResult($result);
+    }
+
+    public function getStatusData(string $id): stdClass
+    {
+        /** @var ExportEntity|null $entity */
+        $entity = $this->entityManager->getEntity(ExportEntity::ENTITY_TYPE, $id);
+
+        if (!$entity) {
+            throw new NotFoundSilent();
+        }
+
+        if ($entity->getCreatedBy()->getId() !== $this->user->getId()) {
+            throw new ForbiddenSilent();
+        }
+
+        return (object) [
+            'status' => $entity->getStatus(),
+            'attachmentId' => $entity->getAttachmentId(),
+        ];
+    }
+
+    public function subscribeToNotificationOnSuccess(string $id): void
+    {
+        /** @var ExportEntity|null $entity */
+        $entity = $this->entityManager->getEntity(ExportEntity::ENTITY_TYPE, $id);
+
+        if (!$entity) {
+            throw new NotFoundSilent();
+        }
+
+        if ($entity->getCreatedBy()->getId() !== $this->user->getId()) {
+            throw new ForbiddenSilent();
+        }
+
+        $entity->setNotifyOnFinish();
+
+        $this->entityManager->saveEntity($entity);
+    }
+
+    private function schedule(Params $params): ServiceResult
+    {
+        $entity = $this->entityManager->createEntity(ExportEntity::ENTITY_TYPE, [
+            'params' => serialize($params),
+        ]);
+
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(Process::class)
+            ->setData(
+                JobData::create()
+                    ->withTargetId($entity->getId())
+                    ->withTargetType($entity->getEntityType())
+            )
+            ->schedule();
+
+        return ServiceResult::createWithId($entity->getId());
     }
 }

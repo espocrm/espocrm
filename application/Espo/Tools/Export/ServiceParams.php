@@ -29,38 +29,26 @@
 
 namespace Espo\Tools\Export;
 
-use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
-
-use Espo\Core\AclManager;
-use Espo\Core\Acl;
-
-use Espo\Core\Binding\BindingContainerBuilder;
-
-class Factory
+class ServiceParams
 {
-    private InjectableFactory $injectableFactory;
+    private bool $isIdle = false;
 
-    private AclManager $aclManager;
-
-    public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
+    public static function create(): self
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
+        return new self();
     }
 
-    public function create(): Export
+    public function isIdle(): bool
     {
-        return $this->injectableFactory->create(Export::class);
+        return $this->isIdle;
     }
 
-    public function createForUser(User $user): Export
+    public function withIsIdle(bool $isIdle = true): self
     {
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user))
-            ->build();
+        $obj = clone $this;
 
-        return $this->injectableFactory->createWithBinding(Export::class, $bindingContainer);
+        $obj->isIdle = $isIdle;
+
+        return $obj;
     }
 }

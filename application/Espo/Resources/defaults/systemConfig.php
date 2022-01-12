@@ -291,4 +291,5 @@ return [
     'ldapPortalUserLdapAuth' => false,
     'passwordGenerateLength' => 10,
     'massActionIdleCountThreshold' => 100,
+    'exportIdleCountThreshold' => 1000,
 ];

@@ -2,12 +2,23 @@
     "fields": {
         "exportAllFields": "Export all fields",
         "fieldList": "Field List",
-        "format": "Format"
+        "format": "Format",
+        "status": "Status"
     },
     "options": {
         "format": {
             "csv": "CSV",
             "xlsx": "XLSX (Excel)"
+        },
+        "status": {
+            "Pending": "Pending",
+            "Running": "Running",
+            "Success": "Success",
+            "Failed": "Failed"
         }
+    },
+    "messages": {
+        "exportProcessed": "Export has been processed. Download the [file]({url}).",
+        "infoText": "The export is being processed in idle by cron. It can take some time to finish. Closing this modal dialog won't affect the execution process."
     }
 }

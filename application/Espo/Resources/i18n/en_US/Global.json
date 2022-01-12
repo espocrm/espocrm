@@ -265,7 +265,8 @@
         "Save & New": "Save & New",
         "Field": "Field",
         "Resolution": "Resolution",
-        "Resolve Conflict": "Resolve Conflict"
+        "Resolve Conflict": "Resolve Conflict",
+        "Download": "Download"
     },
     "messages": {
         "pleaseWait": "Please wait...",

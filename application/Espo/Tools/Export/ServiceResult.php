@@ -29,38 +29,42 @@
 
 namespace Espo\Tools\Export;
 
-use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
-
-use Espo\Core\AclManager;
-use Espo\Core\Acl;
-
-use Espo\Core\Binding\BindingContainerBuilder;
-
-class Factory
+class ServiceResult
 {
-    private InjectableFactory $injectableFactory;
+    private ?Result $result = null;
 
-    private AclManager $aclManager;
+    private ?string $id = null;
 
-    public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
+    private function __construct() {}
+
+    public function hasResult(): bool
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
+        return $this->result !== null;
     }
 
-    public function create(): Export
+    public function getId(): ?string
     {
-        return $this->injectableFactory->create(Export::class);
+        return $this->id;
     }
 
-    public function createForUser(User $user): Export
+    public function getResult(): ?Result
     {
-        $bindingContainer = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $user)
-            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user))
-            ->build();
+        return $this->result;
+    }
 
-        return $this->injectableFactory->createWithBinding(Export::class, $bindingContainer);
+    public static function createWithId(string $id): self
+    {
+        $obj = new self;
+        $obj->id = $id;
+
+        return $obj;
+    }
+
+    public static function createWithResult(Result $result): self
+    {
+        $obj = new self;
+        $obj->result = $result;
+
+        return $obj;
     }
 }
