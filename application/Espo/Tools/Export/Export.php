@@ -35,6 +35,8 @@ use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     Exceptions\Error,
     Utils\Json,
@@ -87,6 +89,8 @@ class Export
 
     private $fieldUtil;
 
+    private User $user;
+
     public function __construct(
         ProcessorFactory $processorFactory,
         SelectBuilderFactory $selectBuilderFactor,
@@ -96,7 +100,8 @@ class Export
         Metadata $metadata,
         FileStorageManager $fileStorageManager,
         ListLoadProcessor $listLoadProcessor,
-        FieldUtil $fieldUtil
+        FieldUtil $fieldUtil,
+        User $user
     ) {
         $this->processorFactory = $processorFactory;
         $this->selectBuilderFactory = $selectBuilderFactor;
@@ -107,6 +112,7 @@ class Export
         $this->fileStorageManager = $fileStorageManager;
         $this->listLoadProcessor = $listLoadProcessor;
         $this->fieldUtil = $fieldUtil;
+        $this->user = $user;
     }
 
     public function setParams(Params $params): self
@@ -221,7 +227,10 @@ class Export
         $attachment->set('type', $mimeType);
         $attachment->set('size', $stream->getSize());
 
-        $this->entityManager->saveEntity($attachment);
+
+        $this->entityManager->saveEntity($attachment, [
+            'createdById' => $this->user->getId(),
+        ]);
 
         $this->fileStorageManager->putStream($attachment, $stream);
 
@@ -356,6 +365,7 @@ class Export
 
         $builder = $this->selectBuilderFactory
             ->create()
+            ->forUser($this->user)
             ->from($entityType)
             ->withSearchParams($searchParams);
 
