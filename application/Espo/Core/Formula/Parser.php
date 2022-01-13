@@ -31,7 +31,7 @@ namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\SyntaxError;
 
-use StdClass;
+use stdClass;
 
 /**
  * Parses a formula script into AST. Returns a RAW data object that represents a tree of functions.
@@ -64,12 +64,12 @@ class Parser
         '<=' => 'comparison\\lessThanOrEquals',
     ];
 
-    public function parse(string $expression): StdClass
+    public function parse(string $expression): stdClass
     {
         return $this->split($expression);
     }
 
-    private function applyOperator(string $operator, string $firstPart, string $secondPart): StdClass
+    private function applyOperator(string $operator, string $firstPart, string $secondPart): stdClass
     {
         if ($operator === '=') {
             if (strlen($firstPart)) {
@@ -215,7 +215,7 @@ class Parser
         return $isString;
     }
 
-    private function split(string $expression): StdClass
+    private function split(string $expression): stdClass
     {
         $expression = trim($expression);
 
