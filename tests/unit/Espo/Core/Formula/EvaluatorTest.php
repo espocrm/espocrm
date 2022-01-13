@@ -32,6 +32,8 @@ namespace tests\unit\Espo\Core\Formula;
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\InjectableFactory;
 
+use Espo\Core\Formula\Exceptions\SyntaxError;
+
 use Espo\Core\Utils\Log;
 
 use tests\unit\ContainerMocker;
@@ -514,5 +516,68 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(2, $vars->test);
 
+    }
+
+    public function testSyntaxError1(): void
+    {
+        $expression = "test = 'test";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError2(): void
+    {
+        $expression = "test 'tests'";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError3(): void
+    {
+        $expression = "test tests";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError4(): void
+    {
+        $expression = "test = ";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError5(): void
+    {
+        $expression = "test =";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError6(): void
+    {
+        $expression = "test = $";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
+
+    public function testSyntaxError7(): void
+    {
+        $expression = "test.+test";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
     }
 }

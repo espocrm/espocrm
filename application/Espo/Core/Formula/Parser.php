@@ -72,33 +72,37 @@ class Parser
     private function applyOperator(string $operator, string $firstPart, string $secondPart): stdClass
     {
         if ($operator === '=') {
-            if (strlen($firstPart)) {
-                if ($firstPart[0] == '$') {
-                    return (object) [
-                        'type' => 'assign',
-                        'value' => [
-                            (object) [
-                                'type' => 'value',
-                                'value' => substr($firstPart, 1)
-                            ],
-                            $this->split($secondPart)
-                        ]
-                    ];
-                }
+            if (!strlen($firstPart)) {
+                throw new SyntaxError("Bad operator usage.");
+            }
 
+            if ($firstPart[0] == '$') {
                 return (object) [
-                    'type' => 'setAttribute',
+                    'type' => 'assign',
                     'value' => [
                         (object) [
                             'type' => 'value',
-                            'value' => $firstPart,
+                            'value' => substr($firstPart, 1)
                         ],
                         $this->split($secondPart)
                     ]
                 ];
             }
 
-            throw new SyntaxError("Bad operator usage.");
+            if ($secondPart === '') {
+                throw SyntaxError::create("Bad assignment usage.");
+            }
+
+            return (object) [
+                'type' => 'setAttribute',
+                'value' => [
+                    (object) [
+                        'type' => 'value',
+                        'value' => $firstPart,
+                    ],
+                    $this->split($secondPart)
+                ]
+            ];
         }
 
         $functionName = $this->operatorMap[$operator];
@@ -225,7 +229,11 @@ class Parser
         $modifiedExpression = '';
         $splitterIndexList = [];
 
-        $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
+        $isStringNotClosed = $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
+
+        if ($isStringNotClosed) {
+            throw SyntaxError::create('String is not closed.');
+        }
 
         $this->stripComments($expression, $modifiedExpression);
 
@@ -454,9 +462,15 @@ class Parser
             }
 
             if ($expression[0] === "$") {
+                $value = substr($expression, 1);
+
+                if ($value === '') {
+                    throw SyntaxError::create("Empty variable name");
+                }
+
                 return (object) [
                     'type' => 'variable',
-                    'value' => substr($expression, 1)
+                    'value' => $value,
                 ];
             }
 
@@ -510,6 +524,18 @@ class Parser
                         'value' => $argumentSplittedList,
                     ];
                 }
+            }
+
+            if ($expression === '') {
+                throw SyntaxError::create("Empty attribute.");
+            }
+
+            if (!preg_match("/^[a-zA-Z0-9.]+$/", $expression)) {
+                throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
+            }
+
+            if (substr($expression, -1) === '.') {
+                throw SyntaxError::create("Attribute ends with dot.");
             }
 
             return (object) [
