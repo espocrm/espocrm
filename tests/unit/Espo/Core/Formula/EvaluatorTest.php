@@ -63,42 +63,42 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->evaluator = null;
     }
 
-    function testEvaluateMathExpression1()
+    public function testEvaluateMathExpression1()
     {
         $expression = "5 - (2 + 1)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(2, $actual);
     }
 
-    function testEvaluateList1()
+    public function testEvaluateList1()
     {
         $expression = "list()";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals([], $actual);
     }
 
-    function testEvaluateList2()
+    public function testEvaluateList2()
     {
         $expression = "list(1)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals([1], $actual);
     }
 
-    function testEvaluateEmpty()
+    public function testEvaluateEmpty()
     {
         $expression = '';
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(null, $actual);
     }
 
-    function testNotEqualsNull()
+    public function testNotEqualsNull()
     {
         $expression = "5 != null";
         $actual = $this->evaluator->process($expression);
         $this->assertTrue($actual);
     }
 
-    function testSummationOfMultipleIfThenElse()
+    public function testSummationOfMultipleIfThenElse()
     {
         $expression = "
             ifThenElse(
@@ -123,7 +123,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2.5, $actual);
     }
 
-    function testStringPad()
+    public function testStringPad()
     {
         $expression = "string\\pad('1', 3, '0')";
         $actual = $this->evaluator->process($expression);
@@ -142,7 +142,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('0110', $actual);
     }
 
-    function testStringMatchAll()
+    public function testStringMatchAll()
     {
         $expression = "string\\matchAll('{token1} foo {token2} bar', '/{[^}]*}/')";
         $actual = $this->evaluator->process($expression);
@@ -157,7 +157,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['{token2}'], $actual);
     }
 
-    function testStringMatch()
+    public function testStringMatch()
     {
         $expression = "string\\match('{token1} foo {token2} bar', '/{[^}]*}/')";
         $actual = $this->evaluator->process($expression);
@@ -172,14 +172,14 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('{token2}', $actual);
     }
 
-    function testStringReplace()
+    public function testStringReplace()
     {
         $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals('hello hello hello', $actual);
     }
 
-    function testArrayAt()
+    public function testArrayAt()
     {
         $expression = "array\\at(list(1, 2, 4, 8, 16), 2)";
         $actual = $this->evaluator->process($expression);
@@ -494,7 +494,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(124 % 5, $actual);
     }
 
-    function testParentheses1()
+    public function testParentheses1()
     {
         $expression = "
             \$test = 1;
