@@ -355,6 +355,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             let html = $('<img>')
                 .attr('src', this.getImageUrl(id, 'small'))
                 .attr('title', name)
+                .attr('draggable', false)
                 .css({
                     maxWidth: (this.imageSizes[this.previewSize] || {})[0],
                     maxHeight: (this.imageSizes[this.previewSize] || {})[1],
