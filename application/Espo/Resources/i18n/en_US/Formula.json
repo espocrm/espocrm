@@ -1,0 +1,9 @@
+{
+    "labels": {
+        "Check Syntax": "Check Syntax"
+    },
+    "messages": {
+        "checkSyntaxSuccess": "Syntax is correct.",
+        "checkSyntaxError": "Syntax error."
+    }
+}

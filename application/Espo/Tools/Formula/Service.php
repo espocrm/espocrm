@@ -27,22 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Exceptions;
+namespace Espo\Tools\Formula;
 
-class SyntaxError extends Error
+use Espo\Core\Formula\Parser;
+use Espo\Core\Formula\Exceptions\SyntaxError;
+
+class Service
 {
-    private $shortMessage = null;
+    private Parser $parser;
 
-    public static function create(string $message, ?string $shortMessage = null): self
+    public function __construct(Parser $parser)
     {
-        $obj = new static($message);
-        $obj->shortMessage = $shortMessage;
-
-        return $obj;
+        $this->parser = $parser;
     }
 
-    public function getShortMessage(): ?string
+    public function checkSyntax(string $expression): SyntaxCheckResult
     {
-        return $this->shortMessage ?? $this->getMessage();
+        try {
+            $this->parser->parse($expression);
+
+            $result = SyntaxCheckResult::createSuccess();
+        }
+        catch (SyntaxError $e) {
+            return SyntaxCheckResult::createError($e);
+        }
+
+        return $result;
     }
 }

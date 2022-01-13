@@ -40,12 +40,19 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         maxLineEditCount: 200,
 
+        insertDisabled: false,
+
+        checkSyntaxDisabled: false,
+
         events: {
             'click [data-action="addAttribute"]': function () {
                 this.addAttribute();
             },
             'click [data-action="addFunction"]': function () {
                 this.addFunction();
+            },
+            'click [data-action="checkSyntax"]': function () {
+                this.checkSyntax();
             },
         },
 
@@ -69,7 +76,8 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 this.params.targetEntityType ||
                 this.targetEntityType;
 
-            this.insertDisabled = this.options.insertDisabled;
+            this.insertDisabled = this.insertDisabled || this.options.insertDisabled;
+            this.checkSyntaxDisabled = this.checkSyntaxDisabled || this.options.checkSyntaxDisabled;
 
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
@@ -107,9 +115,13 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.containerId = this.containerId;
             data.targetEntityType = this.targetEntityType;
+            data.hasSide = !this.insertDisabled && !this.checkSyntaxDisabled;
+
             data.hasInsert = !this.insertDisabled;
+            data.hasCheckSyntax = !this.checkSyntaxDisabled;
 
             return data;
         },
@@ -344,6 +356,42 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             });
 
             return attributeList;
+        },
+
+        checkSyntax: function () {
+            let expression = this.editor.getValue();
+
+            if (!expression) {
+                Espo.Ui.success(
+                    this.translate('checkSyntaxSuccess', 'messages', 'Formula')
+                );
+
+                return;
+            }
+
+            Espo.Ajax
+                .postRequest('Formula/action/checkSyntax', {
+                    expression: expression,
+                })
+                .then(response => {
+                    if (response.isSuccess) {
+                        Espo.Ui.success(
+                            this.translate('checkSyntaxSuccess', 'messages', 'Formula')
+                        );
+
+                        return;
+                    }
+
+                    let message = this.translate('checkSyntaxError', 'messages', 'Formula');
+
+                    if (response.message) {
+                        message += ' ' + response.message;
+                    }
+
+                    Espo.Ui.error(message);
+
+                    return;
+                });
         },
 
     });

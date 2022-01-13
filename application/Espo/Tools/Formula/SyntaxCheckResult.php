@@ -27,22 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Exceptions;
+namespace Espo\Tools\Formula;
 
-class SyntaxError extends Error
+use Espo\Core\Formula\Exceptions\SyntaxError;
+
+use stdClass;
+
+class SyntaxCheckResult
 {
-    private $shortMessage = null;
+    private bool $isSuccess = false;
 
-    public static function create(string $message, ?string $shortMessage = null): self
+    private ?string $message = null;
+
+    private function __construct(bool $isSuccess)
     {
-        $obj = new static($message);
-        $obj->shortMessage = $shortMessage;
+        $this->isSuccess = $isSuccess;
+    }
+
+    public static function createSuccess(): self
+    {
+        return new self(true);
+    }
+
+    public static function createError(SyntaxError $exception): self
+    {
+        $obj = new self(false);
+
+        $obj->message = $exception->getShortMessage();
 
         return $obj;
     }
 
-    public function getShortMessage(): ?string
+    public function isSuccess(): bool
     {
-        return $this->shortMessage ?? $this->getMessage();
+        return $this->isSuccess;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function toStdClass(): stdClass
+    {
+        $data = (object) [];
+
+        $data->isSuccess = $this->isSuccess();
+
+        if (!$this->isSuccess) {
+            $data->message = $this->message;
+        }
+
+        return $data;
     }
 }

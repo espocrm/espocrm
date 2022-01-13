@@ -27,22 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Exceptions;
+namespace Espo\Controllers;
 
-class SyntaxError extends Error
+use Espo\Core\Api\Request;
+
+use Espo\Tools\Formula\Service;
+
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\ForbiddenSilent;
+
+use Espo\Entities\User;
+
+use stdClass;
+
+class Formula
 {
-    private $shortMessage = null;
+    private Service $service;
 
-    public static function create(string $message, ?string $shortMessage = null): self
+    public function __construct(Service $service, User $user)
     {
-        $obj = new static($message);
-        $obj->shortMessage = $shortMessage;
+        $this->service = $service;
 
-        return $obj;
+        if (!$user->isAdmin()) {
+            throw new ForbiddenSilent();
+        }
     }
 
-    public function getShortMessage(): ?string
+    public function postActionCheckSyntax(Request $request): stdClass
     {
-        return $this->shortMessage ?? $this->getMessage();
+        $expression = $request->getParsedBody()->expression ?? null;
+
+        if (!$expression || !is_string($expression)) {
+            throw new BadRequest("No or non-string expression.");
+        }
+
+        return $this->service
+            ->checkSyntax($expression)
+            ->toStdClass();
     }
 }

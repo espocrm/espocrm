@@ -260,7 +260,10 @@ class Parser
         }
 
         if ($braceCounter !== 0) {
-            throw new SyntaxError('Incorrect round brackets in expression ' . $expression . '.');
+            throw SyntaxError::create(
+                'Incorrect round brackets in expression ' . $expression . '.',
+                'Incorrect round brackets.'
+            );
         }
 
         if (
