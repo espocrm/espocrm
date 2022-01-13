@@ -32,4 +32,12 @@ namespace Espo\Modules\Crm\Entities;
 class EmailQueueItem extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'EmailQueueItem';
+
+    public const STATUS_PENDING = 'Pending';
+
+    public const STATUS_FAILED = 'Failed';
+
+    public const STATUS_SENT = 'Sent';
+
+    public const STATUS_SENDING = 'Sending';
 }

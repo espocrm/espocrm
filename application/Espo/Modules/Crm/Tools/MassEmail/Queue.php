@@ -34,11 +34,10 @@ use Espo\Entities\EmailAddress;
 
 use Espo\Modules\Crm\Entities\TargetList;
 use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
 
-use Espo\Core\{
-    Exceptions\Error,
-    ORM\EntityManager,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ORM\EntityManager;
 
 class Queue
 {
@@ -49,10 +48,7 @@ class Queue
         'users',
     ];
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -64,10 +60,13 @@ class Queue
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('EmailQueueItem')
+            ->from(EmailQueueItem::ENTITY_TYPE)
             ->where([
                  'massEmailId' => $massEmail->getId(),
-                 'status' => ['Pending', 'Failed'],
+                 'status' => [
+                     EmailQueueItem::STATUS_PENDING,
+                     EmailQueueItem::STATUS_FAILED,
+                ],
             ])
             ->build();
 
@@ -76,7 +75,7 @@ class Queue
 
     public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
-        if (!$isTest && $massEmail->get('status') !== 'Pending') {
+        if (!$isTest && $massEmail->get('status') !== EmailQueueItem::STATUS_PENDING) {
             throw new Error("Mass Email '" . $massEmail->getId() . "' should be 'Pending'.");
         }
 
@@ -92,7 +91,7 @@ class Queue
 
         if (!$isTest) {
             $excludingTargetListList = $this->entityManager
-                ->getRDBRepository('MassEmail')
+                ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'excludingTargetLists')
                 ->find();
 
@@ -123,7 +122,7 @@ class Queue
 
             /** @var iterable<TargetList> */
             $targetListCollection = $em
-                ->getRDBRepository('MassEmail')
+                ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'targetLists')
                 ->find();
 
@@ -195,11 +194,11 @@ class Queue
                 }
             }
 
-            $queueItem = $this->entityManager->getEntity('EmailQueueItem');
+            $queueItem = $this->entityManager->getNewEntity(EmailQueueItem::ENTITY_TYPE);
 
             $queueItem->set([
                 'massEmailId' => $massEmail->getId(),
-                'status' => 'Pending',
+                'status' => EmailQueueItem::STATUS_PENDING,
                 'targetId' => $item->id,
                 'targetType' => $item->entityType,
                 'isTest' => $isTest,

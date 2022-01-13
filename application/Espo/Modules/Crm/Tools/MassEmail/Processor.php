@@ -32,7 +32,6 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 use Laminas\Mail\Message;
 
 use Espo\Entities\EmailTemplate;
-use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\Core\{
@@ -50,6 +49,7 @@ use Espo\Core\{
 use Espo\{
     Modules\Crm\Entities\EmailQueueItem,
     Modules\Crm\Entities\Campaign,
+    Modules\Crm\Entities\MassEmail,
     Modules\Crm\Services\Campaign as CampaignService,
     Services\EmailTemplate as EmailTemplateService,
     ORM\Entity,
@@ -107,9 +107,9 @@ class Processor
             $threshold->modify('-1 hour');
 
             $sentLastHourCount = $this->entityManager
-                ->getRDBRepository('EmailQueueItem')
+                ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
                 ->where([
-                    'status' => 'Sent',
+                    'status' => EmailQueueItem::STATUS_SENT,
                     'sentAt>' => $threshold->format('Y-m-d H:i:s'),
                 ])
                 ->count();
@@ -122,9 +122,9 @@ class Processor
         }
 
         $queueItemList = $this->entityManager
-            ->getRDBRepository('EmailQueueItem')
+            ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
             ->where([
-                'status' => 'Pending',
+                'status' => EmailQueueItem::STATUS_PENDING,
                 'massEmailId' => $massEmail->getId(),
                 'isTest' => $isTest,
             ])
@@ -212,16 +212,16 @@ class Processor
 
         if (!$isTest) {
             $countLeft = $this->entityManager
-                ->getRDBRepository('EmailQueueItem')
+                ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
                 ->where([
-                    'status' => 'Pending',
+                    'status' => EmailQueueItem::STATUS_PENDING,
                     'massEmailId' => $massEmail->getId(),
                     'isTest' => false,
                 ])
                 ->count();
 
             if ($countLeft == 0) {
-                $massEmail->set('status', 'Complete');
+                $massEmail->set('status', MassEmail::STATUS_COMPLETE);
 
                 $this->entityManager->saveEntity($massEmail);
             }
@@ -346,22 +346,22 @@ class Processor
         }
     }
 
-    protected function setFailed(Entity $massEmail): void
+    protected function setFailed(MassEmail $massEmail): void
     {
-        $massEmail->set('status', 'Failed');
+        $massEmail->set('status', MassEmail::STATUS_FAILED);
 
         $this->entityManager->saveEntity($massEmail);
 
         $queueItemList = $this->entityManager
-            ->getRDBRepository('EmailQueueItem')
+            ->getRDBRepository(EmailQueueItem::ENTITY_TYPE)
             ->where([
-                'status' => 'Pending',
+                'status' => EmailQueueItem::STATUS_PENDING,
                 'massEmailId' => $massEmail->getId(),
             ])
             ->find();
 
         foreach ($queueItemList as $queueItem) {
-            $queueItem->set('status', 'Failed');
+            $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
 
             $this->entityManager->saveEntity($queueItem);
         }
@@ -382,24 +382,28 @@ class Processor
 
         $queueItemFetched = $this->entityManager->getEntity($queueItem->getEntityType(), $queueItem->getId());
 
-        if ($queueItemFetched->get('status') !== 'Pending') {
+        if ($queueItemFetched->get('status') !== EmailQueueItem::STATUS_PENDING) {
             return false;
         }
 
-        $queueItem->set('status', 'Sending');
+        $queueItem->set('status', EmailQueueItem::STATUS_SENDING);
 
         $this->entityManager->saveEntity($queueItem);
 
         $target = $this->entityManager->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
 
-        $emailAddress = $target->get('emailAddress');
+        $emailAddress = null;
+
+        if ($target) {
+            $emailAddress = $target->get('emailAddress');
+        }
 
         if (
             !$target ||
             !$target->getId() ||
             !$emailAddress
         ) {
-            $queueItem->set('status', 'Failed');
+            $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
 
             $this->entityManager->saveEntity($queueItem);
 
@@ -413,7 +417,7 @@ class Processor
 
         if ($emailAddressRecord) {
             if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
-                $queueItem->set('status', 'Failed');
+                $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
 
                 $this->entityManager->saveEntity($queueItem);
 
@@ -484,10 +488,10 @@ class Processor
             $maxAttemptCount = $this->config->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
 
             if ($queueItem->get('attemptCount') >= $maxAttemptCount) {
-                $queueItem->set('status', 'Failed');
+                $queueItem->set('status', EmailQueueItem::STATUS_FAILED);
             }
             else {
-                $queueItem->set('status', 'Pending');
+                $queueItem->set('status', EmailQueueItem::STATUS_PENDING);
             }
 
             $this->entityManager->saveEntity($queueItem);
@@ -507,7 +511,7 @@ class Processor
 
         $queueItem->set('emailAddress', $target->get('emailAddress'));
 
-        $queueItem->set('status', 'Sent');
+        $queueItem->set('status', EmailQueueItem::STATUS_SENT);
         $queueItem->set('sentAt', date('Y-m-d H:i:s'));
 
         $this->entityManager->saveEntity($queueItem);
