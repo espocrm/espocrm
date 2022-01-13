@@ -1,0 +1,24 @@
+<div class="page-header">
+    <h3>
+        <a href="#Admin">{{translate 'Administration'}}</a>
+        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        <a href="#Admin/entityManager">{{translate 'Entity Manager' scope='Admin'}}</a>
+        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        <a href="#Admin/entityManager/scope={{scope}}">{{scope}}</a>
+        <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+        {{translate 'Formula' scope='EntityManager'}}
+    </h3>
+</div>
+
+<div class="button-container">
+    <div class="btn-group actions-btn-group" role="group">
+        <button class="btn btn-danger action action" data-action="save">
+            {{translate 'Save'}}
+        </button>
+        <button class="btn btn-default action action" data-action="close">
+            {{translate 'Close'}}
+        </button>
+    </div>
+</div>
+
+<div class="record">{{{record}}}</div>

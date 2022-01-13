@@ -26,39 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], function (Dep, Espo, Model) {
 
     return Dep.extend({
 
-        className: 'dialog dialog-record',
+        template: 'admin/entity-manager/formula',
 
-        _template: '' +
-            '<div class="panel panel-default no-side-margin"><div class="panel-body">' +
-            '<div class="record">{{{record}}}</div>' +
-            '</div></div>',
+        scope: null,
+
+        events: {
+            'click [data-action="save"]': function () {
+                this.actionSave();
+            },
+            'click [data-action="close"]': function () {
+                this.actionClose();
+            },
+        },
 
         data: function () {
             return {
+                scope: this.scope,
             };
         },
 
         setup: function () {
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: 'Save',
-                    style: 'danger'
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                },
-            ];
-
-            var scope = this.scope = this.options.scope || false;
-
-            this.headerHtml = this.translate('Formula', 'labels', 'EntityManager') + ': ' +
-                this.translate(scope, 'scopeNames');
+            let scope = this.scope = this.options.scope || false;
 
             var model = this.model = new Model();
 
@@ -67,7 +59,7 @@ define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'model'
             this.wait(
                 Espo.Ajax
                     .getRequest('Metadata/action/get', {
-                      key: 'formula.' + scope
+                        key: 'formula.' + scope
                     })
                     .then(formulaData => {
                         formulaData = formulaData || {};
@@ -81,10 +73,30 @@ define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'model'
                         });
                     })
             );
+
+            this.listenTo(this.model, 'change', (m, o) => {
+                if (!o.ui) {
+                    return;
+                }
+
+                this.setIsChanged();
+            });
+        },
+
+        afterRender: function () {
+            this.$save = this.$el.find('[data-action="save"]');
+        },
+
+        disableButtons: function () {
+            this.$save.addClass('disabled').attr('disabled', 'disabled');
+        },
+
+        enableButtons: function () {
+            this.$save.removeClass('disabled').removeAttr('disabled');
         },
 
         actionSave: function () {
-            this.disableButton('save');
+            this.disableButtons();
 
             var data = this.getView('record').fetch();
 
@@ -108,11 +120,32 @@ define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'model'
                 .then(() => {
                     Espo.Ui.success(this.translate('Saved'));
 
-                    this.trigger('after:save');
+                    this.enableButtons();
+
+                    this.setIsNotChanged();
                 })
-                .catch(() => this.enableButton('save'));
+                .catch(() => this.enableButtons());
+        },
+
+        actionClose: function () {
+            this.setIsNotChanged();
+
+            this.getRouter().navigate('#Admin/entityManager/scope=' + this.scope, {trigger: true});
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
         },
 
     });
 });
-

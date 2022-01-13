@@ -96,8 +96,11 @@
                         <div class="cell col-sm-4 form-group">
                             {{#if isCustomizable}}
                             <div class="">
-                                <a class="btn btn-default btn-lg action btn-full-wide"
-                                href="javascript:" data-action="editFormula">
+                                <a
+                                    class="btn btn-default btn-lg action btn-full-wide"
+                                    data-action="editFormula"
+                                    href="#Admin/entityManager/formula&scope={{scope}}"
+                                >
                                     <span class="fas fa-code"></span>
                                     {{translate 'Formula' scope='EntityManager'}}
                                 </a>

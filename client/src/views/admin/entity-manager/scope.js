@@ -78,9 +78,7 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
             }
 
             this.isCustomizable = !!scopeData.customizable;
-
             this.type = scopeData.type;
-
             this.hasLayouts = scopeData.layouts;
 
             this.label = this.getLanguage().translate(this.scope, 'scopeNames');
@@ -89,10 +87,10 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
         editEntity: function () {
             this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
                 scope: this.scope,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'after:save', function (o) {
+                this.listenTo(view, 'after:save', (o) => {
                     this.clearView('edit');
 
                     this.setupScopeData();
@@ -114,24 +112,22 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
                                     label: this.translate('Close'),
                                 },
                             ],
-                        }, function (view) {
+                        }, (view) => {
                             view.render();
                         });
                     }
-                }, this);
+                });
 
-                this.listenTo(view, 'close', function () {
+                this.listenTo(view, 'close', () => {
                     this.clearView('edit');
-                }, this);
-
-            }, this);
+                });
+            });
         },
 
         removeEntity: function () {
             var scope = this.scope;
 
-            this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), function () {
-
+            this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), () => {
                 Espo.Ui.notify(
                     this.translate('pleaseWait', 'messages')
                 );
@@ -154,31 +150,8 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
                             });
                         });
                 })
-                .fail(() => this.enableButtons());
-
-            }.bind(this));
-        },
-
-        afterRender: function () {
-
-        },
-
-        editFormula: function () {
-            var scope = this.scope;
-
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-formula', {
-                scope: scope,
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function () {
-                    this.clearView('edit');
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
+                .catch(() => this.enableButtons());
+            });
         },
 
         updatePageTitle: function () {

@@ -150,6 +150,12 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
         actionEntityManager: function (options) {
             var scope = options.scope || null;
 
+            if (scope && options.formula) {
+                this.main('views/admin/entity-manager/formula', {scope: scope});
+
+                return;
+            }
+
             if (scope) {
                 this.main('views/admin/entity-manager/scope', {scope: scope});
 
