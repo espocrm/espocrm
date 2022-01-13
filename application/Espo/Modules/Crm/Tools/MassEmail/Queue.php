@@ -98,7 +98,7 @@ class Queue
 
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetsLinkList as $link) {
-                    $excludingList = $em->getRDBRepository('TargetList')
+                    $excludingList = $em->getRDBRepository(TargetList::ENTITY_TYPE)
                         ->findRelated(
                             $excludingTargetList,
                             $link,
