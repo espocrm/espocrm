@@ -68,6 +68,8 @@ class Parser
 
     private $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
 
+    private $attributeNameRegExp = "/^[a-zA-Z0-9.]+$/";
+
     public function parse(string $expression): stdClass
     {
         return $this->split($expression);
@@ -548,7 +550,7 @@ class Parser
                 throw SyntaxError::create("Empty attribute.");
             }
 
-            if (!preg_match("/^[a-zA-Z0-9.]+$/", $expression)) {
+            if (!preg_match($this->attributeNameRegExp, $expression)) {
                 throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
             }
 
