@@ -66,6 +66,8 @@ class Parser
 
     private $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
 
+    private $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
+
     public function parse(string $expression): stdClass
     {
         return $this->split($expression);
@@ -114,6 +116,10 @@ class Parser
         }
 
         $functionName = $this->operatorMap[$operator];
+
+        if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
+            throw new SyntaxError("Bad function name `{$functionName}`.");
+        }
 
         return (object) [
             'type' => $functionName,
@@ -525,6 +531,10 @@ class Parser
 
                     foreach ($argumentList as $argument) {
                         $argumentSplittedList[] = $this->split($argument);
+                    }
+
+                    if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
+                        throw new SyntaxError("Bad function name `{$functionName}`.");
                     }
 
                     return (object) [
