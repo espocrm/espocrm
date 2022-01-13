@@ -29,9 +29,16 @@
 
 namespace Espo\Core\Formula\Exceptions;
 
+use Throwable;
+
 class SyntaxError extends Error
 {
     private $shortMessage = null;
+
+    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 
     public static function create(string $message, ?string $shortMessage = null): self
     {
