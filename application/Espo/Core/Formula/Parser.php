@@ -64,6 +64,8 @@ class Parser
         '<=' => 'comparison\\lessThanOrEquals',
     ];
 
+    private $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
+
     public function parse(string $expression): stdClass
     {
         return $this->split($expression);
@@ -77,14 +79,20 @@ class Parser
             }
 
             if ($firstPart[0] == '$') {
+                $variable = substr($firstPart, 1);
+
+                if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
+                    throw new SyntaxError("Bad varable name `{$variable}`.");
+                }
+
                 return (object) [
                     'type' => 'assign',
                     'value' => [
                         (object) [
                             'type' => 'value',
-                            'value' => substr($firstPart, 1)
+                            'value' => $variable,
                         ],
-                        $this->split($secondPart)
+                        $this->split($secondPart),
                     ]
                 ];
             }
@@ -464,8 +472,8 @@ class Parser
             if ($expression[0] === "$") {
                 $value = substr($expression, 1);
 
-                if ($value === '') {
-                    throw SyntaxError::create("Empty variable name");
+                if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
+                    throw new SyntaxError("Bad varable name `{$value}`.");
                 }
 
                 return (object) [

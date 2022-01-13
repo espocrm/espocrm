@@ -580,4 +580,13 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->evaluator->process($expression, null);
     }
+
+    public function testSyntaxError8(): void
+    {
+        $expression = "\$test.'test' = test";
+
+        $this->expectException(SyntaxError::class);
+
+        $this->evaluator->process($expression, null);
+    }
 }
