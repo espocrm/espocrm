@@ -100,7 +100,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
                 var met = false;
 
-                attachmentIdList.forEach(function (cId) {
+                attachmentIdList.forEach((cId) => {
                     if (cId === id) {
                         met = true;
 
@@ -116,25 +116,25 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     } else {
                         imageIdListRight.push(cId);
                     }
-                }, this);
+                });
 
                 var imageIdList = imageIdListLeft.concat(imageIdListRight);
 
                 var imageList = [];
 
-                imageIdList.forEach(function (cId) {
+                imageIdList.forEach((cId) => {
                     imageList.push({
                         id: cId,
                         name: this.nameHash[cId]
                     });
-                }, this);
+                });
 
                 this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
                     name: this.nameHash[id],
                     imageList: imageList
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
             },
@@ -152,7 +152,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 data.fileSystem = ~this.sourceList.indexOf('FileSystem');
                 data.sourceList = this.sourceList;
             }
@@ -193,57 +193,53 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 .concat(
                     this.getMetadata().get(['clientDefs', 'Attachment', 'generalSourceList']) || []
                 )
-                .filter(
-                    function (item, i, self) {
-                        return self.indexOf(item) === i;
+                .filter((item, i, self) => {
+                    return self.indexOf(item) === i;
+                })
+                .filter((item) => {
+                    var defs = sourceDefs[item] || {};
+
+                    if (defs.accessDataList) {
+                        if (
+                            !Espo.Utils.checkAccessDataList(
+                                defs.accessDataList, this.getAcl(), this.getUser()
+                            )
+                        ) {
+                            return false;
+                        }
                     }
-                )
-                .filter(
-                    function (item) {
-                        var defs = sourceDefs[item] || {};
 
-                        if (defs.accessDataList) {
-                            if (
-                                !Espo.Utils.checkAccessDataList(
-                                    defs.accessDataList, this.getAcl(), this.getUser()
-                                )
-                            ) {
-                                return false;
-                            }
+                    if (defs.configCheck) {
+                        var arr = defs.configCheck.split('.');
+
+                        if (!this.getConfig().getByPath(arr)) {
+                            return false;
                         }
+                    }
 
-                        if (defs.configCheck) {
-                            var arr = defs.configCheck.split('.');
+                    return true;
+                });
 
-                            if (!this.getConfig().getByPath(arr)) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    },
-                    this
-                );
-
-            this.listenTo(this.model, 'change:' + this.nameHashName, function () {
+            this.listenTo(this.model, 'change:' + this.nameHashName, () => {
                 this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
-            }.bind(this));
+            });
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.resizeIsBeingListened) {
                     $(window).off('resize.' + this.cid);
                 }
-            }.bind(this));
+            });
 
-            this.on('inline-edit-off', function () {
+            this.on('inline-edit-off', () => {
                 this.isUploading = false;
-            }, this);
+            });
         },
 
         setupSearch: function () {
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     var type = $(e.currentTarget).val();
+
                     this.handleSearchType(type);
                 },
             }, this.events || {});
@@ -265,7 +261,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             this.removeId(id);
 
             if (this.model.isNew()) {
-                this.getModelFactory().create('Attachment', function (attachment) {
+                this.getModelFactory().create('Attachment', (attachment) => {
                     attachment.id = id;
                     attachment.destroy();
                 });
@@ -407,9 +403,9 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
                 $container.append($loading);
 
-                $att.on('ready', function () {
+                $att.on('ready', () => {
                     $loading.html(this.translate('Ready'));
-                }.bind(this));
+                });
             } else {
                 $att.attr('data-id', id);
             }
@@ -420,8 +416,11 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
         showValidationMessage: function (msg, selector) {
             var $label = this.$el.find('label');
             var title = $label.attr('title');
+
             $label.attr('title', '');
+
             Dep.prototype.showValidationMessage.call(this, msg, selector);
+
             $label.attr('title', title);
         },
 
@@ -442,6 +441,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             if (maxFileSize) {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
+
                     if (file.size > maxFileSize * 1024 * 1024) {
                         exceedsMaxFileSize = true;
                     }
@@ -459,36 +459,39 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
             this.isUploading = true;
 
-            this.getModelFactory().create('Attachment', function (model) {
+            this.getModelFactory().create('Attachment', (model) => {
                 var canceledList = [];
 
                 var fileList = [];
+
                 for (var i = 0; i < files.length; i++) {
                     fileList.push(files[i]);
+
                     totalCount++;
                 }
 
-                fileList.forEach(function (file) {
+                fileList.forEach((file) => {
                     var $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
-                    $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
+                    $attachmentBox.find('.remove-attachment').on('click.uploading', () => {
                         canceledList.push(attachment.cid);
 
                         totalCount--;
 
-                        if (uploadedCount == totalCount) {
+                        if (uploadedCount === totalCount) {
                             this.isUploading = false;
+
                             if (totalCount) {
                                 this.afterAttachmentsUploaded.call(this);
                             }
                         }
-                    }.bind(this));
+                    });
 
                     var attachment = model.clone();
 
                     var fileReader = new FileReader();
 
-                    fileReader.onload = function (e) {
+                    fileReader.onload = (e) => {
                         attachment.set('name', file.name);
                         attachment.set('type', file.type || 'text/plain');
                         attachment.set('role', 'Attachment');
@@ -499,52 +502,46 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
                         attachment
                             .save({}, {timeout: 0})
-                            .then(
-                                function () {
-                                    if (canceledList.indexOf(attachment.cid) === -1) {
-                                        $attachmentBox.trigger('ready');
+                            .then(() => {
+                                if (canceledList.indexOf(attachment.cid) === -1) {
+                                    $attachmentBox.trigger('ready');
 
-                                        this.pushAttachment(attachment);
+                                    this.pushAttachment(attachment);
 
-                                        $attachmentBox.attr('data-id', attachment.id);
-                                        uploadedCount++;
+                                    $attachmentBox.attr('data-id', attachment.id);
+                                    uploadedCount++;
 
-                                        if (uploadedCount == totalCount && this.isUploading) {
-                                            this.model.trigger('attachment-uploaded:' + this.name);
-                                            this.afterAttachmentsUploaded.call(this);
-                                            this.isUploading = false;
-                                        }
-                                    }
-                                }.bind(this)
-                            )
-                            .fail(
-                                function () {
-                                    $attachmentBox.remove();
-
-                                    totalCount--;
-
-                                    if (!totalCount) {
-                                        this.isUploading = false;
-                                        this.$el.find('.uploading-message').remove();
-                                    }
-
-                                    if (uploadedCount == totalCount && this.isUploading) {
-                                        this.isUploading = false;
+                                    if (uploadedCount === totalCount && this.isUploading) {
+                                        this.model.trigger('attachment-uploaded:' + this.name);
                                         this.afterAttachmentsUploaded.call(this);
+
+                                        this.isUploading = false;
                                     }
-                                }.bind(this)
-                            );
-                    }.bind(this);
+                                }
+                            })
+                            .catch(() => {
+                                $attachmentBox.remove();
+
+                                totalCount--;
+
+                                if (!totalCount) {
+                                    this.isUploading = false;
+                                    this.$el.find('.uploading-message').remove();
+                                }
+
+                                if (uploadedCount === totalCount && this.isUploading) {
+                                    this.isUploading = false;
+                                    this.afterAttachmentsUploaded.call(this);
+                                }
+                            });
+                    };
 
                     fileReader.readAsDataURL(file);
-
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
-        afterAttachmentsUploaded: function () {
-
-        },
+        afterAttachmentsUploaded: function () {},
 
         afterRender: function () {
             if (this.mode === 'edit') {
@@ -555,19 +552,19 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 var hameHash = this.model.get(this.nameHashName);
                 var typeHash = this.model.get(this.typeHashName) || {};
 
-                ids.forEach(function (id) {
+                ids.forEach((id) => {
                     if (hameHash) {
                         var name = hameHash[id];
                         var type = typeHash[id] || null;
                         this.addAttachmentBox(name, type, id);
                     }
-                }, this);
+                });
 
                 this.$el.off('drop');
                 this.$el.off('dragover');
                 this.$el.off('dragleave');
 
-                this.$el.on('drop', function (e) {
+                this.$el.on('drop', (e) => {
                     e.preventDefault();
 
                     e.stopPropagation();
@@ -577,15 +574,15 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                         this.uploadFiles(e.dataTransfer.files);
                     }
-                }.bind(this));
+                });
 
-                this.$el.get(0).addEventListener('dragover', function (e) {
+                this.$el.get(0).addEventListener('dragover', (e) => {
                     e.preventDefault();
-                }.bind(this));
+                });
 
-                this.$el.get(0).addEventListener('dragleave', function (e) {
+                this.$el.get(0).addEventListener('dragleave', (e) => {
                     e.preventDefault();
-                }.bind(this));
+                });
             }
 
             if (this.mode === 'search') {
@@ -599,9 +596,9 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     this.handleResize();
                     this.resizeIsBeingListened = true;
 
-                    $(window).on('resize.' + this.cid, function () {
+                    $(window).on('resize.' + this.cid, () => {
                         this.handleResize();
-                    }.bind(this));
+                    });
                 }
             }
         },
@@ -749,36 +746,36 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     boolFilterList: boolFilterList,
                     primaryFilterName: primaryFilterName,
                     multiple: true,
-                }, function (view) {
+                }, (view) => {
                     view.render();
 
                     this.notify(false);
 
-                    this.listenToOnce(view, 'select', function (modelList) {
+                    this.listenToOnce(view, 'select', (modelList) =>{
                         if (Object.prototype.toString.call(modelList) !== '[object Array]') {
                             modelList = [modelList];
                         }
 
-                        modelList.forEach(function (model) {
+                        modelList.forEach((model) => {
                             if (model.name === 'Attachment') {
                                 this.pushAttachment(model);
                             }
                             else {
                                 this.ajaxPostRequest(source + '/action/getAttachmentList', {
                                     id: model.id,
-                                }).done(function (attachmentList) {
-                                    attachmentList.forEach(function (item) {
-                                        this.getModelFactory().create('Attachment', function (attachment) {
+                                }).then((attachmentList) => {
+                                    attachmentList.forEach((item) => {
+                                        this.getModelFactory().create('Attachment', (attachment) => {
                                             attachment.set(item);
 
                                             this.pushAttachment(attachment, true);
-                                        }, this);
-                                    }, this);
-                                }.bind(this));
+                                        });
+                                    });
+                                });
                             }
-                        }, this);
+                        });
                     });
-                }, this);
+                });
 
                 return;
             }
@@ -786,7 +783,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if ((this.model.get(this.idsName) || []).length == 0) {
+                if ((this.model.get(this.idsName) || []).length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'label');
