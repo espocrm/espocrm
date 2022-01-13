@@ -208,10 +208,10 @@ class Queue
         }
 
         if (!$isTest) {
-            $massEmail->set('status', 'In Process');
+            $massEmail->set('status', MassEmail::STATUS_IN_PROGRESS);
 
             if (empty($itemList)) {
-                $massEmail->set('status', 'Complete');
+                $massEmail->set('status', MassEmail::STATUS_COMPLETE);
             }
 
             $this->entityManager->saveEntity($massEmail);
