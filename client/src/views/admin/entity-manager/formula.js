@@ -147,5 +147,9 @@ define('views/admin/entity-manager/formula', ['view', 'lib!espo', 'model'], func
             this.setConfirmLeaveOut(false);
         },
 
+        updatePageTitle: function () {
+            this.setPageTitle(this.getLanguage().translate('Formula', 'labels', 'EntityManager'));
+        },
+
     });
 });
