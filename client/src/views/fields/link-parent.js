@@ -60,11 +60,20 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         data: function () {
             var nameValue = this.model.get(this.nameName);
+
             if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
                 nameValue = this.translate(this.model.get(this.typeName), 'scopeNames');
             }
+
             var iconHtml = null;
-            if ((this.mode == 'detail' || this.mode == 'list' && this.displayScopeColorInListMode) && this.foreignScope) {
+
+            if (
+                (
+                    this.mode === 'detail' ||
+                    this.mode === 'list' && this.displayScopeColorInListMode
+                ) &&
+                this.foreignScope
+            ) {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
 
@@ -101,10 +110,16 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.idName = this.name + 'Id';
 
             this.foreignScopeList = this.options.foreignScopeList || this.foreignScopeList;
-            this.foreignScopeList = this.foreignScopeList || this.params.entityList || this.model.getLinkParam(this.name, 'entityList') || [];
-            this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(function (item) {
-                if (!this.getMetadata().get(['scopes', item, 'disabled'])) return true;
-            }, this);
+
+            this.foreignScopeList = this.foreignScopeList ||
+                this.params.entityList ||
+                this.model.getLinkParam(this.name, 'entityList') || [];
+
+            this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(item => {
+                if (!this.getMetadata().get(['scopes', item, 'disabled'])) {
+                    return true;
+                }
+            });
 
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
 
@@ -112,59 +127,63 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 this.foreignScopeList.unshift(this.foreignScope);
             }
 
-            this.listenTo(this.model, 'change:' + this.typeName, function () {
+            this.listenTo(this.model, 'change:' + this.typeName, () => {
                 this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
-            }.bind(this));
+            });
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
 
-            var self = this;
-
-            if (this.mode != 'list') {
-                this.addActionHandler('selectLink', function () {
+            if (this.mode !== 'list') {
+                this.addActionHandler('selectLink', () => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                        this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode !== 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
-                        forceSelectAllAttributes: this.isForceSelectAllAttributes()
-                    }, function (dialog) {
+                        forceSelectAllAttributes: this.isForceSelectAllAttributes(),
+                    }, (dialog) => {
                         dialog.render();
+
                         Espo.Ui.notify(false);
-                        this.listenToOnce(dialog, 'select', function (model) {
+
+                        this.listenToOnce(dialog, 'select', (model) => {
                             this.clearView('dialog');
                             this.select(model);
-                        }, this);
-                    }, this);
+                        });
+                    });
                 });
-                this.addActionHandler('clearLink', function () {
+
+                this.addActionHandler('clearLink', () => {
                     if (this.foreignScopeList.length) {
                         this.$elementType.val(this.foreignScopeList[0]);
                     }
+
                     this.$elementName.val('');
                     this.$elementId.val('');
                     this.trigger('change');
                 });
 
-                this.events['change select[data-name="'+this.typeName+'"]'] = function (e) {
+                this.events['change select[data-name="'+this.typeName+'"]'] = (e) => {
                     this.foreignScope = e.currentTarget.value;
                     this.$elementName.val('');
                     this.$elementId.val('');
-                }
+                };
             }
         },
 
         setupSearch: function () {
             var type = this.getSearchParamsData().type;
+
             if (type === 'is' || !type) {
                 this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.valueId;
                 this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.valueName;
@@ -172,7 +191,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
 
             this.events = _.extend({
-                'change select.search-type': function (e) {
+                'change select.search-type': (e) => {
                     var type = $(e.currentTarget).val();
                     this.handleSearchType(type);
                 },
@@ -205,79 +224,88 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+
             if (!this.isForceSelectAllAttributes()) {
                 var select = ['id', 'name'];
+
                 if (this.getMandatorySelectAttributeList()) {
                     select = select.concat(this.getMandatorySelectAttributeList());
                 }
+
                 url += '&select=' + select.join(',')
             }
+
             var boolList = this.getSelectBoolFilterList();
-            var where = [];
+
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
+
             var primary = this.getSelectPrimaryFilterName();
+
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
             }
+
             return url;
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
                 this.$elementType = this.$el.find('select[data-name="' + this.typeName + '"]');
 
-                this.$elementName.on('change', function () {
-                    if (this.$elementName.val() == '') {
+                this.$elementName.on('change', () => {
+                    if (this.$elementName.val() === '') {
                         this.$elementName.val('');
                         this.$elementId.val('');
                         this.trigger('change');
                     }
-                }.bind(this));
+                });
 
-                this.$elementType.on('change', function () {
+                this.$elementType.on('change', () => {
                     this.$elementName.val('');
                     this.$elementId.val('');
                     this.trigger('change');
-                }.bind(this));
+                });
 
-                if (this.mode == 'edit') {
-                    this.$elementName.on('blur', function (e) {
+                if (this.mode === 'edit') {
+                    this.$elementName.on('blur', (e) => {
                         if (this.model.has(this.nameName)) {
                             e.currentTarget.value = this.model.get(this.nameName);
                         }
-                    }.bind(this));
+                    });
                 }
 
                 if (!this.autocompleteDisabled) {
                     this.$elementName.autocomplete({
-                        serviceUrl: function (q) {
+                        serviceUrl: (q) => {
                             return this.getAutocompleteUrl(q);
-                        }.bind(this),
+                        },
                         minChars: 1,
                         paramName: 'q',
                         noCache: true,
                         triggerSelectOnValidInput: false,
-                        beforeRender: function ($c) {
+                        beforeRender: ($c) => {
                             if (this.$elementName.hasClass('input-sm')) {
                                 $c.addClass('small');
                             }
-                        }.bind(this),
-                        formatResult: function (suggestion) {
+                        },
+                        formatResult: (suggestion) => {
                             return this.getHelper().escapeString(suggestion.name);
-                        }.bind(this),
-                        transformResult: function (response) {
+                        },
+                        transformResult: (response) => {
                             var response = JSON.parse(response);
                             var list = [];
-                            response.list.forEach(function(item) {
+
+                            response.list.forEach(item => {
                                 list.push({
                                     id: item.id,
                                     name: item.name || item.id,
@@ -285,45 +313,49 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                                     value: item.name || item.id,
                                     attributes: item
                                 });
-                            }, this);
+                            });
+
                             return {
                                 suggestions: list
                             };
-                        }.bind(this),
-                        onSelect: function (s) {
-                            this.getModelFactory().create(this.foreignScope, function (model) {
+                        },
+                        onSelect: (s) => {
+                            this.getModelFactory().create(this.foreignScope, (model) => {
                                 model.set(s.attributes);
+
                                 this.select(model);
-                            }, this);
-                        }.bind(this)
+                            });
+                        },
                     });
+
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);
                 }
 
                 var $elementName = this.$elementName;
 
-                $elementName.on('change', function () {
+                $elementName.on('change', () => {
                     if (!this.model.get(this.idName)) {
                         $elementName.val(this.model.get(this.nameName));
                     }
-                }.bind(this));
+                });
 
-                this.once('render', function () {
+                this.once('render', () => {
                     $elementName.autocomplete('dispose');
-                }, this);
+                });
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     $elementName.autocomplete('dispose');
-                }, this);
+                });
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
 
-                this.$el.find('select.search-type').on('change', function () {
+                this.$el.find('select.search-type').on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -333,9 +365,11 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (this.model.get(this.idName) == null || !this.model.get(this.typeName)) {
+                if (this.model.get(this.idName) === null || !this.model.get(this.typeName)) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -343,19 +377,22 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
+
             data[this.typeName] = this.$elementType.val() || null;
             data[this.nameName] = this.$elementName.val() || null;
             data[this.idName] = this.$elementId.val() || null;
+
             if (data[this.idName] === null) {
                 data[this.typeName] = null;
             }
+
             return data;
         },
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
 
-            if (type == 'isEmpty') {
+            if (type === 'isEmpty') {
                 var data = {
                     type: 'isNull',
                     field: this.idName,
@@ -363,8 +400,11 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         type: type
                     }
                 };
+
                 return data;
-            } else if (type == 'isNotEmpty') {
+            }
+
+            if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
                     field: this.idName,
@@ -372,9 +412,9 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         type: type
                     }
                 };
+
                 return data;
             }
-
 
             var entityType = this.$elementType.val();
             var entityName = this.$elementName.val()
@@ -434,6 +474,6 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront;
-        }
+        },
     });
 });
