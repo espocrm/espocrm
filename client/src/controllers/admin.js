@@ -119,6 +119,86 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
             }, isReturn, key);
         },
 
+        actionUsers: function () {
+            this.getRouter().dispatch('User', 'list', {fromAdmin: true});
+        },
+
+        actionPortalUsers: function () {
+            this.getRouter().dispatch('PortalUser', 'list', {fromAdmin: true});
+        },
+
+        actionApiUsers: function () {
+            this.getRouter().dispatch('ApiUser', 'list', {fromAdmin: true});
+        },
+
+        actionTeams: function () {
+            this.getRouter().dispatch('Team', 'list', {fromAdmin: true});
+        },
+
+        actionRoles: function () {
+            this.getRouter().dispatch('Role', 'list', {fromAdmin: true});
+        },
+
+        actionPortalRoles: function () {
+            this.getRouter().dispatch('PortalRole', 'list', {fromAdmin: true});
+        },
+
+        actionPortals: function () {
+            this.getRouter().dispatch('Portal', 'list', {fromAdmin: true});
+        },
+
+        actionLeadCapture: function () {
+            this.getRouter().dispatch('LeadCapture', 'list', {fromAdmin: true});
+        },
+
+        actionEmailFilters: function () {
+            this.getRouter().dispatch('EmailFilter', 'list', {fromAdmin: true});
+        },
+
+        actionEmailTemplates: function () {
+            this.getRouter().dispatch('EmailTemplate', 'list', {fromAdmin: true});
+        },
+
+        actionPdfTemplates: function () {
+            this.getRouter().dispatch('Template', 'list', {fromAdmin: true});
+        },
+
+        actionDashboardTemplates: function () {
+            this.getRouter().dispatch('DashboardTemplate', 'list', {fromAdmin: true});
+        },
+
+        actionWebhooks: function () {
+            this.getRouter().dispatch('Webhook', 'list', {fromAdmin: true});
+        },
+
+        actionLayoutSets: function () {
+            this.getRouter().dispatch('LayoutSet', 'list', {fromAdmin: true});
+        },
+
+        actionAttachments: function () {
+            this.getRouter().dispatch('Attachment', 'list', {fromAdmin: true});
+        },
+
+        actionEmailAddresses: function () {
+            this.getRouter().dispatch('EmailAddress', 'list', {fromAdmin: true});
+        },
+
+        actionPhoneNumbers: function () {
+            this.getRouter().dispatch('PhoneNumber', 'list', {fromAdmin: true});
+        },
+
+        actionPersonalEmailAccounts: function () {
+            this.getRouter().dispatch('EmailAccount', 'list', {fromAdmin: true});
+        },
+
+        actionGroupEmailAccounts: function () {
+            this.getRouter().dispatch('InboundEmail', 'list', {fromAdmin: true});
+        },
+
+        actionActionHistory: function () {
+            this.getRouter().dispatch('ActionHistoryRecord', 'list', {fromAdmin: true});
+        },
+
         actionLayouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;

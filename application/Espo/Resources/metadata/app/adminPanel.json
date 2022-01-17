@@ -94,19 +94,19 @@
         "label": "Users",
         "itemList": [
             {
-                "url": "#User",
+                "url": "#Admin/users",
                 "label": "Users",
                 "iconClass": "fas fa-user",
                 "description": "users"
             },
             {
-                "url": "#Team",
+                "url": "#Admin/teams",
                 "label": "Teams",
                 "iconClass": "fas fa-users",
                 "description": "teams"
             },
             {
-                "url": "#Role",
+                "url": "#Admin/roles",
                 "label": "Roles",
                 "iconClass": "fas fa-key",
                 "description": "roles"
@@ -124,13 +124,13 @@
                 "description": "authTokens"
             },
             {
-                "url": "#ActionHistoryRecord",
+                "url": "#Admin/actionHistory",
                 "label": "Action History",
                 "iconClass": "fas fa-history",
                 "description": "actionHistory"
             },
             {
-                "url": "#ApiUser",
+                "url": "#Admin/apiUsers",
                 "label": "API Users",
                 "iconClass": "fas fa-user-cog",
                 "description": "apiUsers"
@@ -186,25 +186,25 @@
                 "recordView": "views/admin/inbound-emails"
             },
             {
-                "url": "#InboundEmail",
+                "url": "#Admin/groupEmailAccounts",
                 "label": "Group Email Accounts",
                 "iconClass": "fas fa-inbox",
                 "description": "groupEmailAccounts"
             },
             {
-                "url": "#EmailAccount",
+                "url": "#Admin/personalEmailAccounts",
                 "label": "Personal Email Accounts",
                 "iconClass": "fas fa-inbox",
                 "description": "personalEmailAccounts"
             },
             {
-                "url": "#EmailFilter",
+                "url": "#Admin/emailFilters",
                 "label": "Email Filters",
                 "iconClass": "fas fa-filter",
                 "description": "emailFilters"
             },
             {
-                "url": "#EmailTemplate",
+                "url": "#Admin/emailTemplates",
                 "label": "Email Templates",
                 "iconClass": "fas fa-envelope-square",
                 "description": "emailTemplates"
@@ -223,19 +223,19 @@
         "label": "Portal",
         "itemList": [
             {
-                "url": "#Portal",
+                "url": "#Admin/portals",
                 "label": "Portals",
                 "iconClass": "fas fa-parking",
                 "description": "portals"
             },
             {
-                "url": "#PortalUser",
+                "url": "#Admin/portalUsers",
                 "label": "Portal Users",
                 "iconClass": "fas fa-user",
                 "description": "portalUsers"
             },
             {
-                "url": "#PortalRole",
+                "url": "#Admin/portalRoles",
                 "label": "Portal Roles",
                 "iconClass": "fas fa-key",
                 "description": "portalRoles"
@@ -253,13 +253,13 @@
                 "description": "import"
             },
             {
-                "url": "#LeadCapture",
+                "url": "#Admin/leadCapture",
                 "label": "Lead Capture",
                 "iconClass": "fas fa-id-card",
                 "description": "leadCapture"
             },
             {
-                "url": "#Template",
+                "url": "#Admin/pdfTemplates",
                 "label": "PDF Templates",
                 "iconClass": "fas fa-file-pdf",
                 "description": "pdfTemplates"
@@ -267,27 +267,27 @@
             },
             {
 
-                "url": "#Webhook",
+                "url": "#Admin/webhooks",
                 "label": "Webhooks",
                 "iconClass": "fas fa-share-alt icon-rotate-90",
                 "description": "webhooks"
             },
             {
 
-                "url": "#DashboardTemplate",
+                "url": "#Admin/dashboardTemplates",
                 "label": "Dashboard Templates",
                 "iconClass": "fas fa-th-large",
                 "description": "dashboardTemplates"
             },
             {
-                "url": "#LayoutSet",
+                "url": "#Admin/layoutSets",
                 "label": "Layout Sets",
                 "iconClass": "fas fa-table",
                 "description": "layoutSets"
 
             },
             {
-                "url": "#Attachment",
+                "url": "#Admin/attachments",
                 "label": "Attachments",
                 "iconClass": "fas fa-paperclip",
                 "description": "attachments"
@@ -299,13 +299,13 @@
                 "description": "jobs"
             },
             {
-                "url": "#EmailAddress",
+                "url": "#Admin/emailAddresses",
                 "label": "Email Addresses",
                 "iconClass": "fas fa-envelope",
                 "description": "emailAddresses"
             },
             {
-                "url": "#PhoneNumber",
+                "url": "#Admin/phoneNumbers",
                 "label": "Phone Numbers",
                 "iconClass": "fas fa-phone",
                 "description": "phoneNumbers"

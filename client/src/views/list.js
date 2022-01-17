@@ -117,6 +117,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 this.setupCreateButton();
             }
 
+            if (this.options.params && this.options.params.fromAdmin) {
+                this.keepCurrentRootUrl = true;
+            }
+
             this.getHelper().processSetupHandlers(this, 'list');
         },
 
@@ -412,6 +416,13 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
         },
 
         getHeader: function () {
+            if (this.options.params && this.options.params.fromAdmin) {
+                return this.buildHeaderHtml([
+                    '<a href="#Admin">' + this.translate('Administration', 'labels', 'Admin') + '</a>',
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                ]);
+            }
+
             var headerIconHtml = this.getHeaderIconHtml();
 
             return this.buildHeaderHtml([
