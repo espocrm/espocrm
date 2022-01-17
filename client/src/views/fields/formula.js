@@ -186,7 +186,13 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         fetch: function () {
             var data = {};
 
-            data[this.name] = this.editor.getValue();
+            let value = this.editor.getValue();
+
+            if (value === '') {
+                value = null;
+            }
+
+            data[this.name] = value;
 
             return data;
         },
