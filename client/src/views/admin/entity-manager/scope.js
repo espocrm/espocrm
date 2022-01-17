@@ -49,10 +49,6 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
             'click [data-action="editEntity"]': function (e) {
                 this.editEntity();
             },
-            'click [data-action="editFormula"]': function (e) {
-                this.editFormula();
-
-            },
             'click [data-action="removeEntity"]': function (e) {
                 this.removeEntity();
             },
