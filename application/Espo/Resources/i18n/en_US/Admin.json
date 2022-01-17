@@ -7,6 +7,7 @@
         "Email": "Email",
         "Messaging": "Messaging",
         "Data": "Data",
+        "Misc": "Misc",
         "Customization": "Customization",
         "Available Fields": "Available Fields",
         "Layout": "Layout",
@@ -77,6 +78,7 @@
         "Success": "Success",
         "Fail": "Fail",
         "Configuration Instructions": "Configuration Instructions",
+        "Formula Sandbox": "Formula Sandbox",
         "is recommended": "is recommended",
         "extension is missing": "extension is missing"
     },
@@ -280,7 +282,8 @@
         "layoutSets": "Collections of layouts that can be assigned to teams & portals.",
         "jobsSettings": "Job processing settings. Jobs execute tasks in the background.",
         "sms": "SMS settings.",
-        "pdfTemplates": "Templates for printing to PDF."
+        "pdfTemplates": "Templates for printing to PDF.",
+        "formulaSandbox": "Write and test formula scripts."
     },
     "keywords": {
         "settings": "system",

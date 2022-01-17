@@ -34,9 +34,11 @@ use Espo\Core\Formula\Exceptions\Error;
 
 use stdClass;
 
-class SyntaxCheckResult
+class RunResult
 {
     private bool $isSuccess = false;
+
+    private ?string $output = null;
 
     private ?string $message = null;
 
@@ -47,12 +49,26 @@ class SyntaxCheckResult
         $this->isSuccess = $isSuccess;
     }
 
-    public static function createSuccess(): self
+    public static function createSuccess(?string $output): self
     {
-        return new self(true);
+        $obj = new self(true);
+        $obj->output = $output;
+
+        return $obj;
     }
 
-    public static function createError(SyntaxError $exception): self
+    public static function createError(Error $exception, ?string $output): self
+    {
+        $obj = new self(false);
+
+        $obj->message = $exception->getMessage();
+        $obj->exception = $exception;
+        $obj->output = $output;
+
+        return $obj;
+    }
+
+    public static function createSyntaxError(SyntaxError $exception): self
     {
         $obj = new self(false);
 
@@ -65,6 +81,11 @@ class SyntaxCheckResult
     public function isSuccess(): bool
     {
         return $this->isSuccess;
+    }
+
+    public function getOutput(): ?string
+    {
+        return $this->output;
     }
 
     public function getMessage(): ?string
@@ -85,7 +106,10 @@ class SyntaxCheckResult
 
         if (!$this->isSuccess) {
             $data->message = $this->message;
+            $data->isSyntaxError = $this->exception instanceof SyntaxError;
         }
+
+        $data->output = $this->output;
 
         return $data;
     }

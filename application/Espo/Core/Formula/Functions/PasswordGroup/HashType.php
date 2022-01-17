@@ -39,8 +39,7 @@ use Espo\Core\Utils\PasswordHash;
 
 class HashType extends BaseFunction
 {
-    protected $processor;
-    protected $passwordHash;
+    protected PasswordHash $passwordHash;
 
     public function __construct(Processor $processor, PasswordHash $passwordHash)
     {

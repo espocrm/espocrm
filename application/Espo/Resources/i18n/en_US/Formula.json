@@ -1,9 +1,23 @@
 {
     "labels": {
-        "Check Syntax": "Check Syntax"
+        "Check Syntax": "Check Syntax",
+        "Run": "Run"
+    },
+    "fields": {
+        "target": "Target",
+        "targetType": "Target Type",
+        "script": "Script",
+        "output": "Output",
+        "error": "Error"
     },
     "messages": {
+        "runSuccess": "Executed successfully.",
+        "runError": "Error.",
         "checkSyntaxSuccess": "Syntax is correct.",
-        "checkSyntaxError": "Syntax error."
+        "checkSyntaxError": "Syntax error.",
+        "emptyScript": "Script is empty."
+    },
+    "tooltips": {
+        "output": "Print values with the function `output\\printLine`."
     }
 }

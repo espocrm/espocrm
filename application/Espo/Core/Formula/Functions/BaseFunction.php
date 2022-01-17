@@ -44,21 +44,21 @@ use Espo\Core\Formula\{
 
 use Espo\Core\Utils\Log;
 
-use StdClass;
+use stdClass;
 
 abstract class BaseFunction
 {
-    protected $processor;
+    protected Processor $processor;
 
-    private $entity;
+    private ?Entity $entity;
 
-    private $variables;
+    private ?stdClass $variables;
 
-    protected $name;
+    protected string $name;
 
-    protected $log;
+    protected ?Log $log;
 
-    protected function getVariables(): StdClass
+    protected function getVariables(): stdClass
     {
         return $this->variables;
     }
@@ -76,7 +76,7 @@ abstract class BaseFunction
         string $name,
         Processor $processor,
         ?Entity $entity = null,
-        ?StdClass $variables = null,
+        ?stdClass $variables = null,
         ?Log $log = null
     ) {
         $this->name = $name;

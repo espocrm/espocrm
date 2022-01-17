@@ -1088,6 +1088,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
+            this.confirmLeaveDisabled = this.options.confirmLeaveDisabled || this.confirmLeaveDisabled;
+
             this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
 
             // for backward compatibility
@@ -2046,6 +2048,16 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                         if (this.recordHelper.hasFieldOptionList(name)) {
                             o.customOptionList = this.recordHelper.getFieldOptionList(name);
+                        }
+
+                        if (cellDefs.options) {
+                            for (let optionName in cellDefs.options) {
+                                if (typeof o[optionName] !== 'undefined') {
+                                    continue;
+                                }
+
+                                o[optionName] = cellDefs.options[optionName];
+                            }
                         }
 
                         var cell = {

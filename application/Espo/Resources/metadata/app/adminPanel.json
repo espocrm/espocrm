@@ -312,5 +312,18 @@
             }
         ],
         "order": 25
+    },
+    "misc": {
+        "label": "Misc",
+        "itemList": [
+            {
+                "url": "#Admin/formulaSandbox",
+                "label": "Formula Sandbox",
+                "iconClass": "fas fa-code",
+                "description": "formulaSandbox",
+                "view": "views/admin/formula-sandbox/index"
+            }
+        ],
+        "order": 26
     }
 }

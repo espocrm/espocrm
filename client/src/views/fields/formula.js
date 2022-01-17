@@ -221,7 +221,13 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         },
 
         getFunctionDataList: function () {
-            let list = this.getMetadata().get(['app', 'formula', 'functionList']) || [];
+            let list = Espo.Utils.clone(
+                this.getMetadata().get(['app', 'formula', 'functionList']) || []
+            );
+
+            if (this.options.additionalFunctionDataList) {
+                list = list.concat(this.options.additionalFunctionDataList);
+            }
 
             if (!this.targetEntityType) {
                 list = list.filter(item => {
