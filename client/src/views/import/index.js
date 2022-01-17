@@ -70,15 +70,17 @@ define('views/import/index', 'view', function (Dep) {
                 entityType: this.entityType,
                 formData: this.formData,
                 result: result
-            }, function (view) {
+            }, (view) => {
                 view.render();
             });
 
             var url = '#Import';
+
             if (this.step > 1) {
                 url += '/index/step=' + this.step;
             }
-            this.getRouter().navigate(url, {trigger: false})
+
+            this.getRouter().navigate(url, {trigger: false});
         },
 
         afterRender: function () {
