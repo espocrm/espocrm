@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/scheduled-job/list', 'views/list', function (Dep) {
+
+define('views/scheduled-job/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -36,28 +37,32 @@ Espo.define('views/scheduled-job/list', 'views/list', function (Dep) {
 
             this.menu.buttons.push({
                 link: '#Admin/jobs',
-                html: this.translate('Jobs', 'labels', 'Admin')
+                html: this.translate('Jobs', 'labels', 'Admin'),
             });
 
             this.createView('search', 'views/base', {
                 el: '#main > .search-container',
-                template: 'scheduled-job/cronjob'
+                template: 'scheduled-job/cronjob',
             });
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            $.ajax({
-                type: 'GET',
-                url: 'Admin/action/cronMessage',
-                error: function (x) {
-                }.bind(this)
-            }).done(function (data) {
-                this.$el.find('.cronjob .message').html(data.message);
-                this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
-            }.bind(this));
+
+            Espo.Ajax
+                .getRequest('Admin/action/cronMessage')
+                .then(data => {
+                    this.$el.find('.cronjob .message').html(data.message);
+                    this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
+                });
+        },
+
+        getHeader: function () {
+            return this.buildHeaderHtml([
+                '<a href="#Admin">' + this.translate('Administration', 'labels', 'Admin') + '</a>',
+                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+            ]);
         },
 
     });
-
 });
