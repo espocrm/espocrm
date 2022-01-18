@@ -71,7 +71,7 @@ define('views/admin/index', 'view', function (Dep) {
                 panelItem.label = this.translate(panelItem.label, 'labels', 'Admin');
 
                 if (panelItem.itemList) {
-                    panelItem.itemList.forEach(function (item) {
+                    panelItem.itemList.forEach(item => {
                         item.label = this.translate(item.label, 'labels', 'Admin');
 
                         if (item.description) {
@@ -80,22 +80,23 @@ define('views/admin/index', 'view', function (Dep) {
                         } else {
                             item.keywords = [];
                         }
-                    }, this);
+                    });
                 }
 
                 // Legacy support.
                 if (panelItem.items) {
-                    panelItem.items.forEach(function (item) {
+                    panelItem.items.forEach(item => {
                         item.label = this.translate(item.label, 'labels', 'Admin');
                         panelItem.itemList.push(item);
+
                         item.keywords = [];
-                    }, this);
+                    });
                 }
 
                 this.panelDataList.push(panelItem);
             }
 
-            this.panelDataList.sort(function (v1, v2) {
+            this.panelDataList.sort((v1, v2) => {
                 if (!('order' in v1) && ('order' in v2)) {
                     return 0;
                 }
@@ -105,7 +106,7 @@ define('views/admin/index', 'view', function (Dep) {
                 }
 
                 return v1.order - v2.order;
-            }.bind(this));
+            });
 
             var iframeParams = [
                 'version=' + encodeURIComponent(this.getConfig().get('version')),
@@ -151,7 +152,7 @@ define('views/admin/index', 'view', function (Dep) {
 
             anythingMatched = false;
 
-            this.panelDataList.forEach(function (panel, panelIndex) {
+            this.panelDataList.forEach((panel, panelIndex) => {
                 var panelMatched = false;
 
                 var panelLabelMatched = false;
@@ -161,7 +162,7 @@ define('views/admin/index', 'view', function (Dep) {
                     panelLabelMatched = true;
                 }
 
-                panel.itemList.forEach(function (row, rowIndex) {
+                panel.itemList.forEach((row, rowIndex) => {
                     if (!row.label) return;
 
                     var matched = false;
@@ -177,24 +178,23 @@ define('views/admin/index', 'view', function (Dep) {
                     if (!matched) {
                         var wordList = row.label.split(' ');
 
-                        wordList.forEach(function (word) {
+                        wordList.forEach((word) => {
                             if (word.toLowerCase().indexOf(text) === 0) {
                                 matched = true;
                             }
-                        }, this);
+                        });
 
                         if (!matched) {
                             matched = ~row.keywords.indexOf(text);
                         }
                         if (!matched) {
                             if (text.length > 3) {
-                                row.keywords.forEach(function (word) {
+                                row.keywords.forEach((word) => {
                                     if (word.indexOf(text) === 0) {
                                         matched = true;
                                     }
-                                }, this);
+                                });
                             }
-
                         }
                     }
 
@@ -208,7 +208,7 @@ define('views/admin/index', 'view', function (Dep) {
 
                         anythingMatched = true;
                     }
-                }, this);
+                });
 
                 if (panelMatched) {
 
@@ -218,7 +218,7 @@ define('views/admin/index', 'view', function (Dep) {
 
                     anythingMatched = true;
                 }
-            }, this);
+            });
 
             if (!anythingMatched) {
                 $noData.removeClass('hidden');
