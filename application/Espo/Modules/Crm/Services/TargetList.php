@@ -73,6 +73,13 @@ class TargetList extends \Espo\Services\Record implements
         'User' => 'users',
     ];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        // @todo Properties to be initialized here.
+    }
+
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if (
