@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/api-user/list', 'views/list', function (Dep) {
+define('views/api-user/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -34,18 +34,10 @@ Espo.define('views/api-user/list', 'views/list', function (Dep) {
             Dep.prototype.setup.call(this);
         },
 
-        actionCreate: function () {
-            var attributes = {
-                type: 'api'
+        getCreateAttributes: function () {
+            return {
+                type: 'api',
             };
-
-            var router = this.getRouter();
-            var url = '#' + this.scope + '/create';
-            router.dispatch(this.scope, 'create', {
-                attributes: attributes
-            });
-            router.navigate(url, {trigger: false});
-        }
-
+        },
     });
 });
