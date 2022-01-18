@@ -60,7 +60,7 @@
         "bundle": true
     },
     {
-        "src": "node_modules/marked/lib/marked.js",
+        "src": "node_modules/marked/lib/marked.umd.js",
         "bundle": true
     },
     {

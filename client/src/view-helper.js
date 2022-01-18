@@ -374,10 +374,10 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             options = options || {};
 
             if (options.inline) {
-                text = marked.inlineLexer(text, []);
+                text = marked.parseInline(text);
             }
             else {
-                text = marked(text);
+                text = marked.parse(text);
             }
 
             text = DOMPurify.sanitize(text).toString();

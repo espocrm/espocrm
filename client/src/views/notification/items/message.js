@@ -46,7 +46,7 @@ define(
 
             this.style = data.style || 'text-muted';
 
-            let message = marked(
+            let message = marked.parse(
                 (this.model.get('message') || data.message || '')
             );
 
