@@ -43,6 +43,8 @@ use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
 
+use Espo\Core\Utils\Metadata;
+
 use PDO;
 
 use Espo\Core\Di;
@@ -53,31 +55,36 @@ class TargetList extends \Espo\Services\Record implements
 {
     use Di\HookManagerSetter;
 
-    protected $noEditAccessRequiredLinkList = ['accounts', 'contacts', 'leads', 'users'];
+    protected $targetLinkList = [];
 
-    protected $duplicatingLinkList = ['accounts', 'contacts', 'leads', 'users'];
+    protected $noEditAccessRequiredLinkList = [];
 
-    protected $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];
+    protected $duplicatingLinkList = [];
 
-    protected $linkMandatorySelectAttributeList = [
-        'accounts' => ['targetListIsOptedOut'],
-        'contacts' => ['targetListIsOptedOut'],
-        'leads' => ['targetListIsOptedOut'],
-        'users' => ['targetListIsOptedOut'],
-    ];
+    protected $linkMandatorySelectAttributeList = [];
 
-    protected $entityTypeLinkMap = [
-        'Lead' => 'leads',
-        'Account' => 'accounts',
-        'Contact' => 'contacts',
-        'User' => 'users',
-    ];
+    protected $entityTypeLinkMap = [];
 
-    public function __construct()
+    public function setMetadata(Metadata $metadata): void
     {
-        parent::__construct();
+        parent::setMetadata($metadata);
 
-        // @todo Properties to be initialized here.
+        $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
+
+        $this->duplicatingLinkList = $this->targetLinkList;
+        $this->noEditAccessRequiredLinkList = $this->targetLinkList;
+
+        foreach ($this->targetLinkList as $link) {
+            $this->linkMandatorySelectAttributeList[$link] = ['targetListIsOptedOut'];
+
+            $entityType = $this->entityManager
+                ->getDefs()
+                ->getEntity(TargetListEntity::ENTITY_TYPE)
+                ->getRelation($link)
+                ->getForeignEntityType();
+
+            $this->entityTypeLinkMap[$entityType] = $link;
+        }
     }
 
     protected function afterCreateEntity(Entity $entity, $data)
@@ -111,13 +118,13 @@ class TargetList extends \Espo\Services\Record implements
             throw new BadRequest();
         }
 
-        $campaign = $this->getEntityManager()->getEntity('Campaign', $sourceCampaignId);
+        $campaign = $this->entityManager->getEntity('Campaign', $sourceCampaignId);
 
         if (!$campaign) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($campaign, 'read')) {
+        if (!$this->acl->check($campaign, 'read')) {
             throw new Forbidden();
         }
 
@@ -149,7 +156,7 @@ class TargetList extends \Espo\Services\Record implements
 
         $notQueryBuilder->select(['id']);
 
-        $list = $this->getEntityManager()
+        $list = $this->entityManager
             ->getRDBRepository('CampaignLogRecord')
             ->clone($queryBuilder->build())
             ->find();
@@ -163,28 +170,31 @@ class TargetList extends \Espo\Services\Record implements
                 continue;
             }
 
+            $existing = null;
+
             if (!empty($excludingActionList)) {
                 $cloneQueryBuilder = clone $notQueryBuilder;
-
 
                 $cloneQueryBuilder->where([
                     'parentType' => $logRecord->get('parentType'),
                     'parentId' => $logRecord->get('parentId'),
                 ]);
 
-                if (
-                    $this->getEntityManager()
-                        ->getRDBRepository('CampaignLogRecord')
-                        ->clone($cloneQueryBuilder->build())
-                        ->findOne()
-                ) {
-                    continue;
-                }
+                $existing = $this->entityManager
+                    ->getRDBRepository('CampaignLogRecord')
+                    ->clone($cloneQueryBuilder->build())
+                    ->findOne();
+            }
+
+            if ($existing) {
+                continue;
             }
 
             $relation = $this->entityTypeLinkMap[$logRecord->get('parentType')];
 
-            $this->getRepository()->relate($entity, $relation, $logRecord->get('parentId'));
+            $this->getRepository()
+                ->getRelation($entity, $relation)
+                ->relateById($logRecord->get('parentId'));
         }
     }
 
@@ -197,7 +207,7 @@ class TargetList extends \Espo\Services\Record implements
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -215,7 +225,7 @@ class TargetList extends \Espo\Services\Record implements
             throw new Error();
         }
 
-        $updateQuery = $this->getEntityManager()->getQueryBuilder()
+        $updateQuery = $this->entityManager->getQueryBuilder()
             ->update()
             ->in($linkEntityType)
             ->set([
@@ -226,7 +236,7 @@ class TargetList extends \Espo\Services\Record implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
+        $this->entityManager->getQueryExecutor()->execute($updateQuery);
 
         $this->hookManager->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
 
@@ -254,15 +264,19 @@ class TargetList extends \Espo\Services\Record implements
 
         $key = $seed->getRelationParam($link, 'midKeys')[1] ?? null;
 
-
         if (!$key) {
             throw new Error();
         }
 
-        return $this->getEntityManager()->getQueryBuilder()
+        return $this->entityManager->getQueryBuilder()
             ->select()
             ->from($entityType)
-            ->select(['id', 'name', 'createdAt', ["'{$entityType}'", 'entityType']])
+            ->select([
+                'id',
+                'name',
+                'createdAt',
+                ["'{$entityType}'", 'entityType'],
+            ])
             ->join(
                 $linkEntityType,
                 'j',
@@ -282,12 +296,12 @@ class TargetList extends \Espo\Services\Record implements
         $offset = $searchParams->getOffset() ?? 0;
         $maxSize = $searchParams->getMaxSize() ?? 0;
 
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $queryBuilder = $em->getQueryBuilder();
 
         $queryList = [];
 
-        foreach ($this->targetsLinkList as $link) {
+        foreach ($this->targetLinkList as $link) {
             $queryList[] = $this->getOptedOutSelectQueryForLink($id, $link);
         }
 
@@ -323,7 +337,7 @@ class TargetList extends \Espo\Services\Record implements
             ->create();
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $itemEntity = $this->getEntityManager()->getEntity($row['entityType']);
+            $itemEntity = $this->entityManager->getEntity($row['entityType']);
 
             $itemEntity->set($row);
             $itemEntity->setAsFetched();
@@ -336,24 +350,19 @@ class TargetList extends \Espo\Services\Record implements
 
     public function optOut(string $id, string $targetType, string $targetId)
     {
-        $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+        $targetList = $this->entityManager->getEntity('TargetList', $id);
 
         if (!$targetList) {
             throw new NotFound();
         }
 
-        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        $target = $this->entityManager->getEntity($targetType, $targetId);
 
         if (!$target) {
             throw new NotFound();
         }
 
-        $map = [
-            'Account' => 'accounts',
-            'Contact' => 'contacts',
-            'Lead' => 'leads',
-            'User' => 'users',
-        ];
+        $map = $this->entityTypeLinkMap;
 
         if (empty($map[$targetType])) {
             throw new Error();
@@ -361,20 +370,15 @@ class TargetList extends \Espo\Services\Record implements
 
         $link = $map[$targetType];
 
-        $result = $this->getEntityManager()
-            ->getRDBRepository('TargetList')
-            ->relate($targetList, $link, $targetId, [
-                'optedOut' => true,
-            ]);
-
-        if (!$result) {
-            return false;
-        }
+        $this->entityManager
+            ->getRDBRepository(TargetListEntity::ENTITY_TYPE)
+            ->getRelation($targetList, $link)
+            ->relateById($targetId, ['optedOut' => true]);
 
         $hookData = [
            'link' => $link,
            'targetId' => $targetId,
-           'targetType' => $targetType
+           'targetType' => $targetType,
         ];
 
         $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
@@ -384,24 +388,19 @@ class TargetList extends \Espo\Services\Record implements
 
     public function cancelOptOut(string $id, string $targetType, string $targetId)
     {
-        $targetList = $this->getEntityManager()->getEntity('TargetList', $id);
+        $targetList = $this->entityManager->getEntity('TargetList', $id);
 
         if (!$targetList) {
             throw new NotFound();
         }
 
-        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        $target = $this->entityManager->getEntity($targetType, $targetId);
 
         if (!$target) {
             throw new NotFound();
         }
 
-        $map = [
-            'Account' => 'accounts',
-            'Contact' => 'contacts',
-            'Lead' => 'leads',
-            'User' => 'users',
-        ];
+        $map = $this->entityTypeLinkMap;
 
         if (empty($map[$targetType])) {
             throw new Error();
@@ -409,15 +408,10 @@ class TargetList extends \Espo\Services\Record implements
 
         $link = $map[$targetType];
 
-        $result = $this->getEntityManager()
+        $this->entityManager
             ->getRDBRepository('TargetList')
-            ->updateRelation($targetList, $link, $targetId, [
-                'optedOut' => false,
-            ]);
-
-        if (!$result) {
-            return false;
-        }
+            ->getRelation($targetList, $link)
+            ->updateColumnsById($targetId, ['optedOut' => false]);
 
         $hookData = [
            'link' => $link,
@@ -438,16 +432,17 @@ class TargetList extends \Espo\Services\Record implements
         $repository = $this->getRepository();
 
         foreach ($this->duplicatingLinkList as $link) {
-            $linkedList = $repository->findRelated($duplicatingEntity, $link, [
-                'additionalColumnsConditions' => [
-                    'optedOut' => false,
-                ]
-            ]);
+            $linkedList = $repository
+                ->getRelation($duplicatingEntity, $link)
+                ->where([
+                    '@relation.optedOut' => false,
+                ])
+                ->find();
 
             foreach ($linkedList as $linked) {
-                $repository->relate($entity, $link, $linked, [
-                    'optedOut' => false,
-                ]);
+                $repository
+                    ->getRelation($entity, $link)
+                    ->relate($linked, ['optedOut' => false]);
             }
         }
     }

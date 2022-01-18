@@ -8,5 +8,11 @@
     "stream": false,
     "importable": false,
     "notifications": true,
-    "object": true
+    "object": true,
+    "targetLinkList": [
+        "accounts",
+        "contacts",
+        "leads",
+        "users"
+    ]
 }

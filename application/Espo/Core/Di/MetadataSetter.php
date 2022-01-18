@@ -38,7 +38,7 @@ trait MetadataSetter
      */
     protected $metadata;
 
-    public function setMetadata(Metadata $metadata)
+    public function setMetadata(Metadata $metadata): void
     {
         $this->metadata = $metadata;
     }

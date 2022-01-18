@@ -35,9 +35,9 @@ use Espo\Modules\Crm\Entities\Campaign as CampaignEntity;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Error,
-    Espo\Core\Exceptions\Forbidden,
-    Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
 
@@ -54,13 +54,21 @@ class Campaign extends \Espo\Services\Record implements
         'User' => [],
     ];
 
+    protected $targetLinkList = [
+        'accounts',
+        'contacts',
+        'leads',
+        'users',
+    ];
+
     public function logLeadCreated($campaignId, Entity $target, $actionDate = null, $isTest = false)
     {
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+
         $logRecord->set([
             'campaignId' => $campaignId,
             'actionDate' => $actionDate,
@@ -70,7 +78,7 @@ class Campaign extends \Espo\Services\Record implements
             'isTest' => $isTest,
         ]);
 
-        $this->getEntityManager()->saveEntity($logRecord);
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function logSent(
@@ -86,7 +94,7 @@ class Campaign extends \Espo\Services\Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -106,7 +114,7 @@ class Campaign extends \Espo\Services\Record implements
             ]);
         }
 
-        $this->getEntityManager()->saveEntity($logRecord);
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function logBounced(
@@ -120,7 +128,7 @@ class Campaign extends \Espo\Services\Record implements
     ) {
         if (
             $queueItemId &&
-            $this->getEntityManager()
+            $this->entityManager
                 ->getRDBRepository('CampaignLogRecord')
                 ->where([
                     'queueItemId' => $queueItemId,
@@ -136,7 +144,7 @@ class Campaign extends \Espo\Services\Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -154,7 +162,7 @@ class Campaign extends \Espo\Services\Record implements
         } else {
             $logRecord->set('stringAdditionalData', 'Soft');
         }
-        $this->getEntityManager()->saveEntity($logRecord);
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function logOptedIn(
@@ -167,7 +175,7 @@ class Campaign extends \Espo\Services\Record implements
     ) {
         if (
             $queueItemId &&
-            $this->getEntityManager()
+            $this->entityManager
                 ->getRDBRepository('CampaignLogRecord')
                 ->where([
                     'queueItemId' => $queueItemId,
@@ -187,7 +195,7 @@ class Campaign extends \Espo\Services\Record implements
             $emailAddress = $target->get('emailAddress');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -200,7 +208,7 @@ class Campaign extends \Espo\Services\Record implements
             'isTest' => $isTest,
         ]);
 
-        $this->getEntityManager()->saveEntity($logRecord);
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function logOptedOut(
@@ -213,7 +221,7 @@ class Campaign extends \Espo\Services\Record implements
     ) {
         if (
             $queueItemId &&
-            $this->getEntityManager()
+            $this->entityManager
                 ->getRDBRepository('CampaignLogRecord')
                 ->where([
                     'queueItemId' => $queueItemId,
@@ -229,7 +237,7 @@ class Campaign extends \Espo\Services\Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -242,7 +250,7 @@ class Campaign extends \Espo\Services\Record implements
             'isTest' => $isTest
         ]);
 
-        $this->getEntityManager()->saveEntity($logRecord);
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function logOpened($campaignId, $queueItemId, Entity $target, $actionDate = null, $isTest = false)
@@ -253,7 +261,7 @@ class Campaign extends \Espo\Services\Record implements
 
         if (
             $queueItemId &&
-            $this->getEntityManager()
+            $this->entityManager
                 ->getRDBRepository('CampaignLogRecord')
                 ->where([
                     'queueItemId' => $queueItemId,
@@ -265,13 +273,13 @@ class Campaign extends \Espo\Services\Record implements
             return;
         }
 
-        $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+        $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
 
         if ($queueItem) {
-            $massEmail = $this->getEntityManager()->getEntity('MassEmail', $queueItem->get('massEmailId'));
+            $massEmail = $this->entityManager->getEntity('MassEmail', $queueItem->get('massEmailId'));
 
             if ($massEmail && $massEmail->getId()) {
-                $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+                $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
                 $logRecord->set([
                     'campaignId' => $campaignId,
                     'actionDate' => $actionDate,
@@ -284,7 +292,7 @@ class Campaign extends \Espo\Services\Record implements
                     'isTest' => $isTest,
                 ]);
 
-                $this->getEntityManager()->saveEntity($logRecord);
+                $this->entityManager->saveEntity($logRecord);
             }
         }
     }
@@ -297,13 +305,13 @@ class Campaign extends \Espo\Services\Record implements
         $actionDate = null,
         $isTest = false
     ) {
-        if ($this->getConfig()->get('massEmailOpenTracking')) {
+        if ($this->config->get('massEmailOpenTracking')) {
             $this->logOpened($campaignId, $queueItemId, $target);
         }
 
         if (
             $queueItemId &&
-            $this->getEntityManager()
+            $this->entityManager
                 ->getRDBRepository('CampaignLogRecord')
                 ->where([
                     'queueItemId' => $queueItemId,
@@ -321,7 +329,8 @@ class Campaign extends \Espo\Services\Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->getEntityManager()->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+
         $logRecord->set([
             'campaignId' => $campaignId,
             'actionDate' => $actionDate,
@@ -333,15 +342,16 @@ class Campaign extends \Espo\Services\Record implements
             'queueItemId' => $queueItemId,
             'isTest' => $isTest,
         ]);
-        $this->getEntityManager()->saveEntity($logRecord);
+
+        $this->entityManager->saveEntity($logRecord);
     }
 
     public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false)
     {
         /** @var CampaignEntity $campaign */
-        $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
 
-        if ($checkAcl && !$this->getAcl()->check($campaign, 'read')) {
+        if ($checkAcl && !$this->acl->check($campaign, 'read')) {
             throw new Forbidden();
         }
 
@@ -350,12 +360,12 @@ class Campaign extends \Espo\Services\Record implements
         if ($checkAcl) {
             $targetEntityType = $campaign->getRelationParam($link, 'entity');
 
-            if (!$this->getAcl()->check($targetEntityType, 'read')) {
+            if (!$this->acl->check($targetEntityType, 'read')) {
                 throw new Forbidden("Could not mail merge campaign because access to target entity type is forbidden.");
             }
         }
 
-        if (!in_array($link, ['accounts', 'contacts', 'leads', 'users'])) {
+        if (!in_array($link, $this->targetLinkList)) {
             throw new BadRequest();
         }
 
@@ -369,7 +379,7 @@ class Campaign extends \Espo\Services\Record implements
             throw new Error("Could not mail merge campaign w/o specified template.");
         }
 
-        $template = $this->getEntityManager()->getEntity('Template', $campaign->get($link . 'TemplateId'));
+        $template = $this->entityManager->getEntity('Template', $campaign->get($link . 'TemplateId'));
 
         if (!$template) {
             throw new Error("Template not found");
@@ -390,13 +400,13 @@ class Campaign extends \Espo\Services\Record implements
         $targetEntityList = [];
 
         /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> */
-        $excludingTargetListList = $this->getEntityManager()
+        $excludingTargetListList = $this->entityManager
             ->getRDBRepository('Campaign')
             ->getRelation($campaign, 'excludingTargetLists')
             ->find();
 
         foreach ($excludingTargetListList as $excludingTargetList) {
-            $recordList = $this->getEntityManager()
+            $recordList = $this->entityManager
                 ->getRDBRepository('TargetList')
                 ->getRelation($excludingTargetList, $link)
                 ->find();
@@ -410,7 +420,7 @@ class Campaign extends \Espo\Services\Record implements
         $addressFieldList = $this->entityTypeAddressFieldListMap[$targetEntityType];
 
         /** @var iterable<\Espo\Modules\Crm\Entities\TargetList> */
-        $targetListCollection = $this->getEntityManager()
+        $targetListCollection = $this->entityManager
             ->getRDBRepository('Campaign')
             ->getRelation($campaign, 'targetLists')
             ->find();
@@ -420,7 +430,7 @@ class Campaign extends \Espo\Services\Record implements
                 continue;
             }
 
-            $entityList = $this->getEntityManager()
+            $entityList = $this->entityManager
                 ->getRDBRepository('TargetList')
                 ->getRelation($targetList, $link)
                 ->where([
@@ -465,7 +475,7 @@ class Campaign extends \Espo\Services\Record implements
         }
 
         $filename = $campaign->get('name') . ' - ' .
-            $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
+            $this->defaultLanguage->translate($targetEntityType, 'scopeNamesPlural');
 
         return $this->getPdfService()->generateMailMerge(
             $targetEntityType,
@@ -474,11 +484,6 @@ class Campaign extends \Espo\Services\Record implements
             $filename,
             $campaign->getId()
         );
-    }
-
-    protected function getDefaultLanguage()
-    {
-        return $this->defaultLanguage;
     }
 
     private function getPdfService(): PdfService
