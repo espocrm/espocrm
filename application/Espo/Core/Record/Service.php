@@ -112,11 +112,16 @@ class Service implements Crud,
 
     protected $getEntityBeforeUpdate = false;
 
+    /** @var ?string */
     protected $entityType = null;
 
     private $streamService = null;
 
-    protected $notFilteringAttributeList = []; // TODO maybe remove it
+    /**
+     * @var string[]
+     * @todo Maybe remove it?
+     */
+    protected $notFilteringAttributeList = [];
 
     /** @var string[] */
     protected $forbiddenAttributeList = [];
