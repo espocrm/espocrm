@@ -118,30 +118,43 @@ class Service implements Crud,
 
     protected $notFilteringAttributeList = []; // TODO maybe remove it
 
+    /** @var string[] */
     protected $forbiddenAttributeList = [];
 
+    /** @var string[] */
     protected $internalAttributeList = [];
 
+    /** @var string[] */
     protected $onlyAdminAttributeList = [];
 
+    /** @var string[] */
     protected $readOnlyAttributeList = [];
 
+    /** @var string[] */
     protected $nonAdminReadOnlyAttributeList = [];
 
+    /** @var string[] */
     protected $forbiddenLinkList = [];
 
+    /** @var string[] */
     protected $internalLinkList = [];
 
+    /** @var string[] */
     protected $readOnlyLinkList = [];
 
+    /** @var string[] */
     protected $nonAdminReadOnlyLinkList = [];
 
+    /** @var string[] */
     protected $onlyAdminLinkList = [];
 
+    /** @var array<string,array<string,mixed>> */
     protected $linkParams = [];
 
+    /** @var array<string,string[]> */
     protected $linkMandatorySelectAttributeList = [];
 
+    /** @var string[] */
     protected $noEditAccessRequiredLinkList = [];
 
     protected $noEditAccessRequiredForLink = false;
@@ -150,6 +163,7 @@ class Service implements Crud,
 
     protected $actionHistoryDisabled = false;
 
+    /** @var string[] */
     protected $duplicatingLinkList = [];
 
     protected $listCountQueryDisabled = false;
@@ -160,10 +174,12 @@ class Service implements Crud,
 
     protected $selectAttributeList = null;
 
+    /** @var string[] */
     protected $mandatorySelectAttributeList = [];
 
     protected $forceSelectAllAttributes = false;
 
+    /** @var string[] */
     protected $validateSkipFieldList = [];
 
     /**
@@ -171,6 +187,7 @@ class Service implements Crud,
      */
     protected $validateRequiredSkipFieldList = [];
 
+    /** @var string[] */
     protected $duplicateIgnoreAttributeList = [];
 
     /**
@@ -204,10 +221,7 @@ class Service implements Crud,
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function setEntityType(string $entityType): void
     {
