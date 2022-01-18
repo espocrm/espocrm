@@ -34,5 +34,8 @@ namespace Espo\Core\Container;
  */
 interface Loader
 {
-    public function load(): object;
+    /**
+     * @return object
+     */
+    public function load();
 }
