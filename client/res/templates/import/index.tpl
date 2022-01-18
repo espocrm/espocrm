@@ -1,7 +1,13 @@
 <div class="page-header">
 	<div class="row">
 	    <div class="col-lg-7 col-sm-7">
-	        <h3>{{translate 'Import' category='scopeNames'}}</h3>
+	    	<h3>
+	    	{{#if fromAdmin}}
+    		<a href="#Admin">{{translate 'Administration' scope='Admin'}}</a>
+    		<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+		   	{{/if}}
+		   	{{translate 'Import' category='scopeNames'}}
+	   		</h3>
 	    </div>
 	    <div class="col-lg-5 col-sm-5">
 	        <div class="header-buttons btn-group pull-right">

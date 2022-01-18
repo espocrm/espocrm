@@ -34,6 +34,7 @@ define('views/import/index', 'view', function (Dep) {
 
         data: function () {
             return {
+                fromAdmin: this.options.fromAdmin,
             };
         },
 
@@ -75,6 +76,10 @@ define('views/import/index', 'view', function (Dep) {
             });
 
             var url = '#Import';
+
+            if (this.options.fromAdmin) {
+                url = '#Admin/import';
+            }
 
             if (this.step > 1) {
                 url += '/index/step=' + this.step;

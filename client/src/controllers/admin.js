@@ -199,6 +199,10 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
             this.getRouter().dispatch('ActionHistoryRecord', 'list', {fromAdmin: true});
         },
 
+        actionImport: function () {
+            this.getRouter().dispatch('Import', 'index', {fromAdmin: true});
+        },
+
         actionLayouts: function (options) {
             var scope = options.scope || null;
             var type = options.type || null;

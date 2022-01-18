@@ -247,7 +247,7 @@
         "label": "Data",
         "itemList": [
             {
-                "url": "#Import",
+                "url": "#Admin/import",
                 "label": "Import",
                 "iconClass": "fas fa-file-import",
                 "description": "import"

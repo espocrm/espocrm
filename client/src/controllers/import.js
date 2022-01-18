@@ -36,6 +36,7 @@ define('controllers/import', 'controllers/record', function (Dep) {
             if (this.getAcl().checkScope('Import')) {
                 return true;
             }
+
             return false;
         },
 
@@ -43,10 +44,11 @@ define('controllers/import', 'controllers/record', function (Dep) {
             if (this.getAcl().checkScope('Import')) {
                 return true;
             }
+
             return false;
         },
 
-        actionIndex: function (o, d) {
+        actionIndex: function (o) {
             o = o || {};
 
             var step = null;
@@ -73,18 +75,21 @@ define('controllers/import', 'controllers/record', function (Dep) {
                 step: step,
                 formData: formData,
                 fileContents: fileContents,
-            }, function (view) {
-                this.listenTo(view, 'change', function () {
+                fromAdmin: o.fromAdmin,
+            }, (view) => {
+                this.listenTo(view, 'change', () => {
                     this.storedData = {
                         formData: view.formData,
                         fileContents: view.fileContents,
                     };
                 });
-                this.listenTo(view, 'done', function () {
+
+                this.listenTo(view, 'done', () => {
                     delete this.storedData;
                 });
+
                 view.render();
-            }.bind(this));
+            });
         },
 
     });
