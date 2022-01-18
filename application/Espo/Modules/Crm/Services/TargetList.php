@@ -40,10 +40,8 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 
-use Espo\Core\{
-    Record\Collection as RecordCollection,
-    Select\SearchParams,
-};
+use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\Select\SearchParams;
 
 use PDO;
 
