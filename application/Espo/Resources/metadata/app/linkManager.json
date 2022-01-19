@@ -1,0 +1,8 @@
+{
+    "createHookClassNameList": [
+        "Espo\\Tools\\EntityManager\\Link\\Hooks\\TargetListCreate"
+    ],
+    "deleteHookClassNameList": [
+        "Espo\\Tools\\EntityManager\\Link\\Hooks\\TargetListDelete"
+    ]
+}

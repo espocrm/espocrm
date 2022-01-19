@@ -34,6 +34,12 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Conflict;
 
+use Espo\Tools\EntityManager\Link\Params as LinkParams;
+use Espo\Tools\EntityManager\Link\HookProcessor as LinkHookProcessor;
+use Espo\Tools\EntityManager\Link\Type as LinkType;
+
+use Espo\ORM\Entity;
+
 use Espo\Core\{
     Utils\Util,
     Utils\Json,
@@ -74,6 +80,8 @@ class EntityManager
     private $injectableFactory;
 
     private $dataManager;
+
+    private LinkHookProcessor $linkHookProcessor;
 
     private const MAX_ENTITY_NAME = 100;
 
@@ -124,7 +132,8 @@ class EntityManager
         OrmEntityManager $entityManager,
         ServiceFactory $serviceFactory,
         DataManager $dataManager,
-        InjectableFactory $injectableFactory
+        InjectableFactory $injectableFactory,
+        LinkHookProcessor $linkHookProcessor
     ) {
         $this->metadata = $metadata;
         $this->language = $language;
@@ -136,6 +145,7 @@ class EntityManager
         $this->serviceFactory = $serviceFactory;
         $this->dataManager = $dataManager;
         $this->injectableFactory = $injectableFactory;
+        $this->linkHookProcessor = $linkHookProcessor;
     }
 
     protected function checkControllerExists(string $name): bool
@@ -800,18 +810,26 @@ class EntityManager
         $relationName = null;
         $dataRight = null;
 
+        if (empty($linkType)) {
+            throw new BadRequest("No link type.");
+        }
+
+        if (empty($entity)) {
+            throw new BadRequest("No entity.");
+        }
+
+        if (empty($link) || empty($linkForeign)) {
+            throw new BadRequest("No link or link-foreign.");
+        }
+
         if ($linkType === 'manyToMany') {
-            if (!empty($params['relationName'])) {
-                $relationName = $params['relationName'];
-            }
-            else {
-                $relationName = lcfirst($entity) . $entityForeign;
-            }
+            $relationName = !empty($params['relationName']) ?
+                $params['relationName'] :
+                lcfirst($entity) . $entityForeign;
 
             if (
                 strlen($relationName) > self::MAX_LINK_NAME
             ) {
-
                 throw new Error("Relation name should not be longer than " . self::MAX_LINK_NAME . ".");
             }
 
@@ -828,9 +846,14 @@ class EntityManager
             }
         }
 
-        if (empty($link) || empty($linkForeign)) {
-            throw new BadRequest();
-        }
+        $linkParams = LinkParams::createBuilder()
+            ->setType($linkType)
+            ->setEntityType($entity)
+            ->setForeignEntityType($entityForeign)
+            ->setLink($link)
+            ->setForeignLink($linkForeign)
+            ->setName($relationName)
+            ->build();
 
         if (strlen($link) > self::MAX_LINK_NAME || strlen($linkForeign) > self::MAX_LINK_NAME) {
             throw new Error("Link name should not be longer than " . self::MAX_LINK_NAME . ".");
@@ -880,18 +903,12 @@ class EntityManager
             $auditedForeign = true;
         }
 
-        if (empty($linkType)) {
-            throw new Error();
-        }
-        if (empty($entity)) {
-            throw new Error();
-        }
-
         if ($linkType !== 'childrenToParent') {
             if (empty($entityForeign)) {
                 throw new Error();
             }
         }
+
         if ($this->metadata->get('entityDefs.' . $entity . '.links.' . $link)) {
             throw new Conflict('Link ['.$entity.'::'.$link.'] already exists.');
         }
@@ -1245,6 +1262,8 @@ class EntityManager
             }
         }
 
+        $this->linkHookProcessor->processCreate($linkParams);
+
         $this->dataManager->rebuild();
     }
 
@@ -1489,6 +1508,42 @@ class EntityManager
             throw new BadRequest();
         }
 
+        $foreignLinkType = $this->metadata->get(['entityDefs', $entityForeign, 'links', $linkForeign, 'type']);
+
+        $type = null;
+
+        if ($linkType === Entity::HAS_MANY && $foreignLinkType === Entity::HAS_MANY) {
+            $type = LinkType::MANY_TO_MANY;
+        }
+        else if ($linkType === Entity::HAS_MANY && $foreignLinkType === Entity::BELONGS_TO) {
+            $type = LinkType::ONE_TO_MANY;
+        }
+        else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_MANY) {
+            $type = LinkType::MANY_TO_ONE;
+        }
+        else if ($linkType === Entity::HAS_ONE && $foreignLinkType === Entity::BELONGS_TO) {
+            $type = LinkType::ONE_TO_ONE_LEFT;
+        }
+        else if ($linkType === Entity::BELONGS_TO && $foreignLinkType === Entity::HAS_ONE) {
+            $type = LinkType::ONE_TO_ONE_RIGHT;
+        }
+
+        $name = $this->metadata->get(['entityDefs', $entity, $link, 'relationName']) ??
+            $this->metadata->get(['entityDefs', $entityForeign, $linkForeign, 'relationName']);
+
+        $linkParams = null;
+
+        if ($type) {
+            $linkParams = LinkParams::createBuilder()
+                ->setType($type)
+                ->setName($name)
+                ->setEntityType($entity)
+                ->setForeignEntityType($entityForeign)
+                ->setLink($link)
+                ->setForeignLink($linkForeign)
+                ->build();
+        }
+
         $this->metadata->delete('entityDefs', $entity, [
             'fields.' . $link,
             'links.' . $link
@@ -1500,6 +1555,10 @@ class EntityManager
         ]);
 
         $this->metadata->save();
+
+        if ($linkParams) {
+            $this->linkHookProcessor->processDelete($linkParams);
+        }
 
         $this->dataManager->clearCache();
     }
