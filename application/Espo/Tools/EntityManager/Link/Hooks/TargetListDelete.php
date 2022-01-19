@@ -87,6 +87,16 @@ class TargetListDelete implements DeleteHook
     {
         $this->metadata->delete('entityDefs', $entityType, ['fields.targetListIsOptedOut']);
 
+        $targetLinkList = $this->metadata->get(['scopes', TargetList::ENTITY_TYPE, 'targetLinkList']) ?? [];
+
+        if (in_array($foreignLink, $targetLinkList)) {
+            $targetLinkList = array_diff($targetLinkList, [$foreignLink]);
+
+            $this->metadata->set('scopes', TargetList::ENTITY_TYPE, [
+                'targetLinkList' => $targetLinkList,
+            ]);
+        }
+
         $this->metadata->save();
     }
 }
