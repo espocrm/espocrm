@@ -76,6 +76,10 @@ class TargetListCreate implements CreateHook
             return;
         }
 
+        if ($link !== 'targetLists') {
+            return;
+        }
+
         $this->processInternal($entityType, $link, $foreignLink);
     }
 

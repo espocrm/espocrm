@@ -76,6 +76,10 @@ class TargetListDelete implements DeleteHook
             return;
         }
 
+        if ($link !== 'targetLists') {
+            return;
+        }
+
         $this->processInternal($entityType, $link, $foreignLink);
     }
 
