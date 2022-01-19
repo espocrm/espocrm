@@ -49,9 +49,6 @@
             "type": "linkMultiple",
             "view": "views/fields/teams"
         },
-        "campaigns": {
-            "type": "link"
-        },
         "includingActionList": {
             "type": "multiEnum",
             "view": "crm:views/target-list/fields/including-action-list",
@@ -78,6 +75,7 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
             "exportDisabled": true,
             "importDisabled": true,
             "view": "crm:views/target-list/fields/target-status"
@@ -89,6 +87,7 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
             "exportDisabled": true,
             "importDisabled": true
         }
@@ -115,22 +114,26 @@
         "campaigns": {
             "type": "hasMany",
             "entity": "Campaign",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "layoutRelationshipsDisabled": true
         },
         "massEmails": {
             "type": "hasMany",
             "entity": "MassEmail",
-            "foreign": "targetLists"
+            "foreign": "targetLists",
+            "layoutRelationshipsDisabled": true
         },
         "campaignsExcluding": {
             "type": "hasMany",
             "entity": "Campaign",
-            "foreign": "excludingTargetLists"
+            "foreign": "excludingTargetLists",
+            "layoutRelationshipsDisabled": true
         },
         "massEmailsExcluding": {
             "type": "hasMany",
             "entity": "MassEmail",
-            "foreign": "excludingTargetLists"
+            "foreign": "excludingTargetLists",
+            "layoutRelationshipsDisabled": true
         },
         "accounts": {
             "type": "hasMany",
