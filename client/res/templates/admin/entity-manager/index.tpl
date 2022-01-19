@@ -33,7 +33,7 @@
     {{#each scopeDataList}}
         <tr data-scope="{{name}}" class="scope-row">
             <td>
-                {{#if customizable}}
+                {{#if hasView}}
                 <a href="#Admin/entityManager/scope={{name}}">{{name}}</a>
                 {{else}}
                 {{name}}

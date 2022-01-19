@@ -89,11 +89,13 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     isRemovable = false;
                 }
 
+                hasView = d.customizable;
+
                 this.scopeDataList.push({
                     name: scope,
                     isCustom: d.isCustom,
                     isRemovable: isRemovable,
-                    customizable: d.customizable,
+                    hasView: hasView,
                     type: d.type,
                     label: this.getLanguage().translate(scope, 'scopeNames'),
                     layouts: d.layouts,
