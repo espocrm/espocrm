@@ -3,7 +3,7 @@
         <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
         <a href="#Admin/entityManager">{{translate 'Entity Manager' scope='Admin'}}</a>
         <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
-        {{scope}}
+        {{translate scope category='scopeNames'}}
     </h3>
 </div>
 
