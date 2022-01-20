@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Utils\Metadata;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\Loader\Params,
@@ -42,13 +44,18 @@ use Espo\Core\{
  */
 class EntryCountLoader implements Loader
 {
-    private $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];
+    private array $targetLinkList;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    private Metadata $metadata;
+
+    public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
         $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+
+        $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
 
     public function process(Entity $entity, Params $params): void
@@ -62,7 +69,7 @@ class EntryCountLoader implements Loader
 
         $count = 0;
 
-        foreach ($this->targetsLinkList as $link) {
+        foreach ($this->targetLinkList as $link) {
             $count += $this->entityManager
                 ->getRDBRepository('TargetList')
                 ->getRelation($entity, $link)
