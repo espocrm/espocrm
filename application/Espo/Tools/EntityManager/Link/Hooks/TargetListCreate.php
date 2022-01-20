@@ -118,6 +118,26 @@ class TargetListCreate implements CreateHook
             ]
         ]);
 
+        $this->metadata->set('clientDefs', TargetList::ENTITY_TYPE, [
+            'relationshipPanels' => [
+                $foreignLink => [
+                    'actionList' => [
+                        [
+                            'label' => 'Unlink All',
+                            'action' => 'unlinkAllRelated',
+                            'acl' => 'edit',
+                            'data' => [
+                                'link' => $foreignLink,
+                            ],
+                        ],
+                    ],
+                    'rowActionsView' => 'crm:views/target-list/record/row-actions/default',
+                    'view' => 'crm:views/target-list/record/panels/relationship',
+                    'massSelect' => true,
+                ],
+            ],
+        ]);
+
         $targetLinkList = $this->metadata->get(['scopes', TargetList::ENTITY_TYPE, 'targetLinkList']) ?? [];
 
         if (!in_array($foreignLink, $targetLinkList)) {

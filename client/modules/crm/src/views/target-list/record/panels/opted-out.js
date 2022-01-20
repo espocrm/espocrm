@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
+define(
+    'crm:views/target-list/record/panels/opted-out',
+    ['views/record/panels/relationship', 'multi-collection'],
+    function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -36,53 +39,10 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
 
         scopeList: ['Contact', 'Lead', 'User', 'Account'],
 
-        listLayout: {
-            'Account': {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true
-                        }
-                    ]
-                ]
-            },
-            'Contact': {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true
-                        }
-                    ]
-                ]
-            },
-            'Lead': {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true
-                        }
-                    ]
-                ]
-            },
-            'User': {
-                rows: [
-                    [
-                        {
-                            name: 'name',
-                            link: true
-                        }
-                    ]
-                ]
-            }
-        },
-
         data: function () {
             return {
                 currentTab: this.currentTab,
-                scopeList: this.scopeList
+                scopeList: this.scopeList,
             };
         },
 
@@ -93,25 +53,58 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
         setup: function () {
             this.seeds = {};
 
-            this.wait(true);
-            var i = 0;
-            this.scopeList.forEach(function (scope) {
-                this.getModelFactory().getSeed(scope, function (seed) {
-                    this.seeds[scope] = seed;
-                    i++;
-                    if (i == this.scopeList.length) {
-                        this.wait(false);
-                    }
-                }.bind(this));
-            }.bind(this));
+            let linkList = this.getMetadata().get(['scopes', 'TargetList', 'targetLinkList']) || [];
 
-            this.listenTo(this.model, 'opt-out', function () {
-                this.actionRefresh();
-            }, this);
+            this.scopeList = [];
 
-            this.listenTo(this.model, 'cancel-opt-out', function () {
+            linkList.forEach(link => {
+                let entityType = this.getMetadata().get(['entityDefs', 'TargetList', 'links', link, 'entity']);
+
+                if (entityType) {
+                    this.scopeList.push(entityType);
+                }
+            });
+
+            this.listLayout = {};
+
+            this.scopeList.forEach(scope => {
+                this.listLayout[scope] = {
+                    rows: [
+                        [
+                            {
+                                name: 'name',
+                                link: true,
+                            }
+                        ]
+                    ]
+                };
+            });
+
+            if (this.scopeList.length) {
+                this.wait(true);
+
+                var i = 0;
+
+                this.scopeList.forEach((scope) => {
+                    this.getModelFactory().getSeed(scope, (seed) => {
+                        this.seeds[scope] = seed;
+
+                        i++;
+
+                        if (i === this.scopeList.length) {
+                            this.wait(false);
+                        }
+                    });
+                });
+            }
+
+            this.listenTo(this.model, 'opt-out', () => {
                 this.actionRefresh();
-            }, this);
+            });
+
+            this.listenTo(this.model, 'cancel-opt-out', () => {
+                this.actionRefresh();
+            });
         },
 
         afterRender: function () {
@@ -123,7 +116,7 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
 
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
-            this.listenToOnce(this.collection, 'sync', function () {
+            this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.getSelector() + ' > .list-container',
                     pagination: false,
@@ -132,10 +125,11 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
-            }.bind(this));
+            });
+
             this.collection.fetch();
         },
 
@@ -144,21 +138,15 @@ Espo.define('crm:views/target-list/record/panels/opted-out', ['views/record/pane
         },
 
         actionCancelOptOut: function (data) {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-                $.ajax({
-                    url: 'TargetList/action/cancelOptOut',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        id: this.model.id,
-                        targetId: data.id,
-                        targetType: data.type
-                    })
-                }).done(function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                Espo.Ajax.postRequest('TargetList/action/cancelOptOut', {
+                    id: this.model.id,
+                    targetId: data.id,
+                    targetType: data.type,
+                }).then(() => {
                     this.collection.fetch();
-                }.bind(this));
-            }, this);
-        }
-
+                });
+            });
+        },
     });
 });
-

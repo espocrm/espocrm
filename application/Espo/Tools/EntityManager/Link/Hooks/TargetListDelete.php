@@ -97,6 +97,8 @@ class TargetListDelete implements DeleteHook
             ]);
         }
 
+        $this->metadata->delete('clientDefs', TargetList::ENTITY_TYPE, ['relationshipPanels.' . $foreignLink]);
+
         $this->metadata->save();
     }
 }
