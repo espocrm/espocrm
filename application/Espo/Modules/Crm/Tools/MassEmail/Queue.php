@@ -37,22 +37,28 @@ use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 
 use Espo\Core\Exceptions\Error;
-use Espo\Core\ORM\EntityManager;
+
+use Espo\ORM\EntityManager;
+
+use Espo\Core\Utils\Metadata;
 
 class Queue
 {
-    protected $targetsLinkList = [
-        'accounts',
-        'contacts',
-        'leads',
-        'users',
-    ];
+    /**
+     * @var string[]
+     */
+    protected array $targetLinkList;
 
     protected EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    private Metadata $metadata;
+
+    public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
         $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
+
+        $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
 
     protected function cleanupQueueItems(MassEmail $massEmail): void
@@ -96,7 +102,7 @@ class Queue
                 ->find();
 
             foreach ($excludingTargetListList as $excludingTargetList) {
-                foreach ($this->targetsLinkList as $link) {
+                foreach ($this->targetLinkList as $link) {
                     $excludingList = $em->getRDBRepository(TargetList::ENTITY_TYPE)
                         ->findRelated(
                             $excludingTargetList,
@@ -127,7 +133,7 @@ class Queue
                 ->find();
 
             foreach ($targetListCollection as $targetList) {
-                foreach ($this->targetsLinkList as $link) {
+                foreach ($this->targetLinkList as $link) {
                     $recordList = $em->getRDBRepository('TargetList')
                         ->getRelation($targetList, $link)
                         ->select(['id', 'emailAddress'])

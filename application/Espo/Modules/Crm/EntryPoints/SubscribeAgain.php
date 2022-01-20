@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\EntryPoints;
 
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
+use Espo\Modules\Crm\Tools\MassEmail\Util as MassEmailUtil;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
@@ -80,13 +82,16 @@ class SubscribeAgain implements EntryPoint
      */
     protected $hasher;
 
+    private MassEmailUtil $util;
+
     public function __construct(
         EntityManager $entityManager,
         ClientManager $clientManager,
         HookManager $hookManager,
         Config $config,
         Metadata $metadata,
-        Hasher $hasher
+        Hasher $hasher,
+        MassEmailUtil $util
     ) {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
@@ -94,6 +99,7 @@ class SubscribeAgain implements EntryPoint
         $this->config = $config;
         $this->metadata = $metadata;
         $this->hasher = $hasher;
+        $this->util = $util;
     }
 
     public function run(Request $request, Response $response): void
@@ -160,46 +166,33 @@ class SubscribeAgain implements EntryPoint
                         }
                     }
 
-                    $link = null;
+                    $link = $this->util->getLinkByEntityType($target->getEntityType());
 
-                    $m = [
-                        'Account' => 'accounts',
-                        'Contact' => 'contacts',
-                        'Lead' => 'leads',
-                        'User' => 'users',
-                    ];
+                    $targetListList = $this->entityManager
+                        ->getRDBRepository('MassEmail')
+                        ->getRelation($massEmail, 'targetLists')
+                        ->find();
 
-                    if (!empty($m[$target->getEntityType()])) {
-                        $link = $m[$target->getEntityType()];
-                    }
+                    foreach ($targetListList as $targetList) {
+                        $optedInResult = $this->entityManager
+                            ->getRDBRepository('TargetList')
+                            ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => false]);
 
-                    if ($link) {
-                        $targetListList = $this->entityManager
-                            ->getRDBRepository('MassEmail')
-                            ->getRelation($massEmail, 'targetLists')
-                            ->find();
+                        if ($optedInResult) {
+                            $hookData = [
+                               'link' => $link,
+                               'targetId' => $targetId,
+                               'targetType' => $targetType,
+                            ];
 
-                        foreach ($targetListList as $targetList) {
-                            $optedInResult = $this->entityManager
-                                ->getRDBRepository('TargetList')
-                                ->updateRelation($targetList, $link, $target->getId(), ['optedOut' => false]);
-
-                            if ($optedInResult) {
-                                $hookData = [
-                                   'link' => $link,
-                                   'targetId' => $targetId,
-                                   'targetType' => $targetType,
-                                ];
-
-                                $this->hookManager
-                                    ->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
-                            }
+                            $this->hookManager
+                                ->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
                         }
-
-                        $this->hookManager->process($target->getEntityType(), 'afterCancelOptOut', $target, [], []);
-
-                        $this->display(['queueItemId' => $queueItemId]);
                     }
+
+                    $this->hookManager->process($target->getEntityType(), 'afterCancelOptOut', $target, [], []);
+
+                    $this->display(['queueItemId' => $queueItemId]);
                 }
             }
         }
