@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered no-margin scope-level">
+            <table class="table table-bordered-inside no-margin scope-level">
                 <tr>
                     <th></th>
                     <th width="20%">{{translate 'Access' scope='Role'}}</th>
@@ -63,7 +63,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered no-margin field-level">
+            <table class="table table-bordered-inside no-margin field-level">
                 <tr>
                     <th></th>
                     <th width="20%"></th>
