@@ -234,6 +234,18 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
         actionEntityManager: function (options) {
             var scope = options.scope || null;
 
+            if (scope && options.edit) {
+                this.main('views/admin/entity-manager/edit', {scope: scope});
+
+                return;
+            }
+
+            if (options.create) {
+                this.main('views/admin/entity-manager/edit');
+
+                return;
+            }
+
             if (scope && options.formula) {
                 this.main('views/admin/entity-manager/formula', {scope: scope});
 

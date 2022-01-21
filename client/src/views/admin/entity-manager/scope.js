@@ -46,10 +46,10 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
         },
 
         events: {
-            'click [data-action="editEntity"]': function (e) {
-                this.editEntity();
+            'click [data-action="editEntity"]': function () {
+                this.getRouter().navigate('#Admin/entityManager/edit&scope=' + this.scope, {trigger: true});
             },
-            'click [data-action="removeEntity"]': function (e) {
+            'click [data-action="removeEntity"]': function () {
                 this.removeEntity();
             },
         },
@@ -78,46 +78,6 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
             this.hasLayouts = scopeData.layouts;
 
             this.label = this.getLanguage().translate(this.scope, 'scopeNames');
-        },
-
-        editEntity: function () {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
-                scope: this.scope,
-            }, (view) => {
-                view.render();
-
-                this.listenTo(view, 'after:save', (o) => {
-                    this.clearView('edit');
-
-                    this.setupScopeData();
-
-                    this.reRender();
-
-                    if (o.rebuildRequired) {
-                        this.createView('dialog', 'views/modal', {
-                            templateContent:
-                                "{{complexText viewObject.options.msg}}" +
-                                "{{complexText viewObject.options.msgRebuild}}",
-                            headerText: this.translate('rebuildRequired', 'strings', 'Admin'),
-                            backdrop: 'static',
-                            msg: this.translate('rebuildRequired', 'messages', 'Admin'),
-                            msgRebuild: '```php rebuild.php```',
-                            buttonList: [
-                                {
-                                    name: 'close',
-                                    label: this.translate('Close'),
-                                },
-                            ],
-                        }, (view) => {
-                            view.render();
-                        });
-                    }
-                });
-
-                this.listenTo(view, 'close', () => {
-                    this.clearView('edit');
-                });
-            });
         },
 
         removeEntity: function () {

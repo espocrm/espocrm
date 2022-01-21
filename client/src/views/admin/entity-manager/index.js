@@ -44,7 +44,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
 
         events: {
             'click button[data-action="createEntity"]': function (e) {
-                this.createEntity();
+                this.getRouter().navigate('#Admin/entityManager/create&', {trigger: true});
             },
 
             'keyup input[data-name="quick-search"]': function (e) {
@@ -105,22 +105,6 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
 
         setup: function () {
             this.setupScopeData();
-        },
-
-        createEntity: function () {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, (view) => {
-                view.render();
-
-                this.listenTo(view, 'after:save', (o) => {
-                    this.clearView('edit');
-
-                    this.getRouter().navigate('#Admin/entityManager/scope=' + o.scope, {trigger: true});
-                });
-
-                this.listenTo(view, 'close', () => {
-                    this.clearView('edit');
-                });
-            });
         },
 
         afterRender: function () {
