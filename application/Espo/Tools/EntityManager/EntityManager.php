@@ -637,6 +637,10 @@ class EntityManager
         if (array_key_exists('kanbanStatusIgnoreList', $data)) {
             $scopeData['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
 
+            if (empty($scopeData['kanbanStatusIgnoreList'])) {
+                $scopeData['kanbanStatusIgnoreList'] = null;
+            }
+
             $this->metadata->set('scopes', $name, $scopeData);
         }
 
