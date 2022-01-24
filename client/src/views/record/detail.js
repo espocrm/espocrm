@@ -1168,14 +1168,30 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', (m, o, o1) => {
+            this.listenTo(this.model, 'sync', () => {
                 this.attributes = this.model.getClonedAttributes();
             });
 
-            this.listenTo(this.model, 'change', () => {
+            this.listenTo(this.model, 'change', (m, o) => {
+                if (o.sync) {
+                    for (let attribute in m.attributes) {
+                        if (!m.hasChanged(attribute)) {
+                            continue;
+                        }
+
+                        this.attributes[attribute] = Espo.Utils.cloneDeep(
+                            m.get(attribute)
+                        );
+                    }
+
+                    return;
+                }
+
                 if (this.mode === 'edit' || this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
+
+
             });
 
             var dependencyDefs = Espo.Utils.clone(
