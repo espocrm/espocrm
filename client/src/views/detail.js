@@ -165,7 +165,8 @@ define('views/detail', 'views/main', function (Dep) {
                 .putRequest(this.model.name + '/' + this.model.id + '/subscription')
                 .then(() => {
                     this.removeMenuItem('follow', true);
-                    this.model.set('isFollowed', true);
+
+                    this.model.set('isFollowed', true, {sync: true});
                 })
                 .catch(() => {
                     this.enableMenuItem('follow');
@@ -179,7 +180,8 @@ define('views/detail', 'views/main', function (Dep) {
                 .deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
                 .then(() => {
                     this.removeMenuItem('unfollow', true);
-                    this.model.set('isFollowed', false);
+
+                    this.model.set('isFollowed', false, {sync: true});
                 })
                 .catch(() => {
                     this.enableMenuItem('unfollow');
