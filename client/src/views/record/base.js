@@ -437,17 +437,31 @@ define(
         setupBeforeFinal: function () {
             this.attributes = this.model.getClonedAttributes();
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', (m, o) => {
+                if (o.sync) {
+                    for (let attribute in m.attributes) {
+                        if (!m.hasChanged(attribute)) {
+                            continue;
+                        }
+
+                        this.attributes[attribute] = Espo.Utils.cloneDeep(
+                            m.get(attribute)
+                        );
+                    }
+
+                    return;
+                }
+
                 if (this.mode === 'edit') {
                     this.setIsChanged();
                 }
-            }, this);
+            });
 
             if (this.options.attributes) {
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', (m, o) => {
+            this.listenTo(this.model, 'sync', () => {
                  this.attributes = this.model.getClonedAttributes();
             });
 
