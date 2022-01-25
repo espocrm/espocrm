@@ -42,15 +42,19 @@ class PushType extends BaseFunction
             $this->throwTooFewArguments();
         }
 
-        $list = $this->evaluate($args[0]);
+        $list = $this->evaluate($args[0]) ?? [];
 
         if (!is_array($list)) {
-            return false;
+            $this->throwError("Argument is non-array.");
         }
 
         foreach ($args as $i => $v) {
-            if ($i === 0) continue;
+            if ($i === 0) {
+                continue;
+            }
+
             $element = $this->evaluate($args[$i]);
+
             $list[] = $element;
         }
 

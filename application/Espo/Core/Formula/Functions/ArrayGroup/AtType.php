@@ -44,12 +44,13 @@ class AtType extends BaseFunction
             $this->throwTooFewArguments();
         }
 
-        $array = $args[0];
+        $array = $args[0] ?? [];
         $index = $args[1];
 
         if (!is_array($array)) {
             $this->throwBadArgumentType(1, 'array');
         }
+
         if (!is_int($index)) {
             $this->throwBadArgumentType(2, 'int');
         }

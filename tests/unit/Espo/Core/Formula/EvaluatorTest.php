@@ -199,6 +199,42 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testArrayPush1(): void
+    {
+        $expression = "array\\push(null, 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals([1], $actual);
+    }
+
+    public function testArrayPush2(): void
+    {
+        $expression = "array\\push(list(0), 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals([0, 1], $actual);
+    }
+
+    public function testArrayIncludes1(): void
+    {
+        $expression = "array\\includes(list(1), 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertTrue($actual);
+    }
+
+    public function testArrayIncludes2(): void
+    {
+        $expression = "array\\includes(null, 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertFalse($actual);
+    }
+
     public function testWhile()
     {
         $expression = "

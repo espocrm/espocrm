@@ -42,7 +42,7 @@ class JoinType extends BaseFunction
             $this->throwTooFewArguments();
         }
 
-        $list = $this->evaluate($args[0]);
+        $list = $this->evaluate($args[0]) ?? [];
 
         $separator = $this->evaluate($args[1]);
 

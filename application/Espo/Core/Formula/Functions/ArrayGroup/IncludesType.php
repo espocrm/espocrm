@@ -44,7 +44,7 @@ class IncludesType extends BaseFunction
             $this->throwTooFewArguments();
         }
 
-        $list = $args[0];
+        $list = $args[0] ?? [];
         $needle = $args[1];
 
         if (!is_array($list)) {
