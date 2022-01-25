@@ -62,40 +62,27 @@ class OrderList implements Iterator
         return new self($list);
     }
 
-    /**
-     * @return void
-     */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
 
-    /**
-     * @return Order
-     */
-    public function current()
+    public function current(): Order
     {
         return $this->list[$this->position];
     }
 
-    /**
-     *
-     * @return int
-     */
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
 
-    /**
-     * @return bool
-     */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->list[$this->position]);
     }

@@ -34,6 +34,7 @@ use Espo\ORM\QueryComposer\QueryComposer as QueryComposer;
 
 use IteratorAggregate;
 use Countable;
+use Traversable;
 use PDO;
 
 /**
@@ -103,7 +104,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->query;
     }
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return (function () {
             if (isset($this->sth)) {

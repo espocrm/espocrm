@@ -65,7 +65,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         $this->entityFactory = $entityFactory;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
 
@@ -74,17 +74,23 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function current()
     {
         return $this->getEntityByOffset($this->position);
     }
 
+    /**
+     * @return mixed
+     */
     public function key()
     {
         return $this->position;
     }
 
-    public function next()
+    public function next(): void
     {
         do {
             $this->position ++;
@@ -114,16 +120,23 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return $i;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->dataList[$this->position]);
     }
 
-    public function offsetExists($offset)
+    /**
+     * @param mixed $offset
+     */
+    public function offsetExists($offset): bool
     {
         return isset($this->dataList[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         if (!isset($this->dataList[$offset])) {
@@ -133,7 +146,11 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return $this->getEntityByOffset($offset);
     }
 
-    public function offsetSet($offset, $value)
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value): void
     {
         if (!($value instanceof Entity)) {
             throw new InvalidArgumentException('Only Entity is allowed to be added to EntityCollection.');
@@ -148,17 +165,23 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         $this->dataList[$offset] = $value;
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->dataList[$offset]);
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->dataList);
     }
 
-    public function seek($offset)
+    /**
+     * @param int $offset
+     */
+    public function seek($offset): void
     {
         $this->position = $offset;
 
@@ -167,7 +190,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         }
     }
 
-    public function append(Entity $entity)
+    public function append(Entity $entity): void
     {
         $this->dataList[] = $entity;
     }

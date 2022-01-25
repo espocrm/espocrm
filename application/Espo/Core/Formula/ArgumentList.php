@@ -67,7 +67,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         return $i;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
 
@@ -81,22 +81,32 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         return new Argument($this->dataList[$index]);
     }
 
+    /**
+     * @return mixed
+     */
     public function current()
     {
         return $this->getArgumentByIndex($this->position);
     }
 
+    /**
+     * @return mixed
+     */
     public function key()
     {
         return $this->position;
     }
 
-    public function next()
+    public function next(): void
     {
         do {
             $this->position ++;
             $next = false;
-            if (!$this->valid() && $this->position <= $this->getLastValidKey()) {
+
+            if (
+                !$this->valid() &&
+                $this->position <= $this->getLastValidKey()
+            ) {
                 $next = true;
             }
         } while ($next);
@@ -107,11 +117,18 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         return array_key_exists($this->position, $this->dataList);
     }
 
+    /**
+     * @param mixed $offset
+     */
     public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->dataList);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
@@ -120,12 +137,19 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         return $this->getArgumentByIndex($offset);
     }
 
-    public function offsetSet($offset, $value)
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value): void
     {
         throw new BadMethodCallException('Setting is not allowed.');
     }
 
-    public function offsetUnset($offset)
+    /**
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset): void
     {
         throw new BadMethodCallException('Unsetting is not allowed.');
     }
@@ -135,7 +159,10 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         return count($this->dataList);
     }
 
-    public function seek($offset)
+    /**
+     * @param int $offset
+     */
+    public function seek($offset): void
     {
         $this->position = $offset;
 
