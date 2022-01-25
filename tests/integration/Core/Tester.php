@@ -46,7 +46,9 @@ use Slim\Psr7\Response;
 
 class Tester
 {
-    protected $configPath = 'tests/integration/config.php';
+    protected string $configPath = 'tests/integration/config.php';
+
+    private string $envConfigPath = 'tests/integration/config-env.php';
 
     protected $buildedPath = 'build';
 
@@ -137,11 +139,15 @@ class Tester
 
     protected function getTestConfigData()
     {
-        if (!file_exists($this->configPath)) {
+        if (file_exists($this->configPath)) {
+            $data = include($this->configPath);
+        }
+        else if (getenv('TEST_DATABASE_NAME')) {
+            $data = include($this->envConfigPath);
+        }
+        else {
             die('Config for integration tests ['. $this->configPath .'] is not found');
         }
-
-        $data = include($this->configPath);
 
         $packageData = json_decode(file_get_contents($this->packageJsonPath));
 
