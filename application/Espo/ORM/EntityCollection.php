@@ -168,7 +168,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->dataList[$offset]);
     }
