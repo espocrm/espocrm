@@ -13,8 +13,6 @@ on:
       - 'phpstan.neon'
 
   pull_request:
-    types:
-      - opened
     paths:
       - '**.php'
       - '**.json'
