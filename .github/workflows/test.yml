@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'hotfix/**'
+      - 'ci'
+    paths:
+      - '**.php'
+      - '**.json'
+      - '**.yml'
+      - 'composer.lock'
+      - 'phpstan.neon'
+
+  pull_request:
+    types:
+      - opened
+    paths:
+      - '**.php'
+      - '**.json'
+      - '**.yml'
+      - 'composer.lock'
+      - 'phpstan.neon'
+
+jobs:
+  test:
+    name: Test on PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0']
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP with Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: composer:v2
+        ini-values: memory_limit=1024M
+
+    - name: Composer install
+      run: composer install
+
+    - name: Static analysis
+      run: vendor/bin/phpstan
+
+    - name: Unit testing
+      run: vendor/bin/phpunit tests/unit

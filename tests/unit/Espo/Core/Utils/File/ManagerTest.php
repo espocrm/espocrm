@@ -535,11 +535,16 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function relativePathData()
     {
         $tmpPath = $this->cachePath;
+
+        if (!file_exists($tmpPath)) {
+            mkdir($tmpPath, 0775, true);
+        }
+
         $tmpFile = tempnam($tmpPath, 'tmp');
 
         $data = [
             ['data/config.php', 'data/config.php'],
-            [realpath('data/config.php'), 'data/config.php'],
+            [realpath('vendor/autoload.php'), 'vendor/autoload.php'],
             [$tmpFile, $tmpPath . '/' . basename($tmpFile)],
             [realpath('application/Espo/Core'), 'application/Espo/Core'],
             [realpath('application/Espo/Core') . '/', 'application/Espo/Core/'],
