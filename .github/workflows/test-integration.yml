@@ -1,0 +1,78 @@
+name: Test Integration
+
+on:
+  schedule:
+    - cron:  '0 10 * * *'
+  push:
+    branches:
+      - 'master'
+      - 'hotfix/**'
+      - 'workflow-integration-test'
+    paths:
+      - '**.php'
+      - '**.json'
+      - '**.yml'
+      - 'composer.lock'
+
+  pull_request:
+    paths:
+      - '**.php'
+      - '**.json'
+      - '**.yml'
+      - 'composer.lock'
+      - 'phpstan.neon'
+
+jobs:
+  test:
+    name: Test on PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-20.04
+    env:
+      TEST_DATABASE_HOST: '127.0.0.1'
+      TEST_DATABASE_PORT: '8888'
+      TEST_DATABASE_NAME: integration_test
+      TEST_DATABASE_USER: root
+      TEST_DATABASE_PASSWORD: password
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQ_USER: root
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: integration_test
+        ports:
+          - '8888:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      matrix:
+        php-versions: ['7.4']
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: Setup PHP with Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: composer:v2
+        ini-values: memory_limit=1024M
+
+    - name: Start MySQL service
+      run: sudo systemctl start mysql
+
+    - name: Create DB table
+      run: mysql -h 127.0.0.1 --port 8888 -u root -ppassword -e 'CREATE DATABASE IF NOT EXISTS integration_test;'
+
+    - name: NPM install
+      run: npm install
+
+    - name: Build
+      run: grunt test
+
+    - name: Integration testing
+      run: vendor/bin/phpunit tests/integration

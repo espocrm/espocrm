@@ -282,7 +282,7 @@ class Tester
             die("EspoCRM build is not found. Please run \"grunt\" in your terminal.\n");
         }
 
-        if (!isset($configData['siteUrl'])) {
+        if (!isset($configData['siteUrl']) && file_exists('data/config.php')) {
             $mainConfigData = include('data/config.php');
 
             if (isset($mainConfigData['siteUrl'])) {
