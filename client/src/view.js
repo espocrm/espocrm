@@ -262,7 +262,7 @@ define('view', [], function () {
                 cancelText: cancelText,
                 confirmStyle: confirmStyle,
                 noCancelButton: o.noCancelButton,
-                backdrop: ('backdrop' in o) ? o.backdrop : false,
+                backdrop: ('backdrop' in o) ? o.backdrop : true,
             }, callback, context);
         }
     });

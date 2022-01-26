@@ -63,7 +63,7 @@ define('ui', [], function () {
             'removeOnClose',
             'draggable',
             'container',
-            'onRemove'
+            'onRemove',
         ];
 
         params.forEach(param => {
@@ -439,6 +439,10 @@ define('ui', [], function () {
 
     Dialog.prototype.remove = function () {
         this.onRemove();
+
+        // Hack allowing multiple backdrops.
+        // `close` function may be called twice.
+        this.close();
 
         this.$el.remove();
 
