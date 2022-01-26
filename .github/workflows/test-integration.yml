@@ -3,24 +3,6 @@ name: Test Integration
 on:
   schedule:
     - cron:  '0 10 * * *'
-  push:
-    branches:
-      - 'master'
-      - 'hotfix/**'
-      - 'workflow-integration-test'
-    paths:
-      - '**.php'
-      - '**.json'
-      - '**.yml'
-      - 'composer.lock'
-
-  pull_request:
-    paths:
-      - '**.php'
-      - '**.json'
-      - '**.yml'
-      - 'composer.lock'
-      - 'phpstan.neon'
 
 jobs:
   test:
