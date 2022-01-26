@@ -44,6 +44,7 @@ define('ui', [], function () {
         this.draggable = false;
         this.container = 'body';
         this.onRemove = function () {};
+        this.onClose = function () {};
 
         this.options = options;
 
@@ -64,6 +65,7 @@ define('ui', [], function () {
             'draggable',
             'container',
             'onRemove',
+            'onClose',
         ];
 
         params.forEach(param => {
@@ -71,6 +73,8 @@ define('ui', [], function () {
                 this[param] = options[param];
             }
         });
+
+        this.onCloseIsCalled = false;
 
         if (this.buttons && this.buttons.length) {
             this.buttonList = this.buttons;
@@ -424,6 +428,11 @@ define('ui', [], function () {
     };
 
     Dialog.prototype.close = function () {
+        if (!this.onCloseIsCalled) {
+            this.onClose();
+            this.onCloseIsCalled = true;
+        }
+
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().removeClass('hidden');
@@ -467,8 +476,24 @@ define('ui', [], function () {
                 backdrop = false;
             }
 
-            return new Promise(function (resolve) {
-                var dialog = new Dialog({
+            let isResolved = false;
+
+            let processCancel = () => {
+                if (!o.cancelCallback) {
+                    return;
+                }
+
+                if (context) {
+                    o.cancelCallback.call(context);
+
+                    return;
+                }
+
+                o.cancelCallback();
+            };
+
+            return new Promise(resolve => {
+                let dialog = new Dialog({
                     backdrop: backdrop,
                     header: false,
                     className: 'dialog-confirm',
@@ -477,7 +502,9 @@ define('ui', [], function () {
                         {
                             text: ' ' + confirmText + ' ',
                             name: 'confirm',
-                            onClick: function () {
+                            onClick: () => {
+                                isResolved = true;
+
                                 if (callback) {
                                     if (context) {
                                         callback.call(context);
@@ -485,7 +512,9 @@ define('ui', [], function () {
                                         callback();
                                     }
                                 }
+
                                 resolve();
+
                                 dialog.close();
                             },
                             style: confirmStyle,
@@ -494,19 +523,23 @@ define('ui', [], function () {
                         {
                             text: cancelText,
                             name: 'cancel',
-                            onClick: function () {
+                            onClick: () => {
+                                isResolved = true;
+
                                 dialog.close();
-                                if (o.cancelCallback) {
-                                    if (context) {
-                                        o.cancelCallback.call(context);
-                                    } else {
-                                        o.cancelCallback();
-                                    }
-                                }
+
+                                processCancel();
                             },
                             pullRight: true,
                         }
-                    ]
+                    ],
+                    onClose: () => {
+                        if (isResolved) {
+                            return;
+                        }
+
+                        processCancel();
+                    },
                 });
 
                 dialog.show();
