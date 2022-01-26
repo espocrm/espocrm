@@ -38,6 +38,7 @@ use Espo\Core\Field\LinkParent;
 use Espo\Core\Exceptions\NotFoundSilent;
 
 use Espo\ORM\EntityManager;
+use Espo\ORM\Entity;
 
 class Service
 {
@@ -100,8 +101,23 @@ class Service
             return RunResult::createError($e, $output);
         }
 
+        if ($target && $this->isEntityChanged($target)) {
+            $this->entityManager->saveEntity($target);
+        }
+
         $output = $variables->__output ?? null;
 
         return RunResult::createSuccess($output);
+    }
+
+    private function isEntityChanged(Entity $entity): bool
+    {
+        foreach ($entity->getAttributeList() as $attribute) {
+            if ($entity->isAttributeChanged($attribute)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
