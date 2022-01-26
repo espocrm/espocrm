@@ -148,8 +148,7 @@ define('views/modal', 'view', function (Dep) {
 
             this.once('remove', () => {
                 if (this.dialog) {
-                    // `close` is called in `dialog.remove`.
-                    //this.dialog.close();
+                    this.dialog.close();
                 }
 
                 $(containerSelector).remove();

@@ -427,12 +427,7 @@ define('ui', [], function () {
         this.$el.find('.modal-content').addClass('hidden');
     };
 
-    Dialog.prototype.close = function () {
-        if (!this.onCloseIsCalled) {
-            this.onClose();
-            this.onCloseIsCalled = true;
-        }
-
+    Dialog.prototype._close = function () {
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().removeClass('hidden');
@@ -440,6 +435,16 @@ define('ui', [], function () {
         let $modalConainer = $('.modal-container');
 
         $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
+    };
+
+    Dialog.prototype.close = function () {
+        if (!this.onCloseIsCalled) {
+            this.onClose();
+
+            this.onCloseIsCalled = true;
+        }
+
+        this._close();
 
         this.$el.modal('hide');
 
@@ -451,7 +456,7 @@ define('ui', [], function () {
 
         // Hack allowing multiple backdrops.
         // `close` function may be called twice.
-        this.close();
+        this._close();
 
         this.$el.remove();
 
