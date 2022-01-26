@@ -56,6 +56,7 @@ define(
                 columnCount: this.columnCount,
                 panelDataList: this.getPanelDataList(),
             };
+
             return data;
         },
 
@@ -71,7 +72,7 @@ define(
                 this.makeDraggable();
             },
             'click #layout a[data-action="removePanel"]': function (e) {
-                $(e.target).closest('ul.panels > li').find('ul.cells > li').each(function (i, li) {
+                $(e.target).closest('ul.panels > li').find('ul.cells > li').each((i, li) => {
                     if ($(li).attr('data-name')) {
                         $(li).appendTo($('#layout ul.disabled'));
                     }
@@ -84,11 +85,11 @@ define(
 
                 var index = -1;
 
-                this.panels.forEach(function (item, i) {
+                this.panels.forEach((item, i) => {
                     if (item.number === number) {
                         index = i;
                     }
-                }, this);
+                });
 
                 if (~index) {
                     this.panels.splice(index, 1);
@@ -101,13 +102,14 @@ define(
             'click #layout a[data-action="addRow"]': function (e) {
                 var tpl = this.unescape($("#layout-row-tpl").html());
                 var html = _.template(tpl);
+
                 $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
 
                 this.setIsChanged();
                 this.makeDraggable();
             },
             'click #layout a[data-action="removeRow"]': function (e) {
-                $(e.target).closest('ul.rows > li').find('ul.cells > li').each(function (i, li) {
+                $(e.target).closest('ul.rows > li').find('ul.cells > li').each((i, li) => {
                     if ($(li).attr('data-name')) {
                         $(li).appendTo($('#layout ul.disabled'));
                     }
@@ -194,13 +196,13 @@ define(
                     panelName: panelName
                 };
 
-                this.panelDataAttributeList.forEach(function (item) {
+                this.panelDataAttributeList.forEach((item) => {
                     if (item === 'panelName') {
                         return;
                     }
 
                     attributes[item] = this.panelsData[id][item];
-                }, this);
+                });
 
                 var attributeList = this.panelDataAttributeList;
                 var attributeDefs = this.panelDataAttributesDefs;
@@ -209,32 +211,33 @@ define(
                     attributeList: attributeList,
                     attributeDefs: attributeDefs,
                     attributes: attributes,
-                }, function (view) {
+                }, (view) => {
                     view.render();
 
-                    this.listenTo(view, 'after:save', function (attributes) {
+                    this.listenTo(view, 'after:save', (attributes) => {
                         $label.text(attributes.panelName);
                         $label.attr('data-is-custom', 'true');
 
-                        this.panelDataAttributeList.forEach(function (item) {
+                        this.panelDataAttributeList.forEach((item) => {
                             if (item === 'panelName') {
                                 return;
                             }
 
                             this.panelsData[id][item] = attributes[item];
-                        }, this);
+                        });
+
                         view.close();
 
                         this.setIsChanged();
-                    }, this);
+                    });
                 });
             }
         }, Dep.prototype.events),
 
         normilizeDisabledItemList: function () {
-            $('#layout ul.cells.disabled > li').each(function (i, el) {
+            $('#layout ul.cells.disabled > li').each((i, el) => {
 
-            }.bind(this));
+            });
         },
 
         setup: function () {
@@ -269,15 +272,15 @@ define(
 
             this.$el.find('ul.panels').append($li);
 
-            this.createPanelView(data, true, function (view) {
+            this.createPanelView(data, true, (view) => {
                 view.render();
-            }, this);
+            });
         },
 
         getPanelDataList: function () {
             var panelDataList = [];
 
-            this.panels.forEach(function (item) {
+            this.panels.forEach((item) => {
                 var o = {};
 
                 o.viewKey = 'panel-' + item.number;
@@ -285,23 +288,23 @@ define(
                 o.number = item.number;
 
                 panelDataList.push(o);
-            }, this);
+            });
 
             return panelDataList;
         },
 
         cancel: function () {
-            this.loadLayout(function () {
+            this.loadLayout(() => {
                 var countLoaded = 0;
 
-                this.setupPanels(function () {
+                this.setupPanels(() => {
                     countLoaded ++;
 
                     if (countLoaded === this.panels.length) {
                         this.reRender();
                     }
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         setupPanels: function (callback) {
@@ -309,7 +312,7 @@ define(
 
             this.panels = Espo.Utils.cloneDeep(this.panels);
 
-            this.panels.forEach(function (panel, i) {
+            this.panels.forEach((panel, i) => {
                 panel.number = i;
 
                 this.lastPanelNumber ++;
@@ -317,7 +320,7 @@ define(
                 this.createPanelView(panel, false, callback);
 
                 this.panelsData[i.toString()] = panel;
-            }, this);
+            });
         },
 
         createPanelView: function (data, empty, callback) {
@@ -334,7 +337,7 @@ define(
 
             data.style = data.style || null;
 
-            data.rows.forEach(function (row) {
+            data.rows.forEach((row) => {
                 var rest = this.columnCount - row.length;
 
                 if (empty) {
@@ -344,34 +347,34 @@ define(
                 }
 
                 for (var i in row) {
-                    if (row[i] != false) {
+                    if (row[i] !== false) {
                         row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
+
                         if ('customLabel' in row[i]) {
-                            row[i].customLabel = row[i].customLabel;
                             row[i].hasCustomLabel = true;
                         }
                     }
                 }
-            }, this);
+            });
 
             this.createView('panel-' + data.number, 'view', {
                 el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
                 template: 'admin/layouts/grid-panel',
-                data: function () {
+                data: () => {
                     var o = Espo.Utils.clone(data);
 
                     o.dataAttributeList = [];
 
-                    this.panelDataAttributeList.forEach(function (item) {
+                    this.panelDataAttributeList.forEach((item) => {
                         if (item === 'panelName') {
                             return;
                         }
 
                         o.dataAttributeList.push(item);
-                    }, this);
+                    });
 
                     return o;
-                }.bind(this)
+                }
             }, callback);
         },
 
@@ -380,8 +383,8 @@ define(
 
             $('#layout ul.panels').sortable({
                 distance: 4,
-                update: function () {
-                    self.setIsChanged();
+                update: () => {
+                    this.setIsChanged();
                 },
             });
 
@@ -390,8 +393,8 @@ define(
             $('#layout ul.rows').sortable({
                 distance: 4,
                 connectWith: '.rows',
-                update: function () {
-                    self.setIsChanged();
+                update: () => {
+                    this.setIsChanged();
                 },
             });
             $('#layout ul.rows').disableSelection();
@@ -451,9 +454,8 @@ define(
 
         fetch: function () {
             var layout = [];
-            var self = this;
 
-            $("#layout ul.panels > li").each(function (i, el) {
+            $("#layout ul.panels > li").each((i, el) => {
                 var $label = $(el).find('header label');
 
                 var id = $(el).data('number').toString();
@@ -462,13 +464,13 @@ define(
                     rows: []
                 };
 
-                this.panelDataAttributeList.forEach(function (item) {
+                this.panelDataAttributeList.forEach((item) => {
                     if (item === 'panelName') {
                         return;
                     }
 
                     o[item] = this.panelsData[id][item];
-                }, this);
+                });
 
                 o.style = o.style || 'default';
 
@@ -484,16 +486,16 @@ define(
                     o.label = $label.data('label');
                 }
 
-                $(el).find('ul.rows > li').each(function (i, li) {
+                $(el).find('ul.rows > li').each((i, li) => {
                     var row = [];
 
-                    $(li).find('ul.cells > li').each(function (i, li) {
+                    $(li).find('ul.cells > li').each((i, li) => {
                         var cell = false;
 
                         if (!$(li).hasClass('empty')) {
                             cell = {};
 
-                            self.dataAttributeList.forEach(function (attr) {
+                            this.dataAttributeList.forEach((attr) => {
                                 if (attr === 'customLabel') {
                                     if ($(li).get(0).hasAttribute('data-custom-label')) {
                                         cell[attr] = $(li).attr('data-custom-label');
@@ -512,30 +514,34 @@ define(
 
                         row.push(cell);
                     });
+
                     o.rows.push(row);
                 });
 
                 layout.push(o);
-            }.bind(this));
+            });
 
             return layout;
         },
 
         validate: function (layout) {
-            var fieldCount = 0;
+            let fieldCount = 0;
 
-            layout.forEach(function (panel) {
-                panel.rows.forEach(function (row) {
-                    row.forEach(function (cell) {
-                        if (cell != false) {
+            layout.forEach(panel => {
+                panel.rows.forEach(row => {
+                    row.forEach(cell => {
+                        if (cell !== false && cell !== null) {
                             fieldCount++;
                         }
                     });
                 });
             });
 
-            if (fieldCount == 0) {
-                alert('Layout cannot be empty.');
+            if (fieldCount === 0) {
+                Espo.Ui.error(
+                    this.translate('cantBeEmpty', 'messages', 'LayoutManager')
+                );
+
                 return false;
             }
 

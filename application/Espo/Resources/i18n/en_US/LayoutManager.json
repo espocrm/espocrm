@@ -30,6 +30,10 @@
         "New panel": "New panel",
         "Layout": "Layout"
     },
+    "messages": {
+        "cantBeEmpty": "Layout can't be empty.",
+        "fieldsIncompatible": "Fields can't be on the layout together: {fields}."
+    },
     "tooltips": {
         "sticked": "The panel will be sticked to the panel above. No gap between panels.",
         "hiddenPanel": "Need to click 'show more' to see the panel.",

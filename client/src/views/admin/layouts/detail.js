@@ -107,11 +107,11 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             this.panelDataAttributesDefs.dynamicLogicStyled.scope = this.scope;
 
             this.wait(true);
-            this.loadLayout(function () {
 
+            this.loadLayout(() => {
                 this.setupPanels();
                 this.wait(false);
-            }.bind(this));
+            });
         },
 
         loadLayout: function (callback) {
@@ -121,76 +121,79 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             var promiseList = [];
 
             promiseList.push(
-                new Promise(function (resolve) {
-                    this.getModelFactory().create(this.scope, function (m) {
+                new Promise((resolve) => {
+                    this.getModelFactory().create(this.scope, (m) => {
                         this.getHelper()
                             .layoutManager
-                            .getOriginal(this.scope, this.type, this.setId, function (layoutLoaded) {
+                            .getOriginal(this.scope, this.type, this.setId, (layoutLoaded) => {
                                 layout = layoutLoaded;
                                 model = m;
                                 resolve();
                             });
-                    }.bind(this));
-                }.bind(this))
+                    });
+                })
             );
 
             if (~['detail', 'detailSmall'].indexOf(this.type)) {
                 promiseList.push(
-                    new Promise(function (resolve) {
+                    new Promise((resolve) => {
                         this.getHelper().layoutManager.getOriginal(
                             this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
                             this.setId,
-                            function (layoutLoaded) {
+                            (layoutLoaded) => {
                                 this.sidePanelsLayout = layoutLoaded;
+
                                 resolve();
-                            }.bind(this)
+                            }
                         );
-                    }.bind(this))
+                    })
                 );
             }
 
             promiseList.push(
-                new Promise(
-                    function (resolve) {
-                        if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
+                new Promise((resolve) => {
+                    if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
+                        resolve();
+                    }
+
+                    this.getHelper().layoutManager.getOriginal(
+                        this.scope,
+                        'defaultSidePanel',
+                        this.setId,
+                        (layoutLoaded) => {
+                            this.defaultSidePanelLayout = layoutLoaded;
+
+                            this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
+
+                            layoutLoaded.forEach((item) => {
+                                var field = item.name;
+
+                                if (!field) {
+                                    return;
+                                }
+
+                                if (field === ':assignedUser') {
+                                    field = 'assignedUser';
+                                }
+
+                                if (!~this.defaultPanelFieldList.indexOf(field)) {
+                                    this.defaultPanelFieldList.push(field);
+                                }
+                            });
+
                             resolve();
                         }
-
-                        this.getHelper().layoutManager.getOriginal(this.scope, 'defaultSidePanel', this.setId,
-                            function (layoutLoaded) {
-                                this.defaultSidePanelLayout = layoutLoaded;
-
-                                this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
-
-                                layoutLoaded.forEach(function (item) {
-                                    var field = item.name;
-
-                                    if (!field) {
-                                        return;
-                                    }
-
-                                    if (field === ':assignedUser') {
-                                        field = 'assignedUser';
-                                    }
-
-                                    if (!~this.defaultPanelFieldList.indexOf(field)) {
-                                        this.defaultPanelFieldList.push(field);
-                                    }
-                                }, this);
-
-                                resolve();
-                            }.bind(this)
-                        );
-                    }.bind(this)
-                )
+                    );
+                })
             );
 
-            Promise.all(promiseList).then(function () {
+            Promise.all(promiseList).then(() => {
                 this.readDataFromLayout(model, layout);
+
                 if (callback) {
                     callback();
                 }
-            }.bind(this));
+            });
         },
 
         readDataFromLayout: function (model, layout) {
@@ -207,18 +210,18 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
             this.panels = layout;
 
-            layout.forEach(function (panel) {
-                panel.rows.forEach(function (row) {
-                    row.forEach(function (cell, i) {
+            layout.forEach((panel) => {
+                panel.rows.forEach((row) => {
+                    row.forEach((cell, i) => {
                         this.enabledFields.push(cell.name);
-                    }.bind(this));
-                }.bind(this));
-            }.bind(this));
+                    });
+                });
+            });
 
-            allFields.sort(function (v1, v2) {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
-
+            allFields.sort((v1, v2) => {
+                return this.translate(v1, 'fields', this.scope)
+                    .localeCompare(this.translate(v2, 'fields', this.scope));
+            });
 
             for (var i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
@@ -258,6 +261,70 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
                         return false;
                     }
                 }
+            }
+
+            return true;
+        },
+
+        validate: function (layout) {
+            if (!Dep.prototype.validate.call(this, layout)) {
+                return false;
+            }
+
+            let fieldCount = 0;
+
+            let fieldList = [];
+
+            layout.forEach(panel => {
+                panel.rows.forEach(row => {
+                    row.forEach(cell => {
+                        if (cell !== false && cell !== null) {
+                            if (cell.name) {
+                                fieldList.push(cell.name);
+                            }
+                        }
+                    });
+                });
+            });
+
+            let incopatibleFieldList = [];
+
+            let isIncompatible = false;
+
+            fieldList.forEach(field => {
+                if (isIncompatible) {
+                    return;
+                }
+
+                let defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+
+                let targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
+
+                targetFieldList.forEach(itemField => {
+                    if (isIncompatible) {
+                        return;
+                    }
+
+                    if (~fieldList.indexOf(itemField)) {
+                        isIncompatible = true;
+
+                        incopatibleFieldList = [field].concat(targetFieldList);
+                    }
+                });
+            });
+
+            if (isIncompatible) {
+                Espo.Ui.error(
+                    this.translate('fieldsIncompatible', 'messages', 'LayoutManager')
+                        .replace(
+                            '{fields}',
+                            incopatibleFieldList
+                                .map(field => this.translate(field, 'fields', this.scope))
+                                .join(', ')
+                        )
+                );
+
+                return false;
             }
 
             return true;

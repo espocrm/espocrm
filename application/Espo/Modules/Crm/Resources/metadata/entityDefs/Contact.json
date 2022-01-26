@@ -223,7 +223,8 @@
                 "role": "contactRole",
                 "isInactive": "contactIsInactive"
             },
-            "orderBy": "name"
+            "orderBy": "name",
+            "detailLayoutIncompatibleFieldList": ["account"]
         },
         "accountRole": {
             "type": "varchar",

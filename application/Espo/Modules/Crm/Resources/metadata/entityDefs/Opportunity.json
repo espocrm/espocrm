@@ -151,7 +151,8 @@
                 "role": "opportunityRole"
             },
             "additionalAttributeList": ["columns"],
-            "orderBy": "name"
+            "orderBy": "name",
+            "detailLayoutIncompatibleFieldList": ["contact"]
         },
         "contact": {
             "type": "link"
