@@ -2,7 +2,7 @@ name: Test Integration
 
 on:
   schedule:
-    - cron:  '0 10 * * *'
+    - cron:  '0 11 * * *'
 
 jobs:
   test:
@@ -27,7 +27,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        php-versions: ['7.4']
+        php-versions: ['7.4', '8.1']
 
     steps:
     - uses: actions/checkout@v2
