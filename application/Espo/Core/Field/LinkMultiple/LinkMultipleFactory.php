@@ -162,6 +162,8 @@ class LinkMultipleFactory implements ValueFactory
         foreach ($collection as $itemEntity) {
             $id = $itemEntity->getId();
 
+            $columnData->$id = (object) [];
+
             foreach ($columns as $column => $attribute) {
                 $columnData->$id->$column = $itemEntity->get($attribute);
             }
