@@ -1078,6 +1078,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
+            this.isNew = this.model.isNew();
+
             if (_.isUndefined(this.events)) {
                 this.events = {};
             }
@@ -1093,7 +1095,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.buttonsDisabled = this.options.buttonsDisabled || this.buttonsDisabled;
 
             // for backward compatibility
-            // TODO remove in 5.6.0
+            // @todo remove
             if ('buttonsPosition' in this.options && !this.options.buttonsPosition) {
                 this.buttonsDisabled = true;
             }
@@ -1114,9 +1116,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.bottomDisabled = this.options.bottomDisabled || this.bottomDisabled;
 
             this.readOnly = this.options.readOnly || this.readOnly;
-            if (!this.readOnly) {
-                this.readOnly = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || this.readOnly;
+
+            if (!this.readOnly && !this.isNew) {
+                this.readOnly = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || false;
             }
+
             this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled ||
