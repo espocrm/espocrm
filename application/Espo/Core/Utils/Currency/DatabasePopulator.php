@@ -27,21 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Currency;
+namespace Espo\Core\Utils\Currency;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Config,
-};
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 
 /**
  * Populates currency rates into database.
  */
 class DatabasePopulator
 {
-    private $config;
+    private Config $config;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -77,7 +75,7 @@ class DatabasePopulator
         }
     }
 
-    protected function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
+    private function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
     {
         $precision = 5;
         $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);

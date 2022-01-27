@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
-use Espo\Core\Currency\DatabasePopulator;
+use Espo\Core\Utils\Currency\DatabasePopulator;
 
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {

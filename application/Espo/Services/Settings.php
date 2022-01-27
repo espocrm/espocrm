@@ -39,7 +39,7 @@ use Espo\Core\InjectableFactory;
 
 use Espo\Core\DataManager;
 use Espo\Core\FieldValidation\FieldValidationManager;
-use Espo\Core\Currency\DatabasePopulator as CurrencyDatabasePopulator;
+use Espo\Core\Utils\Currency\DatabasePopulator as CurrencyDatabasePopulator;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\FieldUtil;
