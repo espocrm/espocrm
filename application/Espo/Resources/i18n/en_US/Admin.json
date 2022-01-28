@@ -288,7 +288,7 @@
     "keywords": {
         "settings": "system",
         "userInterface": "ui,theme,tabs,logo,dashboard",
-        "authentication": "password",
+        "authentication": "password,security,ldap",
         "scheduledJob": "cron,jobs",
         "integrations": "google,maps,google maps",
         "authLog": "log,history",
