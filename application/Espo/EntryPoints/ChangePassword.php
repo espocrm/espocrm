@@ -33,10 +33,11 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Entities\PasswordChangeRequest;
 
+use Espo\Core\Utils\Client\ActionRenderer;
+
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\ClientManager;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
@@ -49,15 +50,15 @@ class ChangePassword implements EntryPoint
 
     private Config $config;
 
-    private ClientManager $clientManager;
-
     private EntityManager $entityManager;
 
-    public function __construct(Config $config, ClientManager $clientManager, EntityManager $entityManager)
+    private ActionRenderer $actionRenderer;
+
+    public function __construct(Config $config, EntityManager $entityManager, ActionRenderer $actionRenderer)
     {
         $this->config = $config;
-        $this->clientManager = $clientManager;
         $this->entityManager = $entityManager;
+        $this->actionRenderer = $actionRenderer;
     }
 
     public function run(Request $request, Response $response): void
@@ -91,14 +92,8 @@ class ChangePassword implements EntryPoint
             'notFound' => !$passwordChangeRequest,
         ];
 
-        $runScript = "
-            app.getController('PasswordChangeRequest', controller => {
-                controller.doAction('passwordChange', " . json_encode($options) . ");
-            });
-        ";
+        $html = $this->actionRenderer->render('controllers/password-change-request', 'passwordChange', $options);
 
-        $response->writeBody(
-            $this->clientManager->render($runScript)
-        );
+        $response->writeBody($html);
     }
 }
