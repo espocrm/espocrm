@@ -15,5 +15,8 @@
     },
     "exports": {
         "className": "Espo\\Classes\\Cleanup\\Exports"
+    },
+    "passwordChangeRequests": {
+        "className": "Espo\\Classes\\Cleanup\\PasswordChangeRequests"
     }
 }
