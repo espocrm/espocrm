@@ -37,66 +37,84 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
 
             this.setupNonAdminFieldsAccess();
 
-            if (this.model.id == this.getUser().id) {
-                this.listenTo(this.model, 'after:save', function () {
+            if (this.model.id === this.getUser().id) {
+                this.listenTo(this.model, 'after:save', () => {
                     this.getUser().set(this.model.toJSON());
-                }, this);
+                });
             }
 
             this.hideField('sendAccessInfo');
 
             this.passwordInfoMessage = this.getPasswordSendingMessage();
+
             if (!this.passwordInfoMessage) {
                 this.hideField('passwordInfo');
             }
 
-            var passwordChanged = false;
+            let passwordChanged = false;
 
-            this.listenToOnce(this.model, 'change:password', function (model) {
+            this.listenToOnce(this.model, 'change:password', (model) => {
                 passwordChanged = true;
-                if (this.isPasswordSendable()) {
-                    this.showField('sendAccessInfo');
-                    this.model.set('sendAccessInfo', true);
-                }
-            }, this);
 
-            this.listenTo(this.model, 'change', function (model) {
-                if (!passwordChanged) return;
-                if (!model.hasChanged('emailAddress') && !model.hasChanged('portalsIds')) return;
+                this.controlSendAccessInfoField();
+            });
 
-                if (this.isPasswordSendable()) {
-                    this.showField('sendAccessInfo');
-                    this.model.set('sendAccessInfo', true);
-                } else {
-                    this.hideField('sendAccessInfo');
-                    this.model.set('sendAccessInfo', false);
+            this.listenTo(this.model, 'change', (model) => {
+                if (!this.model.isNew() && !passwordChanged) {
+                    return;
                 }
-            }, this);
+
+                if (
+                    !model.hasChanged('emailAddress') &&
+                    !model.hasChanged('portalsIds')
+                ) {
+                    return;
+                }
+
+                this.controlSendAccessInfoField();
+            });
 
             Detail.prototype.setupFieldAppearance.call(this);
 
             this.hideField('passwordPreview');
-            this.listenTo(this.model, 'change:passwordPreview', function (model, value) {
+
+            this.listenTo(this.model, 'change:passwordPreview', (model, value) => {
                 value = value || '';
+
                 if (value.length) {
                     this.showField('passwordPreview');
                 } else {
                     this.hideField('passwordPreview');
                 }
-            }, this);
+            });
 
 
-            this.listenTo(this.model, 'after:save', function () {
+            this.listenTo(this.model, 'after:save', () => {
                 this.model.unset('password', {silent: true});
                 this.model.unset('passwordConfirm', {silent: true});
-            }, this);
+            });
+        },
+
+        controlSendAccessInfoField: function () {
+            if (this.isPasswordSendable()) {
+                this.showField('sendAccessInfo');
+                this.model.set('sendAccessInfo', true);
+            } else {
+                this.hideField('sendAccessInfo');
+                this.model.set('sendAccessInfo', false);
+            }
         },
 
         isPasswordSendable: function () {
             if (this.model.isPortal()) {
-                if (!(this.model.get('portalsIds') || []).length) return false;
+                if (!(this.model.get('portalsIds') || []).length) {
+                    return false;
+                }
             }
-            if (!this.model.get('emailAddress')) return false;
+
+            if (!this.model.get('emailAddress')) {
+                return false;
+            }
 
             return true;
         },
@@ -150,7 +168,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                                     name: 'password',
                                     type: 'password',
                                     params: {
-                                        required: this.isNew,
+                                        required: false,
                                         readyToChange: true,
                                     },
                                     view: 'views/user/fields/password',
@@ -166,7 +184,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                                     name: 'passwordConfirm',
                                     type: 'password',
                                     params: {
-                                        required: this.isNew,
+                                        required: false,
                                         readyToChange: true
                                     }
                                 },
@@ -216,9 +234,11 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
             if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
                 return '';
             }
+
             var msg = this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
 
             msg = this.getHelper().transfromMarkdownInlineText(msg);
+
             return msg;
         },
 
@@ -241,7 +261,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
 
         errorHandlerUserNameExists: function () {
             Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
-        }
+        },
 
     });
 });

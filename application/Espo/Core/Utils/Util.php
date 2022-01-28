@@ -888,8 +888,13 @@ class Util
         return $url;
     }
 
-    public static function generatePassword(int $length = 8, int $letters = 5, int $numbers = 3, bool $bothCases = false)
-    {
+    public static function generatePassword(
+        int $length = 8,
+        int $letters = 5,
+        int $numbers = 3,
+        bool $bothCases = false
+    ): string {
+
         $chars = [
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
             '0123456789',
@@ -900,28 +905,39 @@ class Util
 
         $shuffle = function ($array) {
             $currentIndex = count($array);
+
             while (0 !== $currentIndex) {
                 $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
                 $randomIndex = intval(floor($rand * $currentIndex));
                 $currentIndex -= 1;
                 $temporaryValue = $array[$currentIndex];
+
                 $array[$currentIndex] = $array[$randomIndex];
                 $array[$randomIndex] = $temporaryValue;
             }
+
             return $array;
         };
 
         $upperCase = 0;
         $lowerCase = 0;
+
         if ($bothCases) {
             $upperCase = 1;
             $lowerCase = 1;
-            if ($letters >= 2) $letters = $letters - 2;
-                else $letters = 0;
+
+            if ($letters >= 2) {
+                $letters = $letters - 2;
+            } else {
+                $letters = 0;
+            }
         }
 
         $either = $length - ($letters + $numbers + $upperCase + $lowerCase);
-        if ($either < 0) $either = 0;
+
+        if ($either < 0) {
+            $either = 0;
+        }
 
         $array = [];
 
@@ -930,6 +946,7 @@ class Util
             $subArray = [];
 
             $j = 0;
+
             while ($j < $len) {
                 $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
                 $index = intval(floor($rand * strlen($set)));

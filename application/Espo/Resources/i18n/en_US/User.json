@@ -72,6 +72,7 @@
         "Proceed w/o Contact": "Proceed w/o Contact",
         "Generate New API Key": "Generate New API Key",
         "Generate New Password": "Generate New Password",
+        "Send Password Change Link": "Send Password Change Link",
         "Back to login form": "Back to login form",
         "Requirements": "Requirements",
         "Security": "Security",
@@ -91,6 +92,7 @@
         "portals": "Portals which this user has access to."
     },
     "messages": {
+        "sendPasswordChangeLinkConfirmation": "An email with a unique link will be sent to the user allowing them to change their password. The link will expire after a specific amount of time.",
         "passwordRecoverySentIfMatched": "Assuming the entered data matched any user account.",
         "passwordStrengthLength": "Must be at least {length} characters long.",
         "passwordStrengthLetterCount": "Must contain at least {count} letter(s).",
@@ -120,7 +122,8 @@
         "security2FaResetConfimation": "Are you sure you want to reset the current 2FA settings?",
         "auth2FARequiredHeader": "2 factor authentication required",
         "auth2FARequired": "You need to set up 2 factor authentication. Use an authenticator application on your mobile phone (e.g. Google Authenticator).",
-        "ldapUserInEspoNotFound": "User is not found in EspoCRM. Contact your administrator to create the user."
+        "ldapUserInEspoNotFound": "User is not found in EspoCRM. Contact your administrator to create the user.",
+        "passwordChangeRequestNotFound": "The password change request is not found. It might be expired. Try to initiate a new password recovery from the [login page]({url})."
     },
     "options": {
         "gender": {

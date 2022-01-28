@@ -156,6 +156,23 @@ class User extends Record
         return true;
     }
 
+    public function postActionSendPasswordChangeLink(Request $request): bool
+    {
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $this->getUserService()->sendPasswordChangeLink($id);
+
+        return true;
+    }
+
     public function postActionCreateLink(Request $request): bool
     {
         if (!$this->user->isAdmin()) {

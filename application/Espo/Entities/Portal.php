@@ -52,4 +52,9 @@ class Portal extends \Espo\Core\ORM\Entity
     {
         return $this->settingsAttributeList;
     }
+
+    public function getUrl(): ?string
+    {
+        return $this->get('url');
+    }
 }

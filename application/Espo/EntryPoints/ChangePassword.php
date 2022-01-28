@@ -29,31 +29,29 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    EntryPoint\EntryPoint,
-    EntryPoint\Traits\NoAuth,
-    Utils\Config,
-    Utils\ClientManager,
-    ORM\EntityManager,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Entities\PasswordChangeRequest;
+
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\EntryPoint\Traits\NoAuth;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\ClientManager;
+
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+
+use Espo\ORM\EntityManager;
 
 class ChangePassword implements EntryPoint
 {
     use NoAuth;
 
-    /** @var Config */
-    protected $config;
+    private Config $config;
 
-    /** @var ClientManager */
-    protected $clientManager;
+    private ClientManager $clientManager;
 
-    /** @var EntityManager */
-    protected $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(Config $config, ClientManager $clientManager, EntityManager $entityManager)
     {
@@ -71,34 +69,36 @@ class ChangePassword implements EntryPoint
         }
 
         $passwordChangeRequest = $this->entityManager
-            ->getRDBRepository('PasswordChangeRequest')
+            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
             ->where([
                 'requestId' => $requestId,
             ])
             ->findOne();
 
         $strengthParams = [
+            'passwordGenerateLength' => $this->config->get('passwordGenerateLength'),
+            'passwordGenerateLetterCount' => $this->config->get('passwordGenerateLetterCount'),
+            'generateNumberCount' => $this->config->get('generateNumberCount'),
             'passwordStrengthLength' => $this->config->get('passwordStrengthLength'),
             'passwordStrengthLetterCount' => $this->config->get('passwordStrengthLetterCount'),
             'passwordStrengthNumberCount' => $this->config->get('passwordStrengthNumberCount'),
             'passwordStrengthBothCases' => $this->config->get('passwordStrengthBothCases'),
         ];
 
-        if (!$passwordChangeRequest) {
-            throw new NotFound();
-        }
-
         $options = [
             'id' => $requestId,
             'strengthParams' => $strengthParams,
+            'notFound' => !$passwordChangeRequest,
         ];
 
         $runScript = "
-            app.getController('PasswordChangeRequest', function (controller) {
-                controller.doAction('passwordChange', ".json_encode($options).");
+            app.getController('PasswordChangeRequest', controller => {
+                controller.doAction('passwordChange', " . json_encode($options) . ");
             });
         ";
 
-        $this->clientManager->display($runScript);
+        $response->writeBody(
+            $this->clientManager->render($runScript)
+        );
     }
 }

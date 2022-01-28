@@ -32,6 +32,7 @@ namespace Espo\Classes\FieldProcessing\Portal;
 use Espo\ORM\Entity;
 
 use Espo\Repositories\Portal as PortalRepository;
+use Espo\Entities\Portal;
 
 use Espo\Core\{
     FieldProcessing\Loader,
@@ -50,6 +51,8 @@ class UrlLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
+        /** @var Portal $entity */
+
         $this->getPortalRepository()->loadUrlField($entity);
     }
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
+use Espo\Entities\Portal as PortalEntity;
 
 use Espo\Core\Repositories\Database;
 
@@ -41,7 +41,7 @@ class Portal extends Database implements
 {
     use Di\ConfigSetter;
 
-    public function loadUrlField(Entity $entity)
+    public function loadUrlField(PortalEntity $entity): void
     {
         if ($entity->get('customUrl')) {
             $entity->set('url', $entity->get('customUrl'));

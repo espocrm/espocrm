@@ -40,7 +40,8 @@ define('controllers/password-change-request', 'controller', function (Dep) {
             this.entire('views/user/password-change-request', {
                 requestId: options.id,
                 strengthParams: options.strengthParams,
-            }, function (view) {
+                notFound: options.notFound,
+            }, view => {
                 view.render();
             });
         },

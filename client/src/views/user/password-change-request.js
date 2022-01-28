@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/password-change-request', ['view', 'model'], function (Dep, Model) {
+define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], function (Dep, Model, Espo) {
 
     return Dep.extend({
 
@@ -34,24 +34,27 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
 
         data: function () {
             return {
-                requestId: this.options.requestId
+                requestId: this.options.requestId,
+                notFound: this.options.notFound,
+                notFoundMessage: this.notFoundMessage,
             };
         },
 
         events: {
             'click #btn-submit': function () {
                 this.submit();
-            }
+            },
         },
 
         setup: function () {
             var model = this.model = new Model;
+
             model.name = 'User';
 
             this.createView('password', 'views/user/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="password"]',
+                el: this.getSelector() + ' .field[data-name="password"]',
                 defs: {
                     name: 'password',
                     params: {
@@ -64,7 +67,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
             this.createView('passwordConfirm', 'views/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="passwordConfirm"]',
+                el: this.getSelector() + ' .field[data-name="passwordConfirm"]',
                 defs: {
                     name: 'passwordConfirm',
                     params: {
@@ -72,6 +75,34 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
                     },
                 },
             });
+
+            this.createView('generatePassword', 'views/user/fields/generate-password', {
+                model: model,
+                mode: 'detail',
+                readOnly: true,
+                el: this.getSelector() + ' .field[data-name="generatePassword"]',
+                defs: {
+                    name: 'generatePassword',
+                },
+                strengthParams: this.options.strengthParams,
+            });
+
+            this.createView('passwordPreview', 'views/fields/base', {
+                model: model,
+                mode: 'detail',
+                readOnly: true,
+                el: this.getSelector() + ' .field[data-name="passwordPreview"]',
+                defs: {
+                    name: 'passwordPreview',
+                },
+            });
+
+            this.model.on('change:passwordPreview', () => this.reRender());
+
+            let url = this.baseUrl = window.location.href.split('?')[0];
+
+            this.notFoundMessage = this.translate('passwordChangeRequestNotFound', 'messages', 'User')
+                .replace('{url}', url);
         },
 
         submit: function () {
@@ -79,7 +110,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
             this.getView('passwordConfirm').fetchToModel();
 
             var notValid = this.getView('password').validate() ||
-                           this.getView('passwordConfirm').validate();
+                this.getView('passwordConfirm').validate();
 
             var password = this.model.get('password');
 
@@ -87,30 +118,31 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
                 return;
             }
 
-            var $submit = this.$el.find('.btn-submit');
+            let $submit = this.$el.find('.btn-submit');
+
             $submit.addClass('disabled');
 
-            Espo.Ajax.postRequest('User/changePasswordByRequest', {
-                requestId: this.options.requestId,
-                password: password,
-            }).then(
-                function (data) {
+            Espo.Ajax
+                .postRequest('User/changePasswordByRequest', {
+                    requestId: this.options.requestId,
+                    password: password,
+                })
+                .then(data => {
                     this.$el.find('.password-change').remove();
 
-                    var url = data.url || this.getConfig().get('siteUrl');
+                    var url = data.url || this.baseUrl;
 
-                    var msg = this.translate('passwordChangedByRequest', 'messages', 'User');
-                    msg += ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
+                    var msg = this.translate('passwordChangedByRequest', 'messages', 'User') +
+                        ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
 
-                    this.$el.find('.msg-box').removeClass('hidden').html('<span class="text-success">' + msg + '</span>');
-                }.bind(this)
-            ).fail(
-                function () {
-                    $submit.removeClass('disabled');
-                }.bind(this)
-            );
+                    this.$el.find('.msg-box')
+                        .removeClass('hidden')
+                        .html('<span class="text-success">' + msg + '</span>');
+                })
+                .catch(() =>
+                    $submit.removeClass('disabled')
+                );
         },
 
     });
 });
-

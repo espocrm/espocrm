@@ -32,10 +32,15 @@ namespace Espo\Core\Password;
 use Espo\Core\Utils\Util;
 use Espo\Entities\User;
 use Espo\Entities\PasswordChangeRequest;
+use Espo\Entities\Portal;
+
+use Espo\Repositories\Portal as PortalRepository;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Field\DateTime;
 
 use Espo\Core\{
     ORM\EntityManager,
@@ -47,46 +52,30 @@ use Espo\Core\{
     Job\QueueName,
 };
 
-use DateTime;
-
 class Recovery
 {
     /**
      * Milliseconds.
      */
-    const REQUEST_DELAY = 3000;
+    private const REQUEST_DELAY = 3000;
 
-    const REQUEST_LIFETIME = '3 hours';
+    private const REQUEST_LIFETIME = '3 hours';
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private const NEW_USER_REQUEST_LIFETIME = '2 days';
 
-    /**
-     * @var Config
-     */
-    protected $config;
+    private const EXISTING_USER_REQUEST_LIFETIME = '2 days';
 
-    /**
-     * @var EmailSender
-     */
-    protected $emailSender;
+    protected EntityManager $entityManager;
 
-    /**
-     * @var HtmlizerFactory
-     */
-    protected $htmlizerFactory;
+    protected Config $config;
 
-    /**
-     * @var TemplateFileManager
-     */
-    protected $templateFileManager;
+    protected EmailSender $emailSender;
 
-    /**
-     * @var Log
-     */
-    private $log;
+    protected HtmlizerFactory $htmlizerFactory;
+
+    protected TemplateFileManager $templateFileManager;
+
+    private Log $log;
 
     public function __construct(
         EntityManager $entityManager,
@@ -107,13 +96,12 @@ class Recovery
     public function getRequest(string $id): PasswordChangeRequest
     {
         $config = $this->config;
-        $em = $this->entityManager;
 
         if ($config->get('passwordRecoveryDisabled')) {
             throw new Forbidden("Password recovery: Disabled.");
         }
 
-        $request = $em
+        $request = $this->entityManager
             ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'requestId' => $id,
@@ -132,11 +120,9 @@ class Recovery
         return $request;
     }
 
-    public function removeRequest(string $id)
+    public function removeRequest(string $id): void
     {
-        $em = $this->entityManager;
-
-        $request = $em
+        $request = $this->entityManager
             ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'requestId' => $id,
@@ -144,14 +130,13 @@ class Recovery
             ->findOne();
 
         if ($request) {
-            $em->removeEntity($request);
+            $this->entityManager->removeEntity($request);
         }
     }
 
     public function request(string $emailAddress, string $userName, ?string $url): bool
     {
         $config = $this->config;
-        $em = $this->entityManager;
 
         $noExposure = $config->get('passwordRecoveryNoExposure') ?? false;
 
@@ -159,8 +144,8 @@ class Recovery
             throw new Forbidden("Password recovery: Disabled.");
         }
 
-        $user = $em
-           ->getRDBRepository('User')
+        $user = $this->entityManager
+            ->getRDBRepository('User')
             ->where([
                 'userName' => $userName,
                 'emailAddress' => $emailAddress,
@@ -213,14 +198,14 @@ class Recovery
             return false;
         }
 
-        $passwordChangeRequest = $em
+        $existingRequest = $this->entityManager
             ->getRDBRepository('PasswordChangeRequest')
             ->where([
                 'userId' => $user->getId(),
             ])
             ->findOne();
 
-        if ($passwordChangeRequest) {
+        if ($existingRequest) {
             if (!$noExposure) {
                 throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
             }
@@ -230,39 +215,17 @@ class Recovery
             return false;
         }
 
-        $requestId = Util::generateCryptId();
-
-        $passwordChangeRequest = $em->getEntity('PasswordChangeRequest');
-
-        $passwordChangeRequest->set([
-            'userId' => $user->id,
-            'requestId' => $requestId,
-            'url' => $url,
-        ]);
+        $request = $this->createRequestNoSave($user, $url);
 
         $microtime = microtime(true);
 
-        $this->send($requestId, $emailAddress, $user);
+        $this->send($request->getRequestId(), $emailAddress, $user);
 
-        $em->saveEntity($passwordChangeRequest);
-
-        if (!$passwordChangeRequest->id) {
-            throw new Error();
-        }
+        $this->entityManager->saveEntity($request);
 
         $lifetime = $config->get('passwordRecoveryRequestLifetime') ?? self::REQUEST_LIFETIME;
 
-        $dt = new DateTime();
-
-        $dt->modify('+' . $lifetime);
-
-        $em->createEntity('Job', [
-            'serviceName' => 'User',
-            'methodName' => 'removeChangePasswordRequestJob',
-            'data' => ['id' => $passwordChangeRequest->id],
-            'executeTime' => $dt->format('Y-m-d H:i:s'),
-            'queue' => QueueName::Q1,
-        ]);
+        $this->createCleanupRequestJob($request->getId(), $lifetime);
 
         $timeDiff = $this->getDelay() - floor((microtime(true) - $microtime) / 1000);
 
@@ -273,45 +236,104 @@ class Recovery
         return true;
     }
 
-    private function getDelay()
+    private function createRequestNoSave(User $user, ?string $url = null): PasswordChangeRequest
+    {
+        $entity = $this->entityManager->getNewEntity(PasswordChangeRequest::ENTITY_TYPE);
+
+        $entity->set([
+            'userId' => $user->getId(),
+            'requestId' => Util::generateCryptId(),
+            'url' => $url,
+        ]);
+
+        return $entity;
+    }
+
+    public function createRequestForNewUser(User $user, ?string $url = null): PasswordChangeRequest
+    {
+        $entity = $this->createRequestNoSave($user, $url);
+
+        $this->entityManager->saveEntity($entity);
+
+        $lifetime = $this->config->get('passwordChangeRequestNewUserLifetime') ?? self::NEW_USER_REQUEST_LIFETIME;
+
+        $this->createCleanupRequestJob($entity->getId(), $lifetime);
+
+        return $entity;
+    }
+
+    public function createAndSendRequestForExistingUser(User $user, ?string $url = null): PasswordChangeRequest
+    {
+        if (!$user->getEmailAddressGroup()->getPrimary()) {
+            throw new Error("No email address.");
+        }
+
+        $emailAddress = $user->getEmailAddressGroup()->getPrimary()->getAddress();
+
+        $entity = $this->createRequestNoSave($user, $url);
+
+        $this->entityManager->saveEntity($entity);
+
+        $lifetime = $this->config->get('passwordChangeRequestExistingUserLifetime') ??
+            self::EXISTING_USER_REQUEST_LIFETIME;
+
+        $this->createCleanupRequestJob($entity->getId(), $lifetime);
+
+        $this->send($entity->getRequestId(), $emailAddress, $user);
+
+        return $entity;
+    }
+
+    private function createCleanupRequestJob(string $id, string $lifetime): void
+    {
+        $this->entityManager->createEntity('Job', [
+            'serviceName' => 'User',
+            'methodName' => 'removeChangePasswordRequestJob',
+            'data' => ['id' => $id],
+            'executeTime' => DateTime::createNow()
+                ->modify('+' . $lifetime)
+                ->getString(),
+            'queue' => QueueName::Q1,
+        ]);
+    }
+
+    private function getDelay(): int
     {
         return $this->config->get('passwordRecoveryRequestDelay') ?? self::REQUEST_DELAY;
     }
 
-    protected function delay(?int $delay = null)
+    protected function delay(?int $delay = null): void
     {
-        $delay = $delay ?? $this->getDelay();
+        if ($delay === null) {
+            $delay = $this->getDelay();
+        }
 
         usleep($delay * 1000);
     }
 
-    protected function send(string $requestId, string $emailAddress, User $user)
+    protected function send(string $requestId, string $emailAddress, User $user): void
     {
-        $config = $this->config;
-        $em = $this->entityManager;
-        $htmlizerFactory = $this->htmlizerFactory;
-
-        $templateFileManager = $this->templateFileManager;
-
         if (!$emailAddress) {
             return;
         }
 
-        $email = $em->getEntity('Email');
+        $email = $this->entityManager->getEntity('Email');
 
-        if (!$this->emailSender->hasSystemSmtp() && !$config->get('internalSmtpServer')) {
+        if (!$this->emailSender->hasSystemSmtp() && !$this->config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");
         }
 
         $sender = $this->emailSender->create();
 
-        $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
-        $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
+        $subjectTpl = $this->templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
+        $bodyTpl = $this->templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
 
-        $siteUrl = $config->getSiteUrl();
+        $siteUrl = $this->config->getSiteUrl();
 
         if ($user->isPortal()) {
-            $portal = $em->getRDBRepository('Portal')
+            /** @var Portal|null $portal */
+            $portal = $this->entityManager
+                ->getRDBRepository(Portal::ENTITY_TYPE)
                 ->distinct()
                 ->join('users')
                 ->where([
@@ -320,10 +342,16 @@ class Recovery
                 ])
                 ->findOne();
 
-            if ($portal) {
-                if ($portal->get('customUrl')) {
-                    $siteUrl = $portal->get('customUrl');
-                }
+            if (!$portal) {
+                throw new Error("Portal user does not belong to any potral.");
+            }
+
+            $this->getPortalRepository()->loadUrlField($portal);
+
+            $siteUrl = $portal->getUrl();
+
+            if (!$siteUrl) {
+                throw new Error("Portal does not have URL.");
             }
         }
 
@@ -333,7 +361,7 @@ class Recovery
 
         $data['link'] = $link;
 
-        $htmlizer = $htmlizerFactory->create(true);
+        $htmlizer = $this->htmlizerFactory->create(true);
 
         $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
         $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
@@ -347,15 +375,15 @@ class Recovery
 
         if (!$this->emailSender->hasSystemSmtp()) {
             $sender->withSmtpParams([
-                'server' => $config->get('internalSmtpServer'),
-                'port' => $config->get('internalSmtpPort'),
-                'auth' => $config->get('internalSmtpAuth'),
-                'username' => $config->get('internalSmtpUsername'),
-                'password' => $config->get('internalSmtpPassword'),
-                'security' => $config->get('internalSmtpSecurity'),
-                'fromAddress' => $config->get(
+                'server' => $this->config->get('internalSmtpServer'),
+                'port' => $this->config->get('internalSmtpPort'),
+                'auth' => $this->config->get('internalSmtpAuth'),
+                'username' => $this->config->get('internalSmtpUsername'),
+                'password' => $this->config->get('internalSmtpPassword'),
+                'security' => $this->config->get('internalSmtpSecurity'),
+                'fromAddress' => $this->config->get(
                     'internalOutboundEmailFromAddress',
-                    $config->get('outboundEmailFromAddress')
+                    $this->config->get('outboundEmailFromAddress')
                 ),
             ]);
         }
@@ -363,11 +391,9 @@ class Recovery
         $sender->send($email);
     }
 
-    private function fail(?string $msg = null, int $errorCode = 403)
+    private function fail(?string $msg = null, int $errorCode = 403): void
     {
-        $config = $this->config;
-
-        $noExposure = $config->get('passwordRecoveryNoExposure') ?? false;
+        $noExposure = $this->config->get('passwordRecoveryNoExposure') ?? false;
 
         if ($msg) {
             $this->log->warning($msg);
@@ -377,14 +403,20 @@ class Recovery
             if ($errorCode === 403) {
                 throw new Forbidden();
             }
-            else if ($errorCode === 404) {
+
+            if ($errorCode === 404) {
                 throw new NotFound();
             }
-            else {
-                throw new Error();
-            }
+
+            throw new Error();
         }
 
         $this->delay();
+    }
+
+    private function getPortalRepository(): PortalRepository
+    {
+        /** @var PortalRepository */
+        return $this->entityManager->getRDBRepository(Portal::ENTITY_TYPE);
     }
 }

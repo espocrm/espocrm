@@ -30,7 +30,8 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
 
     return Dep.extend({
 
-        _template: '<button type="button" class="btn btn-default" data-action="generatePassword">{{translate \'Generate\' scope=\'User\'}}</button>',
+        templateContent: '<button type="button" class="btn btn-default" data-action="generatePassword">' +
+            '{{translate \'Generate\' scope=\'User\'}}</button>',
 
         events: {
             'click [data-action="generatePassword"]': function () {
@@ -41,12 +42,35 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:password', function (model, value, o) {
-                if (o.isGenerated) return;
+            this.listenTo(this.model, 'change:password', (model, value, o) => {
+                if (o.isGenerated) {
+                    return;
+                }
+
                 this.model.set({
                     passwordPreview: '',
                 });
-            }, this);
+            });
+
+            this.strengthParams = this.options.strengthParams || {};
+
+            this.passwordStrengthLength = this.strengthParams.passwordStrengthLength ||
+                this.getConfig().get('passwordStrengthLength');
+
+            this.passwordStrengthLetterCount = this.strengthParams.passwordStrengthLetterCount ||
+                this.getConfig().get('passwordStrengthLetterCount');
+
+            this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ||
+                this.getConfig().get('passwordStrengthNumberCount');
+
+            this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ||
+                this.getConfig().get('passwordGenerateLength');
+
+            this.passwordGenerateLetterCount = this.strengthParams.passwordGenerateLetterCount ||
+                this.getConfig().get('passwordGenerateLetterCount');
+
+            this.passwordGenerateNumberCount = this.strengthParams.passwordGenerateNumberCount ||
+                this.getConfig().get('passwordGenerateNumberCount');
         },
 
         fetch: function () {
@@ -54,13 +78,13 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
         },
 
         actionGeneratePassword: function () {
-            var length = this.getConfig().get('passwordStrengthLength');
-            var letterCount = this.getConfig().get('passwordStrengthLetterCount');
-            var numberCount = this.getConfig().get('passwordStrengthNumberCount');
+            var length = this.passwordStrengthLength;
+            var letterCount = this.passwordStrengthLetterCount;
+            var numberCount = this.passwordStrengthNumberCount;
 
-            var generateLength = this.getConfig().get('passwordGenerateLength') || 10;
-            var generateLetterCount = this.getConfig().get('passwordGenerateLetterCount') || 4;
-            var generateNumberCount = this.getConfig().get('passwordGenerateNumberCount') || 2;
+            var generateLength = this.passwordGenerateLength || 10;
+            var generateLetterCount = this.passwordGenerateLetterCount || 4;
+            var generateNumberCount = this.passwordGenerateNumberCount || 2;
 
             length = (typeof length === 'undefined') ? generateLength : length;
             letterCount = (typeof letterCount === 'undefined') ? generateLetterCount : letterCount;
@@ -94,17 +118,25 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
             if (bothCases) {
                 upperCase = 1;
                 lowerCase = 1;
-                if (letters >= 2) letters = letters - 2;
-                    else letters = 0;
+
+                if (letters >= 2) {
+                    letters = letters - 2;
+                } else {
+                    letters = 0;
+                }
             }
 
             var either = length - (letters + numbers + upperCase + lowerCase);
-            if (either < 0) either = 0;
+
+            if (either < 0) {
+                either = 0;
+            }
 
             var setList = [letters, numbers, either, upperCase, lowerCase];
 
             var shuffle = function (array) {
                 var currentIndex = array.length, temporaryValue, randomIndex;
+
                 while (0 !== currentIndex) {
                     randomIndex = Math.floor(Math.random() * currentIndex);
                     currentIndex -= 1;
@@ -112,6 +144,7 @@ define('views/user/fields/generate-password', 'views/fields/base', function (Dep
                     array[currentIndex] = array[randomIndex];
                     array[randomIndex] = temporaryValue;
                 }
+
                 return array;
             };
 

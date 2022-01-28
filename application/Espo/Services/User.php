@@ -31,11 +31,18 @@ namespace Espo\Services;
 
 use Espo\Entities\User as UserEntity;
 use Espo\Entities\Email as EmailEntity;
+use Espo\Entities\PasswordChangeRequest;
+use Espo\Entities\Portal as PortalEntity;
+
+use Espo\Repositories\Portal as PortalRepository;
+
+use Espo\Core\Mail\Sender;
 
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\Error,
     Exceptions\NotFound,
+    Exceptions\BadRequest,
     Utils\Util,
     Utils\PasswordHash,
     Utils\ApiKey as ApiKeyUtil,
@@ -122,13 +129,11 @@ class User extends Record implements
         }
 
         if ($checkCurrentPassword) {
-            $passwordHash = new PasswordHash($this->getConfig());
-
             $u = $this->getEntityManager()
                 ->getRDBRepository('User')
                 ->where([
                     'id' => $user->getId(),
-                    'password' => $passwordHash->hash($currentPassword),
+                    'password' => $this->createPasswordHashUtil()->hash($currentPassword),
                 ])
                 ->findOne();
 
@@ -211,16 +216,19 @@ class User extends Record implements
         return true;
     }
 
+    private function createRecoveryService(): Recovery
+    {
+        return $this->injectableFactory->create(Recovery::class);
+    }
+
     public function passwordChangeRequest(string $userName, string $emailAddress, ?string $url = null): void
     {
-        $recovery = $this->injectableFactory->create(Recovery::class);
-
-        $recovery->request($emailAddress, $userName, $url);
+        $this->createRecoveryService()->request($emailAddress, $userName, $url);
     }
 
     public function changePasswordByRequest(string $requestId, string $password): stdClass
     {
-        $recovery = $this->injectableFactory->create(Recovery::class);
+        $recovery = $this->createRecoveryService();
 
         $request = $recovery->getRequest($requestId);
 
@@ -247,7 +255,7 @@ class User extends Record implements
 
         $id = $data->id;
 
-        $p = $this->getEntityManager()->getEntity('PasswordChangeRequest', $id);
+        $p = $this->getEntityManager()->getEntity(PasswordChangeRequest::ENTITY_TYPE, $id);
 
         if ($p) {
             $this->getEntityManager()->removeEntity($p);
@@ -280,11 +288,17 @@ class User extends Record implements
 
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        $newPassword = null;
+        $newPassword = $data->password ?? null;
 
-        if (property_exists($data, 'password')) {
-            $newPassword = $data->password;
+        if ($newPassword === '') {
+            $newPassword = null;
+        }
 
+        if ($newPassword !== null && !is_string($newPassword)) {
+            throw new BadRequest();
+        }
+
+        if ($newPassword !== null) {
             if (!$this->checkPasswordStrength($newPassword)) {
                 throw new Forbidden("Password is weak.");
             }
@@ -295,13 +309,23 @@ class User extends Record implements
         /** @var UserEntity $user */
         $user = parent::create($data, $params);
 
-        if (!is_null($newPassword) && !empty($data->sendAccessInfo)) {
-            if ($user->isActive()) {
-                try {
-                    $this->sendPassword($user, $newPassword);
-                }
-                catch (Exception $e) {}
+        $sendAccessInfo = !empty($data->sendAccessInfo);
+
+        if (!$sendAccessInfo || !$user->isActive() || $user->isApi()) {
+            return $user;
+        }
+
+        try {
+            if ($newPassword !== null) {
+                $this->sendPassword($user, $newPassword);
+
+                return $user;
             }
+
+            $this->sendAccessInfoNew($user);
+        }
+        catch (Exception $e) {
+            $this->log->error("Could not send user access info. " . $e->getMessage());
         }
 
         return $user;
@@ -406,10 +430,67 @@ class User extends Record implements
         return $entity;
     }
 
-    public function generateNewPasswordForUser(string $id, bool $allowNonAdmin = false)
+    private function generatePassword(): string
+    {
+        $length = $this->config->get('passwordStrengthLength');
+        $letterCount = $this->config->get('passwordStrengthLetterCount');
+        $numberCount = $this->config->get('passwordStrengthNumberCount');
+
+        $generateLength = $this->config->get('passwordGenerateLength', 10);
+        $generateLetterCount = $this->config->get('passwordGenerateLetterCount', 4);
+        $generateNumberCount = $this->config->get('passwordGenerateNumberCount', 2);
+
+        $length = is_null($length) ? $generateLength : $length;
+        $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
+        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
+
+        if ($length < $generateLength) {
+            $length = $generateLength;
+        }
+
+        if ($letterCount < $generateLetterCount) {
+            $letterCount = $generateLetterCount;
+        }
+
+        if ($numberCount < $generateNumberCount) {
+            $numberCount = $generateNumberCount;
+        }
+
+        return Util::generatePassword($length, $letterCount, $numberCount, true);
+    }
+
+    public function sendPasswordChangeLink(string $id, bool $allowNonAdmin = false): void
+    {
+        if (!$allowNonAdmin && !$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        /** @var UserEntity|null $user */
+        $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $id);
+
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if (!$user->isActive()) {
+            throw new Forbidden("User is not active.");
+        }
+
+        if (
+            !$user->isRegular() &&
+            !$user->isAdmin() &&
+            !$user->isPortal()
+        ) {
+            throw new Forbidden();
+        }
+
+        $this->createRecoveryService()->createAndSendRequestForExistingUser($user);
+    }
+
+    public function generateNewPasswordForUser(string $id, bool $allowNonAdmin = false): void
     {
         if (!$allowNonAdmin) {
-            if (!$this->getUser()->isAdmin()) {
+            if (!$this->user->isAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -439,45 +520,34 @@ class User extends Record implements
             );
         }
 
-        if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->isSmtpConfigured()) {
             throw new Forbidden(
                 "Generate new password: Can't process because SMTP is not configured."
             );
         }
 
-        $length = $this->getConfig()->get('passwordStrengthLength');
-        $letterCount = $this->getConfig()->get('passwordStrengthLetterCount');
-        $numberCount = $this->getConfig()->get('passwordStrengthNumberCount');
-
-        $generateLength = $this->getConfig()->get('passwordGenerateLength', 10);
-        $generateLetterCount = $this->getConfig()->get('passwordGenerateLetterCount', 4);
-        $generateNumberCount = $this->getConfig()->get('passwordGenerateNumberCount', 2);
-
-        $length = is_null($length) ? $generateLength : $length;
-        $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
-        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
-
-        if ($length < $generateLength) {
-            $length = $generateLength;
-        }
-
-        if ($letterCount < $generateLetterCount) {
-            $letterCount = $generateLetterCount;
-        }
-
-        if ($numberCount < $generateNumberCount) {
-            $numberCount = $generateNumberCount;
-        }
-
-        $password = Util::generatePassword($length, $letterCount, $numberCount, true);
+        $password = $this->generatePassword();
 
         $this->sendPassword($user, $password);
 
-        $passwordHash = new PasswordHash($this->getConfig());
+        $this->saveUserPassword($user, $password);
+    }
 
-        $user->set('password', $passwordHash->hash($password));
+    private function isSmtpConfigured(): bool
+    {
+        return $this->emailSender->hasSystemSmtp() || $this->config->get('internalSmtpServer');
+    }
 
-        $this->getEntityManager()->saveEntity($user);
+    private function saveUserPassword(UserEntity $user, string $password, bool $silent = false): void
+    {
+        $user->set('password', $this->createPasswordHashUtil()->hash($password));
+
+        $this->entityManager->saveEntity($user, ['silent' => $silent]);
+    }
+
+    private function createPasswordHashUtil(): PasswordHash
+    {
+        return $this->injectableFactory->create(PasswordHash::class);
     }
 
     protected function getInternalUserCount()
@@ -619,7 +689,70 @@ class User extends Record implements
         }
     }
 
-    protected function sendPassword(UserEntity $user, $password)
+    /**
+     * @return array{?string,?string,?array<string,mixed>}
+     */
+    private function getAccessInfoTemplateData(
+        UserEntity $user,
+        ?string $password = null,
+        ?PasswordChangeRequest $passwordChangeRequest = null
+    ): array {
+
+        $data = [];
+
+        if ($password !== null) {
+            $data['password'] = $password;
+        }
+
+        $urlSuffix = '';
+
+        if ($passwordChangeRequest !== null) {
+            $urlSuffix = '?entryPoint=changePassword&id=' . $passwordChangeRequest->getRequestId();
+        }
+
+        $siteUrl = $this->config->getSiteUrl() . '/' . $urlSuffix;
+
+        if ($user->isPortal()) {
+            $subjectTpl = $this->templateFileManager->getTemplate('accessInfoPortal', 'subject', 'User');
+            $bodyTpl = $this->templateFileManager->getTemplate('accessInfoPortal', 'body', 'User');
+
+            $urlList = [];
+
+            $portalList = $this->entityManager
+                ->getRDBRepository(PortalEntity::ENTITY_TYPE)
+                ->distinct()
+                ->join('users')
+                ->where([
+                    'isActive' => true,
+                    'users.id' => $user->getId(),
+                ])
+                ->find();
+
+            foreach ($portalList as $portal) {
+                /** @var PortalEntity $portal */
+                $this->getPortalRepository()->loadUrlField($portal);
+
+                $urlList[] = $portal->getUrl() . $urlSuffix;
+            }
+
+            if (count($urlList) === 0) {
+                return [null, null, null];
+            }
+
+            $data['siteUrlList'] = $urlList;
+
+            return [$subjectTpl, $bodyTpl, $data];
+        }
+
+        $subjectTpl = $this->templateFileManager->getTemplate('accessInfo', 'subject', 'User');
+        $bodyTpl = $this->templateFileManager->getTemplate('accessInfo', 'body', 'User');
+
+        $data['siteUrl'] = $siteUrl;
+
+        return [$subjectTpl, $bodyTpl, $data];
+    }
+
+    protected function sendPassword(UserEntity $user, string $password): void
     {
         $emailAddress = $user->get('emailAddress');
 
@@ -630,68 +763,17 @@ class User extends Record implements
         /** @var EmailEntity $email */
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->isSmtpConfigured()) {
             return;
         }
 
-        $templateFileManager = $this->templateFileManager;
+        [$subjectTpl, $bodyTpl, $data] = $this->getAccessInfoTemplateData($user, $password);
 
-        $siteUrl = $this->getConfig()->getSiteUrl() . '/';
-
-        $data = [];
-
-        if ($user->isPortal()) {
-            $subjectTpl = $templateFileManager->getTemplate('accessInfoPortal', 'subject', 'User');
-            $bodyTpl = $templateFileManager->getTemplate('accessInfoPortal', 'body', 'User');
-
-            $urlList = [];
-
-            $portalList = $this->entityManager
-                ->getRDBRepository('Portal')
-                ->distinct()
-                ->join('users')
-                ->where([
-                    'isActive' => true,
-                    'users.id' => $user->getId(),
-                ])
-                ->find();
-
-            foreach ($portalList as $portal) {
-                if ($portal->get('customUrl')) {
-                    $urlList[] = $portal->get('customUrl');
-                }
-                else {
-                    $url = $siteUrl . 'portal/';
-
-                    if ($this->getConfig()->get('defaultPortalId') !== $portal->getId()) {
-                        if ($portal->get('customId')) {
-                            $url .= $portal->get('customId');
-                        }
-                        else {
-                            $url .= $portal->getId();
-                        }
-                    }
-
-                    $urlList[] = $url;
-                }
-            }
-
-            if (!count($urlList)) {
-                return;
-            }
-
-            $data['siteUrlList'] = $urlList;
-        }
-        else {
-            $subjectTpl = $templateFileManager->getTemplate('accessInfo', 'subject', 'User');
-            $bodyTpl = $templateFileManager->getTemplate('accessInfo', 'body', 'User');
-
-            $data['siteUrl'] = $siteUrl;
+        if ($data === null) {
+            return;
         }
 
-        $data['password'] = $password;
-
-        $htmlizer = $this->htmlizerFactory->create(true);
+        $htmlizer = $this->htmlizerFactory->createNoAcl();
 
         $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
         $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
@@ -702,24 +784,29 @@ class User extends Record implements
             'to' => $emailAddress,
         ]);
 
+        $this->getEmailSenderForAccessInfo()->send($email);
+    }
+
+    private function getEmailSenderForAccessInfo(): Sender
+    {
         $sender = $this->emailSender->create();
 
         if (!$this->emailSender->hasSystemSmtp()) {
             $sender->withSmtpParams([
-                'server' => $this->getConfig()->get('internalSmtpServer'),
-                'port' => $this->getConfig()->get('internalSmtpPort'),
-                'auth' => $this->getConfig()->get('internalSmtpAuth'),
-                'username' => $this->getConfig()->get('internalSmtpUsername'),
-                'password' => $this->getConfig()->get('internalSmtpPassword'),
-                'security' => $this->getConfig()->get('internalSmtpSecurity'),
-                'fromAddress' => $this->getConfig()->get(
+                'server' => $this->config->get('internalSmtpServer'),
+                'port' => $this->config->get('internalSmtpPort'),
+                'auth' => $this->config->get('internalSmtpAuth'),
+                'username' => $this->config->get('internalSmtpUsername'),
+                'password' => $this->config->get('internalSmtpPassword'),
+                'security' => $this->config->get('internalSmtpSecurity'),
+                'fromAddress' => $this->config->get(
                     'internalOutboundEmailFromAddress',
-                    $this->getConfig()->get('outboundEmailFromAddress')
+                    $this->config->get('outboundEmailFromAddress')
                 ),
             ]);
         }
 
-        $sender->send($email);
+        return $sender;
     }
 
     public function delete(string $id, DeleteParams $params): void
@@ -802,5 +889,51 @@ class User extends Record implements
         $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
 
         $this->dataManager->updateCacheTimestamp();
+    }
+
+    private function sendAccessInfoNew(UserEntity $user): void
+    {
+        if ($user->getEmailAddressGroup()->getPrimary() === null) {
+            throw new Error("Can't send access info for user '{$user->getId()}' w/o email address.");
+        }
+
+        if (!$this->isSmtpConfigured()) {
+            throw new Error("Can't send access info. SMTP is not configured.");
+        }
+
+        $stubPassword = $this->generatePassword();
+
+        $this->saveUserPassword($user, $stubPassword, true);
+
+        $request = $this->createRecoveryService()->createRequestForNewUser($user);
+
+        [$subjectTpl, $bodyTpl, $data] = $this->getAccessInfoTemplateData($user, null, $request);
+
+        if ($data === null) {
+            throw new Error("Could not send access info.");
+        }
+
+        $emailAddress = $user->getEmailAddressGroup()->getPrimary()->getAddress();
+
+        /** @var EmailEntity $email */
+        $email = $this->entityManager->getEntity(EmailEntity::ENTITY_TYPE);
+
+        $htmlizer = $this->htmlizerFactory->createNoAcl();
+
+        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+
+        $email
+            ->addToAddress($emailAddress)
+            ->setSubject($subject)
+            ->setBody($body);
+
+        $this->getEmailSenderForAccessInfo()->send($email);
+    }
+
+    private function getPortalRepository(): PortalRepository
+    {
+        /** @var PortalRepository */
+        return $this->entityManager->getRDBRepository(PortalEntity::ENTITY_TYPE);
     }
 }

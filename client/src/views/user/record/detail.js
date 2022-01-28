@@ -77,12 +77,21 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             }
 
             if (
-                this.getUser().isAdmin()
-                &&
-                (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal())
-                &&
+                this.getUser().isAdmin() &&
+                (
+                    this.model.isRegular() ||
+                    this.model.isAdmin() ||
+                    this.model.isPortal()
+                ) &&
                 !this.model.isSuperAdmin()
             ) {
+                this.addDropdownItem({
+                    name: 'sendPasswordChangeLink',
+                    label: 'Send Password Change Link',
+                    action: 'sendPasswordChangeLink',
+                    hidden: !this.model.get('emailAddress'),
+                });
+
                 this.addDropdownItem({
                     name: 'generateNewPassword',
                     label: 'Generate New Password',
@@ -91,13 +100,15 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 });
 
                 if (!this.model.get('emailAddress')) {
-                    this.listenTo(this.model, 'sync', function () {
+                    this.listenTo(this.model, 'sync', () => {
                         if (this.model.get('emailAddress')) {
                             this.showActionItem('generateNewPassword');
+                            this.showActionItem('sendPasswordChangeLink');
                         } else {
                             this.hideActionItem('generateNewPassword');
+                            this.hideActionItem('sendPasswordChangeLink');
                         }
-                    }, this);
+                    });
                 }
             }
 
@@ -105,10 +116,10 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 this.hideActionItem('duplicate');
             }
 
-            if (this.model.id == this.getUser().id) {
-                this.listenTo(this.model, 'after:save', function () {
+            if (this.model.id === this.getUser().id) {
+                this.listenTo(this.model, 'after:save', () => {
                     this.getUser().set(this.model.toJSON());
-                }.bind(this));
+                });
             }
 
             this.setupFieldAppearance();
@@ -144,29 +155,27 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'emailAddress',
             ];
 
-            nonAdminReadOnlyFieldList = nonAdminReadOnlyFieldList.filter(
-                function (item) {
-                    if (!this.model.hasField(item)) {
-                        return true;
-                    }
+            nonAdminReadOnlyFieldList = nonAdminReadOnlyFieldList.filter(item => {
+                if (!this.model.hasField(item)) {
+                    return true;
+                }
 
-                    var aclDefs = this.getMetadata().get(['entityAcl', 'User', 'fields', item]);
+                var aclDefs = this.getMetadata().get(['entityAcl', 'User', 'fields', item]);
 
-                    if (!aclDefs) {
-                        return true;
-                    }
+                if (!aclDefs) {
+                    return true;
+                }
 
-                    if (aclDefs.nonAdminReadOnly) {
-                        return true;
-                    }
+                if (aclDefs.nonAdminReadOnly) {
+                    return true;
+                }
 
-                    return false;
-                }.bind(this),
-            );
+                return false;
+            });
 
-            nonAdminReadOnlyFieldList.forEach(function (field) {
+            nonAdminReadOnlyFieldList.forEach((field) => {
                 this.setFieldReadOnly(field, true);
-            }, this);
+            });
 
             if (!this.getAcl().checkScope('Team')) {
                 this.setFieldReadOnly('defaultTeam', true);
@@ -174,11 +183,11 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
         },
 
         setupFieldAppearance: function () {
-
             this.controlFieldAppearance();
-            this.listenTo(this.model, 'change', function () {
+
+            this.listenTo(this.model, 'change', () => {
                 this.controlFieldAppearance();
-            }, this);
+            });
         },
 
         controlFieldAppearance: function () {
@@ -223,7 +232,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
             if (this.model.id === this.getUser().id) {
                 this.setFieldReadOnly('type');
             } else {
-                if (this.model.get('type') == 'admin' || this.model.get('type') == 'regular') {
+                if (this.model.get('type') === 'admin' || this.model.get('type') === 'regular') {
                     this.setFieldNotReadOnly('type');
                     this.setFieldOptionList('type', ['regular', 'admin']);
                 } else {
@@ -245,17 +254,16 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
             this.createView('changePassword', 'views/modals/change-password', {
                 userId: this.model.id
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 this.notify(false);
 
-                this.listenToOnce(view, 'changed', function () {
-                    setTimeout(function () {
+                this.listenToOnce(view, 'changed', () => {
+                    setTimeout(() => {
                         this.getBaseController().logout();
-                    }.bind(this), 2000);
-                }, this);
-
-            }.bind(this));
+                    }, 2000);
+                });
+            });
         },
 
         actionPreferences: function () {
@@ -279,19 +287,23 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 data: {
                     id: this.model.id,
                 }
-            }).done(function (aclData) {
+            }).then((aclData) => {
                 this.createView('access', 'views/user/modals/access', {
                     aclData: aclData,
                     model: this.model,
-                }, function (view) {
+                }, (view) => {
                     this.notify(false);
+
                     view.render();
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         getGridLayout: function (callback) {
-            this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
+            this._helper
+                .layoutManager
+                .get(this.model.name, this.options.layoutName || this.layoutName, (simpleLayout) => {
+
                 var layout = Espo.Utils.cloneDeep(simpleLayout);
 
                 if (!this.getUser().isPortal()) {
@@ -342,42 +354,55 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 };
 
                 callback(gridLayout);
-            }.bind(this));
+            });
         },
 
         actionGenerateNewApiKey: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.ajaxPostRequest('User/action/generateNewApiKey', {
-                    id: this.model.id
-                }).then(function (data) {
+                    id: this.model.id,
+                }).then((data) => {
                     this.model.set(data);
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         actionViewSecurity: function () {
             this.createView('dialog', 'views/user/modals/security', {
                 userModel: this.model,
-            }, function (view) {
+            }, (view) => {
                 view.render();
-            }, this);
+            });
+        },
+
+        actionSendPasswordChangeLink: function () {
+            this.confirm({
+                message: this.translate('sendPasswordChangeLinkConfirmation', 'messages', 'User'),
+                confirmText: this.translate('Send', 'labels', 'Email'),
+            })
+            .then(() => {
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+                Espo.Ajax.postRequest('User/action/sendPasswordChangeLink', {
+                    id: this.model.id,
+                }).then(() => {
+                    Espo.Ui.success(this.translate('Done'));
+                });
+            });
         },
 
         actionGenerateNewPassword: function () {
             this.confirm(
                 this.translate('generateAndSendNewPassword', 'messages', 'User')
-            ).then(
-                function () {
-                    Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                    Espo.Ajax.postRequest('User/action/generateNewPassword', {
-                        id: this.model.id
-                    }).then(
-                        function () {
-                            Espo.Ui.success(this.translate('Done'));
-                        }.bind(this)
-                    );
-                }.bind(this)
-            );
+            ).then(() => {
+                Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+                Espo.Ajax.postRequest('User/action/generateNewPassword', {
+                    id: this.model.id,
+                }).then(() => {
+                    Espo.Ui.success(this.translate('Done'));
+                });
+            });
         },
 
     });
