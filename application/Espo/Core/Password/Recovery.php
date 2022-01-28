@@ -238,6 +238,8 @@ class Recovery
 
     private function createRequestNoSave(User $user, ?string $url = null): PasswordChangeRequest
     {
+        $this->checkUser($user);
+
         $entity = $this->entityManager->getNewEntity(PasswordChangeRequest::ENTITY_TYPE);
 
         $entity->set([
@@ -251,6 +253,8 @@ class Recovery
 
     public function createRequestForNewUser(User $user, ?string $url = null): PasswordChangeRequest
     {
+        $this->checkUser($user);
+
         $entity = $this->createRequestNoSave($user, $url);
 
         $this->entityManager->saveEntity($entity);
@@ -264,6 +268,8 @@ class Recovery
 
     public function createAndSendRequestForExistingUser(User $user, ?string $url = null): PasswordChangeRequest
     {
+        $this->checkUser($user);
+
         if (!$user->getEmailAddressGroup()->getPrimary()) {
             throw new Error("No email address.");
         }
@@ -282,6 +288,23 @@ class Recovery
         $this->send($entity->getRequestId(), $emailAddress, $user);
 
         return $entity;
+    }
+
+    /**
+     * @throws Error
+     */
+    private function checkUser(User $user): void
+    {
+        if (
+            !$user->isActive() ||
+            !(
+                $user->isAdmin() ||
+                $user->isRegular() ||
+                $user->isPortal()
+            )
+        ) {
+            throw new Error("User is not allowed for password change request.");
+        }
     }
 
     private function createCleanupRequestJob(string $id, string $lifetime): void

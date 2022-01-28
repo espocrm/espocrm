@@ -391,6 +391,10 @@
             "name": "ext\\pdf\\generate",
             "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)",
             "returnType": "string"
+        },
+        {
+            "name": "ext\\user\\sendAccessInfo",
+            "insertText": "ext\\user\\sendAccessInfo(USER_ID)"
         }
     ]
 }

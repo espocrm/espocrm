@@ -891,7 +891,7 @@ class User extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
-    private function sendAccessInfoNew(UserEntity $user): void
+    public function sendAccessInfoNew(UserEntity $user): void
     {
         if ($user->getEmailAddressGroup()->getPrimary() === null) {
             throw new Error("Can't send access info for user '{$user->getId()}' w/o email address.");
