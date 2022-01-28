@@ -60,6 +60,7 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
     private $supportedMethodNameList = [
         'getEntity',
         'getNewEntity',
+        'getEntityById',
         'createEntity',
         'getRDBRepository',
         'getRepository',
@@ -88,7 +89,7 @@ class EntityManagerReturnType implements DynamicMethodReturnTypeExtension
 
         $methodName = $methodReflection->getName();
 
-        if ($methodName === 'getEntity') {
+        if ($methodName === 'getEntity' || $methodName === 'getEntityById') {
             return $this->getGetEntity($methodReflection, $methodCall, $scope);
         }
 
