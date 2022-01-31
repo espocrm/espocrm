@@ -38,18 +38,23 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             if (!this.model.isNew()) {
                 var isRestricted = false;
 
-                if (this.model.get('status') == 'Sent') {
+                if (this.model.get('status') === 'Sent') {
                     isRestricted = true;
                 }
 
-                if (this.model.get('status') == 'Archived') {
-                    if (this.model.get('createdById') == 'system' || !this.model.get('createdById') || this.model.get('isImported')) {
+                if (this.model.get('status') === 'Archived') {
+                    if (
+                        this.model.get('createdById') === 'system' ||
+                        !this.model.get('createdById') || this.model.get('isImported')
+                    ) {
                         isRestricted = true;
                     }
                 }
+
                 if (isRestricted) {
                     this.layoutName += 'Restricted';
                 }
+
                 this.isRestricted = isRestricted;
             }
         },
@@ -66,18 +71,19 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             if (this.model.has('isRead') && !this.model.get('isRead')) {
                 this.model.set('isRead', true);
             }
-            this.listenTo(this.model, 'sync', function () {
+
+            this.listenTo(this.model, 'sync', () => {
                 if (!this.model.get('isRead')) {
                     this.model.set('isRead', true);
                 }
-            }, this);
+            });
 
             if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenToOnce(this.model, 'sync', () => {
                     if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
                         this.showActionItem('showBodyPlain');
                     }
-                }, this);
+                });
             }
 
             if (this.model.get('isUsers')) {
@@ -86,21 +92,25 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     'name': 'markAsImportant',
                     'hidden': this.model.get('isImportant')
                 });
+
                 this.addDropdownItem({
                     'label': 'Unmark Importance',
                     'name': 'markAsNotImportant',
                     'hidden': !this.model.get('isImportant')
                 });
+
                 this.addDropdownItem({
                     'label': 'Move to Trash',
                     'name': 'moveToTrash',
                     'hidden': this.model.get('inTrash')
                 });
+
                 this.addDropdownItem({
                     'label': 'Retrieve from Trash',
                     'name': 'retrieveFromTrash',
                     'hidden': !this.model.get('inTrash')
                 });
+
                 this.addDropdownItem({
                     'label': 'Move to Folder',
                     'name': 'moveToFolder'
@@ -113,7 +123,7 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
             });
 
-            this.listenTo(this.model, 'change:isImportant', function () {
+            this.listenTo(this.model, 'change:isImportant', () => {
                 if (this.model.get('isImportant')) {
                     this.hideActionItem('markAsImportant');
                     this.showActionItem('markAsNotImportant');
@@ -121,9 +131,9 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     this.hideActionItem('markAsNotImportant');
                     this.showActionItem('markAsImportant');
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change:inTrash', function () {
+            this.listenTo(this.model, 'change:inTrash', () => {
                 if (this.model.get('inTrash')) {
                     this.hideActionItem('moveToTrash');
                     this.showActionItem('retrieveFromTrash');
@@ -131,12 +141,12 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     this.hideActionItem('retrieveFromTrash');
                     this.showActionItem('moveToTrash');
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'reply', function () {
+            this.listenTo(this.model, 'reply', () => {
                 this.showField('replies');
                 this.model.fetch();
-            }, this);
+            });
 
             if (this.getUser().isAdmin()) {
                 this.addDropdownItem({
@@ -150,6 +160,7 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             Espo.Ajax.postRequest('Email/action/markAsImportant', {
                 id: this.model.id
             });
+
             this.model.set('isImportant', true);
         },
 
@@ -157,16 +168,19 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             Espo.Ajax.postRequest('Email/action/markAsNotImportant', {
                 id: this.model.id
             });
+
             this.model.set('isImportant', false);
         },
 
         actionMoveToTrash: function () {
             Espo.Ajax.postRequest('Email/action/moveToTrash', {
                 id: this.model.id
-            }).then(function () {
+            }).then(() => {
                 Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
-            }.bind(this));
+            });
+
             this.model.set('inTrash', true);
+
             if (this.model.collection) {
                 this.model.collection.trigger('moving-to-trash', this.model.id);
             }
@@ -174,45 +188,51 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         actionRetrieveFromTrash: function () {
             Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {
-                id: this.model.id
-            }).then(function () {
+                id: this.model.id,
+            }).then(() => {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
-            }.bind(this));
+            });
+
             this.model.set('inTrash', false);
+
             if (this.model.collection) {
                 this.model.collection.trigger('retrieving-from-trash', this.model.id);
             }
         },
 
         actionMoveToFolder: function () {
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, function (view) {
+            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
                 view.render();
-                this.listenToOnce(view, 'select', function (folderId, folderName) {
+
+                this.listenToOnce(view, 'select', (folderId, folderName) => {
                     this.clearView('dialog');
+
                     this.ajaxPostRequest('Email/action/moveToFolder', {
                         id: this.model.id,
-                        folderId: folderId
-                    }).then(function () {
+                        folderId: folderId,
+                    }).then(() => {
                         if (folderId === 'inbox') {
                             folderId = null;
                         }
+
                         this.model.set('folderId', folderId);
+
                         Espo.Ui.success(this.translate('Done'));
-                    }.bind(this));
-                }, this);
-            }, this);
+                    });
+                });
+            });
         },
 
         actionShowBodyPlain: function () {
             this.createView('bodyPlain', 'views/email/modals/body-plain', {
                 model: this.model
-            }, function (view) {
+            }, (view) => {
                 view.render();
-            }.bind(this));
+            });
         },
 
         handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length == 0) {
+            if ((this.model.get('attachmentsIds') || []).length === 0) {
                 this.hideField('attachments');
             } else {
                 this.showField('attachments');
@@ -244,18 +264,22 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             if (this.isRestricted) {
                 this.handleAttachmentField();
-                this.listenTo(this.model, 'change:attachmentsIds', function () {
+
+                this.listenTo(this.model, 'change:attachmentsIds', () => {
                     this.handleAttachmentField();
-                }, this);
+                });
 
                 this.handleCcField();
-                this.listenTo(this.model, 'change:cc', function () {
+
+                this.listenTo(this.model, 'change:cc', () => {
                     this.handleCcField();
-                }, this);
+                });
+
                 this.handleBccField();
-                this.listenTo(this.model, 'change:bcc', function () {
+
+                this.listenTo(this.model, 'change:bcc', () => {
                     this.handleBccField();
-                }, this);
+                });
             }
         },
 
@@ -282,7 +306,6 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 this.isSending = false;
 
                 model.set('status', status);
-
             });
 
             this.once('before:save', () => {
@@ -302,14 +325,17 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             var options = {
                 isReturn: true,
                 isReturnThroughLink: false,
-                folder: folderId
+                folder: folderId,
             };
+
             var url = '#' + this.scope;
             var action = null;
+
             if (folderId) {
                 action = 'list';
                 url += '/list/folder=' + folderId;
             }
+
             this.getRouter().dispatch(this.scope, action, options);
             this.getRouter().navigate(url, {trigger: false});
 
@@ -318,7 +344,8 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         actionViewUsers: function (data) {
             var viewName =
-                this.getMetadata().get(['clientDefs', this.model.name, 'relationshipPanels', 'users', 'viewModalView']) ||
+                this.getMetadata()
+                    .get(['clientDefs', this.model.name, 'relationshipPanels', 'users', 'viewModalView']) ||
                 this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
                 'views/modals/related-list';
 
@@ -340,21 +367,25 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             }
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
-            this.createView('modalRelatedList', viewName, options, function (view) {
+
+            this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);
+
                 view.render();
 
-                this.listenTo(view, 'action', function (action, data, e) {
+                this.listenTo(view, 'action', (action, data, e) => {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
                     if (typeof this[method] == 'function') {
                         this[method](data, e);
+
                         e.preventDefault();
                     }
-                }, this);
+                });
 
-                this.listenToOnce(view, 'close', function () {
+                this.listenToOnce(view, 'close', () => {
                     this.clearView('modalRelatedList');
-                }, this);
+                });
             });
         },
 
@@ -362,8 +393,13 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             if (!this.model.id) {
                 this.model.id = data.id;
             }
+
             var msg = this.translate('sendingFailed', 'strings', 'Email');
-            if (data.message) msg += ': ' + data.message;
+
+            if (data.message) {
+                msg += ': ' + data.message;
+            }
+
             Espo.Ui.error(msg);
             console.error(msg);
         },

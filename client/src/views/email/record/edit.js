@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/record/edit', ['views/record/edit', 'views/email/record/detail'], function (Dep, Detail) {
+define('views/email/record/edit', ['views/record/edit', 'views/email/record/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
@@ -36,7 +36,7 @@ Espo.define('views/email/record/edit', ['views/record/edit', 'views/email/record
         },
 
         handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length == 0 && !this.isNew) {
+            if ((this.model.get('attachmentsIds') || []).length === 0 && !this.isNew) {
                 this.hideField('attachments');
             } else {
                 this.showField('attachments');
@@ -67,19 +67,23 @@ Espo.define('views/email/record/edit', ['views/record/edit', 'views/email/record
             }
 
             this.handleAttachmentField();
-            this.listenTo(this.model, 'change:attachmentsIds', function () {
+
+            this.listenTo(this.model, 'change:attachmentsIds', () => {
                 this.handleAttachmentField();
-            }, this);
+            });
+
             this.handleCcField();
-            this.listenTo(this.model, 'change:cc', function () {
+
+            this.listenTo(this.model, 'change:cc', () => {
                 this.handleCcField();
-            }, this);
+            });
+
             this.handleBccField();
-            this.listenTo(this.model, 'change:bcc', function () {
+
+            this.listenTo(this.model, 'change:bcc', () => {
                 this.handleBccField();
-            }, this);
+            });
         },
 
     });
 });
-
