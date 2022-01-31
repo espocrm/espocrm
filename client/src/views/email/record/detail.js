@@ -69,11 +69,17 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.addButtonEdit({
+                name: 'saveDraft',
+                action: 'save',
+                label: 'Save Draft',
+            }, true);
+
+            this.addButtonEdit({
                 name: 'send',
                 action: 'send',
                 label: 'Send',
-                style: 'danger',
-            });
+                style: 'primary',
+            }, true);
 
             this.controlSendButton();
 
@@ -172,11 +178,21 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             if (status === 'Draft') {
                 this.showActionItem('send');
+                this.showActionItem('saveDraft');
+                this.hideActionItem('save');
+                this.hideActionItem('saveAndContinueEditing');
 
                 return;
             }
 
             this.hideActionItem('send');
+            this.hideActionItem('saveDraft');
+            this.showActionItem('save');
+            this.showActionItem('saveAndContinueEditing');
+        },
+
+        actionSaveDraft: function () {
+            this.actionSaveAndContinueEditing();
         },
 
         actionMarkAsImportant: function () {

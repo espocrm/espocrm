@@ -36,7 +36,12 @@
         {{#if navigateButtonsEnabled}}
         <div class="pull-right">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-text btn-icon action {{#unless previousButtonEnabled}} disabled{{/unless}}" data-action="previous" title="{{translate 'Previous Entry'}}">
+                <button
+                    type="button"
+                    class="btn btn-text btn-icon action {{#unless previousButtonEnabled}} disabled{{/unless}}"
+                    data-action="previous"
+                    title="{{translate 'Previous Entry'}}"
+                >
                     <span class="fas fa-chevron-left"></span>
                 </button>
                 <button type="button" class="btn btn-text btn-icon action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next" title="{{translate 'Next Entry'}}">
@@ -54,7 +59,7 @@
         {{#if dropdownEditItemList}}
         <button
             type="button"
-            class="btn btn-default dropdown-toggle"
+            class="btn btn-default dropdown-toggle dropdown-edit-item-list-button{{#if dropdownEditItemListEmpty}} hidden{{/if}}"
             data-toggle="dropdown"
         ><span class="fas fa-ellipsis-h"></span></button>
         <ul class="dropdown-menu pull-left">

@@ -457,6 +457,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
+            for (var i in this.dropdownEditItemList) {
+                if (this.dropdownEditItemList[i].name === name) {
+                    this.dropdownEditItemList[i].hidden = true;
+
+                    break;
+                }
+            }
+
             for (var i in this.buttonEditList) {
                 if (this.buttonEditList[i].name === name) {
                     this.buttonEditList[i].hidden = true;
@@ -478,6 +486,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 if (this.isDropdownItemListEmpty()) {
                     this.$dropdownItemListButton.addClass('hidden');
                 }
+
+                if (this.isDropdownEditItemListEmpty()) {
+                    this.$dropdownEditItemListButton.addClass('hidden');
+                }
             }
         },
 
@@ -493,6 +505,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = false;
+
+                    break;
+                }
+            }
+
+            for (var i in this.dropdownEditItemList) {
+                if (this.dropdownEditItemList[i].name === name) {
+                    this.dropdownEditItemList[i].hidden = false;
 
                     break;
                 }
@@ -517,6 +537,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     .removeClass('hidden');
 
                 if (!this.isDropdownItemListEmpty()) {
+                    this.$dropdownItemListButton.removeClass('hidden');
+                }
+
+                if (!this.isDropdownEditItemListEmpty()) {
                     this.$dropdownItemListButton.removeClass('hidden');
                 }
             }
@@ -996,6 +1020,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 dropdownItemList: this.dropdownItemList,
                 dropdownEditItemList: this.dropdownEditItemList,
                 dropdownItemListEmpty: this.isDropdownItemListEmpty(),
+                dropdownEditItemListEmpty: this.isDropdownEditItemListEmpty(),
                 buttonsDisabled: this.buttonsDisabled,
                 name: this.name,
                 id: this.id,
@@ -1021,10 +1046,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.buttonList = this.options.buttonList || this.buttonList;
             this.dropdownItemList = this.options.dropdownItemList || this.dropdownItemList;
 
-            this.buttonList = _.clone(this.buttonList);
-            this.buttonEditList = _.clone(this.buttonEditList);
-            this.dropdownItemList = _.clone(this.dropdownItemList);
-            this.dropdownEditItemList = _.clone(this.dropdownEditItemList);
+            this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
+            this.buttonEditList = Espo.Utils.cloneDeep(this.buttonEditList);
+            this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
+            this.dropdownEditItemList = Espo.Utils.cloneDeep(this.dropdownEditItemList);
 
             this.returnUrl = this.options.returnUrl || this.returnUrl;
             this.returnDispatchParams = this.options.returnDispatchParams || this.returnDispatchParams;
@@ -1040,11 +1065,28 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             var isEmpty = true;
-            this.dropdownItemList.forEach(function (item) {
+
+            this.dropdownItemList.forEach(item => {
                 if (!item.hidden) {
                     isEmpty = false;
                 }
-            }, this);
+            });
+
+            return isEmpty;
+        },
+
+        isDropdownEditItemListEmpty: function () {
+            if (this.dropdownEditItemList.length === 0) {
+                return true;
+            }
+
+            var isEmpty = true;
+
+            this.dropdownEditItemList.forEach(item => {
+                if (!item.hidden) {
+                    isEmpty = false;
+                }
+            });
 
             return isEmpty;
         },
@@ -1157,6 +1199,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.on('after:render', () => {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
+                this.$dropdownEditItemListButton = this.$detailButtonContainer.find('.dropdown-edit-item-list-button');
             });
 
             if (
