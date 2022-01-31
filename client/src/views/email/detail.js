@@ -39,14 +39,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                 this.backedMenu = this.menu;
 
                 this.menu = {
-                    'buttons': [
-                        {
-                           "label": "Send",
-                           "action": "send",
-                           "style": "danger",
-                           "acl": "edit"
-                        }
-                    ],
+                    'buttons': [],
                     'dropdown': [],
                     'actions': []
                 };

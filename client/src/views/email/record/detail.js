@@ -68,6 +68,17 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.addButtonEdit({
+                name: 'send',
+                action: 'send',
+                label: 'Send',
+                style: 'danger',
+            });
+
+            this.controlSendButton();
+
+            this.listenTo(this.model, 'change:status', () => this.controlSendButton());
+
             if (this.model.has('isRead') && !this.model.get('isRead')) {
                 this.model.set('isRead', true);
             }
@@ -154,6 +165,18 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     name: 'viewUsers'
                 });
             }
+        },
+
+        controlSendButton: function ()  {
+            let status = this.model.get('status');
+
+            if (status === 'Draft') {
+                this.showActionItem('send');
+
+                return;
+            }
+
+            this.hideActionItem('send');
         },
 
         actionMarkAsImportant: function () {

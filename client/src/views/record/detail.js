@@ -448,9 +448,18 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     break;
                 }
             }
+
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = true;
+
+                    break;
+                }
+            }
+
+            for (var i in this.buttonEditList) {
+                if (this.buttonEditList[i].name === name) {
+                    this.buttonEditList[i].hidden = true;
 
                     break;
                 }
@@ -484,6 +493,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = false;
+
+                    break;
+                }
+            }
+
+            for (var i in this.buttonEditList) {
+                if (this.buttonEditList[i].name === name) {
+                    this.buttonEditList[i].hidden = false;
 
                     break;
                 }
@@ -1137,10 +1154,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.setupActionItems();
             this.setupBeforeFinal();
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
                 this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
-            }, this);
+            });
 
             if (
                 !this.isNew &&
@@ -1862,6 +1879,24 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
             this.dropdownItemList[method](o);
+        },
+
+        addButtonEdit: function (o, toBeginning) {
+            var method = toBeginning ? 'unshift' : 'push';
+
+            var name = o.name;
+
+            if (!name) {
+                return;
+            }
+
+            for (var i in this.buttonEditList) {
+                if (this.buttonEditList[i].name === name) {
+                    return;
+                }
+            }
+
+            this.buttonEditList[method](o);
         },
 
         enableButtons: function () {
