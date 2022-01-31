@@ -159,6 +159,15 @@ class Email extends Record implements
 
     public function sendEntity(EmailEntity $entity, ?User $user = null): void
     {
+
+        if (!$this->fieldValidationManager->check($entity, 'to', 'required')) {
+            $entity->set('status', EmailEntity::STATUS_DRAFT);
+
+            $this->entityManager->saveEntity($entity, ['silent' => true]);
+
+            throw new BadRequest("Empty To address.");
+        }
+
         $emailSender = $this->emailSender->create();
 
         $userAddressList = [];

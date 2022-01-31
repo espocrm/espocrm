@@ -397,5 +397,13 @@ define(
             return lineHtml;
         },
 
+        validateRequired: function () {
+            if (this.model.get('status') === 'Draft') {
+                return false;
+            }
+
+            return Dep.prototype.validateRequired.call(this);
+        },
+
     });
 });

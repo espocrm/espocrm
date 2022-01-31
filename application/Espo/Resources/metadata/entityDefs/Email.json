@@ -64,7 +64,8 @@
             "notStorable": true,
             "required": true,
             "view": "views/email/fields/email-address-varchar",
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses"
         },
         "cc": {
             "type": "varchar",

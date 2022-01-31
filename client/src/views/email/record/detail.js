@@ -261,24 +261,33 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
         send: function () {
             var model = this.model;
+
+            let status = model.get('status');
+
             model.set('status', 'Sending');
+
             this.isSending = true;
 
-            var afterSend = function () {
+            var afterSend = () => {
                 model.trigger('after:send');
+
                 this.trigger('after:send');
                 this.isSending = false;
             };
 
             this.once('after:save', afterSend, this);
-            this.once('cancel:save', function () {
+
+            this.once('cancel:save', () => {
                 this.off('after:save', afterSend);
                 this.isSending = false;
-            }, this);
 
-            this.once('before:save', function () {
+                model.set('status', status);
+
+            });
+
+            this.once('before:save', () => {
                 Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
-            }, this);
+            });
 
             this.save();
         },
