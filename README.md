@@ -37,7 +37,7 @@ Before we can merge your pull request you need to accept our CLA [here](https://
 
 Branches:
 
-* *fix** – upcoming maintenance release; fixes should be pushed to this branch;
+* *fix* – upcoming maintenance release; fixes should be pushed to this branch;
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
 
