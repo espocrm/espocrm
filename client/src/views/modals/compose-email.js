@@ -49,7 +49,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             this.buttonList.unshift({
                 name: 'send',
                 text: this.translate('Send', 'labels', 'Email'),
-                style: 'primary'
+                style: 'primary',
             });
 
             this.headerHtml = this.getLanguage().translate('Compose Email');
@@ -61,26 +61,27 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             ) {
                 var attributes = this.options.attributes || {};
 
-                require('email-helper', function (EmailHelper) {
+                require('email-helper', (EmailHelper) => {
                     this.getRouter().confirmLeaveOut = false;
 
                     var emailHelper = new EmailHelper();
 
-                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    var link = emailHelper
+                        .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
 
                     document.location.href = link;
-                }.bind(this));
+                });
 
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     this.actionClose();
-                }, this);
+                });
 
                 return;
             }
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 this.dialogIsHidden = false;
-            }, this);
+            });
         },
 
         createRecordView: function (model, callback) {
@@ -97,7 +98,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 appendSignature: this.options.appendSignature,
-                exit: function () {}
+                exit: () => {},
             };
 
             this.createView('edit', viewName, options, callback);
@@ -110,7 +111,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             var model = editView.model;
 
-            var afterSend = function () {
+            var afterSend = () => {
                 this.dialogIsHidden = false;
 
                 this.trigger('after:save', model);
@@ -122,9 +123,9 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 this.stopListening(editView, 'error:save', errorSave);
 
                 this.remove();
-            }.bind(this);
+            };
 
-            var beforeSave = function () {
+            var beforeSave = () => {
                 this.dialogIsHidden = true;
 
                 dialog.hideWithBackdrop();
@@ -134,22 +135,22 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 if (!this.forceRemoveIsInitiated) {
                     this.initiateForceRemove();
                 }
-            }.bind(this);
+            };
 
-            var errorSave = function () {
+            var errorSave = () => {
                 this.dialogIsHidden = false;
 
                 if (this.isRendered()) {
                     dialog.show();
                 }
-            }.bind(this);
+            };
 
             this.listenToOnce(editView, 'after:send', afterSend);
 
             this.disableButton('send');
             this.disableButton('saveDraft');
 
-            this.listenToOnce(editView, 'cancel:save', function () {
+            this.listenToOnce(editView, 'cancel:save', () => {
                 this.enableButton('send');
                 this.enableButton('saveDraft');
 
@@ -157,7 +158,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
                 this.stopListening(editView, 'before:save', beforeSave);
                 this.stopListening(editView, 'error:save', errorSave);
-            }, this);
+            });
 
             this.listenToOnce(editView, 'before:save', beforeSave);
             this.listenToOnce(editView, 'error:save', errorSave);
@@ -166,8 +167,6 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
         },
 
         actionSaveDraft: function () {
-            var dialog = this.dialog;
-
             var editView = this.getView('edit');
 
             var model = editView.model;
@@ -175,24 +174,25 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             this.disableButton('send');
             this.disableButton('saveDraft');
 
-            var afterSave = function () {
+            var afterSave = () => {
                 this.enableButton('send');
                 this.enableButton('saveDraft');
+
                 Espo.Ui.success(this.translate('savedAsDraft', 'messages', 'Email'))
 
                 this.trigger('after:save', model);
 
                 this.$el.find('button[data-name="cancel"]').html(this.translate('Close'));
-            }.bind(this);
+            };
 
             editView.once('after:save', afterSave , this);
 
-            editView.once('cancel:save', function () {
+            editView.once('cancel:save', () => {
                 this.enableButton('send');
                 this.enableButton('saveDraft');
 
                 editView.off('after:save', afterSave);
-            }, this);
+            });
 
             editView.saveDraft();
         },
@@ -206,13 +206,13 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 return true;
             }
 
-            parentView.once('remove', function () {
+            parentView.once('remove', () => {
                 if (!this.dialogIsHidden) {
                     return;
                 }
 
                 this.remove();
-            }, this);
+            });
         },
 
     });
