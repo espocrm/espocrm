@@ -221,6 +221,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         saveDraft: function () {
             var model = this.model;
+
             model.set('status', 'Draft');
 
             var subjectView = this.getFieldView('subject');
@@ -232,7 +233,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 }
             }
 
-            this.save();
+            return this.save();
         },
 
         htmlToPlain: function (text) {

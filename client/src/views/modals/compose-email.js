@@ -52,6 +52,13 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 style: 'primary',
             });
 
+            this.$header = $('<a>')
+                .attr('href', 'javascript:')
+                .attr('data-action', 'fullFormDraft')
+                .text(this.getLanguage().translate('Compose Email'));
+
+            this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
+
             this.headerHtml = this.getLanguage().translate('Compose Email');
 
             if (
@@ -194,7 +201,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 editView.off('after:save', afterSave);
             });
 
-            editView.saveDraft();
+            return editView.saveDraft();
         },
 
         initiateForceRemove: function () {
@@ -212,6 +219,12 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 }
 
                 this.remove();
+            });
+        },
+
+        actionFullFormDraft: function () {
+            this.actionSaveDraft().then(() => {
+                this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
             });
         },
 

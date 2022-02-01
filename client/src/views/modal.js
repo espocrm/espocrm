@@ -73,6 +73,7 @@ define('views/modal', 'view', function (Dep) {
 
             this.header = this.options.header || this.header;
             this.headerHtml = this.options.headerHtml || this.headerHtml;
+            this.$header = this.options.$header || this.$header;
 
             if (this.options.headerText) {
                 this.headerHtml = Handlebars.Utils.escapeExpression(this.options.headerText);
@@ -108,7 +109,11 @@ define('views/modal', 'view', function (Dep) {
                     modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
                 }
 
-                var headerHtml = this.headerHtml || this.header;
+                let headerHtml = this.headerHtml || this.header;
+
+                if (this.$header && this.$header.length) {
+                    headerHtml = this.$header.get(0).outerHTML;
+                }
 
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
