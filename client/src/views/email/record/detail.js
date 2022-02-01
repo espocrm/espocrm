@@ -85,12 +85,12 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             this.listenTo(this.model, 'change:status', () => this.controlSendButton());
 
-            if (this.model.has('isRead') && !this.model.get('isRead')) {
+            if (this.model.get('status') !== 'Draft' && this.model.has('isRead') && !this.model.get('isRead')) {
                 this.model.set('isRead', true);
             }
 
             this.listenTo(this.model, 'sync', () => {
-                if (!this.model.get('isRead')) {
+                if (!this.model.get('isRead') && this.model.get('status') !== 'Draft') {
                     this.model.set('isRead', true);
                 }
             });

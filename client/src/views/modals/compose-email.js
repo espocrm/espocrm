@@ -223,9 +223,18 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
         },
 
         actionFullFormDraft: function () {
-            this.actionSaveDraft().then(() => {
-                this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
-            });
+            this.actionSaveDraft()
+                .then(() => {
+                    this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
+                })
+                .catch(reason => {
+                    if (reason === 'notModified') {
+                        Espo.Ui.notify(false);
+
+                        this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
+                    }
+                });
+
         },
 
     });
