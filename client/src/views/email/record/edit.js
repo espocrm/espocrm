@@ -32,7 +32,45 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
 
         init: function () {
             Dep.prototype.init.call(this);
+
             Detail.prototype.layoutNameConfigure.call(this);
+        },
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.addButton({
+                name: 'saveDraft',
+                 label: 'Save Draft',
+            }, true);
+
+            this.addButton({
+                name: 'send',
+                label: 'Send',
+                style: 'primary',
+            }, true);
+
+            this.controlSendButton();
+
+            if (this.model.get('status') === 'Draft') {
+                this.setFieldReadOnly('dateSent');
+            }
+
+            this.handleAttachmentField();
+            this.handleCcField();
+            this.handleBccField();
+
+            this.listenTo(this.model, 'change:attachmentsIds', () => {
+                this.handleAttachmentField();
+            });
+
+            this.listenTo(this.model, 'change:cc', () => {
+                this.handleCcField();
+            });
+
+            this.listenTo(this.model, 'change:bcc', () => {
+                this.handleBccField();
+            });
         },
 
         handleAttachmentField: function () {
@@ -59,31 +97,34 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
             }
         },
 
-        afterRender: function () {
-        	Dep.prototype.afterRender.call(this);
+        controlSendButton: function ()  {
+            let status = this.model.get('status');
 
-            if (this.model.get('status') === 'Draft') {
-                this.setFieldReadOnly('dateSent');
+            if (status === 'Draft') {
+                this.showActionItem('send');
+                this.showActionItem('saveDraft');
+                this.hideActionItem('save');
+                this.hideActionItem('saveAndContinueEditing');
+
+                return;
             }
 
-            this.handleAttachmentField();
-
-            this.listenTo(this.model, 'change:attachmentsIds', () => {
-                this.handleAttachmentField();
-            });
-
-            this.handleCcField();
-
-            this.listenTo(this.model, 'change:cc', () => {
-                this.handleCcField();
-            });
-
-            this.handleBccField();
-
-            this.listenTo(this.model, 'change:bcc', () => {
-                this.handleBccField();
-            });
+            this.hideActionItem('send');
+            this.hideActionItem('saveDraft');
+            this.showActionItem('save');
+            this.showActionItem('saveAndContinueEditing');
         },
 
+        actionSaveDraft: function () {
+            this.actionSaveAndContinueEditing();
+        },
+
+        actionSend: function () {
+            Detail.prototype.send.call(this)
+                .then(() => {
+                    this.exit();
+                })
+                .catch(() => {});
+        },
     });
 });

@@ -351,7 +351,7 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
             });
 
-            this.save();
+            return this.save();
         },
 
         exitAfterDelete: function () {

@@ -1886,7 +1886,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.manageAccessStream();
         },
 
-        addButton: function (o) {
+        addButton: function (o, toBeginning) {
+            var method = toBeginning ? 'unshift' : 'push';
+
             var name = o.name;
 
             if (!name) {
@@ -1899,7 +1901,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.buttonList.push(o);
+            this.buttonList[method](o);
         },
 
         addDropdownItem: function (o, toBeginning) {

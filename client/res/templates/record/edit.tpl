@@ -6,8 +6,11 @@
             {{button name scope=../entityType label=label style=style html=html hidden=hidden className='btn-xs-wide'}}
         {{/each}}
         {{#if dropdownItemList}}
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="fas fa-ellipsis-h"></span>
+        <button
+            type="button"
+            class="btn btn-default dropdown-toggle{{#if dropdownItemListEmpty}} hidden{{/if}}"
+            data-toggle="dropdown"
+        ><span class="fas fa-ellipsis-h"></span>
         </button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownItemList}}
