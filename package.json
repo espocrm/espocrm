@@ -7,6 +7,7 @@
     "url": "git://github.com/espocrm/espocrm.git"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "build": "grunt",
     "test": "grunt run-tests",
     "test-unit": "grunt run-unit-tests",
@@ -71,5 +72,8 @@
     "timepicker": "^1.11.15",
     "underscore": "^1.13.1",
     "vis": "^4.19.1"
+  },
+  "resolutions": {
+    "shelljs": "~0.8.5"
   }
 }
