@@ -26,7 +26,7 @@
     "grunt-contrib-less": "^2.0.0",
     "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-mkdir": "~1.0.0",
-    "grunt-replace": "~1.0.1",
+    "grunt-replace": "^2.0.2",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.21",
     "minimist": ">=1.2.2",
