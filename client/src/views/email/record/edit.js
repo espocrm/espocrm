@@ -82,7 +82,7 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
         },
 
         handleCcField: function () {
-            if (!this.model.get('cc')) {
+            if (!this.model.get('cc') && this.model.get('status') !== 'Draft') {
                 this.hideField('cc');
             } else {
                 this.showField('cc');
@@ -90,7 +90,7 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
         },
 
         handleBccField: function () {
-            if (!this.model.get('bcc')) {
+            if (!this.model.get('bcc') && this.model.get('status') !== 'Draft') {
                 this.hideField('bcc');
             } else {
                 this.showField('bcc');

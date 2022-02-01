@@ -3,8 +3,8 @@
         "label":"",
         "rows":[
             [{"name":"dateSent"},{"name":"from"}],
-            [false, {"name":"to"}],
-            [{"name":"parent"}, {"name":"cc"}],
+            [{"name":"parent"}, {"name":"to"}],
+            [false, {"name":"cc"}],
             [false, {"name":"bcc"}],
             [{"name":"subject","fullWidth":true}],
             [{"name":"body","fullWidth":true}],

@@ -3,8 +3,8 @@
         "label":"",
         "rows":[
             [{"name":"dateSent", "readOnly": true},{"name":"from", "readOnly": true}],
-            [false, {"name":"to", "readOnly": true}],
-            [{"name":"parent"}, {"name":"cc", "readOnly": true}],
+            [{"name":"parent"}, {"name":"to", "readOnly": true}],
+            [false, {"name":"cc", "readOnly": true}],
             [false, {"name":"bcc", "readOnly": true}],
             [{"name":"body","fullWidth":true, "readOnly": true, "customLabel": ""}],
             [{"name":"attachments", "readOnly": true, "fullWidth":true, "customLabel": ""}]
