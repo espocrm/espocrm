@@ -35,7 +35,7 @@ define('views/site/master', 'view', function (Dep) {
         views: {
             header: {
                 id: 'header',
-                view: 'views/site/header'
+                view: 'views/site/header',
             },
             main: {
                 id: 'main',
@@ -43,7 +43,7 @@ define('views/site/master', 'view', function (Dep) {
             },
             footer: {
                 el: 'body > footer',
-                view: 'views/site/footer'
+                view: 'views/site/footer',
             },
         },
 
@@ -56,9 +56,9 @@ define('views/site/master', 'view', function (Dep) {
         },
 
         setup: function () {
-            $(window).on('resize.' + this.cid, function () {
+            $(window).on('resize.' + this.cid, () => {
                 this.adjustContent();
-            }.bind(this));
+            });
         },
 
         onRemove: function () {
@@ -67,10 +67,14 @@ define('views/site/master', 'view', function (Dep) {
 
         afterRender: function () {
             var footerView = this.getView('footer');
+
             if (footerView) {
                 var html = footerView.$el.html() || '';
+
                 if ((html.match(/espocrm/gi) || []).length < 2) {
-                    var text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2NybS5jb20iPkVzcG9DUk08L2E+PC9wPg==';
+                    var text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2Nyb' +
+                        'S5jb20iPkVzcG9DUk08L2E+PC9wPg==';
+
                     if (typeof window.atob === "function") {
                         var decText = window.atob(text);
                     } else if (typeof atob === "function") {
@@ -99,11 +103,12 @@ define('views/site/master', 'view', function (Dep) {
                             label: this.translate('Close'),
                         }
                     ],
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
-            } else if (this.getHelper().getAppParam('auth2FARequired')) {
-                this.createView('dialog', 'views/modals/auth2fa-required', {}, function (view) {
+            }
+            else if (this.getHelper().getAppParam('auth2FARequired')) {
+                this.createView('dialog', 'views/modals/auth2fa-required', {}, (view) => {
                     view.render();
                 });
             }
@@ -120,11 +125,13 @@ define('views/site/master', 'view', function (Dep) {
                 var height = window.innerHeight - this.$content.get(0).getBoundingClientRect().top;
 
                 var $navbarCollapse = $('#navbar .navbar-body');
+
                 if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
                     height += $navbarCollapse.height();
                 }
 
                 var footerHeight = $('#footer').height() || 26;
+
                 height -= footerHeight;
 
                 if (height <= 0) {
@@ -132,11 +139,12 @@ define('views/site/master', 'view', function (Dep) {
                 } else {
                     this.$content.css('minHeight', height + 'px');
                 }
-
-            } else {
+            }
+            else {
                 if (this.isSmallScreen) {
                     this.$content.css('minHeight', '');
                 }
+
                 this.isSmallScreen = false;
             }
         },
