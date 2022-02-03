@@ -536,13 +536,15 @@ define('views/modal', 'view', function (Dep) {
 
             var $titleText = this.$el.find('.modal-title > .modal-title-text');
 
-            var containerWidth = $titleText.width();
+            var containerWidth = $titleText.parent().width();
 
             var textWidth = 0;
 
             $titleText.children().each((i, el) => {
                 textWidth += $(el).outerWidth(true);
             });
+
+            console.log(containerWidth, textWidth);
 
             if (containerWidth < textWidth) {
                 if (step > 5) {
