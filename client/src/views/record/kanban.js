@@ -192,6 +192,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.displayTotalCount = this.showCount && this.getConfig().get('displayListViewRecordCount');
 
+            this.minColumnWidthPx = this.getConfig().get('kanbanMinColumnWidth') || this.minColumnWidthPx;
+
             if ('displayTotalCount' in this.options) {
                 this.displayTotalCount = this.options.displayTotalCount;
             }
