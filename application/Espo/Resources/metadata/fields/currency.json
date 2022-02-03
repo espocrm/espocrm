@@ -23,6 +23,12 @@
          "default": false
       },
       {
+        "name": "conversionDisabled",
+        "type": "bool",
+        "default": false,
+        "tooltip": true
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

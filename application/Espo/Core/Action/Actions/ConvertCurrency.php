@@ -129,8 +129,19 @@ class ConvertCurrency implements Action
         array $fieldList,
         string $targetCurrency,
         CurrencyRates $rates
-    ) {
+    ): void {
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
         foreach ($fieldList as $field) {
+            $disabled = $entityDefs->getField($field)->getParam('conversionDisabled');
+
+            if ($disabled) {
+                continue;
+            }
+
             $amount = $entity->get($field);
             $code = $entity->get($field . 'Currency');
 

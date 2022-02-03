@@ -211,7 +211,8 @@
         "codeType": "Code Type",
         "lastChar": "Last Character",
         "onlyDefaultCurrency": "Only default currency",
-        "displayRawText": "Display raw text (no markdown)"
+        "displayRawText": "Display raw text (no markdown)",
+        "conversionDisabled": "Disable conversion"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

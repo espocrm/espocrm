@@ -49,50 +49,24 @@ use Espo\Core\{
     Field\Currency\CurrencyRates,
 };
 
-use Espo\{
-    ORM\Entity,
-};
+use Espo\ORM\Entity;
 
 class MassConvertCurrency implements MassAction
 {
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
+    protected QueryBuilder $queryBuilder;
 
-    /**
-     * @var Acl
-     */
-    protected $acl;
+    protected Acl $acl;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
-    /**
-     * @var FieldUtil
-     */
-    protected $fieldUtil;
+    protected FieldUtil $fieldUtil;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
 
-    /**
-     * @var CurrencyConfigDataProvider
-     */
-    protected $configDataProvider;
+    protected CurrencyConfigDataProvider $configDataProvider;
 
-    /**
-     * @var CurrencyConverter
-     */
-    protected $currencyConverter;
+    protected CurrencyConverter $currencyConverter;
 
-    /**
-     * @var User
-     */
     private $user;
 
     public function __construct(
@@ -192,8 +166,19 @@ class MassConvertCurrency implements MassAction
         array $fieldList,
         string $targetCurrency,
         CurrencyRates $rates
-    ) {
+    ): void {
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
         foreach ($fieldList as $field) {
+            $disabled = $entityDefs->getField($field)->getParam('conversionDisabled');
+
+            if ($disabled) {
+                continue;
+            }
+
             $amount = $entity->get($field);
             $code = $entity->get($field . 'Currency');
 

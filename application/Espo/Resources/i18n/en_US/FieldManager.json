@@ -86,7 +86,8 @@
         "readOnly": "Field value can't be specified by user. But can be calculated by formula.",
         "fileAccept": "Which file types to accept. It's possible to add custom items.",
         "barcodeLastChar": "For EAN-13 type.",
-        "maxFileSize": "If empty or 0 then no limit."
+        "maxFileSize": "If empty or 0 then no limit.",
+        "conversionDisabled": "The currency conversion action won't be applied to this field."
     },
     "fieldParts": {
         "address": {
