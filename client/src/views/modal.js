@@ -61,9 +61,16 @@ define('views/modal', 'view', function (Dep) {
 
         isDraggable: false,
 
+        isCollapsable: false,
+
+        isCollapsed: false,
+
         events: {
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
+            },
+            'click [data-action="collapseModal"]': function () {
+                this.collapse();
             },
         },
 
@@ -99,6 +106,8 @@ define('views/modal', 'view', function (Dep) {
                     this.dialog.close();
                 }
 
+                this.isCollapsed = false;
+
                 $(containerSelector).remove();
 
                 $('<div />').css('display', 'none').attr('id', id).addClass('modal-container').appendTo('body');
@@ -133,6 +142,7 @@ define('views/modal', 'view', function (Dep) {
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,
                     closeButton: !this.noCloseButton,
+                    collapseButton: this.isCollapsable,
                     onRemove: () => {
                         this.onDialogClose();
                     },
@@ -250,7 +260,7 @@ define('views/modal', 'view', function (Dep) {
         },
 
         onDialogClose: function () {
-            if (!this.isBeingRendered()) {
+            if (!this.isBeingRendered() && !this.isCollapsed) {
                 this.trigger('close');
                 this.remove();
             }
@@ -554,6 +564,66 @@ define('views/modal', 'view', function (Dep) {
 
                 this.adjustHeaderFontSize(step + 1);
             }
+        },
+
+        collapse: function () {
+            this.beforeCollapse().then(data => {
+                if (!this.getParentView()) {
+                    throw new Error("Can't collapse w/o parent view.");
+                }
+
+                this.isCollapsed = true;
+
+                data = data || {};
+
+                let title;
+
+                if (data.title) {
+                    title = data.title;
+                }
+                else {
+                    let $title = this.$el.find('.modal-header .modal-title .modal-title-text');
+
+                    if ($title.children().length) {
+                        $title.children()[0];
+                    }
+
+                    title = $title.text();
+                }
+
+                let key = this._path.split('/').pop();
+
+                this.dialog.close();
+
+                let masterView = this;
+
+                while (masterView.getParentView()) {
+                    masterView = masterView.getParentView();
+                }
+
+                this.getParentView().unchainView(key);
+
+                (new Promise(resolve => {
+                    if (masterView.hasView('collapsedModalBar')) {
+                        resolve(masterView.getView('collapsedModalBar'));
+
+                        return;
+                    }
+
+                    masterView
+                        .createView('collapsedModalBar', 'views/collapsed-modal-bar', {
+                            el: 'body > .collapsed-modal-bar',
+                        })
+                        .then(view => resolve(view));
+                }))
+                .then(barView => {
+                    barView.addModalView(this, {title: title});
+                });
+            });
+        },
+
+        beforeCollapse: function () {
+            return new Promise(resolve => resolve());
         },
     });
 });

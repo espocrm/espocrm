@@ -3071,6 +3071,54 @@ a.close:focus {
     border: @scroll-border-width solid var(--scroll-bg);
 }
 
+.collapsed-modal-bar {
+    position: fixed;
+    bottom: 0;
+    display: grid;
+    grid-gap: 10px;
+    width: calc(100% - 300px);
+    justify-content: end;
+
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        width: 100%;
+    }
+
+    > .collapsed-modal {
+        grid-row: 1;
+        width: 200px;
+        overflow: hidden;
+        z-index: 1009;
+        height: 26px;
+        padding: 4px 8px;
+
+        background-color: var(--collapsed-modal-bg);
+
+        .title-container {
+            width: calc(100% - 18px);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            float: left;
+            height: 20px;
+            white-space: nowrap;
+        }
+
+        .close-container {
+            float: right;
+        }
+
+        a, a:hover, a:active {
+            color: var(--collapsed-modal-text-color);
+        }
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";

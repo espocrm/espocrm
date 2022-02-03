@@ -34,6 +34,7 @@ define('ui', [], function () {
         this.className = 'dialog';
         this.backdrop = 'static';
         this.closeButton = true;
+        this.collapseButton = false;
         this.header = false;
         this.body = '';
         this.width = false;
@@ -53,6 +54,7 @@ define('ui', [], function () {
             'backdrop',
             'keyboard',
             'closeButton',
+            'collapseButton',
             'header',
             'body',
             'width',
@@ -106,6 +108,19 @@ define('ui', [], function () {
                             .html(this.header)
                     )
             );
+
+            if (this.collapseButton) {
+                $header.prepend(
+                    $('<a />')
+                        .addClass('collapse-button')
+                        .attr('href', 'javascript:')
+                        .attr('data-action', 'collapseModal')
+                        .append(
+                            $('<span />')
+                                .addClass('fas fa-minus')
+                        )
+                );
+            }
 
             if (this.closeButton) {
                 $header.prepend(

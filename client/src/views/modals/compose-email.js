@@ -38,6 +38,10 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
         fullFormDisabled: true,
 
+        isCollapsable: true,
+
+        wasModified: false,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -88,6 +92,12 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
 
             this.once('remove', () => {
                 this.dialogIsHidden = false;
+            });
+
+            this.listenTo(this.model, 'change', (m, o) => {
+                if (o.ui) {
+                    this.wasModified = true;
+                }
             });
         },
 
@@ -173,7 +183,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             editView.send();
         },
 
-        actionSaveDraft: function () {
+        actionSaveDraft: function (options) {
             var editView = this.getView('edit');
 
             var model = editView.model;
@@ -201,7 +211,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 editView.off('after:save', afterSave);
             });
 
-            return editView.saveDraft();
+            return editView.saveDraft(options);
         },
 
         initiateForceRemove: function () {
@@ -234,7 +244,16 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                         this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
                     }
                 });
+        },
 
+        beforeCollapse: function () {
+            if (this.wasModified) {
+                this.actionSaveDraft({skipNotModifiedWarning: true});
+            }
+
+            this.getView('edit').setConfirmLeaveOut(false);
+
+            return Dep.prototype.beforeCollapse.call(this);
         },
 
     });

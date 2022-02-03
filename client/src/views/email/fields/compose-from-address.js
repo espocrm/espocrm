@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email/fields/compose-from-address', 'views/fields/base', function (Dep) {
+
+define('views/email/fields/compose-from-address', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +35,8 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
         data: function () {
             var noSmtpMessage = this.translate('noSmtpSetup', 'messages', 'Email');
 
-            var linkHtml = '<a href="#EmailAccount">'+this.translate('EmailAccount', 'scopeNamesPlural')+'</a>';
+            var linkHtml = '<a href="#EmailAccount">'+this.translate('EmailAccount', 'scopeNamesPlural') + '</a>';
+
             if (!this.getAcl().check('EmailAccount')) {
                 linkHtml = '<a href="#Preferences">'+this.translate('Preferences')+'</a>';
             }
@@ -49,27 +51,30 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
 
         setup: function () {
             Dep.prototype.setup.call(this);
+            
             this.list = [];
 
             var primaryEmailAddress = this.getUser().get('emailAddress');
+
             if (primaryEmailAddress) {
                 this.list.push(primaryEmailAddress);
             }
 
             var emailAddressList = this.getUser().get('emailAddressList') || [];
-            emailAddressList.forEach(function (item) {
+
+            emailAddressList.forEach(item => {
                 this.list.push(item);
-            }, this);
+            });
 
             this.list = _.uniq(this.list);
 
             if (this.getConfig().get('outboundEmailIsShared') && this.getConfig().get('outboundEmailFromAddress')) {
                 var address = this.getConfig().get('outboundEmailFromAddress');
+
                 if (!~this.list.indexOf(address)) {
                     this.list.push(this.getConfig().get('outboundEmailFromAddress'));
                 }
             }
         },
     });
-
 });

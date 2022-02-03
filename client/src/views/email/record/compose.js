@@ -219,7 +219,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             Detail.prototype.send.call(this);
         },
 
-        saveDraft: function () {
+        saveDraft: function (options) {
             var model = this.model;
 
             model.set('status', 'Draft');
@@ -233,7 +233,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                 }
             }
 
-            return this.save();
+            return this.save(options);
         },
 
         htmlToPlain: function (text) {

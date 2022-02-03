@@ -672,7 +672,9 @@ define(
             }
 
             if (!setAttributes) {
-                this.afterNotModified();
+                if (!options.skipNotModifiedWarning) {
+                    this.afterNotModified();
+                }
 
                 this.lastSaveCancelReason = 'notModified';
 
