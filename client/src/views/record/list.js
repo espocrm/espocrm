@@ -2421,8 +2421,6 @@ define(
                         this.removeRecordFromList(id);
                     })
                     .catch(() => {
-                        this.notify('Error occurred', 'error');
-
                         this.collection.push(model);
                     });
             });
