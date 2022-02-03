@@ -38,6 +38,7 @@ use Espo\Services\Email as EmailService;
 use Espo\Repositories\Email as EmailRepository;
 
 use Espo\Core\Field\LinkParent;
+use Espo\Core\Field\Link;
 
 class Email extends Entity
 {
@@ -507,6 +508,16 @@ class Email extends Entity
         $this->setValueObject('parent', $parent);
 
         return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
+    public function getCreatedBy(): ?Link
+    {
+        return $this->getValueObject('createdBy');
     }
 
     private function getEmailRepository(): EmailRepository

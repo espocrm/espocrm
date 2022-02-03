@@ -132,9 +132,33 @@ class AccessChecker implements AccessEntityCREDSChecker
         return false;
     }
 
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
+    {
+        /** @var Email $entity */
+
+        if (
+            $entity->getStatus() === Email::STATUS_DRAFT &&
+            $entity->getCreatedBy() &&
+            $entity->getCreatedBy()->getId() === $user->getId()
+        ) {
+            return true;
+        }
+
+        return $this->defaultAccessChecker->checkEntityEdit($user, $entity, $data);
+    }
+
+    public function checkEdit(User $user, ScopeData $data): bool
+    {
+        if ($data->getCreate() === Table::LEVEL_YES) {
+            return true;
+        }
+
+        return $this->defaultAccessChecker->checkEdit($user, $data);
+    }
+
     public function checkDelete(User $user, ScopeData $data): bool
     {
-        if ($data->getCreate() !== Table::LEVEL_NO) {
+        if ($data->getCreate() === Table::LEVEL_YES) {
             return true;
         }
 

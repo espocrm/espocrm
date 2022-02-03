@@ -75,6 +75,17 @@ Espo.define('acl/email', 'acl', function (Dep) {
             return false;
         },
 
+        checkModelEdit: function (model, data, precise) {
+            if (
+                model.get('status') === 'Draft' &&
+                model.get('createdById') === this.getUser().id
+            ) {
+                return true;
+            }
+
+            return this.checkModel(model, data, 'edit', precise);
+        },
+
         checkModelDelete: function (model, data, precise) {
             var result = this.checkModel(model, data, 'delete', precise);
 
