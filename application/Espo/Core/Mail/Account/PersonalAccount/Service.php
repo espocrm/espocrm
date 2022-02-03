@@ -129,7 +129,7 @@ class Service
 
             if (
                 !$this->user->isAdmin() &&
-                $account->getAssignedUser()->getId() !== $this->user->getId()
+                $account->getUser()->getId() !== $this->user->getId()
             ) {
                 throw new Forbidden();
             }
