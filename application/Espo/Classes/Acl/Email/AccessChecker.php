@@ -131,4 +131,13 @@ class AccessChecker implements AccessEntityCREDSChecker
 
         return false;
     }
+
+    public function checkDelete(User $user, ScopeData $data): bool
+    {
+        if ($data->getCreate() !== Table::LEVEL_NO) {
+            return true;
+        }
+
+        return $this->defaultAccessChecker->checkDelete($user, $data);
+    }
 }
