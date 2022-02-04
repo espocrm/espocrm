@@ -117,7 +117,7 @@ define('views/fields/currency', 'views/fields/float', function (Dep) {
         },
 
         formatNumber: function (value) {
-            if (this.mode === 'list' || this.mode === 'detail') {
+            if (this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink') {
                 return this.formatNumberDetail(value);
             }
 
