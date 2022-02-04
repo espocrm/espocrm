@@ -544,8 +544,6 @@ define('views/modal', 'view', function (Dep) {
                 textWidth += $(el).outerWidth(true);
             });
 
-            console.log(containerWidth, textWidth);
-
             if (containerWidth < textWidth) {
                 if (step > 5) {
                     var $title = this.$el.find('.modal-title');
