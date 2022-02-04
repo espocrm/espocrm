@@ -526,6 +526,12 @@ div.list-kanban > div > table {
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
+
+                        &:hover {
+                            .kanban-group-label {
+                                max-width: ~"calc(100% - 30px)";
+                            }
+                        }
                     }
                 }
             }
