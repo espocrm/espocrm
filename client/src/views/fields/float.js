@@ -62,6 +62,10 @@ define('views/fields/float', 'views/fields/int', function (Dep) {
                 return value;
             }
 
+            if (this.isReadMode()) {
+                return this.formatNumberDetail(value);
+            }
+
             if (value !== null) {
                 var parts = value.toString().split(".");
 
@@ -71,6 +75,50 @@ define('views/fields/float', 'views/fields/int', function (Dep) {
             }
 
             return '';
+        },
+
+        formatNumberDetail: function (value) {
+            if (value === null) {
+                return '';
+            }
+
+            var decimalPlaces = this.params.decimalPlaces;
+
+            if (decimalPlaces === 0) {
+                value = Math.round(value);
+            }
+            else if (decimalPlaces) {
+                value = Math.round(
+                     value * Math.pow(10, decimalPlaces)) / (Math.pow(10, decimalPlaces)
+                );
+            }
+
+            var parts = value.toString().split(".");
+
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
+            if (decimalPlaces === 0) {
+                return parts[0];
+            }
+            else if (decimalPlaces) {
+                var decimalPartLength = 0;
+
+                if (parts.length > 1) {
+                    decimalPartLength = parts[1].length;
+                } else {
+                    parts[1] = '';
+                }
+
+                if (decimalPlaces && decimalPartLength < decimalPlaces) {
+                    var limit = decimalPlaces - decimalPartLength;
+
+                    for (var i = 0; i < limit; i++) {
+                        parts[1] += '0';
+                    }
+                }
+            }
+
+            return parts.join(this.decimalMark);
         },
 
         setupMaxLength: function () {

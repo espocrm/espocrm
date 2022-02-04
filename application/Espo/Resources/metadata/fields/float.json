@@ -18,6 +18,10 @@
          "type":"float"
       },
       {
+         "name": "decimalPlaces",
+         "type": "int"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },

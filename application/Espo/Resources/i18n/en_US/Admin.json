@@ -212,7 +212,8 @@
         "lastChar": "Last Character",
         "onlyDefaultCurrency": "Only default currency",
         "displayRawText": "Display raw text (no markdown)",
-        "conversionDisabled": "Disable conversion"
+        "conversionDisabled": "Disable conversion",
+        "decimalPlaces": "Decimal Places"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"
