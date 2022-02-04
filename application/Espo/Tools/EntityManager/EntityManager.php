@@ -778,19 +778,33 @@ class EntityManager
             $this->processHook('afterRemove', $type, $name);
         }
 
-        $tabList = $this->config->get('tabList', []);
-
-        if (($key = array_search($name, $tabList)) !== false) {
-            unset($tabList[$key]);
-
-            $tabList = array_values($tabList);
-        }
-
-        $this->configWriter->set('tabList', $tabList);
-
-        $this->configWriter->save();
+        $this->deleteEntityTypeFromConfigParams($name);
 
         $this->dataManager->clearCache();
+    }
+
+    private function deleteEntityTypeFromConfigParams(string $entityType): void
+    {
+        $paramList = $this->metadata->get(['app', 'config', 'entityTypeListParamList']) ?? [];
+
+        foreach ($paramList as $param) {
+            $this->deleteEntityTypeFromConfigParam($entityType, $param);
+        }
+
+        $this->configWriter->save();
+    }
+
+    private function deleteEntityTypeFromConfigParam(string $entityType, string $param): void
+    {
+        $list = $this->config->get($param) ?? [];
+
+        if (($key = array_search($entityType, $list)) !== false) {
+            unset($list[$key]);
+
+            $list = array_values($list);
+        }
+
+        $this->configWriter->set($param, $list);
     }
 
     protected function isCustom(string $name): bool
