@@ -56,9 +56,9 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
         flexibleHeaderFontSize: true,
 
-        setup: function () {
-            var self = this;
+        duplicateAction: false,
 
+        setup: function () {
             this.scope = this.scope || this.options.scope;
             this.id = this.options.id;
 
@@ -160,6 +160,13 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             this.listenToOnce(this.getRouter(), 'routed', function () {
                 this.remove();
             }, this);
+
+            if (this.duplicateAction && this.getAcl().checkScope(this.scope, 'create')) {
+                this.addDropdownItem({
+                    name: 'duplicate',
+                    label: 'Duplicate',
+                });
+            }
         },
 
         setupAfterModelCreated: function () {
@@ -500,6 +507,31 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.trigger('leave');
             this.dialog.close();
-        }
+        },
+
+        actionDuplicate: function () {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            Espo.Ajax
+                .postRequest(this.scope + '/action/getDuplicateAttributes', {
+                    id: this.model.id,
+                })
+                .then(attributes => {
+                    Espo.Ui.notify(false);
+
+                    let url = '#' + this.scope + '/create';
+
+                    this.getRouter().dispatch(this.scope, 'create', {
+                        attributes: attributes,
+                        returnUrl: this.getRouter().getCurrentUrl(),
+                        options: {
+                            duplicateSourceId: this.model.id,
+                            returnAfterCreate: true,
+                        },
+                    });
+
+                    this.getRouter().navigate(url, {trigger: false});
+                });
+        },
     });
 });

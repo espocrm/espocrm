@@ -44,6 +44,7 @@ define('views/edit', 'views/main', function (Dep) {
             'attributes',
             'rootUrl',
             'duplicateSourceId',
+            'returnAfterCreate',
         ],
 
         headerView: 'views/header',

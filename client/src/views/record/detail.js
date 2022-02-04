@@ -1051,6 +1051,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
             this.dropdownEditItemList = Espo.Utils.cloneDeep(this.dropdownEditItemList);
 
+            this.returnAfterCreate = this.options.returnAfterCreate;
+
             this.returnUrl = this.options.returnUrl || this.returnUrl;
             this.returnDispatchParams = this.options.returnDispatchParams || this.returnDispatchParams;
 
@@ -2307,7 +2309,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         exitAfterCreate: function () {
-            if (this.model.id) {
+            if (!this.returnAfterCreate && this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
 
                 this.getRouter().navigate(url, {trigger: false});
@@ -2321,7 +2323,6 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 return true;
             }
         },
-
 
         /**
          * Called after save or cancel.

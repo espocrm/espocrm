@@ -30,6 +30,8 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
     return Dep.extend({
 
+        duplicateAction: true,
+
         setupAfterModelCreated: function () {
             Dep.prototype.setupAfterModelCreated.call(this);
 
