@@ -16,7 +16,7 @@
   "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
   "license": "GPL-3.0",
   "devDependencies": {
-    "archiver": "^3.1.1",
+    "archiver": "^5.3.0",
     "fstream": ">=1.0.12",
     "grunt": "^1.4.1",
     "grunt-chmod": "~1.1.0",
