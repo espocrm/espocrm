@@ -153,7 +153,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
             $time.timepicker({
                 step: this.params.minuteStep || 30,
                 scrollDefaultNow: true,
-                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
+                timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
             });
 
             $time
@@ -200,16 +200,38 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     }
                 });
 
-                var timeout = false;
+                let timeout = false;
+                let isTimeFormatError = false;
+                let previousValue = $time.val();
 
-                $time.on('change', () => {
+                $time.on('change', (e) => {
                     if (!timeout) {
+                        if (isTimeFormatError) {
+                            $time.val(previousValue);
+
+                            return;
+                        }
+
+                        if (this.noneOption && $time.val() === '' && this.$date.val() !== '') {
+                            $time.val(this.noneOption);
+
+                            return;
+                        }
+
                         this.trigger('change');
+
+                        previousValue = $time.val();
                     }
 
                     timeout = true;
 
                     setTimeout(() => timeout = false, 100);
+                });
+
+                $time.on('timeFormatError', () => {
+                    isTimeFormatError = true;
+
+                    setTimeout(() => isTimeFormatError = false, 50);
                 });
             }
         },
