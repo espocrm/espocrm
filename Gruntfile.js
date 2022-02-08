@@ -212,60 +212,6 @@ module.exports = grunt => {
             },
         },
 
-        chmod: {
-            php: {
-                options: {
-                    mode: '644'
-                },
-                src: [
-                    'build/EspoCRM-<%= pkg.version %>/**/*.php',
-                    'build/EspoCRM-<%= pkg.version %>/**/*.json',
-                    'build/EspoCRM-<%= pkg.version %>/**/*.config',
-                    'build/EspoCRM-<%= pkg.version %>/**/.htaccess',
-                    'build/EspoCRM-<%= pkg.version %>/client/**/*.js',
-                    'build/EspoCRM-<%= pkg.version %>/client/**/*.css',
-                    'build/EspoCRM-<%= pkg.version %>/client/**/*.tpl',
-                    'build/EspoCRM-<%= pkg.version %>/**/*.html',
-                    'build/EspoCRM-<%= pkg.version %>/**/*.txt',
-                ],
-            },
-            folders: {
-                options: {
-                    mode: '755'
-                },
-                src: [
-                    'build/EspoCRM-<%= pkg.version %>/public/install',
-                    'build/EspoCRM-<%= pkg.version %>/public/portal',
-                    'build/EspoCRM-<%= pkg.version %>/public/api',
-                    'build/EspoCRM-<%= pkg.version %>/public/api/v1',
-                    'build/EspoCRM-<%= pkg.version %>/public/api/v1/portal-access',
-                    'build/EspoCRM-<%= pkg.version %>',
-                ],
-            },
-            foldersWritable: {
-                options: {
-                    mode: '775'
-                },
-                src: [
-                    'build/EspoCRM-<%= pkg.version %>/data',
-                    'build/EspoCRM-<%= pkg.version %>/custom',
-                    'build/EspoCRM-<%= pkg.version %>/custom/Espo',
-                    'build/EspoCRM-<%= pkg.version %>/custom/Espo/Custom',
-                    'build/EspoCRM-<%= pkg.version %>/client/custom',
-                    'build/EspoCRM-<%= pkg.version %>/client/modules',
-                    'build/EspoCRM-<%= pkg.version %>/application/Espo/Modules',
-                ]
-            },
-            executable: {
-                options: {
-                    mode: '754'
-                },
-                src: [
-                    'build/EspoCRM-<%= pkg.version %>/bin/*',
-                ],
-            },
-        },
-
         replace: {
             version: {
                 options: {
@@ -305,10 +251,102 @@ module.exports = grunt => {
 
     grunt.registerTask('chmod-folders', () => {
         cp.execSync(
-            "find . -type d -exec chmod 755 {} + ",
+            "find . -type d -exec chmod 755 {} +",
             {
-                stdio: 'ignore',
                 cwd: 'build/EspoCRM-' + pkg.version,
+            }
+        );
+    });
+
+    grunt.registerTask('chmod-multiple', () => {
+        let dirPath = 'build/EspoCRM-' + pkg.version;
+
+        let fileList = [
+            {
+                name: '*.php',
+            },
+            {
+                name: '*.json',
+            },
+            {
+                name: '*.config',
+            },
+            {
+                name: '.htaccess',
+            },
+            {
+                name: '*.html',
+            },
+            {
+                name: '*.txt',
+            },
+            {
+                name: '*.js',
+                folder: 'client',
+            },
+            {
+                name: '*.css',
+                folder: 'client',
+            },
+            {
+                name: '*.tpl',
+                folder: 'client',
+            },
+        ];
+
+        let dirReadableList = [
+            'public/install',
+            'public/portal',
+            'public/api',
+            'public/api/v1',
+            'public/api/v1/portal-access',
+            '.',
+        ];
+
+        let dirWritableList = [
+            'data',
+            'custom',
+            'custom/Espo',
+            'custom/Espo/Custom',
+            'client/custom',
+            'client/modules',
+            'application/Espo/Modules',
+        ];
+
+        fileList.forEach(item => {
+            let path = item.folder || '.';
+            let name = item.name;
+
+            cp.execSync(
+                `find ${path} -type f -iname "${name}" -exec chmod 644 {} +`,
+                {
+                    cwd: dirPath,
+                }
+            );
+        });
+
+        dirReadableList.forEach(item => {
+            cp.execSync(
+                `chmod 755 ${item}`,
+                {
+                    cwd: dirPath,
+                }
+            );
+        });
+
+        dirWritableList.forEach(item => {
+            cp.execSync(
+                `chmod 775 ${item}`,
+                {
+                    cwd: dirPath,
+                }
+            );
+        });
+
+        cp.execSync(
+            `find bin -type f -exec chmod 754 {} +`,
+            {
+                cwd: dirPath,
             }
         );
     });
@@ -377,7 +415,6 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
-    grunt.loadNpmTasks('grunt-chmod');
 
     grunt.registerTask('offline', [
         'clean:start',
@@ -394,10 +431,7 @@ module.exports = grunt => {
         'clean:beforeFinal',
         'copy:final',
         'chmod-folders',
-        'chmod:php',
-        'chmod:folders',
-        'chmod:foldersWritable',
-        'chmod:executable',
+        'chmod-multiple',
         'clean:final',
     ]);
 
