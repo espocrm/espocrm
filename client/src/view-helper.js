@@ -564,7 +564,7 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
 
                         if (result && Object.prototype.toString.call(result) === '[object Promise]') {
                             result.then(function () {
-                                resove();
+                                resolve();
                             });
 
                             return;
