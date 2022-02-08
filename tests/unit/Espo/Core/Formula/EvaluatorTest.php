@@ -634,4 +634,34 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->evaluator->process($expression, null);
     }
+
+    public function testStringSplit1(): void
+    {
+        $expression = "string\\split('1 2 3', ' ')";
+
+        $this->assertEquals(
+            ['1', '2', '3'],
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testStringSplit2(): void
+    {
+        $expression = "string\\split(null, '')";
+
+        $this->assertEquals(
+            [],
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testStringSplit3(): void
+    {
+        $expression = "string\\split('12', '')";
+
+        $this->assertEquals(
+            ['1', '2'],
+            $this->evaluator->process($expression, null)
+        );
+    }
 }
