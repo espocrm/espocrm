@@ -67,5 +67,10 @@
     "timepicker": "^1.11.15",
     "underscore": "^1.13.1",
     "vis": "^4.19.1"
+  },
+  "overrides": {
+    "selectize": {
+      "minimist": "0.2.1"
+    }
   }
 }
