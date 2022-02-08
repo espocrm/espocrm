@@ -25,7 +25,7 @@
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-less": "^3.0.0",
-    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+    "grunt-contrib-uglify": "^5.0.1",
     "grunt-mkdir": "^1.1.0",
     "grunt-replace": "^2.0.2",
     "js-yaml": "^3.13.1",
@@ -69,11 +69,5 @@
     "timepicker": "^1.11.15",
     "underscore": "^1.13.1",
     "vis": "^4.19.1"
-  },
-  "resolutions": {
-    "shelljs": "~0.8.5",
-    "trim-newlines": "^4.0.1",
-    "minimist": "^1.2.2",
-    "lodash": "^4.17.21"
   }
 }
