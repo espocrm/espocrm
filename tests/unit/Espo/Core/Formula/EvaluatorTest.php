@@ -704,4 +704,64 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
             $this->evaluator->process($expression, null)
         );
     }
+
+    public function testNullCoalescing1(): void
+    {
+        $expression = "null ?? 1";
+
+        $this->assertSame(
+            1,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNullCoalescing2(): void
+    {
+        $expression = "(null) ?? 1 ?? 0";
+
+        $this->assertSame(
+            1,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNullCoalescing3(): void
+    {
+        $expression = "(null) ?? ifThenElse(false, 1, null) ?? 0";
+
+        $this->assertSame(
+            0,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNullCoalescing4(): void
+    {
+        $expression = "null ?? (1 ?? 0)";
+
+        $this->assertSame(
+            1,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNullCoalescing5(): void
+    {
+        $expression = "null ?? 1 + 2";
+
+        $this->assertSame(
+            3,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNullCoalescing6(): void
+    {
+        $expression = "null ?? true || false";
+
+        $this->assertSame(
+            true,
+            $this->evaluator->process($expression, null)
+        );
+    }
 }

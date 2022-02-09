@@ -40,6 +40,7 @@ class Parser
 {
     private $priorityList = [
         ['='],
+        ['??'],
         ['||'],
         ['&&'],
         ['==', '!=', '>', '<', '>=', '<='],
@@ -49,6 +50,7 @@ class Parser
 
     private $operatorMap = [
         '=' => 'assign',
+        '??' => 'comparison\\nullCoalescing',
         '||' => 'logical\\or',
         '&&' => 'logical\\and',
         '+' => 'numeric\\summation',
