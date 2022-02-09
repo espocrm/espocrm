@@ -664,4 +664,44 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
             $this->evaluator->process($expression, null)
         );
     }
+
+    public function testNumberParseInt1(): void
+    {
+        $expression = "number\\parseInt('1')";
+
+        $this->assertEquals(
+            1,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNumberParseInt2(): void
+    {
+        $expression = "number\\parseInt(null)";
+
+        $this->assertEquals(
+            0,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNumberParseFloat1(): void
+    {
+        $expression = "number\\parseFloat('1')";
+
+        $this->assertEquals(
+            1.0,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testNumberParseFloat2(): void
+    {
+        $expression = "number\\parseFloat(null)";
+
+        $this->assertEquals(
+            0.0,
+            $this->evaluator->process($expression, null)
+        );
+    }
 }

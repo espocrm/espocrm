@@ -202,6 +202,16 @@
             "returnType": "int"
         },
         {
+            "name": "number\\parseInt",
+            "insertText": "number\\parseInt(STRING)",
+            "returnType": "int"
+        },
+        {
+            "name": "number\\parseFloat",
+            "insertText": "number\\parseFloat(STRING)",
+            "returnType": "float"
+        },
+        {
             "name": "entity\\isNew",
             "insertText": "entity\\isNew()",
             "returnType": "bool"
