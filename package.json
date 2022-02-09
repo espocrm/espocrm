@@ -72,5 +72,8 @@
     "selectize": {
       "minimist": "0.2.1"
     }
+  },
+  "engines": {
+    "npm": ">=7"
   }
 }
