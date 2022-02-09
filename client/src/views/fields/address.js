@@ -597,6 +597,20 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             data[this.cityField] = this.$city.val().toString().trim();
             data[this.countryField] = this.$country.val().toString().trim();
 
+            let attributeList = [
+                this.postalCodeField,
+                this.streetField,
+                this.stateField,
+                this.cityField,
+                this.countryField,
+            ];
+
+            attributeList.forEach(attribute => {
+                if (data[attribute] === '') {
+                    data[attribute] = null;
+                }
+            });
+
             return data;
         },
 
