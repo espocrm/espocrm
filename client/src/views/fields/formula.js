@@ -291,6 +291,28 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             caption: item.name + '()',
                             value: item.insertText,
                             meta: item.returnType || null,
+                            completer: {
+                                insertMatch: (editor, data) => {
+                                    editor.completer.insertMatch({value: data.value});
+
+                                    let index = data.value.indexOf('(');
+
+                                    if (!~index) {
+                                        return;
+                                    }
+
+                                    if (~data.value.indexOf('()')) {
+                                        return;
+                                    }
+
+                                    let pos = editor.selection.getCursor();
+
+                                    editor.gotoLine(
+                                        pos.row + 1,
+                                        pos.column - data.value.length + index + 1
+                                    );
+                                },
+                            },
                         };
                     });
 
