@@ -164,7 +164,11 @@ define(
         },
 
         actionRefresh: function () {
-            this.collection.fetch();
+            this.collection.fetch({
+                previousDataList: this.collection.models.map(model => {
+                    return Espo.Utils.cloneDeep(model.attributes);
+                }),
+            });
         },
 
         actionCreateActivity: function (data) {
