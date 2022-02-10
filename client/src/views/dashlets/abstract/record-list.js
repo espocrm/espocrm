@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/base', 'search-manager'], function (Dep, SearchManager) {
+define(
+    'views/dashlets/abstract/record-list',
+    ['views/dashlets/abstract/base', 'search-manager'],
+    function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -46,13 +49,14 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             'displayRecords': {
                 type: 'enumInt',
                 options: [3,4,5,10,15],
-            }
+            },
         }),
 
         rowActionsView: 'views/record/row-actions/view-and-edit',
 
         init: function () {
             this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
+
             Dep.prototype.init.call(this);
         },
 
@@ -65,18 +69,21 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
         },
 
         afterRender: function () {
-            this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, (collection) => {
                 var searchData = this.getSearchData();
 
-                var searchManager = this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), searchData);
+                this.searchManager = new SearchManager(collection, 'list', null, this.getDateTime(), searchData);
 
                 if (!this.scope) {
-                    this.$el.find('.list-container').html(this.translate('selectEntityType', 'messages', 'DashletOptions'));
+                    this.$el.find('.list-container')
+                        .html(this.translate('selectEntityType', 'messages', 'DashletOptions'));
+
                     return;
                 }
 
                 if (!this.checkAccess()) {
                     this.$el.find('.list-container').html(this.translate('No Access'));
+
                     return;
                 }
 
@@ -104,14 +111,16 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
 
                 if (this.getOption('order') === 'asc') {
                     collection.order = 'asc';
-                } else if (this.getOption('order') === 'desc') {
+                }
+                else if (this.getOption('order') === 'desc') {
                     collection.order = 'desc';
                 }
 
                 collection.maxSize = this.getOption('displayRecords');
-                collection.where = searchManager.getWhere();
+                collection.where = this.searchManager.getWhere();
 
-                var viewName = this.listView || ((this.layoutType == 'expanded') ? this.listViewExpanded : this.listViewColumn);
+                var viewName = this.listView || ((this.layoutType === 'expanded') ?
+                    this.listViewExpanded : this.listViewColumn);
 
                 this.createView('list', viewName, {
                     collection: collection,
@@ -122,17 +131,17 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                     checkboxes: false,
                     showMore: true,
                     listLayout: this.getOption(this.layoutType + 'Layout'),
-                    skipBuildRows: true
-                }, function (view) {
-                    view.getSelectAttributeList(function (selectAttributeList) {
+                    skipBuildRows: true,
+                }, (view) => {
+                    view.getSelectAttributeList(selectAttributeList => {
                         if (selectAttributeList) {
                             collection.data.select = selectAttributeList.join(',');
                         }
-                        collection.fetch();
-                    }.bind(this));
-                });
 
-            }, this);
+                        collection.fetch();
+                    });
+                });
+            });
         },
 
         setupActionList: function () {
@@ -141,13 +150,15 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
                     name: 'create',
                     html: this.translate('Create ' + this.scope, 'labels', this.scope),
                     iconHtml: '<span class="fas fa-plus"></span>',
-                    url: '#'+this.scope+'/create'
+                    url: '#'+this.scope+'/create',
                 });
             }
         },
 
         actionRefresh: function () {
-            if (!this.collection) return;
+            if (!this.collection) {
+                return;
+            }
 
             this.collection.where = this.searchManager.getWhere();
             this.collection.fetch();
@@ -168,22 +179,25 @@ Espo.define('views/dashlets/abstract/record-list', ['views/dashlets/abstract/bas
             }
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+                'views/modals/edit';
+
             this.createView('modal', viewName, {
                 scope: this.scope,
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
+
+                this.listenToOnce(view, 'after:save', () => {
                     this.actionRefresh();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         getCreateAttributes: function () {
 
-        }
+        },
     });
 });
-
