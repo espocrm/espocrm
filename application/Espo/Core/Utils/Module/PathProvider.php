@@ -33,11 +33,11 @@ use Espo\Core\Utils\Module;
 
 class PathProvider
 {
-    private $corePath = 'application/Espo/';
+    private string $corePath = 'application/Espo/';
 
-    private $customPath = 'custom/Espo/Custom/';
+    private string $customPath = 'custom/Espo/Custom/';
 
-    private $module;
+    private Module $module;
 
     public function __construct(Module $module)
     {
