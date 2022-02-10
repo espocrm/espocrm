@@ -161,7 +161,11 @@ define(
             }
 
             this.collection.where = this.searchManager.getWhere();
-            this.collection.fetch();
+            this.collection.fetch({
+                previousDataList: this.collection.models.map(model => {
+                    return Espo.Utils.cloneDeep(model.attributes);
+                }),
+            });
         },
 
         actionCreate: function () {
