@@ -778,22 +778,17 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
     public function testObjectSet(): void
     {
         $expression = "
-            \$o1 = object\\create();
-            \$o2 = object\\set(\$o1, 'key', 'value');
+            \$o = object\\create();
+            object\\set(\$o, 'key', 'value');
         ";
 
         $vars = (object) [];
 
         $this->evaluator->process($expression, null, $vars);
 
-        $this->assertNotEquals(
-            $vars->o1,
-            $vars->o2
-        );
-
         $this->assertEquals(
             'value',
-            $vars->o2->key
+            $vars->o->key
         );
     }
 
@@ -801,7 +796,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
     {
         $expression = "
             \$o = object\\create();
-            \$o = object\\set(\$o, 'key', 'value');
+            object\\set(\$o, 'key', 'value');
             \$v = object\\get(\$o, 'key');
         ";
 
@@ -836,8 +831,8 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
     {
         $expression = "
             \$o = object\\create();
-            \$o = object\\set(\$o, 'key', 'value');
-            \$o = object\\clear(\$o, 'key');
+            object\\set(\$o, 'key', 'value');
+            object\\clear(\$o, 'key');
         ";
 
         $vars = (object) [];

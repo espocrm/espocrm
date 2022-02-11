@@ -32,7 +32,6 @@ namespace Espo\Core\Formula\Functions\ObjectGroup;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 
-use Espo\Core\Utils\ObjectUtil;
 
 use stdClass;
 
@@ -56,10 +55,8 @@ class SetType extends BaseFunction
             $this->throwBadArgumentType(2);
         }
 
-        $clonedObj = ObjectUtil::clone($obj);
+        $obj->$key = $value;
 
-        $clonedObj->$key = $value;
-
-        return $clonedObj;
+        return $obj;
     }
 }

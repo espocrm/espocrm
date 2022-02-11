@@ -32,8 +32,6 @@ namespace Espo\Core\Formula\Functions\ObjectGroup;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 
-use Espo\Core\Utils\ObjectUtil;
-
 use stdClass;
 
 class ClearType extends BaseFunction
@@ -55,10 +53,8 @@ class ClearType extends BaseFunction
             $this->throwBadArgumentType(2);
         }
 
-        $clonedObj = ObjectUtil::clone($obj);
+        unset($obj->$key);
 
-        unset($clonedObj->$key);
-
-        return $clonedObj;
+        return $obj;
     }
 }
