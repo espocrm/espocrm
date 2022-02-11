@@ -36,7 +36,7 @@ class ObjectUtil
     /**
      * Deep clone.
      */
-    public static function clone(StdClass $source): stdClass
+    public static function clone(stdClass $source): stdClass
     {
         $cloned = (object) [];
 
@@ -59,7 +59,7 @@ class ObjectUtil
             return $cloned;
         }
 
-        if ($item instanceof StdClass) {
+        if ($item instanceof stdClass) {
             return self::clone($item);
         }
 
