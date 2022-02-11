@@ -340,6 +340,31 @@
             "returnType": "string"
         },
         {
+            "name": "object\\create",
+            "insertText": "object\\create()",
+            "returnType": "object"
+        },
+        {
+            "name": "object\\get",
+            "insertText": "object\\get(OBJECT, KEY)",
+            "returnType": "mixed"
+        },
+        {
+            "name": "object\\has",
+            "insertText": "object\\has(OBJECT, KEY)",
+            "returnType": "bool"
+        },
+        {
+            "name": "object\\set",
+            "insertText": "object\\set(OBJECT, KEY, VALUE)",
+            "returnType": "object"
+        },
+        {
+            "name": "object\\cloneDeep",
+            "insertText": "object\\cloneDeep(OBJECT)",
+            "returnType": "object"
+        },
+        {
             "name": "password\\generate",
             "insertText": "password\\generate()",
             "returnType": "string"
@@ -387,6 +412,11 @@
             "name": "json\\retrieve",
             "insertText": "json\\retrieve(JSON, PATH)",
             "returnType": "mixed"
+        },
+        {
+            "name": "json\\encode",
+            "insertText": "json\\encode(VALUE)",
+            "returnType": "string"
         },
         {
             "name": "ext\\email\\send",

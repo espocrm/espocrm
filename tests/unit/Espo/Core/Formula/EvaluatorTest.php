@@ -764,4 +764,137 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
             $this->evaluator->process($expression, null)
         );
     }
+
+    public function testObjectCreate(): void
+    {
+        $expression = "object\\create()";
+
+        $this->assertEquals(
+            (object) [],
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testObjectSet(): void
+    {
+        $expression = "
+            \$o1 = object\\create();
+            \$o2 = object\\set(\$o1, 'key', 'value');
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertNotEquals(
+            $vars->o1,
+            $vars->o2
+        );
+
+        $this->assertEquals(
+            'value',
+            $vars->o2->key
+        );
+    }
+
+    public function testObjectGet1(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o = object\\set(\$o, 'key', 'value');
+            \$v = object\\get(\$o, 'key');
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(
+            'value',
+            $vars->o->key
+        );
+    }
+
+    public function testObjectGet2(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$v = object\\get(\$o, 'key');
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(
+            null,
+            $vars->v
+        );
+    }
+
+    public function testObjectHas1(): void
+    {
+        $expression = "
+            object\\has(
+                object\\set(object\\create(), 'key', 'value'),
+                'key'
+            )
+        ";
+
+        $this->assertEquals(
+            true,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testObjectHas2(): void
+    {
+        $expression = "
+            object\\has(
+                object\\create(),
+                'key'
+            )
+        ";
+
+        $this->assertEquals(
+            false,
+            $this->evaluator->process($expression, null)
+        );
+    }
+
+    public function testObjectClone(): void
+    {
+        $expression = "
+            \$o1 = object\\create();
+            \$o2 = object\\cloneDeep(\$o1);
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(
+            $vars->o1,
+            $vars->o2
+        );
+
+        $this->assertNotSame(
+            $vars->o1,
+            $vars->o2
+        );
+    }
+
+    public function testJsonEncode(): void
+    {
+        $expression = "
+            json\\encode(
+                object\\set(object\\create(), 'key', 'value')
+            )
+        ";
+
+        $this->assertEquals(
+            "{\"key\":\"value\"}",
+            $this->evaluator->process($expression, null)
+        );
+    }
 }
