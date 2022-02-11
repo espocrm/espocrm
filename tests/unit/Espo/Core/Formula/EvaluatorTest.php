@@ -832,6 +832,23 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testObjectClear(): void
+    {
+        $expression = "
+            \$o = object\\create();
+            \$o = object\\set(\$o, 'key', 'value');
+            \$o = object\\clear(\$o, 'key');
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertFalse(
+            property_exists($vars->o, 'key')
+        );
+    }
+
     public function testObjectHas1(): void
     {
         $expression = "

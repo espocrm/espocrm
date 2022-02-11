@@ -360,6 +360,11 @@
             "returnType": "object"
         },
         {
+            "name": "object\\clear",
+            "insertText": "object\\clear(OBJECT, KEY)",
+            "returnType": "object"
+        },
+        {
             "name": "object\\cloneDeep",
             "insertText": "object\\cloneDeep(OBJECT)",
             "returnType": "object"
