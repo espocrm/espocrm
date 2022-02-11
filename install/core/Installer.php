@@ -668,25 +668,34 @@ class Installer
 
     private function translateSetting($name, array $settingDefs)
     {
-        if (isset($settingDefs['options'])) {
-            $optionLabel = $this->getLanguage()
-                ->translate($name, 'options', 'Settings', $settingDefs['options']);
-
-            if ($optionLabel == $name) {
-                $optionLabel = $this->getLanguage()
-                    ->translate($name, 'options', 'Global', $settingDefs['options']);
-            }
-
-            if ($optionLabel == $name) {
-                $optionLabel = [];
-
-                foreach ($settingDefs['options'] as $key => $value) {
-                    $optionLabel[$value] = $value;
-                }
-            }
-
-            $settingDefs['options'] = $optionLabel;
+        if (!isset($settingDefs['options'])) {
+            return $settingDefs;
         }
+
+        $translation = !empty($settingDefs['translation'])
+            ? explode('.', $settingDefs['translation']) : null;
+
+        $label = $translation[2] ?? $name;
+        $category = $translation[1] ?? 'options';
+        $scope = $translation[0] ?? 'Settings';
+
+        $translatedOptions = $this->getLanguage()
+            ->translate($label, $category, $scope, $settingDefs['options']);
+
+        if ($translatedOptions == $name) {
+            $translatedOptions = $this->getLanguage()
+                ->translate($name, 'options', 'Global', $settingDefs['options']);
+        }
+
+        if ($translatedOptions == $name) {
+            $translatedOptions = [];
+
+            foreach ($settingDefs['options'] as $key => $value) {
+                $translatedOptions[$value] = $value;
+            }
+        }
+
+        $settingDefs['options'] = $translatedOptions;
 
         return $settingDefs;
     }
