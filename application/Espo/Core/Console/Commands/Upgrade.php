@@ -64,6 +64,18 @@ class Upgrade implements Command
         'rebuild',
     ];
 
+    private $upgradeStepLabels = [
+        'init' => 'Initialization',
+        'copyBefore' => 'Copying before upgrade files',
+        'rebuild' => 'Rebuilding',
+        'beforeUpgradeScript' => 'Before upgrade script execution',
+        'copy' => 'Copying files',
+        'copyAfter' => 'Copying after upgrade files',
+        'afterUpgradeScript' => 'After upgrade script execution',
+        'finalize' => 'Finalization',
+        'revert' => 'Reverting',
+    ];
+
     private $fileManager;
 
     private $config;
@@ -119,6 +131,8 @@ class Upgrade implements Command
             }
         }
 
+        fwrite(\STDOUT, "This may take a while. Do not close the terminal.\n");
+
         if (filter_var($packageFile, \FILTER_VALIDATE_URL)) {
             fwrite(\STDOUT, "Downloading...");
 
@@ -135,12 +149,13 @@ class Upgrade implements Command
 
         $upgradeId = $upgradeId ?? $this->upload($packageFile);
 
-        fwrite(\STDOUT, "Upgrading... This may take a while...");
+        fwrite(\STDOUT, "Upgrading...");
 
         try {
             $this->runUpgradeProcess($upgradeId, $upgradeParams);
         }
         catch (Throwable $e) {
+            $this->displayStep('revert');
             $errorMessage = $e->getMessage();
         }
 
@@ -303,7 +318,7 @@ class Upgrade implements Command
 
         try {
             foreach ($stepList as $stepName) {
-                fwrite(\STDOUT, ".");
+                $this->displayStep($stepName);
 
                 $upgradeManager = $this->getUpgradeManager(true);
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
@@ -325,7 +340,7 @@ class Upgrade implements Command
         $phpExecutablePath = $this->getPhpExecutablePath();
 
         foreach ($stepList as $stepName) {
-            fwrite(\STDOUT, ".");
+            $this->displayStep($stepName);
 
             $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) ." --id=". $upgradeId;
 
@@ -342,6 +357,13 @@ class Upgrade implements Command
         }
 
         return true;
+    }
+
+    private function displayStep(string $stepName)
+    {
+        $stepLabel = $this->upgradeStepLabels[$stepName] ?? "";
+
+        fwrite(\STDOUT, "\n  {$stepLabel}...");
     }
 
     protected function confirm()
