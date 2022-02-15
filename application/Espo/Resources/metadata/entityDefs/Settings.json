@@ -661,6 +661,7 @@
         },
         "outboundEmailBccAddress": {
             "type": "varchar",
+            "view": "views/fields/email-address",
             "trim": true
         },
         "cleanupDeletedRecords": {

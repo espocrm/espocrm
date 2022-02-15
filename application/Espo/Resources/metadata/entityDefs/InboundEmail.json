@@ -159,6 +159,7 @@
         },
         "replyToAddress": {
             "type": "varchar",
+            "view": "views/fields/email-address",
             "tooltip": true
         },
         "replyFromName": {

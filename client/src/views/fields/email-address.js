@@ -26,23 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/email-address', 'views/fields/email-address', function (Dep) {
+define('views/fields/email-address', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        editTemplate: 'fields/email-address/edit',
 
-            this.on('change', () => {
-                var emailAddress = this.model.get('emailAddress');
+        validations: ['required', 'emailAddress'],
 
-                this.model.set('name', emailAddress);
+        emailAddressRe: /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/,
 
-                if (this.model.isNew() || !this.model.get('replyToAddress')) {
-                    this.model.set('replyToAddress', emailAddress);
-                }
-            });
+        validateEmailAddress: function () {
+            let value = this.model.get(this.name);
+
+            if (value !== '' && !this.emailAddressRe.test(value)) {
+                let msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
         },
-
     });
 });
