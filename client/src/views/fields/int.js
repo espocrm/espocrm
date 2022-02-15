@@ -129,7 +129,23 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
                 return value;
             }
 
+            if (this.isReadMode()) {
+                return this.formatNumberDetail(value);
+            }
+
             return this.formatNumberEdit(value);
+        },
+
+        formatNumberDetail: function (value) {
+            if (value === null) {
+                return '';
+            }
+
+            let stringValue = value.toString();
+
+            stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
+            return stringValue;
         },
 
         formatNumberEdit: function (value) {
