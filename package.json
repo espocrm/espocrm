@@ -46,7 +46,7 @@
     "es6-promise": "^3.0.2",
     "espo-funnel-chart": "git://github.com/yurikuzn/espo-funnel-chart.git#1.0.0",
     "exif-js": "^2.3.0",
-    "flotr2": "git://github.com/yurikuzn/flotr2.git#0.1.0",
+    "flotr2": "github:yurikuzn/flotr2#0.1.0",
     "fullcalendar": "^3.10.5",
     "getobject": ">=1.0.0",
     "gridstack": "^1.2.1",
