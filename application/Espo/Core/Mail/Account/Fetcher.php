@@ -319,6 +319,10 @@ class Fetcher
 
             $email = $this->importMessage($account, $message, $importerData);
 
+            if (!$email) {
+                return null;
+            }
+
             if (
                 $account->keepFetchedEmailsUnread() &&
                 $flags !== null &&
