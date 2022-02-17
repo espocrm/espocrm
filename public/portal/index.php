@@ -43,6 +43,8 @@ if (!$app->isInstalled()) {
     exit;
 }
 
+$basePath = null;
+
 if (Url::detectIsInPortalDir()) {
     $basePath = '../';
 
