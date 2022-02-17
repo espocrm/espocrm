@@ -68,8 +68,9 @@ class CollectionFactory
     }
 
     /**
-     * @param SthCollection<Entity> $sthCollection
-     * @return EntityCollection<Entity>
+     * @template TEntity of Entity
+     * @param SthCollection<TEntity> $sthCollection
+     * @return EntityCollection<TEntity>
      */
     public function createFromSthCollection(SthCollection $sthCollection): EntityCollection
     {

@@ -35,14 +35,13 @@ class Contact extends \Espo\Core\Repositories\Database
 {
     public function afterSave(Entity $entity, array $options = [])
     {
-        $result = parent::afterSave($entity, $options);
+        parent::afterSave($entity, $options);
+
         $this->handleAfterSaveAccounts($entity, $options);
 
         if ($entity->has('targetListId')) {
             $this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
-
-        return $result;
     }
 
     protected function handleAfterSaveAccounts(Entity $entity, array $options = [])

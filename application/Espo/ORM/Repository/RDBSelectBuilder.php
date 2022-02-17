@@ -278,7 +278,7 @@ class RDBSelectBuilder
      * * `where(string $key, string $value)`
      *
      * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
-     * @param scalar[]|scalar|null $value A value. Omitted if the first argument is not string.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -298,7 +298,7 @@ class RDBSelectBuilder
      * * `having(string $key, string $value)`
      *
      * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
-     * @param scalar[]|scalar|null $value A value. Omitted if the first argument is not string.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */

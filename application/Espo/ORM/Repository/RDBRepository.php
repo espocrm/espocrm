@@ -54,27 +54,15 @@ use PDO;
  */
 class RDBRepository implements Repository
 {
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
-    /**
-     * @var EntityFactory
-     */
-    protected $entityFactory;
+    protected EntityFactory $entityFactory;
 
-    /**
-     * @var HookMediator|null
-     */
-    protected $hookMediator;
+    protected ?HookMediator $hookMediator;
 
-    /**
-     * @var RDBTransactionManager
-     */
-    protected $transactionManager;
+    protected RDBTransactionManager $transactionManager;
 
     public function __construct(
         string $entityType,
@@ -257,7 +245,7 @@ class RDBRepository implements Repository
     /**
      * Find records.
      *
-     * @param ?array $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated
      * @phpstan-return Collection<TEntity>
      */
     public function find(?array $params = []): Collection
@@ -268,7 +256,7 @@ class RDBRepository implements Repository
     /**
      * Find one record.
      *
-     * @param ?array $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated
      */
     public function findOne(?array $params = []): ?Entity
     {
@@ -283,6 +271,8 @@ class RDBRepository implements Repository
 
     /**
      * Find records by a SQL query.
+     *
+     * @return SthCollection<TEntity>
      */
     public function findBySql(string $sql): SthCollection
     {
@@ -297,6 +287,8 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @param ?array<string,mixed> $params
+     * @return Collection<TEntity>|TEntity|null
      */
     public function findRelated(Entity $entity, string $relationName, ?array $params = null)
     {
@@ -341,6 +333,7 @@ class RDBRepository implements Repository
         $result = $this->getMapper()->selectRelated($entity, $relationName, $select);
 
         if ($result instanceof SthCollection) {
+            /** @var SthCollection<TEntity> */
             return $this->entityManager->getCollectionFactory()->createFromSthCollection($result);
         }
 
@@ -349,6 +342,8 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     *
+     * @param ?array<string,mixed> $params
      */
     public function countRelated(Entity $entity, string $relationName, ?array $params = null): int
     {
@@ -386,6 +381,9 @@ class RDBRepository implements Repository
         return (int) $this->getMapper()->countRelated($entity, $relationName, $select);
     }
 
+    /**
+     * @param string[] $columns
+     */
     protected function applyRelationAdditionalColumns(
         Entity $entity,
         string $relationName,
@@ -421,6 +419,9 @@ class RDBRepository implements Repository
             ->build();
     }
 
+    /**
+     * @param array<string,mixed> $conditions
+     */
     protected function applyRelationAdditionalColumnsConditions(
         Entity $entity,
         string $relationName,
@@ -452,6 +453,7 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @param TEntity|string $foreign
      */
     public function isRelated(Entity $entity, string $relationName, $foreign): bool
     {
@@ -462,6 +464,8 @@ class RDBRepository implements Repository
         if ($entity->getEntityType() !== $this->entityType) {
             throw new RuntimeException("Not supported entity type.");
         }
+
+        /** @var mixed $foreign */
 
         if ($foreign instanceof Entity) {
             $id = $foreign->getId();
@@ -500,6 +504,7 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @phpstan-ignore-next-line
      */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
     {
@@ -562,6 +567,7 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @phpstan-ignore-next-line
      */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
@@ -616,38 +622,64 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @phpstan-ignore-next-line
      */
     public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
     {
         return $this->getMapper()->getRelationColumn($entity, $relationName, $foreignId, $column);
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function beforeUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function beforeMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
     }
 
+    /**
+     * @deprecated
+     * @phpstan-ignore-next-line
+     */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
     }
 
     /**
      * @deprecated
+     * @phpstan-ignore-next-line
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
     {
@@ -680,6 +712,7 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated
+     * @phpstan-ignore-next-line
      */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
@@ -697,7 +730,7 @@ class RDBRepository implements Repository
     }
 
     /**
-     * @param array $params @deprecated Omit it.
+     * @param array<string,mixed> $params @deprecated Omit it.
      */
     public function count(array $params = []): int
     {
@@ -757,7 +790,7 @@ class RDBRepository implements Repository
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -772,7 +805,7 @@ class RDBRepository implements Repository
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -783,6 +816,8 @@ class RDBRepository implements Repository
 
     /**
      * Set DISTINCT parameter.
+     *
+     * @return RDBSelectBuilder<TEntity>
      */
     public function distinct(): RDBSelectBuilder
     {
@@ -791,6 +826,8 @@ class RDBRepository implements Repository
 
     /**
      * Lock selected rows. To be used within a transaction.
+     *
+     * @return RDBSelectBuilder<TEntity>
      */
     public function forUpdate(): RDBSelectBuilder
     {
@@ -801,6 +838,7 @@ class RDBRepository implements Repository
      * Set to return STH collection. Recommended fetching large number of records.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function sth(): RDBSelectBuilder
     {
@@ -815,10 +853,10 @@ class RDBRepository implements Repository
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function where($clause = [], $value = null): RDBSelectBuilder
     {
@@ -833,8 +871,8 @@ class RDBRepository implements Repository
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -907,7 +945,7 @@ class RDBRepository implements Repository
      *
      * @param Expression|Expression[]|string|string[] $groupBy
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function group($groupBy): RDBSelectBuilder
     {
@@ -916,6 +954,8 @@ class RDBRepository implements Repository
 
     /**
      * @deprecated Use `group` method.
+     * @param Expression|Expression[]|string|string[] $groupBy
+     * @return RDBSelectBuilder<TEntity>
      */
     public function groupBy($groupBy): RDBSelectBuilder
     {
@@ -943,21 +983,37 @@ class RDBRepository implements Repository
         return $builder;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
         $this->hookMediator->beforeSave($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         $this->hookMediator->afterSave($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         $this->hookMediator->beforeRemove($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->hookMediator->afterRemove($entity, $options);
