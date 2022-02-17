@@ -55,46 +55,25 @@ use RuntimeException;
  */
 class BaseMapper implements RDBMapper
 {
-    const ATTRIBUTE_DELETED = 'deleted';
+    protected const ATTRIBUTE_DELETED = 'deleted';
 
-    protected $fieldsMapCache = [];
+    protected array $fieldsMapCache = [];
 
-    protected $aliasesCache = [];
+    protected array $aliasesCache = [];
 
-    /**
-     * @var PDO
-     */
-    protected $pdo;
+    protected PDO $pdo;
 
-    /**
-     * @var EntityFactory
-     */
-    protected $entityFactory;
+    protected EntityFactory $entityFactory;
 
-    /**
-     * @var CollectionFactory
-     */
-    protected $collectionFactory;
+    protected CollectionFactory $collectionFactory;
 
-    /**
-     * @var QueryComposer
-     */
-    protected $queryComposer;
+    protected QueryComposer $queryComposer;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
 
-    /**
-     * @var SqlExecutor
-     */
-    protected $sqlExecutor;
+    protected SqlExecutor $sqlExecutor;
 
-    /**
-     * @var Helper
-     */
-    protected $helper;
+    protected Helper $helper;
 
     public function __construct(
         PDO $pdo,
@@ -120,6 +99,10 @@ class BaseMapper implements RDBMapper
     public function selectOne(Select $select): ?Entity
     {
         $entityType = $select->getFrom();
+
+        if ($entityType === null) {
+            throw new RuntimeException("No entity type.");
+        }
 
         $entity = $this->entityFactory->create($entityType);
 
@@ -191,6 +174,10 @@ class BaseMapper implements RDBMapper
     {
         $entityType = $select->getFrom();
 
+        if ($entityType === null) {
+            throw new RuntimeException("No entity type.");
+        }
+
         $sql = $this->queryComposer->compose($select);
 
         return $this->selectBySqlInternal($entityType, $sql);
@@ -212,6 +199,10 @@ class BaseMapper implements RDBMapper
     public function aggregate(Select $select, string $aggregation, string $aggregationBy)
     {
         $entityType = $select->getFrom();
+
+        if ($entityType === null) {
+            throw new RuntimeException("No entity type.");
+        }
 
         $entity = $this->entityFactory->create($entityType);
 
@@ -299,6 +290,7 @@ class BaseMapper implements RDBMapper
 
         switch ($relType) {
             case Entity::BELONGS_TO:
+                /** @var Entity $relEntity */
 
                 $params['whereClause'][$foreignKey] = $entity->get($key);
                 $params['offset'] = 0;
@@ -352,6 +344,8 @@ class BaseMapper implements RDBMapper
 
                 $resultDataList = [];
 
+                /** @var Entity $relEntity */
+
                 $params['from'] = $relEntity->getEntityType();
 
                 $sql = $this->queryComposer->compose(Select::fromRaw($params));
@@ -393,6 +387,8 @@ class BaseMapper implements RDBMapper
                     $relationName,
                     $params['select'] ?? []
                 );
+
+                /** @var Entity $relEntity */
 
                 $params['from'] = $relEntity->getEntityType();
 
@@ -1154,6 +1150,8 @@ class BaseMapper implements RDBMapper
                 }
 
                 $where[static::ATTRIBUTE_DELETED] = false;
+
+                /** @var Entity $relEntity */
 
                 $sql = $this->queryComposer->compose(
                     Update::fromRaw([

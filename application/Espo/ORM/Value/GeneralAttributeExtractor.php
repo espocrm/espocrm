@@ -39,7 +39,7 @@ class GeneralAttributeExtractor
     private AttributeExtractorFactory $factory;
 
     /**
-     * @var array<string,AttributeExtractorFactory<object>>
+     * @var array<string,AttributeExtractor<object>>
      */
     private $cache = [];
 

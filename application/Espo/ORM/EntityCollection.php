@@ -221,6 +221,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             throw new RuntimeException("Can't build from array. EntityFactory was not passed to the constructor.");
         }
 
+        assert($this->entityType !== null);
+
         $entity = $this->entityFactory->create($this->entityType);
 
         $entity->set($dataArray);

@@ -33,16 +33,31 @@ use RuntimeException;
 
 class EntityDefs
 {
-    private $data;
+    /**
+     * @var array<string,array<string,mixed>>
+     */
+    private array $data;
 
-    private $name;
+    private string $name;
 
+    /**
+     * @var array<string,?AttributeDefs>
+     */
     private $attributeCache = [];
 
+    /**
+     * @var array<string,?RelationDefs>
+     */
     private $relationCache = [];
 
+    /**
+     * @var array<string,?IndexDefs>
+     */
     private $indexCache = [];
 
+    /**
+     * @var array<string,?FieldDefs>
+     */
     private $fieldCache = [];
 
     private function __construct()
@@ -224,6 +239,7 @@ class EntityDefs
             throw new RuntimeException("Attribute '{$name}' does not exist.");
         }
 
+        /** @var AttributeDefs */
         return $this->attributeCache[$name];
     }
 
@@ -239,6 +255,7 @@ class EntityDefs
             throw new RuntimeException("Relation '{$name}' does not exist.");
         }
 
+        /** @var RelationDefs */
         return $this->relationCache[$name];
     }
 
@@ -254,6 +271,7 @@ class EntityDefs
             throw new RuntimeException("Index '{$name}' does not exist.");
         }
 
+        /** @var IndexDefs */
         return $this->indexCache[$name];
     }
 
@@ -269,6 +287,7 @@ class EntityDefs
             throw new RuntimeException("Field '{$name}' does not exist.");
         }
 
+        /** @var FieldDefs */
         return $this->fieldCache[$name];
     }
 

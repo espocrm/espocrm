@@ -123,9 +123,12 @@ class Metadata
         return array_keys($this->data);
     }
 
+    /**
+     * @param string[]|string|null $key
+     */
     private static function getValueByKey(array $data, $key = null, $default = null)
     {
-        if (!is_string($key) && !is_array($key) && !is_null($key)) {
+        if (!is_string($key) && !is_array($key) && !is_null($key)) { /** @phpstan-ignore-line */
             throw new InvalidArgumentException();
         }
 
@@ -138,6 +141,8 @@ class Metadata
         if (is_string($key)) {
             $path = explode('.', $key);
         }
+
+        /** @var string[] $path */
 
         $item = $data;
 

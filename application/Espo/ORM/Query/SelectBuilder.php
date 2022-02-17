@@ -242,8 +242,8 @@ class SelectBuilder implements Builder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
      */
     public function having($clause, $value = null): self
     {

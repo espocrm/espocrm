@@ -60,7 +60,7 @@ class RDBRepository implements Repository
 
     protected EntityFactory $entityFactory;
 
-    protected ?HookMediator $hookMediator;
+    protected HookMediator $hookMediator;
 
     protected RDBTransactionManager $transactionManager;
 
@@ -320,16 +320,28 @@ class RDBRepository implements Repository
         }
 
         if ($type === Entity::MANY_MANY && count($additionalColumns)) {
+            if ($select === null) {
+                throw new RuntimeException();
+            }
+
             $select = $this->applyRelationAdditionalColumns($entity, $relationName, $additionalColumns, $select);
         }
 
         // @todo Get rid of 'additionalColumnsConditions' usage. Use 'whereClause' instead.
         if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
+            if ($select === null) {
+                throw new RuntimeException();
+            }
+
             $select = $this->applyRelationAdditionalColumnsConditions(
-                $entity, $relationName, $additionalColumnsConditions, $select
+                $entity,
+                $relationName,
+                $additionalColumnsConditions,
+                $select
             );
         }
 
+        /** @var Collection<TEntity>|TEntity|null */
         $result = $this->getMapper()->selectRelated($entity, $relationName, $select);
 
         if ($result instanceof SthCollection) {
@@ -373,8 +385,15 @@ class RDBRepository implements Repository
         }
 
         if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
+            if ($select === null) {
+                throw new RuntimeException();
+            }
+
             $select = $this->applyRelationAdditionalColumnsConditions(
-                $entity, $relationName, $additionalColumnsConditions, $select
+                $entity,
+                $relationName,
+                $additionalColumnsConditions,
+                $select
             );
         }
 

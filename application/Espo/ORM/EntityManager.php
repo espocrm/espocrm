@@ -151,9 +151,12 @@ class EntityManager
         $this->initLocker();
     }
 
+    /**
+     * @todo Use factory.
+     */
     private function initQueryComposer(): void
     {
-        $platform = $this->databaseParams->getPlatform();
+        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
 
         $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
 
@@ -161,17 +164,23 @@ class EntityManager
             throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
         }
 
-        $this->queryComposer = new $className(
+        /** @var QueryComposer */
+        $queryComposer = new $className(
             $this->pdoProvider->get(),
             $this->entityFactory,
             $this->metadata,
             $this->functionConverterFactory
         );
+
+        $this->queryComposer = $queryComposer;
     }
 
+    /**
+     * @todo Use factory.
+     */
     private function initLocker(): void
     {
-        $platform = $this->databaseParams->getPlatform();
+        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
 
         $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
 
@@ -179,7 +188,10 @@ class EntityManager
             $className = BaseLocker::class;
         }
 
-        $this->locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
+        /** @var Locker */
+        $locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
+
+        $this->locker = $locker;
     }
 
     /**
@@ -223,7 +235,8 @@ class EntityManager
         if ($name === self::RDB_MAPPER_NAME) {
             $className = $this->getRDBMapperClassName();
 
-            $this->mappers[$name] = new $className(
+            /** @var Mapper */
+            $mapper = new $className(
                 $this->pdoProvider->get(),
                 $this->entityFactory,
                 $this->collectionFactory,
@@ -231,6 +244,8 @@ class EntityManager
                 $this->metadata,
                 $this->sqlExecutor
             );
+
+            $this->mappers[$name] = $mapper;
 
             return;
         }
@@ -244,7 +259,7 @@ class EntityManager
 
     private function getRDBMapperClassName(): string
     {
-        $platform = $this->databaseParams->getPlatform();
+        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
 
         $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
 
@@ -277,6 +292,7 @@ class EntityManager
      */
     public function getNewEntity(string $entityType): Entity
     {
+        /** @var Entity */
         return $this->getEntity($entityType);
     }
 
@@ -352,7 +368,7 @@ class EntityManager
      */
     public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
-        $entity = $this->getEntity($entityType);
+        $entity = $this->getNewEntity($entityType);
 
         $entity->set($data);
 
@@ -384,7 +400,13 @@ class EntityManager
             $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
 
-        return $this->repositoryHash[$entityType];
+        $repository = $this->repositoryHash[$entityType];
+
+        if (!$repository instanceof RDBRepository) {
+            throw new RuntimeException("Repository '{$entityType}' is not RDB.");
+        }
+
+        return $repository;
     }
 
     /**

@@ -36,7 +36,7 @@ use PDO;
 class Options
 {
     /**
-     * @return array<string, mixed>
+     * @return array<int, mixed>
      */
     public static function getOptionsFromDatabaseParams(DatabaseParams $databaseParams): array
     {

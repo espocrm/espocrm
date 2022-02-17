@@ -54,6 +54,8 @@ class DefaultPDOProvider implements PDOProvider
             $this->intPDO();
         }
 
+        assert($this->pdo !== null);
+
         return $this->pdo;
     }
 

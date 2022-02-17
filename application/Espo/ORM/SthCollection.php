@@ -37,6 +37,7 @@ use Countable;
 use Traversable;
 use PDO;
 use PDOStatement;
+use RuntimeException;
 
 /**
  * Reasonable to use when selecting a large number of records.
@@ -106,6 +107,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
     private function getQuery(): SelectQuery
     {
+        /** @var SelectQuery */
         return $this->query;
     }
 
@@ -145,12 +147,16 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     {
         $this->executeQueryIfNotExecuted();
 
+        assert($this->sth !== null);
+
         return $this->sth->fetch(PDO::FETCH_ASSOC);
     }
 
     public function count(): int
     {
         $this->executeQueryIfNotExecuted();
+
+        assert($this->sth !== null);
 
         $rowCount = $this->sth->rowCount();
 
@@ -193,6 +199,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
     public function getValueMapList(): array
     {
+        /** @var \stdClass[] */
         return $this->toArray(true);
     }
 
@@ -221,7 +228,13 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         /** @var self<Entity> */
         $obj = new self($entityManager);
 
-        $obj->entityType = $query->getFrom();
+        $entityType = $query->getFrom();
+
+        if ($entityType === null) {
+            throw new RuntimeException("Query w/o entity type.");
+        }
+
+        $obj->entityType = $entityType;
         $obj->query = $query;
 
         return $obj;

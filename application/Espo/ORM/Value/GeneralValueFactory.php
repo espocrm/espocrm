@@ -38,7 +38,7 @@ class GeneralValueFactory
     private ValueFactoryFactory $valueFactoryFactory;
 
     /**
-     * @var array<string,ValueFactory>
+     * @var array<string,?ValueFactory>
      */
     private array $factoryCache = [];
 
@@ -74,6 +74,7 @@ class GeneralValueFactory
             throw new RuntimeException("No value-object factory for '{$entityType}.{$field}'.");
         }
 
+        /** @var ValueFactory */
         return $factory->createFromEntity($entity, $field);
     }
 

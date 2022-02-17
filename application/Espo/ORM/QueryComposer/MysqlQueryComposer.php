@@ -29,9 +29,8 @@
 
 namespace Espo\ORM\QueryComposer;
 
-use Espo\ORM\{
-    Query\LockTable as LockTableQuery,
-};
+use Espo\ORM\Query\LockTable as LockTableQuery;
+
 use LogicException;
 
 class MysqlQueryComposer extends BaseQueryComposer

@@ -57,9 +57,9 @@ class RDBSelectBuilder
     private SelectBuilder $builder;
 
     /**
-     * @var RDBRepository<TEntity>|null
+     * @var RDBRepository<TEntity>
      */
-    private ?RDBRepository $repository = null;
+    private RDBRepository $repository;
 
     private bool $returnSthCollection = false;
 
@@ -67,7 +67,10 @@ class RDBSelectBuilder
     {
         $this->entityManager = $entityManager;
 
-        $this->repository = $this->entityManager->getRepository($entityType);
+        /** @var RDBRepository<TEntity> */
+        $repository = $this->entityManager->getRepository($entityType);
+
+        $this->repository = $repository;
 
         if ($query && $query->getFrom() !== $entityType) {
             throw new RuntimeException("SelectBuilder: Passed query doesn't match the entity type.");
@@ -114,6 +117,7 @@ class RDBSelectBuilder
 
         if ($params !== null) { // @todo Remove.
             $query = $this->getMergedParams($params);
+
             $builder = $this->repository->clone($query);
         }
 

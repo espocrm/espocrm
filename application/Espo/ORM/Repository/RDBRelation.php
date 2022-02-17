@@ -49,21 +49,21 @@ use RuntimeException;
  */
 class RDBRelation
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $hookMediator;
+    private HookMediator $hookMediator;
 
-    private $entity;
+    private Entity $entity;
 
-    private $entityType;
+    private string $entityType;
 
-    private $foreignEntityType = null;
+    private ?string $foreignEntityType = null;
 
-    private $relationName;
+    private string $relationName;
 
-    private $relationType = null;
+    private ?string $relationType = null;
 
-    private $noBuilder = false;
+    private bool $noBuilder = false;
 
     public function __construct(
         EntityManager $entityManager,
@@ -178,6 +178,7 @@ class RDBRelation
     public function findOne(): ?Entity
     {
         if ($this->isBelongsToParentType()) {
+            /** @var ?Entity */
             return $this->getMapper()->selectRelated($this->entity, $this->relationName);
         }
 
@@ -445,7 +446,10 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        /** @var string */
+        $foreignEntityType = $this->foreignEntityType;
+
+        $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         $seed->set('id', $id);
 
@@ -465,7 +469,10 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        /** @var string */
+        $foreignEntityType = $this->foreignEntityType;
+
+        $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         $seed->set('id', $id);
 
@@ -485,7 +492,11 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+        /** @var string */
+        $foreignEntityType = $this->foreignEntityType;
+
+        $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
+
         $seed->set('id', $id);
 
         $this->updateColumns($seed, $columnData);
@@ -551,7 +562,13 @@ class RDBRelation
             throw new RuntimeException("Can't update not many-to-many relation.");
         }
 
-        $this->getMapper()->updateRelationColumns($this->entity, $this->relationName, $entity->getId(), $columnData);
+        $id = $entity->getId();
+
+        if ($id === null) {
+            throw new RuntimeException("Entity w/o ID.");
+        }
+
+        $this->getMapper()->updateRelationColumns($this->entity, $this->relationName, $id, $columnData);
     }
 
     /**
@@ -567,7 +584,13 @@ class RDBRelation
             throw new RuntimeException("Can't get a column of not many-to-many relation.");
         }
 
-        return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $entity->getId(), $column);
+        $id = $entity->getId();
+
+        if ($id === null) {
+            throw new RuntimeException("Entity w/o ID.");
+        }
+
+        return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $id, $column);
     }
 
     private function beforeRelate(Entity $entity, ?array $columnData, array $options): void

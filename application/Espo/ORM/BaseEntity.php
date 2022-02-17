@@ -39,17 +39,24 @@ use RuntimeException;
 
 class BaseEntity implements Entity
 {
+    /**
+     * @var string|null
+     * @deprecated
+     */
     public $id = null;
 
+    /**
+     * @var string
+     */
     protected $entityType;
 
-    private $isNotNew = false;
+    private bool $isNotNew = false;
 
-    private $isSaved = false;
+    private bool $isSaved = false;
 
-    private $isFetched = false;
+    private bool $isFetched = false;
 
-    private $isBeingSaved = false;
+    private bool $isBeingSaved = false;
 
     /**
      * @todo Make private. Rename to `attributes`.
@@ -528,7 +535,7 @@ class BaseEntity implements Entity
         $preparedValue = $value;
 
         if (is_array($value)) {
-            $preparedValue = json_decode(json_encode($value));
+            $preparedValue = json_decode(json_encode($value, \JSON_THROW_ON_ERROR));
 
             if ($preparedValue instanceof stdClass) {
                 return $preparedValue;
@@ -828,8 +835,11 @@ class BaseEntity implements Entity
             return true;
         }
 
+        /** @var string */
+        $type = $this->getAttributeType($name);
+
         return !self::areValuesEqual(
-            $this->getAttributeType($name),
+            $type,
             $this->get($name),
             $this->getFetched($name),
             $this->getAttributeParam($name, 'isUnordered') ?? false
@@ -875,7 +885,7 @@ class BaseEntity implements Entity
                 $a1 = get_object_vars($v1);
                 $a2 = get_object_vars($v2);
 
-                foreach ($v1 as $key => $itemValue) {
+                foreach (get_object_vars($v1) as $key => $itemValue) {
                     if (is_object($a1[$key]) && is_object($a2[$key])) {
                         if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
                             return false;
@@ -1015,6 +1025,7 @@ class BaseEntity implements Entity
      */
     protected function getEntityManager(): EntityManager
     {
+        /** @var EntityManager */
         return $this->entityManager;
     }
 
@@ -1042,6 +1053,8 @@ class BaseEntity implements Entity
         }
 
         $copy = [];
+
+        /** @var array<int,stdClass|array|scalar|null> $value */
 
         foreach ($value as $i => $item) {
             if (is_object($item)) {
@@ -1074,6 +1087,8 @@ class BaseEntity implements Entity
         $copy = (object) [];
 
         foreach (get_object_vars($value) as $k => $item) {
+            /** @var stdClass|array|scalar|null $item */
+
             $key = $k;
 
             if (!is_string($key)) {
