@@ -2610,6 +2610,18 @@ table.table-admin-panel {
             left: 1px;
             position: relative;
         }
+
+        a {
+            &:hover,
+            &:focus {
+                text-decoration: none;
+
+                .category-item-name {
+                    text-decoration: underline;
+                    color: @gray-soft;
+                }
+            }
+        }
     }
 }
 

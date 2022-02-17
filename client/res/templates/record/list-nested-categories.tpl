@@ -64,19 +64,12 @@
             <div class="category-item" data-id="{{id}}">
                 <a
                     href="#{{../scope}}/view/{{id}}"
-                    class="action folder-icon"
-                    data-action="openCategory"
-                    data-id="{{id}}"
-                    data-name="{{name}}"
-                ><span class="far fa-folder text-soft"></span></a>
-                <a
-                    href="#{{../scope}}/view/{{id}}"
                     class="action link-gray"
                     data-action="openCategory"
                     data-id="{{id}}"
-                    data-name={{name}}
+                    data-name="{{name}}"
                     title="{{name}}"
-                >{{name}}</a>
+                ><span class="folder-icon far fa-folder text-soft"></span> <span class="category-item-name">{{name}}</span></a>
             </div>
         </div>
         {{/each}}
