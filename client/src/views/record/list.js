@@ -1600,7 +1600,7 @@ define(
                     return;
                 }
 
-                if (options.previousDataList) {
+                if (options && options.previousDataList) {
                     let currentDataList = this.collection.models.map(model => {
                         return Espo.Utils.cloneDeep(model.attributes);
                     });
