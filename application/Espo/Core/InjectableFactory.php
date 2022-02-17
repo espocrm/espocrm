@@ -40,6 +40,7 @@ use ReflectionParameter;
 use ReflectionFunction;
 use ReflectionNamedType;
 use Throwable;
+use Closure;
 
 /**
  * Creates an instance by a class name. Uses constructor param names and type hinting to detect which
@@ -179,7 +180,10 @@ class InjectableFactory
             !$type->isBuiltin()
         ) {
             try {
-                $dependencyClass = new ReflectionClass($type->getName());
+                /** @var class-string */
+                $dependencyClassName = $type->getName();
+
+                $dependencyClass = new ReflectionClass($dependencyClassName);
             }
             catch (Throwable $e) {
                 $badClassName = $type->getName();
@@ -238,6 +242,10 @@ class InjectableFactory
     private function getCallbackInjectionList(callable $callback): array
     {
         $injectionList = [];
+
+        if (!$callback instanceof Closure) {
+            $callback = Closure::fromCallable($callback);
+        }
 
         $function = new ReflectionFunction($callback);
 
@@ -362,7 +370,10 @@ class InjectableFactory
             $type instanceof ReflectionNamedType &&
             !$type->isBuiltin()
         ) {
-            $paramClass = new ReflectionClass($type->getName());
+            /** @var class-string */
+            $dependencyClassName = $type->getName();
+
+            $paramClass = new ReflectionClass($dependencyClassName);
         }
 
         if ($paramClass && $paramClass->isInstance($injection)) {
@@ -374,6 +385,10 @@ class InjectableFactory
 
     /**
      * @deprecated Use create or createWith methods instead.
+     *
+     * @template T of object
+     * @phpstan-param class-string<T> $className
+     * @phpstan-return T
      */
     public function createByClassName(string $className, ?array $with = null): object
     {
@@ -387,6 +402,8 @@ class InjectableFactory
     private function applyInjectable(ReflectionClass $class, object $obj): void
     {
         $setList = [];
+
+        assert($obj instanceof Injectable);
 
         $dependencyList = $obj->getDependencyList();
 
