@@ -388,7 +388,7 @@ class EntityManager
     /**
      * Get a repository for a specific entity type.
      *
-     * @return RDBRepository<Entity>
+     * @return Repository<Entity>
      */
     public function getRepository(string $entityType): Repository
     {
@@ -401,10 +401,6 @@ class EntityManager
         }
 
         $repository = $this->repositoryHash[$entityType];
-
-        if (!$repository instanceof RDBRepository) {
-            throw new RuntimeException("Repository '{$entityType}' is not RDB.");
-        }
 
         return $repository;
     }
