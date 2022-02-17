@@ -33,10 +33,19 @@ use stdClass;
 
 class GeneralAttributeExtractor
 {
-    private $factory;
+    /**
+     * @var AttributeExtractorFactory<object>
+     */
+    private AttributeExtractorFactory $factory;
 
+    /**
+     * @var array<string,AttributeExtractorFactory<object>>
+     */
     private $cache = [];
 
+    /**
+     * @param AttributeExtractorFactory<object> $factory
+     */
     public function __construct(AttributeExtractorFactory $factory)
     {
         $this->factory = $factory;
@@ -56,6 +65,9 @@ class GeneralAttributeExtractor
         return $extractor->extract($value, $field);
     }
 
+    /**
+     * @return AttributeExtractor<object>
+     */
     private function getExtractor(string $entityType, string $field): AttributeExtractor
     {
         $key = $entityType . '_' . $field;

@@ -36,6 +36,7 @@ use IteratorAggregate;
 use Countable;
 use Traversable;
 use PDO;
+use PDOStatement;
 
 /**
  * Reasonable to use when selecting a large number of records.
@@ -45,21 +46,25 @@ use PDO;
  * STH stands for Statement Handle.
  *
  * @template TEntity of Entity
- * @implements IteratorAggregate<TEntity>
+ * @implements IteratorAggregate<int,TEntity>
+ * @implements Collection<TEntity>
  */
 class SthCollection implements Collection, IteratorAggregate, Countable
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $entityType;
+    private string $entityType;
 
-    private $query = null;
+    private ?SelectQuery $query = null;
 
-    private $sth = null;
+    private ?PDOStatement $sth = null;
 
-    private $sql = null;
+    private ?string $sql = null;
 
-    private $entityList = [];
+    /**
+     * @var Entity[]
+     */
+    private array $entityList = [];
 
     private function __construct(EntityManager $entityManager)
     {
@@ -133,6 +138,9 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         }
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function fetchRow()
     {
         $this->executeQueryIfNotExecuted();
@@ -160,6 +168,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
     /**
      * @deprecated
+     * @return array<int,array<string,mixed>>|\stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
     {
@@ -204,8 +213,12 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->entityType;
     }
 
+    /**
+     * @return self<Entity>
+     */
     public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
     {
+        /** @var self<Entity> */
         $obj = new self($entityManager);
 
         $obj->entityType = $query->getFrom();
@@ -214,8 +227,12 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $obj;
     }
 
+    /**
+     * @return self<Entity>
+     */
     public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self
     {
+        /** @var self<Entity> */
         $obj = new self($entityManager);
 
         $obj->entityType = $entityType;

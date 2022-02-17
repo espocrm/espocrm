@@ -29,9 +29,7 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    QueryComposer\QueryComposer,
-};
+use Espo\ORM\QueryComposer\QueryComposer;
 
 use PDO;
 use RuntimeException;
@@ -40,11 +38,11 @@ use Closure;
 
 class TransactionManager
 {
-    private $level = 0;
+    private int $level = 0;
 
-    private $pdo;
+    private PDO $pdo;
 
-    private $queryComposer;
+    private QueryComposer $queryComposer;
 
     public function __construct(PDO $pdo, QueryComposer $queryComposer)
     {

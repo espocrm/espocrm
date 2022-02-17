@@ -29,9 +29,7 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    TransactionManager,
-};
+use Espo\ORM\TransactionManager;
 
 use RuntimeException;
 
@@ -40,9 +38,9 @@ use RuntimeException;
  */
 class RDBTransactionManager
 {
-    private $transactionManager;
+    private TransactionManager $transactionManager;
 
-    private $level = 0;
+    private int $level = 0;
 
     public function __construct(TransactionManager $transactionManager)
     {

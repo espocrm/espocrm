@@ -29,40 +29,48 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    Query\Select,
-};
+use Espo\ORM\Query\Select;
 
 /**
  * Creates collections.
  */
 class CollectionFactory
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @return EntityCollection<Entity>
+     */
     public function create(?string $entityType = null, array $data = []): EntityCollection
     {
         return new EntityCollection($data, $entityType, $this->entityManager->getEntityFactory());
     }
 
+    /**
+     * @return SthCollection<Entity>
+     */
     public function createFromSql(string $entityType, string $sql): SthCollection
     {
         return SthCollection::fromSql($entityType, $sql, $this->entityManager);
     }
 
+    /**
+     * @return SthCollection<Entity>
+     */
     public function createFromQuery(Select $query): SthCollection
     {
         return SthCollection::fromQuery($query, $this->entityManager);
     }
 
+    /**
+     * @param SthCollection<Entity> $sthCollection
+     * @return EntityCollection<Entity>
+     */
     public function createFromSthCollection(SthCollection $sthCollection): EntityCollection
     {
         return EntityCollection::fromSthCollection($sthCollection);

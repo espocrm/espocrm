@@ -29,23 +29,27 @@
 
 namespace Espo\ORM\Value;
 
-use Espo\ORM\{
-    Entity,
-    EventDispatcher,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EventDispatcher;
 
 class ValueAccessorFactory
 {
-    private $generalValueFactory = null;
+    private ?GeneralValueFactory $generalValueFactory = null;
 
-    private $generalAttributeExtractor = null;
+    private ?GeneralAttributeExtractor $generalAttributeExtractor = null;
 
-    private $valueFactoryFactory;
+    private ValueFactoryFactory $valueFactoryFactory;
 
-    private $attributeExtractorFactory;
+    /**
+     * @var AttributeExtractorFactory<object>
+     */
+    private AttributeExtractorFactory $attributeExtractorFactory;
 
-    private $eventDispatcher;
+    private EventDispatcher $eventDispatcher;
 
+    /**
+     * @param AttributeExtractorFactory<object> $attributeExtractorFactory
+     */
     public function __construct(
         ValueFactoryFactory $valueFactoryFactory,
         AttributeExtractorFactory $attributeExtractorFactory,
@@ -60,19 +64,17 @@ class ValueAccessorFactory
 
     public function create(Entity $entity): ValueAccessor
     {
-        $generalValueFactory = $this->getGeneralValueFactory();
-
-        $generalAttributeExtractor = $this->getGeneralAttributeExtractor();
-
-        return new ValueAccessor($entity, $generalValueFactory, $generalAttributeExtractor);
+        return new ValueAccessor(
+            $entity,
+            $this->getGeneralValueFactory(),
+            $this->getGeneralAttributeExtractor()
+        );
     }
 
     private function getGeneralValueFactory(): GeneralValueFactory
     {
         if (!$this->generalValueFactory) {
-            $this->generalValueFactory = new GeneralValueFactory(
-                $this->valueFactoryFactory
-            );
+            $this->generalValueFactory = new GeneralValueFactory($this->valueFactoryFactory);
         }
 
         return $this->generalValueFactory;
@@ -81,9 +83,7 @@ class ValueAccessorFactory
     private function getGeneralAttributeExtractor(): GeneralAttributeExtractor
     {
         if (!$this->generalAttributeExtractor) {
-            $this->generalAttributeExtractor = new GeneralAttributeExtractor(
-                $this->attributeExtractorFactory
-            );
+            $this->generalAttributeExtractor = new GeneralAttributeExtractor($this->attributeExtractorFactory);
         }
 
         return $this->generalAttributeExtractor;

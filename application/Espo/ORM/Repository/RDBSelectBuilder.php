@@ -52,13 +52,16 @@ use RuntimeException;
  */
 class RDBSelectBuilder
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $builder;
+    private SelectBuilder $builder;
 
-    private $repository = null;
+    /**
+     * @var RDBRepository<TEntity>|null
+     */
+    private ?RDBRepository $repository = null;
 
-    private $returnSthCollection = false;
+    private bool $returnSthCollection = false;
 
     public function __construct(EntityManager $entityManager, string $entityType, ?Select $query = null)
     {
@@ -87,20 +90,21 @@ class RDBSelectBuilder
     }
 
     /**
-     * @param ?array $params @deprecated. Omit it.
+     * @param ?array<string,mixed> $params @deprecated. Omit it.
      * @phpstan-return Collection<TEntity>
      */
     public function find(?array $params = null): Collection
     {
         $query = $this->getMergedParams($params);
 
+        /** @var Collection<TEntity> */
         $collection = $this->getMapper()->select($query);
 
         return $this->handleReturnCollection($collection);
     }
 
     /**
-     * @param ?array $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated
      *
      * @phpstan-return ?TEntity
      */
@@ -125,7 +129,7 @@ class RDBSelectBuilder
     /**
      * Get a number of records.
      *
-     * @param ?array $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated
      */
     public function count(?array $params = null): int
     {
@@ -199,7 +203,7 @@ class RDBSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -216,7 +220,7 @@ class RDBSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -273,8 +277,8 @@ class RDBSelectBuilder
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param scalar[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -293,8 +297,8 @@ class RDBSelectBuilder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param scalar[]|scalar|null $value A value. Omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
@@ -391,6 +395,7 @@ class RDBSelectBuilder
      * @deprecated Use `group` method.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
+     * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): self
     {
@@ -398,7 +403,8 @@ class RDBSelectBuilder
     }
 
     /**
-     * @phpstan-return Collection<TEntity>|SthCollection
+     * @param Collection<TEntity> $collection
+     * @return Collection<TEntity>|SthCollection<TEntity>
      */
     protected function handleReturnCollection(Collection $collection): Collection
     {
@@ -410,12 +416,16 @@ class RDBSelectBuilder
             return $collection;
         }
 
+        /**
+         * @var \Espo\ORM\EntityCollection<TEntity>
+         */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
 
     /**
      * For backward compatibility.
      * @todo Remove.
+     * @param array<string,mixed> $params
      */
     protected function getMergedParams(?array $params = null): Select
     {

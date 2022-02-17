@@ -29,17 +29,18 @@
 
 namespace Espo\ORM\Value;
 
-use Espo\ORM\{
-    Entity,
-};
+use Espo\ORM\Entity;
 
 use RuntimeException;
 
 class GeneralValueFactory
 {
-    private $valueFactoryFactory;
+    private ValueFactoryFactory $valueFactoryFactory;
 
-    private $factoryCache = [];
+    /**
+     * @var array<string,ValueFactory>
+     */
+    private array $factoryCache = [];
 
     public function __construct(ValueFactoryFactory $valueFactoryFactory)
     {

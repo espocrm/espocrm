@@ -41,19 +41,22 @@ use InvalidArgumentException;
  * A standard collection of entities. It allocates a memory for all entities.
  *
  * @template TEntity of Entity
- * @implements Iterator<TEntity>
+ * @implements Iterator<int,TEntity>
+ * @implements Collection<TEntity>
+ * @implements ArrayAccess<int,TEntity>
+ * @implements SeekableIterator<int,TEntity>
  */
 class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, SeekableIterator
 {
-    private $entityFactory = null;
+    private ?EntityFactory $entityFactory = null;
 
-    private $entityType;
+    private ?string $entityType;
 
-    private $position = 0;
+    private int $position = 0;
 
-    private $isFetched = false;
+    private bool $isFetched = false;
 
-    protected $dataList = [];
+    protected array $dataList = [];
 
     public function __construct(
         array $dataList = [],
