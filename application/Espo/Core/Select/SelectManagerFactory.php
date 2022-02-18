@@ -29,13 +29,11 @@
 
 namespace Espo\Core\Select;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 use Espo\Core\{
     InjectableFactory,
     Acl,
-    AclManager,
-    Utils\Util,
     Utils\ClassFinder,
 };
 
@@ -52,26 +50,30 @@ class SelectManagerFactory
     protected $defaultClassName = SelectManager::class;
 
     private $user;
+
     private $acl;
-    private $aclManager;
+
+    private $aclManagerProvider;
+
     private $injectableFactory;
+
     private $classFinder;
 
     public function __construct(
         User $user,
         Acl $acl,
-        AclManager $aclManager,
+        UserAclManagerProvider $aclManagerProvider,
         InjectableFactory $injectableFactory,
         ClassFinder $classFinder
     ) {
         $this->user = $user;
         $this->acl = $acl;
-        $this->aclManager = $aclManager;
+        $this->aclManagerProvider = $aclManagerProvider;
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
     }
 
-    public function create(string $entityType, ?User $user = null) : SelectManager
+    public function create(string $entityType, ?User $user = null): SelectManager
     {
         $className = $this->classFinder->find('SelectManagers', $entityType);
 
@@ -80,8 +82,9 @@ class SelectManagerFactory
         }
 
         if ($user) {
-            $acl = $this->aclManager->createUserAcl($user);
-        } else {
+            $acl = $this->aclManagerProvider->get($user)->createUserAcl($user);
+        }
+        else {
             $acl = $this->acl;
             $user = $this->user;
         }
