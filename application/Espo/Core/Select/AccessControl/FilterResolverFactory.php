@@ -29,34 +29,33 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-use Espo\Core\{
-    InjectableFactory,
-    AclManager,
-    Acl,
-    Portal\Acl as PortalAcl,
-    Utils\Metadata,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Acl;
+use Espo\Core\Portal\Acl as PortalAcl;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingData;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class FilterResolverFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $aclManager;
+    private UserAclManagerProvider $userAclManagerProvider;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, AclManager $aclManager)
-    {
+    public function __construct(
+        InjectableFactory $injectableFactory,
+        Metadata $metadata,
+        UserAclManagerProvider $userAclManagerProvider
+    ) {
         $this->injectableFactory = $injectableFactory;
         $this->metadata = $metadata;
-        $this->aclManager = $aclManager;
+        $this->userAclManagerProvider = $userAclManagerProvider;
     }
 
     public function create(string $entityType, User $user): FilterResolver
@@ -65,7 +64,9 @@ class FilterResolverFactory
             $this->getClassName($entityType) :
             $this->getPortalClassName($entityType);
 
-        $acl = $this->aclManager->createUserAcl($user);
+        $acl = $this->userAclManagerProvider
+            ->get($user)
+            ->createUserAcl($user);
 
         $bindingData = new BindingData();
 

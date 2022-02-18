@@ -31,8 +31,6 @@ namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
     Exceptions\Error,
-    AclManager,
-    Acl,
     Select\Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
     Select\SelectManager,
     Select\AccessControl\FilterFactory as AccessControlFilterFactory,
@@ -52,20 +50,12 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
     {
         $this->filterFactory = $this->createMock(AccessControlFilterFactory::class);
         $this->filterResolverFactory = $this->createMock(AccessControlFilterResolverFactory::class);
-        $this->aclManager = $this->createMock(AclManager::class);
-        $this->acl = $this->createMock(Acl::class);
         $this->user = $this->createMock(User::class);
         $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->filterResolver = $this->createMock(FilterResolver::class);
         $this->filter = $this->createMock(AccessControlFilter::class);
         $this->mandatoryFilter = $this->createMock(AccessControlFilter::class);
-
-        $this->aclManager
-            ->expects($this->any())
-            ->method('createUserAcl')
-            ->with($this->user)
-            ->willReturn($this->acl);
 
         $this->entityType = 'Test';
 
@@ -74,7 +64,6 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
             $this->user,
             $this->filterFactory,
             $this->filterResolverFactory,
-            $this->aclManager,
             $this->selectManager
         );
     }

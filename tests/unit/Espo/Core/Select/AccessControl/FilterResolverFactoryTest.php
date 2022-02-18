@@ -29,6 +29,8 @@
 
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
+
 use Espo\Core\{
     Select\AccessControl\FilterResolverFactory,
     Select\AccessControl\DefaultFilterResolver,
@@ -55,14 +57,21 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->user = $this->createMock(User::class);
+        $this->userAclFilterResolver = $this->createMock(UserAclManagerProvider::class);
         $this->aclManager = $this->createMock(AclManager::class);
         $this->acl = $this->createMock(Acl::class);
 
         $this->factory = new FilterResolverFactory(
             $this->injectableFactory,
             $this->metadata,
-            $this->aclManager
+            $this->userAclFilterResolver
         );
+
+        $this->userAclFilterResolver
+            ->expects($this->any())
+            ->method('get')
+            ->with($this->user)
+            ->willReturn($this->aclManager);
 
         $this->aclManager
             ->expects($this->any())

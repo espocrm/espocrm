@@ -30,11 +30,12 @@
 namespace Espo\Core\Utils\Acl;
 
 use Espo\Entities\User;
-use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
 use Espo\Core\AclManager;
 use Espo\Core\Portal\AclManagerContainer as PortalAclManagerContainer;
 use Espo\Core\Exceptions\Error;
+
+use Espo\Core\ApplicationState;
 
 class UserAclManagerProvider
 {
@@ -44,7 +45,7 @@ class UserAclManagerProvider
 
     private $portalAclManagerContainer;
 
-    private $user;
+    private ApplicationState $applicationState;
 
     private $map = [];
 
@@ -52,12 +53,12 @@ class UserAclManagerProvider
         EntityManager $entityManager,
         AclManager $aclManager,
         PortalAclManagerContainer $portalAclManagerContainer,
-        User $user
+        ApplicationState $applicationState
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->portalAclManagerContainer = $portalAclManagerContainer;
-        $this->user = $user;
+        $this->applicationState = $applicationState;
     }
 
     /**
@@ -78,8 +79,8 @@ class UserAclManagerProvider
     {
         $aclManager = $this->aclManager;
 
-        if ($user->isPortal() && !$this->user->isPortal()) {
-            /** @var ?Portal */
+        if ($user->isPortal() && !$this->applicationState->isPortal()) {
+            /** @var ?\Espo\Entities\Portal */
             $portal = $this->entityManager
                 ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'portals')

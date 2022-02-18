@@ -29,6 +29,8 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
+
 use Espo\Core\{
     Select\Where\CheckerFactory,
     Select\Where\Checker,
@@ -49,6 +51,7 @@ class CheckerFactoryTest extends \PHPUnit\Framework\TestCase
         $this->aclManager = $this->createMock(AclManager::class);
         $this->user = $this->createMock(User::class);
         $this->acl = $this->createMock(Acl::class);
+        $this->userAclFilterResolver = $this->createMock(UserAclManagerProvider::class);
 
         $this->aclManager
             ->expects($this->any())
@@ -56,9 +59,15 @@ class CheckerFactoryTest extends \PHPUnit\Framework\TestCase
             ->with($this->user)
             ->willReturn($this->acl);
 
+        $this->userAclFilterResolver
+            ->expects($this->any())
+            ->method('get')
+            ->with($this->user)
+            ->willReturn($this->aclManager);
+
         $this->factory = new CheckerFactory(
             $this->injectableFactory,
-            $this->aclManager
+            $this->userAclFilterResolver
         );
     }
 

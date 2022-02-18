@@ -29,27 +29,27 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    Entities\User,
-    Core\InjectableFactory,
-    Core\AclManager,
-};
+use Espo\Entities\User;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 class CheckerFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $aclManager;
+    private UserAclManagerProvider $userAclManagerProvider;
 
-    public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
+    public function __construct(InjectableFactory $injectableFactory, UserAclManagerProvider $userAclManagerProvider)
     {
         $this->injectableFactory = $injectableFactory;
-        $this->aclManager = $aclManager;
+        $this->userAclManagerProvider = $userAclManagerProvider;
     }
 
     public function create(string $entityType, User $user): Checker
     {
-        $acl = $this->aclManager->createUserAcl($user);
+        $acl = $this->userAclManagerProvider
+            ->get($user)
+            ->createUserAcl($user);
 
         return $this->injectableFactory->createWith(Checker::class, [
             'entityType' => $entityType,

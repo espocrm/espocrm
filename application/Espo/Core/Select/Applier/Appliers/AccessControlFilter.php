@@ -29,9 +29,6 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\Acl;
-use Espo\Core\AclManager;
-
 use Espo\Core\Select\OrmSelectBuilder;
 
 use Espo\Core\{
@@ -48,54 +45,28 @@ use Espo\{
 
 class AccessControlFilter
 {
-    /**
-     * @var Acl
-     */
-    protected $acl;
+    private string $entityType;
 
-    protected $entityType;
+    private User $user;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    private AccessControlFilterFactory $accessControlFilterFactory;
 
-    /**
-     * @var AccessControlFilterFactory
-     */
-    protected $accessControlFilterFactory;
+    private AccessControlFilterResolverFactory $accessControlFilterResolverFactory;
 
-    /**
-     * @var AccessControlFilterResolverFactory
-     */
-    protected $accessControlFilterResolverFactory;
-
-    /**
-     * @var AclManager
-     */
-    protected $aclManager;
-
-    /**
-     * @var SelectManager
-     */
-    protected $selectManager;
+    private SelectManager $selectManager;
 
     public function __construct(
         string $entityType,
         User $user,
         AccessControlFilterFactory $accessControlFilterFactory,
         AccessControlFilterResolverFactory $accessControlFilterResolverFactory,
-        AclManager $aclManager,
         SelectManager $selectManager
     ) {
         $this->entityType = $entityType;
         $this->user = $user;
         $this->accessControlFilterFactory = $accessControlFilterFactory;
         $this->accessControlFilterResolverFactory = $accessControlFilterResolverFactory;
-        $this->aclManager = $aclManager;
         $this->selectManager = $selectManager;
-
-        $this->acl = $this->aclManager->createUserAcl($this->user);
     }
 
     public function apply(QueryBuilder $queryBuilder): void
