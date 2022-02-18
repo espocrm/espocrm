@@ -481,6 +481,10 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         shadeColor: function (color, percent) {
+            if (color === 'transparent') {
+                return color;
+            }
+
             if (this.getThemeManager().getParam('isDark')) {
                 percent *= -1;
             }

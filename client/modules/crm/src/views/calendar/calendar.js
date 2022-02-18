@@ -390,6 +390,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         shadeColor: function (color, percent) {
+            if (color === 'transparent') {
+                return color;
+            }
+            
             if (this.getThemeManager().getParam('isDark')) {
                 percent *= -1;
             }
