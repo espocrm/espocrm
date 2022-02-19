@@ -1135,7 +1135,7 @@ class Stream
 
         $builder
             ->limit($params['offset'], $params['maxSize'])
-            ->order('number', 'DESC');
+            ->order('number', $params['order'] ?? 'DESC');
 
         /** @var iterable<NoteEntity> */
         $collection = $this->entityManager
