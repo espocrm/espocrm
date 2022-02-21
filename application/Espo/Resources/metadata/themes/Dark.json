@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/dark.css",
     "stylesheetIframe": "client/css/espo/dark-iframe.css",
+    "stylesheetIframeFallback": "client/css/espo/hazyblue-iframe.css",
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "navbarHeight": 43,

@@ -289,11 +289,17 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             var body = this.sanitizeHtml(this.model.get(this.name) || '');
 
+            let useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
+
             var linkElement = iframeElement.contentWindow.document.createElement('link');
 
             linkElement.type = 'text/css';
             linkElement.rel = 'stylesheet';
-            linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
+            linkElement.href = this.getBasePath() + (
+                useFallbackStylesheet ?
+                this.getThemeManager().getIframeFallbackStylesheet() :
+                this.getThemeManager().getIframeStylesheet()
+            );
 
             body = linkElement.outerHTML + body;
 
@@ -986,6 +992,18 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 },
 
             });
+        },
+
+        htmlHasColors: function (string) {
+            if (~string.indexOf('background-color:')) {
+                return true;
+            }
+
+            if (~string.indexOf('color:')) {
+                return true;
+            }
+
+            return false;
         },
     });
 });

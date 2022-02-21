@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/dark-vertical.css",
     "stylesheetIframe": "client/css/espo/dark-vertical-iframe.css",
+    "stylesheetIframeFallback": "client/css/espo/hazyblue-iframe.css",
     "navbarIsVertical": true,
     "recordTopButtonsStickTop": 61,
     "recordTopButtonsBlockHeight": 21,

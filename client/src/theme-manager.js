@@ -95,6 +95,17 @@ define('theme-manager', [], function () {
             return link;
         },
 
+        getIframeFallbackStylesheet: function () {
+            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframeFallback']) ||
+                'client/css/espo/espo-iframe.css';
+
+            if (this.config.get('cacheTimestamp')) {
+                link += '?r=' + this.config.get('cacheTimestamp').toString();
+            }
+
+            return link;
+        },
+
         getParam: function (name) {
             return this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
         },
