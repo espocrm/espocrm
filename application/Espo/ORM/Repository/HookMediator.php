@@ -29,21 +29,35 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    Entity,
-    Query\Select,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Select;
 
 interface HookMediator
 {
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeSave(Entity $entity, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeRemove(Entity $entity, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterRemove(Entity $entity, array $options): void;
 
+    /**
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
+     */
     public function beforeRelate(
         Entity $entity,
         string $relationName,
@@ -52,6 +66,10 @@ interface HookMediator
         array $options
     ): void;
 
+    /**
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
+     */
     public function afterRelate(
         Entity $entity,
         string $relationName,
@@ -60,11 +78,23 @@ interface HookMediator
         array $options
     ): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeMassRelate(Entity $entity, string $relationName, Select $query, array $options): void;
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options): void;
 }

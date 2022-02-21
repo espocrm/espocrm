@@ -51,24 +51,21 @@ use InvalidArgumentException;
  */
 class RDBRelationSelectBuilder
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $entity;
+    private Entity $entity;
 
-    private $foreignEntityType;
+    private string $foreignEntityType;
 
-    private $relationName;
+    private string $relationName;
 
-    private $relationType = null;
+    private ?string $relationType = null;
 
-    /**
-     * @var SelectBuilder
-     */
-    private $builder = null;
+    private SelectBuilder $builder;
 
-    private $middleTableAlias = null;
+    private ?string $middleTableAlias = null;
 
-    private $returnSthCollection = false;
+    private bool $returnSthCollection = false;
 
     public function __construct(
         EntityManager $entityManager,
@@ -135,7 +132,7 @@ class RDBRelationSelectBuilder
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array $clause Where clause.
+     * @param WhereItem|array<mixed,mixed> $clause Where clause.
      */
     public function columnsWhere($clause): self
     {
@@ -158,6 +155,10 @@ class RDBRelationSelectBuilder
         return $this;
     }
 
+    /**
+     * @param array<mixed,mixed> $where
+     * @return array<mixed,mixed>
+     */
     protected function applyMiddleAliasToWhere(array $where): array
     {
         $transformedWhere = [];
@@ -200,14 +201,12 @@ class RDBRelationSelectBuilder
     {
         $query = $this->builder->build();
 
-        /** @var (iterable<Entity>&\Espo\ORM\SthCollection)|Entity */
         $related = $this->getMapper()->selectRelated($this->entity, $this->relationName, $query);
 
         if ($related instanceof Collection) {
             return $this->handleReturnCollection($related);
         }
 
-        /** @var iterable<Entity>&\Espo\ORM\EntityCollection $collection */
         $collection = $this->entityManager->getCollectionFactory()->create($this->foreignEntityType);
 
         $collection->setAsFetched();
@@ -249,7 +248,7 @@ class RDBRelationSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -264,7 +263,7 @@ class RDBRelationSelectBuilder
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -301,8 +300,8 @@ class RDBRelationSelectBuilder
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): self
     {
@@ -331,8 +330,8 @@ class RDBRelationSelectBuilder
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): self
     {
@@ -415,6 +414,7 @@ class RDBRelationSelectBuilder
 
     /**
      * @deprecated Use `group` method.
+     * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): self
     {
@@ -451,6 +451,10 @@ class RDBRelationSelectBuilder
         return str_replace('@relation.', $alias . '.', $item);
     }
 
+    /**
+     * @param array<mixed,mixed> $where
+     * @return array<mixed,mixed>
+     */
     protected function applyRelationAliasToWhereClause(array $where): array
     {
         if (!$this->isManyMany()) {
@@ -487,6 +491,7 @@ class RDBRelationSelectBuilder
     }
 
     /**
+     * @param Collection<Entity> $collection
      * @phpstan-return Collection<Entity>
      */
     protected function handleReturnCollection(Collection $collection): Collection

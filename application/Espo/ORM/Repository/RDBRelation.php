@@ -149,9 +149,7 @@ class RDBRelation
     /**
      * Find related records.
      *
-     * @phpstan-return iterable<Entity>&Collection
-     *
-     * @todo Fix phpstan-return after php5.4 to Collection<Entity> or remove.
+     * @return Collection<Entity>
      */
     public function find(): Collection
     {
@@ -205,7 +203,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -218,7 +216,7 @@ class RDBRelation
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): Builder
     {
@@ -249,8 +247,8 @@ class RDBRelation
      * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): Builder
     {
@@ -265,8 +263,8 @@ class RDBRelation
      * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param WhereItem|array|string $clause A key or where clause.
-     * @param array|string|null $value A value. Omitted if the first argument is not string.
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): Builder
     {
@@ -339,6 +337,7 @@ class RDBRelation
 
     /**
      * @deprecated Use `group` method.
+     * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): Builder
     {
@@ -351,7 +350,7 @@ class RDBRelation
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array $clause Where clause.
+     * @param WhereItem|array<mixed,mixed> $clause Where clause.
      */
     public function columnsWhere($clause): Builder
     {
@@ -435,6 +434,9 @@ class RDBRelation
 
     /**
      * Relate with an entity by ID.
+     *
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
      */
     public function relateById(string $id, ?array $columnData = null, array $options = []): void
     {
@@ -458,6 +460,8 @@ class RDBRelation
 
     /**
      * Unrelate from an entity by ID.
+     *
+     * @param array<string,mixed> $options
      */
     public function unrelateById(string $id, array $options = []): void
     {
@@ -481,6 +485,8 @@ class RDBRelation
 
     /**
      * Update relationship columns by ID. For many-to-many relationships.
+     *
+     * @param array<string,mixed> $columnData Role values.
      */
     public function updateColumnsById(string $id, array $columnData): void
     {
@@ -504,6 +510,9 @@ class RDBRelation
 
     /**
      * Relate with an entity.
+     *
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
      */
     public function relate(Entity $entity, ?array $columnData = null, array $options = []): void
     {
@@ -522,6 +531,8 @@ class RDBRelation
 
     /**
      * Unrelate from an entity.
+     *
+     * @param array<string,mixed> $options
      */
     public function unrelate(Entity $entity, array $options = []): void
     {
@@ -534,6 +545,11 @@ class RDBRelation
         $this->afterUnrelate($entity, $options);
     }
 
+    /**
+     * Mass-relate.
+     *
+     * @param array<string,mixed> $options
+     */
     public function massRelate(Select $query, array $options = []): void
     {
         if ($this->isBelongsToParentType()) {
@@ -553,6 +569,8 @@ class RDBRelation
 
     /**
      * Update relationship columns. For many-to-many relationships.
+     *
+     * @param array<string,mixed> $columnData Role values.
      */
     public function updateColumns(Entity $entity, array $columnData): void
     {
@@ -593,31 +611,51 @@ class RDBRelation
         return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $id, $column);
     }
 
+    /**
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
+     */
     private function beforeRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->beforeRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
+    /**
+     * @param array<string,mixed>|null $columnData Role values.
+     * @param array<string,mixed> $options
+     */
     private function afterRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->afterRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function beforeUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->beforeUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->afterUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function beforeMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->beforeMassRelate($this->entity, $this->relationName, $query, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->afterMassRelate($this->entity, $this->relationName, $query, $options);

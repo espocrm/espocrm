@@ -70,12 +70,20 @@ class Util
         return in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE']);
     }
 
+    /**
+     * @param string $expression
+     * @return string[]
+     */
     public static function getAllAttributesFromComplexExpression(string $expression): array
     {
         return self::getAllAttributesFromComplexExpressionImplementation($expression);
     }
 
-    protected static function getAllAttributesFromComplexExpressionImplementation(
+    /**
+     * @param string[]|null $list
+     * @return string[]
+     */
+    private static function getAllAttributesFromComplexExpressionImplementation(
         string $expression,
         ?array &$list = null
     ): array {
@@ -113,6 +121,9 @@ class Util
         return $list;
     }
 
+    /**
+     * @return string[]
+     */
     static public function parseArgumentListFromFunctionContent(string $functionContent): array
     {
         $functionContent = trim($functionContent);

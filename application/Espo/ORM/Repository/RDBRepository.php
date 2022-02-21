@@ -873,7 +873,7 @@ class RDBRepository implements Repository
      * * `where(string $key, string $value)`
      *
      * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
-     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
+     * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      *
      * @return RDBSelectBuilder<TEntity>
      */
@@ -891,7 +891,7 @@ class RDBRepository implements Repository
      * * `having(string $key, string $value)`
      *
      * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
-     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
+     * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      *
      * @phpstan-return RDBSelectBuilder<TEntity>
      */
