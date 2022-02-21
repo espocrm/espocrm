@@ -33,6 +33,9 @@ class InsertBuilder implements Builder
 {
     use BaseBuilderTrait;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $params = [];
 
     /**
@@ -73,6 +76,8 @@ class InsertBuilder implements Builder
 
     /**
      * What columns to set with values. A list of columns.
+     *
+     * @param string[] $columns
      */
     public function columns(array $columns): self
     {
@@ -83,6 +88,8 @@ class InsertBuilder implements Builder
 
     /**
      * What values to insert. A key-value map or a list of key-value maps.
+     *
+     * @param array<string,mixed> $values
      */
     public function values(array $values): self
     {
@@ -93,6 +100,8 @@ class InsertBuilder implements Builder
 
     /**
      * Values to set on duplicate key. A key-value map.
+     *
+     * @param array<string,mixed> $updateSet
      */
     public function updateSet(array $updateSet): self
     {

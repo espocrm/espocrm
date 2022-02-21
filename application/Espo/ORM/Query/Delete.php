@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\Query;
 
-use Espo\ORM\Query\Part\WhereClause;
-
 use RuntimeException;
 
 /**
@@ -65,6 +63,9 @@ class Delete implements Query
         return $this->params['limit'] ?? null;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);

@@ -35,6 +35,8 @@ trait BaseBuilderTrait
 {
     /**
      * Must be protected for compatibility reasons.
+     *
+     * @var array<string,mixed>
      */
     protected $params = [];
 

@@ -41,18 +41,18 @@ use InvalidArgumentException;
  */
 class Metadata
 {
-    private $data;
-
-    private $defs;
-
-    private $defsData;
-
-    private $dataProvider;
-
     /**
-     * @var EventDispatcher
+     * @var array<string,mixed>
      */
-    private $eventDispatcher;
+    private array $data;
+
+    private Defs $defs;
+
+    private DefsData $defsData;
+
+    private MetadataDataProvider $dataProvider;
+
+    private EventDispatcher $eventDispatcher;
 
     public function __construct(MetadataDataProvider $dataProvider, ?EventDispatcher $eventDispatcher = null)
     {
@@ -89,6 +89,11 @@ class Metadata
 
     /**
      * Get a parameter or parameters by key. Key can be a string or array path.
+     *
+     * @param string $entityType An entity type.
+     * @param string[]|string|null $key A Key.
+     * @param mixed $default A default value.     *
+     * @return mixed
      */
     public function get(string $entityType, $key = null, $default = null)
     {
@@ -124,7 +129,10 @@ class Metadata
     }
 
     /**
+     * @param array<string,mixed> $data
      * @param string[]|string|null $key
+     * @param mixed $default A default value.
+     * @return mixed
      */
     private static function getValueByKey(array $data, $key = null, $default = null)
     {
