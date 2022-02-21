@@ -40,13 +40,13 @@ use RuntimeException;
 
 class BaseLocker implements Locker
 {
-    private $pdo;
+    private PDO $pdo;
 
-    private $queryComposer;
+    private QueryComposer $queryComposer;
 
-    private $transactionManager;
+    private TransactionManager $transactionManager;
 
-    private $isLocked = false;
+    private bool $isLocked = false;
 
     public function __construct(PDO $pdo, QueryComposer $queryComposer, TransactionManager $transactionManager)
     {

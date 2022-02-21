@@ -64,6 +64,9 @@ class EntityDefs
     {
     }
 
+    /**
+     * @param array<string,mixed> $raw
+     */
     public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
@@ -299,7 +302,7 @@ class EntityDefs
         return array_key_exists($name, $this->data);
     }
 
-    /*
+    /**
      * Get a parameter value by a name.
      *
      * @return mixed

@@ -31,31 +31,31 @@ namespace Espo\ORM;
 
 class DatabaseParams
 {
-    private $platform = null;
+    private ?string $platform = null;
 
-    private $host = null;
+    private ?string $host = null;
 
-    private $port = null;
+    private ?int $port = null;
 
-    private $name = null;
+    private ?string $name = null;
 
-    private $username = null;
+    private ?string $username = null;
 
-    private $password = null;
+    private ?string $password = null;
 
-    private $charset = null;
+    private ?string $charset = null;
 
-    private $sslCa = null;
+    private ?string $sslCa = null;
 
-    private $sslCert = null;
+    private ?string $sslCert = null;
 
-    private $sslKey = null;
+    private ?string $sslKey = null;
 
-    private $sslCaPath = null;
+    private ?string $sslCaPath = null;
 
-    private $sslCipher = null;
+    private ?string $sslCipher = null;
 
-    private $sslVerifyDisabled = false;
+    private bool $sslVerifyDisabled = false;
 
     public static function create(): self
     {

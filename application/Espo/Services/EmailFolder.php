@@ -132,6 +132,11 @@ class EmailFolder extends Record implements Di\LanguageAware
         $this->entityManager->saveEntity($nextEntity);
     }
 
+    /**
+     * @return array{
+     *   list:array<array<string,mixed>>
+     * }
+     */
     public function listAll()
     {
         $limit = $this->config->get('emailFolderMaxCount', 100);
@@ -171,7 +176,7 @@ class EmailFolder extends Record implements Di\LanguageAware
         $finalList = [];
 
         foreach ($list as $item) {
-            $attributes = $item->getValues();
+            $attributes = get_object_vars($item->getValueMap());
 
             $attributes['childCollection'] = [];
 

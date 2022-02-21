@@ -34,13 +34,10 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
 
-use Espo\ORM\Collection;
-
 class Document extends \Espo\Services\Record
 {
     /**
-     * @return Collection
-     * @phpstan-return iterable<Attachment>&Collection
+     * @return \Espo\ORM\Collection<Attachment>
      */
     public function getAttachmentList(string $id)
     {
@@ -62,8 +59,10 @@ class Document extends \Espo\Services\Record
             throw new NotFound();
         }
 
+
         $attachment = $this->getAttachmentRepository()->getCopiedAttachment($file, 'Attachment');
 
+        /** @var \Espo\ORM\Collection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getCollectionFactory()
             ->create('Attachment');

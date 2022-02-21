@@ -44,11 +44,12 @@ class CollectionFactory
     }
 
     /**
+     * @param array<Entity|array<string,mixed>> $dataList
      * @return EntityCollection<Entity>
      */
-    public function create(?string $entityType = null, array $data = []): EntityCollection
+    public function create(?string $entityType = null, array $dataList = []): EntityCollection
     {
-        return new EntityCollection($data, $entityType, $this->entityManager->getEntityFactory());
+        return new EntityCollection($dataList, $entityType, $this->entityManager->getEntityFactory());
     }
 
     /**
@@ -74,6 +75,7 @@ class CollectionFactory
      */
     public function createFromSthCollection(SthCollection $sthCollection): EntityCollection
     {
+        /** @var EntityCollection<TEntity> */
         return EntityCollection::fromSthCollection($sthCollection);
     }
 }

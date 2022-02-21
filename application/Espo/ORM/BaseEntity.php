@@ -30,6 +30,7 @@
 namespace Espo\ORM;
 
 use Espo\ORM\Value\ValueAccessorFactory;
+use Espo\ORM\Value\ValueAccessor;
 
 use const E_USER_DEPRECATED;
 
@@ -61,43 +62,51 @@ class BaseEntity implements Entity
     /**
      * @todo Make private. Rename to `attributes`.
      * @deprecated
+     * @var array<string,array<string,mixed>>
      */
-    public $fields = [];
+    public array $fields = [];
 
-    private $attributes = [];
+    /**
+     * @var array<string,array<string,mixed>>
+     */
+    private array $attributes = [];
 
     /**
      * @todo Make private.
      * @deprecated
+     * @var array<string,array<string,mixed>>
      */
-    protected $relations = [];
+    protected array $relations = [];
 
     /**
      * An attribute-value map.
      *
      * @deprecated
      * @todo Make private.
+     * @var array<string,mixed>
      */
-    protected $valuesContainer = [];
+    protected array $valuesContainer = [];
 
     /**
      * An attribute-value map of values fetched from DB (before changed).
      *
      * @deprecated
      * @todo Make private.
+     * @var array<string,mixed>
      */
-    private $fetchedValuesContainer = [];
+    private array $fetchedValuesContainer = [];
+
+    protected ?EntityManager $entityManager;
+
+    private ?ValueAccessor $valueAccessor = null;
 
     /**
-     * @var EntityManager|null
+     * @param array{
+     *   attributes?: array<string,array<string,mixed>>,
+     *   relations?: array<string,array<string,mixed>>,
+     *   fields?: array<string,array<string,mixed>>
+     * } $defs
      */
-    protected $entityManager;
-
-    /**
-     * @var Value\ValueAccessor|null
-     */
-    private $valueAccessor = null;
-
     public function __construct(
         string $entityType,
         array $defs,
@@ -144,6 +153,9 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated Use `setInContainer` method.
+     *
+     * @param string $attribute
+     * @param mixed $value
      */
     protected function setValue($attribute, $value): void
     {
@@ -157,7 +169,7 @@ class BaseEntity implements Entity
      * * `set(string $attribute, mixed $value)`
      * * `set(array|object $valueMap)`
      *
-     * @param string|object|array $attribute
+     * @param string|stdClass|array<string,mixed> $attribute
      * @param mixed $value
      */
     public function set($attribute, $value = null): void
@@ -222,8 +234,7 @@ class BaseEntity implements Entity
     /**
      * Get an attribute value.
      *
-     * @param array $params @deprecated
-     *
+     * @param array<string,mixed> $params @deprecated
      * @retrun mixed
      */
     public function get(string $attribute, $params = [])
@@ -416,6 +427,7 @@ class BaseEntity implements Entity
     /**
      * @deprecated
      * @todo Make protected.
+     * @param array<string,mixed> $data
      */
     public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
     {
@@ -444,6 +456,9 @@ class BaseEntity implements Entity
         }
     }
 
+    /**
+     * @param mixed $value
+     */
     protected function populateFromArrayItem(string $attribute, $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
@@ -501,6 +516,10 @@ class BaseEntity implements Entity
         return $value;
     }
 
+    /**
+     * @param MIXED $value
+     * @return mixed[]|null
+     */
     private function prepareArrayAttributeValue($value): ?array
     {
         if (is_string($value)) {
@@ -520,6 +539,9 @@ class BaseEntity implements Entity
         return $this->cloneArray($value);
     }
 
+    /**
+     * @param mixed $value
+     */
     private function prepareObjectAttributeValue($value): ?stdClass
     {
         if (is_string($value)) {
@@ -633,6 +655,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @return string
      */
     public function getEntityName()
     {
@@ -649,6 +672,8 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @param string $name
+     * @return bool
      */
     public function hasField($name)
     {
@@ -689,6 +714,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated Use `getValueMap`.
+     * @return array<string,mixed>
      */
     public function getValues()
     {
@@ -698,6 +724,7 @@ class BaseEntity implements Entity
     /**
      * @deprecated Use `getValueMap`.
      * @todo Make protected.
+     * @return array<string,mixed>
      */
     public function toArray()
     {
@@ -732,6 +759,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @return array<string,mixed>
      */
     public function getFields()
     {
@@ -740,6 +768,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @return array<string,mixed>
      */
     public function getAttributes()
     {
@@ -748,6 +777,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @return array<string,mixed>
      */
     public function getRelations()
     {
@@ -815,7 +845,10 @@ class BaseEntity implements Entity
     }
 
     /**
+     *
      * @deprecated
+     * @param string $name
+     * @return bool
      */
     public function isFieldChanged($name)
     {
@@ -846,6 +879,10 @@ class BaseEntity implements Entity
         );
     }
 
+    /**
+     * @param mixed $v1
+     * @param mixed $v2
+     */
     protected static function areValuesEqual(string $type, $v1, $v2, bool $isUnordered = false): bool
     {
         if ($type === self::JSON_ARRAY) {
@@ -1031,6 +1068,9 @@ class BaseEntity implements Entity
 
     /**
      * Clone an array value.
+     *
+     * @param mixed[]|null $value
+     * @return mixed[]
      */
     protected function cloneArray(?array $value): ?array
     {
@@ -1054,7 +1094,7 @@ class BaseEntity implements Entity
 
         $copy = [];
 
-        /** @var array<int,stdClass|array|scalar|null> $value */
+        /** @var array<int,stdClass|mixed[]|scalar|null> $value */
 
         foreach ($value as $i => $item) {
             if (is_object($item)) {
@@ -1087,7 +1127,7 @@ class BaseEntity implements Entity
         $copy = (object) [];
 
         foreach (get_object_vars($value) as $k => $item) {
-            /** @var stdClass|array|scalar|null $item */
+            /** @var stdClass|mixed[]|scalar|null $item */
 
             $key = $k;
 

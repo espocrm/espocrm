@@ -29,17 +29,18 @@
 
 namespace Espo\ORM\Defs;
 
-use Espo\ORM\{
-    Metadata,
-};
+use Espo\ORM\Metadata;
 
 use RuntimeException;
 
 class DefsData
 {
-    private $cache = [];
+    /**
+     * @var array<string,?EntityDefs>
+     */
+    private array $cache = [];
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {
@@ -51,6 +52,9 @@ class DefsData
         $this->cache = [];
     }
 
+    /**
+     * @return string[]
+     */
     public function getEntityTypeList(): array
     {
         return $this->metadata->getEntityTypeList();

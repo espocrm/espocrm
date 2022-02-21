@@ -56,8 +56,14 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     private bool $isFetched = false;
 
+    /**
+     * @var array<TEntity|array<string,mixed>>
+     */
     protected array $dataList = [];
 
+    /**
+     * @param array<TEntity|array<string,mixed>> $dataList
+     */
     public function __construct(
         array $dataList = [],
         ?string $entityType = null,
@@ -78,7 +84,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @return mixed
+     * @return TEntity
      */
     public function current()
     {
@@ -86,7 +92,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function key()
     {
@@ -106,6 +112,9 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         } while ($next);
     }
 
+    /**
+     * @return int
+     */
     private function getLastValidKey()
     {
         $keys = array_keys($this->dataList);
@@ -138,7 +147,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @param mixed $offset
-     * @return mixed
+     * @return ?TEntity
      */
     public function offsetGet($offset)
     {
@@ -158,6 +167,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         if (!($value instanceof Entity)) {
             throw new InvalidArgumentException('Only Entity is allowed to be added to EntityCollection.');
         }
+
+        /** @var TEntity $value */
 
         if (is_null($offset)) {
             $this->dataList[] = $value;
@@ -193,16 +204,29 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         }
     }
 
+    /**
+     * @param TEntity $entity
+     */
     public function append(Entity $entity): void
     {
         $this->dataList[] = $entity;
     }
 
-    private function getEntityByOffset($offset)
+    /**
+     * @param int $offset
+     * @return TEntity
+     */
+    private function getEntityByOffset($offset): Entity
     {
+        if (!array_key_exists($offset, $this->dataList)) {
+            throw new RuntimeException();
+        }
+
+        /** @var mixed */
         $value = $this->dataList[$offset];
 
         if ($value instanceof Entity) {
+            /** @var TEntity */
             return $value;
         }
 
@@ -212,9 +236,13 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             return $this->dataList[$offset];
         }
 
-        return null;
+        throw new RuntimeException();
     }
 
+    /**
+     * @param array<string,mixed> $dataArray
+     * @return TEntity
+     */
     protected function buildEntityFromArray(array $dataArray): Entity
     {
         if (!$this->entityFactory) {
@@ -223,6 +251,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         assert($this->entityType !== null);
 
+        /** @var TEntity */
         $entity = $this->entityFactory->create($this->entityType);
 
         $entity->set($dataArray);
@@ -244,21 +273,27 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @deprecated
+     * @return string
      */
     public function getEntityName()
     {
         return $this->entityType;
     }
 
-    public function getDataList()
+    /**
+     * @return array<Entity|array<string,mixed>>
+     */
+    public function getDataList(): array
     {
         return $this->dataList;
     }
 
     /**
      * Merge with another collection.
+     *
+     * @param EntityCollection<TEntity> $collection
      */
-    public function merge(EntityCollection $collection)
+    public function merge(EntityCollection $collection): void
     {
         $incomingDataList = $collection->getDataList();
 
@@ -271,6 +306,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * Whether a collection contains a specific item.
+     *
+     * @param TEntity|array<string,mixed> $value
      */
     public function contains($value): bool
     {
@@ -281,6 +318,10 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return false;
     }
 
+    /**
+     * @param TEntity|array<string,mixed> $value
+     * @return false|int
+     */
     public function indexOf($value)
     {
         $index = 0;
@@ -323,6 +364,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @deprecated Use `getValueMapList`.
+     * @return array<array<string,mixed>>|\stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
     {
@@ -333,7 +375,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                 $item = $entity->getValueMap();
             }
             else {
-                $item = $entity->toArray();
+                $item = $entity->toArray(); // @phpstan-ignore-line
             }
 
             $arr[] = $item;
@@ -363,6 +405,10 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return $this->isFetched;
     }
 
+    /**
+     * @param SthCollection<TEntity> $sthCollection
+     * @return self<TEntity>
+     */
     public static function fromSthCollection(SthCollection $sthCollection): self
     {
         $entityList = [];
@@ -371,6 +417,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             $entityList[] = $entity;
         }
 
+        /** @var self<TEntity> */
         $obj = new EntityCollection($entityList, $sthCollection->getEntityType());
 
         $obj->setAsFetched();

@@ -75,7 +75,7 @@ interface Entity
      * * `set(string $attribute, mixed $value)`
      * * `set(array|object $valueMap)`
      *
-     * @param string|object|array $attribute
+     * @param string|stdClass|array<string,mixed> $attribute
      * @param mixed $value
      */
     public function set($attribute, $value = null): void;
@@ -83,7 +83,7 @@ interface Entity
     /**
      * Get an attribute value.
      *
-     * @retrun mixed
+     * @return mixed
      */
     public function get(string $attribute);
 
@@ -104,11 +104,15 @@ interface Entity
 
     /**
      * Get attribute list defined for an entity type.
+     *
+     * @return string[]
      */
     public function getAttributeList(): array;
 
     /**
      * Get relation list defined for an entity type.
+     *
+     * @return string[]
      */
     public function getRelationList(): array;
 
@@ -167,6 +171,8 @@ interface Entity
 
     /**
      * Set a fetched value for a specific attribute.
+     *
+     * @param mixed $value
      */
     public function setFetched(string $attribute, $value): void;
 

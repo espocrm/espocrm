@@ -44,16 +44,14 @@ use RuntimeException;
  */
 class MysqlLocker implements Locker
 {
-    private $pdo;
+    private PDO $pdo;
 
-    private $queryComposer;
+    private MysqlQueryComposer $queryComposer;
 
-    /**
-     * @phpstan-ignore-next-line
-     */
-    private $transactionManager;
+    /** @phpstan-ignore-next-line */
+    private TransactionManager $transactionManager;
 
-    private $isLocked = false;
+    private bool $isLocked = false;
 
     public function __construct(PDO $pdo, MysqlQueryComposer $queryComposer, TransactionManager $transactionManager)
     {

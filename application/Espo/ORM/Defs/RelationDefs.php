@@ -38,20 +38,24 @@ use RuntimeException;
  */
 class RelationDefs
 {
-    private $data;
+    /**
+     * @var array<string,mixed>
+     */
+    private array $data;
 
-    private $name;
+    private string $name;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $raw
+     */
     public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
-
         $obj->data = $raw;
-
         $obj->name = $name;
 
         return $obj;
@@ -297,8 +301,9 @@ class RelationDefs
         return array_key_exists($name, $this->data);
     }
 
-    /*
+    /**
      * Get a parameter value by a name.
+     *
      * @return mixed
      */
     public function getParam(string $name)

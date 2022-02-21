@@ -36,20 +36,24 @@ use RuntimeException;
  */
 class FieldDefs
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $data;
 
-    private $name;
+    private string $name;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $raw
+     */
     public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
-
         $obj->data = $raw;
-
         $obj->name = $name;
 
         return $obj;
@@ -85,7 +89,7 @@ class FieldDefs
         return $this->data['notStorable'] ?? false;
     }
 
-    /*
+    /**
      * Get a parameter value by a name.
      *
      * @return mixed
