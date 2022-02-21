@@ -37,9 +37,7 @@ use stdClass;
 
 class LinkMultiple implements FieldDuplicator
 {
-    private $entityManager;
-
-    private $fieldUtil;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -50,10 +48,15 @@ class LinkMultiple implements FieldDuplicator
     {
         $valueMap = (object) [];
 
-        $relationDefs = $this->entityManager
+        $entityDefs = $this->entityManager
             ->getDefs()
-            ->getEntity($entity->getEntityType())
-            ->getRelation($field);
+            ->getEntity($entity->getEntityType());
+
+        if (!$entity->hasRelation($field)) {
+            return $valueMap;
+        }
+
+        $relationDefs = $entityDefs->getRelation($field);
 
         if (
             !$relationDefs->hasForeignEntityType() ||
