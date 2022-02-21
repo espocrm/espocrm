@@ -29,22 +29,30 @@
 
 namespace Espo\ORM\Mapper;
 
-use Espo\ORM\{
-    Entity,
-    Metadata,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\Metadata;
 
 use RuntimeException;
 
 class Helper
 {
-    protected $metadata;
+    private Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return array{
+     *   key: string,
+     *   foreignKey: string,
+     *   foreignType?: string,
+     *   nearKey?: string,
+     *   distantKey?: string,
+     *   typeKey?: string
+     * }
+     */
     public function getRelationKeys(Entity $entity, string $relationName): array
     {
         $entityType = $entity->getEntityType();

@@ -281,7 +281,8 @@ class RDBRepository implements Repository
         if (!$mapper instanceof BaseMapper) {
             throw new RuntimeException("Not supported 'findBySql'.");
         }
-
+        
+        /** @var SthCollection<TEntity> */
         return $mapper->selectBySql($this->entityType, $sql);
     }
 

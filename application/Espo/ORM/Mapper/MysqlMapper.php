@@ -29,7 +29,4 @@
 
 namespace Espo\ORM\Mapper;
 
-class MysqlMapper extends BaseMapper
-{
-
-}
+class MysqlMapper extends BaseMapper {}

@@ -47,6 +47,7 @@ use PDO;
 use stdClass;
 use LogicException;
 use RuntimeException;
+use PDOStatement;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
@@ -56,10 +57,6 @@ use RuntimeException;
 class BaseMapper implements RDBMapper
 {
     protected const ATTRIBUTE_DELETED = 'deleted';
-
-    protected array $fieldsMapCache = [];
-
-    protected array $aliasesCache = [];
 
     protected PDO $pdo;
 
@@ -129,6 +126,9 @@ class BaseMapper implements RDBMapper
         return (int) $this->aggregate($select, 'COUNT', 'id');
     }
 
+    /**
+     * @return int|float
+     */
     public function max(Select $select, string $attribute)
     {
          $value =  $this->aggregate($select, 'MAX', $attribute);
@@ -136,12 +136,19 @@ class BaseMapper implements RDBMapper
          return $this->castToNumber($value);
     }
 
+    /**
+     * @return int|float
+     */
     public function min(Select $select, string $attribute)
     {
         $value = $this->aggregate($select, 'MIN', $attribute);
 
         return $this->castToNumber($value);
     }
+
+    /**
+     * @return int|float
+     */
 
     public function sum(Select $select, string $attribute)
     {
@@ -150,6 +157,10 @@ class BaseMapper implements RDBMapper
         return $this->castToNumber($value);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     protected function castToNumber($value)
     {
         if (is_int($value) || is_float($value)) {
@@ -169,6 +180,8 @@ class BaseMapper implements RDBMapper
 
     /**
      * {@inheritdoc}
+     *
+     * @return SthCollection<Entity>
      */
     public function select(Select $select): SthCollection
     {
@@ -185,17 +198,25 @@ class BaseMapper implements RDBMapper
 
     /**
      * Select entities from DB by a SQL query.
+     *
+     * @return SthCollection<Entity>
      */
     public function selectBySql(string $entityType, string $sql): SthCollection
     {
         return $this->selectBySqlInternal($entityType, $sql);
     }
 
+    /**
+     * @return SthCollection<Entity>
+     */
     protected function selectBySqlInternal(string $entityType, string $sql): SthCollection
     {
         return $this->collectionFactory->createFromSql($entityType, $sql);
     }
 
+    /**
+     * @return mixed
+     */
     public function aggregate(Select $select, string $aggregation, string $aggregationBy)
     {
         $entityType = $select->getFrom();
@@ -231,13 +252,16 @@ class BaseMapper implements RDBMapper
     /**
      * Select related entities from DB.
      *
-     * @return Collection|Entity|null
+     * @return Collection<Entity>|Entity|null
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null)
     {
         return $this->selectRelatedInternal($entity, $relationName, $select);
     }
 
+    /**
+     * @return Collection<Entity>|Entity|int|null
+     */
     protected function selectRelatedInternal(
         Entity $entity,
         string $relationName,
@@ -727,11 +751,14 @@ class BaseMapper implements RDBMapper
         throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
     }
 
-    protected function executeSql(string $sql, bool $rerunIfDeadlock = false)/* : PDOStatement*/
+    protected function executeSql(string $sql, bool $rerunIfDeadlock = false): PDOStatement
     {
         return $this->sqlExecutor->execute($sql, $rerunIfDeadlock);
     }
 
+    /**
+     * @param array<string,mixed>|null $data
+     */
     protected function addRelation(
         Entity $entity,
         string $relationName,
@@ -1225,7 +1252,10 @@ class BaseMapper implements RDBMapper
         $this->insertInternal($entity, $onDuplicateUpdateAttributeList);
     }
 
-    protected function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null)
+    /**
+     * @param string[]|null $onDuplicateUpdateAttributeList
+     */
+    protected function insertInternal(Entity $entity, ?array $onDuplicateUpdateAttributeList = null): void
     {
         $update = null;
 
@@ -1249,7 +1279,7 @@ class BaseMapper implements RDBMapper
         }
     }
 
-    protected function setLastInsertIdWithinConnection(Entity $entity)
+    protected function setLastInsertIdWithinConnection(Entity $entity): void
     {
         $id = $this->pdo->lastInsertId();
 
@@ -1299,6 +1329,9 @@ class BaseMapper implements RDBMapper
         $this->executeSql($sql, true);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getInsertColumnList(Entity $entity): array
     {
         $columnList = [];
@@ -1312,29 +1345,42 @@ class BaseMapper implements RDBMapper
         return $columnList;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getInsertValueMap(Entity $entity): array
     {
         $map = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
             $type = $entity->getAttributeType($attribute);
+
             $map[$attribute] = $this->prepareValueForInsert($type, $value);
         }
 
         return $map;
     }
 
+    /**
+     * @param string[] $attributeList
+     * @return string[]
+     */
     protected function getInsertOnDuplicateSetMap(Entity $entity, array $attributeList)
     {
         $list = [];
 
-        foreach ($attributeList as $a) {
-            $list[$a] = $this->prepareValueForInsert($entity, $entity->get($a));
+        foreach ($attributeList as $attribute) {
+            $type = $entity->getAttributeType($attribute);
+
+            $list[$attribute] = $this->prepareValueForInsert($type, $entity->get($attribute));
         }
 
         return $list;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getValueMapForUpdate(Entity $entity): array
     {
         $valueMap = [];
@@ -1385,6 +1431,11 @@ class BaseMapper implements RDBMapper
         $this->executeSql($sql);
     }
 
+    /**
+     * @param string $type
+     * @param mixed $value
+     * @return mixed
+     */
     protected function prepareValueForInsert($type, $value)
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
@@ -1405,7 +1456,7 @@ class BaseMapper implements RDBMapper
     /**
      * Delete an entity from DB.
      */
-    public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false)
+    public function deleteFromDb(string $entityType, string $id, bool $onlyDeleted = false): void
     {
         if (empty($entityType) || empty($id)) {
             throw new RuntimeException("Can't delete an empty entity type or ID from DB.");
@@ -1461,6 +1512,9 @@ class BaseMapper implements RDBMapper
         $this->update($entity);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function toValueMap(Entity $entity, bool $onlyStorable = true): array
     {
         $data = [];
@@ -1494,11 +1548,18 @@ class BaseMapper implements RDBMapper
         return $data;
     }
 
-    protected function populateEntityFromRow(Entity $entity, $data)
+    /**
+     * @param array<mixed,mixed> $data
+     */
+    protected function populateEntityFromRow(Entity $entity, $data): void
     {
         $entity->set($data);
     }
 
+    /**
+     * @param array<mixed> $select
+     * @return array<mixed>
+     */
     protected function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
         $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
@@ -1515,8 +1576,9 @@ class BaseMapper implements RDBMapper
             return array_merge($select, $additionalSelect);
         }
 
-        foreach ($additionalSelect as $i => $item) {
+        foreach ($additionalSelect as $item) {
             $index = array_search($item[1], $select);
+
             if ($index !== false) {
                 $select[$index] = $item;
             }
@@ -1525,6 +1587,10 @@ class BaseMapper implements RDBMapper
         return $select;
     }
 
+    /**
+     * @param array<string,mixed>|null $conditions
+     * @return array{string,string,array<mixed,mixed>}
+     */
     protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
         $middleName = $this->getRelationParam($entity, $relationName, 'relationName');
@@ -1565,6 +1631,9 @@ class BaseMapper implements RDBMapper
         return $join;
     }
 
+    /**
+     * @return array<array{string,string}>
+     */
     protected function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
         $foreign = $this->getRelationParam($entity, $relationName, 'foreign');

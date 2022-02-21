@@ -39,6 +39,8 @@ interface RDBMapper extends Mapper
 {
     /**
      * Relate an entity with another entity.
+     *
+     * @param array<string,mixed>|null $columnData
      */
     public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData): bool;
 
@@ -49,6 +51,8 @@ interface RDBMapper extends Mapper
 
     /**
      * Unrelate an entity from another entity by a given ID.
+     *
+     * @param array<string,mixed>|null $columnData
      */
     public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null): bool;
 
@@ -64,6 +68,8 @@ interface RDBMapper extends Mapper
 
     /**
      * Update relationship columns.
+     *
+     * @param array<string,mixed> $columnData
      */
     public function updateRelationColumns(
         Entity $entity,
@@ -87,7 +93,7 @@ interface RDBMapper extends Mapper
     /**
      * Select related entities from DB.
      *
-     * @return Collection|Entity|null
+     * @return Collection<Entity>|Entity|null
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null);
 
