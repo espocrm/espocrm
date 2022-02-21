@@ -91,7 +91,7 @@ class LDAP implements Login
         Language $defaultLanguage,
         Log $log,
         Espo $baseLogin,
-        ClientFactory $clientFactyory,
+        ClientFactory $clientFactory,
         LinkMultipleSaver $linkMultipleSaver,
         EmailAddressSaver $emailAddressSaver,
         PhoneNumberSaver $phoneNumberSaver,
@@ -103,7 +103,7 @@ class LDAP implements Login
         $this->language = $defaultLanguage;
         $this->log = $log;
         $this->baseLogin = $baseLogin;
-        $this->clientFactory = $clientFactyory;
+        $this->clientFactory = $clientFactory;
         $this->linkMultipleSaver = $linkMultipleSaver;
         $this->emailAddressSaver = $emailAddressSaver;
         $this->phoneNumberSaver = $phoneNumberSaver;
