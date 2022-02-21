@@ -77,6 +77,8 @@ class UpdateBuilder implements Builder
 
     /**
      * Values to set. Column => Value map.
+     *
+     * @param array<string,mixed> $set
      */
     public function set(array $set): self
     {

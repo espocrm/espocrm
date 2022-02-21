@@ -38,6 +38,9 @@ class Union implements SelectingQuery
 {
     use BaseTrait;
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function validateRawParams(array $params): void
     {
         if (empty($params['queries'])) {

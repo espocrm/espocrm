@@ -55,6 +55,9 @@ class Update implements Query
         return $this->params['limit'] ?? null;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);

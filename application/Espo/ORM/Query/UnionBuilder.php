@@ -96,7 +96,7 @@ class UnionBuilder implements Builder
     /**
      * Apply ORDER.
      *
-     * @param string|array $orderBy A select alias.
+     * @param string|array<array{string,bool|string}> $orderBy A select alias.
      * @param string|bool $direction OrderExpression::ASC|OrderExpression::DESC. TRUE for DESC order.
      */
     public function order($orderBy, $direction = Order::ASC): self
