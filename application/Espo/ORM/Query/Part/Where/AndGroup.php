@@ -39,8 +39,14 @@ use Espo\ORM\Query\Part\{
  */
 class AndGroup implements WhereItem
 {
+    /**
+     * @var array<mixed,mixed>
+     */
     private $rawValue = [];
 
+    /**
+     * @return array<mixed,mixed>
+     */
     public function getRaw(): array
     {
         return ['AND' => $this->getRawValue()];
@@ -52,7 +58,7 @@ class AndGroup implements WhereItem
     }
 
     /**
-     * @return array
+     * @return array<mixed,mixed>
      */
     public function getRawValue()
     {
@@ -67,6 +73,10 @@ class AndGroup implements WhereItem
         return count($this->rawValue);
     }
 
+    /**
+     * @param array<mixed,mixed> $whereClause
+     * @return self
+     */
     public static function fromRaw(array $whereClause): self
     {
         if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {

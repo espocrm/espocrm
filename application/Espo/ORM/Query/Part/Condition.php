@@ -174,7 +174,7 @@ class Condition
      * Create 'IN' comparison.
      *
      * @param Expression $subject What to test.
-     * @param Select|array $set A set of values. A select query or array of scalars.
+     * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      */
     public static function in(Expression $subject, $set): Comparison
     {
@@ -185,7 +185,7 @@ class Condition
      * Create 'NOT IN' comparison.
      *
      * @param Expression $subject What to test.
-     * @param Select|array $set A set of values. A select query or array of scalars.
+     * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      */
     public static function notIn(Expression $subject, $set): Comparison
     {

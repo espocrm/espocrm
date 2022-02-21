@@ -59,6 +59,10 @@ trait SelectingBuilderTrait
         return $this;
     }
 
+    /**
+     * @param WhereItem|array<mixed,mixed>|string $clause A key or where clause.
+     * @param mixed[]|scalar|null $value A value. Omitted if the first argument is not string.
+     */
     private function applyWhereClause(string $type, $clause, $value): void
     {
         if ($clause instanceof WhereItem) {
@@ -159,7 +163,7 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -221,7 +225,7 @@ trait SelectingBuilderTrait
      * @param Join|string $target
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
-     * @param WhereItem|array|null $conditions Join conditions.
+     * @param WhereItem|array<mixed,mixed>|null $conditions Join conditions.
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -321,6 +325,10 @@ trait SelectingBuilderTrait
         return false;
     }
 
+    /**
+     * @param array<Expression|mixed[]> $itemList
+     * @return array<array{string,string}>
+     */
     private function normilizeExpressionItemArray(array $itemList): array
     {
         $resultList = [];
@@ -352,6 +360,11 @@ trait SelectingBuilderTrait
         return $resultList;
     }
 
+    /**
+     * @param array<Order|mixed[]> $itemList
+     * @param string|bool|null $direction
+     * @return array<array{string,string|bool}>
+     */
     private function normilizeOrderExpressionItemArray(array $itemList, $direction): array
     {
         $resultList = [];

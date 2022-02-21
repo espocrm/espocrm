@@ -34,13 +34,21 @@ use Iterator;
 
 /**
  * A list of order items.
+ *
+ * @implements Iterator<Order>
  */
 class OrderList implements Iterator
 {
-    private $position = 0;
+    private int $position = 0;
 
-    private $list;
+    /**
+     * @var Order[]
+     */
+    private array $list;
 
+    /**
+     * @param Order[] $list
+     */
     private function __construct(array $list)
     {
         foreach ($list as $item) {

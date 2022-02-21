@@ -36,6 +36,10 @@ use Espo\ORM\Query\Part\WhereItem;
  */
 class OrGroup implements WhereItem
 {
+
+    /**
+     * @var array<mixed,mixed>
+     */
     private $rawValue = [];
 
     public function __construct()
@@ -53,7 +57,7 @@ class OrGroup implements WhereItem
     }
 
     /**
-     * @return array
+     * @return array<mixed,mixed>
      */
     public function getRawValue()
     {
@@ -68,6 +72,9 @@ class OrGroup implements WhereItem
         return count($this->rawValue);
     }
 
+    /**
+     * @param array<mixed,mixed> $whereClause
+     */
     public static function fromRaw(array $whereClause): self
     {
         $obj = new self();

@@ -216,6 +216,7 @@ class SelectBuilder implements Builder
 
     /**
      * @deprecated Use `group` method.
+     * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): self
     {
@@ -290,6 +291,10 @@ class SelectBuilder implements Builder
         return $this;
     }
 
+    /**
+     * @param array<Expression|Selection|mixed[]> $itemList
+     * @return array<array{string,string}>
+     */
     private function normilizeSelectExpressionArray(array $itemList): array
     {
         $resultList = [];

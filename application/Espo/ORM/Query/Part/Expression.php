@@ -38,7 +38,7 @@ use RuntimeException;
  */
 class Expression implements WhereItem
 {
-    private $expression;
+    private string $expression;
 
     public function __construct(string $expression)
     {
@@ -675,11 +675,17 @@ class Expression implements WhereItem
         return self::composeFunction('NOT', $argument);
     }
 
+    /**
+     * @param Expression|bool|int|float|string|null ...$argumentList
+     */
     private static function composeFunction(string $function, ...$argumentList): self
     {
         return Util::composeFunction($function, ...$argumentList);
     }
 
+    /**
+     * @param Expression|bool|int|float|string|null $arg
+     */
     private static function stringifyArgument($arg): string
     {
         return Util::stringifyArgument($arg);

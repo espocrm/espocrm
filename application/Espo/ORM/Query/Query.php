@@ -36,6 +36,8 @@ interface Query
 {
     /**
      * Get parameters in RAW format.
+     *
+     * @return array<string,mixed>
      */
     public function getRaw(): array;
 }

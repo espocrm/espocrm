@@ -63,10 +63,16 @@ class Comparison implements WhereItem
 
     private const OPERATOR_NOT_IN_SUB_QUERY = '!=s';
 
-    private $rawKey;
+    private string $rawKey;
 
+    /**
+     * @var mixed
+     */
     private $rawValue;
 
+    /**
+     * @param mixed $rawValue
+     */
     private function __construct(string $rawKey, $rawValue)
     {
         $this->rawKey = $rawKey;
@@ -191,7 +197,7 @@ class Comparison implements WhereItem
      * Create 'IN' comparison.
      *
      * @param Expression $subject What to test.
-     * @param Select|array $set A set of values. A select query or array of scalars.
+     * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      * @return self
      */
     public static function in(Expression $subject, $set): self
@@ -207,7 +213,7 @@ class Comparison implements WhereItem
      * Create 'NOT IN' comparison.
      *
      * @param Expression $subject What to test.
-     * @param Select|array $set A set of values. A select query or array of scalars.
+     * @param Select|scalar[] $set A set of values. A select query or array of scalars.
      * @return self
      */
     public static function notIn(Expression $subject, $set): self
@@ -265,6 +271,7 @@ class Comparison implements WhereItem
 
     /**
      * @param Expression|string $arg1
+     * @param scalar[] $valueList
      */
     private static function createInOrNotInArray(string $operator, $arg1, array $valueList): self
     {

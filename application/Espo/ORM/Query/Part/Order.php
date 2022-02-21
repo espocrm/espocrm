@@ -40,9 +40,9 @@ class Order
 
     public const DESC = 'DESC';
 
-    private $expression;
+    private Expression $expression;
 
-    private $isDesc = false;
+    private bool $isDesc = false;
 
     private function __construct(Expression $expression)
     {

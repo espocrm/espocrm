@@ -36,11 +36,11 @@ use RuntimeException;
  */
 class Join
 {
-    private $target;
+    private string $target;
 
-    private $alias = null;
+    private ?string $alias = null;
 
-    private $conditions = null;
+    private ?WhereItem $conditions = null;
 
     private function __construct(string $target, ?string $alias = null)
     {

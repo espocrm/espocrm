@@ -29,12 +29,13 @@
 
 namespace Espo\ORM\Query\Part\Where;
 
-use Espo\ORM\Query\Part\{
-    WhereItem,
-};
+use Espo\ORM\Query\Part\WhereItem;
 
 class OrGroupBuilder
 {
+    /**
+     * @var array<mixed,mixed>
+     */
     private $raw = [];
 
     public function build(): OrGroup
@@ -81,6 +82,10 @@ class OrGroupBuilder
         return $this;
     }
 
+    /**
+     * @param array<mixed,mixed> $raw
+     * @return array<mixed,mixed>
+     */
     private static function normilizeRaw(array $raw): array
     {
         if (count($raw) === 1 && array_keys($raw)[0] !== 0) {

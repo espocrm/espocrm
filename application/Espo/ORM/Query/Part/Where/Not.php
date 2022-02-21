@@ -38,6 +38,9 @@ use Espo\ORM\Query\Part\{
  */
 class Not implements WhereItem
 {
+    /**
+     * @var array<mixed,mixed>
+     */
     private $rawValue = [];
 
     public function getRaw(): array
@@ -51,13 +54,16 @@ class Not implements WhereItem
     }
 
     /**
-     * @return array
+     * @return array<mixed,mixed>
      */
     public function getRawValue()
     {
         return $this->rawValue;
     }
 
+    /**
+     * @param array<mixed,mixed> $whereClause
+     */
     public static function fromRaw(array $whereClause): self
     {
         if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {

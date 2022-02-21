@@ -178,6 +178,9 @@ class Select implements SelectingQuery
         return WhereClause::fromRaw($havingClause);
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);

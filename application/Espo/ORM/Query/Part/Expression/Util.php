@@ -37,6 +37,8 @@ class Util
 {
     /**
      * Compose an expression by a function name and arguments.
+     *
+     * @param Expr|bool|int|float|string|null ...$argumentList
      */
     public static function composeFunction(string $function, ...$argumentList): Expr
     {
