@@ -1,6 +1,7 @@
 parameters:
 	level: 5
 	inferPrivatePropertyTypeFromConstructor: true
+	treatPhpDocTypesAsCertain: false
 	paths:
 		- application
 	reportUnmatchedIgnoredErrors: false
