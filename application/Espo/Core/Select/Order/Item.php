@@ -35,14 +35,23 @@ use InvalidArgumentException;
 
 class Item
 {
+    /**
+     * @var mixed
+     */
     private $orderBy = false;
 
+    /**
+     * @var mixed
+     */
     private $order = false;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();
@@ -73,11 +82,13 @@ class Item
 
     public function getOrderBy(): ?string
     {
+        /** @var ?string */
         return $this->orderBy;
     }
 
     public function getOrder(): ?string
     {
+        /** @var ?string */
         return $this->order;
     }
 }

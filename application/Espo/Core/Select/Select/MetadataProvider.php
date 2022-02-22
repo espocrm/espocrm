@@ -29,19 +29,15 @@
 
 namespace Espo\Core\Select\Select;
 
-use Espo\Core\{
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    ORM\EntityManager,
-};
+use Espo\ORM\EntityManager;
 
 class MetadataProvider
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(Metadata $metadata, EntityManager $entityManager)
     {
@@ -56,6 +52,9 @@ class MetadataProvider
         ]) ?? null;
     }
 
+    /**
+     * @return array<string,string[]>|null
+     */
     public function getSelectAttributesDependencyMap(string $entityType): ?array
     {
         return $this->metadata->get([
@@ -63,6 +62,9 @@ class MetadataProvider
         ]) ?? null;
     }
 
+    /**
+     * @return string[]
+     */
     public function getAclPortalAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([
@@ -70,6 +72,9 @@ class MetadataProvider
         ]) ?? null;
     }
 
+    /**
+     * @return string[]
+     */
     public function getAclAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([

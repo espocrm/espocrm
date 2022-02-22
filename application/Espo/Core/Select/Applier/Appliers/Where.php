@@ -43,22 +43,13 @@ use Espo\{
 
 class Where
 {
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    /**
-     * @var ConverterFactory
-     */
-    protected $converterFactory;
+    protected ConverterFactory $converterFactory;
 
-    /**
-     * @var CheckerFactory
-     */
-    protected $checkerFactory;
+    protected CheckerFactory $checkerFactory;
 
     public function __construct(
         string $entityType,

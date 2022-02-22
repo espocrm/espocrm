@@ -81,6 +81,9 @@ class FilterFactory
         return (bool) $this->getClassName($entityType, $name);
     }
 
+    /**
+     * @return class-string|null
+     */
     protected function getClassName(string $entityType, string $name): ?string
     {
         if (!$name) {
@@ -103,6 +106,9 @@ class FilterFactory
         return $this->getDefaultClassName($name);
     }
 
+    /**
+     * @return class-string|null
+     */
     protected function getDefaultClassName(string $name): ?string
     {
         $className1 = $this->metadata->get(['app', 'select', 'boolFilterClassNameMap', $name]);

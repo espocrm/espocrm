@@ -32,7 +32,6 @@ namespace Espo\Core\Select;
 use Espo\Core\Select\Where\Item as WhereItem;
 
 use InvalidArgumentException;
-
 use stdClass;
 
 /**
@@ -40,7 +39,10 @@ use stdClass;
  */
 class SearchParams
 {
-    private $rawParams = [];
+    /**
+     * @var array<string,mixed>
+     */
+    private array $rawParams = [];
 
     public const ORDER_ASC = 'ASC';
 
@@ -50,11 +52,17 @@ class SearchParams
     {
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getRaw(): array
     {
         return $this->rawParams;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getSelect(): ?array
     {
         return $this->rawParams['select'] ?? null;
@@ -264,7 +272,7 @@ class SearchParams
     /**
      * Create an instance from a raw.
      *
-     * @params stdClass|array $params
+     * @param stdClass|array<string,mixed> $params
      */
     public static function fromRaw($params): self
     {
@@ -443,6 +451,8 @@ class SearchParams
 
     /**
      * For compatibility with the legacy definition.
+     *
+     * @param array<string,mixed> $params
      */
     private function adjustParams(array &$params): void
     {

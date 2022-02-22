@@ -48,22 +48,13 @@ use Espo\{
 
 class Order
 {
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    /**
-     * @var MetadataProvider
-     */
-    protected $metadataProvider;
+    protected MetadataProvider $metadataProvider;
 
-    /**
-     * @var ItemConverterFactory
-     */
-    protected $itemConverterFactory;
+    protected ItemConverterFactory $itemConverterFactory;
 
     public function __construct(
         string $entityType,
@@ -197,6 +188,9 @@ class Order
         $queryBuilder->order($resultOrderBy);
     }
 
+    /**
+     * @return array<array{string,string}>
+     */
     private function orderListToArray(OrderList $orderList): array
     {
         $list = [];

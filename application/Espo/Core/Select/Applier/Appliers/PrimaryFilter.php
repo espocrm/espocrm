@@ -44,22 +44,13 @@ use Espo\{
 
 class PrimaryFilter
 {
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    /**
-     * @var SelectManager
-     */
-    protected $selectManager;
+    protected SelectManager $selectManager;
 
-    /**
-     * @var FilterFactory
-     */
-    protected $primaryFilterFactory;
+    protected FilterFactory $primaryFilterFactory;
 
     public function __construct(
         string $entityType,

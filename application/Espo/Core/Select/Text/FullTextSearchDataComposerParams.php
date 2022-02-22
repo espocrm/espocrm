@@ -33,12 +33,15 @@ use InvalidArgumentException;
 
 class FullTextSearchDataComposerParams
 {
-    private $isAuxiliaryUse = false;
+    private bool $isAuxiliaryUse = false;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();

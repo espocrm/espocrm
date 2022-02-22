@@ -33,16 +33,25 @@ use InvalidArgumentException;
 
 class FullTextSearchData
 {
-    private $expression = null;
+    private ?string $expression = null;
 
-    private $fieldList = null;
+    /**
+     * @var ?string[]
+     */
+    private ?array $fieldList = null;
 
-    private $columnList = false;
+    /**
+     * @var ?string[]
+     */
+    private ?array $columnList = null;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();
@@ -69,11 +78,17 @@ class FullTextSearchData
         return $this->expression;
     }
 
+    /**
+     * @return string[]
+     */
     public function getFieldList(): array
     {
         return $this->fieldList;
     }
 
+    /**
+     * @return string[]
+     */
     public function getColumnList(): array
     {
         return $this->columnList;

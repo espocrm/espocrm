@@ -33,14 +33,17 @@ use InvalidArgumentException;
 
 class Params
 {
-    private $applyPermissionCheck = false;
+    private bool $applyPermissionCheck = false;
 
-    private $forbidComplexExpressions = false;
+    private bool $forbidComplexExpressions = false;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();

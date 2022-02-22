@@ -39,9 +39,9 @@ use Espo\Entities\User;
 
 class Additional
 {
-    private $user;
+    private User $user;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(User $user, InjectableFactory $injectableFactory)
     {
@@ -49,6 +49,9 @@ class Additional
         $this->injectableFactory = $injectableFactory;
     }
 
+    /**
+     * @param class-string[] $classNameList
+     */
     public function apply(array $classNameList, QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
         foreach ($classNameList as $className) {
@@ -58,6 +61,9 @@ class Additional
         }
     }
 
+    /**
+     * @param class-string $className
+     */
     private function createApplier(string $className): AdditionalApplier
     {
         return $this->injectableFactory->createWithBinding(

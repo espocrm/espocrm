@@ -37,15 +37,13 @@ use Espo\Core\{
     Binding\BindingData,
 };
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class ConverterFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -132,6 +130,9 @@ class ConverterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string
+     */
     private function getConverterClassName(string $entityType): string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereConverterClassName']);
@@ -143,6 +144,9 @@ class ConverterFactory
         return Converter::class;
     }
 
+    /**
+     * @return class-string
+     */
     private function getItemConverterClassName(string $entityType): string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereItemConverterClassName']);
@@ -154,6 +158,9 @@ class ConverterFactory
         return ItemGeneralConverter::class;
     }
 
+    /**
+     * @return class-string
+     */
     private function getDateTimeItemTransformerClassName(string $entityType): string
     {
         $className = $this->metadata

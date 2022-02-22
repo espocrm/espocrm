@@ -46,10 +46,10 @@ use Espo\Entities\User;
 class TextFilter
 {
     /** @todo Move to metadata. */
-    private $fullTextRelevanceThreshold = null;
+    private ?int $fullTextRelevanceThreshold = null;
 
     /** @todo Move to metadata. */
-    private $fullTextOrderRelevanceDivider = 5;
+    private int $fullTextOrderRelevanceDivider = 5;
 
     private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINTED;
 
@@ -59,27 +59,15 @@ class TextFilter
 
     private const FT_ORDER_ORIGINAL = 3;
 
-    private $entityType;
+    private string $entityType;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var MetadataProvider
-     */
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
-    /**
-     * @var FullTextSearchDataComposerFactory
-     */
-    private $fullTextSearchDataComposerFactory;
+    private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory;
 
-    /**
-     * @var FilterFactory
-     */
-    private $filterFactory;
+    private FilterFactory $filterFactory;
 
     public function __construct(
         string $entityType,

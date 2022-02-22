@@ -38,17 +38,23 @@ class Item
 
     public const TYPE_OR = 'or';
 
-    private $type = null;
+    private ?string $type = null;
 
-    private $attribute = null;
+    private ?string $attribute = null;
 
+    /**
+     * @var mixed
+     */
     private $value = null;
 
-    private $dateTime = false;
+    private bool $dateTime = false;
 
-    private $timeZone = null;
+    private ?string $timeZone = null;
 
-    protected $noAttributeTypeList = [
+    /**
+     * @var string[]
+     */
+    private $noAttributeTypeList = [
         self::TYPE_OR,
         self::TYPE_AND,
         'not',
@@ -57,15 +63,19 @@ class Item
         'having', // @todo Check usage. Maybe to be removed.
     ];
 
-    protected $withNestedItemsTypeList = [
+    /**
+     * @var string[]
+     */
+    private $withNestedItemsTypeList = [
         self::TYPE_OR,
         self::TYPE_AND,
     ];
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromRaw(array $params): self
     {
         $obj = new self();
@@ -109,6 +119,9 @@ class Item
         return $obj;
     }
 
+    /**
+     * @param array<array<mixed,mixed>> $paramList
+     */
     public static function fromRawAndGroup(array $paramList): self
     {
         return self::fromRaw([
@@ -117,6 +130,16 @@ class Item
         ]);
     }
 
+    /**
+     *
+     * @return array{
+     *   type: string,
+     *   value: mixed,
+     *   attribute?: string,
+     *   dateTime?: bool,
+     *   timeZone?: string,
+     * }
+     */
     public function getRaw(): array
     {
         $raw = [

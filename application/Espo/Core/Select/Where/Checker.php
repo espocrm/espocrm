@@ -44,14 +44,17 @@ use Espo\ORM\BaseEntity;
  */
 class Checker
 {
-    private $seed = null;
+    private ?Entity $seed = null;
 
-    private $entityType;
+    private string $entityType;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $acl;
+    private Acl $acl;
 
+    /**
+     * @var string[]
+     */
     private $nestingTypeList = [
         'or',
         'and',
@@ -60,12 +63,18 @@ class Checker
         'not',
     ];
 
+    /**
+     * @var string[]
+     */
     private $subQueryTypeList = [
         'subQueryIn',
         'subQueryNotIn',
         'not',
     ];
 
+    /**
+     * @var string[]
+     */
     private $linkTypeList = [
         'inCategory',
         'isLinked',

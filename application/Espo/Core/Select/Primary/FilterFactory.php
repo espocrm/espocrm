@@ -42,9 +42,9 @@ use Espo\Entities\User;
 
 class FilterFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -79,6 +79,9 @@ class FilterFactory
         return (bool) $this->getClassName($entityType, $name);
     }
 
+    /**
+     * @return class-string|null
+     */
     protected function getClassName(string $entityType, string $name): ?string
     {
         if (!$name) {

@@ -35,9 +35,9 @@ use Espo\ORM\Defs;
 
 class MetadataProvider
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $ormDefs;
+    private Defs $ormDefs;
 
     public function __construct(Metadata $metadata, Defs $ormDefs)
     {
@@ -52,6 +52,9 @@ class MetadataProvider
         ]);
     }
 
+    /**
+     * @return string[]|null
+     */
     public function getTextFilterAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([
@@ -84,6 +87,9 @@ class MetadataProvider
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     public function getUseContainsAttributeList(string $entityType): array
     {
         return $this->metadata->get([
@@ -91,6 +97,9 @@ class MetadataProvider
         ]) ?? [];
     }
 
+    /**
+     * @return string[]|null
+     */
     public function getFullTextSearchColumnList(string $entityType): ?array
     {
         return $this->ormDefs

@@ -47,7 +47,10 @@ use Espo\Entities\User;
  */
 class SelectManagerFactory
 {
-    protected $defaultClassName = SelectManager::class;
+    /**
+     * @var class-string
+     */
+    protected string $defaultClassName = SelectManager::class;
 
     private $user;
 

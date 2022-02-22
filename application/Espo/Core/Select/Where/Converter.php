@@ -36,7 +36,6 @@ use Espo\{
     ORM\Query\Part\WhereItem,
     ORM\Entity,
     ORM\Defs as ORMDefs,
-    Entities\User,
     Core\Select\Helpers\RandomStringGenerator,
 };
 
@@ -45,15 +44,15 @@ use Espo\{
  */
 class Converter
 {
-    private $entityType;
+    private string $entityType;
 
-    private $itemConverter;
+    private ItemConverter $itemConverter;
 
-    private $scanner;
+    private Scanner $scanner;
 
-    private $randomStringGenerator;
+    private RandomStringGenerator $randomStringGenerator;
 
-    private $ormDefs;
+    private ORMDefs $ormDefs;
 
     public function __construct(
         string $entityType,
@@ -90,6 +89,9 @@ class Converter
         return WhereClause::fromRaw($whereClause);
     }
 
+    /**
+     * @return array<mixed,mixed>
+     */
     private function itemToList(Item $item): array
     {
         if ($item->getType() !== 'and') {
@@ -107,6 +109,9 @@ class Converter
         return $list;
     }
 
+    /**
+     * @return ?array<mixed,mixed>
+     */
     private function processItem(QueryBuilder $queryBuilder, Item $item): ?array
     {
         $type = $item->getType();
@@ -132,6 +137,10 @@ class Converter
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
     }
 
+    /**
+     * @param mixed $value
+     * @return array<mixed,mixed>
+     */
     private function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
@@ -193,6 +202,10 @@ class Converter
         throw new Error("Not supported link '{$link}' in where item.");
     }
 
+    /**
+     * @param mixed $value
+     * @return array<mixed,mixed>
+     */
     private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;

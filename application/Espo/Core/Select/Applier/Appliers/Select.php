@@ -43,11 +43,17 @@ use Espo\{
 
 class Select
 {
+    /**
+     * @var string[]
+     */
     protected $aclAttributeList = [
         'assignedUserId',
         'createdById',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $aclPortalAttributeList = [
         'assignedUserId',
         'createdById',
@@ -55,7 +61,7 @@ class Select
         'accountId',
     ];
 
-    protected $entityType;
+    protected string $entityType;
 
     /**
      * @var User
@@ -95,6 +101,10 @@ class Select
         }
     }
 
+    /**
+     * @param string[] $attributeList
+     * @return string[]
+     */
     protected function prepareAttributeList(array $attributeList, SearchParams $searchParams): array
     {
         $limit = $searchParams->getMaxTextAttributeLength();
@@ -125,6 +135,9 @@ class Select
         return $resultList;
     }
 
+    /**
+     * @return ?string[]
+     */
     protected function getSelectAttributeList(SearchParams $searchParams): ?array
     {
         $passedAttributeList = $searchParams->getSelect();
@@ -201,6 +214,9 @@ class Select
         return $attributeList;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getAclAttributeList(): array
     {
         if ($this->user->isPortal()) {

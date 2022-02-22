@@ -39,9 +39,9 @@ use Espo\Core\Binding\ContextualBinder;
 
 class FilterFactory
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -51,6 +51,7 @@ class FilterFactory
 
     public function create(string $entityType, User $user): Filter
     {
+        /** @var class-string */
         $className = $this->metadata->get(['selectDefs', $entityType, 'textFilterClassName']) ??
             DefaultFilter::class;
 

@@ -89,6 +89,9 @@ class FilterResolverFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $entityType): string
     {
         return $this->metadata->get([
@@ -96,6 +99,9 @@ class FilterResolverFactory
         ]) ?? DefaultFilterResolver::class;
     }
 
+    /**
+     * @return class-string
+     */
     private function getPortalClassName(string $entityType): string
     {
         return $this->metadata->get([

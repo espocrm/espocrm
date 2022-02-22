@@ -33,15 +33,18 @@ use Espo\ORM\Query\Part\WhereItem;
 
 class Data
 {
-    private $filter;
+    private string $filter;
 
-    private $attributeList;
+    /**
+     * @var string[]
+     */
+    private array $attributeList;
 
-    private $skipWildcards = false;
+    private bool $skipWildcards = false;
 
-    private $fullTextSearchWhereItem = null;
+    private ?WhereItem $fullTextSearchWhereItem = null;
 
-    private $forceFullTextSearch = false;
+    private bool $forceFullTextSearch = false;
 
     /**
      * @param string[] $attributeList

@@ -29,25 +29,17 @@
 
 namespace Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
 
 class FullTextSearchDataComposer
 {
-    const MIN_LENGTH = 4;
+    private const MIN_LENGTH = 4;
 
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected Config $config;
 
-    /**
-     * @var MetadataProvider
-     */
-    protected $metadataProvider;
+    protected MetadataProvider $metadataProvider;
 
     public function __construct(
         string $entityType,
@@ -188,6 +180,9 @@ class FullTextSearchDataComposer
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getTextFilterFieldList(): array
     {
         return $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'];

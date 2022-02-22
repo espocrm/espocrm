@@ -39,20 +39,29 @@ use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
 
 class Scanner
 {
-    private $entityManager;
+    /**
+     * @var array<string,Entity>
+     */
+    private array $seedHash = [];
 
-    private $seedHash = [];
-
+    /**
+     * @var string[]
+     */
     private $nestingTypeList = [
         'or',
         'and',
     ];
 
-    private $subQueryTypeList = [
+    /**
+     * @var string[]
+     */
+    private array $subQueryTypeList = [
         'subQueryIn',
         'subQueryNotIn',
         'not',
     ];
+
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

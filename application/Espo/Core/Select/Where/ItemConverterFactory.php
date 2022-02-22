@@ -38,15 +38,13 @@ use Espo\Core\{
     Binding\BindingData,
 };
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class ItemConverterFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -83,6 +81,9 @@ class ItemConverterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string|null
+     */
     protected function getClassNameForType(string $type): ?string
     {
         return $this->metadata->get([
@@ -119,6 +120,9 @@ class ItemConverterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string|null
+     */
     protected function getClassName(string $entityType, string $attribute, string $type): ?string
     {
         return $this->metadata->get([

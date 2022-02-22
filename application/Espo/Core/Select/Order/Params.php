@@ -35,18 +35,27 @@ use InvalidArgumentException;
 
 class Params
 {
-    private $forbidComplexExpressions = false;
+    private bool $forbidComplexExpressions = false;
 
-    private $forceDefault = false;
+    private bool $forceDefault = false;
 
-    private $orderBy = false;
+    /**
+     * @var mixed
+     */
+    private $orderBy = null;
 
-    private $order = false;
+    /**
+     * @var mixed
+     */
+    private $order = null;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();
@@ -89,11 +98,13 @@ class Params
 
     public function getOrderBy(): ?string
     {
+        /** @var ?string */
         return $this->orderBy;
     }
 
     public function getOrder(): ?string
     {
+        /** @var ?string */
         return $this->order;
     }
 }

@@ -55,6 +55,9 @@ class FullTextSearchDataComposerFactory
         ]);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $entityType): string
     {
         return

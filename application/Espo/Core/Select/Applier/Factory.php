@@ -79,6 +79,7 @@ class Factory
 
     public function create(string $entityType, User $user, string $type): object
     {
+        /** @var class-string */
         $className = $this->metadata->get(
             [
                 'selectDefs',
@@ -106,6 +107,10 @@ class Factory
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
+
+    /**
+     * @return class-string
+     */
     protected function getDefaultClassName(string $type): string
     {
         return 'Espo\\Core\\Select\\Applier\Appliers\\' . ucfirst($type);

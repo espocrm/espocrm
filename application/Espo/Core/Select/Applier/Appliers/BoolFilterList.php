@@ -43,22 +43,13 @@ use Espo\Entities\User;
 
 class BoolFilterList
 {
-    protected $entityType;
+    protected string $entityType;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    /**
-     * @var SelectManager
-     */
-    protected $selectManager;
+    protected SelectManager $selectManager;
 
-    /**
-     * @var BoolFilterFactory
-     */
-    protected $boolFilterFactory;
+    protected BoolFilterFactory $boolFilterFactory;
 
     public function __construct(
         string $entityType,
@@ -72,6 +63,9 @@ class BoolFilterList
         $this->selectManager = $selectManager;
     }
 
+    /**
+     * @param string[] $boolFilterNameList
+     */
     public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
     {
         $orGroupBuilder = new OrGroupBuilder();

@@ -31,15 +31,18 @@ namespace Espo\Core\Select\Where;
 
 class ItemBuilder
 {
-    private $type = null;
+    private ?string $type = null;
 
-    private $attribute = null;
+    private ?string $attribute = null;
 
+    /**
+     * @var mixed
+     */
     private $value = null;
 
-    private $dateTime = false;
+    private bool $dateTime = false;
 
-    private $timeZone = null;
+    private ?string $timeZone = null;
 
     public function setType(string $type): self
     {

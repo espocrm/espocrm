@@ -33,14 +33,17 @@ use InvalidArgumentException;
 
 class FilterParams
 {
-    private $noFullTextSearch = false;
+    private bool $noFullTextSearch = false;
 
-    private $preferFullTextSearch = false;
+    private bool $preferFullTextSearch = false;
 
     private function __construct()
     {
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $object = new self();

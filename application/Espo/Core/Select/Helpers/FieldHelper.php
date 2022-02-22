@@ -38,11 +38,11 @@ use Espo\ORM\BaseEntity;
  */
 class FieldHelper
 {
-    private $seed = null;
+    private ?Entity $seed = null;
 
-    private $entityType;
+    private string $entityType;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(string $entityType, EntityManager $entityManager)
     {

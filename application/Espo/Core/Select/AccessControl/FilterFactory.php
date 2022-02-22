@@ -94,6 +94,9 @@ class FilterFactory
         return (bool) $this->getClassName($entityType, $name);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $entityType, string $name): ?string
     {
         if (!$name) {
