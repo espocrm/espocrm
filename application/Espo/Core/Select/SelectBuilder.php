@@ -58,38 +58,44 @@ use LogicException;
  */
 class SelectBuilder
 {
-    private $entityType = null;
+    private ?string $entityType = null;
 
-    private $queryBuilder;
+    private ?OrmSelectBuilder $queryBuilder = null;
 
-    private $user = null;
+    private ?Query $sourceQuery = null;
 
-    private $sourceQuery = null;
+    private ?SearchParams $searchParams = null;
+
+    private bool $applyAccessControlFilter = false;
+
+    private bool $applyDefaultOrder = false;
+
+    private ?string $textFilter = null;
+
+    private ?string $primaryFilter = null;
 
     /**
-     * @var SearchParams|null
+     * @var string[]
      */
-    private $searchParams = null;
+    private array $boolFilterList = [];
 
-    private $applyAccessControlFilter = false;
+    /**
+     * @var WhereItem[]
+     */
+    private array $whereItemList = [];
 
-    private $applyDefaultOrder = false;
+    private bool $applyWherePermissionCheck = false;
 
-    private $textFilter = null;
+    private bool $applyComplexExpressionsForbidden = false;
 
-    private $primaryFilter = null;
+    /**
+     * @var class-string[]
+     */
+    private array $additionalApplierClassNameList = [];
 
-    private $boolFilterList = [];
+    private User $user;
 
-    private $whereItemList = [];
-
-    private $applyWherePermissionCheck = false;
-
-    private $applyComplexExpressionsForbidden = false;
-
-    private $additionalApplierClassNameList = [];
-
-    private $applierFactory;
+    private ApplierFactory $applierFactory;
 
     public function __construct(User $user, ApplierFactory $applierFactory)
     {

@@ -61,11 +61,11 @@ class Factory
 
     public const ADDITIONAL = 'additional';
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $selectManagerFactory;
+    private SelectManagerFactory $selectManagerFactory;
 
     public function __construct(
         InjectableFactory $injectableFactory,
@@ -106,11 +106,8 @@ class Factory
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
-
     protected function getDefaultClassName(string $type): string
     {
-        $className = 'Espo\\Core\\Select\\Applier\Appliers\\' . ucfirst($type);
-
-        return $className;
+        return 'Espo\\Core\\Select\\Applier\Appliers\\' . ucfirst($type);
     }
 }
