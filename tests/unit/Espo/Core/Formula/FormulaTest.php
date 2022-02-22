@@ -43,7 +43,9 @@ use Espo\Core\ORM\EntityManager;
 
 use Espo\Entities\User;
 
-use Espo\Core\ORM\Entity as EntityCore;
+use Espo\ORM\Entity as Entity;
+
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\InjectableFactory;
 
@@ -106,24 +108,30 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->config = null;
     }
 
-    protected function createProcessor($variables = null)
+    protected function createProcessor($variables = null, ?Entity $entity = null)
     {
         $injectableFactory = new InjectableFactory($this->container);
         $attributeFetcher = new AttributeFetcher();
 
-        return new Processor($injectableFactory, $attributeFetcher, null, $this->entity, $variables);
+        return new Processor(
+            $injectableFactory,
+            $attributeFetcher,
+            null,
+            $entity ?? $this->entity,
+            $variables
+        );
     }
 
     protected function getEntityMock()
     {
-        return $this->getMockBuilder(EntityCore::class)->disableOriginalConstructor()->getMock();
+        return $this->getMockBuilder(Entity::class)->disableOriginalConstructor()->getMock();
     }
 
     protected function setEntityAttributes($entity, $attributes)
     {
         $map = [];
         foreach ($attributes as $key => $value) {
-            $map[] = [$key, [], $value];
+            $map[] = [$key, $value];
         }
 
         $entity
@@ -323,18 +331,18 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $entity = $this->entity;
+        $entity = $this->createMock(CoreEntity::class);
 
-        $this->setEntityAttributes($entity, array(
+        $this->setEntityAttributes($entity, [
             'teamsIds' => ['2']
-        ));
+        ]);
 
         $entity
             ->expects($this->any())
             ->method('addLinkMultipleId')
             ->with('teams', '1');
 
-        $this->createProcessor()->process($item);
+        $this->createProcessor(null, $entity)->process($item);
 
         $this->assertTrue(true);
     }
@@ -357,18 +365,18 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $entity = $this->entity;
+        $entity = $this->createMock(CoreEntity::class);
 
-        $this->setEntityAttributes($entity, array(
+        $this->setEntityAttributes($entity, [
             'teamsIds' => ['1', '2']
-        ));
+        ]);
 
         $entity
             ->expects($this->any())
             ->method('removeLinkMultipleId')
             ->with('teams', '1');
 
-        $this->createProcessor()->process($item);
+        $this->createProcessor(null, $entity)->process($item);
 
         $this->assertTrue(true);
     }
