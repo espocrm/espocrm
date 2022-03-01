@@ -296,6 +296,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.adjustMinHeight();
             });
 
+            this.$container.on('scroll', () => this.syncHeadScroll());
+
             this.adjustMinHeight();
 
             if (this.statusFieldIsEditable) {
@@ -317,7 +319,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initStickableHeader: function () {
-            var $container = this.$el.find('.kanban-head-container');
+            var $container = this.$headContainer = this.$el.find('.kanban-head-container');
             var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
@@ -351,6 +353,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $block.hide();
                     $container.show();
 
+                    $container.get(0).scrollLeft = 0;
+
+                    $container.childeren(0).css('width', '');
+
                     return;
                 }
 
@@ -361,7 +367,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 if (scrollTop < edge) {
                     if (scrollTop > stickTop) {
-                        $container.css('width', width + 'px');
+                        let containerWidth = this.$container.width();
+
+                        $container.children().css('width', width);
+
+                        $container.css('width', containerWidth + 'px');
 
                         if (!$container.hasClass('sticked')) {
                             $container.addClass('sticked');
@@ -375,11 +385,20 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                             $block.hide();
                         }
                     }
+
                     $container.show();
-                } else {
+
+                    this.syncHeadScroll();
+                }
+                else {
                     $container.css('width', width + 'px');
                     $container.hide();
+
                     $block.show();
+
+                    $container.get(0).scrollLeft = 0;
+
+                    $container.children().css('width', '');
                 }
             };
         },
@@ -997,6 +1016,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 let dx = e.originalEvent.clientX - startX;
 
                 containerEl.scrollLeft = startLeft - dx;
+
+                this.syncHeadScroll();
             });
 
             $document.one('mouseup.' + this.cid, () => {
@@ -1009,6 +1030,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$container.get(0).style.userSelect = 'none';
 
             $(document).off('mousemove.' + this.cid);
+        },
+
+        syncHeadScroll: function () {
+            if (!this.$headContainer.hasClass('sticked')) {
+                return;
+            }
+
+            this.$headContainer.get(0).scrollLeft = this.$container.get(0).scrollLeft;
         },
 
         controlHorizontalScroll: function (e) {
@@ -1054,6 +1083,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
 
+                this.syncHeadScroll();
+
                 if (containerEl.scrollLeft + containerEl.offsetWidth === containerEl.scrollWidth) {
                     this.blockScrollControl = false;
 
@@ -1077,6 +1108,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 let stepActual = Math.min(step, containerEl.scrollLeft);
 
                 containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
+
+                this.syncHeadScroll();
 
                 if (containerEl.scrollLeft === 0) {
                     this.blockScrollControl = false;
