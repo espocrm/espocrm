@@ -40,47 +40,38 @@ use Espo\Entities\EmailFilter;
  */
 class EmailFilterManager
 {
-    private $entityManager;
+    /**
+     * @var array<string,\Traversable<EmailFilter>>
+     */
+    private array $data = [];
 
-    private $data = [];
+    private EntityManager $entityManager;
 
-    protected $filtersMatcher = null;
+    private FiltersMatcher $filtersMatcher;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, FiltersMatcher $filtersMatcher)
     {
         $this->entityManager = $entityManager;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getFiltersMatcher()
-    {
-        if (!$this->filtersMatcher) {
-            $this->filtersMatcher = new FiltersMatcher();
-        }
-
-        return $this->filtersMatcher;
+        $this->filtersMatcher = $filtersMatcher;
     }
 
     public function getMatchingFilter(Email $email, string $userId): ?EmailFilter
     {
         if (!array_key_exists($userId, $this->data)) {
-            $emailFilterList = $this->getEntityManager()
-                ->getRepository('EmailFilter')
+            $emailFilterList = $this->entityManager
+                ->getRDBRepository(EmailFilter::ENTITY_TYPE)
                 ->where([
                     'parentId' => $userId,
-                    'parentType' => 'User'
+                    'parentType' => 'User',
                 ])
                 ->order('LIST:action:Skip,Move to Folder')
                 ->find();
 
             $this->data[$userId] = $emailFilterList;
         }
+
         foreach ($this->data[$userId] as $emailFilter) {
-            if ($this->getFiltersMatcher()->match($email, $emailFilter)) {
+            if ($this->filtersMatcher->match($email, $emailFilter)) {
                 return $emailFilter;
             }
         }

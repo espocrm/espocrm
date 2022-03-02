@@ -30,11 +30,15 @@
 namespace Espo\Core\Mail;
 
 use Espo\Entities\Email;
+use Espo\Entities\EmailFilter;
 
 use Traversable;
 
 class FiltersMatcher
 {
+    /**
+     * @param Traversable<EmailFilter>|EmailFilter $subject
+     */
     public function match(Email $email, $subject, bool $skipBody = false): bool
     {
         if (is_array($subject) || $subject instanceof Traversable) {
@@ -47,37 +51,36 @@ class FiltersMatcher
         foreach ($filterList as $filter) {
             $filterCount = 0;
 
-            if ($filter->get('from')) {
+            if ($filter->getFrom()) {
                 $filterCount++;
 
                 if (
                     !$this->matchString(
-                        strtolower($filter->get('from')),
-                        strtolower($email->get('from'))
+                        strtolower($filter->getFrom()),
+                        strtolower($email->getFromAddress())
                     )
                 ) {
                     continue;
                 }
             }
 
-            if ($filter->get('to')) {
+            if ($filter->getTo()) {
                 $filterCount++;
+
                 if (!$this->matchTo($email, $filter)) {
                     continue;
                 }
             }
 
-            if ($filter->get('subject')) {
+            if ($filter->getSubject()) {
                 $filterCount++;
 
-                if (!$this->matchString($filter->get('subject'), $email->get('name'))) {
+                if (!$this->matchString($filter->getSubject(), $email->getSubject())) {
                     continue;
                 }
             }
 
-            $wordList = $filter->get('bodyContains');
-
-            if (!empty($wordList)) {
+            if (count($filter->getBodyContains())) {
                 $filterCount++;
 
                 if ($skipBody) {
@@ -87,7 +90,6 @@ class FiltersMatcher
                 if (!$this->matchBody($email, $filter)) {
                     continue;
                 }
-
             }
 
             if ($filterCount) {
@@ -98,13 +100,11 @@ class FiltersMatcher
         return false;
     }
 
-    protected function matchTo(Email $email, $filter): bool
+    private function matchTo(Email $email, EmailFilter $filter): bool
     {
-        if ($email->get('to')) {
-            $toArr = explode(';', $email->get('to'));
-
-            foreach ($toArr as $to) {
-                if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
+        if (count($email->getToAddressList())) {
+            foreach ($email->getToAddressList() as $to) {
+                if ($this->matchString(strtolower($filter->getTo()), strtolower($to))) {
                     return true;
                 }
             }
@@ -113,13 +113,17 @@ class FiltersMatcher
         return false;
     }
 
-    protected function matchBody(Email $email, $filter): bool
+    private function matchBody(Email $email, EmailFilter $filter): bool
     {
-        $phraseList = $filter->get('bodyContains');
-        $body = $email->get('body');
-        $bodyPlain = $email->get('bodyPlain');
+        $phraseList = $filter->getBodyContains();
+        $body = $email->getBody();
+        $bodyPlain = $email->getBodyPlain();
 
         foreach ($phraseList as $phrase) {
+            if ($phrase === '') {
+                continue;
+            }
+
             if (stripos($bodyPlain, $phrase) !== false) {
                 return true;
             }
@@ -132,7 +136,7 @@ class FiltersMatcher
         return false;
     }
 
-    protected function matchString($pattern, $value): bool
+    private function matchString(string $pattern, string $value): bool
     {
         if ($pattern == $value) {
             return true;
@@ -141,7 +145,7 @@ class FiltersMatcher
         $pattern = preg_quote($pattern, '#');
         $pattern = str_replace('\*', '.*', $pattern).'\z';
 
-        if (preg_match('#^'.$pattern.'#', $value)) {
+        if (preg_match('#^' . $pattern . '#', $value)) {
             return true;
         }
 

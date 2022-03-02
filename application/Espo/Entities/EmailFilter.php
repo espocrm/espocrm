@@ -32,5 +32,27 @@ namespace Espo\Entities;
 class EmailFilter extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'EmailFilter';
-}
 
+    public function getFrom(): ?string
+    {
+        return $this->get('from');
+    }
+
+    public function getTo(): ?string
+    {
+        return $this->get('to');
+    }
+
+    public function getSubject(): ?string
+    {
+        return $this->get('subject');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBodyContains(): array
+    {
+        return $this->get('bodyContains') ?? [];
+    }
+}
