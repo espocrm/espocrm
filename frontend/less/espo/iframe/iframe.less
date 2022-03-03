@@ -64,7 +64,6 @@ table {
     border-top: 1px solid @default-border-color;
 }
 
-
 pre {
     display: block;
     padding: ((@line-height-computed - 1) / 2);
@@ -73,9 +72,10 @@ pre {
     line-height: @line-height-base;
     word-break: break-all;
     word-wrap: break-word;
-    color: @pre-color;
-    background-color: @pre-bg;
-    border: 1px solid @pre-border-color;
+    color: var(--code-color);
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border-color);
+
     border-radius: @border-radius-base;
 
     code {
