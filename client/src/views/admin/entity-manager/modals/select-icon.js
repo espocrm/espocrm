@@ -124,8 +124,6 @@ define('views/admin/entity-manager/modals/select-icon', ['views/modal', 'model']
         },
 
         processQuickSearch: function (filter) {
-            console.log(filter);
-
             if (!filter) {
                 this.$el.find('.icon-container').removeClass('hidden');
 
