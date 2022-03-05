@@ -41,9 +41,9 @@ use Espo\Core\Utils\Util;
 
 class AppInfo implements Command
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
     public function __construct(InjectableFactory $injectableFactory, FileManager $fileManager)
     {
@@ -89,6 +89,7 @@ class AppInfo implements Command
 
     protected function processType(IO $io, string $type, Params $params): void
     {
+        /** @var class-string */
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
         $obj = $this->injectableFactory->create($className);

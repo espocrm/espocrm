@@ -31,9 +31,9 @@ namespace Espo\Core\Binding;
 
 class BindingContainerBuilder
 {
-    private $data;
+    private BindingData $data;
 
-    private $binder;
+    private Binder $binder;
 
     public function __construct()
     {

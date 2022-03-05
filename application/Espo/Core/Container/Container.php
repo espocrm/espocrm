@@ -61,6 +61,7 @@ interface Container
     /**
      * Get a class of a service.
      *
+     * @return ReflectionClass<object>
      * @throws RuntimeException If not gettable.
      */
     public function getClass(string $name): ReflectionClass;

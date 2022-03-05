@@ -37,17 +37,26 @@ use Exception;
 
 class ContainerConfiguration
 {
-    protected $log;
+    /**
+     * Log must be loaded before anything.
+     * @phpstan-ignore-next-line
+     */
+    private Log $log;
 
-    protected $metadata;
+    /**
+     * Must be protected.
+     */
+    protected Metadata $metadata;
 
     public function __construct(Log $log, Metadata $metadata)
     {
-        // Log must be loaded before anything.
         $this->log = $log;
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return ?class-string
+     */
     public function getLoaderClassName(string $name): ?string
     {
         $className = null;
@@ -83,11 +92,17 @@ class ContainerConfiguration
         return null;
     }
 
+    /**
+     * @return ?class-string
+     */
     public function getServiceClassName(string $name): ?string
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'className']) ?? null;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getServiceDependencyList(string $name): ?array
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;

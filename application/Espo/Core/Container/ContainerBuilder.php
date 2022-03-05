@@ -51,22 +51,46 @@ use Espo\Core\Loaders\Metadata as MetadataLoader;
  */
 class ContainerBuilder
 {
-    private $containerClassName = Container::class;
+    /**
+     * @var class-string
+     */
+    private string $containerClassName = Container::class;
 
-    private $containerConfigurationClassName = ContainerConfiguration::class;
+    /**
+     * @var class-string
+     */
+    private string $containerConfigurationClassName = ContainerConfiguration::class;
 
-    private $configClassName = Config::class;
+    /**
+     * @var class-string
+     */
+    private string $configClassName = Config::class;
 
-    private $fileManagerClassName = FileManager::class;
+    /**
+     * @var class-string
+     */
+    private string $fileManagerClassName = FileManager::class;
 
-    private $dataCacheClassName = DataCache::class;
+    /**
+     * @var class-string
+     */
+    private string $dataCacheClassName = DataCache::class;
 
-    private $moduleClassName = Module::class;
+    /**
+     * @var class-string
+     */
+    private string $moduleClassName = Module::class;
 
-    private $bindingLoader = null;
+    private ?BindingLoader $bindingLoader = null;
 
+    /**
+     * @var array<string,object>
+     */
     private $services = [];
 
+    /**
+     * @var array<string,class-string>
+     */
     protected $loaderClassNames = [
         'log' => LogLoader::class,
         'dataManager' => DataManagerLoader::class,
@@ -80,6 +104,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param array<string,object> $services
+     */
     public function withServices(array $services): self
     {
         foreach ($services as $key => $value) {
@@ -89,6 +116,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param array<string,class-string> $classNames
+     */
     public function withLoaderClassNames(array $classNames): self
     {
         foreach ($classNames as $key => $value) {
@@ -98,6 +128,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param class-string $containerClassName
+     */
     public function withContainerClassName(string $containerClassName): self
     {
         $this->containerClassName = $containerClassName;
@@ -105,6 +138,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param class-string $containerConfigurationClassName
+     */
     public function withContainerConfigurationClassName(string $containerConfigurationClassName): self
     {
         $this->containerConfigurationClassName = $containerConfigurationClassName;
@@ -112,6 +148,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param class-string $configClassName
+     */
     public function withConfigClassName(string $configClassName): self
     {
         $this->configClassName = $configClassName;
@@ -119,6 +158,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param class-string $fileManagerClassName
+     */
     public function withFileManagerClassName(string $fileManagerClassName): self
     {
         $this->fileManagerClassName = $fileManagerClassName;
@@ -126,6 +168,9 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * @param class-string $dataCacheClassName
+     */
     public function withDataCacheClassName(string $dataCacheClassName): self
     {
         $this->dataCacheClassName = $dataCacheClassName;

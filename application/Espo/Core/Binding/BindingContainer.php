@@ -36,13 +36,16 @@ use LogicException;
 
 class BindingContainer
 {
-    private $data;
+    private BindingData $data;
 
     public function __construct(BindingData $data)
     {
         $this->data = $data;
     }
 
+    /**
+     * @param ReflectionClass<object>|null $class
+     */
     public function has(?ReflectionClass $class, ReflectionParameter $param): bool
     {
         if ($this->getInternal($class, $param) === null) {
@@ -52,6 +55,9 @@ class BindingContainer
         return true;
     }
 
+    /**
+     * @param ReflectionClass<object>|null $class
+     */
     public function get(?ReflectionClass $class, ReflectionParameter $param): Binding
     {
         if (!$this->has($class, $param)) {
@@ -61,6 +67,9 @@ class BindingContainer
         return $this->getInternal($class, $param);
     }
 
+    /**
+     * @param ReflectionClass<object>|null $class
+     */
     private function getInternal(?ReflectionClass $class, ReflectionParameter $param): ?Binding
     {
         $className = null;

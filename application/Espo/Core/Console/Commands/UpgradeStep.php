@@ -30,7 +30,6 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
-    Container,
     Application,
     Upgrades\UpgradeManager,
     Console\Command,
@@ -42,17 +41,7 @@ use Exception;
 
 class UpgradeStep implements Command
 {
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
+    public function __construct() {}
 
     public function run(Params $params, IO $io): void
     {
@@ -84,7 +73,10 @@ class UpgradeStep implements Command
         echo "true";
     }
 
-    protected function runUpgradeStep($stepName, array $params): bool
+    /**
+     * @param array<string,mixed> $params
+     */
+    private function runUpgradeStep(string $stepName, array $params): bool
     {
         $app = new Application();
 

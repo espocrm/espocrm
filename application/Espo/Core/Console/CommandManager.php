@@ -41,9 +41,9 @@ use Espo\Core\Console\Command\Params;
  */
 class CommandManager
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     private const DEFAULT_COMMAND = 'Help';
 
@@ -55,6 +55,9 @@ class CommandManager
         $this->metadata = $metadata;
     }
 
+    /**
+     * @param array<int,string> $argv
+     */
     public function run(array $argv): void
     {
         $command = $this->getCommandNameFromArgv($argv);
@@ -90,6 +93,9 @@ class CommandManager
         $commandObj->run($params, $io);
     }
 
+    /**
+     * @param array<int,string> $argv
+     */
     private function getCommandNameFromArgv(array $argv): ?string
     {
         $command = isset($argv[1]) ? trim($argv[1]) : null;
@@ -112,6 +118,9 @@ class CommandManager
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $command): string
     {
         $className =
@@ -130,6 +139,9 @@ class CommandManager
         return $className;
     }
 
+    /**
+     * @param array<int,string> $argv
+     */
     private function createParamsFromArgv(array $argv): Params
     {
         return Params::fromArgs(array_slice($argv, 1));

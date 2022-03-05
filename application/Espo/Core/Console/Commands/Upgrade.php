@@ -46,12 +46,16 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 use Exception;
 use Throwable;
+use stdClass;
 
 class Upgrade implements Command
 {
-    protected $upgradeManager;
+    private ?UpgradeManager $upgradeManager = null;
 
-    protected $upgradeStepList = [
+    /**
+     * @var string[]
+     */
+    private $upgradeStepList = [
         'copyBefore',
         'rebuild',
         'beforeUpgradeScript',
@@ -64,6 +68,9 @@ class Upgrade implements Command
         'rebuild',
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $upgradeStepLabels = [
         'init' => 'Initialization',
         'copyBefore' => 'Copying before upgrade files',
@@ -76,11 +83,11 @@ class Upgrade implements Command
         'revert' => 'Reverting',
     ];
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $config;
+    private Config $config;
 
-    private $log;
+    private Log $log;
 
     public function __construct(FileManager $fileManager, Config $config, Log $log)
     {
@@ -196,8 +203,12 @@ class Upgrade implements Command
      * -s - single process
      * --file="EspoCRM-upgrade.zip"
      * --step="beforeUpgradeScript"
+     *
+     * @param array<string,string> $options
+     * @param string[] $flagList
+     * @param string[] $argumentList
      */
-    protected function normalizeParams(array $options, array $flagList, array $argumentList): object
+    private function normalizeParams(array $options, array $flagList, array $argumentList): object
     {
         $params = (object) [
             'localMode' => false,
@@ -239,12 +250,7 @@ class Upgrade implements Command
         return $params;
     }
 
-    /**
-     * @param \stdClass $params
-     * @param \stdClass|null $versionInfo
-     * @return string|null
-     */
-    protected function getPackageFile(object $params, ?object $versionInfo)
+    private function getPackageFile(stdClass $params, ?stdClass $versionInfo): ?string
     {
         $packageFile = $params->file ?? null;
 
@@ -279,7 +285,7 @@ class Upgrade implements Command
         return $packageFile;
     }
 
-    protected function upload(string $filePath)
+    private function upload(string $filePath): string
     {
         try {
             $fileData = file_get_contents($filePath);
@@ -294,7 +300,7 @@ class Upgrade implements Command
         return $upgradeId;
     }
 
-    protected function runUpgradeProcess(string $upgradeId, object $params = null)
+    private function runUpgradeProcess(string $upgradeId, ?stdClass $params = null): void
     {
         $params = $params ?? (object) [];
 
@@ -306,13 +312,16 @@ class Upgrade implements Command
         array_push($stepList, 'finalize');
 
         if (!$useSingleProcess && $this->isShellEnabled()) {
-            return $this->runSteps($upgradeId, $stepList);
+            $this->runSteps($upgradeId, $stepList);
         }
 
-        return $this->runStepsInSingleProcess($upgradeId, $stepList);
+        $this->runStepsInSingleProcess($upgradeId, $stepList);
     }
 
-    protected function runStepsInSingleProcess(string $upgradeId, array $stepList)
+    /**
+     * @param string[] $stepList
+     */
+    private function runStepsInSingleProcess(string $upgradeId, array $stepList): void
     {
         $this->log->debug('Installation process ['.$upgradeId.']: Single process mode.');
 
@@ -321,9 +330,11 @@ class Upgrade implements Command
                 $this->displayStep($stepName);
 
                 $upgradeManager = $this->getUpgradeManager(true);
+
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             try {
                 $this->log->error('Upgrade Error: ' . $e->getMessage());
             }
@@ -331,18 +342,20 @@ class Upgrade implements Command
 
             throw new Error($e->getMessage());
         }
-
-        return true;
     }
 
-    protected function runSteps(string $upgradeId, array $stepList)
+    /**
+     * @param string[] $stepList
+     */
+    private function runSteps(string $upgradeId, array $stepList): void
     {
         $phpExecutablePath = $this->getPhpExecutablePath();
 
         foreach ($stepList as $stepName) {
             $this->displayStep($stepName);
 
-            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) ." --id=". $upgradeId;
+            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) .
+                " --id=" . $upgradeId;
 
             $shellResult = shell_exec($command);
 
@@ -355,18 +368,16 @@ class Upgrade implements Command
                 throw new Error($shellResult);
             }
         }
-
-        return true;
     }
 
-    private function displayStep(string $stepName)
+    private function displayStep(string $stepName): void
     {
         $stepLabel = $this->upgradeStepLabels[$stepName] ?? "";
 
         fwrite(\STDOUT, "\n  {$stepLabel}...");
     }
 
-    protected function confirm()
+    private function confirm(): bool
     {
         $fh = fopen('php://stdin', 'r');
 
@@ -381,7 +392,7 @@ class Upgrade implements Command
         return true;
     }
 
-    protected function getUpgradeManager(bool $reload = false)
+    private function getUpgradeManager(bool $reload = false): UpgradeManager
     {
         if (!$this->upgradeManager || $reload) {
             $app = new Application();
@@ -394,7 +405,7 @@ class Upgrade implements Command
         return $this->upgradeManager;
     }
 
-    protected function getPhpExecutablePath()
+    private function getPhpExecutablePath(): string
     {
         $phpExecutablePath = $this->config->get('phpExecutablePath');
 
@@ -405,7 +416,7 @@ class Upgrade implements Command
         return $phpExecutablePath;
     }
 
-    protected function getVersionInfo($toVersion = null)
+    private function getVersionInfo(?string $toVersion = null): ?stdClass
     {
         $url = 'https://s.espocrm.com/upgrade/next/';
         $url = $this->config->get('upgradeNextVersionUrl', $url);
@@ -443,7 +454,7 @@ class Upgrade implements Command
         return $data;
     }
 
-    protected function downloadFile(string $url)
+    private function downloadFile(string $url): ?string
     {
         $localFilePath = 'data/upload/upgrades/' . Util::generateId() . '.zip';
 
@@ -451,7 +462,8 @@ class Upgrade implements Command
 
         if (is_file($url)) {
             copy($url, $localFilePath);
-        } else {
+        }
+        else {
             $options = [
                 \CURLOPT_FILE => fopen($localFilePath, 'w'),
                 \CURLOPT_TIMEOUT => 3600,
@@ -472,13 +484,13 @@ class Upgrade implements Command
 
             $this->fileManager->unlink($localFilePath);
 
-            return;
+            return null;
         }
 
         return realpath($localFilePath);
     }
 
-    protected function isShellEnabled()
+    private function isShellEnabled(): bool
     {
         if (!function_exists('exec') || !is_callable('shell_exec')) {
             return false;
@@ -493,7 +505,7 @@ class Upgrade implements Command
         return true;
     }
 
-    protected function getCurrentVersion()
+    private function getCurrentVersion(): ?string
     {
         $configData = include "data/config.php";
 

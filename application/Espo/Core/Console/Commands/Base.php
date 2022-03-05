@@ -29,17 +29,19 @@
 
 namespace Espo\Core\Console\Commands;
 
+use Espo\Core\Container;
+
 /** @deprecated */
 abstract class Base
 {
-    private $container;
+    private Container $container;
 
-    public function __construct(\Espo\Core\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    protected function getContainer()
+    protected function getContainer(): Container
     {
         return $this->container;
     }

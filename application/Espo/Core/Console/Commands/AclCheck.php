@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Console\Commands;
 
+use Espo\Entities\User;
+use Espo\Core\AclManager;
+use Espo\ORM\EntityManager;
+
 use Espo\Core\{
     Portal\Application as PortalApplication,
     Container,
@@ -39,7 +43,7 @@ use Espo\Core\{
 
 class AclCheck implements Command
 {
-    protected $container;
+    private Container $container;
 
     public function __construct(Container $container)
     {
@@ -112,8 +116,15 @@ class AclCheck implements Command
         }
     }
 
-    protected function check($user, $scope, $id, $action, $container): bool
-    {
+    private function check(
+        User $user,
+        string $scope,
+        string $id,
+        ?string $action,
+        Container $container
+    ): bool {
+
+        /** @var EntityManager $entityManager */
         $entityManager = $container->get('entityManager');
 
         $entity = $entityManager->getEntity($scope, $id);
@@ -122,6 +133,7 @@ class AclCheck implements Command
             return false;
         }
 
+        /** @var AclManager $aclManager */
         $aclManager = $container->get('aclManager');
 
         if ($aclManager->check($user, $entity, $action)) {

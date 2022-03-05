@@ -35,6 +35,9 @@ use Espo\Core\{
 
 class ContainerConfiguration extends BaseContainerConfiguration
 {
+    /**
+     * @return ?class-string
+     */
     public function getLoaderClassName(string $name): ?string
     {
         $className = null;
@@ -60,6 +63,9 @@ class ContainerConfiguration extends BaseContainerConfiguration
         return parent::getLoaderClassName($name);
     }
 
+    /**
+     * @return ?class-string
+     */
     public function getServiceClassName(string $name): ?string
     {
         $className =
@@ -69,6 +75,9 @@ class ContainerConfiguration extends BaseContainerConfiguration
         return $className;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getServiceDependencyList(string $name): ?array
     {
         return

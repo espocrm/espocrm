@@ -30,12 +30,13 @@
 namespace Espo\Core\Binding;
 
 use LogicException;
+use stdClass;
 
 class BindingData
 {
-    private $global;
+    private stdClass $global;
 
-    private $context;
+    private stdClass $context;
 
     public function __construct()
     {
@@ -97,6 +98,9 @@ class BindingData
         return $this->global->$key;
     }
 
+    /**
+     * @return string[]
+     */
     public function getGlobalKeyList(): array
     {
         return array_keys(
@@ -104,6 +108,9 @@ class BindingData
         );
     }
 
+    /**
+     * @return string[]
+     */
     public function getContextList(): array
     {
         return array_keys(
@@ -111,6 +118,9 @@ class BindingData
         );
     }
 
+    /**
+     * @return string[]
+     */
     public function getContextKeyList(string $context): array
     {
         return array_keys(

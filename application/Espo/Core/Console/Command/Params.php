@@ -51,6 +51,11 @@ class Params
      */
     private $argumentList;
 
+    /**
+     * @param array<string,string>|null $options
+     * @param string[]|null $flagList
+     * @param string[]|null $argumentList
+     */
     public function __construct(?array $options, ?array $flagList, ?array $argumentList)
     {
         $this->options = $options ?? [];
@@ -114,6 +119,9 @@ class Params
         return $this->argumentList[$index] ?? null;
     }
 
+    /**
+     * @param array<int,string> $args
+     */
     public static function fromArgs(array $args): self
     {
         $argumentList = [];

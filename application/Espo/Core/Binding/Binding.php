@@ -43,10 +43,16 @@ class Binding
 
     public const FACTORY_CLASS_NAME = 5;
 
-    private $type;
+    private int $type;
 
+    /**
+     * @var mixed
+     */
     private $value;
 
+    /**
+     * @param mixed $value
+     */
     private function __construct(int $type, $value)
     {
         $this->type = $type;
@@ -58,6 +64,9 @@ class Binding
         return $this->type;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
@@ -81,6 +90,9 @@ class Binding
         return new self(self::CONTAINER_SERVICE, $serviceName);
     }
 
+    /**
+     * @param mixed $value
+     */
     public static function createFromValue($value): self
     {
         return new self(self::VALUE, $value);
