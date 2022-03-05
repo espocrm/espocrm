@@ -38,16 +38,23 @@ use RuntimeException;
  */
 class ScopeData
 {
+    /**
+     * @var stdClass|bool
+     */
     private $raw;
 
+    /**
+     * @var array<string,string>
+     */
     private $actionData = [];
 
-    private $isBoolean = false;
+    private bool $isBoolean = false;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
+    /**
+     * @return never
+     */
     public function __get(string $name)
     {
         throw new RuntimeException("Accessing ScopeData properties is not allowed.");

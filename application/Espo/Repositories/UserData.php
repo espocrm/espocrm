@@ -30,8 +30,12 @@
 namespace Espo\Repositories;
 
 use Espo\Entities\UserData as UserDataEntity;
+use Espo\Core\Repositories\Database;
 
-class UserData extends \Espo\Core\Repositories\Database
+/**
+ * @extends Database<UserDataEntity>
+ */
+class UserData extends Database
 {
     public function getByUserId(string $userId): ?UserDataEntity
     {

@@ -42,7 +42,7 @@ use Espo\Core\{
     Utils\DataCache,
 };
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 
 /**
@@ -53,10 +53,13 @@ class DefaultTable implements Table
 {
     private const LEVEL_NOT_SET = 'not-set';
 
-    protected $type = 'acl';
+    protected string $type = 'acl';
 
-    protected $defaultAclType = 'recordAllTeamOwnNo';
+    protected string $defaultAclType = 'recordAllTeamOwnNo';
 
+    /**
+     * @var string[]
+     */
     private $actionList = [
         self::ACTION_READ,
         self::ACTION_STREAM,
@@ -65,10 +68,16 @@ class DefaultTable implements Table
         self::ACTION_CREATE,
     ];
 
+    /**
+     * @var string[]
+     */
     private $booleanActionList = [
         self::ACTION_CREATE,
     ];
 
+    /**
+     * @var string[]
+     */
     protected $levelList = [
         self::LEVEL_YES,
         self::LEVEL_ALL,
@@ -77,27 +86,36 @@ class DefaultTable implements Table
         self::LEVEL_NO,
     ];
 
+    /**
+     * @var string[]
+     */
     private $fieldActionList = [
         self::ACTION_READ,
         self::ACTION_EDIT,
     ];
 
+    /**
+     * @var string[]
+     */
     protected $fieldLevelList = [
         self::LEVEL_YES,
         self::LEVEL_NO,
     ];
 
-    private $data = null;
+    private stdClass $data;
 
-    private $cacheKey;
+    private string $cacheKey;
 
+    /**
+     * @var string[]
+     */
     private $valuePermissionList = [];
 
-    private $roleListProvider;
+    private RoleListProvider $roleListProvider;
 
-    protected $user;
+    protected User $user;
 
-    protected $metadata;
+    protected Metadata $metadata;
 
     public function __construct(
         RoleListProvider $roleListProvider,
@@ -289,7 +307,7 @@ class DefaultTable implements Table
         return $permission;
     }
 
-    protected function applyHighest(StdClass &$table, StdClass &$fieldTable): void
+    protected function applyHighest(stdClass &$table, stdClass &$fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
             if ($this->metadata->get(['scopes', $scope, $this->type]) === 'boolean') {
@@ -324,7 +342,7 @@ class DefaultTable implements Table
         }
     }
 
-    protected function applyDefault(&$table, &$fieldTable): void
+    protected function applyDefault(stdClass &$table, stdClass &$fieldTable): void
     {
         if ($this->user->isAdmin()) {
             return;
@@ -434,7 +452,7 @@ class DefaultTable implements Table
         }
     }
 
-    protected function applyMandatoryInternal(StdClass $table, StdClass $fieldTable, string $type): void
+    protected function applyMandatoryInternal(stdClass $table, stdClass $fieldTable, string $type): void
     {
         $data = $this->metadata->get(['app', $this->type, $type, 'scopeLevel']) ?? [];
 
@@ -493,17 +511,17 @@ class DefaultTable implements Table
         }
     }
 
-    private function applyMandatory(StdClass $table, StdClass $fieldTable): void
+    private function applyMandatory(stdClass $table, stdClass $fieldTable): void
     {
         $this->applyMandatoryInternal($table, $fieldTable, 'mandatory');
     }
 
-    private function applyAdminMandatory(StdClass $table, StdClass $fieldTable): void
+    private function applyAdminMandatory(stdClass $table, stdClass $fieldTable): void
     {
         $this->applyMandatoryInternal($table, $fieldTable, 'adminMandatory');
     }
 
-    protected function applyDisabled(&$table, &$fieldTable): void
+    protected function applyDisabled(stdClass &$table, stdClass &$fieldTable): void
     {
         if ($this->user->isAdmin()) {
             return;
@@ -521,7 +539,7 @@ class DefaultTable implements Table
     /**
      * @todo Revise usage of this method.
      */
-    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists): void
+    protected function applyAdditional(stdClass &$table, stdClass &$fieldTable, stdClass &$valuePermissionLists): void
     {
         if ($this->user->isPortal()) {
             foreach ($this->getScopeList() as $scope) {
@@ -536,6 +554,9 @@ class DefaultTable implements Table
         }
     }
 
+    /**
+     * @param string[] $list
+     */
     private function mergeValueList(array $list, string $defaultValue): string
     {
         $result = null;
@@ -566,6 +587,9 @@ class DefaultTable implements Table
         return $result;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getScopeWithAclList(): array
     {
         $scopeList = [];
@@ -583,6 +607,9 @@ class DefaultTable implements Table
         return $scopeList;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getScopeList(): array
     {
         $scopeList = [];
@@ -596,7 +623,10 @@ class DefaultTable implements Table
         return $scopeList;
     }
 
-    private function mergeTableList(array $tableList): StdClass
+    /**
+     * @param stdClass[] $tableList
+     */
+    private function mergeTableList(array $tableList): stdClass
     {
         $data = (object) [];
 
@@ -615,7 +645,10 @@ class DefaultTable implements Table
         return $data;
     }
 
-    private function mergeTableListItem(StdClass $data, string $scope, $row): void
+    /**
+     * @param stdClass|bool|null $row
+     */
+    private function mergeTableListItem(stdClass $data, string $scope, $row): void
     {
         if ($row === false || $row === null) {
             if (!isset($data->$scope)) {
@@ -679,7 +712,10 @@ class DefaultTable implements Table
         }
     }
 
-    private function mergeFieldTableList(array $tableList): StdClass
+    /**
+     * @param stdClass[] $tableList
+     */
+    private function mergeFieldTableList(array $tableList): stdClass
     {
         $data = (object) [];
 

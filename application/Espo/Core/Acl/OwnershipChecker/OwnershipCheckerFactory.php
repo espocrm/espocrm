@@ -43,11 +43,14 @@ use Espo\Core\{
 
 class OwnershipCheckerFactory
 {
-    private $defaultClassName = DefaultOwnershipChecker::class;
+    /**
+     * @var class-string
+     */
+    private string $defaultClassName = DefaultOwnershipChecker::class;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Metadata $metadata,
@@ -71,8 +74,13 @@ class OwnershipCheckerFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string
+     * @throws NotImplemented
+     */
     private function getClassName(string $scope): string
     {
+        /** @var ?class-string */
         $className = $this->metadata->get(['aclDefs', $scope, 'ownershipCheckerClassName']);
 
         if ($className) {

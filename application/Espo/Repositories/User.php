@@ -39,7 +39,6 @@ use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\UserData;
 
 /**
- * @template T of \Espo\Entities\User
  * @extends Database<\Espo\Entities\User>
  */
 class User extends Database

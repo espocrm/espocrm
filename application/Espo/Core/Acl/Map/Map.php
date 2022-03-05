@@ -46,28 +46,37 @@ use RuntimeException;
  */
 class Map
 {
-    private $data;
+    private stdClass $data;
 
-    private $cacheKey;
+    private string $cacheKey;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $forbiddenFieldsCache = [];
 
+    /**
+     * @var array<string,string[]>
+     */
     private $forbiddenAttributesCache;
 
+    /**
+     * @var string[]
+     */
     private $fieldLevelList = [
         Table::LEVEL_YES,
         Table::LEVEL_NO,
     ];
 
-    private $user;
+    private User $user;
 
-    private $table;
+    private Table $table;
 
-    private $config;
+    private Config $config;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $dataBuilder;
+    private DataBuilder $dataBuilder;
 
     public function __construct(
         User $user,

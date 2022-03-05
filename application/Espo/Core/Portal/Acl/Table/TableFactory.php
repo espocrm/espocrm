@@ -48,7 +48,7 @@ use Espo\Core\{
 
 class TableFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {

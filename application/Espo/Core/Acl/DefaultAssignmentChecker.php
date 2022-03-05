@@ -59,11 +59,11 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     protected const ATTR_ASSIGNED_USERS_IDS = 'assignedUsersIds';
 
-    private $aclManager;
+    private AclManager $aclManager;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $ormDefs;
+    private Defs $ormDefs;
 
     public function __construct(AclManager $aclManager, EntityManager $entityManager, Defs $ormDefs)
     {

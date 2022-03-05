@@ -37,9 +37,12 @@ use Espo\Core\Acl\AssignmentChecker;
 
 class AssignmentCheckerManager
 {
+    /**
+     * @var array<string,AssignmentChecker>
+     */
     private $checkerCache = [];
 
-    private $factory;
+    private AssignmentCheckerFactory $factory;
 
     public function __construct(AssignmentCheckerFactory $factory)
     {
@@ -57,7 +60,6 @@ class AssignmentCheckerManager
 
     private function getChecker(string $entityType): AssignmentChecker
     {
-
         if (!array_key_exists($entityType, $this->checkerCache)) {
             $this->loadChecker($entityType);
         }

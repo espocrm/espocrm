@@ -34,10 +34,13 @@ use Espo\Core\{
     Utils\FieldUtil,
 };
 
-use StdClass;
+use stdClass;
 
 class DataBuilder
 {
+    /**
+     * @var string[]
+     */
     private $actionList = [
         Table::ACTION_READ,
         Table::ACTION_STREAM,
@@ -46,19 +49,25 @@ class DataBuilder
         Table::ACTION_CREATE,
     ];
 
+    /**
+     * @var string[]
+     */
     private $fieldActionList = [
         Table::ACTION_READ,
         Table::ACTION_EDIT,
     ];
 
+    /**
+     * @var string[]
+     */
     private $fieldLevelList = [
         Table::LEVEL_YES,
         Table::LEVEL_NO,
     ];
 
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
-    private $fieldUtil;
+    private FieldUtil $fieldUtil;
 
     public function __construct(MetadataProvider $metadataProvider, FieldUtil $fieldUtil)
     {
@@ -66,7 +75,7 @@ class DataBuilder
         $this->fieldUtil = $fieldUtil;
     }
 
-    public function build(Table $table): StdClass
+    public function build(Table $table): stdClass
     {
         $data = (object) [
             'table' => (object) [],
@@ -93,7 +102,7 @@ class DataBuilder
     }
 
     /**
-     * @return bool|StdClass
+     * @return bool|stdClass
      */
     private function getScopeRawData(Table $table, string $scope)
     {
@@ -112,7 +121,7 @@ class DataBuilder
         return $rawData;
     }
 
-    private function getScopeFieldData(Table $table, string $scope): ?StdClass
+    private function getScopeFieldData(Table $table, string $scope): ?stdClass
     {
         if (!$this->metadataProvider->isScopeEntity($scope)) {
             return null;
@@ -141,7 +150,7 @@ class DataBuilder
         return $rawData;
     }
 
-    protected function buildFieldTableQuickAccess(StdClass $fieldTable): StdClass
+    protected function buildFieldTableQuickAccess(stdClass $fieldTable): stdClass
     {
         $quickAccess = (object) [];
 
@@ -152,7 +161,7 @@ class DataBuilder
         return $quickAccess;
     }
 
-    private function buildFieldTableQuickAccessScope(string $scope, StdClass $data): StdClass
+    private function buildFieldTableQuickAccessScope(string $scope, stdClass $data): stdClass
     {
         $quickAccess = (object) [
             'attributes' => (object) [],

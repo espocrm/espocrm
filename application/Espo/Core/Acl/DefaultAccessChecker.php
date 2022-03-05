@@ -46,6 +46,12 @@ use Exception;
 
 /**
  * A default implementation for access checking.
+ *
+ * @implements AccessEntityCreateChecker<Entity>
+ * @implements AccessEntityReadChecker<Entity>
+ * @implements AccessEntityEditChecker<Entity>
+ * @implements AccessEntityDeleteChecker<Entity>
+ * @implements AccessEntityStreamChecker<Entity>
  */
 class DefaultAccessChecker implements
 
@@ -63,11 +69,11 @@ class DefaultAccessChecker implements
 
     private const ALLOW_DELETE_OWN_CREATED_PERIOD = '24 hours';
 
-    private $aclManager;
+    private AclManager $aclManager;
 
-    private $config;
+    private Config $config;
 
-    private $scopeChecker;
+    private ScopeChecker $scopeChecker;
 
     public function __construct(
         AclManager $aclManager,

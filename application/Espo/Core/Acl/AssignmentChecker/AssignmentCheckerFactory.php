@@ -39,11 +39,14 @@ use Espo\Core\{
 
 class AssignmentCheckerFactory
 {
-    private $defaultClassName = DefaultAssignmentChecker::class;
+    /**
+     * @var class-string
+     */
+    private string $defaultClassName = DefaultAssignmentChecker::class;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Metadata $metadata,
@@ -65,8 +68,13 @@ class AssignmentCheckerFactory
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return class-string
+     * @throws NotImplemented
+     */
     private function getClassName(string $scope): string
     {
+        /** @var ?class-string */
         $className = $this->metadata->get(['aclDefs', $scope, 'assignmentCheckerClassName']);
 
         if ($className) {

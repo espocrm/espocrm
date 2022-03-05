@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Portal\Acl;
 
-use Espo\Core\{
-    Acl\Table\DefaultTable as BaseTable,
-};
+use Espo\Core\Acl\Table\DefaultTable as BaseTable;
+
+use stdClass;
 
 class Table extends BaseTable
 {
@@ -39,10 +39,13 @@ class Table extends BaseTable
 
     public const LEVEL_CONTACT = 'contact';
 
-    protected $type = 'aclPortal';
+    protected string $type = 'aclPortal';
 
-    protected $defaultAclType = 'recordAllOwnNo';
+    protected string $defaultAclType = 'recordAllOwnNo';
 
+    /**
+     * @var string[]
+     */
     protected $levelList = [
         self::LEVEL_YES,
         self::LEVEL_ALL,
@@ -52,6 +55,9 @@ class Table extends BaseTable
         self::LEVEL_NO,
     ];
 
+    /**
+     * @return string[]
+     */
     protected function getScopeWithAclList(): array
     {
         $scopeList = [];
@@ -73,7 +79,7 @@ class Table extends BaseTable
         return $scopeList;
     }
 
-    protected function applyDefault(&$table, &$fieldTable): void
+    protected function applyDefault(stdClass &$table, stdClass &$fieldTable): void
     {
         parent::applyDefault($table, $fieldTable);
 
@@ -84,7 +90,7 @@ class Table extends BaseTable
         }
     }
 
-    protected function applyDisabled(&$table, &$fieldTable): void
+    protected function applyDisabled(stdClass &$table, stdClass &$fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
             $item = $this->metadata->get(['scopes', $scope]) ?? [];
@@ -97,7 +103,7 @@ class Table extends BaseTable
         }
     }
 
-    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists): void
+    protected function applyAdditional(stdClass &$table, stdClass &$fieldTable, stdClass &$valuePermissionLists): void
     {
     }
 }

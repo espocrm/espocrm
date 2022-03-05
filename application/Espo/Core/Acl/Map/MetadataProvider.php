@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Acl\Map;
 
-use Espo\Core\{
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Metadata;
 
 class MetadataProvider
 {
-    protected $type = 'acl';
+    protected string $type = 'acl';
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {
@@ -45,7 +43,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int,string>
      */
     public function getScopeList(): array
     {
@@ -58,7 +56,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int,string>
      */
     public function getScopeFieldList(string $scope): array
     {
@@ -66,7 +64,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int,string>
      */
     public function getPermissionList(): array
     {

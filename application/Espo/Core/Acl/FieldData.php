@@ -38,16 +38,15 @@ use RuntimeException;
 class FieldData
 {
     /**
-     * @phpstan-ignore-next-line
+     * @var array<string,string>
      */
-    private $raw;
-
     private $actionData = [];
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
+    /**
+     * @return never
+     */
     public function __get(string $name)
     {
         throw new RuntimeException("Accessing ScopeData properties is not allowed.");
@@ -91,8 +90,6 @@ class FieldData
                 throw new RuntimeException("Bad raw scope data.");
             }
         }
-
-        $obj->raw = $raw;
 
         return $obj;
     }

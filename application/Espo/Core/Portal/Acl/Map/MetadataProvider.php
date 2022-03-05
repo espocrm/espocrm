@@ -29,11 +29,9 @@
 
 namespace Espo\Core\Portal\Acl\Map;
 
-use Espo\Core\{
-    Acl\Map\MetadataProvider as BaseMetadataProvider,
-};
+use Espo\Core\Acl\Map\MetadataProvider as BaseMetadataProvider;
 
 class MetadataProvider extends BaseMetadataProvider
 {
-    protected $type = 'aclPortal';
+    protected string $type = 'aclPortal';
 }

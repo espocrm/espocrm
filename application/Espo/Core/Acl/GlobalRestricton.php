@@ -55,6 +55,9 @@ class GlobalRestricton
 
     public const TYPE_NON_ADMIN_READ_ONLY = 'nonAdminReadOnly';
 
+    /**
+     * @var string[]
+     */
     protected $fieldTypeList = [
         'forbidden', // totally forbidden
         'internal', // reading forbidden, writing allowed
@@ -63,6 +66,9 @@ class GlobalRestricton
         'nonAdminReadOnly' // read-only for non-admin users
     ];
 
+    /**
+     * @var string[]
+     */
     protected $linkTypeList = [
         'forbidden', // totally forbidden
         'internal', // reading forbidden, writing allowed
@@ -71,17 +77,17 @@ class GlobalRestricton
         'nonAdminReadOnly' // read-only for non-admin users
     ];
 
-    private $data;
+    private ?stdClass $data = null;
 
-    protected $cacheKey = 'entityAcl';
+    protected string $cacheKey = 'entityAcl';
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $fieldUtil;
+    private FieldUtil $fieldUtil;
 
-    private $log;
+    private Log $log;
 
     public function __construct(
         Metadata $metadata,
@@ -186,11 +192,15 @@ class GlobalRestricton
         $this->data = $data;
     }
 
+    /**
+     * @return string[]
+     */
     public function getScopeRestrictedFieldList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
             return [];
         }
+
         if (!property_exists($this->data->$scope, 'fields')) {
             return [];
         }
@@ -202,6 +212,9 @@ class GlobalRestricton
         return $this->data->$scope->fields->$type;
     }
 
+    /**
+     * @return string[]
+     */
     public function getScopeRestrictedAttributeList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
@@ -219,6 +232,9 @@ class GlobalRestricton
         return $this->data->$scope->attributes->$type;
     }
 
+    /**
+     * @return string[]
+     */
     public function getScopeRestrictedLinkList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
