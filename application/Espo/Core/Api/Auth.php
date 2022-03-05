@@ -171,6 +171,10 @@ class Auth
         return AuthResult::createNotResolved();
     }
 
+    /**
+     * @return array{string,string}
+     * @throws BadRequest
+     */
     protected function decodeAuthorizationString(string $string): array
     {
         $stringDecoded = base64_decode($string);
@@ -260,6 +264,9 @@ class Auth
         return null;
     }
 
+    /**
+     * @return array{?string,?string}
+     */
     protected function obtainUsernamePasswordFromRequest(Request $request): array
     {
         if ($request->hasHeader('Espo-Authorization')) {

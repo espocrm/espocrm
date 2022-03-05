@@ -31,14 +31,20 @@ namespace Espo\Core\Api;
 
 class Route
 {
-    private $method;
+    private string $method;
 
-    private $route;
+    private string $route;
 
-    private $params;
+    /**
+     * @var array<string,string>
+     */
+    private array $params;
 
-    private $noAuth;
+    private bool $noAuth;
 
+    /**
+     * @param array<string,string> $params
+     */
     public function __construct(
         string $method,
         string $route,
@@ -61,6 +67,9 @@ class Route
         return $this->route;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getParams(): array
     {
         return $this->params;

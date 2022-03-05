@@ -43,14 +43,20 @@ use stdClass;
  */
 class RequestWrapper implements ApiRequest
 {
-    private $request;
+    private Psr7Request $request;
 
-    private $basePath;
+    private string $basePath;
 
-    private $parsedBody = null;
+    private ?stdClass $parsedBody = null;
 
-    private $routeParams;
+    /**
+     * @var array<string,string>
+     */
+    private array $routeParams;
 
+    /**
+     * @param array<string,string> $routeParams
+     */
     public function __construct(Psr7Request $request, string $basePath = '', array $routeParams = [])
     {
         $this->request = $request;
@@ -92,6 +98,9 @@ class RequestWrapper implements ApiRequest
         return $this->routeParams[$name] ?? null;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getRouteParams(): array
     {
         return $this->routeParams;
@@ -103,7 +112,7 @@ class RequestWrapper implements ApiRequest
     }
 
     /**
-     * @return string|array|null
+     * @return string|string[]|null
      */
     public function getQueryParam(string $name)
     {
@@ -116,6 +125,9 @@ class RequestWrapper implements ApiRequest
         return $value;
     }
 
+    /**
+     * @return array<string,string|string[]>
+     */
     public function getQueryParams(): array
     {
         return $this->request->getQueryParams();
@@ -184,7 +196,7 @@ class RequestWrapper implements ApiRequest
         return Util::cloneObject($this->parsedBody);
     }
 
-    private function initParsedBody()
+    private function initParsedBody(): void
     {
         $contents = $this->getBodyContents();
 

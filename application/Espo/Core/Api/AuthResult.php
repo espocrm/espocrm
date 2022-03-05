@@ -34,9 +34,9 @@ namespace Espo\Core\Api;
  */
 class AuthResult
 {
-    private $isResolved = false;
+    private bool $isResolved = false;
 
-    private $isResolvedUseNoAuth = false;
+    private bool $isResolvedUseNoAuth = false;
 
     public static function createResolved(): self
     {

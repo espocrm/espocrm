@@ -49,6 +49,8 @@ class ClassFinder
 
     /**
      * Find class name by a category and name.
+     *
+     * @return ?class-string
      */
     public function find(string $category, string $name, bool $subDirs = false): ?string
     {
@@ -62,7 +64,7 @@ class ClassFinder
     /**
      * Get a name => class name map.
      *
-     * @return array<string, string>
+     * @return array<string,class-string>
      */
     public function getMap(string $category, bool $subDirs = false): array
     {

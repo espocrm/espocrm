@@ -29,11 +29,11 @@
 
 namespace Espo\Core\Api;
 
-use StdClass;
+use stdClass;
 
 class Util
 {
-    public static function cloneObject(StdClass $source): StdClass
+    public static function cloneObject(stdClass $source): stdClass
     {
         $cloned = (object) [];
 
@@ -44,6 +44,10 @@ class Util
         return $cloned;
     }
 
+    /**
+     * @param mixed $item
+     * @return mixed
+     */
     private static function cloneObjectItem($item)
     {
         if (is_array($item)) {
@@ -56,7 +60,7 @@ class Util
             return $cloned;
         }
 
-        if ($item instanceof StdClass) {
+        if ($item instanceof stdClass) {
             return self::cloneObject($item);
         }
 

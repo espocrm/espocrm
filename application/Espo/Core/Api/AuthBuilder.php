@@ -40,13 +40,13 @@ use Espo\Core\{
  */
 class AuthBuilder
 {
-    private $authRequired = false;
+    private bool $authRequired = false;
 
-    private $isEntryPoint = false;
+    private bool $isEntryPoint = false;
 
-    private $authentication = null;
+    private ?Authentication $authentication = null;
 
-    private $log;
+    private Log $log;
 
     public function __construct(Log $log)
     {

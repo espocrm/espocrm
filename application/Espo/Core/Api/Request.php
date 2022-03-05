@@ -46,12 +46,14 @@ interface Request
     /**
      * Get a query parameter.
      *
-     * @return string|array|null
+     * @return string|string[]|null
      */
     public function getQueryParam(string $name);
 
     /**
      * Get all query parameters.
+     *
+     * @return array<string,string|string[]>
      */
     public function getQueryParams(): array;
 
@@ -67,6 +69,8 @@ interface Request
 
     /**
      * Get all route parameters.
+     *
+     * @return array<string,string>
      */
     public function getRouteParams(): array;
 

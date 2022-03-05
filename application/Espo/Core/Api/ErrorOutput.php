@@ -45,6 +45,9 @@ use Throwable;
  */
 class ErrorOutput
 {
+    /**
+     * @var array<int,string>
+     */
     private $errorDescriptions = [
         400 => 'Bad Request',
         401 => 'Unauthorized',
@@ -55,6 +58,9 @@ class ErrorOutput
         503 => 'Service Unavailable',
     ];
 
+    /**
+     * @var int[]
+     */
     private $allowedStatusCodeList = [
         200,
         201,
@@ -67,13 +73,16 @@ class ErrorOutput
         503,
     ];
 
+    /**
+     * @var class-string[]
+     */
     private $ignorePrintXStatusReasonExceptionClassNameList = [
         'PDOException',
     ];
 
-    private $log;
+    private Log $log;
 
-    private $config;
+    private Config $config;
 
     public function __construct(Log $log, Config $config)
     {

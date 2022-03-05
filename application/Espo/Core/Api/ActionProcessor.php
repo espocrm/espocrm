@@ -48,9 +48,9 @@ use stdClass;
  */
 class ActionProcessor
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $classFinder;
+    private ClassFinder $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
@@ -130,6 +130,9 @@ class ActionProcessor
         return;
     }
 
+    /**
+     * @param mixed $result
+     */
     private function handleResult(Response $response, $result): void
     {
         $responseContents = $result;
@@ -183,6 +186,10 @@ class ActionProcessor
         return false;
     }
 
+    /**
+     * @return class-string
+     * @throws NotFound
+     */
     private function getControllerClassName(string $name): string
     {
         $className = $this->classFinder->find('Controllers', $name);
