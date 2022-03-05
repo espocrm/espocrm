@@ -38,7 +38,6 @@ use Espo\Core\Repositories\Database;
 use Espo\Core\Di;
 
 /**
- * @template T of PhoneNumberEntity
  * @extends Database<PhoneNumberEntity>
  */
 class PhoneNumber extends Database implements

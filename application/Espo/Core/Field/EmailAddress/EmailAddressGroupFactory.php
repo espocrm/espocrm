@@ -50,9 +50,9 @@ use RuntimeException;
  */
 class EmailAddressGroupFactory implements ValueFactory
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * @todo Use OrmDefs instead of Metadata.
@@ -134,6 +134,10 @@ class EmailAddressGroupFactory implements ValueFactory
         return $group;
     }
 
+    /**
+     * @param array<int,array<string,mixed>|\stdClass> $dataList
+     * @return \stdClass[]
+     */
     private function sanitizeDataList(array $dataList): array
     {
         $sanitizedDataList = [];

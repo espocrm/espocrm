@@ -36,7 +36,10 @@ use RuntimeException;
  */
 class CurrencyRates
 {
-    private $data = [];
+    /**
+     * @var array<string,float>
+     */
+    private array $data = [];
 
     private function __construct()
     {
@@ -56,6 +59,9 @@ class CurrencyRates
         return $this->data[$currencyCode];
     }
 
+    /**
+     * @param array<string,float> $data
+     */
     public static function fromArray(array $data): self
     {
         $obj = new self();

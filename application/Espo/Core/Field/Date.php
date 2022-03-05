@@ -43,9 +43,9 @@ use Throwable;
  */
 class Date implements DateTimeable
 {
-    private $value;
+    private string $value;
 
-    private $dateTime;
+    private DateTimeImmutable $dateTime;
 
     private const SYSTEM_FORMAT = 'Y-m-d';
 
@@ -138,6 +138,7 @@ class Date implements DateTimeable
      */
     public function modify(string $modifier): self
     {
+        /** @var DateTimeImmutable|false */
         $dateTime = $this->dateTime->modify($modifier);
 
         if (!$dateTime) {

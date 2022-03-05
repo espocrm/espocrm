@@ -36,11 +36,11 @@ use RuntimeException;
  */
 class LinkParent
 {
-    private $entityType;
+    private string $entityType;
 
-    private $id;
+    private string $id;
 
-    private $name = null;
+    private ?string $name = null;
 
     public function __construct(string $entityType, string $id)
     {

@@ -38,7 +38,7 @@ use RuntimeException;
  */
 class CurrencyConverter
 {
-    protected $configDataProvider;
+    private CurrencyConfigDataProvider $configDataProvider;
 
     public function __construct(CurrencyConfigDataProvider $configDataProvider)
     {

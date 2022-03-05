@@ -38,11 +38,11 @@ use Espo\Core\{
 
 class AddressFormatterFactory
 {
-    private $metadataProvider;
+    private AddressFormatterMetadataProvider $metadataProvider;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $config;
+    private Config $config;
 
     public function __construct(
         AddressFormatterMetadataProvider $metadataProvider,
@@ -56,6 +56,7 @@ class AddressFormatterFactory
 
     public function create(int $format): AddressFormatter
     {
+        /** @var ?class-string */
         $className = $this->metadataProvider->getFormatterClassName($format);
 
         if (!$className) {

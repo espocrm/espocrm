@@ -35,7 +35,7 @@ use RuntimeException;
 
 class CurrencyConfigDataProvider
 {
-    protected $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {
@@ -61,7 +61,7 @@ class CurrencyConfigDataProvider
     /**
      * Get a list of available currencies.
      *
-     * @return array<int, string>
+     * @return array<int,string>
      */
     public function getCurrencyList(): array
     {

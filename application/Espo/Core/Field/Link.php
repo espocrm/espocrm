@@ -36,9 +36,9 @@ use RuntimeException;
  */
 class Link
 {
-    private $id;
+    private string $id;
 
-    private $name = null;
+    private ?string $name = null;
 
     public function __construct(string $id)
     {

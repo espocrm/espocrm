@@ -36,11 +36,14 @@ use RuntimeException;
  */
 class LinkMultipleItem
 {
-    private $id;
+    private string $id;
 
-    private $name = null;
+    private ?string $name = null;
 
-    private $columnData = [];
+    /**
+     * @var array<string,mixed>
+     */
+    private array $columnData = [];
 
     /**
      * @throws RuntimeException

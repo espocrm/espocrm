@@ -36,13 +36,13 @@ use RuntimeException;
  */
 class PhoneNumber
 {
-    private $number;
+    private string $number;
 
-    private $type = null;
+    private ?string $type = null;
 
-    private $isOptedOut = false;
+    private bool $isOptedOut = false;
 
-    private $isInvalid = false;
+    private bool $isInvalid = false;
 
     public function __construct(string $number)
     {

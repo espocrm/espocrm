@@ -44,19 +44,13 @@ use Espo\Core\{
 
 use RuntimeException;
 use InvalidArgumentException;
-use StdClass;
+use stdClass;
 
 class LinkMultipleFactory implements ValueFactory
 {
-    /**
-     * @var Defs
-     */
-    private $ormDefs;
+    private Defs $ormDefs;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(Defs $ormDefs, EntityManager $entityManager)
     {
@@ -124,7 +118,7 @@ class LinkMultipleFactory implements ValueFactory
         return new LinkMultiple($itemList);
     }
 
-    private function loadLinkMultipleField(CoreEntity $entity, $field): void
+    private function loadLinkMultipleField(CoreEntity $entity, string $field): void
     {
         $columns = $this->ormDefs
             ->getEntity($entity->getEntityType())
@@ -134,7 +128,7 @@ class LinkMultipleFactory implements ValueFactory
         $entity->loadLinkMultipleField($field, $columns);
     }
 
-    private function loadColumnData(Entity $entity, string $field): StdClass
+    private function loadColumnData(Entity $entity, string $field): stdClass
     {
         $columnData = (object) [];
 
@@ -172,7 +166,7 @@ class LinkMultipleFactory implements ValueFactory
         return $columnData;
     }
 
-    private function addColumnValues(LinkMultipleItem $item, object $data)
+    private function addColumnValues(LinkMultipleItem $item, stdClass $data): LinkMultipleItem
     {
         foreach (get_object_vars($data) as $column => $value) {
             $item = $item->withColumnValue($column, $value);

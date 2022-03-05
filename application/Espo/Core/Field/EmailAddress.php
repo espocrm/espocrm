@@ -38,11 +38,11 @@ use FILTER_VALIDATE_EMAIL;
  */
 class EmailAddress
 {
-    private $address;
+    private string $address;
 
-    private $isOptedOut = false;
+    private bool $isOptedOut = false;
 
-    private $isInvalid = false;
+    private bool $isInvalid = false;
 
     public function __construct(string $address)
     {

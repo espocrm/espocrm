@@ -44,9 +44,9 @@ use RuntimeException;
  */
 class DateTimeOptional implements DateTimeable
 {
-    private $dateTimeValue = null;
+    private ?DateTime $dateTimeValue = null;
 
-    private $dateValue = null;
+    private ?Date $dateValue = null;
 
     private const SYSTEM_FORMAT = 'Y-m-d H:i:s';
 

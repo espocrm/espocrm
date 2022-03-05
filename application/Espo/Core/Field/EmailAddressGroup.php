@@ -40,16 +40,12 @@ class EmailAddressGroup
     /**
      * @var EmailAddress[]
      */
-    private $list = [];
+    private array $list = [];
 
-    /**
-     * @var ?EmailAddress
-     */
-    private $primary = null;
+    private ?EmailAddress $primary = null;
 
     /**
      * @param EmailAddress[] $list
-     *
      * @throws RuntimeException
      */
     public function __construct(array $list = [])

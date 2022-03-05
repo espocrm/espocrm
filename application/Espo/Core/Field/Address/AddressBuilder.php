@@ -36,15 +36,15 @@ use Espo\Core\Field\Address;
  */
 class AddressBuilder
 {
-    protected $street;
+    private ?string $street;
 
-    protected $city;
+    private ?string$city;
 
-    protected $country;
+    private ?string $country;
 
-    protected $state;
+    private ?string $state;
 
-    protected $postalCode;
+    private ?string $postalCode;
 
     public function clone(Address $address): self
     {
