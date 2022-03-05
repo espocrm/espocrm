@@ -63,7 +63,7 @@ class MailMimeParser implements Parser
 
     private EntityManager $entityManager;
 
-    private ?WrappeeParser $parser;
+    private ?WrappeeParser $parser = null;
 
     /**
      * @var array<string,ParserMessage>
