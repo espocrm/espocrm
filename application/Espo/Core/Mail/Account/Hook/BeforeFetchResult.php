@@ -33,7 +33,10 @@ class BeforeFetchResult
 {
     private bool $toSkip = false;
 
-    private $data = [];
+    /**
+     * @var array<string,mixed>
+     */
+    private array $data = [];
 
     public static function create(): self
     {

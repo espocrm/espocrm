@@ -50,7 +50,10 @@ use stdClass;
  */
 class MailMimeParser implements Parser
 {
-    private $extMimeTypeMap = [
+    /**
+     * @var array<string,string>
+     */
+    private array $extMimeTypeMap = [
         'jpg' => 'image/jpg',
         'jpeg' => 'image/jpeg',
         'png' => 'image/png',
@@ -58,11 +61,14 @@ class MailMimeParser implements Parser
         'webp' => 'image/webp',
     ];
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $parser = [];
+    private ?WrappeeParser $parser;
 
-    private $messageHash = [];
+    /**
+     * @var array<string,ParserMessage>
+     */
+    private array $messageHash = [];
 
     public function __construct(EntityManager $entityManager)
     {

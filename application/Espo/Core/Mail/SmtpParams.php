@@ -33,29 +33,38 @@ use RuntimeException;
 
 class SmtpParams
 {
-    private $server = null;
+    private string $server;
 
-    private $port = null;
+    private int $port;
 
-    private $fromAddress = null;
+    private ?string $fromAddress = null;
 
-    private $fromName = null;
+    private ?string $fromName = null;
 
-    private $connectionOptions = null;
+    /**
+     * @var array<string,mixed>|null
+     */
+    private ?array $connectionOptions = null;
 
-    private $auth = false;
+    private bool $auth = false;
 
-    private $authMechanism = null;
+    private ?string $authMechanism = null;
 
-    private $authClassName = null;
+    /**
+     * @var ?class-string
+     */
+    private ?string $authClassName = null;
 
-    private $username = null;
+    private ?string $username = null;
 
-    private $password = null;
+    private ?string $password = null;
 
-    private $security = null;
+    private ?string $security = null;
 
-    private $paramList = [
+    /**
+     * @var string[]
+     */
+    private array $paramList = [
         'server',
         'port',
         'fromAddress',
@@ -80,6 +89,9 @@ class SmtpParams
         return new self($server, $port);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function toArray(): array
     {
         $params = [];
@@ -93,6 +105,9 @@ class SmtpParams
         return $params;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $server = $params['server'] ?? null;
@@ -144,6 +159,9 @@ class SmtpParams
         return $this->fromName;
     }
 
+    /**
+     * @return array<string,mixed>|null
+     */
     public function getConnectionOptions(): ?array
     {
         return $this->connectionOptions;
@@ -159,6 +177,9 @@ class SmtpParams
         return $this->authMechanism;
     }
 
+    /**
+     * @return ?class-string
+     */
     public function getAuthClassName(): ?string
     {
         return $this->authClassName;
@@ -182,7 +203,6 @@ class SmtpParams
     public function withFromAddress(?string $fromAddress): self
     {
         $obj = clone $this;
-
         $obj->fromAddress = $fromAddress;
 
         return $obj;
@@ -191,16 +211,17 @@ class SmtpParams
     public function withFromName(?string $fromName): self
     {
         $obj = clone $this;
-
         $obj->fromName = $fromName;
 
         return $obj;
     }
 
+    /**
+     * @param array<string,mixed>|null $connectionOptions
+     */
     public function withConnectionOptions(?array $connectionOptions): self
     {
         $obj = clone $this;
-
         $obj->connectionOptions = $connectionOptions;
 
         return $obj;
@@ -209,7 +230,6 @@ class SmtpParams
     public function withAuth(bool $auth = true): self
     {
         $obj = clone $this;
-
         $obj->auth = $auth;
 
         return $obj;
@@ -218,16 +238,17 @@ class SmtpParams
     public function withAuthMechanism(?string $authMechanism): self
     {
         $obj = clone $this;
-
         $obj->authMechanism = $authMechanism;
 
         return $obj;
     }
 
+    /**
+     * @param ?class-string $authClassName
+     */
     public function withAuthClassName(?string $authClassName): self
     {
         $obj = clone $this;
-
         $obj->authClassName = $authClassName;
 
         return $obj;
@@ -236,7 +257,6 @@ class SmtpParams
     public function withUsername(?string $username): self
     {
         $obj = clone $this;
-
         $obj->username = $username;
 
         return $obj;
@@ -245,7 +265,6 @@ class SmtpParams
     public function withPassword(?string $password): self
     {
         $obj = clone $this;
-
         $obj->password = $password;
 
         return $obj;
@@ -254,7 +273,6 @@ class SmtpParams
     public function withSecurity(?string $security): self
     {
         $obj = clone $this;
-
         $obj->security = $security;
 
         return $obj;

@@ -58,23 +58,17 @@ use Exception;
  */
 class Importer
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $config;
+    private Config $config;
 
-    /**
-     * @var AssignmentNotificator
-     */
-    private $notificator;
+    private AssignmentNotificator $notificator;
 
-    private $filtersMatcher;
+    private FiltersMatcher $filtersMatcher;
 
-    private $parserFactory;
+    private ParserFactory $parserFactory;
 
-    private $linkMultipleSaver;
+    private LinkMultipleSaver $linkMultipleSaver;
 
     public function __construct(
         EntityManager $entityManager,
@@ -636,6 +630,11 @@ class Importer
         return $duplicate;
     }
 
+    /**
+     * @param string[] $userIdList
+     * @param array<string,string> $folderData
+     * @param string[] $teamIdList
+     */
     private function processDuplicate(
         Email $duplicate,
         ?string $assignedUserId,

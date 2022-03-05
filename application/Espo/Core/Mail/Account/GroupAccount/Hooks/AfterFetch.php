@@ -344,6 +344,9 @@ class AfterFetch implements AfterFetchInterface
         return $this->injectableFactory->create(EmailTemplateService::class);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getSmtpParamsFromInboundEmail(InboundEmail $emailAccount): ?array
     {
         $smtpParams = [];
@@ -466,6 +469,9 @@ class AfterFetch implements AfterFetchInterface
         ]);
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function emailToCase(Email $email, array $params): CaseObj
     {
         /** @var CaseObj $case */

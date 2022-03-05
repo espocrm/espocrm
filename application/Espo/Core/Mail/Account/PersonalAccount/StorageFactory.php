@@ -107,6 +107,7 @@ class StorageFactory implements StorageFactoryInterface
 
         $emailAddress = $rawParams['emailAddress'] ?? null;
         $userId = $rawParams['userId'] ?? null;
+        /** @var ?class-string */
         $handlerClassName = $rawParams['imapHandler'] ?? null;
 
         $handler = null;
@@ -139,6 +140,7 @@ class StorageFactory implements StorageFactoryInterface
                 $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
 
                 if (isset($imapHandlers->$emailAddress)) {
+                    /** @var ?class-string */
                     $handlerClassName = $imapHandlers->$emailAddress;
 
                     try {

@@ -35,17 +35,20 @@ class MessageWrapper implements Message
 {
     private int $id;
 
-    private $parser;
+    private ?Storage $storage;
 
-    private $storage;
+    private ?Parser $parser;
 
-    private $rawHeader = null;
+    private ?string $rawHeader = null;
 
-    private $rawContent = null;
+    private ?string $rawContent = null;
 
-    private $fullRawContent = null;
+    private ?string $fullRawContent = null;
 
-    private $flagList = null;
+    /**
+     * @var ?string[]
+     */
+    private ?array $flagList = null;
 
     public function __construct(
         int $id,
@@ -104,6 +107,9 @@ class MessageWrapper implements Message
         return $this->getRawHeader() . "\n" . $this->getRawContent();
     }
 
+    /**
+     * @return string[]
+     */
     public function getFlags(): array
     {
         return $this->flagList ?? [];

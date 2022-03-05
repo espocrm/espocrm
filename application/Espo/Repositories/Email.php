@@ -41,7 +41,6 @@ use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
 
 /**
- * @template T of \Espo\Entities\Email
  * @extends Database<\Espo\Entities\Email>
  */
 class Email extends Database implements

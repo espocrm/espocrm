@@ -82,7 +82,7 @@ interface Storage
     public function close(): void;
 
     /**
-     * @retrun string[]
+     * @return string[]
      */
     public function getFolderNames(): array;
 

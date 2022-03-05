@@ -41,6 +41,7 @@ use Laminas\{
     Mail\Message,
     Mail\Transport\SmtpOptions,
     Mail\Transport\Envelope,
+    Mail\Transport\Smtp as SmtpTransport,
     Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException,
 };
 
@@ -70,41 +71,44 @@ use InvalidArgumentException;
  */
 class Sender
 {
-    private $config;
+    private ?SmtpTransport $transport = null;
+
+    private bool $isGlobal = false;
 
     /**
-     * @var EntityManager
+     * @var array<string,mixed>
      */
-    private $entityManager;
+    private array $params = [];
 
-    private $serviceFactory;
+    /**
+     * @var array<string,mixed>
+     */
+    private array $overrideParams = [];
 
-    private $transportFactory;
+    private bool $systemInboundEmailIsCached = false;
 
-    private $transport;
+    private ?Envelope $envelope = null;
 
-    private $isGlobal = false;
-
-    private $params = [];
-
-    private $overrideParams = [];
-
-    private $systemInboundEmail = null;
-
-    private $inboundEmailService = null;
-
-    private $log;
-
-    private $systemInboundEmailIsCached = false;
-
-    private $envelope = null;
-
-    private $message = null;
+    private ?Message $message = null;
 
     /**
      * @var iterable<Attachment>|null
      */
     private $attachmentList = null;
+
+    private Config $config;
+
+    private EntityManager $entityManager;
+
+    private ServiceFactory $serviceFactory;
+
+    private SmtpTransportFactory $transportFactory;
+
+    private ?InboundEmail $systemInboundEmail = null;
+
+    private ?InboundEmailService $inboundEmailService = null;
+
+    private Log $log;
 
     public function __construct(
         Config $config,
@@ -149,7 +153,7 @@ class Sender
     /**
      * With parameters.
      *
-     * @param SenderParams|array $params
+     * @param SenderParams|array<string,mixed> $params
      */
     public function withParams($params): self
     {
@@ -181,7 +185,7 @@ class Sender
     /**
      * With specific SMTP parameters.
      *
-     * @param SmtpParams|array $params
+     * @param SmtpParams|array<string,mixed> $params
      */
     public function withSmtpParams($params): self
     {
@@ -198,8 +202,7 @@ class Sender
     /**
      * With specific attachments.
      *
-     * @param Attachment[] $attachmentList
-     * @phpstan iterable<Attachment> $attachmentList
+     * @param iterable<Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
@@ -210,6 +213,8 @@ class Sender
 
     /**
      * With envelope options.
+     *
+     * @param array<string,mixed> $options
      */
     public function withEnvelopeOptions(array $options): self
     {
@@ -228,6 +233,7 @@ class Sender
 
     /**
      * @deprecated
+     * @param array<string,mixed> $params
      */
     public function setParams(array $params = []): self
     {
@@ -239,6 +245,7 @@ class Sender
 
     /**
      * @deprecated
+     * @param array<string,mixed> $params
      */
     public function useSmtp(array $params = []): self
     {
@@ -261,6 +268,9 @@ class Sender
         return $this;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function applySmtp(array $params = []): void
     {
         $this->params = $params;
@@ -412,9 +422,9 @@ class Sender
     /**
      * Send an email.
      *
-     * @param ?array $params @deprecated
+     * @param ?array<string,mixed> $params @deprecated
      * @param ?Message $message @deprecated
-     * @param iterable $attachmentList @deprecated
+     * @param iterable<Attachment> $attachmentList @deprecated
      */
     public function send(
         Email $email,
@@ -487,6 +497,7 @@ class Sender
         $attachmentCollection = null;
 
         if (!$email->isNew()) {
+            /** @var \Espo\ORM\Collection<Attachment> */
             $attachmentCollection = $this->entityManager
                 ->getRDBRepository('Email')
                 ->getRelation($email, 'attachments')
@@ -640,6 +651,7 @@ class Sender
                 $message->getHeaders()->addHeader($contentTypeHeader);
             }
 
+            /** @phpstan-ignore-next-line */
             $message->getHeaders()->get('content-type')->setType($messageType);
         }
 
@@ -735,6 +747,8 @@ class Sender
 
     /**
      * @deprecated
+     *
+     * @param array<string,mixed> $options
      */
     public function setEnvelopeOptions(array $options): self
     {

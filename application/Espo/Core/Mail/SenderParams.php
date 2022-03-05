@@ -31,14 +31,17 @@ namespace Espo\Core\Mail;
 
 class SenderParams
 {
-    private $fromAddress = null;
+    private ?string $fromAddress = null;
 
-    private $fromName = null;
+    private ?string $fromName = null;
 
-    private $replyToAddress = null;
+    private ?string $replyToAddress = null;
 
-    private $replyToName = null;
+    private ?string $replyToName = null;
 
+    /**
+     * @var string[]
+     */
     private $paramList = [
         'fromAddress',
         'fromName',
@@ -51,6 +54,9 @@ class SenderParams
         return new self();
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function toArray(): array
     {
         $params = [];
@@ -64,6 +70,9 @@ class SenderParams
         return $params;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public static function fromArray(array $params): self
     {
         $obj = new self();

@@ -39,11 +39,12 @@ use Laminas\Mail\Header;
 
 class XQueueItemId implements Header\HeaderInterface
 {
-    protected $fieldName = 'X-Queue-Item-Id';
+    private string $fieldName = 'X-Queue-Item-Id';
 
-    protected $id = null;
+    private ?string $id = null;
 
     /**
+     * @param ?string $headerLine
      * @return self
      */
     public static function fromString($headerLine)
@@ -63,35 +64,56 @@ class XQueueItemId implements Header\HeaderInterface
         return $header;
     }
 
+    /**
+     * @return string
+     */
     public function getFieldName()
     {
         return $this->fieldName;
     }
 
+    /**
+     * @param string $value
+     * @return void
+     */
     public function setFieldName($value)
     {
     }
 
+    /**
+     * @param string $encoding
+     * @return self
+     */
     public function setEncoding($encoding)
     {
         return $this;
     }
 
-    public function setId($id)
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
+    /**
+     * @return string
+     */
     public function getEncoding()
     {
         return 'ASCII';
     }
 
+    /**
+     * @return string
+     */
     public function toString()
     {
         return $this->fieldName . ': ' . $this->getFieldValue();
     }
 
+    /**
+     * @param bool $format
+     * @return ?string
+     */
     public function getFieldValue($format = Header\HeaderInterface::FORMAT_RAW)
     {
         return $this->id;

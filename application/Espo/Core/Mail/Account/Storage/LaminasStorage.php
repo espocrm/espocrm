@@ -99,7 +99,7 @@ class LaminasStorage implements Storage
     }
 
     /**
-     * @retrun string[]
+     * @return string[]
      */
     public function getFolderNames(): array
     {

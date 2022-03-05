@@ -51,21 +51,21 @@ use Espo\Core\{
  */
 class EmailSender
 {
-    private $systemInboundEmail = null;
+    private ?InboundEmail $systemInboundEmail = null;
 
-    private $inboundEmailService = null;
+    private ?InboundEmailService $inboundEmailService = null;
 
-    private $systemInboundEmailIsCached = false;
+    private bool $systemInboundEmailIsCached = false;
 
-    private $config;
+    private Config $config;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $serviceFactory;
+    private ServiceFactory $serviceFactory;
 
-    private $transportFactory;
+    private SmtpTransportFactory $transportFactory;
 
-    private $log;
+    private Log $log;
 
     public function __construct(
         Config $config,
@@ -105,7 +105,7 @@ class EmailSender
     /**
      * With parameters.
      *
-     * @param SenderParams|array $params
+     * @param SenderParams|array<string,mixed> $params
      */
     public function withParams($params): Sender
     {
@@ -115,7 +115,7 @@ class EmailSender
     /**
      * With specific SMTP parameters.
      *
-     * @param SmtpParams|array $params
+     * @param SmtpParams|array<string,mixed> $params
      */
     public function withSmtpParams($params): Sender
     {
@@ -125,7 +125,7 @@ class EmailSender
     /**
      * With specific attachments.
      *
-     * @param Attachment[] $attachmentList
+     * @param iterable<Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): Sender
     {
@@ -134,6 +134,8 @@ class EmailSender
 
     /**
      * With envelope options.
+     *
+     * @param array<string,mixed> $options
      */
     public function withEnvelopeOptions(array $options): Sender
     {

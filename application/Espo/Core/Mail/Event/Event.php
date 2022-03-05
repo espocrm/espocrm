@@ -37,25 +37,25 @@ use RuntimeException;
 
 class Event
 {
-    private $attendees = null;
+    private ?string $attendees = null;
 
-    private $organizer = null;
+    private ?string $organizer = null;
 
-    private $dateStart = null;
+    private ?string $dateStart = null;
 
-    private $dateEnd = null;
+    private ?string $dateEnd = null;
 
-    private $location = null;
+    private ?string $location = null;
 
-    private $name = null;
+    private ?string $name = null;
 
-    private $description = null;
+    private ?string $description = null;
 
-    private $timezone = null;
+    private ?string $timezone = null;
 
-    private $uid = null;
+    private ?string $uid = null;
 
-    private $isAllDay = false;
+    private bool $isAllDay = false;
 
     public function withAttendees(?string $attendees): self
     {

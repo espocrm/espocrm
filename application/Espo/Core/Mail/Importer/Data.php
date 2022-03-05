@@ -29,24 +29,31 @@
 
 namespace Espo\Core\Mail\Importer;
 
-use Espo\Entities\EmailFilter;
-
 class Data
 {
-    private $assignedUserId = null;
+    private ?string $assignedUserId = null;
 
-    private $teamIdList = [];
+    /**
+     * @var string[]
+     */
+    private array $teamIdList = [];
 
+    /**
+     * @var string[]
+     */
     private $userIdList = [];
 
     /**
-     * @var iterable
+     * @var iterable<\Espo\Entities\EmailFilter>
      */
     private $filterList = [];
 
-    private $fetchOnlyHeader = false;
+    private bool $fetchOnlyHeader = false;
 
-    private $folderData = [];
+    /**
+     * @var array<string,string>
+     */
+    private array $folderData = [];
 
     public static function create(): self
     {
@@ -58,16 +65,25 @@ class Data
         return $this->assignedUserId;
     }
 
+    /**
+     * @return string[]
+     */
     public function getTeamIdList(): array
     {
         return $this->teamIdList;
     }
 
+    /**
+     * @return string[]
+     */
     public function getUserIdList(): array
     {
         return $this->userIdList;
     }
 
+    /**
+     * @return iterable<\Espo\Entities\EmailFilter>
+     */
     public function getFilterList(): iterable
     {
         return $this->filterList;
@@ -78,6 +94,9 @@ class Data
         return $this->fetchOnlyHeader;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getFolderData(): array
     {
         return $this->folderData;
@@ -92,6 +111,9 @@ class Data
         return $obj;
     }
 
+    /**
+     * @param string[] $teamIdList
+     */
     public function withTeamIdList(array $teamIdList): self
     {
         $obj = clone $this;
@@ -101,22 +123,23 @@ class Data
         return $obj;
     }
 
+    /**
+     * @param string[] $userIdList
+     */
     public function withUserIdList(array $userIdList): self
     {
         $obj = clone $this;
-
         $obj->userIdList = $userIdList;
 
         return $obj;
     }
 
     /**
-     * @param EmailFilter[] $filterList
+     * @param iterable<\Espo\Entities\EmailFilter> $filterList
      */
     public function withFilterList(iterable $filterList): self
     {
         $obj = clone $this;
-
         $obj->filterList = $filterList;
 
         return $obj;
@@ -125,16 +148,17 @@ class Data
     public function withFetchOnlyHeader(bool $fetchOnlyHeader = true): self
     {
         $obj = clone $this;
-
         $obj->fetchOnlyHeader = $fetchOnlyHeader;
 
         return $obj;
     }
 
+    /**
+     * @param array<string,string> $folderData
+     */
     public function withFolderData(array $folderData): self
     {
         $obj = clone $this;
-
         $obj->folderData = $folderData;
 
         return $obj;

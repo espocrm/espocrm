@@ -41,6 +41,9 @@ class Params
 
     private ?string $security = null;
 
+    /**
+     * @var ?class-string
+     */
     private ?string $imapHandlerClassName = null;
 
     private ?string $id = null;
@@ -101,6 +104,9 @@ class Params
         return $this->security;
     }
 
+    /**
+     * @return ?class-string
+     */
     public function getImapHandlerClassName(): ?string
     {
         return $this->imapHandlerClassName;
@@ -129,6 +135,9 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param ?class-string $imapHandlerClassName
+     */
     public function withImapHandlerClassName(?string $imapHandlerClassName): self
     {
         $obj = clone $this;
