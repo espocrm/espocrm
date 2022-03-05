@@ -32,6 +32,8 @@ namespace tests\unit\Espo\Core\Mail;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 
+use Espo\Core\Notification\AssignmentNotificator;
+
 use Espo\Core\{
     Mail\Importer,
     Mail\Importer\Data as ImporterData,
@@ -122,6 +124,13 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $attachment = new Attachment('Attachment', $attachmentDefs, $entityManager);
 
         $this->attachment = $attachment;
+
+        $this->assignmentNotificatorFactory
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn(
+                $this->createMock(AssignmentNotificator::class)
+            );
     }
 
     function testImport1()
