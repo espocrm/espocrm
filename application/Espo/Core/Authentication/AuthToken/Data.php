@@ -75,6 +75,9 @@ class Data
         return $this->createSecret;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public static function create(array $data): self
     {
         $object = new self();

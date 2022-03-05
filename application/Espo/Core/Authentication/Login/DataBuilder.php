@@ -33,11 +33,11 @@ use Espo\Core\Authentication\AuthToken\AuthToken;
 
 class DataBuilder
 {
-    private $username = null;
+    private ?string $username = null;
 
-    private $password = null;
+    private ?string $password = null;
 
-    private $authToken = null;
+    private ?AuthToken $authToken = null;
 
     public function setUsername(?string $username): self
     {

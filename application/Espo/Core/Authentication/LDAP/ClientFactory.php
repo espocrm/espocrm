@@ -31,6 +31,9 @@ namespace Espo\Core\Authentication\LDAP;
 
 class ClientFactory
 {
+    /**
+     * @param array<string,mixed> $options
+     */
     public function create(array $options): Client
     {
         return new Client($options);

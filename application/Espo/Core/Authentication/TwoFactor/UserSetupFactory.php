@@ -36,9 +36,9 @@ use Espo\Core\Exceptions\Error;
 
 class UserSetupFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -48,6 +48,7 @@ class UserSetupFactory
 
     public function create(string $method): UserSetup
     {
+        /** @var ?class-string */
         $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'userSetupClassName']);
 
         if (!$className) {

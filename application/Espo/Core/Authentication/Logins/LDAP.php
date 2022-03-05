@@ -60,29 +60,32 @@ class LDAP implements Login
 {
     private $utils;
 
-    private $client;
+    /**
+     * @var ?Client
+     */
+    private $client = null;
 
-    private $isPortal;
+    private bool $isPortal;
 
-    private $config;
+    private Config $config;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $passwordHash;
+    private PasswordHash $passwordHash;
 
-    private $language;
+    private Language $language;
 
-    private $log;
+    private Log $log;
 
-    private $baseLogin;
+    private Espo $baseLogin;
 
-    private $clientFactory;
+    private ClientFactory $clientFactory;
 
-    private $linkMultipleSaver;
+    private LinkMultipleSaver $linkMultipleSaver;
 
-    private $emailAddressSaver;
+    private EmailAddressSaver $emailAddressSaver;
 
-    private $phoneNumberSaver;
+    private PhoneNumberSaver $phoneNumberSaver;
 
     public function __construct(
         Config $config,
@@ -113,6 +116,9 @@ class LDAP implements Login
         $this->utils = new LDAPUtils($config);
     }
 
+    /**
+     * @var array<string,string>
+     */
     private $ldapFieldMap = [
         'userName' => 'userNameAttribute',
         'firstName' => 'userFirstNameAttribute',
@@ -122,11 +128,17 @@ class LDAP implements Login
         'phoneNumber' => 'userPhoneNumberAttribute',
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
         'defaultTeamId' => 'userDefaultTeamId',
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
         'portalRolesIds' => 'portalUserRolesIds',
@@ -273,9 +285,9 @@ class LDAP implements Login
     /**
      * Login by authorization token.
      */
-    private function loginByToken($username, AuthToken $authToken = null): ?User
+    private function loginByToken(?string $username, AuthToken $authToken = null): ?User
     {
-        if (!isset($authToken)) {
+        if (!isset($authToken) || $username === null) {
             return null;
         }
 
@@ -308,7 +320,7 @@ class LDAP implements Login
             ->findOne();
     }
 
-    private function adminLogin($username, $password)
+    private function adminLogin(string $username, string $password): ?User
     {
         $hash = $this->passwordHash->hash($password);
 
@@ -324,8 +336,10 @@ class LDAP implements Login
 
     /**
      * Create Espo user with data gets from LDAP server.
+     *
+     * @param array<string,mixed> $userData
      */
-    private function createUser(array $userData, $isPortal = false)
+    private function createUser(array $userData, bool $isPortal = false): ?User
     {
         $this->log->info('Creating new user...');
 
@@ -387,7 +401,7 @@ class LDAP implements Login
     /**
      * Find LDAP user DN by his username.
      */
-    private function findLdapUserDnByUsername($username)
+    private function findLdapUserDnByUsername(string $username): ?string
     {
         $ldapClient = $this->getLdapClient();
 
@@ -411,12 +425,14 @@ class LDAP implements Login
         foreach ($result as $item) {
             return $item["dn"];
         }
+
+        return null;
     }
 
     /**
      * Check and convert filter item into LDAP format.
      */
-    private function convertToFilterFormat($filter)
+    private function convertToFilterFormat(string $filter): string
     {
         $filter = trim($filter);
 
@@ -433,6 +449,8 @@ class LDAP implements Login
 
     /**
      * Load fields for a user.
+     *
+     * @return array<string,mixed>
      */
     private function loadFields(string $type): array
     {

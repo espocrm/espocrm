@@ -46,21 +46,21 @@ class Result
 
     public const STATUS_FAIL = 'fail';
 
-    private $user;
+    private ?User $user = null;
 
-    private $status;
+    private string $status;
 
-    private $message = null;
+    private ?string $message = null;
 
-    private $token = null;
+    private ?string $token = null;
 
-    private $view = null;
+    private ?string $view = null;
 
-    private $loggedUser = null;
+    private ?User $loggedUser = null;
 
-    private $failReason = null;
+    private ?string $failReason = null;
 
-    private $data = null;
+    private ?Data $data = null;
 
     private function __construct(string $status, ?User $user = null, ?Data $data = null)
     {

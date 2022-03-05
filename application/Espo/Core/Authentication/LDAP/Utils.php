@@ -33,11 +33,17 @@ use Espo\Core\Utils\Config;
 
 class Utils
 {
-    private $config;
+    private Config $config;
 
-    protected $options = null;
+    /**
+     * @var ?array<string,mixed>
+     */
+    private ?array $options = null;
 
-    protected $fieldMap = [
+    /**
+     * @var array<string,string>
+     */
+    private $fieldMap = [
         'host' => 'ldapHost',
         'port' => 'ldapPort',
         'useSsl' => 'ldapSecurity',
@@ -69,7 +75,10 @@ class Utils
         'portalUserRolesIds' => 'ldapPortalUserRolesIds',
     ];
 
-    protected $permittedEspoOptions = [
+    /**
+     * @var array<int,string>
+     */
+    private $permittedEspoOptions = [
         'createEspoUser',
         'userNameAttribute',
         'userObjectClass',
@@ -87,9 +96,11 @@ class Utils
     ];
 
     /**
-     * accountCanonicalForm Map between Espo and Laminas value.
+     * AccountCanonicalForm Map between Espo and Laminas value.
+     *
+     *  @var array<string,int>
      */
-    protected $accountCanonicalFormMap = [
+    private $accountCanonicalFormMap = [
         'Dn' => 1,
         'Username' => 2,
         'Backslash' => 3,
@@ -103,25 +114,21 @@ class Utils
         }
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     /**
      * Get Options from espo config according to $this->fieldMap.
      *
-     * @return array
+     * @return array<string,mixed>
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         if (isset($this->options)) {
             return $this->options;
         }
 
         $options = [];
+
         foreach ($this->fieldMap as $ldapName => $espoName) {
-            $option = $this->getConfig()->get($espoName);
+            $option = $this->config->get($espoName);
 
             if (isset($option)) {
                 $options[$ldapName] = $option;
@@ -136,24 +143,24 @@ class Utils
     /**
      * Normalize options to LDAP client format
      *
-     * @param  array  $options
+     * @param array<string,mixed> $options
      *
-     * @return array
+     * @return array<string,mixed>
      */
-    public function normalizeOptions(array $options)
+    public function normalizeOptions(array $options): array
     {
         $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
         $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
-        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[ $options['accountCanonicalForm'] ];
+        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[$options['accountCanonicalForm']];
 
         return $options;
     }
 
     /**
-     * Get an ldap option.
+     * Get an LDAP option.
      *
-     * @param  string $name
-     * @param  mixed $returns Return value
+     * @param string $name
+     * @param mixed $returns A default value.
      * @return mixed
      */
     public function getOption($name, $returns = null)
@@ -172,11 +179,12 @@ class Utils
     /**
      * Get Laminas options for using Laminas\Ldap.
      *
-     * @return array
+     * @return array<string,mixed>
      */
-    public function getLdapClientOptions()
+    public function getLdapClientOptions(): array
     {
         $options = $this->getOptions();
+
         $zendOptions = array_diff_key($options, array_flip($this->permittedEspoOptions));
 
         return $zendOptions;

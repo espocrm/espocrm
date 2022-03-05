@@ -37,11 +37,11 @@ class LoginFactory
 {
     private const DEFAULT_METHOD = 'Espo';
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $config;
+    private Config $config;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, Config $config)
     {
@@ -52,12 +52,14 @@ class LoginFactory
 
     public function create(string $method, bool $isPortal = false): Login
     {
+        /** @var class-string */
         $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
 
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
             if (!class_exists($className)) {
+                /** @var class-string */
                 $className = "Espo\\Core\\Authentication\\Logins\\" . $sanitizedName;
             }
         }

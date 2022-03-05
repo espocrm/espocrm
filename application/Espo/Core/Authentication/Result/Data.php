@@ -35,17 +35,20 @@ use stdClass;
 
 class Data
 {
-    private $message = null;
+    private ?string $message = null;
 
-    private $token = null;
+    private ?string$token = null;
 
-    private $view = null;
+    private ?string $view = null;
 
-    private $loggedUser = null;
+    private ?User $loggedUser = null;
 
-    private $failReason = null;
+    private ?string $failReason = null;
 
-    private $data = [];
+    /**
+     * @var array<string,mixed>
+     */
+    private array $data = [];
 
     private function __construct(
         ?string $message = null,

@@ -70,30 +70,27 @@ class Authentication
 {
     private const LOGOUT_USERNAME = '**logout';
 
-    private $allowAnyAccess;
+    private bool $allowAnyAccess;
 
-    private $portal;
+    private ?Portal $portal = null;
 
-    private $applicationUser;
+    private ApplicationUser $applicationUser;
 
-    private $applicationState;
+    private ApplicationState $applicationState;
 
-    private $configDataProvider;
+    private ConfigDataProvider $configDataProvider;
 
-    /**
-     * @var EntityManagerProxy
-     */
-    private $entityManager;
+    private EntityManagerProxy $entityManager;
 
-    private $loginFactory;
+    private LoginFactory $loginFactory;
 
-    private $twoFactorLoginFactory;
+    private TwoFactorLoginFactory $twoFactorLoginFactory;
 
-    private $authTokenManager;
+    private AuthTokenManager $authTokenManager;
 
-    private $hookManager;
+    private HookManager $hookManager;
 
-    private $log;
+    private Log $log;
 
     public function __construct(
         ApplicationUser $applicationUser,

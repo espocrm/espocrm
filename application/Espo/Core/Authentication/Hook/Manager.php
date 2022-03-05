@@ -38,9 +38,9 @@ use Espo\Core\Authentication\Result;
 
 class Manager
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -84,7 +84,7 @@ class Manager
     }
 
     /**
-     * @return string[]
+     * @return class-string[]
      */
     private function getHookClassNameList(string $type): array
     {
