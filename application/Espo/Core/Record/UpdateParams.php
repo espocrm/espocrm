@@ -31,9 +31,9 @@ namespace Espo\Core\Record;
 
 class UpdateParams
 {
-    private $skipDuplicateCheck = false;
+    private bool $skipDuplicateCheck = false;
 
-    private $versionNumber = null;
+    private ?int $versionNumber = null;
 
     public function __construct() {}
 

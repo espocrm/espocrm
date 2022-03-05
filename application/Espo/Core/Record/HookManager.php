@@ -44,7 +44,7 @@ use Espo\Core\Record\Hook\{
 
 class HookManager
 {
-    private $provider;
+    private Provider $provider;
 
     public function __construct(Provider $provider)
     {
@@ -126,7 +126,7 @@ class HookManager
     }
 
     /**
-     * @return LinkHook[]
+     * @return LinkHook<\Espo\ORM\Entity>[]
      */
     private function getBeforeLinkHookList(string $entityType): array
     {

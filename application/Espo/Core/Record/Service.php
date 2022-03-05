@@ -110,11 +110,13 @@ class Service implements Crud,
     use Di\AssignmentCheckerManagerSetter;
     use Di\RecordHookManagerSetter;
 
+    /** @var bool */
     protected $getEntityBeforeUpdate = false;
 
     /** @var ?string */
     protected $entityType = null;
 
+    /** @var ?StreamService */
     private $streamService = null;
 
     /**
@@ -162,26 +164,34 @@ class Service implements Crud,
     /** @var string[] */
     protected $noEditAccessRequiredLinkList = [];
 
+    /** @var bool */
     protected $noEditAccessRequiredForLink = false;
 
+    /** @var bool */
     protected $checkForDuplicatesInUpdate = false;
 
+    /** @var bool */
     protected $actionHistoryDisabled = false;
 
     /** @var string[] */
     protected $duplicatingLinkList = [];
 
+    /** @var bool */
     protected $listCountQueryDisabled = false;
 
+    /** @var ?int */
     protected $maxSelectTextAttributeLength = null;
 
+    /** @var bool */
     protected $maxSelectTextAttributeLengthDisabled = false;
 
+    /** @var ?string[] */
     protected $selectAttributeList = null;
 
     /** @var string[] */
     protected $mandatorySelectAttributeList = [];
 
+    /** @var bool */
     protected $forceSelectAllAttributes = false;
 
     /** @var string[] */
@@ -189,6 +199,7 @@ class Service implements Crud,
 
     /**
      * @todo Move to metadata.
+     * @var string[]
      */
     protected $validateRequiredSkipFieldList = [];
 
@@ -220,9 +231,11 @@ class Service implements Crud,
      */
     protected $recordHookManager;
 
-    private $listLoadProcessor;
+    /** @var ?ListLoadProcessor */
+    private $listLoadProcessor = null;
 
-    private $duplicateFinder;
+    /** @var ?DuplicateFinder */
+    private $duplicateFinder = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -357,6 +370,9 @@ class Service implements Crud,
         return $this->listLoadProcessor;
     }
 
+    /**
+     * @return void
+     */
     public function loadAdditionalFields(Entity $entity)
     {
         $loadProcessor = $this->createReadLoadProcessor();
@@ -378,6 +394,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param stdClass $data
      * @return void
      * @throws BadRequest
      */
@@ -409,6 +426,11 @@ class Service implements Crud,
         return $this->assignmentCheckerManager->check($this->user, $entity);
     }
 
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     * @return mixed
+     */
     protected function filterInputAttribute($attribute, $value)
     {
         if (in_array($attribute, $this->notFilteringAttributeList)) {
@@ -424,9 +446,13 @@ class Service implements Crud,
         return $value;
     }
 
+    /**
+     * @param stdClass $data
+     * @return void
+     */
     protected function filterInput($data)
     {
-        foreach ($this->readOnlyAttributeList as $attribute) {
+        foreach($this->readOnlyAttributeList as $attribute) {
             unset($data->$attribute);
         }
 
@@ -434,7 +460,7 @@ class Service implements Crud,
             unset($data->$attribute);
         }
 
-        foreach ($data as $key => $value) {
+        foreach (get_object_vars($data) as $key => $value) {
             $data->$key = $this->filterInputAttribute($key, $data->$key);
         }
 
@@ -495,6 +521,8 @@ class Service implements Crud,
 
     /**
      * @deprecated
+     * @param stdClass $data
+     * @return void
      */
     protected function handleCreateInput($data)
     {
@@ -502,6 +530,8 @@ class Service implements Crud,
 
     /**
      * @deprecated
+     * @param stdClass $data
+     * @return void
      */
     protected function handleInput($data)
     {
@@ -776,6 +806,7 @@ class Service implements Crud,
     /**
      * Find records.
      *
+     * @return RecordCollection<TEntity>
      * @throws Forbidden
      */
     public function find(SearchParams $searchParams): RecordCollection
@@ -903,6 +934,7 @@ class Service implements Crud,
     /**
      * Find linked records.
      *
+     * @return RecordCollection<\Espo\ORM\Entity>
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
      * @throws Error
@@ -1496,6 +1528,8 @@ class Service implements Crud,
 
     /**
      * Find duplicates for an entity.
+     *
+     * @return ?Collection<TEntity>
      */
     public function findDuplicates(Entity $entity): ?Collection
     {
@@ -1544,6 +1578,11 @@ class Service implements Crud,
         }
     }
 
+    /**
+     * @return RecordCollection<\Espo\ORM\Entity>
+     * @throws NotFound
+     * @throws Forbidden
+     */
     protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
     {
         $entity = $this->getRepository()->getById($id);
@@ -1627,6 +1666,10 @@ class Service implements Crud,
         }
     }
 
+    /**
+     * @param string $type
+     * @return string[]
+     */
     protected function getFieldByTypeList($type)
     {
         return $this->fieldUtil->getFieldByTypeList($this->entityType, $type);
@@ -1689,6 +1732,7 @@ class Service implements Crud,
 
     /**
      * @param stdClass $data
+     * @return void
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
@@ -1696,6 +1740,7 @@ class Service implements Crud,
 
     /**
      * @param stdClass $data
+     * @return void
      */
     protected function afterCreateEntity(Entity $entity, $data)
     {
@@ -1703,6 +1748,7 @@ class Service implements Crud,
 
     /**
      * @param stdClass $data
+     * @return void
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
@@ -1710,15 +1756,22 @@ class Service implements Crud,
 
     /**
      * @param stdClass $data
+     * @return void
      */
     protected function afterUpdateEntity(Entity $entity, $data)
     {
     }
 
+    /**
+     * @return void
+     */
     protected function beforeDeleteEntity(Entity $entity)
     {
     }
 
+    /**
+     * @return void
+     */
     protected function afterDeleteEntity(Entity $entity)
     {
     }

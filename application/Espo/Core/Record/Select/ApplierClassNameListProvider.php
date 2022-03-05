@@ -33,13 +33,16 @@ use Espo\Core\Utils\Metadata;
 
 class ApplierClassNameListProvider
 {
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return class-string[]
+     */
     public function get(string $entityType): array
     {
         return $this->metadata->get(['recordDefs', $entityType, 'selectApplierClassNameList']) ?? [];

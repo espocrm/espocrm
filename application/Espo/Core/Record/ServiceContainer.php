@@ -46,15 +46,21 @@ class ServiceContainer
 
     private const RECORD_TREE_SERVICE_NAME = 'RecordTree';
 
+    /**
+     * @var array<string,string>
+     */
     private $defaultTypeMap = [
         'CategoryTree' => self::RECORD_TREE_SERVICE_NAME,
     ];
 
+    /**
+     * @var array<string,Service<\Espo\ORM\Entity>>
+     */
     private $data = [];
 
-    private $serviceFactory;
+    private ServiceFactory $serviceFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(ServiceFactory $serviceFactory, Metadata $metadata)
     {
@@ -62,6 +68,9 @@ class ServiceContainer
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return Service<\Espo\ORM\Entity>
+     */
     public function get(string $entityType): Service
     {
         if (!array_key_exists($entityType, $this->data)) {

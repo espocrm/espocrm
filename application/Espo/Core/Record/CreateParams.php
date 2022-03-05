@@ -31,15 +31,9 @@ namespace Espo\Core\Record;
 
 class CreateParams
 {
-    /**
-     * @var bool
-     */
-    private $skipDuplicateCheck = false;
+    private bool $skipDuplicateCheck = false;
 
-    /**
-     * @var ?string
-     */
-    private $duplicateSourceId = null;
+    private ?string $duplicateSourceId = null;
 
     public function __construct() {}
 

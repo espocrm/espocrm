@@ -37,20 +37,11 @@ use RuntimeException;
 
 class FieldDuplicatorFactory
 {
-    /**
-     * @var Defs
-     */
-    private $defs;
+    private Defs $defs;
 
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private Metadata $metadata;
 
-    /**
-     * @var InjectableFactory
-     */
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Defs $defs, Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -75,6 +66,9 @@ class FieldDuplicatorFactory
         return $this->getClassName($entityType, $field) !== null;
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $entityType, string $field): ?string
     {
         $fieldDefs = $this->defs

@@ -44,7 +44,7 @@ class SearchParamsFetcher
 {
     private const MAX_SIZE_LIMIT = 200;
 
-    private $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {
@@ -58,6 +58,9 @@ class SearchParamsFetcher
         );
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function fetchRaw(Request $request): array
     {
         $params = $request->hasQueryParam('searchParams') ?
@@ -69,6 +72,9 @@ class SearchParamsFetcher
         return $params;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function fetchRawJsonSearchParams(Request $request): array
     {
         try {
@@ -79,6 +85,9 @@ class SearchParamsFetcher
         }
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function fetchRawMultipleParams(Request $request): array
     {
         $params = [];
@@ -147,6 +156,9 @@ class SearchParamsFetcher
         return $params;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function handleRawParams(array &$params): void
     {
         if (isset($params['maxSize']) && !is_int($params['maxSize'])) {
@@ -156,6 +168,9 @@ class SearchParamsFetcher
         $this->handleMaxSize($params);
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     private function handleMaxSize(array &$params): void
     {
         $value = $params['maxSize'];

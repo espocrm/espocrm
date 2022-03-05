@@ -36,6 +36,8 @@ use stdClass;
 
 /**
  * Contains an an ORM collection and total number of records.
+ *
+ * @template TEntity of \Espo\ORM\Entity
  */
 class Collection
 {
@@ -43,10 +45,16 @@ class Collection
 
     public const TOTAL_HAS_NO_MORE = -2;
 
-    private $collection;
+    /**
+     * @var OrmCollection<TEntity>
+     */
+    private OrmCollection $collection;
 
-    private $total;
+    private ?int $total;
 
+    /**
+     * @param OrmCollection<TEntity> $collection
+     */
     public function __construct(OrmCollection $collection, ?int $total = null)
     {
         $this->collection = $collection;
@@ -63,6 +71,8 @@ class Collection
 
     /**
      * Get an ORM collection.
+     *
+     * @return OrmCollection<TEntity>
      */
     public function getCollection(): OrmCollection
     {

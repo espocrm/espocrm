@@ -29,8 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Entities\Note;
-
 use Espo\Core\{
     Record\Collection as RecordCollection,
     Exceptions\Error,
@@ -159,7 +157,7 @@ class Notification extends \Espo\Services\Record
             switch ($entity->get('type')) {
                 case 'Note':
                 case 'MentionInPost':
-                    /** @var ?Note $note */
+                    /** @var ?\Espo\Entities\Note $note */
                     $note = $this->entityManager->getEntity('Note', $data->noteId);
 
                     if (!$note) {

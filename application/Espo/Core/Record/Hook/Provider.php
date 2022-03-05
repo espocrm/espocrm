@@ -37,12 +37,19 @@ use RuntimeException;
 
 class Provider
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
+    /**
+     *
+     * @var array<string,object[]>
+     */
     private $map = [];
 
+    /**
+     * @var array<string,class-string>
+     */
     private $typeInterfaceMap = [
         Type::BEFORE_CREATE => CreateHook::class,
         Type::BEFORE_READ => ReadHook::class,
@@ -79,6 +86,7 @@ class Provider
     {
         $key = $type . 'HookClassNameList';
 
+        /** @var class-string[] */
         $classNameList = $this->metadata->get(['recordDefs', $entityType, $key]) ?? [];
 
         $interfaceName = $this->typeInterfaceMap[$type] ?? null;
