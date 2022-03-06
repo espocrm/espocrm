@@ -31,8 +31,14 @@ namespace Espo\Core\FieldValidation;
 
 class FieldValidationParams
 {
+    /**
+     * @var string[]
+     */
     private $skipFieldList = [];
 
+    /**
+     * @var array<string,string[]>
+     */
     private $typeSkipFieldListData = [];
 
     public function __construct()

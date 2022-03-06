@@ -44,13 +44,16 @@ use stdClass;
  */
 class FieldValidationManager
 {
+    /**
+     * @var array<string,?object>
+     */
     private $checkerCache = [];
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $fieldUtil;
+    private FieldUtil $fieldUtil;
 
-    private $factory;
+    private ValidatorFactory $factory;
 
     public function __construct(Metadata $metadata, FieldUtil $fieldUtil, ValidatorFactory $factory)
     {
@@ -166,6 +169,9 @@ class FieldValidationManager
         }
     }
 
+    /**
+     * @param mixed $validationValue
+     */
     private function processFieldCheck(
         string $entityType,
         string $type,
@@ -189,6 +195,9 @@ class FieldValidationManager
         return $checker->$methodName($entity, $field, $validationValue);
     }
 
+    /**
+     * @param mixed $validationValue
+     */
     private function processFieldRawCheck(
         string $entityType,
         string $type,

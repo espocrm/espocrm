@@ -38,11 +38,14 @@ use RuntimeException;
 
 class ValidatorFactory
 {
+    /**
+     * @var array<string,class-string>
+     */
     private $classNameCache = [];
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -74,6 +77,9 @@ class ValidatorFactory
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $entityType, string $field): ?string
     {
         $key = $entityType . '_' . $field;
@@ -85,6 +91,9 @@ class ValidatorFactory
         return $this->classNameCache[$key];
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassNameNoCache(string $entityType, string $field): ?string
     {
         $className1 = $this->metadata
