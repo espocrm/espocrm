@@ -38,9 +38,9 @@ use Espo\Core\{
 
 class BaseLanguage implements Loader
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    protected $config;
+    protected Config $config;
 
     public function __construct(InjectableFactory $injectableFactory, Config $config)
     {

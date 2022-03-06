@@ -37,7 +37,7 @@ use Espo\Core\{
 
 class DateTime implements Loader
 {
-    protected $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {

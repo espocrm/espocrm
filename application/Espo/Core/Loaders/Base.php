@@ -33,18 +33,18 @@ use Espo\Core\Container;
 
 /**
  * @deprecated
- * @todo Remove in 6.4.
+ * @todo Remove.
  */
 abstract class Base implements Loader
 {
-    protected $container;
+    protected $container; /** @phpstan-ignore-line */
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    protected function getContainer()
+    protected function getContainer() /** @phpstan-ignore-line */
     {
         return $this->container;
     }

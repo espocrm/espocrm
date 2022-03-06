@@ -37,7 +37,7 @@ use Espo\Core\{
 
 class DataManager implements Loader
 {
-    protected $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {
