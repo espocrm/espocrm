@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class ConflictSilent extends Conflict
 {
+    /**
+     * @var string
+     */
     public $logLevel = 'notice';
 }

@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class ErrorSilent extends Error
 {
+    /**
+     * @var string
+     */
     public $logLevel = 'notice';
 }

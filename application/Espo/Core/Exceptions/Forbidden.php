@@ -31,6 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class Forbidden extends \Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 403;
-
 }

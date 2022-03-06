@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class Unauthorized extends \Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 401;
 }

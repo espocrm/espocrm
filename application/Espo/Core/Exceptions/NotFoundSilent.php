@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class NotFoundSilent extends NotFound
 {
+    /**
+     * @var string
+     */
     public $logLevel = 'notice';
 }

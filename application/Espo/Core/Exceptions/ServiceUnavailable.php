@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class ServiceUnavailable extends \Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 503;
 }

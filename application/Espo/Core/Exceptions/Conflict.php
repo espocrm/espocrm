@@ -34,8 +34,14 @@ use Throwable;
 
 class Conflict extends Exception implements HasBody
 {
+    /**
+     * @var int
+     */
     protected $code = 409;
 
+    /**
+     * @var ?string
+     */
     private $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)

@@ -31,5 +31,8 @@ namespace Espo\Core\Exceptions;
 
 class ForbiddenSilent extends Forbidden
 {
+    /**
+     * @var string
+     */
     public $logLevel = 'notice';
 }
