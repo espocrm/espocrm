@@ -35,18 +35,24 @@ use Espo\ORM\Entity;
 
 use Espo\Core\InjectableFactory;
 
-use StdClass;
+use stdClass;
 
 class FunctionFactory
 {
-    private $processor;
+    private Processor $processor;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $attributeFetcher;
+    private AttributeFetcher $attributeFetcher;
 
+    /**
+     * @var array<string,class-string>
+     */
     private $classNameMap;
 
+    /**
+     * @param array<string,class-string> $classNameMap
+     */
     public function __construct(
         Processor $processor,
         InjectableFactory $injectableFactory,
@@ -59,7 +65,7 @@ class FunctionFactory
         $this->classNameMap = $classNameMap;
     }
 
-    public function create(string $name, ?Entity $entity = null, ?StdClass $variables = null): object
+    public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): object
     {
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
             $className = $this->classNameMap[$name];
@@ -76,6 +82,7 @@ class FunctionFactory
 
             $typeName = implode('\\', $arr);
 
+            /** @var class-string */
             $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 

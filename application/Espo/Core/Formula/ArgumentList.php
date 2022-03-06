@@ -38,18 +38,31 @@ use SeekableIterator;
 
 /**
  * A list of function arguments.
+ *
+ * @implements ArrayAccess<int,Argument>
+ * @implements Iterator<Argument>
+ * @implements SeekableIterator<int,Argument>
  */
 class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, SeekableIterator
 {
+    /**
+     * @var mixed[]
+     */
     protected $dataList;
 
-    private $position = 0;
+    private int $position = 0;
 
+    /**
+     * @param mixed[] $dataList
+     */
     public function __construct(array $dataList)
     {
         $this->dataList = $dataList;
     }
 
+    /**
+     * @return int
+     */
     private function getLastValidKey()
     {
         $keys = array_keys($this->dataList);

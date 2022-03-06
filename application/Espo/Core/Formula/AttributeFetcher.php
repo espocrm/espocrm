@@ -37,6 +37,9 @@ use Espo\Core\ORM\Entity as CoreEntity;
  */
 class AttributeFetcher
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $relatedEntitiesCacheMap = [];
 
     /**
@@ -50,6 +53,7 @@ class AttributeFetcher
             $key = $this->buildKey($entity, $arr[0]);
 
             if (!array_key_exists($key, $this->relatedEntitiesCacheMap)) {
+                // @todo User getRelation.
                 $this->relatedEntitiesCacheMap[$key] = $entity->get($arr[0]);
             }
 

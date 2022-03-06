@@ -43,12 +43,15 @@ use stdClass;
  */
 class Processor
 {
-    private $functionFactory;
+    private FunctionFactory $functionFactory;
 
-    private $entity;
+    private Entity $entity;
 
-    private $variables;
+    private stdClass $variables;
 
+    /**
+     * @param ?array<string,class-string> $functionClassNameMap
+     */
     public function __construct(
         InjectableFactory $injectableFactory,
         AttributeFetcher $attributeFetcher,
@@ -96,6 +99,9 @@ class Processor
         return $function->process($item->getArgumentList());
     }
 
+    /**
+     * @return mixed[]
+     */
     private function processList(ArgumentList $args): array
     {
         $list = [];

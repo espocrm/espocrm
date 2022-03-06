@@ -38,6 +38,9 @@ use stdClass;
  */
 class Parser
 {
+    /**
+     * @var array<int,string[]>
+     */
     private $priorityList = [
         ['='],
         ['??'],
@@ -48,6 +51,9 @@ class Parser
         ['*', '/', '%'],
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $operatorMap = [
         '=' => 'assign',
         '??' => 'comparison\\nullCoalescing',
@@ -66,11 +72,11 @@ class Parser
         '<=' => 'comparison\\lessThanOrEquals',
     ];
 
-    private $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
+    private string $variableNameRegExp = "/^[a-zA-Z0-9_\$]+$/";
 
-    private $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
+    private string $functionNameRegExp = "/^[a-zA-Z0-9_\\\\]+$/";
 
-    private $attributeNameRegExp = "/^[a-zA-Z0-9.]+$/";
+    private string $attributeNameRegExp = "/^[a-zA-Z0-9.]+$/";
 
     public function parse(string $expression): stdClass
     {
@@ -134,6 +140,9 @@ class Parser
         ];
     }
 
+    /**
+     * @param ?int[] $splitterIndexList
+     */
     private function processStrings(
         string &$string,
         string &$modifiedString,
@@ -614,6 +623,9 @@ class Parser
         }
     }
 
+    /**
+     * @return string[]
+     */
     private function parseArgumentListFromFunctionContent(string $functionContent): array
     {
         $functionContent = trim($functionContent);

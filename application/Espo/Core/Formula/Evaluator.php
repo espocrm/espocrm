@@ -39,18 +39,25 @@ use stdClass;
  */
 class Evaluator
 {
+    /**
+     * @var array<string,class-string>
+     */
     private $functionClassNameMap;
 
-    private $processor;
+    private Parser $parser;
 
-    private $parser;
+    private AttributeFetcher $attributeFetcher;
 
-    private $attributeFetcher;
+    private InjectableFactory $injectableFactory;
 
-    private $injectableFactory;
-
+    /**
+     * @var array<string,stdClass>
+     */
     private $parsedHash;
 
+    /**
+     * @param array<string,class-string> $functionClassNameMap
+     */
     public function __construct(InjectableFactory $injectableFactory, array $functionClassNameMap = [])
     {
         $this->attributeFetcher = new AttributeFetcher();
@@ -68,13 +75,17 @@ class Evaluator
      */
     public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null)
     {
-        $this->processor = new Processor(
-            $this->injectableFactory, $this->attributeFetcher, $this->functionClassNameMap, $entity, $variables
+        $processor = new Processor(
+            $this->injectableFactory,
+            $this->attributeFetcher,
+            $this->functionClassNameMap,
+            $entity,
+            $variables
         );
 
         $item = $this->getParsedExpression($expression);
 
-        $result = $this->processor->process($item);
+        $result = $processor->process($item);
 
         $this->attributeFetcher->resetRuntimeCache();
 

@@ -36,8 +36,14 @@ use Espo\Core\Formula\Exceptions\Error;
  */
 class Argument implements Evaluatable
 {
+    /**
+     * @var mixed
+     */
     private $data;
 
+    /**
+     * @param mixed $data
+     */
     public function __construct($data)
     {
         $this->data = $data;
