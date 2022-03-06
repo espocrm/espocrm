@@ -34,10 +34,11 @@ use Espo\Core\Interfaces\Injectable;
 /** @deprecated */
 abstract class Base implements Injectable
 {
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    public static $order = 9;
+    public static $order = 9; /** @phpstan-ignore-line */
 
+    /** @phpstan-ignore-next-line */
     protected $dependencyList = [
         'container',
         'entityManager',
@@ -48,80 +49,80 @@ abstract class Base implements Injectable
         'serviceFactory',
     ];
 
-    protected $dependencies = []; // for backward compatibility
+    protected $dependencies = []; /** @phpstan-ignore-line */
 
     public function __construct()
     {
         $this->init();
     }
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return array_merge($this->dependencyList, $this->dependencies);
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    protected function getContainer()
+    protected function getContainer() /** @phpstan-ignore-line */
     {
         return $this->getInjection('container');
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->getInjection('entityManager');
     }
 
-    protected function getUser()
+    protected function getUser() /** @phpstan-ignore-line */
     {
         return $this->getInjection('user');
     }
 
-    protected function getAcl()
+    protected function getAcl() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('acl');
     }
 
-    protected function getAclManager()
+    protected function getAclManager() /** @phpstan-ignore-line */
     {
         return $this->getInjection('aclManager');
     }
 
-    protected function getConfig()
+    protected function getConfig() /** @phpstan-ignore-line */
     {
         return $this->getInjection('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata() /** @phpstan-ignore-line */
     {
         return $this->getInjection('metadata');
     }
 
-    protected function getServiceFactory()
+    protected function getServiceFactory() /** @phpstan-ignore-line */
     {
         return $this->getInjection('serviceFactory');
     }
