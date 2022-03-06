@@ -44,11 +44,14 @@ use Throwable;
 
 class EspoFileHandler extends MonologStreamHandler
 {
-    protected $fileManager;
+    protected FileManager $fileManager;
 
+    /**
+     * @var int
+     */
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct(Config $config, string $filename, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(Config $config, string $filename, int $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($filename, $level, $bubble);
 
@@ -57,6 +60,12 @@ class EspoFileHandler extends MonologStreamHandler
         $this->fileManager = new FileManager($defaultPermissions);
     }
 
+    /**
+     * @param array{
+     *   message: string,
+     *   formatted: string,
+     * } $record
+     */
     protected function write(array $record): void
     {
         if (!$this->url) {
@@ -90,6 +99,13 @@ class EspoFileHandler extends MonologStreamHandler
         }
     }
 
+    /**
+     * @param array{
+     *   message: string,
+     *   formatted: string,
+     * } $record
+     * @return string
+     */
     protected function pruneMessage(array $record)
     {
         $message = (string) $record['message'];

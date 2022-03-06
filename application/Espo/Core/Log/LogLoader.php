@@ -57,9 +57,9 @@ class LogLoader
 
     const DEFAULT_LEVEL = 'WARNING';
 
-    protected $config;
+    protected Config $config;
 
-    protected $injectableFactory;
+    protected InjectableFactory $injectableFactory;
 
     public function __construct(Config $config, InjectableFactory $injectableFactory)
     {

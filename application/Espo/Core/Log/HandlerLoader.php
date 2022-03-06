@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Log;
 
-use Monolog\{
-    Handler\HandlerInterface,
-};
+use Monolog\Handler\HandlerInterface;
 
 interface HandlerLoader
 {
+    /**
+     * @param array<string,mixed> $params
+     */
     public function load(array $params): HandlerInterface;
 }

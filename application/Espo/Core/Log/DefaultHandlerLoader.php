@@ -32,6 +32,7 @@ namespace Espo\Core\Log;
 use Monolog\{
     Logger,
     Handler\HandlerInterface,
+    Handler\FormattableHandlerInterface,
     Formatter\FormatterInterface,
 };
 
@@ -40,8 +41,17 @@ use RuntimeException;
 
 class DefaultHandlerLoader
 {
+    /**
+     * @param array{
+     *   className?: ?class-string<HandlerInterface>,
+     *   params?: ?array<string,mixed>,
+     *   level?: ?string,
+     * } $data
+     */
     public function load(array $data, ?string $defaultLevel = null): HandlerInterface
     {
+        /** @var array<mixed,mixed> $data */
+
         $params = $data['params'] ?? [];
 
         $level = $data['level'] ?? $defaultLevel;
@@ -50,6 +60,7 @@ class DefaultHandlerLoader
             $params['level'] = Logger::toMonologLevel($level);
         }
 
+        /** @var ?class-string<HandlerInterface> */
         $className = $data['className'] ?? null;
 
         if (!$className) {
@@ -60,21 +71,31 @@ class DefaultHandlerLoader
 
         $formatter = $this->loadFormatter($data);
 
-        if ($formatter) {
+        if ($formatter && $handler instanceof FormattableHandlerInterface) {
             $handler->setFormatter($formatter);
         }
 
         return $handler;
     }
 
+    /**
+     * @param array{
+     *   formatter?: ?string,
+     *   className?: ?class-string<FormatterInterface>,
+     *   params?: ?array<string,mixed>
+     * } $data
+     */
     protected function loadFormatter(array $data): ?FormatterInterface
     {
+        /** @var array<mixed,mixed> $data */
+
         $formatterData = $data['formatter'] ?? null;
 
         if (!$formatterData || !is_array($formatterData)) {
             return null;
         }
 
+        /** @var ?class-string<FormatterInterface> */
         $className = $formatterData['className'] ?? null;
 
         if (!$className) {
@@ -86,6 +107,12 @@ class DefaultHandlerLoader
         return $this->createInstance($className, $params);
     }
 
+    /**
+     * @template T of object
+     * @param class-string<T> $className
+     * @param array<string,mixed> $params
+     * @return T
+     */
     protected function createInstance(string $className, array $params): object
     {
         $class = new ReflectionClass($className);

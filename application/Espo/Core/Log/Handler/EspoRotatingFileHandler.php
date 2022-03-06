@@ -37,29 +37,44 @@ use Espo\Core\{
 
 class EspoRotatingFileHandler extends EspoFileHandler
 {
+    /**
+     * @var string
+     */
     protected $dateFormat = 'Y-m-d';
 
+    /**
+     * @var string
+     */
     protected $filenameFormat = '{filename}-{date}';
 
+    /**
+     * @var string
+     */
     protected $filename;
 
+    /**
+     * @var int
+     */
     protected $maxFiles;
 
     public function __construct(
         Config $config,
         string $filename,
         int $maxFiles = 0,
-        $level = Logger::DEBUG,
+        int $level = Logger::DEBUG,
         bool $bubble = true
     ) {
         $this->filename = $filename;
-        $this->maxFiles = (int) $maxFiles;
+        $this->maxFiles = $maxFiles;
 
         parent::__construct($config, $this->getTimedFilename(), $level, $bubble);
 
         $this->rotate();
     }
 
+    /**
+     * @return void
+     */
     protected function rotate()
     {
         if (0 === $this->maxFiles) {
@@ -81,6 +96,9 @@ class EspoRotatingFileHandler extends EspoFileHandler
         }
     }
 
+    /**
+     * @return string
+     */
     protected function getTimedFilename()
     {
         $fileInfo = pathinfo($this->filename);
@@ -98,6 +116,9 @@ class EspoRotatingFileHandler extends EspoFileHandler
         return $timedFilename;
     }
 
+    /**
+     * @return string
+     */
     protected function getFilePattern()
     {
         $fileInfo = pathinfo($this->filename);
