@@ -55,6 +55,9 @@ use DateTimeImmutable;
  */
 class ScheduleProcessor
 {
+    /**
+     * @var string[]
+     */
     private $asSoonAsPossibleSchedulingList = [
         '*',
         '* *',

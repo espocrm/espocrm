@@ -34,9 +34,9 @@ use Espo\Core\Exceptions\Error;
 
 class PreparatorFactory
 {
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(MetadataProvider $metadataProvider, InjectableFactory $injectableFactory)
     {
@@ -51,6 +51,7 @@ class PreparatorFactory
      */
     public function create(string $name): Preparator
     {
+        /** @var class-string */
         $className = $this->metadataProvider->getPreparatorClassName($name);
 
         if (!$className) {

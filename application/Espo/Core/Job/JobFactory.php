@@ -39,11 +39,11 @@ use Espo\Core\{
 
 class JobFactory
 {
-    private $classFinder;
+    private ClassFinder $classFinder;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
     public function __construct(
         ClassFinder $classFinder,
@@ -74,7 +74,7 @@ class JobFactory
 
     /**
      * Create a job by a class name.
-
+     * @param class-string $className
      * @return Job|JobDataLess
      */
     public function createByClassName(string $className): object
@@ -84,6 +84,9 @@ class JobFactory
         return $job;
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $name): ?string
     {
         $className = $this->metadataProvider->getJobClassName($name);

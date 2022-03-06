@@ -46,19 +46,13 @@ use DateTime;
 
 class QueueUtil
 {
-    /**
-     * @var Config
-     */
-    private $config;
+    private Config $config;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $scheduleUtil;
+    private ScheduleUtil $scheduleUtil;
 
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
     private const NOT_EXISTING_PROCESS_PERIOD = 300;
 
@@ -96,7 +90,7 @@ class QueueUtil
 
     /**
      * @return JobEntity[]
-     * @phpstan-return Collection&iterable<JobEntity>
+     * @phpstan-return Collection<JobEntity>
      */
     public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
     {
@@ -128,7 +122,7 @@ class QueueUtil
             $builder->limit(0, $limit);
         }
 
-        /** @var Collection&iterable<JobEntity> $collection */
+        /** @var Collection<JobEntity> $collection */
         $collection = $builder->find();
 
         return $collection;
@@ -348,6 +342,9 @@ class QueueUtil
         $this->markJobListFailed($failedJobList);
     }
 
+    /**
+     * @param iterable<JobEntity> $jobList
+     */
     protected function markJobListFailed(iterable $jobList): void
     {
         if (!count($jobList)) {

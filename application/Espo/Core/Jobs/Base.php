@@ -36,41 +36,40 @@ use Espo\Core\Container;
  */
 abstract class Base
 {
-    private $container;
+    private $container; /** @phpstan-ignore-line */
 
-    protected function getContainer()
+    protected function getContainer() /** @phpstan-ignore-line */
     {
         return $this->container;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getServiceFactory()
+    protected function getServiceFactory() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('serviceFactory');
     }
 
-    protected function getConfig()
+    protected function getConfig() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('metadata');
     }
 
-    protected function getUser()
+    protected function getUser() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('user');
     }
 
-    public function __construct(Container $container)
+    public function __construct(Container $container) /** @phpstan-ignore-line */
     {
         $this->container = $container;
     }
 }
-

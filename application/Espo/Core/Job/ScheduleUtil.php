@@ -45,7 +45,7 @@ use Espo\Entities\{
 
 class ScheduleUtil
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -55,11 +55,11 @@ class ScheduleUtil
     /**
      * Get active scheduled job list.
      *
-     * @phpstan-return iterable<ScheduledJobEntity>&Collection
+     * @return Collection<ScheduledJobEntity>
      */
     public function getActiveScheduledJobList(): Collection
     {
-        /** @var iterable<ScheduledJobEntity>&Collection $collection */
+        /** @var Collection<ScheduledJobEntity> */
         $collection = $this->entityManager
             ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
             ->select([

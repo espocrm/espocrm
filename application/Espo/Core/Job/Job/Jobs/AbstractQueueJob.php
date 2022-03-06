@@ -29,18 +29,17 @@
 
 namespace Espo\Core\Job\Job\Jobs;
 
-use RuntimeException;
 use Espo\Core\Job\JobDataLess;
 use Espo\Core\Job\JobManager;
 use Espo\Core\Job\QueuePortionNumberProvider;
 
 abstract class AbstractQueueJob implements JobDataLess
 {
-    protected $queue = null;
+    protected string $queue;
 
-    private $jobManager;
+    private JobManager $jobManager;
 
-    private $portionNumberProvider;
+    private QueuePortionNumberProvider $portionNumberProvider;
 
     public function __construct(JobManager $jobManager, QueuePortionNumberProvider $portionNumberProvider)
     {
@@ -50,10 +49,6 @@ abstract class AbstractQueueJob implements JobDataLess
 
     public function run(): void
     {
-        if (!$this->queue) {
-            throw new RuntimeException("No queue name.");
-        }
-
         $limit = $this->portionNumberProvider->get($this->queue);
 
         $this->jobManager->processQueue($this->queue, $limit);

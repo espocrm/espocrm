@@ -36,5 +36,5 @@ use Espo\Core\{
 
 class ProcessJobQueueQ1 extends AbstractQueueJob
 {
-    protected $queue = QueueName::Q1;
+    protected string $queue = QueueName::Q1;
 }

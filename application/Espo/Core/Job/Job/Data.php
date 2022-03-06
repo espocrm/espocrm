@@ -36,11 +36,11 @@ use stdClass;
 
 class Data
 {
-    private $data;
+    private stdClass $data;
 
-    private $targetId = null;
+    private ?string $targetId = null;
 
-    private $targetType = null;
+    private ?string $targetType = null;
 
     public function __construct(?stdClass $data = null)
     {
@@ -50,7 +50,7 @@ class Data
     /**
      * Create an instance.
      *
-     * @param stdClass|array|null $data Raw data.
+     * @param stdClass|array<string,mixed>|null $data Raw data.
      * @return self
      */
     public static function create($data = null): self

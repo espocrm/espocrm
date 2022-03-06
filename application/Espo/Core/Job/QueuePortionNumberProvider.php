@@ -29,20 +29,24 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
 
 class QueuePortionNumberProvider
 {
-    private $config;
+    private Config $config;
 
+    /**
+     * @var array<string,int>
+     */
     private $queueNumberMap = [
         QueueName::Q0 => self::Q0_PORTION_NUMBER,
         QueueName::Q1 => self::Q1_PORTION_NUMBER,
         QueueName::E0 => self::E0_PORTION_NUMBER,
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $queueParamNameMap = [
         QueueName::Q0 => 'jobQ0MaxPortion',
         QueueName::Q1 => 'jobQ1MaxPortion',

@@ -33,7 +33,7 @@ use Espo\Core\Utils\Metadata;
 
 class MetadataProvider
 {
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {
@@ -80,11 +80,17 @@ class MetadataProvider
         return $this->metadata->get(['app', 'scheduledJobs', $name, 'jobClassName']);
     }
 
+    /**
+     * @return string[]
+     */
     public function getScheduledJobNameList(): array
     {
         return array_keys($this->metadata->get(['app', 'scheduledJobs']) ?? []);
     }
 
+    /**
+     * @return string[]
+     */
     public function getNonSystemScheduledJobNameList(): array
     {
         return array_filter(

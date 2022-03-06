@@ -48,28 +48,22 @@ use TypeError;
  */
 class JobScheduler
 {
-    private $className = null;
-
-    private $queue = null;
-
-    private $group = null;
-
     /**
-     * @var Data|null
+     * @var ?class-string
      */
-    private $data = null;
+    private ?string $className = null;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    private $time = null;
+    private ?string $queue = null;
 
-    /**
-     * @var DateInterval|null
-     */
-    private $delay = null;
+    private ?string $group = null;
 
-    private $entityManager;
+    private ?Data $data = null;
+
+    private ?DateTimeImmutable $time = null;
+
+    private ?DateInterval $delay = null;
+
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -78,6 +72,8 @@ class JobScheduler
 
     /**
      * A class name of the job. Should implement the `Job` interface.
+     *
+     * @param class-string $className
      */
     public function setClassName(string $className): self
     {
@@ -152,7 +148,7 @@ class JobScheduler
     /**
      * Set data to be passed to the job.
      *
-     * @param Data|array|null $data
+     * @param Data|array<string,mixed>|null $data
      */
     public function setData($data): self
     {

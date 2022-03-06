@@ -41,17 +41,23 @@ use Throwable;
 
 class JobTask extends AsyncTask
 {
-    private $jobId;
+    private string $jobId;
 
     public function __construct(string $jobId)
     {
         $this->jobId = $jobId;
     }
 
+    /**
+     * @return void
+     */
     public function configure()
     {
     }
 
+    /**
+     * @return void
+     */
     public function run()
     {
         $app = new Application();

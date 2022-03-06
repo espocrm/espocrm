@@ -35,9 +35,7 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use Espo\{
-    Entities\Job as JobEntity,
-};
+use Espo\Entities\Job as JobEntity;
 
 use Throwable;
 
@@ -46,25 +44,25 @@ use Throwable;
  */
 class JobManager
 {
-    private $useProcessPool = false;
+    private bool $useProcessPool = false;
 
-    protected $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
+    protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
-    private $config;
+    private Config $config;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $jobRunner;
+    private JobRunner $jobRunner;
 
-    private $log;
+    private Log $log;
 
-    private $scheduleProcessor;
+    private ScheduleProcessor $scheduleProcessor;
 
-    private $queueUtil;
+    private QueueUtil $queueUtil;
 
-    private $asyncPoolFactory;
+    private AsyncPoolFactory $asyncPoolFactory;
 
-    private $queueProcessorFactory;
+    private QueueProcessorFactory $queueProcessorFactory;
 
     public function __construct(
         Config $config,

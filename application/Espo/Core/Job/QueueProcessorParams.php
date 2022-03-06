@@ -31,15 +31,15 @@ namespace Espo\Core\Job;
 
 class QueueProcessorParams
 {
-    private $useProcessPool = false;
+    private bool $useProcessPool = false;
 
-    private $noLock = false;
+    private bool $noLock = false;
 
-    private $queue = null;
+    private ?string $queue = null;
 
-    private $group = null;
+    private ?string $group = null;
 
-    private $limit = 0;
+    private int $limit = 0;
 
     public function withUseProcessPool(bool $useProcessPool): self
     {
