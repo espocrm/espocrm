@@ -49,12 +49,9 @@ use DateTime;
  */
 class Saver implements SaverInterface
 {
-    protected $dateAttribute = 'dateStart';
+    protected string $dateAttribute = 'dateStart';
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

@@ -43,10 +43,13 @@ use Espo\Core\{
  */
 class ListLoadProcessor
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
+    /**
+     * @var array<string,Loader<Entity>[]>
+     */
     private $loaderListMapCache = [];
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
@@ -67,7 +70,7 @@ class ListLoadProcessor
     }
 
     /**
-     * @return Loader[]
+     * @return Loader<Entity>[]
      */
     private function getLoaderList(string $entityType): array
     {
@@ -87,7 +90,7 @@ class ListLoadProcessor
     }
 
     /**
-     * @return string[]
+     * @return class-string[]
      */
     private function getLoaderClassNameList(string $entityType): array
     {
@@ -100,6 +103,10 @@ class ListLoadProcessor
         return array_merge($list, $additionalList);
     }
 
+    /**
+     * @param class-string $className
+     * @return Loader<Entity>
+     */
     private function createLoader(string $className): Loader
     {
         return $this->injectableFactory->create($className);

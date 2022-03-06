@@ -43,10 +43,13 @@ use Espo\Core\{
  */
 class SaveProcessor
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
+    /**
+     * @var array<string,Saver[]>
+     */
     private $saverListMapCache = [];
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
@@ -55,6 +58,9 @@ class SaveProcessor
         $this->metadata = $metadata;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function process(Entity $entity, array $options): void
     {
         $params = Params::create()->withRawOptions($options);
@@ -85,7 +91,7 @@ class SaveProcessor
     }
 
     /**
-     * @return string[]
+     * @return class-string[]
      */
     private function getSaverClassNameList(string $entityType): array
     {
@@ -98,6 +104,9 @@ class SaveProcessor
         return array_merge($list, $additionalList);
     }
 
+    /**
+     * @param class-string $className
+     */
     private function createSaver(string $className): Saver
     {
         return $this->injectableFactory->create($className);

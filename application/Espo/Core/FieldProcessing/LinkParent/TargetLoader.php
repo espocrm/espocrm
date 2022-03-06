@@ -37,9 +37,12 @@ use Espo\Core\{
     FieldProcessing\Loader\Params,
 };
 
+/**
+ * @implements LoaderInterface<Entity>
+ */
 class TargetLoader implements LoaderInterface
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

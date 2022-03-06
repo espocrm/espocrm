@@ -31,12 +31,12 @@ namespace Espo\Core\FieldProcessing\Loader;
 
 class Params
 {
+    /**
+     * @var ?string[]
+     */
     private $select = null;
 
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function hasInSelect(string $field): bool
     {
@@ -48,15 +48,20 @@ class Params
         return $this->select !== null;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getSelect(): ?array
     {
         return $this->select;
     }
 
+    /**
+     * @param ?string[] $select
+     */
     public function withSelect(?array $select): self
     {
         $obj = clone $this;
-
         $obj->select = $select;
 
         return $obj;

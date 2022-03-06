@@ -41,10 +41,13 @@ use const STR_PAD_LEFT;
 
 class BeforeSaveProcessor
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $fieldListMapCache = [];
 
     public function __construct(Metadata $metadata, EntityManager $entityManager)
@@ -53,6 +56,9 @@ class BeforeSaveProcessor
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function process(Entity $entity, array $options): void
     {
         $fieldList = $this->getFieldList($entity->getEntityType());
@@ -62,6 +68,9 @@ class BeforeSaveProcessor
         }
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function processItem(Entity $entity, string $field, array $options): void
     {
         if (!empty($options['import'])) {
@@ -125,6 +134,9 @@ class BeforeSaveProcessor
         return $prefix . str_pad(strval($value), $padLength, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * @return string[]
+     */
     private function getFieldList(string $entityType): array
     {
         if (array_key_exists($entityType, $this->fieldListMapCache)) {

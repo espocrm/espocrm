@@ -39,6 +39,7 @@ use Espo\Core\{
 
 /**
  * @internal This class should not be removed as it's used by custom entities.
+ * @implements LoaderInterface<Entity>
  */
 class Loader implements LoaderInterface
 {
@@ -67,6 +68,9 @@ class Loader implements LoaderInterface
         $entity->set('reminders', $this->fetchReminderDataList($entity));
     }
 
+    /**
+     * @return \stdClass[]
+     */
     private function fetchReminderDataList(Entity $entity): array
     {
         $list = [];

@@ -39,12 +39,18 @@ use Espo\Core\{
 
 use Espo\ORM\Defs as OrmDefs;
 
+/**
+ * @implements LoaderInterface<Entity>
+ */
 class NotJoinedLoader implements LoaderInterface
 {
-    private $ormDefs;
+    private OrmDefs $ormDefs;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $fieldListCacheMap = [];
 
     public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)

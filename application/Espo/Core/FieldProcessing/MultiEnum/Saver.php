@@ -42,8 +42,11 @@ use Espo\Core\{
 
 class Saver implements SaverInterface
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $fieldListMapCache = [];
 
     public function __construct(EntityManager $entityManager)
@@ -76,6 +79,9 @@ class Saver implements SaverInterface
         $repository->storeEntityAttribute($entity, $name);
     }
 
+    /**
+     * @return string[]
+     */
     private function getFieldList(string $entityType): array
     {
         if (array_key_exists($entityType, $this->fieldListMapCache)) {

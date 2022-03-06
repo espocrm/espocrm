@@ -39,14 +39,23 @@ use Espo\Core\{
 
 class Saver implements SaverInterface
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $linkMultipleSaver;
+    private LinkMultipleSaver $linkMultipleSaver;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $manyRelationListMapCache = [];
 
+    /**
+     * @var array<string,string[]>
+     */
     private $hasOneRelationListMapCache = [];
 
+    /**
+     * @var array<string,string[]>
+     */
     private $belongsToHasOneRelationListMapCache = [];
 
     public function __construct(
@@ -193,6 +202,9 @@ class Saver implements SaverInterface
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     private function getManyRelationList(string $entityType): array
     {
         if (array_key_exists($entityType, $this->manyRelationListMapCache)) {
@@ -232,6 +244,9 @@ class Saver implements SaverInterface
         return $list;
     }
 
+    /**
+     * @return string[]
+     */
     private function getHasOneRelationList(string $entityType): array
     {
         if (array_key_exists($entityType, $this->hasOneRelationListMapCache)) {
@@ -277,6 +292,9 @@ class Saver implements SaverInterface
         return $list;
     }
 
+    /**
+     * @return string[]
+     */
     private function getBelongsToHasOneRelationList(string $entityType): array
     {
         if (array_key_exists($entityType, $this->belongsToHasOneRelationListMapCache)) {

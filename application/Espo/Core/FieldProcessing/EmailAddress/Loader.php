@@ -41,11 +41,14 @@ use Espo\Core\{
 
 use Espo\ORM\Defs as OrmDefs;
 
+/**
+ * @implements LoaderInterface<Entity>
+ */
 class Loader implements LoaderInterface
 {
-    private $ormDefs;
+    private OrmDefs $ormDefs;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
     {
