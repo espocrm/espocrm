@@ -38,7 +38,7 @@ trait EmailSenderSetter
      */
     protected $emailSender;
 
-    public function setEmailSender(EmailSender $emailSender)
+    public function setEmailSender(EmailSender $emailSender): void
     {
         $this->emailSender = $emailSender;
     }

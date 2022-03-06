@@ -38,7 +38,7 @@ trait InjectableFactorySetter
      */
     protected $injectableFactory;
 
-    public function setInjectableFactory(InjectableFactory $injectableFactory)
+    public function setInjectableFactory(InjectableFactory $injectableFactory): void
     {
         $this->injectableFactory = $injectableFactory;
     }

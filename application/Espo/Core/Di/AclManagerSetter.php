@@ -38,7 +38,7 @@ trait AclManagerSetter
      */
     protected $aclManager;
 
-    public function setAclManager(AclManager $aclManager)
+    public function setAclManager(AclManager $aclManager): void
     {
         $this->aclManager = $aclManager;
     }

@@ -33,5 +33,5 @@ use Espo\Core\ServiceFactory;
 
 interface ServiceFactoryAware
 {
-    public function setServiceFactory(ServiceFactory $serviceFactory);
+    public function setServiceFactory(ServiceFactory $serviceFactory): void;
 }

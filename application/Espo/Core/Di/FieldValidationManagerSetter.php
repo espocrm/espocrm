@@ -38,7 +38,7 @@ trait FieldValidationManagerSetter
      */
     protected $fieldValidationManager;
 
-    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager)
+    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager): void
     {
         $this->fieldValidationManager = $fieldValidationManager;
     }

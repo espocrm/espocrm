@@ -38,7 +38,7 @@ trait PreferencesSetter
      */
     protected $preferences;
 
-    public function setPreferences(Preferences $preferences)
+    public function setPreferences(Preferences $preferences): void
     {
         $this->preferences = $preferences;
     }

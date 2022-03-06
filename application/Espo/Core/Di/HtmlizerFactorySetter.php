@@ -38,7 +38,7 @@ trait HtmlizerFactorySetter
      */
     protected $htmlizerFactory;
 
-    public function setHtmlizerFactory(HtmlizerFactory $htmlizerFactory)
+    public function setHtmlizerFactory(HtmlizerFactory $htmlizerFactory): void
     {
         $this->htmlizerFactory = $htmlizerFactory;
     }

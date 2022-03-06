@@ -38,7 +38,7 @@ trait RecordServiceContainerSetter
      */
     protected $recordServiceContainer;
 
-    public function setRecordServiceContainer(RecordServiceContainer $recordServiceContainer)
+    public function setRecordServiceContainer(RecordServiceContainer $recordServiceContainer): void
     {
         $this->recordServiceContainer = $recordServiceContainer;
     }

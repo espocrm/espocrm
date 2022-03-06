@@ -33,5 +33,5 @@ use Espo\Core\Webhook\Manager;
 
 interface WebhookManagerAware
 {
-    public function setWebhookManager(Manager $webhookManager);
+    public function setWebhookManager(Manager $webhookManager): void;
 }

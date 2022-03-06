@@ -33,5 +33,5 @@ use Espo\Core\Mail\EmailSender as EmailSender;
 
 interface EmailSenderAware
 {
-    public function setEmailSender(EmailSender $emailSender);
+    public function setEmailSender(EmailSender $emailSender): void;
 }

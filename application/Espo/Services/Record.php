@@ -116,22 +116,6 @@ class Record extends RecordService implements
     }
 
     /**
-     * @todo Remove.
-     */
-    public function setAcl(Acl $acl)
-    {
-        $this->acl = $acl;
-    }
-
-    /**
-     * @todo Remove.
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @deprecated Use `$this->entityType`.
      */
     public function getEntityType(): string

@@ -33,5 +33,5 @@ use Espo\Core\Utils\DataCache;
 
 interface DataCacheAware
 {
-    public function setDataCache(DataCache $dataCache);
+    public function setDataCache(DataCache $dataCache): void;
 }

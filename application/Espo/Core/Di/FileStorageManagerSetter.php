@@ -38,7 +38,7 @@ trait FileStorageManagerSetter
      */
     protected $fileStorageManager;
 
-    public function setFileStorageManager(FileStorageManager $fileStorageManager)
+    public function setFileStorageManager(FileStorageManager $fileStorageManager): void
     {
         $this->fileStorageManager = $fileStorageManager;
     }

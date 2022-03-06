@@ -33,5 +33,5 @@ use Espo\Core\WebSocket\Submission;
 
 interface WebSocketSubmissionAware
 {
-    public function setWebSocketSubmission(Submission $webSocketSubmission);
+    public function setWebSocketSubmission(Submission $webSocketSubmission): void;
 }

@@ -33,5 +33,5 @@ use Espo\Core\Utils\TemplateFileManager;
 
 interface TemplateFileManagerAware
 {
-    public function setTemplateFileManager(TemplateFileManager $templateFileManager);
+    public function setTemplateFileManager(TemplateFileManager $templateFileManager): void;
 }

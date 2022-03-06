@@ -38,7 +38,7 @@ trait NumberSetter
      */
     protected $number;
 
-    public function setNumber(NumberUtil $number)
+    public function setNumber(NumberUtil $number): void
     {
         $this->number = $number;
     }

@@ -38,7 +38,7 @@ trait WebhookManagerSetter
      */
     protected $webhookManager;
 
-    public function setWebhookManager(Manager $webhookManager)
+    public function setWebhookManager(Manager $webhookManager): void
     {
         $this->webhookManager = $webhookManager;
     }

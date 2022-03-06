@@ -38,7 +38,7 @@ trait FileManagerSetter
      */
     protected $fileManager;
 
-    public function setFileManager(FileManager $fileManager)
+    public function setFileManager(FileManager $fileManager): void
     {
         $this->fileManager = $fileManager;
     }

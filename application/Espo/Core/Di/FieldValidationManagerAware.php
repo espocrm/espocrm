@@ -33,5 +33,5 @@ use Espo\Core\FieldValidation\FieldValidationManager;
 
 interface FieldValidationManagerAware
 {
-    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager);
+    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager): void;
 }

@@ -33,5 +33,5 @@ use Espo\Core\Utils\EmailFilterManager;
 
 interface EmailFilterManagerAware
 {
-    public function setEmailFilterManager(EmailFilterManager $emailFilterManager);
+    public function setEmailFilterManager(EmailFilterManager $emailFilterManager): void;
 }

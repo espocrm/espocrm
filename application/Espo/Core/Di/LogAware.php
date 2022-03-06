@@ -33,5 +33,5 @@ use Espo\Core\Utils\Log;
 
 interface LogAware
 {
-    public function setLog(Log $log);
+    public function setLog(Log $log): void;
 }

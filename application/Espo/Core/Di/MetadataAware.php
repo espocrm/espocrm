@@ -33,5 +33,5 @@ use Espo\Core\Utils\Metadata;
 
 interface MetadataAware
 {
-    public function setMetadata(Metadata $metadata);
+    public function setMetadata(Metadata $metadata): void;
 }

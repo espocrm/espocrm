@@ -33,5 +33,5 @@ use Espo\Core\Select\SelectManagerFactory;
 
 interface SelectManagerFactoryAware
 {
-    public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory);
+    public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory): void;
 }

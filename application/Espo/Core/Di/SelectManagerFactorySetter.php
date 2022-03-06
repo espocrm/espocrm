@@ -35,7 +35,7 @@ trait SelectManagerFactorySetter
 {
     protected $selectManagerFactory;
 
-    public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory)
+    public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory): void
     {
         $this->selectManagerFactory = $selectManagerFactory;
     }

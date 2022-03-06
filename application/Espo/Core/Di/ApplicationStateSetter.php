@@ -38,7 +38,7 @@ trait ApplicationStateSetter
      */
     protected $applicationState;
 
-    public function setApplicationState(ApplicationState $applicationState)
+    public function setApplicationState(ApplicationState $applicationState): void
     {
         $this->applicationState = $applicationState;
     }

@@ -38,7 +38,7 @@ trait LanguageSetter
      */
     protected $language;
 
-    public function setLanguage(Language $language)
+    public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }

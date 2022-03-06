@@ -33,5 +33,5 @@ use Espo\Core\InjectableFactory;
 
 interface InjectableFactoryAware
 {
-    public function setInjectableFactory(InjectableFactory $injectableFactory);
+    public function setInjectableFactory(InjectableFactory $injectableFactory): void;
 }

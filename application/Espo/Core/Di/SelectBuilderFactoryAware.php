@@ -33,5 +33,5 @@ use Espo\Core\Select\SelectBuilderFactory;
 
 interface SelectBuilderFactoryAware
 {
-    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory);
+    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory): void;
 }

@@ -38,7 +38,7 @@ trait DataManagerSetter
      */
     protected $dataManager;
 
-    public function setDataManager(DataManager $dataManager)
+    public function setDataManager(DataManager $dataManager): void
     {
         $this->dataManager = $dataManager;
     }

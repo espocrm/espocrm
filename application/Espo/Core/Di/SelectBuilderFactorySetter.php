@@ -38,7 +38,7 @@ trait SelectBuilderFactorySetter
      */
     protected $selectBuilderFactory;
 
-    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory)
+    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory): void
     {
         $this->selectBuilderFactory = $selectBuilderFactory;
     }

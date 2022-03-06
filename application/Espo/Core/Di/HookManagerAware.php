@@ -33,5 +33,5 @@ use Espo\Core\HookManager;
 
 interface HookManagerAware
 {
-    public function setHookManager(HookManager $hookManager);
+    public function setHookManager(HookManager $hookManager): void;
 }

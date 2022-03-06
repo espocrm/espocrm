@@ -33,5 +33,5 @@ use Espo\Core\Utils\Language;
 
 interface DefaultLanguageAware
 {
-    public function setDefaultLanguage(Language $defaultLanguage);
+    public function setDefaultLanguage(Language $defaultLanguage): void;
 }

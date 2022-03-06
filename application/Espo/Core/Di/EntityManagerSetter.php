@@ -38,7 +38,7 @@ trait EntityManagerSetter
      */
     protected $entityManager;
 
-    public function setEntityManager(EntityManager $entityManager)
+    public function setEntityManager(EntityManager $entityManager): void
     {
         $this->entityManager = $entityManager;
     }

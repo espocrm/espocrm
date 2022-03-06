@@ -38,7 +38,7 @@ trait WebSocketSubmissionSetter
      */
     protected $webSocketSubmission;
 
-    public function setWebSocketSubmission(Submission $webSocketSubmission)
+    public function setWebSocketSubmission(Submission $webSocketSubmission): void
     {
         $this->webSocketSubmission = $webSocketSubmission;
     }

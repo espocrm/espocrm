@@ -38,7 +38,7 @@ trait EmailFilterManagerSetter
      */
     protected $emailFilterManager;
 
-    public function setEmailFilterManager(EmailFilterManager $emailFilterManager)
+    public function setEmailFilterManager(EmailFilterManager $emailFilterManager): void
     {
         $this->emailFilterManager = $emailFilterManager;
     }

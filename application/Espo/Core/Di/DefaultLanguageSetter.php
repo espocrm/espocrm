@@ -38,7 +38,7 @@ trait DefaultLanguageSetter
      */
     protected $defaultLanguage;
 
-    public function setDefaultLanguage(Language $defaultLanguage)
+    public function setDefaultLanguage(Language $defaultLanguage): void
     {
         $this->defaultLanguage = $defaultLanguage;
     }

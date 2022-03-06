@@ -38,7 +38,7 @@ trait ConfigSetter
      */
     protected $config;
 
-    public function setConfig(Config $config)
+    public function setConfig(Config $config): void
     {
         $this->config = $config;
     }

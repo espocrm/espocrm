@@ -38,7 +38,7 @@ trait ServiceFactorySetter
      */
     protected $serviceFactory;
 
-    public function setServiceFactory(ServiceFactory $serviceFactory)
+    public function setServiceFactory(ServiceFactory $serviceFactory): void
     {
         $this->serviceFactory = $serviceFactory;
     }

@@ -54,21 +54,21 @@ use Espo\Core\{
  */
 class Base implements AccessChecker, Injectable
 {
-    protected $dependencyList = [];
+    protected $dependencyList = []; /** @phpstan-ignore-line */
 
-    protected $dependencies = [];
+    protected $dependencies = []; /** @phpstan-ignore-line */
 
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    protected $entityManager;
+    protected $entityManager; /** @phpstan-ignore-line */
 
-    protected $aclManager;
+    protected $aclManager; /** @phpstan-ignore-line */
 
-    protected $config;
+    protected $config; /** @phpstan-ignore-line */
 
-    protected $scopeChecker;
+    protected $scopeChecker; /** @phpstan-ignore-line */
 
-    protected $defaultChecker;
+    protected $defaultChecker; /** @phpstan-ignore-line */
 
     public function __construct(
         EntityManager $entityManager,
@@ -144,17 +144,17 @@ class Base implements AccessChecker, Injectable
         return false;
     }
 
-    public function checkIsOwner(User $user, Entity $entity)
+    public function checkIsOwner(User $user, Entity $entity) /** @phpstan-ignore-line */
     {
         return $this->aclManager->checkOwnershipOwn($user, $entity);
     }
 
-    public function checkInAccount(User $user, Entity $entity)
+    public function checkInAccount(User $user, Entity $entity) /** @phpstan-ignore-line */
     {
         return $this->aclManager->checkOwnershipAccount($user, $entity);
     }
 
-    public function checkIsOwnContact(User $user, Entity $entity)
+    public function checkIsOwnContact(User $user, Entity $entity) /** @phpstan-ignore-line */
     {
         return $this->aclManager->checkOwnershipContact($user, $entity);
     }
@@ -174,33 +174,33 @@ class Base implements AccessChecker, Injectable
         return $this->aclManager;
     }
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return array_merge($this->dependencyList, $this->dependencies);
     }

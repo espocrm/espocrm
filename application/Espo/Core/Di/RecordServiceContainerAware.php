@@ -33,5 +33,5 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 interface RecordServiceContainerAware
 {
-    public function setRecordServiceContainer(RecordServiceContainer $recordServiceContainer);
+    public function setRecordServiceContainer(RecordServiceContainer $recordServiceContainer): void;
 }

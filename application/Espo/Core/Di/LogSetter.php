@@ -38,7 +38,7 @@ trait LogSetter
      */
     protected $log;
 
-    public function setLog(Log $log)
+    public function setLog(Log $log): void
     {
         $this->log = $log;
     }

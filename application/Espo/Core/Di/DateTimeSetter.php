@@ -38,7 +38,7 @@ trait DateTimeSetter
      */
     protected $dateTime;
 
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }

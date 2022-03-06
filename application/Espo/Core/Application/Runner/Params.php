@@ -34,6 +34,9 @@ namespace Espo\Core\Application\Runner;
  */
 class Params
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $data = [];
 
     public function __construct()
@@ -74,6 +77,8 @@ class Params
 
     /**
      * Create from an associative array.
+     *
+     * @param array<string,mixed> $data
      */
     public static function fromArray(array $data): self
     {

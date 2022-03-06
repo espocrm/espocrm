@@ -33,5 +33,5 @@ use Espo\Core\Utils\DateTime;
 
 interface DateTimeAware
 {
-    public function setDateTime(DateTime $dateTime);
+    public function setDateTime(DateTime $dateTime): void;
 }

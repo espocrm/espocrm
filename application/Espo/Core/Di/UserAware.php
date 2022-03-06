@@ -33,5 +33,5 @@ use Espo\Entities\User;
 
 interface UserAware
 {
-    public function setUser(User $user);
+    public function setUser(User $user): void;
 }

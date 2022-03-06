@@ -33,5 +33,5 @@ use Espo\Core\Acl;
 
 interface AclAware
 {
-    public function setAcl(Acl $acl);
+    public function setAcl(Acl $acl): void;
 }

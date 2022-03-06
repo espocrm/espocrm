@@ -33,5 +33,5 @@ use Espo\Core\ApplicationState;
 
 interface ApplicationStateAware
 {
-    public function setApplicationState(ApplicationState $applicationState);
+    public function setApplicationState(ApplicationState $applicationState): void;
 }

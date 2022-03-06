@@ -38,7 +38,7 @@ trait HookManagerSetter
      */
     protected $hookManager;
 
-    public function setHookManager(HookManager $hookManager)
+    public function setHookManager(HookManager $hookManager): void
     {
         $this->hookManager = $hookManager;
     }

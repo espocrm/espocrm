@@ -33,5 +33,5 @@ use Espo\Core\FileStorage\Manager as FileStorageManager;
 
 interface FileStorageManagerAware
 {
-    public function setFileStorageManager(FileStorageManager $fileStorageManager);
+    public function setFileStorageManager(FileStorageManager $fileStorageManager): void;
 }

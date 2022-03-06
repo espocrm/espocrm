@@ -38,7 +38,7 @@ trait DataCacheSetter
      */
     protected $dataCache;
 
-    public function setDataCache(DataCache $dataCache)
+    public function setDataCache(DataCache $dataCache): void
     {
         $this->dataCache = $dataCache;
     }

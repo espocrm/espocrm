@@ -38,7 +38,7 @@ trait TemplateFileManagerSetter
      */
     protected $templateFileManager;
 
-    public function setTemplateFileManager(TemplateFileManager $templateFileManager)
+    public function setTemplateFileManager(TemplateFileManager $templateFileManager): void
     {
         $this->templateFileManager = $templateFileManager;
     }

@@ -38,7 +38,7 @@ trait AclSetter
      */
     protected $acl;
 
-    public function setAcl(Acl $acl)
+    public function setAcl(Acl $acl): void
     {
         $this->acl = $acl;
     }

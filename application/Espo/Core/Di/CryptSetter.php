@@ -38,7 +38,7 @@ trait CryptSetter
      */
     protected $crypt;
 
-    public function setCrypt(Crypt $crypt)
+    public function setCrypt(Crypt $crypt): void
     {
         $this->crypt = $crypt;
     }

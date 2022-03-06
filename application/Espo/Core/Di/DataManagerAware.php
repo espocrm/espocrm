@@ -33,5 +33,5 @@ use Espo\Core\DataManager;
 
 interface DataManagerAware
 {
-    public function setDataManager(DataManager $dataManager);
+    public function setDataManager(DataManager $dataManager): void;
 }

@@ -33,5 +33,5 @@ use Espo\Core\Utils\Config;
 
 interface ConfigAware
 {
-    public function setConfig(Config $config);
+    public function setConfig(Config $config): void;
 }
