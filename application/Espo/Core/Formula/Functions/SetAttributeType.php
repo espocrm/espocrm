@@ -33,6 +33,9 @@ use Espo\Core\Exceptions\Error;
 
 class SetAttributeType extends Base
 {
+    /**
+     * @return mixed
+     */
     public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {

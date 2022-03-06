@@ -92,8 +92,6 @@ class FindRelatedOneType extends BaseFunction implements
 
         if (!$entity instanceof CoreEntity) {
             $this->throwError("Only core entities are supported.");
-
-            return;
         }
 
         $relationType = $entity->getRelationParam($link, 'type');

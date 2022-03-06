@@ -79,6 +79,7 @@ class FindRelatedManyType extends BaseFunction implements
 
         if (!$id) {
             $this->log("Empty ID.");
+
             return [];
         }
 
@@ -117,8 +118,6 @@ class FindRelatedManyType extends BaseFunction implements
 
         if (!$entity instanceof CoreEntity) {
             $this->throwError("Only core entities are supported.");
-
-            return;
         }
 
         $relationType = $entity->getRelationParam($link, 'type');

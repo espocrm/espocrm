@@ -36,6 +36,9 @@ use Espo\Core\Formula\{
 
 abstract class Base extends BaseFunction
 {
+    /**
+     * @return bool
+     */
     public function process(ArgumentList $args)
     {
         if (count($args) < 2) {
@@ -48,5 +51,10 @@ abstract class Base extends BaseFunction
         return $this->compare($left, $right);
     }
 
+    /**
+     * @param mixed $left
+     * @param mixed $right
+     * @return bool
+     */
     abstract protected function compare($left, $right);
 }

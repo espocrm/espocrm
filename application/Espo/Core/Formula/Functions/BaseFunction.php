@@ -105,11 +105,14 @@ abstract class BaseFunction
     }
 
     /**
-     * Throw TooFewArguments exception.
+     * Throws TooFewArguments exception.
+     *
+     * @return never
      */
     protected function throwTooFewArguments(?int $number = null)
     {
         $msg = 'function: ' . $this->name;
+
         if ($number !== null) {
             $msg .= ', needs: ' . $number;
         }
@@ -119,6 +122,8 @@ abstract class BaseFunction
 
     /**
      * Throw BadArgumentType exception.
+     *
+     * @return never
      */
     protected function throwBadArgumentType(?int $index = null, ?string $type = null)
     {
@@ -137,6 +142,8 @@ abstract class BaseFunction
 
     /**
      * Throw BadArgumentValue exception.
+     *
+     * @return never
      */
     protected function throwBadArgumentValue(?int $index = null, ?string $msg = null)
     {
@@ -155,11 +162,14 @@ abstract class BaseFunction
 
     /**
      * Throw Error exception.
+     *
+     * @return never
      */
     protected function throwError(?string $msg = null)
 
     {
         $string = 'function: ' . $this->name;
+
         if ($msg) {
             $string .= ', ' . $msg;
         }
@@ -169,6 +179,8 @@ abstract class BaseFunction
 
     /**
      * Log a bad argument type.
+     *
+     * @return void
      */
     protected function logBadArgumentType(int $index, string $type)
     {
@@ -181,6 +193,8 @@ abstract class BaseFunction
 
     /**
      * Log a message.
+     *
+     * @return void
      */
     protected function log(string $msg, string $level = 'notice')
     {

@@ -36,6 +36,9 @@ use Espo\Core\Formula\{
 
 class RetrieveType extends BaseFunction
 {
+    /**
+     * @return mixed
+     */
     public function process(ArgumentList $args)
     {
         if (count($args) < 2) {
@@ -64,6 +67,10 @@ class RetrieveType extends BaseFunction
         return $this->retrieveAttribute($item, $pathArray);
     }
 
+    /**
+     * @param string $path
+     * @return string[]
+     */
     private function splitPath(string $path): array
     {
         $pathArray = preg_split('/(?<!\\\)\./', $path);
@@ -75,6 +82,11 @@ class RetrieveType extends BaseFunction
         return $pathArray;
     }
 
+    /**
+     * @param mixed $item
+     * @param string[] $path
+     * @return mixed
+     */
     private function retrieveAttribute($item, array $path)
     {
         if (!count($path)) {

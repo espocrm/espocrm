@@ -31,6 +31,11 @@ namespace Espo\Core\Formula\Functions\ComparisonGroup;
 
 class NotEqualsType extends EqualsType
 {
+    /**
+     * @param mixed $left
+     * @param mixed $right
+     * @return bool
+     */
     protected function compare($left, $right)
     {
         return !parent::compare($left, $right);

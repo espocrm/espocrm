@@ -33,6 +33,9 @@ use Throwable;
 
 class SyntaxError extends Error
 {
+    /**
+     * @var ?string
+     */
     private $shortMessage = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)

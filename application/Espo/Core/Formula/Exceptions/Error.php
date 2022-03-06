@@ -31,5 +31,8 @@ namespace Espo\Core\Formula\Exceptions;
 
 class Error extends \Exception
 {
+    /**
+     * @var int
+     */
     protected $code = 500;
 }

@@ -45,6 +45,9 @@ class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
      */
     protected $entityManager;
 
+    /**
+     * @return mixed
+     */
     public function process(\stdClass $item)
     {
         $args = $item->value ?? [];

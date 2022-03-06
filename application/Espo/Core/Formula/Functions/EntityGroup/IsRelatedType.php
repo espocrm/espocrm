@@ -45,6 +45,9 @@ class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
      */
     protected $entityManager;
 
+    /**
+     * @return bool
+     */
     public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {

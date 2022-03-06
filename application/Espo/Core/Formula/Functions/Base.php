@@ -45,41 +45,53 @@ use stdClass;
  */
 abstract class Base implements Injectable
 {
+    /**
+     * @var ?string
+     */
     protected $name;
 
+    /**
+     * @var Processor
+     */
     protected $processor;
 
+    /**
+     * @var ?Entity
+     */
     private $entity;
 
+    /**
+     * @var \stdClass
+     */
     private $variables;
 
-    protected $dependencyList = [];
+    protected $dependencyList = []; /** @phpstan-ignore-line */
 
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return $this->dependencyList;
     }
@@ -94,7 +106,7 @@ abstract class Base implements Injectable
         $this->init();
     }
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
@@ -103,27 +115,40 @@ abstract class Base implements Injectable
         return $this->variables;
     }
 
-    protected function getEntity()
+    protected function getEntity() /** @phpstan-ignore-line */
     {
         if (!$this->entity) {
             throw new Error('Formula: Entity required but not passed.');
         }
+
         return $this->entity;
     }
 
+    /**
+     * @return mixed
+     */
     public abstract function process(stdClass $item);
 
+    /**
+     * @param mixed $item
+     * @return mixed
+     */
     protected function evaluate($item)
     {
         $item = new Argument($item);
+
         return $this->processor->process($item);
     }
 
+    /**
+     * @return mixed[]
+     */
     protected function fetchArguments(stdClass $item): array
     {
         $args = $item->value ?? [];
 
         $eArgs = [];
+
         foreach ($args as $item) {
             $eArgs[] = $this->evaluate($item);
         }
@@ -131,6 +156,9 @@ abstract class Base implements Injectable
         return $eArgs;
     }
 
+    /**
+     * @return mixed[]
+     */
     protected function fetchRawArguments(stdClass $item): array
     {
         return $item->value ?? [];

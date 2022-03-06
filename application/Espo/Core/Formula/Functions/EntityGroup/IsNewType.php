@@ -31,6 +31,9 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 class IsNewType extends \Espo\Core\Formula\Functions\Base
 {
+    /**
+     * @return bool
+     */
     public function process(\stdClass $item)
     {
         return $this->getEntity()->isNew();

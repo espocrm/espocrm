@@ -46,8 +46,14 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 
+    /**
+     * @var bool
+     */
     protected $timeOnly = false;
 
+    /**
+     * @var string
+     */
     protected $intervalTypeString;
 
     public function process(ArgumentList $args)

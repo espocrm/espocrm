@@ -37,6 +37,9 @@ use Espo\Core\Utils\Util;
 
 class GenerateIdType
 {
+    /**
+     * @return string
+     */
     public function process(ArgumentList $args)
     {
         return Util::generateId();

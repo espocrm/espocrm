@@ -38,6 +38,9 @@ use DateTime;
 
 class DiffType extends BaseFunction
 {
+    /**
+     * @var array<string,string>
+     */
     protected $intevalTypePropertyMap = [
         'years' => 'y',
         'months' => 'm',
@@ -47,6 +50,9 @@ class DiffType extends BaseFunction
         'seconds' => 's',
     ];
 
+    /**
+     * @return ?int
+     */
     public function process(ArgumentList $args)
     {
         $args = $this->evaluate($args);
@@ -75,6 +81,7 @@ class DiffType extends BaseFunction
         }
 
         $intervalType = 'days';
+
         if (count($args) > 2) {
             $intervalType = $args[2];
         }
@@ -88,6 +95,7 @@ class DiffType extends BaseFunction
         }
 
         $isTime = false;
+
         if (strlen($dateTime1String) > 10) {
             $isTime = true;
         }
@@ -95,7 +103,8 @@ class DiffType extends BaseFunction
         try {
             $dateTime1 = new DateTime($dateTime1String);
             $dateTime2 = new DateTime($dateTime2String);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return null;
         }
 
@@ -116,6 +125,7 @@ class DiffType extends BaseFunction
             $property = $this->intevalTypePropertyMap[$intervalType];
             $interval = $dateTime2->diff($dateTime1);
             $number = $interval->$property;
+
             if ($interval->invert) {
                 $number *= -1;
             }

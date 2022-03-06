@@ -49,6 +49,9 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
      */
     protected $entityManager;
 
+    /**
+     * @return int
+     */
     public function process(stdClass $item)
     {
         if (count($item->value) < 1) {

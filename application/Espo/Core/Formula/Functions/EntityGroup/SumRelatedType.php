@@ -43,6 +43,9 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
     use Di\EntityManagerSetter;
     use Di\SelectBuilderFactorySetter;
 
+    /**
+     * @return float
+     */
     public function process(stdClass $item)
     {
         if (count($item->value) < 2) {
@@ -143,7 +146,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
         $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($rowList)) {
-            return 0;
+            return 0.0;
         }
 
         $stringValue = $rowList[0]['SUM:' . $field];

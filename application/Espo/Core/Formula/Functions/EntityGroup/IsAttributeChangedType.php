@@ -33,6 +33,9 @@ use Espo\Core\Exceptions\Error;
 
 class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
 {
+    /**
+     * @return bool
+     */
     public function process(\stdClass $item)
     {
         if (count($item->value) < 1) {
@@ -44,6 +47,10 @@ class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
         return $this->check($attribute);
     }
 
+    /**
+     * @param string $attribute
+     * @return bool
+     */
     protected function check($attribute)
     {
         return $this->getEntity()->isAttributeChanged($attribute);

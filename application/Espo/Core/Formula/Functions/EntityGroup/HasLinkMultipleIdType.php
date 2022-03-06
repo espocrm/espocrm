@@ -33,6 +33,9 @@ use Espo\Core\Exceptions\Error;
 
 class HasLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
 {
+    /**
+     * @return bool
+     */
     public function process(\stdClass $item)
     {
         if (count($item->value) < 2) {
@@ -45,6 +48,7 @@ class HasLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
         if (!is_string($link)) {
             throw new Error();
         }
+
         if (!is_string($id)) {
             throw new Error();
         }

@@ -30,18 +30,26 @@
 namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Formula\AttributeFetcher;
 
 class AttributeType extends Base
 {
+    /**
+     * @var AttributeFetcher
+     */
     protected $attributeFetcher;
 
+    /**
+     * @return void
+     */
     public function setAttributeFetcher(AttributeFetcher $attributeFetcher)
     {
         $this->attributeFetcher = $attributeFetcher;
     }
 
+    /**
+     * @return mixed
+     */
     public function process(\stdClass $item)
     {
         if (!property_exists($item, 'value')) {
@@ -51,6 +59,10 @@ class AttributeType extends Base
         return $this->getAttributeValue($item->value);
     }
 
+    /**
+     * @param string $attribute
+     * @return mixed
+     */
     protected function getAttributeValue($attribute)
     {
         return $this->attributeFetcher->fetch($this->getEntity(), $attribute);
