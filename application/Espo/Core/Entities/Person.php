@@ -58,6 +58,10 @@ class Person extends Entity
         $this->helper = $helper;
     }
 
+    /**
+     * @param string $value
+     * @return void
+     */
     protected function _setLastName($value)
     {
         $this->setInContainer('lastName', $value);
@@ -67,6 +71,10 @@ class Person extends Entity
         $this->setInContainer('name', $name);
     }
 
+    /**
+     * @param string $value
+     * @return void
+     */
     protected function _setFirstName($value)
     {
         $this->setInContainer('firstName', $value);
@@ -76,6 +84,10 @@ class Person extends Entity
         $this->setInContainer('name', $name);
     }
 
+    /**
+     * @param string $value
+     * @return void
+     */
     protected function _setMiddleName($value)
     {
         $this->setInContainer('middleName', $value);

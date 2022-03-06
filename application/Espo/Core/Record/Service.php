@@ -1543,9 +1543,11 @@ class Service implements Crud,
                 return null;
             }
 
+            /** @var ?Collection<TEntity> */
             return $finder->findByWhere($entity, WhereClause::fromRaw($whereClause));
         }
 
+        /** @var ?Collection<TEntity> */
         return $finder->find($entity);
     }
 

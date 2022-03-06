@@ -35,5 +35,8 @@ namespace Espo\Core\EntryPoint\Traits;
  */
 trait NoAuth
 {
+    /**
+     * @var bool
+     */
     public static $noAuth = true;
 }

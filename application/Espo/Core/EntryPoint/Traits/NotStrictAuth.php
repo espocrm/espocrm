@@ -34,5 +34,8 @@ namespace Espo\Core\EntryPoint\Traits;
  */
 trait NotStrictAuth
 {
+    /**
+     * @var bool
+     */
     public static $notStrictAuth = true;
 }

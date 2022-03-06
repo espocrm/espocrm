@@ -34,73 +34,79 @@ use Espo\Core\Container;
 /** @deprecated */
 abstract class Base
 {
+    /**
+     * @var bool
+     */
     public static $authRequired = true;
 
+    /**
+     * @var bool
+     */
     public static $notStrictAuth = false;
 
-    private $container;
+    private $container; /** @phpstan-ignore-line */
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    protected function getContainer()
+    protected function getContainer() /** @phpstan-ignore-line */
     {
         return $this->container;
     }
 
-    protected function getUser()
+    protected function getUser() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('user');
     }
 
-    protected function getAcl()
+    protected function getAcl() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('acl');
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getServiceFactory()
+    protected function getServiceFactory() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('serviceFactory');
     }
 
-    protected function getConfig()
+    protected function getConfig() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('metadata');
     }
 
-    protected function getDateTime()
+    protected function getDateTime() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('dateTime');
     }
 
-    protected function getNumber()
+    protected function getNumber() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('number');
     }
 
-    protected function getFileManager()
+    protected function getFileManager() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('fileManager');
     }
 
-    protected function getLanguage()
+    protected function getLanguage() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('language');
     }
 
-    protected function getClientManager()
+    protected function getClientManager() /** @phpstan-ignore-line */
     {
         return $this->getContainer()->get('clientManager');
     }
