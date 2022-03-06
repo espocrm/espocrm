@@ -45,7 +45,7 @@ class Processor
 {
     private FunctionFactory $functionFactory;
 
-    private Entity $entity;
+    private ?Entity $entity;
 
     private stdClass $variables;
 
