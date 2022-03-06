@@ -50,7 +50,7 @@ use RuntimeException;
 
 class AwsS3 implements Storage
 {
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     public function __construct(Config $config)
     {

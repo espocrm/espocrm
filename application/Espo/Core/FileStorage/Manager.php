@@ -40,12 +40,18 @@ use function GuzzleHttp\Psr7\stream_for;
  */
 class Manager
 {
+    /**
+     * @var array<string,Storage>
+     */
     private $implHash = [];
 
     private const DEFAULT_STORAGE = 'EspoUploadDir';
 
-    private $factory;
+    private Factory $factory;
 
+    /**
+     * @var array<string,resource>
+     */
     private $resourceMap = [];
 
     public function __construct(Factory $factory)

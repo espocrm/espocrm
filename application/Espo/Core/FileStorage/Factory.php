@@ -38,9 +38,9 @@ use RuntimeException;
 
 class Factory
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -50,6 +50,7 @@ class Factory
 
     public function create(string $name): Storage
     {
+        /** @var ?class-string */
         $className = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $name]);
 
         if (!$className) {

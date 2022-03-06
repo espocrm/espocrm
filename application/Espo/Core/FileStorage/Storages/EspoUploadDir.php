@@ -43,7 +43,7 @@ use GuzzleHttp\Psr7\Stream;
 
 class EspoUploadDir implements Storage, Local
 {
-    protected $fileManager;
+    protected FileManager $fileManager;
 
     public function __construct(FileManager $fileManager)
     {
@@ -106,6 +106,9 @@ class EspoUploadDir implements Storage, Local
         return $this->getFilePath($attachment);
     }
 
+    /**
+     * @return string
+     */
     protected function getFilePath(Attachment $attachment)
     {
         $sourceId = $attachment->getSourceId();
