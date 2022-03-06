@@ -67,7 +67,7 @@ class MassConvertCurrency implements MassAction
 
     protected CurrencyConverter $currencyConverter;
 
-    private $user;
+    private User $user;
 
     public function __construct(
         QueryBuilder $queryBuilder,
@@ -161,6 +161,9 @@ class MassConvertCurrency implements MassAction
         return Result::fromArray($result);
     }
 
+    /**
+     * @param string[] $fieldList
+     */
     protected function convertEntity(
         Entity $entity,
         array $fieldList,
@@ -218,6 +221,9 @@ class MassConvertCurrency implements MassAction
         return CurrencyRates::fromArray($ratesArray);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getFieldList(string $entityType, Data $data): array
     {
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');

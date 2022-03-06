@@ -172,6 +172,9 @@ class MassUpdate implements MassAction
         return Result::fromArray($result);
     }
 
+    /**
+     * @param string[] $fieldToCopyList
+     */
     protected function prepareItemValueMap(
         string $entityType,
         stdClass $valueMap,
@@ -264,6 +267,9 @@ class MassUpdate implements MassAction
         $valueMap->$idsAttribute = $copiedIds;
     }
 
+    /**
+     * @return string[]
+     */
     protected function detectFieldToCopyList(string $entityType, stdClass $valueMap): array
     {
         $resultFieldList = [];

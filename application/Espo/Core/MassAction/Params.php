@@ -35,21 +35,26 @@ use RuntimeException;
 
 class Params
 {
-    private $entityType;
+    private string $entityType;
 
-    private $ids;
+    /**
+     * @var ?string[]
+     */
+    private $ids = null;
 
-    private $searchParams;
+    private ?SearchParams $searchParams = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public function getEntityType(): string
     {
         return $this->entityType;
     }
 
+    /**
+     * @return string[]
+     * @throws RuntimeException
+     */
     public function getIds(): array
     {
         if (!$this->ids) {
@@ -73,6 +78,9 @@ class Params
         return !is_null($this->ids);
     }
 
+    /**
+     * @param string[] $ids
+     */
     public static function createWithIds(string $entityType, array $ids): self
     {
         return self::fromRaw([
@@ -86,7 +94,6 @@ class Params
         $obj = new self();
 
         $obj->entityType = $entityType;
-
         $obj->searchParams = $searchParams;
 
         return $obj;
@@ -95,17 +102,27 @@ class Params
     /**
      * Create from raw params.
      *
+     * @param array{
+     *   entityType?: string,
+     *   where?: array<int,array<string,mixed>>,
+     *   ids?: ?string[],
+     *   searchParams?: ?array<string,mixed>,
+     * } $params
      * @throws RuntimeException
      */
     public static function fromRaw(array $params, ?string $entityType = null): self
     {
+        /** @var array<string,mixed> $params */
+
         $obj = new self();
 
-        $obj->entityType = $entityType ?? $params['entityType'] ?? null;
+        $passedEntityType = $entityType ?? $params['entityType'] ?? null;
 
-        if (!$obj->entityType) {
+        if (!$passedEntityType) {
             throw new RuntimeException("No 'entityType'.");
         }
+
+        $obj->entityType = $passedEntityType;
 
         $where = $params['where'] ?? null;
         $ids = $params['ids'] ?? null;
@@ -168,7 +185,11 @@ class Params
     }
 
     /**
-     * @return array
+     * @return array{
+     *   entityType: ?string,
+     *   ids: ?string[],
+     *   searchParams: string,
+     * }
      */
     public function __serialize(): array
     {
@@ -179,6 +200,13 @@ class Params
         ];
     }
 
+    /**
+     * @param array{
+     *   entityType: ?string,
+     *   ids: ?string[],
+     *   searchParams: string,
+     * } $data
+     */
     public function __unserialize(array $data): void
     {
         $this->entityType = $data['entityType'];

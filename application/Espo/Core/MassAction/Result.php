@@ -33,11 +33,17 @@ use RuntimeException;
 
 class Result
 {
+    private ?int $count = null;
+
+    /**
+     * @var ?string[]
+     */
     private $ids = null;
 
-    private $count = null;
-
-    public function __construct(int $count, ?array $ids = null)
+    /**
+     * @param ?string[] $ids
+     */
+    public function __construct(?int $count, ?array $ids = null)
     {
         $this->count = $count;
         $this->ids = $ids;
@@ -53,6 +59,9 @@ class Result
         return $this->count !== null;
     }
 
+    /**
+     * @return string[]
+     */
     public function getIds(): array
     {
         if (!$this->hasIds()) {
@@ -78,6 +87,12 @@ class Result
         ]);
     }
 
+    /**
+     * @param array{
+     *   count?: ?int,
+     *   ids?: ?string[],
+     * } $data
+     */
     public static function fromArray(array $data): self
     {
         $obj = new self(

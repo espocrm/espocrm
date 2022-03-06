@@ -42,11 +42,11 @@ use Espo\Core\Binding\BindingContainerBuilder;
 
 class MassActionFactory
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $aclManager;
+    private AclManager $aclManager;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory, AclManager $aclManager)
     {
@@ -86,6 +86,11 @@ class MassActionFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @param array<string,mixed> $with
+     * @deprecated
+     * @todo Remove.
+     */
     public function createWith(string $action, string $entityType, array $with): MassAction
     {
         $className = $this->getClassName($action, $entityType);
@@ -97,6 +102,9 @@ class MassActionFactory
         return $this->injectableFactory->createWith($className, $with);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $action, string $entityType): ?string
     {
         $className = $this->getEntityTypeClassName($action, $entityType);
@@ -110,6 +118,9 @@ class MassActionFactory
         );
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
         return $this->metadata->get(
