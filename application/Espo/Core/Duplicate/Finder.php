@@ -45,14 +45,20 @@ class Finder
 {
     protected const LIMIT = 10;
 
+    /**
+     * @var string[]
+     */
     protected $selectAttributeList = ['id', 'name'];
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $selectBuilderFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
 
-    private $whereBuilderFactory;
+    private WhereBuilderFactory $whereBuilderFactory;
 
+    /**
+     * @var array<string,?WhereBuilder<Entity>>
+     */
     private $whereBuilderMap = [];
 
     public function __construct(
@@ -81,6 +87,8 @@ class Finder
 
     /**
      * Find entity duplicates.
+     *
+     * @return ?Collection<Entity>
      */
     public function find(Entity $entity): ?Collection
     {
@@ -121,6 +129,8 @@ class Finder
 
     /**
      * The method is public for backward compatibility.
+     *
+     * @return ?Collection<Entity>
      */
     public function findByWhere(Entity $entity, WhereItem $where): ?Collection
     {
@@ -157,6 +167,9 @@ class Finder
         return $builder->find();
     }
 
+    /**
+     * @return string[]
+     */
     private function getSelect(Entity $entity): array
     {
         $select = $this->selectAttributeList;
@@ -187,6 +200,9 @@ class Finder
         return $builder->build($entity);
     }
 
+    /**
+     * @return ?WhereBuilder<Entity>
+     */
     private function loadWhereBuilder(string $entityType): ?WhereBuilder
     {
         if (!$this->whereBuilderFactory->has($entityType)) {

@@ -53,6 +53,10 @@ class WhereBuilderFactory
         return (bool) $this->getClassName($entityType);
     }
 
+    /**
+     * @return WhereBuilder<\Espo\ORM\Entity>
+     * @throws RuntimeException
+     */
     public function create(string $entityType): WhereBuilder
     {
         $className = $this->getClassName($entityType);
@@ -64,6 +68,9 @@ class WhereBuilderFactory
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $entityType): ?string
     {
         return $this->metadata
