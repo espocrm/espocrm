@@ -37,6 +37,9 @@ use stdClass;
 
 class RecordTree extends Record
 {
+    /**
+     * @var string
+     */
     public static $defaultAction = 'list';
 
     /**
@@ -74,6 +77,10 @@ class RecordTree extends Record
         ];
     }
 
+    /**
+     * @return string[]
+     * @throws Forbidden
+     */
     public function getActionLastChildrenIdList(Request $request): array
     {
         if (!$this->acl->check($this->name, 'read')) {

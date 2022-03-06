@@ -64,6 +64,9 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
     use Di\EntityManagerSetter;
     use Di\InjectableFactorySetter;
 
+    /**
+     * @var string
+     */
     public static $defaultAction = 'list';
 
     /**
@@ -160,6 +163,9 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         return $this->name;
     }
 
+    /**
+     * @return RecordService<\Espo\ORM\Entity>
+     */
     protected function getRecordService(?string $entityType = null): RecordService
     {
         return $this->recordServiceContainer->get($entityType ?? $this->getEntityType());
@@ -299,6 +305,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * @deprecated
+     * @return EntityManager
      */
     protected function getEntityManager()
     {

@@ -49,38 +49,58 @@ use Espo\Entities\{
  */
 abstract class Base
 {
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var string
+     */
     public static $defaultAction = 'index';
 
     /**
      * @deprecated
+     * @var Container
      */
     private $container;
 
+    /**
+     * @var User;
+     */
     protected $user;
 
+    /**
+     * @var Acl;
+     */
     protected $acl;
 
     /**
      * @deprecated
+     * @var AclManager
      */
     protected $aclManager;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
     /**
      * @deprecated
+     * @var Preferences
      */
     protected $preferences;
 
     /**
      * @deprecated
+     * @var Metadata
      */
     protected $metadata;
 
     /**
      * @deprecated
+     * @var ServiceFactory
      */
     protected $serviceFactory;
 
@@ -143,6 +163,7 @@ abstract class Base
 
     /**
      * @throws Forbidden
+     * @return void;
      * @deprecated
      */
     protected function checkControllerAccess()
@@ -152,6 +173,7 @@ abstract class Base
 
     /**
      * @deprecated
+     * @param string $name
      */
     protected function getService($name): object
     {
@@ -161,7 +183,7 @@ abstract class Base
     /**
      * @deprecated Use Aware interfaces to inject dependencies.
      *
-     * @return \Espo\Core\Container
+     * @return Container
      */
     protected function getContainer()
     {
@@ -171,7 +193,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Entities\User
+     * @return User
      */
     protected function getUser()
     {
@@ -181,7 +203,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Core\Acl
+     * @return Acl
      */
     protected function getAcl()
     {
@@ -191,7 +213,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Core\AclManager
+     * @return AclManager
      */
     protected function getAclManager()
     {
@@ -201,7 +223,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Core\Utils\Config
+     * @return Config
      */
     protected function getConfig()
     {
@@ -210,6 +232,7 @@ abstract class Base
 
     /**
      * @deprecated
+     * @return Preferences
      */
     protected function getPreferences()
     {
@@ -219,7 +242,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Core\Utils\Metadata
+     * @return Metadata
      */
     protected function getMetadata()
     {
@@ -229,7 +252,7 @@ abstract class Base
     /**
      * @deprecated
      *
-     * @return \Espo\Core\ServiceFactory
+     * @return ServiceFactory
      */
     protected function getServiceFactory()
     {
