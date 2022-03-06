@@ -31,12 +31,27 @@ namespace Espo\Core\ExternalAccount\Clients;
 
 interface IClient
 {
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getParam($name);
-    
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
     public function setParam($name, $value);
-    
+
+    /**
+     * @param array<string,mixed> $params
+     * @return mixed
+     */
     public function setParams(array $params);
 
+    /**
+     * @return bool
+     */
     public function ping();
 }
-

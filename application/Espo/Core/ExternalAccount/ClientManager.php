@@ -67,6 +67,10 @@ class ClientManager
      */
     protected $injectableFactory = null;
 
+    /**
+     *
+     * @var array<string,array<string,mixed>>
+     */
     protected $clientMap = [];
 
     public function __construct(
@@ -81,6 +85,14 @@ class ClientManager
         $this->injectableFactory = $injectableFactory;
     }
 
+    /**
+     * @param array{
+     *   accessToken: ?string,
+     *   tokenType: ?string,
+     *   expiresAt?: ?string,
+     *   refreshToken?: ?string,
+     * } $data
+     */
     public function storeAccessToken(string $hash, array $data): void
     {
         if (empty($this->clientMap[$hash]) || empty($this->clientMap[$hash]['externalAccountEntity'])) {
@@ -154,6 +166,7 @@ class ClientManager
             return null;
         }
 
+        /** @var class-string */
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");
 
         $client = $this->injectableFactory->create($className);
@@ -178,6 +191,7 @@ class ClientManager
         /** @var ExternalAccountEntity|null $externalAccountEntity */
         $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
 
+        /** @var class-string */
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");
 
         $redirectUri = $this->config->get('siteUrl') . '?entryPoint=oauthCallback';
@@ -245,6 +259,10 @@ class ClientManager
         return $client;
     }
 
+    /**
+     * @param object $client
+     * @return void
+     */
     protected function addToClientMap(
         $client,
         IntegrationEntity $integrationEntity,
@@ -260,6 +278,9 @@ class ClientManager
         ];
     }
 
+    /**
+     * @param object $client
+     */
     protected function getClientRecord($client): Entity
     {
         $data = $this->clientMap[spl_object_hash($client)];
@@ -271,6 +292,9 @@ class ClientManager
         return $data['externalAccountEntity'];
     }
 
+    /**
+     * @param object $client
+     */
     public function isClientLocked($client): bool
     {
         $externalAccountEntity = $this->getClientRecord($client);

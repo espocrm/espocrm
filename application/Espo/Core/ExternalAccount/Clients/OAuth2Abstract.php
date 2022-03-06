@@ -42,12 +42,24 @@ use DateTime;
 
 abstract class OAuth2Abstract implements IClient
 {
+    /**
+     * @var ?Client
+     */
     protected $client = null;
 
+    /**
+     * @var ?ClientManager
+     */
     protected $manager = null;
 
+    /**
+     * @var Log
+     */
     protected $log;
 
+    /**
+     * @var string[]
+     */
     protected $paramList = [
         'endpoint',
         'tokenEndpoint',
@@ -60,16 +72,34 @@ abstract class OAuth2Abstract implements IClient
         'expiresAt',
     ];
 
+    /**
+     * @var ?string
+     */
     protected $clientId = null;
 
+    /**
+     * @var ?string
+     */
     protected $clientSecret = null;
 
+    /**
+     * @var ?string
+     */
     protected $accessToken = null;
 
+    /**
+     * @var ?string
+     */
     protected $refreshToken = null;
 
+    /**
+     * @var ?string
+     */
     protected $redirectUri = null;
 
+    /**
+     * @var ?string
+     */
     protected $expiresAt = null;
 
     const ACCESS_TOKEN_EXPIRATION_MARGIN = '20 seconds';
@@ -78,6 +108,9 @@ abstract class OAuth2Abstract implements IClient
 
     const LOCK_CHECK_STEP = 0.5;
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public function __construct(
         Client $client,
         array $params = [],
@@ -91,6 +124,10 @@ abstract class OAuth2Abstract implements IClient
         $this->setParams($params);
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getParam($name)
     {
         if (in_array($name, $this->paramList)) {
@@ -100,6 +137,11 @@ abstract class OAuth2Abstract implements IClient
         return null;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
     public function setParam($name, $value)
     {
         if (in_array($name, $this->paramList)) {
@@ -113,6 +155,10 @@ abstract class OAuth2Abstract implements IClient
         }
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @return void
+     */
     public function setParams(array $params)
     {
         foreach ($this->paramList as $name) {
@@ -122,6 +168,10 @@ abstract class OAuth2Abstract implements IClient
         }
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     protected function afterTokenRefreshed(array $data): void
     {
         if ($this->manager) {
@@ -129,6 +179,19 @@ abstract class OAuth2Abstract implements IClient
         }
     }
 
+    /**
+     * @param array{
+     *   access_token: string,
+     *   token_type: string,
+     *   refresh_token?: string,
+     *   expires_in?: int,
+     * } $result
+     * @return array{
+     *   accessToken: string,
+     *   tokenType: string,
+     *   expiresAt: ?string,
+     * }
+     */
     protected function getAccessTokenDataFromResponseResult($result): array
     {
         $data = [];
@@ -152,7 +215,12 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @return array|null
+     * @return ?array{
+     *   accessToken: string,
+     *   tokenType: string,
+     *   expiresAt: ?string,
+     *   refreshToken: string,
+     * }
      */
     public function getAccessTokenFromAuthorizationCode(string $code)
     {
@@ -292,7 +360,7 @@ abstract class OAuth2Abstract implements IClient
     /**
      *
      * @param string $url
-     * @param array|string|null $params
+     * @param array<string,mixed>|string|null $params
      * @param string $httpMethod
      * @param ?string $contentType
      * @param bool $allowRenew
@@ -414,6 +482,12 @@ abstract class OAuth2Abstract implements IClient
         return false;
     }
 
+    /**
+     * @param array<string,mixed> $r
+     * @return ?array{
+     *   action: string,
+     * }
+     */
     protected function handleErrorResponse($r)
     {
         if ($r['code'] == 401 && !empty($r['result'])) {
