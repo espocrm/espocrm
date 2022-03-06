@@ -41,7 +41,7 @@ class ClearCache implements Runner
 {
     use Cli;
 
-    protected $dataManager;
+    private DataManager $dataManager;
 
     public function __construct(DataManager $dataManager)
     {

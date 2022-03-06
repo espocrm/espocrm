@@ -48,17 +48,17 @@ use Espo\Entities\{
     EmailAddress,
 };
 
-use StdClass;
+use stdClass;
 
 class Merger
 {
-    private $acl;
+    private Acl $acl;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $serviceContainer;
+    private ServiceContainer $serviceContainer;
 
     public function __construct(
         Acl $acl,
@@ -73,10 +73,11 @@ class Merger
     }
 
     /**
+     * @param string[] $sourceIdList
      * @throws NotFound
      * @throws Forbidden
      */
-    public function process(Params $params, array $sourceIdList, StdClass $data): void
+    public function process(Params $params, array $sourceIdList, stdClass $data): void
     {
         $clonedData = ObjectUtil::clone($data);
 
@@ -171,6 +172,7 @@ class Merger
     }
 
     /**
+     * @param string[] $sourceIdList
      * @return Entity[]
      * @throws Forbidden
      * @throws NotFound
@@ -323,7 +325,7 @@ class Merger
     /**
      * @param PhoneNumber[] $phoneNumberList
      */
-    private function preparePhoneNumberData(array $phoneNumberList, StdClass $data): void
+    private function preparePhoneNumberData(array $phoneNumberList, stdClass $data): void
     {
         $phoneNumberData = [];
 
@@ -354,7 +356,7 @@ class Merger
     /**
      * @param EmailAddress[] $emailAddressList
      */
-    private function prepareEmailAddressData(array $emailAddressList, StdClass $data): void
+    private function prepareEmailAddressData(array $emailAddressList, stdClass $data): void
     {
         $emailAddressData = [];
 

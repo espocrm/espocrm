@@ -64,7 +64,7 @@ class Preload implements Runner
         echo "Files loaded: " . (string) $count . "." . PHP_EOL;
     }
 
-    protected function processException(Throwable $e)
+    protected function processException(Throwable $e): void
     {
         echo "Error occurred." . PHP_EOL;
 

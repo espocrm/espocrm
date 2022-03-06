@@ -34,5 +34,5 @@ namespace Espo\Core\ApplicationRunners;
  */
 trait SetupSystemUser
 {
-    public static $setupSystemUser = true;
+    public static bool $setupSystemUser = true;
 }

@@ -124,6 +124,9 @@ class ConvertCurrency implements Action
         $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
     }
 
+    /**
+     * @param string[] $fieldList
+     */
     protected function convertEntity(
         Entity $entity,
         array $fieldList,
@@ -179,6 +182,9 @@ class ConvertCurrency implements Action
         return CurrencyRates::fromArray($ratesArray);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getFieldList(string $entityType, Data $data): array
     {
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');

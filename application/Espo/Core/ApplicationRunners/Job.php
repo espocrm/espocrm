@@ -43,7 +43,7 @@ class Job implements RunnerParameterized
     use Cli;
     use SetupSystemUser;
 
-    private $jobManager;
+    private JobManager $jobManager;
 
     public function __construct(JobManager $jobManager)
     {

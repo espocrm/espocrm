@@ -34,5 +34,5 @@ namespace Espo\Core\ApplicationRunners;
  */
 trait Cli
 {
-    public static $cli = true;
+    public static bool $cli = true;
 }

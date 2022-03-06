@@ -38,9 +38,9 @@ use Espo\Core\{
 
 class ActionFactory
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -63,6 +63,11 @@ class ActionFactory
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @param array<string,object> $with
+     * @deprecated
+     * @todo Remove.
+     */
     public function createWith(string $action, ?string $entityType, array $with): Action
     {
         $className = $this->getClassName($action, $entityType);
@@ -74,6 +79,9 @@ class ActionFactory
         return $this->injectableFactory->createWith($className, $with);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $action, ?string $entityType): ?string
     {
         if ($entityType) {
@@ -89,6 +97,9 @@ class ActionFactory
         );
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
         return  $this->metadata->get(

@@ -32,7 +32,7 @@ namespace Espo\Core\Cleanup;
 /** @deprecated */
 abstract class Base extends \Espo\Core\Injectable
 {
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
         $this->addDependency('config');
         $this->addDependency('metadata');
@@ -40,25 +40,25 @@ abstract class Base extends \Espo\Core\Injectable
         $this->addDependency('fileManager');
     }
 
-    protected function getConfig()
+    protected function getConfig() /** @phpstan-ignore-line */
     {
         return $this->getInjection('config');
     }
 
-    protected function getMetadata()
+    protected function getMetadata() /** @phpstan-ignore-line */
     {
         return $this->getInjection('metadata');
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->getInjection('entityManager');
     }
 
-    protected function getFileManager()
+    protected function getFileManager() /** @phpstan-ignore-line */
     {
         return $this->getInjection('fileManager');
     }
 
-    abstract public function process();
+    abstract public function process(); /** @phpstan-ignore-line */
 }
