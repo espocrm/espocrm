@@ -53,7 +53,7 @@ class AttributeFetcher
             $key = $this->buildKey($entity, $arr[0]);
 
             if (!array_key_exists($key, $this->relatedEntitiesCacheMap)) {
-                // @todo User getRelation.
+                // @todo Use getRelation.
                 $this->relatedEntitiesCacheMap[$key] = $entity->get($arr[0]);
             }
 
