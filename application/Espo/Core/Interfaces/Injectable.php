@@ -32,7 +32,7 @@ namespace Espo\Core\Interfaces;
 /** @deprecated */
 interface Injectable
 {
-    public function getDependencyList();
+    public function getDependencyList(); /** @phpstan-ignore-line */
 
-    public function inject($name, $object);
+    public function inject($name, $object); /** @phpstan-ignore-line */
 }
