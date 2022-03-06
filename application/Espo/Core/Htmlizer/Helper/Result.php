@@ -31,7 +31,10 @@ namespace Espo\Core\Htmlizer\Helper;
 
 class Result
 {
-    private $value;
+    /**
+     * @var string|SafeString|null
+     */
+    private $value = null;
 
     private function __construct() {}
 

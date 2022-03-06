@@ -120,7 +120,7 @@ class Htmlizer
      * Generate an HTML for entity by a given template.
      *
      * @param ?string $cacheId @deprecated To be skipped..
-     * @param ?array $additionalData Data will be passed to the template.
+     * @param ?array<string,mixed> $additionalData Data will be passed to the template.
      * @param bool $skipLinks Do not process related records.
      */
     public function render(
@@ -199,6 +199,10 @@ class Htmlizer
         return $html;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     private function format($value)
     {
         if (is_float($value)) {
@@ -216,6 +220,10 @@ class Htmlizer
         return $value;
     }
 
+    /**
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,mixed>
+     */
     private function getDataFromEntity(
         Entity $entity,
         bool $skipLinks = false,
@@ -467,6 +475,9 @@ class Htmlizer
         return $data;
     }
 
+    /**
+     * @return array<string,callable>
+     */
     private function getHelpers(): array
     {
         $helpers = [
@@ -746,6 +757,9 @@ class Htmlizer
         return $helpers;
     }
 
+    /**
+     * @return ?string
+     */
     private function getFieldType(string $entityType, string $field)
     {
         if (!$this->metadata) {
@@ -755,6 +769,9 @@ class Htmlizer
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 
+    /**
+     * @return array<int,array{string,string}>
+     */
     private function getRelationOrder(string $entityType, string $relation): array
     {
         $relationDefs = $this->entityManager

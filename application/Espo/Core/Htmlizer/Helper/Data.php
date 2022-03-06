@@ -33,22 +33,43 @@ use stdClass;
 
 class Data
 {
+    /**
+     * @var mixed[]
+     */
     private $argumentList;
 
-    private $options;
+    private stdClass $options;
 
-    private $blockParams;
+    private int $blockParams;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $context;
 
-    private $name;
+    private string $name;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $rootContext;
 
-    private $func;
+    /**
+     * @var ?callable
+     */
+    private $func = null;
 
-    private $inverseFunc;
+    /**
+     * @var ?callable
+     */
+    private $inverseFunc = null;
 
+    /**
+     * @param mixed[] $argumentList
+     * @param array<string,mixed> $context
+     * @param array<string,mixed> $rootContext
+     * @param int $blockParams
+     */
     public function __construct(
         string $name,
         array $argumentList,
@@ -74,11 +95,17 @@ class Data
         return $this->name;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getContext(): array
     {
         return $this->context;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getRootContext(): array
     {
         return $this->rootContext;

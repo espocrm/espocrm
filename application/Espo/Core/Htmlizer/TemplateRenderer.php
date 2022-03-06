@@ -39,26 +39,26 @@ use LogicException;
 
 class TemplateRenderer
 {
-    private $data;
-
-    private $user = null;
-
-    private $entity = null;
-
-    private $skipRelations = false;
-
-    private $applyAcl = false;
-
-    private $useUserTimezone = false;
-
-    private $htmlizerFactory;
-
-    private $applicationState;
-
     /**
-     * @var ?string
+     * @var ?array<string,mixed>
      */
-    private $template = null;
+    private $data = null;
+
+    private ?User $user = null;
+
+    private ?Entity $entity = null;
+
+    private bool $skipRelations = false;
+
+    private bool $applyAcl = false;
+
+    private bool $useUserTimezone = false;
+
+    private HtmlizerFactory $htmlizerFactory;
+
+    private ApplicationState $applicationState;
+
+    private ?string $template = null;
 
     public function __construct(HtmlizerFactory $htmlizerFactory, ApplicationState $applicationState)
     {
@@ -81,7 +81,7 @@ class TemplateRenderer
     }
 
     /**
-     * @param stdClass|array $data Additional data.
+     * @param stdClass|array<string,mixed> $data Additional data.
      */
     public function setData($data): self
     {
