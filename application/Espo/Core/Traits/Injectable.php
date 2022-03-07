@@ -32,29 +32,29 @@ namespace Espo\Core\Traits;
 /** @deprecated */
 trait Injectable
 {
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
     }
 
-    public function getDependencyList() : array
+    public function getDependencyList() : array /** @phpstan-ignore-line */
     {
         return $this->dependencyList;
     }
 
-    protected function getInjection(string $name)
+    protected function getInjection(string $name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependency(string $name)
+    protected function addDependency(string $name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);

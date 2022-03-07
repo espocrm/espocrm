@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Templates\Repositories;
 
+/**
+ * @template TEntity of \Espo\Core\Entities\CategoryTreeItem
+ * @extends \Espo\Core\Repositories\CategoryTree<TEntity>
+ */
 class CategoryTree extends \Espo\Core\Repositories\CategoryTree
 {
 
