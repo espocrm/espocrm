@@ -44,13 +44,16 @@ use Espo\Core\{
 
 class AccessCheckerFactory
 {
+    /**
+     * @var class-string
+     */
     private $defaultClassName = DefaultAccessChecker::class;
 
-    private $classFinder;
+    private ClassFinder $classFinder;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         ClassFinder $classFinder,
@@ -76,6 +79,9 @@ class AccessCheckerFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $scope): string
     {
         $className1 = $this->metadata->get(['aclDefs', $scope, 'portalAccessCheckerClassName']);

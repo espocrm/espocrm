@@ -93,6 +93,7 @@ class Config
     /**
      * Get a parameter value.
      *
+     * @param mixed $default
      * @return mixed
      */
     public function get(string $name, $default = null)

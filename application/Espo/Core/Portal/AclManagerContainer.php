@@ -44,9 +44,12 @@ use Espo\Core\Exceptions\Error;
  */
 class AclManagerContainer
 {
+    /**
+     * @var array<string,AclManager>
+     */
     private $data = [];
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {

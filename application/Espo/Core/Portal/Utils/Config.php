@@ -38,10 +38,16 @@ use stdClass;
 
 class Config extends BaseConfig
 {
-    private $portalParamsSet = false;
+    private bool $portalParamsSet = false;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $portalData = [];
 
+    /**
+     * @var string[]
+     */
     private $portalParamList = [
         'companyLogoId',
         'tabList',
@@ -57,6 +63,10 @@ class Config extends BaseConfig
         'defaultCurrency',
     ];
 
+    /**
+     * @param mixed $default
+     * @return mixed
+     */
     public function get(string $name, $default = null)
     {
         if (array_key_exists($name, $this->portalData)) {
@@ -88,8 +98,10 @@ class Config extends BaseConfig
 
     /**
      * Override parameters for a portal. Can be called only once.
+     *
+     * @param array<string,mixed> $data
      */
-    public function setPortalParameters(array $data = [])
+    public function setPortalParameters(array $data = []): void
     {
         if ($this->portalParamsSet) {
             throw new Error("Can't set portal params second time.");

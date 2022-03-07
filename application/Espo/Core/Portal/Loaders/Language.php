@@ -38,7 +38,6 @@ use Espo\Core\{
 
 use Espo\Entities\{
     Preferences,
-    Portal,
 };
 
 class Language implements Loader
@@ -49,18 +48,14 @@ class Language implements Loader
 
     private $preferences;
 
-    private $portal;
-
     public function __construct(
         InjectableFactory $injectableFactory,
         Config $config,
-        Preferences $preferences,
-        Portal $portal
+        Preferences $preferences
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->config = $config;
         $this->preferences = $preferences;
-        $this->portal = $portal;
     }
 
     public function load(): LanguageService
@@ -69,8 +64,6 @@ class Language implements Loader
             'language' => LanguageService::detectLanguage($this->config, $this->preferences),
             'useCache' => $this->config->get('useCache') ?? false,
         ]);
-
-        $language->setPortal($this->portal);
 
         return $language;
     }

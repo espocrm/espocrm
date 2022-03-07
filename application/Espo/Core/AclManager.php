@@ -78,6 +78,9 @@ class AclManager
 
     protected $mapHashMap = [];
 
+    /**
+     * @var class-string
+     */
     protected $userAclClassName = Acl::class;
 
     protected const PERMISSION_ASSIGNMENT = 'assignment';
@@ -287,7 +290,7 @@ class AclManager
             return $this->checkScope($user, $subject, $action);
         }
 
-        /** @var mixed */
+        /** @var mixed $entity */
         $entity = $subject;
 
         if ($entity instanceof Entity) {

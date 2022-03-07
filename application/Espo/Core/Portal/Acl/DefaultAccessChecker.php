@@ -47,6 +47,12 @@ use Espo\Core\{
 
 /**
  * A default implementation for access checking for portal.
+ *
+ * @implements AccessEntityCreateChecker<Entity>
+ * @implements AccessEntityReadChecker<Entity>
+ * @implements AccessEntityEditChecker<Entity>
+ * @implements AccessEntityDeleteChecker<Entity>
+ * @implements AccessEntityStreamChecker<Entity>
  */
 class DefaultAccessChecker implements
 
@@ -56,9 +62,9 @@ class DefaultAccessChecker implements
     AccessEntityDeleteChecker,
     AccessEntityStreamChecker
 {
-    private $aclManager;
+    private PortalAclManager $aclManager;
 
-    private $scopeChecker;
+    private ScopeChecker $scopeChecker;
 
     public function __construct(
         PortalAclManager $aclManager,

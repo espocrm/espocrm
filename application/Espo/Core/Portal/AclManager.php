@@ -60,21 +60,18 @@ use RuntimeException;
 
 class AclManager extends InternalAclManager
 {
+    /**
+     * @var class-string
+     */
     protected $userAclClassName = Acl::class;
 
-    private $internalAclManager = null;
+    private ?InternalAclManager $internalAclManager = null;
 
-    private $portal = null;
+    private ?Portal $portal = null;
 
-    /**
-     * @var TableFactory
-     */
-    private $portalTableFactory;
+    private TableFactory $portalTableFactory;
 
-    /**
-     * @var MapFactory
-     */
-    private $portalMapFactory;
+    private MapFactory $portalMapFactory;
 
     public function __construct(
         AccessCheckerFactory $accessCheckerFactory,
