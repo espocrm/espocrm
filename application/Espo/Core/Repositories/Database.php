@@ -55,28 +55,48 @@ use Espo\Core\{
  */
 class Database extends RDBRepository
 {
+    /**
+     * @var bool
+     */
     protected $hooksDisabled = false;
 
     /**
      * @deprecated
      * @todo Remove all usage.
+     * @var bool
      */
     protected $processFieldsAfterSaveDisabled = false;
 
     /**
      * @deprecated
      * @todo Remove all usage.
+     * @var bool
      */
     protected $processFieldsAfterRemoveDisabled = false;
 
+    /**
+     * @var ?array<string,mixed>
+     */
     private $restoreData = null;
 
+    /**
+     * @var Metadata
+     */
     protected $metadata;
 
+    /**
+     * @var HookManager
+     */
     protected $hookManager;
 
+    /**
+     * @var ApplicationState
+     */
     protected $applicationState;
 
+    /**
+     * @var RecordIdGenerator
+     */
     protected $recordIdGenerator;
 
     public function __construct(
@@ -105,7 +125,7 @@ class Database extends RDBRepository
     /**
      * @deprecated Use `$this->metadata`.
      */
-    protected function getMetadata()
+    protected function getMetadata() /** @phpstan-ignore-line */
     {
         return $this->metadata;
     }
@@ -113,12 +133,13 @@ class Database extends RDBRepository
     /**
      * @deprecated Will be removed.
      */
-    public function handleSelectParams(&$params)
+    public function handleSelectParams(&$params) /** @phpstan-ignore-line */
     {
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
      */
     public function save(Entity $entity, array $options = []): void
     {
@@ -140,7 +161,9 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function beforeRemove(Entity $entity, array $options = [])
     {
@@ -170,7 +193,9 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function afterRemove(Entity $entity, array $options = [])
     {
@@ -182,7 +207,11 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param string $relationName
+     * @param array<string,mixed> $params
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
@@ -205,7 +234,12 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param string $relationName
+     * @param Entity|string $foreign
+     * @param \stdClass|array<string,mixed>|null $data
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
@@ -239,7 +273,11 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param string $relationName
+     * @param Entity|string $foreign
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
@@ -268,7 +306,9 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -280,7 +320,9 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
+     * @return void
      */
     protected function afterSave(Entity $entity, array $options = [])
     {
@@ -298,7 +340,8 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
      */
     private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
@@ -330,7 +373,8 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
      */
     private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
     {
@@ -362,7 +406,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @pparam TEntity $entity
      * @return mixed
      */
     private function getAttributeParam(Entity $entity, string $attribute, string $param)
@@ -383,7 +427,7 @@ class Database extends RDBRepository
     }
 
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      * @return mixed
      */
     private function getRelationParam(Entity $entity, string $relation, string $param)

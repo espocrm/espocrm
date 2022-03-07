@@ -51,10 +51,20 @@ class Event extends Database implements
     use Di\DateTimeSetter;
     use Di\ConfigSetter;
 
+    /**
+     * @var string[]
+     */
     protected $reminderSkippingStatusList = ['Held', 'Not Held'];
 
+    /**
+     * @var bool
+     */
     protected $preserveDuration = true;
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (
@@ -130,6 +140,10 @@ class Event extends Database implements
         parent::beforeSave($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
@@ -146,6 +160,10 @@ class Event extends Database implements
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
+    /**
+     * @param string $string
+     * @return ?string
+     */
     protected function convertDateTimeToDefaultTimezone($string)
     {
         $timeZone = $this->config->get('timeZone') ?? 'UTC';

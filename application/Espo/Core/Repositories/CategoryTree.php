@@ -32,8 +32,16 @@ namespace Espo\Core\Repositories;
 use Espo\ORM\Entity;
 use Espo\ORM\Mapper\BaseMapper;
 
+/**
+ * @template TEntity of Entity
+ * @extends Database<Entity>
+ */
 class CategoryTree extends Database
 {
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
