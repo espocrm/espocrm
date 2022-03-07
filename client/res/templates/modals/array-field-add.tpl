@@ -6,7 +6,15 @@
     <li class="list-group-item clearfix">
         <input class="cell" type="checkbox" data-value="{{./this}}">
         <a href="javascript:" class="add text-bold" data-value="{{./this}}">
-            {{#if ../translatedOptions}}{{prop ../translatedOptions this}}{{else}}{{./this}}{{/if}}
+            {{#if ../translatedOptions}}
+                {{#if (prop ../translatedOptions this)}}
+                    {{prop ../translatedOptions this}}
+                {{else}}
+                    {{./this}}
+                {{/if}}
+            {{else}}
+                {{./this}}
+            {{/if}}
         </a>
     </li>
 {{/each}}
