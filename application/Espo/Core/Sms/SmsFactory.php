@@ -37,7 +37,7 @@ use Espo\Entities\Sms as SmsEntity;
  */
 class SmsFactory
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

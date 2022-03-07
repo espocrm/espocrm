@@ -39,11 +39,11 @@ use RuntimeException;
 
 class SenderFactory implements Factory
 {
-    private $config;
+    private Config $config;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Config $config,
@@ -63,6 +63,7 @@ class SenderFactory implements Factory
             throw new RuntimeException("No `smsProvider` in config.");
         }
 
+        /** @var ?class-string */
         $className = $this->metadata->get(['app', 'smsProviders', $provider, 'senderClassName']);
 
         if (!$className) {

@@ -34,71 +34,71 @@ use Espo\Core\Interfaces\Injectable;
 /** @deprecated */
 abstract class Base implements Injectable
 {
-    protected $dependencyList = [
+    protected $dependencyList = [ /** @phpstan-ignore-line */
         'config',
         'entityManager',
         'user',
         'serviceFactory',
     ];
 
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    public function __construct()
+    public function __construct() /** @phpstan-ignore-line */
     {
         $this->init();
     }
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
-    public function prepare()
+    public function prepare() /** @phpstan-ignore-line */
     {
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return $this->dependencyList;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->getInjection('entityManager');
     }
 
-    protected function getConfig()
+    protected function getConfig() /** @phpstan-ignore-line */
     {
         return $this->getInjection('config');
     }
 
-    protected function getUser()
+    protected function getUser() /** @phpstan-ignore-line */
     {
         return $this->getInjection('user');
     }
 
-    protected function getServiceFactory()
+    protected function getServiceFactory() /** @phpstan-ignore-line */
     {
         return $this->getInjection('serviceFactory');
     }
