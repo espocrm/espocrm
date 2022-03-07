@@ -34,9 +34,9 @@ use Espo\Core\Utils\Metadata;
 
 class RebuildActionProcessor
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -51,6 +51,9 @@ class RebuildActionProcessor
         }
     }
 
+    /**
+     * @return RebuildAction[]
+     */
     private function getActionList(): array
     {
         $classNameList = $this->getClassNameList();
@@ -65,7 +68,7 @@ class RebuildActionProcessor
     }
 
     /**
-     * @return string[]
+     * @return class-string[]
      */
     private function getClassNameList(): array
     {
