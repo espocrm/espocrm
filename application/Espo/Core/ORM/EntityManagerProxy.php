@@ -41,9 +41,9 @@ use Espo\Core\{
 
 class EntityManagerProxy
 {
-    private $entityManager = null;
+    private ?EntityManager $entityManager = null;
 
-    private $container;
+    private Container $container;
 
     public function __construct(Container $container)
     {
@@ -64,6 +64,10 @@ class EntityManagerProxy
         return $this->getEntityManager()->getEntity($entityType, $id);
     }
 
+    /**
+     * @param array<mixed,string> $options
+     * @return void
+     */
     public function saveEntity(Entity $entity, array $options = [])
     {
         /** Return for backward compatibility. */
@@ -71,11 +75,17 @@ class EntityManagerProxy
         return $this->getEntityManager()->saveEntity($entity, $options);
     }
 
+    /**
+     * @return Repository<Entity>
+     */
     public function getRepository(string $entityType): Repository
     {
         return $this->getEntityManager()->getRepository($entityType);
     }
 
+    /**
+     * @return RDBRepository<Entity>
+     */
     public function getRDBRepository(string $entityType): RDBRepository
     {
         return $this->getEntityManager()->getRDBRepository($entityType);

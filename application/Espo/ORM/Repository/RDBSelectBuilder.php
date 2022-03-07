@@ -94,7 +94,7 @@ class RDBSelectBuilder
 
     /**
      * @param ?array<string,mixed> $params @deprecated. Omit it.
-     * @phpstan-return Collection<TEntity>
+     * @return Collection<TEntity>
      */
     public function find(?array $params = null): Collection
     {
@@ -109,7 +109,7 @@ class RDBSelectBuilder
     /**
      * @param ?array<string,mixed> $params @deprecated
      *
-     * @phpstan-return ?TEntity
+     * @return ?TEntity
      */
     public function findOne(?array $params = null): ?Entity
     {

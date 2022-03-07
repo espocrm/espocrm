@@ -86,6 +86,8 @@ class RDBRepository implements Repository
 
     /**
      * Get a new entity.
+     *
+     * @return TEntity
      */
     public function getNew(): Entity
     {
@@ -102,6 +104,8 @@ class RDBRepository implements Repository
 
     /**
      * Fetch an entity by ID.
+     *
+     * @return ?TEntity
      */
     public function getById(string $id): ?Entity
     {
@@ -123,7 +127,7 @@ class RDBRepository implements Repository
     /**
      * Get an entity. If ID is NULL, a new entity is returned.
      *
-     * @phpstan-return ?TEntity
+     * @return ?TEntity
      */
     public function get(?string $id = null): ?Entity
     {
@@ -141,6 +145,10 @@ class RDBRepository implements Repository
         }
     }
 
+    /**
+     * @param TEntity $entity
+     * @param array<string,mixed> $options
+     */
     public function save(Entity $entity, array $options = []): void
     {
         $this->processCheckEntity($entity);
@@ -207,7 +215,7 @@ class RDBRepository implements Repository
     /**
      * Get an access point for a specific relation of a record.
      *
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function getRelation(Entity $entity, string $relationName): RDBRelation
     {
@@ -246,7 +254,7 @@ class RDBRepository implements Repository
      * Find records.
      *
      * @param ?array<string,mixed> $params @deprecated
-     * @phpstan-return Collection<TEntity>
+     * @return Collection<TEntity>
      */
     public function find(?array $params = []): Collection
     {
@@ -281,7 +289,7 @@ class RDBRepository implements Repository
         if (!$mapper instanceof BaseMapper) {
             throw new RuntimeException("Not supported 'findBySql'.");
         }
-        
+
         /** @var SthCollection<TEntity> */
         return $mapper->selectBySql($this->entityType, $sql);
     }
@@ -790,7 +798,7 @@ class RDBRepository implements Repository
     /**
      * Clone an existing query for a further modification and usage by 'find' or 'count' methods.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function clone(Select $query): RDBSelectBuilder
     {
@@ -812,7 +820,7 @@ class RDBRepository implements Repository
      * @param string|null $alias An alias.
      * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
@@ -827,7 +835,7 @@ class RDBRepository implements Repository
      * @param string|null $alias An alias.
      * @param WhereItem|array<scalar,mixed>|null $conditions Join conditions.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
@@ -857,7 +865,7 @@ class RDBRepository implements Repository
     /**
      * Set to return STH collection. Recommended fetching large number of records.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      * @return RDBSelectBuilder<TEntity>
      */
     public function sth(): RDBSelectBuilder
@@ -894,7 +902,7 @@ class RDBRepository implements Repository
      * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function having($clause = [], $value = null): RDBSelectBuilder
     {
@@ -916,7 +924,7 @@ class RDBRepository implements Repository
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      *
      * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): RDBSelectBuilder
     {
@@ -926,7 +934,7 @@ class RDBRepository implements Repository
     /**
      * Apply OFFSET and LIMIT.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function limit(?int $offset = null, ?int $limit = null): RDBSelectBuilder
     {
@@ -947,7 +955,7 @@ class RDBRepository implements Repository
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     public function select($select = [], ?string $alias = null): RDBSelectBuilder
     {
@@ -993,7 +1001,7 @@ class RDBRepository implements Repository
     /**
      * Create a select builder.
      *
-     * @phpstan-return RDBSelectBuilder<TEntity>
+     * @return RDBSelectBuilder<TEntity>
      */
     protected function createSelectBuilder(): RDBSelectBuilder
     {

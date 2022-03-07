@@ -29,15 +29,16 @@
 
 namespace Espo\Core\Notification;
 
-use Espo\Core\{
-    ORM\EntityManager,
-};
+use Espo\Core\ORM\EntityManager;
 
 class UserEnabledChecker
 {
+    /**
+     * @var array<string,bool>
+     */
     private $assignmentCache = [];
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

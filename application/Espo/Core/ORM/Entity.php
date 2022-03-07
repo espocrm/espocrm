@@ -93,6 +93,14 @@ class Entity extends BaseEntity
         $this->set($field . 'Name', null);
     }
 
+    /**
+     *
+     * @param string $link
+     * @return ?array{
+     *   orderBy: ?string,
+     *   order: ?string,
+     * }
+     */
     protected function getRelationOrderParams(string $link): ?array
     {
         $field = $link;
@@ -145,11 +153,14 @@ class Entity extends BaseEntity
         ];
     }
 
+    /**
+     * @param ?array<string,string> $columns
+     */
     public function loadLinkMultipleField(string $field, $columns = null): void
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) {
             return;
-            // @todo Throw exception in 6.4.
+            // @todo Throw exception on v7.2.
             // throw new LogicException("There's no link-multiple field '{$field}'.");
         }
 
@@ -320,6 +331,9 @@ class Entity extends BaseEntity
         return null;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setLinkMultipleColumn(string $field, string $column, string $id, $value): void
     {
         $columnsAttribute = $field . 'Columns';
@@ -347,6 +361,9 @@ class Entity extends BaseEntity
         $this->set($columnsAttribute, $object);
     }
 
+    /**
+     * @param string[] $idList
+     */
     public function setLinkMultipleIdList(string $field, array $idList): void
     {
         $idsAttribute = $field . 'Ids';
@@ -397,6 +414,9 @@ class Entity extends BaseEntity
         }
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getLinkMultipleIdList(string $field): ?array
     {
         $idsAttribute = $field . 'Ids';

@@ -44,11 +44,11 @@ use RuntimeException;
 
 class ValueFactoryFactory implements ValueFactoryFactoryInteface
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $ormMetadata;
+    private OrmMetadata $ormMetadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, OrmMetadata $ormMetadata, InjectableFactory $injectableFactory)
     {
@@ -73,6 +73,9 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $entityType, string $field): ?string
     {
         $fieldDefs = $this->ormMetadata

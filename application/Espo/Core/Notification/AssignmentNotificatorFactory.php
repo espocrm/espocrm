@@ -39,13 +39,16 @@ use Espo\Core\{
 
 class AssignmentNotificatorFactory
 {
-    protected $defaultClassName = DefaultAssignmentNotificator::class;
+    /**
+     * @var class-string
+     */
+    protected string $defaultClassName = DefaultAssignmentNotificator::class;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $classFinder;
+    private ClassFinder $classFinder;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
     {
@@ -66,6 +69,9 @@ class AssignmentNotificatorFactory
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $entityType): string
     {
         $className1 = $this->metadata->get(['notificationDefs', $entityType, 'assignmentNotificatorClassName']);

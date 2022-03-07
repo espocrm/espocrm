@@ -31,6 +31,9 @@ namespace Espo\Core\Notification\AssignmentNotificator;
 
 class Params
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $options = [];
 
     public function hasOption(string $option): bool
@@ -46,11 +49,17 @@ class Params
         return $this->options[$option] ?? null;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getRawOptions(): array
     {
         return $this->options;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function withRawOptions(array $options): self
     {
         $obj = clone $this;

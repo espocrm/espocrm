@@ -48,11 +48,11 @@ use RuntimeException;
  */
 class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $ormMetadata;
+    private OrmMetadata $ormMetadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, OrmMetadata $ormMetadata, InjectableFactory $injectableFactory)
     {
@@ -77,6 +77,9 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $entityType, string $field): ?string
     {
         $fieldDefs = $this->ormMetadata

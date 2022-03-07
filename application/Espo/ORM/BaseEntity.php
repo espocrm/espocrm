@@ -177,8 +177,8 @@ class BaseEntity implements Entity
         $p1 = $attribute;
         $p2 = $value;
 
-        /** @phpstan-var mixed $p1 */
-        /** @phpstan-var mixed $p2 */
+        /** @var mixed $p1 */
+        /** @var mixed $p2 */
 
         if (is_array($p1) || is_object($p1)) {
             if (is_object($p1)) {

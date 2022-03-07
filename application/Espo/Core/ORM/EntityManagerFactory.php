@@ -50,14 +50,17 @@ use RuntimeException;
 
 class EntityManagerFactory
 {
-    private $config;
+    private Config $config;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadataDataProvider;
+    private MetadataDataProvider $metadataDataProvider;
 
-    private $eventDispatcher;
+    private EventDispatcher $eventDispatcher;
 
+    /**
+     * @var array<string,string>
+     */
     private $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
         'mysqli' => 'Mysql',

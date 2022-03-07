@@ -39,13 +39,17 @@ use Espo\Core\HookManager;
 
 class HookMediator extends EmptyHookMediator
 {
-    protected $hookManager;
+    protected HookManager $hookManager;
 
     public function __construct(HookManager $hookManager)
     {
         $this->hookManager = $hookManager;
     }
 
+    /**
+     * @param ?array<string,mixed> $columnData
+     * @param array<string,mixed> $options
+     */
     public function afterRelate(
         Entity $entity,
         string $relationName,
@@ -62,7 +66,7 @@ class HookMediator extends EmptyHookMediator
             'relationName' => $relationName,
             'relationData' => $columnData,
             'foreignEntity' => $foreignEntity,
-            'foreignId' => $foreignEntity->getId()
+            'foreignId' => $foreignEntity->getId(),
         ];
 
         $this->hookManager->process(
@@ -73,6 +77,10 @@ class HookMediator extends EmptyHookMediator
             $hookData
         );
     }
+
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {
         if (!empty($options['skipHooks'])) {
@@ -94,6 +102,9 @@ class HookMediator extends EmptyHookMediator
         );
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options): void
     {
         if (!empty($options['skipHooks'])) {

@@ -49,15 +49,15 @@ use Espo\ORM\{
 
 class EntityFactory implements EntityFactoryInterface
 {
-    private $classFinder;
+    private ClassFinder $classFinder;
 
-    private $helper;
+    private Helper $helper;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $entityManager = null;
+    private ?EntityManager $entityManager = null;
 
-    private $valueAccessorFactory = null;
+    private ?ValueAccessorFactory $valueAccessorFactory = null;
 
     public function __construct(ClassFinder $classFinder, Helper $helper, InjectableFactory $injectableFactory)
     {
@@ -66,6 +66,9 @@ class EntityFactory implements EntityFactoryInterface
         $this->injectableFactory = $injectableFactory;
     }
 
+    /**
+     * @return class-string
+     */
     private function getClassName(string $entityType): ?string
     {
         return $this->classFinder->find('Entities', $entityType);
@@ -108,6 +111,9 @@ class EntityFactory implements EntityFactoryInterface
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @param array<string,mixed> $defs
+     */
     private function getBindingContainer(string $className, string $entityType, array $defs): BindingContainer
     {
         $data = new BindingData();

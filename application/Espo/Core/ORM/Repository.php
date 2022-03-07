@@ -38,46 +38,50 @@ use Espo\ORM\{
 
 /**
  * @deprecated
+ * @extends RDBRepository<Entity>
  */
 abstract class Repository extends RDBRepository implements Injectable
 {
-    protected $dependencyList = [];
+    protected $dependencyList = []; /** @phpstan-ignore-line */
 
-    protected $dependencies = []; // for backward compatibility
+    protected $dependencies = []; /** @phpstan-ignore-line */
 
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name];
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return array_merge($this->dependencyList, $this->dependencies);
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         $this->dependencyList[] = $name;
     }
 
+    /**
+     * @param string $entityType
+     */
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         parent::__construct($entityType, $entityManager, $entityFactory);

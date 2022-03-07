@@ -45,13 +45,13 @@ use Espo\Core\{
  */
 class DefaultNotificator
 {
-    protected $entityType;
+    protected $entityType; /** @phpstan-ignore-line */
 
-    protected $user;
+    protected $user; /** @phpstan-ignore-line */
 
-    protected $entityManager;
+    protected $entityManager; /** @phpstan-ignore-line */
 
-    private $base;
+    private $base; /** @phpstan-ignore-line */
 
     public function __construct(User $user, EntityManager $entityManager, DefaultAssignmentNotificator $base)
     {
@@ -60,7 +60,7 @@ class DefaultNotificator
         $this->base = $base;
     }
 
-    public function process(Entity $entity, array $options = [])
+    public function process(Entity $entity, array $options = []) /** @phpstan-ignore-line */
     {
         $this->base->process($entity, Params::create()->withRawOptions($options));
     }
@@ -68,7 +68,7 @@ class DefaultNotificator
     /**
      * For backward compatibility.
       */
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->entityManager;
     }
@@ -76,7 +76,7 @@ class DefaultNotificator
     /**
      * For backward compatibility.
      */
-    protected function getUser()
+    protected function getUser() /** @phpstan-ignore-line */
     {
         return $this->user;
     }

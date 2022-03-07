@@ -41,14 +41,14 @@ interface Repository
     /**
      * Get a new entity.
      *
-     * @phpstan-return TEntity
+     * @return TEntity
      */
     public function getNew(): Entity;
 
     /**
      * Fetch an entity by ID.
      *
-     * @phpstan-return ?TEntity
+     * @return ?TEntity
      */
     public function getById(string $id): ?Entity;
 

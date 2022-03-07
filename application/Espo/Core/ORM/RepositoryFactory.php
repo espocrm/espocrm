@@ -46,22 +46,16 @@ use Espo\ORM\{
 
 class RepositoryFactory implements RepositoryFactoryInterface
 {
+    /**
+     * @var class-string
+     */
     protected $defaultClassName = DatabaseRepository::class;
 
-    /**
-     * @var EntityFactoryInteface
-     */
-    protected $entityFactory;
+    protected EntityFactoryInteface $entityFactory;
 
-    /**
-     * @var InjectableFactory
-     */
-    protected $injectableFactory;
+    protected InjectableFactory $injectableFactory;
 
-    /**
-     * @var ClassFinder
-     */
-    protected $classFinder;
+    protected ClassFinder $classFinder;
 
     public function __construct(
         EntityFactoryInteface $entityFactory,
@@ -74,6 +68,9 @@ class RepositoryFactory implements RepositoryFactoryInterface
         $this->classFinder = $classFinder;
     }
 
+    /**
+     * @return ?class-string
+     */
     protected function getClassName(string $entityType): ?string
     {
         return $this->classFinder->find('Repositories', $entityType);

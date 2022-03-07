@@ -291,6 +291,7 @@ class Metadata
 
     /**
      * @param stdClass $data
+     * @return stdClass
      */
     private function addAdditionalFieldsObj($data)
     {

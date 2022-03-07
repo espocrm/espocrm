@@ -40,13 +40,16 @@ use LogicException;
 
 class FunctionConverterFactory implements FunctionConverterFactoryInterface
 {
+    /**
+     * @var array<string,FunctionConverter>
+     */
     private $hash = [];
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $databaseParams;
+    private DatabaseParams $databaseParams;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(
         Metadata $metadata,
@@ -80,6 +83,9 @@ class FunctionConverterFactory implements FunctionConverterFactoryInterface
         return true;
     }
 
+    /**
+     * @return ?class-string
+     */
     private function getClassName(string $name): ?string
     {
         if (!array_key_exists($name, $this->hash)) {
