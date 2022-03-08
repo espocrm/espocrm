@@ -248,6 +248,9 @@ class Queue
         $this->send($webhook, $dataList, $actualItemList);
     }
 
+    /**
+     * @param string[] $forbiddenAttributeList
+     */
     private function prepareItemData(WebhookQueueItem $item, ?User $user, array $forbiddenAttributeList): ?stdClass
     {
         $targetType = $item->get('targetType');
@@ -285,6 +288,10 @@ class Queue
         return $data;
     }
 
+    /**
+     * @param mixed[] $dataList
+     * @param WebhookQueueItem[] $itemList
+     */
     private function send(Webhook $webhook, array $dataList, array $itemList): void
     {
         try {
@@ -324,6 +331,9 @@ class Queue
         $this->log->debug("Webhook Queue: Webhook '" . $webhook->getId()  . "' sent, response code: {$code}.");
     }
 
+    /**
+     * @param WebhookQueueItem[] $itemList
+     */
     protected function failQueueItemList(array $itemList, bool $force = false): void
     {
         foreach ($itemList as $item) {
@@ -331,6 +341,9 @@ class Queue
         }
     }
 
+    /**
+     * @param WebhookQueueItem[] $itemList
+     */
     protected function succeedQueueItemList(array $itemList): void
     {
         foreach ($itemList as $item) {

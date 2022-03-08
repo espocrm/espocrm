@@ -48,10 +48,19 @@ use Espo\Entities\{
  */
 class Manager
 {
+    /**
+     * @var string
+     */
     private $cacheKey = 'webhooks';
 
+    /**
+     * @var string[]
+     */
     protected $skipAttributeList = ['isFollowed', 'modifiedAt', 'modifiedBy'];
 
+    /**
+     * @var ?array<string,bool>
+     */
     private $data = null;
 
     private $config;
@@ -102,6 +111,9 @@ class Manager
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 
+    /**
+     * @return array<string,bool>
+     */
     private function buildData(): array
     {
         $data = [];

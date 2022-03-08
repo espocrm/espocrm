@@ -44,13 +44,16 @@ class Sender
 
     private const TIMEOUT = 10;
 
-    private $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * @param array<int,mixed> $dataList
+     */
     public function send(Webhook $webhook, array $dataList): int
     {
         $payload = json_encode($dataList);
