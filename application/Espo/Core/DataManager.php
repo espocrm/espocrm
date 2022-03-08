@@ -74,7 +74,7 @@ class DataManager
 
     private $rebuildActionProcessor;
 
-    private $cachePath = 'data/cache';
+    private string $cachePath = 'data/cache';
 
     public function __construct(
         EntityManager $entityManager,
@@ -104,6 +104,8 @@ class DataManager
 
     /**
      * Rebuild the system with metadata, database and cache clearing.
+     *
+     * @param ?string[] $entityList
      */
     public function rebuild(?array $entityList = null): void
     {
@@ -137,6 +139,8 @@ class DataManager
 
     /**
      * Rebuild database.
+     *
+     * @param ?string[] $entityList
      */
     public function rebuildDatabase(?array $entityList = null): void
     {

@@ -32,25 +32,25 @@ namespace Espo\Core;
 /** @deprecated */
 abstract class Injectable implements \Espo\Core\Interfaces\Injectable
 {
-    protected $dependencyList = [];
+    protected $dependencyList = []; /** @phpstan-ignore-line */
 
-    protected $injections = [];
+    protected $injections = []; /** @phpstan-ignore-line */
 
-    public function inject($name, $object)
+    public function inject($name, $object) /** @phpstan-ignore-line */
     {
         $this->injections[$name] = $object;
     }
 
-    public function __construct()
+    public function __construct() /** @phpstan-ignore-line */
     {
         $this->init();
     }
 
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
-    public function __call($methodName, $args)
+    public function __call($methodName, $args) /** @phpstan-ignore-line */
     {
         if (strpos($methodName, 'get') === 0) {
             $injectionName = lcfirst(substr($methodName, 3));
@@ -61,25 +61,25 @@ abstract class Injectable implements \Espo\Core\Interfaces\Injectable
         throw new \BadMethodCallException('Method ' . $methodName . ' does not exist');
     }
 
-    protected function getInjection($name)
+    protected function getInjection($name) /** @phpstan-ignore-line */
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependency($name)
+    protected function addDependency($name) /** @phpstan-ignore-line */
     {
         if (in_array($name, $this->dependencyList)) return;
         $this->dependencyList[] = $name;
     }
 
-    protected function addDependencyList(array $list)
+    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
     {
         foreach ($list as $item) {
             $this->addDependency($item);
         }
     }
 
-    public function getDependencyList()
+    public function getDependencyList() /** @phpstan-ignore-line */
     {
         return $this->dependencyList;
     }

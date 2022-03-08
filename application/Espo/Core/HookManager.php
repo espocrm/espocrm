@@ -49,16 +49,28 @@ class HookManager
 {
     private const DEFAULT_ORDER = 9;
 
-    private $data;
+    /**
+     * @var ?array<string,array<string,mixed>>
+     */
+    private $data = null;
 
-    private $isDisabled;
+    private bool $isDisabled = false;
 
+    /**
+     * @var array<string,class-string[]>
+     */
     private $hookListHash = [];
 
+    /**
+     * @var array<class-string,object>
+     */
     private $hooks;
 
-    private $cacheKey = 'hooks';
+    private string $cacheKey = 'hooks';
 
+    /**
+     * @var string[]
+     */
     private $ignoredMethodList = [
         '__construct',
         'getDependencyList',
@@ -97,6 +109,11 @@ class HookManager
         $this->pathProvider = $pathProvider;
     }
 
+    /**
+     * @param mixed $injection
+     * @param array<string,mixed> $options
+     * @param array<string,mixed> $hookData
+     */
     public function process(
         string $scope,
         string $hookName,
@@ -173,6 +190,9 @@ class HookManager
         }
     }
 
+    /**
+     * @param class-string $className
+     */
     private function createHookByClassName(string $className): object
     {
         if (!class_exists($className)) {
@@ -184,6 +204,11 @@ class HookManager
         return $obj;
     }
 
+    /**
+     * @param string $hookDir
+     * @param array<string,array<string,mixed>> $hookData
+     * @return array<string,array<string,mixed>>
+     */
     private function readHookData(string $hookDir, array $hookData = []): array
     {
         if (!$this->fileManager->exists($hookDir)) {
@@ -232,6 +257,9 @@ class HookManager
 
     /**
      * Sort hooks by the order parameter.
+     *
+     * @param array<string,array<string,mixed>> $hooks
+     * @return array<string,array<string,mixed>>
      */
     private function sortHooks(array $hooks): array
     {
@@ -246,6 +274,8 @@ class HookManager
 
     /**
      * Get sorted hook list.
+     *
+     * @return class-string[]
      */
     private function getHookList(string $scope, string $hookName): array
     {
@@ -278,6 +308,9 @@ class HookManager
 
     /**
      * Check if hook exists in the list.
+     *
+     * @param class-string $className
+     * @param array<string,mixed> $hookData
      */
     private function hookExists(string $className, array $hookData): bool
     {
@@ -292,6 +325,10 @@ class HookManager
         return false;
     }
 
+    /**
+     * @param array<string,mixed> $a
+     * @param array<string,mixed> $b
+     */
     private function cmpHooks($a, $b): int
     {
         if ($a['order'] == $b['order']) {
