@@ -70,12 +70,24 @@ use InvalidArgumentException;
  */
 class AclManager
 {
+    /**
+     * @var array<string,AccessChecker>
+     */
     private $accessCheckerHashMap = [];
 
+    /**
+     * @var array<string,OwnershipChecker>
+     */
     private $ownershipCheckerHashMap = [];
 
+    /**
+     * @var array<string,Table>
+     */
     protected $tableHashMap = [];
 
+    /**
+     * @var array<string,Map>
+     */
     protected $mapHashMap = [];
 
     /**
@@ -85,6 +97,9 @@ class AclManager
 
     protected const PERMISSION_ASSIGNMENT = 'assignment';
 
+    /**
+     * @var array<string,class-string<AccessChecker>>
+     */
     private $entityActionInterfaceMap = [
         Table::ACTION_CREATE => AccessEntityCreateChecker::class,
         Table::ACTION_READ => AccessEntityReadChecker::class,
@@ -93,6 +108,9 @@ class AclManager
         Table::ACTION_STREAM => AccessEntityStreamChecker::class,
     ];
 
+    /**
+     * @var array<string,class-string<AccessChecker>>
+     */
     private $actionInterfaceMap = [
         Table::ACTION_CREATE => AccessCreateChecker::class,
         Table::ACTION_READ => AccessReadChecker::class,
@@ -476,6 +494,9 @@ class AclManager
         return $checker->$methodName($user, $data, $action);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getGlobalRestrictionTypeList(User $user, string $action = Table::ACTION_READ): array
     {
         $typeList = [

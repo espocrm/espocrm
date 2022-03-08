@@ -48,7 +48,7 @@ use Espo\Core\Utils\ClientManager;
  */
 class Application
 {
-    protected $container;
+    protected Container $container;
 
     public function __construct()
     {

@@ -44,9 +44,9 @@ use stdClass;
  */
 class Acl
 {
-    protected $user;
+    protected AclManager $aclManager;
 
-    protected $aclManager;
+    protected User $user;
 
     public function __construct(AclManager $aclManager, User $user)
     {
