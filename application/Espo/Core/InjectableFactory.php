@@ -65,8 +65,8 @@ class InjectableFactory
      * Create an instance by a class name.
      *
      * @template T of object
-     * @phpstan-param class-string<T> $className
-     * @phpstan-return T
+     * @param class-string<T> $className
+     * @return T
      */
     public function create(string $className): object
     {
@@ -78,8 +78,9 @@ class InjectableFactory
      * defined in an associative array. A key should match the parameter name.
      *
      * @template T of object
-     * @phpstan-param class-string<T> $className
-     * @phpstan-return T
+     * @param class-string<T> $className
+     * @param array<string,mixed> $with
+     * @return T
      */
     public function createWith(string $className, array $with): object
     {
@@ -90,8 +91,8 @@ class InjectableFactory
      * Create an instance by a class name with a specific binding.
      *
      * @template T of object
-     * @phpstan-param class-string<T> $className
-     * @phpstan-return T
+     * @param class-string<T> $className
+     * @return T
      */
     public function createWithBinding(string $className, BindingContainer $bindingContainer): object
     {
@@ -100,8 +101,9 @@ class InjectableFactory
 
     /**
      * @template T of object
-     * @phpstan-param class-string<T> $className
-     * @phpstan-return T
+     * @param class-string<T> $className
+     * @param ?array<string,mixed> $with
+     * @return T
      */
     private function createInternal(
         string $className,
@@ -131,6 +133,11 @@ class InjectableFactory
         return $obj;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     * @param ?array<string,mixed> $with
+     * @return mixed[]
+     */
     private function getConstructorInjectionList(
         ReflectionClass $class,
         ?array $with = null,
@@ -155,6 +162,8 @@ class InjectableFactory
     }
 
     /**
+     * @param? ReflectionClass<object> $class
+     * @param ?array<string,mixed> $with
      * @return mixed
      */
     private function getMethodParamInjection(
@@ -239,6 +248,9 @@ class InjectableFactory
         );
     }
 
+    /**
+     * @return mixed[]
+     */
     private function getCallbackInjectionList(callable $callback): array
     {
         $injectionList = [];
@@ -269,6 +281,7 @@ class InjectableFactory
         }
 
         if ($type === Binding::IMPLEMENTATION_CLASS_NAME) {
+            /** @var class-string $value */
             return $this->createInternal($value, null, $bindingContainer);
         }
 
@@ -285,6 +298,7 @@ class InjectableFactory
         }
 
         if ($type === Binding::FACTORY_CLASS_NAME) {
+            /** @var class-string $value */
             /** @var Factory $factory */
             $factory = $this->createInternal($value, null, $bindingContainer);
 
@@ -294,6 +308,10 @@ class InjectableFactory
         throw new Error("InjectableFactory: Bad binding.");
     }
 
+    /**
+     * @param ReflectionClass<object> $paramHintClass
+     * @param ReflectionClass<object> $returnHintClass
+     */
     private function areDependencyClassesMatching(
         ReflectionClass $paramHintClass,
         ReflectionClass $returnHintClass
@@ -310,6 +328,10 @@ class InjectableFactory
         return false;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     * @param string[] $ignoreList
+     */
     private function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = []): void
     {
         foreach ($class->getInterfaces() as $interface) {
@@ -337,6 +359,9 @@ class InjectableFactory
         }
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function classHasDependencySetter(
         ReflectionClass $class,
         string $name,
@@ -387,8 +412,9 @@ class InjectableFactory
      * @deprecated Use create or createWith methods instead.
      *
      * @template T of object
-     * @phpstan-param class-string<T> $className
-     * @phpstan-return T
+     * @param class-string<T> $className
+     * @param ?array<string,mixed> $with
+     * @return T
      */
     public function createByClassName(string $className, ?array $with = null): object
     {
@@ -397,7 +423,8 @@ class InjectableFactory
 
     /**
      * @deprecated
-     * @todo Remove in 6.4.
+     * @param ReflectionClass<object> $class
+     * @todo Remove in 7.4.
      */
     private function applyInjectable(ReflectionClass $class, object $obj): void
     {
