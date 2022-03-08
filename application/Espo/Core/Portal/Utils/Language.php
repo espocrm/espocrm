@@ -29,7 +29,4 @@
 
 namespace Espo\Core\Portal\Utils;
 
-class Language extends \Espo\Core\Utils\Language
-{
-
-}
+class Language extends \Espo\Core\Utils\Language {}

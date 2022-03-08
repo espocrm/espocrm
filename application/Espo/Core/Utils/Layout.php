@@ -39,16 +39,16 @@ use Espo\Core\{
 
 class Layout
 {
-    private $defaultPath = 'application/Espo/Resources/defaults/layouts';
+    private string $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     /**
      * @internal Used by the portal layout util.
      */
-    protected $fileReader;
+    protected FileReader $fileReader;
 
     public function __construct(
         FileManager $fileManager,

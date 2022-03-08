@@ -39,35 +39,42 @@ use Espo\Core\{
     Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
-use Espo\{
-    Entities\Preferences,
-};
+use Espo\Entities\Preferences;
 
 class Language
 {
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $data = [];
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $deletedData = [];
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $changedData = [];
 
-    private $currentLanguage = null;
+    private ?string $currentLanguage = null;
 
-    protected $defaultLanguage = 'en_US';
+    protected string $defaultLanguage = 'en_US';
 
-    protected $useCache = false;
+    protected bool $useCache = false;
 
-    protected $noCustom = false;
+    protected bool $noCustom = false;
 
-    private $customPath = 'custom/Espo/Custom/Resources/i18n/{language}';
+    private string $customPath = 'custom/Espo/Custom/Resources/i18n/{language}';
 
-    private $resourcePath = 'i18n/{language}';
+    private string $resourcePath = 'i18n/{language}';
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $resourceReader;
+    private ResourceReader $resourceReader;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
     public function __construct(
         ?string $language,
@@ -120,22 +127,20 @@ class Language
 
     private function getCacheKey(string $language = null): string
     {
-        $language = $language ?? $this->currentLanguage;
-
-        return 'languages/' . $language;
+        return 'languages/' . ($language ?? $this->currentLanguage);
     }
 
     /**
      * Translate label/labels.
      *
-     * @param string|array $label name of label
+     * @param string|string[] $label name of label
      * @param string $category
      * @param string $scope
-     * @param array|null $requiredOptions List of required options.
+     * @param string[]|null $requiredOptions List of required options.
      *  Ex., $requiredOptions = ['en_US', 'de_DE']
      *  "language" option has only ['en_US' => 'English (United States)']
      *  Result will be ['en_US' => 'English (United States)', 'de_DE' => 'de_DE'].
-     * @return string|array
+     * @return string|string[]
      */
     public function translate(
         $label,
@@ -153,11 +158,11 @@ class Language
             return $translated;
         }
 
-        $key = $scope.'.'.$category.'.'.$label;
+        $key = $scope.'.'.$category.'.' . $label;
         $translated = $this->get($key);
 
         if (!isset($translated)) {
-            $key = 'Global.'.$category.'.'.$label;
+            $key = 'Global.'.$category.'.' . $label;
             $translated = $this->get($key, $label);
         }
 
@@ -176,6 +181,10 @@ class Language
         return $translated;
     }
 
+    /**
+     * @param scalar $value
+     * @return string
+     */
     public function translateOption($value, string $field, string $scope = 'Global')
     {
         $options = $this->get($scope. '.options.' . $field);
@@ -195,6 +204,13 @@ class Language
         return $value;
     }
 
+    /**
+     *
+     * @param string|string[]|null $key
+     * @param mixed $returns
+     * @return mixed
+     * @throws Error
+     */
     public function get($key = null, $returns = null)
     {
         $data = $this->getData();
@@ -206,6 +222,9 @@ class Language
         return Util::getValueByKey($data, $key, $returns);
     }
 
+    /**
+     * @return array<string,array<string,mixed>>
+     */
     public function getAll(): array
     {
         return $this->get();
@@ -257,6 +276,9 @@ class Language
         $this->init(true);
     }
 
+    /**
+     * @return ?array<string,mixed>
+     */
     private function getData(): ?array
     {
         $currentLanguage = $this->currentLanguage;
@@ -271,12 +293,10 @@ class Language
     /**
      * Set/change a label.
      *
-     * @param string $scope
-     * @param string $category
-     * @param string|array $name
+     * @param string|array<string,string> $name
      * @param mixed $value
      */
-    public function set($scope, $category, $name, $value): void
+    public function set(string $scope, string $category, $name, $value): void
     {
         if (is_array($name)) {
             foreach ($name as $rowLabel => $rowValue) {
@@ -304,7 +324,7 @@ class Language
      *
      * @param string $scope
      * @param string $category
-     * @param string|array $name
+     * @param string|string[] $name
      */
     public function delete(string $scope, string $category, $name): void
     {
@@ -333,7 +353,7 @@ class Language
         }
     }
 
-    private function undelete($scope, $category, $name): void
+    private function undelete(string $scope, string $category, string $name): void
     {
         if (isset($this->deletedData[$scope][$category])) {
             foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
@@ -349,11 +369,17 @@ class Language
         $this->data[$this->currentLanguage] = $this->getLanguageData($this->currentLanguage, $reload);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getDefaultLanguageData(bool $reload = false): array
     {
         return $this->getLanguageData($this->defaultLanguage, $reload);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getLanguageData(string $language, bool $reload = false): array
     {
         if (!$reload && isset($this->data[$language])) {
@@ -393,6 +419,9 @@ class Language
         return $this->data[$language] ?? [];
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     private function sanitizeData(array &$data): void
     {
         foreach ($data as &$subData) {
