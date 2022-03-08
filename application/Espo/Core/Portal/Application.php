@@ -91,7 +91,10 @@ class Application extends BaseApplication
             throw new Forbidden("Portal {$portalId} is not active.");
         }
 
-        $this->container->setPortal($portal);
+        /** @var PortalContainer */
+        $container = $this->container;
+
+        $container->setPortal($portal);
     }
 
     protected function initPreloads(): void

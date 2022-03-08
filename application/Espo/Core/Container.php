@@ -32,6 +32,7 @@ namespace Espo\Core;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Container\Loader;
 use Espo\Core\Container\Container as ContainerInterface;
+use Espo\Core\Container\Configuration;
 use Espo\Core\Binding\BindingContainer;
 
 use ReflectionClass;
@@ -45,18 +46,33 @@ use ReflectionNamedType;
  */
 class Container implements ContainerInterface
 {
+    /**
+     * @var array<string,object>
+     */
     private $data = [];
 
+    /**
+     * @var array<string,ReflectionClass<object>>
+     */
     private $classCache = [];
 
+    /**
+     * @var array<string,class-string<Loader>>
+     */
     private $loaderClassNames;
 
-    private $configuration = null;
+    private ?Configuration $configuration = null;
 
-    private $bindingContainer;
+    private ?BindingContainer $bindingContainer = null;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
+    /**
+     * @param class-string<Configuration> $configurationClassName
+     * @param array<string,class-string<Loader>> $loaderClassNames
+     * @param array<string,object> $services
+     * @throws RuntimeException
+     */
     public function __construct(
         string $configurationClassName,
         array $loaderClassNames = [],
@@ -172,6 +188,10 @@ class Container implements ContainerInterface
         $this->classCache[$name] = new ReflectionClass($className);
     }
 
+    /**
+     * @param class-string<Loader> $loaderClassName
+     * @throws RuntimeException
+     */
     private function initClassByLoader(string $name, string $loaderClassName): void
     {
         $loaderClass = new ReflectionClass($loaderClassName);
@@ -196,6 +216,7 @@ class Container implements ContainerInterface
     /**
      * Get a class of a service.
      *
+     * @return ReflectionClass<object>
      * @throws RuntimeException If not gettable.
      */
     public function getClass(string $name): ReflectionClass
@@ -245,6 +266,9 @@ class Container implements ContainerInterface
         return $this->injectableFactory->create($loaderClassName);
     }
 
+    /**
+     * @return ?class-string<Loader>
+     */
     private function getLoaderClassName(string $name): ?string
     {
         return $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);

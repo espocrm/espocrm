@@ -35,7 +35,7 @@ use Espo\Core\Utils\Metadata;
 use ReflectionClass;
 use Exception;
 
-class ContainerConfiguration
+class ContainerConfiguration implements Configuration
 {
     /**
      * Log must be loaded before anything.

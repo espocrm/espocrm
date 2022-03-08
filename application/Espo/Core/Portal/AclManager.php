@@ -65,7 +65,7 @@ class AclManager extends InternalAclManager
      */
     protected $userAclClassName = Acl::class;
 
-    private ?InternalAclManager $internalAclManager = null;
+    private InternalAclManager $internalAclManager;
 
     private ?Portal $portal = null;
 
