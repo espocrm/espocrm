@@ -52,7 +52,10 @@ class ServiceFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    private function getClassName(string $name)
+    /**
+     * @return ?class-string
+     */
+    private function getClassName(string $name): ?string
     {
         return $this->classFinder->find('Services', $name);
     }
@@ -71,6 +74,7 @@ class ServiceFactory
     public function create(string $name): object
     {
         $className = $this->getClassName($name);
+
         if (!$className) {
             throw new Error("Service '{$name}' was not found.");
         }
