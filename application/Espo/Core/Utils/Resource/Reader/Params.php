@@ -31,9 +31,9 @@ namespace Espo\Core\Utils\Resource\Reader;
 
 class Params
 {
-    private $noCustom = false;
+    private bool $noCustom = false;
 
-    private $asArray = false;
+    private bool $asArray = false;
 
     public static function create(): self
     {

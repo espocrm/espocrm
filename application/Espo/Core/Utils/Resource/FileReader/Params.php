@@ -31,9 +31,9 @@ namespace Espo\Core\Utils\Resource\FileReader;
 
 class Params
 {
-    private $scope = null;
+    private ?string $scope = null;
 
-    private $moduleName = null;
+    private ?string $moduleName = null;
 
     public static function create(): self
     {

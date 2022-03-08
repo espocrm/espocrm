@@ -31,9 +31,9 @@ namespace Espo\Core\Utils;
 
 class NumberUtil
 {
-    private $decimalMark;
+    private ?string $decimalMark;
 
-    private $thousandSeparator;
+    private ?string $thousandSeparator;
 
     public function __construct(?string $decimalMark = '.', ?string $thousandSeparator = ',')
     {
@@ -41,6 +41,9 @@ class NumberUtil
         $this->thousandSeparator = $thousandSeparator;
     }
 
+    /**
+     * @param scalar $value
+     */
     public function format(
         $value,
         ?int $decimals = null,

@@ -41,14 +41,20 @@ use RecursiveRegexIterator;
  */
 class Preload
 {
+    /**
+     * @var string[]
+     */
     protected $dirList = [
         'application',
         'vendor/slim',
         'vendor/nikic/fast-route',
     ];
 
-    private $counter = 0;
+    private int $counter = 0;
 
+    /**
+     * @var string[]
+     */
     protected $ignoreList = [
         'application/Espo/Core/Mail/Parsers/PhpMimeMailParser/',
         'vendor/nikic/fast-route/test/',

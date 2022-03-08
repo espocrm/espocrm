@@ -41,21 +41,31 @@ use Espo\Core\{
 
 class Route
 {
+    /**
+     * @var ?array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *   }
+     * >
+     */
     private $data = null;
 
-    private $cacheKey = 'routes';
+    private string $cacheKey = 'routes';
 
-    private $routesFileName = 'routes.json';
+    private string $routesFileName = 'routes.json';
 
-    private $config;
+    private Config $config;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $pathProvider;
+    private PathProvider $pathProvider;
 
     public function __construct(
         Config $config,
@@ -112,6 +122,16 @@ class Route
         }
     }
 
+    /**
+     * @return array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *   }
+     * >
+     */
     private function unify(): array
     {
         $customData = $this->addDataFromFile([], $this->pathProvider->getCustom() . $this->routesFileName);
@@ -136,6 +156,24 @@ class Route
         );
     }
 
+    /**
+     * @param array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *   }
+     * > $currentData
+     * @return array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *   }
+     * >
+     */
     private function addDataFromFile(array $currentData, string $routeFile): array
     {
         if (!$this->fileManager->exists($routeFile)) {
@@ -149,6 +187,36 @@ class Route
         return $this->appendRoutesToData($currentData, $data);
     }
 
+    /**
+     *
+     * @param array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *     conditions?: array<string,mixed>,
+     *   }
+     * > $data
+     * @param array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *     conditions?: array<string,mixed>,
+     *   }
+     * > $newData
+     * @return array<
+     *   int,
+     *   array{
+     *     route:string,
+     *     method:string,
+     *     noAuth?:bool,
+     *     conditions?: array<string,mixed>,
+     *   }
+     * >
+     */
     private function appendRoutesToData(array $data, array $newData): array
     {
         foreach ($newData as $route) {
@@ -223,6 +291,10 @@ class Route
         return '/';
     }
 
+    /**
+     * @param array<string,mixed> $newRoute
+     * @param array<int,array<string,mixed>> $routeList
+     */
     static private function isRouteInList(array $newRoute, array $routeList): bool
     {
         foreach ($routeList as $route) {

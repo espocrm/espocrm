@@ -36,7 +36,7 @@ use Espo\Core\Utils\ThemeManager as BaseThemeManager;
 
 class ThemeManager extends BaseThemeManager
 {
-    private $portal;
+    private Portal $portal;
 
     public function __construct(Config $config, Metadata $metadata, Portal $portal)
     {

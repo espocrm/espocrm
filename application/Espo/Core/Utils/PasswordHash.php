@@ -33,12 +33,12 @@ use Espo\Core\Exceptions\Error;
 
 class PasswordHash
 {
-    private $config;
+    private Config $config;
 
     /**
      * SHA-512 salt format.
      */
-    private $saltFormat = '$6${0}$';
+    private string $saltFormat = '$6${0}$';
 
     public function __construct(Config $config)
     {

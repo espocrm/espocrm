@@ -40,9 +40,9 @@ use stdClass;
  */
 class Reader
 {
-    private $unifier;
+    private Unifier $unifier;
 
-    private $unifierObj;
+    private UnifierObj $unifierObj;
 
     public function __construct(Unifier $unifier, UnifierObj $unifierObj)
     {
@@ -53,7 +53,7 @@ class Reader
     /**
      * Read resource data.
      *
-     * @return stdClass|array
+     * @return stdClass|array<string,mixed>
      */
     public function read(string $path, Params $params)
     {

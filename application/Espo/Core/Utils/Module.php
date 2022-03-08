@@ -42,27 +42,39 @@ class Module
 {
     private const DEFAULT_ORDER = 11;
 
-    private $useCache;
+    private bool $useCache;
 
+    /**
+     * @var ?array<string,array<string,mixed>>
+     */
     private $data = null;
 
+    /**
+     * @var ?string[]
+     */
     private $list = null;
 
+    /**
+     * @var ?string[]
+     */
     private $internalList = null;
 
+    /**
+     * @var ?string[]
+     */
     private $orderedList = null;
 
-    private $cacheKey = 'modules';
+    private string $cacheKey = 'modules';
 
-    private $internalPath = 'application/Espo/Modules';
+    private string $internalPath = 'application/Espo/Modules';
 
-    private $customPath = 'custom/Espo/Modules';
+    private string $customPath = 'custom/Espo/Modules';
 
-    private $moduleFilePath = 'Resources/module.json';
+    private string $moduleFilePath = 'Resources/module.json';
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $dataCache;
+    private ?DataCache $dataCache;
 
     public function __construct(
         FileManager $fileManager,
@@ -79,7 +91,7 @@ class Module
     /**
      * Get module parameters.
      *
-     * @param string|array|null $key
+     * @param string|string[]|null $key
      * @param mixed $defaultValue
      * @return mixed
      */
@@ -193,6 +205,9 @@ class Module
         $this->orderedList = null;
     }
 
+    /**
+     * @return array<string,array<string,mixed>>
+     */
     private function loadData(): array
     {
         $data = [];
@@ -204,6 +219,9 @@ class Module
         return $data;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function loadModuleData(string $moduleName): array
     {
         $path = $this->getModulePath($moduleName) . '/' . $this->moduleFilePath;

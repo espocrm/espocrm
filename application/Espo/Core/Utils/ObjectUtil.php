@@ -47,6 +47,10 @@ class ObjectUtil
         return $cloned;
     }
 
+    /**
+     * @param mixed $item
+     * @return mixed
+     */
     private static function cloneItem($item)
     {
         if (is_array($item)) {

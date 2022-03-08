@@ -40,13 +40,13 @@ use PDO;
 
 class SystemRequirements
 {
-    private $config;
+    private Config $config;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $systemHelper;
+    private System $systemHelper;
 
-    private $databaseHelper;
+    private DatabaseHelper $databaseHelper;
 
     public function __construct(
         Config $config,
@@ -60,6 +60,13 @@ class SystemRequirements
         $this->databaseHelper = $databaseHelper;
     }
 
+    /**
+     * @return array{
+     *   php: array<string,array<string,mixed>>,
+     *   database: array<string,array<string,mixed>>,
+     *   permission: array<string,array{type:string,acceptable:int}>,
+     * }
+     */
     public function getAllRequiredList(bool $requiredOnly = false): array
     {
         return [
@@ -69,6 +76,14 @@ class SystemRequirements
         ];
     }
 
+    /**
+     * @param array<string,mixed> $additionalData
+     * @return array{
+     *   php?: array<string,array<string,mixed>>,
+     *   database?: array<string,array<string,mixed>>,
+     *   permission?: array<string,array{type:string,acceptable:int}>,
+     * }
+     */
     public function getRequiredListByType(
         string $type,
         bool $requiredOnly = false,
@@ -91,8 +106,11 @@ class SystemRequirements
 
     /**
      * Get required PHP params.
+     *
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
      */
-    protected function getPhpRequiredList(bool $requiredOnly, array $additionalData = null): array
+    protected function getPhpRequiredList(bool $requiredOnly, ?array $additionalData = null): array
     {
         $requiredList = [
             'requiredPhpVersion',
@@ -111,8 +129,11 @@ class SystemRequirements
 
     /**
      * Get required DB params.
+     *
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
      */
-    protected function getDatabaseRequiredList(bool $requiredOnly, array $additionalData = null): array
+    protected function getDatabaseRequiredList(bool $requiredOnly, ?array $additionalData = null): array
     {
         $databaseTypeName = 'Mysql';
 
@@ -143,24 +164,34 @@ class SystemRequirements
 
     /**
      * Get permission requirements.
+     *
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
      */
-    private function getRequiredPermissionList(bool $requiredOnly, array $additionalData = null): array
+    private function getRequiredPermissionList(bool $requiredOnly, ?array $additionalData = null): array
     {
         return $this->getRequiredList(
             'permissionRequirements',
             [
                 'permissionMap.writable',
             ],
-            $additionalData, [
+            $additionalData,
+            [
                 'permissionMap.writable' => $this->fileManager->getPermissionUtils()->getWritableList(),
             ]
         );
     }
 
+    /**
+     * @param string[] $checkList
+     * @param ?array<string,mixed> $additionalData
+     * @param array<string,mixed> $predefinedData
+     * @return array<string,array<string,mixed>>
+     */
     private function getRequiredList(
         string $type,
         array $checkList,
-        array $additionalData = null,
+        ?array $additionalData = null,
         array $predefinedData = []
     ): array {
 
@@ -185,8 +216,12 @@ class SystemRequirements
 
     /**
      * Check PHP requirements,
+     *
+     * @param array<string,mixed>|string $data
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
      */
-    private function checkPhpRequirements(string $type, $data, array $additionalData = null): array
+    private function checkPhpRequirements(string $type, $data, ?array $additionalData = null): array
     {
         $list = [];
 
@@ -215,12 +250,13 @@ class SystemRequirements
                 foreach ($data as $name) {
                     $acceptable = $this->systemHelper->hasPhpExtension($name);
 
-                    $list[$name] = array(
+                    $list[$name] = [
                         'type' => 'lib',
                         'acceptable' => $acceptable,
                         'actual' => $acceptable ? 'On' : 'Off',
-                    );
+                    ];
                 }
+
                 break;
 
             case 'recommendedPhpParams':
@@ -248,8 +284,12 @@ class SystemRequirements
 
     /**
      * Check DB requirements.
+     *
+     * @param array<string,mixed>|string $data
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
      */
-    private function checkDatabaseRequirements(string $type, $data, array $additionalData = null): array
+    private function checkDatabaseRequirements(string $type, $data, ?array $additionalData = null): array
     {
         $list = [];
 
@@ -349,7 +389,12 @@ class SystemRequirements
         return $list;
     }
 
-    private function checkPermissionRequirements(string $type, $data, array $additionalData = null): array
+    /**
+     * @param array<string,mixed> $data
+     * @param ?array<string,mixed> $additionalData
+     * @return array<string,array<string,mixed>>
+     */
+    private function checkPermissionRequirements(string $type, $data, ?array $additionalData = null): array
     {
         $list = [];
 

@@ -43,17 +43,16 @@ use DateTime;
 
 class ScheduledJob
 {
-    private $systemUtil;
-
-    protected $cronFile = 'cron.php';
+    protected string $cronFile = 'cron.php';
 
     /**
      * Period to check if crontab is configured properly.
-     *
-     * @var string
      */
-    protected $checkingCronPeriod = '25 hours';
+    protected string $checkingCronPeriod = '25 hours';
 
+    /**
+     * @var array<string,string>
+     */
     protected $cronSetup = [
         'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
         'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
@@ -61,16 +60,15 @@ class ScheduledJob
         'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
     ];
 
-    private $classFinder;
+    private ClassFinder $classFinder;
 
-    private $language;
+    private Language $language;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $metadataProvider;
+    private MetadataProvider $metadataProvider;
+
+    private System $systemUtil;
 
     public function __construct(
         ClassFinder $classFinder,
@@ -86,6 +84,9 @@ class ScheduledJob
         $this->systemUtil = new System();
     }
 
+    /**
+     * @return string[]
+     */
     public function getAvailableList(): array
     {
         $list = array_filter(
@@ -105,6 +106,12 @@ class ScheduledJob
         return array_values($list);
     }
 
+    /**
+     * @return array{
+     *   message: string,
+     *   command: string,
+     * }
+     */
     public function getSetupMessage(): array
     {
         $language = $this->language;

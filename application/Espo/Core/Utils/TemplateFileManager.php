@@ -38,11 +38,11 @@ use Espo\Core\{
 
 class TemplateFileManager
 {
-    private $config;
+    private Config $config;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $fileReader;
+    private FileReader $fileReader;
 
     public function __construct(
         Config $config,
