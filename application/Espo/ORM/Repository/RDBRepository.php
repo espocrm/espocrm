@@ -97,7 +97,7 @@ class RDBRepository implements Repository
             $entity->populateDefaults();
         }
 
-        /** @var TEntity $entity */
+        /** @var TEntity */
         return $entity;
     }
 
