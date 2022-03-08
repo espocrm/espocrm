@@ -69,6 +69,8 @@ class RecordTree extends Record
         if ($this->entityType === 'RecordTree') {
             $this->entityType = null;
         }
+
+        $this->readOnlyLinkList[] = 'children';
     }
 
     public function setEntityType(string $entityType): void
@@ -384,4 +386,6 @@ class RecordTree extends Record
 
         return $idList;
     }
+
+
 }

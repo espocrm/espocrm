@@ -36,5 +36,11 @@
                 }
             ]
         }
+    },
+    "relationshipPanels": {
+        "children": {
+            "selectDisabled": true,
+            "unlinkDisabled": true
+        }
     }
 }

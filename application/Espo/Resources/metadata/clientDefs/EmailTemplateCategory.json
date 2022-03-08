@@ -40,6 +40,10 @@
     "relationshipPanels": {
         "emailTemplates": {
             "create": false
+        },
+        "children": {
+            "selectDisabled": true,
+            "unlinkDisabled": true
         }
     }
 }
