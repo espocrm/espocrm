@@ -428,8 +428,7 @@ define('views/detail', 'views/main', function (Dep) {
                             this.notify('Linked', 'success');
                             this.updateRelationshipPanel(link);
                             this.model.trigger('after:relate');
-                        })
-                        .catch(() => this.notify('Error occurred', 'error'));
+                        });
                 });
             });
         },
