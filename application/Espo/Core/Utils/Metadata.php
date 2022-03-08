@@ -371,8 +371,9 @@ class Metadata
      * Get metadata definition in custom directory.
      *
      * @param mixed $default
+     * @return mixed
      */
-    public function getCustom(string $key1, string $key2, $default = null): stdClass
+    public function getCustom(string $key1, string $key2, $default = null)
     {
         $filePath = $this->customPath . "/{$key1}/{$key2}.json";
 
