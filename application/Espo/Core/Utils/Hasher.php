@@ -37,9 +37,9 @@ use Espo\Core\Utils\Config;
  */
 class Hasher
 {
-    private $config;
+    private Config $config;
 
-    private $secretKeyParam = 'hashSecretKey';
+    private string $secretKeyParam = 'hashSecretKey';
 
     public function __construct(Config $config)
     {

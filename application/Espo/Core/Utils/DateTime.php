@@ -44,13 +44,13 @@ class DateTime
 
     public const SYSTEM_DATE_FORMAT = 'Y-m-d';
 
-    private $dateFormat;
+    private ?string $dateFormat;
 
-    private $timeFormat;
+    private ?string $timeFormat;
 
-    private $timezone;
+    private DateTimeZone $timezone;
 
-    private $language;
+    private ?string $language;
 
     public function __construct(
         ?string $dateFormat = 'YYYY-MM-DD',
@@ -240,6 +240,7 @@ class DateTime
 
     /**
      * @deprecated Use `convertSystemDate`.
+     * @param string $string
      */
     public function convertSystemDateToGlobal($string): ?string
     {

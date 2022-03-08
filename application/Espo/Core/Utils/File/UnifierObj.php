@@ -31,5 +31,5 @@ namespace Espo\Core\Utils\File;
 
 class UnifierObj extends Unifier
 {
-    protected $useObjects = true;
+    protected bool $useObjects = true;
 }

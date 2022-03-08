@@ -42,17 +42,15 @@ use JsonException;
 
 class Unifier
 {
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $module;
+    private Module $module;
 
-    private $pathProvider;
+    private PathProvider $pathProvider;
 
-    protected $useObjects = false;
+    protected bool $useObjects = false;
 
-    private $unsetFileName = 'unset.json';
-
-    private $moduleList = null;
+    private string $unsetFileName = 'unset.json';
 
     public function __construct(FileManager $fileManager, Module $module, PathProvider $pathProvider)
     {
@@ -64,7 +62,7 @@ class Unifier
     /**
      * Merge data of resource files.
      *
-     * @return array|object
+     * @return array<string,mixed>|\stdClass
      */
     public function unify(string $path, bool $noCustom = false)
     {
@@ -110,6 +108,9 @@ class Unifier
         );
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function unifySingle(string $dirPath, bool $recursively)
     {
         $data = [];
@@ -180,6 +181,10 @@ class Unifier
         return Util::unsetInArray($data, $unsets);
     }
 
+    /**
+     * @return \stdClass|array<string,mixed>
+     * @throws JsonException
+     */
     private function getContents(string $path)
     {
         $fileContent = $this->fileManager->getContents($path);
