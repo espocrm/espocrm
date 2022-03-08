@@ -56,6 +56,7 @@ class SenderFactory implements Factory
     {
         $messager = $this->config->get('webSocketMessager') ?? self::DEFAULT_MESSAGER;
 
+        /** @var ?class-string */
         $className = $this->metadata->get(['app', 'webSocket', 'messagers', $messager, 'senderClassName']);
 
         if (!$className) {

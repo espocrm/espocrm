@@ -52,10 +52,13 @@ class ServerStarter
 
     private $phpExecutablePath;
 
-    private $isDebugMode;
+    private bool $isDebugMode;
 
-    private $useSecureServer;
+    private bool $useSecureServer;
 
+    /**
+     * @var string
+     */
     private $port;
 
     private $config;
@@ -109,6 +112,9 @@ class ServerStarter
         $loop->run();
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getSslParams(): array
     {
         $sslParams = [
