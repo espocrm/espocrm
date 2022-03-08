@@ -31,7 +31,4 @@ namespace Espo\Core\Utils;
 
 use Monolog\Logger as MonologLogger;
 
-class Log extends MonologLogger
-{
-
-}
+class Log extends MonologLogger {}
