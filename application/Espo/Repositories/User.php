@@ -43,6 +43,10 @@ use Espo\Entities\UserData;
  */
 class User extends Database
 {
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->has('type') && !$entity->get('type')) {
@@ -129,6 +133,10 @@ class User extends Database
         }
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterSave(Entity $entity, array $options = [])
     {
         if ($this->entityManager->getLocker()->isLocked()) {
@@ -138,6 +146,10 @@ class User extends Database
         parent::afterSave($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @return void
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);

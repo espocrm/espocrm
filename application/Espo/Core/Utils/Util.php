@@ -31,16 +31,16 @@ namespace Espo\Core\Utils;
 
 class Util
 {
+    /** @var string */
     protected static $separator = DIRECTORY_SEPARATOR;
 
+    /** @var string[] */
     protected static $reservedWordList = ['Case'];
 
     /**
      * Get a folder separator.
-     *
-     * @return string
      */
-    public static function getSeparator()
+    public static function getSeparator(): string
     {
         return static::$separator;
     }
@@ -103,19 +103,23 @@ class Util
         return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $input);
     }
 
+    /**
+     * @param string[] $matches
+     * @return string
+     * @internal Used by toCamelCase.
+     */
     protected static function toCamelCaseConversion($matches)
     {
         return strtoupper($matches[1]);
     }
 
     /**
-     * Convert name from Camel Case format.
-     * ex. camelCase to camel-case
+     * Convert name from Camel Case format. Ex. camelCase to camel-case.
      *
      * @param string|string[] $input
      * @return string|string[]
      */
-    public static function fromCamelCase($input, $symbol = '_')
+    public static function fromCamelCase($input, string $symbol = '_')
     {
         if (is_array($input)) {
             foreach ($input as &$value) {
@@ -151,10 +155,10 @@ class Util
     /**
      * Merge arrays recursively. $newArray overrides $currentArray.
      *
-     * @param array $currentArray
-     * @param array $newArray - chief array (priority is same as for array_merge())
+     * @param array<mixed,mixed> $currentArray
+     * @param array<mixed,mixed> $newArray Chief array (priority is same as for array_merge()).
      *
-     * @return array
+     * @return array<mixed,mixed>
      */
     public static function merge($currentArray, $newArray)
     {
@@ -215,11 +219,10 @@ class Util
      * Unset a value in array recursively.
      *
      * @param string $needle
-     * @param array $haystack
-     * @param bool $reIndex
-     * @return array
+     * @param array<mixed,mixed> $haystack
+     * @return array<mixed,mixed>
      */
-    public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
+    public static function unsetInArrayByValue($needle, array $haystack, bool $reIndex = true): array
     {
         $doReindex = false;
 
@@ -246,12 +249,9 @@ class Util
     /**
      * Get a full path of the file.
      *
-     * @param string|array $folderPath
-     * @param string|null $filePath
-     *
-     * @return string
+     * @param string|string[] $folderPath
      */
-    public static function concatPath($folderPath, $filePath = null)
+    public static function concatPath($folderPath, ?string $filePath = null): string
     {
         if (is_array($folderPath)) {
             $fullPath = '';
@@ -280,11 +280,8 @@ class Util
 
     /**
      * Fix path separator.
-     *
-     * @param string $path
-     * @return string
      */
-    public static function fixPath($path)
+    public static function fixPath(string $path): string
     {
         return str_replace('/', static::getSeparator(), $path);
     }
@@ -292,7 +289,7 @@ class Util
     /**
      * Convert array to object format recursively.
      *
-     * @param array $array
+     * @param array<string,mixed> $array
      * @return object
      */
     public static function arrayToObject($array)
@@ -312,7 +309,7 @@ class Util
      * Convert object to array format recursively.
      *
      * @param object $object
-     * @return array
+     * @return array<string,mixed>
      */
     public static function objectToArray($object)
     {
@@ -357,16 +354,15 @@ class Util
     }
 
     /**
-    * Get Naming according to prefix or postfix type.
-    *
-    * @param string $name
-    * @param string $prePostFix
-    * @param string $type
-    *
-    * @return string|null
+    * Get naming according to prefix or postfix type.
     */
-    public static function getNaming($name, $prePostFix, $type = 'prefix', $symbol = '_')
-    {
+    public static function getNaming(
+        string $name,
+        string $prePostFix,
+        string $type = 'prefix',
+        string $symbol = '_'
+    ): ?string {
+
         if ($type == 'prefix') {
             return static::toCamelCase($prePostFix.$symbol.$name, $symbol);
         }
@@ -414,8 +410,8 @@ class Util
     /**
      * Unset content items defined in the unset.json.
      *
-     * @param array $content
-     * @param string|array $unsets in format
+     * @param array<mixed,mixed> $content
+     * @param string|array<mixed,string> $unsets in format
      *  [
      *      'EntityType1' => [ 'unset1', 'unset2'],
      *      'EntityType2' => ['unset1', 'unset2'],
@@ -426,9 +422,9 @@ class Util
      *  'EntityType1.unset1'
      * @param bool $unsetParentEmptyArray If unset empty parent array after unsets
      *
-     * @return array
+     * @return array<mixed,mixed>
      */
-    public static function unsetInArray(array $content, $unsets, $unsetParentEmptyArray = false)
+    public static function unsetInArray(array $content, $unsets, bool $unsetParentEmptyArray = false)
     {
         if (empty($unsets)) {
             return $content;
@@ -488,11 +484,9 @@ class Util
     /**
      * Get class name from the file path.
      *
-     * @param  string $filePath
-     *
-     * @return string
+     * @return class-string
      */
-    public static function getClassName($filePath)
+    public static function getClassName(string $filePath): string
     {
         $className = preg_replace('/\.php$/i', '', $filePath);
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
@@ -505,7 +499,7 @@ class Util
      * Return values of defined $key.
      *
      * @param mixed $data
-     * @param array|string $key Ex. of key is "entityDefs", "entityDefs.User".
+     * @param string[]|string $key Ex. of key is "entityDefs", "entityDefs.User".
      * @param mixed $default
      * @return mixed
      */
@@ -552,7 +546,6 @@ class Util
      *
      * @param mixed $var1
      * @param mixed $var2
-     * @return boolean
      */
     public static function areEqual($var1, $var2): bool
     {
@@ -569,16 +562,17 @@ class Util
 
     /**
      * Sort array recursively.
-     * @param  array $array
-     * @return bool
+     *
+     * @param array<mixed,mixed> $array
      */
-    public static function ksortRecursive(&$array)
+    public static function ksortRecursive(&$array): bool
     {
         if (!is_array($array)) {
             return false;
         }
 
         ksort($array);
+
         foreach ($array as $key => $value) {
             static::ksortRecursive($array[$key]);
         }
@@ -586,7 +580,12 @@ class Util
         return true;
     }
 
-    public static function isSingleArray(array $array)
+    /**
+     * @param array<mixed,mixed> $array
+     * @deprecated
+     * @todo Make private.
+     */
+    public static function isSingleArray(array $array): bool
     {
         foreach ($array as $key => $value) {
             if (!is_int($key)) {
@@ -632,7 +631,7 @@ class Util
         return md5(uniqid((string) rand(), true));
     }
 
-    public static function sanitizeFileName($fileName)
+    public static function sanitizeFileName(string $fileName): string
     {
         return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
@@ -640,48 +639,48 @@ class Util
     /**
      * Improved computing the difference of arrays.
      *
-     * @param  array  $array1
-     * @param  array  $array2
+     * @param array<mixed,mixed> $array1
+     * @param array<mixed,mixed> $array2
      *
-     * @return array
+     * @return array<mixed,mixed>
      */
     public static function arrayDiff(array $array1, array $array2)
     {
-        $diff = array();
+        $diff = [];
 
         foreach ($array1 as $key1 => $value1) {
             if (array_key_exists($key1, $array2)) {
                 if ($value1 !== $array2[$key1]) {
                     $diff[$key1] = $array2[$key1];
                 }
+
                 continue;
             }
 
             $diff[$key1] = $value1;
         }
 
-        $diff = array_merge($diff, array_diff_key($array2, $array1));
-
-        return $diff;
+        return array_merge($diff, array_diff_key($array2, $array1));
     }
 
     /**
      * Fill array with specified keys.
      *
-     * @param  array|string $keys
-     * @param  mixed $value
+     * @param mixed[]|mixed $keys
+     * @param mixed $value
      *
-     * @return array
+     * @return array<mixed,mixed>
      */
     public static function fillArrayKeys($keys, $value)
     {
         $arrayKeys = is_array($keys) ? $keys : explode('.', $keys);
 
-        $array = array();
+        $array = [];
+
         foreach (array_reverse($arrayKeys) as $i => $key) {
-            $array = array(
+            $array = [
                 $key => ($i == 0) ? $value : $array,
-            );
+            ];
         }
 
         return $array;
@@ -690,32 +689,35 @@ class Util
     /**
      * Array keys exists.
      *
-     * @param  array  $keys
-     * @param  array  $array
+     * @param mixed[] $keys
+     * @param array<mixed,mixed> $array
      *
-     * @return boolean
+     * @return bool
      */
     public static function arrayKeysExists(array $keys, array $array)
     {
        return !array_diff_key(array_flip($keys), $array);
     }
 
-    public static function convertToByte($value)
+    public static function convertToByte(string $value): int
     {
-        $value = trim($value);
-        $last = strtoupper(substr($value, -1));
+        $valueTrimmed = trim($value);
+
+        $last = strtoupper(substr($valueTrimmed, -1));
 
         switch ($last)
         {
             case 'G':
-            $value = (int) $value * 1024;
+                return (int) $valueTrimmed * 1024;
+
             case 'M':
-            $value = (int) $value * 1024;
+                return (int) $valueTrimmed * 1024;
+
             case 'K':
-            $value = (int) $value * 1024;
+                return (int) $valueTrimmed * 1024;
         }
 
-        return $value;
+        return (int) $valueTrimmed;
     }
 
     /**
@@ -789,9 +791,11 @@ class Util
         return $v1 === $v2;
     }
 
-    public static function mbUpperCaseFirst(string $string)
+    public static function mbUpperCaseFirst(string $string): string
     {
-        if (!$string) return $string;
+        if (!$string) {
+            return $string;
+        }
 
         $length = mb_strlen($string);
         $firstChar = mb_substr($string, 0, 1);
@@ -800,9 +804,11 @@ class Util
         return mb_strtoupper($firstChar) . $then;
     }
 
-    public static function mbLowerCaseFirst(string $string)
+    public static function mbLowerCaseFirst(string $string): string
     {
-        if (!$string) return $string;
+        if (!$string) {
+            return $string;
+        }
 
         $length = mb_strlen($string);
         $firstChar = mb_substr($string, 0, 1);
@@ -836,7 +842,10 @@ class Util
         return $sanitized;
     }
 
-    public static function urlAddParam($url, $paramName, $paramValue)
+    /**
+     * @param mixed $paramValue
+     */
+    public static function urlAddParam(string $url, string $paramName, $paramValue): string
     {
         $urlQuery = parse_url($url, \PHP_URL_QUERY);
 
@@ -863,7 +872,7 @@ class Util
         return $url;
     }
 
-    public static function urlRemoveParam($url, $paramName, $suffix = '')
+    public static function urlRemoveParam(string $url, string $paramName, string $suffix = ''): string
     {
         $urlQuery = parse_url($url, \PHP_URL_QUERY);
 

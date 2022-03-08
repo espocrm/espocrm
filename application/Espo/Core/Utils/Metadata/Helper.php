@@ -156,7 +156,7 @@ class Helper
 
             $additionalFields = array();
 
-            //add additional fields
+            // add additional fields
             foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
                 $namingType = isset($fieldDefinition['naming']) ? $fieldDefinition['naming'] : $this->defaultNaming;
 
