@@ -400,8 +400,7 @@ class Converter
             if (isset($fieldTypeMetadata['linkDefs'])) {
                 $linkDefs = $this->getMetadataHelper()->getLinkDefsInFieldMeta(
                     $entityType,
-                    $attributeParams,
-                    $fieldTypeMetadata['linkDefs']
+                    $attributeParams
                 );
 
                 if (isset($linkDefs)) {

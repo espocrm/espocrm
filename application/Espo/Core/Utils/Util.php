@@ -498,7 +498,7 @@ class Util
     /**
      * Return values of defined $key.
      *
-     * @param mixed $data
+     * @param \stdClass|array<string,mixed> $data
      * @param string[]|string $key Ex. of key is "entityDefs", "entityDefs.User".
      * @param mixed $default
      * @return mixed
@@ -535,7 +535,6 @@ class Util
                     return $default;
                 }
             }
-
         }
 
         return $item;

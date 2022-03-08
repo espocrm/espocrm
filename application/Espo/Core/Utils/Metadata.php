@@ -46,31 +46,40 @@ use stdClass;
  */
 class Metadata
 {
-    private $data = null;
+    /**
+     * @var ?array<string,mixed>
+     */
+    private ?array $data = null;
 
-    private $objData = null;
+    private ?stdClass $objData = null;
 
-    private $useCache;
+    private bool $useCache;
 
-    private $cacheKey = 'metadata';
+    private string $cacheKey = 'metadata';
 
-    private $objCacheKey = 'objMetadata';
+    private string $objCacheKey = 'objMetadata';
 
-    private $customPath = 'custom/Espo/Custom/Resources/metadata';
+    private string $customPath = 'custom/Espo/Custom/Resources/metadata';
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $deletedData = [];
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $changedData = [];
 
-    private $metadataHelper;
+    private Helper $metadataHelper;
 
-    private $module;
+    private Module $module;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $resourceReader;
+    private ResourceReader $resourceReader;
 
     public function __construct(
         FileManager $fileManager,
@@ -125,7 +134,7 @@ class Metadata
     /**
      * Get metadata array.
      *
-     * @return array
+     * @return array<string,mixed>
      */
     private function getData(): array
     {
@@ -139,9 +148,8 @@ class Metadata
     /**
     * Get metadata by key.
     *
-    * @param string|array $key
+    * @param string|string[] $key
     * @param mixed $default
-    *
     * @return mixed
     */
     public function get($key = null, $default = null)
@@ -156,8 +164,7 @@ class Metadata
     *
     * @param bool $isJSON
     * @param bool $reload
-    *
-    * @return array|string
+    * @return array<string,mixed>|string
     */
     public function getAll(bool $isJSON = false, bool $reload = false)
     {
@@ -205,9 +212,8 @@ class Metadata
     /**
     * Get metadata with stdClass items.
     *
-    * @param string|array $key
+    * @param string|string[] $key
     * @param mixed $default
-    *
     * @return mixed
     */
     public function getObjects($key = null, $default = null)
@@ -217,7 +223,10 @@ class Metadata
         return Util::getValueByKey($objData, $key, $default);
     }
 
-    public function getAllObjects($isJSON = false, $reload = false)
+    /**
+     * @return stdClass|string
+     */
+    public function getAllObjects(bool $isJSON = false, bool $reload = false)
     {
         $objData = $this->getObjData($reload);
 
@@ -241,6 +250,11 @@ class Metadata
         return $data;
     }
 
+    /**
+     *
+     * @param string[] $row
+     * @param stdClass $data
+     */
     private function removeDataByPath($row, &$data): void
     {
         $p = &$data;
@@ -254,7 +268,8 @@ class Metadata
             if ($item === '__ANY__') {
                 foreach (get_object_vars($p) as &$v) {
                     $this->removeDataByPath(
-                        array_slice($row, $i + 1), $v
+                        array_slice($row, $i + 1),
+                        $v
                     );
                 }
 
@@ -355,13 +370,9 @@ class Metadata
     /**
      * Get metadata definition in custom directory.
      *
-     * @param string $key1
-     * @param string $key2
      * @param mixed $default
-     *
-     * @return stdClass
      */
-    public function getCustom($key1, $key2, $default = null)
+    public function getCustom(string $key1, string $key2, $default = null): stdClass
     {
         $filePath = $this->customPath . "/{$key1}/{$key2}.json";
 
@@ -378,15 +389,12 @@ class Metadata
      * Set and save metadata in custom directory.
      * The data is not merging with existing data. Use getCustom() to get existing data.
      *
-     * @param string $key1
-     * @param string $key2
-     * @param array|stdClass $data
+     * @param array<string,mixed>|stdClass $data
      */
     public function saveCustom(string $key1, string $key2, $data): void
     {
         if (is_object($data)) {
-            /** @phpstan-ignore-next-line */
-            foreach ($data as $key => $item) {
+            foreach (get_object_vars($data) as $key => $item) {
                 if ($item == new stdClass()) {
                     unset($data->$key);
                 }
@@ -404,6 +412,8 @@ class Metadata
 
     /**
      * Set Metadata data.
+     *
+     * @param array<mixed,mixed>|scalar|null $data
      */
     public function set(string $key1, string $key2, $data): void
     {
@@ -430,7 +440,7 @@ class Metadata
     /**
      * Unset some fields and other stuff in metadata.
      *
-     * @param array|string $unsets Example: `fields.name`.
+     * @param string[]|string $unsets Example: `fields.name`.
      */
     public function delete(string $key1, string $key2, $unsets = null): void
     {
@@ -489,7 +499,10 @@ class Metadata
         $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
     }
 
-    private function undelete($key1, $key2, $data): void
+    /**
+     * @param stdClass|array<string,mixed> $data
+     */
+    private function undelete(string $key1, string $key2, $data): void
     {
         if (isset($this->deletedData[$key1][$key2])) {
             foreach ($this->deletedData[$key1][$key2] as $unsetIndex => $unsetItem) {

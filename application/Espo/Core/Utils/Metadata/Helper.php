@@ -30,17 +30,20 @@
 namespace Espo\Core\Utils\Metadata;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Metadata;
 
 class Helper
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    protected $defaultNaming = 'postfix';
+    protected string $defaultNaming = 'postfix';
 
     /**
      * List of copied params for metadata -> 'fields' from parent items.
+     *
+     * @var string[]
      */
-    protected $copiedDefParams = array(
+    protected $copiedDefParams = [
         'readOnly',
         'disabled',
         'notStorable',
@@ -53,37 +56,36 @@ class Helper
         'customizationDisabled',
         'importDisabled',
         'exportDisabled',
-    );
+    ];
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
     }
 
     /**
      * Get field definition by type in metadata, "fields" key.
      *
-     * @param array|string $fieldDef - It can be a string or field definition from entityDefs
-     * @return array|null
+     * @param array<string,mixed>|string $fieldDef It can be a string or field definition from entityDefs.
+     * @return ?array<string,mixed>
      */
     public function getFieldDefsByType($fieldDef)
     {
         if (is_string($fieldDef)) {
-            $fieldDef = array('type' => $fieldDef);
+            $fieldDef = ['type' => $fieldDef];
         }
 
         if (isset($fieldDef['type'])) {
-            return $this->getMetadata()->get('fields.'.$fieldDef['type']);
+            return $this->metadata->get('fields.' . $fieldDef['type']);
         }
 
         return null;
     }
 
+    /**
+     * @param array<string,mixed>|string $fieldDef
+     * @return ?array<string,mixed>
+     */
     public function getFieldDefsInFieldMeta($fieldDef)
     {
         $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
@@ -101,11 +103,10 @@ class Helper
      * Variables should be defined into fieldDefs (in 'entityDefs' metadata).
      *
      * @param string $entityName
-     * @param array $fieldDef
-     * @param array $linkFieldDefsByType
-     * @return array|null
+     * @param array<string,mixed>|string $fieldDef
+     * @return ?array<string,mixed>
      */
-    public function getLinkDefsInFieldMeta($entityName, $fieldDef, array $linkFieldDefsByType = null)
+    public function getLinkDefsInFieldMeta($entityName, $fieldDef)
     {
         $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
 
@@ -115,11 +116,12 @@ class Helper
 
         $linkFieldDefsByType = $fieldDefsByType['linkDefs'];
 
-        foreach ($linkFieldDefsByType as $paramName => &$paramValue) {
+        foreach ($linkFieldDefsByType as &$paramValue) {
             if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
                 if (in_array($matches[1], array_keys($fieldDef))) {
                     $value = $fieldDef[$matches[1]];
-                } else if (strtolower($matches[1]) == 'entity') {
+                }
+                else if (strtolower($matches[1]) == 'entity') {
                     $value = $entityName;
                 }
 
@@ -136,10 +138,9 @@ class Helper
      * Get additional field list based on field definition in metadata 'fields'.
      *
      * @param string $fieldName
-     * @param array $fieldParams
-     * @param array $definitionList
-     *
-     * @return array|null
+     * @param array<string,mixed> $fieldParams
+     * @param array<string,mixed> $definitionList
+     * @return ?array<string,mixed>
      */
     public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList)
     {

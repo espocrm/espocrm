@@ -40,21 +40,24 @@ use Espo\Core\{
 
 class OrmMetadataData
 {
+    /**
+     * @var ?array<string,array<string,mixed>>
+     */
     protected $data = null;
 
-    protected $cacheKey = 'ormMetadata';
+    protected string $cacheKey = 'ormMetadata';
 
-    protected $useCache;
+    protected bool $useCache;
 
-    protected $metadata;
+    protected Metadata $metadata;
 
-    protected $fileManager;
+    protected FileManager $fileManager;
 
-    protected $dataCache;
+    protected DataCache $dataCache;
 
-    protected $config;
+    protected Config $config;
 
-    private $converter;
+    private ?Converter $converter = null;
 
     public function __construct(
         Metadata $metadata,
@@ -67,7 +70,7 @@ class OrmMetadataData
         $this->dataCache = $dataCache;
         $this->config = $config;
 
-        $this->useCache = $this->config->get('useCache', false);
+        $this->useCache = (bool) $this->config->get('useCache', false);
     }
 
     protected function getConverter(): Converter
@@ -79,6 +82,9 @@ class OrmMetadataData
         return $this->converter;
     }
 
+    /**
+     * @return array<string,array<string,mixed>>
+     */
     public function getData(bool $reload = false): array
     {
         if (isset($this->data) && !$reload) {
@@ -100,6 +106,11 @@ class OrmMetadataData
         return $this->data;
     }
 
+    /**
+     * @param string|string[]|null $key
+     * @param mixed $default
+     * @return mixed
+     */
     public function get($key = null, $default = null)
     {
         return Util::getValueByKey($this->getData(), $key, $default);
