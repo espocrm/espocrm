@@ -31,8 +31,14 @@ namespace Espo\Core\Upgrades;
 
 class UpgradeManager extends Base
 {
+    /**
+     * @var string
+     */
     protected $name = 'Upgrade';
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $params = [
         'packagePath' => 'data/upload/upgrades',
         'backupPath' => 'data/.backup/upgrades',

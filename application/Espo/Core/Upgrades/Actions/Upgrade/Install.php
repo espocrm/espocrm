@@ -31,16 +31,29 @@ namespace Espo\Core\Upgrades\Actions\Upgrade;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
+    /**
+     * @param array<string,mixed> $data
+     * @return mixed
+     */
     public function stepBeforeUpgradeScript(array $data)
     {
+        /** @phpstan-ignore-next-line */
         return $this->stepBeforeInstallScript($data);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return mixed
+     */
     public function stepAfterUpgradeScript(array $data)
     {
+        /** @phpstan-ignore-next-line */
         return $this->stepAfterInstallScript($data);
     }
 
+    /**
+     * @return void
+     */
     protected function finalize()
     {
         $manifest = $this->getManifest();

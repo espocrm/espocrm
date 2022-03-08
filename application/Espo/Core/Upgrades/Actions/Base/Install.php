@@ -37,6 +37,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * Main installation process.
      *
+     * @param array<string,mixed> $data
+     * @return void
      */
     public function run($data)
     {
@@ -77,6 +79,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->debug('Installation process ['.$processId.']: end run.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     * @throws Error
+     */
     protected function initPackage(array $data)
     {
         $processId = $data['id'];
@@ -99,6 +106,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         }
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepInit(array $data)
     {
         $this->initPackage($data);
@@ -118,6 +129,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "init" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepCopyBefore(array $data)
     {
         $this->initPackage($data);
@@ -131,6 +146,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copyBefore" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepBeforeInstallScript(array $data)
     {
         $this->initPackage($data);
@@ -144,6 +163,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "beforeInstallScript" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepCopy(array $data)
     {
         $this->initPackage($data);
@@ -171,6 +194,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copy" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepRebuild(array $data)
     {
         $this->initPackage($data);
@@ -186,6 +213,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "rebuild" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepCopyAfter(array $data)
     {
         $this->initPackage($data);
@@ -200,6 +231,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copyAfter" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepAfterInstallScript(array $data)
     {
         $this->initPackage($data);
@@ -214,6 +249,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "afterInstallScript" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepFinalize(array $data)
     {
         $this->initPackage($data);
@@ -237,6 +276,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "finalize" step.');
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function stepRevert(array $data)
     {
         $this->initPackage($data);
@@ -248,6 +291,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "revert" step.');
     }
 
+    /**
+     * @return bool
+     */
     protected function restoreFiles()
     {
         $this->getLog()->info('Installer: Restore previous files.');
@@ -276,9 +322,16 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
+    /**
+     * @param string $errorMessage
+     * @param bool $deletePackage
+     * @param bool $systemRebuild
+     * @return void
+     */
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         $this->restoreFiles();
+
         parent::throwErrorAndRemovePackage($errorMessage, $deletePackage, $systemRebuild);
     }
 }

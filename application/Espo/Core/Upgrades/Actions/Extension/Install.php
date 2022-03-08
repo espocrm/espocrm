@@ -37,8 +37,14 @@ use Throwable;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
+    /**
+     * @var ?\Espo\Entities\Extension
+     */
     protected $extensionEntity = null;
 
+    /**
+     * @return void
+     */
     protected function beforeRunAction()
     {
         $this->findExtension();
@@ -51,6 +57,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         }
     }
 
+    /**
+     * @return void
+     */
     protected function afterRunAction()
     {
         if (!$this->isNew()) {
@@ -61,7 +70,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Copy Existing files to backup directory
+     * Copy Existing files to backup directory.
      *
      * @return bool
      */
@@ -80,6 +89,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         return $this->copy($source, $destination, true);
     }
 
+    /**
+     * @return bool
+     */
     protected function isNew()
     {
         $extensionEntity = $this->getExtensionEntity();
@@ -92,7 +104,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Get extension ID. It's an ID of existing entity (if available) or Installation ID
+     * Get extension ID. It's an ID of existing entity (if available) or Installation ID.
      *
      * @return string
      */
@@ -111,7 +123,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Get entity of this extension
+     * Get entity of this extension.
      *
      * @return \Espo\Entities\Extension|null
      */
@@ -121,7 +133,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Find Extension entity
+     * Find Extension entity.
      *
      * @return \Espo\Entities\Extension
      */
@@ -129,16 +141,21 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $manifest = $this->getManifest();
 
-        $this->extensionEntity = $this->getEntityManager()->getRepository('Extension')->where(array(
-            'name' => $manifest['name'],
-            'isInstalled' => true,
-        ))->findOne();
+        $this->extensionEntity = $this->getEntityManager()
+            ->getRDBRepository('Extension')
+            ->where(array(
+                'name' => $manifest['name'],
+                'isInstalled' => true,
+            ))
+            ->findOne();
 
         return $this->extensionEntity;
     }
 
     /**
      * Create a record of Extension Entity.
+     *
+     * @return void
      */
     protected function storeExtension()
     {
@@ -231,6 +248,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         ]);
     }
 
+    /**
+     * @param array<string,string[]> $dependencyList
+     * @return bool
+     */
     protected function checkDependencies($dependencyList)
     {
         return $this->getHelper()->checkDependencies($dependencyList);

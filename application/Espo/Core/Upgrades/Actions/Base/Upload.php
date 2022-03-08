@@ -28,14 +28,16 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Base;
+
 use Espo\Core\Exceptions\Error;
 
 class Upload extends \Espo\Core\Upgrades\Actions\Base
 {
     /**
-     * Upload an upgrade/extension package
+     * Upload an upgrade/extension package.
      *
-     * @return string  ID of upgrade/extension process
+     * @param string $data
+     * @return string ID of upgrade/extension process.
      */
     public function run($data)
     {

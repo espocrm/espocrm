@@ -35,6 +35,11 @@ use Espo\Core\Utils\Json;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 {
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     * @throws Error
+     */
     public function run($data)
     {
         $processId = $data['id'];
@@ -104,6 +109,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $this->clearCache();
     }
 
+    /**
+     * @return int
+     */
     protected function restoreFiles()
     {
         $packagePath = $this->getPath('packagePath');
@@ -136,6 +144,11 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
+    /**
+     * @param ?string $type
+     * @param ?string $dest
+     * @return bool
+     */
     protected function copyFiles($type = null, $dest = '')
     {
         $backupPath = $this->getPath('backupPath');
@@ -150,6 +163,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     /**
      * Get backup path.
      *
+     * @param bool $isPackage     *
      * @return string
      */
     protected function getPackagePath($isPackage = false)
@@ -161,6 +175,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $this->getPath('backupPath');
     }
 
+    /**
+     * @return bool
+     */
     protected function deletePackageFiles()
     {
         $backupPath = $this->getPath('backupPath');
@@ -169,6 +186,12 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
+    /**
+     * @param ?string $errorMessage
+     * @param bool $deletePackage
+     * @param bool $systemRebuild
+     * @return void
+     */
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         $this->restoreFiles();
@@ -176,6 +199,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         parent::throwErrorAndRemovePackage($errorMessage, false, $systemRebuild);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getCopyFileList()
     {
         if (!isset($this->data['fileList'])) {
@@ -188,6 +214,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $this->data['fileList'];
     }
 
+    /**
+     * @return string[]
+     */
     protected function getRestoreFileList()
     {
         if (!isset($this->data['restoreFileList'])) {
@@ -204,6 +233,10 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $this->data['restoreFileList'];
     }
 
+    /**
+     * @param string $type
+     * @return string[]
+     */
     protected function getDeleteList($type = 'delete')
     {
         if ($type == 'delete') {
@@ -213,6 +246,6 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
             return array_diff($packageFileList, $backupFileList);
         }
 
-        return array();
+        return [];
     }
 }

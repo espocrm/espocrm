@@ -33,6 +33,11 @@ use Espo\Core\Exceptions\Error;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     * @throws Error
+     */
     public function run($data)
     {
         $processId = $data['id'];
@@ -63,6 +68,9 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
         $this->getLog()->debug('Delete package process ['.$processId.']: end run.');
     }
 
+    /**
+     * @return bool
+     */
     protected function deletePackage()
     {
         $packageArchivePath = $this->getPackagePath(true);
@@ -71,5 +79,4 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
 
         return $res;
     }
-
 }

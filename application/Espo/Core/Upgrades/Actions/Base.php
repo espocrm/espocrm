@@ -51,42 +51,80 @@ use Throwable;
 
 abstract class Base
 {
+    /**
+     * @var ?\Espo\Core\Upgrades\Actions\Helper
+     */
     private $helper;
 
+    /**
+     * @var mixed
+     */
     protected $data;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $params = null;
 
+    /**
+     * @var \Espo\Core\Container
+     */
     private $container;
 
+    /**
+     * @var ?ActionManager
+     */
     private $actionManager;
 
+    /**
+     * @var ZipArchive
+     */
     private $zipUtil;
 
+    /**
+     * @var ?DatabaseHelper
+     */
     private $databaseHelper;
 
+    /**
+     * @var ?string
+     */
     protected $processId = null;
 
+    /**
+     * @var ?string
+     */
     protected $parentProcessId = null;
 
+    /**
+     * @var string
+     */
     protected $manifestName = 'manifest.json';
 
+    /**
+     * @var string
+     */
     protected $packagePostfix = 'z';
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $scriptParams = [];
 
     /**
-     * Directory name of files in a package
+     * Directory name of files in a package.
      */
     const FILES = 'files';
 
     /**
-     * Directory name of scripts in a package
+     * Directory name of scripts in a package.
      */
     const SCRIPTS = 'scripts';
 
     /**
-     * Package types
+     * Package types.
+     *
+     * @var array<string,string>
      */
     protected $packageTypes = array(
         'upgrade' => 'upgrade',
@@ -94,10 +132,15 @@ abstract class Base
     );
 
     /**
-     * Default package type
+     * Default package type.
+     *
+     * @var string
      */
     protected $defaultPackageType = 'extension';
 
+    /**
+     * @var string
+     */
     protected $vendorDirName = 'vendor';
 
     public function __construct(Container $container, ActionManager $actionManager)
@@ -115,16 +158,27 @@ abstract class Base
         $this->data = null;
     }
 
+    /**
+     * @return \Espo\Core\Container
+     */
     protected function getContainer()
     {
         return $this->container;
     }
 
+    /**
+     * @return ActionManager
+     */
     protected function getActionManager()
     {
         return $this->actionManager;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $returns
+     * @return mixed
+     */
     protected function getParams($name, $returns = null)
     {
         if (isset($this->params[$name])) {
@@ -134,16 +188,27 @@ abstract class Base
         return $returns;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
     protected function setParam($name, $value)
     {
         $this->params[$name] = $value;
     }
 
+    /**
+     * @return ZipArchive
+     */
     protected function getZipUtil()
     {
         return $this->zipUtil;
     }
 
+    /**
+     * @return DatabaseHelper
+     */
     protected function getDatabaseHelper()
     {
         if (!isset($this->databaseHelper)) {
@@ -166,11 +231,17 @@ abstract class Base
         return $this->getContainer()->get('fileManager');
     }
 
+    /**
+     * @return \Espo\Core\Utils\Config
+     */
     protected function getConfig()
     {
         return $this->getContainer()->get('config');
     }
 
+    /**
+     * @return \Espo\ORM\EntityManager
+     */
     public function getEntityManager()
     {
         return $this->getContainer()->get('entityManager');
@@ -181,6 +252,14 @@ abstract class Base
         return $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
     }
 
+    /**
+     *
+     * @param string $errorMessage
+     * @param bool $deletePackage
+     * @param bool $systemRebuild
+     * @return void
+     * @throws Error
+     */
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         if ($deletePackage) {
@@ -197,8 +276,16 @@ abstract class Base
         throw new Error($errorMessage);
     }
 
+    /**
+     * @param never $data
+     * @return mixed
+     */
     abstract public function run($data);
 
+    /**
+     * @return string
+     * @throws Error
+     */
     protected function createProcessId()
     {
         if (isset($this->processId)) {
@@ -210,6 +297,9 @@ abstract class Base
         return $this->processId;
     }
 
+    /**
+     * @return string
+     */
     protected function getProcessId()
     {
         if (!isset($this->processId)) {
@@ -219,16 +309,27 @@ abstract class Base
         return $this->processId;
     }
 
+    /**
+     * @return ?string
+     */
     protected function getParentProcessId()
     {
         return $this->parentProcessId;
     }
 
+    /**
+     * @param string $processId
+     * @return void
+     */
     public function setProcessId($processId)
     {
         $this->processId = $processId;
     }
 
+    /**
+     * @param string $processId
+     * @return void
+     */
     public function setParentProcessId($processId)
     {
         $this->parentProcessId = $processId;
@@ -290,6 +391,12 @@ abstract class Base
         return (bool) $res;
     }
 
+    /**
+     * @param string[] $versionList
+     * @param string $currentVersion
+     * @param string $errorMessage
+     * @return bool
+     */
     public function checkVersions($versionList, $currentVersion, $errorMessage = '')
     {
         if (empty($versionList)) {
@@ -321,8 +428,13 @@ abstract class Base
         $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
 
         $this->throwErrorAndRemovePackage($errorMessage);
+
+        return false;
     }
 
+    /**
+     * @return bool
+     */
     protected function checkPackageType()
     {
         $manifest = $this->getManifest();
@@ -345,6 +457,9 @@ abstract class Base
         return true;
     }
 
+    /**
+     * @return string
+     */
     protected function getPackageType()
     {
         $manifest = $this->getManifest();
@@ -356,14 +471,18 @@ abstract class Base
         return $this->defaultPackageType;
     }
 
+    /**
+     * @param array<string,string[]> $dependencyList
+     * @return bool
+     */
     protected function checkDependencies($dependencyList)
     {
         return true;
     }
 
     /**
-     * Run a script by a type
-     * @param  string $type Ex. "before", "after"
+     * Run a script by a type.
+     * @param string $type Ex. "before", "after".
      * @return void
      */
     protected function runScript($type)
@@ -387,6 +506,11 @@ abstract class Base
         }
     }
 
+
+    /**
+     * @param string $type
+     * @return ?string
+     */
     protected function getScriptPath($type)
     {
         $packagePath = $this->getPackagePath();
@@ -395,7 +519,7 @@ abstract class Base
         $scriptName = $scriptNames[$type];
 
         if (!isset($scriptName)) {
-            return;
+            return null;
         }
 
         $beforeInstallScript = Util::concatPath(array($packagePath, self::SCRIPTS, $scriptName)) . '.php';
@@ -403,12 +527,15 @@ abstract class Base
         if (file_exists($beforeInstallScript)) {
             return $beforeInstallScript;
         }
+
+        return null;
     }
 
     /**
-     * Get package path
+     * Get package path,
      *
      * @param string $name
+     * @param bool $isPackage
      * @return string
      */
     protected function getPath($name = 'packagePath', $isPackage = false)
@@ -421,11 +548,19 @@ abstract class Base
         return $path . $postfix;
     }
 
+    /**
+     * @param bool $isPackage
+     * @return string
+     */
     protected function getPackagePath($isPackage = false)
     {
         return $this->getPath('packagePath', $isPackage);
     }
 
+    /**
+     * @param string $type
+     * @return string[]
+     */
     protected function getDeleteList($type = 'delete')
     {
         $manifest = $this->getManifest();
@@ -447,9 +582,9 @@ abstract class Base
     }
 
     /**
-     * Get a list of files defined in manifest.json
+     * Get a list of files defined in manifest.
      *
-     * @return array
+     * @return string[]
      */
     protected function getDeleteFileList()
     {
@@ -483,6 +618,9 @@ abstract class Base
 
     /**
      * Delete files defined in a manifest.
+     *
+     * @param string $type
+     * @param bool $withEmptyDirs
      * @return bool
      */
     protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
@@ -496,6 +634,9 @@ abstract class Base
         return true;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getCopyFileList()
     {
         if (!isset($this->data['fileList'])) {
@@ -507,6 +648,9 @@ abstract class Base
         return $this->data['fileList'];
     }
 
+    /**
+     * @return string[]
+     */
     protected function getRestoreFileList()
     {
         if (!isset($this->data['restoreFileList'])) {
@@ -521,8 +665,8 @@ abstract class Base
     /**
      * Get file directories (files, beforeInstallFiles, afterInstallFiles).
      *
-     * @param string $parentDirPath
-     * @return array
+     * @param ?string $parentDirPath
+     * @return string[]
      */
     protected function getFileDirs($parentDirPath = null)
     {
@@ -542,8 +686,9 @@ abstract class Base
     /**
      * Get file list from directories: files, beforeUpgradeFiles, afterUpgradeFiles.
      *
-     * @param  string $dirPath
-     * @return array
+     * @param string $dirPath
+     * @param bool $skipVendorFileList
+     * @return string[]
      */
     protected function getFileList($dirPath, $skipVendorFileList = false)
     {
@@ -568,6 +713,15 @@ abstract class Base
         return $fileList;
     }
 
+    /**
+     *
+     * @param string $sourcePath
+     * @param string $destPath
+     * @param bool $recursively
+     * @param string[] $fileList
+     * @param bool $copyOnlyFiles
+     * @return bool
+     */
     protected function copy(
         $sourcePath,
         $destPath,
@@ -588,8 +742,9 @@ abstract class Base
     /**
      * Copy files from upgrade/extension package.
      *
-     * @param  string $type
-     * @return boolean
+     * @param ?string $type
+     * @param string $dest
+     * @return bool
      */
     protected function copyFiles($type = null, $dest = '')
     {
@@ -652,6 +807,10 @@ abstract class Base
         return null;
     }
 
+    /**
+     * @param string $type
+     * @return string[]
+     */
     protected function getVendorFileList($type = 'copy')
     {
         $list = [];
@@ -688,6 +847,9 @@ abstract class Base
         return $list;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getManifest()
     {
         if (!isset($this->data['manifest'])) {
@@ -715,16 +877,18 @@ abstract class Base
         return $this->data['manifest'];
     }
 
+    /**
+     * @return void
+     */
     protected function setManifest()
     {
-
     }
 
     /**
      * Check if the manifest is correct.
      *
-     * @param  array  $manifest
-     * @return boolean
+     * @param array<string,mixed> $manifest
+     * @return bool
      */
     protected function checkManifest(array $manifest)
     {
@@ -742,6 +906,11 @@ abstract class Base
         return true;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
     protected function getManifestParam($name, $default = null)
     {
         $manifest = $this->getManifest();
@@ -756,6 +925,7 @@ abstract class Base
     /**
      * Unzip a package archive.
      *
+     * @param ?string $packagePath
      * @return void
      */
     protected function unzipArchive($packagePath = null)
@@ -801,6 +971,9 @@ abstract class Base
         return $res;
     }
 
+    /**
+     * @return bool
+     */
     protected function systemRebuild()
     {
         try {
@@ -838,31 +1011,48 @@ abstract class Base
         $actionManager->setAction($currentAction);
     }
 
+    /**
+     * @return void
+     */
     protected function initialize()
     {
-
     }
 
+    /**
+     * @return void
+     */
     protected function finalize()
     {
-
     }
 
+    /**
+     * @return void
+     */
     protected function beforeRunAction()
     {
-
     }
 
+    /**
+     * @return void
+     */
     protected function afterRunAction()
     {
-
     }
 
+    /**
+     * @return void
+     */
     protected function clearCache()
     {
-        return $this->getContainer()->get('dataManager')->clearCache();
+        /** @var \Espo\Core\DataManager $dataManager */
+        $dataManager = $this->getContainer()->get('dataManager');
+
+        $dataManager->clearCache();
     }
 
+    /**
+     * @return void
+     */
     protected function checkIsWritable()
     {
         $backupPath = $this->getPath('backupPath');
@@ -881,6 +1071,9 @@ abstract class Base
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function backupExistingFiles()
     {
         $fullFileList = array_merge($this->getDeleteFileList(), $this->getCopyFileList());
@@ -892,6 +1085,9 @@ abstract class Base
         return $this->copy('', $destination, false, $fullFileList);
     }
 
+    /**
+     * @return \Espo\Core\Upgrades\Actions\Helper
+     */
     protected function getHelper()
     {
         if (!isset($this->helper)) {
@@ -903,6 +1099,11 @@ abstract class Base
         return $this->helper;
     }
 
+    /**
+     * @param string $string
+     * @param string[] $array
+     * @return string[]
+     */
     protected function concatStringWithArray($string, array $array)
     {
         foreach ($array as &$value) {
@@ -915,6 +1116,9 @@ abstract class Base
         return $array;
     }
 
+    /**
+     * @return void
+     */
     protected function enableMaintenanceMode()
     {
         $config = $this->getConfig();
@@ -961,6 +1165,10 @@ abstract class Base
         }
     }
 
+    /**
+     * @param bool $force
+     * @return void
+     */
     protected function disableMaintenanceMode($force = false)
     {
         $config = $this->getConfig();
@@ -998,6 +1206,10 @@ abstract class Base
         }
     }
 
+    /**
+     * @param bool $isParentProcess
+     * @return ?string
+     */
     protected function getTemporaryConfigParamName($isParentProcess = false)
     {
         $processId = $this->getProcessId();
@@ -1006,13 +1218,16 @@ abstract class Base
             $processId = $this->getParentProcessId();
 
             if (!$processId) {
-                return;
+                return null;
             }
         }
 
         return 'temporaryUpgradeParams' . $processId;
     }
 
+    /**
+     * @return bool
+     */
     protected function isCli()
     {
         if (substr(php_sapi_name(), 0, 3) == 'cli') {

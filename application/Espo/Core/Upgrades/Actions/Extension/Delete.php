@@ -32,10 +32,13 @@ use Espo\Core\Exceptions\Error;
 
 class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 {
+    /**
+     * @var ?\Espo\Entities\Extension
+     */
     protected $extensionEntity;
 
     /**
-     * Get entity of this extension
+     * Get entity of this extension.
      *
      * @return \Espo\Entities\Extension
      */
@@ -52,10 +55,14 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
         return $this->extensionEntity;
     }
 
+    /**
+     * @return void
+     */
     protected function afterRunAction()
     {
         /** Delete extension entity */
         $extensionEntity = $this->getExtensionEntity();
+
         $this->getEntityManager()->removeEntity($extensionEntity);
     }
 }

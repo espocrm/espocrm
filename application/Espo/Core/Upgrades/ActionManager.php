@@ -33,16 +33,36 @@ use Espo\Core\Exceptions\Error;
 
 class ActionManager
 {
+    /**
+     * @var string
+     */
     private $managerName;
 
+    /**
+     * @var \Espo\Core\Container
+     */
     private $container;
 
+    /**
+     * @var array<string,array<string,\Espo\Core\Upgrades\Actions\Base>>
+     */
     private $objects;
 
+    /**
+     * @var ?string
+     */
     protected $currentAction;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $params;
 
+    /**
+     * @param string $managerName
+     * @param \Espo\Core\Container $container
+     * @param array<string,mixed> $params
+     */
     public function __construct($managerName, $container, $params)
     {
         $this->managerName = $managerName;
@@ -52,31 +72,51 @@ class ActionManager
         $this->params = $params;
     }
 
+    /**
+     * @return string
+     */
     protected function getManagerName()
     {
         return $this->managerName;
     }
 
+    /**
+     * @return \Espo\Core\Container
+     */
     protected function getContainer()
     {
         return $this->container;
     }
 
+    /**
+     * @param string $action
+     * @return void
+     */
     public function setAction($action)
     {
         $this->currentAction = $action;
     }
 
+    /**
+     * @return string
+     */
     public function getAction()
     {
         return $this->currentAction;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * @param mixed $data
+     * @return mixed
+     */
     public function run($data)
     {
         $object = $this->getObject();
@@ -84,16 +124,27 @@ class ActionManager
         return $object->run($data);
     }
 
+    /**
+     * @param string $actionName
+     * @return \Espo\Core\Upgrades\Actions\Base
+     */
     public function getActionClass($actionName)
     {
         return $this->getObject($actionName);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getManifest()
     {
         return $this->getObject()->getManifest();
     }
 
+    /**
+     * @param ?string $actionName
+     * @return \Espo\Core\Upgrades\Actions\Base
+     */
     protected function getObject($actionName = null)
     {
         $managerName = $this->getManagerName();

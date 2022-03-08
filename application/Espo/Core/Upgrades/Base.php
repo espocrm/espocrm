@@ -33,12 +33,24 @@ use Espo\Core\Exceptions\Error;
 
 abstract class Base
 {
+    /**
+     * @var \Espo\Core\Container
+     */
     private $container;
 
+    /**
+     * @var ActionManager
+     */
     protected $actionManager;
 
+    /**
+     * @var ?string
+     */
     protected $name = null;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $params = [];
 
     const UPLOAD = 'upload';
@@ -49,6 +61,9 @@ abstract class Base
 
     const DELETE = 'delete';
 
+    /**
+     * @param \Espo\Core\Container $container
+     */
     public function __construct($container)
     {
         $this->container = $container;
@@ -56,21 +71,34 @@ abstract class Base
         $this->actionManager = new ActionManager($this->name, $container, $this->params);
     }
 
+    /**
+     * @return \Espo\Core\Container
+     */
     protected function getContainer()
     {
         return $this->container;
     }
 
+    /**
+     * @return ActionManager
+     */
     protected function getActionManager()
     {
         return $this->actionManager;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getManifest()
     {
         return $this->getActionManager()->getManifest();
     }
 
+    /**
+     * @param string $processId
+     * @return array<string,mixed>
+     */
     public function getManifestById($processId)
     {
         $actionClass = $this->getActionManager()->getActionClass(self::INSTALL);
@@ -79,6 +107,10 @@ abstract class Base
         return $actionClass->getManifest();
     }
 
+    /**
+     * @param string $data
+     * @return string
+     */
     public function upload($data)
     {
         $this->getActionManager()->setAction(self::UPLOAD);
@@ -86,6 +118,10 @@ abstract class Base
         return $this->getActionManager()->run($data);
     }
 
+    /**
+     * @param string $processId
+     * @return mixed
+     */
     public function install($processId)
     {
         $this->getActionManager()->setAction(self::INSTALL);
@@ -93,6 +129,10 @@ abstract class Base
         return $this->getActionManager()->run($processId);
     }
 
+    /**
+     * @param string $processId
+     * @return mixed
+     */
     public function uninstall($processId)
     {
         $this->getActionManager()->setAction(self::UNINSTALL);
@@ -100,6 +140,10 @@ abstract class Base
         return $this->getActionManager()->run($processId);
     }
 
+    /**
+     * @param string $processId
+     * @return mixed
+     */
     public function delete($processId)
     {
         $this->getActionManager()->setAction(self::DELETE);
@@ -107,11 +151,24 @@ abstract class Base
         return $this->getActionManager()->run($processId);
     }
 
+    /**
+     * @param string $stepName
+     * @param array<string,mixed> $params
+     * @return bool
+     */
     public function runInstallStep($stepName, array $params = [])
     {
         return $this->runActionStep(self::INSTALL, $stepName, $params);
     }
 
+    /**
+     *
+     * @param string $actionName
+     * @param string $stepName
+     * @param array<string,mixed> $params
+     * @return bool
+     * @throws Error
+     */
     protected function runActionStep($actionName, $stepName, array $params = [])
     {
         $actionClass = $this->getActionManager()->getActionClass($actionName);

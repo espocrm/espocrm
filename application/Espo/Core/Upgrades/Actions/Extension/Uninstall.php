@@ -35,10 +35,13 @@ use Throwable;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
+    /**
+     * @var ?\Espo\Entities\Extension
+     */
     protected $extensionEntity;
 
     /**
-     * Get entity of this extension
+     * Get entity of this extension.
      *
      * @return \Espo\Entities\Extension
      */
@@ -56,6 +59,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
         return $this->extensionEntity;
     }
 
+    /**
+     * @return void
+     */
     protected function afterRunAction()
     {
         /** Set extension entity, isInstalled = false */
@@ -75,6 +81,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
         }
     }
 
+    /**
+     * @return string[]
+     */
     protected function getRestoreFileList()
     {
         if (!isset($this->data['restoreFileList'])) {
