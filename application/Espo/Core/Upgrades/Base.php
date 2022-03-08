@@ -119,36 +119,36 @@ abstract class Base
     }
 
     /**
-     * @param string $processId
+     * @param array<string,mixed> $data
      * @return mixed
      */
-    public function install($processId)
+    public function install($data)
     {
         $this->getActionManager()->setAction(self::INSTALL);
 
-        return $this->getActionManager()->run($processId);
+        return $this->getActionManager()->run($data);
     }
 
     /**
-     * @param string $processId
+     * @param array<string,mixed> $data
      * @return mixed
      */
-    public function uninstall($processId)
+    public function uninstall($data)
     {
         $this->getActionManager()->setAction(self::UNINSTALL);
 
-        return $this->getActionManager()->run($processId);
+        return $this->getActionManager()->run($data);
     }
 
     /**
-     * @param string $processId
+     * @param array<string,mixed> $data
      * @return mixed
      */
-    public function delete($processId)
+    public function delete($data)
     {
         $this->getActionManager()->setAction(self::DELETE);
 
-        return $this->getActionManager()->run($processId);
+        return $this->getActionManager()->run($data);
     }
 
     /**

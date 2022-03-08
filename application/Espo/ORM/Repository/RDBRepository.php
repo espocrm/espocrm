@@ -98,7 +98,6 @@ class RDBRepository implements Repository
         }
 
         /** @var TEntity $entity */
-
         return $entity;
     }
 
