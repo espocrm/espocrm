@@ -43,17 +43,17 @@ use ReflectionClass;
 
 class ClassMap
 {
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $config;
+    private Config $config;
 
-    private $module;
+    private Module $module;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $log;
+    private Log $log;
 
-    private $pathProvider;
+    private PathProvider $pathProvider;
 
     public function __construct(
         FileManager $fileManager,
@@ -74,7 +74,8 @@ class ClassMap
     /**
      * Return paths to class files.
      *
-     * @param array|null $allowedMethods If specified, classes w/o specified method will be ignored.
+     * @param ?string[] $allowedMethods If specified, classes w/o specified method will be ignored.
+     * @return array<string,string>
      */
     public function getData(
         string $path,
@@ -134,6 +135,11 @@ class ClassMap
         return $data;
     }
 
+    /**
+     * @param string[]|string $dirs
+     * @param ?string[] $allowedMethods
+     * @return array<string,string>
+     */
     private function getClassNameHash($dirs, ?array $allowedMethods = [], bool $subDirs = false): array
     {
         if (is_string($dirs)) {
@@ -153,6 +159,11 @@ class ClassMap
         return $data;
     }
 
+    /**
+     * @param string[] $fileList
+     * @param ?string[] $allowedMethods
+     * @param array<string,string> $data
+     */
     private function fillHashFromFileList(
         array $fileList,
         string $dir,

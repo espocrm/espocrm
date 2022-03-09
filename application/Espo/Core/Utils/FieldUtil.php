@@ -31,8 +31,11 @@ namespace Espo\Core\Utils;
 
 class FieldUtil
 {
-    private $metadata;
+    private Metadata $metadata;
 
+    /**
+     * @var array<string,string[]>
+     */
     private $fieldByTypeListCache = [];
 
     public function __construct(Metadata $metadata)
@@ -40,6 +43,9 @@ class FieldUtil
         $this->metadata = $metadata;
     }
 
+    /**
+     * @return string[]
+     */
     private function getAttributeListByType(string $entityType, string $name, string $type): array
     {
         $fieldType = $this->metadata->get('entityDefs.' . $entityType . '.fields.' . $name . '.type');
@@ -93,6 +99,9 @@ class FieldUtil
         return $fieldList;
     }
 
+    /**
+     * @return string[]
+     */
     public function getAdditionalActualAttributeList(string $entityType, string $name): array
     {
         $attributeList = [];
@@ -126,6 +135,8 @@ class FieldUtil
 
     /**
      * Get storable attributes of a specific field.
+     *
+     * @return string[]
      */
     public function getActualAttributeList(string $entityType, string $field): array
     {
@@ -137,6 +148,8 @@ class FieldUtil
 
     /**
      * Get non-storable attributes of a specific field.
+     *
+     * @return string[]
      */
     public function getNotActualAttributeList(string $entityType, string $field): array
     {
@@ -145,6 +158,8 @@ class FieldUtil
 
     /**
      * Get attributes of a specific field.
+     *
+     * @return string[]
      */
     public function getAttributeList(string $entityType, string $field): array
     {
@@ -156,6 +171,8 @@ class FieldUtil
 
     /**
      * Get a list of fields of a specific type in an entity type.
+     *
+     * @return string[]
      */
     public function getFieldByTypeList(string $entityType, string $type): array
     {
@@ -180,7 +197,10 @@ class FieldUtil
         return $this->fieldByTypeListCache[$entityType][$type];
     }
 
-    private function getFieldTypeAttributeListByType($fieldType, $name, $type)
+    /**
+     * @return string[]
+     */
+    private function getFieldTypeAttributeListByType(string $fieldType, string $name, string $type): array
     {
         $defs = $this->metadata->get(['fields', $fieldType]);
 
@@ -219,6 +239,8 @@ class FieldUtil
 
     /**
      * Get an attribute list for a given field type and field name.
+     *
+     * @return string[]
      */
     public function getFieldTypeAttributeList(string $fieldType, string $name): array
     {
@@ -230,17 +252,25 @@ class FieldUtil
 
     /**
      * Get a list of fields in an entity type.
+     *
+     * @return string[]
      */
     public function getEntityTypeFieldList(string $entityType): array
     {
         return array_keys($this->metadata->get(['entityDefs', $entityType, 'fields'], []));
     }
 
+    /**
+     * @return mixed
+     */
     public function getEntityTypeFieldParam(string $entityType, string $field, string $param)
     {
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, $param]);
     }
 
+    /**
+     * @return string[]
+     */
     public function getEntityTypeAttributeList(string $entityType): array
     {
         $attributeList = [];
