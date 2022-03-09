@@ -51,6 +51,7 @@ class Manager
 
     /**
      * @var array<string,resource>
+     * @phpstan-ignore-next-line Used to prevent deleting from memory.
      */
     private $resourceMap = [];
 

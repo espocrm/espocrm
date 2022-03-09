@@ -62,11 +62,6 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
     private ?string $sql = null;
 
-    /**
-     * @var Entity[]
-     */
-    private array $entityList = [];
-
     private function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -125,8 +120,6 @@ class SthCollection implements Collection, IteratorAggregate, Countable
                 $entity->setAsFetched();
 
                 $this->prepareEntity($entity);
-
-                $this->entityList[] = $entity;
 
                 yield $entity;
             }

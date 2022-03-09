@@ -33,11 +33,11 @@ use RuntimeException;
 
 class Crypt
 {
-    private $key = null;
+    private string $cryptKey;
 
-    private $cryptKey = null;
+    private ?string $key = null;
 
-    private $iv = null;
+    private ?string $iv = null;
 
     public function __construct(Config $config)
     {
@@ -51,7 +51,7 @@ class Crypt
         }
 
         if (!$this->key) {
-            throw new RuntimeException("Could not hash key.");
+            throw new RuntimeException("Could not hash the key.");
         }
 
         return $this->key;
@@ -60,12 +60,11 @@ class Crypt
     private function getIv(): string
     {
         if ($this->iv === null) {
-            if (extension_loaded('openssl')) {
-                $this->iv = openssl_random_pseudo_bytes(16);
+            if (!extension_loaded('openssl')) {
+                throw new RuntimeException("openssl extension is not loaded.");
             }
-            else {
-                $this->iv = mcrypt_create_iv(16, MCRYPT_RAND);
-            }
+
+            $this->iv = openssl_random_pseudo_bytes(16);
         }
 
         return $this->iv;
@@ -75,44 +74,28 @@ class Crypt
     {
         $iv = $this->getIv();
 
-        if (extension_loaded('openssl')) {
-            return base64_encode(
-                openssl_encrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA , $iv) . $iv
-            );
+        if (!extension_loaded('openssl')) {
+            throw new RuntimeException("openssl extension is not loaded.");
         }
 
-        $block = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, 'cbc');
-
-        $pad = $block - (strlen($string) % $block);
-
-        $string .= str_repeat(chr($pad), $pad);
-
         return base64_encode(
-            mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->getKey(), $string, MCRYPT_MODE_CBC, $iv) . $iv
+            openssl_encrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA, $iv) . $iv
         );
     }
 
     public function decrypt(string $encryptedString): string
     {
         $encryptedStringDecoded = base64_decode($encryptedString);
-
         $string = substr($encryptedStringDecoded, 0, strlen($encryptedStringDecoded) - 16);
-
         $iv = substr($encryptedStringDecoded, -16);
 
-        if (extension_loaded('openssl')) {
-            return trim(
-                openssl_decrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA, $iv)
-            );
+        if (!extension_loaded('openssl')) {
+            throw new RuntimeException("openssl extension is not loaded.");
         }
 
-        $string = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->getKey(), $string, MCRYPT_MODE_CBC, $iv);
-
-        $len = strlen($string);
-
-        $pad = ord($string[$len - 1]);
-
-        return substr($string, 0, strlen($string) - $pad);
+        return trim(
+            openssl_decrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA, $iv)
+        );
     }
 
     public function generateKey(): string

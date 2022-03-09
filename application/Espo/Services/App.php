@@ -37,8 +37,6 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Acl,
-    AclManager,
-    Select\SelectBuilderFactory,
     DataManager,
     InjectableFactory,
     Utils\Metadata,
@@ -72,11 +70,7 @@ class App
 
     private $acl;
 
-    private $aclManager;
-
     private $dataManager;
-
-    private $selectBuilderFactory;
 
     private $injectableFactory;
 
@@ -95,9 +89,7 @@ class App
         EntityManager $entityManager,
         Metadata $metadata,
         Acl $acl,
-        AclManager $aclManager,
         DataManager $dataManager,
-        SelectBuilderFactory $selectBuilderFactory,
         InjectableFactory $injectableFactory,
         SettingsService $settingsService,
         User $user,
@@ -109,9 +101,7 @@ class App
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->acl = $acl;
-        $this->aclManager = $aclManager;
         $this->dataManager = $dataManager;
-        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->injectableFactory = $injectableFactory;
         $this->settingsService = $settingsService;
         $this->user = $user;
