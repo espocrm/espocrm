@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
+use \Doctrine\DBAL\Schema\Schema as DbalSchema;
+
 use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
@@ -38,33 +40,21 @@ use Espo\Core\{
 
 abstract class BaseRebuildActions
 {
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
+
+    protected Config $config;
+
+    protected EntityManager $entityManager;
+
+    protected Log $log;
 
     /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var Log
-     */
-    protected $log;
-
-    /**
-     * @var \Doctrine\DBAL\Schema\Schema|null
+     * @var ?DbalSchema
      */
     protected $currentSchema = null;
 
     /**
-     * @var \Doctrine\DBAL\Schema\Schema|null
+     * @var ?DbalSchema
      */
     protected $metadataSchema = null;
 
@@ -95,24 +85,23 @@ abstract class BaseRebuildActions
         return $this->metadata;
     }
 
-    public function setCurrentSchema(\Doctrine\DBAL\Schema\Schema $currentSchema)
+    public function setCurrentSchema(DbalSchema $currentSchema): void
     {
         $this->currentSchema = $currentSchema;
     }
 
-    public function setMetadataSchema(\Doctrine\DBAL\Schema\Schema $metadataSchema)
+    public function setMetadataSchema(DbalSchema $metadataSchema): void
     {
         $this->metadataSchema = $metadataSchema;
     }
 
-    protected function getCurrentSchema(): ?\Doctrine\DBAL\Schema\Schema
+    protected function getCurrentSchema(): ?DbalSchema
     {
         return $this->currentSchema;
     }
 
-    protected function getMetadataSchema(): ?\Doctrine\DBAL\Schema\Schema
+    protected function getMetadataSchema(): ?DbalSchema
     {
         return $this->metadataSchema;
     }
 }
-

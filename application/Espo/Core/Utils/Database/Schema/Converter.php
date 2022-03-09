@@ -40,6 +40,9 @@ use Espo\Core\Utils\{
     Module\PathProvider,
 };
 
+
+use Doctrine\DBAL\Schema\Table;
+
 use Doctrine\DBAL\{
     Schema\Schema as DbalSchema,
     Types\Type as DbalType,
@@ -47,25 +50,31 @@ use Doctrine\DBAL\{
 
 class Converter
 {
-    private $dbalSchema;
+    private ?DbalSchema $dbalSchema = null;
 
-    private $databaseSchema;
+    private Schema $databaseSchema;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $config;
+    private Config $config;
 
-    private $log;
+    private Log $log;
 
-    private $pathProvider;
+    private PathProvider $pathProvider;
 
-    private $tablesPath = 'Core/Utils/Database/Schema/tables';
+    private string $tablesPath = 'Core/Utils/Database/Schema/tables';
 
+    /**
+     * @var string[]
+     */
     protected $typeList;
 
-    //pair ORM => doctrine
+    /**
+     * ORM => doctrine
+     * @var array<string,string>
+     */
     protected $allowedDbFieldParams = [
         'len' => 'length',
         'default' => 'default',
@@ -73,23 +82,35 @@ class Converter
         'autoincrement' => 'autoincrement',
     ];
 
-    //todo: same array in Converters\Orm
+    /**
+     * @todo Same array in Converters\Orm.
+     * @var array<string,mixed>
+     */
     protected $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
     ];
 
-    //todo: same array in Converters\Orm
+    /**
+     * @todo Same array in Converters\Orm.
+     * @var array<string,mixed>
+     */
     protected $defaultLength = [
         'varchar' => 255,
         'int' => 11,
     ];
 
+    /**
+     * @var string[]
+     */
     protected $notStorableTypes = [
         'foreign',
     ];
 
-    protected $maxIndexLength;
+    /**
+     * @var ?int
+     */
+    protected $maxIndexLength = null;
 
     public function __construct(
         Metadata $metadata,
@@ -109,14 +130,7 @@ class Converter
         $this->typeList = array_keys(DbalType::getTypesMap());
     }
 
-    /**
-     * Get schema
-     *
-     * @param  boolean $reload
-     *
-     * @return \Doctrine\DBAL\Schema\Schema
-     */
-    protected function getSchema($reload = false)
+    protected function getSchema(bool $reload = false): DbalSchema
     {
         if (!isset($this->dbalSchema) || $reload) {
             $this->dbalSchema = new DbalSchema();
@@ -125,11 +139,14 @@ class Converter
         return $this->dbalSchema;
     }
 
-    protected function getDatabaseSchema()
+    protected function getDatabaseSchema(): Schema
     {
         return $this->databaseSchema;
     }
 
+    /**
+     * @return int
+     */
     protected function getMaxIndexLength()
     {
         if (!isset($this->maxIndexLength)) {
@@ -142,12 +159,10 @@ class Converter
     /**
      * Schema conversation process.
      *
-     * @param array $ormMeta
-     * @param array|string|null $entityList
-     *
-     * @return \Doctrine\DBAL\Schema\Schema
+     * @param array<string,mixed> $ormMeta
+     * @param string[]|string|null $entityList
      */
-    public function process(array $ormMeta, $entityList = null)
+    public function process(array $ormMeta, $entityList = null): DbalSchema
     {
         $this->log->debug('Schema\Converter - Start: building schema');
 
@@ -282,8 +297,8 @@ class Converter
                         $tableName = $relationParams['relationName'];
 
                         // check for duplicate tables
-                        if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
-                            $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
+                        if (!isset($tables[$tableName])) { // no needs to create the table if it already exists
+                            $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams);
                         }
 
                         break;
@@ -300,12 +315,9 @@ class Converter
      * Prepare a relation table for the manyMany relation.
      *
      * @param string $entityName
-     * @param array $relationParams
-     * @param array $tables
-     *
-     * @return \Doctrine\DBAL\Schema\Table
+     * @param array<string,mixed> $relationParams
      */
-    protected function prepareManyMany($entityName, $relationParams, $tables)
+    protected function prepareManyMany(string $entityName, $relationParams): Table
     {
         $tableName = Util::toUnderScore($relationParams['relationName']);
 
@@ -418,7 +430,10 @@ class Converter
         return $table;
     }
 
-    protected function addIndexes($table, array $indexes)
+    /**
+     * @param array<string,array<string,mixed>> $indexes
+     */
+    protected function addIndexes(Table $table, array $indexes): void
     {
         foreach($indexes as $indexName => $indexParams) {
             $indexType = !empty($indexParams['type']) ?
@@ -442,6 +457,10 @@ class Converter
         }
     }
 
+    /**
+     * @param array<string,mixed> $fieldParams
+     * @return array<string,mixed>
+     */
     protected function getDbFieldParams($fieldParams)
     {
         $dbFieldParams = [
@@ -523,9 +542,9 @@ class Converter
      * Get custom table definition in
      * `application/Espo/Core/Utils/Database/Schema/tables/` and in metadata 'additionalTables'.
      *
-     * @param array $ormMeta
+     * @param array<string,mixed> $ormMeta
      *
-     * @return array
+     * @return array<string,array<string,mixed>>
      */
     protected function getCustomTables(array $ormMeta)
     {
@@ -555,6 +574,13 @@ class Converter
         return $customTables;
     }
 
+    /**
+     *
+     * @param string[]|string $entityList
+     * @param array<string,mixed> $ormMeta
+     * @param string[] $dependentEntities
+     * @return string[]
+     */
     protected function getDependentEntities($entityList, $ormMeta, $dependentEntities = [])
     {
         if (is_string($entityList)) {
@@ -562,7 +588,6 @@ class Converter
         }
 
         foreach ($entityList as $entityName) {
-
             if (in_array($entityName, $dependentEntities)) {
                 continue;
             }
@@ -590,6 +615,10 @@ class Converter
         return $dependentEntities;
     }
 
+    /**
+     * @param string $path
+     * @return array<string,array<string,mixed>>
+     */
     protected function loadData($path)
     {
         $tables = [];
@@ -600,7 +629,7 @@ class Converter
 
         $fileList = $this->fileManager->getFileList($path, false, '\.php$', true);
 
-        foreach($fileList as $fileName) {
+        foreach ($fileList as $fileName) {
             $fileData = $this->fileManager->getPhpContents($path . '/' . $fileName);
 
             if (is_array($fileData)) {
