@@ -33,6 +33,9 @@ use Espo\Core\Utils\Database\Schema\BaseRebuildActions as Base;
 
 class AddSystemUser extends Base
 {
+    /**
+     * @return void
+     */
     public function afterRebuild()
     {
         $userId = $this->getConfig()->get('systemUserAttributes.id');

@@ -33,6 +33,11 @@ use Espo\Core\Utils\Util;
 
 class Utils
 {
+    /**
+     * @param array<string,mixed> $ormMeta
+     * @param string[] $ignoreFlags
+     * @return array<string,array<string,mixed>>
+     */
     public static function getIndexes(array $ormMeta, array $ignoreFlags = [])
     {
         $indexList = [];
@@ -87,6 +92,10 @@ class Utils
         return $indexList;
     }
 
+    /**
+     * @param array<string,mixed> $fieldDefs
+     * @return ?string
+     */
     public static function getIndexTypeByFieldDefs(array $fieldDefs)
     {
         if ($fieldDefs['type'] != 'id' && isset($fieldDefs['unique']) && $fieldDefs['unique']) {
@@ -96,8 +105,16 @@ class Utils
         if (isset($fieldDefs['index']) && $fieldDefs['index']) {
             return 'index';
         }
+
+        return null;
     }
 
+    /**
+     * @param string $fieldName
+     * @param array<string,mixed> $fieldDefs
+     * @param mixed $default
+     * @return mixed
+     */
     public static function getIndexNameByFieldDefs($fieldName, array $fieldDefs, $default = null)
     {
         $indexType = static::getIndexTypeByFieldDefs($fieldDefs);
@@ -117,6 +134,11 @@ class Utils
         return $default;
     }
 
+    /**
+     * @param array<string,mixed> $fieldsDefs
+     * @param bool $isTableColumnNames
+     * @return array<string,mixed>
+     */
     public static function getEntityIndexListByFieldsDefs(array $fieldsDefs, $isTableColumnNames = false)
     {
         $indexList = [];
@@ -150,6 +172,10 @@ class Utils
         return $indexList;
     }
 
+    /**
+     * @param array<string,mixed> $indexDefs
+     * @return string
+     */
     public static function getIndexTypeByIndexDefs(array $indexDefs)
     {
         if (
@@ -166,6 +192,12 @@ class Utils
         return 'index';
     }
 
+    /**
+     * @param string $name
+     * @param string $type
+     * @param int $maxLength
+     * @return string
+     */
     public static function generateIndexName($name, $type = 'index', $maxLength = 60)
     {
         switch ($type) {
@@ -185,6 +217,14 @@ class Utils
         return substr(implode('_', $nameList), 0, $maxLength);
     }
 
+    /**
+     *
+     * @param array<string,mixed> $ormMeta
+     * @param int $indexMaxLength
+     * @param ?array<string,mixed> $indexList
+     * @param int $characterLength
+     * @return array<string,mixed>
+     */
     public static function getFieldListExceededIndexMaxLength(
         array $ormMeta,
         $indexMaxLength = 1000,
@@ -244,6 +284,11 @@ class Utils
         return $fields;
     }
 
+    /**
+     * @param array<string,mixed> $ormFieldDefs
+     * @param int $characterLength
+     * @return int
+     */
     protected static function getFieldLength(array $ormFieldDefs, $characterLength = 4)
     {
         $length = 0;
@@ -264,7 +309,7 @@ class Utils
         $type = static::getDbFieldType($ormFieldDefs);
 
         $length = isset($defaultLength[$type]) ? $defaultLength[$type] : $length;
-        $length = isset($ormFieldDefs['len']) ? $ormFieldDefs['len'] : $length;
+        //$length = isset($ormFieldDefs['len']) ? $ormFieldDefs['len'] : $length;
 
         switch ($type) {
             case 'varchar':
@@ -275,11 +320,19 @@ class Utils
         return $length;
     }
 
+    /**
+     * @param array<string,mixed> $ormFieldDefs
+     * @return string
+     */
     protected static function getDbFieldType(array $ormFieldDefs)
     {
         return isset($ormFieldDefs['dbType']) ? $ormFieldDefs['dbType'] : $ormFieldDefs['type'];
     }
 
+    /**
+     * @param array<string,mixed> $ormFieldDefs
+     * @return string
+     */
     protected static function getFieldType(array $ormFieldDefs)
     {
         return isset($ormFieldDefs['type']) ? $ormFieldDefs['type'] : static::getDbFieldType($ormFieldDefs);

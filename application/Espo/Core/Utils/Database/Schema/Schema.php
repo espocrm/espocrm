@@ -33,6 +33,8 @@ use Doctrine\DBAL\{
     Types\Type,
     Schema\SchemaDiff as DBALSchemaDiff,
     Schema\Schema as DBALSchema,
+    Connection,
+    Platforms\AbstractPlatform,
 };
 
 use Espo\Core\{
@@ -54,38 +56,37 @@ use Throwable;
 
 class Schema
 {
-    private $config;
+    private Config $config;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $classMap;
+    private ClassMap $classMap;
 
-    private $comparator;
+    private Comparator $comparator;
 
-    private $converter;
+    private DatabaseConverter $converter;
 
-    private $databaseHelper;
+    private Helper $databaseHelper;
 
-    protected $ormMetadataData;
+    protected OrmMetadataData $ormMetadataData;
 
-    private $log;
+    private Log $log;
 
-    private $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
+    private string $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
 
-    private $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
+    private string $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
-    private $schemaConverter;
+    private Converter $schemaConverter;
 
     /**
-     * Array of rebuildActions classes in format:
-     * [
-     *   'beforeRebuild' => [...],
-     *   'afterRebuild' => [...],
-     * ]
+     * @var ?array{
+     *   beforeRebuild: \Espo\Core\Utils\Database\Schema\BaseRebuildActions[],
+     *   afterRebuild: \Espo\Core\Utils\Database\Schema\BaseRebuildActions[],
+     * }
      */
     protected $rebuildActionClasses = null;
 
@@ -107,7 +108,6 @@ class Schema
         $this->log = $log;
 
         $this->databaseHelper = new Helper($this->config);
-
         $this->comparator = new Comparator();
 
         $this->initFieldTypes();
@@ -126,54 +126,24 @@ class Schema
         $this->ormMetadataData = $ormMetadataData;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getComparator()
-    {
-        return $this->comparator;
-    }
-
-    protected function getConverter()
-    {
-        return $this->converter;
-    }
-
-    public function getPlatform()
-    {
-        return $this->getConnection()->getDatabasePlatform();
-    }
-
-    public function getDatabaseHelper()
+    public function getDatabaseHelper(): Helper
     {
         return $this->databaseHelper;
     }
 
-    public function getConnection()
+    public function getPlatform(): AbstractPlatform
+    {
+        return $this->getConnection()->getDatabasePlatform();
+    }
+
+    public function getConnection(): Connection
     {
         return $this->getDatabaseHelper()->getDbalConnection();
     }
 
-    protected function initFieldTypes()
+    protected function initFieldTypes(): void
     {
-        $typeList = $this->getFileManager()->getFileList($this->fieldTypePath, false, '\.php$');
+        $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
 
         foreach ($typeList as $name) {
             $typeName = preg_replace('/Type\.php$/i', '', $name);
@@ -197,12 +167,14 @@ class Schema
         }
     }
 
-    /*
+    /**
      * Rebuild database schema.
+     *
+     * @param ?string[] $entityList
      */
-    public function rebuild(?array $entityList = null) : bool
+    public function rebuild(?array $entityList = null): bool
     {
-        if (!$this->getConverter()->process()) {
+        if (!$this->converter->process()) {
             return false;
         }
 
@@ -251,34 +223,34 @@ class Schema
         return (bool) $result;
     }
 
-    /*
-    * Get current database schema.
-    *
-    * @return \Doctrine\DBAL\Schema\Schema
-    */
-    protected function getCurrentSchema()
+    /**
+     * Get current database schema.
+     */
+    protected function getCurrentSchema(): DBALSchema
     {
-        return $this->getConnection()->getSchemaManager()->createSchema();
+        return $this->getConnection()
+            ->getSchemaManager()
+            ->createSchema();
     }
 
-    /*
-    * Get SQL queries of database schema.
-    *
-    * @return array - array of SQL queries
-    */
+    /**
+     * Get SQL queries of database schema.
+     *
+     * @return string[] Array of SQL queries.
+     */
     public function toSql(DBALSchemaDiff $schema)
     {
         return $schema->toSaveSql($this->getPlatform());
     }
 
-    /*
-    * Get SQL queries to get from one to another schema.
-    *
-    * @return array - array of SQL queries.
-    */
+    /**
+     * Get SQL queries to get from one to another schema.
+     *
+     * @return string[] Array of SQL queries.
+     */
     public function getDiffSql(DBALSchema $fromSchema, DBALSchema $toSchema)
     {
-        $schemaDiff = $this->getComparator()->compare($fromSchema, $toSchema);
+        $schemaDiff = $this->comparator->compare($fromSchema, $toSchema);
 
         return $this->toSql($schemaDiff);
     }
@@ -286,13 +258,14 @@ class Schema
     /**
      * Init Rebuild Actions, get all classes and create them.
      */
-    protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
+    protected function initRebuildActions(?DBALSchema $currentSchema = null, ?DBALSchema $metadataSchema = null): void
     {
         $methods = [
             'beforeRebuild',
             'afterRebuild',
         ];
 
+        /** @var array<string,class-string<\Espo\Core\Utils\Database\Schema\BaseRebuildActions>> */
         $rebuildActions = $this->classMap->getData($this->rebuildActionsPath, null, $methods);
 
         $classes = [];
@@ -326,18 +299,16 @@ class Schema
     /**
      * Execute actions for RebuildAction classes.
      *
-     * @param  string $action action name, possible values 'beforeRebuild' | 'afterRebuild'.
+     * @param string $action An action name, 'beforeRebuild' or 'afterRebuild'.
      */
-    protected function executeRebuildActions($action = 'beforeRebuild')
+    protected function executeRebuildActions(string $action = 'beforeRebuild'): void
     {
         if (!isset($this->rebuildActionClasses)) {
             $this->initRebuildActions();
         }
 
-        if (isset($this->rebuildActionClasses[$action])) {
-            foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
-                $rebuildActionClass->$action();
-            }
+        foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
+            $rebuildActionClass->$action();
         }
     }
 }

@@ -75,7 +75,7 @@ class ClassMap
      * Return paths to class files.
      *
      * @param ?string[] $allowedMethods If specified, classes w/o specified method will be ignored.
-     * @return array<string,string>
+     * @return array<string,class-string>
      */
     public function getData(
         string $path,
@@ -138,7 +138,7 @@ class ClassMap
     /**
      * @param string[]|string $dirs
      * @param ?string[] $allowedMethods
-     * @return array<string,string>
+     * @return array<string,class-string>
      */
     private function getClassNameHash($dirs, ?array $allowedMethods = [], bool $subDirs = false): array
     {
@@ -162,7 +162,7 @@ class ClassMap
     /**
      * @param string[] $fileList
      * @param ?string[] $allowedMethods
-     * @param array<string,string> $data
+     * @param array<string,class-string> $data
      */
     private function fillHashFromFileList(
         array $fileList,

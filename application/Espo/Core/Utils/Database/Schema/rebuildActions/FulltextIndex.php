@@ -36,6 +36,9 @@ use Exception;
 
 class FulltextIndex extends BaseRebuildActions
 {
+    /**
+     * @return void
+     */
     public function beforeRebuild()
     {
         $currentSchema = $this->getCurrentSchema();

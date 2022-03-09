@@ -36,7 +36,7 @@ use Espo\Core\{
 
 class SchemaProxy
 {
-    private $container;
+    private Container $container;
 
     public function __construct(Container $container)
     {
@@ -48,12 +48,15 @@ class SchemaProxy
         return $this->container->get('schema');
     }
 
-    public function rebuild(?array $entityList = null) : bool
+    /**
+     * @param ?string[] $entityList
+     */
+    public function rebuild(?array $entityList = null): bool
     {
         return $this->getSchema()->rebuild();
     }
 
-    public function getDatabaseHelper() : Helper
+    public function getDatabaseHelper(): Helper
     {
         return $this->getSchema()->getDatabaseHelper();
     }

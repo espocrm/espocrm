@@ -30,7 +30,6 @@
 namespace Espo\Core\Utils\Database;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Config,
 };
 
@@ -51,11 +50,11 @@ use RuntimeException;
 
 class Helper
 {
-    private $config;
+    private ?Config $config;
 
-    private $dbalConnection;
+    private ?DbalConnection $dbalConnection = null;
 
-    private $pdoConnection;
+    private ?PDO $pdoConnection = null;
 
     private $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
@@ -79,7 +78,7 @@ class Helper
         $this->config = $config;
     }
 
-    public function getDbalConnection()
+    public function getDbalConnection(): DbalConnection
     {
         if (!isset($this->dbalConnection)) {
             $this->dbalConnection = $this->createDbalConnection();
@@ -88,7 +87,7 @@ class Helper
         return $this->dbalConnection;
     }
 
-    public function getPdoConnection()
+    public function getPdoConnection(): PDO
     {
         if (!isset($this->pdoConnection)) {
             $this->pdoConnection = $this->createPdoConnection();
@@ -97,17 +96,17 @@ class Helper
         return $this->pdoConnection;
     }
 
-    public function setDbalConnection(DbalConnection $dbalConnection)
+    public function setDbalConnection(DbalConnection $dbalConnection): void
     {
         $this->dbalConnection = $dbalConnection;
     }
 
-    public function setPdoConnection(PDO $pdoConnection)
+    public function setPdoConnection(PDO $pdoConnection): void
     {
         $this->pdoConnection = $pdoConnection;
     }
 
-    public function createDbalConnection(array $params = [])
+    public function createDbalConnection(array $params = []): DbalConnection
     {
         if (empty($params) && isset($this->config)) {
             $params = $this->config->get('database');

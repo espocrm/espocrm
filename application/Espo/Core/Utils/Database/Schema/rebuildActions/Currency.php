@@ -33,6 +33,9 @@ use Espo\Core\Utils\Currency\DatabasePopulator;
 
 class Currency extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
 {
+    /**
+     * @return void
+     */
     public function afterRebuild()
     {
         $populator = new DatabasePopulator($this->getConfig(), $this->getEntityManager());
