@@ -87,7 +87,7 @@ class Helper
         return $this->dbalConnection;
     }
 
-    public function getPdoConnection(): PDO
+    public function getPdoConnection(): ?PDO
     {
         if (!isset($this->pdoConnection)) {
             $this->pdoConnection = $this->createPdoConnection();
