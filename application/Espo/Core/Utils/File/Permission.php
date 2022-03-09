@@ -35,17 +35,23 @@ use Throwable;
 
 class Permission
 {
-    private $fileManager;
+    private Manager $fileManager;
 
     /**
      * Last permission error.
      *
-     * @var array|string
+     * @var string[]|string|null
      */
     protected $permissionError = null;
 
+    /**
+     * @var ?array<string,array<string,string>>
+     */
     protected $permissionErrorRules = null;
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     protected $writableMap = [
         'data' => [
             'recursive' => true,
@@ -64,6 +70,14 @@ class Permission
         ],
     ];
 
+    /**
+     * @var array{
+     *   dir: string|int|null,
+     *   file: string|int|null,
+     *   user: string|int|null,
+     *   group: string|int|null,
+     * }
+     */
     protected $defaultPermissions = [
         'dir' => '0755',
         'file' => '0644',
@@ -71,11 +85,20 @@ class Permission
         'group' => null,
     ];
 
+    /**
+     * @var array{
+     *   file: string|int|null,
+     *   dir: string|int|null,
+     * }
+     */
     protected $writablePermissions = [
         'file' => '0664',
         'dir' => '0775',
     ];
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public function __construct(Manager $fileManager, array $params = null)
     {
         $this->fileManager = $fileManager;
@@ -93,22 +116,43 @@ class Permission
     }
     /**
      * Get default settings.
+     *
+     * @return array{
+     *   dir: string|int|null,
+     *   file: string|int|null,
+     *   user: string|int|null,
+     *   group: string|int|null,
+     * }
      */
     public function getDefaultPermissions(): array
     {
         return $this->defaultPermissions;
     }
 
+    /**
+     * @return array<string,array<string,mixed>>
+     */
     public function getWritableMap(): array
     {
         return $this->writableMap;
     }
 
+    /**
+     * @return string[]
+     */
     public function getWritableList(): array
     {
         return array_keys($this->writableMap);
     }
 
+    /**
+     * @return array{
+     *   dir: string|int|null,
+     *   file: string|int|null,
+     *   user: string|int|null,
+     *   group: string|int|null,
+     * }
+     */
     public function getRequiredPermissions(string $path): array
     {
         $permission = $this->getDefaultPermissions();
@@ -170,7 +214,7 @@ class Permission
      * Change permissions.
      *
      * @param string $path
-     * @param int|string[]|string $octal ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
+     * @param int|string[]|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
      * @param bool $recurse
      */
     public function chmod(string $path, $octal, bool $recurse = false): bool
@@ -230,8 +274,8 @@ class Permission
     /**
      * Change permissions recursive.
      *
-     * @param int $fileOctal ex. 0644
-     * @param int $dirOctal ex. 0755
+     * @param int $fileOctal Ex. 0644.
+     * @param int $dirOctal Ex. 0755.
      */
     protected function chmodRecurse(string $path, $fileOctal = 0644, $dirOctal = 0755): bool
     {
@@ -255,7 +299,7 @@ class Permission
     }
 
     /**
-     * Change owner permission
+     * Change owner permission.
      *
      * @param int|string $user
      */
@@ -278,6 +322,8 @@ class Permission
 
     /**
      * Change owner permission recursive.
+     *
+     * @param int|string $user
      */
     protected function chownRecurse(string $path, $user): bool
     {
@@ -477,7 +523,7 @@ class Permission
     /**
      * Get last permission error.
      *
-     * @return array|string
+     * @return string[]|string
      */
     public function getLastError()
     {
@@ -487,7 +533,7 @@ class Permission
     /**
      * Get last permission error rules.
      *
-     * @return array|string
+     * @return ?array<string,array<string,string>>
      */
     public function getLastErrorRules()
     {
@@ -507,14 +553,13 @@ class Permission
      * result will be `['application/Espo/Controllers']`.
      *
      * @param string[] $fileList
-     * @return array
+     * @return string[]
      */
     public function arrangePermissionList(array $fileList): array
     {
         $betterList = [];
 
         foreach ($fileList as $fileName) {
-
             $pathInfo = pathinfo($fileName);
             $dirname = $pathInfo['dirname'];
 
@@ -536,17 +581,17 @@ class Permission
      * Get count of a search string in a array.
      *
      * @param string $search
-     * @param array $array
+     * @param string[] $array
      * @return int
      */
-    protected function getSearchCount($search, array $array)
+    protected function getSearchCount(string $search, array $array)
     {
-        $search = $this->getPregQuote($search);
+        $searchQuoted = $this->getPregQuote($search);
 
         $number = 0;
 
         foreach ($array as $value) {
-            if (preg_match('/^' . $search . '/', $value)) {
+            if (preg_match('/^' . $searchQuoted . '/', $value)) {
                 $number++;
             }
         }
@@ -554,7 +599,10 @@ class Permission
         return $number;
     }
 
-    protected function itemIncludes($item, $array): bool
+    /**
+     * @param string[] $array
+     */
+    protected function itemIncludes(string $item, array $array): bool
     {
         foreach ($array as $value) {
             $value = $this->getPregQuote($value);
@@ -567,7 +615,10 @@ class Permission
         return false;
     }
 
-    protected function getPregQuote($string)
+    /**
+     * @return string
+     */
+    protected function getPregQuote(string $string): string
     {
         return preg_quote($string, '/-+=.');
     }
