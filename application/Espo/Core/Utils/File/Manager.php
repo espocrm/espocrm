@@ -35,7 +35,7 @@ use Espo\Core\{
     Utils\Json,
 };
 
-use StdClass;
+use stdClass;
 use Throwable;
 use InvalidArgumentException;
 
@@ -43,11 +43,14 @@ use const E_USER_DEPRECATED;
 
 class Manager
 {
-    private $permission;
+    private Permission $permission;
 
+    /**
+     * @var string[]
+     */
     private $permissionDeniedList = [];
 
-    protected $tmpDir = 'data/tmp';
+    protected string $tmpDir = 'data/tmp';
 
     protected const RENAME_RETRY_NUMBER = 10;
 
@@ -57,6 +60,14 @@ class Manager
 
     protected const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
+    /**
+     * @param ?array{
+     *   dir: string|int|null,
+     *   file: string|int|null,
+     *   user: string|int|null,
+     *   group: string|int|null,
+     * } $defaultPermissions
+     */
     public function __construct(?array $defaultPermissions = null)
     {
         $params = null;
@@ -156,6 +167,13 @@ class Manager
         return $result;
     }
 
+    /**
+     * @param string[] $fileList
+     * @param ?bool $onlyFileType
+     * @param ?string $basePath
+     * @param string $parentDirName
+     * @return string[]
+     */
     private function getSingleFileList(
         array $fileList,
         $onlyFileType = null,
@@ -243,10 +261,10 @@ class Manager
     }
 
     /**
-     * Get array or StdClass data from PHP file.
+     * Get array or stdClass data from PHP file.
      * If a file is not yet written, it will wait until it's ready.
      *
-     * @return array|object
+     * @return array<mixed,mixed>|stdClass
      */
     public function getPhpSafeContents(string $path)
     {
@@ -263,7 +281,7 @@ class Manager
         while ($counter < self::GET_SAFE_CONTENTS_RETRY_NUMBER) {
             $data = include($path);
 
-            if (is_array($data) || $data instanceof StdClass) {
+            if (is_array($data) || $data instanceof stdClass) {
                 return $data;
             }
 
@@ -303,6 +321,9 @@ class Manager
         return (bool) $result;
     }
 
+    /**
+     * @param string $data
+     */
     private function putContentsUseRenaming(string $path, $data): bool
     {
         $tmpDir = $this->tmpDir;
@@ -390,6 +411,7 @@ class Manager
 
     /**
      * Save JSON content to a file.
+     * @param mixed $data
      */
     public function putJsonContents(string $path, $data): bool
     {
@@ -402,6 +424,8 @@ class Manager
 
     /**
      * Merge JSON file contents with existing and override the file.
+     *
+     * @param array<mixed,mixed> $data
      */
     public function mergeJsonContents(string $path, array $data): bool
     {
@@ -441,6 +465,8 @@ class Manager
     /**
      * Unset specific items in a JSON file and override the file.
      * Items are specified as an array of JSON paths.
+     *
+     * @param array<mixed,string> $unsets
      */
     public function unsetJsonContents(string $path, array $unsets): bool
     {
@@ -467,6 +493,8 @@ class Manager
 
     /**
      * @deprecated
+     * @param string|string[] $paths
+     * @return string
      */
     private function concatPaths($paths)
     {
@@ -534,11 +562,11 @@ class Manager
      * @param string $sourcePath
      * @param string $destPath
      * @param bool $recursively
-     * @param array $fileList List of files that should be copied.
+     * @param string[] $fileList List of files that should be copied.
      * @param bool $copyOnlyFiles Copy only files, instead of full path with directories.
-     * Example:
-     * $sourcePath = 'data/uploads/extensions/file.json',
-     * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'.
+     *   Example:
+     *   $sourcePath = 'data/uploads/extensions/file.json',
+     *   $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'.
      */
     public function copy(
         string $sourcePath,
@@ -667,7 +695,7 @@ class Manager
     /**
      * Remove a file or multiples files.
      *
-     * @param array|string $filePaths File paths or a single path.
+     * @param string[]|string $filePaths File paths or a single path.
      */
     public function unlink($filePaths): bool
     {
@@ -676,6 +704,7 @@ class Manager
 
     /**
      * @deprecated Use removeDir.
+     * @param string[]|string $dirPaths
      */
     public function rmdir($dirPaths): bool
     {
@@ -697,7 +726,7 @@ class Manager
     /**
      * Remove a directory or multiple directories.
      *
-     * @param array|string $dirPaths
+     * @param string[]|string $dirPaths
      */
     public function removeDir($dirPaths): bool
     {
@@ -707,8 +736,8 @@ class Manager
     /**
      * Remove file or multiples files.
      *
-     * @param array|string $filePaths File paths or a single path.
-     * @param string|null $dirPath A directory path.
+     * @param string[]|string $filePaths File paths or a single path.
+     * @param ?string $dirPath A directory path.
      */
     public function removeFile($filePaths, $dirPath = null): bool
     {
@@ -765,8 +794,8 @@ class Manager
     /**
      * Remove items (files or directories).
      *
-     * @param string|array $items
-     * @param string $dirPath
+     * @param string|string[] $items
+     * @param ?string $dirPath
      */
     public function remove($items, $dirPath = null, bool $removeEmptyDirs = false): bool
     {
@@ -955,7 +984,7 @@ class Manager
     /**
      * Wrap data for export to PHP file.
      *
-     * @param array|object|null $data
+     * @param array<mixed,mixed>|object|null $data
      * @return string|false
      */
     public function wrapForDataExport($data, bool $withObjects = false)
@@ -973,7 +1002,10 @@ class Manager
             "return " . $this->varExport($data) . ";\n";
     }
 
-    private function varExport($variable, int $level = 0)
+    /**
+     * @param mixed $variable
+     */
+    private function varExport($variable, int $level = 0): string
     {
         $tab = '';
         $tabElement = '  ';
@@ -984,7 +1016,7 @@ class Manager
 
         $prevTab = substr($tab, 0, strlen($tab) - strlen($tabElement));
 
-        if ($variable instanceof StdClass) {
+        if ($variable instanceof stdClass) {
             return "(object) " . $this->varExport(get_object_vars($variable), $level);
         }
 
@@ -1008,6 +1040,8 @@ class Manager
     /**
      * Check if $paths are writable. Permission denied list can be ontained
      * with getLastPermissionDeniedList().
+     *
+     * @param string[] $paths
      */
     public function isWritableList(array $paths): bool
     {
@@ -1036,7 +1070,7 @@ class Manager
     /**
      * Get last permission denied list.
      *
-     * @return array
+     * @return string[]
      */
     public function getLastPermissionDeniedList(): array
     {
