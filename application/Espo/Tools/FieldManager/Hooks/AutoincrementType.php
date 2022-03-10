@@ -38,7 +38,11 @@ class AutoincrementType implements Di\MetadataAware
 {
     use Di\MetadataSetter;
 
-    public function beforeSave($scope, $name, $defs, $options)
+    /**
+     * @param array<string,mixed> $defs
+     * @param array<string,mixed> $options
+     */
+    public function beforeSave(string $scope, string $name, $defs, $options): void
     {
         if (!isset($options['isNew']) || !$options['isNew']) {
             return;

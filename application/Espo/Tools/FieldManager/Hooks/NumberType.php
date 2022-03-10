@@ -35,7 +35,11 @@ class NumberType implements Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    public function onRead($scope, $name, &$defs, $options)
+    /**
+     * @param array<string,mixed> $defs
+     * @param array<string,mixed> $options
+     */
+    public function onRead(string $scope, string $name, &$defs, $options): void
     {
         $number = $this->entityManager
             ->getRDBRepository('NextNumber')
@@ -62,7 +66,11 @@ class NumberType implements Di\EntityManagerAware
         $defs['nextNumber'] = $value;
     }
 
-    public function afterSave($scope, $name, $defs, $options)
+    /**
+     * @param array<string,mixed> $defs
+     * @param array<string,mixed> $options
+     */
+    public function afterSave(string $scope, string $name, $defs, $options): void
     {
         if (!isset($defs['nextNumber'])) {
             return;
@@ -88,7 +96,11 @@ class NumberType implements Di\EntityManagerAware
         $this->entityManager->saveEntity($number);
     }
 
-    public function afterRemove($scope, $name, $defs, $options)
+    /**
+     * @param array<string,mixed> $defs
+     * @param array<string,mixed> $options
+     */
+    public function afterRemove(string $scope, string $name, $defs, $options): void
     {
         $number = $this->entityManager
             ->getRDBRepository('NextNumber')
