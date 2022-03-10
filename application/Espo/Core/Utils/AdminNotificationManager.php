@@ -42,13 +42,13 @@ use Espo\Core\{
  */
 class AdminNotificationManager
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $config;
+    private Config $config;
 
-    private $language;
+    private Language $language;
 
-    private $scheduledJob;
+    private ScheduledJob $scheduledJob;
 
     public function __construct(
         EntityManager $entityManager,
@@ -62,6 +62,10 @@ class AdminNotificationManager
         $this->scheduledJob = $scheduledJob;
     }
 
+    /**
+     *
+     * @return array<int,array{id:string,type:string,message:string}>
+     */
     public function getNotificationList(): array
     {
         $notificationList = [];
@@ -123,6 +127,9 @@ class AdminNotificationManager
         return $this->scheduledJob->isCronConfigured();
     }
 
+    /**
+     * @return ?array{currentVersion:string,latestVersion:string}
+     */
     private function getInstanceNeedingUpgrade(): ?array
     {
         $latestVersion = $this->config->get('latestVersion');
@@ -147,6 +154,10 @@ class AdminNotificationManager
         return null;
     }
 
+    /**
+     *
+     * @return array<string,array{currentVersion:string,latestVersion:string,extensionName:string}>
+     */
     private function getExtensionsNeedingUpgrade(): array
     {
         $extensions = [];
@@ -191,6 +202,9 @@ class AdminNotificationManager
         return $extension->get('version');
     }
 
+    /**
+     * @param array<string,string> $data
+     */
     private function prepareMessage(string $message, array $data = []): string
     {
         foreach ($data as $name => $value) {

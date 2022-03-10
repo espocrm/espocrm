@@ -40,23 +40,26 @@ use Exception;
 
 class Autoload
 {
+    /**
+     * @var ?array<string,mixed>
+     */
     private $data = null;
 
-    private $cacheKey = 'autoload';
+    private string $cacheKey = 'autoload';
 
-    private $autoloadFileName = 'autoload.json';
+    private string $autoloadFileName = 'autoload.json';
 
-    private $config;
+    private Config $config;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $loader;
+    private Loader $loader;
 
-    private $pathProvider;
+    private PathProvider $pathProvider;
 
     public function __construct(
         Config $config,
@@ -74,6 +77,9 @@ class Autoload
         $this->pathProvider = $pathProvider;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getData(): array
     {
         if (!isset($this->data)) {
@@ -100,6 +106,9 @@ class Autoload
         }
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function loadData(): array
     {
         $corePath = $this->pathProvider->getCore() . $this->autoloadFileName;
@@ -123,6 +132,9 @@ class Autoload
         );
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function loadDataFromFile(string $filePath): array
     {
         if (!$this->fileManager->isFile($filePath)) {
@@ -136,6 +148,10 @@ class Autoload
         return $this->normalizeData($arrayContent);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return array<string,mixed>
+     */
     private function normalizeData(array $data): array
     {
         $normalizedData = [];

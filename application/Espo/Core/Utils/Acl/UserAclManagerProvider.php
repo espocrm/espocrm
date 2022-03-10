@@ -39,14 +39,17 @@ use Espo\Core\ApplicationState;
 
 class UserAclManagerProvider
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $aclManager;
+    private AclManager $aclManager;
 
-    private $portalAclManagerContainer;
+    private PortalAclManagerContainer $portalAclManagerContainer;
 
     private ApplicationState $applicationState;
 
+    /**
+     * @var array<string,AclManager>
+     */
     private $map = [];
 
     public function __construct(
