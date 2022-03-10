@@ -43,9 +43,9 @@ class Converter
 
     private $config;
 
-    private $ormConverter;
+    private Orm\Converter $ormConverter;
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config = null)
+    public function __construct(Metadata $metadata, FileManager $fileManager, ?Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
@@ -53,16 +53,19 @@ class Converter
         $this->ormConverter = new Orm\Converter($this->metadata, $this->fileManager, $this->config);
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
 
-    protected function getOrmConverter()
+    protected function getOrmConverter(): Orm\Converter
     {
         return $this->ormConverter;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function process()
     {
         $data = $this->getOrmConverter()->process();

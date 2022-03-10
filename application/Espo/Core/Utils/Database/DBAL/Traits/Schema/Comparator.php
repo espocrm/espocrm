@@ -36,8 +36,11 @@ use Doctrine\DBAL\{
 
 trait Comparator
 {
-    /*
+    /**
      * Fix problem with executing query for custom types
+     *
+     * @param string[] $changedProperties
+     * @return void
      */
     protected function espoFixTypeDiff(array &$changedProperties, Column $column1, Column $column2)
     {
@@ -60,8 +63,10 @@ trait Comparator
             $changedProperties[] = 'type';
         }
     }
-    /* Espo: end */
 
+    /**
+     * @return string
+     */
     private function getColumnDbType(Column $column)
     {
         $dbType = $column->getType()->getName();
@@ -73,6 +78,9 @@ trait Comparator
         return strtoupper($dbType);
     }
 
+    /**
+     * @return ?int
+     */
     private function getColumnDbLength(Column $column)
     {
         $dbType = $this->getColumnDbType($column);
@@ -87,5 +95,7 @@ trait Comparator
         if (defined($constName)) {
             return constant($constName);
         }
+
+        return null;
     }
 }

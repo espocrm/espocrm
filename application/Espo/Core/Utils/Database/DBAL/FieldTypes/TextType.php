@@ -33,11 +33,18 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class TextType extends \Doctrine\DBAL\Types\TextType
 {
+    /**
+     * @return string
+     */
     public static function getDbTypeName()
     {
         return 'mediumtext';
     }
 
+    /**
+     * @param array<string,mixed> $fieldDeclaration
+     * @return string
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'MEDIUMTEXT';

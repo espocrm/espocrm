@@ -35,11 +35,17 @@ class BoolType extends BooleanType
 {
     const BOOL = 'bool';
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return self::BOOL;
     }
 
+    /**
+     * @return string
+     */
     public static function getDbTypeName()
     {
         return 'TINYINT';
