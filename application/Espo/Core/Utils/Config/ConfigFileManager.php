@@ -38,7 +38,7 @@ use RuntimeException;
 
 class ConfigFileManager
 {
-    protected $fileManager;
+    protected FileManager $fileManager;
 
     public function __construct()
     {
@@ -57,6 +57,10 @@ class ConfigFileManager
         return $this->fileManager->isFile($filePath);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @throws RuntimeException
+     */
     protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
     {
         $result = $this->fileManager->putPhpContents($path, $data, true, $useRenaming);
@@ -66,18 +70,24 @@ class ConfigFileManager
         }
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public function putPhpContents(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, true);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public function putPhpContentsNoRenaming(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, false);
     }
 
     /**
-     * @return array|false
+     * @return array<string,mixed>|false
      */
     public function getPhpContents(string $path)
     {

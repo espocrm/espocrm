@@ -39,10 +39,19 @@ use Exception;
  */
 class ConfigWriter
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $changedData = [];
 
+    /**
+     * @var string[]
+     */
     private $removeParamList = [];
 
+    /**
+     * @var string[]
+     */
     protected $associativeArrayAttributeList = [
         'currencyRates',
         'database',
@@ -50,15 +59,15 @@ class ConfigWriter
         'defaultPermissions',
     ];
 
-    private $cacheTimestampParam = 'cacheTimestamp';
+    private string $cacheTimestampParam = 'cacheTimestamp';
 
-    private $config;
+    private Config $config;
 
-    private $fileManager;
+    private ConfigWriterFileManager $fileManager;
 
-    private $helper;
+    private ConfigWriterHelper $helper;
 
-    private $internalConfigHelper;
+    private InternalConfigHelper $internalConfigHelper;
 
     public function __construct(
         Config $config,
@@ -74,6 +83,8 @@ class ConfigWriter
 
     /**
      * Set a parameter.
+     *
+     * @param mixed $value
      */
     public function set(string $name, $value): void
     {
@@ -86,6 +97,8 @@ class ConfigWriter
 
     /**
      * Set multiple parameters.
+     *
+     * @param array<string,mixed> $params
      */
     public function setMultiple(array $params): void
     {
@@ -176,6 +189,10 @@ class ConfigWriter
         $this->config->update();
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @throws Error
+     */
     private function saveData(string $path, array &$data, string $timeParam): void
     {
         $data[$timeParam] = $microtime = $this->helper->generateMicrotime();

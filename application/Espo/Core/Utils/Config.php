@@ -40,14 +40,17 @@ use E_USER_DEPRECATED;
  */
 class Config
 {
-    private $configPath = 'data/config.php';
+    private string $configPath = 'data/config.php';
 
-    private $internalConfigPath = 'data/config-internal.php';
+    private string $internalConfigPath = 'data/config-internal.php';
 
-    private $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
+    private string $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
 
-    private $cacheTimestamp = 'cacheTimestamp';
+    private string $cacheTimestamp = 'cacheTimestamp';
 
+    /**
+     * @var string[]
+     */
     protected $associativeArrayAttributeList = [
         'currencyRates',
         'database',
@@ -55,14 +58,26 @@ class Config
         'defaultPermissions',
     ];
 
-    private $data;
+    /**
+     * @var ?array<string,mixed>
+     */
+    private $data = null;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $changedData = [];
 
+    /**
+     * @var string[]
+     */
     private $removeData = [];
 
-    private $fileManager;
+    private ConfigFileManager $fileManager;
 
+    /**
+     * @var string[]
+     */
     private $internalParamList = [];
 
     public function __construct(ConfigFileManager $fileManager)
@@ -159,15 +174,18 @@ class Config
      * @todo Get rid of this method. Use ConfigData as a dependency.
      * `$configData->update();`
      */
-    public function update()
+    public function update(): void
     {
         $this->load();
     }
 
     /**
      * @deprecated Since v7.0.
+     *
+     * @param string|array<string,mixed>|\stdClass $name
+     * @param mixed $value
      */
-    public function set($name, $value = null, bool $dontMarkDirty = false)
+    public function set($name, $value = null, bool $dontMarkDirty = false): void
     {
         if (is_object($name)) {
             $name = get_object_vars($name);
@@ -208,6 +226,8 @@ class Config
 
     /**
      * @deprecated Since v7.0.
+     *
+     * @return bool
      */
     public function save()
     {
@@ -269,6 +289,9 @@ class Config
         return isset($this->data) && !empty($this->data);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getData(): array
     {
         if (!$this->isLoaded()) {
@@ -322,20 +345,25 @@ class Config
         return in_array($name, $this->internalParamList);
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function setData($data)
     {
         if (is_object($data)) {
             $data = get_object_vars($data);
         }
 
-        return $this->set($data);
+        $this->set($data);
     }
 
     /**
      * Update cache timestamp.
      *
      * @deprecated
+     * @return ?array<string,int>
      */
     public function updateCacheTimestamp(bool $returnOnlyValue = false)
     {
@@ -347,7 +375,9 @@ class Config
             return $timestamp;
         }
 
-        return $this->set($timestamp);
+        $this->set($timestamp);
+
+        return null;
     }
 
     /**

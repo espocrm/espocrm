@@ -75,6 +75,10 @@ class DatabasePopulator
         }
     }
 
+    /**
+     * @param array<string,float> $currencyRates
+     * @return array<string,float>
+     */
     private function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
     {
         $precision = 5;

@@ -38,8 +38,16 @@ use RuntimeException;
 
 class ConfigWriterFileManager
 {
-    private $fileManager;
+    private FileManager $fileManager;
 
+    /**
+     * @param ?array{
+     *   dir: string|int|null,
+     *   file: string|int|null,
+     *   user: string|int|null,
+     *   group: string|int|null,
+     * } $defaultPermissions
+     */
     public function __construct(?Config $config = null, ?array $defaultPermissions = null)
     {
         $defaultPermissionsToSet = null;
@@ -54,7 +62,7 @@ class ConfigWriterFileManager
         $this->fileManager = new FileManager($defaultPermissionsToSet);
     }
 
-    public function setConfig(Config $config)
+    public function setConfig(Config $config): void
     {
         $this->fileManager = new FileManager(
             $config->get('defaultPermissions')
@@ -66,7 +74,11 @@ class ConfigWriterFileManager
         return $this->fileManager->isFile($filePath);
     }
 
-    protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false)
+    /**
+     * @param array<string,mixed> $data
+     * @throws RuntimeException
+     */
+    protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
     {
         $result = $this->fileManager->putPhpContents($path, $data, true, $useRenaming);
 
@@ -75,16 +87,25 @@ class ConfigWriterFileManager
         }
     }
 
-    public function putPhpContents(string $path, array $data)
+    /**
+     * @param array<string,mixed> $data $data
+     */
+    public function putPhpContents(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, true);
     }
 
-    public function putPhpContentsNoRenaming(string $path, array $data)
+    /**
+     * @param array<string,mixed> $data
+     */
+    public function putPhpContentsNoRenaming(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, false);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPhpContents(string $path)
     {
         return $this->fileManager->getPhpContents($path);
