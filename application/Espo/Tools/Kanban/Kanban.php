@@ -49,20 +49,17 @@ class Kanban
 
     private const MAX_GROUP_LENGTH = 100;
 
-    protected $entityType;
+    protected ?string $entityType = null;
 
-    protected $countDisabled = false;
+    protected bool $countDisabled = false;
 
-    protected $orderDisabled = false;
+    protected bool $orderDisabled = false;
 
-    /**
-     * @var ?SearchParams
-     */
-    protected $searchParams = null;
+    protected ?SearchParams $searchParams = null;
 
-    protected $userId = null;
+    protected ?string $userId = null;
 
-    protected $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
+    protected int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
 
     private $metadata;
 
@@ -301,6 +298,10 @@ class Kanban
         return $statusField;
     }
 
+    /**
+     * @return string[]
+     * @throws Error
+     */
     protected function getStatusList(): array
     {
         $statusField = $this->getStatusField();
@@ -314,6 +315,9 @@ class Kanban
         return $statusList;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getStatusIgnoreList(): array
     {
         return $this->metadata->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);

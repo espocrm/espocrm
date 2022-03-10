@@ -93,6 +93,10 @@ class KanbanService
             ->getResult();
     }
 
+    /**
+     * @param string[] $ids
+     * @throws ForbiddenSilent
+     */
     public function order(string $entityType, string $group, array $ids): void
     {
         $this->processAccessCheck($entityType);
@@ -116,7 +120,7 @@ class KanbanService
         return $this->injectableFactory->create(Kanban::class);
     }
 
-    private function processAccessCheck($entityType): void
+    private function processAccessCheck(string $entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
             throw new ForbiddenSilent("Non-object entities are not supported.");

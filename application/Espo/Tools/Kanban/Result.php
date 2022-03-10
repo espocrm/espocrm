@@ -29,27 +29,34 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\{
-    ORM\EntityCollection,
-};
+use Espo\ORM\EntityCollection;
 
-use StdClass;
+use stdClass;
 
 class Result
 {
-    private $collection;
+    /**
+     * @var EntityCollection<\Espo\ORM\Entity>
+     */
+    private EntityCollection $collection;
 
-    private $total;
+    private int $total;
 
-    private $data;
+    private stdClass $data;
 
-    public function __construct(EntityCollection $collection, int $total, StdClass $data)
+    /**
+     * @param EntityCollection<\Espo\ORM\Entity> $collection
+     */
+    public function __construct(EntityCollection $collection, int $total, stdClass $data)
     {
         $this->collection = $collection;
         $this->total = $total;
         $this->data = $data;
     }
 
+    /**
+     * @return EntityCollection<\Espo\ORM\Entity>
+     */
     public function getCollection(): EntityCollection
     {
         return $this->collection;
@@ -60,7 +67,7 @@ class Result
         return $this->total;
     }
 
-    public function getData(): StdClass
+    public function getData(): stdClass
     {
         return $this->data;
     }

@@ -43,17 +43,17 @@ class OrdererProcessor
 
     private const DEFAULT_MAX_NUMBER = 50;
 
-    private $entityType;
+    private ?string $entityType = null;
 
-    private $group;
+    private ?string $group = null;
 
-    private $userId = null;
+    private ?string $userId = null;
 
-    private $maxNumber = self::DEFAULT_MAX_NUMBER;
+    private int $maxNumber = self::DEFAULT_MAX_NUMBER;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
@@ -95,6 +95,9 @@ class OrdererProcessor
         return $this;
     }
 
+    /**
+     * @param string[] $ids
+     */
     public function order(array $ids): void
     {
         $this->validate();
