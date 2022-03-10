@@ -68,6 +68,11 @@ class Service
         $this->acl = $acl;
     }
 
+    /**
+     * @param string[] $attributeList
+     * @param string $attachmentId
+     * @throws Forbidden
+     */
     public function import(
         string $entityType,
         array $attributeList,

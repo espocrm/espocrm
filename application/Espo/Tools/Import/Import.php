@@ -71,15 +71,18 @@ class Import
 
     private const DEFAULT_TIME_FORMAT = 'HH:mm';
 
+    /**
+     * @var string[]
+     */
     private $attributeList = [];
 
-    private $params;
+    private Params $params;
 
-    private $id = null;
+    private ?string $id = null;
 
-    private $attachmentId = null;
+    private ?string $attachmentId = null;
 
-    private $entityType = null;
+    private ?string $entityType = null;
 
     private $aclManager;
 
@@ -165,6 +168,8 @@ class Import
 
     /**
      * Set an attribute list to parse from CSV rows.
+     *
+     * @param string[] $attributeList
      */
     public function setAttributeList(array $attributeList): self
     {
@@ -386,6 +391,11 @@ class Import
             ->withCountUpdated(count($result->updatedIds));
     }
 
+    /**
+     * @param string[] $attributeList
+     * @param mixed[] $row
+     * @throws Error
+     */
     private function importRow(array $attributeList, array $row): ?stdClass
     {
         $params = $this->params;
@@ -627,6 +637,9 @@ class Import
         }
     }
 
+    /**
+     * @param mixed $value
+     */
     private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap): void
     {
         $params = $this->params;
@@ -801,6 +814,7 @@ class Import
     }
 
     /**
+     * @param mixed $value
      * @return mixed
      */
     private function parseValue(Entity $entity, string $attribute, $value)
@@ -894,6 +908,7 @@ class Import
     }
 
     /**
+     * @param mixed $value
      * @return mixed
      */
     private function prepareAttributeValue(Entity $entity, string $attribute, $value)
@@ -909,7 +924,14 @@ class Import
         return $value;
     }
 
-    private function parsePersonName($value, string $format): array
+    /**
+     * @return array{
+     *   firstName: ?string,
+     *   lastName: ?string,
+     *   middleName?: ?string,
+     * }
+     */
+    private function parsePersonName(string $value, string $format): array
     {
         $firstName = null;
         $lastName = $value;
@@ -929,6 +951,7 @@ class Import
 
             case 'l f':
                 $pos = strpos($value, ' ');
+
                 if ($pos) {
                     $lastName = trim(substr($value, 0, $pos));
                     $firstName = trim(substr($value, $pos + 1));
@@ -1002,6 +1025,9 @@ class Import
         ];
     }
 
+    /**
+     * @return string[]
+     */
     private function readCsvString(
         string &$string,
         string $separator = ';',

@@ -40,39 +40,42 @@ class Params
 
     public const ACTION_UPDATE = 'update';
 
-    private $action = null;
+    private ?string $action = null;
 
-    private $delimiter = null;
+    private ?string $delimiter = null;
 
-    private $textQualifier = null;
+    private ?string $textQualifier = null;
 
-    private $personNameFormat = null;
+    private ?string $personNameFormat = null;
 
-    private $idleMode = false;
+    private bool $idleMode = false;
 
-    private $manualMode = false;
+    private bool $manualMode = false;
 
-    private $silentMode = false;
+    private bool $silentMode = false;
 
-    private $headerRow = false;
+    private bool $headerRow = false;
 
-    private $skipDuplicateChecking = false;
+    private bool $skipDuplicateChecking = false;
 
-    private $startFromLastIndex = false;
+    private bool $startFromLastIndex = false;
 
+    /**
+     * @var int[]
+     */
     private $updateBy = [];
 
-    private $defaultValues;
+    private stdClass $defaultValues;
 
-    private $dateFormat = null;
+    private ?string $dateFormat = null;
 
-    private $timeFormat = null;
+    private ?string $timeFormat = null;
 
-    private $currency = null;
+    private ?string $currency = null;
 
-    private $timezone = null;
+    private ?string $timezone = null;
 
-    private $decimalMark = null;
+    private ?string $decimalMark = null;
 
     private function __construct()
     {
@@ -129,6 +132,9 @@ class Params
         return $this->startFromLastIndex;
     }
 
+    /**
+     * @return int[]
+     */
     public function getUpdateBy(): array
     {
         return $this->updateBy;
@@ -249,6 +255,9 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param int[] $updateBy
+     */
     public function withUpdateBy(array $updateBy): self
     {
         $obj = clone $this;
@@ -258,7 +267,7 @@ class Params
     }
 
     /**
-     * @param stdClass|array|null $defaultValues
+     * @param stdClass|array<string,mixed>|null $defaultValues
      */
     public function withDefaultValues($defaultValues): self
     {
@@ -323,7 +332,7 @@ class Params
     }
 
     /**
-     * @param stdClass|array|null $params
+     * @param stdClass|array<string,mixed>|null $params
      */
     public static function fromRaw($params): self
     {
@@ -355,6 +364,9 @@ class Params
         return $obj;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getRaw(): array
     {
         return [

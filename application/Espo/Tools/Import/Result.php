@@ -33,13 +33,13 @@ use stdClass;
 
 class Result
 {
-    private $id = null;
+    private ?string $id = null;
 
-    private $countCreated = 0;
+    private int $countCreated = 0;
 
-    private $countUpdated = 0;
+    private int $countUpdated = 0;
 
-    private $manualMode = false;
+    private bool $manualMode = false;
 
     public function getId(): ?string
     {
