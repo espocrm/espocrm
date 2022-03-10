@@ -124,8 +124,7 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
         $this->fileManager
             ->expects($this->once())
             ->method('putPhpContents')
-            ->with($this->configPath, $newData)
-            ->willReturn($previousData);
+            ->with($this->configPath, $newData);
 
         $this->fileManager
             ->expects($this->exactly(2))

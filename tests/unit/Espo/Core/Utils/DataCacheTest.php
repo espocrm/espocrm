@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\Espo\Core\Utils;
+namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\{
     Utils\DataCache,
@@ -70,32 +70,6 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
         $result = $this->dataCache->has('autoload');
 
         $this->assertFalse($result);
-    }
-
-    public function testGetDataInt()
-    {
-        $this->expectException(Error::class);
-
-        $this->fileManager
-            ->expects($this->once())
-            ->method('getPhpSafeContents')
-            ->with('data/cache/application/autoload.php')
-            ->willReturn(1);
-
-        $result = $this->dataCache->get('autoload');
-    }
-
-    public function testGetError()
-    {
-        $this->expectException(Error::class);
-
-        $this->fileManager
-            ->expects($this->once())
-            ->method('getPhpSafeContents')
-            ->with('data/cache/application/autoload.php')
-            ->willReturn(false);
-
-        $result = $this->dataCache->get('autoload');
     }
 
     public function testStoreData()
