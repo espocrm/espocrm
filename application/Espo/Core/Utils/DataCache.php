@@ -39,9 +39,9 @@ use stdClass;
 
 class DataCache
 {
-    protected $fileManager;
+    protected FileManager $fileManager;
 
-    protected $cacheDir = 'data/cache/application/';
+    protected string $cacheDir = 'data/cache/application/';
 
     public function __construct(FileManager $fileManager)
     {
@@ -62,34 +62,25 @@ class DataCache
      * Get a stored value.
      *
      * @throws Error if is not cached.
-     *
-     * @return array|stdClass|null
+     * @return array<mixed,mixed>|stdClass|null
      */
     public function get(string $key)
     {
         $cacheFile = $this->getCacheFile($key);
 
-        $data = $this->fileManager->getPhpSafeContents($cacheFile);
-
-        if ($data === false) {
-            throw new Error("Could not get '{$key}'.");
-        }
-
-        if (! $this->checkDataIsValid($data)) {
-            throw new Error("Bad data fetched from cache by key '{$key}'.");
-        }
-
-        return $data;
+        return $this->fileManager->getPhpSafeContents($cacheFile);
     }
 
     /**
      * Store in cache.
      *
-     * @param array|stdClass|null $data
+     * @param array<mixed,mixed>|stdClass|null $data
      */
     public function store(string $key, $data): void
     {
-        if (! $this->checkDataIsValid($data)) {
+        /** @phpstan-var mixed $data */
+
+        if (!$this->checkDataIsValid($data)) {
             throw new InvalidArgumentException("Bad cache data type.");
         }
 
@@ -102,13 +93,18 @@ class DataCache
         }
     }
 
+
+    /**
+     * @param mixed $data
+     * @return bool
+     */
     protected function checkDataIsValid($data)
     {
         $isInvalid =
             !is_array($data) &&
             !$data instanceof stdClass;
 
-        return ! $isInvalid;
+        return !$isInvalid;
     }
 
     protected function getCacheFile(string $key): string

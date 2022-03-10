@@ -35,6 +35,13 @@ use InvalidArgumentException;
 
 class DataUtil
 {
+    /**
+     * @param array<mixed,mixed> $data
+     * @param array<int,string|string[]>|string $unsetList
+     * @return array<mixed,mixed>
+     * @throws InvalidArgumentException
+     * @throws Error
+     */
     public static function unsetByKey(&$data, $unsetList, bool $removeEmptyItems = false)
     {
         if (empty($unsetList)) {
@@ -109,6 +116,11 @@ class DataUtil
         return $data;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @param mixed $needle
+     * @return array<string,mixed>
+     */
     public static function unsetByValue(&$data, $needle)
     {
         if (is_object($data)) {
@@ -140,6 +152,12 @@ class DataUtil
         return $data;
     }
 
+    /**
+     *
+     * @param array<string,mixed>|\stdClass $data
+     * @param array<string,mixed>|\stdClass $overrideData
+     * @return array<string,mixed>|\stdClass
+     */
     public static function merge($data, $overrideData)
     {
         $appendIdentifier = '__APPEND__';
