@@ -31,13 +31,13 @@ namespace Espo\Tools\EmailNotification;
 
 class AssignmentProcessorData
 {
-    private $userId = null;
+    private ?string $userId = null;
 
-    private $assignerUserId = null;
+    private ?string $assignerUserId = null;
 
-    private $entityId = null;
+    private ?string $entityId = null;
 
-    private $entityType = null;
+    private ?string $entityType = null;
 
     public function getUserId(): ?string
     {

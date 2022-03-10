@@ -87,6 +87,9 @@ class EntityManager
 
     private const MAX_LINK_NAME = 100;
 
+    /**
+     * @var string[]
+     */
     private $reservedWordList = [
         '__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable',
         'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default',
@@ -98,6 +101,9 @@ class EntityManager
         'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn', 'parent',
     ];
 
+    /**
+     * @var string[]
+     */
     private $linkForbiddenNameList = [
         'posts',
         'stream',
@@ -109,6 +115,9 @@ class EntityManager
         'true',
     ];
 
+    /**
+     * @var string[]
+     */
     private $forbiddenEntityTypeNameList = [
         'Common',
         'PortalUser',
@@ -210,6 +219,13 @@ class EntityManager
         return false;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @param array<string,mixed> $replaceData
+     * @throws BadRequest
+     * @throws Error
+     * @throws Conflict
+     */
     public function create(string $name, string $type, array $params = [], array $replaceData = []): void
     {
         $name = ucfirst($name);
@@ -525,6 +541,26 @@ class EntityManager
         $this->metadata->set('recordDefs', $name, $data);
     }
 
+    /**
+     * @param array{
+     *   stream?: bool,
+     *   disabled?: bool,
+     *   statusField?: ?string,
+     *   labelSingular?: ?string,
+     *   labelPlural?: ?string,
+     *   sortBy?: ?string,
+     *   sortDirection?: ?string,
+     *   textFilterFields?: ?string[],
+     *   fullTextSearch?: bool,
+     *   countDisabled?: bool,
+     *   optimisticConcurrencyControl?: bool,
+     *   kanbanStatusIgnoreList?: ?string[],
+     *   kanbanViewMode?: bool,
+     *   color?: ?string,
+     *   iconClass?: ?string,
+     * } $data
+     * @throws Error
+     */
     public function update(string $name, array $data): void
     {
         if (!$this->metadata->get('scopes.' . $name)) {
@@ -689,6 +725,13 @@ class EntityManager
         }
     }
 
+    /**
+     * @param array{
+     *   forceRemove?: bool
+     * } $params
+     * @throws Forbidden
+     * @throws Error
+     */
     public function delete(string $name, array $params = []): void
     {
         if (!$this->isCustom($name)) {
@@ -812,6 +855,25 @@ class EntityManager
         return (bool) $this->metadata->get('scopes.' . $name . '.isCustom');
     }
 
+    /**
+     * @param array{
+     *   linkType: string,
+     *   entity: string,
+     *   link: string,
+     *   entityForeign: string,
+     *   linkForeign: string,
+     *   label: string,
+     *   labelForeign: string,
+     *   relationName?: ?string,
+     *   linkMultipleField?: bool,
+     *   linkMultipleFieldForeign?: bool,
+     *   audited?: bool,
+     *   auditedForeign?: bool,
+     * } $params
+     * @throws BadRequest
+     * @throws Error
+     * @throws Conflict
+     */
     public function createLink(array $params): void
     {
         $linkType = $params['linkType'];
@@ -1285,6 +1347,23 @@ class EntityManager
         $this->dataManager->rebuild();
     }
 
+    /**
+     * @param array{
+     *   entity: string,
+     *   link: string,
+     *   entityForeign?: ?string,
+     *   linkForeign?: ?string,
+     *   label?: string,
+     *   labelForeign?: string,
+     *   linkMultipleField?: bool,
+     *   linkMultipleFieldForeign?: bool,
+     *   audited?: bool,
+     *   auditedForeign?: bool,
+     *   parentEntityTypeList?: string[],
+     *   foreignLinkEntityTypeList?: string[],
+     * } $params
+     * @throws BadRequest
+     */
     public function updateLink(array $params): void
     {
         $entity = $params['entity'];
@@ -1476,6 +1555,14 @@ class EntityManager
         $this->dataManager->clearCache();
     }
 
+    /**
+     * @param array{
+     *   entity?: string,
+     *   link?: string,
+     * } $params
+     * @throws Error
+     * @throws BadRequest
+     */
     public function deleteLink(array $params): void
     {
         $entity = $params['entity'];
@@ -1581,6 +1668,9 @@ class EntityManager
         $this->dataManager->clearCache();
     }
 
+    /**
+     * @param array<string,string> $data
+     */
     public function setFormulaData(string $scope, array $data): void
     {
         $this->metadata->set('formula', $scope, $data);
@@ -1590,6 +1680,9 @@ class EntityManager
         $this->dataManager->clearCache();
     }
 
+    /**
+     * @param ?array<string,mixed> $params
+     */
     protected function processHook(string $methodName, string $type, string $name, &$params = null): void
     {
         $hook = $this->getHook($type);
@@ -1670,6 +1763,9 @@ class EntityManager
         $this->dataManager->clearCache();
     }
 
+    /**
+     * @param string[] $foreignLinkEntityTypeList
+     */
     protected function updateParentForeignLinks(
         string $entityType,
         string $link,

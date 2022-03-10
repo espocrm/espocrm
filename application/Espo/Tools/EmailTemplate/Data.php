@@ -35,21 +35,24 @@ use Espo\Entities\User;
 
 class Data
 {
+    /**
+     * @var array<string,Entity>
+     */
     private $entityHash = [];
 
-    private $emailAddress = null;
+    private ?string $emailAddress = null;
 
-    private $parent = null;
+    private ?Entity $parent = null;
 
-    private $parentId = null;
+    private ?string $parentId = null;
 
-    private $parentType = null;
+    private ?string $parentType = null;
 
-    private $relatedId = null;
+    private ?string $relatedId = null;
 
-    private $relatedType = null;
+    private ?string $relatedType = null;
 
-    private $user = null;
+    private ?User $user = null;
 
     /**
      * @return array<string,Entity> $entityHash

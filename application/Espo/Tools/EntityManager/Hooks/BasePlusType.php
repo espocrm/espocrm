@@ -36,7 +36,10 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
     use Di\ConfigSetter;
     use Di\MetadataSetter;
 
-    public function afterCreate($name, $params)
+    /**
+     * @param array<string,mixed> $params
+     */
+    public function afterCreate(string $name, $params): void
     {
         $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
         $historyEntityTypeList = $this->config->get('historyEntityList', []);
@@ -66,7 +69,7 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
         $this->metadata->save();
     }
 
-    public function afterRemove($name)
+    public function afterRemove(string $name): void
     {
         $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
         $historyEntityTypeList = $this->config->get('historyEntityList', []);

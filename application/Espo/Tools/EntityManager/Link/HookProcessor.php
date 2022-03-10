@@ -63,6 +63,7 @@ class HookProcessor
      */
     private function getCreateHookList(): array
     {
+        /** @var class-string[] */
         $classNameList = $this->metadata->get(['app', 'linkManager', 'createHookClassNameList']) ?? [];
 
         $list = [];
@@ -79,6 +80,7 @@ class HookProcessor
      */
     private function getDeleteHookList(): array
     {
+        /** @var class-string[] */
         $classNameList = $this->metadata->get(['app', 'linkManager', 'deleteHookClassNameList']) ?? [];
 
         $list = [];

@@ -70,7 +70,17 @@ class Processor
 
     private const PROCESS_MAX_COUNT = 200;
 
-    private $htmlizer;
+    private ?Htmlizer $htmlizer = null;
+
+    /**
+     * @var array<string,?EmailNotificationHandler>
+     */
+    private $emailNotificationEntityHandlerHash = [];
+
+    /**
+     * @var array<string,?\Espo\Entities\Portal>
+     */
+    private $userIdPortalCacheMap = [];
 
     private $entityManager;
 
@@ -115,10 +125,6 @@ class Processor
         $this->log = $log;
         $this->noteAccessControl = $noteAccessControl;
     }
-
-    private $emailNotificationEntityHandlerHash = [];
-
-    private $userIdPortalCacheMap = [];
 
     public function process(): void
     {
@@ -457,6 +463,7 @@ class Processor
         if (!array_key_exists($key, $this->emailNotificationEntityHandlerHash)) {
             $this->emailNotificationEntityHandlerHash[$key] = null;
 
+            /** @var ?class-string<EmailNotificationHandler> */
             $className = $this->metadata
                 ->get(['notificationDefs', $entityType, 'emailNotificationHandlerClassNameMap', $type]);
 
