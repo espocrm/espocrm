@@ -39,6 +39,9 @@ class EspoManager implements Manager
 {
     private EntityManager $entityManager;
 
+    /**
+     * @var RDBRepository<AuthTokenEntity>
+     */
     private RDBRepository $repository;
 
     private const TOKEN_RANDOM_LENGTH = 16;
@@ -47,7 +50,10 @@ class EspoManager implements Manager
     {
         $this->entityManager = $entityManager;
 
-        $this->repository = $entityManager->getRDBRepository(AuthTokenEntity::ENTITY_TYPE);
+        /** @var RDBRepository<AuthTokenEntity> */
+        $repository = $entityManager->getRDBRepository(AuthTokenEntity::ENTITY_TYPE);
+        
+        $this->repository = $repository;
     }
 
     public function get(string $token): ?AuthToken

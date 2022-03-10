@@ -38,6 +38,9 @@ trait FieldUtilSetter
      */
     protected $fieldUtil;
 
+    /**
+     * @var FieldUtil
+     */
     protected $fieldManagerUtil;
 
     public function setFieldUtil(FieldUtil $fieldUtil): void
