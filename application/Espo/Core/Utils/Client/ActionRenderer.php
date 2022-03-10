@@ -44,6 +44,9 @@ class ActionRenderer
         $this->clientManager = $clientManager;
     }
 
+    /**
+     * @param ?array<string,mixed> $data
+     */
     public function render(string $controller, string $action, ?array $data = null): string
     {
         $encodedData = Json::encode($data);

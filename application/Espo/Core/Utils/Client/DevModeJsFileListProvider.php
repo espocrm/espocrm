@@ -29,16 +29,14 @@
 
 namespace Espo\Core\Utils\Client;
 
-use Espo\Core\{
-    Utils\File\Manager as FileManager,
-};
+use Espo\Core\Utils\File\Manager as FileManager;
 
 /**
  * @internal Also used by the installer w/o DI.
  */
 class DevModeJsFileListProvider
 {
-    private $fileManager;
+    private FileManager $fileManager;
 
     private const LIBS_FILE = 'frontend/libs.json';
 
@@ -78,6 +76,10 @@ class DevModeJsFileListProvider
         return $list;
     }
 
+    /**
+     * @param \stdClass[] $items
+     * @return string[]
+     */
     private function getLibFileListFromItems(array $items): array
     {
         $list = [];

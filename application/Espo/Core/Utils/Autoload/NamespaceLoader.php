@@ -43,34 +43,50 @@ use Throwable;
 
 class NamespaceLoader
 {
-    private $classLoader;
+    /**
+     * @var ?array{
+     *   psr-4?: array<string,mixed>,
+     *   psr-0?: array<string,mixed>,
+     *   classmap?: array<string,mixed>,
+     * }
+     */
+    private $namespaces = null;
 
-    private $namespaces;
+    /**
+     * @var ?array<string,mixed>
+     */
+    private $vendorNamespaces = null;
 
-    private $autoloadFilePath = 'vendor/autoload.php';
+    private string $autoloadFilePath = 'vendor/autoload.php';
 
+    /**
+     * @var array<string,string>
+     */
     private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
         'psr-0' => 'vendor/composer/autoload_namespaces.php',
         'classmap' => 'vendor/composer/autoload_classmap.php',
     ];
 
+    /**
+     * @var array<string,string>
+     */
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
         'psr-0' => 'add',
     ];
 
-    private $vendorNamespaces;
+    private string $cacheKey = 'autoloadVendorNamespaces';
 
-    private $cacheKey = 'autoloadVendorNamespaces';
+    private ClassLoader $classLoader;
 
-    private $config;
+    private Config $config;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $log;
+    private Log $log;
 
     public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager, Log $log)
     {
@@ -82,6 +98,12 @@ class NamespaceLoader
         $this->classLoader = new ClassLoader();
     }
 
+    /**
+     * @param array{
+     *   psr-4?: array<string,mixed>,
+     *   psr-0?: array<string,mixed>
+     * } $data
+     */
     public function register(array $data): void
     {
         $this->addListToClassLoader($data);
@@ -89,6 +111,13 @@ class NamespaceLoader
         $this->classLoader->register(true);
     }
 
+    /**
+     * @return array{
+     *   psr-4?: array<string,mixed>,
+     *   psr-0?: array<string,mixed>,
+     *   classmap?: array<string,mixed>,
+     * }
+     */
     private function loadNamespaces(string $basePath = ''): array
     {
         $namespaces = [];
@@ -110,6 +139,14 @@ class NamespaceLoader
         return $namespaces;
     }
 
+    /**
+     *
+     * @return array{
+     *   psr-4?: array<string,mixed>,
+     *   psr-0?: array<string,mixed>,
+     *   classmap?: array<string,mixed>,
+     * }
+     */
     private function getNamespaces(): array
     {
         if (!$this->namespaces) {
@@ -119,6 +156,9 @@ class NamespaceLoader
         return $this->namespaces;
     }
 
+    /**
+     * @return string[]
+     */
     private function getNamespaceList(string $type): array
     {
         $namespaces = $this->getNamespaces();
@@ -126,6 +166,9 @@ class NamespaceLoader
         return array_keys($namespaces[$type]);
     }
 
+    /**
+     * @param string|array<string,string> $path
+     */
     private function addNamespace(string $type, string $name, $path): void
     {
         if (!$this->namespaces) {
@@ -152,6 +195,9 @@ class NamespaceLoader
         return false;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     private function addListToClassLoader(array $data, bool $skipVendorNamespaces = false): void
     {
         foreach ($this->methodNameMap as $type => $methodName) {
@@ -192,6 +238,9 @@ class NamespaceLoader
         }
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getVendorNamespaces(string $path): array
     {
         $useCache = $this->config->get('useCache');

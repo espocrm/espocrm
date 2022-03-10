@@ -38,8 +38,11 @@ use Espo\Core\Utils\File\ClassMap;
  */
 class ClassFinder
 {
-    private $classMap;
+    private ClassMap $classMap;
 
+    /**
+     * @var array<string,array<string,class-string>>
+     */
     private $dataHashMap = [];
 
     public function __construct(ClassMap $classMap)

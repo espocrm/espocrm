@@ -41,25 +41,25 @@ use Espo\Core\{
  */
 class ClientManager
 {
-    protected $mainHtmlFilePath = 'html/main.html';
+    protected string $mainHtmlFilePath = 'html/main.html';
 
-    protected $runScript = "app.start();";
+    protected string $runScript = "app.start();";
 
-    private $basePath = '';
+    private string $basePath = '';
 
-    private $libsConfigPath = 'client/cfg/libs.json';
+    private string $libsConfigPath = 'client/cfg/libs.json';
 
-    private $themeManager;
+    private Config $config;
 
-    private $config;
+    private ThemeManager $themeManager;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $devModeJsFileListProvider;
+    private DevModeJsFileListProvider $devModeJsFileListProvider;
 
-    private $module;
+    private Module $module;
 
     private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
 
@@ -98,11 +98,17 @@ class ClientManager
         return $this->config->get('cacheTimestamp', 0);
     }
 
+    /**
+     * @param array<string,mixed> $vars
+     */
     public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
         echo $this->render($runScript, $htmlFilePath, $vars);
     }
 
+    /**
+     * @param array<string,mixed> $vars
+     */
     public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {
         if (is_null($runScript)) {
