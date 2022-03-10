@@ -54,23 +54,40 @@ class Converter
 
     private $relationManager;
 
-    private $entityDefs;
+    /**
+     * @var ?array<string,mixed>
+     */
+    private $entityDefs = null;
 
+    /**
+     * @var string
+     */
     protected $defaultFieldType = 'varchar';
 
+    /**
+     * @var string
+     */
     protected $defaultNaming = 'postfix';
 
+    /**
+     * @var array<string,int>
+     */
     protected $defaultLength = [
         'varchar' => 255,
         'int' => 11,
     ];
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $defaultValue = [
         'bool' => false,
     ];
 
     /**
-     * params mapping: entityDefs => ORM
+     * Mapping entityDefs => ORM.
+     *
+     * @var array<string,mixed>
      */
     protected $fieldAccordances = [
         'type' => 'type',
@@ -95,6 +112,9 @@ class Converter
         'dependeeAttributeList' => 'dependeeAttributeList',
     ];
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
@@ -102,6 +122,8 @@ class Converter
 
     /**
      * Permitted entityDefs parameters which will be copied to ormMetadata.
+     *
+     * @var string[]
      */
     protected $permittedEntityOptions = [
         'indexes',
@@ -131,7 +153,8 @@ class Converter
     }
 
     /**
-     * @return array
+     * @param bool $reload
+     * @return array<string,mixed>
      */
     protected function getEntityDefs($reload = false)
     {
@@ -164,6 +187,8 @@ class Converter
 
     /**
      * Covert metadata > entityDefs to ORM metadata.
+     *
+     * @return array<string,mixed>
      */
     public function process(): array
     {
@@ -198,6 +223,10 @@ class Converter
         return $ormMetadata;
     }
 
+    /**
+     * @param array<string,mixed> $entityMetadata
+     * @return array<string,mixed>
+     */
     protected function convertEntity(string $entityType, array $entityMetadata): array
     {
         $ormMetadata = [];
@@ -248,6 +277,10 @@ class Converter
         return $ormMetadata;
     }
 
+    /**
+     * @param array<string,mixed> $ormMetadata
+     * @return array<string,mixed>
+     */
     protected function afterFieldsProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
@@ -309,6 +342,10 @@ class Converter
         return $ormMetadata;
     }
 
+    /**
+     * @param array<string,mixed> $ormMetadata
+     * @return array<string,mixed>
+     */
     protected function afterProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
@@ -328,6 +365,9 @@ class Converter
         return $ormMetadata;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     protected function obtainForeignType(array $data, string $entityType, string $attribute): ?string
     {
         $params = $data[$entityType]['fields'][$attribute] ?? [];
@@ -352,6 +392,10 @@ class Converter
         return $foreignParams['type'] ?? null;
     }
 
+    /**
+     * @param array<string,mixed> $entityMetadata
+     * @return array<string,mixed>
+     */
     protected function convertFields(string $entityType, array &$entityMetadata): array
     {
         // List of unmerged fields with default field definitions in $output.
@@ -421,6 +465,9 @@ class Converter
 
     /**
      * Correct fields definitions based on Espo\Custom\Core\Utils\Database\Orm\Fields.
+     *
+     * @param array<string,mixed> $ormMetadata
+     * @return array<string,mixed>
      */
     protected function correctFields(string $entityType, array $ormMetadata): array
     {
@@ -513,6 +560,11 @@ class Converter
         return $ormMetadata;
     }
 
+    /**
+     * @param array<string,mixed> $attributeParams
+     * @param ?array<string,mixed> $fieldTypeMetadata
+     * @return array<string,mixed>|false
+     */
     protected function convertField(
         string $entityType,
         string $attribute,
@@ -559,6 +611,11 @@ class Converter
         return $fieldDefs;
     }
 
+    /**
+     * @param array<string,mixed> $entityMetadata
+     * @param array<string,mixed> $ormMetadata
+     * @return array<string,mixed>
+     */
     protected function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata): array
     {
         if (!isset($entityMetadata['links'])) {
@@ -582,6 +639,10 @@ class Converter
         return $relationships;
     }
 
+    /**
+     * @param array<string,mixed> $attributeParams
+     * @return array<string,mixed>
+     */
     protected function getInitValues(array $attributeParams)
     {
         $values = [];
@@ -617,6 +678,10 @@ class Converter
         return $values;
     }
 
+    /**
+     * @param array<string,mixed> $ormMetadata
+     * @return void
+     */
     protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
         if (!$this->getDatabaseHelper()->doesTableSupportFulltext(Util::toUnderScore($entityType))) {
@@ -682,6 +747,11 @@ class Converter
         }
     }
 
+    /**
+     * @param array<string,mixed> $ormMetadata
+     * @param string $entityType
+     * @return void
+     */
     protected function applyIndexes(&$ormMetadata, $entityType)
     {
         if (isset($ormMetadata[$entityType]['fields'])) {
@@ -715,6 +785,10 @@ class Converter
         }
     }
 
+    /**
+     * @param array<string,mixed> $defs
+     * @return array<string,mixed>
+     */
     protected function createAdditionalEntityTypes(string $entityType, array $defs): array
     {
         if (empty($defs['additionalTables'])) {
@@ -726,6 +800,10 @@ class Converter
         return $additionalDefs;
     }
 
+    /**
+     * @param array<string,mixed> $defs
+     * @return array<string,mixed>
+     */
     protected function createRelationsEntityDefs(string $entityType, array $defs): array
     {
         $result = [];

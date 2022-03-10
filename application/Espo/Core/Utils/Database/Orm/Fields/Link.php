@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class Link extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityName)
     {
         $fieldParams = $this->getFieldParams();
@@ -63,8 +68,12 @@ class Link extends Base
             $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
         }
 
-        if (!empty($fieldParams['defaultAttributes']) && array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])) {
-            $data[$entityName]['fields'][$fieldName.'Id']['default'] = $fieldParams['defaultAttributes'][$fieldName.'Id'];
+        if (
+            !empty($fieldParams['defaultAttributes']) &&
+            array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])
+        ) {
+            $data[$entityName]['fields'][$fieldName.'Id']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName.'Id'];
         }
 
         return $data;

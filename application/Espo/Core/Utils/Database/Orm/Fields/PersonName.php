@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class PersonName extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityType)
     {
         $format = $this->config->get('personNameFormat');
@@ -73,6 +78,7 @@ class PersonName extends Base
 
             if (empty($fieldNameTrimmed)) {
                 $fullList[] = "'" . $subFieldName . "'";
+
                 continue;
             }
 
@@ -172,10 +178,12 @@ class PersonName extends Base
         ];
     }
 
+    /**
+     * @param string[] $fullList
+     */
     protected function getSelect(array $fullList, ?string $alias = null): string
     {
         foreach ($fullList as &$item) {
-
             $rowItem = trim($item, " '");
 
             if (empty($rowItem)) {

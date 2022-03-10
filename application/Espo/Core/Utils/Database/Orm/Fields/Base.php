@@ -32,11 +32,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
     /**
-     * Start process Orm converting for fields.
+     * ORM conversion for fields.
      *
-     * @param string $itemName    Field name
+     * @param string $itemName A field name.
      * @param string $entityName
-     * @return array
+     * @return array<string,mixed>
      */
     public function process($itemName, $entityName)
     {
@@ -55,8 +55,13 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $convertedDefs;
     }
 
+    /**
+     * @param string $fieldName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityType)
     {
-
+        return [];
     }
 }

@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class Currency extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityType)
     {
         $alias = $fieldName . 'CurrencyRate';

@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class LinkParent extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityName)
     {
         $data = [
@@ -69,11 +74,20 @@ class LinkParent extends Base
 
         $fieldParams = $this->getFieldParams();
 
-        if (!empty($fieldParams['defaultAttributes']) && array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])) {
-            $data[$entityName]['fields'][$fieldName.'Id']['default'] = $fieldParams['defaultAttributes'][$fieldName.'Id'];
+        if (
+            !empty($fieldParams['defaultAttributes']) &&
+            array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])
+        ) {
+            $data[$entityName]['fields'][$fieldName.'Id']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName.'Id'];
         }
-        if (!empty($fieldParams['defaultAttributes']) && array_key_exists($fieldName.'Type', $fieldParams['defaultAttributes'])) {
-            $data[$entityName]['fields'][$fieldName.'Type']['default'] = $fieldParams['defaultAttributes'][$fieldName.'Type'];
+
+        if (
+            !empty($fieldParams['defaultAttributes']) &&
+            array_key_exists($fieldName.'Type', $fieldParams['defaultAttributes'])
+        ) {
+            $data[$entityName]['fields'][$fieldName.'Type']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName.'Type'];
         }
 
         return $data;

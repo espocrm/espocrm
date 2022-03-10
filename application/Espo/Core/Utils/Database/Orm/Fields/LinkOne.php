@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class LinkOne extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityType)
     {
         $fieldParams = $this->getFieldParams();

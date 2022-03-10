@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Fields;
 
 class LinkMultiple extends Base
 {
+    /**
+     * @param string $fieldName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($fieldName, $entityName)
     {
         $data = [
@@ -65,12 +70,14 @@ class LinkMultiple extends Base
 
         if (array_key_exists('orderBy', $fieldParams)) {
             $data[$entityName]['fields'][$fieldName . 'Ids']['orderBy'] = $fieldParams['orderBy'];
+
             if (array_key_exists('orderDirection', $fieldParams)) {
                 $data[$entityName]['fields'][$fieldName . 'Ids']['orderDirection'] = $fieldParams['orderDirection'];
             }
         }
 
         $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
+
         if (!empty($columns)) {
             $data[$entityName]['fields'][$fieldName . 'Columns'] = [
                 'type' => 'jsonObject',
