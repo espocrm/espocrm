@@ -2002,6 +2002,7 @@ class Stream
     public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
         if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
+            /** @var Collection<User> */
             return $this->entityManager->getCollectionFactory()->create('User', []);
         }
 
@@ -2025,7 +2026,8 @@ class Stream
 
         $subQuery = $builder->build();
 
-        $userList = $this->entityManager
+        /** @var Collection<User> */
+        return $this->entityManager
             ->getRDBRepository('User')
             ->where([
                 'isActive' => true,
@@ -2033,8 +2035,6 @@ class Stream
             ])
             ->select(['id', 'type'])
             ->find();
-
-        return $userList;
     }
 
     public function processNoteAclJob(stdClass $data): void
