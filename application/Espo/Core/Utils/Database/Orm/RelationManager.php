@@ -35,9 +35,9 @@ use Espo\Core\Utils\Config;
 
 class RelationManager
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $config;
+    private Config $config;
 
     public function __construct(Metadata $metadata, Config $config)
     {
@@ -45,17 +45,25 @@ class RelationManager
         $this->config = $config;
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
 
+    /**
+     * @param string $entityName
+     * @param array<string,mixed> $linkParams
+     * @return string
+     */
     public function getLinkEntityName($entityName, $linkParams)
     {
         return isset($linkParams['entity']) ? $linkParams['entity'] : $entityName;
     }
 
-    public function isRelationExists($relationName)
+    /**
+     * @param string $relationName
+     */
+    public function relationExists($relationName): bool
     {
         if ($this->getRelationClass($relationName) !== false) {
             return true;
@@ -64,13 +72,18 @@ class RelationManager
         return false;
     }
 
+    /**
+     * @param string $relationName
+     * @return class-string<\Espo\Core\Utils\Database\Orm\Relations\Base>|false
+     */
     protected function getRelationClass($relationName)
     {
         $relationName = ucfirst($relationName);
 
-        $className = '\Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
+        $className = 'Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
+
         if (!class_exists($className)) {
-            $className = '\Espo\Core\Utils\Database\Orm\Relations\\'.$relationName;
+            $className = 'Espo\Core\Utils\Database\Orm\Relations\\'.$relationName;
         }
 
         if (class_exists($className)) {
@@ -80,7 +93,10 @@ class RelationManager
         return false;
     }
 
-    protected function isMethodExists($relationName)
+    /**
+     * @param string $relationName
+     */
+    protected function methodExists($relationName): bool
     {
         $className = $this->getRelationClass($relationName);
 
@@ -90,61 +106,71 @@ class RelationManager
     /**
      * Get foreign link.
      *
-     * @param string $parentLinkName
-     * @param array $parentLinkParams
-     * @param array $currentEntityDefs
+     * @param array<string,mixed> $parentLinkParams
+     * @param array<string,mixed> $currentEntityDefs
      *
-     * @return array|false Formatted as ['name', 'params'].
+     * @return array{name:string,params:array<string,mixed>}|false
      */
-    private function getForeignLink($parentLinkName, $parentLinkParams, $currentEntityDefs)
+    private function getForeignLink($parentLinkParams, $currentEntityDefs)
     {
         if (isset($parentLinkParams['foreign']) && isset($currentEntityDefs['links'][$parentLinkParams['foreign']])) {
-            return array(
+            return [
                 'name' => $parentLinkParams['foreign'],
                 'params' => $currentEntityDefs['links'][$parentLinkParams['foreign']],
-            );
+            ];
         }
 
         return false;
     }
 
+    /**
+     * @param string $linkName
+     * @param array<string,mixed> $linkParams
+     * @param string $entityName
+     * @param array<string,mixed> $ormMetadata
+     * @return ?array<string,mixed>
+     */
     public function convert($linkName, $linkParams, $entityName, $ormMetadata)
     {
         $entityDefs = $this->getMetadata()->get('entityDefs');
 
         $foreignEntityName = $this->getLinkEntityName($entityName, $linkParams);
-        $foreignLink = $this->getForeignLink($linkName, $linkParams, $entityDefs[$foreignEntityName]);
+        $foreignLink = $this->getForeignLink($linkParams, $entityDefs[$foreignEntityName]);
 
         $currentType = $linkParams['type'];
 
         $relType = $currentType;
+
         if ($foreignLink !== false) {
             $relType .= '_' . $foreignLink['params']['type'];
         }
+
         $relType = Util::toCamelCase($relType);
 
-        $relationName = $this->isRelationExists($relType) ? $relType /*hasManyHasMany*/ : $currentType /*hasMany*/;
+        $relationName = $this->relationExists($relType) ? $relType /*hasManyHasMany*/ : $currentType /*hasMany*/;
 
-        //relationDefs defined in separate file
+        // relationDefs defined in separate file
         if (isset($linkParams['relationName'])) {
             $className = $this->getRelationClass($linkParams['relationName']);
+
             if (!$className) {
-                $relationName = $this->isRelationExists($relType) ? $relType : $currentType;
+                $relationName = $this->relationExists($relType) ? $relType : $currentType;
                 $className = $this->getRelationClass($relationName);
             }
         } else {
             $className = $this->getRelationClass($relationName);
         }
 
-        if (isset($className) && $className !== false) {
-            $foreignLinkName = (is_array($foreignLink) && array_key_exists('name', $foreignLink)) ? $foreignLink['name'] : null;
+        if ($className) {
+            $foreignLinkName = (is_array($foreignLink) && array_key_exists('name', $foreignLink)) ?
+                $foreignLink['name'] : null;
 
             $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
+
             return $helperClass->process($linkName, $entityName, $foreignLinkName, $foreignEntityName);
         }
         //END: relationDefs defined in separate file
 
         return null;
     }
-
 }

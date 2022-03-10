@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class BelongsToParent extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityName)
     {
         $linkParams = $this->getLinkParams();

@@ -33,14 +33,29 @@ use Espo\Core\Utils\Util;
 
 class Base extends \Espo\Core\Utils\Database\Orm\Base
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $params;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $foreignParams;
 
+    /**
+     * @var ?string
+     */
     protected $foreignLinkName = null;
 
+    /**
+     * @var ?string
+     */
     protected $foreignEntityName = null;
 
+    /**
+     * @var string[]
+     */
     protected $allowedParams = [
         'relationName',
         'conditions',
@@ -50,46 +65,77 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         'indexes'
     ];
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getForeignParams()
     {
         return $this->foreignParams;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @return void
+     */
     protected function setParams(array $params)
     {
         $this->params = $params;
     }
 
+    /**
+     * @param array<string,mixed> $foreignParams
+     * @return void
+     */
     protected function setForeignParams(array $foreignParams)
     {
         $this->foreignParams = $foreignParams;
     }
 
+    /**
+     * @param string $foreignLinkName
+     * @return void
+     */
     protected function setForeignLinkName($foreignLinkName)
     {
         $this->foreignLinkName = $foreignLinkName;
     }
 
+    /**
+     * @return ?string
+     */
     protected function getForeignLinkName()
     {
         return $this->foreignLinkName;
     }
 
+    /**
+     * @param string $foreignEntityName
+     * @return void
+     */
     protected function setForeignEntityName($foreignEntityName)
     {
         $this->foreignEntityName = $foreignEntityName;
     }
 
+    /**
+     * @return ?string
+     */
     protected function getForeignEntityName()
     {
         return $this->foreignEntityName;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getForeignLinkParams()
     {
         $foreignLinkName = $this->getForeignLinkName();
@@ -99,6 +145,14 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $foreignLinkParams;
     }
 
+    /**
+     *
+     * @param string $linkName
+     * @param string $entityName
+     * @param ?string $foreignLinkName
+     * @param ?string $foreignEntityName
+     * @return array<string,mixed>
+     */
     public function process($linkName, $entityName, $foreignLinkName, $foreignEntityName)
     {
         $inputs = [
@@ -121,6 +175,10 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $convertedDefs;
     }
 
+    /**
+     * @param array<string,mixed> $loads
+     * @return array<string,mixed>'
+     */
     private function mergeAllowedParams($loads)
     {
         $linkName = $this->getLinkName();
@@ -145,6 +203,10 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $loads;
     }
 
+    /**
+     * @param string $allowedItemName
+     * @return ?array<string,mixed>'
+     */
     private function getAllowedAdditionalParam($allowedItemName)
     {
         $linkParams = $this->getLinkParams();
@@ -177,8 +239,13 @@ class Base extends \Espo\Core\Utils\Database\Orm\Base
         return $additionalParam;
     }
 
+    /**
+     * @param string $linkName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityType)
     {
-
+        return [];
     }
 }

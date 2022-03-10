@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class HasOne extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityType)
     {
         $linkParams = $this->getLinkParams();

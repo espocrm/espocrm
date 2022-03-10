@@ -33,6 +33,11 @@ use Espo\Core\Utils\Util;
 
 class ManyMany extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityType)
     {
         $foreignEntityName = $this->getForeignEntityName();
@@ -74,7 +79,8 @@ class ManyMany extends Base
             'foreign' => $foreignLinkName,
         ];
 
-        $columnAttributeMap = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $linkName, 'columnAttributeMap']);
+        $columnAttributeMap = $this->getMetadata()
+            ->get(['entityDefs', $entityType, 'links', $linkName, 'columnAttributeMap']);
 
         if ($columnAttributeMap) {
             $relationDefs['columnAttributeMap'] = $columnAttributeMap;
@@ -101,6 +107,11 @@ class ManyMany extends Base
         ];
     }
 
+    /**
+     * @param string $tableName1
+     * @param string $tableName2
+     * @return string
+     */
     protected function getJoinTable($tableName1, $tableName2)
     {
         $tables = $this->getSortEntities($tableName1, $tableName2);
@@ -108,12 +119,17 @@ class ManyMany extends Base
         return Util::toCamelCase(implode('_', $tables));
     }
 
+    /**
+     * @param string $entity1
+     * @param string $entity2
+     * @return array{string,string}
+     */
     protected function getSortEntities($entity1, $entity2)
     {
-        $entities = array(
+        $entities = [
             Util::toCamelCase(lcfirst($entity1)),
             Util::toCamelCase(lcfirst($entity2)),
-        );
+        ];
 
         sort($entities);
 

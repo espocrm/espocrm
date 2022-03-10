@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class HasChildren extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityName)
     {
         $foreignLinkName = $this->getForeignLinkName();

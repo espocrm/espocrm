@@ -33,6 +33,11 @@ use Espo\Core\Utils\Util;
 
 class SmsPhoneNumber extends HasMany
 {
+    /**
+     * @param string $linkName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityName)
     {
         $parentRelation = parent::load($linkName, $entityName);

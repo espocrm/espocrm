@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class EntityTeam extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityType)
     {
         $linkParams = $this->getLinkParams();
@@ -61,5 +66,4 @@ class EntityTeam extends Base
             ]
         ];
     }
-
 }

@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class EmailEmailAddress extends HasMany
 {
+    /**
+     * @param string $linkName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityName)
     {
         $parentRelation = parent::load($linkName, $entityName);
@@ -54,5 +59,4 @@ class EmailEmailAddress extends HasMany
 
         return $relation;
     }
-
 }

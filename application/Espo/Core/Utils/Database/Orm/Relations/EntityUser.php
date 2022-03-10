@@ -31,35 +31,39 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class EntityUser extends Base
 {
+    /**
+     * @param string $linkName
+     * @param string $entityType
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityType)
     {
         $linkParams = $this->getLinkParams();
         $foreignEntityName = $this->getForeignEntityName();
 
-        return array(
-            $entityType => array(
-                'relations' => array(
-                    $linkName => array(
+        return [
+            $entityType => [
+                'relations' => [
+                    $linkName => [
                         'type' => 'manyMany',
                         'entity' => $foreignEntityName,
                         'relationName' => lcfirst($linkParams['relationName']),
-                        'midKeys' => array(
+                        'midKeys' => [
                             'entityId',
-                            'userId'
-                        ),
-                        'conditions' => array(
-                            'entityType' => $entityType
-                        ),
-                        'additionalColumns' => array(
-                            'entityType' => array(
+                            'userId',
+                        ],
+                        'conditions' => [
+                            'entityType' => $entityType,
+                        ],
+                        'additionalColumns' => [
+                            'entityType' => [
                                 'type' => 'varchar',
                                 'len' => 100
-                            )
-                        )
-                    )
-                )
-            )
-        );
+                            ],
+                        ],
+                    ]
+                ]
+            ]
+        ];
     }
-
 }

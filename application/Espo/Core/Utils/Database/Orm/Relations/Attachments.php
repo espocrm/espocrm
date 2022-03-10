@@ -29,8 +29,15 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
+use Espo\Core\Utils\Util;
+
 class Attachments extends HasChildren
 {
+    /**
+     * @param string $linkName
+     * @param string $entityName
+     * @return array<string,mixed>
+     */
     protected function load($linkName, $entityName)
     {
         $parentRelation = parent::load($linkName, $entityName);
@@ -56,8 +63,6 @@ class Attachments extends HasChildren
             ],
         ];
 
-        $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
-
-        return $relation;
+        return Util::merge($parentRelation, $relation);
     }
 }
