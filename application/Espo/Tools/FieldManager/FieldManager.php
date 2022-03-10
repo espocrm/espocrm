@@ -821,12 +821,16 @@ class FieldManager
      */
     protected function processHook(
         string $methodName,
-        string $type,
+        ?string $type,
         string $scope,
         string $name,
         &$defs = null,
         $options = []
     ): void {
+
+        if (!$type) {
+            return;
+        }
 
         $hook = $this->getHook($type);
 

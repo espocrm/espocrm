@@ -33,43 +33,35 @@ use tests\unit\ReflectionHelper;
 
 use Espo\Tools\FieldManager\FieldManager;
 
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\FieldUtil;
+
 class FieldManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    private FieldManager $fieldManager;
 
-    protected $objects;
-
-    protected $reflection;
+    private $reflection;
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->createMock('Espo\\Core\\Utils\\Metadata');
+        $this->language = $this->createMock('Espo\\Core\\Utils\\Language');
+        $this->baseLanguage = $this->createMock('\\Espo\\Core\\Utils\\Language');
+        $this->defaultLanguage = $this->createMock('\\Espo\\Core\\Utils\\Language');
 
-        $this->objects['metadata'] = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['language'] = $this->getMockBuilder('Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
-        $this->objects['baseLanguage'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
-        $this->objects['metadataHelper'] = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata\\Helper')->disableOriginalConstructor()->getMock();
+        $this->metadataHelper = $this->createMock('Espo\\Core\\Utils\\Metadata\\Helper');
 
-        $map = array(
-            array('baseLanguage', $this->objects['baseLanguage']),
-            array('language', $this->objects['language']),
-            array('metadata', $this->objects['metadata'])
+        $this->fieldManager = new FieldManager(
+            $this->createMock(InjectableFactory::class),
+            $this->metadata,
+            $this->language,
+            $this->baseLanguage,
+            $this->defaultLanguage,
+            $this->createMock(FieldUtil::class)
         );
 
-        $this->objects['container']
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($map));
-
-        $this->object = new FieldManager($this->objects['container']);
-
-        $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('metadataHelper', $this->objects['metadataHelper']);
-    }
-
-    protected function tearDown() : void
-    {
-        $this->object = NULL;
+        $this->reflection = new ReflectionHelper($this->fieldManager);
+        $this->reflection->setProperty('metadataHelper', $this->metadataHelper);
     }
 
     public function testCreateExistingField()
@@ -81,12 +73,12 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "maxLength" => "50",
         ];
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getObjects')
             ->will($this->returnValue($data));
 
-        $this->object->create('CustomEntity', 'varName', $data);
+        $this->fieldManager->create('CustomEntity', 'varName', $data);
     }
 
     public function testUpdateCoreField()
@@ -109,22 +101,22 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
 
-        $this->objects['language']
+        $this->language
             ->expects($this->once())
             ->method('save')
             ->will($this->returnValue(true));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(2))
             ->method('getObjects')
             ->will($this->returnValue($existingData));
 
-        $this->objects['metadataHelper']
+        $this->metadataHelper
             ->expects($this->once())
             ->method('getFieldDefsByType')
             ->will($this->returnValue(json_decode('{
@@ -166,12 +158,12 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
                "fullTextSearch": true
             }', true)));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(2))
             ->method('getCustom')
             ->will($this->returnValue((object) []));
 
-        $this->object->update('Account', 'name', $data);
+        $this->fieldManager->update('Account', 'name', $data);
     }
 
     public function testUpdateCoreFieldWithNoChanges()
@@ -188,15 +180,15 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->never())
             ->method('set');
 
-        $this->objects['language']
+        $this->language
             ->expects($this->once())
             ->method('save');
 
-        $this->objects['metadataHelper']
+        $this->metadataHelper
             ->expects($this->once())
             ->method('getFieldDefsByType')
             ->will($this->returnValue(json_decode('{
@@ -238,26 +230,26 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
                "fullTextSearch": true
             }', true)));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(2))
             ->method('getObjects')
             ->will($this->returnValue((object) $data));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(1))
             ->method('getCustom')
             ->will($this->returnValue((object) []));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->never())
             ->method('saveCustom');
 
-        $this->object->update('Account', 'name', $data);
+        $this->fieldManager->update('Account', 'name', $data);
     }
 
     public function dddtestUpdateCustomFieldIsNotChanged()
@@ -276,22 +268,22 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->never())
             ->method('set')
             ->will($this->returnValue(true));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(1))
             ->method('getCustom')
             ->will($this->returnValue((object) []));
 
-        $this->assertTrue($this->object->update('CustomEntity', 'varName', $data));
+        $this->assertTrue($this->fieldManager->update('CustomEntity', 'varName', $data));
     }
 
     public function testUpdateCustomField()
@@ -309,22 +301,22 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             [['fields', 'varchar', 'hookClassName'], null, null],
         );
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(2))
             ->method('getObjects')
             ->will($this->returnValue((object) $data));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('saveCustom')
             ->will($this->returnValue(true));
 
-        $this->objects['metadataHelper']
+        $this->metadataHelper
             ->expects($this->once())
             ->method('getFieldDefsByType')
             ->will($this->returnValue(json_decode('{
@@ -373,34 +365,34 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "isCustom" => true,
         );
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(2))
             ->method('getCustom')
             ->will($this->returnValue((object) []));
 
-        $this->object->update('CustomEntity', 'varName', $data);
+        $this->fieldManager->update('CustomEntity', 'varName', $data);
     }
 
     public function testRead()
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => "50",
             "isCustom" => true,
             "label" => 'Var Name',
-        );
+        ];
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getObjects')
             ->will($this->returnValue((object) $data));
 
-        $this->objects['language']
+        $this->language
             ->expects($this->once())
             ->method('translate')
             ->will($this->returnValue('Var Name'));
 
-        $this->assertEquals($data, $this->object->read('Account', 'varName'));
+        $this->assertEquals($data, $this->fieldManager->read('Account', 'varName'));
     }
 
     public function testNormalizeDefs()
