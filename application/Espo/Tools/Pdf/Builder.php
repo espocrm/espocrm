@@ -36,11 +36,11 @@ use Espo\Core\{
 
 class Builder
 {
-    private $template;
+    private ?Template $template = null;
 
-    private $engine;
+    private ?string $engine = null;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {

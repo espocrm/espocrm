@@ -39,9 +39,9 @@ use Espo\Tools\Pdf\Params;
 
 class DataLoaderManager
 {
-    private $metadata;
+    private Metadata $metadata;
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
@@ -59,6 +59,7 @@ class DataLoaderManager
             $data = Data::create();
         }
 
+        /** @var class-string[] */
         $classNameList = $this->metadata->get(['pdfDefs', $entity->getEntityType(), 'dataLoaderClassNameList']) ?? [];
 
         foreach ($classNameList as $className) {
@@ -72,6 +73,9 @@ class DataLoaderManager
         return $data;
     }
 
+    /**
+     * @param class-string $className
+     */
     private function createLoader(string $className): DataLoader
     {
         return $this->injectableFactory->create($className);

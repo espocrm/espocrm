@@ -31,7 +31,7 @@ namespace Espo\Tools\Pdf;
 
 class Params
 {
-    private $applyAcl = false;
+    private bool $applyAcl = false;
 
     public function applyAcl(): bool
     {

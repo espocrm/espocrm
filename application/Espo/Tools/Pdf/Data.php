@@ -33,6 +33,9 @@ use stdClass;
 
 class Data
 {
+    /**
+     * @var array<string,mixed>
+     */
     private $additionalTemplateData = [];
 
     public function getAdditionalTemplateData(): stdClass

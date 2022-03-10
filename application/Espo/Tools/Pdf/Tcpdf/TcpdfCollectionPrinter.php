@@ -40,17 +40,18 @@ use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class TcpdfCollectionPrinter implements CollectionPrinter
 {
-    private $entityProcessor;
+    private EntityProcessor $entityProcessor;
 
     public function __construct(EntityProcessor $entityProcessor)
     {
         $this->entityProcessor = $entityProcessor;
     }
 
+    /**
+     * @param Collection<\Espo\ORM\Entity> $collection
+     */
     public function print(Template $template, Collection $collection, Params $params, IdDataMap $dataMap): Contents
     {
-        /** @var iterable<\Espo\ORM\Entity> $collection */
-
         $pdf = new Tcpdf();
 
         $pdf->setUseGroupNumbers(true);

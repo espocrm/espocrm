@@ -33,7 +33,7 @@ use Espo\Entities\Template as TemplateEntity;
 
 class TemplateWrapper implements Template
 {
-    protected $template;
+    protected TemplateEntity $template;
 
     public function __construct(TemplateEntity $template)
     {

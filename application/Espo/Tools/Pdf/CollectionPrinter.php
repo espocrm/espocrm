@@ -33,5 +33,8 @@ use Espo\ORM\Collection;
 
 interface CollectionPrinter
 {
+    /**
+     * @param Collection<\Espo\ORM\Entity> $collection
+     */
     public function print(Template $template, Collection $collection, Params $params, IdDataMap $idDataMap): Contents;
 }

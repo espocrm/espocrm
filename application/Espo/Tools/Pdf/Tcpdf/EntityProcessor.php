@@ -42,13 +42,13 @@ use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class EntityProcessor
 {
-    private $fontFace = 'freesans';
+    private string $fontFace = 'freesans';
 
-    private $fontSize = 12;
+    private int $fontSize = 12;
 
-    private $config;
+    private Config $config;
 
-    private $templateRendererFactory;
+    private TemplateRendererFactory $templateRendererFactory;
 
     public function __construct(Config $config, TemplateRendererFactory $templateRendererFactory)
     {
@@ -152,6 +152,11 @@ class EntityProcessor
         );
     }
 
+    /**
+     *
+     * @param array<string,mixed> $data
+     * @return string
+     */
     private function composeBarcodeTag(array $data): string
     {
         $value = $data['value'] ?? null;

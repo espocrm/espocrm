@@ -31,6 +31,9 @@ namespace Espo\Tools\Pdf;
 
 class IdDataMap
 {
+    /**
+     * @var array<string,Data>
+     */
     private $map = [];
 
     public function set(string $id, Data $data): void

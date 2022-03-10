@@ -53,23 +53,32 @@ use Espo\Core\ORM\Entity as CoreEntity;
  */
 class HookProcessor
 {
+    /**
+     * @var array<string,bool>
+     */
     private $hasStreamCache = [];
 
+    /**
+     * @var array<string,bool>
+     */
     private $isLinkObservableInStreamCache = [];
 
+    /**
+     * @var ?array<string,?string>
+     */
     private $statusFields = null;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $service;
+    private Service $service;
 
-    private $user;
+    private User $user;
 
-    private $preferences;
+    private Preferences $preferences;
 
-    private $jobSchedulerFactory;
+    private JobSchedulerFactory $jobSchedulerFactory;
 
     public function __construct(
         Metadata $metadata,
@@ -87,6 +96,9 @@ class HookProcessor
         $this->jobSchedulerFactory = $jobSchedulerFactory;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void
     {
         if ($this->checkHasStream($entity->getEntityType())) {
@@ -148,6 +160,9 @@ class HookProcessor
         return $this->isLinkObservableInStreamCache[$key];
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function handleCreateRelated(Entity $entity, array $options = []): void
     {
         $notifiedEntityTypeList = [];
@@ -180,6 +195,9 @@ class HookProcessor
         }
     }
 
+    /**
+     * @param string[] $notifiedEntityTypeList
+     */
     private function handleCreateRelatedBelongsTo(
         Entity $entity,
         RelationDefs $defs,
@@ -216,6 +234,10 @@ class HookProcessor
         $notifiedEntityTypeList[] = $foreignEntityType;
     }
 
+    /**
+     * @param string[] $notifiedEntityTypeList
+     * @param array<string,mixed> $options
+     */
     private function handleCreateRelatedBelongsToParent(
         Entity $entity,
         RelationDefs $defs,
@@ -250,6 +272,10 @@ class HookProcessor
         $notifiedEntityTypeList[] = $foreignEntityType;
     }
 
+    /**
+     * @param string[] $notifiedEntityTypeList
+     * @param array<string,mixed> $options
+     */
     private function handleCreateRelatedHasMany(
         Entity $entity,
         RelationDefs $defs,
@@ -294,6 +320,7 @@ class HookProcessor
     }
 
     /**
+     * @param string[] $ignoreUserIdList
      * @return string[]
      */
     private function getAutofollowUserIdList(string $entityType, array $ignoreUserIdList = []): array
@@ -321,7 +348,9 @@ class HookProcessor
         return $userIdList;
     }
 
-
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterSaveStream(Entity $entity, array $options): void
     {
         if (!$entity instanceof CoreEntity) {
@@ -337,6 +366,9 @@ class HookProcessor
         $this->afterSaveStreamNotNew($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterSaveStreamNew(CoreEntity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
@@ -401,12 +433,18 @@ class HookProcessor
         }
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterSaveStreamNotNew(CoreEntity $entity, array $options): void
     {
         $this->afterSaveStreamNotNew1($entity, $options);
         $this->afterSaveStreamNotNew2($entity);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
         if (!empty($options['noStream']) || !empty($options['silent'])) {
@@ -449,6 +487,9 @@ class HookProcessor
         }
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     private function afterSaveStreamNotNewAssignedUserIdChanged(Entity $entity, array $options): void
     {
         $assignedUserId = $entity->get('assignedUserId');
@@ -501,6 +542,9 @@ class HookProcessor
         return $this->getStatusFields()[$entityType] ?? null;
     }
 
+    /**
+     * @return array<string,string>
+     */
     private function getStatusFields(): array
     {
         if (is_null($this->statusFields)) {
@@ -520,6 +564,9 @@ class HookProcessor
         return $this->statusFields;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterRelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
         if (!$entity instanceof CoreEntity) {
@@ -550,6 +597,9 @@ class HookProcessor
         }
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterUnrelate(Entity $entity, Entity $foreignEntity, string $link, array $options): void
     {
         if (!$entity instanceof CoreEntity) {

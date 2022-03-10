@@ -37,51 +37,89 @@ use TCPDF_STATIC;
 
 class Tcpdf extends TcpdfOriginal
 {
+    /**
+     * @var string
+     */
     protected $footerHtml = '';
 
+    /**
+     * @var string
+     */
     protected $headerHtml = '';
 
+    /**
+     * @var float|int
+     */
     protected $footerPosition = 15;
 
+    /**
+     * @var float|int
+     */
     protected $headerPosition = 10;
 
+    /**
+     * @var bool
+     */
     protected $useGroupNumbers = false;
 
-    public function serializeTCPDFtagParameters($data)
+    public function serializeTCPDFtagParameters($data) /** @phpstan-ignore-line */
     {
         return urlencode(json_encode($data));
     }
 
-    protected function unserializeTCPDFtagParameters($data)
+    protected function unserializeTCPDFtagParameters($data) /** @phpstan-ignore-line */
     {
         return json_decode(urldecode($data), true);
     }
 
+    /**
+     * @param bool $value
+     * @return void
+     */
     public function setUseGroupNumbers($value)
     {
         $this->useGroupNumbers = $value;
     }
 
+    /**
+     * @param string $html
+     * @return void
+     */
     public function setHeaderHtml($html)
     {
         $this->headerHtml = $html;
     }
 
+    /**
+     * @param string $html
+     * @return void
+     */
     public function setFooterHtml($html)
     {
         $this->footerHtml = $html;
     }
 
+    /**
+     * @param float $position
+     * @return void
+     */
     public function setFooterPosition($position)
     {
         $this->footerPosition = $position;
     }
 
+    /**
+     * @param float $position
+     * @return void
+     */
     public function setHeaderPosition($position)
     {
         $this->headerPosition = $position;
     }
 
+    /**
+     * @return void
+     */
     public function Header()
     {
         $this->SetY($this->headerPosition);
@@ -106,6 +144,9 @@ class Tcpdf extends TcpdfOriginal
         $this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, '', 0, false);
     }
 
+    /**
+     * @return void
+     */
     public function Footer()
     {
         $breakMargin = $this->getBreakMargin();
@@ -137,6 +178,11 @@ class Tcpdf extends TcpdfOriginal
         $this->SetAutoPageBreak($autoPageBreak, $breakMargin);
     }
 
+    /**
+     * @param string $name
+     * @param string $dest
+     * @return string
+     */
     public function Output($name = 'doc.pdf', $dest = 'I')
     {
         if ($dest === 'I' && !$this->sign && php_sapi_name() != 'cli') {
