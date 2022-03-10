@@ -38,27 +38,37 @@ use RuntimeException;
 
 class Params
 {
-    private $entityType;
+    private string $entityType;
 
+    /**
+     * @var ?string[]
+     */
     private $attributeList = null;
 
+    /**
+     * @var ?string[]
+     */
     private $fieldList = null;
 
-    private $fileName = null;
+    private ?string $fileName = null;
 
-    private $format = null;
+    private ?string $format = null;
 
-    private $name = null;
+    private ?string $name = null;
 
-    private $searchParams = null;
+    private ?SearchParams $searchParams = null;
 
-    private $applyAccessControl = true;
+    private bool $applyAccessControl = true;
 
     public function __construct(string $entityType)
     {
         $this->entityType = $entityType;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @throws RuntimeException
+     */
     public static function fromRaw(array $params): self
     {
         $entityType = $params['entityType'] ?? null;
@@ -172,6 +182,9 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param ?string[] $fieldList
+     */
     public function withFieldList(?array $fieldList): self
     {
         $obj = clone $this;
@@ -181,6 +194,9 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param ?string[] $attributeList
+     */
     public function withAttributeList(?array $attributeList): self
     {
         $obj = clone $this;
@@ -245,6 +261,8 @@ class Params
 
     /**
      * Get attributes to be exported.
+     *
+     * @return ?string[]
      */
     public function getAttributeList(): ?array
     {
@@ -253,6 +271,8 @@ class Params
 
     /**
      * Get fields to be exported.
+     *
+     * @return ?string[]
      */
     public function getFieldList(): ?array
     {

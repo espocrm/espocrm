@@ -31,16 +31,26 @@ namespace Espo\Tools\Export\Processor;
 
 class Params
 {
-    private $fileName;
+    private string $fileName;
 
-    private $attributeList = null;
+    /**
+     * @var string[]
+     */
+    private $attributeList;
 
+    /**
+     * @var ?string[]
+     */
     private $fieldList = null;
 
-    private $name = null;
+    private ?string $name = null;
 
-    private $entityType = null;
+    private ?string $entityType = null;
 
+    /**
+     * @param string[] $attributeList
+     * @param ?string[] $fieldList
+     */
     public function __construct(string $fileName, array $attributeList, ?array $fieldList)
     {
         $this->fileName = $fileName;
@@ -71,11 +81,17 @@ class Params
         return $this->fileName;
     }
 
+    /**
+     * @return string[]
+     */
     public function getAttributeList(): array
     {
         return $this->attributeList;
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getFieldList(): ?array
     {
         return $this->fieldList;

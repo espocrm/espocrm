@@ -31,13 +31,23 @@ namespace Espo\Tools\Export\Processor;
 
 class Data
 {
+    /**
+     * @var resource
+     */
     private $resource;
 
+    /**
+     * @param resource $resource
+     */
     public function __construct($resource)
     {
         $this->resource = $resource;
     }
 
+    /**
+     *
+     * @return ?mixed[]
+     */
     public function readRow(): ?array
     {
         $line = fgets($this->resource);

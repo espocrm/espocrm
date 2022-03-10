@@ -38,9 +38,9 @@ use LogicException;
 
 class ProcessorFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -54,6 +54,7 @@ class ProcessorFactory
             throw new LogicException("Not supported export format '{$format}'.");
         }
 
+        /** @var ?class-string */
         $className = $this->metadata->get(['app', 'export', 'processorClassNameMap', $format]);
 
         if (!$className) {

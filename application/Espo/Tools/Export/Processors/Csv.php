@@ -92,6 +92,10 @@ class Csv implements Processor
         return new Stream($fp);
     }
 
+    /**
+     * @param mixed[] $row
+     * @return mixed[]
+     */
     protected function prepareRow(array $row): array
     {
         $preparedRow = [];
@@ -107,6 +111,9 @@ class Csv implements Processor
         return $preparedRow;
     }
 
+    /**
+     * @param string[] $fieldList
+     */
     public function loadAdditionalFields(Entity $entity, array $fieldList): void
     {
         if (!$entity instanceof CoreEntity) {

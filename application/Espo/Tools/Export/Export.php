@@ -64,12 +64,12 @@ class Export
     /**
      * @var ?Params
      */
-    private $params;
+    private ?Params $params = null;
 
     /**
-     * @phpstan-var (Collection&iterable<Entity>)|null $collection
+     * @var ?Collection<Entity>
      */
-    private $collection = null;
+    private ?Collection $collection = null;
 
     private $processorFactory;
 
@@ -123,7 +123,7 @@ class Export
     }
 
     /**
-     * @phpstan-param Collection&iterable<Entity> $collection
+     * @param Collection<Entity> $collection
      */
     public function setCollection(Collection $collection): self
     {
@@ -237,6 +237,9 @@ class Export
         return new Result($attachment->getId());
     }
 
+    /**
+     * @return mixed
+     */
     protected function getAttributeFromEntity(Entity $entity, string $attribute)
     {
         $methodName = 'getAttribute' . ucfirst($attribute). 'FromEntity';
@@ -351,7 +354,7 @@ class Export
     }
 
     /**
-     * @phpstan-return Collection&iterable<Entity>
+     * @return Collection<Entity>
      */
     private function getCollection(Params $params): Collection
     {
@@ -375,7 +378,7 @@ class Export
 
         $query = $builder->build();
 
-        /** @phpstan-var Collection&iterable<Entity> */
+        /** @var Collection<Entity> */
         return $this->entityManager
             ->getRDBRepository($entityType)
             ->clone($query)
@@ -383,11 +386,14 @@ class Export
             ->find();
     }
 
+    /**
+     * @return string[]
+     */
     private function getAttributeList(Params $params): array
     {
-        $list = [];
+       $list = [];
 
-        $entityType = $params->getEntityType();
+       $entityType = $params->getEntityType();
 
        $entityDefs = $this->entityManager
             ->getDefs()
@@ -430,6 +436,10 @@ class Export
         return $list;
     }
 
+    /**
+     * @return string[]
+     * @throws RuntimeException
+     */
     private function getAttributeListFromFieldList(Params $params): array
     {
         $entityType = $params->getEntityType();
@@ -452,6 +462,9 @@ class Export
         return $attributeList;
     }
 
+    /**
+     * @return ?string[]
+     */
     private function getFieldList(Params $params, Processor $processor): ?array
     {
         $entityDefs = $this->entityManager

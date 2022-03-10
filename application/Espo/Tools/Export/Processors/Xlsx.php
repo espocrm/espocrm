@@ -357,6 +357,12 @@ class Xlsx implements Processor
         return $stream;
     }
 
+    /**
+     * @param mixed[] $row
+     * @param string[] $fieldList
+     * @param string[] $azRange
+     * @param array<string,string> $typesCache
+     */
     private function processRow(
         string $entityType,
         array $row,
@@ -745,6 +751,9 @@ class Xlsx implements Processor
         return '[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00';
     }
 
+    /**
+     * @param string[] $fieldList
+     */
     public function loadAdditionalFields(Entity $entity, array $fieldList): void
     {
         if (!$entity instanceof CoreEntity) {
@@ -789,6 +798,10 @@ class Xlsx implements Processor
         }
     }
 
+    /**
+     * @param string[] $fieldList
+     * @return string[]
+     */
     public function filterFieldList(string $entityType, array $fieldList, bool $exportAllFields): array
     {
         if ($exportAllFields) {
@@ -804,6 +817,10 @@ class Xlsx implements Processor
         return array_values($fieldList);
     }
 
+    /**
+     * @param string[] $attributeList
+     * @param string[] $fieldList
+     */
     public function addAdditionalAttributes(string $entityType, array &$attributeList, array $fieldList): void
     {
         $linkList = [];
@@ -886,6 +903,10 @@ class Xlsx implements Processor
         return $value;
     }
 
+    /**
+     * @param mixed[] $row
+     * @return mixed[]
+     */
     private function sanitizeRow(array $row): array
     {
         return array_map(
