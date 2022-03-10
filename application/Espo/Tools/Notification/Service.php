@@ -77,6 +77,9 @@ class Service
         ]);
     }
 
+    /**
+     * @param string[] $userIdList
+     */
     public function notifyAboutNote(array $userIdList, Note $note): void
     {
         $related = null;

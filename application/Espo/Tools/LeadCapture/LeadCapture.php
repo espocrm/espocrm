@@ -63,38 +63,27 @@ use DateTime;
 
 class LeadCapture
 {
-    /** @var EntityManager */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
-    /** @var FieldUtil */
-    protected $fieldUtil;
+    protected FieldUtil $fieldUtil;
 
-    /** @var Language */
-    protected $defaultLanguage;
+    protected Language $defaultLanguage;
 
-    /** @var HookManager */
-    protected $hookManager;
+    protected HookManager $hookManager;
 
-    /** @var EmailSender */
-    protected $emailSender;
+    protected EmailSender $emailSender;
 
-    /** @var Config */
-    protected $config;
+    protected Config $config;
 
-    /** @var DateTimeUtil */
-    protected $dateTime;
+    protected DateTimeUtil $dateTime;
 
-    /** @var Log */
-    protected $log;
+    protected Log $log;
 
-    /** @var CampaignService */
-    private $campaignService;
+    private CampaignService $campaignService;
 
-    /** @var EmailTemplateService */
-    private $emailTemplateService;
+    private EmailTemplateService $emailTemplateService;
 
-    /** @var InboundEmailService */
-    private $inboundEmailService;
+    private InboundEmailService $inboundEmailService;
 
     public function __construct(
         EntityManager $entityManager,
@@ -122,10 +111,10 @@ class LeadCapture
         $this->inboundEmailService = $inboundEmailService;
     }
 
-    public function capture(string $apiKey, stdClass $data)
+    public function capture(string $apiKey, stdClass $data): void
     {
         $leadCapture = $this->entityManager
-            ->getRDBRepository('LeadCapture')
+            ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
             ->where([
                 'apiKey' => $apiKey,
                 'isActive' => true,
@@ -464,7 +453,7 @@ class LeadCapture
         ];
     }
 
-    public function sendOptInConfirmation(string $id)
+    public function sendOptInConfirmation(string $id): void
     {
         /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
@@ -682,6 +671,12 @@ class LeadCapture
         return $lead;
     }
 
+    /**
+     * @return array{
+     *   contact: ?\Espo\Modules\Crm\Entities\Contact,
+     *   lead: ?LeadEntity,
+     * }
+     */
     protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, LeadEntity $lead): array
     {
         $duplicate = null;
@@ -764,7 +759,7 @@ class LeadCapture
         return true;
     }
 
-    protected function log(LeadCaptureEntity $leadCapture, Entity $target, stdClass $data, bool $isNew = true)
+    protected function log(LeadCaptureEntity $leadCapture, Entity $target, stdClass $data, bool $isNew = true): void
     {
         $logRecord = $this->entityManager->getEntity('LeadCaptureLogRecord');
 

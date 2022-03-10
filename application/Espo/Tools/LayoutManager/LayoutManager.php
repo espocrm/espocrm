@@ -41,10 +41,13 @@ use const JSON_UNESCAPED_UNICODE;
 
 class LayoutManager
 {
-    protected $fileManager;
+    protected FileManager $fileManager;
 
-    protected $layout;
+    protected Layout $layout;
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     protected $changedData = [];
 
     public function __construct(FileManager $fileManager, Layout $layout)

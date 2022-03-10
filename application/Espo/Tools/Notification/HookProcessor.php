@@ -51,22 +51,31 @@ use Espo\Core\ORM\Entity as CoreEntity;
  */
 class HookProcessor
 {
+    /**
+     * @var array<string,AssignmentNotificator>
+     */
     private $notifatorsHash = [];
 
+    /**
+     * @var array<string,bool>
+     */
     private $hasStreamCache = [];
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $config;
+    private Config $config;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $streamService;
+    private StreamService $streamService;
 
-    private $notificatorFactory;
+    private AssignmentNotificatorFactory $notificatorFactory;
 
-    private $user;
+    private User $user;
 
+    /**
+     * @var array<string,string>
+     */
     private $userNameHash = [];
 
     public function __construct(
@@ -85,6 +94,9 @@ class HookProcessor
         $this->user = $user;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
@@ -121,6 +133,9 @@ class HookProcessor
         $notificator->process($entity, $params);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeRemove(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();

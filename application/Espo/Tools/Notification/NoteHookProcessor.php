@@ -197,6 +197,9 @@ class NoteHookProcessor
         }
     }
 
+    /**
+     * @param string[] $userIdList
+     */
     private function processNotify(Note $note, array $userIdList): void
     {
         $filteredUserIdList = array_filter(
@@ -357,6 +360,11 @@ class NoteHookProcessor
         $this->processNotify($note, $notifyUserIdList);
     }
 
+    /**
+     * @param string[] $teamIdList
+     * @param string[] $userIdList
+     * @return bool
+     */
     private function checkUserAccess(
         User $user,
         string $level,
@@ -396,12 +404,10 @@ class NoteHookProcessor
     }
 
     /**
-     * @phpstan-return Collection&iterable<User>
-     * @return User[]
+     * @return Collection<User>
      */
     private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
-        /** @var Collection&iterable<User> */
         return $this->streamService->getSubscriberList($parentType, $parentId, $isInternal);
     }
 }

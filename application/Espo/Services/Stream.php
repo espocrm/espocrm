@@ -1996,6 +1996,9 @@ class Stream
         return $ignoreScopeList;
     }
 
+    /**
+     * @return Collection<User>
+     */
     public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
         if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {

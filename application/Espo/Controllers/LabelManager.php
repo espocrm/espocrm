@@ -41,6 +41,8 @@ use Espo\{
     Entities\User,
 };
 
+use stdClass;
+
 class LabelManager
 {
     private $user;
@@ -60,12 +62,15 @@ class LabelManager
         }
     }
 
-    public function postActionGetScopeList()
+    /**
+     * @return string[]
+     */
+    public function postActionGetScopeList(): array
     {
         return $this->labelManagerTool->getScopeList();
     }
 
-    public function postActionGetScopeData(Request $request)
+    public function postActionGetScopeData(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -76,7 +81,7 @@ class LabelManager
         return $this->labelManagerTool->getScopeData($data->language, $data->scope);
     }
 
-    public function postActionSaveLabels(Request $request)
+    public function postActionSaveLabels(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 

@@ -35,6 +35,8 @@ use Espo\Core\{
     InjectableFactory,
 };
 
+use stdClass;
+
 class LabelManager implements
     Di\DefaultLanguageAware,
     Di\MetadataAware,
@@ -46,18 +48,24 @@ class LabelManager implements
     use Di\FileManagerSetter;
     use Di\DataCacheSetter;
 
+    /**
+     * @var string[]
+     */
     protected $ignoreList = [
         'Global.sets',
     ];
 
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function getScopeList()
+    /**
+     * @return string[]
+     */
+    public function getScopeList(): array
     {
         $scopeList = [];
 
@@ -80,7 +88,7 @@ class LabelManager implements
         return $scopeList;
     }
 
-    public function getScopeData($language, $scope)
+    public function getScopeData(string $language, string $scope): stdClass
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
@@ -93,10 +101,10 @@ class LabelManager implements
         }
 
         if ($this->metadata->get(['scopes', $scope, 'entity'])) {
-
             if (empty($data['fields'])) {
                 $data['fields'] = [];
             }
+
             foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $item) {
                 if (!array_key_exists($field, $data['fields'])) {
                     $data['fields'][$field] = $languageObj->get('Global.fields.' . $field);
@@ -105,9 +113,11 @@ class LabelManager implements
                     }
                 }
             }
+
             if (empty($data['links'])) {
                 $data['links'] = [];
             }
+
             foreach ($this->metadata->get(['entityDefs', $scope, 'links']) as $link => $item) {
                 if (!array_key_exists($link, $data['links'])) {
                     $data['links'][$link] = $languageObj->get('Global.links.' . $link);
@@ -120,24 +130,34 @@ class LabelManager implements
             if (empty($data['labels'])) {
                 $data['labels'] = [];
             }
+
             if (!array_key_exists('Create ' . $scope, $data['labels'])) {
                 $data['labels']['Create ' . $scope] = '';
             }
         }
 
         foreach ($this->metadata->get(['entityDefs', $scope, 'fields'], []) as $field => $item) {
-            if (!$this->metadata->get(['entityDefs', $scope, 'fields', $field, 'options'])) continue;
+            if (!$this->metadata->get(['entityDefs', $scope, 'fields', $field, 'options'])) {
+                continue;
+            }
+
             $optionsData = [];
             $optionList = $this->metadata->get(['entityDefs', $scope, 'fields', $field, 'options'], []);
+
             if (!array_key_exists('options', $data)) {
                 $data['options'] = [];
             }
+
             if (!array_key_exists($field, $data['options'])) {
                 $data['options'][$field] = [];
             }
             foreach ($optionList as $option) {
-                if (empty($option)) continue;
+                if (empty($option)) {
+                    continue;
+                }
+
                 $optionsData[$option] = $option;
+
                 if (array_key_exists($option, $data['options'][$field])) {
                     if (!empty($data['options'][$field][$option])) {
                         $optionsData[$option] = $data['options'][$field][$option];
@@ -151,15 +171,18 @@ class LabelManager implements
             if (empty($data['scopeNames'])) {
                 $data['scopeNames'] = [];
             }
+
             if (empty($data['scopeNamesPlural'])) {
                 $data['scopeNamesPlural'] = [];
             }
+
             foreach ($this->metadata->get(['scopes']) as $scopeKey => $item) {
                 if (!empty($item['entity'])) {
                     if (empty($data['scopeNamesPlural'][$scopeKey])) {
                         $data['scopeNamesPlural'][$scopeKey] = '';
                     }
                 }
+
                 if (empty($data['scopeNames'][$scopeKey])) {
                     $data['scopeNames'][$scopeKey] = '';
                 }
@@ -175,22 +198,29 @@ class LabelManager implements
         $finalData = [];
 
         foreach ($data as $category => $item) {
-            if (in_array($scope . '.' . $category, $this->ignoreList)) continue;
+            if (in_array($scope . '.' . $category, $this->ignoreList)) {
+                continue;
+            }
+
             foreach ($item as $key => $categoryItem) {
                 if (is_array($categoryItem)) {
                     foreach ($categoryItem as $subKey => $subItem) {
                         $finalData[$category][$category .'[.]' . $key .'[.]' . $subKey] = $subItem;
                     }
-                } else {
+                }
+                else {
                     $finalData[$category][$category .'[.]' . $key] = $categoryItem;
                 }
             }
         }
 
-        return $finalData;
+        return json_decode(json_encode($finalData));
     }
 
-    public function saveLabels($language, $scope, $labels)
+    /**
+     * @param array<string,string> $labels
+     */
+    public function saveLabels(string $language, string $scope, array $labels): stdClass
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
@@ -216,16 +246,20 @@ class LabelManager implements
                 if ($value !== '') {
                     $languageObj->set($scope, $category, $name, $value);
                     $setValue = $value;
-                } else {
+                }
+                else {
                     $setValue = $languageOriginalObj->get(implode('.', [$scope, $category, $name]));
                     if (is_null($setValue) && $scope !== 'Global') {
                         $setValue = $languageOriginalObj->get(implode('.', ['Global', $category, $name]));
                     }
+
                     $languageObj->delete($scope, $category, $name);
                 }
-            } else if (count($arr) == 3) {
+            }
+            else if (count($arr) == 3) {
                 $name = $arr[1];
                 $attribute = $arr[2];
+
                 $data = $languageObj->get($scope . '.' . $category . '.' . $name);
 
                 $setPath[] = $attribute;
@@ -234,25 +268,29 @@ class LabelManager implements
                     if ($value !== '') {
                         $data[$attribute] = $value;
                         $setValue = $value;
-                    } else {
+                    }
+                    else {
                         $dataOriginal = $languageOriginalObj->get($scope . '.' . $category . '.' . $name);
+
                         if (is_array($dataOriginal) && isset($dataOriginal[$attribute])) {
                             $data[$attribute] = $dataOriginal[$attribute];
                             $setValue = $dataOriginal[$attribute];
                         }
                     }
+
                     $languageObj->set($scope, $category, $name, $data);
                 }
             }
 
             if (!is_null($setValue)) {
                 $frontKey = implode('[.]', $setPath);
+
                 $returnDataHash[$frontKey] = $setValue;
             }
         }
 
         $languageObj->save();
 
-        return $returnDataHash;
+        return json_decode(json_encode($returnDataHash));
     }
 }

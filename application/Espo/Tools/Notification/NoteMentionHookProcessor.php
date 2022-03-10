@@ -110,6 +110,10 @@ class NoteMentionHookProcessor
         $note->set('data', $data);
     }
 
+    /**
+     * @param string[] $matchList
+     * @param string[] $previousMentionList
+     */
     private function processMatches(
         array $matchList,
         Note $note,
