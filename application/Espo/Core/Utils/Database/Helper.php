@@ -56,16 +56,25 @@ class Helper
 
     private ?PDO $pdoConnection = null;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
         'mysqli' => 'Mysql',
     ];
 
+    /**
+     * @var array<string,mixed>
+     */
     protected $dbalDrivers = [
         'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
         'pdo_mysql' => 'Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
     ];
 
+    /**
+     * @var array<string,string>
+     */
     protected $dbalPlatforms = [
         'MariaDb1027Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
         'MySQL57Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
@@ -73,7 +82,7 @@ class Helper
         'MySQLPlatform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
     ];
 
-    public function __construct(Config $config = null)
+    public function __construct(?Config $config = null)
     {
         $this->config = $config;
     }
@@ -106,6 +115,10 @@ class Helper
         $this->pdoConnection = $pdoConnection;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @throws RuntimeException
+     */
     public function createDbalConnection(array $params = []): DbalConnection
     {
         if (empty($params) && isset($this->config)) {
@@ -139,6 +152,12 @@ class Helper
         );
     }
 
+    /**
+     *
+     * @param array<string,mixed> $params
+     * @return \Doctrine\DBAL\VersionAwarePlatformDriver
+     * @throws RuntimeException
+     */
     private function createDbalDriver(array $params)
     {
         $driverName = $params['driver'] ?? 'pdo_mysql';
@@ -156,6 +175,10 @@ class Helper
         return new $driverClass();
     }
 
+    /**
+     * @param DbalPlatform $platform
+     * @return \Doctrine\DBAL\Platforms\AbstractPlatform
+     */
     private function createDbalPlatform(DbalPlatform $platform)
     {
         $reflect = new ReflectionClass($platform);
@@ -174,8 +197,8 @@ class Helper
     /**
      * Create PDO connection.
      *
-     * @param array $params
-     * @return PDO|null
+     * @param array<string,mixed> $params
+     * @return ?PDO
      */
     public function createPdoConnection(
         array $params = [],
@@ -208,6 +231,10 @@ class Helper
         return $pdoProvider->get();
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @throws RuntimeException
+     */
     private function createDatabaseParams(array $params): DatabaseParams
     {
         $databaseParams = DatabaseParams::create()
@@ -248,6 +275,7 @@ class Helper
      * Get maximum index length. If $tableName is empty get a value for all database tables.
      *
      * @param ?string $tableName
+     * @param int $default
      * @return int
      */
     public function getMaxIndexLength($tableName = null, $default = 1000)
@@ -285,6 +313,11 @@ class Helper
         return 1000; //MyISAM
     }
 
+    /**
+     * @param string $tableName
+     * @param int $default
+     * @return int
+     */
     public function getTableMaxIndexLength($tableName, $default = 1000)
     {
         return $this->getMaxIndexLength($tableName, $default);
@@ -292,6 +325,8 @@ class Helper
 
     /**
      * Get database type (MySQL, MariaDB)
+     *
+     * @param string $default
      * @return string
      */
     public function getDatabaseType($default = 'MySQL')
@@ -305,6 +340,9 @@ class Helper
         return $default;
     }
 
+    /**
+     * @return ?string
+     */
     protected function getFullDatabaseVersion()
     {
         $connection = $this->getPdoConnection();
@@ -323,7 +361,7 @@ class Helper
     /**
      * Get database version.
      *
-     * @return string|null
+     * @return ?string
      */
     public function getDatabaseVersion()
     {
@@ -339,9 +377,9 @@ class Helper
     /**
      * Get table/database tables engine. If $tableName is empty get a value for all database tables.
      *
-     * @param  string|null $tableName
-     *
-     * @return string
+     * @param ?string $tableName
+     * @param ?string $default
+     * @return ?string
      */
     protected function getTableEngine($tableName = null, $default = null)
     {
@@ -371,9 +409,9 @@ class Helper
     /**
      * Check if full text is supported. If $tableName is empty get a value for all database tables.
      *
-     * @param string $tableName
-     *
-     * @return boolean
+     * @param ?string $tableName
+     * @param bool $default
+     * @return bool
      */
     public function doesSupportFulltext($tableName = null, $default = false)
     {
@@ -397,11 +435,20 @@ class Helper
         return true; //MyISAM
     }
 
+    /**
+     * @param ?string $tableName
+     * @param bool $default
+     * @return bool
+     */
     public function doesTableSupportFulltext($tableName, $default = false)
     {
         return $this->doesSupportFulltext($tableName, $default);
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getPdoDatabaseParam($name, PDO $pdoConnection)
     {
         if (!method_exists($pdoConnection, 'prepare')) {
@@ -419,6 +466,9 @@ class Helper
         return $version;
     }
 
+    /**
+     * @return string
+     */
     public function getPdoDatabaseVersion(PDO $pdoConnection)
     {
         return $this->getPdoDatabaseParam('version', $pdoConnection);

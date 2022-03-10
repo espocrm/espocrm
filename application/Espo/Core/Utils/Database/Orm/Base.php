@@ -34,18 +34,34 @@ use Espo\Core\Utils\Metadata;
 
 class Base
 {
+    /**
+     * @var ?string
+     */
     private $itemName = null;
 
+    /**
+     * @var ?string
+     */
     private $entityName = null;
 
-    private $metadata;
+    private Metadata $metadata;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $ormEntityDefs;
 
+    /**
+     * @var array<string,mixed>
+     */
     private $entityDefs;
 
-    protected $config;
+    protected Config $config;
 
+    /**
+     * @param array<string,mixed> $ormEntityDefs
+     * @param array<string,mixed> $entityDefs
+     */
     public function __construct(Metadata $metadata, array $ormEntityDefs, array $entityDefs, Config $config)
     {
         $this->metadata = $metadata;
@@ -54,16 +70,22 @@ class Base
         $this->config = $config;
     }
 
-    protected function getMetadata()
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getOrmEntityDefs()
     {
         return $this->ormEntityDefs;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     protected function getEntityDefs()
     {
         return $this->entityDefs;
@@ -71,6 +93,9 @@ class Base
 
     /**
      * Set current Field name or Link name.
+     *
+     * @param string $itemName
+     * @return void
      */
     protected function setItemName($itemName)
     {
@@ -99,6 +124,9 @@ class Base
 
     /**
      * Set current Entity Name.
+     *
+     * @param string $entityName
+     * @return void
      */
     protected function setEntityName($entityName)
     {
@@ -117,6 +145,9 @@ class Base
 
     /**
      * @todo Call methods explicitly.
+     *
+     * @param array<string,mixed> $keyValueList
+     * @return void
      */
     protected function setMethods(array $keyValueList)
     {
@@ -132,8 +163,8 @@ class Base
     /**
      * Get Entity Defs by type (entity/orm).
      *
-     * @param  boolean $isOrmEntityDefs
-     * @return array
+     * @param bool $isOrmEntityDefs
+     * @return array<string,mixed>
      */
     protected function getDefs($isOrmEntityDefs = false)
     {
@@ -220,6 +251,9 @@ class Base
         return $returns;
     }
 
+    /**
+     * @return string
+     */
     protected function getForeignField(string $name, string $entityType)
     {
         return $name;
@@ -227,6 +261,10 @@ class Base
 
     /**
      * Set a value for all elements of array. So, in result all elements will have the same values.
+     *
+     * @param mixed $inputValue
+     * @param mixed[] $array
+     * @return mixed[]
      */
     protected function setArrayValue($inputValue, array $array)
     {
