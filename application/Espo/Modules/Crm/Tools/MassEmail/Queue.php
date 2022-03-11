@@ -80,7 +80,7 @@ class Queue
     }
 
     /**
-     * @param iterable<TargetList> $additionalTargetList
+     * @param iterable<\Espo\ORM\Entity> $additionalTargetList
      * @throws Error
      */
     public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void

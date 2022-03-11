@@ -79,6 +79,13 @@ class MassEmail extends Record
         $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
+    /**
+     * @param \stdClass[] $targetDataList
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function processTest(string $id, array $targetDataList): void
     {
         $targetList = [];
@@ -123,6 +130,9 @@ class MassEmail extends Record
         $this->processTestSending($massEmail);
     }
 
+    /**
+     * @param iterable<Entity> $targetList
+     */
     protected function createTestQueue(MassEmailEntity $massEmail, iterable $targetList): void
     {
         $queue = $this->injectableFactory->create(Queue::class);
@@ -137,6 +147,10 @@ class MassEmail extends Record
         $processor->process($massEmail, true);
     }
 
+    /**
+     * @return \stdClass[]
+     * @throws Forbidden
+     */
     public function getSmtpAccountDataList(): array
     {
         if (

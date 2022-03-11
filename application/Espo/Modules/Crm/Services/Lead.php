@@ -94,6 +94,10 @@ class Lead extends Record implements
         }
     }
 
+    /**
+     * @return array<string,array<string,mixed>>
+     * @throws Forbidden
+     */
     public function getConvertAttributes(string $id): array
     {
         /** @var LeadEntity */

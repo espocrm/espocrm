@@ -60,6 +60,9 @@ class TargetList extends Record implements
 {
     use Di\HookManagerSetter;
 
+    /**
+     * @var string[]
+     */
     protected $targetLinkList = [];
 
     protected $noEditAccessRequiredLinkList = [];
@@ -68,6 +71,9 @@ class TargetList extends Record implements
 
     protected $linkMandatorySelectAttributeList = [];
 
+    /**
+     * @var array<string,string>
+     */
     protected $entityTypeLinkMap = [];
 
     public function setMetadata(Metadata $metadata): void
@@ -113,12 +119,20 @@ class TargetList extends Record implements
         }
     }
 
+    /**
+     * @param string[] $includingActionList
+     * @param string[] $excludingActionList
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     */
     protected function populateFromCampaignLog(
         TargetListEntity $entity,
         string $sourceCampaignId,
         array $includingActionList,
         array $excludingActionList
-    ) {
+    ): void {
+
         if (empty($sourceCampaignId)) {
             throw new BadRequest();
         }
@@ -203,7 +217,7 @@ class TargetList extends Record implements
         }
     }
 
-    public function unlinkAll(string $id, string $link)
+    public function unlinkAll(string $id, string $link): void
     {
         /** @var TargetListEntity|null $entity */
         $entity = $this->getRepository()->get($id);
@@ -244,8 +258,6 @@ class TargetList extends Record implements
         $this->entityManager->getQueryExecutor()->execute($updateQuery);
 
         $this->hookManager->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
-
-        return true;
     }
 
     protected function getOptedOutSelectQueryForLink(string $targetListId, string $link): Select
@@ -296,6 +308,9 @@ class TargetList extends Record implements
             ->build();
     }
 
+    /**
+     * @return RecordCollection<Entity>
+     */
     protected function findLinkedOptedOut(string $id, SearchParams $searchParams): RecordCollection
     {
         $offset = $searchParams->getOffset() ?? 0;
@@ -350,10 +365,11 @@ class TargetList extends Record implements
             $collection[] = $itemEntity;
         }
 
+        /** @var RecordCollection<Entity> */
         return new RecordCollection($collection, $totalCount);
     }
 
-    public function optOut(string $id, string $targetType, string $targetId)
+    public function optOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->entityManager->getEntity('TargetList', $id);
 
@@ -387,11 +403,9 @@ class TargetList extends Record implements
         ];
 
         $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
-
-        return true;
     }
 
-    public function cancelOptOut(string $id, string $targetType, string $targetId)
+    public function cancelOptOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->entityManager->getEntity('TargetList', $id);
 
@@ -425,8 +439,6 @@ class TargetList extends Record implements
         ];
 
         $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
-
-        return true;
     }
 
     /**

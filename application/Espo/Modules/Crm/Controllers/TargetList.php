@@ -36,7 +36,7 @@ use Espo\Core\Controllers\Record;
 
 class TargetList extends Record
 {
-    public function postActionUnlinkAll(Request $request)
+    public function postActionUnlinkAll(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -48,10 +48,12 @@ class TargetList extends Record
             throw new BadRequest();
         }
 
-        return $this->getTargetListService()->unlinkAll($data->id, $data->link);
+        $this->getTargetListService()->unlinkAll($data->id, $data->link);
+
+        return true;
     }
 
-    public function postActionOptOut(Request $request)
+    public function postActionOptOut(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -70,10 +72,12 @@ class TargetList extends Record
         $data->id = strval($data->id);
         $data->targetId = strval($data->targetId);
 
-        return $this->getTargetListService()->optOut($data->id, $data->targetType, $data->targetId);
+        $this->getTargetListService()->optOut($data->id, $data->targetType, $data->targetId);
+
+        return true;
     }
 
-    public function postActionCancelOptOut(Request $request)
+    public function postActionCancelOptOut(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -92,7 +96,9 @@ class TargetList extends Record
         $data->id = strval($data->id);
         $data->targetId = strval($data->targetId);
 
-        return $this->getTargetListService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
+        $this->getTargetListService()->cancelOptOut($data->id, $data->targetType, $data->targetId);
+
+        return true;
     }
 
     private function getTargetListService(): Service

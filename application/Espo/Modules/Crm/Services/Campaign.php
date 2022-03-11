@@ -39,7 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use \Espo\Services\Record;
+use Espo\Services\Record;
 
 use Espo\Core\Di;
 
@@ -52,6 +52,9 @@ class Campaign extends Record implements
 {
     use Di\DefaultLanguageSetter;
 
+    /**
+     * @var array<string,string[]>
+     */
     protected $entityTypeAddressFieldListMap = [
         'Account' => ['billingAddress', 'shippingAddress'],
         'Contact' => ['address'],
@@ -59,6 +62,9 @@ class Campaign extends Record implements
         'User' => [],
     ];
 
+    /**
+     * @var string[]
+     */
     protected $targetLinkList = [
         'accounts',
         'contacts',
@@ -66,8 +72,13 @@ class Campaign extends Record implements
         'users',
     ];
 
-    public function logLeadCreated($campaignId, Entity $target, $actionDate = null, $isTest = false)
-    {
+    public function logLeadCreated(
+        string $campaignId,
+        Entity $target,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
@@ -91,10 +102,11 @@ class Campaign extends Record implements
         ?string $queueItemId,
         Entity $target,
         ?Entity $emailOrEmailTemplate,
-        $emailAddress,
-        $actionDate = null,
-        $isTest = false
-    ) {
+        string $emailAddress,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
@@ -123,14 +135,15 @@ class Campaign extends Record implements
     }
 
     public function logBounced(
-        $campaignId,
-        $queueItemId,
+        string $campaignId,
+        ?string $queueItemId,
         Entity $target,
-        $emailAddress,
-        $isHard = false,
-        $actionDate = null,
-        $isTest = false
-    ) {
+        string $emailAddress,
+        bool $isHard = false,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (
             $queueItemId &&
             $this->entityManager
@@ -171,13 +184,14 @@ class Campaign extends Record implements
     }
 
     public function logOptedIn(
-        $campaignId,
-        $queueItemId,
+        string $campaignId,
+        ?string $queueItemId,
         Entity $target,
-        $emailAddress = null,
-        $actionDate = null,
-        $isTest = false
-    ) {
+        ?string $emailAddress = null,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (
             $queueItemId &&
             $this->entityManager
@@ -217,13 +231,14 @@ class Campaign extends Record implements
     }
 
     public function logOptedOut(
-        $campaignId,
-        $queueItemId,
+        string $campaignId,
+        ?string $queueItemId,
         Entity $target,
-        $emailAddress = null,
-        $actionDate = null,
-        $isTest = false
-    ) {
+        ?string $emailAddress = null,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (
             $queueItemId &&
             $this->entityManager
@@ -258,8 +273,14 @@ class Campaign extends Record implements
         $this->entityManager->saveEntity($logRecord);
     }
 
-    public function logOpened($campaignId, $queueItemId, Entity $target, $actionDate = null, $isTest = false)
-    {
+    public function logOpened(
+        string $campaignId,
+        ?string $queueItemId,
+        Entity $target,
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if (empty($actionDate)) {
             $actionDate = date('Y-m-d H:i:s');
         }
@@ -285,6 +306,7 @@ class Campaign extends Record implements
 
             if ($massEmail && $massEmail->getId()) {
                 $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+
                 $logRecord->set([
                     'campaignId' => $campaignId,
                     'actionDate' => $actionDate,
@@ -303,13 +325,14 @@ class Campaign extends Record implements
     }
 
     public function logClicked(
-        $campaignId,
-        $queueItemId,
+        string $campaignId,
+        string $queueItemId,
         Entity $target,
         Entity $trackingUrl,
-        $actionDate = null,
-        $isTest = false
-    ) {
+        ?string $actionDate = null,
+        bool $isTest = false
+    ): void {
+
         if ($this->config->get('massEmailOpenTracking')) {
             $this->logOpened($campaignId, $queueItemId, $target);
         }
@@ -351,7 +374,7 @@ class Campaign extends Record implements
         $this->entityManager->saveEntity($logRecord);
     }
 
-    public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false)
+    public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false): string
     {
         /** @var CampaignEntity $campaign */
         $campaign = $this->entityManager->getEntity('Campaign', $campaignId);

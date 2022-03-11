@@ -43,10 +43,6 @@ class Contact extends Record
         'portalUserId'
     ];
 
-    protected $exportAllowedAttributeList = [
-        'title'
-    ];
-
     protected $linkMandatorySelectAttributeList = [
         'targetLists' => ['isOptedOut'],
     ];

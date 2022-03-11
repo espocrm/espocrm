@@ -399,8 +399,8 @@ class Service implements Crud,
     }
 
     /**
-     * @param stdClass $data
      * @param TEntity $entity
+     * @param stdClass $data
      * @return void
      * @throws BadRequest
      */

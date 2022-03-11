@@ -58,19 +58,6 @@ class KnowledgeBaseArticle extends Record implements
 
     protected $readOnlyAttributeList = ['order'];
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'fileStorageManager'
-        ]);
-    }
-
-    protected function getFileStorageManager()
-    {
-        return $this->fileStorageManager;
-    }
-
     public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): stdClass
     {
         $ids = [];
@@ -81,13 +68,13 @@ class KnowledgeBaseArticle extends Record implements
         }
 
         /** @var KnowledgeBaseArticleEntity|null $entity */
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($entity, 'read')) {
+        if (!$this->acl->checkEntity($entity, 'read')) {
             throw new Forbidden();
         }
 
@@ -97,10 +84,10 @@ class KnowledgeBaseArticle extends Record implements
 
         foreach ($attachmentsIds as $attachmentId) {
             /** @var Attachment|null $source */
-            $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+            $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
-                $attachment = $this->getEntityManager()->getEntity('Attachment');
+                $attachment = $this->entityManager->getEntity('Attachment');
                 $attachment->set('role', 'Attachment');
                 $attachment->set('type', $source->get('type'));
                 $attachment->set('size', $source->get('size'));
@@ -114,12 +101,12 @@ class KnowledgeBaseArticle extends Record implements
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileStorageManager()->exists($source)) {
-                    $this->getEntityManager()->saveEntity($attachment);
+                if ($this->fileStorageManager->exists($source)) {
+                    $this->entityManager->saveEntity($attachment);
 
-                    $contents = $this->getFileStorageManager()->getContents($source) ?? '';
+                    $contents = $this->fileStorageManager->getContents($source);
 
-                    $this->getFileStorageManager()->putContents($attachment, $contents);
+                    $this->fileStorageManager->putContents($attachment, $contents);
 
                     $ids[] = $attachment->getId();
 
@@ -134,15 +121,21 @@ class KnowledgeBaseArticle extends Record implements
         ];
     }
 
-    public function moveUp(string $id, ?array $where = null)
+    /**
+     * @param ?array<mixed,mixed> $where
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     */
+    public function moveUp(string $id, ?array $where = null): void
     {
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -186,19 +179,25 @@ class KnowledgeBaseArticle extends Record implements
 
         $previousEntity->set('order', $currentIndex);
 
-        $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($previousEntity);
+        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($previousEntity);
     }
 
-    public function moveDown(string $id, ?array $where = null)
+    /**
+     * @param ?array<mixed,mixed> $where
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     */
+    public function moveDown(string $id, ?array $where = null): void
     {
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -242,19 +241,25 @@ class KnowledgeBaseArticle extends Record implements
 
         $nextEntity->set('order', $currentIndex);
 
-        $this->getEntityManager()->saveEntity($entity);
-        $this->getEntityManager()->saveEntity($nextEntity);
+        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($nextEntity);
     }
 
-    public function moveToTop(string $id, ?array $where = null)
+    /**
+     * @param ?array<mixed,mixed> $where
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     */
+    public function moveToTop(string $id, ?array $where = null): void
     {
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -296,18 +301,24 @@ class KnowledgeBaseArticle extends Record implements
 
         $entity->set('order', $previousEntity->get('order') - 1);
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->entityManager->saveEntity($entity);
     }
 
-    public function moveToBottom(string $id, ?array $where = null)
+    /**
+     * @param ?array<mixed,mixed> $where
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws Error
+     */
+    public function moveToBottom(string $id, ?array $where = null): void
     {
-        $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+        $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -349,6 +360,6 @@ class KnowledgeBaseArticle extends Record implements
 
         $entity->set('order', $nextEntity->get('order') + 1);
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->entityManager->saveEntity($entity);
     }
 }

@@ -50,10 +50,10 @@ class CaseObj extends Record
     {
         parent::beforeCreateEntity($entity, $data);
 
-        if ($this->getUser()->isPortal()) {
+        if ($this->user->isPortal()) {
             if (!$entity->has('accountId')) {
-                if ($this->getUser()->get('contactId')) {
-                    $contact = $this->getEntityManager()->getEntity('Contact', $this->getUser()->get('contactId'));
+                if ($this->user->get('contactId')) {
+                    $contact = $this->entityManager->getEntity('Contact', $this->user->get('contactId'));
 
                     if ($contact && $contact->get('accountId')) {
                         $entity->set('accountId', $contact->get('accountId'));
@@ -61,8 +61,8 @@ class CaseObj extends Record
                 }
             }
             if (!$entity->has('contactId')) {
-                if ($this->getUser()->get('contactId')) {
-                    $entity->set('contactId', $this->getUser()->get('contactId'));
+                if ($this->user->get('contactId')) {
+                    $entity->set('contactId', $this->user->get('contactId'));
                 }
             }
         }
@@ -73,7 +73,7 @@ class CaseObj extends Record
         parent::afterCreateEntity($entity, $data);
 
         if (!empty($data->emailId)) {
-            $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
+            $email = $this->entityManager->getEntity('Email', $data->emailId);
 
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set([
@@ -81,11 +81,14 @@ class CaseObj extends Record
                     'parentId' => $entity->getId(),
                 ]);
 
-                $this->getEntityManager()->saveEntity($email);
+                $this->entityManager->saveEntity($email);
             }
         }
     }
 
+    /**
+     * @return stdClass[]
+     */
     public function getEmailAddressList(string $id): array
     {
         /** @var CaseEntity */
@@ -133,6 +136,9 @@ class CaseObj extends Record
         return $list;
     }
 
+    /**
+     * @param stdClass[] $dataList
+     */
     protected function getAccountEmailAddress(CaseEntity $entity, array $dataList): ?stdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
@@ -160,6 +166,9 @@ class CaseObj extends Record
         ];
     }
 
+    /**
+     * @param stdClass[] $dataList
+     */
     protected function getLeadEmailAddress(CaseEntity $entity, array $dataList): ?stdClass
     {
         $lead = $this->entityManager->getEntity('Account', $entity->get('leadId'));
@@ -187,6 +196,9 @@ class CaseObj extends Record
         ];
     }
 
+    /**
+     * @return stdClass[]
+     */
     protected function getContactEmailAddressList(CaseEntity $entity): array
     {
         $contactIdList = $entity->getLinkMultipleIdList('contacts');

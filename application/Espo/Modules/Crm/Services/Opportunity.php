@@ -47,6 +47,9 @@ use DateInterval;
 use PDO;
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Opportunity>
+ */
 class Opportunity extends Record
 {
     protected $mandatorySelectAttributeList = [
@@ -418,8 +421,10 @@ class Opportunity extends Record
 
     /**
      * A grouping-by with distinct will give wrong results. Need to use sub-query.
+     *
+     * @param array<mixed,mixed> $whereClause
      */
-    protected function handleDistinctReportQueryBuilder(SelectBuilder $queryBuilder, array $whereClause)
+    protected function handleDistinctReportQueryBuilder(SelectBuilder $queryBuilder, array $whereClause): void
     {
         if (!$queryBuilder->build()->isDistinct()) {
             return;
@@ -438,6 +443,11 @@ class Opportunity extends Record
         ]);
     }
 
+    /**
+     *
+     * @param string $dateFilter
+     * @return array{string,string}
+     */
     protected function getDateRangeByFilter(string $dateFilter): array
     {
         switch ($dateFilter) {
@@ -516,9 +526,12 @@ class Opportunity extends Record
                 ];
         }
 
-        return [0, 0];
+        return ['0', '0'];
     }
 
+    /**
+     * @return string[]
+     */
     protected function getLostStageList(): array
     {
         $lostStageList = [];
@@ -538,6 +551,9 @@ class Opportunity extends Record
         return $lostStageList;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getWonStageList(): array
     {
         $wonStageList = [];
@@ -557,6 +573,9 @@ class Opportunity extends Record
         return $wonStageList;
     }
 
+    /**
+     * @return stdClass[]
+     */
     public function getEmailAddressList(string $id): array
     {
         /** @var OpportunityEntity */
@@ -591,6 +610,9 @@ class Opportunity extends Record
         return $list;
     }
 
+    /**
+     * @param stdClass[] $dataList
+     */
     protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList): ?stdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
@@ -618,6 +640,9 @@ class Opportunity extends Record
         ];
     }
 
+    /**
+     * @return stdClass[]
+     */
     protected function getContactEmailAddressList(OpportunityEntity $entity): array
     {
         $contactIdList = $entity->getLinkMultipleIdList('contacts');
