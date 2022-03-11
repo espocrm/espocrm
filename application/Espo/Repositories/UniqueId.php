@@ -32,8 +32,12 @@ namespace Espo\Repositories;
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Repositories\Database;
 
-class UniqueId extends \Espo\Core\Repositories\Database
+/**
+ * @extends Database<\Espo\Entities\UniqueId>
+ */
+class UniqueId extends Database
 {
     protected $hooksDisabled = true;
 

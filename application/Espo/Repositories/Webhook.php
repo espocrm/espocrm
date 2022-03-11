@@ -33,7 +33,12 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
-class Webhook extends \Espo\Core\Repositories\Database
+use \Espo\Core\Repositories\Database;
+
+/**
+ * @extends Database<\Espo\Entities\Webhook>
+ */
+class Webhook extends Database
 {
     protected $hooksDisabled = true;
 

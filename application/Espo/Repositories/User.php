@@ -161,6 +161,9 @@ class User extends Database
         }
     }
 
+    /**
+     * @param string[] $teamIds
+     */
     public function checkBelongsToAnyOfTeams(string $userId, array $teamIds): bool
     {
         if (empty($teamIds)) {
