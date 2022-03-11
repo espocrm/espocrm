@@ -34,6 +34,9 @@ use Espo\Entities\EmailAddress as EmailAddressEntity;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+/**
+ * @extends Record<\Espo\Entities\EmailAddress>
+ */
 class EmailAddress extends Record
 {
     const ERASED_PREFIX = 'ERASED:';

@@ -41,6 +41,9 @@ use Espo\Entities\Attachment as AttachmentEntity;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\Attachment>
+ */
 class Attachment extends Record
 {
     /**

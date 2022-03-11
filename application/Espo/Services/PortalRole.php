@@ -33,6 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Record<\Espo\Entities\PortalRole>
+ */
 class PortalRole extends Record implements
 
     Di\FileManagerAware,

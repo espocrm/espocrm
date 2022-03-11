@@ -29,6 +29,9 @@
 
 namespace Espo\Services;
 
+/**
+ * @extends Record<\Espo\Entities\Job>
+ */
 class Job extends Record
 {
     protected $forceSelectAllAttributes = true;

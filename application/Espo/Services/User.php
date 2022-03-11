@@ -58,6 +58,9 @@ use Espo\ORM\Entity;
 use stdClass;
 use Exception;
 
+/**
+ * @extends Record<\Espo\Entities\User>
+ */
 class User extends Record implements
 
     Di\TemplateFileManagerAware,

@@ -37,6 +37,9 @@ use Espo\Entities\User;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\Webhook>
+ */
 class Webhook extends Record implements
     Di\WebhookManagerAware
 

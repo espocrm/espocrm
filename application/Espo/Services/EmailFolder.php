@@ -38,6 +38,9 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Record<\Espo\Entities\EmailFolder>
+ */
 class EmailFolder extends Record implements Di\LanguageAware
 {
     use Di\LanguageSetter;

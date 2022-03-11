@@ -61,6 +61,9 @@ use Exception;
 use Throwable;
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\Email>
+ */
 class Email extends Record implements
 
     Di\EmailSenderAware,

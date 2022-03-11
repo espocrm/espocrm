@@ -37,6 +37,9 @@ use Cron\CronExpression;
 
 use Exception;
 
+/**
+ * @extends Record<\Espo\Entities\ScheduledJob>
+ */
 class ScheduledJob extends Record
 {
     /** Should not be removed. */

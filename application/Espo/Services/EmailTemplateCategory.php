@@ -29,7 +29,12 @@
 
 namespace Espo\Services;
 
-class EmailTemplateCategory extends \Espo\Services\RecordTree
+use Espo\Services\RecordTree;
+
+/**
+ * @extends RecordTree<\Espo\Entities\EmailTemplateCategory>
+ */
+class EmailTemplateCategory extends RecordTree
 {
     protected $categoryField = 'category';
 }

@@ -46,6 +46,9 @@ use Espo\Core\Di;
 use Throwable;
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\EmailAccount>
+ */
 class EmailAccount extends Record implements
 
     Di\CryptAware

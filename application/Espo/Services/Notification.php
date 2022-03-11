@@ -38,6 +38,9 @@ use Espo\Entities\User;
 
 use Espo\Tools\Stream\NoteAccessControl;
 
+/**
+ * @extends Record<\Espo\Entities\Notification>
+ */
 class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;

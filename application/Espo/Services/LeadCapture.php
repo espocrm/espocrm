@@ -43,6 +43,9 @@ use Espo\Core\{
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\LeadCapture>
+ */
 class LeadCapture extends Record
 {
     /**

@@ -33,6 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Record<\Espo\Entities\Role>
+ */
 class Role extends Record implements
 
     Di\FileManagerAware,

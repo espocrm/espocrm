@@ -29,6 +29,9 @@
 
 namespace Espo\Services;
 
+/**
+ * @extends Record<\Espo\Entities\AuthLogRecord>
+ */
 class AuthLogRecord extends Record
 {
     protected $internalAttributeList = [];

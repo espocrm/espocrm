@@ -29,6 +29,9 @@
 
 namespace Espo\Services;
 
+/**
+ * @extends Record<\Espo\Entities\ActionHistoryRecord>
+ */
 class ActionHistoryRecord extends Record
 {
     protected $actionHistoryDisabled = true;

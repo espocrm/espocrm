@@ -48,6 +48,9 @@ use Espo\Entities\Integration as IntegrationEntity;
 
 use Exception;
 
+/**
+ * @extends Record<\Espo\Entities\ExternalAccount>
+ */
 class ExternalAccount extends Record implements Di\HookManagerAware
 {
     use Di\HookManagerSetter;

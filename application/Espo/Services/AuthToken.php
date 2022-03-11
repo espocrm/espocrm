@@ -31,6 +31,9 @@ namespace Espo\Services;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\AuthToken>
+ */
 class AuthToken extends Record
 {
     protected $actionHistoryDisabled = true;

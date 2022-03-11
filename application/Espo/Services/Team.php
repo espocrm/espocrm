@@ -35,6 +35,9 @@ use Espo\Core\Select\SearchParams;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Record<\Espo\Entities\Team>
+ */
 class Team extends Record implements
 
     Di\FileManagerAware,

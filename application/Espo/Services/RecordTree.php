@@ -48,6 +48,10 @@ use Espo\Core\Acl\Exceptions\NotImplemented;
 
 use stdClass;
 
+/**
+ * @template TEntity of Entity
+ * @extends Record<TEntity>
+ */
 class RecordTree extends Record
 {
     const MAX_DEPTH = 2;

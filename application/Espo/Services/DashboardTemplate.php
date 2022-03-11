@@ -36,6 +36,9 @@ use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Entities\User;
 
+/**
+ * @extends Record<\Espo\Entities\DashboardTemplate>
+ */
 class DashboardTemplate extends Record
 {
     protected function applyLayout(Entity $preferences, Entity $template, bool $append): void

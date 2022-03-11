@@ -29,6 +29,9 @@
 
 namespace Espo\Services;
 
+/**
+ * @extends Record<\Espo\Entities\LeadCaptureLogRecord>
+ */
 class LeadCaptureLogRecord extends Record
 {
 

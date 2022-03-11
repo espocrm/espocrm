@@ -41,6 +41,9 @@ use Espo\Core\{
 
 use Espo\Services\Record;
 
+/**
+ * @extends Record<\Espo\Entities\Import>
+ */
 class Import extends Record
 {
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection

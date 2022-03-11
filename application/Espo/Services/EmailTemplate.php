@@ -45,6 +45,9 @@ use Espo\Core\Di;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\EmailTemplate>
+ */
 class EmailTemplate extends Record implements
 
     Di\FieldUtilAware

@@ -45,6 +45,9 @@ use Espo\ORM\Entity;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Entities\Note>
+ */
 class Note extends Record
 {
     protected function afterCreateEntity(Entity $entity, $data)

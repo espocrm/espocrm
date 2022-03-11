@@ -64,8 +64,6 @@ class Record extends RecordService implements
     Di\InjectableFactoryAware,
     Di\SelectBuilderFactoryAware,
     Di\LogAware,
-
-    /** for backward compatibility, to be removed */
     \Espo\Core\Interfaces\Injectable
 {
     use Di\AclManagerSetter;

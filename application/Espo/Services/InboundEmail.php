@@ -45,6 +45,9 @@ use Espo\Core\Di;
 
 use Throwable;
 
+/**
+ * @extends Record<\Espo\Entities\InboundEmail>
+ */
 class InboundEmail extends RecordService implements
 
     Di\CryptAware,
