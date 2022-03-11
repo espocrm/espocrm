@@ -72,14 +72,23 @@ class User extends Record implements
     use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
+    /**
+     * @var string[]
+     */
     protected $mandatorySelectAttributeList = [
         'isActive',
         'userName',
         'type',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $validateSkipFieldList = ['name', "firstName", "lastName"];
 
+    /**
+     * @var string[]
+     */
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
     public function getEntity(?string $id = null): ?Entity
@@ -247,10 +256,10 @@ class User extends Record implements
         ];
     }
 
-    public function removeChangePasswordRequestJob($data)
+    public function removeChangePasswordRequestJob(stdClass $data): void
     {
         if (empty($data->id)) {
-            return false;
+            return;
         }
 
         $id = $data->id;
@@ -260,11 +269,9 @@ class User extends Record implements
         if ($p) {
             $this->getEntityManager()->removeEntity($p);
         }
-
-        return true;
     }
 
-    protected function hashPassword($password)
+    protected function hashPassword(string $password): string
     {
         $passwordHash = $this->injectableFactory->create(PasswordHash::class);
 
@@ -550,7 +557,7 @@ class User extends Record implements
         return $this->injectableFactory->create(PasswordHash::class);
     }
 
-    protected function getInternalUserCount()
+    protected function getInternalUserCount(): int
     {
         return $this->getEntityManager()
             ->getRDBRepository('User')
@@ -562,7 +569,7 @@ class User extends Record implements
             ->count();
     }
 
-    protected function getPortalUserCount()
+    protected function getPortalUserCount(): int
     {
         return $this->getEntityManager()
             ->getRDBRepository('User')
@@ -875,7 +882,7 @@ class User extends Record implements
         }
     }
 
-    protected function clearRoleCache(string $id)
+    protected function clearRoleCache(string $id): void
     {
         $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
         $this->fileManager->removeFile('data/cache/application/aclMap/' . $id . '.php');
@@ -883,7 +890,7 @@ class User extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
-    protected function clearPortalRolesCache()
+    protected function clearPortalRolesCache(): void
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
         $this->fileManager->removeInDir('data/cache/application/aclPortalMap');

@@ -45,6 +45,9 @@ class Webhook extends Record implements
 
     const WEBHOOK_MAX_COUNT_PER_USER = 50;
 
+    /**
+     * @var string[]
+     */
     protected $eventTypeList = [
         'create',
         'update',
@@ -52,8 +55,14 @@ class Webhook extends Record implements
         'fieldUpdate',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $onlyAdminAttributeList = ['userId', 'userName'];
 
+    /**
+     * @var string[]
+     */
     protected $readOnlyAttributeList = ['secretKey'];
 
     public function populateDefaults(Entity $entity, stdClass $data): void
@@ -93,7 +102,7 @@ class Webhook extends Record implements
         }
     }
 
-    protected function checkMaxCount()
+    protected function checkMaxCount(): void
     {
         $maxCount = $this->getConfig()->get('webhookMaxCountPerUser', self::WEBHOOK_MAX_COUNT_PER_USER);
 
@@ -115,7 +124,7 @@ class Webhook extends Record implements
         $this->processEntityEventData($entity);
     }
 
-    protected function checkEntityUserIsApi(Entity $entity)
+    protected function checkEntityUserIsApi(Entity $entity): void
     {
         $userId = $entity->get('userId');
 
@@ -131,7 +140,7 @@ class Webhook extends Record implements
         }
     }
 
-    protected function processEntityEventData(Entity $entity)
+    protected function processEntityEventData(Entity $entity): void
     {
         $event = $entity->get('event');
 
