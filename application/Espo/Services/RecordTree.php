@@ -52,10 +52,16 @@ class RecordTree extends Record
 {
     const MAX_DEPTH = 2;
 
-    private $seed = null;
+    private ?Entity $seed = null;
 
+    /**
+     * @var ?string
+     */
     protected $subjectEntityType = null;
 
+    /**
+     * @var ?string
+     */
     protected $categoryField = null;
 
     public function __construct()
@@ -82,6 +88,11 @@ class RecordTree extends Record
         }
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @return ?Collection<Entity>
+     * @throws Forbidden
+     */
     public function getTree(
         string $parentId = null,
         array $params = [],
@@ -95,6 +106,10 @@ class RecordTree extends Record
         return $this->getTreeInternal($parentId, $params, $maxDepth, 0);
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @return ?Collection<Entity>
+     */
     protected function getTreeInternal(
         string $parentId = null,
         array $params = [],
@@ -230,6 +245,10 @@ class RecordTree extends Record
         ];
     }
 
+    /**
+     * @return string[]
+     * @throws Forbidden
+     */
     public function getTreeItemPath(?string $parentId = null): array
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
@@ -258,7 +277,7 @@ class RecordTree extends Record
         return $arr;
     }
 
-    protected function getSeed()
+    protected function getSeed(): Entity
     {
         if (empty($this->seed)) {
             $this->seed = $this->getEntityManager()->getEntity($this->getEntityType());
@@ -267,7 +286,7 @@ class RecordTree extends Record
         return $this->seed;
     }
 
-    protected function hasOrder()
+    protected function hasOrder(): bool
     {
         $seed = $this->getSeed();
 
@@ -313,6 +332,10 @@ class RecordTree extends Record
         parent::link($id, $link, $foreignId);
     }
 
+    /**
+     * @return string[]
+     * @throws Forbidden
+     */
     public function getLastChildrenIdList(?string $parentId = null): array
     {
         if (!$this->acl->check($this->getEntityType(), 'read')) {
@@ -386,6 +409,4 @@ class RecordTree extends Record
 
         return $idList;
     }
-
-
 }

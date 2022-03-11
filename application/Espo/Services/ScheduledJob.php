@@ -35,9 +35,12 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Cron\CronExpression;
 
+use Exception;
+
 class ScheduledJob extends Record
 {
-    protected $findLinkedLogCountQueryDisabled = true;
+    /** Should not be removed. */
+    protected bool $findLinkedLogCountQueryDisabled = true;
 
     public function processValidation(Entity $entity, $data)
     {
@@ -47,8 +50,11 @@ class ScheduledJob extends Record
 
         try {
             $cronExpression = CronExpression::factory($scheduling);
-            $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
-        } catch (\Exception $e) {
+
+            /** @phpstan-ignore-next-line*/
+            $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+        }
+        catch (Exception $e) {
             throw new BadRequest("Not valid scheduling expression.");
         }
     }

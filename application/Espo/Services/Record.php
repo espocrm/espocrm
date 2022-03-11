@@ -36,13 +36,8 @@ use Espo\ORM\{
     Collection,
 };
 
-use Espo\{
-    Entities\User,
-};
-
 use Espo\Core\{
     Exceptions\ForbiddenSilent,
-    Acl,
     Acl\Table as AclTable,
     Utils\Util,
     Record\Service as RecordService,
@@ -84,7 +79,7 @@ class Record extends RecordService implements
     use \Espo\Core\Traits\Injectable;
 
     /** for backward compatibility, to be removed */
-    protected $dependencyList = [];
+    protected $dependencyList = []; /** @phpstan-ignore-line */
 
     public function __construct()
     {
@@ -111,7 +106,7 @@ class Record extends RecordService implements
     /**
      * @deprecated For backward compatibility, to be removed.
      */
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
     }
 
@@ -144,7 +139,8 @@ class Record extends RecordService implements
     }
 
     /**
-     * @deprecated Since v6.2.0.
+     * @deprecated Since v7.0.
+     * @return \Espo\Core\Select\SelectManagerFactory
      */
     protected function getSelectManagerFactory()
     {
@@ -202,6 +198,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->fieldUtil`.
+     * @return \Espo\Core\Utils\FieldUtil
      */
     protected function getFieldManagerUtil()
     {
@@ -220,6 +217,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @param ?string $entityType
+     * @return \Espo\Core\Select\SelectManager
      */
     protected function getSelectManager($entityType = null)
     {
@@ -232,6 +231,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @param array<string,mixed> $params
+     * @return array<string,mixed>
      */
     protected function getSelectParams($params)
     {
@@ -249,7 +250,8 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->recordServiceContainer->get($name)`.
      *
-     * @return \Espo\Core\Record\Service
+     * @param string $name
+     * @return \Espo\Core\Record\Service<Entity>
      */
     protected function getRecordService($name)
     {
@@ -258,11 +260,11 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @param array<string,mixed> $params
+     * @param Collection<TEntity> $collection
      */
     public function exportCollection(array $params, Collection $collection): string
     {
-        /** @var iterable<Entity>&Collection $collection */
-
         if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }
@@ -284,6 +286,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @param string[] $selectAttributeList
      */
     public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
@@ -312,6 +315,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @return void
      */
     public function loadAdditionalFieldsForList(Entity $entity)
     {
@@ -320,6 +324,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @return void
      */
     public function loadAdditionalFieldsForExport(Entity $entity)
     {
@@ -327,6 +332,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @return string[]
      */
     protected function getConvertCurrencyFieldList()
     {
@@ -358,6 +364,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\Field\Currency\CurrencyConverter`.
+     * @param ?string[] $fieldList
+     * @return stdClass
      */
     public function getConvertCurrencyValues(
         Entity $entity,
