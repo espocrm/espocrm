@@ -36,7 +36,7 @@ use Espo\Core\{
 
 use Espo\Services\Stream as Service;
 
-use StdClass;
+use stdClass;
 
 class Stream
 {
@@ -54,7 +54,7 @@ class Stream
         $this->searchParamsFetcher = $searchParamsFetcher;
     }
 
-    public function getActionList(Request $request): StdClass
+    public function getActionList(Request $request): stdClass
     {
         $params = $request->getRouteParams();
 
@@ -84,7 +84,7 @@ class Stream
         ];
     }
 
-    public function getActionListPosts(Request $request): StdClass
+    public function getActionListPosts(Request $request): stdClass
     {
         $params = $request->getRouteParams();
 

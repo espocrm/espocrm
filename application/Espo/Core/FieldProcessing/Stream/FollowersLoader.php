@@ -109,10 +109,6 @@ class FollowersLoader implements LoaderInterface
 
         $data = $this->streamService->getEntityFollowers($entity, 0, $limit);
 
-        if (!$data) {
-            return;
-        }
-
         $entity->set('followersIds', $data['idList']);
         $entity->set('followersNames', $data['nameMap']);
     }
