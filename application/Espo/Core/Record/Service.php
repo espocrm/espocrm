@@ -1581,7 +1581,7 @@ class Service implements Crud,
     }
 
     /**
-     * @return RecordCollection<\Espo\ORM\Entity>
+     * @return RecordCollection<\Espo\Entities\User>
      * @throws NotFound
      * @throws Forbidden
      */
