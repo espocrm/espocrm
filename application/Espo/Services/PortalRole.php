@@ -55,7 +55,7 @@ class PortalRole extends Record implements
         $this->clearRolesCache();
     }
 
-    protected function clearRolesCache()
+    protected function clearRolesCache(): void
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
         $this->fileManager->removeInDir('data/cache/application/aclPortalMap');

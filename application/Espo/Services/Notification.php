@@ -42,7 +42,7 @@ class Notification extends \Espo\Services\Record
 {
     protected $actionHistoryDisabled = true;
 
-    private $noteAccessControl = null;
+    private ?NoteAccessControl $noteAccessControl = null;
 
     public function getNotReadCount(string $userId): int
     {
@@ -68,7 +68,7 @@ class Notification extends \Espo\Services\Record
             ->count();
     }
 
-    public function markAllRead(string $userId)
+    public function markAllRead(string $userId): bool
     {
         $update = $this->entityManager
             ->getQueryBuilder()
@@ -86,6 +86,15 @@ class Notification extends \Espo\Services\Record
         return true;
     }
 
+    /**
+     * @param array{
+     *   after?: ?string,
+     *   offset?: ?int,
+     *   maxSize?: ?int,
+     * } $params
+     * @return RecordCollection<\Espo\Entities\Notification>
+     * @throws Error
+     */
     public function getList(string $userId, array $params = []): RecordCollection
     {
         $queryBuilder = $this->entityManager
@@ -133,6 +142,7 @@ class Notification extends \Espo\Services\Record
 
         $query = $queryBuilder->build();
 
+        /** @var \Espo\ORM\Collection<\Espo\Entities\Notification>> */
         $collection = $this->entityManager
             ->getRDBRepository('Notification')
             ->clone($query)
@@ -230,9 +240,13 @@ class Notification extends \Espo\Services\Record
             $this->entityManager->getQueryExecutor()->execute($update);
         }
 
+        /** @return RecordCollection<\Espo\Entities\Notification> */
         return new RecordCollection($collection, $count);
     }
 
+    /**
+     * @return string[]
+     */
     private function getIgnoreScopeList(): array
     {
         $ignoreScopeList = [];

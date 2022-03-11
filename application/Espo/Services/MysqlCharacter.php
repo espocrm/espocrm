@@ -37,17 +37,17 @@ use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
  */
 class MysqlCharacter extends \Espo\Core\Services\Base
 {
-    protected function init()
+    protected function init() /** @phpstan-ignore-line */
     {
         $this->addDependency('container');
     }
 
-    protected function getContainer()
+    protected function getContainer() /** @phpstan-ignore-line */
     {
         return $this->getInjection('container');
     }
 
-    public function jobConvertToMb4()
+    public function jobConvertToMb4() /** @phpstan-ignore-line */
     {
         $container = $this->getContainer();
 

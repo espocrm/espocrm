@@ -177,7 +177,7 @@ class Note extends Record
         $entity->clear('isGlobal');
     }
 
-    protected function handlePostText(Entity $entity)
+    protected function handlePostText(Entity $entity): void
     {
         $post = $entity->get('post');
 

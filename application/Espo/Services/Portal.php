@@ -62,12 +62,12 @@ class Portal extends Record implements
         }
     }
 
-    protected function loadUrlField(PortalEntity $entity)
+    protected function loadUrlField(PortalEntity $entity): void
     {
         $this->getPortalRepository()->loadUrlField($entity);
     }
 
-    protected function clearRolesCache()
+    protected function clearRolesCache(): void
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
         $this->fileManager->removeInDir('data/cache/application/aclPortalMap');

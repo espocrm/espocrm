@@ -34,6 +34,8 @@ use Espo\Core\Utils\Metadata as MetadataUtil;
 
 use Espo\Entities\User;
 
+use stdClass;
+
 class Metadata
 {
     private $acl;
@@ -49,7 +51,7 @@ class Metadata
         $this->user = $user;
     }
 
-    public function getDataForFrontend()
+    public function getDataForFrontend(): stdClass
     {
         $data = $this->metadata->getAllForFrontend();
 

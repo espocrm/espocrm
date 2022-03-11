@@ -68,7 +68,7 @@ class Pdf
 {
     private const DEFAULT_ENGINE = 'Tcpdf';
 
-    private $removeMassFilePeriod = '1 hour';
+    private string $removeMassFilePeriod = '1 hour';
 
     private $config;
 
@@ -106,6 +106,9 @@ class Pdf
         $this->dataLoaderManager = $dataLoaderManager;
     }
 
+    /**
+     * @param iterable<Entity> $entityList
+     */
     public function generateMailMerge(
         string $entityType,
         iterable $entityList,
@@ -169,6 +172,12 @@ class Pdf
         return $attachment->getId();
     }
 
+    /**
+     * @param string[] $idList
+     * @throws Error
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function massGenerate(
         string $entityType,
         array $idList,
@@ -312,6 +321,7 @@ class Pdf
 
     /**
      * @deprecated
+     * @param ?array<string,mixed> $additionalData
      */
     public function buildFromTemplate(
         Entity $entity,
@@ -323,6 +333,10 @@ class Pdf
         return $this->buildFromTemplateInternal($entity, $template, $displayInline, $additionalData);
     }
 
+    /**
+     * @deprecated
+     * @param ?array<string,mixed> $additionalData
+     */
     private function buildFromTemplateInternal(
         Entity $entity,
         Template $template,
