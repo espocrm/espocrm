@@ -315,6 +315,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @param TEntity $entity
      * @return void
      */
     public function loadAdditionalFieldsForList(Entity $entity)
@@ -324,6 +325,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @param TEntity $entity
      * @return void
      */
     public function loadAdditionalFieldsForExport(Entity $entity)

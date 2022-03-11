@@ -372,6 +372,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @return void
      */
     public function loadAdditionalFields(Entity $entity)
@@ -381,6 +382,9 @@ class Service implements Crud,
         $loadProcessor->process($entity);
     }
 
+    /**
+     * @param TEntity $entity
+     */
     protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
         $params = new FieldLoaderParams();
@@ -396,6 +400,7 @@ class Service implements Crud,
 
     /**
      * @param stdClass $data
+     * @param TEntity $entity
      * @return void
      * @throws BadRequest
      */
@@ -410,6 +415,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @throws Forbidden
      */
     protected function processAssignmentCheck(Entity $entity): void
@@ -420,6 +426,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * Check whether assignment can be applied for an entity.
      */
     public function checkAssignment(Entity $entity): bool
@@ -538,6 +545,9 @@ class Service implements Crud,
     {
     }
 
+    /**
+     * @param TEntity $entity
+     */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
         if ($entity->get('versionNumber') === null) {
@@ -576,6 +586,9 @@ class Service implements Crud,
         throw ConflictSilent::createWithBody('modified', json_encode($responseData));
     }
 
+    /**
+     * @param TEntity $entity
+     */
     protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
         $duplicateList = $this->findDuplicates($entity);
@@ -593,6 +606,9 @@ class Service implements Crud,
         throw ConflictSilent::createWithBody('duplicate', json_encode($list));
     }
 
+    /**
+     * @param TEntity $entity
+     */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
         if (!$this->user->isPortal()) {
@@ -1508,6 +1524,8 @@ class Service implements Crud,
 
     /**
      * Check whether an entity has a duplicate.
+     *
+     * @param TEntity $entity
      */
     public function checkIsDuplicate(Entity $entity): bool
     {
@@ -1554,7 +1572,7 @@ class Service implements Crud,
 
     /**
      * Prepare an entity for output. Clears not allowed attributes.
-     *
+     * @param TEntity $entity
      * @return void
      */
     public function prepareEntityForOutput(Entity $entity)
@@ -1635,6 +1653,9 @@ class Service implements Crud,
         return $attributes;
     }
 
+    /**
+     * @param TEntity $entity
+     */
     protected function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
         $duplicatingEntityId = $params->getDuplicateSourceId();
@@ -1656,6 +1677,9 @@ class Service implements Crud,
         $this->duplicateLinks($entity, $duplicatingEntity);
     }
 
+    /**
+     * @param TEntity $entity
+     */
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
         $repository = $this->getRepository();
@@ -1734,6 +1758,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @param stdClass $data
      * @return void
      */
@@ -1742,6 +1767,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @param stdClass $data
      * @return void
      */
@@ -1750,6 +1776,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @param stdClass $data
      * @return void
      */
@@ -1758,6 +1785,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @param stdClass $data
      * @return void
      */
@@ -1766,6 +1794,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @return void
      */
     protected function beforeDeleteEntity(Entity $entity)
@@ -1773,6 +1802,7 @@ class Service implements Crud,
     }
 
     /**
+     * @param TEntity $entity
      * @return void
      */
     protected function afterDeleteEntity(Entity $entity)
