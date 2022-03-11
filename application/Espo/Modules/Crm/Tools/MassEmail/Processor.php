@@ -50,6 +50,7 @@ use Espo\{
     Modules\Crm\Entities\EmailQueueItem,
     Modules\Crm\Entities\Campaign,
     Modules\Crm\Entities\MassEmail,
+    Modules\Crm\Entities\CampaignTrackingUrl,
     Modules\Crm\Services\Campaign as CampaignService,
     Services\EmailTemplate as EmailTemplateService,
     ORM\Entity,
@@ -75,11 +76,11 @@ class Processor
 
     protected const MAX_PER_HOUR_COUNT = 10000;
 
-    private $campaignService = null;
+    private ?CampaignService $campaignService = null;
 
-    private $emailTemplateService = null;
+    private ?EmailTemplateService $emailTemplateService = null;
 
-    protected $log;
+    protected Log $log;
 
     public function __construct(
         Config $config,
@@ -228,6 +229,9 @@ class Processor
         }
     }
 
+    /**
+     * @param iterable<CampaignTrackingUrl> $trackingUrlList
+     */
     protected function getPreparedEmail(
         EmailQueueItem $queueItem,
         MassEmail $massEmail,
@@ -311,6 +315,9 @@ class Processor
         return $email;
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     protected function prepareQueueItemMessage(
         EmailQueueItem $queueItem,
         Sender $sender,
@@ -369,6 +376,7 @@ class Processor
 
     /**
      * @param iterable<\Espo\Entities\Attachment> $attachmentList
+     * @param ?array<string,mixed> $smtpParams
      */
     protected function sendQueueItem(
         EmailQueueItem $queueItem,
@@ -425,9 +433,11 @@ class Processor
             }
         }
 
+        /** @var CampaignTrackingUrl[] */
         $trackingUrlList = [];
 
         if ($campaign) {
+            /** @var \Espo\ORM\Collection<CampaignTrackingUrl> */
             $trackingUrlList = $this->entityManager
                 ->getRDBRepository('Campaign')
                 ->getRelation($campaign, 'trackingUrls')

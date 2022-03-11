@@ -34,7 +34,12 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
 
-class Document extends \Espo\Services\Record
+use Espo\Services\Record;
+
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Document>
+ */
+class Document extends Record
 {
     /**
      * @return \Espo\ORM\Collection<Attachment>

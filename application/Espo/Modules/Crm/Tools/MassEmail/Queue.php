@@ -79,6 +79,10 @@ class Queue
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
+    /**
+     * @param iterable<TargetList> $additionalTargetList
+     * @throws Error
+     */
     public function create(MassEmail $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
         if (!$isTest && $massEmail->get('status') !== EmailQueueItem::STATUS_PENDING) {

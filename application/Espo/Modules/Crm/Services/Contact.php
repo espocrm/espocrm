@@ -33,6 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Services\Record;
 
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Contact>
+ */
 class Contact extends Record
 {
     protected $readOnlyAttributeList = [

@@ -29,7 +29,12 @@
 
 namespace Espo\Modules\Crm\Services;
 
-class CampaignLogRecord extends \Espo\Services\Record
+use Espo\Services\Record;
+
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\CampaignLogRecord>
+ */
+class CampaignLogRecord extends Record
 {
     protected $forceSelectAllAttributes = true;
 }

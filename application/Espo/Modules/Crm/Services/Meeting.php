@@ -41,18 +41,34 @@ use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Record<CoreEntity>
+ */
 class Meeting extends Record implements
     Di\HookManagerAware
 {
     use Di\HookManagerSetter;
 
+    /**
+     * @var string[]
+     */
     protected $validateRequiredSkipFieldList = [
         'dateEnd',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $exportSkipFieldList = ['duration'];
 
-    protected $duplicateIgnoreAttributeList = ['usersColumns', 'contactsColumns', 'leadsColumns'];
+    /**
+     * @var string[]
+     */
+    protected $duplicateIgnoreAttributeList = [
+        'usersColumns',
+        'contactsColumns',
+        'leadsColumns',
+    ];
 
     public function checkAssignment(Entity $entity): bool
     {
@@ -102,7 +118,7 @@ class Meeting extends Record implements
         return true;
     }
 
-    protected function getInvitationManager(bool $useUserSmtp = true)
+    protected function getInvitationManager(bool $useUserSmtp = true): Invitations
     {
         $smtpParams = null;
 
@@ -115,7 +131,7 @@ class Meeting extends Record implements
         ]);
     }
 
-    public function sendInvitations(CoreEntity $entity, bool $useUserSmtp = true)
+    public function sendInvitations(CoreEntity $entity, bool $useUserSmtp = true): bool
     {
         $invitationManager = $this->getInvitationManager($useUserSmtp);
 
@@ -188,7 +204,10 @@ class Meeting extends Record implements
         return true;
     }
 
-    public function massSetHeld(array $ids)
+    /**
+     * @param string[] $ids
+     */
+    public function massSetHeld(array $ids): bool
     {
         foreach ($ids as $id) {
             $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
@@ -202,7 +221,10 @@ class Meeting extends Record implements
         return true;
     }
 
-    public function massSetNotHeld(array $ids)
+    /**
+     * @param string[] $ids
+     */
+    public function massSetNotHeld(array $ids): bool
     {
         foreach ($ids as $id) {
             $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
@@ -217,7 +239,7 @@ class Meeting extends Record implements
         return true;
     }
 
-    public function setAcceptanceStatus(string $id, string $status, ?string $userId = null)
+    public function setAcceptanceStatus(string $id, string $status, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -237,7 +259,7 @@ class Meeting extends Record implements
         assert($entity instanceof CoreEntity);
 
         if (!$entity->hasLinkMultipleId('users', $userId)) {
-            return;
+            return false;
         }
 
         $this->getEntityManager()

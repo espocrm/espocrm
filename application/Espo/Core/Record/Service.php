@@ -1679,6 +1679,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @param TEntity $duplicatingEntity
      */
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {

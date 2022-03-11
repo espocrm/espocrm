@@ -57,5 +57,4 @@ class Call extends Entity
     {
         $this->setValueObject('dateEnd', $dateEnd);
     }
-
 }

@@ -193,6 +193,9 @@ class Email extends Database implements
         }
     }
 
+    /**
+     * @param string[] $fieldList
+     */
     public function loadNameHash(EmailEntity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo']): void
     {
         $addressList = [];
@@ -425,7 +428,7 @@ class Email extends Database implements
                 }
             }
 
-            $filter = $this->getEmailFilterManager()->getMatchingFilter($entity, $userId);
+            $filter = $this->emailFilterManager->getMatchingFilter($entity, $userId);
 
             if ($filter) {
                 $action = $filter->get('action');
@@ -489,11 +492,6 @@ class Email extends Database implements
         if ($entity->get('isBeingImported')) {
             $entity->set('isBeingImported', false);
         }
-    }
-
-    protected function getEmailFilterManager()
-    {
-        return $this->emailFilterManager;
     }
 
     private function getEmailAddressRepository(): EmailAddressRepository

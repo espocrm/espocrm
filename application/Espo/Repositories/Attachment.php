@@ -49,6 +49,9 @@ class Attachment extends Database implements
     use Di\FileStorageManagerSetter;
     use Di\ConfigSetter;
 
+    /**
+     * @var string[]
+     */
     protected $imageTypeList = [
         'image/jpeg',
         'image/png',
@@ -56,6 +59,9 @@ class Attachment extends Database implements
         'image/webp',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $imageThumbList = [
         'xxx-small',
         'xx-small',
@@ -124,7 +130,7 @@ class Attachment extends Database implements
         }
     }
 
-    public function removeImageThumbs(AttachmentEntity $entity)
+    public function removeImageThumbs(AttachmentEntity $entity): void
     {
         foreach ($this->imageThumbList as $suffix) {
             $filePath = "data/upload/thumbs/" . $entity->getSourceId() . "_{$suffix}";
@@ -135,7 +141,7 @@ class Attachment extends Database implements
         }
     }
 
-    public function getCopiedAttachment(AttachmentEntity $entity, $role = null): AttachmentEntity
+    public function getCopiedAttachment(AttachmentEntity $entity, ?string $role = null): AttachmentEntity
     {
         $attachment = $this->get();
 

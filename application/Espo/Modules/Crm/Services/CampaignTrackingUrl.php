@@ -32,13 +32,19 @@ namespace Espo\Modules\Crm\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 
-class CampaignTrackingUrl extends \Espo\Services\Record
+use Espo\Services\Record;
+
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\CampaignTrackingUrl>
+ */
+class CampaignTrackingUrl extends Record
 {
     protected $mandatorySelectAttributeList = ['campaignId'];
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }

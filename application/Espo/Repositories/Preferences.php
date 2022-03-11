@@ -68,6 +68,9 @@ class Preferences implements Repository,
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @var string[]
+     */
     protected $defaultAttributeListFromSettings = [
         'decimalMark',
         'thousandSeparator',
@@ -75,6 +78,9 @@ class Preferences implements Repository,
         'followCreatedEntities',
     ];
 
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private $data = [];
 
     public function getNew(): Entity
@@ -112,7 +118,7 @@ class Preferences implements Repository,
         return $this->getById($id);
     }
 
-    protected function loadData(string $id)
+    protected function loadData(string $id): void
     {
         $data = null;
 
@@ -171,7 +177,7 @@ class Preferences implements Repository,
         $this->data[$id] = $defaults;
     }
 
-    protected function fetchAutoFollowEntityTypeList(PreferencesEntity $entity)
+    protected function fetchAutoFollowEntityTypeList(PreferencesEntity $entity): void
     {
         $id = $entity->getId();
 
@@ -194,7 +200,7 @@ class Preferences implements Repository,
         $entity->set('autoFollowEntityTypeList', $autoFollowEntityTypeList);
     }
 
-    protected function storeAutoFollowEntityTypeList(Entity $entity)
+    protected function storeAutoFollowEntityTypeList(Entity $entity): void
     {
         $id = $entity->getId();
 

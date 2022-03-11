@@ -48,6 +48,9 @@ use Espo\Core\Di;
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Lead>
+ */
 class Lead extends Record implements
 
     Di\FieldUtilAware

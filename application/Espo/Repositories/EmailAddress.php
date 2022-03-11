@@ -47,6 +47,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
     protected $hooksDisabled = true;
 
+    /**
+     * @param string[] $addressList
+     * @return string[]
+     */
     public function getIdListFormAddressList(array $addressList = []): array
     {
         return $this->getIds($addressList);
@@ -54,6 +58,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
     /**
      * @deprecated Use `getIdListFormAddressList`.
+     * @param string[] $addressList
+     * @return string[]
      */
     public function getIds(array $addressList = []): array
     {
@@ -104,6 +110,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         return $ids;
     }
 
+    /**
+     * @return \stdClass[]
+     */
     public function getEmailAddressData(Entity $entity): array
     {
         $dataList = [];
@@ -146,6 +155,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         return $this->where(['lower' => strtolower($address)])->findOne();
     }
 
+    /**
+     * @return Entity[]
+     */
     public function getEntityListByAddressId(
         string $emailAddressId,
         ?Entity $exceptionEntity = null,
@@ -293,6 +305,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         return null;
     }
 
+    /**
+     * @param string[] $order
+     */
     public function getEntityByAddress(
         string $address,
         ?string $entityType = null,

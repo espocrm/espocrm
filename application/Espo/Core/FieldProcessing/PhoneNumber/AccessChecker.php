@@ -70,7 +70,7 @@ class AccessChecker
             }
 
             if (
-                $e->getEntityType() === 'User' &&
+                $e instanceof User &&
                 $e->isPortal() &&
                 $excludeEntity->getEntityType() === 'Contact' &&
                 $e->get('contactId') === $excludeEntity->getId()

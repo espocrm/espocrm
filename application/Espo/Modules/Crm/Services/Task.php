@@ -31,4 +31,7 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Services\Record;
 
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Task>
+ */
 class Task extends Record {}

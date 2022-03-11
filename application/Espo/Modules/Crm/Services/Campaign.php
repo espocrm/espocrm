@@ -39,9 +39,14 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use \Espo\Services\Record;
+
 use Espo\Core\Di;
 
-class Campaign extends \Espo\Services\Record implements
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Campaign>
+ */
+class Campaign extends Record implements
 
     Di\DefaultLanguageAware
 {

@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Services\Record;
+
 use Espo\Entities\Attachment;
 
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle as KnowledgeBaseArticleEntity;
@@ -45,7 +47,10 @@ use Espo\Core\{
 
 use stdClass;
 
-class KnowledgeBaseArticle extends \Espo\Services\Record implements
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\KnowledgeBaseArticle>
+ */
+class KnowledgeBaseArticle extends Record implements
 
     Di\FileStorageManagerAware
 {

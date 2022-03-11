@@ -37,6 +37,9 @@ use Espo\{
 
 use stdClass;
 
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\CaseObj>
+ */
 class CaseObj extends Record
 {
     protected $noEditAccessRequiredLinkList = [

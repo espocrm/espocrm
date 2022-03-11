@@ -211,7 +211,7 @@ class CampaignUrl implements EntryPoint
 
         foreach ($entityList as $target) {
             $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
-                'targetId' => $target->id,
+                'targetId' => $target->getId(),
                 'targetType' => $target->getEntityType(),
             ]);
         }

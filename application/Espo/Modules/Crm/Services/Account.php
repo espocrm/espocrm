@@ -29,7 +29,12 @@
 
 namespace Espo\Modules\Crm\Services;
 
-class Account extends \Espo\Services\Record
+use Espo\Services\Record;
+
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\Account>
+ */
+class Account extends Record
 {
     protected $linkMandatorySelectAttributeList = [
         'contacts' => ['accountIsInactive'],

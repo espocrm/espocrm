@@ -40,12 +40,15 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Entity,
-    Services\Record as RecordService,
+    Services\Record,
     Modules\Crm\Tools\MassEmail\Processor,
     Modules\Crm\Tools\MassEmail\Queue,
 };
 
-class MassEmail extends RecordService
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\MassEmail>
+ */
+class MassEmail extends Record
 {
     protected $mandatorySelectAttributeList = [
         'campaignId',

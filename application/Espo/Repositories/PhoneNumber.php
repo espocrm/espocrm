@@ -52,6 +52,10 @@ class PhoneNumber extends Database implements
 
     const ERASED_PREFIX = 'ERASED:';
 
+    /**
+     * @param string [] $numberList
+     * @return string[]
+     */
     public function getIds($numberList = []): array
     {
         $ids = [];
@@ -96,6 +100,9 @@ class PhoneNumber extends Database implements
         return $ids;
     }
 
+    /**
+     * @return array<int,\stdClass>
+     */
     public function getPhoneNumberData(Entity $entity): array
     {
         $dataList = [];
@@ -138,6 +145,9 @@ class PhoneNumber extends Database implements
         return $this->where(['name' => $number])->findOne();
     }
 
+    /**
+     * @return Entity[]
+     */
     public function getEntityListByPhoneNumberId(string $phoneNumberId, ?Entity $exceptionEntity = null): array
     {
         $entityList = [];

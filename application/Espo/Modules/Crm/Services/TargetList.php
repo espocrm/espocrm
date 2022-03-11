@@ -41,6 +41,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 
 use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Services\Record;
+
 use Espo\Core\Select\SearchParams;
 
 use Espo\Core\Utils\Metadata;
@@ -49,7 +51,10 @@ use PDO;
 
 use Espo\Core\Di;
 
-class TargetList extends \Espo\Services\Record implements
+/**
+ * @extends Record<\Espo\Modules\Crm\Entities\TargetList>
+ */
+class TargetList extends Record implements
 
     Di\HookManagerAware
 {
@@ -109,7 +114,7 @@ class TargetList extends \Espo\Services\Record implements
     }
 
     protected function populateFromCampaignLog(
-        Entity $entity,
+        TargetListEntity $entity,
         string $sourceCampaignId,
         array $includingActionList,
         array $excludingActionList

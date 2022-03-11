@@ -31,12 +31,15 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\ORM\Entity;
+
 /**
  * @deprecated
+ * @extends \Espo\Services\Record<\Espo\Modules\Crm\Entities\Target>
  */
 class Target extends \Espo\Services\Record
 {
-    public function convert($id)
+    public function convert(string $id): Entity
     {
         $entityManager = $this->getEntityManager();
         $target = $this->getEntity($id);
