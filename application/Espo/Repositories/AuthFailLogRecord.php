@@ -30,7 +30,7 @@
 namespace Espo\Repositories;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Entities\AuthFailLogRecord>
+ * @extends \Espo\Core\Repositories\Database<\Espo\Core\ORM\Entity>
  */
 class AuthFailLogRecord extends \Espo\Core\Repositories\Database
 {
