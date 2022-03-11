@@ -54,7 +54,7 @@ use stdClass;
 
 /**
  * @template TEntity of Entity
- * @implements RecordService<TEntity>
+ * @extends RecordService<TEntity>
  */
 class Record extends RecordService implements
 
