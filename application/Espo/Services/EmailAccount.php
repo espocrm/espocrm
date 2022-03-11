@@ -127,6 +127,9 @@ class EmailAccount extends Record implements
         return $emailAccount;
     }
 
+    /**
+     * @return ?array<string,mixed>
+     */
     public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array
     {
         $smtpParams = [];
@@ -156,8 +159,12 @@ class EmailAccount extends Record implements
         return null;
     }
 
-    public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params)
+    /**
+     * @param array<string,mixed> $params
+     */
+    public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params): void
     {
+        /** @var ?class-string */
         $handlerClassName = $emailAccount->get('smtpHandler');
 
         if (!$handlerClassName) {

@@ -38,7 +38,7 @@ use Espo\Entities\User;
 
 class DashboardTemplate extends Record
 {
-    protected function applyLayout(Entity $preferences, Entity $template, bool $append)
+    protected function applyLayout(Entity $preferences, Entity $template, bool $append): void
     {
         if (!$append) {
             $preferences->set([
@@ -87,6 +87,11 @@ class DashboardTemplate extends Record
         }
     }
 
+    /**
+     * @param string[] $userIdList
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function deployToUsers(string $id, array $userIdList, bool $append = false): void
     {
         $template = $this->getEntityManager()->getEntity('DashboardTemplate', $id);

@@ -73,6 +73,9 @@ class Email extends Record implements
 
     protected $getEntityBeforeUpdate = true;
 
+    /**
+     * @var string[]
+     */
     protected $allowedForUpdateAttributeList = [
         'parentType',
         'parentId',
@@ -371,7 +374,10 @@ class Email extends Record implements
         }
     }
 
-    protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
+    /**
+     * @param array<string,mixed> $params
+     */
+    protected function applySmtpHandler(string $userId, string $emailAddress, array &$params): void
     {
         $userData = $this->getUserDataRepository()->getByUserId($userId);
 
@@ -488,7 +494,10 @@ class Email extends Record implements
         return $entity;
     }
 
-    public function markAsReadByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function markAsReadByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->markAsRead($id, $userId);
@@ -497,7 +506,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsNotReadByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function markAsNotReadByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->markAsNotRead($id, $userId);
@@ -506,7 +518,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsImportantByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function markAsImportantByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->markAsImportant($id, $userId);
@@ -515,7 +530,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsNotImportantByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function markAsNotImportantByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->markAsNotImportant($id, $userId);
@@ -524,7 +542,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function moveToTrashByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function moveToTrashByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->moveToTrash($id, $userId);
@@ -533,7 +554,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function moveToFolderByIdList(array $idList, $folderId, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function moveToFolderByIdList(array $idList, ?string $folderId, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->moveToFolder($id, $folderId, $userId);
@@ -542,7 +566,10 @@ class Email extends Record implements
         return true;
     }
 
-    public function retrieveFromTrashByIdList(array $idList, $userId = null)
+    /**
+     * @param string[] $idList
+     */
+    public function retrieveFromTrashByIdList(array $idList, ?string $userId = null): bool
     {
         foreach ($idList as $id) {
             $this->retrieveFromTrash($id, $userId);
@@ -551,7 +578,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAllAsRead(?string $userId = null)
+    public function markAllAsRead(?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -584,7 +611,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsRead(string $id, ?string $userId = null)
+    public function markAsRead(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -605,7 +632,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsNotRead(string $id, ?string $userId = null)
+    public function markAsNotRead(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -624,7 +651,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsImportant(string $id, ?string $userId = null)
+    public function markAsImportant(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -643,7 +670,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markAsNotImportant(string $id, ?string $userId = null)
+    public function markAsNotImportant(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -662,7 +689,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function moveToTrash(string $id, ?string $userId = null)
+    public function moveToTrash(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -683,7 +710,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function retrieveFromTrash(string $id, ?string $userId = null)
+    public function retrieveFromTrash(string $id, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -702,7 +729,7 @@ class Email extends Record implements
         return true;
     }
 
-    public function markNotificationAsRead(string $id, string $userId)
+    public function markNotificationAsRead(string $id, string $userId): void
     {
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('Notification')
@@ -720,7 +747,7 @@ class Email extends Record implements
         $this->entityManager->getQueryExecutor()->execute($update);
     }
 
-    public function moveToFolder(string $id, ?string $folderId, ?string $userId = null)
+    public function moveToFolder(string $id, ?string $folderId, ?string $userId = null): bool
     {
         $userId = $userId ?? $this->getUser()->getId();
 
@@ -852,7 +879,11 @@ class Email extends Record implements
         ];
     }
 
-    public function sendTestEmail(array $data)
+    /**
+     * @param array<string,mixed> $data
+     * @throws Forbidden
+     */
+    public function sendTestEmail(array $data): bool
     {
         $smtpParams = $data;
 

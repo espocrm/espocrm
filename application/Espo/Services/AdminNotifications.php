@@ -41,9 +41,9 @@ class AdminNotifications implements
 {
     use Di\EntityManagerSetter;
 
-    protected $config;
+    private $config;
 
-    protected $configWriter;
+    private $configWriter;
 
     public function __construct(Config $config, ConfigWriter $configWriter)
     {
@@ -54,12 +54,12 @@ class AdminNotifications implements
     /**
      * Job for checking a new version of EspoCRM.
      */
-    public function jobCheckNewVersion()
+    public function jobCheckNewVersion(): void
     {
         $config = $this->config;
 
         if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewVersion')) {
-            return true;
+            return;
         }
 
         $latestRelease = $this->getLatestRelease();
@@ -69,7 +69,7 @@ class AdminNotifications implements
 
             $this->configWriter->save();
 
-            return true;
+            return;
         }
 
         if ($config->get('latestVersion') != $latestRelease['version']) {
@@ -81,25 +81,23 @@ class AdminNotifications implements
 
             $this->configWriter->save();
 
-            return true;
+            return;
         }
 
         if (!empty($latestRelease['notes'])) {
             // @todo Find and modify notification.
         }
-
-        return true;
     }
 
     /**
      * Job for checking a new version of installed extensions.
      */
-    public function jobCheckNewExtensionVersion()
+    public function jobCheckNewExtensionVersion(): void
     {
         $config = $this->config;
 
         if (!$config->get('adminNotifications') || !$config->get('adminNotificationsNewExtensionVersion')) {
-            return true;
+            return;
         }
 
         $query = $this->entityManager->getQueryBuilder()
@@ -136,7 +134,6 @@ class AdminNotifications implements
         $save = false;
 
         foreach ($latestReleases as $extensionName => $extensionData) {
-
             if (empty($latestExtensionVersions[$extensionName])) {
                 $latestExtensionVersions[$extensionName] = $extensionData['version'];
                 $save = true;
@@ -166,10 +163,12 @@ class AdminNotifications implements
 
             $this->configWriter->save();
         }
-
-        return true;
     }
 
+    /**
+     * @param array<string,mixed> $requestData
+     * @return ?array<mixed,mixed>
+     */
     protected function getLatestRelease(
         ?string $url = null,
         array $requestData = [],

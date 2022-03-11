@@ -43,16 +43,31 @@ use stdClass;
 
 class Attachment extends Record
 {
+    /**
+     * @var string[]
+     */
     protected $notFilteringAttributeList = ['contents'];
 
+    /**
+     * @var string[]
+     */
     protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple'];
 
+    /**
+     * @var string[]
+     */
     protected $inlineAttachmentFieldTypeList = ['wysiwyg'];
 
+    /**
+     * @var string[]
+     */
     protected $adminOnlyHavingInlineAttachmentsEntityTypeList = [
         'TemplateManager',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $imageTypeList = [
         'image/png',
         'image/jpeg',
@@ -60,6 +75,10 @@ class Attachment extends Record
         'image/webp',
     ];
 
+    /**
+     * @param string $fileData
+     * @throws Forbidden
+     */
     public function upload($fileData): Entity
     {
         if (!$this->getAcl()->checkScope('Attachment', 'create')) {
@@ -213,13 +232,11 @@ class Attachment extends Record
         }
     }
 
-    protected function checkAttachmentField($relatedEntityType, $field, $role = 'Attachment')
+    protected function checkAttachmentField(string $relatedEntityType, string $field, string $role = 'Attachment'): void
     {
         if (
-            $this->getUser()->isAdmin()
-            &&
-            $role === 'Inline Attachment'
-            &&
+            $this->getUser()->isAdmin() &&
+            $role === 'Inline Attachment' &&
             in_array($relatedEntityType, $this->adminOnlyHavingInlineAttachmentsEntityTypeList)
         ) {
             return;

@@ -110,6 +110,9 @@ class App
         $this->log = $log;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getUserData(): array
     {
         $preferencesData = $this->preferences->getValueMap();
@@ -161,6 +164,7 @@ class App
         ];
 
         foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
+            /** @var ?class-string */
             $className = $item['className'] ?? null;
 
             if (!$className) {
@@ -190,7 +194,7 @@ class App
         ];
     }
 
-    private function getUserDataForFrontend()
+    private function getUserDataForFrontend(): stdClass
     {
         $user = $this->user;
 
@@ -230,7 +234,7 @@ class App
         return $data;
     }
 
-    private function getAclDataForFrontend()
+    private function getAclDataForFrontend(): stdClass
     {
         $data = $this->acl->getMapData();
 
@@ -251,7 +255,7 @@ class App
         return $data;
     }
 
-    private function getEmailAddressData()
+    private function getEmailAddressData(): stdClass
     {
         $user = $this->user;
 
@@ -337,6 +341,9 @@ class App
         ];
     }
 
+    /**
+     * @return int
+     */
     private function getMaxUploadSize()
     {
         $maxSize = 0;
@@ -391,20 +398,20 @@ class App
         return $value;
     }
 
-    public function jobClearCache()
+    public function jobClearCache(): void
     {
         $this->dataManager->clearCache();
     }
 
-    public function jobRebuild()
+    public function jobRebuild(): void
     {
         $this->dataManager->rebuild();
     }
 
     /**
-     * @todo Remove in 6.0.
+     * @todo Remove in 7.2.
      */
-    public function jobPopulatePhoneNumberNumeric()
+    public function jobPopulatePhoneNumberNumeric(): void
     {
         $numberList = $this->entityManager
             ->getRDBRepository('PhoneNumber')
@@ -416,9 +423,9 @@ class App
     }
 
     /**
-     * @todo Remove in 6.0. Move to another place. CLI command.
+     * @todo Remove in 7.2. Move to another place. CLI command.
      */
-    public function jobPopulateArrayValues()
+    public function jobPopulateArrayValues(): void
     {
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
@@ -517,9 +524,9 @@ class App
     }
 
     /**
-     * @todo Remove in 6.0. Move to another place. CLI command.
+     * @todo Remove in 7.2. Move to another place. CLI command.
      */
-    public function jobPopulateOptedOutPhoneNumbers()
+    public function jobPopulateOptedOutPhoneNumbers(): void
     {
         $entityTypeList = ['Contact', 'Lead'];
 
@@ -553,7 +560,7 @@ class App
         }
     }
 
-    private function filterPreferencesData(stdClass $data)
+    private function filterPreferencesData(stdClass $data): void
     {
         $passwordFieldList = $this->fieldUtil->getFieldByTypeList('Preferences', 'password');
 

@@ -41,17 +41,17 @@ use Espo\Core\{
     Acl,
 };
 
-use StdClass;
+use stdClass;
 
 class CurrencyRate
 {
-    protected $config;
+    private $config;
 
-    protected $configWriter;
+    private $configWriter;
 
-    protected $dataManager;
+    private $dataManager;
 
-    protected $acl;
+    private $acl;
 
     public function __construct(Config $config, ConfigWriter $configWriter, DataManager $dataManager, Acl $acl)
     {
@@ -61,7 +61,7 @@ class CurrencyRate
         $this->acl = $acl;
     }
 
-    public function get(): StdClass
+    public function get(): stdClass
     {
         if (!$this->acl->check('Currency')) {
             throw new Forbidden();
@@ -76,7 +76,7 @@ class CurrencyRate
         );
     }
 
-    public function set(StdClass $rates): StdClass
+    public function set(stdClass $rates): stdClass
     {
         if (!$this->acl->check('Currency')) {
             throw new Forbidden();
