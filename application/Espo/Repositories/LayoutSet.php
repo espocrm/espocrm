@@ -31,6 +31,9 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Entities\LayoutSet>
+ */
 class LayoutSet extends \Espo\Core\Repositories\Database
 {
     protected function afterSave(Entity $entity, array $options = [])

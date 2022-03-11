@@ -34,6 +34,9 @@ use Espo\Entities\PhoneNumber;
 
 use Espo\Core\Repositories\Database;
 
+/**
+ * @extends Database<\Espo\Entities\Sms>
+ */
 class Sms extends Database
 {
     public function loadFromField(SmsEntity $entity): void

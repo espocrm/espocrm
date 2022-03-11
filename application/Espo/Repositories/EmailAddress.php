@@ -35,6 +35,9 @@ use Espo\Entities\EmailAddress as EmailAddressEntity;
 
 use Espo\Core\Di;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Entities\EmailAddress>
+ */
 class EmailAddress extends \Espo\Core\Repositories\Database implements
     Di\ApplicationStateAware,
     Di\AclManagerAware

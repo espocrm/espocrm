@@ -29,6 +29,9 @@
 
 namespace Espo\Repositories;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Entities\Extension>
+ */
 class Extension extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;

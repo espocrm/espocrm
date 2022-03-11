@@ -35,6 +35,9 @@ use Espo\Core\Repositories\Database;
 
 use Espo\Core\Di;
 
+/**
+ * @extends Database<\Espo\Entities\Portal>
+ */
 class Portal extends Database implements
 
     Di\ConfigAware

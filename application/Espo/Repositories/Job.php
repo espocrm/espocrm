@@ -33,6 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Di;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Entities\Job>
+ */
 class Job extends \Espo\Core\Repositories\Database implements
     Di\ConfigAware
 {

@@ -39,8 +39,14 @@ use Espo\ORM\{
 
 use Espo\Core\Repositories\Database;
 
+/**
+ * @extends Database<\Espo\Entities\Import>
+ */
 class Import extends Database
 {
+    /**
+     * @return Collection<Entity>
+     */
     public function findResultRecords(ImportEntity $entity, string $relationName, Query $query): Collection
     {
         $entityType = $entity->get('entityType');

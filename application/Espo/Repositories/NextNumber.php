@@ -29,8 +29,9 @@
 
 namespace Espo\Repositories;
 
-use Espo\ORM\Entity;
-
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Entities\NextNumber>
+ */
 class NextNumber extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;

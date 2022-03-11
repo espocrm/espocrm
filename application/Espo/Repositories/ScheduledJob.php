@@ -33,7 +33,12 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Job\Job\Status;
 
-class ScheduledJob extends \Espo\Core\Repositories\Database
+use Espo\Core\Repositories\Database;
+
+/**
+ * @extends Database<\Espo\Entities\ScheduledJob>
+ */
+class ScheduledJob extends Database
 {
     protected $hooksDisabled = true;
 

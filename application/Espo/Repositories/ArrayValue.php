@@ -37,6 +37,9 @@ use Espo\Core\{
     Repositories\Database,
 };
 
+/**
+ * @extends Database<\Espo\Entities\ArrayValue>
+ */
 class ArrayValue extends Database
 {
     protected $hooksDisabled = true;
