@@ -42,8 +42,14 @@ class EmailFolder extends Record implements Di\LanguageAware
 {
     use Di\LanguageSetter;
 
+    /**
+     * @var string[]
+     */
     protected $systemFolderList = ['inbox', 'important', 'sent'];
 
+    /**
+     * @var string[]
+     */
     protected $systemFolderEndList = ['drafts', 'trash'];
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -58,7 +64,7 @@ class EmailFolder extends Record implements Di\LanguageAware
         }
     }
 
-    public function moveUp(string $id)
+    public function moveUp(string $id): void
     {
         $entity = $this->entityManager->getEntity('EmailFolder', $id);
         if (!$entity) {
@@ -95,7 +101,7 @@ class EmailFolder extends Record implements Di\LanguageAware
         $this->entityManager->saveEntity($previousEntity);
     }
 
-    public function moveDown(string $id)
+    public function moveDown(string $id): void
     {
         $entity = $this->entityManager->getEntity('EmailFolder', $id);
 

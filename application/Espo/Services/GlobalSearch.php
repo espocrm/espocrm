@@ -55,9 +55,9 @@ class GlobalSearch implements
     use Di\AclSetter;
     use Di\ConfigSetter;
 
-    protected $fullTextSearchDataComposerFactory;
+    private $fullTextSearchDataComposerFactory;
 
-    protected $selectBuilderFactory;
+    private $selectBuilderFactory;
 
     public function __construct(
         FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,

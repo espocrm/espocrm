@@ -52,7 +52,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 {
     use Di\HookManagerSetter;
 
-    protected function getClient(string $integration, string $id)
+    protected function getClient(string $integration, string $id): ?object
     {
         /** @var IntegrationEntity|null $integrationEntity */
         $integrationEntity = $this->entityManager->getEntity('Integration', $integration);
@@ -102,6 +102,11 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         return false;
     }
 
+    /**
+     * @return bool
+     * @throws NotFound
+     * @throws Error
+     */
     public function authorizationCode(string $integration, string $userId, string $code)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);

@@ -75,6 +75,9 @@ class Integration
         $this->configWriter = $configWriter;
     }
 
+    /**
+     * @return void
+     */
     protected function processAccessCheck()
     {
         if (!$this->user->isAdmin()) {

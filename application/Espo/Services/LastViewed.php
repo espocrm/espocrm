@@ -60,6 +60,12 @@ class LastViewed
         $this->listLoadProcessor = $listLoadProcessor;
     }
 
+    /**
+     * @param array{
+     *   offset: int,
+     *   maxSize: int,
+     * } $params
+     */
     public function getList(array $params): object
     {
         $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');

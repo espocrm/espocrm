@@ -38,13 +38,16 @@ class EmailAddress extends Record
 {
     const ERASED_PREFIX = 'ERASED:';
 
+    /**
+     * @param array<int,array<string,mixed>> $result
+     */
     protected function findInAddressBookByEntityType(
         string $filter,
         int $limit,
         string $entityType,
         array &$result,
         bool $onlyActual = false
-    ) {
+    ): void {
 
         $whereClause = [
             'OR' => [
@@ -161,7 +164,7 @@ class EmailAddress extends Record
         }
     }
 
-    protected function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder)
+    protected function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder): void
     {
         if ($this->acl->get('portalPermission') === 'no') {
             $queryBuilder->where([
@@ -174,10 +177,13 @@ class EmailAddress extends Record
         ]);
     }
 
-    protected function findInInboundEmail(string $query, int $limit, array &$result)
+    /**
+     * @param array<int,array<string,mixed>> $result
+     */
+    protected function findInInboundEmail(string $query, int $limit, array &$result): void
     {
         if ($this->user->isPortal()) {
-            return [];
+            return;
         }
 
         $list = $this->entityManager
@@ -199,6 +205,9 @@ class EmailAddress extends Record
         }
     }
 
+    /**
+     * @return array<int,array<string,mixed>>
+     */
     public function searchInAddressBook(string $query, int $limit, bool $onlyActual = false): array
     {
         $result = [];
@@ -259,7 +268,10 @@ class EmailAddress extends Record
         return $finalResult;
     }
 
-    protected function getHavingEmailAddressEntityTypeList()
+    /**
+     * @return string[]
+     */
+    protected function getHavingEmailAddressEntityTypeList(): array
     {
         $list = ['Account', 'Contact', 'Lead', 'User'];
 

@@ -151,6 +151,9 @@ class InboundEmail extends RecordService implements
         $service->storeSentMessage($emailAccount->getId(), $message);
     }
 
+    /**
+     * @return ?array<string,mixed>
+     */
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
     {
         $smtpParams = [];
@@ -187,8 +190,12 @@ class InboundEmail extends RecordService implements
         return null;
     }
 
-    public function applySmtpHandler(InboundEmailEntity $emailAccount, array &$params)
+    /**
+     * @param array<string,mixed> $params
+     */
+    public function applySmtpHandler(InboundEmailEntity $emailAccount, array &$params): void
     {
+        /** @var ?class-string */
         $handlerClassName = $emailAccount->get('smtpHandler');
 
         if (!$handlerClassName) {

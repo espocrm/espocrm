@@ -51,11 +51,15 @@ class EmailTemplate extends Record implements
 {
     use Di\FieldUtilSetter;
 
+    /**
+     * @param array<string,mixed> $params
+     * @return array<string,mixed>
+     */
     public function parseTemplate(
         EmailTemplateEntity $emailTemplate,
         array $params = [],
-        $copyAttachments = false,
-        $skipAcl = false
+        bool $copyAttachments = false,
+        bool $skipAcl = false
     ): array {
 
         $paramsInternal = Params::create()
@@ -77,6 +81,10 @@ class EmailTemplate extends Record implements
         return get_object_vars($result->getValueMap());
     }
 
+    /**
+     * @param array<string,mixed> $params
+     * @return array<string,mixed>
+     */
     public function parse(string $id, array $params = [], bool $copyAttachments = false): array
     {
         /** @var EmailTemplateEntity|null */
@@ -89,6 +97,9 @@ class EmailTemplate extends Record implements
         return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     public function getInsertFieldData(array $params): stdClass
     {
         $to = $params['to'] ?? null;

@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\Language as LanguageUtil;
+
 use Espo\Core\{
     Acl,
     Container,
@@ -39,13 +41,13 @@ use Espo\Entities\User;
 
 class Language
 {
-    protected $metadata;
+    private $metadata;
 
-    protected $acl;
+    private $acl;
 
-    protected $user;
+    private $user;
 
-    protected $container;
+    private $container;
 
     public function __construct(
         Metadata $metadata,
@@ -60,17 +62,20 @@ class Language
     }
 
     // TODO use proxy
-    protected function getDefaultLanguage()
+    protected function getDefaultLanguage(): LanguageUtil
     {
         return $this->container->get('defaultLanguage');
     }
 
-    protected function getLanguage()
+    protected function getLanguage(): LanguageUtil
     {
         return $this->container->get('language');
     }
 
-    public function getDataForFrontend(bool $default = false)
+    /**
+     * @return array<string,mixed>
+     */
+    public function getDataForFrontend(bool $default = false): array
     {
         if ($default) {
             $languageObj = $this->getDefaultLanguage();

@@ -45,6 +45,9 @@ use stdClass;
 
 class LeadCapture extends Record
 {
+    /**
+     * @var string[]
+     */
     protected $readOnlyAttributeList = ['apiKey'];
 
     public function prepareEntityForOutput(Entity $entity)
@@ -164,12 +167,12 @@ class LeadCapture extends Record
         return $this->injectableFactory->create(Tool::class);
     }
 
-    public function leadCapture(string $apiKey, stdClass $data)
+    public function leadCapture(string $apiKey, stdClass $data): void
     {
         $this->createTool()->capture($apiKey, $data);
     }
 
-    public function jobOptInConfirmation(stdClass $data)
+    public function jobOptInConfirmation(stdClass $data): void
     {
         if (empty($data->id)) {
             throw new Error();
@@ -183,6 +186,10 @@ class LeadCapture extends Record
         return $this->createTool()->confirmOptIn($id);
     }
 
+    /**
+     * @return stdClass[]
+     * @throws Forbidden
+     */
     public function getSmtpAccountDataList(): array
     {
         if (!$this->getUser()->isAdmin()) {

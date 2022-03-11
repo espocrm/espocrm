@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\LayoutRecord;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\Forbidden,
@@ -45,6 +47,8 @@ use Espo\{
     Entities\User,
     Tools\LayoutManager\LayoutManager,
 };
+
+use stdClass;
 
 class Layout
 {
@@ -102,7 +106,7 @@ class Layout
     }
 
     /**
-     * @return array|object|null
+     * @return array<int,mixed>|stdClass|null
      */
     public function getOriginal(string $scope, string $name, ?string $setId = null)
     {
@@ -133,6 +137,11 @@ class Layout
         return $result;
     }
 
+    /**
+     * @return mixed
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getForFrontend(string $scope, string $name)
     {
         try {
@@ -243,8 +252,13 @@ class Layout
         return $data;
     }
 
-    protected function getRecordFromSet(string $scope, string $name, string $setId, bool $skipCheck = false)
-    {
+    protected function getRecordFromSet(
+        string $scope,
+        string $name,
+        string $setId,
+        bool $skipCheck = false
+    ): ?LayoutRecord {
+
         $em = $this->entityManager;
 
         $layoutSet = $em->getEntity('LayoutSet', $setId);
@@ -276,6 +290,10 @@ class Layout
         return $layout;
     }
 
+    /**
+     * @param mixed $data
+     * @return mixed
+     */
     public function update(string $scope, string $name, ?string $setId, $data)
     {
         if ($setId) {
@@ -310,6 +328,9 @@ class Layout
         return $layoutManager->get($scope, $name);
     }
 
+    /**
+     * @return array<int,mixed>|stdClass|null
+     */
     public function resetToDefault(string $scope, string $name, ?string $setId = null)
     {
         $this->dataManager->updateCacheTimestamp();
@@ -336,7 +357,7 @@ class Layout
         return $this->getOriginal($scope, $name);
     }
 
-    protected function getOriginalBottomPanelsDetail(string $scope, ?string $setId = null)
+    protected function getOriginalBottomPanelsDetail(string $scope, ?string $setId = null): stdClass
     {
         $relationships = $this->getOriginal($scope, 'relationships') ?? [];
 
@@ -366,12 +387,12 @@ class Layout
         return $result;
     }
 
-    protected function getForFrontendBottomPanelsDetail(string $scope)
+    protected function getForFrontendBottomPanelsDetail(string $scope): stdClass
     {
         return $this->getOriginalBottomPanelsDetail($scope);
     }
 
-    protected function resetToDefaultBottomPanelsDetail(string $scope)
+    protected function resetToDefaultBottomPanelsDetail(string $scope): void
     {
         $this->layoutManager->resetToDefault($scope, 'relationships');
     }
