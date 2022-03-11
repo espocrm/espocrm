@@ -132,7 +132,7 @@ class Webhook extends Record implements
             return;
         }
 
-        /** @var ?User $user */
+        /** @var User|null */
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         if (!$user || !$user->isApi()) {

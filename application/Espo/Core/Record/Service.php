@@ -255,7 +255,7 @@ class Service implements Crud,
     }
 
     /**
-     * @phpstan-return RDBRepository<TEntity>
+     * @return RDBRepository<TEntity>
      */
     protected function getRepository(): RDBRepository
     {
@@ -291,6 +291,7 @@ class Service implements Crud,
     /**
      * Read a record by ID. Access control check is performed.
      *
+     * @return TEntity
      * @throws Error
      * @throws NotFoundSilent If no read access.
      */
@@ -322,7 +323,7 @@ class Service implements Crud,
      *
      * @throws ForbiddenSilent If no read access.
      *
-     * @phpstan-return TEntity|null
+     * @return TEntity|null
      */
     public function getEntity(string $id): ?Entity
     {
@@ -655,7 +656,7 @@ class Service implements Crud,
      *
      * @throws ForbiddenSilent If no create access.
      *
-     * @phpstan-return TEntity
+     * @return TEntity
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -705,7 +706,7 @@ class Service implements Crud,
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
      *
-     * @phpstan-return TEntity
+     * @return TEntity
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
@@ -875,7 +876,7 @@ class Service implements Crud,
     }
 
     /**
-     * @phpstan-return TEntity|null
+     * @return TEntity|null
      */
     protected function getEntityEvenDeleted(string $id): ?Entity
     {
