@@ -31,12 +31,20 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\Lead>
+ */
 class Lead extends \Espo\Core\Repositories\Database
 {
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (!$entity->get('convertedAt') && $entity->get('status') === 'Converted' && $entity->isAttributeChanged('status')) {
+        if (
+            !$entity->get('convertedAt') &&
+            $entity->get('status') === 'Converted' &&
+            $entity->isAttributeChanged('status')
+        ) {
             $convertedAt = date('Y-m-d H:i:s');
+
             $entity->set('convertedAt', $convertedAt);
         }
 
@@ -48,7 +56,7 @@ class Lead extends \Espo\Core\Repositories\Database
         parent::afterSave($entity, $options);
 
         if ($entity->has('targetListId')) {
-        	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
+            $this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
     }
 }

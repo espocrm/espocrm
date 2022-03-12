@@ -29,6 +29,9 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+/**
+ * @extends \Espo\Core\Repositories\CategoryTree<\Espo\Modules\Crm\Entities\KnowledgeBaseCategory>
+ */
 class KnowledgeBaseCategory extends \Espo\Core\Repositories\CategoryTree
 {
 }

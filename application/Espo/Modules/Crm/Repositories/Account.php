@@ -31,6 +31,9 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\Account>
+ */
 class Account extends \Espo\Core\Repositories\Database
 {
     public function afterSave(Entity $entity, array $options = [])

@@ -31,20 +31,23 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\Lead>
+ */
 class Contact extends \Espo\Core\Repositories\Database
 {
     public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
 
-        $this->handleAfterSaveAccounts($entity, $options);
+        $this->handleAfterSaveAccounts($entity);
 
         if ($entity->has('targetListId')) {
             $this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
     }
 
-    protected function handleAfterSaveAccounts(Entity $entity, array $options = [])
+    protected function handleAfterSaveAccounts(Entity $entity): void
     {
         $accountIdChanged = $entity->has('accountId') &&
             $entity->get('accountId') != $entity->getFetched('accountId');

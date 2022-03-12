@@ -30,17 +30,18 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
-
 use Espo\Services\Stream as StreamService;
-
 use Espo\Core\Di;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\CaseObj>
+ */
 class CaseObj extends \Espo\Core\Repositories\Database implements
     Di\ServiceFactoryAware
 {
     use Di\ServiceFactorySetter;
 
-    protected $streamService;
+    protected ?StreamService $streamService = null;
 
     protected function afterSave(Entity $entity, array $options = [])
     {

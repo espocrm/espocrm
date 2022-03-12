@@ -29,6 +29,9 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
+/**
+ * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\TargetList>
+ */
 class TargetList extends \Espo\Core\Repositories\Database
 {
 }

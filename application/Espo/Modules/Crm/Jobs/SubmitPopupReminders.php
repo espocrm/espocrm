@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\Modules\Crm\Entities\Reminder;
+
 use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
@@ -80,7 +82,6 @@ class SubmitPopupReminders implements JobDataLess
 
         $nowShifted = $dt->modify('-' . $pastHours . ' hours')->format('Y-m-d H:i:s');
 
-        /** @var iterable<\Espo\Modules\Crm\Entities\Reminder> $reminderList */
         $reminderList = $this->entityManager
             ->getRDBRepository('Reminder')
             ->where([
@@ -165,7 +166,7 @@ class SubmitPopupReminders implements JobDataLess
         }
     }
 
-    protected function deleteReminder($reminder)
+    protected function deleteReminder(Reminder $reminder): void
     {
         $this->entityManager->getRDBRepository('Reminder')->deleteFromDb($reminder->id);
     }
