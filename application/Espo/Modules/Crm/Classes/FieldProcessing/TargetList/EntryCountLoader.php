@@ -44,6 +44,9 @@ use Espo\Core\{
  */
 class EntryCountLoader implements Loader
 {
+    /**
+     * @var string[]
+     */
     private array $targetLinkList;
 
     private EntityManager $entityManager;

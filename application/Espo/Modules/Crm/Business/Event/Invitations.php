@@ -33,6 +33,8 @@ use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\User;
+
 use Espo\Core\Utils\Util;
 
 use Espo\Core\{
@@ -52,28 +54,29 @@ use DateTime;
 
 class Invitations
 {
-    protected $smtpParams;
+    private $smtpParams;
 
-    protected $ics;
+    private $entityManager;
 
-    protected $entityManager;
+    private $emailSender;
 
-    protected $emailSender;
+    private $config;
 
-    protected $config;
+    private $dateTime; /** @phpstan-ignore-line */
 
-    protected $dateTime;
+    private $language;
 
-    protected $language;
+    private $number; /** @phpstan-ignore-line */
 
-    protected $number;
+    private $templateFileManager;
 
-    protected $templateFileManager;
+    private $fileManager; /** @phpstan-ignore-line */
 
-    protected $fileManager;
+    private $htmlizerFactory;
 
-    protected $htmlizerFactory;
-
+    /**
+     * Some dependencies are unused to keep backward compatibility.
+     */
     public function __construct(
         EntityManager $entityManager,
         ?SmtpParams $smtpParams,
@@ -152,7 +155,7 @@ class Invitations
         $data['declineLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=decline&uid=' . $uid->get('name');
         $data['tentativeLink'] = $siteUrl . '?entryPoint=eventConfirmation&action=tentative&uid=' . $uid->get('name');
 
-        if ($invitee->getEntityType() === 'User') {
+        if ($invitee instanceof User) {
             $data['isUser'] = true;
 
             $htmlizer = $this->htmlizerFactory->createForUser($invitee);

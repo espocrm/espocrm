@@ -41,6 +41,9 @@ use Espo\Core\{
 
 use stdClass;
 
+/**
+ * @implements Loader<\Espo\Modules\Crm\Entities\Call>
+ */
 class PhoneNumberMapLoader implements Loader
 {
     private const ERASED_PART = 'ERASED:';
@@ -73,6 +76,9 @@ class PhoneNumberMapLoader implements Loader
         $entity->set('phoneNumbersMap', $map);
     }
 
+    /**
+     * @param string[] $idList
+     */
     private function populate(stdClass $map, string $entityType, array $idList): void
     {
         $entityList = $this->entityManager

@@ -41,8 +41,14 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * @implements Loader<TargetList>
+ */
 class OptedOutCountLoader implements Loader
 {
+    /**
+     * @var string[]
+     */
     private array $targetLinkList;
 
     private EntityManager $entityManager;

@@ -29,182 +29,105 @@
 
 namespace Espo\Modules\Crm\Business\Event;
 
+use RuntimeException;
+
 class Ics
 {
-    private $dEnd;
+    private ?string $output = null;
 
-    private $dStart;
+    private string $prodid;
 
-    private $sAddress;
+    private ?int $startDate = null;
 
-    private $sDescription;
+    private ?int $endDate = null;
 
-    private $sHtml;
+    private ?string $summary = null;
 
-    private $sWho;
+    private ?string $address = null;
 
-    private $sEmail;
+    private ?string $email = null;
 
-    private $sUri;
+    private ?string $who = null;
 
-    private $sUid;
+    private ?string $description = null;
 
-    private $sSummary;
+    private ?string $uid = null;
 
-    private $sOutput;
-
-    private $sProdid;
-
-    private $startDate;
-
-    private $endDate;
-
-    private $summary;
-
-    private $address;
-
-    private $email;
-
-    private $who;
-
-    private $description;
-
-    private $uid;
-
-    public function __construct($prodid, array $attributes = [])
+    /**
+     * @param array<string,string|int|null> $attributes
+     * @throws RuntimeException
+     */
+    public function __construct(string $prodid, array $attributes = [])
     {
-        if (!is_string($prodid) || $prodid === '') {
-            throw new \Exception('PRODID is required');
+        if ($prodid === '') {
+            throw new RuntimeException('PRODID is required');
         }
 
-        $this->sProdid = $prodid;
+        $this->prodid = $prodid;
 
         foreach ($attributes as $key => $value) {
+            if (!property_exists($this, $key)) {
+                throw new RuntimeException("Bad attribute '{$key}'.");
+            }
+
             $this->$key = $value;
         }
     }
 
-    public function __set($name, $value)
+    public function get(): string
     {
-        switch ($name) {
-            case 'startDate':
-                $this->dStart = $value;
-                break;
-
-            case 'endDate':
-                $this->dEnd = $value;
-                break;
-
-            case 'address':
-                $this->sAddress = $value;
-                break;
-
-            case 'summary':
-                $this->sSummary = $value;
-                break;
-
-            case 'who':
-                $this->sWho = $value;
-                break;
-
-            case 'email':
-                $this->sEmail = $value;
-                break;
-
-            case 'uri':
-                $this->sUri = $value;
-                break;
-
-            case 'uid':
-                $this->sUid = $value;
-                break;
-
-            case 'description':
-                $this->sDescription = $value;
-                break;
-
-            case 'html':
-                $this->sHtml = $value;
-                break;
+        if ($this->output === null) {
+            $this->generate();
         }
 
-        return $this;
+        return $this->output;
     }
 
-    public function __get($name) {
-        switch ($name)
-        {
-            case 'startDate':
-                return $this->dStart;
+    private function generate(): void
+    {
+        $this->output =
+            "BEGIN:VCALENDAR\n".
+            "VERSION:2.0\n".
+            "PRODID:-" . $this->prodid . "\n".
+            "METHOD:REQUEST\n".
+            "BEGIN:VEVENT\n".
+            "DTSTART:" . $this->formatTimestamp($this->startDate) . "\n".
+            "DTEND:" . $this->formatTimestamp($this->endDate) . "\n".
+            "SUMMARY:" . $this->escapeString($this->summary) . "\n".
+            "LOCATION:" . $this->escapeString($this->address) . "\n".
+            "ORGANIZER;CN=" . $this->escapeString($this->who) . ":MAILTO:" . $this->escapeString($this->email) . "\n".
+            "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\n".
+            "UID:" . $this->uid . "\n".
+            "SEQUENCE:0\n".
+            "DTSTAMP:" . $this->formatTimestamp(time())."\n".
+            "END:VEVENT\n".
+            "END:VCALENDAR";
+    }
 
-            case 'endDate':
-                return $this->dEnd;
-
-            case 'address':
-                return $this->sAddress;
-
-            case 'summary':
-                return $this->sSummary;
-
-            case 'uri':
-                return $this->sUri;
-
-            case 'who':
-                return $this->sWho;
-
-            case 'email':
-                return $this->sEmail;
-
-            case 'uid':
-                return $this->sUid;
-
-            case 'description':
-                return $this->sDescription;
-
-            case 'html':
-                return $this->sHtml;
+    private function formatTimestamp(?int $timestamp): string
+    {
+        if (!$timestamp) {
+            $timestamp = time();
         }
+
+        return date('Ymd\THis\Z', $timestamp);
     }
 
-    public function get()
+    private function escapeString(?string $string): string
     {
-        ($this->sOutput) ? $this->sOutput : $this->generate();
+        if (!$string) {
+            return '';
+        }
 
-        return $this->sOutput;
+        return preg_replace('/([\,;])/', '\\\$1', $string);
     }
 
-    private function generate()
+    private function formatMultiline(?string $string): string
     {
-        $this->sOutput = "BEGIN:VCALENDAR\n".
-             "VERSION:2.0\n".
-             "PRODID:-".$this->sProdid."\n".
-             "METHOD:REQUEST\n".
-             "BEGIN:VEVENT\n".
-             "DTSTART:".$this->dateToCal($this->startDate)."\n".
-             "DTEND:".$this->dateToCal($this->endDate)."\n".
-             "SUMMARY:".$this->escapeString($this->summary)."\n".
-             "LOCATION:".$this->escapeString($this->address)."\n".
-             "ORGANIZER;CN=".$this->escapeString($this->who).":MAILTO:" . $this->escapeString($this->email)."\n".
-             "DESCRIPTION:".$this->escapeString($this->formatMultiline($this->description))."\n".
-             "UID:".$this->uid."\n".
-             "SEQUENCE:0\n".
-             "DTSTAMP:".$this->dateToCal(time())."\n".
-             "END:VEVENT\n".
-             "END:VCALENDAR";
-    }
+        if (!$string) {
+            return '';
+        }
 
-    private function dateToCal($timestamp)
-    {
-        return date('Ymd\THis\Z', ($timestamp) ? $timestamp : time());
-    }
-
-    private function escapeString($string)
-    {
-        return preg_replace('/([\,;])/','\\\$1', ($string) ? $string : '');
-    }
-
-    private function formatMultiline($string)
-    {
         return str_replace(["\r\n", "\n"], "\\n", $string);
     }
 }

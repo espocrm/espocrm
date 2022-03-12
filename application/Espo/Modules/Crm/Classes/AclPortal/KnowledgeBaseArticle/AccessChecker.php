@@ -42,6 +42,9 @@ use Espo\Core\{
     Portal\Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Modules\Crm\Entities\KnowledgeBaseArticle>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

@@ -43,13 +43,16 @@ use PDO;
 
 use const PHP_ROUND_HALF_EVEN;
 
+/**
+ * @implements Loader<\Espo\Modules\Crm\Entities\Campaign>
+ */
 class StatsLoader implements Loader
 {
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $acl;
+    private Acl $acl;
 
-    private $currencyDataProvider;
+    private CurrencyConfigDataProvider $currencyDataProvider;
 
     public function __construct(
         EntityManager $entityManager,

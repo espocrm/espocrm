@@ -43,6 +43,9 @@ use Espo\Core\{
     Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDSChecker<\Espo\Modules\Crm\Entities\Meeting>
+ */
 class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
