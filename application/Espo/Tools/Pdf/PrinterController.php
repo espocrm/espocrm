@@ -68,7 +68,7 @@ class PrinterController
         $params = $params ?? new Params();
         $data = $data ?? new Data();
 
-        return $this->createPrinter('entity')->print($this->template, $entity, $params,  $data);
+        return $this->createEntityPrinter()->print($this->template, $entity, $params,  $data);
     }
 
     /**
@@ -79,17 +79,30 @@ class PrinterController
         $params = $params ?? new Params();
         $IdDataMap = $IdDataMap ?? new IdDataMap();
 
-        return $this->createPrinter('collection')->print($this->template, $collection, $params, $IdDataMap);
+        return $this->createCollectionPrinter()->print($this->template, $collection, $params, $IdDataMap);
     }
 
-    private function createPrinter(string $type): object
+    private function createEntityPrinter(): EntityPrinter
     {
         /** @var ?class-string */
         $className = $this->metadata
-            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', $type]) ?? null;
+            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'entity']) ?? null;
 
         if (!$className) {
-            throw new Error("Unknown PDF engine '{$this->engine}', type '{$type}'.");
+            throw new Error("Unknown PDF engine '{$this->engine}', type 'entity'.");
+        }
+
+        return $this->injectableFactory->create($className);
+    }
+
+    private function createCollectionPrinter(): CollectionPrinter
+    {
+        /** @var ?class-string */
+        $className = $this->metadata
+            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', 'collection']) ?? null;
+
+        if (!$className) {
+            throw new Error("Unknown PDF engine '{$this->engine}', type 'collection'.");
         }
 
         return $this->injectableFactory->create($className);
