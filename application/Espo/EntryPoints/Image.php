@@ -235,7 +235,7 @@ class Image implements EntryPoint
     }
 
     /**
-     * @return resource|\GdImage
+     * @return resource|object
      */
     protected function createThumbImage(string $filePath, string $fileType, string $size)
     {
@@ -349,8 +349,8 @@ class Image implements EntryPoint
     }
 
     /**
-     * @param resource|\GdImage $targetImage
-     * @return resource|\GdImage
+     * @param resource|object $targetImage
+     * @return resource|object
      */
     protected function fixOrientation($targetImage, string $filePath)
     {
