@@ -41,7 +41,7 @@ class Reminders implements Cleanup
 
     private $entityManager;
 
-    private $cleanupRemindersPeriod = '15 days';
+    private string $cleanupRemindersPeriod = '15 days';
 
     public function __construct(Config $config, EntityManager $entityManager)
     {

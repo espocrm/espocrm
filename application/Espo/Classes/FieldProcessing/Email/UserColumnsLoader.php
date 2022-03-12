@@ -39,6 +39,9 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
+/**
+ * @implements Loader<\Espo\Entities\Email>
+ */
 class UserColumnsLoader implements Loader
 {
     private $entityManager;

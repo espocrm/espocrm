@@ -40,6 +40,9 @@ use Espo\Core\{
     Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Entities\ScheduledJob>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

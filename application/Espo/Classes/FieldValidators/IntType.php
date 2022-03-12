@@ -38,6 +38,9 @@ class IntType
         return $this->isNotEmpty($entity, $field);
     }
 
+    /**
+     * @param mixed $validationValue
+     */
     public function checkMax(Entity $entity, string $field, $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {
@@ -51,6 +54,9 @@ class IntType
         return true;
     }
 
+    /**
+     * @param mixed $validationValue
+     */
     public function checkMin(Entity $entity, string $field, $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {

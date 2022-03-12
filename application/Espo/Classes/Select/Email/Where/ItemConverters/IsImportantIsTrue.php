@@ -44,9 +44,9 @@ use Espo\{
 
 class IsImportantIsTrue implements ItemConverter
 {
-    protected $user;
+    private $user;
 
-    protected $joinHelper;
+    private $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)
     {

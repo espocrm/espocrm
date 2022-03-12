@@ -46,6 +46,9 @@ use Espo\Core\{
 use DateTime;
 use Exception;
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Entities\Note>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

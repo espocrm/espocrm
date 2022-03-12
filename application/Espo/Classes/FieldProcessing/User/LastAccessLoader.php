@@ -42,6 +42,9 @@ use Espo\Core\{
 use DateTime;
 use Exception;
 
+/**
+ * @implements Loader<\Espo\Entities\User>
+ */
 class LastAccessLoader implements Loader
 {
     private $entityManager;

@@ -76,7 +76,7 @@ class CheckNewVersion implements JobDataLess
         return;
     }
 
-    protected function getRunTime()
+    protected function getRunTime(): string
     {
         $hour = rand(0, 4);
         $minute = rand(0, 59);
@@ -99,7 +99,7 @@ class CheckNewVersion implements JobDataLess
      * For backward compatibility.
      * @deprecated
      */
-    protected function getEntityManager()
+    protected function getEntityManager() /** @phpstan-ignore-line */
     {
         return $this->entityManager;
     }

@@ -53,23 +53,23 @@ use Throwable;
 
 class Cleanup implements JobDataLess
 {
-    private $cleanupJobPeriod = '10 days';
+    private string $cleanupJobPeriod = '10 days';
 
-    private $cleanupActionHistoryPeriod = '15 days';
+    private string $cleanupActionHistoryPeriod = '15 days';
 
-    private $cleanupAuthTokenPeriod = '1 month';
+    private string $cleanupAuthTokenPeriod = '1 month';
 
-    private $cleanupAuthLogPeriod = '2 months';
+    private string $cleanupAuthLogPeriod = '2 months';
 
-    private $cleanupNotificationsPeriod = '2 months';
+    private string $cleanupNotificationsPeriod = '2 months';
 
-    private $cleanupAttachmentsPeriod = '15 days';
+    private string $cleanupAttachmentsPeriod = '15 days';
 
-    private $cleanupAttachmentsFromPeriod = '3 months';
+    private string $cleanupAttachmentsFromPeriod = '3 months';
 
-    private $cleanupBackupPeriod = '2 month';
+    private string $cleanupBackupPeriod = '2 month';
 
-    private $cleanupDeletedRecordsPeriod = '3 months';
+    private string $cleanupDeletedRecordsPeriod = '3 months';
 
     private $config;
 
@@ -134,6 +134,7 @@ class Cleanup implements JobDataLess
 
         foreach ($items as $name => $item) {
             try {
+                /** @var class-string */
                 $className = $item['className'];
 
                 $injectableFactory->create($className)->process();

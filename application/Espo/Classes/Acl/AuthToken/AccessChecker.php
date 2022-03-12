@@ -38,6 +38,9 @@ use Espo\Core\{
     Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Entities\AuthToken>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

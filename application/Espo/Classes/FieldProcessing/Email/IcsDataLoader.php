@@ -48,12 +48,18 @@ use ICal\Event;
 
 use Throwable;
 
+/**
+ * @implements Loader<\Espo\Entities\Email>
+ */
 class IcsDataLoader implements Loader
 {
     private $entityManager;
 
     private $log;
 
+    /**
+     * @var array<string,string>
+     */
     private $entityTypeLinkMap = [
         'User' => 'users',
         'Contact' => 'contacts',

@@ -55,7 +55,7 @@ class Email implements AssignmentNotificator
 {
     private const DAYS_THRESHOLD = 2;
 
-    private $streamService = null;
+    private ?StreamService $streamService = null;
 
     private $user;
 

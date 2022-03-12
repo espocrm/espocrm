@@ -43,6 +43,9 @@ use Espo\ORM\{
     Entity,
 };
 
+/**
+ * @implements WhereBuilder<CoreEntity>
+ */
 class Person implements WhereBuilder
 {
     public function build(Entity $entity): ?WhereItem
@@ -97,6 +100,9 @@ class Person implements WhereBuilder
         return $orBuilder->build();
     }
 
+    /**
+     * @return string[]
+     */
     private function getEmailAddressList(CoreEntity $entity): array
     {
         if ($entity->get('emailAddressData')) {

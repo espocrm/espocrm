@@ -39,6 +39,10 @@ use Espo\Core\{
     Acl\AccessEntityDeleteChecker,
 };
 
+/**
+ * @implements AccessEntityReadChecker<\Espo\Entities\Import>
+ * @implements AccessEntityDeleteChecker<\Espo\Entities\Import>
+ */
 class AccessChecker implements AccessEntityReadChecker, AccessEntityDeleteChecker
 {
     public function check(User $user, ScopeData $data): bool

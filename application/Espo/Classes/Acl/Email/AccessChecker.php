@@ -42,6 +42,9 @@ use Espo\Core\{
     Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDSChecker<\Espo\Entities\Email>
+ */
 class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;

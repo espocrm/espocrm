@@ -38,6 +38,9 @@ use Espo\Core\{
 
 use Espo\Entities\Note;
 
+/**
+ * @implements Loader<\Espo\Entities\Note>
+ */
 class AttachmentsLoader implements Loader
 {
     public function process(Entity $entity, Params $params): void

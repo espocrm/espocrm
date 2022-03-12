@@ -40,6 +40,9 @@ use Espo\Core\{
     AclManager,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Entities\Portal>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

@@ -37,7 +37,7 @@ use DateTime;
 
 class WebhookQueue implements Cleanup
 {
-    private $cleanupWebhookQueuePeriod = '10 days';
+    private string $cleanupWebhookQueuePeriod = '10 days';
 
     private $config;
 

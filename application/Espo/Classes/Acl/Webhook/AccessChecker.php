@@ -40,6 +40,9 @@ use Espo\Core\{
     Acl\Traits\DefaultAccessCheckerDependency,
 };
 
+/**
+ * @implements AccessEntityCREDChecker<\Espo\Entities\Webhook>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;

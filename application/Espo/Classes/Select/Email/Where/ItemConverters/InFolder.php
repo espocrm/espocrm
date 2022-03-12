@@ -45,20 +45,11 @@ use Espo\{
 
 class InFolder implements ItemConverter
 {
-    /**
-     * @var User
-     */
-    protected $user;
+    private User $user;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private EntityManager $entityManager;
 
-    /**
-     * @var JoinHelper
-     */
-    protected $joinHelper;
+    private JoinHelper $joinHelper;
 
     public function __construct(User $user, EntityManager $entityManager, JoinHelper $joinHelper)
     {
@@ -173,7 +164,7 @@ class InFolder implements ItemConverter
     {
         return WhereClause::fromRaw([
             'status' => 'Draft',
-            'createdById' => $this->user->id,
+            'createdById' => $this->user->getId(),
         ]);
     }
 
@@ -187,11 +178,14 @@ class InFolder implements ItemConverter
         ]);
     }
 
-    protected function joinEmailUser(QueryBuilder $queryBuilder)
+    protected function joinEmailUser(QueryBuilder $queryBuilder): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
     }
 
+    /**
+     * @return string[]
+     */
     protected function getEmailAddressIdList(): array
     {
         $emailAddressList = $this->entityManager

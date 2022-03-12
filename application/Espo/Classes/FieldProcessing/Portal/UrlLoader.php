@@ -40,6 +40,9 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * @implements Loader<\Espo\Entities\Portal>
+ */
 class UrlLoader implements Loader
 {
     private $entityManager;

@@ -41,7 +41,7 @@ class MassActions implements Cleanup
 
     private $entityManager;
 
-    private $cleanupPeriod = '14 days';
+    private string $cleanupPeriod = '14 days';
 
     public function __construct(Config $config, EntityManager $entityManager)
     {

@@ -51,13 +51,13 @@ class AttachmentMultiple implements FieldDuplicator
     {
         $valueMap = (object) [];
 
-        /** @var \Espo\ORM\Collection&iterable<Attachment> $attachmentList */
+        /** @var \Espo\ORM\Collection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, $field)
             ->find();
 
-        if (!count($attachmentList)) {
+        if (is_countable($attachmentList) && !count($attachmentList)) {
             return $valueMap;
         }
 

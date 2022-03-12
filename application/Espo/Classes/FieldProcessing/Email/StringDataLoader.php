@@ -42,12 +42,18 @@ use Espo\Core\{
 use Espo\Entities\Email;
 use Espo\Entities\User;
 
+/**
+ * @implements Loader<\Espo\Entities\Email>
+ */
 class StringDataLoader implements Loader
 {
     private $entityManager;
 
     private $user;
 
+    /**
+     * @var array<string,string>
+     */
     private $fromEmailAddressNameCache = [];
 
     public function __construct(EntityManager $entityManager, User $user)

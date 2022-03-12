@@ -43,7 +43,7 @@ class Exports implements Cleanup
 
     private $entityManager;
 
-    private $cleanupPeriod = '2 days';
+    private string $cleanupPeriod = '2 days';
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
