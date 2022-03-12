@@ -35,15 +35,18 @@ use Espo\Entities\Note;
 
 class Mentions
 {
-    public static $order = 9;
+    public static int $order = 9;
 
-    private $processor;
+    private NoteMentionHookProcessor $processor;
 
     public function __construct(NoteMentionHookProcessor $processor)
     {
         $this->processor = $processor;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeSave(Entity $entity, array $options): void
     {
         if (!empty($options['silent'])) {

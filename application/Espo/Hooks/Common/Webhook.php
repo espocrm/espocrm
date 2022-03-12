@@ -39,11 +39,11 @@ use Espo\Core\{
 
 class Webhook
 {
-    public static $order = 101;
+    public static int $order = 101;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $webhookManager;
+    private WebhookManager $webhookManager;
 
     public function __construct(Metadata $metadata, WebhookManager $webhookManager)
     {
@@ -51,7 +51,10 @@ class Webhook
         $this->webhookManager = $webhookManager;
     }
 
-    public function afterSave(Entity $entity, array $options = [])
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['silent'])) {
             return;
@@ -73,7 +76,10 @@ class Webhook
         }
     }
 
-    public function afterRemove(Entity $entity, array $options = [])
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function afterRemove(Entity $entity, array $options): void
     {
         if (!empty($options['silent'])) {
             return;

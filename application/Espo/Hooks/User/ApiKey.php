@@ -37,7 +37,7 @@ use Espo\Entities\User;
 
 class ApiKey
 {
-    private $apiKey;
+    private ApiKeyUtil $apiKey;
 
     public function __construct(ApiKeyUtil $apiKey)
     {
@@ -47,7 +47,7 @@ class ApiKey
     /**
      * @param User $entity
      */
-    public function afterSave(Entity $entity)
+    public function afterSave(Entity $entity): void
     {
         if (!$entity->isApi()) {
             return;
@@ -74,7 +74,7 @@ class ApiKey
     /**
      * @param User $entity
      */
-    public function afterRemove(Entity $entity)
+    public function afterRemove(Entity $entity): void
     {
         if (!$entity->isApi()) {
             return;

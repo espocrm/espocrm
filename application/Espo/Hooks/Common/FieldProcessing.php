@@ -35,16 +35,19 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 class FieldProcessing
 {
-    public static $order = -11;
+    public static int $order = -11;
 
-    private $saveProcessor;
+    private SaveProcessor $saveProcessor;
 
     public function __construct(SaveProcessor $saveProcessor)
     {
         $this->saveProcessor = $saveProcessor;
     }
 
-    public function afterSave(Entity $entity, array $options = []): void
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['skipFieldProcessing'])) {
             return;

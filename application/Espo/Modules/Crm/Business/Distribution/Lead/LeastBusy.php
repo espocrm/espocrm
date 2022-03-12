@@ -46,11 +46,6 @@ class LeastBusy
         $this->entityManager = $entityManager;
     }
 
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
     /**
      * @param Team $team
      * @param ?string $targetUserPosition

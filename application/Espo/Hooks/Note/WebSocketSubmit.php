@@ -38,11 +38,11 @@ use Espo\Core\{
 
 class WebSocketSubmit
 {
-    public static $order = 20;
+    public static int $order = 20;
 
-    protected $webSocketSubmission;
+    private $webSocketSubmission;
 
-    protected $config;
+    private $config;
 
     public function __construct(WebSocketSubmission $webSocketSubmission, Config $config)
     {
@@ -50,7 +50,7 @@ class WebSocketSubmit
         $this->config = $config;
     }
 
-    public function afterSave(Entity $entity, array $options = [])
+    public function afterSave(Entity $entity): void
     {
         if (!$this->config->get('useWebSocket')) {
             return;

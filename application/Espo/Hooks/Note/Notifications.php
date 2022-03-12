@@ -35,7 +35,7 @@ use Espo\Entities\Note;
 
 class Notifications
 {
-    public static $order = 14;
+    public static int $order = 14;
 
     private $processor;
 
@@ -44,6 +44,9 @@ class Notifications
         $this->processor = $processor;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void
     {
         if (!$entity->isNew() && empty($options['forceProcessNotifications'])) {

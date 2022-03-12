@@ -37,9 +37,9 @@ class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
     use Di\MetadataSetter;
     use Di\ConfigSetter;
 
-    public static $order = 1;
+    public static int $order = 1;
 
-    public function beforeSave(Entity $entity, array $options = [])
+    public function beforeSave(Entity $entity): void
     {
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 

@@ -31,13 +31,11 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    FieldProcessing\VersionNumber\BeforeSaveProcessor as Processor,
-};
+use Espo\Core\FieldProcessing\VersionNumber\BeforeSaveProcessor as Processor;
 
 class VersionNumber
 {
-    protected $processor;
+    private Processor $processor;
 
     public function __construct(Processor $processor)
     {

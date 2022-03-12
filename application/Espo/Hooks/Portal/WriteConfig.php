@@ -53,7 +53,7 @@ class WriteConfig
     /**
      * @param Portal $entity
      */
-    public function afterSave(Entity $entity)
+    public function afterSave(Entity $entity): void
     {
         if (!$entity->has('isDefault')) {
             return;

@@ -33,13 +33,11 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\Integration;
 
-use Espo\Core\{
-    Utils\Config\ConfigWriter,
-};
+use Espo\Core\Utils\Config\ConfigWriter;
 
 class GoogleMaps
 {
-    private $configWriter;
+    private ConfigWriter $configWriter;
 
     public function __construct(ConfigWriter $configWriter)
     {
@@ -49,7 +47,7 @@ class GoogleMaps
     /**
      * @param Integration $entity
      */
-    public function afterSave(Entity $entity)
+    public function afterSave(Entity $entity): void
     {
         if ($entity->getId() !== 'GoogleMaps') {
             return;

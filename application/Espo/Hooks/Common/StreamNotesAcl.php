@@ -42,16 +42,19 @@ use Espo\Services\Stream as Service;
  */
 class StreamNotesAcl
 {
-    public static $order = 10;
+    public static int $order = 10;
 
-    private $service;
+    private Service $service;
 
     public function __construct(Service $service)
     {
         $this->service = $service;
     }
 
-    public function afterSave(Entity $entity, array $options = []): void
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['noStream'])) {
             return;

@@ -34,15 +34,18 @@ use Espo\ORM\Entity;
 
 class Notifications
 {
-    public static $order = 10;
+    public static int $order = 10;
 
-    private $processor;
+    private HookProcessor $processor;
 
     public function __construct(HookProcessor $processor)
     {
         $this->processor = $processor;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
@@ -52,6 +55,9 @@ class Notifications
         $this->processor->afterSave($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function beforeRemove(Entity $entity, array $options): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
@@ -61,6 +67,9 @@ class Notifications
         $this->processor->beforeRemove($entity, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterRemove(Entity $entity, array $options): void
     {
         if (!empty($options['silent'])) {

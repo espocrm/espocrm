@@ -39,13 +39,13 @@ use Espo\Core\{
 
 class WebSocketSubmit
 {
-    public static $order = 20;
+    public static int $order = 20;
 
-    protected $metadata;
+    private Metadata $metadata;
 
-    protected $webSocketSubmission;
+    private WebSocketSubmission $webSocketSubmission;
 
-    protected $config;
+    private Config $config;
 
     public function __construct(Metadata $metadata, WebSocketSubmission $webSocketSubmission, Config $config)
     {
@@ -54,7 +54,10 @@ class WebSocketSubmit
         $this->config = $config;
     }
 
-    public function afterSave(Entity $entity, array $options = [])
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function afterSave(Entity $entity, array $options): void
     {
         if ($options['silent'] ?? false) {
             return;

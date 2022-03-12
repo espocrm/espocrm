@@ -34,15 +34,18 @@ use Espo\Tools\Stream\HookProcessor;
 
 class Stream
 {
-    public static $order = 9;
+    public static int $order = 9;
 
-    private $processor;
+    private HookProcessor $processor;
 
     public function __construct(HookProcessor $processor)
     {
         $this->processor = $processor;
     }
 
+    /**
+     * @param array<string,mixed> $options
+     */
     public function afterSave(Entity $entity, array $options): void
     {
         $this->processor->afterSave($entity, $options);
@@ -53,6 +56,10 @@ class Stream
         $this->processor->afterRemove($entity);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @param array<string,mixed> $data
+     */
     public function afterRelate(Entity $entity, array $options, array $data): void
     {
         $link = $data['relationName'] ?? null;
@@ -65,6 +72,10 @@ class Stream
         $this->processor->afterRelate($entity, $foreignEntity, $link, $options);
     }
 
+    /**
+     * @param array<string,mixed> $options
+     * @param array<string,mixed> $data
+     */
     public function afterUnrelate(Entity $entity, array $options, array $data): void
     {
         $link = $data['relationName'] ?? null;

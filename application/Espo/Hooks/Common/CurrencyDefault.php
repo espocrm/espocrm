@@ -38,11 +38,11 @@ use Espo\Core\Utils\{
 
 class CurrencyDefault
 {
-    public static $order = 200;
+    public static int $order = 200;
 
-    protected $config;
+    private Config $config;
 
-    protected $fieldUtil;
+    private FieldUtil $fieldUtil;
 
     public function __construct(Config $config, FieldUtil $fieldUtil)
     {
@@ -50,7 +50,7 @@ class CurrencyDefault
         $this->fieldUtil = $fieldUtil;
     }
 
-    public function beforeSave(Entity $entity, array $options = [])
+    public function beforeSave(Entity $entity): void
     {
         $fieldList = $this->fieldUtil->getFieldByTypeList($entity->getEntityType(), 'currency');
 

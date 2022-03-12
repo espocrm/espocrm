@@ -41,13 +41,13 @@ use Exception;
 
 class Formula
 {
-    public static $order = 11;
+    public static int $order = 11;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    private $formulaManager;
+    private FormulaManager $formulaManager;
 
-    private $log;
+    private Log $log;
 
     public function __construct(Metadata $metadata, FormulaManager $formulaManager, Log $log)
     {
@@ -56,7 +56,10 @@ class Formula
         $this->log = $log;
     }
 
-    public function beforeSave(Entity $entity, array $options = [])
+    /**
+     * @param array<string,mixed> $options
+     */
+    public function beforeSave(Entity $entity, array $options): void
     {
         if (!empty($options['skipFormula'])) {
             return;
