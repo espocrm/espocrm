@@ -31,7 +31,6 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
 
 use Espo\Modules\Crm\Services\CaseObj as Service;
@@ -40,7 +39,10 @@ class CaseObj extends \Espo\Core\Controllers\Record
 {
     protected $name = 'Case';
 
-    public function getActionEmailAddressList(Request $request)
+    /**
+     * @return \stdClass[]
+     */
+    public function getActionEmailAddressList(Request $request): array
     {
         if (!$request->getQueryParam('id')) {
             throw new BadRequest();

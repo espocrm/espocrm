@@ -30,14 +30,14 @@
 namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
-
 use Espo\Modules\Crm\Services\KnowledgeBaseArticle as Service;
+
+use stdClass;
 
 class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
 {
-    public function postActionGetCopiedAttachments(Request $request)
+    public function postActionGetCopiedAttachments(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -50,7 +50,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return $this->getArticleService()->getCopiedAttachments($id);
     }
 
-    public function postActionMoveToTop(Request $request)
+    public function postActionMoveToTop(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -61,8 +61,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = $data->where;
-            $where = json_decode(json_encode($where), true);
+            $where = json_decode(json_encode($data->where), true);
         }
 
         $this->getArticleService()->moveToTop($data->id, $where);
@@ -70,7 +69,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function postActionMoveUp(Request $request)
+    public function postActionMoveUp(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -81,8 +80,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = $data->where;
-            $where = json_decode(json_encode($where), true);
+            $where = json_decode(json_encode($data->wher), true);
         }
 
         $this->getArticleService()->moveUp($data->id, $where);
@@ -90,7 +88,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function postActionMoveDown(Request $request)
+    public function postActionMoveDown(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -101,8 +99,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = $data->where;
-            $where = json_decode(json_encode($where), true);
+            $where = json_decode(json_encode($data->where), true);
         }
 
         $this->getArticleService()->moveDown($data->id, $where);
@@ -110,7 +107,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function postActionMoveToBottom(Request $request)
+    public function postActionMoveToBottom(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -121,8 +118,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = $data->where;
-            $where = json_decode(json_encode($where), true);
+            $where = json_decode(json_encode($data->where), true);
         }
 
         $this->getArticleService()->moveToBottom($data->id, $where);

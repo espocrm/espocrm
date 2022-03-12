@@ -53,40 +53,19 @@ class Unsubscribe implements EntryPoint
 {
     use NoAuth;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
-    /**
-     * @var ClientManager
-     */
-    protected $clientManager;
+    protected ClientManager $clientManager;
 
-    /**
-     * @var HookManager
-     */
-    protected $hookManager;
+    protected HookManager $hookManager;
 
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected Config $config;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
 
-    /**
-     * @var Hasher
-     */
-    protected $hasher;
+    protected Hasher $hasher;
 
-    /**
-     * @var Service
-     */
-    protected $service;
+    protected Service $service;
 
     private MassEmailUtil $util;
 
@@ -216,7 +195,10 @@ class Unsubscribe implements EntryPoint
         }
     }
 
-    protected function display(array $actionData)
+    /**
+     * @param array<string,mixed> $actionData
+     */
+    protected function display(array $actionData): void
     {
         $data = [
             'actionData' => $actionData,
@@ -235,7 +217,7 @@ class Unsubscribe implements EntryPoint
         $this->clientManager->display($runScript);
     }
 
-    protected function processWithHash(string $emailAddress, string $hash)
+    protected function processWithHash(string $emailAddress, string $hash): void
     {
         $hash2 = $this->hasher->hash($emailAddress);
 

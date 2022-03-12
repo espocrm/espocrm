@@ -46,7 +46,11 @@ class Contacts
         $this->entityManager = $entityManager;
     }
 
-    public function afterRelate(Entity $entity, array $options = [], array $data = [])
+    /**
+     * @param array<string,mixed> $options
+     * @param array<string,mixed> $data
+     */
+    public function afterRelate(Entity $entity, array $options = [], array $data = []): void
     {
         $relationName = $data['relationName'] ?? null;
         $foreignEntity = $data['foreignEntity'] ?? null;
@@ -60,7 +64,11 @@ class Contacts
         }
     }
 
-    public function afterUnrelate(Entity $entity, array $options = [], array $data = [])
+    /**
+     * @param array<string,mixed> $options
+     * @param array<string,mixed> $data
+     */
+    public function afterUnrelate(Entity $entity, array $options = [], array $data = []): void
     {
         $relationName = $data['relationName'] ?? null;
         $foreignEntity = $data['foreignEntity'] ?? null;

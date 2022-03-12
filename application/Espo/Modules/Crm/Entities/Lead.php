@@ -33,6 +33,9 @@ class Lead extends \Espo\Core\Entities\Person
 {
     public const ENTITY_TYPE = 'Lead';
 
+    /**
+     * @return ?string
+     */
     protected function _getName()
     {
         if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
@@ -52,6 +55,9 @@ class Lead extends \Espo\Core\Entities\Person
         return $this->getFromContainer('name');
     }
 
+    /**
+     * @return bool
+     */
     protected function _hasName()
     {
         if ($this->hasInContainer('name')) {

@@ -31,14 +31,16 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
 
 use Espo\Modules\Crm\Services\Document as Service;
 
 class Document extends \Espo\Core\Controllers\Record
 {
-    public function postActionGetAttachmentList(Request $request)
+    /**
+     * @return \stdClass[]
+     */
+    public function postActionGetAttachmentList(Request $request): array
     {
         $data = $request->getParsedBody();
 

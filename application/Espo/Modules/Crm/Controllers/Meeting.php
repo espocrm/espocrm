@@ -39,7 +39,7 @@ use Espo\Modules\Crm\Services\Meeting as Service;
 
 class Meeting extends \Espo\Core\Controllers\Record
 {
-    public function postActionSendInvitations(Request $request)
+    public function postActionSendInvitations(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -65,7 +65,7 @@ class Meeting extends \Espo\Core\Controllers\Record
         return $this->getMeetingService()->sendInvitations($entity);
     }
 
-    public function postActionMassSetHeld(Request $request)
+    public function postActionMassSetHeld(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -76,7 +76,7 @@ class Meeting extends \Espo\Core\Controllers\Record
         return $this->getMeetingService()->massSetHeld($data->ids);
     }
 
-    public function postActionMassSetNotHeld(Request $request)
+    public function postActionMassSetNotHeld(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -87,7 +87,7 @@ class Meeting extends \Espo\Core\Controllers\Record
         return $this->getMeetingService()->massSetNotHeld($data->ids);
     }
 
-    public function postActionSetAcceptanceStatus(Request $request)
+    public function postActionSetAcceptanceStatus(Request $request): bool
     {
         $data = $request->getParsedBody();
 

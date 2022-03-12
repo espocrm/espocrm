@@ -31,14 +31,14 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
-
 use Espo\Modules\Crm\Services\Campaign as Service;
+
+use stdClass;
 
 class Campaign extends \Espo\Core\Controllers\Record
 {
-    public function postActionGenerateMailMergePdf(Request $request)
+    public function postActionGenerateMailMergePdf(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -54,7 +54,7 @@ class Campaign extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return [
+        return (object) [
             'id' => $this->getCampaignService()->generateMailMergePdf($data->campaignId, $data->link, true)
         ];
     }

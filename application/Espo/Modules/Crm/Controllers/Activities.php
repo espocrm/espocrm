@@ -41,7 +41,6 @@ use Espo\Core\{
 };
 
 use Espo\Modules\Crm\Services\Activities as Service;
-
 use Espo\Entities\User;
 
 use stdClass;
@@ -50,13 +49,13 @@ class Activities
 {
     private const MAX_CALENDAR_RANGE = 123;
 
-    private $user;
+    private User $user;
 
-    private $acl;
+    private Acl $acl;
 
-    private $searchParamsFetcher;
+    private SearchParamsFetcher $searchParamsFetcher;
 
-    private $service;
+    private Service $service;
 
     public function __construct(
         User $user,
@@ -70,7 +69,10 @@ class Activities
         $this->service = $service;
     }
 
-    public function getActionListCalendarEvents(Request $request)
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    public function getActionListCalendarEvents(Request $request): array
     {
         if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
@@ -117,7 +119,7 @@ class Activities
         return $this->service->getEventList($userId, $from, $to, $scopeList);
     }
 
-    public function getActionGetTimeline(Request $request)
+    public function getActionGetTimeline(Request $request): stdClass
     {
         if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
@@ -157,7 +159,7 @@ class Activities
         return $this->service->getUsersTimeline($userIdList, $from, $to, $scopeList);
     }
 
-    public function getActionListUpcoming(Request $request)
+    public function getActionListUpcoming(Request $request): stdClass
     {
         $userId = $request->getQueryParam('userId');
 
@@ -174,7 +176,7 @@ class Activities
 
         $futureDays = intval($request->getQueryParam('futureDays'));
 
-        return $this->service->getUpcomingActivities(
+        return (object) $this->service->getUpcomingActivities(
             $userId,
             [
                 'offset' => $offset,
@@ -185,6 +187,9 @@ class Activities
         );
     }
 
+    /**
+     * @return array<int,array<string,mixed>>
+     */
     public function getActionPopupNotifications(): array
     {
         $userId = $this->user->getId();
@@ -207,7 +212,7 @@ class Activities
         return true;
     }
 
-    public function getActionList(Request $request)
+    public function getActionList(Request $request): stdClass
     {
         $params = $request->getRouteParams();
 
@@ -215,7 +220,7 @@ class Activities
             throw new Forbidden();
         }
 
-        $name = $params['name'];
+        $name = $params['name'] ?? null;
 
         if (!in_array($name, ['activities', 'history'])) {
             throw new BadRequest();
@@ -241,15 +246,19 @@ class Activities
 
         $scope = $request->getQueryParam('entityType') ?? null;
 
-        $methodName = 'get' . ucfirst($name);
-
-        return $this->service->$methodName($entityType, $id, [
+        $methodParams = [
             'scope' => $scope,
             'offset' => $offset,
             'maxSize' => $maxSize,
             'order' => $order,
             'orderBy' => $orderBy,
-        ]);
+        ];
+
+        if ($name === 'history') {
+            return (object) $this->service->getHistory($entityType, $id, $methodParams);
+        }
+
+        return (object) $this->service->getActivities($entityType, $id, $methodParams);
     }
 
     public function getActionEntityTypeList(Request $request): stdClass
@@ -289,7 +298,13 @@ class Activities
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $result = $this->service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $searchParams);
+        $result = $this->service->findActivitiyEntityType(
+            $scope,
+            $id,
+            $entityType,
+            $isHistory,
+            $searchParams
+        );
 
         return (object) [
             'total' => $result->getTotal(),
@@ -297,7 +312,7 @@ class Activities
         ];
     }
 
-    public function getActionBusyRanges(Request $request)
+    public function getActionBusyRanges(Request $request): stdClass
     {
         $from = $request->getQueryParam('from');
         $to = $request->getQueryParam('to');

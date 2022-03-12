@@ -37,9 +37,11 @@ use Espo\Core\{
     Api\Request,
 };
 
+use stdClass;
+
 class MassEmail extends \Espo\Core\Controllers\Record
 {
-    public function postActionSendTest(Request $request)
+    public function postActionSendTest(Request $request): bool
     {
         $id = $request->getParsedBody()->id ?? null;
         $targetList = $request->getParsedBody()->targetList ?? null;
@@ -53,7 +55,10 @@ class MassEmail extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function getActionSmtpAccountDataList()
+    /**
+     * @return stdClass[]
+     */
+    public function getActionSmtpAccountDataList(): array
     {
         if (
             !$this->getAcl()->checkScope('MassEmail', 'create') &&

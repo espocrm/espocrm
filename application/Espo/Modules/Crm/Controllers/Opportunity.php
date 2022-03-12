@@ -36,9 +36,11 @@ use Espo\Core\Api\Request;
 
 use Espo\Modules\Crm\Services\Opportunity as Service;
 
+use stdClass;
+
 class Opportunity extends \Espo\Core\Controllers\Record
 {
-    public function getActionReportByLeadSource(Request $request)
+    public function getActionReportByLeadSource(Request $request): stdClass
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -53,7 +55,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
         return $this->getOpportunityService()->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function getActionReportByStage(Request $request)
+    public function getActionReportByStage(Request $request): stdClass
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -68,7 +70,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
         return $this->getOpportunityService()->reportByStage($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function getActionReportSalesByMonth(Request $request)
+    public function getActionReportSalesByMonth(Request $request): stdClass
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -83,7 +85,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
         return $this->getOpportunityService()->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
     }
 
-    public function getActionReportSalesPipeline(Request $request)
+    public function getActionReportSalesPipeline(Request $request): stdClass
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
 
@@ -101,7 +103,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
             ->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
     }
 
-    public function getActionEmailAddressList(Request $request)
+    /**
+     * @return stdClass[]
+     */
+    public function getActionEmailAddressList(Request $request): array
     {
         if (!$request->getQueryParam('id')) {
             throw new BadRequest();

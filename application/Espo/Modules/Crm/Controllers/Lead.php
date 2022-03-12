@@ -30,15 +30,14 @@
 namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Api\Request;
-
 use Espo\Modules\Crm\Services\Lead as Service;
+
+use stdClass;
 
 class Lead extends \Espo\Core\Controllers\Record
 {
-    public function postActionConvert(Request $request)
+    public function postActionConvert(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -59,7 +58,7 @@ class Lead extends \Espo\Core\Controllers\Record
         return $entity->getValueMap();
     }
 
-    public function postActionGetConvertAttributes(Request $request)
+    public function postActionGetConvertAttributes(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -67,7 +66,7 @@ class Lead extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        return $this->getLeadService()->getConvertAttributes($data->id);
+        return (object) $this->getLeadService()->getConvertAttributes($data->id);
     }
 
     private function getLeadService(): Service

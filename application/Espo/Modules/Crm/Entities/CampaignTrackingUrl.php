@@ -33,12 +33,12 @@ class CampaignTrackingUrl extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'CampaignTrackingUrl';
 
-    protected function _getUrlToUse()
+    protected function _getUrlToUse(): string
     {
         return '{trackingUrl:' . $this->id . '}';
     }
 
-    protected function _hasUrlToUse()
+    protected function _hasUrlToUse(): bool
     {
         return !$this->isNew();
     }
