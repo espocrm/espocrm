@@ -97,6 +97,9 @@ class LeadCapture extends Record
             ->getValueMap();
     }
 
+    /**
+     * @return stdClass[]
+     */
     public function getActionSmtpAccountDataList(): array
     {
         if (!$this->getUser()->isAdmin()) {

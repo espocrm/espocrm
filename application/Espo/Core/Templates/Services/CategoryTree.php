@@ -29,9 +29,10 @@
 
 namespace Espo\Core\Templates\Services;
 
-
+/**
+ * @extends \Espo\Services\RecordTree<\Espo\Core\Templates\Entities\CategoryTree>
+ */
 class CategoryTree extends \Espo\Services\RecordTree
 {
 
 }
-

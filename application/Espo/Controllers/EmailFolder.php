@@ -66,6 +66,11 @@ class EmailFolder extends RecordBase
         return true;
     }
 
+    /**
+     * @return array{
+     *   list:array<array<string,mixed>>
+     * }
+     */
     public function getActionListAll(): array
     {
         return $this->getEmailFolderService()->listAll();

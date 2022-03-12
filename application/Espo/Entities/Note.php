@@ -57,7 +57,7 @@ class Note extends Entity
 
     public const TYPE_CREATE = 'Create';
 
-    private $aclIsProcessed = false;
+    private bool $aclIsProcessed = false;
 
     public function isPost(): bool
     {
@@ -174,7 +174,7 @@ class Note extends Entity
         $this->set('attachmentsTypes', $types);
     }
 
-    public function addNotifiedUserId($userId): void
+    public function addNotifiedUserId(string $userId): void
     {
         $userIdList = $this->get('notifiedUserIdList');
 
@@ -189,7 +189,7 @@ class Note extends Entity
         $this->set('notifiedUserIdList', $userIdList);
     }
 
-    public function isUserIdNotified($userId): bool
+    public function isUserIdNotified(string $userId): bool
     {
         $userIdList = $this->get('notifiedUserIdList') ?? [];
 

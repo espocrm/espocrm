@@ -44,11 +44,11 @@ use Espo\Core\{
 
 class FieldManager
 {
-    protected $user;
+    private $user;
 
-    protected $dataManager;
+    private $dataManager;
 
-    protected $fieldManagerTool;
+    private $fieldManagerTool;
 
     public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManagerTool)
     {
@@ -59,14 +59,17 @@ class FieldManager
         $this->checkControllerAccess();
     }
 
-    protected function checkControllerAccess()
+    protected function checkControllerAccess(): void
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function getActionRead(Request $request)
+    /**
+     * @return array<string,mixed>
+     */
+    public function getActionRead(Request $request): array
     {
         $scope = $request->getRouteParam('scope');
         $name = $request->getRouteParam('name');
@@ -75,16 +78,13 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $data = $this->fieldManagerTool->read($scope, $name);
-
-        if (!isset($data)) {
-            throw new BadRequest();
-        }
-
-        return $data;
+        return $this->fieldManagerTool->read($scope, $name);
     }
 
-    public function postActionCreate(Request $request)
+    /**
+     * @return array<string,mixed>
+     */
+    public function postActionCreate(Request $request): array
     {
         $data = $request->getParsedBody();
 
@@ -111,12 +111,18 @@ class FieldManager
         return $fieldManagerTool->read($scope, $data->name);
     }
 
-    public function patchActionUpdate(Request $request)
+    /**
+     * @return array<string,mixed>
+     */
+    public function patchActionUpdate(Request $request): array
     {
         return $this->putActionUpdate($request);
     }
 
-    public function putActionUpdate(Request $request)
+    /**
+     * @return array<string,mixed>
+     */
+    public function putActionUpdate(Request $request): array
     {
         $data = $request->getParsedBody();
 
@@ -140,7 +146,7 @@ class FieldManager
         return $fieldManagerTool->read($scope, $name);
     }
 
-    public function deleteActionDelete(Request $request)
+    public function deleteActionDelete(Request $request): bool
     {
         $scope = $request->getRouteParam('scope');
         $name = $request->getRouteParam('name');
@@ -156,7 +162,7 @@ class FieldManager
         return $result;
     }
 
-    public function postActionResetToDefault(Request $request)
+    public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
 

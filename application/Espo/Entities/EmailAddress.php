@@ -37,6 +37,10 @@ class EmailAddress extends Entity
 {
     public const ENTITY_TYPE = 'EmailAddress';
 
+    /**
+     * @param string $value
+     * @return void
+     */
     protected function _setName($value)
     {
         if (empty($value)) {

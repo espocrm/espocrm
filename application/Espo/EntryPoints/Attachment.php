@@ -107,6 +107,9 @@ class Attachment implements EntryPoint
             ->setBody($stream);
     }
 
+    /**
+     * @return string[]
+     */
     private function getAllowedFileTypeList(): array
     {
         return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];

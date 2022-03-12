@@ -34,27 +34,45 @@ trait Injectable
 {
     protected $injections = []; /** @phpstan-ignore-line */
 
+    /**
+     * @param string $name
+     * @param object $object
+     * @return void
+     */
     public function inject($name, $object)
     {
         $this->injections[$name] = $object;
     }
 
-    public function getDependencyList() : array /** @phpstan-ignore-line */
+    /**
+     * @return string[]
+     */
+    public function getDependencyList(): array
     {
         return $this->dependencyList;
     }
 
-    protected function getInjection(string $name) /** @phpstan-ignore-line */
+    /**
+     * @return ?object
+     */
+    protected function getInjection(string $name)
     {
         return $this->injections[$name] ?? $this->$name ?? null;
     }
 
-    protected function addDependency(string $name) /** @phpstan-ignore-line */
+    /**
+     * @return void
+     */
+    protected function addDependency(string $name)
     {
         $this->dependencyList[] = $name;
     }
 
-    protected function addDependencyList(array $list) /** @phpstan-ignore-line */
+    /**
+     * @param string[] $list
+     * @return void
+     */
+    protected function addDependencyList(array $list)
     {
         foreach ($list as $item) {
             $this->addDependency($item);

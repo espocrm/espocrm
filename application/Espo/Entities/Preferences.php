@@ -33,6 +33,9 @@ class Preferences extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'Preferences';
 
+    /**
+     * @return ?array<string,mixed>
+     */
     public function getSmtpParams(): ?array
     {
         $smtpParams = [];

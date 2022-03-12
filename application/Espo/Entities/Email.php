@@ -54,42 +54,46 @@ class Email extends Entity
 
     public const STATUS_DRAFT = 'Draft';
 
-    protected function _getSubject()
+    protected function _getSubject(): ?string
     {
         return $this->get('name');
     }
 
-    protected function _setSubject($value)
+    protected function _setSubject(?string $value): void
     {
         $this->set('name', $value);
     }
 
-    protected function _hasSubject()
+    /**
+     * @return bool
+     */
+    protected function _hasSubject(): bool
     {
         return $this->has('name');
     }
 
-    protected function _hasFromName()
+
+    protected function _hasFromName(): bool
     {
         return $this->has('fromString');
     }
 
-    protected function _hasFromAddress()
+    protected function _hasFromAddress(): bool
     {
         return $this->has('fromString');
     }
 
-    protected function _hasReplyToName()
+    protected function _hasReplyToName(): bool
     {
         return $this->has('replyToString');
     }
 
-    protected function _hasReplyToAddress()
+    protected function _hasReplyToAddress(): bool
     {
         return $this->has('replyToString');
     }
 
-    protected function _getFromName()
+    protected function _getFromName(): ?string
     {
         if (!$this->has('fromString')) {
             return null;
@@ -104,7 +108,7 @@ class Email extends Entity
         return $string;
     }
 
-    protected function _getFromAddress()
+    protected function _getFromAddress(): ?string
     {
         if (!$this->has('fromString')) {
             return null;
@@ -113,7 +117,7 @@ class Email extends Entity
         return EmailService::parseFromAddress($this->get('fromString'));
     }
 
-    protected function _getReplyToName()
+    protected function _getReplyToName(): ?string
     {
         if (!$this->has('replyToString')) {
             return null;
@@ -130,7 +134,7 @@ class Email extends Entity
         );
     }
 
-    protected function _getReplyToAddress()
+    protected function _getReplyToAddress(): ?string
     {
         if (!$this->has('replyToString')) {
             return null;
@@ -147,7 +151,7 @@ class Email extends Entity
         );
     }
 
-    protected function _setIsRead($value)
+    protected function _setIsRead(?bool $value): void
     {
         $this->setInContainer('isRead', $value !== false);
 
@@ -177,7 +181,7 @@ class Email extends Entity
         $this->entityManager->saveEntity($attachment);
     }
 
-    protected function _getBodyPlain()
+    protected function _getBodyPlain(): ?string
     {
         return $this->getBodyPlain();
     }

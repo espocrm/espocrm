@@ -44,8 +44,11 @@ class Avatar extends Image implements Di\MetadataAware
     use Di\MetadataSetter;
     use NotStrictAuth;
 
-    protected $systemColor = '#a4b5bd';
+    protected string $systemColor = '#a4b5bd';
 
+    /**
+     * @var array<int,string|array{int,int,int}>
+     */
     protected $colorList = [
         [111, 168, 214],
         [237, 197, 85],
@@ -58,7 +61,10 @@ class Avatar extends Image implements Di\MetadataAware
         '#E8AF64',
     ];
 
-    protected function getColor($hash)
+    /**
+     * @return string|array{int,int,int}
+     */
+    protected function getColor(string $hash)
     {
         $length = strlen($hash);
 

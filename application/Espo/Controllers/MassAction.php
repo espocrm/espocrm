@@ -115,6 +115,9 @@ class MassAction
         $response->writeBody('true');
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function prepareMassActionParams(stdClass $data): array
     {
         $where = $data->where ?? null;

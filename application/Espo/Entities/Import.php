@@ -65,6 +65,9 @@ class Import extends \Espo\Core\ORM\Entity
         return $this->get('entityType');
     }
 
+    /**
+     * @return ?string[]
+     */
     public function getTargetAttributeList(): ?array
     {
         return $this->get('attributeList');

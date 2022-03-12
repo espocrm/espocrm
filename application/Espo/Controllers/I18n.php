@@ -42,6 +42,9 @@ class I18n
         $this->service = $service;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getActionRead(Request $request): array
     {
         $default = $request->getQueryParam('default') === 'true';

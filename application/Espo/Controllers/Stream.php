@@ -40,7 +40,7 @@ use stdClass;
 
 class Stream
 {
-    public static $defaultAction = 'list';
+    public static string $defaultAction = 'list';
 
     private $service;
 

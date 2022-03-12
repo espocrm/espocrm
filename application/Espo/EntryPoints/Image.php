@@ -52,8 +52,14 @@ use Espo\Entities\Attachment;
 
 class Image implements EntryPoint
 {
+    /**
+     * @var ?string[]
+     */
     protected $allowedRelatedTypeList = null;
 
+    /**
+     * @var ?string[]
+     */
     protected $allowedFieldList = null;
 
     /** @var FileStorageManager */
@@ -228,6 +234,9 @@ class Image implements EntryPoint
         return $contents;
     }
 
+    /**
+     * @return resource|\GdImage
+     */
     protected function createThumbImage(string $filePath, string $fileType, string $size)
     {
         if (!is_array(getimagesize($filePath))) {
@@ -324,7 +333,11 @@ class Image implements EntryPoint
         return $targetImage;
     }
 
-    protected function getOrientation($filePath)
+    /**
+     * @param string $filePath
+     * @return ?int
+     */
+    protected function getOrientation(string $filePath)
     {
         $orientation = 0;
 
@@ -335,7 +348,11 @@ class Image implements EntryPoint
         return $orientation;
     }
 
-    protected function fixOrientation($targetImage, $filePath)
+    /**
+     * @param resource|\GdImage $targetImage
+     * @return resource|\GdImage
+     */
+    protected function fixOrientation($targetImage, string $filePath)
     {
         $orientation = $this->getOrientation($filePath);
 
@@ -348,21 +365,33 @@ class Image implements EntryPoint
         return $targetImage;
     }
 
+    /**
+     * @return string[]
+     */
     private function getAllowedFileTypeList(): array
     {
         return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
     }
 
+    /**
+     * @return string[]
+     */
     private function getResizableFileTypeList(): array
     {
         return $this->metadata->get(['app', 'image', 'resizableFileTypeList']) ?? [];
     }
 
+    /**
+     * @return string[]
+     */
     private function getFixOrientationFileTypeList(): array
     {
         return $this->metadata->get(['app', 'image', 'fixOrientationFileTypeList']) ?? [];
     }
 
+    /**
+     * @return array<string,array{int,int}>
+     */
     protected function getSizes(): array
     {
         return $this->metadata->get(['app', 'image', 'sizes']) ?? [];

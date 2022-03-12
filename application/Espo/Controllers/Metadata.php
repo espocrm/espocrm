@@ -47,6 +47,9 @@ class Metadata extends Base
         return $this->getMetadataService()->getDataForFrontend();
     }
 
+    /**
+     * @return mixed
+     */
     public function getActionGet(Request $request)
     {
         if (!$this->user->isAdmin()) {

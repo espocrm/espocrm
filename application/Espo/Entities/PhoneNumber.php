@@ -37,6 +37,10 @@ class PhoneNumber extends Entity
 {
     public const ENTITY_TYPE = 'PhoneNumber';
 
+    /**
+     * @param string $value
+     * @return void
+     */
     protected function _setName($value)
     {
         if (empty($value)) {

@@ -33,7 +33,7 @@ use Espo\Core\Acl;
 
 trait AclSetter
 {
-    /*
+    /**
      * @var Acl
      */
     protected $acl;

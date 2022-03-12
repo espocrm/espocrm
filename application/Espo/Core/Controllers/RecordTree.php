@@ -92,6 +92,9 @@ class RecordTree extends Record
         return $this->getRecordTreeService()->getLastChildrenIdList($parentId);
     }
 
+    /**
+     * @return Service<\Espo\Core\ORM\Entity>
+     */
     protected function getRecordTreeService(): Service
     {
         $service = $this->getRecordService();

@@ -114,6 +114,9 @@ class User extends Person
         return $this->getValueObject('teams');
     }
 
+    /**
+     * @return string[]
+     */
     public function getTeamIdList(): array
     {
         return $this->getLinkMultipleIdList('teams');
@@ -169,6 +172,9 @@ class User extends Person
         return $this->get('userName');
     }
 
+    /**
+     * @return ?string
+     */
     protected function _getName()
     {
         if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
@@ -180,6 +186,9 @@ class User extends Person
         return $this->getFromContainer('name');
     }
 
+    /**
+     * @return bool
+     */
     protected function _hasName()
     {
         if ($this->hasInContainer('name')) {

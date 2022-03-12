@@ -61,7 +61,7 @@ class Email extends Record
     /**
      * @todo Move to service.
      */
-    public function postActionSendTestEmail(Request $request)
+    public function postActionSendTestEmail(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -142,10 +142,12 @@ class Email extends Record
             }
         }
 
-        return $this->getEmailService()->sendTestEmail(get_object_vars($data));
+        $this->getEmailService()->sendTestEmail(get_object_vars($data));
+
+        return true;
     }
 
-    public function postActionMarkAsRead(Request $request)
+    public function postActionMarkAsRead(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -161,7 +163,9 @@ class Email extends Record
             }
         }
 
-        return $this->getEmailService()->markAsReadByIdList($idList);
+        $this->getEmailService()->markAsReadByIdList($idList);
+
+        return true;
     }
 
     public function postActionMarkAsNotRead(Request $request): bool
@@ -304,7 +308,7 @@ class Email extends Record
         return true;
     }
 
-    public function getActionGetInsertFieldData(Request $request)
+    public function getActionGetInsertFieldData(Request $request): stdClass
     {
         if (!$this->acl->checkScope('Email', 'create')) {
             throw new Forbidden();

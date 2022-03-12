@@ -43,6 +43,9 @@ use Espo\Core\{
 
 class Download implements EntryPoint
 {
+    /**
+     * @var string[]
+     */
     protected $fileTypesToShowInline = [
         'application/pdf',
         'application/vnd.ms-word',

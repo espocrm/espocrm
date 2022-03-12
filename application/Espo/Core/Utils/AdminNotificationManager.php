@@ -63,7 +63,6 @@ class AdminNotificationManager
     }
 
     /**
-     *
      * @return array<int,array{id:string,type:string,message:string}>
      */
     public function getNotificationList(): array

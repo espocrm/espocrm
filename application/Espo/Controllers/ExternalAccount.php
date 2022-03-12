@@ -142,7 +142,7 @@ class ExternalAccount extends RecordBase
         return $entity->getValueMap();
     }
 
-    public function postActionAuthorizationCode(Request $request)
+    public function postActionAuthorizationCode(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -155,7 +155,9 @@ class ExternalAccount extends RecordBase
             throw new Forbidden();
         }
 
-        return $this->getExternalAccount()->authorizationCode($integration, $userId, $code);
+        $this->getExternalAccount()->authorizationCode($integration, $userId, $code);
+
+        return true;
     }
 
     private function getExternalAccount(): Service

@@ -117,6 +117,10 @@ class FieldManager
     {
         $fieldDefs = $this->getFieldDefs($scope, $name);
 
+        if ($fieldDefs === null) {
+            throw new Error("Can't read field defs {$scope}.{$name}.");
+        }
+
         $fieldDefs['label'] = $this->language->translate($name, 'fields', $scope);
 
         $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);

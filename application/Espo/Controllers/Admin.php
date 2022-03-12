@@ -96,12 +96,26 @@ class Admin
         return true;
     }
 
+    /**
+     * @return string[]
+     */
     public function getActionJobs(): array
     {
         return $this->scheduledJob->getAvailableList();
     }
 
-    public function postActionUploadUpgradePackage($params, $data)
+
+    /**
+     * @todo Use Request.
+     *
+     * @param array<string,mixed> $params
+     * @param string $data
+     * @return array{
+     *   id: string,
+     *   version: string,
+     * }
+     */
+    public function postActionUploadUpgradePackage($params, $data): array
     {
         if ($this->config->get('restrictedMode')) {
             if (!$this->user->isSuperAdmin()) {
@@ -137,16 +151,32 @@ class Admin
         return true;
     }
 
+    /**
+     * @return array{
+     *   message: string,
+     *   command: string,
+     * }
+     */
     public function actionCronMessage(): array
     {
         return $this->scheduledJob->getSetupMessage();
     }
 
+    /**
+     * @return array<int,array{id:string,type:string,message:string}>
+     */
     public function actionAdminNotificationList(): array
     {
         return $this->adminNotificationManager->getNotificationList();
     }
 
+    /**
+     * @return array{
+     *   php: array<string,array<string,mixed>>,
+     *   database: array<string,array<string,mixed>>,
+     *   permission: array<string,array{type:string,acceptable:int}>,
+     * }
+     */
     public function actionSystemRequirementList(): array
     {
         return $this->systemRequirements->getAllRequiredList();

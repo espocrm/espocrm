@@ -33,6 +33,9 @@ use Espo\Core\Select\SelectManagerFactory;
 
 trait SelectManagerFactorySetter
 {
+    /**
+     * @var SelectManagerFactory
+     */
     protected $selectManagerFactory;
 
     public function setSelectManagerFactory(SelectManagerFactory $selectManagerFactory): void

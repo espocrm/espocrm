@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Templates\Services;
 
-
+/**
+ * @extends \Espo\Services\Record<\Espo\Core\Templates\Entities\BasePlus>
+ */
 class BasePlus extends \Espo\Services\Record
 {
-
 }
-

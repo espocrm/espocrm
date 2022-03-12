@@ -40,6 +40,9 @@ use Espo\Core\{
 
 class EmailAddress extends RecordBase
 {
+    /**
+     * @return array<int,array<string,mixed>>
+     */
     public function actionSearchInAddressBook(Request $request): array
     {
         if (!$this->acl->checkScope('Email')) {
