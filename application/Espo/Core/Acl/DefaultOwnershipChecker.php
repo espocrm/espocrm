@@ -35,6 +35,9 @@ use Espo\Entities\User;
 
 /**
  * A default implementation for ownership checking.
+ *
+ * @implements OwnershipOwnChecker<CoreEntity>
+ * @implements OwnershipTeamChecker<CoreEntity>
  */
 class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {

@@ -30,15 +30,19 @@
 namespace Espo\Core\Portal\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
 use Espo\Core\Acl\OwnershipChecker;
 
+/**
+ * @template TEntity of Entity
+ */
 interface OwnershipContactChecker extends OwnershipChecker
 {
     /**
      * Check whether an entity belongs to a portal user contact.
+     *
+     * @param TEntity $entity
      */
     public function checkContact(User $user, Entity $entity): bool;
 }

@@ -37,6 +37,9 @@ use Espo\Core\{
     Acl\OwnershipOwnChecker,
 };
 
+/**
+ * @implements OwnershipOwnChecker<\Espo\Entities\Team>
+ */
 class OwnershipChecker implements OwnershipOwnChecker
 {
     public function checkOwn(User $user, Entity $entity): bool

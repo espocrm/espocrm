@@ -43,12 +43,15 @@ use Espo\Core\{
 
 /**
  * A default implementation for ownership checking for portal.
+ *
+ * @implements OwnershipOwnChecker<\Espo\Core\ORM\Entity>
+ * @implements OwnershipAccountChecker<\Espo\Core\ORM\Entity>
+ * @implements OwnershipContactChecker<\Espo\Core\ORM\Entity>
  */
 class DefaultOwnershipChecker implements
     OwnershipOwnChecker,
     OwnershipAccountChecker,
     OwnershipContactChecker
-
 {
     private const ENTITY_ACCOUNT = 'Account';
 

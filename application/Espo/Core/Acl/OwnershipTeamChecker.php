@@ -30,13 +30,17 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface OwnershipTeamChecker extends OwnershipChecker
 {
     /**
      * Check whether an entity belongs to a user team.
+     *
+     * @param TEntity $entity
      */
     public function checkTeam(User $user, Entity $entity): bool;
 }

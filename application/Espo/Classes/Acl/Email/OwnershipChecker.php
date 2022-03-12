@@ -40,6 +40,10 @@ use Espo\Core\{
     Acl\OwnershipTeamChecker,
 };
 
+/**
+ * @implements OwnershipOwnChecker<\Espo\Entities\Email>
+ * @implements OwnershipTeamChecker<\Espo\Entities\Email>
+ */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
     private $defaultOwnershipChecker;

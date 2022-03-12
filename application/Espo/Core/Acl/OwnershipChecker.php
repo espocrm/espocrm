@@ -29,7 +29,4 @@
 
 namespace Espo\Core\Acl;
 
-interface OwnershipChecker
-{
-
-}
+interface OwnershipChecker {}

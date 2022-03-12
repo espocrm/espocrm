@@ -33,10 +33,15 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface AssignmentChecker
 {
     /**
      * Check assignment.
+     *
+     * @param TEntity $entity
      */
     public function check(User $user, Entity $entity): bool;
 }

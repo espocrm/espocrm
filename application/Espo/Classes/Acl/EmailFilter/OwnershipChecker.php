@@ -38,6 +38,9 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * @implements OwnershipOwnChecker<\Espo\Entities\EmailFilter>
+ */
 class OwnershipChecker implements OwnershipOwnChecker
 {
     private $entityManager;

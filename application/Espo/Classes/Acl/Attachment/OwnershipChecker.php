@@ -37,6 +37,9 @@ use Espo\Core\{
     Acl\OwnershipOwnChecker,
 };
 
+/**
+ * @implements OwnershipOwnChecker<\Espo\Entities\Attachment>
+ */
 class OwnershipChecker implements OwnershipOwnChecker
 {
     private const ATTR_CREATED_BY_ID = 'createdById';

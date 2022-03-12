@@ -47,6 +47,9 @@ use Espo\Core\{
     Acl\Table,
 };
 
+/**
+ * @implements AssignmentChecker<CoreEntity>
+ */
 class DefaultAssignmentChecker implements AssignmentChecker
 {
     protected const FIELD_ASSIGNED_USERS = 'assignedUsers';

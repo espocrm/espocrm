@@ -38,7 +38,7 @@ use Espo\Core\Acl\AssignmentChecker;
 class AssignmentCheckerManager
 {
     /**
-     * @var array<string,AssignmentChecker>
+     * @var array<string,AssignmentChecker<Entity>>
      */
     private $checkerCache = [];
 
@@ -58,6 +58,9 @@ class AssignmentCheckerManager
         return $checker->check($user, $entity);
     }
 
+    /**
+     * @return AssignmentChecker<Entity>
+     */
     private function getChecker(string $entityType): AssignmentChecker
     {
         if (!array_key_exists($entityType, $this->checkerCache)) {

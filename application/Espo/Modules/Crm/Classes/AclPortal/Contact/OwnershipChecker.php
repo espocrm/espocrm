@@ -39,6 +39,10 @@ use Espo\Core\{
     Portal\Acl\OwnershipContactChecker,
 };
 
+/**
+ * @implements OwnershipAccountChecker<\Espo\Modules\Crm\Entities\Contact>
+ * @implements OwnershipContactChecker<\Espo\Modules\Crm\Entities\Contact>
+ */
 class OwnershipChecker implements OwnershipAccountChecker, OwnershipContactChecker
 {
     private $defaultOwnershipChecker;

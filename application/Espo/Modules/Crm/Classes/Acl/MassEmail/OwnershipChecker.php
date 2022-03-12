@@ -40,6 +40,10 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+/**
+ * @implements OwnershipOwnChecker<\Espo\Modules\Crm\Entities\MassEmail>
+ * @implements OwnershipTeamChecker<\Espo\Modules\Crm\Entities\MassEmail>
+ */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
     private $aclManager;

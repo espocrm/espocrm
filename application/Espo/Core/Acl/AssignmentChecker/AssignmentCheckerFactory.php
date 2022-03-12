@@ -59,6 +59,7 @@ class AssignmentCheckerFactory
     /**
      * Create an access checker.
      *
+     * @return AssignmentChecker<\Espo\ORM\Entity>
      * @throws NotImplemented
      */
     public function create(string $scope): AssignmentChecker

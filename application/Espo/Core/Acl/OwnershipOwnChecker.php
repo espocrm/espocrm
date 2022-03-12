@@ -30,13 +30,17 @@
 namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
+/**
+ * @template TEntity of Entity
+ */
 interface OwnershipOwnChecker extends OwnershipChecker
 {
     /**
      * Check whether a user is an owner of an entity.
+     *
+     * @param TEntity $entity
      */
     public function checkOwn(User $user, Entity $entity): bool;
 }

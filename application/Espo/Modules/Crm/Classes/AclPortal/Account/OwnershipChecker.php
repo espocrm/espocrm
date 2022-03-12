@@ -37,6 +37,9 @@ use Espo\Core\{
     Portal\Acl\OwnershipAccountChecker,
 };
 
+/**
+ * @implements OwnershipAccountChecker<\Espo\Modules\Crm\Entities\Account>
+ */
 class OwnershipChecker implements OwnershipAccountChecker
 {
     public function checkAccount(User $user, Entity $entity): bool
