@@ -64,6 +64,7 @@ use PDO;
 use Exception;
 use DateTime;
 use DateInterval;
+use stdClass;
 
 class Activities implements
 
@@ -74,7 +75,6 @@ class Activities implements
     Di\EntityManagerAware,
     Di\UserAware
 {
-
     use Di\ConfigSetter;
     use Di\MetadataSetter;
     use Di\AclSetter;
@@ -90,13 +90,13 @@ class Activities implements
 
     const BUSY_RANGES_MAX_RANGE_DAYS = 10;
 
-    private $whereConverterFactory;
+    private WhereConverterFactory $whereConverterFactory;
 
-    private $listLoadProcessor;
+    private ListLoadProcessor $listLoadProcessor;
 
-    private $recordServiceContainer;
+    private RecordServiceContainer $recordServiceContainer;
 
-    private $selectBuilderFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
 
     public function __construct(
         WhereConverterFactory $whereConverterFactory,
@@ -121,7 +121,10 @@ class Activities implements
         return in_array($scope, ['Account']) || $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
     }
 
-    protected function getActivitiesUserMeetingQuery(UserEntity $entity, array $statusList = [])
+    /**
+     * @param string[] $statusList
+     */
+    protected function getActivitiesUserMeetingQuery(UserEntity $entity, array $statusList = []): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()
@@ -179,7 +182,10 @@ class Activities implements
         return $builder->build();
     }
 
-    protected function getActivitiesUserCallQuery(UserEntity $entity, array $statusList = [])
+    /**
+     * @param string[] $statusList
+     */
+    protected function getActivitiesUserCallQuery(UserEntity $entity, array $statusList = []): Select
     {
         $seed = $this->entityManager->getEntity('Call');
 
@@ -245,6 +251,10 @@ class Activities implements
         return $builder->build();
     }
 
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
     protected function getActivitiesUserEmailQuery(UserEntity $entity, array $statusList = [])
     {
         if ($entity->isPortal() && $entity->get('contactId')) {
@@ -296,6 +306,10 @@ class Activities implements
         return $builder->build();
     }
 
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
     protected function getActivitiesMeetingOrCallQuery(
         Entity $entity,
         array $statusList,
@@ -430,16 +444,28 @@ class Activities implements
         return $queryList;
     }
 
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
     protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [])
     {
         return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Meeting');
     }
 
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
     protected function getActivitiesCallQuery(Entity $entity, array $statusList = [])
     {
         return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Call');
     }
 
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
     protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [])
     {
         $entityType = $entity->getEntityType();
@@ -580,7 +606,19 @@ class Activities implements
         return $queryList;
     }
 
-    protected function getResultFromQueryParts($parts, $scope, $id, $params)
+    /**
+     * @param array<string,Select|array<string,mixed>> $parts
+     * @param array{
+     *   scope?: ?string,
+     *   offset?: ?int,
+     *   maxSize?: ?int,
+     * } $params
+     * @return array{
+     *   list: array<string,mixed>[],
+     *   total: int,
+     * }
+     */
+    protected function getResultFromQueryParts(array $parts, string $scope, array $params): array
     {
         if (empty($parts)) {
             return [
@@ -658,6 +696,8 @@ class Activities implements
             $builder->query($query);
         }
 
+        $totalCount = -2;
+
         if ($scope !== 'User') {
             $countQuery = $this->entityManager->getQueryBuilder()
                 ->select()
@@ -712,9 +752,6 @@ class Activities implements
 
                 unset($list[count($list) - 1]);
             }
-            else {
-                $totalCount = -2;
-            }
         }
 
         return [
@@ -723,7 +760,7 @@ class Activities implements
         ];
     }
 
-    protected function accessCheck($entity)
+    protected function accessCheck(Entity $entity): void
     {
         if ($entity->getEntityType() == 'User') {
             if (!$this->acl->checkUserPermission($entity, 'user')) {
@@ -737,6 +774,12 @@ class Activities implements
         }
     }
 
+    /**
+     * @return RecordCollection<Entity>
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function findActivitiyEntityType(
         string $scope,
         string $id,
@@ -876,7 +919,20 @@ class Activities implements
         return new RecordCollection($collection, $total);
     }
 
-    public function getActivities(string $scope, string $id, array $params = [])
+    /**
+     * @param array{
+     *   scope?: ?string,
+     *   offset?: ?int,
+     *   maxSize?: ?int,
+     * } $params
+     * @return array{
+     *   list: array<string,mixed>[],
+     *   total: int,
+     * }
+     * @throws NotFound
+     * @throws Error
+     */
+    public function getActivities(string $scope, string $id, array $params = []): array
     {
         $entity = $this->entityManager->getEntity($scope, $id);
 
@@ -916,10 +972,23 @@ class Activities implements
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
-        return $this->getResultFromQueryParts($parts, $scope, $id, $params);
+        return $this->getResultFromQueryParts($parts, $scope, $params);
     }
 
-    public function getHistory(string $scope, string $id, array $params = [])
+    /**
+     * @param array{
+     *   scope?: ?string,
+     *   offset?: ?int,
+     *   maxSize?: ?int,
+     * } $params
+     * @return array{
+     *   list: array<string,mixed>[],
+     *   total: int,
+     * }
+     * @throws NotFound
+     * @throws Error
+     */
+    public function getHistory(string $scope, string $id, array $params = []): array
     {
         $entity = $this->entityManager->getEntity($scope, $id);
         if (!$entity) {
@@ -959,7 +1028,7 @@ class Activities implements
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);
         }
 
-        $result = $this->getResultFromQueryParts($parts, $scope, $id, $params);
+        $result = $this->getResultFromQueryParts($parts, $scope, $params);
 
         foreach ($result['list'] as &$item) {
             if ($item['_scope'] == 'Email') {
@@ -1298,7 +1367,11 @@ class Activities implements
         return $this->getCalenderBaseQuery($scope, $userId, $from, $to, $skipAcl);
     }
 
-    protected function getActivitiesQuery(Entity $entity, $scope, array $statusList = [])
+    /**
+     * @param string[] $statusList
+     * @return Select|Select[]
+     */
+    protected function getActivitiesQuery(Entity $entity, string $scope, array $statusList = [])
     {
         $serviceName = 'Activities' . $entity->getEntityType();
 
@@ -1321,7 +1394,10 @@ class Activities implements
         return $this->getActivitiesBaseQuery($entity, $scope, $statusList);
     }
 
-    protected function getActivitiesBaseQuery(Entity $entity, string $scope, array $statusList)
+    /**
+     * @param string[] $statusList
+     */
+    protected function getActivitiesBaseQuery(Entity $entity, string $scope, array $statusList = []): Select
     {
         $seed = $this->entityManager->getEntity($scope);
 
@@ -1370,8 +1446,18 @@ class Activities implements
         return $builder->build();
     }
 
-    public function getUsersTimeline($userIdList, $from, $to, $scopeList = null)
-    {
+    /**
+     * @param string[] $userIdList
+     * @param ?string[] $scopeList
+     * @throws Exception
+     */
+    public function getUsersTimeline(
+        array $userIdList,
+        string $from,
+        string $to,
+        ?array $scopeList = null
+    ): stdClass {
+
         $brScopeList = $this->config->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
 
         if ($scopeList) {
@@ -1394,7 +1480,11 @@ class Activities implements
                 $userData->eventList = $this->getEventList($userId, $from, $to, $scopeList);
 
                 $userData->busyRangeList = $this->getBusyRangeList(
-                    $userId, $from, $to, $brScopeList, $userData->eventList
+                    $userId,
+                    $from,
+                    $to,
+                    $brScopeList,
+                    $userData->eventList
                 );
             }
             catch (Exception $e) {
@@ -1411,10 +1501,20 @@ class Activities implements
         return $resultData;
     }
 
+    /**
+     * @param string[] $userIdList
+     * @throws Forbidden
+     * @throws Error
+     * @throws Exception
+     */
     public function getBusyRanges(
-        array $userIdList, string $from, string $to,
-        ?string $entityType = null, ?string $ignoreId = null, ?array $scopeList = null)
-    {
+        array $userIdList,
+        string $from,
+        string $to,
+        ?string $entityType = null,
+        ?string $ignoreId = null
+    ): stdClass {
+
         $scopeList = $this->config->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
 
         if ($entityType) {
@@ -1433,7 +1533,7 @@ class Activities implements
             $diff = $dtTo->diff($dtFrom, true);
 
             if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
-                return [];
+                return (object) [];
             }
         }
         catch (Exception $e) {
@@ -1471,12 +1571,23 @@ class Activities implements
         return $resultData;
     }
 
-    public function getEventsForUsers($userIdList, $from, $to, $scopeList = null)
+    /**
+     * @param string[] $userIdList
+     * @param ?string[] $scopeList
+     * @return array<string,mixed>[]
+     */
+    public function getEventsForUsers(array $userIdList, string $from, string $to, ?array $scopeList = null): array
     {
         return $this->getUsersEventList($userIdList, $from, $to, $scopeList);
     }
 
-    public function getUsersEventList($userIdList, $from, $to, $scopeList = null)
+    /**
+     * @param string[] $userIdList
+     * @param ?string[] $scopeList
+     * @return array<string,mixed>[]
+     * @throws Exception
+     */
+    public function getUsersEventList(array $userIdList, string $from, string $to, ?array $scopeList = null): array
     {
         $resultList = [];
 
@@ -1502,12 +1613,22 @@ class Activities implements
         return $resultList;
     }
 
-    public function getEventsForTeams($teamIdList, $from, $to, $scopeList = null)
+    /**
+     * @param string[] $teamIdList
+     * @param ?string[] $scopeList
+     * @return array<int,array<string,mixed>>
+     */
+    public function getEventsForTeams(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {
         return $this->getTeamsEventList($teamIdList, $from, $to, $scopeList);
     }
 
-    public function getTeamsEventList($teamIdList, $from, $to, $scopeList = null)
+    /**
+     * @param string[] $teamIdList
+     * @param ?string[] $scopeList
+     * @return array<int,array<string,mixed>>
+     */
+    public function getTeamsEventList(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {
         if ($this->acl->get('userPermission') === 'no') {
             throw new Forbidden("User Permission not allowing to view calendars of other users.");
@@ -1565,18 +1686,30 @@ class Activities implements
 
         foreach ($eventList as &$event) {
             $eventUserNames = (object) [];
+
             foreach ($event['userIdList'] as $userId) {
                 $eventUserNames->$userId = $userNames->$userId;
             }
+
             $event['userNameMap'] = $eventUserNames;
         }
-
 
         return $eventList;
     }
 
-    public function getBusyRangeList($userId, $from, $to, $scopeList = null, ?array $ignoreEventList = null)
-    {
+    /**
+     * @param ?string[] $scopeList
+     * @param ?array<int,array<string,mixed>> $ignoreEventList
+     * @return stdClass[]
+     */
+    public function getBusyRangeList(
+        string $userId,
+        string $from,
+        string $to,
+        ?array $scopeList = null,
+        ?array $ignoreEventList = null
+    ): array {
+
         $rangeList = [];
 
         $eventListInitial = $this->getEventList($userId, $from, $to, $scopeList, true);
@@ -1681,8 +1814,19 @@ class Activities implements
         return $rangeList;
     }
 
-    public function getEventList($userId, $from, $to, $scopeList = null, $skipAcl = false)
-    {
+    /**
+     * @param ?string[] $scopeList
+     * @return array<int,array<string,mixed>>
+     * @throws NotFound
+     */
+    public function getEventList(
+        string $userId,
+        string $from,
+        string $to,
+        ?array $scopeList = null,
+        bool $skipAcl = false
+    ): array {
+
         $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$user) {
@@ -1739,8 +1883,19 @@ class Activities implements
         return $rowList;
     }
 
-    public function getEvents($userId, $from, $to, $scopeList = null, $skipAcl = false)
-    {
+    /**
+     * @param ?string[] $scopeList
+     * @return array<int,array<string,mixed>>
+     * @throws NotFound
+     */
+    public function getEvents(
+        string $userId,
+        string $from,
+        string $to,
+        ?array $scopeList = null,
+        bool $skipAcl = false
+    ): array {
+
         return $this->getEventList($userId, $from, $to, $scopeList, $skipAcl);
     }
 
@@ -1765,6 +1920,9 @@ class Activities implements
         $this->entityManager->getQueryExecutor()->execute($deleteQuery);
     }
 
+    /**
+     * @return array<int,array<string,mixed>>
+     */
     public function getPopupNotifications(string $userId): array
     {
         $dt = new DateTime();
@@ -1837,12 +1995,23 @@ class Activities implements
         return $resultList;
     }
 
+    /**
+     * @param array{
+     *   offset?: ?int,
+     *   maxSize?: ?int,
+     * } $params
+     * @param ?string[] $entityTypeList
+     * @return array{
+     *   total: int,
+     *   list: stdClass[],
+     * }
+     */
     public function getUpcomingActivities(
         string $userId,
         array $params = [],
         ?array $entityTypeList = null,
         ?int $futureDays = null
-    ) {
+    ): array {
 
         $user = $this->entityManager->getEntity('User', $userId);
 
@@ -1943,6 +2112,9 @@ class Activities implements
         ];
     }
 
+    /**
+     * @param array<string,mixed> $params
+     */
     protected function getUpcomingActivitiesEntityTypeQuery(
         string $entityType,
         array $params,
