@@ -36,6 +36,8 @@ use Espo\Services\Stream as StreamService;
 
 use Espo\ORM\EntityManager;
 use Espo\ORM\Collection;
+use Espo\ORM\SthCollection;
+use Espo\ORM\EntityCollection;
 
 use Espo\Entities\User;
 use Espo\Entities\Team;
@@ -404,10 +406,32 @@ class NoteHookProcessor
     }
 
     /**
-     * @return Collection<User>
+     * @return EntityCollection<User>
      */
-    private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
+    private function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): EntityCollection
     {
-        return $this->streamService->getSubscriberList($parentType, $parentId, $isInternal);
+        $collection = $this->streamService->getSubscriberList($parentType, $parentId, $isInternal);
+
+        if ($collection instanceof EntityCollection) {
+            return $collection;
+        }
+
+        if ($collection instanceof SthCollection) {
+            /** @var EntityCollection<User> */
+            return $this->entityManager
+                ->getCollectionFactory()
+                ->createFromSthCollection($collection);
+        }
+
+        /** @var EntityCollection<User> */
+        $newCollection = $this->entityManager
+            ->getCollectionFactory()
+            ->create(User::ENTITY_TYPE);
+
+        foreach ($collection as $entity) {
+            $newCollection[] = $entity;
+        }
+
+        return $newCollection;
     }
 }
