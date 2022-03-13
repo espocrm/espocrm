@@ -33,9 +33,11 @@ use Psr\Http\Message\StreamInterface;
 
 use GuzzleHttp\Psr7\Stream;
 
+use RuntimeException;
+
 class ContentsString implements Contents
 {
-    private $contents;
+    private string $contents;
 
     private function __construct(string $contents)
     {
@@ -45,6 +47,10 @@ class ContentsString implements Contents
     public function getStream(): StreamInterface
     {
         $resource = fopen('php://temp', 'r+');
+
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
 
         fwrite($resource, $this->getString());
         rewind($resource);

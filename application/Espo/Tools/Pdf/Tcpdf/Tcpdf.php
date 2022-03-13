@@ -35,6 +35,8 @@ use Espo\Core\Utils\Util;
 
 use TCPDF_STATIC;
 
+use Espo\Core\Utils\Json;
+
 class Tcpdf extends TcpdfOriginal
 {
     /**
@@ -64,7 +66,7 @@ class Tcpdf extends TcpdfOriginal
 
     public function serializeTCPDFtagParameters($data) /** @phpstan-ignore-line */
     {
-        return urlencode(json_encode($data));
+        return urlencode(Json::encode($data));
     }
 
     protected function unserializeTCPDFtagParameters($data) /** @phpstan-ignore-line */

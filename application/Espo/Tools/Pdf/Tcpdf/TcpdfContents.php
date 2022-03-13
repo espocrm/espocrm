@@ -36,6 +36,8 @@ use Psr\Http\Message\StreamInterface;
 
 use GuzzleHttp\Psr7\Stream;
 
+use RuntimeException;
+
 class TcpdfContents implements Contents
 {
     private $pdf;
@@ -48,6 +50,10 @@ class TcpdfContents implements Contents
     public function getStream(): StreamInterface
     {
         $resource = fopen('php://temp', 'r+');
+
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
 
         fwrite($resource, $this->getString());
         rewind($resource);

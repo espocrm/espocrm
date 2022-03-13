@@ -59,7 +59,7 @@ class DataLoaderManager
             $data = Data::create();
         }
 
-        /** @var class-string[] */
+        /** @var class-string<DataLoader>[] */
         $classNameList = $this->metadata->get(['pdfDefs', $entity->getEntityType(), 'dataLoaderClassNameList']) ?? [];
 
         foreach ($classNameList as $className) {
@@ -74,7 +74,7 @@ class DataLoaderManager
     }
 
     /**
-     * @param class-string $className
+     * @param class-string<DataLoader> $className
      */
     private function createLoader(string $className): DataLoader
     {

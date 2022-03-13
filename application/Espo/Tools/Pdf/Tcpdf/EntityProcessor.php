@@ -30,6 +30,7 @@
 namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Json;
 use Espo\Core\Htmlizer\TemplateRendererFactory;
 use Espo\Core\Htmlizer\TemplateRenderer;
 
@@ -225,7 +226,7 @@ class EntityProcessor
             ];
         }
 
-        $paramsString = urlencode(json_encode($params));
+        $paramsString = urlencode(Json::encode($params));
 
         return "<tcpdf method=\"{$function}\" params=\"{$paramsString}\" />";
     }
