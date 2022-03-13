@@ -161,6 +161,10 @@ class Export
 
         $dataResource = fopen('php://temp', 'w');
 
+        if ($dataResource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
+
         $loaderParams = LoaderParams
             ::create()
             ->withSelect($attributeList);

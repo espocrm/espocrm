@@ -188,6 +188,7 @@ class EntityManager
     {
         $name = ucfirst($name);
 
+        /** @var string[] */
         $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
         foreach ($scopeList as $entityType) {
@@ -393,13 +394,15 @@ class EntityManager
         }
 
         $languageList = $this->metadata->get(['app', 'language', 'list'], []);
+
         foreach ($languageList as $language) {
             $filePath = $templatePath . '/i18n/' . $language . '/' . $type . '.json';
 
-            if (!file_exists($filePath)) {
+            if (!$this->fileManager->exists($filePath)) {
                 continue;
             }
 
+            /** @var string */
             $languageContents = $this->fileManager->getContents($filePath);
 
             $languageContents = str_replace('{entityType}', $name, $languageContents);
@@ -415,7 +418,13 @@ class EntityManager
         }
 
         $filePath = $templatePath . "/Metadata/{$type}/scopes.json";
+
         $scopesDataContents = $this->fileManager->getContents($filePath);
+
+        if ($scopesDataContents === false) {
+            throw new Error("Could not open file `{$filePath}`.");
+        }
+
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
 
         foreach ($replaceData as $key => $value) {
@@ -445,6 +454,10 @@ class EntityManager
 
         $entityDefsDataContents = $this->fileManager->getContents($filePath);
 
+        if ($entityDefsDataContents === false) {
+            throw new Error("Could not open file `{$filePath}`.");
+        }
+
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
 
@@ -459,6 +472,10 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/{$type}/clientDefs.json";
 
         $clientDefsContents = $this->fileManager->getContents($filePath);
+
+        if ($clientDefsContents === false) {
+            throw new Error("Could not open file `{$filePath}`.");
+        }
 
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
 
@@ -519,6 +536,7 @@ class EntityManager
             return;
         }
 
+        /** @var string */
         $contents = $this->fileManager->getContents($path);
 
         $data = Json::decode($contents, true);
@@ -534,6 +552,7 @@ class EntityManager
             return;
         }
 
+        /** @var string */
         $contents = $this->fileManager->getContents($path);
 
         $data = Json::decode($contents, true);
@@ -598,7 +617,8 @@ class EntityManager
 
         if (!empty($data['labelSingular'])) {
             $labelSingular = $data['labelSingular'];
-            $labelCreate = $this->language->translate('Create') . ' ' . $labelSingular;
+
+            $labelCreate = $this->language->translateLabel('Create') . ' ' . $labelSingular;
 
             $this->language->set('Global', 'scopeNames', $name, $labelSingular);
             $this->language->set($name, 'labels', 'Create ' . $name, $labelCreate);
@@ -611,6 +631,7 @@ class EntityManager
 
         if (!empty($data['labelPlural'])) {
             $labelPlural = $data['labelPlural'];
+
             $this->language->set('Global', 'scopeNamesPlural', $name, $labelPlural);
 
             if ($isCustom) {
@@ -716,9 +737,10 @@ class EntityManager
         $this->dataManager->clearCache();
 
         if (
-            !$initialData['optimisticConcurrencyControl'] && $data['optimisticConcurrencyControl'] &&
+            !$initialData['optimisticConcurrencyControl'] &&
+            !empty($data['optimisticConcurrencyControl']) &&
             (
-                !$data['fullTextSearch'] || $initialData['fullTextSearch']
+                empty($data['fullTextSearch']) || $initialData['fullTextSearch']
             )
         ) {
             $this->dataManager->rebuild();
@@ -1369,7 +1391,7 @@ class EntityManager
         $entity = $params['entity'];
         $link = $params['link'];
         $entityForeign = $params['entityForeign'] ?? null;
-        $linkForeign = $params['linkForeign'];
+        $linkForeign = $params['linkForeign'] ?? null;
 
         if (empty($link)) {
             throw new BadRequest();
@@ -1565,8 +1587,8 @@ class EntityManager
      */
     public function deleteLink(array $params): void
     {
-        $entity = $params['entity'];
-        $link = $params['link'];
+        $entity = $params['entity'] ?? null;
+        $link = $params['link'] ?? null;
 
         if (!$this->metadata->get("entityDefs.{$entity}.links.{$link}.isCustom")) {
             throw new Error("Could not delete link {$entity}.{$link}. Not isCustom.");
@@ -1799,6 +1821,7 @@ class EntityManager
             $toCreateList[] = $foreignEntityType;
         }
 
+        /** @var string[] */
         $entityTypeList = array_keys($this->metadata->get('entityDefs') ?? []);
 
         foreach ($entityTypeList as $itemEntityType) {

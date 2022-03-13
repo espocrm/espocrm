@@ -70,6 +70,10 @@ class TargetListDelete implements DeleteHook
                 $params->getForeignLink(),
             ];
 
+        if (!$entityType) {
+            return;
+        }
+
         $type = $this->metadata->get(['scopes', $entityType, 'type']);
 
         if (!in_array($type, ['Person', 'Company'])) {

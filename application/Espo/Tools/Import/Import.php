@@ -642,6 +642,8 @@ class Import
      */
     private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap): void
     {
+        assert(is_string($this->entityType));
+
         $params = $this->params;
 
         $action = $params->getAction() ?? self::DEFAULT_ACTION;

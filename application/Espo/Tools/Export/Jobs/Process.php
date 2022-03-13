@@ -121,7 +121,7 @@ class Process implements Job
         $message = str_replace(
             '{url}',
             $url,
-            $this->language->translate('exportProcessed', 'messages', 'Export')
+            $this->language->translateLabel('exportProcessed', 'messages', 'Export')
         );
 
         $notification

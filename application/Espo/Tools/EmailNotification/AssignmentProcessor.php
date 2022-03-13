@@ -174,7 +174,7 @@ class AssignmentProcessor
             'userName' => $user->get('name'),
             'assignerUserName' => $assignerUser->get('name'),
             'recordUrl' => $recordUrl,
-            'entityType' => $this->language->translate($entity->getEntityType(), 'scopeNames'),
+            'entityType' => $this->language->translateLabel($entity->getEntityType(), 'scopeNames'),
         ];
 
         $templateData['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($templateData['entityType']);

@@ -198,7 +198,9 @@ class Xlsx implements Processor
             $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $name]);
 
             if (!$defs) {
-                $defs['type'] = 'base';
+                $defs = [
+                    'type' => 'base',
+                ];
             }
 
             $label = $name;
@@ -210,8 +212,8 @@ class Xlsx implements Processor
 
                 if ($foreignScope) {
                     $label =
-                        $this->language->translate($linkName, 'links', $entityType) . '.' .
-                        $this->language->translate($foreignField, 'fields', $foreignScope);
+                        $this->language->translateLabel($linkName, 'links', $entityType) . '.' .
+                        $this->language->translateLabel($foreignField, 'fields', $foreignScope);
                 }
             }
             else {
@@ -347,6 +349,10 @@ class Xlsx implements Processor
         $objWriter = IOFactory::createWriter($phpExcel, 'Xlsx');
 
         $resource = fopen('php://temp', 'r+');
+
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
 
         $objWriter->save($resource);
 
@@ -609,7 +615,7 @@ class Xlsx implements Processor
                     $value = '';
 
                     if ($days) {
-                        $value .= (string) $days . $this->language->translate('d', 'durationUnits');
+                        $value .= (string) $days . $this->language->translateLabel('d', 'durationUnits');
 
                         if ($minutes || $hours) {
                             $value .= ' ';
@@ -617,7 +623,7 @@ class Xlsx implements Processor
                     }
 
                     if ($hours) {
-                        $value .= (string) $hours . $this->language->translate('h', 'durationUnits');
+                        $value .= (string) $hours . $this->language->translateLabel('h', 'durationUnits');
 
                         if ($minutes) {
                             $value .= ' ';
@@ -625,7 +631,7 @@ class Xlsx implements Processor
                     }
 
                     if ($minutes) {
-                        $value .= (string) $minutes . $this->language->translate('m', 'durationUnits');
+                        $value .= (string) $minutes . $this->language->translateLabel('m', 'durationUnits');
                     }
 
                     $sheet->setCellValue("$col$rowNumber", $value);
@@ -869,7 +875,7 @@ class Xlsx implements Processor
     {
         $exportName =
             $params->getName() ??
-            $this->language->translate($params->getEntityType(), 'scopeNamesPlural');
+            $this->language->translateLabel($params->getEntityType(), 'scopeNamesPlural');
 
         $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
 

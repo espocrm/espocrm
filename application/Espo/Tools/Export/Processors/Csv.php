@@ -51,6 +51,8 @@ use Psr\Http\Message\StreamInterface;
 
 use GuzzleHttp\Psr7\Stream;
 
+use RuntimeException;
+
 class Csv implements Processor
 {
     private $config;
@@ -78,6 +80,10 @@ class Csv implements Processor
         $delimiter = str_replace('\t', "\t", $delimiterRaw);
 
         $fp = fopen('php://temp', 'w');
+
+        if ($fp === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
 
         fputcsv($fp, $attributeList, $delimiter);
 

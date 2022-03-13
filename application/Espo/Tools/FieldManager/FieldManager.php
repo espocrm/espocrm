@@ -34,6 +34,8 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\InjectableFactory;
 
+use Espo\Core\Utils\Json;
+
 use Espo\Core\{
     Exceptions\BadRequest,
     Exceptions\Error,
@@ -224,7 +226,7 @@ class FieldManager
         if ($this->metadata->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
                 $translatedOptions = $fieldDefs['translatedOptions'];
-                $translatedOptions = json_decode(json_encode($fieldDefs['translatedOptions']), true);
+                $translatedOptions = json_decode(Json::encode($fieldDefs['translatedOptions']), true);
 
                 if (isset($translatedOptions['_empty_'])) {
                     $translatedOptions[''] = $translatedOptions['_empty_'];
@@ -765,6 +767,7 @@ class FieldManager
             }
         }
 
+        /** @var array<string,mixed> */
         return $filteredFieldDefs;
     }
 

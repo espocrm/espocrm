@@ -279,7 +279,7 @@ class Params
             $defaultValues = (object) [];
         }
 
-        /** @var object|scalar $defaultValues */
+        /** @var stdClass|scalar $defaultValues */
 
         if (!is_object($defaultValues)) {
             throw new TypeError();
