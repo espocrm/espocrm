@@ -210,10 +210,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 viewMode: this.viewMode,
                 viewModeList: this.viewModeList,
                 isWide: true,
-            }, function (view) {
-                this.listenTo(view, 'reset', function () {
+            }, (view) => {
+                this.listenTo(view, 'reset', () => {
                     this.resetSorting();
-                }, this);
+                });
 
                 if (this.viewModeList.length > 1) {
                     this.listenTo(view, 'change-view-mode', this.switchViewMode, this);
@@ -358,9 +358,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 skipBuildRows: true,
             };
 
-            this.optionsToPass.forEach(function (option) {
+            this.optionsToPass.forEach(option => {
                 o[option] = this.options[option];
-            }, this);
+            });
 
             if (this.keepCurrentRootUrl) {
                 o.keepCurrentRootUrl = true;
@@ -377,37 +377,37 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             var listViewName = this.getRecordViewName();
 
-            this.createView('list', listViewName, o, function (view) {
+            this.createView('list', listViewName, o, view =>{
                 if (!this.hasParentView()) {
                     view.undelegateEvents();
 
                     return;
                 }
 
-                this.listenToOnce(view, 'after:render', function () {
+                this.listenToOnce(view, 'after:render', () => {
                     if (!this.hasParentView()) {
                         view.undelegateEvents();
 
                         this.clearView('list');
                     }
-                }, this);
+                });
 
                 view.notify(false);
 
                 if (this.searchPanel) {
-                    this.listenTo(view, 'sort', function (obj) {
+                    this.listenTo(view, 'sort', obj => {
                         this.getStorage().set('listSorting', this.collection.name, obj);
-                    }, this);
+                    });
                 }
 
                 if (fetch) {
-                    view.getSelectAttributeList(function (selectAttributeList) {
+                    view.getSelectAttributeList(selectAttributeList => {
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
                         this.collection.fetch();
-                    }.bind(this));
+                    });
                 }
                 else {
                     view.render();
