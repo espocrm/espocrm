@@ -383,11 +383,10 @@ class Campaign extends Record implements
             throw new Forbidden();
         }
 
-        $targetEntityType = null;
+        /** @var string $targetEntityType */
+        $targetEntityType = $campaign->getRelationParam($link, 'entity');
 
         if ($checkAcl) {
-            $targetEntityType = $campaign->getRelationParam($link, 'entity');
-
             if (!$this->acl->check($targetEntityType, 'read')) {
                 throw new Forbidden("Could not mail merge campaign because access to target entity type is forbidden.");
             }
@@ -410,7 +409,7 @@ class Campaign extends Record implements
         $template = $this->entityManager->getEntity('Template', $campaign->get($link . 'TemplateId'));
 
         if (!$template) {
-            throw new Error("Template not found");
+            throw new Error("Template not found.");
         }
 
         if ($template->get('entityType') !== $targetEntityType) {

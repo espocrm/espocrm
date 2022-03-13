@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\LabelManager;
 
+use Espo\Core\Utils\Json;
+
 use Espo\Core\{
     Di,
     Utils\Language,
@@ -214,7 +216,7 @@ class LabelManager implements
             }
         }
 
-        return json_decode(json_encode($finalData));
+        return json_decode(Json::encode($finalData));
     }
 
     /**
@@ -291,6 +293,6 @@ class LabelManager implements
 
         $languageObj->save();
 
-        return json_decode(json_encode($returnDataHash));
+        return json_decode(Json::encode($returnDataHash));
     }
 }

@@ -131,12 +131,31 @@ class Language
     }
 
     /**
-     * Translate label/labels.
+     * Translate a label.
      *
-     * @param string|string[] $label name of label
+     * @param string $label
      * @param string $category
      * @param string $scope
-     * @param string[]|null $requiredOptions List of required options.
+     * @return string
+     */
+    public function translateLabel(string $label, string $category = 'labels', string $scope = 'Global'): string
+    {
+        $translated = $this->translate($label, $category, $scope);
+
+        if (is_array($translated)) {
+            return implode(', ', $translated);
+        }
+
+        return $translated;
+    }
+
+    /**
+     * Translate label or labels.
+     *
+     * @param string|string[] $label A name of label.
+     * @param string $category A category.
+     * @param string $scope A scope.
+     * @param string[]|null $requiredOptions A list of required options.
      *  Ex., $requiredOptions = ['en_US', 'de_DE']
      *  "language" option has only ['en_US' => 'English (United States)']
      *  Result will be ['en_US' => 'English (United States)', 'de_DE' => 'de_DE'].

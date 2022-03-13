@@ -480,7 +480,7 @@ class Processor
     protected function processNotificationNotePost(NoteEntity $note, UserEntity $user): void
     {
         $parentId = $note->get('parentId');
-        $parentType = $note->get('parentType');
+        $parentType = $note->getParentType();
 
         $emailAddress = $user->get('emailAddress');
 
@@ -514,7 +514,7 @@ class Processor
 
             $data['name'] = $data['parentName'];
 
-            $data['entityType'] = $this->language->translate($data['parentType'], 'scopeNames');
+            $data['entityType'] = $this->language->translateLabel($parentType, 'scopeNames');
             $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
             $subjectTpl = $this->templateFileManager->getTemplate('notePost', 'subject', $parentType);
@@ -637,7 +637,7 @@ class Processor
         $this->noteAccessControl->apply($note, $user);
 
         $parentId = $note->get('parentId');
-        $parentType = $note->get('parentType');
+        $parentType = $note->getParentType();
 
         $emailAddress = $user->get('emailAddress');
 
@@ -664,7 +664,7 @@ class Processor
 
         $data['name'] = $data['parentName'];
 
-        $data['entityType'] = $this->language->translate($data['parentType'], 'scopeNames');
+        $data['entityType'] = $this->language->translateLabel($parentType, 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         $noteData = $note->get('data');
@@ -678,9 +678,14 @@ class Processor
         }
 
         $data['value'] = $noteData->value;
-        $data['field'] = $noteData->field;
+        $data['field'] = $field = $noteData->field;
+
+        if (!is_string($field)) {
+            return;
+        }
+
         $data['valueTranslated'] = $this->language->translateOption($data['value'], $data['field'], $parentType);
-        $data['fieldTranslated'] = $this->language->translate($data['field'], 'fields', $parentType);
+        $data['fieldTranslated'] = $this->language->translateLabel($field, 'fields', $parentType);
         $data['fieldTranslatedLowerCase'] = Util::mbLowerCaseFirst($data['fieldTranslated']);
 
         $data['userName'] = $note->get('createdByName');
@@ -741,7 +746,7 @@ class Processor
     protected function processNotificationNoteEmailReceived(NoteEntity $note, UserEntity $user): void
     {
         $parentId = $note->get('parentId');
-        $parentType = $note->get('parentType');
+        $parentType = $note->getParentType();
 
         $allowedEntityTypeList = $this->config->get('streamEmailNotificationsEmailReceivedEntityTypeList');
 
@@ -822,7 +827,7 @@ class Processor
 
         $data['name'] = $data['parentName'];
 
-        $data['entityType'] = $this->language->translate($data['parentType'], 'scopeNames');
+        $data['entityType'] = $this->language->translateLabel($parentType, 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         $subjectTpl = $this->templateFileManager->getTemplate('noteEmailReceived', 'subject', $parentType);

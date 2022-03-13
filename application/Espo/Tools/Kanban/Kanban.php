@@ -43,6 +43,8 @@ use Espo\{
     ORM\EntityManager,
 };
 
+use ArrayAccess;
+
 class Kanban
 {
     private const DEFAULT_MAX_ORDER_NUMBER = 50;
@@ -240,7 +242,8 @@ class Kanban
                 if (
                     $maxSize &&
                     is_countable($collectionSub) &&
-                    count($collectionSub) > $maxSize
+                    count($collectionSub) > $maxSize &&
+                    $collectionSub instanceof ArrayAccess
                 ) {
                     $totalSub = -1;
 
@@ -289,6 +292,8 @@ class Kanban
 
     protected function getStatusField(): string
     {
+        assert(is_string($this->entityType));
+
         $statusField = $this->metadata->get(['scopes', $this->entityType, 'statusField']);
 
         if (!$statusField) {
@@ -304,6 +309,8 @@ class Kanban
      */
     protected function getStatusList(): array
     {
+        assert(is_string($this->entityType));
+        
         $statusField = $this->getStatusField();
 
         $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
@@ -320,6 +327,8 @@ class Kanban
      */
     protected function getStatusIgnoreList(): array
     {
+        assert(is_string($this->entityType));
+
         return $this->metadata->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
     }
 }

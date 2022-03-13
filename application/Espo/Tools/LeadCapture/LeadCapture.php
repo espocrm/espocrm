@@ -425,7 +425,8 @@ class LeadCapture
         if (is_string($terminateAt) && time() > strtotime($terminateAt)) {
             return (object) [
                 'status' => 'expired',
-                'message' => $this->defaultLanguage->translate('optInConfirmationExpired', 'messages', 'LeadCapture'),
+                'message' => $this->defaultLanguage
+                    ->translateLabel('optInConfirmationExpired', 'messages', 'LeadCapture'),
             ];
         }
 
@@ -545,7 +546,7 @@ class LeadCapture
 
         $linkHtml =
             '<a href='.$url.'>' .
-            $this->defaultLanguage->translate('Confirm Opt-In', 'labels', 'LeadCapture') .
+            $this->defaultLanguage->translateLabel('Confirm Opt-In', 'labels', 'LeadCapture') .
             '</a>';
 
         $body = str_replace('{optInUrl}', $url, $body);
