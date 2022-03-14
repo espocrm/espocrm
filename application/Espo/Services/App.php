@@ -164,7 +164,7 @@ class App
         ];
 
         foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
-            /** @var ?class-string */
+            /** @var ?class-string<object> */
             $className = $item['className'] ?? null;
 
             if (!$className) {
@@ -172,7 +172,13 @@ class App
             }
 
             try {
-                $itemParams = $this->injectableFactory->create($className)->get();
+                $obj = $this->injectableFactory->create($className);
+
+                if (!method_exists($obj, 'get')) {
+                    continue;
+                }
+
+                $itemParams = $obj->get();
             }
             catch (Throwable $e) {
                 $this->log->error("appParam {$paramKey}: " . $e->getMessage());
@@ -241,6 +247,7 @@ class App
         if (!$this->user->isAdmin()) {
             $data = unserialize(serialize($data));
 
+            /** @var string[] */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {
@@ -427,6 +434,7 @@ class App
      */
     public function jobPopulateArrayValues(): void
     {
+        /** @var string[] */
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
         $query = $this->entityManager->getQueryBuilder()

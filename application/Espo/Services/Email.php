@@ -38,6 +38,8 @@ use Espo\Entities\Attachment;
 use Espo\Entities\UserData;
 use Espo\Repositories\UserData as UserDataRepository;
 
+use Espo\Core\Utils\Json;
+
 use Espo\{
     ORM\Entity,
     Entities\User,
@@ -332,7 +334,7 @@ class Email extends Record implements
                 'message' => $e->getMessage(),
             ];
 
-            throw ErrorSilent::createWithBody('sendingFail', json_encode($errorData));
+            throw ErrorSilent::createWithBody('sendingFail', Json::encode($errorData));
         }
 
         $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
@@ -398,12 +400,13 @@ class Email extends Record implements
             return;
         }
 
+        /** @var class-string<object> */
         $handlerClassName = $smtpHandlers->$emailAddress;
 
         $handler = null;
 
         try {
-            $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
+            $handler = $this->injectableFactory->create($handlerClassName);
         }
         catch (Throwable $e) {
             $this->log->error(
@@ -952,7 +955,7 @@ class Email extends Record implements
                 'message' => $e->getMessage(),
             ];
 
-            throw ErrorSilent::createWithBody('sendingFail', json_encode($errorData));
+            throw ErrorSilent::createWithBody('sendingFail', Json::encode($errorData));
         }
 
         return true;

@@ -344,6 +344,8 @@ class Record extends RecordService implements
 
         $list = [];
 
+        assert(is_string($this->entityType));
+
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             if (
                 $this->metadata

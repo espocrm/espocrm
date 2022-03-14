@@ -38,6 +38,8 @@ use Espo\Entities\User;
 
 use Espo\Tools\Stream\NoteAccessControl;
 
+use ArrayAccess;
+
 /**
  * @extends Record<\Espo\Entities\Notification>
  */
@@ -150,6 +152,10 @@ class Notification extends \Espo\Services\Record
             ->getRDBRepository('Notification')
             ->clone($query)
             ->find();
+
+        if (!$collection instanceof ArrayAccess) {
+            throw new Error("Collection is not instance of ArrayAccess.");
+        }
 
         $count = $this->entityManager
             ->getRDBRepository('Notification')

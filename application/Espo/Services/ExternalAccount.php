@@ -91,12 +91,11 @@ class ExternalAccount extends Record implements Di\HookManagerAware
      */
     public function ping(string $integration, string $userId)
     {
-        $entity = $this->getExternalAccountEntity($integration, $userId);
-
         try {
             $client = $this->getClient($integration, $userId);
 
-            if ($client) {
+            if ($client && method_exists($client, 'ping')) {
+                /** @var @bool */
                 return $client->ping();
             }
         }

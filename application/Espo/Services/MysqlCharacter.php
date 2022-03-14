@@ -78,6 +78,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $tableName = \Espo\Core\Utils\Util::toUnderScore($entityName);
 
             // Get table columns params
+            /** @phpstan-ignore-next-line */
             $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE `Collation` <> 'utf8mb4_unicode_ci'";
 
             try {
@@ -109,6 +110,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                     continue;
                 }
 
+                /** @phpstan-ignore-next-line */
                 if (!isset($columnParams[$columnName]) || empty($columnParams[$columnName]['Type'])) {
                     continue;
                 }
@@ -120,10 +122,12 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                     case 'text':
                     case 'jsonObject':
                     case 'jsonArray':
-                        $query = "ALTER TABLE `".$tableName."`
-                            CHANGE COLUMN `". $columnName ."` `". $columnName ."` ". $columnParams[$columnName]['Type'] ."
-                            CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-                        ";
+                        /** @phpstan-ignore-next-line */
+                        $query = "ALTER TABLE `".$tableName."` ".
+                            /** @phpstan-ignore-next-line */
+                            "CHANGE COLUMN `". $columnName ."` `". $columnName ."` ". $columnParams[$columnName]['Type'] .
+                            /** @phpstan-ignore-next-line */
+                            " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 
                         break;
                 }

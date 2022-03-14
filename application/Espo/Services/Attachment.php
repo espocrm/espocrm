@@ -429,7 +429,14 @@ class Attachment extends Record
 
         curl_setopt_array($ch, $opts);
 
+        /** @var string|false */
         $response = curl_exec($ch);
+
+        if ($response === false) {
+            curl_close($ch);
+
+            return null;
+        }
 
         $headerSize = curl_getinfo($ch, \CURLINFO_HEADER_SIZE);
 

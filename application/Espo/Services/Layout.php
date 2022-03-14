@@ -34,6 +34,7 @@ use Espo\Entities\LayoutRecord;
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\Forbidden,
+    Exceptions\Error,
     Acl,
     Acl\Exceptions\NotImplemented,
     Utils\Layout as LayoutUtil,
@@ -223,6 +224,7 @@ class Layout
                         $link = $item;
 
                         if (is_object($item)) {
+                            /** @var \stdClass $item */
                             $link = $item->name ?? null;
                         }
 
@@ -361,6 +363,10 @@ class Layout
     {
         $relationships = $this->getOriginal($scope, 'relationships') ?? [];
 
+        if (!is_array($relationships)) {
+            throw new Error("Bad 'relationships' layout.");
+        }
+
         $result = (object) [];
 
         foreach ($relationships as $i => $item) {
@@ -373,6 +379,8 @@ class Layout
             if (!is_object($item)) {
                 continue;
             }
+
+            /** @var stdClass $item */
 
             $item = clone $item;
             $item->index = 5 + 0.001 * $i;

@@ -38,6 +38,8 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
+use ArrayAccess;
+
 class LastViewed
 {
     private $metadata;
@@ -105,7 +107,12 @@ class LastViewed
             $entity->set('id', Util::generateId());
         }
 
-        if ($maxSize && is_countable($collection) && count($collection) > $maxSize) {
+        if (
+            $maxSize &&
+            is_countable($collection) &&
+            count($collection) > $maxSize &&
+            $collection instanceof ArrayAccess
+        ) {
             $total = -1;
 
             unset($collection[count($collection) - 1]);

@@ -112,7 +112,7 @@ class GlobalSearch implements
 
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $resultList = [];
 

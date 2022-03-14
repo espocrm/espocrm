@@ -64,11 +64,13 @@ class Language
     // TODO use proxy
     protected function getDefaultLanguage(): LanguageUtil
     {
+        /** @var LanguageUtil */
         return $this->container->get('defaultLanguage');
     }
 
     protected function getLanguage(): LanguageUtil
     {
+        /** @var LanguageUtil */
         return $this->container->get('language');
     }
 
@@ -120,6 +122,7 @@ class Language
             unset($data['Campaign']['presetFilters']);
         }
         else {
+            /** @var string[] */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {

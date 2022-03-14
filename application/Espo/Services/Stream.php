@@ -199,14 +199,18 @@ class Stream
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
+            /** @var array<string,array<string,mixed>> */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
-                if (empty($data['statusField'])) {
+                /** @var ?string */
+                $statusField = $data['statusField'] ?? null;
+
+                if (!$statusField) {
                     continue;
                 }
 
-                $this->statusFields[$scope] = $data['statusField'];
+                $this->statusFields[$scope] = $statusField;
             }
         }
 
@@ -1204,7 +1208,7 @@ class Stream
         $countBuilder = clone $builder;
 
         $builder
-            ->limit($params['offset'], $params['maxSize'])
+            ->limit($params['offset'] ?? 0, $params['maxSize'])
             ->order('number', 'DESC');
 
         /** @var iterable<NoteEntity> */
@@ -1731,16 +1735,24 @@ class Stream
             return $this->auditedFieldsCache[$entityType];
         }
 
+        /** @var array<string,array<string,mixed>> */
         $fields = $this->metadata->get('entityDefs.' . $entityType . '.fields');
 
         $auditedFields = [];
 
-        foreach ($fields as $field => $d) {
-            if (empty($d['audited'])) {
+        foreach ($fields as $field => $defs) {
+            if (empty($defs['audited'])) {
                 continue;
             }
 
             if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
+                continue;
+            }
+
+            /** @var ?string */
+            $type = $defs['type'] ?? null;
+
+            if (!$type) {
                 continue;
             }
 
@@ -1752,7 +1764,7 @@ class Stream
             $auditedFields[$field]['notActualList'] =
                 $this->fieldUtil->getNotActualAttributeList($entityType, $field);
 
-            $auditedFields[$field]['fieldType'] = $d['type'];
+            $auditedFields[$field]['fieldType'] = $type;
         }
 
         $this->auditedFieldsCache[$entityType] = $auditedFields;
@@ -1953,6 +1965,7 @@ class Stream
         ];
 
         foreach ($userList as $user) {
+            /** @var string */
             $id = $user->getId();
 
             $data['idList'][] = $id;
@@ -2238,7 +2251,7 @@ class Stream
 
             if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
                 if ($fieldDefs->getType() === 'linkMultiple') {
-                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
+                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField) ?? [];
                 }
                 else {
                     $userId = $entity->get($ownerUserIdAttribute);
@@ -2254,7 +2267,7 @@ class Stream
             }
 
             if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-                $teamIdList = $entity->getLinkMultipleIdList('teams');
+                $teamIdList = $entity->getLinkMultipleIdList('teams') ?? [];
             }
         }
 

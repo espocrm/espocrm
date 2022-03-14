@@ -256,7 +256,7 @@ class Pdf
 
         $contents = $printer->printCollection($collection, $params, $idDataMap);
 
-        $entityTypeTranslated = $this->defaultLanguage->translate($entityType, 'scopeNamesPlural');
+        $entityTypeTranslated = $this->defaultLanguage->translateLabel($entityType, 'scopeNamesPlural');
 
         $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
 

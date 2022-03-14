@@ -46,6 +46,7 @@ use Espo\Core\{
 
 use Espo\Core\Acl\Exceptions\NotImplemented;
 
+use ArrayAccess;
 use stdClass;
 
 /**
@@ -159,7 +160,10 @@ class RecordTree extends Record
             ->clone($selectBuilder->build())
             ->find();
 
-        if (!empty($params['onlyNotEmpty']) || $filterItems) {
+        if (
+            (!empty($params['onlyNotEmpty']) || $filterItems) &&
+            $collection instanceof ArrayAccess
+        ) {
             foreach ($collection as $i => $entity) {
                 if ($this->checkItemIsEmpty($entity)) {
                     unset($collection[$i]);
