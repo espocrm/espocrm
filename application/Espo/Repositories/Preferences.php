@@ -146,7 +146,9 @@ class Preferences implements Repository,
             return;
         }
 
+        /** @var array<string,array<string,mixed>> */
         $fields = $this->metadata->get('entityDefs.Preferences.fields');
+
         $defaults = [];
 
         $dashboardLayout = $this->config->get('dashboardLayout');

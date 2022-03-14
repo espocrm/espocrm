@@ -457,6 +457,7 @@ class Email extends Database implements
                 $entity->get('parentId') &&
                 $entity->isAttributeChanged('parentId')
             ) {
+                /** @var \Espo\ORM\Collection<EmailEntity> */
                 $replyList = $this->findRelated($entity, 'replies');
 
                 foreach ($replyList as $reply) {

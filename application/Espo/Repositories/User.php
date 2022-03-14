@@ -34,6 +34,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Repositories\Database;
+use Espo\Core\Utils\Json;
 
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\UserData;
@@ -104,7 +105,7 @@ class User extends Database
             if ($user) {
                 $this->entityManager->getLocker()->rollback();
 
-                throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                throw new Conflict(Json::encode(['reason' => 'userNameExists']));
             }
         } else {
             if ($entity->isAttributeChanged('userName')) {
@@ -127,7 +128,7 @@ class User extends Database
                 if ($user) {
                     $this->entityManager->getLocker()->rollback();
 
-                    throw new Conflict(json_encode(['reason' => 'userNameExists']));
+                    throw new Conflict(Json::encode(['reason' => 'userNameExists']));
                 }
             }
         }
