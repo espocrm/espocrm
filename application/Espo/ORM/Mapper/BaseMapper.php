@@ -256,6 +256,7 @@ class BaseMapper implements RDBMapper
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null)
     {
+        /** @var Collection<Entity>|Entity|null */
         return $this->selectRelatedInternal($entity, $relationName, $select);
     }
 
@@ -350,7 +351,11 @@ class BaseMapper implements RDBMapper
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == Entity::HAS_CHILDREN) {
-                    $foreignType = $keySet['foreignType'];
+                    $foreignType = $keySet['foreignType'] ?? null;
+
+                    if ($foreignType === null) {
+                        throw new RuntimeException("Bad relation key.");
+                    }
 
                     $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
@@ -385,7 +390,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 if ($relType == Entity::HAS_ONE) {
-                    $resultDataList = $this->executeSql($sql)->fetchAll();
+                    $resultDataList = $this->executeSql($sql)->fetchAll() ?: [];
 
                     if (!count($resultDataList)) {
                         return null;
@@ -431,7 +436,13 @@ class BaseMapper implements RDBMapper
                 return $this->collectionFactory->createFromSql($relEntity->getEntityType(), $sql);
 
             case Entity::BELONGS_TO_PARENT:
-                $foreignEntityType = $entity->get($keySet['typeKey']);
+                $typeKey = $keySet['typeKey'] ?? null;
+
+                if ($typeKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
+
+                $foreignEntityType = $entity->get($typeKey);
                 $foreignEntityId = $entity->get($key);
 
                 if (!$foreignEntityType || !$foreignEntityId) {
@@ -479,7 +490,10 @@ class BaseMapper implements RDBMapper
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int
     {
-        return (int) $this->selectRelatedInternal($entity, $relationName, $select, true);
+        /** @var int|null */
+        $result = $this->selectRelatedInternal($entity, $relationName, $select, true);
+
+        return (int) $result;
     }
 
     /**
@@ -554,8 +568,12 @@ class BaseMapper implements RDBMapper
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
 
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
+                $nearKey = $keySet['nearKey'] ?? null;
+                $distantKey = $keySet['distantKey'] ?? null;
+
+                if ($nearKey === null || $distantKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 $update = [];
 
@@ -617,8 +635,12 @@ class BaseMapper implements RDBMapper
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
-        $nearKey = $keySet['nearKey'];
-        $distantKey = $keySet['distantKey'];
+        $nearKey = $keySet['nearKey'] ?? null;
+        $distantKey = $keySet['distantKey'] ?? null;
+
+        if ($nearKey === null || $distantKey === null) {
+            throw new RuntimeException("Bad relation key.");
+        }
 
         $additionalColumns = $this->getRelationParam($entity, $relationName, 'additionalColumns') ?? [];
 
@@ -699,8 +721,12 @@ class BaseMapper implements RDBMapper
 
         switch ($relType) {
             case Entity::MANY_MANY:
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
+                $nearKey = $keySet['nearKey'] ?? null;
+                $distantKey = $keySet['distantKey'] ?? null;
+
+                if ($nearKey === null || $distantKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
 
@@ -940,7 +966,12 @@ class BaseMapper implements RDBMapper
                 ];
 
                 if ($relType == Entity::HAS_CHILDREN) {
-                    $foreignType = $keySet['foreignType'];
+                    $foreignType = $keySet['foreignType'] ?? null;
+
+                    if ($foreignType === null) {
+                        throw new RuntimeException("Bad relation key.");
+                    }
+
                     $set[$foreignType] = $entity->getEntityType();
                 }
 
@@ -960,8 +991,12 @@ class BaseMapper implements RDBMapper
                 return true;
 
             case Entity::MANY_MANY:
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
+                $nearKey = $keySet['nearKey'] ?? null;
+                $distantKey = $keySet['distantKey'] ?? null;
+
+                if ($nearKey === null || $distantKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 $selectForCount = Select::fromRaw([
                     'from' => $relEntity->getEntityType(),
@@ -1171,7 +1206,12 @@ class BaseMapper implements RDBMapper
                 $where[$foreignKey] = $entity->getId();
 
                 if ($relType === Entity::HAS_CHILDREN) {
-                    $foreignType = $keySet['foreignType'];
+                    $foreignType = $keySet['foreignType'] ?? null;
+
+                    if ($foreignType === null) {
+                        throw new RuntimeException("Bad relation key.");
+                    }
+
                     $where[$foreignType] = $entity->getEntityType();
                     $update[$foreignType] = null;
                 }
@@ -1193,8 +1233,12 @@ class BaseMapper implements RDBMapper
                 return;
 
             case Entity::MANY_MANY:
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
+                $nearKey = $keySet['nearKey'] ?? null;
+                $distantKey = $keySet['distantKey'] ?? null;
+
+                if ($nearKey === null || $distantKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
                     throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
@@ -1311,17 +1355,21 @@ class BaseMapper implements RDBMapper
         $values = [];
 
         $entityType = null;
+        $firstEntity = null;
 
         foreach ($collection as $entity) {
-            $values[] = $this->getInsertValueMap($entity);
+            if ($firstEntity === null) {
+                $firstEntity = $entity;
+                $entityType = $entity->getEntityType();
+            }
 
-            $entityType = $entity->getEntityType();
+            $values[] = $this->getInsertValueMap($entity);
         }
 
         $sql = $this->queryComposer->compose(
             Insert::fromRaw([
                 'into' => $entityType,
-                'columns' => $this->getInsertColumnList($collection[0]),
+                'columns' => $this->getInsertColumnList($firstEntity),
                 'values' => $values,
             ])
         );
@@ -1549,7 +1597,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<mixed,mixed> $data
+     * @param array<string,mixed> $data
      */
     protected function populateEntityFromRow(Entity $entity, $data): void
     {
@@ -1599,11 +1647,15 @@ class BaseMapper implements RDBMapper
 
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
-        $nearKey = $keySet['nearKey'];
-        $distantKey = $keySet['distantKey'];
+        $nearKey = $keySet['nearKey'] ?? null;
+        $distantKey = $keySet['distantKey'] ?? null;
 
         if (!$middleName) {
             throw new RuntimeException("No 'relationName' parameter for '{$relationName}' relationship.");
+        }
+
+        if ($nearKey === null || $distantKey === null) {
+            throw new RuntimeException("Bad relation key.");
         }
 
         $alias = lcfirst($middleName);

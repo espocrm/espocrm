@@ -281,7 +281,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @return array<Entity|array<string,mixed>>
+     * @return array<TEntity|array<string,mixed>>
      */
     public function getDataList(): array
     {
@@ -386,6 +386,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     public function getValueMapList(): array
     {
+        /** @var \stdClass[] */
         return $this->toArray(true);
     }
 
