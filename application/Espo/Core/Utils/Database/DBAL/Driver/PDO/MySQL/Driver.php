@@ -32,11 +32,14 @@ namespace Espo\Core\Utils\Database\DBAL\Driver\PDO\MySQL;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+
 use PDO;
 
 // Espo: requires for the issue https://github.com/doctrine/dbal/issues/4496
 use Espo\Core\Utils\Database\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Connection as MySQLDriverConnection;
+
 
 // End: espo
 
@@ -99,6 +102,7 @@ final class Driver extends AbstractMySQLDriver
     // Espo: requires for the issue https://github.com/doctrine/dbal/issues/4496
     public function getSchemaManager(MySQLDriverConnection $conn, AbstractPlatform $platform)
     {
+        assert($platform instanceof MySQLPlatform);
         return new MySQLSchemaManager($conn, $platform);
     }
     // End: espo
