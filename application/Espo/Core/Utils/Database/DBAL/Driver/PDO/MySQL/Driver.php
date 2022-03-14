@@ -44,30 +44,30 @@ final class Driver extends AbstractMySQLDriver
 {
     /**
      * {@inheritdoc}
-     *
      * @return Connection
      */
     public function connect(array $params)
     {
         $driverOptions = $params['driverOptions'] ?? [];
 
-        if (! empty($params['persistent'])) {
+        if (!empty($params['persistent'])) {
             $driverOptions[PDO::ATTR_PERSISTENT] = true;
         }
 
-        return new Connection(
+        $pdo = new PDO(
             $this->constructPdoDsn($params),
             $params['user'] ?? '',
             $params['password'] ?? '',
             $driverOptions
         );
+
+        return new Connection($pdo);
     }
 
     /**
      * Constructs the MySQL PDO DSN.
      *
      * @param mixed[] $params
-     *
      * @return string The DSN.
      */
     protected function constructPdoDsn(array $params)
