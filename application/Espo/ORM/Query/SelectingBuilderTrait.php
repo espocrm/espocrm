@@ -327,7 +327,7 @@ trait SelectingBuilderTrait
 
     /**
      * @param array<Expression|mixed[]> $itemList
-     * @return array<array{string,string}>
+     * @return array<array{0:string,1?:string}|string>
      */
     private function normilizeExpressionItemArray(array $itemList): array
     {
@@ -341,6 +341,7 @@ trait SelectingBuilderTrait
             }
 
             if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
+                /** @var array{0:string,1?:string} $item */
                 $resultList[] = $item;
 
                 continue;
@@ -352,6 +353,8 @@ trait SelectingBuilderTrait
                 $newItem[] = $item[1];
             }
 
+            /** @var array{0:string,1?:string} $newItem */
+
             $resultList[] = $newItem;
 
             continue;
@@ -361,7 +364,7 @@ trait SelectingBuilderTrait
     }
 
     /**
-     * @param array<Order|mixed[]> $itemList
+     * @param array<Order|mixed[]|string> $itemList
      * @param string|bool|null $direction
      * @return array<array{string,string|bool}>
      */

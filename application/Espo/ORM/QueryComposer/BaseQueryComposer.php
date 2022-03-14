@@ -1632,6 +1632,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                         foreach ($j[2] as $k => $value) {
                             $value = str_replace('{alias}', $alias, $value);
+                            /** @var string */
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
 
@@ -1670,6 +1671,7 @@ abstract class BaseQueryComposer implements QueryComposer
                         foreach ($j[2] as $k => $value) {
                             $value = str_replace('{alias}', $alias, $value);
 
+                            /** @var string */
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
 
@@ -1898,6 +1900,8 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
+        /** @var string $alias */
+
         // @todo Make VALUE: usage deprecated.
         if (is_string($expression) && stripos($expression, 'VALUE:') === 0) {
             $part = $this->quote(
@@ -1943,6 +1947,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return null;
             }
 
+            /** @var string */
             $part = $this->getAttributePath($entity, $attribute0, $params);
 
             return [$part, $alias];
@@ -1974,6 +1979,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
+        /** @var string */
         $fieldPath = $this->getAttributePath($entity, $attribute, $params);
 
         if ($attributeType === Entity::TEXT && $maxTextColumnsLength !== null) {
@@ -2082,17 +2088,19 @@ abstract class BaseQueryComposer implements QueryComposer
         $relationsToJoin = [];
 
         if (is_array($select)) {
-
             foreach ($select as $item) {
                 $field = $item;
 
                 if (is_array($item)) {
-                    if (count($field) == 0) {
+                    if (count($item) == 0) {
                         continue;
                     }
 
                     $field = $item[0];
                 }
+
+                /** @var string $field */
+
                 if (
                     $entity->getAttributeType($field) == 'foreign' &&
                     $this->getAttributeParam($entity, $field, 'relation')
@@ -3200,8 +3208,12 @@ abstract class BaseQueryComposer implements QueryComposer
             case Entity::MANY_MANY:
                 $key = $keySet['key'];
                 $foreignKey = $keySet['foreignKey'];
-                $nearKey = $keySet['nearKey'];
-                $distantKey = $keySet['distantKey'];
+                $nearKey = $keySet['nearKey'] ?? null;
+                $distantKey = $keySet['distantKey'] ?? null;
+
+                if ($nearKey === null || $distantKey === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 $relTable = $this->toDb(
                     $this->getRelationParam($entity, $relationName, 'relationName')
@@ -3316,7 +3328,11 @@ abstract class BaseQueryComposer implements QueryComposer
 
             case Entity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
-                $foreignType = $keySet['foreignType'];
+                $foreignType = $keySet['foreignType'] ?? null;
+
+                if ($foreignType === null) {
+                    throw new RuntimeException("Bad relation key.");
+                }
 
                 $distantTable = $this->toDb($foreignEntityType);
 

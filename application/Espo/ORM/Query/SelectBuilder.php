@@ -293,7 +293,7 @@ class SelectBuilder implements Builder
 
     /**
      * @param array<Expression|Selection|mixed[]> $itemList
-     * @return array<array{string,string}>
+     * @return array<array{0:string,1?:string}|string>
      */
     private function normilizeSelectExpressionArray(array $itemList): array
     {
@@ -315,6 +315,7 @@ class SelectBuilder implements Builder
             }
 
             if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
+                /** @var array{0:string,1?:string} $item */
                 $resultList[] = $item;
 
                 continue;
@@ -325,6 +326,8 @@ class SelectBuilder implements Builder
             if (count($item) > 1) {
                 $newItem[] = $item[1];
             }
+
+            /** @var array{0:string,1?:string} $newItem */
 
             $resultList[] = $newItem;
 

@@ -50,7 +50,7 @@ class Helper
      *   foreignType?: string,
      *   nearKey?: string,
      *   distantKey?: string,
-     *   typeKey?: string
+     *   typeKey?: string,
      * }
      */
     public function getRelationKeys(Entity $entity, string $relationName): array
