@@ -58,7 +58,7 @@ class RecordTree extends Record
         $parentId = $request->getQueryParam('parentId');
         $maxDepth = $request->getQueryParam('maxDepth');
         $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
-        
+
         if ($where !== null && !is_array($where)) {
             throw new BadRequest();
         }
