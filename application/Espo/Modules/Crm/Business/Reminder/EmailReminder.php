@@ -137,7 +137,7 @@ class EmailReminder
         $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
 
         $data['recordUrl'] = $recordUrl;
-        $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
+        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
         $data['userName'] = $user->get('name');
 

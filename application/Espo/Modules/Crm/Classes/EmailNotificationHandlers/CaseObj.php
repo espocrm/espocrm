@@ -41,7 +41,7 @@ use Espo\ORM\EntityManager;
 class CaseObj implements EmailNotificationHandler
 {
     /**
-     * @var array<string,\Espo\Entities\InboundEmail>
+     * @var array<string,\Espo\Entities\InboundEmail|null>
      */
     private $inboundEmailEntityHash = [];
 
@@ -56,6 +56,7 @@ class CaseObj implements EmailNotificationHandler
 
     public function getSenderParams(Entity $entity, User $user): ?SenderParams
     {
+        /** @var ?string */
         $inboundEmailId = $entity->get('inboundEmailId');
 
         if (!$inboundEmailId) {

@@ -72,6 +72,7 @@ class MassEmail extends \Espo\Core\Controllers\Record
 
     private function getMassEmailService(): Service
     {
+        /** @var Service */
         return $this->getServiceFactory()->create('MassEmail');
     }
 }

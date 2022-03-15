@@ -165,7 +165,7 @@ class Invitations
         }
 
         $data['inviteeName'] = $invitee->get('name');
-        $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
+        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         $subject = $htmlizer->render(
@@ -188,9 +188,9 @@ class Invitations
         $email->set('body', $body);
         $email->set('isHtml', true);
 
-        $attachmentName = ucwords($this->language->translate($entity->getEntityType(), 'scopeNames')) . '.ics';
+        $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
 
-        $attachment = $this->entityManager->getEntity('Attachment');
+        $attachment = $this->entityManager->getNewEntity('Attachment');
 
         $attachment->set([
             'name' => $attachmentName,

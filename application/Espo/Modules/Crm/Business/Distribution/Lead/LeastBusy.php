@@ -53,17 +53,25 @@ class LeastBusy
      */
     public function getUser($team, $targetUserPosition = null)
     {
-        $params = [];
+        $where = [
+            'isActive' => true,
+        ];
 
         if (!empty($targetUserPosition)) {
-            $params['additionalColumnsConditions'] = [
-                'role' => $targetUserPosition
-            ];
+            $where['@relation.role'] = $targetUserPosition;
         }
 
-        $userList = $team->get('users', $params);
+        /**
+         * @var \Espo\ORM\Collection<User>
+         */
+        $userList = $this->entityManager
+            ->getRDBRepository(Team::ENTITY_TYPE)
+            ->getRelation($team, 'users')
+            ->where($where)
+            ->order('id')
+            ->find();
 
-        if (count($userList) == 0) {
+        if (is_countable($userList) && count($userList) == 0) {
             return null;
         }
 
@@ -71,8 +79,8 @@ class LeastBusy
 
         foreach ($userList as $user) {
             $where = [
-                'assignedUserId' => $user->id,
-                'status<>' => ['Converted', 'Recycled', 'Dead']
+                'assignedUserId' => $user->getId(),
+                'status<>' => ['Converted', 'Recycled', 'Dead'],
             ];
 
             $count = $this->entityManager

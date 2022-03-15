@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
+use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Services\KnowledgeBaseArticle as Service;
 
 use stdClass;
@@ -61,7 +62,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(json_encode($data->where), true);
+            $where = json_decode(Json::encode($data->where), true);
         }
 
         $this->getArticleService()->moveToTop($data->id, $where);
@@ -80,7 +81,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(json_encode($data->wher), true);
+            $where = json_decode(Json::encode($data->wher), true);
         }
 
         $this->getArticleService()->moveUp($data->id, $where);
@@ -99,7 +100,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(json_encode($data->where), true);
+            $where = json_decode(Json::encode($data->where), true);
         }
 
         $this->getArticleService()->moveDown($data->id, $where);
@@ -118,7 +119,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         $where = null;
 
         if (!empty($data->where)) {
-            $where = json_decode(json_encode($data->where), true);
+            $where = json_decode(Json::encode($data->where), true);
         }
 
         $this->getArticleService()->moveToBottom($data->id, $where);
