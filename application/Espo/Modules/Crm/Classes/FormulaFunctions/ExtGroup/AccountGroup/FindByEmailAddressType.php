@@ -86,7 +86,7 @@ class FindByEmailAddressType extends BaseFunction implements
         $ignoreList = json_decode(
             $this->fileManager->getContents(
                 'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json'
-            ) ?: '[]'
+            )
         ) ?? [];
 
         $contact = $em->getRDBRepository('Contact')

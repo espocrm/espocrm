@@ -377,13 +377,13 @@ class Metadata
     {
         $filePath = $this->customPath . "/{$key1}/{$key2}.json";
 
-        $fileContent = $this->fileManager->getContents($filePath);
-
-        if ($fileContent) {
-            return Json::decode($fileContent);
+        if (!$this->fileManager->isFile($filePath)) {
+            return $default;
         }
 
-        return $default;
+        $fileContent = $this->fileManager->getContents($filePath);
+
+        return Json::decode($fileContent);
     }
 
     /**

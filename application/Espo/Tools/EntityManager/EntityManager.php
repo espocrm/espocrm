@@ -421,10 +421,6 @@ class EntityManager
 
         $scopesDataContents = $this->fileManager->getContents($filePath);
 
-        if ($scopesDataContents === false) {
-            throw new Error("Could not open file `{$filePath}`.");
-        }
-
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
 
         foreach ($replaceData as $key => $value) {
@@ -454,10 +450,6 @@ class EntityManager
 
         $entityDefsDataContents = $this->fileManager->getContents($filePath);
 
-        if ($entityDefsDataContents === false) {
-            throw new Error("Could not open file `{$filePath}`.");
-        }
-
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
 
@@ -472,10 +464,6 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/{$type}/clientDefs.json";
 
         $clientDefsContents = $this->fileManager->getContents($filePath);
-
-        if ($clientDefsContents === false) {
-            throw new Error("Could not open file `{$filePath}`.");
-        }
 
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
 

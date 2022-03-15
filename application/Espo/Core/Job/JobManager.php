@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
@@ -183,20 +185,30 @@ class JobManager
         $this->jobRunner->runThrowingException($job);
     }
 
+    /**
+     * @todo Move to a separate class.
+     */
     private function getLastRunTime(): int
     {
-        $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
+        if ($this->fileManager->isFile($this->lastRunTimeFile)) {
+            try {
+                $data = $this->fileManager->getPhpContents($this->lastRunTimeFile);
+            }
+            catch (Error $e) {
+                $data = null;
+            }
 
-        if (is_array($lastRunData) && !empty($lastRunData['time'])) {
-            $lastRunTime = $lastRunData['time'];
-        }
-        else {
-            $lastRunTime = time() - intval($this->config->get('cronMinInterval', 0)) - 1;
+            if (is_array($data) && isset($data['time'])) {
+                return (int) $data['time'];
+            }
         }
 
-        return (int) $lastRunTime;
+        return time() - intval($this->config->get('cronMinInterval', 0)) - 1;
     }
 
+    /**
+     * @todo Move to a separate class.
+     */
     private function updateLastRunTime(): void
     {
         $data = [

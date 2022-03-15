@@ -133,7 +133,7 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
                 [$this->configPath],
                 [$this->configPath],
             )
-            ->willReturnOnConsecutiveCalls($previousData);
+            ->willReturnOnConsecutiveCalls($previousData, $previousData);
 
         $this->configWriter->save();
     }

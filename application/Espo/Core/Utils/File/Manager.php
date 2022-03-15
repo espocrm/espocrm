@@ -217,15 +217,15 @@ class Manager
      * Get file contents.
      *
      * @param string $path
-     * @return string|false
+     * @throws Error If the file could not be read.
      */
-    public function getContents($path)
+    public function getContents($path): string
     {
         /** @var mixed $path */
 
         if (is_array($path)) {
             // For backward compatibility.
-            // @todo Remove support of arrays in v6.4.
+            // @todo Remove support of arrays in v7.3.
             trigger_error(
                 'Array parameter is deprecated for FileMaanger::getContents.',
                 E_USER_DEPRECATED
@@ -237,27 +237,35 @@ class Manager
             throw new InvalidArgumentException();
         }
 
-        if (file_exists($path)) {
-            return file_get_contents($path);
+        if (!file_exists($path)) {
+            throw new Error("File '{$path}' does not exist.");
         }
 
-        return false;
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            throw new Error("Could not open file '{$path}'.");
+        }
+
+        return $contents;
     }
 
     /**
      * Get data from a PHP file.
      *
-     * @return mixed|false
+     * @return mixed
      */
     public function getPhpContents(string $path)
     {
-        if (file_exists($path) && strtolower(substr($path, -4)) == '.php') {
-            $phpContents = include($path);
-
-            return $phpContents;
+        if (!file_exists($path)) {
+            throw new Error("File '$path' does not exist.");
         }
 
-        return false;
+        if (strtolower(substr($path, -4)) !== '.php') {
+            throw new Error("File '$path' is not PHP.");
+        }
+
+        return include($path);
     }
 
     /**
@@ -429,18 +437,16 @@ class Manager
      */
     public function mergeJsonContents(string $path, array $data): bool
     {
-        $currentContents = $this->getContents($path);
+        $currentData = [];
 
-        if ($this->isFile($path) && $currentContents === false) {
-            throw new Error("FileManager: Failed to read file '{$path}'.");
+        if ($this->isFile($path)) {
+            $currentContents = $this->getContents($path);
+
+            $currentData = Json::decode($currentContents, true);
         }
 
-        $currentData = $this->isFile($path) ?
-            Json::decode($currentContents, true) :
-            [];
-
         if (!is_array($currentData)) {
-            throw new Error("Neither an array nor object in '{$path}'.");
+            throw new Error("Neither array nor object in '{$path}'.");
         }
 
         $mergedData = Util::merge($currentData, $data);
@@ -470,15 +476,11 @@ class Manager
      */
     public function unsetJsonContents(string $path, array $unsets): bool
     {
-        if (!file_exists($path)) {
+        if (!$this->isFile($path)) {
             return true;
         }
 
         $currentContents = $this->getContents($path);
-
-        if (!$currentContents) {
-            return true;
-        }
 
         $currentData = Json::decode($currentContents, true);
 

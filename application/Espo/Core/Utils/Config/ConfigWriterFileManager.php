@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Utils\Config;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Config,
 };
-
-use RuntimeException;
 
 class ConfigWriterFileManager
 {
@@ -76,14 +76,14 @@ class ConfigWriterFileManager
 
     /**
      * @param array<string,mixed> $data
-     * @throws RuntimeException
+     * @throws Error
      */
     protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
     {
         $result = $this->fileManager->putPhpContents($path, $data, true, $useRenaming);
 
         if ($result === false) {
-            throw new RuntimeException();
+            throw new Error();
         }
     }
 
@@ -103,12 +103,25 @@ class ConfigWriterFileManager
         $this->putPhpContentsInternal($path, $data, false);
     }
 
+
     /**
-     * @return mixed
+     * Supposed to return array. False means the file is being written or corrupted.
+     * @return array<string,mixed>|false
      */
     public function getPhpContents(string $path)
     {
-        return $this->fileManager->getPhpContents($path);
+        try {
+            $data = $this->fileManager->getPhpContents($path);
+        }
+        catch (Error $e) {
+            return false;
+        }
+
+        if (!is_array($data)) {
+            return false;
+        }
+
+        /** @var array<string,mixed> */
+        return $data;
     }
 }
-

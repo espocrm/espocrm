@@ -117,6 +117,8 @@ class ConfigWriter
 
     /**
      * Save config changes to the file.
+     *
+     * @throws Error
      */
     public function save(): void
     {
@@ -130,17 +132,13 @@ class ConfigWriter
         $internalConfigPath = $this->config->getInternalConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
-            throw new Error("Config file '{$configPath}' was not found.");
+            throw new Error("Config file '{$configPath}' not found.");
         }
 
         $data = $this->fileManager->getPhpContents($configPath);
 
         $dataInternal = $this->fileManager->isFile($internalConfigPath) ?
             $this->fileManager->getPhpContents($internalConfigPath) : [];
-
-        if (!is_array($data)) {
-            $data = $this->fileManager->getPhpContents($configPath);
-        }
 
         if (!is_array($data)) {
             throw new Error("Could not read config.");

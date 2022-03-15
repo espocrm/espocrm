@@ -630,11 +630,19 @@ class Converter
         $fileList = $this->fileManager->getFileList($path, false, '\.php$', true);
 
         foreach ($fileList as $fileName) {
-            $fileData = $this->fileManager->getPhpContents($path . '/' . $fileName);
+            $itemPath = $path . '/' . $fileName;
 
-            if (is_array($fileData)) {
-                $tables = Util::merge($tables, $fileData);
+            if (!$this->fileManager->isFile($itemPath)) {
+                continue;
             }
+
+            $fileData = $this->fileManager->getPhpContents($itemPath);
+
+            if (!is_array($fileData)) {
+                continue;
+            }
+
+            $tables = Util::merge($tables, $fileData);
         }
 
         return $tables;
