@@ -92,7 +92,12 @@ class SearchParamsFetcher
     {
         $params = [];
 
-        $params['where'] = $request->getQueryParam('where');
+        $params['where'] = $request->getQueryParams()['where'] ?? null;
+
+        if ($params['where'] !== null && !is_array($params['where'])) {
+            $params['where'] = null;
+        }
+
         $params['maxSize'] = $request->getQueryParam('maxSize');
         $params['offset'] = $request->getQueryParam('offset');
 
@@ -141,12 +146,12 @@ class SearchParamsFetcher
             $params['primaryFilter'] = $request->getQueryParam('primaryFilter');
         }
 
-        if ($request->getQueryParam('boolFilterList')) {
-            $params['boolFilterList'] = $request->getQueryParam('boolFilterList');
+        if ($request->getQueryParams()['boolFilterList'] ?? null) {
+            $params['boolFilterList'] = (array) $request->getQueryParams()['boolFilterList'];
         }
 
-        if ($request->getQueryParam('filterList')) {
-            $params['filterList'] = $request->getQueryParam('filterList');
+        if ($request->getQueryParams()['filterList'] ?? null) {
+            $params['filterList'] = (array) $request->getQueryParams()['filterList'];
         }
 
         if ($request->getQueryParam('select')) {

@@ -50,14 +50,11 @@ class RequestNull implements ApiRequest
     /**
      * @return null
      */
-    public function getQueryParam(string $name)
+    public function getQueryParam(string $name): ?string
     {
         return null;
     }
 
-    /**
-     * @return string[]
-     */
     public function getQueryParams(): array
     {
         return [];

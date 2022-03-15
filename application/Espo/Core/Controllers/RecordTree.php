@@ -30,6 +30,8 @@
 namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+
 use Espo\Services\RecordTree as Service;
 use Espo\Core\Api\Request;
 
@@ -52,10 +54,14 @@ class RecordTree extends Record
             return (object) $this->actionListTree($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
-        $where = $request->getQueryParam('where');
+        $where = $request->getQueryParams()['where'] ?? null;
         $parentId = $request->getQueryParam('parentId');
         $maxDepth = $request->getQueryParam('maxDepth');
         $onlyNotEmpty = (bool) $request->getQueryParam('onlyNotEmpty');
+        
+        if ($where !== null && !is_array($where)) {
+            throw new BadRequest();
+        }
 
         if ($maxDepth !== null) {
             $maxDepth = (int) $maxDepth;

@@ -172,7 +172,7 @@ class Activities
         $offset = $searchParams->getOffset();
         $maxSize = $searchParams->getMaxSize();
 
-        $entityTypeList = $request->getQueryParam('entityTypeList');
+        $entityTypeList = (array) ($request->getQueryParams()['entityTypeList'] ?? null);
 
         $futureDays = intval($request->getQueryParam('futureDays'));
 

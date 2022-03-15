@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+
 use Espo\Core\{
     Api\Request,
     Record\SearchParamsFetcher,
@@ -97,7 +99,11 @@ class Stream
         $maxSize = $searchParams->getMaxSize();
 
         $after = $request->getQueryParam('after');
-        $where = $request->getQueryParam('where');
+        $where = $request->getQueryParams()['where'] ?? null;
+
+        if ($where !== null && !is_array($where)) {
+            throw new BadRequest();
+        }
 
         $result = $this->service->find($scope, $id, [
             'offset' => $offset,

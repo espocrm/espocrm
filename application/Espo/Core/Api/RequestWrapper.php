@@ -85,7 +85,7 @@ class RequestWrapper implements ApiRequest
             return $this->getRouteParam($name);
         }
 
-        return $this->getQueryParam($name);
+        return $this->request->getQueryParams()[$name] ?? null;
     }
 
     public function hasRouteParam(string $name): bool
@@ -111,23 +111,17 @@ class RequestWrapper implements ApiRequest
         return array_key_exists($name, $this->request->getQueryParams());
     }
 
-    /**
-     * @return string|string[]|null
-     */
-    public function getQueryParam(string $name)
+    public function getQueryParam(string $name): ?string
     {
         $value = $this->request->getQueryParams()[$name] ?? null;
 
-        if ($value === null) {
+        if (!is_string($value)) {
             return null;
         }
 
         return $value;
     }
 
-    /**
-     * @return array<string,string|string[]>
-     */
     public function getQueryParams(): array
     {
         return $this->request->getQueryParams();
