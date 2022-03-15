@@ -40,6 +40,7 @@ class Meeting extends Entity
 
     public function getDateStart(): ?DateTimeOptional
     {
+        /** @var ?DateTimeOptional */
         return $this->getValueObject('dateStart');
     }
 
@@ -50,6 +51,7 @@ class Meeting extends Entity
 
     public function getDateEnd(): ?DateTimeOptional
     {
+        /** @var ?DateTimeOptional */
         return $this->getValueObject('dateEnd');
     }
 

@@ -120,9 +120,17 @@ class CampaignTrackOpened implements EntryPoint
 
         $img  = imagecreatetruecolor(1, 1);
 
+        if (!$img) {
+            return;
+        }
+
         imagesavealpha($img, true);
 
         $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
+
+        if ($color === false) {
+            return;
+        }
 
         imagefill($img, 0, 0, $color);
 

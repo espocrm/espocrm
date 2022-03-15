@@ -53,6 +53,7 @@ class Opportunity extends Entity
 
     public function getAmount(): ?Currency
     {
+        /** @var ?Currency */
         return $this->getValueObject('amount');
     }
 
@@ -65,6 +66,7 @@ class Opportunity extends Entity
 
     public function getCloseDate(): ?Date
     {
+        /** @var ?Date */
         return $this->getValueObject('closeDate');
     }
 

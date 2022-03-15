@@ -40,6 +40,7 @@ class Call extends Entity
 
     public function getDateStart(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('dateStart');
     }
 
@@ -50,6 +51,7 @@ class Call extends Entity
 
     public function getDateEnd(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('dateEnd');
     }
 
