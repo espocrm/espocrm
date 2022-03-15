@@ -53,7 +53,7 @@ interface Request
     /**
      * Get all query parameters.
      *
-     * @return array<string,string|string[]>
+     * @return array<string,string|array<scalar,mixed>>
      */
     public function getQueryParams(): array;
 
