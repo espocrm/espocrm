@@ -50,6 +50,9 @@ use Espo\Core\{
 
 use Espo\Entities\Attachment;
 
+/**
+ * @todo Remove PHPStan ignores when PHP v8.0 is the min supported.
+ */
 class Image implements EntryPoint
 {
     /**
@@ -201,31 +204,31 @@ class Image implements EntryPoint
 
         switch ($fileType) {
             case 'image/jpeg':
-                imagejpeg($targetImage);
+                imagejpeg($targetImage); /** @phpstan-ignore-line */
 
                 break;
 
             case 'image/png':
-                imagepng($targetImage);
+                imagepng($targetImage); /** @phpstan-ignore-line */
 
                 break;
 
             case 'image/gif':
-                imagegif($targetImage);
+                imagegif($targetImage); /** @phpstan-ignore-line */
 
                 break;
 
             case 'image/webp':
-                imagewebp($targetImage);
+                imagewebp($targetImage); /** @phpstan-ignore-line */
 
                 break;
         }
 
-        $contents = ob_get_contents();
+        $contents = ob_get_contents() ?: '';
 
         ob_end_clean();
 
-        imagedestroy($targetImage);
+        imagedestroy($targetImage); /** @phpstan-ignore-line */
 
         if ($useCache) {
             $this->fileManager->putContents($cacheFilePath, $contents);
@@ -235,7 +238,8 @@ class Image implements EntryPoint
     }
 
     /**
-     * @return resource|object
+     * @return \GdImage
+     * @phpstan-ignore-next-line
      */
     protected function createThumbImage(string $filePath, string $fileType, string $size)
     {
@@ -280,7 +284,7 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromjpeg($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
                     $targetWidth, $targetHeight, $originalWidth, $originalHeight
                 );
                 break;
@@ -289,15 +293,16 @@ class Image implements EntryPoint
 
                 $sourceImage = imagecreatefrompng($filePath);
 
-                imagealphablending($targetImage, false);
-                imagesavealpha($targetImage, true);
+                imagealphablending($targetImage, false); /** @phpstan-ignore-line */
+                imagesavealpha($targetImage, true); /** @phpstan-ignore-line */
 
-                $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+                $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127); /** @phpstan-ignore-line */
 
+                /** @phpstan-ignore-next-line */
                 imagefilledrectangle($targetImage, 0, 0, $targetWidth, $targetHeight, $transparent);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
                     $targetWidth, $targetHeight, $originalWidth, $originalHeight
                 );
 
@@ -308,7 +313,7 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromgif($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
                     $targetWidth, $targetHeight, $originalWidth, $originalHeight
                 );
 
@@ -319,7 +324,7 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromwebp($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
                     $targetWidth, $targetHeight, $originalWidth, $originalHeight
                 );
 
@@ -327,10 +332,10 @@ class Image implements EntryPoint
         }
 
         if (in_array($fileType, $this->getFixOrientationFileTypeList())) {
-            $targetImage = $this->fixOrientation($targetImage, $filePath);
+            $targetImage = $this->fixOrientation($targetImage, $filePath); /** @phpstan-ignore-line */
         }
 
-        return $targetImage;
+        return $targetImage; /** @phpstan-ignore-line */
     }
 
     /**
@@ -339,18 +344,19 @@ class Image implements EntryPoint
      */
     protected function getOrientation(string $filePath)
     {
-        $orientation = 0;
-
-        if (function_exists('exif_read_data')) {
-            $orientation = exif_read_data($filePath)['Orientation'] ?? null;
+        if (!function_exists('exif_read_data')) {
+            return 0;
         }
 
-        return $orientation;
+        $data = exif_read_data($filePath) ?: [];
+
+        return $data['Orientation'] ?? null;
     }
 
     /**
-     * @param resource|object $targetImage
-     * @return resource|object
+     * @param \GdImage $targetImage
+     * @return \GdImage
+     * @phpstan-ignore-next-line
      */
     protected function fixOrientation($targetImage, string $filePath)
     {
@@ -359,9 +365,10 @@ class Image implements EntryPoint
         if ($orientation) {
             $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
 
-            $targetImage = imagerotate($targetImage, $angle, 0);
+            $targetImage = imagerotate($targetImage, $angle, 0) ?: $targetImage; /** @phpstan-ignore-line */
         }
 
+        /** @phpstan-ignore-next-line */
         return $targetImage;
     }
 
