@@ -56,7 +56,13 @@ class EmailTemplate extends Record implements
 
     /**
      * @param array<string,mixed> $params
-     * @return array<string,mixed>
+     * @return array{
+     *   subject: string,
+     *   body: string,
+     *   isHtml: bool,
+     *   attachmentsIds: string[],
+     *   attachmentsNames: \stdClass,
+     * }
      */
     public function parseTemplate(
         EmailTemplateEntity $emailTemplate,
@@ -81,6 +87,14 @@ class EmailTemplate extends Record implements
 
         $result = $this->createProcessor()->process($emailTemplate, $paramsInternal, $data);
 
+        /** @var array{
+          *   subject: string,
+          *   body: string,
+          *   isHtml: bool,
+          *   attachmentsIds: string[],
+          *   attachmentsNames: \stdClass,
+          * }
+         */
         return get_object_vars($result->getValueMap());
     }
 

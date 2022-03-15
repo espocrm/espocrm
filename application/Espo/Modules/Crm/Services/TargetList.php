@@ -86,6 +86,7 @@ class TargetList extends Record implements
         $this->noEditAccessRequiredLinkList = $this->targetLinkList;
 
         foreach ($this->targetLinkList as $link) {
+            /** @var string $link */
             $this->linkMandatorySelectAttributeList[$link] = ['targetListIsOptedOut'];
 
             $entityType = $this->entityManager

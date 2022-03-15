@@ -100,6 +100,7 @@ class Queue
         $itemList = [];
 
         if (!$isTest) {
+            /** @var \Espo\ORM\Collection<TargetList> */
             $excludingTargetListList = $this->entityManager
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'excludingTargetLists')
@@ -108,13 +109,10 @@ class Queue
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetLinkList as $link) {
                     $excludingList = $em->getRDBRepository(TargetList::ENTITY_TYPE)
-                        ->findRelated(
-                            $excludingTargetList,
-                            $link,
-                            [
-                                'select' => ['id', 'emailAddress'],
-                            ]
-                        );
+                        ->getRelation($excludingTargetList, $link)
+                        ->sth()
+                        ->select(['id', 'emailAddress'])
+                        ->find();
 
                     foreach ($excludingList as $excludingTarget) {
                         $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->getId();
@@ -130,7 +128,7 @@ class Queue
                 }
             }
 
-            /** @var iterable<TargetList> */
+            /** @var \Espo\ORM\Collection<TargetList> */
             $targetListCollection = $em
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'targetLists')

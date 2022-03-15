@@ -184,6 +184,7 @@ class Processor
                 );
             }
 
+            /** @var \Espo\Services\InboundEmail */
             $inboundEmailService = $this->serviceFactory->create('InboundEmail');
 
             $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
@@ -252,7 +253,7 @@ class Processor
 
         $optOutLink =
             '<a href="' . $optOutUrl . '">' .
-            $this->defaultLanguage->translate('Unsubscribe', 'labels', 'Campaign') .
+            $this->defaultLanguage->translateLabel('Unsubscribe', 'labels', 'Campaign') .
             '</a>';
 
         $body = str_replace('{optOutUrl}', $optOutUrl, $body);
@@ -277,7 +278,7 @@ class Processor
             }
         }
 
-        $trackImageAlt = $this->defaultLanguage->translate('Campaign', 'scopeNames');
+        $trackImageAlt = $this->defaultLanguage->translateLabel('Campaign', 'scopeNames');
 
         $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->getId();
 
@@ -544,7 +545,10 @@ class Processor
     protected function getEmailTemplateService(): EmailTemplateService
     {
         if (!$this->emailTemplateService) {
-            $this->emailTemplateService = $this->serviceFactory->create('EmailTemplate');
+            /** @var EmailTemplateService */
+            $service = $this->serviceFactory->create('EmailTemplate');
+
+            $this->emailTemplateService = $service;
         }
 
         return $this->emailTemplateService;
@@ -553,7 +557,10 @@ class Processor
     protected function getCampaignService(): CampaignService
     {
         if (!$this->campaignService) {
-            $this->campaignService = $this->serviceFactory->create('Campaign');
+            /** @var CampaignService */
+            $service = $this->serviceFactory->create('Campaign');
+
+            $this->campaignService = $service;
         }
 
         return $this->campaignService;
