@@ -248,7 +248,6 @@ return [
         'useCache',
         'useCacheInDeveloperMode',
         'isDeveloperMode',
-        'version',
         'useWebSocket',
         'webSocketUrl',
         'aclAllowDeleteCreated',
