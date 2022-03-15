@@ -95,9 +95,9 @@ class SubmitPopupReminders implements JobDataLess
         $submitData = [];
 
         foreach ($reminderList as $reminder) {
-            $userId = $reminder->get('userId');
-            $entityType = $reminder->get('entityType');
-            $entityId = $reminder->get('entityId');
+            $userId = $reminder->getUserId();
+            $entityType = $reminder->getTargetEntityId();
+            $entityId = $reminder->getTargetEntityId();
 
             if (!$userId || !$entityType || !$entityId) {
                 $this->deleteReminder($reminder);
@@ -160,7 +160,8 @@ class SubmitPopupReminders implements JobDataLess
                 $this->webSocketSubmission->submit('popupNotifications.event', $userId, (object) [
                     'list' => $list
                 ]);
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }

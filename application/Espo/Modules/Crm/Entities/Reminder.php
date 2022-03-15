@@ -32,4 +32,19 @@ namespace Espo\Modules\Crm\Entities;
 class Reminder extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'Reminder';
+
+    public function getUserId(): ?string
+    {
+        return $this->get('userId');
+    }
+
+    public function getTargetEntityId(): ?string
+    {
+        return $this->get('entityId');
+    }
+
+    public function getTargetEntityType(): ?string
+    {
+        return $this->get('entityType');
+    }
 }

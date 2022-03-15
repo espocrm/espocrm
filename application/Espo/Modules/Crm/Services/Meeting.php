@@ -243,7 +243,9 @@ class Meeting extends Record implements
     {
         $userId = $userId ?? $this->getUser()->getId();
 
-        $statusList = $this->getMetadata()
+        assert(is_string($this->entityType));
+
+        $statusList = $this->metadata
                 ->get(['entityDefs', $this->entityType, 'fields', 'acceptanceStatus', 'options'], []);
 
         if (!in_array($status, $statusList)) {

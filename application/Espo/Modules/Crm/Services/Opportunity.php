@@ -75,7 +75,7 @@ class Opportunity extends Record
 
         $lostStageList = $this->getLostStageList();
 
-        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        $options = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
@@ -126,7 +126,7 @@ class Opportunity extends Record
             ->getQueryExecutor()
             ->execute($queryBuilder->build());
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $data = [];
 
@@ -138,7 +138,7 @@ class Opportunity extends Record
 
         $dataList = [];
 
-        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
 
         foreach ($stageList as $stage) {
             if (in_array($stage, $lostStageList)) {
@@ -178,7 +178,7 @@ class Opportunity extends Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $options = $this->getMetadata()->get('entityDefs.Lead.fields.source.options', []);
+        $options = $this->metadata->get('entityDefs.Lead.fields.source.options', []);
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
@@ -214,7 +214,7 @@ class Opportunity extends Record
             ->getQueryExecutor()
             ->execute($queryBuilder->build());
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $result = [];
 
@@ -241,7 +241,7 @@ class Opportunity extends Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        $options = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
@@ -278,7 +278,7 @@ class Opportunity extends Record
             ->getQueryExecutor()
             ->execute($queryBuilder->build());
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $result = [];
 
@@ -355,7 +355,7 @@ class Opportunity extends Record
 
         $result = [];
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         foreach ($rowList as $row) {
             $month = $row['month'];
@@ -536,11 +536,11 @@ class Opportunity extends Record
     {
         $lostStageList = [];
 
-        $probabilityMap =  $this->getMetadata()->get(
+        $probabilityMap =  $this->metadata->get(
             ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
         );
 
-        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
 
         foreach ($stageList as $stage) {
             if (empty($probabilityMap[$stage])) {
@@ -558,11 +558,11 @@ class Opportunity extends Record
     {
         $wonStageList = [];
 
-        $probabilityMap =  $this->getMetadata()->get(
+        $probabilityMap =  $this->metadata->get(
             ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
         );
 
-        $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+        $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
 
         foreach ($stageList as $stage) {
             if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] == 100) {

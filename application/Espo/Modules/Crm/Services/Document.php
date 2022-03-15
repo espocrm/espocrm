@@ -67,7 +67,7 @@ class Document extends Record
 
         $attachment = $this->getAttachmentRepository()->getCopiedAttachment($file, 'Attachment');
 
-        /** @var \Espo\ORM\Collection<Attachment> $attachmentList */
+        /** @var \Espo\ORM\EntityCollection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getCollectionFactory()
             ->create('Attachment');

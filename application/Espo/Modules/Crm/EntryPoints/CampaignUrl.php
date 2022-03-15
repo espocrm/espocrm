@@ -109,7 +109,7 @@ class CampaignUrl implements EntryPoint
         $hash = $request->getQueryParam('hash') ?? null;
         $uid = $request->getQueryParam('uid') ?? null;
 
-        if (!$trackingUrlId) {
+        if (!$trackingUrlId || !is_string($trackingUrlId)) {
             throw new BadRequest();
         }
 
@@ -120,13 +120,21 @@ class CampaignUrl implements EntryPoint
         }
 
         if ($emailAddress && $hash) {
+            if (!is_string($emailAddress) || !is_string($hash)) {
+                throw new BadRequest();
+            }
+
             $this->processWithHash($trackingUrl, $emailAddress, $hash);
         }
         else if ($uid && $hash) {
+            if (!is_string($uid) || !is_string($hash)) {
+                throw new BadRequest();
+            }
+
             $this->processWithUniqueId($trackingUrl, $uid, $hash);
         }
         else {
-            if (!$queueItemId) {
+            if (!$queueItemId || !is_string($queueItemId)) {
                 throw new BadRequest();
             }
 

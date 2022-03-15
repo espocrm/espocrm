@@ -119,7 +119,7 @@ class Opportunity extends Database
         }
 
         $probability = $this->metadata
-            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getStage()]) ?? 0;
+            ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $entity->getStage() ?? '']) ?? 0;
 
         if ($probability) {
             $entity->set('lastStage', $entity->getStage());

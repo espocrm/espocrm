@@ -32,6 +32,8 @@ namespace Espo\Modules\Crm\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ConflictSilent;
 
+use Espo\Core\Utils\Json;
+
 use Espo\ORM\Entity;
 
 use Espo\Modules\Crm\Entities\Lead as LeadEntity;
@@ -109,11 +111,13 @@ class Lead extends Record implements
 
         $data = [];
 
-        $entityList = $this->getMetadata()->get('entityDefs.Lead.convertEntityList', []);
+        /** @var string[] */
+        $entityList = $this->metadata->get('entityDefs.Lead.convertEntityList', []);
 
         $ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
-        $convertFieldsDefs = $this->getMetadata()->get('entityDefs.Lead.convertFields', []);
+        /** @var array<string,array<string,string>> */
+        $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
 
         foreach ($entityList as $entityType) {
             if (!$this->getAcl()->checkScope($entityType, 'edit')) {
@@ -121,26 +125,27 @@ class Lead extends Record implements
             }
 
             $attributes = [];
-
             $fieldMap = [];
 
-            $fieldList = array_keys($this->getMetadata()->get('entityDefs.Lead.fields', []));
+            /** @var string[] */
+            $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
 
             foreach ($fieldList as $field) {
-                if (!$this->getMetadata()->get('entityDefs.'.$entityType.'.fields.' . $field)) {
+                if (!$this->metadata->get('entityDefs.'.$entityType.'.fields.' . $field)) {
                     continue;
                 }
 
                 if (
-                    $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type'])
+                    $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type'])
                     !==
-                    $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type'])
+                    $this->metadata->get(['entityDefs', 'Lead', 'fields', $field, 'type'])
                 ) {
                     continue;
                 }
 
                 $fieldMap[$field] = $field;
             }
+
             if (array_key_exists($entityType, $convertFieldsDefs)) {
                 foreach ($convertFieldsDefs[$entityType] as $field => $leadField) {
                     $fieldMap[$field] = $leadField;
@@ -148,7 +153,7 @@ class Lead extends Record implements
             }
 
             foreach ($fieldMap as $field => $leadField) {
-                $type = $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
+                $type = $this->metadata->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
 
                 if (in_array($type, ['file', 'image'])) {
                     $attachment = $lead->get($field);
@@ -355,7 +360,7 @@ class Lead extends Record implements
                 'duplicates' => $duplicateList,
             ];
 
-            throw new ConflictSilent(json_encode($reason));
+            throw new ConflictSilent(Json::encode($reason));
         }
 
         $lead->set('status', 'Converted');

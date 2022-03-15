@@ -502,7 +502,7 @@ class Campaign extends Record implements
         }
 
         $filename = $campaign->get('name') . ' - ' .
-            $this->defaultLanguage->translate($targetEntityType, 'scopeNamesPlural');
+            $this->defaultLanguage->translateLabel($targetEntityType, 'scopeNamesPlural');
 
         return $this->getPdfService()->generateMailMerge(
             $targetEntityType,

@@ -96,12 +96,16 @@ class Unsubscribe implements EntryPoint
         $hash = $request->getQueryParam('hash') ?? null;
 
         if ($emailAddress && $hash) {
+            if (!is_string($emailAddress) || !is_string($hash)) {
+                throw new BadRequest();
+            }
+
             $this->processWithHash($emailAddress, $hash);
 
             return;
         }
 
-        if (!$id) {
+        if (!$id || !is_string($id)) {
             throw new BadRequest();
         }
 

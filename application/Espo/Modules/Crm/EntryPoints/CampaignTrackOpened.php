@@ -65,7 +65,7 @@ class CampaignTrackOpened implements EntryPoint
     {
         $id = $request->getQueryParam('id');
 
-        if (!$id) {
+        if (!$id || !is_string($id)) {
             throw new BadRequest();
         }
 

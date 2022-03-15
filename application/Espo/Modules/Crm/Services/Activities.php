@@ -728,7 +728,7 @@ class Activities implements
 
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $boolAttributeList = ['hasAttachment'];
 
@@ -942,20 +942,23 @@ class Activities implements
 
         $this->accessCheck($entity);
 
-        $fetchAll = empty($params['scope']);
+        $targetScope = $params['scope'] ?? null;
 
-        if (!$fetchAll) {
-            if (!$this->metadata->get(['scopes', $params['scope'], 'activity'])) {
-                throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
+        $fetchAll = empty($targetScope);
+
+        if ($targetScope) {
+            if (!$this->metadata->get(['scopes', $targetScope, 'activity'])) {
+                throw new Error('Entity \'' . $targetScope . '\' is not an activity');
             }
         }
 
         $parts = [];
 
+        /** @var string[] */
         $entityTypeList = $this->config->get('activitiesEntityList', ['Meeting', 'Call']);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$fetchAll && $params['scope'] !== $entityType) {
+            if (!$fetchAll && $targetScope !== $entityType) {
                 continue;
             }
 
@@ -997,19 +1000,23 @@ class Activities implements
 
         $this->accessCheck($entity);
 
-        $fetchAll = empty($params['scope']);
+        $targetScope = $params['scope'] ?? null;
 
-        if (!$fetchAll) {
-            if (!$this->metadata->get(['scopes', $params['scope'], 'activity'])) {
-                throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
+        $fetchAll = empty($targetScope);
+
+        if ($targetScope) {
+            if (!$this->metadata->get(['scopes', $targetScope, 'activity'])) {
+                throw new Error('Entity \'' . $targetScope . '\' is not an activity');
             }
         }
 
         $parts = [];
+
+        /** @var string[] */
         $entityTypeList = $this->config->get('historyEntityList', ['Meeting', 'Call', 'Email']);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$fetchAll && $params['scope'] !== $entityType) {
+            if (!$fetchAll && $targetScope !== $entityType) {
                 continue;
             }
 
@@ -1878,7 +1885,7 @@ class Activities implements
 
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
-        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         return $rowList;
     }
@@ -2060,7 +2067,8 @@ class Activities implements
             ];
         }
 
-        $builder = $this->entityManager->getQueryBuilder()
+        $builder = $this->entityManager
+            ->getQueryBuilder()
             ->union();
 
         foreach ($queryList as $query) {
@@ -2081,8 +2089,8 @@ class Activities implements
 
         $totalCount = $row['count'];
 
-        $offset = intval($params['offset']);
-        $maxSize = intval($params['maxSize']);
+        $offset = intval($params['offset'] ?? 0);
+        $maxSize = intval($params['maxSize'] ?? 0);
 
         $unionQuery = $builder
             ->order('dateStart')
@@ -2093,7 +2101,7 @@ class Activities implements
 
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $sth->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $entityDataList = [];
 
