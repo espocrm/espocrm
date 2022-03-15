@@ -38,7 +38,7 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
 
         $data = $app->getContainer()->get('serviceFactory')->create('Settings')->getConfigData();
 
-        $this->assertTrue(property_exists($data, 'version'));
+        $this->assertTrue(property_exists($data, 'cacheTimestamp'));
         $this->assertFalse(property_exists($data, 'googleMapsApiKey'));
         $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
         $this->assertFalse(property_exists($data, 'jobPeriod'));
