@@ -188,7 +188,7 @@ class Converter
     /**
      * Covert metadata > entityDefs to ORM metadata.
      *
-     * @return array<string,mixed>
+     * @return array<string,array<string,mixed>>
      */
     public function process(): array
     {

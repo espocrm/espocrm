@@ -273,6 +273,7 @@ class Manager
      * If a file is not yet written, it will wait until it's ready.
      *
      * @return array<mixed,mixed>|stdClass
+     * @throws Error
      */
     public function getPhpSafeContents(string $path)
     {

@@ -124,9 +124,7 @@ class Route
 
             $this->data = $data;
 
-            if ($this->data !== null) {
-                return;
-            }
+            return;
         }
 
         $this->data = $this->unify();

@@ -61,8 +61,8 @@ class DataCache
     /**
      * Get a stored value.
      *
-     * @throws Error if is not cached.
-     * @return array<mixed,mixed>|stdClass|null
+     * @return array<mixed,mixed>|stdClass
+     * @throws Error If is not cached or bad data stored.
      */
     public function get(string $key)
     {
@@ -74,7 +74,7 @@ class DataCache
     /**
      * Store in cache.
      *
-     * @param array<mixed,mixed>|stdClass|null $data
+     * @param array<mixed,mixed>|stdClass $data
      */
     public function store(string $key, $data): void
     {

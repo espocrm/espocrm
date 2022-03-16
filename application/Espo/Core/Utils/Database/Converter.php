@@ -64,7 +64,7 @@ class Converter
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string,array<string,mixed>>
      */
     public function process()
     {
