@@ -121,6 +121,7 @@ class Note extends Entity
 
     public function getCreatedAt(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('createdAt');
     }
 

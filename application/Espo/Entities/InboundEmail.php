@@ -53,11 +53,13 @@ class InboundEmail extends Entity
 
     public function getAssignToUser(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('assignToUser');
     }
 
     public function getTeam(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('team');
     }
 
@@ -98,6 +100,7 @@ class InboundEmail extends Entity
 
     public function getFetchSince(): ?Date
     {
+        /** @var ?Date */
         return $this->getValueObject('fetchSince');
     }
 

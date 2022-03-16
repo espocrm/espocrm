@@ -53,12 +53,14 @@ class EmailAccount extends Entity
 
     public function getAssignedUser(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('assignedUser');
     }
 
     public function getTeams(): LinkMultiple
     {
-         return LinkMultiple::create();
+        /** @var LinkMultiple */
+        return LinkMultiple::create();
     }
 
     public function keepFetchedEmailsUnread(): bool
@@ -87,11 +89,13 @@ class EmailAccount extends Entity
 
     public function getFetchSince(): ?Date
     {
+        /** @var ?Date */
         return $this->getValueObject('fetchSince');
     }
 
     public function getEmailFolder(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('emailFolder');
     }
 

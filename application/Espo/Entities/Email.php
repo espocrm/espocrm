@@ -197,6 +197,7 @@ class Email extends Entity
             return $this->getFromContainer('bodyPlain');
         }
 
+        /** @var string */
         $body = $this->get('body') ?? '';
 
         $breaks = ["<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;"];
@@ -231,6 +232,7 @@ class Email extends Entity
         ];
 
         foreach ($reList as $i => $re) {
+            /** @var string */
             $body = mb_ereg_replace($re, $replaceList[$i], $body, 'i');
         }
 
@@ -312,6 +314,7 @@ class Email extends Entity
 
     public function getDateSent(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('dateSent');
     }
 
@@ -504,6 +507,7 @@ class Email extends Entity
 
     public function getParent(): ?LinkParent
     {
+        /** @var ?LinkParent */
         return $this->getValueObject('parent');
     }
 
@@ -521,6 +525,7 @@ class Email extends Entity
 
     public function getCreatedBy(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('createdBy');
     }
 

@@ -81,6 +81,7 @@ class Notification extends \Espo\Core\ORM\Entity
 
     public function getRelated(): ?LinkParent
     {
+        /** @var ?LinkParent */
         return $this->getValueObject('related');
     }
 

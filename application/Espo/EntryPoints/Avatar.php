@@ -30,6 +30,7 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\NotStrictAuth;
 use Espo\Core\Di;
@@ -143,15 +144,27 @@ class Avatar extends Image implements Di\MetadataAware
 
         $img  = imagecreatetruecolor(14, 14);
 
+        if ($img === false) {
+            throw new Error();
+        }
+
         imagesavealpha($img, true);
 
         $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
+
+        if ($color === false) {
+            throw new Error();
+        }
 
         imagefill($img, 0, 0, $color);
         imagepng($img);
         imagecolordeallocate($img, $color);
 
         $contents = ob_get_contents();
+
+        if ($contents === false) {
+            throw new Error();
+        }
 
         ob_end_clean();
 

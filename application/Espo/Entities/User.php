@@ -101,16 +101,19 @@ class User extends Person
 
     public function getRoles(): LinkMultiple
     {
+        /** @var LinkMultiple */
         return $this->getValueObject('roles');
     }
 
     public function getDefaultTeam(): ?Link
     {
+        /** @var ?Link */
         return $this->getValueObject('defaultTeam');
     }
 
     public function getTeams(): LinkMultiple
     {
+        /** @var LinkMultiple */
         return $this->getValueObject('teams');
     }
 

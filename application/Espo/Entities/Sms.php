@@ -51,11 +51,13 @@ class Sms extends Entity implements SmsInterface
 
     public function getDateSent(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('dateTime');
     }
 
     public function getCreatedAt(): ?DateTime
     {
+        /** @var ?DateTime */
         return $this->getValueObject('createdAt');
     }
 
