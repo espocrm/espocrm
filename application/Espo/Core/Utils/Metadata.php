@@ -381,7 +381,12 @@ class Metadata
             return $default;
         }
 
-        $fileContent = $this->fileManager->getContents($filePath);
+        try {
+            $fileContent = $this->fileManager->getContents($filePath);
+        }
+        catch (Error $e) {
+            return $default;
+        }
 
         return Json::decode($fileContent);
     }

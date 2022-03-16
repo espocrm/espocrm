@@ -65,33 +65,32 @@ class Util
      * ex. Espo/Utils to Espo\Utils
      *
      * @param string $name
-     * @param string $delim - delimiter
+     * @param string $delimiter
      *
      * @return string
      */
-    public static function toFormat($name, $delim = '/')
+    public static function toFormat($name, $delimiter = '/')
     {
-        return preg_replace("/[\/\\\]/", $delim, $name);
+        return preg_replace("/[\/\\\]/", $delimiter, $name);
     }
 
 
     /**
      * Convert name to Camel Case format, ex. camel_case to camelCase.
      *
-     * @param string|string[] $input
-     * @param string $symbol
+     * @param string $input
      * @param bool $capitaliseFirstChar
      *
-     * @return string|string[]
+     * @return string
      */
-    public static function toCamelCase($input, $symbol = '_', $capitaliseFirstChar = false)
+    public static function toCamelCase($input, string $symbol = '_', bool $capitaliseFirstChar = false)
     {
-        if (is_array($input)) {
+        if (is_array($input)) { /** @phpstan-ignore-line */
             foreach ($input as &$value) {
                 $value = static::toCamelCase($value, $symbol, $capitaliseFirstChar);
             }
 
-            return $input;
+            return $input; /** @phpstan-ignore-line */
         }
 
         $input = lcfirst($input);
@@ -100,33 +99,32 @@ class Util
             $input = ucfirst($input);
         }
 
-        return preg_replace_callback('/' . $symbol . '([a-zA-Z])/', 'static::toCamelCaseConversion', $input);
-    }
-
-    /**
-     * @param string[] $matches
-     * @return string
-     * @internal Used by toCamelCase.
-     */
-    protected static function toCamelCaseConversion($matches)
-    {
-        return strtoupper($matches[1]);
+        return preg_replace_callback(
+            '/' . $symbol . '([a-zA-Z])/',
+            /**
+             * @param string[] $matches
+             */
+            function ($matches): string {
+                return strtoupper($matches[1]);
+            },
+            $input
+        );
     }
 
     /**
      * Convert name from Camel Case format. Ex. camelCase to camel-case.
      *
-     * @param string|string[] $input
-     * @return string|string[]
+     * @param string $input
+     * @return string
      */
     public static function fromCamelCase($input, string $symbol = '_')
     {
-        if (is_array($input)) {
+        if (is_array($input)) { /** @phpstan-ignore-line */
             foreach ($input as &$value) {
                 $value = static::fromCamelCase($value, $symbol);
             }
 
-            return $input;
+            return $input; /** @phpstan-ignore-line */
         }
 
         $input[0] = strtolower($input[0]);
@@ -141,11 +139,11 @@ class Util
     }
 
     /**
-     * Convert name from Camel Case format to underscore.
-     * ex. camelCase to camel_case
+     * Convert a string from Camel Case to underscore.
+     * Ex. camelCase to camel_case
      *
-     * @param string|string[] $input
-     * @return string|string[]
+     * @param string $input
+     * @return string
      */
     public static function toUnderScore($input)
     {
@@ -297,7 +295,10 @@ class Util
         /** @phpstan-var mixed $array */
 
         if (is_array($array)) {
-            return (object) array_map("static::arrayToObject", $array);
+            /** @var callable */
+            $callable = ['static', 'arrayToObject'];
+
+            return (object) array_map($callable, $array);
         }
 
         /** @phpstan-var object $array */
@@ -319,7 +320,10 @@ class Util
             $object = (array) $object;
         }
 
-        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+        /** @var callable */
+        $callable = ['static', 'objectToArray'];
+
+        return is_array($object) ? array_map($callable, $object) : $object;
     }
 
     /**
@@ -379,14 +383,14 @@ class Util
      *
      * @param string $search
      * @param string $replace
-     * @param string[]|string|false $array
+     * @param string[]|string $array
      * @param bool $isKeys
-     * @return string|string[]
+     * @return string|array<scalar,mixed>
      *
      * @todo Maybe to remove the method.
      * @deprecated
      */
-    public static function replaceInArray($search = '', $replace = '', $array = false, $isKeys = true)
+    public static function replaceInArray($search = '', $replace = '', $array = [], $isKeys = true)
     {
         if (!is_array($array)) {
             return str_replace($search, $replace, $array);
@@ -484,7 +488,7 @@ class Util
     /**
      * Get class name from the file path.
      *
-     * @return class-string
+     * @return class-string<object>
      */
     public static function getClassName(string $filePath): string
     {
@@ -492,6 +496,7 @@ class Util
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
         $className = static::toFormat($className, '\\');
 
+        /** @var class-string<object> */
         return $className;
     }
 
@@ -762,7 +767,7 @@ class Util
             $a1 = get_object_vars($v1);
             $a2 = get_object_vars($v2);
 
-            foreach ($v1 as $key => $itemValue) {
+            foreach ($a1 as $key => $itemValue) {
                 if (is_object($a1[$key]) && is_object($a2[$key])) {
                     if (!self::areValuesEqual($a1[$key], $a2[$key])) {
                         return false;
