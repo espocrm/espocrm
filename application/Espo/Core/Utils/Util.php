@@ -288,7 +288,7 @@ class Util
      * Convert array to object format recursively.
      *
      * @param array<string,mixed> $array
-     * @return object
+     * @return \stdClass
      */
     public static function arrayToObject($array)
     {
@@ -301,8 +301,7 @@ class Util
             return (object) array_map($callable, $array);
         }
 
-        /** @phpstan-var object $array */
-
+        /** @var \stdClass */
         return $array;
     }
 

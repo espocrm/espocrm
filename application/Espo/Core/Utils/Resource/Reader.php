@@ -52,15 +52,21 @@ class Reader
 
     /**
      * Read resource data.
-     *
-     * @return stdClass|array<string,mixed>
      */
-    public function read(string $path, Params $params)
+    public function read(string $path, Params $params): stdClass
     {
-        if ($params->asArray()) {
-            return $this->unifier->unify($path, $params->noCustom());
-        }
-
+        /** @var stdClass */
         return $this->unifierObj->unify($path, $params->noCustom());
+    }
+
+    /**
+     * Read resource data as an associative array.
+     *
+     * @return array<string,mixed>
+     */
+    public function readAsArray(string $path, Params $params): array
+    {
+        /** @var array<string,mixed> */
+        return $this->unifier->unify($path, $params->noCustom());
     }
 }

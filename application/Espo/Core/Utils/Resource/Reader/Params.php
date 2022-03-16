@@ -33,8 +33,6 @@ class Params
 {
     private bool $noCustom = false;
 
-    private bool $asArray = false;
-
     public static function create(): self
     {
         return new self();
@@ -48,21 +46,8 @@ class Params
         return $obj;
     }
 
-    public function withAsArray(bool $asArray = true): self
-    {
-        $obj = clone $this;
-        $obj->asArray = $asArray;
-
-        return $obj;
-    }
-
     public function noCustom(): bool
     {
         return $this->noCustom;
-    }
-
-    public function asArray(): bool
-    {
-        return $this->asArray;
     }
 }

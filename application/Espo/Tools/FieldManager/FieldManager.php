@@ -752,7 +752,7 @@ class FieldManager
             }
         }
 
-        $metaFieldDefs = $this->metadataHelper->getFieldDefsInFieldMeta($filteredFieldDefs);
+        $metaFieldDefs = $this->metadataHelper->getFieldDefsInFieldMetadata($filteredFieldDefs);
 
         if (isset($metaFieldDefs)) {
             $filteredFieldDefs = Util::merge($metaFieldDefs, $filteredFieldDefs);

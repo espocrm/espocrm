@@ -408,13 +408,13 @@ class Language
         $cacheKey = $this->getCacheKey($language);
 
         if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
-            $readerParams = ResourceReaderParams::create()
-                ->withAsArray()
+            $readerParams = ResourceReaderParams
+                ::create()
                 ->withNoCustom($this->noCustom);
 
             $path = str_replace('{language}', $language, $this->resourcePath);
 
-            $data = $this->resourceReader->read($path, $readerParams);
+            $data = $this->resourceReader->readAsArray($path, $readerParams);
 
             if (is_array($data)) {
                 $this->sanitizeData($data);

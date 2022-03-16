@@ -74,8 +74,7 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
 
     public function testRead2(): void
     {
-        $params = ReaderParams::create()
-            ->withAsArray();
+        $params = ReaderParams::create();
 
         $this->unifier
             ->expects($this->once())
@@ -83,13 +82,12 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
             ->with('test/hello', false)
             ->willReturn([]);
 
-        $this->reader->read('test/hello', $params);
+        $this->reader->readAsArray('test/hello', $params);
     }
 
     public function testRead3(): void
     {
         $params = ReaderParams::create()
-            ->withAsArray()
             ->withNoCustom();
 
         $this->unifier
@@ -98,6 +96,6 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
             ->with('test/hello', true)
             ->willReturn([]);
 
-        $this->reader->read('test/hello', $params);
+        $this->reader->readAsArray('test/hello', $params);
     }
 }

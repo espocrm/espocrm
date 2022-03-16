@@ -66,29 +66,25 @@ class Helper
     /**
      * Get field definition by type in metadata, "fields" key.
      *
-     * @param array<string,mixed>|string $fieldDef It can be a string or field definition from entityDefs.
+     * @param array<string,mixed> $defs It can be a string or field definition from entityDefs.
      * @return ?array<string,mixed>
      */
-    public function getFieldDefsByType($fieldDef)
+    public function getFieldDefsByType($defs)
     {
-        if (is_string($fieldDef)) {
-            $fieldDef = ['type' => $fieldDef];
-        }
-
-        if (isset($fieldDef['type'])) {
-            return $this->metadata->get('fields.' . $fieldDef['type']);
+        if (isset($defs['type'])) {
+            return $this->metadata->get('fields.' . $defs['type']);
         }
 
         return null;
     }
 
     /**
-     * @param array<string,mixed>|string $fieldDef
+     * @param array<string,mixed> $defs
      * @return ?array<string,mixed>
      */
-    public function getFieldDefsInFieldMeta($fieldDef)
+    public function getFieldDefsInFieldMetadata($defs)
     {
-        $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+        $fieldDefsByType = $this->getFieldDefsByType($defs);
 
         if (isset($fieldDefsByType['fieldDefs'])) {
             return $fieldDefsByType['fieldDefs'];
@@ -102,13 +98,13 @@ class Helper
      * In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}").
      * Variables should be defined into fieldDefs (in 'entityDefs' metadata).
      *
-     * @param string $entityName
-     * @param array<string,mixed>|string $fieldDef
+     * @param string $entityType
+     * @param array<string,mixed> $defs
      * @return ?array<string,mixed>
      */
-    public function getLinkDefsInFieldMeta($entityName, $fieldDef)
+    public function getLinkDefsInFieldMeta($entityType, $defs)
     {
-        $fieldDefsByType = $this->getFieldDefsByType($fieldDef);
+        $fieldDefsByType = $this->getFieldDefsByType($defs);
 
         if (!isset($fieldDefsByType['linkDefs'])) {
             return null;
@@ -118,11 +114,11 @@ class Helper
 
         foreach ($linkFieldDefsByType as &$paramValue) {
             if (preg_match('/{(.*?)}/', $paramValue, $matches)) {
-                if (in_array($matches[1], array_keys($fieldDef))) {
-                    $value = $fieldDef[$matches[1]];
+                if (in_array($matches[1], array_keys($defs))) {
+                    $value = $defs[$matches[1]];
                 }
                 else if (strtolower($matches[1]) == 'entity') {
-                    $value = $entityName;
+                    $value = $entityType;
                 }
 
                 if (isset($value)) {
@@ -151,17 +147,21 @@ class Helper
         $fieldType = $fieldParams['type'];
         $fieldDefinition = isset($definitionList[$fieldType]) ? $definitionList[$fieldType] : null;
 
-        if (isset($fieldDefinition) && !empty($fieldDefinition['fields']) && is_array($fieldDefinition['fields'])) {
-
+        if (
+            isset($fieldDefinition) &&
+            !empty($fieldDefinition['fields']) &&
+            is_array($fieldDefinition['fields'])
+        ) {
             $copiedParams = array_intersect_key($fieldParams, array_flip($this->copiedDefParams));
 
-            $additionalFields = array();
+            $additionalFields = [];
 
             // add additional fields
             foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
                 $namingType = isset($fieldDefinition['naming']) ? $fieldDefinition['naming'] : $this->defaultNaming;
 
                 $subFieldNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
+
                 $additionalFields[$subFieldNaming] = array_merge($copiedParams, $subFieldParams);
             }
 

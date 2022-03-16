@@ -115,14 +115,17 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->cacheKey) && !$reload) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+            /** @var array<string,mixed> */
+            $data = $this->dataCache->get($this->cacheKey);
+
+            $this->data = $data;
 
             return;
         }
 
         $this->clearVars();
 
-        $objData = $this->getAllObjects(false, $reload);
+        $objData = $this->getObjData($reload);
 
         $this->data = Util::objectToArray($objData);
 
@@ -186,7 +189,10 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->objCacheKey) && !$reload) {
-            $this->objData = $this->dataCache->get($this->objCacheKey);
+            /** @var stdClass */
+            $data = $this->dataCache->get($this->objCacheKey);
+
+            $this->objData = $data;
 
             return;
         }
@@ -223,23 +229,9 @@ class Metadata
         return Util::getValueByKey($objData, $key, $default);
     }
 
-    /**
-     * @return stdClass|string
-     */
-    public function getAllObjects(bool $isJSON = false, bool $reload = false)
-    {
-        $objData = $this->getObjData($reload);
-
-        if ($isJSON) {
-            return Json::encode($objData);
-        }
-
-        return $objData;
-    }
-
     public function getAllForFrontend(): stdClass
     {
-        $data = $this->getAllObjects();
+        $data = $this->getObjData();
 
         $frontendHiddenPathList = $this->get(['app', 'metadata', 'frontendHiddenPathList'], []);
 
@@ -353,7 +345,8 @@ class Metadata
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
                     if (isset($entityDefsItem->fields->$subFieldName)) {
                         $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(
-                            Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName
+                            Util::arrayToObject($subFieldParams),
+                            $entityDefsItem->fields->$subFieldName
                         );
                     }
                     else {
@@ -414,7 +407,7 @@ class Metadata
     /**
      * Set Metadata data.
      *
-     * @param array<mixed,mixed>|scalar|null $data
+     * @param array<string,mixed>|scalar|null $data
      */
     public function set(string $key1, string $key2, $data): void
     {
@@ -432,10 +425,17 @@ class Metadata
             ],
         ];
 
-        $this->changedData = Util::merge($this->changedData, $newData);
-        $this->data = Util::merge($this->getData(), $newData);
+        /** @var array<string,array<string,mixed>> */
+        $mergedChangedData = Util::merge($this->changedData, $newData);
+        /** @var array<string,mixed> */
+        $mergedData = Util::merge($this->getData(), $newData);
 
-        $this->undelete($key1, $key2, $data);
+        $this->changedData = $mergedChangedData;
+        $this->data = $mergedData;
+
+        if (is_array($data)) {
+            $this->undelete($key1, $key2, $data);
+        }
     }
 
     /**
@@ -494,14 +494,21 @@ class Metadata
             ]
         ];
 
-        $this->deletedData = Util::merge($this->deletedData, $unsetData);
-        $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
+        /** @var array<string,array<string,mixed>> */
+        $mergedDeletedData = Util::merge($this->deletedData, $unsetData);
+        $this->deletedData = $mergedDeletedData;
 
-        $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
+        /** @var array<string,array<string,mixed>> */
+        $unsedDeletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
+        $this->deletedData = $unsedDeletedData;
+
+        /** @var array<string,mixed> */
+        $data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
+        $this->data = $data;
     }
 
     /**
-     * @param stdClass|array<string,mixed> $data
+     * @param array<string,mixed> $data
      */
     private function undelete(string $key1, string $key2, $data): void
     {
