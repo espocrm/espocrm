@@ -89,13 +89,8 @@ class Manager
     private function loadData(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+            /** @var array<string,bool> $data */
             $data = $this->dataCache->get($this->cacheKey);
-
-            if (!is_array($data)) {
-                $data = null;
-            }
-
-            /** @var ?array<string,bool> $data */
 
             $this->data = $data;
         }
