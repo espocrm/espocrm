@@ -110,9 +110,23 @@ class Route
         $useCache = $this->config->get('useCache');
 
         if ($this->dataCache->has($this->cacheKey) && $useCache) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+            /**
+             * @var ?array<
+             *   int,
+             *   array{
+             *     route:string,
+             *     method:string,
+             *     noAuth?:bool,
+             *   }
+             * >
+             */
+            $data = $this->dataCache->get($this->cacheKey);
 
-            return;
+            $this->data = $data;
+
+            if ($this->data !== null) {
+                return;
+            }
         }
 
         $this->data = $this->unify();
@@ -255,13 +269,21 @@ class Route
 
     public static function detectBasePath(): string
     {
-        $scriptName = parse_url($_SERVER['SCRIPT_NAME'] , PHP_URL_PATH);
+        /** @var string */
+        $serverScriptName = $_SERVER['SCRIPT_NAME'];
+
+        /** @var string */
+        $serverRequestUri = $_SERVER['REQUEST_URI'];
+
+        /** @var string */
+        $scriptName = parse_url($serverScriptName , PHP_URL_PATH);
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
         $scriptDir = dirname($scriptNameModified);
 
-        $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        /** @var string */
+        $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
 
         if (stripos($uri, $scriptName) === 0) {
             return $scriptName;
@@ -278,7 +300,11 @@ class Route
     {
         $basePath = self::detectBasePath();
 
-        $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        /** @var string */
+        $serverRequestUri = $_SERVER['REQUEST_URI'];
+
+        /** @var string */
+        $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
 
         if ($uri === $basePath) {
             return '/';

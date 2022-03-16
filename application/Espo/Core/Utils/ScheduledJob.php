@@ -120,6 +120,10 @@ class ScheduledJob
 
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
 
+        if (!is_array($desc)) {
+            $desc = [];
+        }
+
         $data = [
             'PHP-BINARY' => $this->systemUtil->getPhpBinary(),
             'CRON-FILE' => $this->cronFile,

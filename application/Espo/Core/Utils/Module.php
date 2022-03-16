@@ -111,9 +111,14 @@ class Module
     private function init(): void
     {
         if ($this->useCache && $this->dataCache->has($this->cacheKey)) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+            /** @var ?array<string,array<string,mixed>> */
+            $data = $this->dataCache->get($this->cacheKey);
 
-            return;
+            $this->data = $data;
+
+            if ($data !== null) {
+                return;
+            }
         }
 
         $this->data = $this->loadData();

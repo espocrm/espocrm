@@ -64,7 +64,7 @@ class SystemRequirements
      * @return array{
      *   php: array<string,array<string,mixed>>,
      *   database: array<string,array<string,mixed>>,
-     *   permission: array<string,array{type:string,acceptable:int}>,
+     *   permission: array<string,array<string,mixed>>,
      * }
      */
     public function getAllRequiredList(bool $requiredOnly = false): array
@@ -228,6 +228,7 @@ class SystemRequirements
         switch ($type) {
             case 'requiredPhpVersion':
                 $actualVersion = $this->systemHelper->getPhpVersion();
+                /** @var string */
                 $requiredVersion = $data;
 
                 $acceptable = true;
@@ -247,6 +248,7 @@ class SystemRequirements
 
             case 'requiredPhpLibs':
             case 'recommendedPhpLibs':
+                /** @var string[] $data */
                 foreach ($data as $name) {
                     $acceptable = $this->systemHelper->hasPhpExtension($name);
 
@@ -260,9 +262,10 @@ class SystemRequirements
                 break;
 
             case 'recommendedPhpParams':
+                /** @var string[] $data */
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
-                    $actualValue = $this->systemHelper->getPhpParam($name);
+                    $actualValue = $this->systemHelper->getPhpParam($name) ?: '0';
 
                     $acceptable = (
                         Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)
@@ -306,6 +309,7 @@ class SystemRequirements
         switch ($type) {
             case 'requiredMysqlVersion':
             case 'requiredMariadbVersion':
+                /** @var string $data */
                 $actualVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
                 $requiredVersion = $data;
 
@@ -324,6 +328,7 @@ class SystemRequirements
 
             case 'recommendedMysqlParams':
             case 'recommendedMariadbParams':
+                /** @var string[] $data */
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
                     $actualValue = $databaseHelper->getPdoDatabaseParam($name, $pdo);
@@ -357,33 +362,33 @@ class SystemRequirements
                 break;
 
             case 'connection':
-                    if (!$databaseParams) {
-                        $databaseParams = $this->config->get('database');
-                    }
+                if (!$databaseParams) {
+                    $databaseParams = $this->config->get('database');
+                }
 
-                    $acceptable = true;
+                $acceptable = true;
 
-                    if (!$pdo instanceof PDO) {
-                        $acceptable = false;
-                    }
+                if (!$pdo instanceof PDO) {
+                    $acceptable = false;
+                }
 
-                    $list['host'] = [
-                        'type' => 'connection',
-                        'acceptable' => $acceptable,
-                        'actual' => $databaseParams['host'],
-                    ];
-                    $list['dbname'] = [
-                        'type' => 'connection',
-                        'acceptable' => $acceptable,
-                        'actual' => $databaseParams['dbname'],
-                    ];
-                    $list['user'] = [
-                        'type' => 'connection',
-                        'acceptable' => $acceptable,
-                        'actual' => $databaseParams['user'],
-                    ];
+                $list['host'] = [
+                    'type' => 'connection',
+                    'acceptable' => $acceptable,
+                    'actual' => $databaseParams['host'],
+                ];
+                $list['dbname'] = [
+                    'type' => 'connection',
+                    'acceptable' => $acceptable,
+                    'actual' => $databaseParams['dbname'],
+                ];
+                $list['user'] = [
+                    'type' => 'connection',
+                    'acceptable' => $acceptable,
+                    'actual' => $databaseParams['user'],
+                ];
 
-                    break;
+                break;
         }
 
         return $list;

@@ -97,7 +97,7 @@ class System
      */
     public function getRootDir(): string
     {
-        $bPath = realpath('bootstrap.php');
+        $bPath = realpath('bootstrap.php') ?: '';
         $rootDir = dirname($bPath);
 
         return $rootDir;
@@ -162,11 +162,17 @@ class System
      */
     public static function getPid(): ?int
     {
-        if (function_exists('getmypid')) {
-            return getmypid();
+        if (!function_exists('getmypid')) {
+            return null;
         }
 
-        return null;
+        $pid = getmypid();
+
+        if ($pid === false) {
+            return null;
+        }
+
+        return $pid;
     }
 
     public static function isProcessActive(?int $pid): bool

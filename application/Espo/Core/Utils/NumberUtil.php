@@ -60,7 +60,7 @@ class NumberUtil
         }
 
         if (!is_null($decimals)) {
-            return number_format($value, $decimals, $decimalMark, $thousandSeparator);
+            return number_format((float) $value, $decimals, $decimalMark, $thousandSeparator);
         }
 
         $arr = explode('.', strval($value));
