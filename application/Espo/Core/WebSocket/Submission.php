@@ -30,6 +30,7 @@
 namespace Espo\Core\WebSocket;
 
 use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Json;
 
 use stdClass;
 use Throwable;
@@ -61,7 +62,7 @@ class Submission
 
         $data->topicId = $topic;
 
-        $message = json_encode($data);
+        $message = Json::encode($data);
 
         try {
             $this->sender->send($message);

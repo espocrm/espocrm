@@ -48,10 +48,7 @@ use Espo\Entities\{
  */
 class Manager
 {
-    /**
-     * @var string
-     */
-    private $cacheKey = 'webhooks';
+    private string $cacheKey = 'webhooks';
 
     /**
      * @var string[]
@@ -63,15 +60,15 @@ class Manager
      */
     private $data = null;
 
-    private $config;
+    private Config $config;
 
-    private $dataCache;
+    private DataCache $dataCache;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $fieldUtil;
+    private FieldUtil $fieldUtil;
 
-    private $log;
+    private Log $log;
 
     public function __construct(
         Config $config,
@@ -91,10 +88,16 @@ class Manager
 
     private function loadData(): void
     {
-        if ($this->config->get('useCache')) {
-            if ($this->dataCache->has($this->cacheKey)) {
-                $this->data = $this->dataCache->get($this->cacheKey);
+        if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+            $data = $this->dataCache->get($this->cacheKey);
+
+            if (!is_array($data)) {
+                $data = null;
             }
+
+            /** @var ?array<string,bool> $data */
+
+            $this->data = $data;
         }
 
         if (is_null($this->data)) {
@@ -128,8 +131,11 @@ class Manager
             ])
             ->find();
 
-        foreach ($list as $e) {
-            $data[$e->get('event')] = true;
+        foreach ($list as $webhook) {
+            /** @var string */
+            $event = $webhook->getEvent();
+
+            $data[$event] = true;
         }
 
         return $data;

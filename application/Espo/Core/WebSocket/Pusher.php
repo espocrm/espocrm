@@ -75,10 +75,7 @@ class Pusher implements WampServerInterface
      */
     protected $topicHash = [];
 
-    /**
-     * @var ?string
-     */
-    private $phpExecutablePath;
+    private string $phpExecutablePath;
 
     /**
      * @param array<string,array<string,mixed>> $categoriesData
@@ -91,7 +88,19 @@ class Pusher implements WampServerInterface
         $this->categoryList = array_keys($categoriesData);
         $this->categoriesData = $categoriesData;
 
-        $this->phpExecutablePath = $phpExecutablePath ?: (new PhpExecutableFinder)->find();
+        if (!$phpExecutablePath) {
+            $phpExecutablePath = (new PhpExecutableFinder)->find() ?: null;
+        }
+
+        if (!$phpExecutablePath) {
+            if ($isDebugMode) {
+                $this->log("Error: No php-executable-path.");
+            }
+
+            throw new Exception("No php-executable-path.");
+        }
+
+        $this->phpExecutablePath = $phpExecutablePath;
         $this->isDebugMode = $isDebugMode;
     }
 
@@ -111,6 +120,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
+        /** @var string */
         /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
@@ -169,6 +179,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
+        /** @var string */
         /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
@@ -230,6 +241,7 @@ class Pusher implements WampServerInterface
 
         if (array_key_exists('paramList', $data)) {
             foreach ($data['paramList'] as $i => $item) {
+                /** @var string $item */
                 if (isset($arr[$i + 1])) {
                     $params[$item] = $arr[$i + 1];
                 }
@@ -328,6 +340,7 @@ class Pusher implements WampServerInterface
      */
     protected function subscribeUser(ConnectionInterface $connection, $userId)
     {
+        /** @var string */
         /** @phpstan-ignore-next-line */
         $resourceId = $connection->resourceId;
 

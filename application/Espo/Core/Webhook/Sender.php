@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Webhook;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\Entities\Webhook;
 
-use Espo\Core\{
-    Utils\Config,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Json;
 
 /**
  * Sends a portion.
@@ -53,14 +54,15 @@ class Sender
 
     /**
      * @param array<int,mixed> $dataList
+     * @throws Error
      */
     public function send(Webhook $webhook, array $dataList): int
     {
-        $payload = json_encode($dataList);
+        $payload = Json::encode($dataList);
 
         $signature = null;
 
-        $secretKey = $webhook->get('secretKey');
+        $secretKey = $webhook->getSecretKey();
 
         if ($secretKey) {
             $signature = $this->buildSignature($webhook, $payload, $secretKey);
@@ -78,7 +80,17 @@ class Sender
             $headerList[] = 'X-Signature: ' . $signature;
         }
 
-        $handler = curl_init($webhook->get('url'));
+        $url = $webhook->getUrl();
+
+        if (!$url) {
+            throw new Error("Webhook does not have URL.");
+        }
+
+        $handler = curl_init($url);
+
+        if ($handler === false) {
+            throw new Error("Could not init CURL for URL {$url}.");
+        }
 
         curl_setopt($handler, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($handler, \CURLOPT_FOLLOWLOCATION, true);
