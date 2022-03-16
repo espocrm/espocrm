@@ -159,7 +159,15 @@ class Schema
                 Type::overrideType($dbalTypeName, $class);
             }
 
-            $dbTypeName = method_exists($class, 'getDbTypeName') ? $class::getDbTypeName() : $dbalTypeName;
+            if (method_exists($class, 'getDbTypeName')) {
+                /** @var callable */
+                $getDbTypeNameCallable = [$class, 'getDbTypeName'];
+
+                $dbTypeName = call_user_func($getDbTypeNameCallable);
+            }
+            else {
+                $dbTypeName = $dbalTypeName;
+            }
 
             $this->getConnection()
                 ->getDatabasePlatform()

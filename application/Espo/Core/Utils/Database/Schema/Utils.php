@@ -82,8 +82,12 @@ class Utils
                     if (is_array($indexParams['columns'])) {
                         $indexList[$entityName][$tableIndexName]['type'] = $indexType;
 
-                        $indexList[$entityName][$tableIndexName]['columns'] =
-                            Util::toUnderScore($indexParams['columns']);
+                        $indexList[$entityName][$tableIndexName]['columns'] = array_map(
+                            function ($item) {
+                                return Util::toUnderScore($item);
+                            },
+                            $indexParams['columns']
+                        );
                     }
                 }
             }
