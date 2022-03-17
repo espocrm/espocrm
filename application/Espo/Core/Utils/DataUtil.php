@@ -117,9 +117,9 @@ class DataUtil
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string|int,mixed>|\stdClass $data
      * @param mixed $needle
-     * @return array<string,mixed>
+     * @return array<string|int,mixed>|\stdClass
      */
     public static function unsetByValue(&$data, $needle)
     {
@@ -156,7 +156,7 @@ class DataUtil
      *
      * @param array<string,mixed>|\stdClass $data
      * @param array<string,mixed>|\stdClass $overrideData
-     * @return array<string,mixed>|\stdClass
+     * @return array<string|int,mixed>|\stdClass
      */
     public static function merge($data, $overrideData)
     {
@@ -195,6 +195,8 @@ class DataUtil
             if (empty($data)) {
                 $data = [];
             }
+
+            /** @var array<string,mixed> $data */
 
             if (in_array($appendIdentifier, $overrideData)) {
                 foreach ($overrideData as $key => $item) {

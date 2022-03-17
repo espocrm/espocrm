@@ -36,6 +36,8 @@ use Espo\Core\Utils\Config\ConfigFileManager;
 
 class ConfigTest extends \PHPUnit\Framework\TestCase
 {
+    private ?Config $config = null;
+
     private $defaultTestConfig = 'tests/unit/testData/Utils/Config/config.php';
 
     private $configPath = 'tests/unit/testData/cache/config.php';
@@ -44,7 +46,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     private $internalConfigPath = 'tests/unit/testData/cache/config-internal.php';
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = new ConfigFileManager;
 
@@ -74,7 +76,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('getData', []));
     }
 
-    public function testGet()
+    public function testGet1(): void
     {
         $result = [
             'driver' => 'pdo_mysql',
@@ -108,7 +110,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('adminItems', $configData);
     }
 
-    public function testGet1(): void
+    public function testGet2(): void
     {
         $fileManager = $this->createMock(ConfigFileManager::class);
 
@@ -156,5 +158,56 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
             ],
             $config->getAllNonInternalData(),
         );
+    }
+
+    public function testGet3(): void
+    {
+        $fileManager = $this->createMock(ConfigFileManager::class);
+
+        $fileManager
+            ->method('isFile')
+            ->willReturn(true);
+
+        $data = [
+            'a' => [
+                '1' => 'a1',
+            ],
+            'b' => (object) [
+                '1' => 'b1',
+            ],
+            'c' => 'c',
+            'd' => ['d'],
+        ];
+
+        $dataInternal = [
+        ];
+
+        $dataSystem = [
+        ];
+
+        $fileManager
+            ->method('getPhpContents')
+            ->will(
+                $this->returnValueMap([
+                    ['data/config.php', $data],
+                    ['data/config-internal.php', $dataInternal],
+                    ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
+                ])
+            );
+
+
+        $config = new Config($fileManager);
+
+        $this->assertEquals(['1' => 'a1'], $config->get('a'));
+        $this->assertEquals('a1', $config->get('a.1'));
+        $this->assertEquals('b1', $config->get('b.1'));
+        $this->assertEquals('c', $config->get('c'));
+        $this->assertEquals(['d'], $config->get('d'));
+
+        $this->assertFalse($config->has('a.2'));
+        $this->assertTrue($config->has('a.1'));
+
+        $this->assertTrue($config->has('a'));
+        $this->assertFalse($config->has('0'));
     }
 }

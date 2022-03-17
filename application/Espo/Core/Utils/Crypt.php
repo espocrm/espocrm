@@ -64,7 +64,10 @@ class Crypt
                 throw new RuntimeException("openssl extension is not loaded.");
             }
 
-            $this->iv = openssl_random_pseudo_bytes(16);
+            /** @var string */
+            $iv = openssl_random_pseudo_bytes(16);
+
+            $this->iv = $iv;
         }
 
         return $this->iv;
@@ -93,9 +96,13 @@ class Crypt
             throw new RuntimeException("openssl extension is not loaded.");
         }
 
-        return trim(
-            openssl_decrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA, $iv)
-        );
+        $value = openssl_decrypt($string, 'aes-256-cbc', $this->getKey(), OPENSSL_RAW_DATA, $iv);
+
+        if ($value === false) {
+            throw new RuntimeException("OpenSSL decrypt failure.");
+        }
+
+        return trim($value);
     }
 
     public function generateKey(): string

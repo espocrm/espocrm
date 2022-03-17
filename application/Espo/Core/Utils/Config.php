@@ -122,7 +122,11 @@ class Config
                 return $default;
             }
 
-            if (!isset($lastBranch[$key])) {
+            if (is_array($lastBranch) && !isset($lastBranch[$key])) {
+                return $default;
+            }
+
+            if (is_object($lastBranch) && !property_exists($lastBranch, $key)) {
                 return $default;
             }
 
@@ -152,7 +156,11 @@ class Config
                 return false;
             }
 
-            if (!isset($lastBranch[$key])) {
+            if (is_array($lastBranch) && !isset($lastBranch[$key])) {
+                return false;
+            }
+
+            if (is_object($lastBranch) && !property_exists($lastBranch, $key)) {
                 return false;
             }
 
@@ -311,8 +319,13 @@ class Config
         $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
             $this->fileManager->getPhpContents($this->internalConfigPath) : [];
 
-        $this->data = Util::merge($systemData, $data);
-        $this->data = Util::merge($this->data, $internalData);
+        /** @var array<string,mixed> */
+        $mergedData = Util::merge(
+            Util::merge($systemData, $data),
+            $internalData
+        );
+
+        $this->data = $mergedData;
 
         $this->internalParamList = array_keys($internalData);
 
