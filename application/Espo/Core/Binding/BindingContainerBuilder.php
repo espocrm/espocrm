@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Binding;
 
+use Closure;
+
 class BindingContainerBuilder
 {
     private BindingData $data;
@@ -110,9 +112,9 @@ class BindingContainerBuilder
      * Creates a contextual binder.
      *
      * @param string $className A context.
-     * @param callable $callback A callback with a `ContextualBinder` argument.
+     * @param Closure(ContextualBinder): void $callback A callback with a `ContextualBinder` argument.
      */
-    public function inContext(string $className, callable $callback): self
+    public function inContext(string $className, Closure $callback): self
     {
         $contextualBinder = new ContextualBinder($this->data, $className);
 

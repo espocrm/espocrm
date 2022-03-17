@@ -47,7 +47,7 @@ use Espo\ORM\{
 class RepositoryFactory implements RepositoryFactoryInterface
 {
     /**
-     * @var class-string
+     * @var class-string<Repository<\Espo\ORM\Entity>>
      */
     protected $defaultClassName = DatabaseRepository::class;
 
@@ -69,10 +69,11 @@ class RepositoryFactory implements RepositoryFactoryInterface
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<Repository<\Espo\ORM\Entity>>
      */
     protected function getClassName(string $entityType): ?string
     {
+        /** @var ?class-string<Repository<\Espo\ORM\Entity>> */
         return $this->classFinder->find('Repositories', $entityType);
     }
 

@@ -84,7 +84,7 @@ class FunctionConverterFactory implements FunctionConverterFactoryInterface
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<FunctionConverter>
      */
     private function getClassName(string $name): ?string
     {
@@ -94,6 +94,7 @@ class FunctionConverterFactory implements FunctionConverterFactoryInterface
 
         }
 
+        /** @var ?class-string<FunctionConverter> */
         return $this->hash[$name];
     }
 }

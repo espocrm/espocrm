@@ -53,7 +53,10 @@ class EntityManagerProxy
     private function getEntityManager(): EntityManager
     {
         if (!$this->entityManager) {
-            $this->entityManager = $this->container->get('entityManager');
+            /** @var EntityManager */
+            $entityManager = $this->container->get('entityManager');
+
+            $this->entityManager = $entityManager;
         }
 
         return $this->entityManager;

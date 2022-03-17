@@ -30,6 +30,8 @@
 namespace Espo\Core\Password;
 
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Json;
+
 use Espo\Entities\User;
 use Espo\Entities\PasswordChangeRequest;
 use Espo\Entities\Portal;
@@ -207,7 +209,7 @@ class Recovery
 
         if ($existingRequest) {
             if (!$noExposure) {
-                throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
+                throw new Forbidden(Json::encode(['reason' => 'Already-Sent']));
             }
 
             $this->fail("Password recovery: Denied for {$user->id}, already sent.");

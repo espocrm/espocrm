@@ -68,10 +68,11 @@ class RebuildActionProcessor
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<RebuildAction>[]
      */
     private function getClassNameList(): array
     {
+        /** @var class-string<RebuildAction>[] */
         return $this->metadata->get(['app', 'rebuild', 'actionClassNameList']) ?? [];
     }
 }

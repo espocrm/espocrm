@@ -67,10 +67,11 @@ class EntityFactory implements EntityFactoryInterface
     }
 
     /**
-     * @return class-string
+     * @return ?class-string<\Espo\ORM\Entity>
      */
     private function getClassName(string $entityType): ?string
     {
+        /** @var ?class-string<\Espo\ORM\Entity> */
         return $this->classFinder->find('Entities', $entityType);
     }
 

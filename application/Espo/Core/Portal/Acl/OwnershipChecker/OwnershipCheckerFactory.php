@@ -44,7 +44,7 @@ use Espo\Core\{
 class OwnershipCheckerFactory
 {
     /**
-     * @var class-string
+     * @var class-string<OwnershipChecker>
      */
     private $defaultClassName = DefaultOwnershipChecker::class;
 
@@ -75,13 +75,14 @@ class OwnershipCheckerFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<OwnershipChecker>
      */
     private function getClassName(string $scope): string
     {
         $className = $this->metadata->get(['aclDefs', $scope, 'portalOwnershipCheckerClassName']);
 
         if ($className) {
+            /** @var ?class-string<OwnershipChecker> */
             return $className;
         }
 

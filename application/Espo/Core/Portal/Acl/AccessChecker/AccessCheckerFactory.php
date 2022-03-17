@@ -45,7 +45,7 @@ use Espo\Core\{
 class AccessCheckerFactory
 {
     /**
-     * @var class-string
+     * @var class-string<AccessChecker>
      */
     private $defaultClassName = DefaultAccessChecker::class;
 
@@ -80,10 +80,11 @@ class AccessCheckerFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<AccessChecker>
      */
     private function getClassName(string $scope): string
     {
+        /** @var ?class-string<AccessChecker> */
         $className1 = $this->metadata->get(['aclDefs', $scope, 'portalAccessCheckerClassName']);
 
         if ($className1) {
@@ -95,6 +96,7 @@ class AccessCheckerFactory
         }
 
         // For backward compatibility.
+        /** @var ?class-string<AccessChecker> */
         $className2 = $this->classFinder->find('AclPortal', $scope);
 
         if ($className2) {

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Portal\Acl\AccessChecker;
 
+use Closure;
+
 /**
  * Builds scope checker data.
  */
@@ -106,21 +108,30 @@ class ScopeCheckerDataBuilder
         return $this;
     }
 
-    public function setIsOwnChecker(callable $checker): self
+    /**
+     * @param Closure(): bool $checker
+     */
+    public function setIsOwnChecker(Closure $checker): self
     {
         $this->isOwnChecker = $checker;
 
         return $this;
     }
 
-    public function setInAccountChecker(callable $checker): self
+    /**
+     * @param Closure(): bool $checker
+     */
+    public function setInAccountChecker(Closure $checker): self
     {
         $this->inAccountChecker = $checker;
 
         return $this;
     }
 
-    public function setInContactChecker(callable $checker): self
+    /**
+     * @param Closure(): bool $checker
+     */
+    public function setInContactChecker(Closure $checker): self
     {
         $this->inContactChecker = $checker;
 

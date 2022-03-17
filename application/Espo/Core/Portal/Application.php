@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\ORM\EntityManager;
+
 use Espo\Core\Exceptions\{
     Error,
     NotFound,
@@ -72,6 +74,7 @@ class Application extends BaseApplication
             throw new Error("Portal ID was not passed to Portal\Application.");
         }
 
+        /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('entityManager');
 
         $portal = $entityManager->getEntity('Portal', $portalId);

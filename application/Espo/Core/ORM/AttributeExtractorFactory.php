@@ -78,7 +78,7 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<AttributeExtractor<T>>
      */
     private function getClassName(string $entityType, string $field): ?string
     {
@@ -90,11 +90,13 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
         $className = $fieldDefs->getParam('attributeExtractorClassName');
 
         if ($className) {
+            /** @var class-string<AttributeExtractor<T>> */
             return $className;
         }
 
         $type = $fieldDefs->getType();
 
+        /** @var ?class-string<AttributeExtractor<T>> */
         return $this->metadata->get(['fields', $type, 'attributeExtractorClassName']);
     }
 }

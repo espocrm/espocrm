@@ -31,6 +31,9 @@ namespace Espo\Core\Portal;
 
 use Espo\Entities\Portal as PortalEntity;
 
+use Espo\Core\Portal\Utils\Config;
+use Espo\Core\Portal\AclManager;
+
 use Espo\Core\{
     Container as BaseContainer,
     Exceptions\Error,
@@ -52,12 +55,18 @@ class Container extends BaseContainer
 
         $data = [];
 
-        foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
-            $data[$attribute] = $this->get('portal')->get($attribute);
+        foreach ($portal->getSettingsAttributeList() as $attribute) {
+            $data[$attribute] = $portal->get($attribute);
         }
 
-        $this->get('config')->setPortalParameters($data);
+        /** @var Config $config */
+        $config = $this->get('config');
 
-        $this->get('aclManager')->setPortal($portal);
+        $config->setPortalParameters($data);
+
+        /** @var AclManager $aclManager */
+        $aclManager = $this->get('aclManager');
+
+        $aclManager->setPortal($portal);
     }
 }

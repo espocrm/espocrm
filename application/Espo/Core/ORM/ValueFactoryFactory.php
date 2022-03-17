@@ -74,7 +74,7 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<ValueFactory>
      */
     private function getClassName(string $entityType, string $field): ?string
     {
@@ -83,6 +83,7 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
             ->getEntity($entityType)
             ->getField($field);
 
+        /** @var ?class-string<ValueFactory> */
         $className = $fieldDefs->getParam('valueFactoryClassName');
 
         if ($className) {
@@ -91,6 +92,7 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
 
         $type = $fieldDefs->getType();
 
+        /** @var ?class-string<ValueFactory> */
         return $this->metadata->get(['fields', $type, 'valueFactoryClassName']);
     }
 }
