@@ -60,7 +60,7 @@ class NamespaceLoader
     private string $autoloadFilePath = 'vendor/autoload.php';
 
     /**
-     * @var array<string,string>
+     * @var array<'psr-4'|'psr-0'|'classmap',string>
      */
     private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
@@ -69,7 +69,7 @@ class NamespaceLoader
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<'psr-4'|'psr-0',string>
      */
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
@@ -157,16 +157,18 @@ class NamespaceLoader
     }
 
     /**
+     * @param 'psr-4'|'psr-0'|'classmap' $type
      * @return string[]
      */
     private function getNamespaceList(string $type): array
     {
         $namespaces = $this->getNamespaces();
 
-        return array_keys($namespaces[$type]);
+        return array_keys($namespaces[$type] ?? []);
     }
 
     /**
+     * @param 'psr-4'|'psr-0'|'classmap' $type
      * @param string|array<string,string> $path
      */
     private function addNamespace(string $type, string $name, $path): void
@@ -178,6 +180,9 @@ class NamespaceLoader
         $this->namespaces[$type][$name] = (array) $path;
     }
 
+    /**
+     * @param 'psr-4'|'psr-0'|'classmap' $type
+     */
     private function hasNamespace(string $type, string $name): bool
     {
         if (in_array($name, $this->getNamespaceList($type))) {
@@ -249,11 +254,10 @@ class NamespaceLoader
             $this->vendorNamespaces = [];
 
             if ($useCache && $this->dataCache->has($this->cacheKey)) {
-                $this->vendorNamespaces = $this->dataCache->get($this->cacheKey);
+                /** @var ?array<string,mixed>*/
+                $cachedData = $this->dataCache->get($this->cacheKey);
 
-                if (!is_array($this->vendorNamespaces)) {
-                    $this->vendorNamespaces = [];
-                }
+                $this->vendorNamespaces = $cachedData;
             }
         }
 

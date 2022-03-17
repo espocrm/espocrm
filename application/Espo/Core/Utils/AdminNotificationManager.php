@@ -78,7 +78,7 @@ class AdminNotificationManager
                 $notificationList[] = [
                     'id' => 'cronIsNotConfigured',
                     'type' => 'cronIsNotConfigured',
-                    'message' => $this->language->translate('cronIsNotConfigured', 'messages', 'Admin'),
+                    'message' => $this->language->translateLabel('cronIsNotConfigured', 'messages', 'Admin'),
                 ];
             }
         }
@@ -87,7 +87,7 @@ class AdminNotificationManager
             $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
 
             if (!empty($instanceNeedingUpgrade)) {
-                $message = $this->language->translate('newVersionIsAvailable', 'messages', 'Admin');
+                $message = $this->language->translateLabel('newVersionIsAvailable', 'messages', 'Admin');
 
                 $notificationList[] = [
                     'id' => 'newVersionIsAvailable',
