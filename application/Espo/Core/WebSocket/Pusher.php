@@ -436,6 +436,7 @@ class Pusher implements WampServerInterface
      */
     private function getUserIdByAuthToken($authToken)
     {
+        /** @var string|null|false */
         $result = shell_exec($this->phpExecutablePath . " command.php AuthTokenCheck " . $authToken);
 
         if ($result === null || $result === false) {
