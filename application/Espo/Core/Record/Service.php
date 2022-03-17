@@ -31,6 +31,8 @@ namespace Espo\Core\Record;
 
 use Espo\Core\ORM\Entity as CoreEntity;
 
+use Espo\Core\Utils\Json;
+
 use Espo\Core\Exceptions\{
     Error,
     BadRequest,
@@ -72,6 +74,7 @@ use Espo\Core\Di;
 
 use stdClass;
 use RuntimeException;
+use ArrayAccess;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -351,7 +354,7 @@ class Service implements Crud,
     protected function getStreamService(): StreamService
     {
         if (empty($this->streamService)) {
-            $this->streamService = $this->serviceFactory->create('Stream');
+            $this->streamService = $this->injectableFactory->create(StreamService::class);
         }
 
         return $this->streamService;
@@ -383,7 +386,7 @@ class Service implements Crud,
     }
 
     /**
-     * @param TEntity $entity
+     * @param Entity $entity
      */
     protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
@@ -583,7 +586,7 @@ class Service implements Crud,
             'versionNumber' => $entity->get('versionNumber'),
         ];
 
-        throw ConflictSilent::createWithBody('modified', json_encode($responseData));
+        throw ConflictSilent::createWithBody('modified', Json::encode($responseData));
     }
 
     /**
@@ -603,7 +606,7 @@ class Service implements Crud,
             $list[] = $e->getValueMap();
         }
 
-        throw ConflictSilent::createWithBody('duplicate', json_encode($list));
+        throw ConflictSilent::createWithBody('duplicate', Json::encode($list));
     }
 
     /**
@@ -759,6 +762,8 @@ class Service implements Crud,
 
         $this->processAssignmentCheck($entity);
 
+        assert(is_string($this->entityType));
+
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
             $this->checkForDuplicatesInUpdate;
@@ -832,6 +837,8 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
+        assert(is_string($this->entityType));
+
         $disableCount =
             $this->listCountQueryDisabled ||
             $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled']);
@@ -873,7 +880,8 @@ class Service implements Crud,
         else if (
             $maxSize &&
             is_countable($collection) &&
-            count($collection) > $maxSize
+            count($collection) > $maxSize &&
+            $collection instanceof ArrayAccess
         ) {
             $total = RecordCollection::TOTAL_HAS_MORE;
 
@@ -1057,7 +1065,8 @@ class Service implements Crud,
         else if (
             $maxSize &&
             is_countable($collection) &&
-            count($collection) > $maxSize
+            count($collection) > $maxSize &&
+            $collection instanceof ArrayAccess
         ) {
             $total = RecordCollection::TOTAL_HAS_MORE;
 
@@ -1220,6 +1229,8 @@ class Service implements Crud,
 
     public function linkFollowers(string $id, string $foreignId): void
     {
+        assert(is_string($this->entityType));
+
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
@@ -1274,6 +1285,8 @@ class Service implements Crud,
 
     public function unlinkFollowers(string $id, string $foreignId): void
     {
+        assert(is_string($this->entityType));
+
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
@@ -1664,7 +1677,8 @@ class Service implements Crud,
             return;
         }
 
-        $duplicatingEntity = $this->entityManager->getEntity($entity->getEntityType(), $duplicatingEntityId);
+        /** @var ?TEntity */
+        $duplicatingEntity = $this->entityManager->getEntityById($entity->getEntityType(), $duplicatingEntityId);
 
         if (!$duplicatingEntity) {
             return;
@@ -1686,7 +1700,9 @@ class Service implements Crud,
         $repository = $this->getRepository();
 
         foreach ($this->duplicatingLinkList as $link) {
-            $linkedList = $repository->findRelated($duplicatingEntity, $link);
+            $linkedList = $repository
+                ->getRelation($duplicatingEntity, $link)
+                ->find();
 
             foreach ($linkedList as $linked) {
                 $repository->relate($entity, $link, $linked);

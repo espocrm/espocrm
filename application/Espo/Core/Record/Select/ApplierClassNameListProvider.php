@@ -41,7 +41,7 @@ class ApplierClassNameListProvider
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<\Espo\Core\Select\Applier\AdditionalApplier>[]
      */
     public function get(string $entityType): array
     {

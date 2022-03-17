@@ -35,6 +35,8 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
+use RuntimeException;
+
 /**
  * Container for record services. Lazy loading is used.
  * Usually there's no need to have multiple record service instances of the same entity type.
@@ -114,6 +116,10 @@ class ServiceContainer
         }
 
         $obj = $this->serviceFactory->create($default);
+
+        if (!$obj instanceof Service) {
+            throw new RuntimeException("Service class {$default} is not instance of Record.");
+        }
 
         $obj->setEntityType($entityType);
 
