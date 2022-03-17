@@ -109,10 +109,13 @@ class Factory
     }
 
     /**
-     * @return class-string
+     * @return class-string<object>
      */
     protected function getDefaultClassName(string $type): string
     {
-        return 'Espo\\Core\\Select\\Applier\Appliers\\' . ucfirst($type);
+        /** @var class-string<object> */
+        $className = 'Espo\\Core\\Select\\Applier\Appliers\\' . ucfirst($type);
+
+        return $className;
     }
 }

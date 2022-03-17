@@ -82,7 +82,7 @@ class FilterFactory
     }
 
     /**
-     * @return class-string|null
+     * @return ?class-string<Filter>
      */
     protected function getClassName(string $entityType, string $name): ?string
     {
@@ -100,6 +100,7 @@ class FilterFactory
         );
 
         if ($className) {
+            /** @var ?class-string<Filter> */
             return $className;
         }
 
@@ -107,13 +108,14 @@ class FilterFactory
     }
 
     /**
-     * @return class-string|null
+     * @return ?class-string<Filter>
      */
     protected function getDefaultClassName(string $name): ?string
     {
         $className1 = $this->metadata->get(['app', 'select', 'boolFilterClassNameMap', $name]);
 
         if ($className1) {
+            /** @var ?class-string<Filter> */
             return $className1;
         }
 
@@ -123,6 +125,7 @@ class FilterFactory
             return null;
         }
 
+        /** @var ?class-string<Filter> */
         return $className;
     }
 }

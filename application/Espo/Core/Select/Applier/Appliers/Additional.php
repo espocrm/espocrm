@@ -50,7 +50,7 @@ class Additional
     }
 
     /**
-     * @param class-string[] $classNameList
+     * @param class-string<AdditionalApplier>[] $classNameList
      */
     public function apply(array $classNameList, QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
@@ -62,7 +62,7 @@ class Additional
     }
 
     /**
-     * @param class-string $className
+     * @param class-string<AdditionalApplier> $className
      */
     private function createApplier(string $className): AdditionalApplier
     {

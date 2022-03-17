@@ -131,7 +131,7 @@ class ConverterFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<Converter>
      */
     private function getConverterClassName(string $entityType): string
     {
@@ -145,7 +145,7 @@ class ConverterFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<ItemGeneralConverter>
      */
     private function getItemConverterClassName(string $entityType): string
     {
@@ -159,7 +159,7 @@ class ConverterFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<DateTimeItemTransformer>
      */
     private function getDateTimeItemTransformerClassName(string $entityType): string
     {

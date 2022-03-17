@@ -84,6 +84,8 @@ class SelectManagerFactory
             $className = $this->defaultClassName;
         }
 
+        /** @var class-string<SelectManager> $className */
+
         if ($user) {
             $acl = $this->aclManagerProvider->get($user)->createUserAcl($user);
         }

@@ -95,7 +95,7 @@ class FilterFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<Filter>
      */
     private function getClassName(string $entityType, string $name): ?string
     {
@@ -103,6 +103,7 @@ class FilterFactory
             throw new Error("Empty access control filter name.");
         }
 
+        /** @var ?class-string<Filter> */
         $className = $this->metadata->get(
             [
                 'selectDefs',
@@ -119,6 +120,9 @@ class FilterFactory
         return $this->getDefaultClassName($name);
     }
 
+    /**
+     * @return class-string<Filter>
+     */
     private function getDefaultClassName(string $name): ?string
     {
         $className = 'Espo\\Core\\Select\\AccessControl\\Filters\\' . ucfirst($name);
@@ -127,6 +131,7 @@ class FilterFactory
             return null;
         }
 
+        /** @var class-string<Filter> */
         return $className;
     }
 }

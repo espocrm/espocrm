@@ -66,10 +66,11 @@ class ItemConverterFactory
     }
 
     /**
-     * @return class-string|null
+     * @return ?class-string<ItemConverter>
      */
     private function getClassName(string $entityType, string $field): ?string
     {
+        /** @var ?class-string<ItemConverter> */
         $className = $this->metadata->get([
             'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field
         ]);
@@ -86,6 +87,7 @@ class ItemConverterFactory
             return null;
         }
 
+        /** @var ?class-string<ItemConverter> */
         $className = $this->metadata->get([
             'app', 'select', 'orderItemConverterClassNameMap', $type
         ]);
@@ -97,6 +99,7 @@ class ItemConverterFactory
         $className = 'Espo\\Core\\Select\\Order\\ItemConverters\\' . ucfirst($type) . 'Type';
 
         if (class_exists($className)) {
+            /** @var class-string<ItemConverter> */
             return $className;
         }
 

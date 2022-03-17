@@ -89,7 +89,7 @@ class SelectBuilder
     private bool $applyComplexExpressionsForbidden = false;
 
     /**
-     * @var class-string[]
+     * @var class-string<\Espo\Core\Select\Applier\AdditionalApplier>[]
      */
     private array $additionalApplierClassNameList = [];
 
@@ -333,9 +333,8 @@ class SelectBuilder
 
     /**
      * Apply a list of additional applier class names.
-     * Classes must implement `Applier\AdditionalApplier` interface.
      *
-     * @param string[] $additionalApplierClassNameList
+     * @param class-string<\Espo\Core\Select\Applier\AdditionalApplier>[] $additionalApplierClassNameList
      */
     public function withAdditionalApplierClassNameList(array $additionalApplierClassNameList): self
     {
@@ -507,6 +506,7 @@ class SelectBuilder
 
     private function createWhereApplier(): WhereApplier
     {
+        /** @var WhereApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -516,6 +516,7 @@ class SelectBuilder
 
     private function createSelectApplier(): SelectApplier
     {
+        /** @var SelectApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -525,6 +526,7 @@ class SelectBuilder
 
     private function createOrderApplier(): OrderApplier
     {
+        /** @var OrderApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -534,6 +536,7 @@ class SelectBuilder
 
     private function createLimitApplier(): LimitApplier
     {
+        /** @var LimitApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -543,6 +546,7 @@ class SelectBuilder
 
     private function createAccessControlFilterApplier(): AccessControlFilterApplier
     {
+        /** @var AccessControlFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -552,6 +556,7 @@ class SelectBuilder
 
     private function createTextFilterApplier(): TextFilterApplier
     {
+        /** @var TextFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -561,6 +566,7 @@ class SelectBuilder
 
     private function createPrimaryFilterApplier(): PrimaryFilterApplier
     {
+        /** @var PrimaryFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -570,6 +576,7 @@ class SelectBuilder
 
     private function createBoolFilterListApplier(): BoolFilterListApplier
     {
+        /** @var BoolFilterListApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,
@@ -579,6 +586,7 @@ class SelectBuilder
 
     private function createAdditionalApplier(): AdditionalApplier
     {
+        /** @var AdditionalApplier */
         return $this->applierFactory->create(
             $this->entityType,
             $this->user,

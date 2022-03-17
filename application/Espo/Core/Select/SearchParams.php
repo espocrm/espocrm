@@ -30,6 +30,7 @@
 namespace Espo\Core\Select;
 
 use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Utils\Json;
 
 use InvalidArgumentException;
 use stdClass;
@@ -281,7 +282,7 @@ class SearchParams
         }
 
         if ($params instanceof stdClass) {
-            $params = json_decode(json_encode($params), true);
+            $params = json_decode(Json::encode($params), true);
         }
 
         $object = new self();

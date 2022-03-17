@@ -82,7 +82,7 @@ class ItemConverterFactory
     }
 
     /**
-     * @return class-string|null
+     * @return ?class-string<ItemConverter>
      */
     protected function getClassNameForType(string $type): ?string
     {
@@ -121,7 +121,7 @@ class ItemConverterFactory
     }
 
     /**
-     * @return class-string|null
+     * @return ?class-string<ItemConverter>
      */
     protected function getClassName(string $entityType, string $attribute, string $type): ?string
     {

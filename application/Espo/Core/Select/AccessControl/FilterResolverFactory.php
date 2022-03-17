@@ -90,20 +90,22 @@ class FilterResolverFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<FilterResolver>
      */
     private function getClassName(string $entityType): string
     {
+        /** @var class-string<FilterResolver> */
         return $this->metadata->get([
             'selectDefs', $entityType, 'accessControlFilterResolverClassName'
         ]) ?? DefaultFilterResolver::class;
     }
 
     /**
-     * @return class-string
+     * @return class-string<FilterResolver>
      */
     private function getPortalClassName(string $entityType): string
     {
+        /** @var class-string<FilterResolver> */
         return $this->metadata->get([
             'selectDefs', $entityType, 'portalAccessControlFilterResolverClassName'
         ]) ?? DefaultPortalFilterResolver::class;

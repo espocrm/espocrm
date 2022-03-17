@@ -103,7 +103,7 @@ class Select
 
     /**
      * @param string[] $attributeList
-     * @return string[]
+     * @return array<int,array{string,string}|string>
      */
     protected function prepareAttributeList(array $attributeList, SearchParams $searchParams): array
     {

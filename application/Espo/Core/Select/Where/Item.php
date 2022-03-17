@@ -142,8 +142,11 @@ class Item
      */
     public function getRaw(): array
     {
+        /** @var string */
+        $type = $this->type;
+
         $raw = [
-            'type' => $this->type,
+            'type' => $type,
             'value' => $this->value,
         ];
 
