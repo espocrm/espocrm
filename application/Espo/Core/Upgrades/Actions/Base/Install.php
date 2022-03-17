@@ -319,7 +319,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->getFileManager()->removeInDir($backupPath, true);
         }
 
-        return $res;
+        return (bool) $res;
     }
 
     /**

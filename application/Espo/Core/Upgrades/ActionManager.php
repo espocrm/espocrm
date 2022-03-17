@@ -160,6 +160,8 @@ class ActionManager
                 throw new Error('Could not find an action ['.ucfirst($actionName).'], class ['.$class.'].');
             }
 
+            /** @var class-string<\Espo\Core\Upgrades\Actions\Base> $class */
+
             $this->objects[$managerName][$actionName] = new $class($this->container, $this);
         }
 

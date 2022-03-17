@@ -149,7 +149,10 @@ abstract class Base
         $this->actionManager = $actionManager;
         $this->params = $actionManager->getParams();
 
-        $this->zipUtil = new ZipArchive($container->get('fileManager'));
+        /** @var FileManager */
+        $fileManager = $container->get('fileManager');
+
+        $this->zipUtil = new ZipArchive($fileManager);
     }
 
     public function __destruct()
@@ -220,6 +223,7 @@ abstract class Base
 
     protected function getLog(): Log
     {
+        /** @var Log */
         return $this->getContainer()->get('log');
     }
 
@@ -228,6 +232,7 @@ abstract class Base
      */
     protected function getFileManager()
     {
+        /** @var FileManager */
         return $this->getContainer()->get('fileManager');
     }
 
@@ -236,6 +241,7 @@ abstract class Base
      */
     protected function getConfig()
     {
+        /** @var \Espo\Core\Utils\Config */
         return $this->getContainer()->get('config');
     }
 
@@ -244,12 +250,16 @@ abstract class Base
      */
     public function getEntityManager()
     {
+        /** @var \Espo\ORM\EntityManager */
         return $this->getContainer()->get('entityManager');
     }
 
     public function createConfigWriter(): ConfigWriter
     {
-        return $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+        /** @var \Espo\Core\InjectableFactory */
+        $injectableFactory = $this->getContainer()->get('injectableFactory');
+
+        return $injectableFactory->create(ConfigWriter::class);
     }
 
     /**
@@ -498,6 +508,8 @@ abstract class Base
             $script = new $scriptName();
 
             try {
+                assert(method_exists($script, 'run'));
+
                 $script->run($this->getContainer(), $this->scriptParams);
             }
             catch (Throwable $e) {
@@ -597,9 +609,11 @@ abstract class Base
                 $this->getDeleteList('vendor')
             );
 
-            foreach ($deleteList as $key => $itemPath) {
+            foreach ($deleteList as $itemPath) {
                 if (is_dir($itemPath)) {
+                    /** @var string[] */
                     $fileList = $this->getFileManager()->getFileList($itemPath, true, '', true, true);
+
                     $fileList = $this->concatStringWithArray($itemPath, $fileList);
 
                     $deleteFileList = array_merge($deleteFileList, $fileList);
@@ -692,20 +706,25 @@ abstract class Base
      */
     protected function getFileList($dirPath, $skipVendorFileList = false)
     {
-        $fileList = array();
+        $fileList = [];
 
         $paths = $this->getFileDirs($dirPath);
 
         foreach ($paths as $filesPath) {
             if (file_exists($filesPath)) {
+                /** @var string[] */
                 $files = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
+
+                /** @var string[] */
                 $fileList = array_merge($fileList, $files);
             }
         }
 
         if (!$skipVendorFileList) {
             $vendorFileList = $this->getVendorFileList('copy');
+
             if (!empty($vendorFileList)) {
+                /** @var string[] */
                 $fileList = array_merge($fileList, $vendorFileList);
             }
         }
@@ -830,11 +849,13 @@ abstract class Base
 
         switch ($type) {
             case 'copy':
+                /** @var string[] */
                 $list = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
 
                 break;
 
             case 'delete':
+                /** @var string[] */
                 $list = $this->getFileManager()->getFileList($filesPath, false, '', null, true);
 
                 break;
@@ -977,7 +998,10 @@ abstract class Base
     protected function systemRebuild()
     {
         try {
-            $this->getContainer()->get('dataManager')->rebuild();
+            /** @var \Espo\Core\DataManager $dataManager */
+            $dataManager = $this->getContainer()->get('dataManager');
+
+            $dataManager->rebuild();
 
             return true;
         }
@@ -1230,7 +1254,7 @@ abstract class Base
      */
     protected function isCli()
     {
-        if (substr(php_sapi_name(), 0, 3) == 'cli') {
+        if (substr(php_sapi_name() ?: '', 0, 3) === 'cli') {
             return true;
         }
 
