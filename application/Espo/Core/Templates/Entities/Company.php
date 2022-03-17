@@ -40,11 +40,13 @@ class Company extends Entity
 {
     public function getEmailAddressGroup(): EmailAddressGroup
     {
+        /** @var EmailAddressGroup */
         return $this->getValueObject('emailAddress');
     }
 
     public function getPhoneNumberGroup(): PhoneNumberGroup
     {
+        /** @var PhoneNumberGroup */
         return $this->getValueObject('phoneNumber');
     }
 
@@ -60,6 +62,7 @@ class Company extends Entity
 
     public function getBillingAddress(): Address
     {
+        /** @var Address */
         return $this->getValueObject('billingAddress');
     }
 
@@ -70,6 +73,7 @@ class Company extends Entity
 
     public function getShippingAddress(): Address
     {
+        /** @var Address */
         return $this->getValueObject('shippingAddress');
     }
 
