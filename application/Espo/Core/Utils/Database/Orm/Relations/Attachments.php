@@ -63,6 +63,7 @@ class Attachments extends HasChildren
             ],
         ];
 
+        /** @var array<string,mixed> */
         return Util::merge($parentRelation, $relation);
     }
 }

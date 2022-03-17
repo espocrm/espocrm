@@ -57,6 +57,7 @@ class SmsPhoneNumber extends HasMany
             ],
         ];
 
+        /** @var array<string,mixed> */
         return Util::merge($parentRelation, $relation);
     }
 }

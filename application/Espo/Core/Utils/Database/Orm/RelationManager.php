@@ -87,6 +87,7 @@ class RelationManager
         }
 
         if (class_exists($className)) {
+            /** @var class-string<\Espo\Core\Utils\Database\Orm\Relations\Base> */
             return $className;
         }
 
@@ -99,6 +100,10 @@ class RelationManager
     protected function methodExists($relationName): bool
     {
         $className = $this->getRelationClass($relationName);
+
+        if ($className === false) {
+            return false;
+        }
 
         return method_exists($className, 'load');
     }

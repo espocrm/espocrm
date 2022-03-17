@@ -166,7 +166,9 @@ class Converter
     {
         $this->log->debug('Schema\Converter - Start: building schema');
 
-        // check if exist files in "Tables" directory and merge with ormMetadata
+        // Check if exist files in "Tables" directory and merge with ormMetadata.
+
+        /** @var array<string,mixed> */
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         if (isset($ormMeta['unsetIgnore'])) {
@@ -184,12 +186,14 @@ class Converter
 
         // unset some keys in orm
         if (isset($ormMeta['unset'])) {
+            /** @var array<string,mixed> */
             $ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
 
             unset($ormMeta['unset']);
         }
 
         if (isset($protectedOrmMeta)) {
+            /** @var array<string,mixed> */
             $ormMeta = Util::merge($ormMeta, $protectedOrmMeta);
         }
 
@@ -559,6 +563,7 @@ class Converter
             );
         }
 
+        /** @var array<string,mixed> */
         $customTables = Util::merge(
             $customTables,
             $this->loadData($this->pathProvider->getCustom() . $this->tablesPath)
@@ -567,6 +572,7 @@ class Converter
         // Get custom tables from metdata 'additionalTables'.
         foreach ($ormMeta as $entityParams) {
             if (isset($entityParams['additionalTables']) && is_array($entityParams['additionalTables'])) {
+                /** @var array<string,mixed> */
                 $customTables = Util::merge($customTables, $entityParams['additionalTables']);
             }
         }
@@ -627,6 +633,7 @@ class Converter
             return $tables;
         }
 
+        /** @var string[] */
         $fileList = $this->fileManager->getFileList($path, false, '\.php$', true);
 
         foreach ($fileList as $fileName) {
@@ -642,6 +649,7 @@ class Converter
                 continue;
             }
 
+            /** @var array<string,array<string,mixed>> */
             $tables = Util::merge($tables, $fileData);
         }
 

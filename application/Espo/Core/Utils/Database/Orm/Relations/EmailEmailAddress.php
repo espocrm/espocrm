@@ -55,8 +55,7 @@ class EmailEmailAddress extends HasMany
             ),
         );
 
-        $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
-
-        return $relation;
+        /** @var array<string,mixed> */
+        return \Espo\Core\Utils\Util::merge($parentRelation, $relation);
     }
 }
