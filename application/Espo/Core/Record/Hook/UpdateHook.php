@@ -33,7 +33,13 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Record\UpdateParams;
 
+/**
+ * @template TEntity of Entity
+ */
 interface UpdateHook
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, UpdateParams $params): void;
 }

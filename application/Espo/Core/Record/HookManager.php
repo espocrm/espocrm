@@ -34,12 +34,6 @@ use Espo\ORM\Entity;
 use Espo\Core\Record\Hook\{
     Provider,
     Type,
-    ReadHook,
-    CreateHook,
-    UpdateHook,
-    DeleteHook,
-    LinkHook,
-    UnlinkHook,
 };
 
 class HookManager
@@ -94,50 +88,56 @@ class HookManager
     }
 
     /**
-     * @return ReadHook[]
+     * @return \Espo\Core\Record\Hook\ReadHook<Entity>[]
      */
     private function getBeforeReadHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\ReadHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_READ);
     }
 
     /**
-     * @return CreateHook[]
+     * @return \Espo\Core\Record\Hook\CreateHook<Entity>[]
      */
     private function getBeforeCreateHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\CreateHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_CREATE);
     }
 
     /**
-     * @return UpdateHook[]
+     * @return \Espo\Core\Record\Hook\UpdateHook<Entity>[]
      */
     private function getBeforeUpdateHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\UpdateHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_UPDATE);
     }
 
     /**
-     * @return DeleteHook[]
+     * @return \Espo\Core\Record\Hook\DeleteHook<Entity>[]
      */
     private function getBeforeDeleteHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\DeleteHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_DELETE);
     }
 
     /**
-     * @return LinkHook<\Espo\ORM\Entity>[]
+     * @return \Espo\Core\Record\Hook\LinkHook<Entity>[]
      */
     private function getBeforeLinkHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\LinkHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_LINK);
     }
 
     /**
-     * @return UnlinkHook[]
+     * @return \Espo\Core\Record\Hook\UnlinkHook<Entity>[]
      */
     private function getBeforeUnlinkHookList(string $entityType): array
     {
+        /** @var \Espo\Core\Record\Hook\UnlinkHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_UNLINK);
     }
 }

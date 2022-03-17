@@ -67,7 +67,7 @@ class FieldDuplicatorFactory
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<FieldDuplicator>
      */
     private function getClassName(string $entityType, string $field): ?string
     {
@@ -78,6 +78,7 @@ class FieldDuplicatorFactory
         $className1 = $fieldDefs->getParam('duplicatorClassName');
 
         if ($className1) {
+            /** @var class-string<FieldDuplicator> */
             return $className1;
         }
 
@@ -86,6 +87,7 @@ class FieldDuplicatorFactory
         $className2 = $this->metadata->get(['fields', $type, 'duplicatorClassName']);
 
         if ($className2) {
+            /** @var class-string<FieldDuplicator> */
             return $className2;
         }
 

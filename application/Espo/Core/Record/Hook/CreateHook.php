@@ -30,10 +30,15 @@
 namespace Espo\Core\Record\Hook;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\Record\CreateParams;
 
+/**
+ * @template TEntity of Entity
+ */
 interface CreateHook
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, CreateParams $params): void;
 }

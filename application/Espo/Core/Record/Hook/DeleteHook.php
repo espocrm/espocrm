@@ -30,10 +30,15 @@
 namespace Espo\Core\Record\Hook;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\Record\DeleteParams;
 
+/**
+ * @template TEntity of Entity
+ */
 interface DeleteHook
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, DeleteParams $params): void;
 }

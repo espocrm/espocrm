@@ -37,7 +37,7 @@ use Espo\ORM\Entity;
 interface LinkHook
 {
     /**
-     * @phpstan-param TEntity $entity
+     * @param TEntity $entity
      */
     public function process(Entity $entity, string $link, Entity $foreignEntity): void;
 }

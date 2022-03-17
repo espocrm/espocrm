@@ -30,10 +30,15 @@
 namespace Espo\Core\Record\Hook;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\Record\ReadParams;
 
+/**
+ * @template TEntity of Entity
+ */
 interface ReadHook
 {
+    /**
+     * @param TEntity $entity
+     */
     public function process(Entity $entity, ReadParams $params): void;
 }
