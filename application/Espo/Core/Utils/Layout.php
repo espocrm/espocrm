@@ -93,6 +93,10 @@ class Layout
             // @todo Use factory and interface.
             $defaultImpl = $this->injectableFactory->create($defaultImplClassName);
 
+            if (!method_exists($defaultImpl, 'get')) {
+                throw new Error("No 'get' method in '{$defaultImplClassName}'.");
+            }
+
             $data = $defaultImpl->get($scope);
 
             return Json::encode($data);

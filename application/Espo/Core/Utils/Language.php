@@ -159,7 +159,7 @@ class Language
      *  Ex., $requiredOptions = ['en_US', 'de_DE']
      *  "language" option has only ['en_US' => 'English (United States)']
      *  Result will be ['en_US' => 'English (United States)', 'de_DE' => 'de_DE'].
-     * @return string|string[]
+     * @return string|string[]|array<string,string>
      */
     public function translate(
         $label,
@@ -174,10 +174,12 @@ class Language
                 $translated[$subLabel] = $this->translate($subLabel, $category, $scope, $requiredOptions);
             }
 
+            /** @var string[]|array<string,string> */
             return $translated;
         }
 
-        $key = $scope.'.'.$category.'.' . $label;
+        $key = $scope . '.' . $category . '.' . $label;
+
         $translated = $this->get($key);
 
         if (!isset($translated)) {
@@ -201,12 +203,12 @@ class Language
     }
 
     /**
-     * @param scalar $value
+     * @param int|string $value
      * @return string
      */
     public function translateOption($value, string $field, string $scope = 'Global')
     {
-        $options = $this->get($scope. '.options.' . $field);
+        $options = $this->get($scope . '.options.' . $field);
 
         if (is_array($options) && array_key_exists($value, $options)) {
             return $options[$value];
@@ -220,7 +222,7 @@ class Language
             }
         }
 
-        return $value;
+        return (string) $value;
     }
 
     /**
@@ -432,7 +434,10 @@ class Language
         }
 
         if ($this->useCache) {
-            $this->data[$language] = $this->dataCache->get($cacheKey);
+            /** @var array<string, mixed> */
+            $cachedData = $this->dataCache->get($cacheKey);
+
+            $this->data[$language] = $cachedData;
         }
 
         return $this->data[$language] ?? [];
