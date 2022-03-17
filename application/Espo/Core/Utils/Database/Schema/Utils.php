@@ -43,7 +43,6 @@ class Utils
         $indexList = [];
 
         foreach ($ormMeta as $entityName => $entityParams) {
-
             /* add indexes for additionalTables */
             $entityIndexList = static::getEntityIndexListByFieldsDefs($entityParams['fields']);
 
@@ -93,6 +92,7 @@ class Utils
             }
         }
 
+        /** @var array<string,array<string,mixed>> */
         return $indexList;
     }
 
@@ -173,6 +173,7 @@ class Utils
             }
         }
 
+        /** @var array<string,mixed> */
         return $indexList;
     }
 

@@ -88,7 +88,7 @@ class Schema
      *   afterRebuild: \Espo\Core\Utils\Database\Schema\BaseRebuildActions[],
      * }
      */
-    protected $rebuildActionClasses = null;
+    protected $rebuildActions = null;
 
     public function __construct(
         Config $config,
@@ -143,6 +143,7 @@ class Schema
 
     protected function initFieldTypes(): void
     {
+        /** @var string[] */
         $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
 
         foreach ($typeList as $name) {
@@ -150,6 +151,8 @@ class Schema
             $dbalTypeName = strtolower($typeName);
 
             $filePath = Util::concatPath($this->fieldTypePath, $typeName . 'Type');
+
+            /** @var class-string<\Doctrine\DBAL\Types\Type> */
             $class = Util::getClassName($filePath);
 
             if (!Type::hasType($dbalTypeName)) {
@@ -268,18 +271,21 @@ class Schema
      */
     protected function initRebuildActions(?DBALSchema $currentSchema = null, ?DBALSchema $metadataSchema = null): void
     {
-        $methods = [
+        $methodList = [
             'beforeRebuild',
             'afterRebuild',
         ];
 
         /** @var array<string,class-string<\Espo\Core\Utils\Database\Schema\BaseRebuildActions>> */
-        $rebuildActions = $this->classMap->getData($this->rebuildActionsPath, null, $methods);
+        $classes = $this->classMap->getData($this->rebuildActionsPath, null, $methodList);
 
-        $classes = [];
+        $objects = [
+            'beforeRebuild' => [],
+            'afterRebuild' => [],
+        ];
 
-        foreach ($rebuildActions as $actionClass) {
-            $rebuildActionClass = new $actionClass(
+        foreach ($classes as $className) {
+            $actionObj = new $className(
                 $this->metadata,
                 $this->config,
                 $this->entityManager,
@@ -287,21 +293,21 @@ class Schema
             );
 
             if (isset($currentSchema)) {
-                $rebuildActionClass->setCurrentSchema($currentSchema);
+                $actionObj->setCurrentSchema($currentSchema);
             }
 
             if (isset($metadataSchema)) {
-                $rebuildActionClass->setMetadataSchema($metadataSchema);
+                $actionObj->setMetadataSchema($metadataSchema);
             }
 
-            foreach ($methods as $methodName) {
-                if (method_exists($rebuildActionClass, $methodName)) {
-                    $classes[$methodName][] = $rebuildActionClass;
+            foreach ($methodList as $methodName) {
+                if (method_exists($actionObj, $methodName)) {
+                    $objects[$methodName][] = $actionObj;
                 }
             }
         }
 
-        $this->rebuildActionClasses = $classes;
+        $this->rebuildActions = $objects;
     }
 
     /**
@@ -311,11 +317,11 @@ class Schema
      */
     protected function executeRebuildActions(string $action = 'beforeRebuild'): void
     {
-        if (!isset($this->rebuildActionClasses)) {
+        if (!isset($this->rebuildActions)) {
             $this->initRebuildActions();
         }
 
-        foreach ($this->rebuildActionClasses[$action] as $rebuildActionClass) {
+        foreach ($this->rebuildActions[$action] as $rebuildActionClass) {
             $rebuildActionClass->$action();
         }
     }

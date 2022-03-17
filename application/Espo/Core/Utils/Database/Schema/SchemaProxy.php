@@ -43,8 +43,9 @@ class SchemaProxy
         $this->container = $container;
     }
 
-    protected function getSchema() : Schema
+    protected function getSchema(): Schema
     {
+        /** @var Schema */
         return $this->container->get('schema');
     }
 
