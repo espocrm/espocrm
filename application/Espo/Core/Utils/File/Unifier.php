@@ -66,26 +66,59 @@ class Unifier
      */
     public function unify(string $path, bool $noCustom = false)
     {
-        // @todo Remove variable.
-        $recursively = true;
+        if ($this->useObjects) {
+            return $this->unifyObject($path, $noCustom);
+        }
 
-        $data = $this->unifySingle($this->pathProvider->getCore() . $path, $recursively);
+        return $this->unifyArray($path, $noCustom);
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function unifyArray(string $path, bool $noCustom = false)
+    {
+        /** @var array<string,mixed> */
+        $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            if ($this->useObjects) {
-                $data = DataUtil::merge(
-                    $data,
-                    $this->unifySingle($filePath, $recursively)
-                );
+            /** @var array<string,mixed> */
+            $newData = $this->unifySingle($filePath, true);
 
-                continue;
-            }
+            /** @var array<string,mixed> */
+            $data = Util::merge($data, $newData);
+        }
 
-            $data = Util::merge(
+        if ($noCustom) {
+            return $data;
+        }
+
+        $customFilePath = $this->pathProvider->getCustom() . $path;
+
+        /** @var array<string,mixed> */
+        $newData = $this->unifySingle($customFilePath, true);
+
+        /** @var array<string,mixed> */
+        return Util::merge($data, $newData);
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function unifyObject(string $path, bool $noCustom = false)
+    {
+        /** @var \stdClass */
+        $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
+
+        foreach ($this->getModuleList() as $moduleName) {
+            $filePath = $this->pathProvider->getModule($moduleName) . $path;
+
+            /** @var \stdClass */
+            $data = DataUtil::merge(
                 $data,
-                $this->unifySingle($filePath, $recursively)
+                $this->unifySingle($filePath, true)
             );
         }
 
@@ -95,21 +128,15 @@ class Unifier
 
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
-        if ($this->useObjects) {
-            return DataUtil::merge(
-                $data,
-                $this->unifySingle($customFilePath, $recursively)
-            );
-        }
-
-        return Util::merge(
+        /** @var \stdClass */
+        return DataUtil::merge(
             $data,
-            $this->unifySingle($customFilePath, $recursively)
+            $this->unifySingle($customFilePath, true)
         );
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string,mixed>|\stdClass
      */
     private function unifySingle(string $dirPath, bool $recursively)
     {
@@ -130,6 +157,7 @@ class Unifier
 
         foreach ($fileList as $dirName => $item) {
             if (is_array($item)) {
+                /** @var string $dirName */
                 // Only a first level of a sub-directory.
                 $itemValue = $this->unifySingle(
                     Util::concatPath($dirPath, $dirName),
@@ -137,15 +165,21 @@ class Unifier
                 );
 
                 if ($this->useObjects) {
+                    /** @var \stdClass $data */
+
                     $data->$dirName = $itemValue;
 
                     continue;
                 }
 
+                /** @var array<string,mixed> $data */
+
                 $data[$dirName] = $itemValue;
 
                 continue;
             }
+
+            /** @var string $item */
 
             $fileName = $item;
 
@@ -166,18 +200,28 @@ class Unifier
             $name = $this->fileManager->getFileName($fileName, '.json');
 
             if ($this->useObjects) {
+                /** @var \stdClass $data */
+
                 $data->$name = $itemValue;
 
                 continue;
             }
 
+            /** @var array<string,mixed> $data */
+
             $data[$name] = $itemValue;
         }
 
         if ($this->useObjects) {
+            /** @var \stdClass $data */
+
+            /** @var \stdClass */
             return DataUtil::unsetByKey($data, $unsets);
         }
 
+        /** @var array<string,mixed> $data */
+
+        /** @var array<string,mixed> */
         return Util::unsetInArray($data, $unsets);
     }
 
