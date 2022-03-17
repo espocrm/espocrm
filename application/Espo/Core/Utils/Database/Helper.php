@@ -166,13 +166,16 @@ class Helper
             throw new RuntimeException('Unknown database driver.');
         }
 
+        /** @var class-string<\Doctrine\DBAL\VersionAwarePlatformDriver> */
         $driverClass = $this->dbalDrivers[$driverName];
 
         if (!class_exists($driverClass)) {
             throw new RuntimeException('Unknown database class.');
         }
 
-        return new $driverClass();
+        $driver = new $driverClass();
+
+        return $driver;
     }
 
     /**
@@ -186,9 +189,10 @@ class Helper
         $platformClass = $reflect->getShortName();
 
         if (isset($this->dbalPlatforms[$platformClass])) {
-            $class = $this->dbalPlatforms[$platformClass];
+            /** @var class-string<\Doctrine\DBAL\Platforms\AbstractPlatform> */
+            $className = $this->dbalPlatforms[$platformClass];
 
-            return new $class();
+            return new $className();
         }
 
         return $platform;
@@ -355,7 +359,14 @@ class Helper
 
         $sth->execute();
 
-        return $sth->fetchColumn();
+        /** @var string|null|false */
+        $result = $sth->fetchColumn();
+
+        if ($result === false || $result === null) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
