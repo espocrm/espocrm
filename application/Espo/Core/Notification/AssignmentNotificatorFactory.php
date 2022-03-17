@@ -40,7 +40,7 @@ use Espo\Core\{
 class AssignmentNotificatorFactory
 {
     /**
-     * @var class-string
+     * @var class-string<AssignmentNotificator>
      */
     protected string $defaultClassName = DefaultAssignmentNotificator::class;
 
@@ -70,10 +70,11 @@ class AssignmentNotificatorFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<AssignmentNotificator>
      */
     private function getClassName(string $entityType): string
     {
+        /** @var ?class-string<AssignmentNotificator> */
         $className1 = $this->metadata->get(['notificationDefs', $entityType, 'assignmentNotificatorClassName']);
 
         if ($className1) {
@@ -81,6 +82,7 @@ class AssignmentNotificatorFactory
         }
 
         /* For backward compatibility. */
+        /** @var ?class-string<AssignmentNotificator> */
         $className2 = $this->classFinder->find('Notificators', $entityType);
 
         if ($className2) {

@@ -103,26 +103,29 @@ class MassActionFactory
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<MassAction>
      */
     private function getClassName(string $action, string $entityType): ?string
     {
+        /** @var ?class-string<MassAction> */
         $className = $this->getEntityTypeClassName($action, $entityType);
 
         if ($className) {
             return $className;
         }
 
+        /** @var ?class-string<MassAction> */
         return $this->metadata->get(
             ['app', 'massActions', $action, 'implementationClassName']
         );
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<MassAction>
      */
     private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
+        /** @var ?class-string<MassAction> */
         return $this->metadata->get(
             ['recordDefs', $entityType, 'massActions', $action, 'implementationClassName']
         );

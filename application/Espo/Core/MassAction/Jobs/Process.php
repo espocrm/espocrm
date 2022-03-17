@@ -116,7 +116,7 @@ class Process implements Job
         /** @var Notification $notification */
         $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
 
-        $message = $this->language->translate('massActionProcessed', 'messages');
+        $message = $this->language->translateLabel('massActionProcessed', 'messages');
 
         $notification
             ->setType(Notification::TYPE_MESSAGE)

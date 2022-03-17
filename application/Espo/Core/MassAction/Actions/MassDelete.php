@@ -120,7 +120,10 @@ class MassDelete implements MassAction
                 'modifiedById' => $this->user->getId(),
             ]);
 
-            $ids[] = $entity->getId();
+            /** @var string */
+            $id = $entity->getId();
+
+            $ids[] = $id;
 
             $count++;
 

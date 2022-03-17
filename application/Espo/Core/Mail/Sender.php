@@ -47,7 +47,6 @@ use Laminas\{
 
 use Espo\Entities\{
     Email,
-    Attachment,
     InboundEmail,
 };
 
@@ -92,7 +91,7 @@ class Sender
     private ?Message $message = null;
 
     /**
-     * @var iterable<Attachment>|null
+     * @var iterable<\Espo\Entities\Attachment>|null
      */
     private $attachmentList = null;
 
@@ -202,7 +201,7 @@ class Sender
     /**
      * With specific attachments.
      *
-     * @param iterable<Attachment> $attachmentList
+     * @param iterable<\Espo\Entities\Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
@@ -424,7 +423,7 @@ class Sender
      *
      * @param ?array<string,mixed> $params @deprecated
      * @param ?Message $message @deprecated
-     * @param iterable<Attachment> $attachmentList @deprecated
+     * @param iterable<\Espo\Entities\Attachment> $attachmentList @deprecated
      */
     public function send(
         Email $email,
@@ -497,7 +496,7 @@ class Sender
         $attachmentCollection = null;
 
         if (!$email->isNew()) {
-            /** @var \Espo\ORM\Collection<Attachment> */
+            /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> */
             $attachmentCollection = $this->entityManager
                 ->getRDBRepository('Email')
                 ->getRelation($email, 'attachments')
