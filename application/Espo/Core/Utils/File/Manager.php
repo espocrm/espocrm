@@ -92,6 +92,7 @@ class Manager
      */
     public function getDirList(string $path): array
     {
+        /** @var string[] */
         return $this->getFileList($path, false, '', false);
     }
 
@@ -105,7 +106,7 @@ class Manager
      * If TRUE - returns only file list, if FALSE - only directory list.
      * @param bool $returnSingleArray Return a single array.
      *
-     * @return array<int, string>|array<string, string[]>
+     * @return string[]|array<string,string[]>
      */
     public function getFileList(
         string $path,
@@ -121,7 +122,7 @@ class Manager
             return $result;
         }
 
-        $cdir = scandir($path);
+        $cdir = scandir($path) ?: [];
 
         foreach ($cdir as $key => $value) {
             if (!in_array($value, [".", ".."])) {
@@ -161,9 +162,11 @@ class Manager
         }
 
         if ($returnSingleArray) {
+            /** @var string[] $result */
             return $this->getSingleFileList($result, $onlyFileType, $path);
         }
 
+        /** @var array<string,string[]> */
         return $result;
     }
 
@@ -347,6 +350,10 @@ class Manager
 
         $tmpPath = tempnam($tmpDir, 'tmp');
 
+        if ($tmpPath === false) {
+            return false;
+        }
+
         $tmpPath = $this->getRelativePath($tmpPath);
 
         if (!$tmpPath) {
@@ -362,6 +369,10 @@ class Manager
         }
 
         $h = fopen($tmpPath, 'w');
+
+        if ($h === false) {
+            return false;
+        }
 
         fwrite($h, $data);
         fclose($h);
@@ -535,7 +546,7 @@ class Manager
         $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($path);
 
         if (!isset($permission)) {
-            $permission = base_convert((string) $defaultPermissions['dir'], 8, 10);
+            $permission = (int) base_convert((string) $defaultPermissions['dir'], 8, 10);
         }
 
         $umask = umask(0);
@@ -586,6 +597,8 @@ class Manager
         }
 
         $permissionDeniedList = [];
+
+        /** @var string[] $fileList */
 
         foreach ($fileList as $file) {
             if ($copyOnlyFiles) {
@@ -662,7 +675,7 @@ class Manager
             $dirPermissionOriginal = $defaultPermissions['dir'];
 
             $dirPermission = is_string($dirPermissionOriginal) ?
-                base_convert($dirPermissionOriginal, 8, 10) :
+                (int) base_convert($dirPermissionOriginal, 8, 10) :
                 $dirPermissionOriginal;
 
             if (!$this->mkdir($pathParts['dirname'], $dirPermission)) {
@@ -770,6 +783,7 @@ class Manager
      */
     public function removeInDir(string $path, bool $removeWithDir = false): bool
     {
+        /** @var string[] */
         $fileList = $this->getFileList($path, false);
 
         $result = true;
@@ -936,7 +950,13 @@ class Manager
     public function getFileName(string $fileName, string $extension = ''): string
     {
         if (empty($extension)) {
-            $fileName = substr($fileName, 0, strrpos($fileName, '.', -1));
+            $dotIndex = strrpos($fileName, '.', -1);
+
+            if ($dotIndex === false) {
+                $dotIndex = strlen($fileName);
+            }
+
+            $fileName = substr($fileName, 0, $dotIndex);
         }
         else {
             if (substr($extension, 0, 1) != '.') {
@@ -1122,6 +1142,10 @@ class Manager
     {
         if (!$basePath) {
             $basePath = getcwd();
+        }
+
+        if ($basePath === false) {
+            return '';
         }
 
         $path = Util::fixPath($path);
