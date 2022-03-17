@@ -87,7 +87,7 @@ class Converter
     /**
      * Mapping entityDefs => ORM.
      *
-     * @var array<string,mixed>
+     * @var array<string,string>
      */
     protected $fieldAccordances = [
         'type' => 'type',
@@ -201,26 +201,27 @@ class Converter
                 $ormMetadata[$entityType]['skipRebuild'] = true;
             }
 
+            /** @var array<string,array<string,mixed>> */
             $ormMetadata = Util::merge($ormMetadata, $this->convertEntity($entityType, $entityMetadata));
         }
 
         $ormMetadata = $this->afterFieldsProcess($ormMetadata);
 
         foreach ($ormMetadata as $entityType => $entityOrmMetadata) {
+            /** @var array<string,array<string,mixed>> */
             $ormMetadata = Util::merge(
                 $ormMetadata,
                 $this->createRelationsEntityDefs($entityType, $entityOrmMetadata)
             );
 
+            /** @var array<string,array<string,mixed>> */
             $ormMetadata = Util::merge(
                 $ormMetadata,
                 $this->createAdditionalEntityTypes($entityType, $entityOrmMetadata)
             );
         }
 
-        $ormMetadata = $this->afterProcess($ormMetadata);
-
-        return $ormMetadata;
+        return $this->afterProcess($ormMetadata);
     }
 
     /**
@@ -439,6 +440,8 @@ class Converter
                 else {
                     $output[$attribute] = $fieldDefs;
                 }
+
+                /** @var array<string,array<string,mixed>> $output */
             }
 
             if (isset($fieldTypeMetadata['linkDefs'])) {
@@ -493,8 +496,14 @@ class Converter
                 }
             }
 
-            if (class_exists($className) && method_exists($className, 'load')) {
+            if (
+                class_exists($className) &&
+                method_exists($className, 'load') &&
+                method_exists($className, 'process')
+            ) {
                 $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
+
+                assert(method_exists($helperClass, 'process'));
 
                 $fieldResult = $helperClass->process($attribute, $entityType);
 
@@ -504,6 +513,7 @@ class Converter
                     unset($fieldResult['unset']);
                 }
 
+                /** @var array<string,mixed> */
                 $ormMetadata = Util::merge($ormMetadata, $fieldResult);
             }
 
@@ -520,6 +530,7 @@ class Converter
                     ]
                 ];
 
+                /** @var array<string,mixed> */
                 $ormMetadata = Util::merge($ormMetadata, $defaultMetadataPart);
             }
         }
@@ -577,6 +588,7 @@ class Converter
         }
 
         if (isset($fieldTypeMetadata['fieldDefs'])) {
+            /** @var array<string,mixed> */
             $attributeParams = Util::merge($attributeParams, $fieldTypeMetadata['fieldDefs']);
         }
 
@@ -632,6 +644,7 @@ class Converter
             $convertedLink = $this->getRelationManager()->convert($linkName, $linkParams, $entityType, $ormMetadata);
 
             if (isset($convertedLink)) {
+                /** @var array<string,mixed> */
                 $relationships = Util::merge($convertedLink, $relationships);
             }
         }
@@ -648,7 +661,6 @@ class Converter
         $values = [];
 
         foreach($this->fieldAccordances as $espoType => $ormType) {
-
             if (!array_key_exists($espoType, $attributeParams)) {
                 continue;
             }
