@@ -249,7 +249,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * @param array<string,string[]> $dependencyList
+     * @param array<string,string[]|string> $dependencyList
      * @return bool
      */
     protected function checkDependencies($dependencyList)

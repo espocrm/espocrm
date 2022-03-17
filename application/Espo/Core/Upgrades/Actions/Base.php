@@ -392,7 +392,7 @@ abstract class Base
     }
 
     /**
-     * @param string[] $versionList
+     * @param string[]|string $versionList
      * @param string $currentVersion
      * @param string $errorMessage
      * @return bool

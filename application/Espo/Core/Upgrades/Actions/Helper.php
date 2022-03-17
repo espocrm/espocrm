@@ -67,14 +67,16 @@ class Helper
     /**
      * Check dependencies.
      *
-     * @param array<string,string[]>|string $dependencyList
+     * @param array<string,string[]|string> $dependencyList
      * @return bool
      */
     public function checkDependencies($dependencyList)
     {
-        if (!is_array($dependencyList)) {
+        if (!is_array($dependencyList)) { /** @phpstan-ignore-line */
             $dependencyList = (array) $dependencyList;
         }
+
+        /** @var array<string,string[]|string> $dependencyList */
 
         $actionObject = $this->getActionObject();
 
@@ -88,8 +90,12 @@ class Helper
                 ])
                 ->findOne();
 
-            $errorMessage = 'Dependency Error: The extension "'.$extensionName.'" with version "'.
-                $extensionVersion.'" is missing.';
+            $versionString = is_array($extensionVersion) ?
+                implode(', ', $extensionVersion) :
+                $extensionVersion;
+
+            $errorMessage = 'Dependency Error: The extension "' . $extensionName .'" with version "'.
+                $versionString . '" is missing.';
 
             if (
                 !isset($dependencyExtensionEntity) ||
