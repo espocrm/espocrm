@@ -40,12 +40,12 @@ class Permission
     /**
      * Last permission error.
      *
-     * @var string[]|string|null
+     * @var string[]
      */
-    protected $permissionError = null;
+    protected $permissionError = [];
 
     /**
-     * @var ?array<string,array<string,string>>
+     * @var ?array<string,mixed>
      */
     protected $permissionErrorRules = null;
 
@@ -107,6 +107,7 @@ class Permission
             foreach ($params as $paramName => $paramValue) {
                 switch ($paramName) {
                     case 'defaultPermissions':
+                        /** @phpstan-ignore-next-line */
                         $this->defaultPermissions = array_merge($this->defaultPermissions, $paramValue);
 
                         break;
@@ -159,10 +160,12 @@ class Permission
 
         foreach ($this->getWritableMap() as $writablePath => $writableOptions) {
             if (!$writableOptions['recursive'] && $path == $writablePath) {
+                /** @phpstan-ignore-next-line */
                 return array_merge($permission, $this->writablePermissions);
             }
 
             if ($writableOptions['recursive'] && substr($path, 0, strlen($writablePath)) == $writablePath) {
+                /** @phpstan-ignore-next-line */
                 return array_merge($permission, $this->writablePermissions);
             }
         }
@@ -197,7 +200,7 @@ class Permission
     /**
      * Get current permissions.
      *
-     * @return string|bool
+     * @return string|false
      */
     public function getCurrentPermission(string $filePath)
     {
@@ -205,6 +208,7 @@ class Permission
             return false;
         }
 
+        /** @var array{mode: mixed}*/
         $fileInfo = stat($filePath);
 
         return substr(base_convert((string) $fileInfo['mode'], 10, 8), -4);
@@ -214,7 +218,7 @@ class Permission
      * Change permissions.
      *
      * @param string $path
-     * @param int|string[]|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
+     * @param int|array<int|string,string|int|null>|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
      * @param bool $recurse
      */
     public function chmod(string $path, $octal, bool $recurse = false): bool
@@ -289,6 +293,7 @@ class Permission
 
         $result = $this->chmodReal($path, $dirOctal);
 
+        /** @var string[] */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {
@@ -311,6 +316,11 @@ class Permission
 
         if (empty($user)) {
             $user = $this->getDefaultOwner();
+        }
+
+        if ($user === false) {
+            // @todo Revise.
+            $user = '';
         }
 
         if (!$recurse) {
@@ -337,6 +347,7 @@ class Permission
 
         $result = $this->chownReal($path, $user);
 
+        /** @var string[] */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {
@@ -359,6 +370,11 @@ class Permission
 
         if (!isset($group)) {
             $group = $this->getDefaultGroup();
+        }
+
+        if ($group === false) {
+            // @todo Revise.
+            $group = '';
         }
 
         if (!$recurse) {
@@ -385,6 +401,7 @@ class Permission
 
         $result = $this->chgrpReal($path, $group);
 
+        /** @var string[] */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {
@@ -405,8 +422,21 @@ class Permission
             return true;
         }
 
-        $this->chown($filename, $this->getDefaultOwner(true));
-        $this->chgrp($filename, $this->getDefaultGroup(true));
+        $defaultOwner = $this->getDefaultOwner(true);
+        $defaultGroup = $this->getDefaultGroup(true);
+
+        if ($defaultOwner === false) {
+            // @todo Revise.
+            $defaultOwner = '';
+        }
+
+        if ($defaultGroup === false) {
+            // @todo Revise.
+            $defaultGroup = '';
+        }
+
+        $this->chown($filename, $defaultOwner);
+        $this->chgrp($filename, $defaultGroup);
 
         return @chmod($filename, $mode);
     }
@@ -432,7 +462,7 @@ class Permission
     /**
      * Get default owner user.
      *
-     * @return int|false owner id.
+     * @return string|int|false owner id.
      */
     public function getDefaultOwner(bool $usePosix = false)
     {
@@ -454,7 +484,7 @@ class Permission
     /**
      * Get default group user.
      *
-     * @return int|false Group id.
+     * @return string|int|false Group id.
      */
     public function getDefaultGroup(bool $usePosix = false)
     {
@@ -523,7 +553,7 @@ class Permission
     /**
      * Get last permission error.
      *
-     * @return string[]|string
+     * @return string[]
      */
     public function getLastError()
     {
