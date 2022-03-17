@@ -34,7 +34,6 @@ use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\File\ClassMap;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Log;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Module;
@@ -70,8 +69,6 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
 
         $this->dataCache = $this->createMock(DataCache::class);
 
-        $this->log = $this->createMock(Log::class);
-
         $pathProvider = $this->createMock(PathProvider::class);
 
         $pathProvider
@@ -103,7 +100,6 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             $this->config,
             $this->module,
             $this->dataCache,
-            $this->log,
             $pathProvider
         );
 

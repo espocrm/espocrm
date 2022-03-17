@@ -34,7 +34,7 @@ class FieldUtil
     private Metadata $metadata;
 
     /**
-     * @var array<string,string[]>
+     * @var array<string,array<string,string[]>>
      */
     private $fieldByTypeListCache = [];
 
@@ -181,6 +181,7 @@ class FieldUtil
         }
 
         if (!array_key_exists($type, $this->fieldByTypeListCache[$entityType])) {
+            /** @var array<string,array<string,mixed>> */
             $fieldDefs = $this->metadata->get(['entityDefs', $entityType, 'fields'], []);
 
             $list = [];
@@ -257,6 +258,7 @@ class FieldUtil
      */
     public function getEntityTypeFieldList(string $entityType): array
     {
+        /** @var string[] */
         return array_keys($this->metadata->get(['entityDefs', $entityType, 'fields'], []));
     }
 

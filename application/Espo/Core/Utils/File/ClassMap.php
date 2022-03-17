@@ -35,7 +35,6 @@ use Espo\Core\{
     Utils\Config,
     Utils\Module,
     Utils\DataCache,
-    Utils\Log,
     Utils\Module\PathProvider,
 };
 
@@ -51,8 +50,6 @@ class ClassMap
 
     private DataCache $dataCache;
 
-    private Log $log;
-
     private PathProvider $pathProvider;
 
     public function __construct(
@@ -60,14 +57,12 @@ class ClassMap
         Config $config,
         Module $module,
         DataCache $dataCache,
-        Log $log,
         PathProvider $pathProvider
     ) {
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->module = $module;
         $this->dataCache = $dataCache;
-        $this->log = $log;
         $this->pathProvider = $pathProvider;
     }
 
@@ -91,11 +86,8 @@ class ClassMap
             $this->dataCache->has($cacheKey) &&
             $this->config->get('useCache')
         ) {
+            /** @var array<string,class-string> */
             $data = $this->dataCache->get($cacheKey);
-
-            if (!is_array($data)) {
-                $this->log->error("ClassParser: Non-array value stored in {$cacheKey}.");
-            }
         }
 
         if (is_array($data)) {
@@ -150,6 +142,7 @@ class ClassMap
 
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
+                /** @var string[] */
                 $fileList = $this->fileManager->getFileList($dir, $subDirs, '\.php$', true);
 
                 $this->fillHashFromFileList($fileList, $dir, $allowedMethods, $data);
