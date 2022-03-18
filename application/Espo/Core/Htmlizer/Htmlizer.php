@@ -33,6 +33,10 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
 
+use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Utils\Json;
+
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\DateTime,
@@ -140,6 +144,10 @@ class Htmlizer
             'helpers' => $this->getHelpers(),
         ]);
 
+        if ($code === false) {
+            throw new Error("Template compile error.");
+        }
+
         $renderer = LightnCandy::prepare($code);
 
         if ($additionalData === null) {
@@ -176,6 +184,7 @@ class Htmlizer
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 
         if ($this->entityManager) {
+            /** @var string */
             $html = preg_replace_callback(
                 '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
                 function ($matches) {
@@ -369,7 +378,10 @@ class Htmlizer
                         $v = $item;
 
                         if ($item instanceof stdClass) {
-                            $v = json_decode(json_encode($v, JSON_PRESERVE_ZERO_FRACTION), true);
+                            $v = json_decode(
+                                Json::encode($v, JSON_PRESERVE_ZERO_FRACTION),
+                                true
+                            );
                         }
 
                         if (is_array($v)) {
@@ -390,7 +402,10 @@ class Htmlizer
                     $value = $data[$attribute];
 
                     if ($value instanceof stdClass) {
-                        $data[$attribute] = json_decode(json_encode($value, JSON_PRESERVE_ZERO_FRACTION), true);
+                        $data[$attribute] = json_decode(
+                            Json::encode($value, JSON_PRESERVE_ZERO_FRACTION),
+                            true
+                        );
                     }
 
                     foreach ($data[$attribute] as $k => $w) {
@@ -601,6 +616,7 @@ class Htmlizer
                 $params = $context['hash'];
                 $params['value'] = $value;
 
+                /** @phpstan-ignore-next-line */
                 $paramsString = urlencode(json_encode($params));
 
                 /** @phpstan-ignore-next-line */
