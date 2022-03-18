@@ -65,6 +65,9 @@ class FunctionFactory
         $this->classNameMap = $classNameMap;
     }
 
+    /**
+     * @return \Espo\Core\Formula\Functions\BaseFunction|\Espo\Core\Formula\Functions\Base
+     */
     public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): object
     {
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
@@ -105,6 +108,7 @@ class FunctionFactory
             $object->setAttributeFetcher($this->attributeFetcher);
         }
 
+        /** @var \Espo\Core\Formula\Functions\BaseFunction|\Espo\Core\Formula\Functions\Base */
         return $object;
     }
 }
