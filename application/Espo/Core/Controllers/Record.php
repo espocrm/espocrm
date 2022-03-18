@@ -32,6 +32,7 @@ namespace Espo\Core\Controllers;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\Json;
 
 use stdClass;
 
@@ -166,12 +167,15 @@ class Record extends RecordBase
         $where = $data->where ?? null;
 
         if ($where !== null) {
-            $where = json_decode(json_encode($where), true);
+            $where = json_decode(Json::encode($where), true);
         }
 
-        $params = json_decode(json_encode(
-            $data->searchParams ?? $data->selectData ?? (object) []
-        ), true);
+        $params = json_decode(
+            Json::encode(
+                $data->searchParams ?? $data->selectData ?? (object) []
+            ),
+            true
+        );
 
         if ($where !== null && !is_array($where)) {
             throw new BadRequest("Bad 'where.");

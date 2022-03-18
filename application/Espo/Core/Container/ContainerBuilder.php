@@ -31,6 +31,7 @@ namespace Espo\Core\Container;
 
 use Espo\Core\Container;
 use Espo\Core\Container\ContainerConfiguration;
+use Espo\Core\Container\Container as ContainerInterface;
 
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingLoader;
@@ -52,12 +53,12 @@ use Espo\Core\Loaders\Metadata as MetadataLoader;
 class ContainerBuilder
 {
     /**
-     * @var class-string
+     * @var class-string<\Espo\Core\Container\Container>
      */
     private string $containerClassName = Container::class;
 
     /**
-     * @var class-string
+     * @var class-string<\Espo\Core\Container\Configuration>
      */
     private string $containerConfigurationClassName = ContainerConfiguration::class;
 
@@ -77,7 +78,7 @@ class ContainerBuilder
     private string $dataCacheClassName = DataCache::class;
 
     /**
-     * @var class-string
+     * @var class-string<Module>
      */
     private string $moduleClassName = Module::class;
 
@@ -89,7 +90,7 @@ class ContainerBuilder
     private $services = [];
 
     /**
-     * @var array<string,class-string>
+     * @var array<string,class-string<\Espo\Core\Container\Loader>>
      */
     protected $loaderClassNames = [
         'log' => LogLoader::class,
@@ -117,7 +118,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param array<string,class-string> $classNames
+     * @param array<string,class-string<\Espo\Core\Container\Loader>> $classNames
      */
     public function withLoaderClassNames(array $classNames): self
     {
@@ -129,7 +130,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param class-string $containerClassName
+     * @param class-string<\Espo\Core\Container\Container> $containerClassName
      */
     public function withContainerClassName(string $containerClassName): self
     {
@@ -139,7 +140,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param class-string $containerConfigurationClassName
+     * @param class-string<\Espo\Core\Container\Configuration> $containerConfigurationClassName
      */
     public function withContainerConfigurationClassName(string $containerConfigurationClassName): self
     {
@@ -178,8 +179,9 @@ class ContainerBuilder
         return $this;
     }
 
-    public function build(): Container
+    public function build(): ContainerInterface
     {
+        /** @var Config */
         $config = $this->services['config'] ?? (
             new $this->configClassName(
                 new ConfigFileManager()
@@ -198,6 +200,7 @@ class ContainerBuilder
 
         $useCache = $config->get('useCache') ?? false;
 
+        /** @var Module */
         $module = $this->services['module'] ?? (
             new $this->moduleClassName($fileManager, $dataCache, $useCache)
         );

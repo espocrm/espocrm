@@ -61,11 +61,17 @@ class Application extends BaseApplication
 
     protected function initContainer(): void
     {
-        $this->container = (new ContainerBuilder())
+        $container = (new ContainerBuilder())
             ->withConfigClassName(Config::class)
             ->withContainerClassName(PortalContainer::class)
             ->withContainerConfigurationClassName(PortalContainerConfiguration::class)
             ->build();
+
+        if (!$container instanceof PortalContainer) {
+            throw new Error("Wrong container created.");
+        }
+
+        $this->container = $container;
     }
 
     protected function initPortal(?string $portalId): void

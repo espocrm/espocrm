@@ -150,6 +150,7 @@ abstract class Base
      */
     protected function getName(): string
     {
+        /** @var string */
         return $this->name;
     }
 
@@ -197,6 +198,7 @@ abstract class Base
      */
     protected function getUser()
     {
+        /** @var User */
         return $this->container->get('user');
     }
 
@@ -207,6 +209,7 @@ abstract class Base
      */
     protected function getAcl()
     {
+        /** @var Acl */
         return $this->container->get('acl');
     }
 
@@ -217,6 +220,7 @@ abstract class Base
      */
     protected function getAclManager()
     {
+        /** @var AclManager */
         return $this->container->get('aclManager');
     }
 
@@ -227,6 +231,7 @@ abstract class Base
      */
     protected function getConfig()
     {
+        /** @var Config */
         return $this->container->get('config');
     }
 
@@ -236,6 +241,7 @@ abstract class Base
      */
     protected function getPreferences()
     {
+        /** @var Preferences */
         return $this->container->get('preferences');
     }
 
@@ -246,6 +252,7 @@ abstract class Base
      */
     protected function getMetadata()
     {
+        /** @var Metadata */
         return $this->container->get('metadata');
     }
 
@@ -256,6 +263,7 @@ abstract class Base
      */
     protected function getServiceFactory()
     {
+        /** @var ServiceFactory */
         return $this->container->get('serviceFactory');
     }
 }

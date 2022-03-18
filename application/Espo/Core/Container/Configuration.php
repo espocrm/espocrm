@@ -32,12 +32,12 @@ namespace Espo\Core\Container;
 interface Configuration
 {
     /**
-     * @return ?class-string
+     * @return ?class-string<Loader>
      */
     public function getLoaderClassName(string $name): ?string;
 
     /**
-     * @return ?class-string
+     * @return ?class-string<object>
      */
     public function getServiceClassName(string $name): ?string;
 

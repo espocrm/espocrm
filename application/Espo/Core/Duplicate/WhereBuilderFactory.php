@@ -69,10 +69,11 @@ class WhereBuilderFactory
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<WhereBuilder<\Espo\ORM\Entity>>
      */
     private function getClassName(string $entityType): ?string
     {
+        /** @var ?class-string<WhereBuilder<\Espo\ORM\Entity>> */
         return $this->metadata
             ->get(['recordDefs', $entityType, 'duplicateWhereBuilderClassName']);
     }
