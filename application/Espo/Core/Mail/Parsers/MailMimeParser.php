@@ -154,6 +154,8 @@ class MailMimeParser implements Parser
                 continue;
             }
 
+            /** @var \ZBateson\MailMimeParser\Header\AddressHeader $header */
+
             $list = $header->getAddresses();
 
             foreach ($list as $item) {
@@ -172,6 +174,8 @@ class MailMimeParser implements Parser
     public function getAddressData(Message $message, string $type): ?stdClass
     {
         $header = $this->getMessage($message)->getHeader($type);
+
+        /** @var ?\ZBateson\MailMimeParser\Header\AddressHeader $header */
 
         if ($header && method_exists($header, 'getAddresses')) {
             foreach ($header->getAddresses() as $item) {
@@ -193,6 +197,8 @@ class MailMimeParser implements Parser
         $addressList = [];
 
         $header = $this->getMessage($message)->getHeader($type);
+
+        /** @var ?\ZBateson\MailMimeParser\Header\AddressHeader $header */
 
         if ($header && method_exists($header, 'getAddresses')) {
             $list = $header->getAddresses();

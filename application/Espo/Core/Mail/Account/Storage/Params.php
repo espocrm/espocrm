@@ -42,7 +42,7 @@ class Params
     private ?string $security = null;
 
     /**
-     * @var ?class-string
+     * @var ?class-string<object>
      */
     private ?string $imapHandlerClassName = null;
 
@@ -52,6 +52,9 @@ class Params
 
     private ?string $emailAddress = null;
 
+    /**
+     * @param ?class-string<object> $imapHandlerClassName
+     */
     public function __construct(
         ?string $host,
         ?int $port,

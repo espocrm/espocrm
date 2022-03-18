@@ -32,16 +32,14 @@ namespace Espo\Core\Mail;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 
-use Traversable;
-
 class FiltersMatcher
 {
     /**
-     * @param Traversable<EmailFilter>|EmailFilter $subject
+     * @param iterable<EmailFilter>|EmailFilter $subject
      */
     public function match(Email $email, $subject, bool $skipBody = false): bool
     {
-        if (is_array($subject) || $subject instanceof Traversable) {
+        if (is_array($subject) || is_iterable($subject)) {
             $filterList = $subject;
         }
         else {

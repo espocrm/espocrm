@@ -41,6 +41,9 @@ class ParamsBuilder
 
     private ?string $security = null;
 
+    /**
+     * @var ?class-string<object>
+     */
     private ?string $imapHandlerClassName = null;
 
     private ?string $id = null;
@@ -99,6 +102,9 @@ class ParamsBuilder
         return $this;
     }
 
+    /**
+     * @param ?class-string<object> $imapHandlerClassName
+     */
     public function setImapHandlerClassName(?string $imapHandlerClassName): self
     {
         $this->imapHandlerClassName = $imapHandlerClassName;

@@ -55,6 +55,7 @@ class Imap extends \Laminas\Mail\Storage\Imap
      */
     public function getHeaderAndFlags(int $id): array
     {
+        /** @var array{'RFC822.HEADER': string, FLAGS: string[]} */
         $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
 
         $header = $data['RFC822.HEADER'];

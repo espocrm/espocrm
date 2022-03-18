@@ -142,8 +142,12 @@ class InboundEmail extends Entity
         return $this->get('security');
     }
 
+    /**
+     * @return ?class-string<object>
+     */
     public function getImapHandlerClassName(): ?string
     {
+        /** @var ?class-string<object> */
         return $this->get('imapHandler');
     }
 

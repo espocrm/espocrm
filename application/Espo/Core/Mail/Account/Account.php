@@ -123,6 +123,9 @@ interface Account
 
     public function getSecurity(): ?string;
 
+    /**
+     * @return ?class-string<object>
+     */
     public function getImapHandlerClassName(): ?string;
 
     public function getSentFolder(): ?string;

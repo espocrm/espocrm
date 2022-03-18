@@ -125,7 +125,7 @@ class StorageFactory implements StorageFactoryInterface
 
             if (method_exists($handler, 'prepareProtocol')) {
                 // for backward compatibility
-                $rawParams['ssl'] = $rawParams['security'];
+                $rawParams['ssl'] = $rawParams['security'] ?? null;
 
                 $imapParams = $handler->prepareProtocol($rawParams['id'], $rawParams);
             }

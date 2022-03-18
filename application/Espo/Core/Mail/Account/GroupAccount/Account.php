@@ -211,6 +211,9 @@ class Account implements AccountInterface
         return $this->entity->getSecurity();
     }
 
+    /**
+     * @return ?class-string<object>
+     */
     public function getImapHandlerClassName(): ?string
     {
         return $this->entity->getImapHandlerClassName();

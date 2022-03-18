@@ -54,6 +54,7 @@ class LaminasStorage implements Storage
 
     public function getSize(int $id): int
     {
+        /** @var int */
         return $this->imap->getSize($id);
     }
 
@@ -64,6 +65,7 @@ class LaminasStorage implements Storage
 
     public function getUniqueId(int $id): string
     {
+        /** @var string */
         return $this->imap->getUniqueId($id);
     }
 
@@ -114,6 +116,7 @@ class LaminasStorage implements Storage
             $list[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
 
+        /** @var string[] */
         return $list;
     }
 

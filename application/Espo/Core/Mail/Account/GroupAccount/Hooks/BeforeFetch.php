@@ -105,6 +105,7 @@ class BeforeFetch implements BeforeFetchInterface
         $queueItemId = null;
 
         if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
+            /** @var array{string} */
             $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
 
             $queueItemId = $arr[0];
@@ -113,6 +114,7 @@ class BeforeFetch implements BeforeFetchInterface
             $to = $message->getHeader('to');
 
             if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to, $m)) {
+                /** @var array{string} */
                 $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
 
                 $queueItemId = $arr[0];
