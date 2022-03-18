@@ -166,7 +166,10 @@ class HookManager
     private function loadHooks(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+            /** @var array<string,array<string,mixed>> */
+            $cachedData = $this->dataCache->get($this->cacheKey);
+
+            $this->data = $cachedData;
 
             return;
         }
@@ -215,6 +218,7 @@ class HookManager
             return $hookData;
         }
 
+        /** @var array<string,string[]> */
         $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
 
         foreach ($fileList as $scopeName => $hookFiles) {
@@ -229,6 +233,7 @@ class HookManager
 
                 $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
+                /** @var string[] */
                 $hookMethods = array_filter($hookMethods, function ($item) {
                     if (strpos($item, 'set') === 0) {
                         return false;
