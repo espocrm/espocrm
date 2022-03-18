@@ -100,10 +100,11 @@ class EntryPointManager
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<EntryPoint>
      */
     private function getClassName(string $name): ?string
     {
+        /** @var ?class-string<EntryPoint> */
         return $this->classFinder->find('EntryPoints', ucfirst($name));
     }
 }

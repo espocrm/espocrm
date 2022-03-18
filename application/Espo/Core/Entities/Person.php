@@ -99,11 +99,13 @@ class Person extends Entity
 
     public function getEmailAddressGroup(): EmailAddressGroup
     {
+        /** @var EmailAddressGroup */
         return $this->getValueObject('emailAddress');
     }
 
     public function getPhoneNumberGroup(): PhoneNumberGroup
     {
+        /** @var PhoneNumberGroup */
         return $this->getValueObject('phoneNumber');
     }
 
@@ -164,6 +166,7 @@ class Person extends Entity
 
     public function getAddress(): Address
     {
+        /** @var Address */
         return $this->getValueObject('address');
     }
 
