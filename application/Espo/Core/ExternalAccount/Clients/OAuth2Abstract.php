@@ -31,6 +31,8 @@ namespace Espo\Core\ExternalAccount\Clients;
 
 use Espo\Core\Exceptions\Error;
 
+use Espo\Core\Utils\Json;
+
 use Espo\Core\{
     ExternalAccount\OAuth2\Client,
     ExternalAccount\ClientManager,
@@ -169,7 +171,12 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array{
+     *   accessToken: ?string,
+     *   tokenType: ?string,
+     *   expiresAt?: ?string,
+     *   refreshToken?: ?string
+     * } $data
      * @return void
      */
     protected function afterTokenRefreshed(array $data): void
@@ -180,15 +187,11 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     * @param array{
-     *   access_token: string,
-     *   token_type: string,
-     *   refresh_token?: string,
-     *   expires_in?: int,
-     * } $result
+     * @param array<string,mixed> $result
      * @return array{
-     *   accessToken: string,
-     *   tokenType: string,
+     *   accessToken: ?string,
+     *   tokenType: ?string,
+     *   refreshToken: ?string,
      *   expiresAt: ?string,
      * }
      */
@@ -196,8 +199,8 @@ abstract class OAuth2Abstract implements IClient
     {
         $data = [];
 
-        $data['accessToken'] = $result['access_token'];
-        $data['tokenType'] = $result['token_type'];
+        $data['accessToken'] = $result['access_token'] ?? null;
+        $data['tokenType'] = $result['token_type'] ?? null;
 
         $data['expiresAt'] = null;
 
@@ -211,20 +214,28 @@ abstract class OAuth2Abstract implements IClient
                 ->format('Y-m-d H:i:s');
         }
 
+        /**
+         * @var array{
+         *   accessToken: ?string,
+         *   tokenType: ?string,
+         *   refreshToken: ?string,
+         *   expiresAt: ?string,
+         * }
+         */
         return $data;
     }
 
     /**
      * @return ?array{
-     *   accessToken: string,
-     *   tokenType: string,
+     *   accessToken: ?string,
+     *   tokenType: ?string,
      *   expiresAt: ?string,
-     *   refreshToken: string,
+     *   refreshToken: ?string,
      * }
      */
     public function getAccessTokenFromAuthorizationCode(string $code)
     {
-        $r = $this->client->getAccessToken(
+        $response = $this->client->getAccessToken(
             $this->getParam('tokenEndpoint'),
             Client::GRANT_TYPE_AUTHORIZATION_CODE,
             [
@@ -233,22 +244,33 @@ abstract class OAuth2Abstract implements IClient
             ]
         );
 
-        if ($r['code'] == 200) {
-            if (!empty($r['result'])) {
-                $data = $this->getAccessTokenDataFromResponseResult($r['result']);
+        if ($response['code'] == 200) {
+            if (!empty($response['result'])) {
+                /** @var array<string,mixed> */
+                $result = $response['result'];
 
-                $data['refreshToken'] = $r['result']['refresh_token'];
+                $data = $this->getAccessTokenDataFromResponseResult($result);
 
+                $data['refreshToken'] = $result['refresh_token'] ?? null;
+
+                /**
+                 * @var ?array{
+                 *   accessToken: ?string,
+                 *   tokenType: ?string,
+                 *   expiresAt: ?string,
+                 *   refreshToken: ?string,
+                 * }
+                 */
                 return $data;
             }
             else {
-                $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . json_encode($r));
+                $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . Json::encode($response));
 
                 return null;
             }
         }
         else {
-            $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . json_encode($r));
+            $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . Json::encode($response));
         }
 
         return null;
@@ -358,7 +380,6 @@ abstract class OAuth2Abstract implements IClient
     }
 
     /**
-     *
      * @param string $url
      * @param array<string,mixed>|string|null $params
      * @param string $httpMethod
@@ -385,30 +406,36 @@ abstract class OAuth2Abstract implements IClient
 
             switch ($contentType) {
                 case Client::CONTENT_TYPE_MULTIPART_FORM_DATA:
-                    $httpHeaders['Content-Length'] = strlen($params);
+                    if (is_string($params)) {
+                        $httpHeaders['Content-Length'] = (string) strlen($params);
+                    }
 
                     break;
 
                 case Client::CONTENT_TYPE_APPLICATION_JSON:
-                    $httpHeaders['Content-Length'] = strlen($params);
+                    if (is_string($params)) {
+                        $httpHeaders['Content-Length'] = (string) strlen($params);
+                    }
 
                     break;
             }
         }
 
-        $r = $this->client->request($url, $params, $httpMethod, $httpHeaders);
+        $response = $this->client->request($url, $params, $httpMethod, $httpHeaders);
 
         $code = null;
 
-        if (!empty($r['code'])) {
-            $code = $r['code'];
+        if (!empty($response['code'])) {
+            $code = $response['code'];
         }
+
+        $result = $response['result'];
 
         if ($code >= 200 && $code < 300) {
-            return $r['result'];
+            return $result;
         }
 
-        $handledData = $this->handleErrorResponse($r);
+        $handledData = $this->handleErrorResponse($response);
 
         if ($allowRenew && is_array($handledData)) {
             if ($handledData['action'] === 'refreshToken') {
@@ -423,8 +450,13 @@ abstract class OAuth2Abstract implements IClient
 
         $reasonPart = '';
 
-        if (isset($r['result']['error']) && isset($r['result']['error']['message'])) {
-            $reasonPart = '; Reason: ' . $r['result']['error']['message'];
+        if (
+            is_array($result) &&
+            isset($result['error']) &&
+            is_array($result['error']) &&
+            isset($result['error']['message'])
+        ) {
+            $reasonPart = '; Reason: ' . $result['error']['message'];
         }
 
         throw new Error("Oauth: Error after requesting {$httpMethod} {$url}{$reasonPart}.", $code);
@@ -432,7 +464,6 @@ abstract class OAuth2Abstract implements IClient
 
     /**
      * @return bool
-     *
      * @throws Error
      */
     protected function refreshToken()

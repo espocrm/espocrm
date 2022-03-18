@@ -171,6 +171,10 @@ class ClientManager
 
         $client = $this->injectableFactory->create($className);
 
+        if (!method_exists($client, 'setup')) {
+            throw new Error("{$className} does not have `setup` method.");
+        }
+
         $client->setup(
             $userId,
             $integrationEntity,
@@ -362,6 +366,9 @@ class ClientManager
         ]);
     }
 
+    /**
+     * @param \Espo\Core\ExternalAccount\Clients\IClient $client
+     */
     public function reFetchClient(object $client): void
     {
         $externalAccountEntity = $this->getClientRecord($client);

@@ -224,6 +224,10 @@ class Client
         if ($this->accessToken) {
             switch ($this->tokenType) {
                 case self::TOKEN_TYPE_URI:
+                    if (is_string($params) || $params === null) {
+                        $params = [];
+                    }
+
                     $params[$this->accessTokenParamName] = $this->accessToken;
 
                     break;
@@ -336,7 +340,12 @@ class Client
             curl_setopt_array($ch, $this->curlOptions);
         }
 
+        /** @var string|false */
         $response = curl_exec($ch);
+
+        if ($response === false) {
+            throw new Exception("Curl failure.");
+        }
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
