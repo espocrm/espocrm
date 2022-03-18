@@ -36,7 +36,6 @@ use DateTimeInterface;
 use DateInterval;
 use DateTimeZone;
 use RuntimeException;
-use Throwable;
 
 /**
  * A date value object. Immutable.
@@ -57,20 +56,17 @@ class Date implements DateTimeable
 
         $this->value = $value;
 
-        try {
-            $this->dateTime = DateTimeImmutable::createFromFormat(
-                '!' . self::SYSTEM_FORMAT,
-                $value,
-                new DateTimeZone('UTC')
-            );
-        }
-        catch (Throwable $e) {
+        $parsedValue = DateTimeImmutable::createFromFormat(
+            '!' . self::SYSTEM_FORMAT,
+            $value,
+            new DateTimeZone('UTC')
+        );
+
+        if ($parsedValue === false) {
             throw new RuntimeException("Bad value.");
         }
 
-        if (!$this->dateTime) {
-            throw new RuntimeException("Bad value.");
-        }
+        $this->dateTime = $parsedValue;
 
         if ($this->value !== $this->dateTime->format(self::SYSTEM_FORMAT)) {
             throw new RuntimeException("Bad value.");

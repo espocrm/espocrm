@@ -147,7 +147,10 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        return $this->getActualValue()->getHour();
+        /** @var DateTime */
+        $value = $this->getActualValue();
+
+        return $value->getHour();
     }
 
     /**
@@ -159,7 +162,10 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        return $this->getActualValue()->getMinute();
+        /** @var DateTime */
+        $value = $this->getActualValue();
+
+        return $value->getMinute();
     }
 
     /**
@@ -171,7 +177,10 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        return $this->getActualValue()->getSecond();
+        /** @var DateTime */
+        $value = $this->getActualValue();
+
+        return $value->getSecond();
     }
 
     /**
@@ -209,7 +218,10 @@ class DateTimeOptional implements DateTimeable
             return self::fromDateTime($dateTime);
         }
 
-        $dateTime = $this->getActualValue()->withTimezone($timezone)->getDateTime();
+        /** @var DateTime */
+        $value = $this->getActualValue();
+
+        $dateTime = $value->withTimezone($timezone)->getDateTime();
 
         return self::fromDateTime($dateTime);
     }
@@ -309,10 +321,14 @@ class DateTimeOptional implements DateTimeable
      */
     public static function fromDateTime(DateTimeInterface $dateTime): self
     {
-        $value = $dateTime->format(self::SYSTEM_FORMAT);
+        /** @var DateTimeImmutable */
+        $value = DateTimeImmutable::createFromFormat(
+            self::SYSTEM_FORMAT,
+            $dateTime->format(self::SYSTEM_FORMAT),
+            $dateTime->getTimezone()
+        );
 
-        $utcValue = DateTimeImmutable
-             ::createFromFormat(self::SYSTEM_FORMAT, $value, $dateTime->getTimezone())
+        $utcValue = $value
              ->setTimezone(new DateTimeZone('UTC'))
              ->format(self::SYSTEM_FORMAT);
 

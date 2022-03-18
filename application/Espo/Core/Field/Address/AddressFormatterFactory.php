@@ -56,7 +56,7 @@ class AddressFormatterFactory
 
     public function create(int $format): AddressFormatter
     {
-        /** @var ?class-string */
+        /** @var ?class-string<AddressFormatter> */
         $className = $this->metadataProvider->getFormatterClassName($format);
 
         if (!$className) {

@@ -90,7 +90,7 @@ class ReadLoadProcessor
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<Loader<Entity>>[]
      */
     private function getLoaderClassNameList(string $entityType): array
     {
@@ -100,11 +100,12 @@ class ReadLoadProcessor
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'readLoaderClassNameList']) ?? [];
 
+        /** @var class-string<Loader<Entity>>[] */
         return array_merge($list, $additionalList);
     }
 
     /**
-     * @param class-string $className
+     * @param class-string<Loader<Entity>> $className
      * @return Loader<Entity>
      */
     private function createLoader(string $className): Loader

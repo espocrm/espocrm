@@ -90,7 +90,7 @@ class ListLoadProcessor
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<Loader<Entity>>[]
      */
     private function getLoaderClassNameList(string $entityType): array
     {
@@ -104,7 +104,7 @@ class ListLoadProcessor
     }
 
     /**
-     * @param class-string $className
+     * @param class-string<Loader<Entity>> $className
      * @return Loader<Entity>
      */
     private function createLoader(string $className): Loader

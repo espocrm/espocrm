@@ -91,7 +91,7 @@ class SaveProcessor
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<Saver>[]
      */
     private function getSaverClassNameList(string $entityType): array
     {
@@ -101,11 +101,12 @@ class SaveProcessor
         $additionalList = $this->metadata
             ->get(['recordDefs', $entityType, 'saverClassNameList']) ?? [];
 
+        /** @var class-string<Saver>[] */
         return array_merge($list, $additionalList);
     }
 
     /**
-     * @param class-string $className
+     * @param class-string<Saver> $className
      */
     private function createSaver(string $className): Saver
     {
