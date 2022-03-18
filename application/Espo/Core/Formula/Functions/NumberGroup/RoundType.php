@@ -45,6 +45,7 @@ class RoundType extends BaseFunction
         $value = $this->evaluate($args[0]);
 
         $precision = 0;
+
         if (count($args) > 1) {
              $precision = $this->evaluate($args[1]);
         }
@@ -53,6 +54,6 @@ class RoundType extends BaseFunction
             return null;
         }
 
-        return round($value, $precision);
+        return round((float) $value, $precision);
     }
 }

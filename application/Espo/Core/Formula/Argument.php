@@ -58,6 +58,10 @@ class Argument implements Evaluatable
             return null;
         }
 
+        if (!property_exists($this->data, 'type')) {
+            return null;
+        }
+
         return $this->data->type ?? null;
     }
 

@@ -55,6 +55,7 @@ class UpdateType extends BaseFunction implements
         if (!is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
         }
+
         if (!is_string($id)) {
             $this->throwBadArgumentType(2, 'string');
         }
@@ -62,13 +63,20 @@ class UpdateType extends BaseFunction implements
         $data = [];
 
         $i = 2;
+
         while ($i < count($args) - 1) {
             $attribute = $args[$i];
+
             if (!is_string($entityType)) {
                 $this->throwBadArgumentType($i + 1, 'string');
             }
+
+            /** @var string $attribute */
+
             $value = $args[$i + 1];
+
             $data[$attribute] = $value;
+
             $i = $i + 2;
         }
 

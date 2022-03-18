@@ -48,6 +48,6 @@ class FloorType extends BaseFunction
             return null;
         }
 
-        return intval(floor($value));
+        return intval(floor((float) $value));
     }
 }

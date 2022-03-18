@@ -66,6 +66,8 @@ class CreateType extends BaseFunction implements
                 $this->throwBadArgumentType($i + 1, 'string');
             }
 
+            /** @var string $attribute */
+
             $value = $args[$i + 1];
 
             $data[$attribute] = $value;

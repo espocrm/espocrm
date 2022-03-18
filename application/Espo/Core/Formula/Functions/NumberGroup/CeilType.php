@@ -48,6 +48,6 @@ class CeilType extends BaseFunction
             return null;
         }
 
-        return intval(ceil($value));
+        return intval(ceil((float) $value));
     }
 }

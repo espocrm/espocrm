@@ -102,8 +102,7 @@ class FunctionFactory
         ]);
 
         if (
-            property_exists($className, 'hasAttributeFetcher') ||
-            method_exists($className, 'setAttributeFetcher')
+            method_exists($object, 'setAttributeFetcher')
         ) {
             $object->setAttributeFetcher($this->attributeFetcher);
         }

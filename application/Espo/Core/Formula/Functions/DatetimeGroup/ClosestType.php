@@ -60,11 +60,13 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
         }
 
         $inPast = false;
+
         if (count($args) > 3) {
             $inPast = $args[3];
         }
 
         $timezone = null;
+
         if (count($args) > 4) {
             $timezone = $args[4];
         }
@@ -82,6 +84,7 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
         }
 
         $isDate = false;
+
         if (strlen($value) === 10) {
             $isDate = true;
             $value .= ' 00:00:00';
@@ -95,20 +98,26 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
 
         /** @var DateTime */
         $dt = DateTime::createFromFormat($format, $value, new DateTimeZone($timezone));
+
         $valueTimestamp = $dt->getTimestamp();
 
         if ($type === 'time') {
             if (!is_string($target)) {
                 $this->throwBadArgumentType(3, 'string');
             }
+
             list($hour, $minute) = explode(':', $target);
+
             if (!$hour) {
                 $hour = 0;
             }
+
             if (!$minute) {
                 $minute = 0;
             }
-            $dt->setTime($hour, $minute, 0);
+
+            $dt->setTime((int) $hour, (int) $minute, 0);
+
             if ($valueTimestamp < $dt->getTimestamp()) {
                 if ($inPast) {
                     $dt->modify('-1 day');
@@ -118,32 +127,39 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
                     $dt->modify('+1 day');
                 }
             }
-        } else if ($type === 'hour') {
+        }
+        else if ($type === 'hour') {
             $target = intval($target);
             $dt->setTime($target, 0, 0);
+
             if ($valueTimestamp < $dt->getTimestamp()) {
                 if ($inPast) {
                     $dt->modify('-1 day');
                 }
-            } else if ($valueTimestamp > $dt->getTimestamp()) {
+            }
+            else if ($valueTimestamp > $dt->getTimestamp()) {
                 if (!$inPast) {
                     $dt->modify('+1 day');
                 }
             }
-        } else if ($type === 'minute') {
+        }
+        else if ($type === 'minute') {
             $target = intval($target);
+
             $dt->setTime(intval($dt->format('G')), intval($target), 0);
 
             if ($valueTimestamp < $dt->getTimestamp()) {
                 if ($inPast) {
                     $dt->modify('-1 hour');
                 }
-            } else if ($valueTimestamp > $dt->getTimestamp()) {
+            }
+            else if ($valueTimestamp > $dt->getTimestamp()) {
                 if (!$inPast) {
                     $dt->modify('+1 hour');
                 }
             }
-        } else if ($type === 'dayOfWeek') {
+        }
+        else if ($type === 'dayOfWeek') {
             $target = intval($target);
             $dt->setTime(0, 0, 0);
 
@@ -155,36 +171,45 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
                 if ($inPast) {
                     $dt->modify('-1 week');
                 }
-            } else if ($valueTimestamp > $dt->getTimestamp()) {
+            }
+            else if ($valueTimestamp > $dt->getTimestamp()) {
                 if (!$inPast) {
                     $dt->modify('+1 week');
                 }
             }
-        } else if ($type === 'date') {
+        }
+        else if ($type === 'date') {
             $target = intval($target);
             $dt->setTime(0, 0, 0);
 
             if ($inPast) {
                 while (true) {
                     $date = intval($dt->format('d'));
+
                     if ($date === $target) {
                         break;
                     }
+
                     $dt->modify('-1 day');
                 }
-            } else {
+            }
+            else {
                 if ($valueTimestamp > $dt->getTimestamp()) {
                     $dt->modify('+1 day');
                 }
+
                 while (true) {
                     $date = intval($dt->format('d'));
+
                     if ($date === $target) {
                         break;
                     }
+
                     $dt->modify('+1 day');
                 }
             }
-        } else if ($type === 'month') {
+        }
+        else if ($type === 'month') {
             $target = intval($target);
 
             $dt->setTime(0, 0, 0);
@@ -194,20 +219,26 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
             if ($inPast) {
                 while (true) {
                     $month = intval($dt->format('m'));
+
                     if ($month === $target) {
                         break;
                     }
+
                     $dt->modify('-1 month');
                 }
-            } else {
+            }
+            else {
                 if ($valueTimestamp > $dt->getTimestamp()) {
                     $dt->modify('+1 month');
                 }
+
                 while (true) {
                     $month = intval($dt->format('m'));
+
                     if ($month === $target) {
                         break;
                     }
+
                     $dt->modify('+1 month');
                 }
             }
@@ -219,9 +250,10 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
 
         if (!$isDate) {
             $dt->setTimezone(new DateTimeZone('UTC'));
+
             return $dt->format('Y-m-d H:i');
-        } else {
-            return $dt->format('Y-m-d');
         }
+
+        return $dt->format('Y-m-d');
     }
 }

@@ -75,7 +75,9 @@ class SendType extends BaseFunction implements
             return false;
         }
 
+        /** @var \Espo\Services\Email */
         $service = $this->serviceFactory->create('Email');
+
         $service->loadAdditionalFields($email);
 
         $toSave = false;
