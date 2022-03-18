@@ -59,6 +59,14 @@ class Application extends BaseApplication
         $this->initPreloads();
     }
 
+    public function getContainer(): Container
+    {
+        $container = parent::getContainer();
+
+        /** @var Container */
+        return $container;
+    }
+
     protected function initContainer(): void
     {
         $container = (new ContainerBuilder())
