@@ -140,6 +140,7 @@ class ScheduleProcessor
 
             $data = new PreparatorData($scheduledJob->getId(), $scheduledJob->getName());
 
+            /** @var DateTimeImmutable */
             $executeTimeObj = DateTimeImmutable
                 ::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $executeTime);
 

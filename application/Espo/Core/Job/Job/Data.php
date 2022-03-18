@@ -65,6 +65,8 @@ class Data
             $data = (object) $data;
         }
 
+        /** @var ?stdClass $data */
+
         return new self($data);
     }
 

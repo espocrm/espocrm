@@ -85,7 +85,10 @@ class MetadataProvider
      */
     public function getScheduledJobNameList(): array
     {
-        return array_keys($this->metadata->get(['app', 'scheduledJobs']) ?? []);
+        /** @var array<string,mixed> */
+        $items = $this->metadata->get(['app', 'scheduledJobs']) ?? [];
+
+        return array_keys($items);
     }
 
     /**

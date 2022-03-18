@@ -347,7 +347,7 @@ class QueueUtil
      */
     protected function markJobListFailed(iterable $jobList): void
     {
-        if (!count($jobList)) {
+        if (is_countable($jobList) && !count($jobList)) {
             return;
         }
 

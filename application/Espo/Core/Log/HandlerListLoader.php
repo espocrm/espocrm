@@ -82,7 +82,7 @@ class HandlerListLoader
             $params['level'] = Logger::toMonologLevel($level);
         }
 
-        /** @var ?class-string */
+        /** @var ?class-string<\Espo\Core\Log\HandlerLoader> */
         $loaderClassName = $data['loaderClassName'] ?? null;
 
         if ($loaderClassName) {

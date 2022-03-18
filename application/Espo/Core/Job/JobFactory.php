@@ -74,7 +74,7 @@ class JobFactory
 
     /**
      * Create a job by a class name.
-     * @param class-string $className
+     * @param class-string<Job|JobDataLess> $className
      * @return Job|JobDataLess
      */
     public function createByClassName(string $className): object
@@ -85,16 +85,18 @@ class JobFactory
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<Job|JobDataLess>
      */
     private function getClassName(string $name): ?string
     {
+        /** @var ?class-string<Job|JobDataLess> */
         $className = $this->metadataProvider->getJobClassName($name);
 
         if ($className) {
             return $className;
         }
 
+        /** @var ?class-string<Job|JobDataLess> */
         return $this->classFinder->find('Jobs', ucfirst($name));
     }
 }

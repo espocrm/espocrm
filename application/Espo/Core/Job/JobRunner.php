@@ -208,6 +208,7 @@ class JobRunner
 
     private function runJobWithClassName(JobEntity $jobEntity): void
     {
+        /** @var class-string<Job|JobDataLess> */
         $className = $jobEntity->getClassName();
 
         $job = $this->jobFactory->createByClassName($className);
