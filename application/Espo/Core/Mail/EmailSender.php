@@ -29,9 +29,10 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\InjectableFactory;
+
 use Espo\{
     Entities\Email,
-    Entities\Attachment,
     Entities\InboundEmail,
     Services\InboundEmail as InboundEmailService,
 };
@@ -41,7 +42,6 @@ use Laminas\Mail\Message;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    ServiceFactory,
     Utils\Log,
 };
 
@@ -61,7 +61,7 @@ class EmailSender
 
     private EntityManager $entityManager;
 
-    private ServiceFactory $serviceFactory;
+    private InjectableFactory $injectableFactory;
 
     private SmtpTransportFactory $transportFactory;
 
@@ -70,13 +70,13 @@ class EmailSender
     public function __construct(
         Config $config,
         EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
+        InjectableFactory $injectableFactory,
         SmtpTransportFactory $transportFactory,
         Log $log
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->injectableFactory = $injectableFactory;
         $this->transportFactory = $transportFactory;
         $this->log = $log;
     }
@@ -86,7 +86,7 @@ class EmailSender
         return new Sender(
             $this->config,
             $this->entityManager,
-            $this->serviceFactory,
+            $this->injectableFactory,
             $this->log,
             $this->transportFactory,
             $this->getInboundEmailService(),
@@ -125,7 +125,7 @@ class EmailSender
     /**
      * With specific attachments.
      *
-     * @param iterable<Attachment> $attachmentList
+     * @param iterable<\Espo\Entities\Attachment> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): Sender
     {
@@ -189,7 +189,7 @@ class EmailSender
     private function getInboundEmailService(): InboundEmailService
     {
         if (!$this->inboundEmailService) {
-            $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
+            $this->inboundEmailService = $this->injectableFactory->create(InboundEmailService::class);
         }
 
         return $this->inboundEmailService;

@@ -29,10 +29,11 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
+use Espo\Core\InjectableFactory;
+
 use Laminas\{
     Mail\Transport\Smtp as SmtpTransport,
 };
-
 
 use Espo\Entities\{
     Email,
@@ -43,7 +44,6 @@ use Espo\Core\{
     Mail\SmtpTransportFactory,
     ORM\EntityManager,
     Utils\Config,
-    ServiceFactory,
     Utils\Log,
 };
 
@@ -55,14 +55,20 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
     {
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $serviceFactory = $this->getMockBuilder(ServiceFactory::class)->disableOriginalConstructor()->getMock();
+        $injectableFactory = $this->createMock(InjectableFactory::class);
         $transportFactory = $this->getMockBuilder(SmtpTransportFactory::class)->disableOriginalConstructor()->getMock();
 
         $this->transport = $this->getMockBuilder(SmtpTransport::class)->disableOriginalConstructor()->getMock();
 
         $log = $this->createMock(Log::class);
 
-        $emailSender = new EmailSender($config, $entityManager, $serviceFactory, $transportFactory, $log);
+        $emailSender = new EmailSender(
+            $config,
+            $entityManager,
+            $injectableFactory,
+            $transportFactory,
+            $log
+        );
 
         $transportFactory
             ->expects($this->any())
@@ -95,12 +101,12 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
 
         $inboundEmailService = $this->createMock(InboundEmailService::class);
 
-        $serviceFactory
+        $injectableFactory
             ->expects($this->any())
             ->method('create')
-            ->will(
+              ->will(
                 $this->returnValueMap([
-                    ['InboundEmail', $inboundEmailService],
+                    [InboundEmailService::class, $inboundEmailService],
                 ])
             );
     }

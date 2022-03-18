@@ -30,6 +30,9 @@
 namespace Espo\Core\Mail;
 
 use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Entities\Attachment;
+
+use Espo\Core\InjectableFactory;
 
 use Laminas\{
     Mime\Message as MimeMessage,
@@ -58,7 +61,6 @@ use Espo\Core\{
     Exceptions\Error,
     Utils\Config,
     ORM\EntityManager,
-    ServiceFactory,
     Utils\Log,
 };
 
@@ -99,7 +101,7 @@ class Sender
 
     private EntityManager $entityManager;
 
-    private ServiceFactory $serviceFactory;
+    private InjectableFactory $injectableFactory;
 
     private SmtpTransportFactory $transportFactory;
 
@@ -112,7 +114,7 @@ class Sender
     public function __construct(
         Config $config,
         EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
+        InjectableFactory $injectableFactory,
         Log $log,
         SmtpTransportFactory $transportFactory,
         ?InboundEmailService $inboundEmailService = null,
@@ -120,7 +122,7 @@ class Sender
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->injectableFactory = $injectableFactory;
         $this->log = $log;
 
         $this->transportFactory = $transportFactory;
@@ -128,7 +130,7 @@ class Sender
         $this->inboundEmailService = $inboundEmailService;
         $this->systemInboundEmail = $systemInboundEmail;
 
-        if ($inboundEmailService) {
+        if ($systemInboundEmail) {
             $this->systemInboundEmailIsCached = true;
         }
 
@@ -412,7 +414,7 @@ class Sender
     private function getInboundEmailService(): InboundEmailService
     {
         if (!$this->inboundEmailService) {
-            $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
+            $this->inboundEmailService = $this->injectableFactory->create(InboundEmailService::class);
         }
 
         return $this->inboundEmailService;
@@ -493,23 +495,32 @@ class Sender
 
         $attachmentPartList = [];
 
-        $attachmentCollection = null;
+        /** @var \Espo\ORM\EntityCollection<\Espo\Entities\Attachment> */
+        $attachmentCollection = $this->entityManager
+            ->getCollectionFactory()
+            ->create(Attachment::ENTITY_TYPE);
 
         if (!$email->isNew()) {
             /** @var \Espo\ORM\Collection<\Espo\Entities\Attachment> */
-            $attachmentCollection = $this->entityManager
+            $relatedAttachmentCollection = $this->entityManager
                 ->getRDBRepository('Email')
                 ->getRelation($email, 'attachments')
                 ->find();
-            }
 
-        $attachmentList = $this->attachmentList ?? $attachmentList;
+            foreach ($relatedAttachmentCollection as $attachment) {
+                $attachmentCollection[] = $attachment;
+            }
+        }
+
+        if ($this->attachmentList !== null) {
+            $attachmentList = $this->attachmentList;
+        }
 
         foreach ($attachmentList as $attachment) {
             $attachmentCollection[] = $attachment;
         }
 
-        if (!empty($attachmentCollection)) {
+        if (count($attachmentCollection)) {
             /** @var AttachmentRepository $attachmentRepository */
             $attachmentRepository = $this->entityManager->getRepository('Attachment');
 
