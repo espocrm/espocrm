@@ -47,9 +47,12 @@ class Help implements Command
 
     public function run(Params $params, IO $io): void
     {
+        /** @var string[] */
+        $fullCommandList = array_keys($this->metadata->get(['app', 'consoleCommands']) ?? []);
+
         $commandList = array_filter(
-            array_keys($this->metadata->get(['app', 'consoleCommands']) ?? []),
-            function (string $item): bool {
+            $fullCommandList,
+            function ($item): bool {
                 return (bool) $this->metadata->get(['app', 'consoleCommands', $item]);
             }
         );

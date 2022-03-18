@@ -85,6 +85,8 @@ class CommandManager
 
         if (!$commandObj instanceof Command) {
             // for backward compatibility
+            assert(method_exists($commandObj, 'run'));
+
             $commandObj->run($params->getOptions(), $params->getFlagList(), $params->getArgumentList());
 
             return;
@@ -119,10 +121,11 @@ class CommandManager
     }
 
     /**
-     * @return class-string
+     * @return class-string<Command>
      */
     private function getClassName(string $command): string
     {
+        /** @var ?class-string<Command> */
         $className =
             $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'className']);
 
@@ -136,6 +139,7 @@ class CommandManager
             throw new CommandNotFound("Command '" . Util::camelCaseToHyphen($command) ."' does not exist.");
         }
 
+        /** @var ?class-string<Command> */
         return $className;
     }
 

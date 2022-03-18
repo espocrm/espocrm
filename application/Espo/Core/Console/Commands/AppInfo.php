@@ -53,10 +53,11 @@ class AppInfo implements Command
 
     public function run(Params $params, IO $io): void
     {
+        /** @var string[] */
         $fileList = $this->fileManager->getFileList('application/Espo/Classes/AppInfo');
 
         $typeList = array_map(
-            function ($item) {
+            function ($item): string {
                 return lcfirst(substr($item, 0, -4));
             },
             $fileList
@@ -93,6 +94,9 @@ class AppInfo implements Command
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
         $obj = $this->injectableFactory->create($className);
+
+        // @todo Use inteface.
+        assert(method_exists($obj, 'process'));
 
         $result = $obj->process($params);
 

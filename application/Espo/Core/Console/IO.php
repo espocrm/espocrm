@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Console;
 
+use RuntimeException;
+
 use const STDOUT;
 use const PHP_EOL;
 
@@ -60,7 +62,17 @@ class IO
     {
         $resource = fopen('php://stdin', 'r');
 
-        $string = trim(fgets($resource));
+        if ($resource === false) {
+            throw new RuntimeException("Could not open stdin.");
+        }
+
+        $readString = fgets($resource);
+
+        if ($readString === false) {
+            $readString = '';
+        }
+
+        $string = trim($readString);
 
         fclose($resource);
 
