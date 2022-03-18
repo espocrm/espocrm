@@ -50,7 +50,7 @@ class Factory
 
     public function create(string $name): Storage
     {
-        /** @var ?class-string */
+        /** @var ?class-string<Storage> */
         $className = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $name]);
 
         if (!$className) {

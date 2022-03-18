@@ -33,6 +33,8 @@ use Espo\Entities\Attachment as AttachmentEntity;
 
 use Psr\Http\Message\StreamInterface;
 
+use RuntimeException;
+
 use function GuzzleHttp\Psr7\stream_for;
 
 /**
@@ -156,6 +158,10 @@ class Manager
         $contents = $this->getContents($attachment);
 
         $resource = tmpfile();
+
+        if ($resource === false) {
+            throw new RuntimeException("Could not create temp file.");
+        }
 
         fwrite($resource, $contents);
 

@@ -72,7 +72,7 @@ class EspoUploadDir implements Storage, Local
             throw new Error("Could not get size for non-existing file '{$filePath}'.");
         }
 
-        return filesize($filePath);
+        return (int) filesize($filePath);
     }
 
     public function getStream(Attachment $attachment): StreamInterface
@@ -84,6 +84,10 @@ class EspoUploadDir implements Storage, Local
         }
 
         $resouce = fopen($filePath, 'r');
+
+        if ($resouce === false) {
+            throw new Error("Could not open '{$filePath}'.");
+        }
 
         return new Stream($resouce);
     }

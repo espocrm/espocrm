@@ -109,6 +109,10 @@ class AwsS3 implements Storage
 
         $resource = fopen('php://temp', 'r+');
 
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
+
         fwrite($resource, $stream->getContents());
         rewind($resource);
 
