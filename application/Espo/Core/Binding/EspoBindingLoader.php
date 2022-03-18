@@ -65,6 +65,8 @@ class EspoBindingLoader implements BindingLoader
             return;
         }
 
+        /** @var class-string<BindingProcessor> $className */
+
         (new $className())->process($binder);
     }
 
@@ -75,6 +77,8 @@ class EspoBindingLoader implements BindingLoader
         if (!class_exists($className)) {
             return;
         }
+
+        /** @var class-string<BindingProcessor> $className */
 
         (new $className())->process($binder);
     }
