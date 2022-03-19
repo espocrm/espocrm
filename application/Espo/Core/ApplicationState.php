@@ -74,6 +74,7 @@ class ApplicationState
             throw new Error("Can't get portal for non-portal application.");
         }
 
+        /** @var PortalEntity */
         return $this->container->get('portal');
     }
 
@@ -94,6 +95,7 @@ class ApplicationState
             throw new Error("User is not yet available.");
         }
 
+        /** @var UserEntity */
         return $this->container->get('user');
     }
 

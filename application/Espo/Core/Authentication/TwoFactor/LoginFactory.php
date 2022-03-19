@@ -47,7 +47,7 @@ class LoginFactory
 
     public function create(string $method): Login
     {
-        /** @var ?class-string */
+        /** @var ?class-string<Login> */
         $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'loginClassName']);
 
         if (!$className) {

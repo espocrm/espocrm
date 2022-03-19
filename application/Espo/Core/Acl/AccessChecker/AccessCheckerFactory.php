@@ -45,7 +45,7 @@ use Espo\Core\{
 class AccessCheckerFactory
 {
     /**
-     * @var class-string
+     * @var class-string<AccessChecker>
      */
     private string $defaultClassName = DefaultAccessChecker::class;
 
@@ -80,11 +80,12 @@ class AccessCheckerFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<AccessChecker>
      * @throws NotImplemented
      */
     private function getClassName(string $scope): string
     {
+        /** @var ?class-string<AccessChecker> */
         $className1 = $this->metadata->get(['aclDefs', $scope, 'accessCheckerClassName']);
 
         if ($className1) {
@@ -99,6 +100,7 @@ class AccessCheckerFactory
         $className2 = $this->classFinder->find('Acl', $scope);
 
         if ($className2) {
+            /** @var ?class-string<AccessChecker> */
             return $className2;
         }
 

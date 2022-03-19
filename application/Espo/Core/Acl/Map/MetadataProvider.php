@@ -43,10 +43,11 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int,string>
+     * @return string[]
      */
     public function getScopeList(): array
     {
+        /** @var string[] */
         return array_keys($this->metadata->get('scopes') ?? []);
     }
 
@@ -56,10 +57,11 @@ class MetadataProvider
     }
 
     /**
-     * @return array<int,string>
+     * @return string[]
      */
     public function getScopeFieldList(string $scope): array
     {
+        /** @var string[] */
         return array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
     }
 

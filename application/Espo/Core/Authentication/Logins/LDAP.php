@@ -461,6 +461,7 @@ class LDAP implements Login
         $fields = [];
 
         foreach ($this->$typeMap as $fieldName => $fieldValue) {
+            /** @var string $fieldName */
             if (isset($options[$fieldValue])) {
                 $fields[$fieldName] = $options[$fieldValue];
             }

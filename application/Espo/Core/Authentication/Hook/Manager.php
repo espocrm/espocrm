@@ -84,12 +84,13 @@ class Manager
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<BeforeLogin|OnResult>[]
      */
     private function getHookClassNameList(string $type): array
     {
         $key = $type . 'HookClassNameList';
 
+        /** @var class-string<BeforeLogin|OnResult>[] */
         return $this->metadata->get(['app', 'authentication', $key]) ?? [];
     }
 
@@ -101,6 +102,7 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('beforeLogin') as $className) {
+            /** @var class-string<BeforeLogin> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 
@@ -115,6 +117,7 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('onFail') as $className) {
+            /** @var class-string<OnResult> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 
@@ -129,6 +132,7 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('onSuccess') as $className) {
+            /** @var class-string<OnResult> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 
@@ -143,6 +147,7 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('onSuccessByToken') as $className) {
+            /** @var class-string<OnResult> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 
@@ -157,6 +162,7 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('onSecondStepRequired') as $className) {
+            /** @var class-string<OnResult> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 

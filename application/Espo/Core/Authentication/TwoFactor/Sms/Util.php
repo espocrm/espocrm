@@ -271,7 +271,7 @@ class Util
     {
         $fromNumber = $this->config->get('outboundSmsFromNumber');
 
-        $bodyTpl = $this->language->translate('yourAuthenticationCode', 'messages', 'User');
+        $bodyTpl = $this->language->translateLabel('yourAuthenticationCode', 'messages', 'User');
 
         $body = str_replace('{code}', $code, $bodyTpl);
 

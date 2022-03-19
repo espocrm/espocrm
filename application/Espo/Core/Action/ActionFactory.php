@@ -80,7 +80,7 @@ class ActionFactory
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<Action>
      */
     private function getClassName(string $action, ?string $entityType): ?string
     {
@@ -92,16 +92,18 @@ class ActionFactory
             }
         }
 
+        /** @var ?class-string<Action> */
         return $this->metadata->get(
             ['app', 'actions', $action, 'implementationClassName']
         );
     }
 
     /**
-     * @return ?class-string
+     * @return ?class-string<Action>
      */
     private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
+        /** @var ?class-string<Action> */
         return  $this->metadata->get(
             ['recordDefs', $entityType, 'actions', $action, 'implementationClassName']
         );

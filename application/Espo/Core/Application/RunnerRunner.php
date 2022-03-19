@@ -70,7 +70,7 @@ class RunnerRunner
 
         if (
             $class->getStaticPropertyValue('cli', false) &&
-            substr(php_sapi_name(), 0, 3) !== 'cli'
+            substr(php_sapi_name() ?: '', 0, 3) !== 'cli'
         ) {
             throw new RunnerException("Can be run only via CLI.");
         }

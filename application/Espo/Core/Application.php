@@ -103,26 +103,31 @@ class Application
 
     protected function getInjectableFactory(): InjectableFactory
     {
+        /** @var InjectableFactory */
         return $this->container->get('injectableFactory');
     }
 
     protected function getApplicationUser(): ApplicationUser
     {
+        /** @var ApplicationUser */
         return $this->container->get('applicationUser');
     }
 
     protected function getClientManager(): ClientManager
     {
+        /** @var ClientManager */
         return $this->container->get('clientManager');
     }
 
     protected function getMetadata(): Metadata
     {
+        /** @var Metadata */
         return $this->container->get('metadata');
     }
 
     protected function getConfig(): Config
     {
+        /** @var Config */
         return $this->container->get('config');
     }
 

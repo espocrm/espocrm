@@ -658,6 +658,7 @@ class AclManager
 
         $acl = new $className($this, $user);
 
+        /** @var Acl */
         return $acl;
     }
 

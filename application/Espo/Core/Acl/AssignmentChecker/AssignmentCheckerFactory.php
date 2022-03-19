@@ -40,7 +40,7 @@ use Espo\Core\{
 class AssignmentCheckerFactory
 {
     /**
-     * @var class-string
+     * @var class-string<AssignmentChecker<\Espo\Core\ORM\Entity>>
      */
     private string $defaultClassName = DefaultAssignmentChecker::class;
 
@@ -70,12 +70,12 @@ class AssignmentCheckerFactory
     }
 
     /**
-     * @return class-string
+     * @return class-string<AssignmentChecker<\Espo\ORM\Entity>>
      * @throws NotImplemented
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string */
+        /** @var ?class-string<AssignmentChecker<\Espo\ORM\Entity>> */
         $className = $this->metadata->get(['aclDefs', $scope, 'assignmentCheckerClassName']);
 
         if ($className) {
@@ -86,6 +86,7 @@ class AssignmentCheckerFactory
             throw new NotImplemented();
         }
 
+        /** @var class-string<AssignmentChecker<\Espo\ORM\Entity>> */
         return $this->defaultClassName;
     }
 }

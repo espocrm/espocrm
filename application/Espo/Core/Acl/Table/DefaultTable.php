@@ -146,7 +146,10 @@ class DefaultTable implements Table
         $this->cacheKey = $cacheKeyProvider->get();
 
         if ($config->get('useCache') && $dataCache->has($this->cacheKey)) {
-            $this->data = $dataCache->get($this->cacheKey);
+            /** @var stdClass */
+            $cachedData = $dataCache->get($this->cacheKey);
+
+            $this->data = $cachedData;
         }
         else {
             $this->load();

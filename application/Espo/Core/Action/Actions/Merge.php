@@ -40,6 +40,8 @@ use Espo\Core\{
     Acl\Table,
 };
 
+use stdClass;
+
 class Merge implements Action
 {
     private $acl;
@@ -67,7 +69,7 @@ class Merge implements Action
             throw new BadRequest("No 'sourceIdList'.");
         }
 
-        if (!is_object($attributes)) {
+        if (!$attributes instanceof stdClass) {
             throw new BadRequest("No 'attributes'.");
         }
 

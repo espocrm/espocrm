@@ -69,7 +69,10 @@ class ActionProcessor
 
         $requestMethod = $request->getMethod();
 
-        if ($actionName == 'index') {
+        if (
+            $actionName == 'index' &&
+            property_exists($controller, 'defaultAction')
+        ) {
             $actionName = $controller::$defaultAction ?? 'index';
         }
 
@@ -174,7 +177,10 @@ class ActionProcessor
             return false;
         }
 
-        $firstParamClass = new ReflectionClass($type->getName());
+        /** @var class-string */
+        $className = $type->getName();
+
+        $firstParamClass = new ReflectionClass($className);
 
         if (
             $firstParamClass->getName() === Request::class ||

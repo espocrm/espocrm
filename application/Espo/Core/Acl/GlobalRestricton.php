@@ -101,27 +101,22 @@ class GlobalRestricton
         $this->fieldUtil = $fieldUtil;
         $this->log = $log;
 
-        $isFromCache = false;
-
         $useCache = $config->get('useCache');
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+            /** @var stdClass */
+            $cachedData = $this->dataCache->get($this->cacheKey);
 
-            $isFromCache = true;
+            $this->data = $cachedData;
 
-            if (!$this->data instanceof stdClass) {
-                $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
-
-                $this->data = null;
-            }
+            return;
         }
 
         if (!$this->data) {
             $this->buildData();
         }
 
-        if ($useCache && !$isFromCache) {
+        if ($useCache) {
             $this->storeCacheFile();
         }
     }
@@ -133,12 +128,15 @@ class GlobalRestricton
 
     protected function buildData(): void
     {
+        /** @var string[] */
         $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
         $data = (object) [];
 
         foreach ($scopeList as $scope) {
+            /** @var string[] */
             $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields'], []));
+            /** @var string[] */
             $linkList = array_keys($this->metadata->get(['entityDefs', $scope, 'links'], []));
 
             $isNotEmpty = false;

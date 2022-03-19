@@ -39,6 +39,7 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Json;
 
 use Exception;
 
@@ -177,12 +178,14 @@ class Auth
      */
     protected function decodeAuthorizationString(string $string): array
     {
+        /** @var string */
         $stringDecoded = base64_decode($string);
 
         if (strpos($stringDecoded, ':') === false) {
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
+        /** @var array{string,string} */
         return explode(':', $stringDecoded, 2);
     }
 
@@ -199,7 +202,7 @@ class Auth
             'data' => $result->getData(),
         ];
 
-        $response->writeBody(json_encode($bodyData));
+        $response->writeBody(Json::encode($bodyData));
     }
 
     protected function handleException(Response $response, Exception $e): void
