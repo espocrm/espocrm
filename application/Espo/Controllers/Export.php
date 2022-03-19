@@ -33,6 +33,8 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Utils\Json;
+
 use Espo\Tools\Export\Service;
 use Espo\Tools\Export\ServiceParams;
 use Espo\Tools\Export\Params;
@@ -112,11 +114,11 @@ class Export
 
         if (!is_null($where) || !is_null($searchParams)) {
             if (!is_null($where)) {
-                $params['where'] = json_decode(json_encode($where), true);
+                $params['where'] = json_decode(Json::encode($where), true);
             }
 
             if (!is_null($searchParams)) {
-                $params['searchParams'] = json_decode(json_encode($searchParams), true);
+                $params['searchParams'] = json_decode(Json::encode($searchParams), true);
             }
         }
         else if (!is_null($ids)) {

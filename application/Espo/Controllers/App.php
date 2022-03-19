@@ -36,19 +36,18 @@ use Espo\Core\Di;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 
-use StdClass;
+use Espo\Services\App as Service;
+
+use stdClass;
 
 class App implements
-
-    Di\ServiceFactoryAware,
     Di\InjectableFactoryAware
 {
-    use Di\ServiceFactorySetter;
     use Di\InjectableFactorySetter;
 
-    public function getActionUser(): StdClass
+    public function getActionUser(): stdClass
     {
-        return (object) $this->serviceFactory->create('App')->getUserData();
+        return (object) $this->getService()->getUserData();
     }
 
     public function postActionDestroyAuthToken(Request $request, Response $response): bool
@@ -62,5 +61,10 @@ class App implements
         $auth = $this->injectableFactory->create(Authentication::class);
 
         return $auth->destroyAuthToken($data->token, $request, $response);
+    }
+
+    private function getService(): Service
+    {
+        return $this->injectableFactory->create(Service::class);
     }
 }

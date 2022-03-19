@@ -65,8 +65,8 @@ class LastViewed
         $result = $this->service->getList($params);
 
         return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList(),
+            'total' => $result['total'],
+            'list' => $result['collection']->getValueMapList(),
         ];
     }
 }

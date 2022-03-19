@@ -63,6 +63,7 @@ class Metadata extends Base
 
     private function getMetadataService(): Service
     {
+        /** @var Service */
         return $this->getServiceFactory()->create('Metadata');
     }
 }

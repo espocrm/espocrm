@@ -39,6 +39,8 @@ use Espo\Core\Api\Request;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 
+use Espo\Core\Utils\Crypt;
+
 use stdClass;
 
 class Email extends Record
@@ -82,9 +84,7 @@ class Email extends Record
                 }
 
                 if (is_null($data->password)) {
-                    $data->password = $this->getContainer()
-                        ->get('crypt')
-                        ->decrypt($preferences->get('smtpPassword'));
+                    $data->password = $this->getCrypt()->decrypt($preferences->get('smtpPassword'));
                 }
             }
             else if ($data->type == 'emailAccount') {
@@ -105,10 +105,9 @@ class Email extends Record
                             throw new Forbidden();
                         }
                     }
+
                     if (is_null($data->password)) {
-                        $data->password = $this->getContainer()
-                            ->get('crypt')
-                            ->decrypt($emailAccount->get('smtpPassword'));
+                        $data->password = $this->getCrypt()->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
             }
@@ -125,9 +124,7 @@ class Email extends Record
                     }
 
                     if (is_null($data->password)) {
-                        $data->password = $this->getContainer()
-                            ->get('crypt')
-                            ->decrypt($emailAccount->get('smtpPassword'));
+                        $data->password = $this->getCrypt()->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
             }
@@ -331,5 +328,11 @@ class Email extends Record
     {
         /** @var EmailTemplateService */
         return $this->getServiceFactory()->create('EmailTemplate');
+    }
+
+    private function getCrypt(): Crypt
+    {
+        /** @var Crypt */
+        return $this->getContainer()->get('crypt');
     }
 }

@@ -212,6 +212,7 @@ class User extends Record
 
     private function getUserService(): Service
     {
+        /** @var Service */
         return $this->getServiceFactory()->create('User');
     }
 }

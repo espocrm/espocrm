@@ -72,46 +72,62 @@ class EntityManager
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
         $type = filter_var($type, \FILTER_SANITIZE_STRING);
 
+        if (!is_string($name) || !is_string($type)) {
+            throw new BadRequest();
+        }
+
         $params = [];
 
         if (!empty($data['labelSingular'])) {
             $params['labelSingular'] = $data['labelSingular'];
         }
+
         if (!empty($data['labelPlural'])) {
             $params['labelPlural'] = $data['labelPlural'];
         }
+
         if (!empty($data['stream'])) {
             $params['stream'] = $data['stream'];
         }
+
         if (!empty($data['disabled'])) {
             $params['disabled'] = $data['disabled'];
         }
+
         if (!empty($data['sortBy'])) {
             $params['sortBy'] = $data['sortBy'];
         }
+
         if (!empty($data['sortDirection'])) {
             $params['asc'] = $data['sortDirection'] === 'asc';
         }
+
         if (isset($data['textFilterFields']) && is_array($data['textFilterFields'])) {
             $params['textFilterFields'] = $data['textFilterFields'];
         }
+
         if (!empty($data['color'])) {
             $params['color'] = $data['color'];
         }
+
         if (!empty($data['iconClass'])) {
             $params['iconClass'] = $data['iconClass'];
         }
+
         if (isset($data['fullTextSearch'])) {
             $params['fullTextSearch'] = $data['fullTextSearch'];
         }
+
         if (isset($data['countDisabled'])) {
             $params['countDisabled'] = $data['countDisabled'];
         }
+
         if (isset($data['optimisticConcurrencyControl'])) {
             $params['optimisticConcurrencyControl'] = $data['optimisticConcurrencyControl'];
         }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
+
         if (!empty($data['kanbanStatusIgnoreList'])) {
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
@@ -135,6 +151,10 @@ class EntityManager
 
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
 
+        if (!is_string($name)) {
+            throw new BadRequest();
+        }
+
         $this->entityManagerTool->update($name, $data);
 
         return true;
@@ -153,6 +173,10 @@ class EntityManager
         $name = $data['name'];
 
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
+
+        if (!is_string($name)) {
+            throw new BadRequest();
+        }
 
         $this->entityManagerTool->delete($name);
 
@@ -198,6 +222,7 @@ class EntityManager
         if (array_key_exists('linkMultipleField', $data)) {
             $params['linkMultipleField'] = $data['linkMultipleField'];
         }
+
         if (array_key_exists('linkMultipleFieldForeign', $data)) {
             $params['linkMultipleFieldForeign'] = $data['linkMultipleFieldForeign'];
         }
@@ -205,15 +230,34 @@ class EntityManager
         if (array_key_exists('audited', $data)) {
             $params['audited'] = $data['audited'];
         }
+
         if (array_key_exists('auditedForeign', $data)) {
             $params['auditedForeign'] = $data['auditedForeign'];
         }
+
         if (array_key_exists('parentEntityTypeList', $data)) {
             $params['parentEntityTypeList'] = $data['parentEntityTypeList'];
         }
+
         if (array_key_exists('foreignLinkEntityTypeList', $data)) {
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
+
+        /** @var array{
+         *   linkType: string,
+         *   entity: string,
+         *   link: string,
+         *   entityForeign: string,
+         *   linkForeign: string,
+         *   label: string,
+         *   labelForeign: string,
+         *   relationName?: ?string,
+         *   linkMultipleField?: bool,
+         *   linkMultipleFieldForeign?: bool,
+         *   audited?: bool,
+         *   auditedForeign?: bool,
+         * } $params
+         */
 
         $this->entityManagerTool->createLink($params);
 
@@ -253,15 +297,35 @@ class EntityManager
         if (array_key_exists('audited', $data)) {
             $params['audited'] = $data['audited'];
         }
+
         if (array_key_exists('auditedForeign', $data)) {
             $params['auditedForeign'] = $data['auditedForeign'];
         }
+
         if (array_key_exists('parentEntityTypeList', $data)) {
             $params['parentEntityTypeList'] = $data['parentEntityTypeList'];
         }
+
         if (array_key_exists('foreignLinkEntityTypeList', $data)) {
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
+
+        /**
+         * @var array{
+         *   entity: string,
+         *   link: string,
+         *   entityForeign?: ?string,
+         *   linkForeign?: ?string,
+         *   label?: string,
+         *   labelForeign?: string,
+         *   linkMultipleField?: bool,
+         *   linkMultipleFieldForeign?: bool,
+         *   audited?: bool,
+         *   auditedForeign?: bool,
+         *   parentEntityTypeList?: string[],
+         *   foreignLinkEntityTypeList?: string[],
+         * } $params
+         */
 
         $this->entityManagerTool->updateLink($params);
 
@@ -279,13 +343,20 @@ class EntityManager
             'link',
         ];
 
-        $d = [];
+        $params = [];
 
         foreach ($paramList as $item) {
-            $d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
-        $this->entityManagerTool->deleteLink($d);
+        /**
+         * @var array{
+         *   entity?: string,
+         *   link?: string,
+         * } $params
+         */
+
+        $this->entityManagerTool->deleteLink($params);
 
         return true;
     }

@@ -64,11 +64,15 @@ class LastViewed
 
     /**
      * @param array{
-     *   offset: int,
-     *   maxSize: int,
+     *   offset: ?int,
+     *   maxSize: ?int,
      * } $params
+     * @return array{
+     *   total: int,
+     *   collection: \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord>,
+     * }
      */
-    public function getList(array $params): object
+    public function getList(array $params): array
     {
         $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');
 
@@ -81,9 +85,10 @@ class LastViewed
             }
         );
 
-        $offset = $params['offset'];
-        $maxSize = $params['maxSize'];
+        $offset = $params['offset'] ?? 0;
+        $maxSize = $params['maxSize'] ?? 0;
 
+        /** @var \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord> */
         $collection = $repository
             ->where([
                 'userId' => $this->user->getId(),
@@ -121,7 +126,7 @@ class LastViewed
             $total = -2;
         }
 
-        return (object) [
+        return [
             'total' => $total,
             'collection' => $collection,
         ];

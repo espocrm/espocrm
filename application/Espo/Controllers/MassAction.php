@@ -40,6 +40,8 @@ use Espo\Core\MassAction\ServiceParams;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 
+use Espo\Core\Utils\Json;
+
 use stdClass;
 use RuntimeException;
 
@@ -128,11 +130,11 @@ class MassAction
             $params = [];
 
             if (!is_null($where)) {
-                $params['where'] = json_decode(json_encode($where), true);
+                $params['where'] = json_decode(Json::encode($where), true);
             }
 
             if (!is_null($searchParams)) {
-                $params['searchParams'] = json_decode(json_encode($searchParams), true);
+                $params['searchParams'] = json_decode(Json::encode($searchParams), true);
             }
 
             return $params;

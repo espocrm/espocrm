@@ -174,7 +174,7 @@ class Admin
      * @return array{
      *   php: array<string,array<string,mixed>>,
      *   database: array<string,array<string,mixed>>,
-     *   permission: array<string,array{type:string,acceptable:int}>,
+     *   permission: array<string,array<string,mixed>>,
      * }
      */
     public function actionSystemRequirementList(): array

@@ -64,9 +64,11 @@ class ExternalAccount extends RecordBase
                 $entity->get('enabled') &&
                 $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
             ) {
+                /** @var string */
+                $id = $entity->getId();
 
                 $userAccountAclScope = $this->metadata
-                    ->get(['integrations', $entity->getId(), 'userAccountAclScope']);
+                    ->get(['integrations', $id, 'userAccountAclScope']);
 
                 if ($userAccountAclScope) {
                     if (!$this->acl->checkScope($userAccountAclScope)) {
@@ -75,7 +77,7 @@ class ExternalAccount extends RecordBase
                 }
 
                 $list[] = [
-                    'id' => $entity->getId(),
+                    'id' => $id,
                 ];
             }
         }
