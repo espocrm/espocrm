@@ -52,7 +52,7 @@ class EspoManager implements Manager
 
         /** @var RDBRepository<AuthTokenEntity> */
         $repository = $entityManager->getRDBRepository(AuthTokenEntity::ENTITY_TYPE);
-        
+
         $this->repository = $repository;
     }
 
@@ -169,7 +169,10 @@ class EspoManager implements Manager
         }
 
         if (function_exists('openssl_random_pseudo_bytes')) {
-            return bin2hex(openssl_random_pseudo_bytes($length));
+            /** @var string */
+            $randomValue = openssl_random_pseudo_bytes($length);
+
+            return bin2hex($randomValue);
         }
 
         throw new RuntimeException("Could not generate token.");
