@@ -23,9 +23,9 @@
 * * `grunt` - full build
 * * `grunt dev` - build only items needed for development (takes less time)
 * * `grunt offline` - build but skip *composer install*
-* * `grant release` - full build plus upgrade packages`
-* * `grant test` - build for tests running
-* * `grant run-tests` - build and run unit and integration tests
+* * `grunt release` - full build plus upgrade packages`
+* * `grunt test` - build for tests running
+* * `grunt run-tests` - build and run unit and integration tests
 */
 
 const fs = require('fs');
