@@ -187,7 +187,7 @@ class GoogleMaps implements Helper
 
         list($width, $height) = explode('x', $size);
 
-        $src = '@' . base64_encode($image);
+        $src = '@' . base64_encode($image); /** @phpstan-ignore-line */
 
         $tag = "<img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\">";
 
