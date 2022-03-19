@@ -47,6 +47,7 @@ use ICal\ICal;
 use ICal\Event;
 
 use Throwable;
+use stdClass;
 
 /**
  * @implements Loader<\Espo\Entities\Email>
@@ -174,7 +175,7 @@ class IcsDataLoader implements Loader
         }
     }
 
-    private function loadCreatedEvent(Entity $entity, EspoEvent $espoEvent, object $eventData): void
+    private function loadCreatedEvent(Entity $entity, EspoEvent $espoEvent, stdClass $eventData): void
     {
         $emailSameEvent = $this->entityManager
             ->getRDBRepository(Email::ENTITY_TYPE)

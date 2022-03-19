@@ -63,10 +63,11 @@ class Container
             'user',
         ];
 
+        /** @var string[] */
         $fileList = scandir('application/Espo/Core/Loaders');
 
         if (file_exists('custom/Espo/Custom/Core/Loaders')) {
-            $fileList = array_merge($fileList, scandir('custom/Espo/Custom/Core/Loaders'));
+            $fileList = array_merge($fileList, scandir('custom/Espo/Custom/Core/Loaders') ?: []);
         }
 
         foreach ($fileList as $file) {

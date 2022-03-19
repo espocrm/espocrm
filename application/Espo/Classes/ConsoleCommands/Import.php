@@ -31,6 +31,8 @@ namespace Espo\Classes\ConsoleCommands;
 
 use Espo\Tools\Import\Service;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+
 use Espo\Core\{
     Console\Command,
     Console\Command\Params,
@@ -41,11 +43,14 @@ use Throwable;
 
 class Import implements Command
 {
-    private $service;
+    private Service $service;
 
-    public function __construct(Service $service)
+    private FileManager $fileManager;
+
+    public function __construct(Service $service, FileManager $fileManager)
     {
         $this->service = $service;
+        $this->fileManager = $fileManager;
     }
 
     public function run(Params $params, IO $io) : void
@@ -64,13 +69,13 @@ class Import implements Command
                 return;
             }
 
-            if (!file_exists($filePath)) {
+            if (!$this->fileManager->isFile($filePath)) {
                 $io->writeLine("File not found.");
 
                 return;
             }
 
-            $contents = file_get_contents($filePath);
+            $contents = $this->fileManager->getContents($filePath);
 
             try {
                 $result = $this->service->importContentsWithParamsId($contents, $paramsId);

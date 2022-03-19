@@ -35,7 +35,7 @@ use Espo\Services\Stream as StreamService;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params;
 use Espo\Core\Notification\UserEnabledChecker;
-use Espo\Core\ServiceFactory;
+use Espo\Core\InjectableFactory;
 use Espo\Core\AclManager;
 
 use Espo\ORM\EntityManager;
@@ -61,7 +61,7 @@ class Email implements AssignmentNotificator
 
     private $entityManager;
 
-    private $serviceFactory;
+    private $injectableFactory;
 
     private $aclManager;
 
@@ -71,13 +71,13 @@ class Email implements AssignmentNotificator
         User $user,
         EntityManager $entityManager,
         UserEnabledChecker $userChecker,
-        ServiceFactory $serviceFactory,
+        InjectableFactory $injectableFactory,
         AclManager $aclManager
     ) {
         $this->user = $user;
         $this->entityManager = $entityManager;
         $this->userChecker = $userChecker;
-        $this->serviceFactory = $serviceFactory;
+        $this->injectableFactory = $injectableFactory;
         $this->aclManager = $aclManager;
     }
 
@@ -294,7 +294,7 @@ class Email implements AssignmentNotificator
     private function getStreamService(): StreamService
     {
         if (empty($this->streamService)) {
-            $this->streamService = $this->serviceFactory->create('Stream');
+            $this->streamService = $this->injectableFactory->create(StreamService::class);
         }
 
         return $this->streamService;
