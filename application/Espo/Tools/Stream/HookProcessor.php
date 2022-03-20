@@ -379,6 +379,7 @@ class HookProcessor
         $assignedUserId = $entity->get('assignedUserId');
         $createdById = $entity->get('createdById');
 
+        /** @var string[] */
         $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList('assignedUsers') : [];
 
         if (
@@ -471,6 +472,7 @@ class HookProcessor
             return;
         }
 
+        /** @var string[] */
         $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
         $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
 
@@ -554,7 +556,7 @@ class HookProcessor
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
-                /** @var ?string */
+                /** @var ?string $statusField */
                 $statusField = $data['statusField'] ?? null;
 
                 if (!$statusField) {
@@ -565,6 +567,7 @@ class HookProcessor
             }
         }
 
+        /** @var array<string,string> */
         return $this->statusFields;
     }
 
@@ -579,6 +582,7 @@ class HookProcessor
 
         $entityType = $entity->getEntityType();
         $foreignEntityType = $foreignEntity->getEntityType();
+
         $foreignLink = $entity->getRelationParam($link, 'foreign');
 
         if (
@@ -592,12 +596,19 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
+        $id = $entity->getId();
+        $foreignId = $foreignEntity->getId();
+
+        if (!$id || !$foreignId) {
+            return;
+        }
+
         if ($audited) {
-            $this->service->noteRelate($foreignEntity, $entityType, $entity->getId());
+            $this->service->noteRelate($foreignEntity, $entityType, $id);
         }
 
         if ($auditedForeign) {
-            $this->service->noteRelate($entity, $foreignEntity->getEntityType(), $foreignEntity->getId());
+            $this->service->noteRelate($entity, $foreignEntity->getEntityType(), $foreignId);
         }
     }
 

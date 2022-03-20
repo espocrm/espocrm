@@ -130,7 +130,7 @@ class Service
                 continue;
             }
 
-            $notification = $this->entityManager->getEntity(Notification::ENTITY_TYPE);
+            $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
 
             $notification->set([
                 'id' => Util::generateId(),

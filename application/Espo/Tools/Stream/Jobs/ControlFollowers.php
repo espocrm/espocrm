@@ -78,17 +78,19 @@ class ControlFollowers implements Job
 
         $idList = $this->service->getEntityFolowerIdList($entity);
 
-        /** @var iterable<User> $userList */
         $userList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'id' => $idList,
             ])
             ->find();
 
         foreach ($userList as $user) {
-            if (!$user->get('isActive')) {
-                $this->service->unfollowEntity($entity, $user->getId());
+            /** @var string */
+            $userId = $user->getId();
+
+            if (!$user->isActive()) {
+                $this->service->unfollowEntity($entity, $userId);
 
                 continue;
             }
@@ -108,7 +110,7 @@ class ControlFollowers implements Job
                 continue;
             }
 
-            $this->service->unfollowEntity($entity, $user->getId());
+            $this->service->unfollowEntity($entity, $userId);
         }
     }
 }

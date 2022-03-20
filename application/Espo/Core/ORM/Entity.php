@@ -416,6 +416,7 @@ class Entity extends BaseEntity
 
     /**
      * @return ?string[]
+     * @todo Throw exception if the link does not exist.
      */
     public function getLinkMultipleIdList(string $field): ?array
     {
