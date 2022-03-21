@@ -156,11 +156,12 @@ class Erasor implements
                 $attachmentId = $entity->get($field . 'Id');
 
                 if ($attachmentId) {
-                    $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+                    $attachment = $this->entityManager->getEntityById('Attachment', $attachmentId);
 
-                    $this->entityManager->removeEntity($attachment);
+                    if ($attachment) {
+                        $this->entityManager->removeEntity($attachment);
+                    }
                 }
-
             }
             else if ($type === 'attachmentMultiple') {
                 $attachmentList = $entity->get($field);

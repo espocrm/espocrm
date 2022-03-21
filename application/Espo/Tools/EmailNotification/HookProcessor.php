@@ -36,7 +36,6 @@ use Espo\Core\Utils\Config;
 use Espo\Core\ApplicationState;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Job\JobSchedulerFactory;
-use Espo\Core\ORM\Entity as EntityCore;
 
 use Espo\Tools\EmailNotification\Jobs\NotifyAboutAssignment;
 
@@ -89,7 +88,7 @@ class HookProcessor
 
     private function processMultiple(CoreEntity $entity): void
     {
-        $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
+        $userIdList = $entity->getLinkMultipleIdList('assignedUsers') ?? [];
         $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
 
         foreach ($userIdList as $userId) {

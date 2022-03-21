@@ -160,7 +160,7 @@ class AssignmentProcessor
             return;
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $subjectTpl = $this->templateFileManager->getTemplate('assignment', 'subject', $entity->getEntityType());
         $bodyTpl = $this->templateFileManager->getTemplate('assignment', 'body', $entity->getEntityType());

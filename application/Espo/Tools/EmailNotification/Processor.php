@@ -359,7 +359,7 @@ class Processor
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'subject' => $subject,
@@ -501,7 +501,7 @@ class Processor
         $parent = null;
 
         if ($parentId && $parentType) {
-            $parent = $this->entityManager->getEntity($parentType, $parentId);
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
             if (!$parent) {
                 return;
@@ -550,7 +550,7 @@ class Processor
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'subject' => $subject,
@@ -570,7 +570,7 @@ class Processor
         $senderParams = SenderParams::create();
 
         if ($parent) {
-            $handler = $this->getHandler('notePost', $parentType);
+            $handler = $this->getHandler('notePost', $parent->getEntityType());
 
             if ($handler) {
                 $handler->prepareEmail($email, $parent, $user);
@@ -597,9 +597,10 @@ class Processor
             return $this->config->getSiteUrl();
         }
 
-        if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
-            $this->userIdPortalCacheMap[$user->id] = null;
+        if (!array_key_exists($user->getId(), $this->userIdPortalCacheMap)) {
+            $this->userIdPortalCacheMap[$user->getId()] = null;
 
+            /** @var string[] */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             $defaultPortalId = $this->config->get('defaultPortalId');
@@ -614,15 +615,17 @@ class Processor
             }
 
             if ($portalId) {
-                $portal = $this->entityManager->getEntity('Portal', $portalId);
+                $portal = $this->entityManager->getEntityById('Portal', $portalId);
+            }
 
+            if ($portal) {
                 $this->getPortalRepository()->loadUrlField($portal);
 
-                $this->userIdPortalCacheMap[$user->id] = $portal;
+                $this->userIdPortalCacheMap[$user->getId()] = $portal;
             }
         }
         else {
-            $portal = $this->userIdPortalCacheMap[$user->id];
+            $portal = $this->userIdPortalCacheMap[$user->getId()];
         }
 
         if ($portal) {
@@ -711,7 +714,7 @@ class Processor
             true
         );
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'subject' => $subject,
@@ -851,7 +854,7 @@ class Processor
             true
         );
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'subject' => $subject,
