@@ -55,7 +55,9 @@ class MonthType extends BaseFunction implements Di\DateTimeAware
              $timezone = $args[1];
         }
 
-        if (empty($value)) return 0;
+        if (empty($value)) {
+            return 0;
+        }
 
         if (strlen($value) > 11) {
             $resultString = $this->dateTime->convertSystemDateTime($value, $timezone, 'M');
