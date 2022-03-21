@@ -532,7 +532,7 @@ class Import
             }
         }
 
-        if ($entity->getId()) {
+        if ($entity->hasId()) {
             $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
                 ->deleteFromDb($entity->getId(), true);

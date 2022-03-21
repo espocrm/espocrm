@@ -392,7 +392,7 @@ class Stream
 
     public function unfollowAllUsersFromEntity(Entity $entity): void
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return;
         }
 

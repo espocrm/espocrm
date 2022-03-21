@@ -69,7 +69,7 @@ class UserAclManagerProvider
      */
     public function get(User $user): AclManager
     {
-        $key = $user->getId() ?? spl_object_hash($user);
+        $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!isset($this->map[$key])) {
             $this->map[$key] = $this->load($user);

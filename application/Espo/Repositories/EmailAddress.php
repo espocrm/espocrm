@@ -115,6 +115,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
      */
     public function getEmailAddressData(Entity $entity): array
     {
+        if (!$entity->hasId()) {
+            return [];
+        }
+
         $dataList = [];
 
         $emailAddressList = $this

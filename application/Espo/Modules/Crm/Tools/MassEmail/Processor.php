@@ -409,7 +409,7 @@ class Processor
 
         if (
             !$target ||
-            !$target->getId() ||
+            !$target->hasId() ||
             !$emailAddress
         ) {
             $queueItem->set('status', EmailQueueItem::STATUS_FAILED);

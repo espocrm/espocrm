@@ -277,7 +277,7 @@ class Processor
             $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
         }
 
-        if (!$skipLinks && $entity->getId()) {
+        if (!$skipLinks && $entity->hasId()) {
             $text = $this->processLinks(
                 $type,
                 $entity,

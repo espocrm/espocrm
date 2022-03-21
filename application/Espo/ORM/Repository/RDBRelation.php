@@ -75,7 +75,7 @@ class RDBRelation
         $this->entity = $entity;
         $this->hookMediator = $hookMediator;
 
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
 
@@ -363,7 +363,7 @@ class RDBRelation
             throw new RuntimeException("Entity type doesn't match an entity type of the relation.");
         }
 
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
     }
@@ -375,7 +375,7 @@ class RDBRelation
      */
     public function isRelated(Entity $entity): bool
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
 
@@ -580,11 +580,11 @@ class RDBRelation
             throw new RuntimeException("Can't update not many-to-many relation.");
         }
 
-        $id = $entity->getId();
-
-        if ($id === null) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Entity w/o ID.");
         }
+
+        $id = $entity->getId();
 
         $this->getMapper()->updateRelationColumns($this->entity, $this->relationName, $id, $columnData);
     }
@@ -602,11 +602,11 @@ class RDBRelation
             throw new RuntimeException("Can't get a column of not many-to-many relation.");
         }
 
-        $id = $entity->getId();
-
-        if ($id === null) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Entity w/o ID.");
         }
+
+        $id = $entity->getId();
 
         return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $id, $column);
     }

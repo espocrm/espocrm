@@ -109,11 +109,7 @@ class AclManager extends InternalAclManager
 
     protected function getTable(User $user): TableBase
     {
-        $key = $user->getId();
-
-        if (!$key) {
-            $key = spl_object_hash($user);
-        }
+        $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->tableHashMap)) {
             $this->tableHashMap[$key] = $this->portalTableFactory->create($user, $this->getPortal());
@@ -124,11 +120,7 @@ class AclManager extends InternalAclManager
 
     protected function getMap(User $user): Map
     {
-        $key = $user->getId();
-
-        if (!$key) {
-            $key = spl_object_hash($user);
-        }
+        $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->mapHashMap)) {
             /** @var Table */

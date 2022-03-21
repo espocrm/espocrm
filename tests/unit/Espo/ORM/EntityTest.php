@@ -74,6 +74,9 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     {
     }
 
+    /**
+     * @return \Espo\ORM\Entity
+     */
     protected function createEntity(string $entityType, ?string $className = null)
     {
         $defs = $this->metadata->get($entityType);
@@ -347,5 +350,34 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $entity->set('int', '1');
 
         $this->assertEquals(1, $entity->get('int'));
+    }
+
+    public function testHasId(): void
+    {
+        $entity = $this->createEntity('Test');
+
+        $this->assertFalse($entity->hasId());
+
+        $entity->set('id', '1');
+
+        $this->assertTrue($entity->hasId());
+    }
+
+    public function testGetId1(): void
+    {
+        $entity = $this->createEntity('Test');
+
+        $entity->set('id', '1');
+
+        $this->assertEquals('1', $entity->getId());
+    }
+
+    public function testGetIdEmpty(): void
+    {
+        $entity = $this->createEntity('Test');
+
+        $this->expectException(\RuntimeException::class);
+
+        $entity->getId();
     }
 }

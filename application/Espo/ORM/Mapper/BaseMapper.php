@@ -700,10 +700,12 @@ class BaseMapper implements RDBMapper
     {
         $params = $select->getRaw();
 
-        $id = $entity->getId();
+        if (!$entity->hasId()) {
+            throw new RuntimeException("Entity w/o ID.");
+        }
 
-        if (empty($id) || empty($relationName)) {
-            throw new RuntimeException("Can't mass relate on empty ID or relation name.");
+        if (empty($relationName)) {
+            throw new RuntimeException("Empty relation name.");
         }
 
         $relType = $entity->getRelationType($relationName);

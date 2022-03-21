@@ -130,9 +130,25 @@ class BaseEntity implements Entity
     /**
      * Get an entity ID.
      */
-    public function getId(): ?string
+    public function getId(): string
     {
-        return $this->get('id');
+        /** @var ?string */
+        $id = $this->get('id');
+
+        if ($id === null) {
+            throw new RuntimeException("Entity ID is not set.");
+        }
+
+        if ($id === '') {
+            throw new RuntimeException("Entity ID is empty.");
+        }
+
+        return $id;
+    }
+
+    public function hasId(): bool
+    {
+        return $this->id !== null;
     }
 
     /**

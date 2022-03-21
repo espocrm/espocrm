@@ -274,7 +274,7 @@ class Htmlizer
 
         $relationList = $entity->getRelationList();
 
-        if (!$skipLinks && $level === 0 && $this->entityManager && $entity->getId()) {
+        if (!$skipLinks && $level === 0 && $this->entityManager && $entity->hasId()) {
             foreach ($relationList as $relation) {
                 $collection = null;
 

@@ -237,7 +237,7 @@ class Preferences implements Repository,
 
     public function save(Entity $entity, array $options = []): void
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return;
         }
 
@@ -293,7 +293,7 @@ class Preferences implements Repository,
 
     public function remove(Entity $entity, array $options = []): void
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return;
         }
 

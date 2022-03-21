@@ -306,7 +306,7 @@ class RDBRepository implements Repository
             throw new RuntimeException("Not supported entity type.");
         }
 
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return null;
         }
 
@@ -373,7 +373,7 @@ class RDBRepository implements Repository
             throw new RuntimeException("Not supported entity type.");
         }
 
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return 0;
         }
 
@@ -484,7 +484,7 @@ class RDBRepository implements Repository
      */
     public function isRelated(Entity $entity, string $relationName, $foreign): bool
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             return false;
         }
 
@@ -495,6 +495,10 @@ class RDBRepository implements Repository
         /** @var mixed $foreign */
 
         if ($foreign instanceof Entity) {
+            if (!$foreign->hasId()) {
+                return false;
+            }
+
             $id = $foreign->getId();
         }
         else if (is_string($foreign)) {
@@ -535,11 +539,11 @@ class RDBRepository implements Repository
      */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't relate an entity w/o ID.");
         }
 
-        if (! $foreign instanceof Entity && !is_string($foreign)) {
+        if (!$foreign instanceof Entity && !is_string($foreign)) {
             throw new RuntimeException("Bad 'foreign' value.");
         }
 
@@ -598,11 +602,11 @@ class RDBRepository implements Repository
      */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't unrelate an entity w/o ID.");
         }
 
-        if (! $foreign instanceof Entity && !is_string($foreign)) {
+        if (!$foreign instanceof Entity && !is_string($foreign)) {
             throw new RuntimeException("Bad foreign value.");
         }
 
@@ -710,11 +714,11 @@ class RDBRepository implements Repository
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't update a relation for an entity w/o ID.");
         }
 
-        if (! $foreign instanceof Entity && !is_string($foreign)) {
+        if (!$foreign instanceof Entity && !is_string($foreign)) {
             throw new RuntimeException("Bad foreign value.");
         }
 
@@ -743,7 +747,7 @@ class RDBRepository implements Repository
      */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't related an entity w/o ID.");
         }
 

@@ -60,8 +60,16 @@ interface Entity
 
     /**
      * Get an entity ID.
+     *
+     * @return non-empty-string
+     * @throws \RuntimeException If an ID is not set.
      */
-    public function getId(): ?string;
+    public function getId(): string;
+
+    /**
+     * Whether an ID is set.
+     */
+    public function hasId(): bool;
 
     /**
      * Reset all attributes (empty an entity).
@@ -73,7 +81,7 @@ interface Entity
      *
      * Two usage options:
      * * `set(string $attribute, mixed $value)`
-     * * `set(array|object $valueMap)`
+     * * `set(array|stdClass $valueMap)`
      *
      * @param string|stdClass|array<string,mixed> $attribute
      * @param mixed $value

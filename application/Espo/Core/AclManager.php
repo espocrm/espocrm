@@ -198,11 +198,7 @@ class AclManager
 
     protected function getTable(User $user): Table
     {
-        $key = $user->getId();
-
-        if (!$key) {
-            $key = spl_object_hash($user);
-        }
+        $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->tableHashMap)) {
             $this->tableHashMap[$key] = $this->tableFactory->create($user);
@@ -213,11 +209,7 @@ class AclManager
 
     protected function getMap(User $user): Map
     {
-        $key = $user->getId();
-
-        if (!$key) {
-            $key = spl_object_hash($user);
-        }
+        $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
 
         if (!array_key_exists($key, $this->mapHashMap)) {
             $this->mapHashMap[$key] = $this->mapFactory->create($user, $this->getTable($user));

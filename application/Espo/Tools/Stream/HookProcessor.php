@@ -596,19 +596,12 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
-        $id = $entity->getId();
-        $foreignId = $foreignEntity->getId();
-
-        if (!$id || !$foreignId) {
-            return;
-        }
-
         if ($audited) {
-            $this->service->noteRelate($foreignEntity, $entityType, $id);
+            $this->service->noteRelate($foreignEntity, $entityType, $entity->getId());
         }
 
         if ($auditedForeign) {
-            $this->service->noteRelate($entity, $foreignEntity->getEntityType(), $foreignId);
+            $this->service->noteRelate($entity, $foreignEntity->getEntityType(), $foreignEntity->getId());
         }
     }
 

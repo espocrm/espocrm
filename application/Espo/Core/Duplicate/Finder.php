@@ -108,7 +108,7 @@ class Finder
     {
         $entityType = $entity->getEntityType();
 
-        if ($entity->getId()) {
+        if ($entity->hasId()) {
             $where = Cond::and(
                 $where,
                 Cond::notEqual(
@@ -136,7 +136,7 @@ class Finder
     {
         $entityType = $entity->getEntityType();
 
-        if ($entity->getId()) {
+        if ($entity->hasId()) {
             $where = Cond::and(
                 $where,
                 Cond::notEqual(

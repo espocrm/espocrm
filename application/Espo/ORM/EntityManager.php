@@ -346,7 +346,7 @@ class EntityManager
             throw new RuntimeException("Can't refresh a new entity.");
         }
 
-        if ($entity->getId() === null) {
+        if (!$entity->hasId()) {
             throw new RuntimeException("Can't refresh an entity w/o ID.");
         }
 

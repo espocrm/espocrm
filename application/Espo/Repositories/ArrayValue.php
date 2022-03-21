@@ -132,7 +132,7 @@ class ArrayValue extends Database
 
     public function deleteEntityAttribute(CoreEntity $entity, string $attribute): void
     {
-        if (!$entity->getId()) {
+        if (!$entity->hasId()) {
             throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");
         }
 

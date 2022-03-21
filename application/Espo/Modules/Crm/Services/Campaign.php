@@ -304,7 +304,7 @@ class Campaign extends Record implements
         if ($queueItem) {
             $massEmail = $this->entityManager->getEntity('MassEmail', $queueItem->get('massEmailId'));
 
-            if ($massEmail && $massEmail->getId()) {
+            if ($massEmail && $massEmail->hasId()) {
                 $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
 
                 $logRecord->set([

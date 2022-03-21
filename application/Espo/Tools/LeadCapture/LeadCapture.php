@@ -352,7 +352,7 @@ class LeadCapture
             }
         }
 
-        if ($toRelateLead && $targetLead->getId()) {
+        if ($toRelateLead && $targetLead->hasId()) {
             $this->entityManager
                 ->getRDBRepository('Lead')
                 ->relate($targetLead, 'targetLists', $leadCapture->get('targetListId'), [

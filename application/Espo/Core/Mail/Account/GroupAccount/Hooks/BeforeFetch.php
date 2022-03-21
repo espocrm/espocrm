@@ -162,7 +162,7 @@ class BeforeFetch implements BeforeFetchInterface
         if (
             $campaignId &&
             $target &&
-            $target->getId()
+            $target->hasId()
         ) {
             $this->getCampaignService()
                 ->logBounced(

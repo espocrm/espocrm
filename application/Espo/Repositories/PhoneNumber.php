@@ -105,6 +105,10 @@ class PhoneNumber extends Database implements
      */
     public function getPhoneNumberData(Entity $entity): array
     {
+        if (!$entity->hasId()) {
+            return [];
+        }
+
         $dataList = [];
 
         $numberList = $this
