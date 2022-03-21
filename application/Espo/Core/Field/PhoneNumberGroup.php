@@ -81,6 +81,20 @@ class PhoneNumberGroup
     }
 
     /**
+     * Get a primary number as a string. If no primary, then returns null,
+     */
+    public function getPrimaryNumber(): ?string
+    {
+        $primary = $this->getPrimary();
+
+        if (!$primary) {
+            return null;
+        }
+
+        return $primary->getNumber();
+    }
+
+    /**
      * Get a primary phone number.
      */
     public function getPrimary(): ?PhoneNumber

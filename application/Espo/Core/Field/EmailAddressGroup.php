@@ -77,6 +77,20 @@ class EmailAddressGroup
     }
 
     /**
+     * Get a primary address as a string. If no primary, then returns null,
+     */
+    public function getPrimaryAddress(): ?string
+    {
+        $primary = $this->getPrimary();
+
+        if (!$primary) {
+            return null;
+        }
+
+        return $primary->getAddress();
+    }
+
+    /**
      * Get a primary email address.
      */
     public function getPrimary(): ?EmailAddress

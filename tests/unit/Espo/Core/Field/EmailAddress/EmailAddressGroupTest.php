@@ -46,6 +46,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, count($group->getSecondaryList()));
 
         $this->assertNull($group->getPrimary());
+        $this->assertNull($group->getPrimaryAddress());
 
         $this->assertEquals(0, $group->getCount());
     }
@@ -86,6 +87,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($group->getPrimary());
 
         $this->assertEquals('primary@test.com', $group->getPrimary()->getAddress());
+        $this->assertEquals('primary@test.com', $group->getPrimaryAddress());
 
         $primaryAnother = EmailAddress::create('primaryAnother@test.com');
 

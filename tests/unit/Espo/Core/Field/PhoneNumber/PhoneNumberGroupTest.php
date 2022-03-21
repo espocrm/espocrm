@@ -46,6 +46,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, count($group->getSecondaryList()));
 
         $this->assertNull($group->getPrimary());
+        $this->assertNull($group->getPrimaryNumber());
 
         $this->assertEquals(0, $group->getCount());
     }
@@ -75,6 +76,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($group->getPrimary());
 
         $this->assertEquals('+000', $group->getPrimary()->getNumber());
+        $this->assertEquals('+000', $group->getPrimaryNumber());
 
         $primaryAnother = PhoneNumber::create('+001');
 
