@@ -191,6 +191,7 @@ class Tcpdf extends TcpdfOriginal
             if ($this->state < 3) {
                 $this->Close();
             }
+            /** @var string */
             $name = preg_replace('/[\s]+/', '_', $name);
             $name = Util::sanitizeFileName($name);
 

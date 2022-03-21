@@ -228,10 +228,10 @@ class HookProcessor
             $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
 
             if ($user) {
-                $this->userNameHash[$id] = $user->getName();
+                $this->userNameHash[$id] = $user->getName() ?? $id;
             }
         }
 
-        return $this->userNameHash[$id] ?? $id;
+        return $this->userNameHash[$id];
     }
 }

@@ -92,6 +92,10 @@ class NoteHookProcessor
         $superParentType = $note->getSuperParentType();
         $superParentId = $note->getSuperParentId();
 
+        if (!$parentType || !$parentId) {
+            return;
+        }
+
         $userList = $this->getSubscriberList($parentType, $parentId, $note->isInternal());
 
         $userIdMetList = [];
@@ -129,7 +133,9 @@ class NoteHookProcessor
         $userIdList = null;
 
         if (!$skipAclCheck) {
+            /** @var string[] */
             $teamIdList = $note->getLinkMultipleIdList('teams');
+            /** @var string[] */
             $userIdList = $note->getLinkMultipleIdList('users');
         }
 
@@ -141,6 +147,9 @@ class NoteHookProcessor
 
                 continue;
             }
+
+            /** @var string[] $userIdList */
+            /** @var string[] $teamIdList */
 
             if ($user->isAdmin()) {
                 $notifyUserIdList[] = $user->getId();
@@ -387,6 +396,7 @@ class NoteHookProcessor
                 return false;
             }
 
+            /** @var string[] */
             $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {

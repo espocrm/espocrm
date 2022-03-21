@@ -140,6 +140,7 @@ class EntityProcessor
     {
         $html = $renderer->renderTemplate($template);
 
+        /** @var string */
         return preg_replace_callback(
             '/<barcodeimage data="([^"]+)"\/>/',
             function ($matches) {

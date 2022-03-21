@@ -195,7 +195,7 @@ class LeadCapture
 
         $terminateAt = $dt->format('Y-m-d H:i:s');
 
-        $uniqueId = $this->entityManager->getEntity('UniqueId');
+        $uniqueId = $this->entityManager->getNewEntity('UniqueId');
 
         $uniqueId->set([
             'terminateAt' => $terminateAt,
@@ -209,7 +209,7 @@ class LeadCapture
 
         $this->entityManager->saveEntity($uniqueId);
 
-        $job = $this->entityManager->getEntity('Job');
+        $job = $this->entityManager->getNewEntity('Job');
 
         $job->set([
             'serviceName' => 'LeadCapture',
@@ -231,15 +231,23 @@ class LeadCapture
     ): void {
 
         if ($leadId) {
-            $lead = $this->entityManager->getEntity('Lead', $leadId);
-        } else {
+            $lead = $this->entityManager->getEntityById('Lead', $leadId);
+
+            if (!$lead) {
+                throw new NotFound("Lead '{$leadId}' not found.");
+            }
+        }
+        else {
             $lead = $this->getLeadWithPopulatedData($leadCapture, $data);
         }
 
         $campaign = null;
 
-        if ($leadCapture->get('campaignId')) {
-            $campaign = $this->entityManager->getEntity('Campaign', $leadCapture->get('campaignId'));
+        /** @var ?string */
+        $campaignId = $leadCapture->get('campaignId');
+
+        if ($campaignId) {
+            $campaign = $this->entityManager->getEntityById('Campaign', $campaignId);
         }
 
         $toRelateLead = false;
@@ -267,10 +275,6 @@ class LeadCapture
             if (!$contact) {
                 $target = $lead;
             }
-        }
-
-        if ($targetLead) {
-            assert($targetLead instanceof Lead);
         }
 
         $isContactOptedIn = false;
@@ -507,9 +511,10 @@ class LeadCapture
         }
 
         if ($leadId) {
-            $lead = $this->entityManager->getEntity('Lead', $leadId);
-        } else {
-            $lead = $this->entityManager->getEntity('Lead');
+            $lead = $this->entityManager->getEntityById('Lead', $leadId);
+        }
+        else {
+            $lead = $this->entityManager->getNewEntity('Lead');
 
             $lead->set($data);
         }
