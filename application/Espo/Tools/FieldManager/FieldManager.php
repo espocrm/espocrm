@@ -718,6 +718,10 @@ class FieldManager
 
         $actualCustomFieldDefs = $this->getCustomFieldDefs($scope, $name, []);
         $actualFieldDefs = $this->getFieldDefs($scope, $name, (object) []);
+
+        assert($actualFieldDefs !== null);
+        assert($actualCustomFieldDefs !== null);
+
         $permittedParamList = array_keys($params);
 
         $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];

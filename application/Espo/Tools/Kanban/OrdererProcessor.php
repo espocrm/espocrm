@@ -167,7 +167,7 @@ class OrdererProcessor
             ->create('KanbanOrder');
 
         foreach ($ids as $i => $id) {
-            $item = $this->entityManager->getEntity('KanbanOrder');
+            $item = $this->entityManager->getNewEntity('KanbanOrder');
 
             $item->set([
                 'id' => Util::generateId(),

@@ -145,6 +145,7 @@ class LayoutManager
 
     protected function sanitizeInput(string $name): string
     {
+        /** @var string */
         return preg_replace("([\.]{2,})", '', $name);
     }
 }

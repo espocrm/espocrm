@@ -85,7 +85,7 @@ class NumberType implements Di\EntityManagerAware
             ->findOne();
 
         if (!$number) {
-            $number = $this->entityManager->getEntity('NextNumber');
+            $number = $this->entityManager->getNewEntity('NextNumber');
 
             $number->set('entityType', $scope);
             $number->set('fieldName', $name);

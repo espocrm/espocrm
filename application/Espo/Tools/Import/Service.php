@@ -123,6 +123,10 @@ class Service
         $entityType = $source->getTargetEntityType();
         $attributeList = $source->getTargetAttributeList() ?? [];
 
+        if (!$entityType) {
+            throw new Error("No entity-type.");
+        }
+
         $params = Params::fromRaw($source->getParams())
             ->withIdleMode(false)
             ->withManualMode(false);
@@ -156,10 +160,18 @@ class Service
         $entityType = $import->getTargetEntityType();
         $attributeList = $import->getTargetAttributeList() ?? [];
 
+        if (!$entityType) {
+            throw new Error("No entity-type.");
+        }
+
         $params = Params::fromRaw($import->getParams())
             ->withStartFromLastIndex($startFromLastIndex);
 
         $attachmentId = $import->getFileId();
+
+        if (!$attachmentId) {
+            throw new Error("No file-id.");
+        }
 
         return $this->factory
             ->create()
@@ -255,7 +267,7 @@ class Service
      */
     public function uploadFile(string $contents): string
     {
-        $attachment = $this->entityManager->getEntity(Attachment::ENTITY_TYPE);
+        $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
         $attachment->set('type', 'text/csv');
         $attachment->set('role', 'Import File');

@@ -218,6 +218,8 @@ class Import
 
         $enclosure = $params->getTextQualifier() ?? self::DEFAULT_TEXT_QUALIFIER;
 
+        assert(is_string($this->entityType));
+
         if (!$this->user->isAdmin()) {
             $forbiddenAttributeList =
                 $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, 'edit');
@@ -248,7 +250,7 @@ class Import
         $startFromIndex = null;
 
         if ($this->id) {
-            $import = $this->entityManager->getEntity('Import', $this->id);
+            $import = $this->entityManager->getEntityById('Import', $this->id);
 
             if (!$import) {
                 throw new Error('Import: Could not find import record.');
@@ -261,7 +263,7 @@ class Import
             $import->set('status', ImportEntity::STATUS_IN_PROCESS);
         }
         else {
-            $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE);
+            $import = $this->entityManager->getNewEntity(ImportEntity::ENTITY_TYPE);
 
             $import->set([
                 'entityType' => $this->entityType,
@@ -423,6 +425,8 @@ class Import
             }
         }
 
+        assert(is_string($this->entityType));
+
         $recordService = $this->recordServiceContainer->get($this->entityType);
 
         if (in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE])) {
@@ -445,7 +449,7 @@ class Import
 
             if (!$entity) {
                 if ($action === Params::ACTION_CREATE_AND_UPDATE) {
-                    $entity = $this->entityManager->getEntity($this->entityType);
+                    $entity = $this->entityManager->getNewEntity($this->entityType);
 
                     if (array_key_exists('id', $whereClause)) {
                         $entity->set('id', $whereClause['id']);
@@ -611,7 +615,7 @@ class Import
         $nameValue = $entity->get($attribute);
 
         if ($isPerson) {
-            $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat());
+            $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat() ?? '');
         }
         else {
             $where = [
@@ -698,7 +702,7 @@ class Import
                     $lastNameAttribute = 'last' . ucfirst($attribute);
                     $middleNameAttribute = 'middle' . ucfirst($attribute);
 
-                    $personNameData = $this->parsePersonName($value, $params->getPersonNameFormat());
+                    $personNameData = $this->parsePersonName($value, $params->getPersonNameFormat() ?? '');
 
                     if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
                         $personNameData['firstName'] = $this->prepareAttributeValue(
