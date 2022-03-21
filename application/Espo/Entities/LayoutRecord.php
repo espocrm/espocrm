@@ -29,23 +29,7 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Utils\Json;
-
 class LayoutRecord extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'LayoutRecord';
-
-    /*protected function _getData()
-    {
-        $data = $this->getFromContainer('data');
-
-        return Json::decode($data);
-    }
-
-    protected function _setData($value)
-    {
-        $data = Json::encode($value);
-
-        $this->setInContainer('data', $data);
-    }*/
 }

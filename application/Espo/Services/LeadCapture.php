@@ -88,7 +88,7 @@ class LeadCapture extends Record
             }
         }
 
-        $seed = $this->getEntityManager()->getEntity('Lead');
+        $seed = $this->getEntityManager()->getNewEntity('Lead');
 
         foreach ($attributeList as $i => $attribute) {
             $value = strtoupper(Util::camelCaseToUnderscore($attribute));

@@ -156,7 +156,7 @@ class Pdf
 
         $filename = Util::sanitizeFileName($name) . '.pdf';
 
-        $attachment = $this->entityManager->getEntity('Attachment');
+        $attachment = $this->entityManager->getNewEntity('Attachment');
 
         $attachment->set([
             'name' => $filename,
@@ -260,7 +260,7 @@ class Pdf
 
         $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
 
-        $attachment = $this->entityManager->getEntity('Attachment');
+        $attachment = $this->entityManager->getNewEntity('Attachment');
 
         $attachment->set([
             'name' => $filename,
@@ -271,7 +271,7 @@ class Pdf
 
         $this->entityManager->saveEntity($attachment);
 
-        $job = $this->entityManager->getEntity('Job');
+        $job = $this->entityManager->getNewEntity('Job');
 
         $job->set([
             'serviceName' => 'Pdf',
@@ -316,7 +316,11 @@ class Pdf
             $params = Params::create()->withAcl();
         }
 
-        return $this->buildFromTemplateInternal($entity, $template, false, null, $params, $data);
+        $result = $this->buildFromTemplateInternal($entity, $template, false, null, $params, $data);
+
+        assert($result !== null);
+
+        return $result;
     }
 
     /**

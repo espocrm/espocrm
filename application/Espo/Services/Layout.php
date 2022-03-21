@@ -117,14 +117,17 @@ class Layout
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
 
             if ($layout && $layout->get('data') !== null) {
-                $result = Json::decode($layout->get('data'));
+                /** @var string */
+                $data = $layout->get('data');
+
+                $result = Json::decode($data);
             }
         }
 
         if (!$result) {
-            $result = Json::decode(
-                $this->layout->get($scope, $name)
-            );
+            $data = $this->layout->get($scope, $name) ?? 'false';
+
+            $result = Json::decode($data);
         }
 
         if ($result === false) {
@@ -205,12 +208,12 @@ class Layout
         }
 
         if (!$data) {
-            $dataString = $this->layout->get($scope, $name);
+            $dataString = $this->layout->get($scope, $name) ?? 'null';
 
-            $data = json_decode($dataString);
+            $data = Json::decode($dataString);
         }
         else {
-            $dataString = json_encode($data);
+            $dataString = Json::encode($data);
         }
 
         if (is_null($data)) {
@@ -302,7 +305,7 @@ class Layout
             $layout = $this->getRecordFromSet($scope, $name, $setId);
 
             if (!$layout) {
-                $layout = $this->entityManager->getEntity('LayoutRecord');
+                $layout = $this->entityManager->getNewEntity('LayoutRecord');
 
                 $layout->set([
                     'layoutSetId' => $setId,
