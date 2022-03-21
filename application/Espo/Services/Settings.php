@@ -137,7 +137,7 @@ class Settings
             unset($data->$item);
         }
 
-        $entity = $this->entityManager->getEntity('Settings');
+        $entity = $this->entityManager->getNewEntity('Settings');
 
         $entity->set($data);
         $entity->setAsNotNew();

@@ -113,6 +113,8 @@ class Record extends RecordService implements
      */
     public function getEntityType(): string
     {
+        assert($this->entityType !== null);
+
         return $this->entityType;
     }
 
@@ -220,6 +222,8 @@ class Record extends RecordService implements
      */
     protected function getSelectManager($entityType = null)
     {
+        assert($this->entityType !== null);
+
         if (!$entityType) {
             $entityType = $this->entityType;
         }
@@ -263,6 +267,8 @@ class Record extends RecordService implements
      */
     public function exportCollection(array $params, Collection $collection): string
     {
+        assert($this->entityType !== null);
+
         if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }
@@ -336,6 +342,8 @@ class Record extends RecordService implements
      */
     protected function getConvertCurrencyFieldList()
     {
+        assert($this->entityType !== null);
+
         if (isset($this->convertCurrencyFieldList)) {
             return $this->convertCurrencyFieldList;
         }

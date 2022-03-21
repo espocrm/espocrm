@@ -307,7 +307,7 @@ class Stream
         $collection = new EntityCollection();
 
         foreach ($userIdList as $userId) {
-            $subscription = $this->entityManager->getEntity('Subscription');
+            $subscription = $this->entityManager->getNewEntity('Subscription');
 
             $subscription->set([
                 'userId' => $userId,
@@ -1351,7 +1351,7 @@ class Stream
             return;
         }
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'EmailReceived');
         $note->set('parentId', $entity->getId());
@@ -1403,7 +1403,7 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'EmailSent');
         $note->set('parentId', $entity->getId());
@@ -1466,7 +1466,7 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'Create');
         $note->set('parentId', $entity->getId());
@@ -1553,7 +1553,7 @@ class Stream
         array $options = []
     ): void {
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $entityType = $entity->getEntityType();
 
@@ -1604,7 +1604,7 @@ class Stream
             return;
         }
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set([
             'type' => 'Relate',
@@ -1630,7 +1630,7 @@ class Stream
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'Assign');
         $note->set('parentId', $entity->getId());
@@ -1677,7 +1677,7 @@ class Stream
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'Status');
         $note->set('parentId', $entity->getId());
@@ -1827,7 +1827,7 @@ class Stream
             return;
         }
 
-        $note = $this->entityManager->getEntity('Note');
+        $note = $this->entityManager->getNewEntity('Note');
 
         $note->set('type', 'Update');
         $note->set('parentId', $entity->getId());

@@ -73,6 +73,8 @@ class RecordTree extends Record
     {
         parent::__construct();
 
+        assert($this->entityType !== null);
+
         if (!$this->subjectEntityType && $this->entityType !== 'RecordTree') {
             $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
         }
@@ -87,6 +89,8 @@ class RecordTree extends Record
     public function setEntityType(string $entityType): void
     {
         parent::setEntityType($entityType);
+
+        assert($this->entityType !== null);
 
         if (!$this->subjectEntityType) {
             $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
@@ -121,6 +125,8 @@ class RecordTree extends Record
         ?int $maxDepth = null,
         int $level = 0
     ): ?Collection {
+
+        assert($this->entityType !== null);
 
         if (!$maxDepth) {
             $maxDepth = self::MAX_DEPTH;
@@ -182,6 +188,8 @@ class RecordTree extends Record
 
     protected function checkFilterOnlyNotEmpty(): bool
     {
+        assert($this->subjectEntityType !== null);
+
         try {
             if (!$this->acl->checkScope($this->subjectEntityType, 'create')) {
                 return true;
@@ -199,6 +207,8 @@ class RecordTree extends Record
         if (!$this->categoryField) {
             return false;
         }
+
+        assert($this->subjectEntityType !== null);
 
         $query = $this->selectBuilderFactory
             ->create()
@@ -227,6 +237,8 @@ class RecordTree extends Record
 
     public function getCategoryData(?string $id): ?stdClass
     {
+        assert($this->entityType !== null);
+
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new Forbidden();
         }
@@ -259,6 +271,8 @@ class RecordTree extends Record
      */
     public function getTreeItemPath(?string $parentId = null): array
     {
+        assert($this->entityType !== null);
+
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new Forbidden();
         }
@@ -288,7 +302,7 @@ class RecordTree extends Record
     protected function getSeed(): Entity
     {
         if (empty($this->seed)) {
-            $this->seed = $this->getEntityManager()->getEntity($this->getEntityType());
+            $this->seed = $this->getEntityManager()->getNewEntity($this->getEntityType());
         }
 
         return $this->seed;
@@ -346,6 +360,8 @@ class RecordTree extends Record
      */
     public function getLastChildrenIdList(?string $parentId = null): array
     {
+        assert($this->entityType !== null);
+
         if (!$this->acl->check($this->getEntityType(), 'read')) {
             throw new Forbidden();
         }
