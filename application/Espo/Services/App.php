@@ -294,6 +294,7 @@ class App
 
         $entityManager = $this->entityManager;
 
+        /** @var string[] */
         $teamIdList = $user->getLinkMultipleIdList('teams');
 
         $groupEmailAccountPermission = $this->acl->get('groupEmailAccountPermission');

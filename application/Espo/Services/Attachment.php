@@ -98,10 +98,11 @@ class Attachment extends Record
             $contents = '';
         }
 
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
+        $attachment = $this->entityManager->getNewEntity('Attachment');
+
         $attachment->set('contents', $contents);
 
-        $this->getEntityManager()->saveEntity($attachment);
+        $this->entityManager->saveEntity($attachment);
 
         return $attachment;
     }

@@ -64,7 +64,12 @@ class AdminNotifications implements
 
         $latestRelease = $this->getLatestRelease();
 
+        if ($latestRelease === null) {
+            return;
+        }
+
         if (empty($latestRelease['version'])) {
+            // @todo Check the logic. WTF?
             $this->configWriter->set('latestVersion', $latestRelease['version']);
 
             $this->configWriter->save();
