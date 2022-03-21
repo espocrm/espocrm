@@ -738,8 +738,14 @@ class Xlsx implements Processor
             }
 
             if ($link) {
-                $sheet->getCell("$col$rowNumber")->getHyperlink()->setUrl($link);
-                $sheet->getCell("$col$rowNumber")->getHyperlink()->setTooltip($link);
+                $cell = $sheet->getCell("$col$rowNumber");
+
+                assert($cell !== null);
+
+                $hyperLink = $cell->getHyperlink();
+
+                $hyperLink->setUrl($link);
+                $hyperLink->setTooltip($link);
             }
         }
     }

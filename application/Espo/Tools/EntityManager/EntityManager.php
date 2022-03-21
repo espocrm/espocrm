@@ -1434,6 +1434,8 @@ class EntityManager
             $this->metadata->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type") == 'hasMany' &&
             $this->metadata->get("entityDefs.{$entityForeign}.links.{$linkForeign}.isCustom")
         ) {
+            /** @var string $entityForeign */
+
             if (array_key_exists('linkMultipleFieldForeign', $params)) {
                 $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
 
@@ -1480,6 +1482,8 @@ class EntityManager
                 ['hasMany', 'hasChildren']
             )
         ) {
+            /** @var string $entityForeign */
+
             if (array_key_exists('auditedForeign', $params)) {
                 $auditedForeign = $params['auditedForeign'];
 
@@ -1533,6 +1537,9 @@ class EntityManager
         $labelForeign = null;
 
         if ($linkType !== 'belongsToParent') {
+            /** @var string $linkForeign */
+            /** @var string $entityForeign */
+
             if (isset($params['labelForeign'])) {
                 $labelForeign = $params['labelForeign'];
             }
@@ -1554,6 +1561,9 @@ class EntityManager
                 }
 
                 if ($labelForeign && $linkType !== 'belongsToParent') {
+                    /** @var string $linkForeign */
+                    /** @var string $entityForeign */
+
                     $this->baseLanguage->set($entityForeign, 'fields', $linkForeign, $labelForeign);
                     $this->baseLanguage->set($entityForeign, 'links', $linkForeign, $labelForeign);
                 }

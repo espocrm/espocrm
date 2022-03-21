@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\Export\Processor;
 
+use RuntimeException;
+
 class Params
 {
     private string $fileName;
@@ -104,6 +106,10 @@ class Params
 
     public function getEntityType(): string
     {
+        if ($this->entityType === null) {
+            throw new RuntimeException("No entity-type.");
+        }
+
         return $this->entityType;
     }
 }

@@ -224,7 +224,7 @@ class Export
 
         fclose($dataResource);
 
-        $attachment = $this->entityManager->getEntity('Attachment');
+        $attachment = $this->entityManager->getNewEntity('Attachment');
 
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
@@ -424,6 +424,8 @@ class Export
         if ($params->getAttributeList() === null && $params->getFieldList() === null) {
             $initialAttributeList = $entityDefs->getAttributeNameList();
         }
+
+        assert($initialAttributeList !== null);
 
         foreach ($initialAttributeList as $attribute) {
             if (in_array($attribute, $attributeListToSkip)) {

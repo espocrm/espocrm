@@ -37,7 +37,7 @@ class Params
 
     private string $link;
 
-    private ?string $foreignLink = null;
+    private string $foreignLink;
 
     private ?string $foreignEntityType = null;
 
