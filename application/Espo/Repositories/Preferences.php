@@ -239,7 +239,7 @@ class Preferences implements Repository,
     public function save(Entity $entity, array $options = []): void
     {
         if (!$entity->hasId()) {
-            throw new RuntimeException();
+            throw new RuntimeException("ID is not set.");
         }
 
         $this->data[$entity->getId()] = $entity->toArray();
@@ -295,7 +295,7 @@ class Preferences implements Repository,
     public function remove(Entity $entity, array $options = []): void
     {
         if (!$entity->hasId()) {
-            throw new RuntimeException();
+            throw new RuntimeException("ID is not set.");
         }
 
         $this->deleteFromDb($entity->getId());
