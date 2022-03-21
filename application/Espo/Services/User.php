@@ -94,9 +94,9 @@ class User extends Record implements
      */
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
-    public function getEntity(?string $id = null): ?Entity
+    public function getEntity(string $id): ?Entity
     {
-        if (isset($id) && $id == 'system') {
+        if ($id == 'system') {
             throw new Forbidden();
         }
 
@@ -145,7 +145,7 @@ class User extends Record implements
                 ->getRDBRepository('User')
                 ->where([
                     'id' => $user->getId(),
-                    'password' => $this->createPasswordHashUtil()->hash($currentPassword),
+                    'password' => $this->createPasswordHashUtil()->hash($currentPassword ?? ''),
                 ])
                 ->findOne();
 
@@ -389,7 +389,7 @@ class User extends Record implements
         if ($entity->isApi()) {
             if ($this->getUser()->isAdmin()) {
                 if ($entity->get('authMethod') === 'Hmac') {
-                    $secretKey = $this->getSecretKeyForUserId($entity->id);
+                    $secretKey = $this->getSecretKeyForUserId($entity->getId());
                     $entity->set('secretKey', $secretKey);
                 }
             } else {
@@ -785,8 +785,8 @@ class User extends Record implements
 
         $htmlizer = $this->htmlizerFactory->createNoAcl();
 
-        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
-        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+        $subject = $htmlizer->render($user, $subjectTpl ?? '', null, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl ?? '', null, $data, true);
 
         $email->set([
             'subject' => $subject,
@@ -903,9 +903,13 @@ class User extends Record implements
 
     public function sendAccessInfoNew(UserEntity $user): void
     {
-        if ($user->getEmailAddressGroup()->getPrimary() === null) {
+        $primaryAddress = $user->getEmailAddressGroup()->getPrimary();
+
+        if ($primaryAddress === null) {
             throw new Error("Can't send access info for user '{$user->getId()}' w/o email address.");
         }
+
+        $emailAddress = $primaryAddress->getAddress();
 
         if (!$this->isSmtpConfigured()) {
             throw new Error("Can't send access info. SMTP is not configured.");
@@ -923,15 +927,13 @@ class User extends Record implements
             throw new Error("Could not send access info.");
         }
 
-        $emailAddress = $user->getEmailAddressGroup()->getPrimary()->getAddress();
-
         /** @var EmailEntity $email */
         $email = $this->entityManager->getEntity(EmailEntity::ENTITY_TYPE);
 
         $htmlizer = $this->htmlizerFactory->createNoAcl();
 
-        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
-        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+        $subject = $htmlizer->render($user, $subjectTpl ?? '', null, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl ?? '', null, $data, true);
 
         $email
             ->addToAddress($emailAddress)

@@ -83,7 +83,7 @@ class UserSecurity
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $id);
+        $user = $this->entityManager->getEntityById('User', $id);
 
         if (!$user) {
             throw new NotFound();
@@ -94,6 +94,10 @@ class UserSecurity
         }
 
         $userData = $this->getUserDataRepository()->getByUserId($id);
+
+        if (!$userData) {
+            throw new NotFound();
+        }
 
         return (object) [
             'auth2FA' => $userData->get('auth2FA'),
@@ -110,7 +114,7 @@ class UserSecurity
         $isReset = $data->reset ?? false;
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $id);
+        $user = $this->entityManager->getEntityById('User', $id);
 
         if (!$user) {
             throw new NotFound();
@@ -143,6 +147,10 @@ class UserSecurity
         if ($isReset) {
             $userData = $this->getUserDataRepository()->getByUserId($id);
 
+            if (!$userData) {
+                throw new NotFound();
+            }
+
             $userData->set('auth2FA', false);
             $userData->set('auth2FAMethod', null);
 
@@ -170,6 +178,10 @@ class UserSecurity
         }
 
         $userData = $this->getUserDataRepository()->getByUserId($id);
+
+        if (!$userData) {
+            throw new NotFound();
+        }
 
         $password = $data->password ?? null;
 
