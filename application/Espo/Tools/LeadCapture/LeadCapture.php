@@ -569,7 +569,7 @@ class LeadCapture
             $body = str_replace('{optInDateTime}', $dateTimeString, $body);
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'to' => $emailAddress,
@@ -614,7 +614,7 @@ class LeadCapture
 
     protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): LeadEntity
     {
-        $lead = $this->entityManager->getEntity('Lead');
+        $lead = $this->entityManager->getNewEntity('Lead');
 
         $fieldList = $leadCapture->get('fieldList');
 
@@ -767,7 +767,7 @@ class LeadCapture
 
     protected function log(LeadCaptureEntity $leadCapture, Entity $target, stdClass $data, bool $isNew = true): void
     {
-        $logRecord = $this->entityManager->getEntity('LeadCaptureLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('LeadCaptureLogRecord');
 
         $logRecord->set([
             'targetId' => $target->getId(),
