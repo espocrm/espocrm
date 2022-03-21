@@ -38,6 +38,7 @@ use Espo\Core\Utils\Json;
 use Espo\Entities\Preferences as PreferencesEntity;
 use Espo\Entities\User;
 
+use RuntimeException;
 use stdClass;
 
 use Espo\Core\Di;
@@ -238,7 +239,7 @@ class Preferences implements Repository,
     public function save(Entity $entity, array $options = []): void
     {
         if (!$entity->hasId()) {
-            return;
+            throw new RuntimeException();
         }
 
         $this->data[$entity->getId()] = $entity->toArray();
@@ -294,7 +295,7 @@ class Preferences implements Repository,
     public function remove(Entity $entity, array $options = []): void
     {
         if (!$entity->hasId()) {
-            return;
+            throw new RuntimeException();
         }
 
         $this->deleteFromDb($entity->getId());
