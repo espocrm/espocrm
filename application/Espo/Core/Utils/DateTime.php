@@ -34,6 +34,8 @@ use Carbon\Carbon;
 use DateTimeZone;
 use DateTime as DateTimeStd;
 
+use RuntimeException;
+
 /**
  * Util for a date-time formatting and conversion.
  * Available as 'dateTime' service.
@@ -86,6 +88,7 @@ class DateTime
      * @param string $string A system date.
      * @param string|null $format A target format. If not specified then the default format will be used.
      * @param string|null $language A language. If not specified then the default language will be used.
+     * @throws RuntimeException If could not parse.
      */
     public function convertSystemDate(
         string $string,
@@ -95,8 +98,8 @@ class DateTime
 
         $dateTime = DateTimeStd::createFromFormat('Y-m-d', $string);
 
-        if (!$dateTime) {
-            return null;
+        if ($dateTime === false) {
+            throw new RuntimeException("Could not parse date `{$string}`.");
         }
 
         $carbon = Carbon::instance($dateTime);
@@ -113,13 +116,14 @@ class DateTime
      * @param string $timezone A target timezone. If not specified then the default timezone will be used.
      * @param string|null $format A target format. If not specified then the default format will be used.
      * @param string|null $language A language. If not specified then the default language will be used.
+     * @throws RuntimeException If could not parse.
      */
     public function convertSystemDateTime(
         string $string,
         ?string $timezone = null,
         ?string $format = null,
         ?string $language = null
-    ): ?string {
+    ): string {
 
         if (is_string($string) && strlen($string) === 16) {
             $string .= ':00';
@@ -127,8 +131,8 @@ class DateTime
 
         $dateTime = DateTimeStd::createFromFormat('Y-m-d H:i:s', $string);
 
-        if (!$dateTime) {
-            return null;
+        if ($dateTime === false) {
+            throw new RuntimeException("Could not parse date-time `{$string}`.");
         }
 
         $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
@@ -242,7 +246,7 @@ class DateTime
      * @deprecated Use `convertSystemDate`.
      * @param string $string
      */
-    public function convertSystemDateToGlobal($string): ?string
+    public function convertSystemDateToGlobal($string): string
     {
         return $this->convertSystemDate($string);
     }
@@ -250,7 +254,7 @@ class DateTime
     /**
      * @deprecated Use `convertSystemDateTime`.
      */
-    public function convertSystemDateTimeToGlobal(string $string): ?string
+    public function convertSystemDateTimeToGlobal(string $string): string
     {
         return $this->convertSystemDateTime($string);
     }
