@@ -161,7 +161,7 @@ class EmailFolder extends Record implements Di\LanguageAware
         $list = new EntityCollection();
 
         foreach ($this->systemFolderList as $name) {
-            $folder = $this->entityManager->getEntity('EmailFolder');
+            $folder = $this->entityManager->getNewEntity('EmailFolder');
 
             $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
             $folder->set('id', $name);
@@ -174,7 +174,7 @@ class EmailFolder extends Record implements Di\LanguageAware
         }
 
         foreach ($this->systemFolderEndList as $name) {
-            $folder = $this->entityManager->getEntity('EmailFolder');
+            $folder = $this->entityManager->getNewEntity('EmailFolder');
 
             $folder->set('name', $this->language->translate($name, 'presetFilters', 'Email'));
             $folder->set('id', $name);

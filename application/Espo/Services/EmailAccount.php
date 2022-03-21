@@ -174,8 +174,6 @@ class EmailAccount extends Record implements
             return;
         }
 
-        $handler = null;
-
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
         }
@@ -184,6 +182,8 @@ class EmailAccount extends Record implements
                 "EmailAccount: Could not create Smtp Handler for account {$emailAccount->getId()}. Error: " .
                 $e->getMessage()
             );
+
+            return;
         }
 
         if (method_exists($handler, 'applyParams')) {

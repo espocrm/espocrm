@@ -403,8 +403,6 @@ class Email extends Record implements
         /** @var class-string<object> */
         $handlerClassName = $smtpHandlers->$emailAddress;
 
-        $handler = null;
-
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
         }
@@ -413,6 +411,8 @@ class Email extends Record implements
                 "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " .
                 $e->getMessage() . "."
             );
+
+            return;
         }
 
         if (method_exists($handler, 'applyParams')) {
@@ -489,11 +489,11 @@ class Email extends Record implements
         }
     }
 
-    public function getEntity(?string $id = null): ?Entity
+    public function getEntity(string $id): ?Entity
     {
         $entity = parent::getEntity($id);
 
-        if ($entity && $id && !$entity->get('isRead')) {
+        if ($entity && !$entity->get('isRead')) {
             $this->markAsRead($entity->getId());
         }
 
@@ -783,10 +783,11 @@ class Email extends Record implements
     {
         $fromName = '';
 
-        if ($string) {
-            if (stripos($string, '<') !== false) {
-                $fromName = trim(preg_replace('/(<.*>)/', '', $string), '" ');
-            }
+        if ($string && stripos($string, '<') !== false) {
+            /** @var string */
+            $replasedString = preg_replace('/(<.*>)/', '', $string);
+
+            $fromName = trim($replasedString, '" ');
         }
 
         return $fromName;
@@ -843,7 +844,7 @@ class Email extends Record implements
             $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
-                $attachment = $this->entityManager->getEntity('Attachment');
+                $attachment = $this->entityManager->getNewEntity('Attachment');
 
                 $attachment->set('role', 'Attachment');
                 $attachment->set('type', $source->get('type'));
@@ -908,7 +909,7 @@ class Email extends Record implements
             }
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set([
             'subject' => 'EspoCRM: Test Email',

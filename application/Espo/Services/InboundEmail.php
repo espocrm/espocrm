@@ -109,6 +109,7 @@ class InboundEmail extends RecordService implements
         }
 
         if ($groupEmailAccountPermission === 'team') {
+            /** @var string[] */
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             if (!count($teamIdList)) {
@@ -205,8 +206,6 @@ class InboundEmail extends RecordService implements
             return;
         }
 
-        $handler = null;
-
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
         }
@@ -215,6 +214,8 @@ class InboundEmail extends RecordService implements
                 "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
                     $e->getMessage()
             );
+
+            return;
         }
 
         if (method_exists($handler, 'applyParams')) {
