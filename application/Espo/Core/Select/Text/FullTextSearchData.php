@@ -33,20 +33,28 @@ use InvalidArgumentException;
 
 class FullTextSearchData
 {
-    private ?string $expression = null;
+    private string $expression;
 
     /**
-     * @var ?string[]
+     * @var string[]
      */
-    private ?array $fieldList = null;
+    private array $fieldList;
 
     /**
-     * @var ?string[]
+     * @var string[]
      */
-    private ?array $columnList = null;
+    private array $columnList;
 
-    private function __construct()
+    /**
+     * @param string $expression
+     * @param string[] $fieldList
+     * @param string[] $columnList
+     */
+    public function __construct(string $expression, array $fieldList, array $columnList)
     {
+        $this->expression = $expression;
+        $this->fieldList = $fieldList;
+        $this->columnList = $columnList;
     }
 
     /**
@@ -54,9 +62,19 @@ class FullTextSearchData
      */
     public static function fromArray(array $params): self
     {
-        $object = new self();
+        $expression = $params['expression'] ?? null;
 
-        $object->expression = $params['expression'] ?? null;
+        if (!$expression || !is_string($expression)) {
+            throw new InvalidArgumentException("Bad expression.");
+        }
+
+        $object = new self(
+            $expression,
+            $params['fieldList'] ?? [],
+            $params['columnList'] ?? []
+        );
+
+        $object->expression = $expression;
         $object->fieldList = $params['fieldList'] ?? [];
         $object->columnList = $params['columnList'] ?? [];
 
@@ -64,10 +82,6 @@ class FullTextSearchData
             if (!property_exists($object, $key)) {
                 throw new InvalidArgumentException("Unknown parameter '{$key}'.");
             }
-        }
-
-        if (!$object->expression || !is_string($object->expression)) {
-            throw new InvalidArgumentException("Bad expression.");
         }
 
         return $object;

@@ -156,7 +156,7 @@ class Scanner
     private function getSeed(string $entityType): Entity
     {
         if (!isset($this->seedHash[$entityType])) {
-            $this->seedHash[$entityType] = $this->entityManager->getEntity($entityType);
+            $this->seedHash[$entityType] = $this->entityManager->getNewEntity($entityType);
         }
 
         return $this->seedHash[$entityType];

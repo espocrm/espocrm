@@ -110,10 +110,10 @@ class Order
         if (!$order) {
             $order = $this->metadataProvider->getDefaultOrder($this->entityType);
 
-            if (strtolower($order) === 'desc') {
+            if ($order && strtolower($order) === 'desc') {
                 $order = SearchParams::ORDER_DESC;
             }
-            else if (strtolower($order) === 'asc') {
+            else if ($order && strtolower($order) === 'asc') {
                 $order = SearchParams::ORDER_ASC;
             }
             else if ($order !== null) {

@@ -171,7 +171,7 @@ class FullTextSearchDataComposer
             $filter = trim($filter);
         }
 
-        $expression = $function . ':(' . implode(', ', $fullTextSearchColumnList) . ', ' . "'{$filter}'" . ')';
+        $expression = $function . ':(' . implode(', ', $fullTextSearchColumnList ?? []) . ', ' . "'{$filter}'" . ')';
 
         return FullTextSearchData::fromArray([
             'expression' => $expression,

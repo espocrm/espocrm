@@ -38,7 +38,7 @@ class Item
 
     public const TYPE_OR = 'or';
 
-    private ?string $type = null;
+    private string $type;
 
     private ?string $attribute = null;
 
@@ -71,16 +71,24 @@ class Item
         self::TYPE_AND,
     ];
 
-    private function __construct() {}
+    private function __construct(string $type)
+    {
+        $this->type = $type;
+    }
 
     /**
      * @param array<string,mixed> $params
      */
     public static function fromRaw(array $params): self
     {
-        $obj = new self();
+        $type = $params['type'] ?? null;
 
-        $obj->type = $params['type'] ?? null;
+        if (!$type) {
+            throw new InvalidArgumentException("No 'type' in where item.");
+        }
+
+        $obj = new self($type);
+
         $obj->attribute = $params['attribute'] ?? $params['field'] ?? null;
         $obj->value = $params['value'] ?? null;
         $obj->dateTime = $params['dateTime'] ?? false;
@@ -92,10 +100,6 @@ class Item
             if (!property_exists($obj, $key)) {
                 throw new InvalidArgumentException("Unknown parameter '{$key}'.");
             }
-        }
-
-        if (!$obj->type) {
-            throw new InvalidArgumentException("No 'type' in where item.");
         }
 
         if (
@@ -131,7 +135,6 @@ class Item
     }
 
     /**
-     *
      * @return array{
      *   type: string,
      *   value: mixed,
@@ -142,7 +145,6 @@ class Item
      */
     public function getRaw(): array
     {
-        /** @var string */
         $type = $this->type;
 
         $raw = [
@@ -170,6 +172,8 @@ class Item
      */
     public function getType(): string
     {
+        assert($this->type !== null);
+
         return $this->type;
     }
 

@@ -65,13 +65,13 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager
             ->expects($this->any())
-            ->method('getEntity')
+            ->method('getNewEntity')
             ->with($this->entityType)
             ->willReturn($this->entity);
 
         $this->entityManager
             ->expects($this->any())
-            ->method('getEntity')
+            ->method('getNewEntity')
             ->with($this->foreignEntityType)
             ->willReturn($this->foreignEntity);
     }

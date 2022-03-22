@@ -216,7 +216,7 @@ class SearchParams
         return $obj;
     }
 
-    public function withWhere(?WhereItem $where): self
+    public function withWhere(WhereItem $where): self
     {
         $obj = clone $this;
 

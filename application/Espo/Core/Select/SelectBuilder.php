@@ -186,6 +186,7 @@ class SelectBuilder
 
         $this->applyAdditional();
 
+        /** @var QueryBuilder */
         return $this->queryBuilder;
     }
 
@@ -348,6 +349,9 @@ class SelectBuilder
 
     private function applyPrimaryFilter(): void
     {
+        assert($this->queryBuilder !== null);
+        assert($this->primaryFilter !== null);
+
         $this->createPrimaryFilterApplier()
             ->apply(
                 $this->queryBuilder,
@@ -357,6 +361,8 @@ class SelectBuilder
 
     private function applyBoolFilterList(): void
     {
+        assert($this->queryBuilder !== null);
+
         $this->createBoolFilterListApplier()
             ->apply(
                 $this->queryBuilder,
@@ -366,6 +372,9 @@ class SelectBuilder
 
     private function applyTextFilter(): void
     {
+        assert($this->queryBuilder !== null);
+        assert($this->textFilter !== null);
+
         $noFullTextSearch = false;
 
         if ($this->searchParams && $this->searchParams->noFullTextSearch()) {
@@ -384,6 +393,8 @@ class SelectBuilder
 
     private function applyAccessControlFilter(): void
     {
+        assert($this->queryBuilder !== null);
+
         $this->createAccessControlFilterApplier()
             ->apply(
                 $this->queryBuilder
@@ -392,6 +403,8 @@ class SelectBuilder
 
     private function applyDefaultOrder(): void
     {
+        assert($this->queryBuilder !== null);
+
         $order = null;
 
         if ($this->searchParams) {
@@ -419,6 +432,8 @@ class SelectBuilder
 
     private function applyWhereItem(WhereItem $whereItem): void
     {
+        assert($this->queryBuilder !== null);
+
         $params = WhereParams::fromArray([
             'applyPermissionCheck' => $this->applyWherePermissionCheck,
             'forbidComplexExpressions' => $this->applyComplexExpressionsForbidden,
@@ -437,6 +452,8 @@ class SelectBuilder
         if (!$this->searchParams) {
             return;
         }
+
+        assert($this->queryBuilder !== null);
 
         if (
             !$this->applyDefaultOrder &&
@@ -483,6 +500,8 @@ class SelectBuilder
 
     private function applyAdditional(): void
     {
+        assert($this->queryBuilder !== null);
+
         if (count($this->additionalApplierClassNameList) === 0) {
             return;
         }
@@ -506,6 +525,8 @@ class SelectBuilder
 
     private function createWhereApplier(): WhereApplier
     {
+        assert($this->entityType !== null);
+
         /** @var WhereApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -516,6 +537,8 @@ class SelectBuilder
 
     private function createSelectApplier(): SelectApplier
     {
+        assert($this->entityType !== null);
+
         /** @var SelectApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -526,6 +549,8 @@ class SelectBuilder
 
     private function createOrderApplier(): OrderApplier
     {
+        assert($this->entityType !== null);
+
         /** @var OrderApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -536,6 +561,8 @@ class SelectBuilder
 
     private function createLimitApplier(): LimitApplier
     {
+        assert($this->entityType !== null);
+
         /** @var LimitApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -546,6 +573,8 @@ class SelectBuilder
 
     private function createAccessControlFilterApplier(): AccessControlFilterApplier
     {
+        assert($this->entityType !== null);
+
         /** @var AccessControlFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -556,6 +585,8 @@ class SelectBuilder
 
     private function createTextFilterApplier(): TextFilterApplier
     {
+        assert($this->entityType !== null);
+
         /** @var TextFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -566,6 +597,8 @@ class SelectBuilder
 
     private function createPrimaryFilterApplier(): PrimaryFilterApplier
     {
+        assert($this->entityType !== null);
+
         /** @var PrimaryFilterApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -576,6 +609,8 @@ class SelectBuilder
 
     private function createBoolFilterListApplier(): BoolFilterListApplier
     {
+        assert($this->entityType !== null);
+
         /** @var BoolFilterListApplier */
         return $this->applierFactory->create(
             $this->entityType,
@@ -586,6 +621,8 @@ class SelectBuilder
 
     private function createAdditionalApplier(): AdditionalApplier
     {
+        assert($this->entityType !== null);
+
         /** @var AdditionalApplier */
         return $this->applierFactory->create(
             $this->entityType,

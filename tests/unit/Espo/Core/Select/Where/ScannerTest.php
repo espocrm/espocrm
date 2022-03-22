@@ -30,14 +30,12 @@
 namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\{
-    Core\Exceptions\Error,
     Core\Select\Where\Scanner,
     Core\Select\Where\Item,
     ORM\EntityManager,
     ORM\BaseEntity as Entity,
     ORM\Query\Select as Query,
     ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\QueryComposer\BaseQueryComposer as QueryComposer,
 };
 
 class ScannerTest extends \PHPUnit\Framework\TestCase
@@ -68,7 +66,7 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager
             ->expects($this->any())
-            ->method('getEntity')
+            ->method('getNewEntity')
             ->with($this->entityType)
             ->willReturn($this->entity);
     }
