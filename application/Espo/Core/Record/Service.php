@@ -73,7 +73,6 @@ use Espo\Core\{
 use Espo\Core\Di;
 
 use stdClass;
-use RuntimeException;
 use ArrayAccess;
 
 /**
