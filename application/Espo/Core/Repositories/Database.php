@@ -255,10 +255,9 @@ class Database extends RDBRepository
             $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
             if ($foreignEntityType) {
-                $foreign = $this->entityManager->getEntity($foreignEntityType);
+                $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
                 $foreign->set('id', $foreignId);
-
                 $foreign->setAsFetched();
             }
         }
@@ -293,7 +292,7 @@ class Database extends RDBRepository
             $foreignEntityType = $this->getRelationParam($entity, $relationName, 'entity');
 
             if ($foreignEntityType) {
-                $foreign = $this->entityManager->getEntity($foreignEntityType);
+                $foreign = $this->entityManager->getNewEntity($foreignEntityType);
 
                 $foreign->set('id', $foreignId);
                 $foreign->setAsFetched();

@@ -31,6 +31,8 @@ namespace Espo\Core\Repositories;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Exceptions\Error;
+
 use Espo\Core\{
     Di,
     Utils\DateTime as DateTimeUtil,
@@ -93,19 +95,14 @@ class Event extends Database implements
             $dateEndDate = $entity->get('dateEndDate');
 
             if (!empty($dateEndDate)) {
-                $dateEnd = $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00');
+                $dt = new DateTime(
+                    $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00')
+                );
 
-                $dt = null;
+                $dt->modify('+1 day');
 
-                try {
-                    $dt = new DateTime($dateEnd);
-                    $dt->modify('+1 day');
-
-                    $dateEnd = $dt->format('Y-m-d H:i:s');
-                }
-                catch (Exception $e) {}
-
-                $entity->set('dateEnd', $dateEnd);
+                $dateEnd = $dt->format('Y-m-d H:i:s');
+                 $entity->set('dateEnd', $dateEnd);
             }
             else {
                 $entity->set('dateEndDate', null);
@@ -162,7 +159,7 @@ class Event extends Database implements
 
     /**
      * @param string $string
-     * @return ?string
+     * @return string
      */
     protected function convertDateTimeToDefaultTimezone($string)
     {
@@ -170,19 +167,14 @@ class Event extends Database implements
 
         $tz = new DateTimeZone($timeZone);
 
-        $dt = null;
+        $dt = DateTime::createFromFormat(
+            DateTimeUtil::SYSTEM_DATE_TIME_FORMAT,
+            $string,
+            $tz
+        );
 
-        try {
-            $dt = DateTime::createFromFormat(
-                DateTimeUtil::SYSTEM_DATE_TIME_FORMAT,
-                $string,
-                $tz
-            );
-        }
-        catch (Exception $e) {}
-
-        if (!$dt) {
-            return null;
+        if ($dt === false) {
+            throw new Error("Could not parse date-time `{$string}`.");
         }
 
         $utcTz = new DateTimeZone('UTC');
