@@ -30,8 +30,8 @@
 namespace Espo\Core\Upgrades\Actions\Extension;
 
 use Espo\Core\Upgrades\ExtensionManager;
-
 use Espo\Core\Utils\Util;
+use Espo\Core\Exceptions\Error;
 
 use Throwable;
 
@@ -97,7 +97,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $extensionEntity = $this->getExtensionEntity();
 
         if (isset($extensionEntity)) {
-            $id = $this->getExtensionEntity()->get('id');
+            $id = $extensionEntity->get('id');
         }
 
         return isset($id) ? false : true;
@@ -111,6 +111,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     protected function getExtensionId()
     {
         $extensionEntity = $this->getExtensionEntity();
+
         if (isset($extensionEntity)) {
             $extensionEntityId = $extensionEntity->get('id');
         }
@@ -135,7 +136,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Find Extension entity.
      *
-     * @return \Espo\Entities\Extension
+     * @return ?\Espo\Entities\Extension
      */
     protected function findExtension()
     {
@@ -143,10 +144,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         $this->extensionEntity = $this->getEntityManager()
             ->getRDBRepository('Extension')
-            ->where(array(
+            ->where([
                 'name' => $manifest['name'],
                 'isInstalled' => true,
-            ))
+            ])
             ->findOne();
 
         return $this->extensionEntity;
@@ -162,21 +163,22 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $entityManager = $this->getEntityManager();
 
         $extensionEntity = $entityManager->getEntity('Extension', $this->getProcessId());
+
         if (!isset($extensionEntity)) {
-            $extensionEntity = $entityManager->getEntity('Extension');
+            $extensionEntity = $entityManager->getNewEntity('Extension');
         }
 
         $manifest = $this->getManifest();
         $fileList = $this->getCopyFileList();
 
-        $data = array(
+        $data = [
             'id' => $this->getProcessId(),
             'name' => trim($manifest['name']),
             'isInstalled' => true,
             'version' => $manifest['version'],
             'fileList' => $fileList,
             'description' => $manifest['description'],
-        );
+        ];
 
         if (!empty($manifest['checkVersionUrl'])) {
             $data['checkVersionUrl'] = $manifest['checkVersionUrl'];
@@ -225,6 +227,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
+        if (!$extensionEntity) {
+            throw new Error("Can't unistall not existing extension.");
+        }
+
         $this->executeAction(ExtensionManager::UNINSTALL, [
             'id' => $extensionEntity->get('id'),
             'skipSystemRebuild' => true,
@@ -241,6 +247,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     protected function deleteExtension()
     {
         $extensionEntity = $this->getExtensionEntity();
+
+        if (!$extensionEntity) {
+            throw new Error("Can't delete not existing extension.");
+        }
 
         $this->executeAction(ExtensionManager::DELETE, [
             'id' => $extensionEntity->get('id'),

@@ -102,6 +102,8 @@ class ActionManager
      */
     public function getAction()
     {
+        assert($this->currentAction !== null);
+
         return $this->currentAction;
     }
 

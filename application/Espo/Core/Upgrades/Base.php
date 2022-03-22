@@ -68,7 +68,7 @@ abstract class Base
     {
         $this->container = $container;
 
-        $this->actionManager = new ActionManager($this->name, $container, $this->params);
+        $this->actionManager = new ActionManager($this->name ?? '', $container, $this->params);
     }
 
     /**

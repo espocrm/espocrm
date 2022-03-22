@@ -146,7 +146,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @param ?string $type
-     * @param ?string $dest
+     * @param string $dest
      * @return bool
      */
     protected function copyFiles($type = null, $dest = '')
@@ -187,7 +187,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     }
 
     /**
-     * @param ?string $errorMessage
+     * @param string $errorMessage
      * @param bool $deletePackage
      * @param bool $systemRebuild
      * @return void

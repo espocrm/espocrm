@@ -174,6 +174,8 @@ abstract class Base
      */
     protected function getActionManager()
     {
+        assert($this->actionManager !== null);
+
         return $this->actionManager;
     }
 
@@ -434,8 +436,10 @@ abstract class Base
             }
         }
 
+        /** @var string */
         $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
-        $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
+        /** @var string */
+        $errorMessage = preg_replace('/\{requiredVersion\}/', $version ?? '', $errorMessage);
 
         $this->throwErrorAndRemovePackage($errorMessage);
 
@@ -1120,6 +1124,8 @@ abstract class Base
 
         $this->helper->setActionObject($this);
 
+        assert($this->helper !== null);
+
         return $this->helper;
     }
 
@@ -1151,7 +1157,10 @@ abstract class Base
         $configParamName = $this->getTemporaryConfigParamName();
         $parentConfigParamName = $this->getTemporaryConfigParamName(true);
 
-        if ($config->has($configParamName) || ($parentConfigParamName && $config->has($parentConfigParamName))) {
+        if (
+            ($configParamName && $config->has($configParamName)) ||
+            ($parentConfigParamName && $config->has($parentConfigParamName))
+        ) {
             return;
         }
 
@@ -1161,8 +1170,11 @@ abstract class Base
             'useCache' => $config->get('useCache'),
         ];
 
-        // @todo Maybe to romove this line?
-        $configWriter->set($configParamName, $actualParams);
+
+        if ($configParamName) {
+            // @todo Maybe to romove this line?
+            $configWriter->set($configParamName, $actualParams);
+        }
 
         $save = false;
 
@@ -1209,6 +1221,9 @@ abstract class Base
         $save = false;
 
         foreach ($configParamList as $configParamName) {
+            if ($configParamName === null) {
+                continue;
+            }
 
             if (!$config->has($configParamName)) {
                 continue;

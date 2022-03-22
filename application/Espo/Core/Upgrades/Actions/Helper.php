@@ -80,6 +80,8 @@ class Helper
 
         $actionObject = $this->getActionObject();
 
+        assert($actionObject !== null);
+
         foreach ($dependencyList as $extensionName => $extensionVersion) {
             $dependencyExtensionEntity = $actionObject
                 ->getEntityManager()
