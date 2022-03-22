@@ -113,7 +113,7 @@ class ArrayValue extends Database
                 continue;
             }
 
-            $arrayValue = $this->get();
+            $arrayValue = $this->getNew();
 
             $arrayValue->set([
                 'entityType' => $entity->getEntityType(),

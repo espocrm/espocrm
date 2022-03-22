@@ -96,7 +96,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 }
 
                 if (!in_array(strtolower($address), $exist)) {
-                    $ea = $this->get();
+                    $ea = $this->getNew();
 
                     $ea->set('name', $address);
 

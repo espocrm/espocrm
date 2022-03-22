@@ -86,7 +86,7 @@ class PhoneNumber extends Database implements
                 }
 
                 if (!in_array($number, $exist)) {
-                    $phoneNumber = $this->get();
+                    $phoneNumber = $this->getNew();
 
                     $phoneNumber->set('name', $number);
 

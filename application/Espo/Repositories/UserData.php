@@ -56,7 +56,6 @@ class UserData extends Database
             return null;
         }
 
-        /** @var ?UserDataEntity */
         $userData = $this->getNew();
 
         $userData->set('userId', $userId);

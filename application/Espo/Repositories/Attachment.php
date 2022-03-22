@@ -143,7 +143,7 @@ class Attachment extends Database implements
 
     public function getCopiedAttachment(AttachmentEntity $entity, ?string $role = null): AttachmentEntity
     {
-        $attachment = $this->get();
+        $attachment = $this->getNew();
 
         $attachment->set([
             'sourceId' => $entity->getSourceId(),

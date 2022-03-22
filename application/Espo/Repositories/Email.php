@@ -421,7 +421,10 @@ class Email extends Database implements
 
     public function applyUsersFilters(EmailEntity $entity): void
     {
-        foreach ($entity->getLinkMultipleIdList('users') as $userId) {
+        /** @var string[] */
+        $userIdList = $entity->getLinkMultipleIdList('users');
+
+        foreach ($userIdList as $userId) {
             if ($entity->get('status') === 'Sent') {
                 if ($entity->get('sentById') && $entity->get('sentById') === $userId) {
                     continue;
