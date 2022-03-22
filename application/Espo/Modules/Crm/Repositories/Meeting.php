@@ -56,6 +56,7 @@ class Meeting extends EventRepository implements
 
         if (!$this->config->get('eventAssignedUserIsAttendeeDisabled')) {
             if ($entity->hasLinkMultipleField('assignedUsers')) {
+                /** @var string[] */
                 $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
 
                 foreach ($assignedUserIdList as $assignedUserId) {

@@ -65,7 +65,7 @@ class EntryCountLoader implements Loader
     {
         if (
             $params->hasSelect() &&
-            !in_array('entryCount', $params->getSelect())
+            !in_array('entryCount', $params->getSelect() ?? [])
         ) {
             return;
         }

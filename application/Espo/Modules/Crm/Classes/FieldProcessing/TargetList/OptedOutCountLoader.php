@@ -67,7 +67,7 @@ class OptedOutCountLoader implements Loader
     {
         if (
             $params->hasSelect() &&
-            !in_array('optedOutCount', $params->getSelect())
+            !in_array('optedOutCount', $params->getSelect() ?? [])
         ) {
             return;
         }

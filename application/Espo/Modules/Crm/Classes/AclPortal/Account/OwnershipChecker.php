@@ -44,7 +44,7 @@ class OwnershipChecker implements OwnershipAccountChecker
 {
     public function checkAccount(User $user, Entity $entity): bool
     {
-        $accountIdList = $user->getLinkMultipleIdList('accounts');
+        $accountIdList = $user->getLinkMultipleIdList('accounts') ?? [];
 
         if (in_array($entity->getId(), $accountIdList)) {
             return true;

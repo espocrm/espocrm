@@ -182,7 +182,7 @@ class CampaignUrl implements EntryPoint
         if ($campaign && $target) {
             $this->service->logClicked(
                 $campaignId,
-                $queueItem->id,
+                $queueItem->getId(),
                 $target,
                 $trackingUrl,
                 null,
@@ -207,7 +207,7 @@ class CampaignUrl implements EntryPoint
             throw new NotFoundSilent();
         }
 
-        $entityList = $eaRepository->getEntityListByAddressId($ea->id);
+        $entityList = $eaRepository->getEntityListByAddressId($ea->getId());
 
         foreach ($entityList as $target) {
             $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [

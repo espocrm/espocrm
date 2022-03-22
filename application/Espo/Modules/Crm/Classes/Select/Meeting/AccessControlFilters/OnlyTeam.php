@@ -54,7 +54,7 @@ class OnlyTeam implements Filter
                 Cond::or(
                     Cond::in(
                         Cond::column('teamsAccessMiddle.teamId'),
-                        $this->user->getLinkMultipleIdList(User::LINK_TEAMS)
+                        $this->user->getLinkMultipleIdList(User::LINK_TEAMS) ?? []
                     ),
                     Cond::equal(
                         Cond::column('usersAccessMiddle.userId'),

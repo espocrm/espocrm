@@ -47,7 +47,7 @@ class OnlyTeam implements Filter
     {
         $queryBuilder->leftJoin('campaign', 'campaignAccess');
 
-        $teamIdList = $this->user->getLinkMultipleIdList('teams');
+        $teamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
 
         if (count($teamIdList) === 0) {
             $queryBuilder->where([

@@ -169,6 +169,6 @@ class SubmitPopupReminders implements JobDataLess
 
     protected function deleteReminder(Reminder $reminder): void
     {
-        $this->entityManager->getRDBRepository('Reminder')->deleteFromDb($reminder->id);
+        $this->entityManager->getRDBRepository('Reminder')->deleteFromDb($reminder->getId());
     }
 }

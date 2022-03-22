@@ -52,6 +52,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateTo = $request->getQueryParam('dateTo');
         $dateFilter = $request->getQueryParam('dateFilter');
 
+        if (!$dateFilter) {
+            throw new BadRequest("No `dateFilter` parameter.");
+        }
+
         return $this->getOpportunityService()->reportByLeadSource($dateFilter, $dateFrom, $dateTo);
     }
 
@@ -67,6 +71,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateTo = $request->getQueryParam('dateTo');
         $dateFilter = $request->getQueryParam('dateFilter');
 
+        if (!$dateFilter) {
+            throw new BadRequest("No `dateFilter` parameter.");
+        }
+
         return $this->getOpportunityService()->reportByStage($dateFilter, $dateFrom, $dateTo);
     }
 
@@ -81,6 +89,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateFrom = $request->getQueryParam('dateFrom');
         $dateTo = $request->getQueryParam('dateTo');
         $dateFilter = $request->getQueryParam('dateFilter');
+
+        if (!$dateFilter) {
+            throw new BadRequest("No `dateFilter` parameter.");
+        }
 
         return $this->getOpportunityService()->reportSalesByMonth($dateFilter, $dateFrom, $dateTo);
     }
@@ -98,6 +110,10 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $dateFilter = $request->getQueryParam('dateFilter');
         $useLastStage = $request->getQueryParam('useLastStage') === 'true';
         $teamId = $request->getQueryParam('teamId') ?? null;
+
+        if (!$dateFilter) {
+            throw new BadRequest("No `dateFilter` parameter.");
+        }
 
         return $this->getOpportunityService()
             ->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);

@@ -230,10 +230,11 @@ class Unsubscribe implements EntryPoint
         $ea = $repository->getByAddress($emailAddress);
 
         if ($ea) {
-            $entityList = $repository->getEntityListByAddressId($ea->id);
+            $entityList = $repository->getEntityListByAddressId($ea->getId());
 
             if (!$ea->get('optOut')) {
                 $ea->set('optOut', true);
+
                 $this->entityManager->saveEntity($ea);
 
                 foreach ($entityList as $entity) {
