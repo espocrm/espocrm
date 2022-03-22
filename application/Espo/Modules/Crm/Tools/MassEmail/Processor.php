@@ -293,7 +293,7 @@ class Processor
 
         $emailData['body'] = $body;
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set($emailData);
 
@@ -389,9 +389,12 @@ class Processor
         $smtpParams = null
     ): bool {
 
-        $queueItemFetched = $this->entityManager->getEntity($queueItem->getEntityType(), $queueItem->getId());
+        $queueItemFetched = $this->entityManager->getEntityById($queueItem->getEntityType(), $queueItem->getId());
 
-        if ($queueItemFetched->get('status') !== EmailQueueItem::STATUS_PENDING) {
+        if (
+            !$queueItemFetched ||
+            $queueItemFetched->get('status') !== EmailQueueItem::STATUS_PENDING
+        ) {
             return false;
         }
 
@@ -458,7 +461,7 @@ class Processor
         if ($campaign) {
             $email->setLinkMultipleIdList(
                 'teams',
-                $campaign->getLinkMultipleIdList('teams')
+                $campaign->getLinkMultipleIdList('teams') ?? []
             );
         }
 
