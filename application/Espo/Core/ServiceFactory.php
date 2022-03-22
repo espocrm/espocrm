@@ -71,7 +71,10 @@ class ServiceFactory
         return true;
     }
 
-    public function create(string $name): object
+    /**
+     * @param array<string,mixed> $with
+     */
+    public function createWith(string $name, array $with): object
     {
         $className = $this->getClassName($name);
 
@@ -79,13 +82,18 @@ class ServiceFactory
             throw new Error("Service '{$name}' was not found.");
         }
 
-        $obj = $this->injectableFactory->create($className);
+        $obj = $this->injectableFactory->createWith($className, $with);
 
-        // deprecated
+        // For backward compatibility.
         if (method_exists($obj, 'prepare')) {
             $obj->prepare();
         }
 
         return $obj;
+    }
+
+    public function create(string $name): object
+    {
+        return $this->createWith($name, []);
     }
 }

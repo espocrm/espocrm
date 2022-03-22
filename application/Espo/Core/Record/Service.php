@@ -116,8 +116,8 @@ class Service implements Crud,
     /** @var bool */
     protected $getEntityBeforeUpdate = false;
 
-    /** @var ?string */
-    protected $entityType = null;
+    /** @var string */
+    protected $entityType;
 
     /** @var ?StreamService */
     private $streamService = null;
@@ -242,21 +242,8 @@ class Service implements Crud,
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
-    /**
-     * @todo Pass entity type through constructor. Make non-nullable.
-     */
-    public function __construct() {}
-
-    public function setEntityType(string $entityType): void
+    public function __construct(string $entityType = '')
     {
-        if ($this->entityType && $this->entityType !== $entityType) {
-            throw new RuntimeException("entityType is already set.");
-        }
-
-        if ($this->entityType) {
-            return;
-        }
-
         $this->entityType = $entityType;
     }
 
@@ -265,8 +252,6 @@ class Service implements Crud,
      */
     protected function getRepository(): RDBRepository
     {
-        assert($this->entityType !== null);
-
         return $this->entityManager->getRDBRepository($this->entityType);
     }
 
@@ -305,8 +290,6 @@ class Service implements Crud,
      */
     public function read(string $id, ReadParams $params): Entity
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
@@ -470,8 +453,6 @@ class Service implements Crud,
      */
     protected function filterInput($data)
     {
-        assert($this->entityType !== null);
-
         foreach($this->readOnlyAttributeList as $attribute) {
             unset($data->$attribute);
         }
@@ -623,8 +604,6 @@ class Service implements Crud,
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
-        assert($this->entityType !== null);
-
         if (!$this->user->isPortal()) {
             $forbiddenFieldList = null;
 
@@ -690,8 +669,6 @@ class Service implements Crud,
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent();
         }
@@ -742,8 +719,6 @@ class Service implements Crud,
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent();
         }
@@ -777,8 +752,6 @@ class Service implements Crud,
 
         $this->processAssignmentCheck($entity);
 
-        assert(is_string($this->entityType));
-
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
             $this->checkForDuplicatesInUpdate;
@@ -811,8 +784,6 @@ class Service implements Crud,
      */
     public function delete(string $id, DeleteParams $params): void
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent();
         }
@@ -850,8 +821,6 @@ class Service implements Crud,
      */
     public function find(SearchParams $searchParams): RecordCollection
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
@@ -921,8 +890,6 @@ class Service implements Crud,
      */
     protected function getEntityEvenDeleted(string $id): ?Entity
     {
-        assert($this->entityType !== null);
-
         $query = $this->entityManager
             ->getQueryBuilder()
             ->select()
@@ -985,8 +952,6 @@ class Service implements Crud,
      */
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No access.");
         }
@@ -1012,8 +977,6 @@ class Service implements Crud,
         if (method_exists($this, $methodName)) {
             return $this->$methodName($id, $searchParams);
         }
-
-        assert($this->entityType !== null);
 
         $foreignEntityType = $this->entityManager
             ->getDefs()
@@ -1078,8 +1041,6 @@ class Service implements Crud,
             $recordService->prepareEntityForOutput($itemEntity);
         }
 
-        assert($this->entityType !== null);
-
         if (!$disableCount) {
             $total = $this->entityManager
                 ->getRDBRepository($this->entityType)
@@ -1114,8 +1075,6 @@ class Service implements Crud,
      */
     public function link(string $id, string $link, string $foreignId): void
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType)) {
             throw new Forbidden();
         }
@@ -1190,8 +1149,6 @@ class Service implements Crud,
      */
     public function unlink(string $id, string $link, string $foreignId): void
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType)) {
             throw new Forbidden();
         }
@@ -1258,8 +1215,6 @@ class Service implements Crud,
 
     public function linkFollowers(string $id, string $foreignId): void
     {
-        assert(is_string($this->entityType));
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
@@ -1314,8 +1269,6 @@ class Service implements Crud,
 
     public function unlinkFollowers(string $id, string $foreignId): void
     {
-        assert(is_string($this->entityType));
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
@@ -1366,8 +1319,6 @@ class Service implements Crud,
 
     public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
@@ -1456,8 +1407,6 @@ class Service implements Crud,
 
     protected function processForbiddenLinkReadCheck(string $link): void
     {
-        assert($this->entityType !== null);
-
         $forbiddenLinkList = $this->acl
             ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_READ);
 
@@ -1480,8 +1429,6 @@ class Service implements Crud,
 
     protected function processForbiddenLinkEditCheck(string $link): void
     {
-        assert($this->entityType !== null);
-
         $forbiddenLinkList = $this->acl
             ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
 
@@ -1517,8 +1464,6 @@ class Service implements Crud,
      */
     public function follow(string $id, ?string $userId = null): void
     {
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_STREAM)) {
             throw new Forbidden();
         }
@@ -1680,8 +1625,6 @@ class Service implements Crud,
             throw new BadRequest("No ID.");
         }
 
-        assert($this->entityType !== null);
-
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new Forbidden("No 'create' access.");
         }
@@ -1755,8 +1698,6 @@ class Service implements Crud,
      */
     protected function getFieldByTypeList($type)
     {
-        assert($this->entityType !== null);
-
         return $this->fieldUtil->getFieldByTypeList($this->entityType, $type);
     }
 

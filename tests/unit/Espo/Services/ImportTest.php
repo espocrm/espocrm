@@ -34,10 +34,8 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Acl;
-use Espo\Core\Select\SelectBuilderFactory;
 
 use Espo\Services\Import;
-
 
 class ImportTest extends \PHPUnit\Framework\TestCase
 {
@@ -57,9 +55,7 @@ class ImportTest extends \PHPUnit\Framework\TestCase
 
         $this->objects['acl'] = $this->getMockBuilder(Acl::class)->disableOriginalConstructor()->getMock();
 
-        $this->selectBuilderFactory = $this->getMockBuilder(SelectBuilderFactory::class)->disableOriginalConstructor()->getMock();
-
-        $this->importService = new Import($this->selectBuilderFactory);
+        $this->importService = new Import('Import');
 
         $this->importService->inject('serviceFactory', $this->objects['serviceFactory']);
         $this->importService->inject('config', $this->objects['config']);

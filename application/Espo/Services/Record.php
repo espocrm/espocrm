@@ -79,11 +79,12 @@ class Record extends RecordService implements
     /** for backward compatibility, to be removed */
     protected $dependencyList = []; /** @phpstan-ignore-line */
 
-    public function __construct()
+    public function __construct(string $entityType = '')
     {
-        parent::__construct();
+        parent::__construct($entityType);
 
         if (!$this->entityType) {
+            // Detecting the entity type by the class-name.
             $name = get_class($this);
 
             $matches = null;
@@ -92,9 +93,7 @@ class Record extends RecordService implements
                 $name = $matches[1];
             }
 
-            if ($name !== 'Record') {
-                $this->entityType = Util::normilizeScopeName($name);
-            }
+            $this->entityType = Util::normilizeScopeName($name);
         }
 
         // to be removed
@@ -103,18 +102,15 @@ class Record extends RecordService implements
 
     /**
      * @deprecated For backward compatibility, to be removed.
+     * @return void
      */
-    protected function init() /** @phpstan-ignore-line */
-    {
-    }
+    protected function init() {}
 
     /**
      * @deprecated Use `$this->entityType`.
      */
     public function getEntityType(): string
     {
-        assert($this->entityType !== null);
-
         return $this->entityType;
     }
 
@@ -222,8 +218,6 @@ class Record extends RecordService implements
      */
     protected function getSelectManager($entityType = null)
     {
-        assert($this->entityType !== null);
-
         if (!$entityType) {
             $entityType = $this->entityType;
         }
@@ -267,8 +261,6 @@ class Record extends RecordService implements
      */
     public function exportCollection(array $params, Collection $collection): string
     {
-        assert($this->entityType !== null);
-
         if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }
@@ -342,8 +334,6 @@ class Record extends RecordService implements
      */
     protected function getConvertCurrencyFieldList()
     {
-        assert($this->entityType !== null);
-
         if (isset($this->convertCurrencyFieldList)) {
             return $this->convertCurrencyFieldList;
         }
@@ -351,8 +341,6 @@ class Record extends RecordService implements
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $list = [];
-
-        assert(is_string($this->entityType));
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             if (

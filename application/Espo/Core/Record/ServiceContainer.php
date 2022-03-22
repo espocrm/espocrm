@@ -89,7 +89,7 @@ class ServiceContainer
         }
 
         if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->create($entityType);
+            $service = $this->serviceFactory->createWith($entityType, ['entityType' => $entityType]);
 
             if (!$service instanceof Service) {
                 $this->loadDefault($entityType);
@@ -115,13 +115,13 @@ class ServiceContainer
             $default = $this->defaultTypeMap[$type] ?? $default;
         }
 
-        $obj = $this->serviceFactory->create($default);
+        $obj = $this->serviceFactory->createWith($default, ['entityType' => $entityType]);
 
         if (!$obj instanceof Service) {
             throw new RuntimeException("Service class {$default} is not instance of Record.");
         }
 
-        $obj->setEntityType($entityType);
+        //$obj->setEntityType($entityType);
 
         $this->data[$entityType] = $obj;
     }
