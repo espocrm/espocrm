@@ -68,6 +68,7 @@ class Result
             throw new RuntimeException("No IDs.");
         }
 
+        /** @var string[] */
         return $this->ids;
     }
 
@@ -77,6 +78,7 @@ class Result
             throw new RuntimeException("No count.");
         }
 
+        /** @var int */
         return $this->count;
     }
 

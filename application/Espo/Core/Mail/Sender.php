@@ -347,18 +347,22 @@ class Sender
     {
         $config = $this->config;
 
+        $groupAccount = null;
+
         if (!$config->get('smtpServer') && $config->get('outboundEmailFromAddress')) {
-            $inboundEmail = $this->getSystemInboundEmail();
+            $groupAccount = $this->getSystemInboundEmail();
+        }
 
-            if ($inboundEmail) {
-                $service = $this->getInboundEmailService();
+        if ($groupAccount) {
+            $service = $this->getInboundEmailService();
 
-                $params = $service->getSmtpParamsFromAccount($inboundEmail);
+            $params = $service->getSmtpParamsFromAccount($groupAccount);
 
+            if ($params) {
                 $this->applySmtp($params);
-
-                return;
             }
+
+            return;
         }
 
         $this->applySmtp([

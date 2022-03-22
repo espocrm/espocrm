@@ -55,7 +55,7 @@ class MassActionFactory
         $this->aclManager = $aclManager;
     }
 
-    public function create(string $action, string $entityType = null): MassAction
+    public function create(string $action, string $entityType): MassAction
     {
         $className = $this->getClassName($action, $entityType);
 

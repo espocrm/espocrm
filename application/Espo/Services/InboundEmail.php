@@ -161,6 +161,7 @@ class InboundEmail extends RecordService implements
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
     {
         $smtpParams = [];
+
         $smtpParams['server'] = $emailAccount->get('smtpHost');
 
         if ($smtpParams['server']) {

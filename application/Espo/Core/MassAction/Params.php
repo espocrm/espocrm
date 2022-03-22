@@ -186,7 +186,7 @@ class Params
 
     /**
      * @return array{
-     *   entityType: ?string,
+     *   entityType: string,
      *   ids: ?string[],
      *   searchParams: string,
      * }
@@ -202,7 +202,7 @@ class Params
 
     /**
      * @param array{
-     *   entityType: ?string,
+     *   entityType: string,
      *   ids: ?string[],
      *   searchParams: string,
      * } $data
