@@ -67,7 +67,6 @@ class KnowledgeBaseArticle extends Record implements
             throw new BadRequest();
         }
 
-        /** @var KnowledgeBaseArticleEntity|null $entity */
         $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -87,7 +86,8 @@ class KnowledgeBaseArticle extends Record implements
             $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
-                $attachment = $this->entityManager->getEntity('Attachment');
+                $attachment = $this->entityManager->getNewEntity('Attachment');
+
                 $attachment->set('role', 'Attachment');
                 $attachment->set('type', $source->get('type'));
                 $attachment->set('size', $source->get('size'));
@@ -129,6 +129,8 @@ class KnowledgeBaseArticle extends Record implements
      */
     public function moveUp(string $id, ?array $where = null): void
     {
+        assert($this->entityType !== null);
+
         $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -191,6 +193,8 @@ class KnowledgeBaseArticle extends Record implements
      */
     public function moveDown(string $id, ?array $where = null): void
     {
+        assert($this->entityType !== null);
+
         $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -253,6 +257,8 @@ class KnowledgeBaseArticle extends Record implements
      */
     public function moveToTop(string $id, ?array $where = null): void
     {
+        assert($this->entityType !== null);
+
         $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {
@@ -312,6 +318,8 @@ class KnowledgeBaseArticle extends Record implements
      */
     public function moveToBottom(string $id, ?array $where = null): void
     {
+        assert($this->entityType !== null);
+
         $entity = $this->entityManager->getEntity('KnowledgeBaseArticle', $id);
 
         if (!$entity) {

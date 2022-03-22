@@ -66,22 +66,22 @@ class Lead extends Record implements
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if (!empty($data->emailId)) {
-            $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
+            $email = $this->entityManager->getEntity('Email', $data->emailId);
 
-            if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
+            if ($email && !$email->get('parentId') && $this->acl->check($email)) {
                 $email->set([
                     'parentType' => 'Lead',
                     'parentId' => $entity->getId(),
                 ]);
 
-                $this->getEntityManager()->saveEntity($email);
+                $this->entityManager->saveEntity($email);
             }
         }
         if ($entity->get('campaignId')) {
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $entity->get('campaignId'));
+            $campaign = $this->entityManager->getEntity('Campaign', $entity->get('campaignId'));
 
             if ($campaign) {
-                $log = $this->getEntityManager()->getEntity('CampaignLogRecord');
+                $log = $this->entityManager->getNewEntity('CampaignLogRecord');
 
                 $log->set([
                     'action' => 'Lead Created',
@@ -91,7 +91,7 @@ class Lead extends Record implements
                     'campaignId' => $campaign->getId(),
                 ]);
 
-                $this->getEntityManager()->saveEntity($log);
+                $this->entityManager->saveEntity($log);
             }
         }
     }
@@ -105,7 +105,7 @@ class Lead extends Record implements
         /** @var LeadEntity */
         $lead = $this->getEntity($id);
 
-        if (!$this->getAcl()->check($lead, 'read')) {
+        if (!$this->acl->check($lead, 'read')) {
             throw new Forbidden();
         }
 
@@ -120,7 +120,7 @@ class Lead extends Record implements
         $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
 
         foreach ($entityList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'edit')) {
+            if (!$this->acl->checkScope($entityType, 'edit')) {
                 continue;
             }
 
@@ -217,7 +217,7 @@ class Lead extends Record implements
 
                     $leadAttribute = $leadAttributeList[$i] ?? null;
 
-                    if (!$lead->has($leadAttribute)) {
+                    if (!$leadAttribute || !$lead->has($leadAttribute)) {
                         continue;
                     }
 
@@ -241,19 +241,20 @@ class Lead extends Record implements
 
         $additionalData = $additionalData ?? (object) [];
 
-        if (!$this->getAcl()->check($lead, 'edit')) {
+        if (!$this->acl->check($lead, 'edit')) {
             throw new Forbidden();
         }
 
         $duplicateList = [];
         $duplicateCheck = !($additionalData->skipDuplicateCheck ?? false);
 
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->entityManager;
 
         $skipSave = false;
 
         if (!empty($recordsData->Account)) {
-            $account = $entityManager->getEntity('Account');
+            $account = $entityManager->getNewEntity('Account');
+
             $account->set(get_object_vars($recordsData->Account));
 
             if ($duplicateCheck) {
@@ -281,7 +282,8 @@ class Lead extends Record implements
         }
 
         if (!empty($recordsData->Contact)) {
-            $contact = $entityManager->getEntity('Contact');
+            $contact = $entityManager->getNewEntity('Contact');
+
             $contact->set(get_object_vars($recordsData->Contact));
 
             if (isset($account)) {
@@ -315,7 +317,8 @@ class Lead extends Record implements
         }
 
         if (!empty($recordsData->Opportunity)) {
-            $opportunity = $entityManager->getEntity('Opportunity');
+            $opportunity = $entityManager->getNewEntity('Opportunity');
+
             $opportunity->set(get_object_vars($recordsData->Opportunity));
 
             if (isset($account)) {

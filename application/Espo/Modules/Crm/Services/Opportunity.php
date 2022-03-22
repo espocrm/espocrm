@@ -321,6 +321,9 @@ class Opportunity extends Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
+        /** @var string $dateFrom */
+        /** @var string $dateTo */
+
         $queryBuilder = $this->selectBuilderFactory
             ->create()
             ->from(OpportunityEntity::ENTITY_TYPE)
@@ -645,7 +648,7 @@ class Opportunity extends Record
      */
     protected function getContactEmailAddressList(OpportunityEntity $entity): array
     {
-        $contactIdList = $entity->getLinkMultipleIdList('contacts');
+        $contactIdList = $entity->getLinkMultipleIdList('contacts') ?? [];
 
         if (!count($contactIdList)) {
             return [];

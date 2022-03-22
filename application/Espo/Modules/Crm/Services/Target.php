@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
 
@@ -42,16 +43,23 @@ class Target extends \Espo\Services\Record
     public function convert(string $id): Entity
     {
         $entityManager = $this->getEntityManager();
+
         $target = $this->getEntity($id);
+
+        if (!$target) {
+            throw new NotFound();
+        }
 
         if (!$this->getAcl()->check($target, 'delete')) {
             throw new Forbidden();
         }
+
         if (!$this->getAcl()->check('Lead', 'read')) {
             throw new Forbidden();
         }
 
-        $lead = $entityManager->getEntity('Lead');
+        $lead = $entityManager->getNewEntity('Lead');
+
         $lead->set($target->getValueMap());
 
         $entityManager->removeEntity($target);

@@ -358,7 +358,7 @@ class TargetList extends Record implements
             ->create();
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $itemEntity = $this->entityManager->getEntity($row['entityType']);
+            $itemEntity = $this->entityManager->getNewEntity($row['entityType']);
 
             $itemEntity->set($row);
             $itemEntity->setAsFetched();

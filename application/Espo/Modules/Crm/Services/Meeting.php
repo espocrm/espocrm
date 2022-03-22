@@ -209,11 +209,14 @@ class Meeting extends Record implements
      */
     public function massSetHeld(array $ids): bool
     {
+        assert($this->entityType !== null);
+
         foreach ($ids as $id) {
             $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
 
             if ($entity && $this->getAcl()->check($entity, 'edit')) {
                 $entity->set('status', 'Held');
+
                 $this->getEntityManager()->saveEntity($entity);
             }
         }
@@ -226,6 +229,8 @@ class Meeting extends Record implements
      */
     public function massSetNotHeld(array $ids): bool
     {
+        assert($this->entityType !== null);
+
         foreach ($ids as $id) {
             $entity = $this->getEntityManager()->getEntity($this->entityType, $id);
 

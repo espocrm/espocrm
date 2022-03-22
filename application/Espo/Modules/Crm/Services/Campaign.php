@@ -83,7 +83,7 @@ class Campaign extends Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -111,7 +111,7 @@ class Campaign extends Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -162,7 +162,7 @@ class Campaign extends Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -214,7 +214,7 @@ class Campaign extends Record implements
             $emailAddress = $target->get('emailAddress');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -257,7 +257,7 @@ class Campaign extends Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -305,7 +305,7 @@ class Campaign extends Record implements
             $massEmail = $this->entityManager->getEntity('MassEmail', $queueItem->get('massEmailId'));
 
             if ($massEmail && $massEmail->hasId()) {
-                $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+                $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
                 $logRecord->set([
                     'campaignId' => $campaignId,
@@ -357,7 +357,7 @@ class Campaign extends Record implements
             $actionDate = date('Y-m-d H:i:s');
         }
 
-        $logRecord = $this->entityManager->getEntity('CampaignLogRecord');
+        $logRecord = $this->entityManager->getNewEntity('CampaignLogRecord');
 
         $logRecord->set([
             'campaignId' => $campaignId,
@@ -419,7 +419,7 @@ class Campaign extends Record implements
         $campaign->loadLinkMultipleField('targetLists');
         $campaign->loadLinkMultipleField('excludingTargetLists');
 
-        if (count($campaign->getLinkMultipleIdList('targetLists')) === 0) {
+        if (count($campaign->getLinkMultipleIdList('targetLists') ?? []) === 0) {
             throw new Error("Could not mail merge campaign w/o any specified target list.");
         }
 

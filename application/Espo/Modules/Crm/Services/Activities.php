@@ -187,7 +187,7 @@ class Activities implements
      */
     protected function getActivitiesUserCallQuery(UserEntity $entity, array $statusList = []): Select
     {
-        $seed = $this->entityManager->getEntity('Call');
+        $seed = $this->entityManager->getNewEntity('Call');
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -325,7 +325,7 @@ class Activities implements
             return $this->$methodName($entity, $statusList);
         }
 
-        $seed = $this->entityManager->getEntity($targetEntityType);
+        $seed = $this->entityManager->getNewEntity($targetEntityType);
 
         $baseBuilder = $this->selectBuilderFactory
             ->create()
@@ -1070,7 +1070,7 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->entityManager->getEntity('Meeting');
+        $seed = $this->entityManager->getNewEntity('Meeting');
 
         $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
@@ -1131,7 +1131,7 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->entityManager->getEntity('Call');
+        $seed = $this->entityManager->getNewEntity('Call');
 
         $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
@@ -1192,7 +1192,7 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->entityManager->getEntity('Task');
+        $seed = $this->entityManager->getNewEntity('Task');
 
         $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
@@ -1263,7 +1263,7 @@ class Activities implements
             $builder->withStrictAccessControl();
         }
 
-        $seed = $this->entityManager->getEntity($scope);
+        $seed = $this->entityManager->getNewEntity($scope);
 
         $select = [
             ['"' . $scope . '"', 'scope'],
@@ -1406,7 +1406,7 @@ class Activities implements
      */
     protected function getActivitiesBaseQuery(Entity $entity, string $scope, array $statusList = []): Select
     {
-        $seed = $this->entityManager->getEntity($scope);
+        $seed = $this->entityManager->getNewEntity($scope);
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1642,7 +1642,7 @@ class Activities implements
         }
 
         if ($this->acl->get('userPermission') === 'team') {
-            $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
+            $userTeamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
@@ -2022,6 +2022,10 @@ class Activities implements
 
         $user = $this->entityManager->getEntity('User', $userId);
 
+        if (!$user) {
+            throw new NotFound();
+        }
+
         $this->accessCheck($user);
 
         if (!$entityTypeList) {
@@ -2107,6 +2111,12 @@ class Activities implements
 
         foreach ($rows as $row) {
             $entity = $this->entityManager->getEntity($row['entityType'], $row['id']);
+
+            if (!$entity) {
+                $entity = $this->entityManager->getNewEntity($row['entityType']);
+
+                $entity->set('id', $row['id']);
+            }
 
             $entityData = $entity->getValueMap();
             $entityData->_scope = $entity->getEntityType();

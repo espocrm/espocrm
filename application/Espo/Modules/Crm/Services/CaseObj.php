@@ -201,7 +201,7 @@ class CaseObj extends Record
      */
     protected function getContactEmailAddressList(CaseEntity $entity): array
     {
-        $contactIdList = $entity->getLinkMultipleIdList('contacts');
+        $contactIdList = $entity->getLinkMultipleIdList('contacts') ?? [];
 
         if (!count($contactIdList)) {
             return [];
