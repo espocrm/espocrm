@@ -242,6 +242,9 @@ class Service implements Crud,
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
+    /**
+     * @todo Pass entity type through constructor. Make non-nullable.
+     */
     public function __construct() {}
 
     public function setEntityType(string $entityType): void
