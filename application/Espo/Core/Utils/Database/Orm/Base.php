@@ -32,6 +32,8 @@ namespace Espo\Core\Utils\Database\Orm;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
+use RuntimeException;
+
 class Base
 {
     /**
@@ -109,16 +111,24 @@ class Base
      */
     protected function getFieldName()
     {
+        if ($this->itemName === null) {
+            throw new RuntimeException("No item-name.");
+        }
+
         return $this->itemName;
     }
 
     /**
-     * Get current Link name
+     * Get current Link name.
      *
      * @return string
      */
     protected function getLinkName()
     {
+        if ($this->itemName === null) {
+            throw new RuntimeException("No item-name.");
+        }
+
         return $this->itemName;
     }
 
@@ -140,6 +150,10 @@ class Base
      */
     protected function getEntityName()
     {
+        if ($this->entityName === null) {
+            throw new RuntimeException("No entity-name.");
+        }
+
         return $this->entityName;
     }
 

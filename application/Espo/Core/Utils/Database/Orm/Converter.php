@@ -130,7 +130,7 @@ class Converter
         'additionalTables',
     ];
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config = null)
+    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;

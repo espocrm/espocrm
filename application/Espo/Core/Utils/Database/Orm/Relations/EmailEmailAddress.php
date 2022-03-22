@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
+use RuntimeException;
+
 class EmailEmailAddress extends HasMany
 {
     /**
@@ -41,6 +43,10 @@ class EmailEmailAddress extends HasMany
         $parentRelation = parent::load($linkName, $entityName);
 
         $foreignEntityName = $this->getForeignEntityName();
+
+        if ($foreignEntityName === null) {
+            throw new RuntimeException("No foreign-entity-type.");
+        }
 
         $relation = array(
             $entityName => array(

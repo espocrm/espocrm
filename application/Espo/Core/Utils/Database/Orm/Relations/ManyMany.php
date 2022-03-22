@@ -31,6 +31,8 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 use Espo\Core\Utils\Util;
 
+use RuntimeException;
+
 class ManyMany extends Base
 {
     /**
@@ -42,6 +44,14 @@ class ManyMany extends Base
     {
         $foreignEntityName = $this->getForeignEntityName();
         $foreignLinkName = $this->getForeignLinkName();
+
+        if ($foreignEntityName === null) {
+            throw new RuntimeException("No foreign-entity-type.");
+        }
+
+        if ($foreignLinkName === null) {
+            throw new RuntimeException("No foreign-link-name.");
+        }
 
         $linkParams = $this->getLinkParams();
 

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Database\Orm\Relations;
 
+use RuntimeException;
+
 class HasOne extends Base
 {
     /**
@@ -40,7 +42,11 @@ class HasOne extends Base
     {
         $linkParams = $this->getLinkParams();
         $foreignLinkName = $this->getForeignLinkName();
-        $foreignentityType = $this->getForeignEntityName();
+        $foreignEntityType = $this->getForeignEntityName();
+
+        if ($foreignEntityType === null) {
+            throw new RuntimeException();
+        }
 
         $noForeignName = false;
 
@@ -54,7 +60,7 @@ class HasOne extends Base
                 $foreign = $linkParams['foreignName'];
             }
             else {
-                $foreign = $this->getForeignField('name', $foreignentityType);
+                $foreign = $this->getForeignField('name', $foreignEntityType);
             }
         }
 
@@ -77,7 +83,7 @@ class HasOne extends Base
                 'relations' => [
                     $linkName => [
                         'type' => 'hasOne',
-                        'entity' => $foreignentityType,
+                        'entity' => $foreignEntityType,
                         'foreignKey' => lcfirst($foreignLinkName.'Id'),
                         'foreign' => $foreignLinkName,
                     ],

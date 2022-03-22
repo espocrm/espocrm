@@ -48,7 +48,7 @@ class AddSystemUser extends Base
 
         $systemUserAttributes = $this->getConfig()->get('systemUserAttributes');
 
-        $user = $this->getEntityManager()->getEntity('User');
+        $user = $this->getEntityManager()->getNewEntity('User');
 
         $user->set($systemUserAttributes);
 

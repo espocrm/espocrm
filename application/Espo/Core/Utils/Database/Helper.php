@@ -133,7 +133,7 @@ class Helper
 
         $driver = $this->createDbalDriver($params);
 
-        $version = $this->getFullDatabaseVersion();
+        $version = $this->getFullDatabaseVersion() ?? '';
 
         $platform = $driver->createDatabasePlatformForVersion($version);
 
@@ -293,7 +293,7 @@ class Helper
         switch ($tableEngine) {
             case 'InnoDB':
                 $databaseType = $this->getDatabaseType();
-                $version = $this->getDatabaseVersion();
+                $version = $this->getDatabaseVersion() ?? '';
 
                 switch ($databaseType) {
                     case 'MariaDB':
@@ -335,7 +335,7 @@ class Helper
      */
     public function getDatabaseType($default = 'MySQL')
     {
-        $version = $this->getFullDatabaseVersion();
+        $version = $this->getFullDatabaseVersion() ?? '';
 
         if (preg_match('/mariadb/i', $version)) {
             return 'MariaDB';
@@ -376,7 +376,7 @@ class Helper
      */
     public function getDatabaseVersion()
     {
-        $fullVersion = $this->getFullDatabaseVersion();
+        $fullVersion = $this->getFullDatabaseVersion() ?? '';
 
         if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $fullVersion, $match)) {
             return $match[0];
@@ -434,7 +434,7 @@ class Helper
 
         switch ($tableEngine) {
             case 'InnoDB':
-                $version = $this->getFullDatabaseVersion();
+                $version = $this->getFullDatabaseVersion() ?? '';
 
                 if (version_compare($version, '5.6.4') >= 0) {
                     return true; //InnoDB, MySQL 5.6.4+

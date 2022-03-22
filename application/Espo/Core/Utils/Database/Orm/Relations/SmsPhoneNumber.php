@@ -31,6 +31,8 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 use Espo\Core\Utils\Util;
 
+use RuntimeException;
+
 class SmsPhoneNumber extends HasMany
 {
     /**
@@ -43,6 +45,10 @@ class SmsPhoneNumber extends HasMany
         $parentRelation = parent::load($linkName, $entityName);
 
         $foreignEntityName = $this->getForeignEntityName();
+
+        if ($foreignEntityName === null) {
+            throw new RuntimeException();
+        }
 
         $relation = [
             $entityName => [

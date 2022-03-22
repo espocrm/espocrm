@@ -147,6 +147,7 @@ class Schema
         $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
 
         foreach ($typeList as $name) {
+            /** @var string */
             $typeName = preg_replace('/Type\.php$/i', '', $name);
             $dbalTypeName = strtolower($typeName);
 
@@ -313,13 +314,15 @@ class Schema
     /**
      * Execute actions for RebuildAction classes.
      *
-     * @param string $action An action name, 'beforeRebuild' or 'afterRebuild'.
+     * @param 'beforeRebuild'|'afterRebuild' $action An action name, 'beforeRebuild' or 'afterRebuild'.
      */
     protected function executeRebuildActions(string $action = 'beforeRebuild'): void
     {
         if (!isset($this->rebuildActions)) {
             $this->initRebuildActions();
         }
+
+        assert($this->rebuildActions !== null);
 
         foreach ($this->rebuildActions[$action] as $rebuildActionClass) {
             $rebuildActionClass->$action();

@@ -33,6 +33,7 @@ use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Database\Schema\BaseRebuildActions;
 
 use Exception;
+use RuntimeException;
 
 class FulltextIndex extends BaseRebuildActions
 {
@@ -42,6 +43,10 @@ class FulltextIndex extends BaseRebuildActions
     public function beforeRebuild()
     {
         $currentSchema = $this->getCurrentSchema();
+
+        if (!$currentSchema) {
+            throw new RuntimeException();
+        }
 
         $tables = $currentSchema->getTables();
 
@@ -54,6 +59,10 @@ class FulltextIndex extends BaseRebuildActions
         $connection = $databaseHelper->getDbalConnection();
 
         $metadataSchema = $this->getMetadataSchema();
+
+        if (!$metadataSchema) {
+            throw new RuntimeException();
+        }
 
         $tables = $metadataSchema->getTables();
 
