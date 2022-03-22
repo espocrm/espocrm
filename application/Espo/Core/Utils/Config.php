@@ -221,6 +221,8 @@ class Config
      */
     public function remove(string $name): bool
     {
+        assert($this->data !== null);
+
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
 
@@ -247,7 +249,7 @@ class Config
         $values = $this->changedData;
 
         if (!isset($values[$this->cacheTimestamp])) {
-            $values = array_merge($this->updateCacheTimestamp(true), $values);
+            $values = array_merge($this->updateCacheTimestamp(true) ?? [], $values);
         }
 
         $removeData = empty($this->removeData) ? null : $this->removeData;
@@ -305,6 +307,8 @@ class Config
         if (!$this->isLoaded()) {
             $this->load();
         }
+
+        assert($this->data !== null);
 
         return $this->data;
     }

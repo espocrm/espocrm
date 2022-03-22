@@ -261,6 +261,8 @@ class NamespaceLoader
             }
         }
 
+        assert($this->vendorNamespaces !== null);
+
         if (!array_key_exists($path, $this->vendorNamespaces)) {
             $vendorPath = $this->findVendorPath($path);
 

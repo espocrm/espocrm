@@ -86,6 +86,8 @@ class Autoload
             $this->init();
         }
 
+        assert($this->data !== null);
+
         return $this->data;
     }
 
