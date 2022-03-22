@@ -58,7 +58,7 @@ class Language
      */
     private $changedData = [];
 
-    private ?string $currentLanguage = null;
+    private string $currentLanguage;
 
     protected string $defaultLanguage = 'en_US';
 

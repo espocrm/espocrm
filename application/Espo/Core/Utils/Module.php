@@ -101,6 +101,8 @@ class Module
             $this->init();
         }
 
+        assert($this->data !== null);
+
         if ($key === null) {
             return $this->data;
         }
@@ -110,7 +112,11 @@ class Module
 
     private function init(): void
     {
-        if ($this->useCache && $this->dataCache->has($this->cacheKey)) {
+        if (
+            $this->useCache &&
+            $this->dataCache &&
+            $this->dataCache->has($this->cacheKey)
+        ) {
             /** @var array<string,array<string,mixed>> */
             $data = $this->dataCache->get($this->cacheKey);
 
@@ -121,7 +127,7 @@ class Module
 
         $this->data = $this->loadData();
 
-        if ($this->useCache) {
+        if ($this->useCache && $this->dataCache) {
             $this->dataCache->store($this->cacheKey, $this->data);
         }
     }

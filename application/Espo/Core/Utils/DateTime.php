@@ -46,13 +46,13 @@ class DateTime
 
     public const SYSTEM_DATE_FORMAT = 'Y-m-d';
 
-    private ?string $dateFormat;
+    private string $dateFormat;
 
-    private ?string $timeFormat;
+    private string $timeFormat;
 
     private DateTimeZone $timezone;
 
-    private ?string $language;
+    private string $language;
 
     public function __construct(
         ?string $dateFormat = 'YYYY-MM-DD',
@@ -94,7 +94,7 @@ class DateTime
         string $string,
         ?string $format = null,
         ?string $language = null
-    ): ?string {
+    ): string {
 
         $dateTime = DateTimeStd::createFromFormat('Y-m-d', $string);
 

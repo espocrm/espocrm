@@ -978,6 +978,7 @@ class Manager
      */
     public function getDirName(string $path, bool $isFullPath = true, bool $useIsDir = true): string
     {
+        /** @var string */
         $dirName = preg_replace('/\/$/i', '', $path);
 
         $dirName = ($useIsDir && is_dir($dirName)) ?
@@ -1159,6 +1160,7 @@ class Manager
             $basePath .= $dirSeparator;
         }
 
+        /** @var string */
         return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
     }
 

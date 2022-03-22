@@ -145,6 +145,8 @@ class Metadata
             $this->init();
         }
 
+        assert($this->data !== null);
+
         return $this->data;
     }
 
@@ -174,6 +176,8 @@ class Metadata
         if ($reload) {
             $this->init($reload);
         }
+
+        assert($this->data !== null);
 
         if ($isJSON) {
             return Json::encode($this->data);
@@ -211,6 +215,8 @@ class Metadata
         if (!isset($this->objData) || $reload) {
             $this->objInit($reload);
         }
+
+        assert($this->objData !== null);
 
         return $this->objData;
     }

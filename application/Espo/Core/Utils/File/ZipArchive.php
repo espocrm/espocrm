@@ -33,11 +33,11 @@ use Espo\Core\Exceptions\Error;
 
 class ZipArchive
 {
-    private $fileManager;
+    private Manager $fileManager;
 
-    public function __construct(Manager $fileManager = null)
+    public function __construct(?Manager $fileManager = null)
     {
-        if (!isset($fileManager)) {
+        if ($fileManager === null) {
             $fileManager = new Manager();
         }
 
