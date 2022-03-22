@@ -78,7 +78,7 @@ class SearchParamsFetcher
     private function fetchRawJsonSearchParams(Request $request): array
     {
         try {
-            return Json::decode($request->getQueryParam('searchParams'), true);
+            return Json::decode($request->getQueryParam('searchParams') ?? '', true);
         }
         catch (JsonException $e) {
             throw new BadRequest("Invalid search params JSON.");
