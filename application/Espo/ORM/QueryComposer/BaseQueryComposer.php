@@ -386,12 +386,11 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     protected function createInsertQuery(?array $params): string
     {
-        $params = $this->normilizeInsertParams($params);
+        $params = $this->normilizeInsertParams($params ?? []);
 
         $entityType = $params['into'];
 
         $columns = $params['columns'];
-        $values = $params['values'];
         $updateSet = $params['updateSet'];
 
         $columnsPart = $this->getInsertColumnsPart($columns);
@@ -2372,7 +2371,11 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         if (!array_key_exists($string, $this->attributeDbMapCache)) {
             $string[0] = strtolower($string[0]);
-            $this->attributeDbMapCache[$string] = preg_replace_callback('/([A-Z])/', [$this, 'toDbMatchConversion'], $string);
+
+            /** @var string */
+            $dbString = preg_replace_callback('/([A-Z])/', [$this, 'toDbMatchConversion'], $string);
+
+            $this->attributeDbMapCache[$string] = $dbString;
         }
 
         return $this->attributeDbMapCache[$string];

@@ -273,7 +273,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @deprecated
-     * @return string
+     * @return ?string
      */
     public function getEntityName()
     {

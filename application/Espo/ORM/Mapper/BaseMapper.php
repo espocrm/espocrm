@@ -1368,6 +1368,8 @@ class BaseMapper implements RDBMapper
             $values[] = $this->getInsertValueMap($entity);
         }
 
+        /** @var Entity $firstEntity */
+
         $sql = $this->queryComposer->compose(
             Insert::fromRaw([
                 'into' => $entityType,
@@ -1482,7 +1484,7 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param string $type
+     * @param ?string $type
      * @param mixed $value
      * @return mixed
      */

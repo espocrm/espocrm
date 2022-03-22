@@ -75,6 +75,7 @@ class DefsData
             throw new RuntimeException("Entity type '{$name}' does not exist.");
         }
 
+        /** @var EntityDefs */
         return $this->cache[$name];
     }
 
