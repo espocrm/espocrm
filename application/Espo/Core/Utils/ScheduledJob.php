@@ -136,7 +136,8 @@ class ScheduledJob
         $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
 
         foreach ($data as $name => $value) {
-            $command = str_replace('{'.$name.'}', $value, $command);
+            /** @var string */
+            $command = str_replace('{' . $name . '}', $value ?? '', $command);
         }
 
         return [

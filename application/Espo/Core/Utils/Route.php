@@ -48,6 +48,7 @@ class Route
      *     route:string,
      *     method:string,
      *     noAuth?:bool,
+     *     params?:array<string,mixed>,
      *   }
      * >
      */
@@ -92,6 +93,8 @@ class Route
             $this->init();
         }
 
+        assert($this->data !== null);
+
         return array_map(
             function (array $item): RouteItem {
                 return new RouteItem(
@@ -117,6 +120,7 @@ class Route
              *     route:string,
              *     method:string,
              *     noAuth?:bool,
+             *     params?:array<string,mixed>,
              *   }
              * >
              */
@@ -141,6 +145,7 @@ class Route
      *     route:string,
      *     method:string,
      *     noAuth?:bool,
+     *     params?:array<string,mixed>,
      *   }
      * >
      */
@@ -175,6 +180,7 @@ class Route
      *     route:string,
      *     method:string,
      *     noAuth?:bool,
+     *     params?:array<string,mixed>,
      *   }
      * > $currentData
      * @return array<
@@ -183,6 +189,7 @@ class Route
      *     route:string,
      *     method:string,
      *     noAuth?:bool,
+     *     params?:array<string,mixed>,
      *   }
      * >
      */
@@ -256,6 +263,7 @@ class Route
     private function adjustPath(string $path): string
     {
         // to fast route format
+        /** @var string */
         $pathFormatteted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
 
         if (substr($pathFormatteted, 0, 1) !== '/') {

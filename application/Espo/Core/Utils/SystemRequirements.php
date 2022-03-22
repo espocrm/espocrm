@@ -310,7 +310,9 @@ class SystemRequirements
             case 'requiredMysqlVersion':
             case 'requiredMariadbVersion':
                 /** @var string $data */
+                /** @var PDO $pdo */
                 $actualVersion = $databaseHelper->getPdoDatabaseVersion($pdo);
+
                 $requiredVersion = $data;
 
                 $acceptable = true;
@@ -331,6 +333,9 @@ class SystemRequirements
                 /** @var string[] $data */
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
+
+                    /** @var PDO $pdo */
+
                     $actualValue = $databaseHelper->getPdoDatabaseParam($name, $pdo);
 
                     $acceptable = false;

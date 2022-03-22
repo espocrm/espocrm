@@ -43,6 +43,8 @@ use Espo\Entities\{
     Webhook,
 };
 
+use RuntimeException;
+
 /**
  * Processes events. Holds an information about existing events.
  */
@@ -106,6 +108,10 @@ class Manager
 
     private function storeDataToCache(): void
     {
+        if ($this->data === null) {
+            throw new RuntimeException("No data to store.");
+        }
+
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 

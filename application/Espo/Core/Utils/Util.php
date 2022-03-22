@@ -71,6 +71,7 @@ class Util
      */
     public static function toFormat($name, $delimiter = '/')
     {
+        /** @var string */
         return preg_replace("/[\/\\\]/", $delimiter, $name);
     }
 
@@ -99,6 +100,7 @@ class Util
             $input = ucfirst($input);
         }
 
+        /** @var string */
         return preg_replace_callback(
             '/' . $symbol . '([a-zA-Z])/',
             /**
@@ -129,6 +131,7 @@ class Util
 
         $input[0] = strtolower($input[0]);
 
+        /** @var string */
         return preg_replace_callback(
             '/([A-Z])/',
             function ($matches) use ($symbol) {
@@ -491,7 +494,9 @@ class Util
      */
     public static function getClassName(string $filePath): string
     {
+        /** @var string */
         $className = preg_replace('/\.php$/i', '', $filePath);
+        /** @var string */
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
         $className = static::toFormat($className, '\\');
 
@@ -636,6 +641,7 @@ class Util
 
     public static function sanitizeFileName(string $fileName): string
     {
+        /** @var string */
         return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
 
@@ -839,6 +845,7 @@ class Util
         $sanitized = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
 
         foreach ($permittedHtmlTags as $htmlTag) {
+            /** @var string */
             $sanitized = preg_replace('/&lt;(\/)?(' . $htmlTag . ')&gt;/i', '<$1$2>', $sanitized);
         }
 
@@ -858,7 +865,9 @@ class Util
             ];
 
             $url = trim($url);
+            /** @var string */
             $url = preg_replace('/\/\?$/', '', $url);
+            /** @var string */
             $url = preg_replace('/\/$/', '', $url);
 
             return $url . '/?' . http_build_query($params);
@@ -888,8 +897,11 @@ class Util
                 $newUrl = str_replace($urlQuery, http_build_query($params), $url);
 
                 if (empty($params)) {
+                    /** @var string */
                     $newUrl = preg_replace('/\/\?$/', '', $newUrl);
+                    /** @var string */
                     $newUrl = preg_replace('/\/$/', '', $newUrl);
+
                     $newUrl .= $suffix;
                 }
 

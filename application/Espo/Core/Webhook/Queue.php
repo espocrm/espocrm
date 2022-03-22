@@ -198,12 +198,14 @@ class Queue
             ->limit(0, $batchSize)
             ->find();
 
-        $webhook = $this->entityManager->getEntity(Webhook::ENTITY_TYPE, $webhookId);
+        $webhook = $this->entityManager->getEntityById(Webhook::ENTITY_TYPE, $webhookId);
 
         if (!$webhook || !$webhook->get('isActive')) {
             foreach ($itemList as $item) {
                 $this->deleteQueueItem($item);
             }
+
+            return;
         }
 
         $forbiddenAttributeList = [];
