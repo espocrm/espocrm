@@ -195,7 +195,7 @@ interface Entity
     public function setAsNotNew(): void;
 
     /**
-     * Copy all current values to fetched values. All current attribute values will beset as those
+     * Copy all current values to fetched values. All current attribute values will be set as those
      * that are fetched from DB.
      */
     public function updateFetchedValues(): void;
