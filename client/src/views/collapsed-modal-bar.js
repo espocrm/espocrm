@@ -30,7 +30,7 @@ define('views/collapsed-modal-bar', 'view', function (Dep) {
 
     return Dep.extend({
 
-        maxNumberToDisplay: 2,
+        maxNumberToDisplay: 3,
 
         templateContent: `
             {{#each dataList}}
@@ -62,7 +62,7 @@ define('views/collapsed-modal-bar', 'view', function (Dep) {
         getDataList: function () {
             let list = [];
 
-            let numberList = this.numberList;
+            let numberList = Espo.Utils.clone(this.numberList);
 
             if (this.numberList.length > this.maxNumberToDisplay) {
                 numberList = numberList.slice(this.numberList.length - this.maxNumberToDisplay);
@@ -81,6 +81,34 @@ define('views/collapsed-modal-bar', 'view', function (Dep) {
             return list;
         },
 
+        calculateDuplicateNumber: function (title) {
+            let duplicateNumber = 0;
+
+            this.numberList.forEach(number => {
+                let view = this.getModalViewByNumber(number);
+
+                if (!view) {
+                    return;
+                }
+
+                if (view.title === title) {
+                    duplicateNumber++;
+                }
+            });
+
+            if (duplicateNumber === 0) {
+                return null;
+            }
+
+            return duplicateNumber;
+        },
+
+        getModalViewByNumber: function (number) {
+            let key = 'key-' + number;
+
+            return this.getView(key);
+        },
+
         addModalView: function (modalView, options) {
             let number = this.lastNumber;
 
@@ -90,6 +118,7 @@ define('views/collapsed-modal-bar', 'view', function (Dep) {
 
             this.createView(key, 'views/collapsed-modal', {
                 title: options.title,
+                duplicateNumber: this.calculateDuplicateNumber(options.title),
                 el: this.getSelector() + ' [data-number="' + number + '"]',
             })
             .then(view => {

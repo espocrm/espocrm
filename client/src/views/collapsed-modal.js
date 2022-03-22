@@ -49,13 +49,20 @@ define('views/collapsed-modal', 'view', function (Dep) {
         },
 
         data: function () {
+            let title = this.title;
+
+            if (this.duplicateNumber) {
+                title = this.title + ' ' + this.duplicateNumber;
+            }
+
             return {
-                title: this.title,
+                title: title,
             };
         },
 
         setup: function () {
             this.title = this.options.title || 'no-title';
+            this.duplicateNumber = this.options.duplicateNumber || null;
         },
 
         expand: function () {
