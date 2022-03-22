@@ -342,7 +342,7 @@ class Recovery
             return;
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");

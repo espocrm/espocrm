@@ -103,6 +103,7 @@ class DefaultOwnershipChecker implements
 
     public function checkAccount(User $user, Entity $entity): bool
     {
+        /** @var string[] */
         $accountIdList = $user->getLinkMultipleIdList(self::FIELD_ACCOUNTS);
 
         if (!count($accountIdList)) {

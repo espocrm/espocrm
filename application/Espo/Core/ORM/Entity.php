@@ -65,6 +65,10 @@ class Entity extends BaseEntity
         $parentId = $this->get($field . 'Id');
         $parentType = $this->get($field . 'Type');
 
+        if (!$this->entityManager) {
+            throw new LogicException("No entity-manager.");
+        }
+
         if ($parentId && $parentType) {
             if (!$this->entityManager->hasRepository($parentType)) {
                 return;
@@ -164,6 +168,10 @@ class Entity extends BaseEntity
             // throw new LogicException("There's no link-multiple field '{$field}'.");
         }
 
+        if (!$this->entityManager) {
+            throw new LogicException("No entity-manager.");
+        }
+
         $select = ['id', 'name'];
 
         $hasType = $this->hasAttribute($field . 'Types');
@@ -185,7 +193,7 @@ class Entity extends BaseEntity
 
         $orderParams = $this->getRelationOrderParams($field);
 
-        if ($orderParams) {
+        if ($orderParams && $orderParams['orderBy']) {
             $selectBuilder->order($orderParams['orderBy'], $orderParams['order']);
         }
 
@@ -243,6 +251,10 @@ class Entity extends BaseEntity
 
         if ($this->getRelationType($field) !== 'hasOne' && $this->getRelationType($field) !== 'belongsTo') {
             throw new LogicException("Can't load link '{$field}'.");
+        }
+
+        if (!$this->entityManager) {
+            throw new LogicException("No entity-manager.");
         }
 
         $select = ['id', 'name'];
@@ -402,11 +414,14 @@ class Entity extends BaseEntity
     public function removeLinkMultipleId(string $field, string $id): void
     {
         if ($this->hasLinkMultipleId($field, $id)) {
+            /** @var string[] */
             $list = $this->getLinkMultipleIdList($field);
 
             $index = array_search($id, $list);
+
             if ($index !== false) {
                 unset($list[$index]);
+
                 $list = array_values($list);
             }
 

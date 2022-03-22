@@ -82,7 +82,7 @@ class OwnershipCheckerFactory
         $className = $this->metadata->get(['aclDefs', $scope, 'portalOwnershipCheckerClassName']);
 
         if ($className) {
-            /** @var ?class-string<OwnershipChecker> */
+            /** @var class-string<OwnershipChecker> */
             return $className;
         }
 

@@ -97,8 +97,12 @@ class EntityFactory implements EntityFactoryInterface
     {
         $className = $this->getClassName($entityType);
 
-        if (!class_exists($className)) {
+        if (!$className) {
             $className = BaseEntity::class;
+        }
+
+        if (!$this->entityManager) {
+            throw new Error();
         }
 
         $defs = $this->entityManager->getMetadata()->get($entityType);
@@ -117,6 +121,10 @@ class EntityFactory implements EntityFactoryInterface
      */
     private function getBindingContainer(string $className, string $entityType, array $defs): BindingContainer
     {
+        if (!$this->entityManager || !$this->valueAccessorFactory) {
+            throw new Error();
+        }
+
         $data = new BindingData();
 
         $binder = new Binder($data);
