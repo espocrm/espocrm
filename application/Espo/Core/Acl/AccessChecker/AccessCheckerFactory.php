@@ -100,7 +100,7 @@ class AccessCheckerFactory
         $className2 = $this->classFinder->find('Acl', $scope);
 
         if ($className2) {
-            /** @var ?class-string<AccessChecker> */
+            /** @var class-string<AccessChecker> */
             return $className2;
         }
 

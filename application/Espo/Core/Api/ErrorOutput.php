@@ -170,7 +170,7 @@ class ErrorOutput
         }
 
         if ($exception instanceof HasBody && $this->exceptionHasBody($exception)) {
-            $response->writeBody($exception->getBody());
+            $response->writeBody($exception->getBody() ?? '');
 
             $toPrintBody = false;
         }
@@ -212,6 +212,7 @@ class ErrorOutput
 
     private function clearPasswords(string $string): string
     {
+        /** @var string */
         return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $string);
     }
 
@@ -227,12 +228,13 @@ class ErrorOutput
     {
         $pattern = "/[^ \t\x21-\x7E\x80-\xFF]/";
 
+        /** @var string */
         return preg_replace($pattern, ' ', $value);
     }
 
     private function processRoute(string $route, Request $request, Throwable $exception): void
     {
-        $requestBodyString = $this->clearPasswords($request->getBodyContents());
+        $requestBodyString = $this->clearPasswords($request->getBodyContents() ?? '');
 
         $message = $exception->getMessage();
         $statusCode = $exception->getCode();

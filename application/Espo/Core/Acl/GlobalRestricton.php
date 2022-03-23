@@ -123,6 +123,8 @@ class GlobalRestricton
 
     protected function storeCacheFile(): void
     {
+        assert($this->data !== null);
+
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 
@@ -195,6 +197,8 @@ class GlobalRestricton
      */
     public function getScopeRestrictedFieldList(string $scope, string $type): array
     {
+        assert($this->data !== null);
+
         if (!property_exists($this->data, $scope)) {
             return [];
         }
@@ -215,6 +219,8 @@ class GlobalRestricton
      */
     public function getScopeRestrictedAttributeList(string $scope, string $type): array
     {
+        assert($this->data !== null);
+
         if (!property_exists($this->data, $scope)) {
             return [];
         }
@@ -235,6 +241,8 @@ class GlobalRestricton
      */
     public function getScopeRestrictedLinkList(string $scope, string $type): array
     {
+        assert($this->data !== null);
+
         if (!property_exists($this->data, $scope)) {
             return [];
         }

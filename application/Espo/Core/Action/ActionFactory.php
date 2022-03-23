@@ -56,7 +56,7 @@ class ActionFactory
             throw new NotFound("Action '{$action}' not found.");
         }
 
-        if ($this->isDisabled($action, $entityType)) {
+        if ($entityType && $this->isDisabled($action, $entityType)) {
             throw new Forbidden("Action '{$action}' is disabled for '{$entityType}'.");
         }
 
@@ -74,6 +74,10 @@ class ActionFactory
 
         if (!$className) {
             throw new NotFound("Action '{$action}' not found.");
+        }
+
+        if ($entityType && $this->isDisabled($action, $entityType)) {
+            throw new Forbidden("Action '{$action}' is disabled for '{$entityType}'.");
         }
 
         return $this->injectableFactory->createWith($className, $with);

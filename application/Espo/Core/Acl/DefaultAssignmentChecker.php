@@ -228,6 +228,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return true;
         }
 
+        /** @var string[] */
         $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         foreach ($newIdList as $id) {
@@ -330,6 +331,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function isPermittedAssignedUsersLevelNo(User $user, CoreEntity $entity): bool
     {
+        /** @var string[] */
         $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
 
         $fetchedAssignedUserIdList = $entity->getFetched(self::ATTR_ASSIGNED_USERS_IDS);
@@ -349,10 +351,12 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function isPermittedAssignedUsersLevelTeam(User $user, CoreEntity $entity): bool
     {
+        /** @var string[] */
         $userIdList = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
 
         $fetchedAssignedUserIdList = $entity->getFetched(self::ATTR_ASSIGNED_USERS_IDS);
 
+        /** @var string[] */
         $teamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         foreach ($userIdList as $userId) {

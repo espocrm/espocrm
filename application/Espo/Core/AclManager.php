@@ -599,13 +599,13 @@ class AclManager
         $permission = $this->get($user, $permissionType);
 
         if (is_object($target)) {
-            $userId = $target->id;
+            $userId = $target->getId();
         }
         else {
             $userId = $target;
         }
 
-        if ($user->id === $userId) {
+        if ($user->getId() === $userId) {
             return true;
         }
 
@@ -618,6 +618,7 @@ class AclManager
         }
 
         if ($permission === Table::LEVEL_TEAM) {
+            /** @var string[] */
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             /** @var \Espo\Repositories\User $userRepository */

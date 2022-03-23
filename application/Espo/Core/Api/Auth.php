@@ -274,7 +274,7 @@ class Auth
     {
         if ($request->hasHeader('Espo-Authorization')) {
             list($username, $password) = $this->decodeAuthorizationString(
-                $request->getHeader('Espo-Authorization')
+                $request->getHeader('Espo-Authorization') ?? ''
             );
 
             return [$username, $password];

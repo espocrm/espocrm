@@ -187,6 +187,8 @@ class RequestWrapper implements ApiRequest
             $this->initParsedBody();
         }
 
+        assert($this->parsedBody !== null);
+
         return Util::cloneObject($this->parsedBody);
     }
 
