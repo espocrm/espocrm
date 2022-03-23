@@ -176,7 +176,7 @@ class Htmlizer
         $data['__language'] = $this->language;
         $data['__serviceFactory'] = $this->serviceFactory;
         $data['__log'] = $this->log;
-        $data['__entityType'] = $entity->getEntityType();
+        $data['__entityType'] = $entity ? $entity->getEntityType() : null;
 
         /** @phpstan-ignore-next-line */
         $html = $renderer($data);
@@ -190,7 +190,13 @@ class Htmlizer
                 function ($matches) {
                     $id = $matches[1];
 
-                    $attachment = $this->entityManager->getEntity('Attachment', $id);
+                    if (!$id) {
+                        return '';
+                    }
+
+                    assert($this->entityManager !== null);
+
+                    $attachment = $this->entityManager->getEntityById('Attachment', $id);
 
                     if (!$attachment) {
                         return '';
@@ -455,7 +461,7 @@ class Htmlizer
             }
         }
 
-        if (!$skipLinks) {
+        if (!$skipLinks && $this->entityManager) {
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {
                     continue;
@@ -790,6 +796,10 @@ class Htmlizer
      */
     private function getRelationOrder(string $entityType, string $relation): array
     {
+        if (!$this->entityManager) {
+            return [];
+        }
+
         $relationDefs = $this->entityManager
             ->getDefs()
             ->getEntity($entityType)
