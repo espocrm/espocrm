@@ -61,7 +61,7 @@
     "moment-timezone": "^0.5.33",
     "moment-timezone-data-build": "git://github.com/yurikuzn/moment-timezone-data-build.git#0.1.0",
     "qrcodejs": "^1.0.0",
-    "selectize": "git://github.com/selectize/selectize.js.git#v0.13.3",
+    "selectize": "github:selectize/selectize.js#v0.13.3",
     "set-value": ">=4.0.1",
     "summernote": "^0.8.18",
     "timepicker": "^1.11.15",
@@ -70,7 +70,7 @@
   },
   "overrides": {
     "selectize": {
-      "minimist": "0.2.1"
+      "minimist": "1.2.6"
     }
   },
   "engines": {
