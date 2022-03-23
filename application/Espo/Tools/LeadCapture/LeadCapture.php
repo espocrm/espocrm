@@ -202,7 +202,7 @@ class LeadCapture
             'data' => (object) [
                 'leadCaptureId' => $leadCapture->getId(),
                 'data' => $data,
-                'leadId' => $lead->getId(),
+                'leadId' => $lead->hasId() ? $lead->getId() : null,
                 'isLogged' => $isLogged,
             ],
         ]);
@@ -770,7 +770,7 @@ class LeadCapture
         $logRecord = $this->entityManager->getNewEntity('LeadCaptureLogRecord');
 
         $logRecord->set([
-            'targetId' => $target->getId(),
+            'targetId' => $target->hasId() ? $target->getId() : null,
             'targetType' => $target->getEntityType(),
             'leadCaptureId' => $leadCapture->getId(),
             'isCreated' => $isNew,
