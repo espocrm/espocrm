@@ -188,6 +188,8 @@ class LDAP implements Login
                 'LDAP: Could not connect to LDAP server [' . $options['host'] . '], details: ' . $e->getMessage()
             );
 
+            /** @var string $username */
+
             $adminUser = $this->adminLogin($username, $password);
 
             if (!isset($adminUser)) {
@@ -200,6 +202,8 @@ class LDAP implements Login
         $userDn = null;
 
         if (!isset($adminUser)) {
+            /** @var string $username */
+
             try {
                 $userDn = $this->findLdapUserDnByUsername($username);
             }
@@ -254,6 +258,8 @@ class LDAP implements Login
                 return Result::fail(FailReason::USER_NOT_FOUND);
             }
 
+            /** @var string $userDn */
+
             $userData = $ldapClient->getEntry($userDn);
 
             $user = $this->createUser($userData, $isPortal);
@@ -279,6 +285,7 @@ class LDAP implements Login
             }
         }
 
+        /** @var Client */
         return $this->client;
     }
 
@@ -372,7 +379,7 @@ class LDAP implements Login
             $data[$fieldName] = $fieldValue;
         }
 
-        $user = $this->entityManager->getEntity('User');
+        $user = $this->entityManager->getNewEntity('User');
 
         $user->set($data);
 
@@ -418,6 +425,7 @@ class LDAP implements Login
             '(' . $options['userNameAttribute'] . '=' . $username . ')' .
             $loginFilterString . ')';
 
+        /** @var array<int,array{dn: string}> */
         $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');

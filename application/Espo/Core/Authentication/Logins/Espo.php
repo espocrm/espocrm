@@ -39,6 +39,8 @@ use Espo\Core\{
     Authentication\Result\FailReason,
 };
 
+use RuntimeException;
+
 class Espo implements Login
 {
     private $userFinder;
@@ -57,6 +59,10 @@ class Espo implements Login
         $password = $data->getPassword();
         $authToken = $data->getAuthToken();
 
+        if (!$username) {
+            return Result::fail(FailReason::NO_USERNAME);
+        }
+
         if (!$password) {
             return Result::fail(FailReason::NO_PASSWORD);
         }
@@ -64,6 +70,10 @@ class Espo implements Login
         $hash = $authToken ?
             $authToken->getHash() :
             $this->passwordHash->hash($password);
+
+        if (!$hash) {
+            throw new RuntimeException("No hash.");
+        }
 
         $user = $this->userFinder->find($username, $hash);
 

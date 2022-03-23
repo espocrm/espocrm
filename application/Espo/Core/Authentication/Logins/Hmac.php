@@ -54,9 +54,13 @@ class Hmac implements Login
 
     public function login(Data $data, Request $request): Result
     {
-        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+        $authString = base64_decode($request->getHeader('X-Hmac-Authorization') ?? '');
 
         list($apiKey, $hash) = explode(':', $authString, 2);
+
+        if (!$apiKey) {
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
+        }
 
         $user = $this->userFinder->findApiHmac($apiKey);
 

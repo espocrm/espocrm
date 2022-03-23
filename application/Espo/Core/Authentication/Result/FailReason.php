@@ -35,6 +35,8 @@ class FailReason
 
     public const CODE_NOT_VERIFIED = 'Code not verified';
 
+    public const NO_USERNAME = 'No username';
+
     public const NO_PASSWORD = 'No password';
 
     public const TOKEN_NOT_FOUND = 'Token not found';

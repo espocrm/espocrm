@@ -51,6 +51,10 @@ class ApiKey implements Login
     {
         $apiKey = $request->getHeader('X-Api-Key');
 
+        if (!$apiKey) {
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
+        }
+
         $user = $this->userFinder->findApiApiKey($apiKey);
 
         if (!$user) {

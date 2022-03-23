@@ -83,7 +83,7 @@ class EspoManager implements Manager
 
     public function create(Data $data): AuthToken
     {
-        /** @var ?AuthTokenEntity */
+        /** @var AuthTokenEntity */
         $authToken = $this->repository->getNew();
 
         $authToken->set([

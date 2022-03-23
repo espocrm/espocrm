@@ -62,7 +62,7 @@ class ApplicationState
             throw new Error("Can't get portal ID for non-portal application.");
         }
 
-        return $this->getPortal()->id;
+        return $this->getPortal()->getId();
     }
 
     /**
@@ -104,7 +104,7 @@ class ApplicationState
      */
     public function getUserId(): string
     {
-        return $this->getUser()->id;
+        return $this->getUser()->getId();
     }
 
     /**

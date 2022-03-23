@@ -63,6 +63,8 @@ use Espo\Core\{
     Utils\Log,
 };
 
+use RuntimeException;
+
 /**
  * Handles authentication. The entry point of the auth process.
  */
@@ -439,6 +441,10 @@ class Authentication
     {
         $loggedUser = $result->getLoggedUser();
 
+        if (!$loggedUser) {
+            throw new RuntimeException("No logged-user.");
+        }
+
         $method = $this->getUser2FAMethod($loggedUser);
 
         if (!$method) {
@@ -557,8 +563,8 @@ class Authentication
             return null;
         }
 
-        /** @var ?AuthLogRecord */
-        $authLogRecord = $this->entityManager->getEntity('AuthLogRecord');
+        /** @var AuthLogRecord */
+        $authLogRecord = $this->entityManager->getNewEntity('AuthLogRecord');
 
         $requestUrl =
             $request->getUri()->getScheme() . '://' .

@@ -62,6 +62,16 @@ class EntityManagerProxy
         return $this->entityManager;
     }
 
+    public function getNewEntity(string $entityType): Entity
+    {
+        return $this->getEntityManager()->getNewEntity($entityType);
+    }
+
+    public function getEntityById(string $entityType, string $id): ?Entity
+    {
+        return $this->getEntityManager()->getEntityById($entityType, $id);
+    }
+
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
         return $this->getEntityManager()->getEntity($entityType, $id);
