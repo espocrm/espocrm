@@ -31,6 +31,7 @@ namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 
 use Espo\Services\RecordTree as Service;
 use Espo\Core\Api\Request;
@@ -75,6 +76,10 @@ class RecordTree extends Record
             ],
             $maxDepth
         );
+
+        if (!$collection) {
+            throw new Error();
+        }
 
         return (object) [
             'list' => $collection->getValueMapList(),

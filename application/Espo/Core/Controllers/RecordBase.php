@@ -184,6 +184,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         $id = $request->getRouteParam('id');
         $params = $this->readParamsFetcher->fetch($request);
 
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
+
         $entity = $this->getRecordService()->read($id, $params);
 
         return $entity->getValueMap();
@@ -225,6 +229,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         $id = $request->getRouteParam('id');
         $data = $request->getParsedBody();
 
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
+
         $params = $this->updateParamsFetcher->fetch($request);
 
         $entity = $this->getRecordService()->update($id, $data, $params);
@@ -264,6 +272,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
         $id = $request->getRouteParam('id');
         $params = $this->deleteParamsFetcher->fetch($request);
+
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
 
         $this->getRecordService()->delete($id, $params);
 

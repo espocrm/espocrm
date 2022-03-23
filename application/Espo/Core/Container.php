@@ -186,7 +186,13 @@ class Container implements ContainerInterface
             return;
         }
 
+        assert($this->configuration !== null);
+
         $className = $this->configuration->getServiceClassName($name);
+
+        if ($className === null) {
+            throw new RuntimeException("No class-name for service '{$name}'.");
+        }
 
         $this->classCache[$name] = new ReflectionClass($className);
     }
@@ -243,6 +249,8 @@ class Container implements ContainerInterface
      */
     public function set(string $name, object $object): void
     {
+        assert($this->configuration !== null);
+
         if (!$this->configuration->isSettable($name)) {
             throw new RuntimeException("Service '{$name}' is not settable.");
         }
@@ -275,6 +283,8 @@ class Container implements ContainerInterface
      */
     private function getLoaderClassName(string $name): ?string
     {
+        assert($this->configuration !== null);
+
         return $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
     }
 
@@ -299,6 +309,8 @@ class Container implements ContainerInterface
 
             return;
         }
+
+        assert($this->configuration !== null);
 
         $className = $this->configuration->getServiceClassName($name);
 

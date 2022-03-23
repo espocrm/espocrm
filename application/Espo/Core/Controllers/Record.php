@@ -46,6 +46,14 @@ class Record extends RecordBase
         $id = $request->getRouteParam('id');
         $link = $request->getRouteParam('link');
 
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
+
+        if (!$link) {
+            throw new BadRequest("No link.");
+        }
+
         $searchParams = $this->fetchSearchParamsFromRequest($request);
 
         $recordCollection = $this->getRecordService()->findLinked($id, $link, $searchParams);
@@ -143,6 +151,10 @@ class Record extends RecordBase
     {
         $id = $request->getRouteParam('id');
 
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
+
         $this->getRecordService()->follow($id);
 
         return true;
@@ -154,6 +166,10 @@ class Record extends RecordBase
     public function deleteActionUnfollow(Request $request): bool
     {
         $id = $request->getRouteParam('id');
+
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
 
         $this->getRecordService()->unfollow($id);
 
