@@ -45,7 +45,7 @@ use DateTime;
 abstract class OAuth2Abstract implements IClient
 {
     /**
-     * @var ?Client
+     * @var Client
      */
     protected $client = null;
 
@@ -361,21 +361,37 @@ abstract class OAuth2Abstract implements IClient
 
     protected function isLocked(): bool
     {
+        if (!$this->manager) {
+            return false;
+        }
+
         return $this->manager->isClientLocked($this);
     }
 
     protected function lock(): void
     {
+        if (!$this->manager) {
+            return;
+        }
+
         $this->manager->lockClient($this);
     }
 
     protected function unlock(): void
     {
+        if (!$this->manager) {
+            return;
+        }
+
         $this->manager->unlockClient($this);
     }
 
     protected function reFetch(): void
     {
+        if (!$this->manager) {
+            return;
+        }
+
         $this->manager->reFetchClient($this);
     }
 
@@ -459,7 +475,7 @@ abstract class OAuth2Abstract implements IClient
             $reasonPart = '; Reason: ' . $result['error']['message'];
         }
 
-        throw new Error("Oauth: Error after requesting {$httpMethod} {$url}{$reasonPart}.", $code);
+        throw new Error("Oauth: Error after requesting {$httpMethod} {$url}{$reasonPart}.", (int) $code);
     }
 
     /**

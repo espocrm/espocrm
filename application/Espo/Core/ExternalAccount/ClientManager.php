@@ -155,7 +155,11 @@ class ClientManager
         $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
 
         if (!$externalAccountEntity) {
-            throw new Error("External Account {$integration} not found for {$userId}");
+            throw new Error("External Account {$integration} not found for {$userId}.");
+        }
+
+        if (!$integrationEntity) {
+            return null;
         }
 
         if (!$integrationEntity->get('enabled')) {
@@ -208,6 +212,10 @@ class ClientManager
 
         if (!$externalAccountEntity) {
             throw new Error("External Account {$integration} not found for '{$userId}'.");
+        }
+
+        if (!$integrationEntity) {
+            return null;
         }
 
         if (!$integrationEntity->get('enabled')) {
