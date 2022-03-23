@@ -45,6 +45,7 @@ use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\ORM\EntityManager;
 
+use LogicException;
 use Throwable;
 
 class StorageFactory implements StorageFactoryInterface
@@ -71,16 +72,24 @@ class StorageFactory implements StorageFactoryInterface
 
     public function create(Account $account): LaminasStorage
     {
+        $userLink = $account->getUser();
+
+        if (!$userLink) {
+            throw new LogicException("No user for mail account.");
+        }
+
+        $userId = $userLink->getId();
+
         $params = Params::createBuilder()
             ->setHost($account->getHost())
             ->setPort($account->getPort())
             ->setSecurity($account->getSecurity())
             ->setUsername($account->getUsername())
             ->setPassword(
-                $this->crypt->decrypt($account->getPassword())
+                $this->crypt->decrypt($account->getPassword() ?? '')
             )
             ->setEmailAddress($account->getEmailAddress())
-            ->setUserId($account->getUser()->getId())
+            ->setUserId($userId)
             ->setId($account->getId())
             ->setImapHandlerClassName($account->getImapHandlerClassName())
             ->build();
@@ -123,7 +132,7 @@ class StorageFactory implements StorageFactoryInterface
                 );
             }
 
-            if (method_exists($handler, 'prepareProtocol')) {
+            if ($handler && method_exists($handler, 'prepareProtocol')) {
                 // for backward compatibility
                 $rawParams['ssl'] = $rawParams['security'] ?? null;
 
@@ -140,7 +149,7 @@ class StorageFactory implements StorageFactoryInterface
                 $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
 
                 if (isset($imapHandlers->$emailAddress)) {
-                    /** @var ?class-string */
+                    /** @var class-string */
                     $handlerClassName = $imapHandlers->$emailAddress;
 
                     try {
@@ -153,7 +162,7 @@ class StorageFactory implements StorageFactoryInterface
                         );
                     }
 
-                    if (method_exists($handler, 'prepareProtocol')) {
+                    if ($handler && method_exists($handler, 'prepareProtocol')) {
                         $imapParams = $handler->prepareProtocol($userId, $emailAddress, $rawParams);
                     }
                 }

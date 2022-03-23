@@ -602,7 +602,9 @@ class Sender
 
         $htmlPart = null;
 
-        if ($email->get('isHtml')) {
+        $isHtml = $email->get('isHtml');
+
+        if ($isHtml) {
             $htmlPart = new MimePart($email->getBodyForSending());
 
             $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
@@ -613,7 +615,7 @@ class Sender
         if (!empty($attachmentPartList)) {
             $messageType = 'multipart/related';
 
-            if ($email->get('isHtml')) {
+            if ($isHtml) {
                 $content = new MimeMessage();
 
                 $content->addPart($textPart);
@@ -637,7 +639,7 @@ class Sender
             }
         }
         else {
-            if ($email->get('isHtml')) {
+            if ($isHtml) {
                 $body->setParts([$textPart, $htmlPart]);
 
                 $messageType = 'multipart/alternative';
@@ -697,6 +699,8 @@ class Sender
             $messageIdHeader->setId($messageId);
 
             $message->getHeaders()->addHeader($messageIdHeader);
+
+            assert($this->transport !== null);
 
             $this->transport->send($message);
 

@@ -68,7 +68,7 @@ class BeforeFetch implements BeforeFetchInterface
     {
         if (
             $message->hasHeader('from') &&
-            preg_match('/MAILER-DAEMON|POSTMASTER/i', $message->getHeader('from'))
+            preg_match('/MAILER-DAEMON|POSTMASTER/i', $message->getHeader('from') ?? '')
         ) {
             try {
                 $toSkip = $this->processBounced($message);
@@ -113,7 +113,7 @@ class BeforeFetch implements BeforeFetchInterface
         else {
             $to = $message->getHeader('to');
 
-            if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to, $m)) {
+            if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to ?? '', $m)) {
                 /** @var array{string} */
                 $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
 

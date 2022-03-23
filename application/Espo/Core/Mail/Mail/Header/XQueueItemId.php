@@ -44,7 +44,7 @@ class XQueueItemId implements Header\HeaderInterface
     private ?string $id = null;
 
     /**
-     * @param ?string $headerLine
+     * @param string $headerLine
      * @return self
      */
     public static function fromString($headerLine)

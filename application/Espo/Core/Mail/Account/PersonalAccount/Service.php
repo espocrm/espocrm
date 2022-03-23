@@ -98,7 +98,8 @@ class Service
 
             $params = $params
                 ->withPassword(
-                    $params->getPassword() ?? $this->crypt->decrypt($account->getPassword())
+                    $params->getPassword() ??
+                    $this->crypt->decrypt($account->getPassword() ?? '')
                 )
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
@@ -136,7 +137,8 @@ class Service
 
             $params = $params
                 ->withPassword(
-                    $params->getPassword() ?? $this->crypt->decrypt($account->getPassword())
+                    $params->getPassword() ??
+                    $this->crypt->decrypt($account->getPassword() ?? '')
                 )
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }

@@ -68,11 +68,15 @@ class Account implements AccountInterface
             throw new Error("No assigned user.");
         }
 
-        $this->user = $this->entityManager->getEntity(User::ENTITY_TYPE, $this->entity->getAssignedUser()->getId());
+        $userId = $this->entity->getAssignedUser()->getId();
 
-        if (!$this->user) {
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+
+        if (!$user) {
             throw new Error("Assigned user not found.");
         }
+
+        $this->user = $user;
     }
 
     public function updateFetchData(FetchData $fetchData): void
@@ -114,10 +118,12 @@ class Account implements AccountInterface
     {
         $linkMultiple = LinkMultiple::create();
 
+        $userLink = $this->getUser();
+
         return $linkMultiple->withAdded(
             LinkMultipleItem
-                ::create($this->getUser()->getId())
-                ->withName($this->getUser()->getName())
+                ::create($userLink->getId())
+                ->withName($userLink->getName() ?? '')
         );
     }
 
@@ -128,7 +134,13 @@ class Account implements AccountInterface
 
     public function getUser(): Link
     {
-        return $this->entity->getAssignedUser();
+        $userLink = $this->entity->getAssignedUser();
+
+        if (!$userLink) {
+            throw new Error("No assigned user.");
+        }
+
+        return $userLink;
     }
 
     public function getTeams(): LinkMultiple
@@ -144,7 +156,7 @@ class Account implements AccountInterface
         return $linkMultiple->withAdded(
             LinkMultipleItem
                 ::create($team->getId())
-                ->withName($team->getName())
+                ->withName($team->getName() ?? '')
         );
     }
 

@@ -38,6 +38,8 @@ class Imap extends \Laminas\Mail\Storage\Imap
     {
         $nextUid = strval(intval($uid) + 1);
 
+        assert($this->protocol !== null);
+
         return $this->protocol->search(['UID ' . $nextUid . ':*']);
     }
 
@@ -46,6 +48,8 @@ class Imap extends \Laminas\Mail\Storage\Imap
      */
     public function getIdsSinceDate(string $date): array
     {
+        assert($this->protocol !== null);
+
         return $this->protocol->search(['SINCE "' . $date . '"']);
     }
 
@@ -55,6 +59,8 @@ class Imap extends \Laminas\Mail\Storage\Imap
      */
     public function getHeaderAndFlags(int $id): array
     {
+        assert($this->protocol !== null);
+
         /** @var array{'RFC822.HEADER': string, FLAGS: string[]} */
         $data = $this->protocol->fetch(['FLAGS', 'RFC822.HEADER'], $id);
 

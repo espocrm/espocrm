@@ -49,13 +49,16 @@ class FiltersMatcher
         foreach ($filterList as $filter) {
             $filterCount = 0;
 
-            if ($filter->getFrom()) {
+            $from = $filter->getFrom();
+            $subject = $filter->getSubject();
+
+            if ($from) {
                 $filterCount++;
 
                 if (
                     !$this->matchString(
-                        strtolower($filter->getFrom()),
-                        strtolower($email->getFromAddress())
+                        strtolower($from),
+                        strtolower($email->getFromAddress() ?? '')
                     )
                 ) {
                     continue;
@@ -70,10 +73,12 @@ class FiltersMatcher
                 }
             }
 
-            if ($filter->getSubject()) {
+            if ($subject) {
                 $filterCount++;
 
-                if (!$this->matchString($filter->getSubject(), $email->getSubject())) {
+                if (
+                    !$this->matchString($subject, $email->getSubject() ?? '')
+                ) {
                     continue;
                 }
             }
@@ -100,9 +105,20 @@ class FiltersMatcher
 
     private function matchTo(Email $email, EmailFilter $filter): bool
     {
+        $filterTo = $filter->getTo();
+
+        if ($filterTo === null) {
+            return false;
+        }
+
         if (count($email->getToAddressList())) {
             foreach ($email->getToAddressList() as $to) {
-                if ($this->matchString(strtolower($filter->getTo()), strtolower($to))) {
+                if (
+                    $this->matchString(
+                        strtolower($filterTo),
+                        strtolower($to)
+                    )
+                ) {
                     return true;
                 }
             }
@@ -122,11 +138,11 @@ class FiltersMatcher
                 continue;
             }
 
-            if (stripos($bodyPlain, $phrase) !== false) {
+            if ($bodyPlain && stripos($bodyPlain, $phrase) !== false) {
                 return true;
             }
 
-            if (stripos($body, $phrase) !== false) {
+            if ($body && stripos($body, $phrase) !== false) {
                 return true;
             }
         }

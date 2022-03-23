@@ -34,6 +34,8 @@ use Espo\Repositories\Email as EmailRepository;
 
 use Espo\ORM\EntityManager;
 
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
@@ -182,6 +184,7 @@ class Importer
             $parser->hasHeader($message, 'message-Id') &&
             $parser->getHeader($message, 'message-Id')
         ) {
+            /** @var string */
             $messageId = $parser->getMessageId($message);
 
             $email->set('messageId', $messageId);
@@ -217,25 +220,35 @@ class Importer
 
         if ($parser->hasHeader($message, 'date')) {
             try {
-                $dt = new DateTime($parser->getHeader($message, 'date'));
+                /** @var string */
+                $dateHeaderValue = $parser->getHeader($message, 'date');
 
-                $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                $dt = new DateTime($dateHeaderValue);
+
+                $dateSent = $dt
+                    ->setTimezone(new DateTimeZone('UTC'))
+                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
                 $email->set('dateSent', $dateSent);
             }
             catch (Exception $e) {}
         }
         else {
-            $email->set('dateSent', date('Y-m-d H:i:s'));
+            $email->set('dateSent', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
         }
 
         if ($parser->hasHeader($message, 'delivery-Date')) {
             try {
-                $dt = new DateTime($parser->getHeader($message, 'delivery-Date'));
+                /** @var string */
+                $deliveryDateHeaderValue = $parser->getHeader($message, 'delivery-Date');
 
-                $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                $dt = new DateTime($deliveryDateHeaderValue);
 
-                $email->set('delivery-Date', $deliveryDate);
+                $deliveryDate = $dt
+                    ->setTimezone(new DateTimeZone('UTC'))
+                    ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+
+                $email->set('deliveryDate', $deliveryDate);
             }
             catch (Exception $e) {}
         }
@@ -280,6 +293,7 @@ class Importer
                 if ($replied) {
                     $email->set('repliedId', $replied->getId());
 
+                    /** @var string[] */
                     $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
 
                     foreach ($repliedTeamIdList as $repliedTeamId) {
@@ -449,6 +463,7 @@ class Importer
             return;
         }
 
+        /** @var string[] */
         $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
 
         foreach ($parentTeamIdList as $parentTeamId) {
@@ -653,6 +668,7 @@ class Importer
 
         $duplicate->loadLinkMultipleField('users');
 
+        /** @var string[] */
         $fetchedUserIdList = $duplicate->getLinkMultipleIdList('users');
 
         $duplicate->setLinkMultipleIdList('users', []);
@@ -710,6 +726,7 @@ class Importer
             );
         }
 
+        /** @var string[] */
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {
@@ -731,9 +748,9 @@ class Importer
 
             $dt->modify('+5 seconds');
 
-            $executeAt = $dt->format('Y-m-d H:i:s');
+            $executeAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
-            $job = $this->entityManager->getEntity('Job');
+            $job = $this->entityManager->getNewEntity('Job');
 
             $job->set([
                 'serviceName' => 'Stream',

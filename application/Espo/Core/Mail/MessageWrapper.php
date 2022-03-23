@@ -31,6 +31,8 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\Mail\Account\Storage;
 
+use RuntimeException;
+
 class MessageWrapper implements Message
 {
     private int $id;
@@ -81,17 +83,29 @@ class MessageWrapper implements Message
 
     public function hasHeader(string $name): bool
     {
-        return $this->getParser()->hasHeader($this, $name);
+        if (!$this->parser) {
+            throw new RuntimeException();
+        }
+
+        return $this->parser->hasHeader($this, $name);
     }
 
     public function getHeader(string $attribute): ?string
     {
-        return $this->getParser()->getHeader($this, $attribute);
+        if (!$this->parser) {
+            throw new RuntimeException();
+        }
+
+        return $this->parser->getHeader($this, $attribute);
     }
 
     public function getRawContent(): string
     {
         if (is_null($this->rawContent)) {
+            if (!$this->storage) {
+                throw new RuntimeException();
+            }
+
             $this->rawContent = $this->storage->getRawContent($this->id);
         }
 

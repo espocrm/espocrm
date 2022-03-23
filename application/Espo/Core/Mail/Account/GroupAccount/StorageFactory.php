@@ -64,7 +64,7 @@ class StorageFactory implements StorageFactoryInterface
             ->setSecurity($account->getSecurity())
             ->setUsername($account->getUsername())
             ->setPassword(
-                $this->crypt->decrypt($account->getPassword())
+                $this->crypt->decrypt($account->getPassword() ?? '')
             )
             ->setId($account->getId())
             ->setImapHandlerClassName($account->getImapHandlerClassName())
@@ -104,7 +104,7 @@ class StorageFactory implements StorageFactoryInterface
                 );
             }
 
-            if (method_exists($handler, 'prepareProtocol')) {
+            if ($handler && method_exists($handler, 'prepareProtocol')) {
                 // for backward compatibility
                 $rawParams['ssl'] = $rawParams['security'] ?? null;
 
