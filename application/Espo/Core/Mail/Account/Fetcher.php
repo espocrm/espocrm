@@ -365,6 +365,8 @@ class Fetcher
 
     private function processBeforeFetchHook(Account $account, MessageWrapper $message): BeforeFetchHookResult
     {
+        assert($this->beforeFetchHook !== null);
+
         try {
             return $this->beforeFetchHook->process($account, $message);
         }

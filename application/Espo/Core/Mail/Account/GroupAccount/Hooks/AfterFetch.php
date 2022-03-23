@@ -209,19 +209,22 @@ class AfterFetch implements AfterFetchInterface
 
         $emailAddress = $emailAddressRepository->getByAddress($email->get('from'));
 
-        $sentCount = $this->entityManager
-            ->getRDBRepository(Email::ENTITY_TYPE)
-            ->where([
-                'toEmailAddresses.id' => $emailAddress->getId(),
-                'dateSent>' => $threshold,
-                'status' => 'Sent',
-                'createdById' => 'system',
-            ])
-            ->join('toEmailAddresses')
-            ->count();
 
-        if ($sentCount >= $limit) {
-            return;
+        if ($emailAddress) {
+            $sentCount = $this->entityManager
+                ->getRDBRepository(Email::ENTITY_TYPE)
+                ->where([
+                    'toEmailAddresses.id' => $emailAddress->getId(),
+                    'dateSent>' => $threshold,
+                    'status' => 'Sent',
+                    'createdById' => 'system',
+                ])
+                ->join('toEmailAddresses')
+                ->count();
+
+            if ($sentCount >= $limit) {
+                return;
+            }
         }
 
         $message = new Message();
@@ -248,7 +251,7 @@ class AfterFetch implements AfterFetchInterface
             }
 
             if (empty($contact)) {
-                $contact = $this->entityManager->getEntity('Contact');
+                $contact = $this->entityManager->getNewEntity('Contact');
 
                 $fromName = EmailService::parseFromName($email->get('fromString'));
 
@@ -279,7 +282,7 @@ class AfterFetch implements AfterFetchInterface
                 $subject = '[#' . $case->get('number'). '] ' . $subject;
             }
 
-            $reply = $this->entityManager->getEntity(Email::ENTITY_TYPE);
+            $reply = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
             $reply->set('to', $email->get('from'));
             $reply->set('subject', $subject);
@@ -443,6 +446,7 @@ class AfterFetch implements AfterFetchInterface
         $userIdList = [];
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
+            /** @var string[] */
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
         }
         else {
@@ -457,6 +461,7 @@ class AfterFetch implements AfterFetchInterface
             $email->addLinkMultipleId('users', $userId);
         }
 
+        /** @var string[] */
         $teamIdList = $case->getLinkMultipleIdList('teams');
 
         foreach ($teamIdList as $teamId) {
@@ -481,9 +486,12 @@ class AfterFetch implements AfterFetchInterface
 
         $case->set('name', $email->get('name'));
 
-        $bodyPlain = $email->getBodyPlain();
+        $bodyPlain = $email->getBodyPlain() ?? '';
 
-        if (trim(preg_replace('/\s+/', '', $bodyPlain)) === '') {
+        /** @var string */
+        $replacedBodyPlain = preg_replace('/\s+/', '', $bodyPlain);
+
+        if (trim($replacedBodyPlain) === '') {
             $bodyPlain = '';
         }
 
@@ -491,7 +499,9 @@ class AfterFetch implements AfterFetchInterface
             $case->set('description', $bodyPlain);
         }
 
+        /** @var string[] */
         $attachmentIdList = $email->getLinkMultipleIdList('attachments');
+
         $copiedAttachmentIdList = [];
 
         /** @var AttachmentRepository $attachmentRepository*/
@@ -622,7 +632,16 @@ class AfterFetch implements AfterFetchInterface
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        return $this->entityManager->getEntity('Case', $case->getId());
+        // Unknown reason to do this.
+        $fetchedCase = $this->entityManager->getEntity('Case', $case->getId());
+
+        if ($fetchedCase) {
+            return $fetchedCase;
+        }
+
+        $this->entityManager->refreshEntity($case);
+
+        return $case;
     }
 
     private function assignRoundRobin(CaseObj $case, Team $team, ?string $targetUserPosition): void
