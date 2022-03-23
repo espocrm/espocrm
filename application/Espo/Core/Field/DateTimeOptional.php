@@ -204,6 +204,7 @@ class DateTimeOptional implements DateTimeable
      */
     private function getActualValue(): object
     {
+        /** @var Date|DateTime */
         return $this->dateValue ?? $this->dateTimeValue;
     }
 
@@ -232,10 +233,14 @@ class DateTimeOptional implements DateTimeable
     public function modify(string $modifier): self
     {
         if ($this->isAllDay()) {
+            assert($this->dateValue !== null);
+
             return self::fromDateTimeAllDay(
                 $this->dateValue->modify($modifier)->getDateTime()
             );
         }
+
+        assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
             $this->dateTimeValue->modify($modifier)->getDateTime()
@@ -248,10 +253,14 @@ class DateTimeOptional implements DateTimeable
     public function add(DateInterval $interval): self
     {
         if ($this->isAllDay()) {
+            assert($this->dateValue !== null);
+
             return self::fromDateTimeAllDay(
                 $this->dateValue->add($interval)->getDateTime()
             );
         }
+
+        assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
             $this->dateTimeValue->add($interval)->getDateTime()
@@ -264,10 +273,14 @@ class DateTimeOptional implements DateTimeable
     public function subtract(DateInterval $interval): self
     {
         if ($this->isAllDay()) {
+            assert($this->dateValue !== null);
+
             return self::fromDateTimeAllDay(
                 $this->dateValue->subtract($interval)->getDateTime()
             );
         }
+
+        assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
             $this->dateTimeValue->subtract($interval)->getDateTime()
@@ -333,6 +346,8 @@ class DateTimeOptional implements DateTimeable
              ->format(self::SYSTEM_FORMAT);
 
         $obj = self::fromString($utcValue);
+
+        assert($obj->dateTimeValue !== null);
 
         $obj->dateTimeValue = $obj->dateTimeValue->withTimezone($dateTime->getTimezone());
 
