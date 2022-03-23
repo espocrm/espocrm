@@ -107,6 +107,11 @@ class Record extends RecordService implements
     protected function init() {}
 
     /**
+     * @deprecated For backward compatibility, a dummy method.
+     */
+    public function setEntityType(string $entityType): void {}
+
+    /**
      * @deprecated Use `$this->entityType`.
      */
     public function getEntityType(): string
