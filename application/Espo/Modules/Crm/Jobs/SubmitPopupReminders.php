@@ -96,7 +96,7 @@ class SubmitPopupReminders implements JobDataLess
 
         foreach ($reminderList as $reminder) {
             $userId = $reminder->getUserId();
-            $entityType = $reminder->getTargetEntityId();
+            $entityType = $reminder->getTargetEntityType();
             $entityId = $reminder->getTargetEntityId();
 
             if (!$userId || !$entityType || !$entityId) {
