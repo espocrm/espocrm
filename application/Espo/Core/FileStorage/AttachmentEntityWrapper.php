@@ -48,6 +48,12 @@ class AttachmentEntityWrapper implements Attachment
 
     public function getSourceId(): string
     {
-        return $this->attachment->getSourceId();
+        $sourceId = $this->attachment->getSourceId();
+
+        if (!$sourceId) {
+            throw new RuntimeException("Attachment w/o a source ID.");
+        }
+
+        return $sourceId;
     }
 }

@@ -122,6 +122,7 @@ class ApplyTemplateType extends BaseFunction implements
 
         $data = $emailTemplateService->parseTemplate($emailTemplate, $params, true, true);
 
+        /** @var string[] */
         $attachmentsIds = $email->getLinkMultipleIdList('attachments');
 
         $attachmentsIds = array_merge($attachmentsIds, $data['attachmentsIds']);

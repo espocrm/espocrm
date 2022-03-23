@@ -61,7 +61,7 @@ abstract class Base implements Injectable
     private $entity;
 
     /**
-     * @var \stdClass
+     * @var ?\stdClass
      */
     private $variables;
 
@@ -112,7 +112,7 @@ abstract class Base implements Injectable
 
     protected function getVariables(): stdClass
     {
-        return $this->variables;
+        return $this->variables ?? (object) [];
     }
 
     protected function getEntity() /** @phpstan-ignore-line */

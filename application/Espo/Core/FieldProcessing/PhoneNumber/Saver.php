@@ -299,7 +299,7 @@ class Saver implements SaverInterface
             $phoneNumber = $this->getByNumber($number);
 
             if (!$phoneNumber) {
-                $phoneNumber = $this->entityManager->getEntity('PhoneNumber');
+                $phoneNumber = $this->entityManager->getNewEntity('PhoneNumber');
 
                 $phoneNumber->set([
                     'name' => $number,
@@ -337,7 +337,7 @@ class Saver implements SaverInterface
                 }
             }
 
-            $entityPhoneNumber = $this->entityManager->getEntity('EntityPhoneNumber');
+            $entityPhoneNumber = $this->entityManager->getNewEntity('EntityPhoneNumber');
 
             $entityPhoneNumber->set([
                 'entityId' => $entity->getId(),
@@ -430,7 +430,7 @@ class Saver implements SaverInterface
                 $isNewPhoneNumber = false;
 
                 if (!$phoneNumberNew) {
-                    $phoneNumberNew = $this->entityManager->getEntity('PhoneNumber');
+                    $phoneNumberNew = $this->entityManager->getNewEntity('PhoneNumber');
 
                     $phoneNumberNew->set('name', $phoneNumberValue);
 

@@ -287,7 +287,7 @@ class Saver implements SaverInterface
             $emailAddress = $this->getByAddress($address);
 
             if (!$emailAddress) {
-                $emailAddress = $this->entityManager->getEntity('EmailAddress');
+                $emailAddress = $this->entityManager->getNewEntity('EmailAddress');
 
                 $emailAddress->set([
                     'name' => $hash->{$address}['emailAddress'],
@@ -323,7 +323,7 @@ class Saver implements SaverInterface
                 }
             }
 
-            $entityEmailAddress = $this->entityManager->getEntity('EntityEmailAddress');
+            $entityEmailAddress = $this->entityManager->getNewEntity('EntityEmailAddress');
 
             $entityEmailAddress->set([
                 'entityId' => $entity->getId(),
@@ -455,7 +455,7 @@ class Saver implements SaverInterface
         $isNewEmailAddress = false;
 
         if (!$emailAddressNew) {
-            $emailAddressNew = $this->entityManager->getEntity('EmailAddress');
+            $emailAddressNew = $this->entityManager->getNewEntity('EmailAddress');
 
             $emailAddressNew->set('name', $emailAddressValue);
 

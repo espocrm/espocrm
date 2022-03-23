@@ -62,7 +62,7 @@ class FunctionFactory
         $this->processor = $processor;
         $this->injectableFactory = $injectableFactory;
         $this->attributeFetcher = $attributeFetcher;
-        $this->classNameMap = $classNameMap;
+        $this->classNameMap = $classNameMap ?? [];
     }
 
     /**

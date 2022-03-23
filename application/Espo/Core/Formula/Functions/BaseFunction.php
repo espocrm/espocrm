@@ -60,7 +60,7 @@ abstract class BaseFunction
 
     protected function getVariables(): stdClass
     {
-        return $this->variables;
+        return $this->variables ?? (object) [];
     }
 
     protected function getEntity(): Entity

@@ -39,7 +39,7 @@ use RuntimeException;
 class ValidatorFactory
 {
     /**
-     * @var array<string,class-string>
+     * @var array<string,?class-string>
      */
     private $classNameCache = [];
 

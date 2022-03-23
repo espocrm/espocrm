@@ -439,6 +439,8 @@ class Parser
         }
 
         if ($firstOperator) {
+            /** @var int $minIndex */
+
             $firstPart = substr($expression, 0, $minIndex);
             $secondPart = substr($expression, $minIndex + strlen($firstOperator));
 

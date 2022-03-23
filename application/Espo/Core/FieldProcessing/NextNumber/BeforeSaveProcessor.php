@@ -99,7 +99,7 @@ class BeforeSaveProcessor
             ->findOne();
 
         if (!$nextNumber) {
-            $nextNumber = $this->entityManager->getEntity('NextNumber');
+            $nextNumber = $this->entityManager->getNewEntity('NextNumber');
 
             $nextNumber->set('entityType', $entity->getEntityType());
             $nextNumber->set('fieldName', $field);

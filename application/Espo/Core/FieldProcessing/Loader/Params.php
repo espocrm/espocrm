@@ -40,7 +40,7 @@ class Params
 
     public function hasInSelect(string $field): bool
     {
-        return $this->hasSelect() && in_array($field, $this->select);
+        return $this->hasSelect() && in_array($field, $this->select ?? []);
     }
 
     public function hasSelect(): bool
