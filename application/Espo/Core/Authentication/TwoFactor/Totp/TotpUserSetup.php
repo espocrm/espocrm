@@ -103,6 +103,10 @@ class TotpUserSetup implements UserSetup
     {
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
+        if (!$userData) {
+            throw new Error();
+        }
+
         $userData->set('auth2FATotpSecret', $secret);
 
         $this->entityManager->saveEntity($userData);

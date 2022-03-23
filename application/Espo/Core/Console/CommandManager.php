@@ -139,7 +139,7 @@ class CommandManager
             throw new CommandNotFound("Command '" . Util::camelCaseToHyphen($command) ."' does not exist.");
         }
 
-        /** @var ?class-string<Command> */
+        /** @var class-string<Command> */
         return $className;
     }
 

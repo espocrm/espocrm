@@ -115,6 +115,10 @@ class Util
 
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
+        if (!$userData) {
+            throw new Error("UserData not found.");
+        }
+
         $userData->set('auth2FAEmailAddress', $emailAddress);
 
         $this->entityManager->saveEntity($userData);
@@ -215,7 +219,8 @@ class Util
             throw new Error("User does not have email address.");
         }
 
-        return $user->getEmailAddressGroup()->getPrimary()->getAddress();
+        /** @var string */
+        return $user->getEmailAddressGroup()->getPrimaryAddress();
     }
 
     private function checkEmailAddressIsUsers(User $user, string $emailAddress): void

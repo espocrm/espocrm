@@ -42,6 +42,8 @@ use Espo\Core\Authentication\Result\Data as ResultData;
 use Espo\Core\Authentication\Result\FailReason;
 use Espo\Core\Api\Request;
 
+use RuntimeException;
+
 class SmsLogin implements Login
 {
     /**
@@ -61,13 +63,23 @@ class SmsLogin implements Login
     {
         $code = $request->getHeader('Espo-Authorization-Code');
 
-        if (!$code) {
-            $this->util->sendCode($result->getLoggedUser());
+        $loggedUser = $result->getLoggedUser();
 
-            return Result::secondStepRequired($result->getUser(), $this->getResultData());
+        if (!$loggedUser) {
+            throw new RuntimeException("No logged-user.");
         }
 
-        $loggedUser = $result->getLoggedUser();
+        if (!$code) {
+            $user = $result->getUser();
+
+            if (!$user) {
+                throw new RuntimeException("No user.");
+            }
+
+            $this->util->sendCode($loggedUser);
+
+            return Result::secondStepRequired($user, $this->getResultData());
+        }
 
         if ($this->verifyCode($loggedUser, $code)) {
             return $result;

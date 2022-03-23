@@ -83,6 +83,7 @@ class AclCheck implements Command
         }
 
         if ($user->isPortal()) {
+            /** @var string[] */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             foreach ($portalIdList as $portalId) {

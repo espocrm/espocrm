@@ -64,6 +64,7 @@ class BindingContainer
             throw new LogicException("BindingContainer: Can't get not existing binding.");
         }
 
+        /** @var Binding */
         return $this->getInternal($class, $param);
     }
 
@@ -82,7 +83,7 @@ class BindingContainer
             $key = '$' . $param->getName();
         }
 
-        if ($className && $this->data->hasContext($className, $key) && $key) {
+        if ($className && $key && $this->data->hasContext($className, $key)) {
             return $this->data->getContext($className, $key);
         }
 

@@ -110,6 +110,10 @@ class Util
 
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
+        if (!$userData) {
+            throw new Error();
+        }
+
         $userData->set('auth2FASmsPhoneNumber', $phoneNumber);
 
         $this->entityManager->saveEntity($userData);
@@ -210,7 +214,8 @@ class Util
             throw new Error("User does not have phone number.");
         }
 
-        return $user->getPhoneNumberGroup()->getPrimary()->getNumber();
+        /** @var string */
+        return $user->getPhoneNumberGroup()->getPrimaryNumber();
     }
 
     private function checkPhoneNumberIsUsers(User $user, string $phoneNumber): void

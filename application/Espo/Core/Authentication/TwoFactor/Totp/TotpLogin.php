@@ -43,6 +43,8 @@ use Espo\Core\Authentication\Result\FailReason;
 
 use Espo\Core\Api\Request;
 
+use RuntimeException;
+
 class TotpLogin implements Login
 {
     /**
@@ -63,10 +65,20 @@ class TotpLogin implements Login
         $code = $request->getHeader('Espo-Authorization-Code');
 
         if (!$code) {
-            return Result::secondStepRequired($result->getUser(), $this->getResultData());
+            $user = $result->getUser();
+
+            if (!$user) {
+                throw new RuntimeException("No user.");
+            }
+
+            return Result::secondStepRequired($user, $this->getResultData());
         }
 
         $loggedUser = $result->getLoggedUser();
+
+        if (!$loggedUser) {
+            throw new RuntimeException("No logged-user.");
+        }
 
         if ($this->verifyCode($loggedUser, $code)) {
             return $result;
