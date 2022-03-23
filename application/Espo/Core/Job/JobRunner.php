@@ -186,6 +186,10 @@ class JobRunner
     {
         $jobName = $jobEntity->getJob();
 
+        if (!$jobName) {
+            throw new Error("No job name.");
+        }
+
         $job = $this->jobFactory->create($jobName);
 
         $this->runJob($job, $jobEntity);

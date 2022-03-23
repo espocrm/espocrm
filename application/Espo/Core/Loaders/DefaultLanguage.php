@@ -35,6 +35,6 @@ class DefaultLanguage extends BaseLanguage
 {
     protected function getLanguage(): string
     {
-        return LanguageService::detectLanguage($this->config);
+        return LanguageService::detectLanguage($this->config) ?? parent::getLanguage();
     }
 }

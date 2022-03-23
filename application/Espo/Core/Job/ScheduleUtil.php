@@ -102,7 +102,7 @@ class ScheduleUtil
 
         $this->entityManager->saveEntity($scheduledJob, ['silent' => true]);
 
-        $scheduledJobLog = $this->entityManager->getEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
+        $scheduledJobLog = $this->entityManager->getNewEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
 
         $scheduledJobLog->set([
             'scheduledJobId' => $scheduledJobId,

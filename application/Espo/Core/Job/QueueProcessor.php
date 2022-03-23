@@ -112,7 +112,7 @@ class QueueProcessor
             }
         }
 
-        if ($noLock || $this->queueUtil->isJobPending($job->id)) {
+        if ($noLock || $this->queueUtil->isJobPending($job->getId())) {
             if (
                 $job->getScheduledJobId() &&
                 $this->queueUtil->isScheduledJobRunning(
@@ -162,8 +162,8 @@ class QueueProcessor
             }
         }
 
-        if ($useProcessPool) {
-            $task = new JobTask($job->id);
+        if ($useProcessPool && $pool) {
+            $task = new JobTask($job->getId());
 
             $pool->add($task);
 

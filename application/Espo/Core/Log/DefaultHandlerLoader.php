@@ -119,6 +119,10 @@ class DefaultHandlerLoader
 
         $constructor = $class->getConstructor();
 
+        if (!$constructor) {
+            return $class->newInstanceArgs([]);
+        }
+
         $argumentList = [];
 
         foreach ($constructor->getParameters() as $parameter) {

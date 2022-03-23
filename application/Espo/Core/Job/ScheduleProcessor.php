@@ -135,10 +135,10 @@ class ScheduleProcessor
 
         $jobName = $scheduledJob->getJob();
 
-        if ($this->metadataProvider->isJobPreparable($jobName)) {
+        if ($jobName && $this->metadataProvider->isJobPreparable($jobName)) {
             $preparator = $this->preparatorFactory->create($jobName);
 
-            $data = new PreparatorData($scheduledJob->getId(), $scheduledJob->getName());
+            $data = new PreparatorData($scheduledJob->getId(), $scheduledJob->getName() ?? $jobName);
 
             /** @var DateTimeImmutable */
             $executeTimeObj = DateTimeImmutable
@@ -177,6 +177,10 @@ class ScheduleProcessor
     private function findExecuteTime(ScheduledJobEntity $scheduledJob): ?string
     {
         $scheduling = $scheduledJob->getScheduling();
+
+        if ($scheduling === null) {
+            return null;
+        }
 
         $id = $scheduledJob->getId();
 
