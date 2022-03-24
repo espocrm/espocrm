@@ -235,45 +235,45 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($actual);
     }
 
-    public function testArrayIndex1(): void
+    public function testArrayIndexOf1(): void
     {
-        $expression = "array\\index(list(0, 1, 2), 1)";
+        $expression = "array\\indexOf(list(0, 1, 2), 1)";
 
         $actual = $this->evaluator->process($expression);
 
         $this->assertEquals(1, $actual);
     }
 
-    public function testArrayIndex2(): void
+    public function testArrayIndexOf2(): void
     {
-        $expression = "array\\index(list('0', '1', '2'), '0')";
+        $expression = "array\\indexOf(list('0', '1', '2'), '0')";
 
         $actual = $this->evaluator->process($expression);
 
         $this->assertEquals(0, $actual);
     }
 
-    public function testArrayIndex3(): void
+    public function testArrayIndexOf3(): void
     {
-        $expression = "array\\index(list('0', '1', '2'), 1)";
+        $expression = "array\\indexOf(list('0', '1', '2'), 1)";
 
         $actual = $this->evaluator->process($expression);
 
         $this->assertEquals(null, $actual);
     }
 
-    public function testArrayIndex4(): void
+    public function testArrayIndexOf4(): void
     {
-        $expression = "array\\index(list(), 1)";
+        $expression = "array\\indexOf(list(), 1)";
 
         $actual = $this->evaluator->process($expression);
 
         $this->assertEquals(null, $actual);
     }
 
-    public function testArrayIndex5(): void
+    public function testArrayIndexOf5(): void
     {
-        $expression = "array\\index(null, 1)";
+        $expression = "array\\indexOf(null, 1)";
 
         $actual = $this->evaluator->process($expression);
 

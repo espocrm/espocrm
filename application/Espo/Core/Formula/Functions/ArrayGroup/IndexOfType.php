@@ -34,7 +34,7 @@ use Espo\Core\Formula\{
     ArgumentList,
 };
 
-class IndexType extends BaseFunction
+class IndexOfType extends BaseFunction
 {
     public function process(ArgumentList $args)
     {

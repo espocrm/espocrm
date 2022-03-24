@@ -404,8 +404,8 @@
             "returnType": "string"
         },
         {
-            "name": "array\\index",
-            "insertText": "array\\index(LIST, ELEMENT)",
+            "name": "array\\indexOf",
+            "insertText": "array\\indexOf(LIST, ELEMENT)",
             "returnType": "?int"
         },
         {
