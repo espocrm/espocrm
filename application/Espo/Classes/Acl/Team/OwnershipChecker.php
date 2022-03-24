@@ -44,6 +44,7 @@ class OwnershipChecker implements OwnershipOwnChecker
 {
     public function checkOwn(User $user, Entity $entity): bool
     {
+        /** @var string[] */
         $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
         return in_array($entity->getId(), $userTeamIdList);

@@ -56,7 +56,7 @@ class IsImportantIsFalse implements ItemConverter
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         return WhereClause::fromRaw([
             'emailUser.isImportant' => false,

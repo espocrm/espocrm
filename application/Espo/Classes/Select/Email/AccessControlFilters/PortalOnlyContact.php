@@ -53,12 +53,12 @@ class PortalOnlyContact implements Filter
 
     public function apply(QueryBuilder $queryBuilder): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         $queryBuilder->distinct();
 
         $orGroup = [
-            'emailUser.userId' => $this->user->id,
+            'emailUser.userId' => $this->user->getId(),
         ];
 
         $contactId = $this->user->get('contactId');

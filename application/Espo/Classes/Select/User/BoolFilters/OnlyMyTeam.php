@@ -50,6 +50,7 @@ class OnlyMyTeam implements Filter
 
     public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
+        /** @var string[] */
         $teamIdList = $this->user->getLinkMultipleIdList('teams');
 
         if (count($teamIdList) === 0) {

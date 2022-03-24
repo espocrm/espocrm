@@ -62,7 +62,7 @@ class CheckNewVersion implements JobDataLess
             return;
         }
 
-        $job = $this->entityManager->getEntity('Job');
+        $job = $this->entityManager->getNewEntity('Job');
 
         $job->set([
             'name' => 'Check for New Version (job)',

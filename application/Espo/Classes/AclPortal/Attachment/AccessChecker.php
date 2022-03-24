@@ -79,20 +79,21 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         $parent = null;
-        $hasParent = false;
 
-        if ($entity->get('parentId') && $entity->get('parentType')) {
-            $hasParent = true;
+        $parentType = $entity->get('parentType');
+        $parentId = $entity->get('parentId');
 
-            $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        $relatedType = $entity->get('relatedType');
+        $relatedId = $entity->get('relatedId');
+
+        if ($parentId && $parentType) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
         }
-        else if ($entity->get('relatedId') && $entity->get('relatedType')) {
-            $hasParent = true;
-
-            $parent = $this->entityManager->getEntity($entity->get('relatedType'), $entity->get('relatedId'));
+        else if ($relatedId && $relatedType) {
+            $parent = $this->entityManager->getEntityById($relatedType, $relatedId);
         }
 
-        if (!$hasParent) {
+        if (!$parent) {
             if ($entity->get('createdById') === $user->getId()) {
                 return true;
             }
@@ -137,8 +138,8 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_PORTALS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('portals'),
-                $user->getLinkMultipleIdList('portals')
+                $note->getLinkMultipleIdList('portals') ?? [],
+                $user->getLinkMultipleIdList('portals') ?? []
             );
 
             if (count($intersect)) {

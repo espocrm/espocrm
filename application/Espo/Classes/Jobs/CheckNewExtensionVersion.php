@@ -40,7 +40,8 @@ class CheckNewExtensionVersion extends CheckNewVersion
             return;
         }
 
-        $job = $this->entityManager->getEntity('Job');
+        $job = $this->entityManager->getNewEntity('Job');
+
         $job->set([
             'name' => 'Check for new versions of installed extensions (job)',
             'serviceName' => 'AdminNotifications',

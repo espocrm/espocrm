@@ -40,6 +40,9 @@ class LinkMultipleType
             return false;
         }
 
-        return count($entity->getLinkMultipleIdList($field)) > 0;
+        /** @var string[] */
+        $idList = $entity->getLinkMultipleIdList($field);
+
+        return count($idList) > 0;
     }
 }

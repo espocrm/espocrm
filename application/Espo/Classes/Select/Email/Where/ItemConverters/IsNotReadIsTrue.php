@@ -56,13 +56,13 @@ class IsNotReadIsTrue implements ItemConverter
 
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         return WhereClause::fromRaw([
             'emailUser.isRead' => false,
             'OR' => [
                 'sentById' => null,
-                'sentById!=' => $this->user->id
+                'sentById!=' => $this->user->getId()
             ],
         ]);
     }

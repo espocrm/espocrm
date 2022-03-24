@@ -78,20 +78,20 @@ class AccessChecker implements AccessEntityCREDChecker
 
         $parent = null;
 
-        $hasParent = false;
+        $parentType = $entity->get('parentType');
+        $parentId = $entity->get('parentId');
 
-        if ($entity->get('parentId') && $entity->get('parentType')) {
-            $hasParent = true;
+        $relatedType = $entity->get('relatedType');
+        $relatedId = $entity->get('relatedId');
 
-            $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        if ($parentId && $parentType) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
         }
-        else if ($entity->get('relatedId') && $entity->get('relatedType')) {
-            $hasParent = true;
-
-            $parent = $this->entityManager->getEntity($entity->get('relatedType'), $entity->get('relatedId'));
+        else if ($relatedId && $relatedType) {
+            $parent = $this->entityManager->getEntityById($relatedType, $relatedId);
         }
 
-        if (!$parent || !$hasParent) {
+        if (!$parent) {
             if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
                 return true;
             }
@@ -132,8 +132,8 @@ class AccessChecker implements AccessEntityCREDChecker
     {
         if ($note->getTargetType() === Note::TARGET_TEAMS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('teams'),
-                $user->getLinkMultipleIdList('teams')
+                $note->getLinkMultipleIdList('teams') ?? [],
+                $user->getLinkMultipleIdList('teams') ?? []
             );
 
             if (count($intersect)) {

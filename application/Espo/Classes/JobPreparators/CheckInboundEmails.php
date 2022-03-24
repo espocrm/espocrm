@@ -91,7 +91,7 @@ class CheckInboundEmails implements Preparator
                 continue;
             }
 
-            $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE);
+            $jobEntity = $this->entityManager->getNewEntity(JobEntity::ENTITY_TYPE);
 
             $jobEntity->set([
                 'name' => $data->getName(),

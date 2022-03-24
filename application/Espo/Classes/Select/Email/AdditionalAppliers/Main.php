@@ -70,7 +70,7 @@ class Main implements AdditionalApplier
 
     protected function joinEmailUser(SelectBuilder $queryBuilder): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         if ($queryBuilder->build()->getSelect() === []) {
             $queryBuilder->select('*');

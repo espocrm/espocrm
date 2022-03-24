@@ -53,10 +53,10 @@ class OnlyOwn implements Filter
 
     public function apply(QueryBuilder $queryBuilder): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
         $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
+            'emailUser.userId' => $this->user->getId(),
         ]);
     }
 }
