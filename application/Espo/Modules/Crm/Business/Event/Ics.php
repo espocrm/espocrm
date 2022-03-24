@@ -80,6 +80,7 @@ class Ics
             $this->generate();
         }
 
+        /** @var string */
         return $this->output;
     }
 
@@ -119,6 +120,7 @@ class Ics
             return '';
         }
 
+        /** @var string */
         return preg_replace('/([\,;])/', '\\\$1', $string);
     }
 

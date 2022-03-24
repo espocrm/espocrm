@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Services\EmailAddress as Service;
 
@@ -54,6 +55,10 @@ class EmailAddress extends RecordBase
         }
 
         $q = $request->getQueryParam('q');
+
+        if ($q === null) {
+            throw new BadRequest("No `q` parameter.");
+        }
 
         $maxSize = intval($request->getQueryParam('maxSize'));
 

@@ -29,8 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Services\GlobalSearch as Service;
-
 use Espo\Core\Api\Request;
 
 use stdClass;
@@ -47,6 +47,10 @@ class GlobalSearch
     public function getActionSearch(Request $request): stdClass
     {
         $query = $request->getQueryParam('q');
+
+        if ($query === null) {
+            throw new BadRequest("No `q` parameter.");
+        }
 
         $offset = intval($request->getQueryParam('offset'));
         $maxSize = intval($request->getQueryParam('maxSize'));

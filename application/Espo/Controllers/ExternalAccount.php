@@ -30,6 +30,8 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\Services\ExternalAccount as Service;
 
@@ -91,6 +93,10 @@ class ExternalAccount extends RecordBase
     {
         $id = $request->getQueryParam('id');
 
+        if ($id === null) {
+            throw new BadRequest();
+        }
+
         list($integration, $userId) = explode('__', $id);
 
         if ($this->user->getId() != $userId && !$this->user->isAdmin()) {
@@ -112,6 +118,7 @@ class ExternalAccount extends RecordBase
 
     public function getActionRead(Request $request, Response $response): stdClass
     {
+        /** @var string */
         $id = $request->getRouteParam('id');
 
         return $this->getRecordService()
@@ -121,11 +128,12 @@ class ExternalAccount extends RecordBase
 
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
+        /** @var string */
         $id = $request->getRouteParam('id');
 
         $data = $request->getParsedBody();
 
-        list ($integration, $userId) = explode('__', $id);
+        list($integration, $userId) = explode('__', $id);
 
         if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
             throw new Forbidden();
@@ -136,6 +144,10 @@ class ExternalAccount extends RecordBase
         }
 
         $entity = $this->entityManager->getEntity('ExternalAccount', $id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
 
         $entity->set($data);
 

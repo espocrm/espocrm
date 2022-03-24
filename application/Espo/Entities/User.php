@@ -122,6 +122,7 @@ class User extends Person
      */
     public function getTeamIdList(): array
     {
+        /** @var string[] */
         return $this->getLinkMultipleIdList('teams');
     }
 

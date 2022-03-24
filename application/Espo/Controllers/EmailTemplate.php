@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\BadRequest;
+
 use Espo\Services\EmailTemplate as Service;
 
 use Espo\Core\{
@@ -43,6 +45,10 @@ class EmailTemplate extends Record
     public function actionParse(Request $request): stdClass
     {
         $id = $request->getQueryParam('id');
+
+        if ($id === null) {
+            throw new BadRequest("No `id`.");
+        }
 
         return (object) $this->getEmailTempalteService()->parse(
             $id,

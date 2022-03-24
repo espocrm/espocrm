@@ -33,6 +33,7 @@ use Espo\Core\ORM\Entity;
 
 use Espo\Core\Field\DateTime;
 
+use RuntimeException;
 use stdClass;
 
 class Note extends Entity
@@ -143,6 +144,10 @@ class Note extends Entity
             $this->loadLinkMultipleField('attachments');
 
             return;
+        }
+
+        if (!$this->entityManager) {
+            throw new RuntimeException();
         }
 
         $attachmentsIds = $data->attachmentsIds;

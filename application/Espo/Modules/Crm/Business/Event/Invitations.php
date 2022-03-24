@@ -103,7 +103,7 @@ class Invitations
 
     public function sendInvitation(Entity $entity, Entity $invitee, string $link): void
     {
-        $uid = $this->entityManager->getEntity('UniqueId');
+        $uid = $this->entityManager->getNewEntity('UniqueId');
 
         $uid->set('data', [
             'eventType' => $entity->getEntityType(),
@@ -137,7 +137,8 @@ class Invitations
             return;
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
+
         $email->set('to', $emailAddress);
 
         $subjectTpl = $this->templateFileManager->getTemplate('invitation', 'subject', $entity->getEntityType(), 'Crm');

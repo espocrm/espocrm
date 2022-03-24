@@ -56,14 +56,21 @@ class Integration
 
     public function getActionRead(Request $request): stdClass
     {
-        $entity = $this->service->read($request->getRouteParam('id'));
+        /** @var string */
+        $id = $request->getRouteParam('id');
+
+        $entity = $this->service->read($id);
 
         return $entity->getValueMap();
     }
 
     public function putActionUpdate(Request $request): stdClass
     {
-        $entity = $this->service->update($request->getRouteParam('id'), $request->getParsedBody());
+        /** @var string */
+        $id = $request->getRouteParam('id');
+        $data = $request->getParsedBody();
+
+        $entity = $this->service->update($id, $data);
 
         return $entity->getValueMap();
     }

@@ -64,7 +64,7 @@ class Import extends Record
 
     public function postActionUploadFile(Request $request): stdClass
     {
-        $contents = $request->getBodyContents();
+        $contents = $request->getBodyContents() ?? '';
 
         $attachmentId = $this->getImportService()->uploadFile($contents);
 

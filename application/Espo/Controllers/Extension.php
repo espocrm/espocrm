@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\{
     Upgrades\ExtensionManager,
@@ -50,6 +51,10 @@ class Extension extends RecordBase
     public function postActionUpload(Request $request): stdClass
     {
         $body = $request->getBodyContents();
+
+        if ($body === null) {
+            throw new BadRequest();
+        }
 
         $manager = new ExtensionManager($this->getContainer());
 

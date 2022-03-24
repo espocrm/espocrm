@@ -31,10 +31,9 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+
 use Espo\Core\Api\Request;
-
 use Espo\Services\Layout as Service;
-
 use Espo\Entities\User;
 
 class Layout
@@ -59,6 +58,10 @@ class Layout
         $scope = $params['scope'] ?? null;
         $name = $params['name'] ?? null;
 
+        if (!$scope || !$name) {
+            throw new BadRequest();
+        }
+
         return $this->service->getForFrontend($scope, $name);
     }
 
@@ -69,7 +72,7 @@ class Layout
     {
         $params = $request->getRouteParams();
 
-        $data = json_decode($request->getBodyContents());
+        $data = json_decode($request->getBodyContents() ?? 'null');
 
         if (is_object($data)) {
             $data = get_object_vars($data);
@@ -82,6 +85,10 @@ class Layout
         $scope = $params['scope'] ?? null;
         $name = $params['name'] ?? null;
         $setId = $params['setId'] ?? null;
+
+        if (!$scope || !$name) {
+            throw new BadRequest();
+        }
 
         return $this->service->update($scope, $name, $setId, $data);
     }
@@ -113,10 +120,14 @@ class Layout
             throw new Forbidden();
         }
 
-        return $this->service->getOriginal(
-            $request->getQueryParam('scope'),
-            $request->getQueryParam('name'),
-            $request->getQueryParam('setId')
-        );
+        $scope = $request->getQueryParam('scope');
+        $name = $request->getQueryParam('name');
+        $setId = $request->getQueryParam('setId');
+
+        if (!$scope || !$name) {
+            throw new BadRequest("No `scope` or `name` parameter.");
+        }
+
+        return $this->service->getOriginal($scope, $name, $setId);
     }
 }

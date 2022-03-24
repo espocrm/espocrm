@@ -35,6 +35,8 @@ use Espo\Core\Field\DateTime;
 
 use Espo\Repositories\Sms as SmsRepository;
 
+use RuntimeException;
+
 class Sms extends Entity implements SmsInterface
 {
     public const ENTITY_TYPE = 'Sms';
@@ -148,6 +150,10 @@ class Sms extends Entity implements SmsInterface
 
     private function getSmsRepository(): SmsRepository
     {
+        if (!$this->entityManager) {
+            throw new RuntimeException();
+        }
+
         /** @var SmsRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }

@@ -37,7 +37,7 @@ use Espo\Core\{
 
 use Espo\Tools\Kanban\KanbanService;
 
-use StdClass;
+use stdClass;
 
 class Kanban
 {
@@ -51,8 +51,9 @@ class Kanban
         $this->searchParamsFetcher = $searchParamsFetcher;
     }
 
-    public function getActionGetData(Request $request): StdClass
+    public function getActionGetData(Request $request): stdClass
     {
+        /** @var string */
         $entityType = $request->getRouteParam('entityType');
 
         $searchParams = $this->searchParamsFetcher->fetch($request);

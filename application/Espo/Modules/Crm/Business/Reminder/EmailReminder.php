@@ -119,7 +119,7 @@ class EmailReminder
             }
         }
 
-        $email = $this->entityManager->getEntity('Email');
+        $email = $this->entityManager->getNewEntity('Email');
 
         $email->set('to', $emailAddress);
 

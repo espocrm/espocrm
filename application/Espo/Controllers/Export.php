@@ -62,8 +62,12 @@ class Export
         $result = $this->service->process($params, $serviceParams);
 
         if ($result->hasResult()) {
+            $subResult = $result->getResult();
+
+            assert($subResult !== null);
+
             return (object) [
-                'id' => $result->getResult()->getAttachmentId(),
+                'id' => $subResult->getAttachmentId(),
             ];
         }
 

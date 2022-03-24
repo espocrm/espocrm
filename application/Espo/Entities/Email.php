@@ -40,6 +40,8 @@ use Espo\Repositories\Email as EmailRepository;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
 
+use RuntimeException;
+
 class Email extends Entity
 {
     public const ENTITY_TYPE = 'Email';
@@ -178,6 +180,10 @@ class Email extends Entity
         $attachment->set('parentId', $this->id);
         $attachment->set('parentType', 'Email');
 
+        if (!$this->entityManager) {
+            throw new RuntimeException();
+        }
+
         $this->entityManager->saveEntity($attachment);
     }
 
@@ -300,6 +306,10 @@ class Email extends Entity
             }
 
             $idList[] = $id;
+
+            if (!$this->entityManager) {
+                throw new RuntimeException();
+            }
 
             /** @var Attachment|null */
             $attachment = $this->entityManager->getEntity('Attachment', $id);
@@ -531,6 +541,10 @@ class Email extends Entity
 
     private function getEmailRepository(): EmailRepository
     {
+        if (!$this->entityManager) {
+            throw new RuntimeException();
+        }
+
         /** @var EmailRepository */
         return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }
