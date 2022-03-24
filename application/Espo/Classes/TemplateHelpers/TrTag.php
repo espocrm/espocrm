@@ -37,10 +37,12 @@ class TrTag implements Helper
 {
     public function render(Data $data): Result
     {
+        $function = $data->getFunction();
+
+        $content = $function !== null ? $function() : '';
+
         return Result::createSafeString(
-            "<tr>" .
-            $data->getFunction()() .
-            "</tr>"
+            "<tr>" . $content . "</tr>"
         );
     }
 }

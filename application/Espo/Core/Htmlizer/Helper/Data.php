@@ -30,6 +30,7 @@
 namespace Espo\Core\Htmlizer\Helper;
 
 use stdClass;
+use Closure;
 
 class Data
 {
@@ -55,12 +56,12 @@ class Data
     private $rootContext;
 
     /**
-     * @var ?callable
+     * @var ?Closure
      */
     private $func = null;
 
     /**
-     * @var ?callable
+     * @var ?Closure
      */
     private $inverseFunc = null;
 
@@ -77,8 +78,8 @@ class Data
         array $context,
         array $rootContext,
         int $blockParams,
-        ?callable $func,
-        ?callable $inverseFunc
+        ?Closure $func,
+        ?Closure $inverseFunc
     ) {
         $this->name = $name;
         $this->argumentList = $argumentList;
@@ -137,12 +138,12 @@ class Data
         return $this->options->$name ?? null;
     }
 
-    public function getFunction(): ?callable
+    public function getFunction(): ?Closure
     {
         return $this->func;
     }
 
-    public function getInverseFunction(): ?callable
+    public function getInverseFunction(): ?Closure
     {
         return $this->inverseFunc;
     }

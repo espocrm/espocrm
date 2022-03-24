@@ -47,9 +47,13 @@ class TableTag implements Helper
             $attributesPart .= " width=\"{$width}\"";
         }
 
+        $function = $data->getFunction();
+
+        $content = $function !== null ? $function() : '';
+
         return Result::createSafeString(
             "<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>" .
-            $data->getFunction()() .
+            $content .
             "</table>"
         );
     }

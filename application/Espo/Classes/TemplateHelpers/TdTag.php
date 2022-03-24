@@ -51,10 +51,12 @@ class TdTag implements Helper
             $attributesPart .= " width=\"{$width}\"";
         }
 
+        $function = $data->getFunction();
+
+        $content = $function !== null ? $function() : '';
+
         return Result::createSafeString(
-            "<td>" .
-            $data->getFunction()() .
-            "</td>"
+            "<td>" . $content . "</td>"
         );
     }
 }
