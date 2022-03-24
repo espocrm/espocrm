@@ -235,6 +235,87 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($actual);
     }
 
+    public function testArrayIndex1(): void
+    {
+        $expression = "array\\index(list(0, 1, 2), 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(1, $actual);
+    }
+
+    public function testArrayIndex2(): void
+    {
+        $expression = "array\\index(list('0', '1', '2'), '0')";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(0, $actual);
+    }
+
+    public function testArrayIndex3(): void
+    {
+        $expression = "array\\index(list('0', '1', '2'), 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(null, $actual);
+    }
+
+    public function testArrayIndex4(): void
+    {
+        $expression = "array\\index(list(), 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(null, $actual);
+    }
+
+    public function testArrayIndex5(): void
+    {
+        $expression = "array\\index(null, 1)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(null, $actual);
+    }
+
+    public function testArrayUnique1(): void
+    {
+        $expression = "array\\unique(list('0', '0', '1'))";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(['0', '1'], $actual);
+    }
+
+    public function testArrayRemoveAt1(): void
+    {
+        $expression = "array\\removeAt(list('0', '1'), 0)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(['1'], $actual);
+    }
+
+    public function testArrayRemoveAt2(): void
+    {
+        $expression = "array\\removeAt(list('0', '1'), 3)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(['0', '1'], $actual);
+    }
+
+    public function testArrayRemoveAt3(): void
+    {
+        $expression = "array\\removeAt(list('0', '1'), null)";
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(['0', '1'], $actual);
+    }
+
     public function testWhile()
     {
         $expression = "
