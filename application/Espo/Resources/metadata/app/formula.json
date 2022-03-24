@@ -404,6 +404,21 @@
             "returnType": "string"
         },
         {
+            "name": "array\\index",
+            "insertText": "array\\index(LIST, ELEMENT)",
+            "returnType": "?int"
+        },
+        {
+            "name": "array\\removeAt",
+            "insertText": "array\\removeAt(LIST, INDEX)",
+            "returnType": "array"
+        },
+        {
+            "name": "array\\unique",
+            "insertText": "array\\unique(LIST)",
+            "returnType": "array"
+        },
+        {
             "name": "language\\translate",
             "insertText": "language\\translate(LABEL, CATEGORY, SCOPE)",
             "returnType": "string"
