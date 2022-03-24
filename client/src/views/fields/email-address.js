@@ -39,6 +39,10 @@ define('views/fields/email-address', 'views/fields/varchar', function (Dep) {
         validateEmailAddress: function () {
             let value = this.model.get(this.name);
 
+            if (!value) {
+                return false;
+            }
+
             if (value !== '' && !this.emailAddressRe.test(value)) {
                 let msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
 
@@ -46,6 +50,8 @@ define('views/fields/email-address', 'views/fields/varchar', function (Dep) {
 
                 return true;
             }
+
+            return false;
         },
     });
 });
