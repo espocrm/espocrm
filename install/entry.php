@@ -199,7 +199,7 @@ if (Utils::checkActionExists($action)) {
 
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
-    $isBuilt = file_exists('client/espo.min.js');
+    $isBuilt = file_exists('client/lib/espo.min.js');
 
     $smarty->assign('isBuilt', $isBuilt);
 

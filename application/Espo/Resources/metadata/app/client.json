@@ -1,6 +1,6 @@
 {
     "scriptList": [
-        "client/espo.min.js"
+        "client/lib/espo.min.js"
     ],
     "developerModeScriptList": [
         "client/src/loader.js",

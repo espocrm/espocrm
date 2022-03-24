@@ -20,12 +20,13 @@
  ************************************************************************/
 
 /**
-* * `grunt` - full build
-* * `grunt dev` - build only items needed for development (takes less time)
-* * `grunt offline` - build but skip *composer install*
-* * `grunt release` - full build plus upgrade packages`
-* * `grunt test` - build for tests running
-* * `grunt run-tests` - build and run unit and integration tests
+* * `grunt` - full build;
+* * `grunt dev` - build only items needed for development (takes less time);
+* * `grunt offline` - build but skip *composer install*;
+* * `grunt internal` - build only libs and css;
+* * `grunt release` - full build plus upgrade packages`;
+* * `grunt test` - build for tests running;
+* * `grunt run-tests` - build and run unit and integration tests.
 */
 
 const fs = require('fs');
@@ -95,7 +96,12 @@ module.exports = grunt => {
         },
 
         clean: {
-            start: ['build/EspoCRM-*'],
+            start: [
+                'build/EspoCRM-*',
+                'client/lib/*',
+                'client/modules/crm/lib/*',
+                'client/css/espo/*',
+            ],
             final: ['build/tmp'],
             release: ['build/EspoCRM-' + pkg.version],
             beforeFinal: {
@@ -136,7 +142,7 @@ module.exports = grunt => {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 },
                 files: {
-                    'build/tmp/client/espo.min.js': jsFilesToBundle,
+                    'client/lib/espo.min.js': jsFilesToBundle,
                 },
             },
             lib: {
@@ -148,7 +154,7 @@ module.exports = grunt => {
             options: {
                 mode: true,
             },
-            frontendFolders: {
+            frontend: {
                 expand: true,
                 cwd: 'client',
                 src: [
@@ -161,18 +167,12 @@ module.exports = grunt => {
                     'css/**',
                     'sounds/**',
                     'custom/**',
+                    'lib/**',
                 ],
                 dest: 'build/tmp/client',
             },
             frontendLib: {
                 files: jsFilesToCopy,
-            },
-            frontendCommitedLib: {
-                expand: true,
-                dot: true,
-                cwd: 'client/lib',
-                src: '**',
-                dest: 'build/tmp/client/lib/',
             },
             backend: {
                 expand: true,
@@ -416,17 +416,21 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
 
-    grunt.registerTask('offline', [
-        'clean:start',
-        'mkdir:tmp',
+
+    grunt.registerTask('internal', [
         'less',
         'cssmin',
         'uglify:bundle',
-        'copy:frontendFolders',
         'copy:frontendLib',
-        'copy:frontendCommitedLib',
-        'copy:backend',
         'uglify:lib',
+    ]);
+
+    grunt.registerTask('offline', [
+        'clean:start',
+        'mkdir:tmp',
+        'internal',
+        'copy:frontend',
+        'copy:backend',
         'replace',
         'clean:beforeFinal',
         'copy:final',
@@ -521,10 +525,10 @@ function getCopyLibDataList() {
         let minify = item.minify;
 
         if (item.files) {
-            item.files.forEach(item  => {
+            item.files.forEach(item => {
                 list.push({
                     src: item.src,
-                    dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+                    dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
                     minify: minify,
                 });
             });
@@ -538,7 +542,7 @@ function getCopyLibDataList() {
 
         list.push({
             src: item.src,
-            dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+            dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
             minify: minify,
         });
     });

@@ -23,3 +23,7 @@
 !/custom/Espo/Custom/.htaccess
 !/custom/Espo/Modules/.htaccess
 /install/config.php
+
+client/css/espo/*
+client/lib/*
+client/modules/crm/lib/*
