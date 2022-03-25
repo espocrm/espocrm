@@ -2,7 +2,7 @@
 
 [![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
 
-[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
+[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities – all in an easy and intuitive interface.
 
 It's a web application with a frontend designed as a single page application and REST API backend written in PHP.
 
