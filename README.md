@@ -19,11 +19,11 @@ For more information about server configuration see [this article](https://docs.
 
 The documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
 
-### How to report a bug
+### Bug reporting
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
 
-### How to install stable version
+### Installing the stable version
 
 See the [instructions](https://docs.espocrm.com/administration/installation/) about installation.
 
@@ -33,7 +33,7 @@ See the [instructions](https://docs.espocrm.com/administration/installation/) ab
 * [Running tests](https://docs.espocrm.com/development/tests)
 * [Making translation](https://docs.espocrm.com/development/translation)
 
-### How to contribute
+### Contributing
 
 Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
