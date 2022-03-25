@@ -10,10 +10,10 @@
                 {{#if hasCheckSyntax}}
                 <button
                     type="button"
-                    class="btn btn-default btn-sm dropdown-toggle btn-icon"
+                    class="btn btn-default btn-sm btn-icon"
                     data-action="checkSyntax"
                     title="{{translate 'Check Syntax' scope='Formula'}}"
-                ><span class="fas fa-play"></span></button>
+                ><span class="far fa-circle"></span></button>
                 {{/if}}
                 {{#if hasInsert}}
                 <button
