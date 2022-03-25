@@ -549,10 +549,14 @@ class Diff
 
         let toMinifyOldMap = {};
 
+        let libOldDataMap = {};
+
         libOldDataList.forEach(item => {
             let name = resolveItemName(item);
 
             toMinifyOldMap[name] = item.minify || false;
+
+            libOldDataMap[name] = item;
         });
 
         libNewDataList.forEach(item => {
@@ -573,10 +577,15 @@ class Diff
 
             let wasMinified = (toMinifyOldMap || {})[name];
 
+            let isDefsChanged = libOldDataMap[name] ?
+                JSON.stringify(item) !== JSON.stringify(libOldDataMap[name]) :
+                false;
+
             if (
                 !isAdded &&
                 versionNew === versionOld &&
-                minify === wasMinified
+                minify === wasMinified &&
+                !isDefsChanged
             ) {
                 return;
             }
