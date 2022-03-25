@@ -23,7 +23,7 @@ The documentation for administrators, users and developers is available [here](h
 
 Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our [forum](http://forum.espocrm.com/forum/bug-reports).
 
-### How to install a stable version
+### How to install stable version
 
 See the [instructions](https://docs.espocrm.com/administration/installation/) about installation.
 
