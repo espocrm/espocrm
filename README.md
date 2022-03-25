@@ -17,7 +17,7 @@ For more information about server configuration see [this article](https://docs.
 
 ### Documentation
 
-Documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
+The documentation for administrators, users and developers is available [here](https://docs.espocrm.com).
 
 ### How to report a bug
 
