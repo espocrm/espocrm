@@ -85,7 +85,16 @@ class Email implements AssignmentNotificator
     {
         /** @var EmailEntity $entity */
 
-        if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
+        if (
+            !in_array(
+                $entity->get('status'),
+                [
+                    EmailEntity::STATUS_ARCHIVED,
+                    EmailEntity::STATUS_SENT,
+                    EmailEntity::STATUS_BEING_IMPORTED,
+                ]
+            )
+        ) {
             return;
         }
 
@@ -183,14 +192,19 @@ class Email implements AssignmentNotificator
 
         $parent = null;
 
-        if ($entity->get('parentId') && $entity->get('parentType')) {
-            $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+
+        if ($parentType && $parentId) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
         }
 
         $account = null;
 
-        if ($entity->get('accountId')) {
-            $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
+        $accountId = $entity->get('accountId');
+
+        if ($accountId) {
+            $account = $this->entityManager->getEntityById('Account', $accountId);
         }
 
         foreach ($userIdList as $userId) {
@@ -247,7 +261,7 @@ class Email implements AssignmentNotificator
             }
 
             $isArchivedOrBeingImported =
-                $entity->get('status') === 'Archived' ||
+                $entity->get('status') === EmailEntity::STATUS_ARCHIVED ||
                 $params->getOption('isBeingImported');
 
             if (
