@@ -824,10 +824,12 @@ define(
 
                 let msg;
 
+                let closeButton = false;
+
                 switch (xhr.status) {
                     case 0:
                         if (xhr.statusText === 'timeout') {
-                            Ui.error(this.language.translate('Timeout'));
+                            Ui.error(this.language.translate('Timeout'), true);
                         }
 
                         break;
@@ -853,25 +855,26 @@ define(
                     case 403:
                         if (options.main) {
                             this.baseController.error403();
+
+                            break;
                         }
-                        else {
-                            msg = this.language.translate('Error') + ' ' + xhr.status;
 
-                            msg += ': ' + this.language.translate('Access denied');
+                        msg = this.language.translate('Error') + ' ' + xhr.status + ': ' +
+                            this.language.translate('Access denied');
 
-                            if (statusReason) {
-                                msg += ': ' + statusReason;
-                            }
+                        if (statusReason) {
+                            msg += ': ' + statusReason;
 
-                            Ui.error(msg);
+                            closeButton = true;
                         }
+
+                        Ui.error(msg, closeButton);
 
                         break;
 
                     case 400:
-                        msg = this.language.translate('Error') + ' ' + xhr.status;
-
-                        msg += ': ' + this.language.translate('Bad request');
+                        msg = this.language.translate('Error') + ' ' + xhr.status + ': ' +
+                            this.language.translate('Bad request');
 
                         if (statusReason) {
                             msg += ': ' + statusReason;
@@ -884,29 +887,30 @@ define(
                     case 404:
                         if (options.main) {
                             this.baseController.error404();
-                        }
-                        else {
-                            msg = this.language.translate('Error') + ' ' + xhr.status;
 
-                            msg += ': ' + this.language.translate('Not found');
-
-                            Ui.error(msg);
+                            break
                         }
 
-                        break;
+                        msg = this.language.translate('Error') + ' ' + xhr.status;
+
+                        msg += ': ' + this.language.translate('Not found');
+
+                        Ui.error(msg);
 
                     default:
                         msg = this.language.translate('Error') + ' ' + xhr.status;
 
                         if (statusReason) {
                             msg += ': ' + statusReason;
+
+                            closeButton = true;
                         }
 
-                        Ui.error(msg);
+                        Ui.error(msg, closeButton);
                 }
 
                 if (statusReason) {
-                    console.error('Server side error '+xhr.status+': ' + statusReason);
+                    console.error('Server side error ' + xhr.status + ': ' + statusReason);
                 }
             });
         },

@@ -623,39 +623,51 @@ define('ui', [], function () {
         notify: function (message, type, timeout, closeButton) {
             $('#nofitication').remove();
 
-            if (message) {
-                type = type || 'warning';
-                if (typeof closeButton === 'undefined') {
-                    closeButton = false;
-                }
-
-                if (type === 'error') {
-                    type = 'danger';
-                }
-
-                var el = $('<div class="alert alert-' + type + ' fade in" id="nofitication" />')
-                    .css({
-                        position: 'fixed',
-                        top: '0px',
-                        'z-index': 2000,
-                    })
-                    .html(message);
-
-                if (closeButton) {
-                    el.append(
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
-                    );
-                }
-
-                if (timeout) {
-                    setTimeout(function () {
-                        el.alert('close');
-                    }, timeout);
-                }
-
-                el.appendTo('body');
-                el.css("left", ($(window).width() - el.width()) / 2 + $(window).scrollLeft()  + "px");
+            if (!message) {
+                return;
             }
+
+            type = type || 'warning';
+            closeButton = closeButton || false;
+
+            if (type === 'error') {
+                type = 'danger';
+            }
+
+            let additionalClassName = closeButton ? ' alert-closable' : '';
+
+            let $el = $(
+                    '<div class="alert alert-' + type + '' + additionalClassName + ' fade in" id="nofitication" />'
+                )
+                .css({
+                    position: 'fixed',
+                    top: '0px',
+                    'z-index': 2000,
+                })
+                .html('<div class="message">' + message + '</div>');
+
+            if (closeButton) {
+                $close = $(
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                );
+
+                $btnContainer = $('<div class="close-container">').append($close);
+
+                $el.append($btnContainer);
+
+                $close.on('click', () => $el.alert('close'));
+            }
+
+            if (timeout) {
+                setTimeout(() => $el.alert('close'), timeout);
+            }
+
+            $el
+                .appendTo('body')
+                .css(
+                    'left',
+                    ($(window).width() - $el.width()) / 2 + $(window).scrollLeft()  + "px"
+                );
         },
 
         warning: function (message) {
@@ -666,8 +678,11 @@ define('ui', [], function () {
             Espo.Ui.notify(message, 'success', 2000);
         },
 
-        error: function (message) {
-            Espo.Ui.notify(message, 'error', 4000);
+        error: function (message, closeButton) {
+            closeButton = closeButton || false;
+            timeout = closeButton ? 0 : 4000;
+
+            Espo.Ui.notify(message, 'error', timeout, closeButton);
         },
 
         info: function (message) {
