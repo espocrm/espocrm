@@ -43,9 +43,9 @@ class Error extends InternalServerError implements HasBody
         parent::__construct($message, $code, $previous);
     }
 
-    public static function createWithBody(string $reason, string $body): self
+    public static function createWithBody(string $message, string $body): self
     {
-        $exception = new static($reason);
+        $exception = new static($message);
 
         $exception->body = $body;
 
