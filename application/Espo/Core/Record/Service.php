@@ -1262,7 +1262,7 @@ class Service implements Crud,
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
 
         if (!$result) {
-            throw new Forbidden("Could not add a user to followers. The user needs to have 'stream' access.");
+            throw new ForbiddenSilent("Could not add a user to followers. The user needs to have 'stream' access.");
         }
     }
 
