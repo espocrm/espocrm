@@ -863,7 +863,7 @@ define(
                             this.language.translate('Access denied');
 
                         if (statusReason) {
-                            msg += ': ' + statusReason;
+                            msg += '\n' + statusReason;
 
                             closeButton = true;
                         }
@@ -901,7 +901,7 @@ define(
                         msg = this.language.translate('Error') + ' ' + xhr.status;
 
                         if (statusReason) {
-                            msg += ': ' + statusReason;
+                            msg += '\n' + statusReason;
 
                             closeButton = true;
                         }

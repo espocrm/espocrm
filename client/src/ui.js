@@ -627,6 +627,8 @@ define('ui', [], function () {
                 return;
             }
 
+            message = message.replace(/\n|\r\n|\r/g, '<br/>');
+
             type = type || 'warning';
             closeButton = closeButton || false;
 
