@@ -223,7 +223,11 @@ class Pusher implements WampServerInterface
         $command = $this->phpExecutablePath . " command.php " . $data['accessCheckCommand'];
 
         foreach ($params as $key => $value) {
-            $command = str_replace(':' . $key, $value, $command);
+            $command = str_replace(
+                ':' . $key,
+                escapeshellarg($value),
+                $command
+            );
         }
 
         return $command;
@@ -327,8 +331,7 @@ class Pusher implements WampServerInterface
         }
 
         $authToken = preg_replace('/[^a-zA-Z0-9]+/', '', $params['authToken']);
-
-        $userId = $params['userId'];
+        $userId = preg_replace('/[^a-zA-Z0-9]+/', '', $params['userId']);
 
         $result = $this->getUserIdByAuthToken($authToken);
 
