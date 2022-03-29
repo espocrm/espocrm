@@ -60,9 +60,10 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
             this.checkAvailability();
 
             this.stopListening(this.model, 'change:host');
-            this.listenTo(this.model, 'change:host', function () {
+
+            this.listenTo(this.model, 'change:host', () => {
                 this.checkAvailability();
-            }, this);
+            });
         },
 
         getData: function () {
@@ -76,9 +77,9 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
                 emailAddress: this.model.get('emailAddress'),
                 userId: this.model.get('assignedUserId'),
             };
+
             return data;
         },
-
 
         test: function () {
             var data = this.getData();
@@ -93,31 +94,35 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
                 url: this.url,
                 type: 'POST',
                 data: JSON.stringify(data),
-                error: function (xhr, status) {
+                error: (xhr, status) => {
                     var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 
                     var msg = this.translate('Error');
+
                     if (xhr.status != 200) {
                         msg += ' ' + xhr.status;
                     }
+
                     if (statusReason) {
                         msg += ': ' + statusReason;
                     }
-                    Espo.Ui.error(msg);
-                    console.error(msg);
-                    xhr.errorIsHandled = true;
-                    $btn.removeClass('disabled');
-                }.bind(this)
-            }).done(function () {
-                $btn.removeClass('disabled');
-                Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
-            }.bind(this));
 
+                    Espo.Ui.error(msg, true);
+
+                    console.error(msg);
+
+                    xhr.errorIsHandled = true;
+
+                    $btn.removeClass('disabled');
+                }
+            }).then(() => {
+                $btn.removeClass('disabled');
+
+                Espo.Ui.success(this.translate('connectionIsOk', 'messages', 'EmailAccount'));
+            });
         },
 
     });
-
 });
-

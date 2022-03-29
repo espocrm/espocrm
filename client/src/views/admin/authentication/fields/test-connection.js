@@ -26,11 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/authentication/fields/test-connection', 'views/fields/base', function (Dep) {
+define('views/admin/authentication/fields/test-connection', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        _template: '<button class="btn btn-default" data-action="testConnection">{{translate \'Test Connection\' scope=\'Settings\'}}</button>',
+        _template: `
+            <button
+                class="btn btn-default"
+                data-action="testConnection"
+            >{{translate \'Test Connection\' scope=\'Settings\'}}</button>
+        `,
 
         events: {
             'click [data-action="testConnection"]': function () {
@@ -55,6 +60,7 @@ Espo.define('views/admin/authentication/fields/test-connection', 'views/fields/b
                 'accountDomainNameShort': this.model.get('ldapAccountDomainNameShort'),
                 'accountCanonicalForm': this.model.get('ldapAccountCanonicalForm')
             };
+
             return data;
         },
 
@@ -69,29 +75,33 @@ Espo.define('views/admin/authentication/fields/test-connection', 'views/fields/b
                 url: 'Settings/action/testLdapConnection',
                 type: 'POST',
                 data: JSON.stringify(data),
-                error: function (xhr, status) {
+                error: (xhr, status) => {
                     var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
+
                     statusReason = statusReason.replace(/ $/, '');
                     statusReason = statusReason.replace(/,$/, '');
 
                     var msg = this.translate('Error') + ' ' + xhr.status;
+
                     if (statusReason) {
                         msg += ': ' + statusReason;
                     }
-                    Espo.Ui.error(msg);
+
+                    Espo.Ui.error(msg, true);
+
                     console.error(msg);
+
                     xhr.errorIsHandled = true;
 
                     this.$el.find('button').prop('disabled', false);
-                }.bind(this)
-            }).done(function () {
+                }
+            }).then(() => {
                 this.$el.find('button').prop('disabled', false);
+
                 Espo.Ui.success(this.translate('ldapTestConnection', 'messages', 'Settings'));
-            }.bind(this));
+            });
 
         },
 
     });
-
 });
-

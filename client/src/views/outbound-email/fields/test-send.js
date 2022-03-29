@@ -57,9 +57,9 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
 
             this.stopListening(this.model, 'change:smtpServer');
 
-            this.listenTo(this.model, 'change:smtpServer', function () {
+            this.listenTo(this.model, 'change:smtpServer', () => {
                 this.checkAvailability();
-            }, this);
+            });
         },
 
         getSmtpData: function () {
@@ -74,6 +74,7 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
                 'fromAddress': this.model.get('outboundEmailFromAddress'),
                 'type': 'outboundEmail',
             };
+
             return data;
         },
 
@@ -83,10 +84,10 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
 
             this.createView('popup', 'views/outbound-email/modals/test-send', {
                 emailAddress: this.getUser().get('emailAddress')
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'send', function (emailAddress) {
+                this.listenToOnce(view, 'send', (emailAddress) => {
                     this.$el.find('button').addClass('disabled');
                     data.emailAddress = emailAddress;
 
@@ -95,59 +96,53 @@ define('views/outbound-email/fields/test-send', 'views/fields/base', function (D
                     view.close();
 
                     Espo.Ajax.postRequest('Email/action/sendTestEmail', data)
-                        .then(
-                            function () {
-                                this.$el.find('button').removeClass('disabled');
+                        .then(() => {
+                            this.$el.find('button').removeClass('disabled');
 
-                                Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
+                            Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
+                        })
+                        .catch((xhr) => {
+                            var reason = xhr.getResponseHeader('X-Status-Reason') || '';
+
+                            reason = reason
+                                .replace(/ $/, '')
+                                .replace(/,$/, '');
+
+                            var msg = this.translate('Error');
+
+                            if (xhr.status !== 200) {
+                                msg += ' ' + xhr.status;
                             }
-                            .bind(this)
-                        )
-                        .fail(
-                            function (xhr) {
-                                var reason = xhr.getResponseHeader('X-Status-Reason') || '';
 
-                                reason = reason
-                                    .replace(/ $/, '')
-                                    .replace(/,$/, '');
+                            if (xhr.responseText) {
+                                try {
+                                    var data = JSON.parse(xhr.responseText);
 
-                                var msg = this.translate('Error');
-
-                                if (xhr.status !== 200) {
-                                    msg += ' ' + xhr.status;
+                                    reason = data.message || reason;
                                 }
+                                catch (e) {
+                                    console.error('Could not parse error response body.');
 
-                                if (xhr.responseText) {
-                                    try {
-                                        var data = JSON.parse(xhr.responseText);
-
-                                        reason = data.message || reason;
-                                    }
-                                    catch (e) {
-                                        console.error('Could not parse error response body.');
-
-                                        return;
-                                    }
+                                    return;
                                 }
-
-                                if (reason) {
-                                    msg += ': ' + reason;
-                                }
-
-                                Espo.Ui.error(msg);
-
-                                console.error(msg);
-
-                                xhr.errorIsHandled = true;
-
-                                this.$el.find('button').removeClass('disabled');
                             }
-                            .bind(this)
-                        );
 
-                }, this);
-            }.bind(this));
+                            if (reason) {
+                                msg += ': ' + reason;
+                            }
 
+                            Espo.Ui.error(msg, true);
+
+                            console.error(msg);
+
+                            xhr.errorIsHandled = true;
+
+                            this.$el.find('button').removeClass('disabled');
+                        }
+                    );
+
+                });
+            });
         },
 
     });
