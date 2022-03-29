@@ -106,11 +106,11 @@ class Config
                 return $default;
             }
 
-            if (!isset($lastBranch[$key])) {
-                return $default;
-            }
-
             if (is_array($lastBranch)) {
+                if (!isset($lastBranch[$key])) {
+                    return $default;
+                }
+
                 $lastBranch = $lastBranch[$key];
 
                 continue;
