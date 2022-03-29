@@ -298,7 +298,7 @@
         },
         {
             "name": "record\\create",
-            "insertText": "record\\relate(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)",
+            "insertText": "record\\create(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)",
             "returnType": "string"
         },
         {
