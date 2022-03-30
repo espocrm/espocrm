@@ -32,6 +32,7 @@ namespace Espo\Core\Record;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\Utils\Json;
+use Espo\Core\Exceptions\Error\Body as ErrorBody;
 
 use Espo\Core\Exceptions\{
     Error,
@@ -1262,7 +1263,18 @@ class Service implements Crud,
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
 
         if (!$result) {
-            throw new ForbiddenSilent("Could not add a user to followers. The user needs to have 'stream' access.");
+            throw ForbiddenSilent::createWithBody(
+                "Could not add user to followers.",
+                ErrorBody::create()
+                    ->withMessageTranslation(
+                        'couldNotAddFollowerUserHasNoAccessToStream',
+                        'Stream',
+                        [
+                            'userName' => $user->getUserName(),
+                        ]
+                    )
+                    ->encode()
+            );
         }
     }
 

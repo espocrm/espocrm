@@ -815,16 +815,10 @@ define(
                 contentType: 'application/json',
             });
 
-            $(document).ajaxError((event, xhr, options) => {
+            $(document).ajaxError((e, xhr, options) => {
                 if (xhr.errorIsHandled) {
                     return;
                 }
-
-                let statusReason = xhr.getResponseHeader('X-Status-Reason');
-
-                let msg;
-
-                let closeButton = false;
 
                 switch (xhr.status) {
                     case 0:
@@ -836,6 +830,7 @@ define(
 
                     case 200:
                         Ui.error(this.language.translate('Bad server response'));
+
                         console.error('Bad server response: ' + xhr.responseText);
 
                         break;
@@ -844,10 +839,11 @@ define(
                         if (!options.login) {
                             if (this.auth) {
                                 this.logout();
+
+                                break
                             }
-                            else {
-                                console.error('Error 401: Unauthorized.');
-                            }
+
+                            console.error('Error 401: Unauthorized.');
                         }
 
                         break;
@@ -859,28 +855,12 @@ define(
                             break;
                         }
 
-                        msg = this.language.translate('Error') + ' ' + xhr.status + ': ' +
-                            this.language.translate('Access denied');
-
-                        if (statusReason) {
-                            msg += '\n' + statusReason;
-
-                            closeButton = true;
-                        }
-
-                        Ui.error(msg, closeButton);
+                        this._processErrorAlert(xhr, 'Access denied');
 
                         break;
 
                     case 400:
-                        msg = this.language.translate('Error') + ' ' + xhr.status + ': ' +
-                            this.language.translate('Bad request');
-
-                        if (statusReason) {
-                            msg += ': ' + statusReason;
-                        }
-
-                        Ui.error(msg);
+                        this._processErrorAlert(xhr, 'Bad request');
 
                         break;
 
@@ -891,28 +871,80 @@ define(
                             break
                         }
 
-                        msg = this.language.translate('Error') + ' ' + xhr.status;
+                        this._processErrorAlert(xhr, 'Not found', true);
 
-                        msg += ': ' + this.language.translate('Not found');
-
-                        Ui.error(msg);
+                        break;
 
                     default:
-                        msg = this.language.translate('Error') + ' ' + xhr.status;
-
-                        if (statusReason) {
-                            msg += '\n' + statusReason;
-
-                            closeButton = true;
-                        }
-
-                        Ui.error(msg, closeButton);
+                        this._processErrorAlert(xhr, null);
                 }
+
+                let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 if (statusReason) {
                     console.error('Server side error ' + xhr.status + ': ' + statusReason);
                 }
             });
+        },
+
+        _processErrorAlert: function (xhr, label, noDetail) {
+            let msg = this.language.translate('Error') + ' ' + xhr.status;
+
+            if (label) {
+                msg += ': ' + this.language.translate(label);
+            }
+
+            let obj = {
+                msg: msg,
+                closeButton: false,
+            };
+
+            let isMessageDone = false;
+
+            if (noDetail) {
+                isMessageDone = true;
+            }
+
+            if (!isMessageDone && xhr.responseText && xhr.responseText[0] === '{') {
+                let data = null;
+
+                try {
+                    data = JSON.parse(xhr.responseText);
+                }
+                catch (e) {}
+
+                if (data && data.messageTranslation && data.messageTranslation.label) {
+                    let msgDetail = this.language.translate(
+                        data.messageTranslation.label,
+                        'messages',
+                        data.messageTranslation.scope
+                    );
+
+                    let msgData = data.messageTranslation.data || {};
+
+                    for (let key in msgData) {
+                        msgDetail = msgDetail.replace('{' + key + '}', msgData[key]);
+                    }
+
+                    obj.msg += '\n' + msgDetail;
+                    obj.closeButton = true;
+
+                    isMessageDone = true;
+                }
+            }
+
+            if (!isMessageDone) {
+                let statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+                if (statusReason) {
+                    obj.msg += '\n' + statusReason;
+                    obj.closeButton = true;
+
+                    isMessageDone = true;
+                }
+            }
+
+            Ui.error(obj.msg, obj.closeButton);
         },
 
         initBroadcastChannel: function () {
