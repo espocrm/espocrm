@@ -1270,7 +1270,7 @@ class Service implements Crud,
                         'couldNotAddFollowerUserHasNoAccessToStream',
                         'Stream',
                         [
-                            'userName' => $user->getUserName(),
+                            'userName' => $user->getUserName() ?? '',
                         ]
                     )
                     ->encode()
