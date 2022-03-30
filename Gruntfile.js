@@ -371,6 +371,10 @@ module.exports = grunt => {
         cp.execSync("vendor/bin/phpunit ./tests/integration", {stdio: 'inherit'});
     });
 
+    grunt.registerTask('set-config-params', () => {
+        cp.execSync("composer run-script setConfigParams", {stdio: 'ignore'});
+    });
+
     grunt.registerTask('zip', () => {
         const archiver = require('archiver');
 
@@ -416,7 +420,6 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
 
-
     grunt.registerTask('internal', [
         'less',
         'cssmin',
@@ -442,6 +445,7 @@ module.exports = grunt => {
     grunt.registerTask('build', [
         'composer-install',
         'npm-install',
+        'set-config-params',
         'offline',
     ]);
 

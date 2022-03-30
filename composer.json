@@ -86,5 +86,8 @@
         {
             "name": "Oleksii Avramenko"
         }
-    ]
+    ],
+    "scripts": {
+        "setConfigParams": "EspoDev\\SetConfigParams::process"
+    }
 }
