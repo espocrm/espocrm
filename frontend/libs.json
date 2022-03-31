@@ -24,7 +24,7 @@
         "bundle": true
     },
     {
-        "src": "node_modules/base-64/base64.js",
+        "src": "node_modules/js-base64/base64.js",
         "bundle": true
     },
     {

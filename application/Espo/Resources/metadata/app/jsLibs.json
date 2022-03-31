@@ -5,6 +5,10 @@
         "exportsTo": "window",
         "exportsAs": "Flotr"
     },
+    "Base64": {
+        "exportsTo": "window",
+        "exportsAs": "Base64"
+    },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
         "devPath": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js",

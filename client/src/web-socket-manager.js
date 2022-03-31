@@ -81,7 +81,7 @@ define('web-socket-manager', [], function () {
     _.extend(WebSocketManager.prototype, {
 
         connect: function (auth, userId) {
-            let authArray = base64.decode(auth).split(':');
+            let authArray = Base64.decode(auth).split(':');
 
             let authToken = authArray[1];
 

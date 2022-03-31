@@ -71,7 +71,7 @@ define('views/login-second-step', 'view', function (Dep) {
 
             var $submit = this.$el.find('#btn-send');
 
-            if (code == '') {
+            if (code === '') {
                 this.isPopoverDestroyed = false;
 
                 var $el = $("#field-code");
@@ -108,12 +108,14 @@ define('views/login-second-step', 'view', function (Dep) {
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
+            let authString = Base64.encode(userName  + ':' + password);
+
             Espo.Ajax
                 .getRequest('App/user', {code: code}, {
                     login: true,
                     headers: {
-                        'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
-                        'Espo-Authorization': base64.encode(userName + ':' + password),
+                        'Authorization': 'Basic ' + authString,
+                        'Espo-Authorization': authString,
                         'Espo-Authorization-Code': code,
                         'Espo-Authorization-Create-Token-Secret': true,
                     },

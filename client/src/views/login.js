@@ -123,7 +123,7 @@ define('views/login', 'view', function (Dep) {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             try {
-                var authString = base64.encode(userName  + ':' + password);
+                var authString = Base64.encode(userName  + ':' + password);
             }
             catch (e) {
                 Espo.Ui.error(this.translate('Error') + ': ' + e.message, true);
