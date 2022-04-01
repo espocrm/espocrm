@@ -36,20 +36,45 @@ use RuntimeException;
  */
 class Rates
 {
+    private ?string $baseCode = null;
+
     /**
      * @var array<string,float>
      */
     private array $data = [];
 
-    private function __construct()
+    private function __construct(?string $baseCode = null)
     {
+        $this->baseCode = $baseCode;
     }
 
-    public static function create(): self
+    /**
+     * Create an instance.
+     *
+     * @param ?string $baseCode A base-currency code.
+     */
+    public static function create(?string $baseCode = null): self
     {
-        return new self();
+        return new self($baseCode);
     }
 
+    /**
+     * Get a base-currency code.
+     *
+     * @throws RuntimeException If the base code is not set.
+     */
+    public function getBase(): string
+    {
+        if ($this->baseCode === null) {
+            throw new RuntimeException("Base code is not set.");
+        }
+
+        return $this->baseCode;
+    }
+
+    /**
+     * Clone with a rate value for a specific currency.
+     */
     public function withRate(string $code, float $value): self
     {
         $obj = clone $this;
@@ -58,11 +83,17 @@ class Rates
         return $obj;
     }
 
+    /**
+     * Whether a rate is set for a specific currency.
+     */
     public function hasRate(string $code): bool
     {
         return array_key_exists($code, $this->data);
     }
 
+    /**
+     * Get a rate value for a specific currency.
+     */
     public function getRate(string $code): float
     {
         if (!$this->hasRate($code)) {
@@ -75,10 +106,9 @@ class Rates
     /**
      * @param array<string,float> $data
      */
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data, ?string $baseCode = null): self
     {
-        $obj = new self();
-
+        $obj = new self($baseCode);
         $obj->data = $data;
 
         return $obj;

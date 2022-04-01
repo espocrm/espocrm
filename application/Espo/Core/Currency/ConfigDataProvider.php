@@ -101,6 +101,6 @@ class ConfigDataProvider
 
         $rates[$this->getBaseCurrency()] = 1.0;
 
-        return Rates::fromArray($rates);
+        return Rates::fromArray($rates, $this->getBaseCurrency());
     }
 }
