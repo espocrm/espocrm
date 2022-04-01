@@ -283,6 +283,10 @@ class ItemGeneralConverter implements ItemConverter
         $link = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
         $column = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
 
+        if (!$column || !$link) {
+            throw new Error("Bad where item 'column'.");
+        }
+
         $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
 
         $queryBuilder->distinct();
