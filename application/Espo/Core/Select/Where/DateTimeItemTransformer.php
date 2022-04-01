@@ -34,6 +34,8 @@ use Espo\Entities\User;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
 
+use Espo\Core\Select\Where\Item\Type;
+
 use DateTime;
 use DateTimeZone;
 use DateInterval;
@@ -43,12 +45,9 @@ use DateInterval;
  */
 class DateTimeItemTransformer
 {
-    /**
-     * @var User
-     */
-    protected $user;
+    protected User $user;
 
-    private $config;
+    private Config $config;
 
     public function __construct(User $user, Config $config)
     {
@@ -78,7 +77,17 @@ class DateTimeItemTransformer
             throw new Error("Bad datetime where item. Empty 'type'.");
         }
 
-        if (empty($value) && in_array($type, ['on', 'before', 'after'])) {
+        if (
+            empty($value) &&
+            in_array(
+                $type,
+                [
+                    Type::ON,
+                    Type::BEFORE,
+                    Type::AFTER,
+                ]
+            )
+        ) {
             throw new Error("Bad where item. Empty value.");
         }
 
@@ -89,9 +98,8 @@ class DateTimeItemTransformer
         $dt = new DateTime('now', new DateTimeZone($timeZone));
 
         switch ($type) {
-            case 'today':
-
-                $where['type'] = 'between';
+            case Type::TODAY:
+                $where['type'] = Type::BETWEEN;
 
                 $dt->setTime(0, 0, 0);
 
@@ -107,9 +115,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'past':
-
-                $where['type'] = 'before';
+            case Type::PAST:
+                $where['type'] = Type::BEFORE;
 
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -117,9 +124,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'future':
-
-                $where['type'] = 'after';
+            case Type::FUTURE:
+                $where['type'] = Type::AFTER;
 
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -128,8 +134,7 @@ class DateTimeItemTransformer
                 break;
 
             case 'lastSevenDays':
-
-                $where['type'] = 'between';
+                $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
 
@@ -146,9 +151,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'lastXDays':
-
-                $where['type'] = 'between';
+            case Type::LAST_X_DAYS:
+                $where['type'] = Type::BETWEEN;
 
                 $dtFrom = clone $dt;
 
@@ -168,8 +172,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'nextXDays':
-                $where['type'] = 'between';
+            case Type::NEXT_X_DAYS:
+                $where['type'] = Type::BETWEEN;
 
                 $dtTo = clone $dt;
 
@@ -189,9 +193,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'olderThanXDays':
-
-                $where['type'] = 'before';
+            case Type::OLDER_THAN_X_DAYS:
+                $where['type'] = Type::BEFORE;
 
                 $number = strval(intval($value));
 
@@ -203,9 +206,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'afterXDays':
-
-                $where['type'] = 'after';
+            case Type::AFTER_X_DAYS:
+                $where['type'] = Type::AFTER;
 
                 $number = strval(intval($value));
 
@@ -217,8 +219,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'on':
-                $where['type'] = 'between';
+            case Type::ON:
+                $where['type'] = Type::BETWEEN;
 
                 $dt = new DateTime($value, new DateTimeZone($timeZone));
                 $dtTo = clone $dt;
@@ -237,8 +239,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'before':
-                $where['type'] = 'before';
+            case Type::BEFORE:
+                $where['type'] = Type::BEFORE;
 
                 $dt = new DateTime($value, new DateTimeZone($timeZone));
                 $dt->setTimezone(new DateTimeZone('UTC'));
@@ -247,8 +249,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'after':
-                $where['type'] = 'after';
+            case Type::AFTER:
+                $where['type'] = Type::AFTER;
 
                 $dt = new DateTime($value, new DateTimeZone($timeZone));
 
@@ -262,9 +264,8 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'between':
-
-                $where['type'] = 'between';
+            case Type::BETWEEN:
+                $where['type'] = Type::BETWEEN;
 
                 if (!is_array($value) || count($value) < 2) {
                     throw new Error("Bad where item. Bad value.");
@@ -288,18 +289,18 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'currentMonth':
-            case 'lastMonth':
-            case 'nextMonth':
-
-                $where['type'] = 'between';
+            case Type::CURRENT_MONTH:
+            case Type::LAST_MONTH:
+            case Type::NEXT_MONTH:
+                $where['type'] = Type::BETWEEN;
 
                 $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
                 $dtFrom = $dt->modify('first day of this month')->setTime(0, 0, 0);
 
-                if ($type == 'lastMonth') {
+                if ($type == Type::LAST_MONTH) {
                     $dtFrom->modify('-1 month');
-                } else if ($type == 'nextMonth') {
+                }
+                else if ($type == Type::NEXT_MONTH) {
                     $dtFrom->modify('+1 month');
                 }
 
@@ -313,10 +314,9 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'currentQuarter':
-            case 'lastQuarter':
-
-                $where['type'] = 'between';
+            case Type::CURRENT_QUARTER:
+            case Type::LAST_QUARTER:
+                $where['type'] = Type::BETWEEN;
 
                 $dt = new DateTime('now', new DateTimeZone($timeZone));
                 $quarter = ceil($dt->format('m') / 3);
@@ -324,7 +324,7 @@ class DateTimeItemTransformer
                 $dtFrom = clone $dt;
                 $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
 
-                if ($type === 'lastQuarter') {
+                if ($type === Type::LAST_QUARTER) {
                     $quarter--;
 
                     if ($quarter == 0) {
@@ -346,14 +346,14 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'currentYear':
-            case 'lastYear':
+            case Type::CURRENT_YEAR:
+            case Type::LAST_YEAR:
+                $where['type'] = Type::BETWEEN;
 
-                $where['type'] = 'between';
                 $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
                 $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
 
-                if ($type == 'lastYear') {
+                if ($type == Type::LAST_YEAR) {
                     $dtFrom->modify('-1 year');
                 }
 
@@ -369,10 +369,10 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'currentFiscalYear':
-            case 'lastFiscalYear':
+            case Type::CURRENT_FISCAL_YEAR:
+            case Type::LAST_FISCAL_YEAR:
+                $where['type'] = Type::BETWEEN;
 
-                $where['type'] = 'between';
                 $dtToday = new DateTime('now', new DateTimeZone($timeZone));
                 $dt = clone $dtToday;
                 $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
@@ -386,7 +386,7 @@ class DateTimeItemTransformer
                     $dt->modify('-1 year');
                 }
 
-                if ($type === 'lastFiscalYear') {
+                if ($type === Type::LAST_FISCAL_YEAR) {
                     $dt->modify('-1 year');
                 }
 
@@ -404,10 +404,9 @@ class DateTimeItemTransformer
 
                 break;
 
-            case 'currentFiscalQuarter':
-            case 'lastFiscalQuarter':
-
-                $where['type'] = 'between';
+            case Type::CURRENT_FISCAL_QUARTER:
+            case Type::LAST_FISCAL_QUARTER:
+                $where['type'] = Type::BETWEEN;
 
                 $dtToday = new DateTime('now', new DateTimeZone($timeZone));
 
@@ -433,7 +432,7 @@ class DateTimeItemTransformer
                     }
                 }
 
-                if ($type === 'lastFiscalQuarter') {
+                if ($type === Type::LAST_FISCAL_QUARTER) {
                     $dt->modify('-3 months');
                 }
 
@@ -452,7 +451,6 @@ class DateTimeItemTransformer
                 break;
 
             default:
-
                 $where['type'] = $type;
         }
 
