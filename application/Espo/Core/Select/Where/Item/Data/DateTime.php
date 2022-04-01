@@ -27,85 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Where;
+namespace Espo\Core\Select\Where\Item\Data;
 
 use Espo\Core\Select\Where\Item\Data;
 
-class ItemBuilder
+class DateTime implements Data
 {
-    private ?string $type = null;
-
-    private ?string $attribute = null;
-
-    /**
-     * @var mixed
-     */
-    private $value = null;
-
-    private ?Data $data = null;
+    private ?string $timeZone = null;
 
     public static function create(): self
     {
         return new self();
     }
 
-    public function setType(string $type): self
+    public function withTimeZone(?string $timeZone): self
     {
-        $this->type = $type;
+        $obj = clone $this;
+        $obj->timeZone = $timeZone;
 
-        return $this;
+        return $obj;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value): self
+    public function getTimeZone(): ?string
     {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    public function setAttribute(?string $attribute): self
-    {
-        $this->attribute = $attribute;
-
-        return $this;
-    }
-
-    public function setData(?Data $data): self
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * Set nested where item list.
-     *
-     * @param Item[] $itemList
-     * @return self
-     */
-    public function setItemList(array $itemList): self
-    {
-        $this->value = array_map(
-            function (Item $item): array {
-                return $item->getRaw();
-            },
-            $itemList
-        );
-
-        return $this;
-    }
-
-    public function build(): Item
-    {
-        return Item
-            ::fromRaw([
-                'type' => $this->type,
-                'attribute' => $this->attribute,
-                'value' => $this->value,
-            ])
-            ->withData($this->data);
+        return $this->timeZone;
     }
 }

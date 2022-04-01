@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Select\Where;
 
+use Espo\Core\Select\Where\Item\Data;
+use Espo\Core\Select\Where\Item\Data\DateTime as DateTimeData;
+
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -47,9 +50,7 @@ class Item
      */
     private $value = null;
 
-    private bool $dateTime = false;
-
-    private ?string $timeZone = null;
+    private ?Data $data = null;
 
     /**
      * @var string[]
@@ -78,6 +79,7 @@ class Item
 
     /**
      * @param array<string,mixed> $params
+     * {@internal}
      */
     public static function fromRaw(array $params): self
     {
@@ -91,10 +93,16 @@ class Item
 
         $obj->attribute = $params['attribute'] ?? $params['field'] ?? null;
         $obj->value = $params['value'] ?? null;
-        $obj->dateTime = $params['dateTime'] ?? false;
-        $obj->timeZone = $params['timeZone'] ?? null;
+
+        if ($params['dateTime'] ?? false) {
+            $obj->data = DateTimeData
+                ::create()
+                ->withTimeZone($params['timeZone'] ?? null);
+        }
 
         unset($params['field']);
+        unset($params['dateTime']);
+        unset($params['timeZone']);
 
         foreach (array_keys($params) as $key) {
             if (!property_exists($obj, $key)) {
@@ -125,6 +133,7 @@ class Item
 
     /**
      * @param array<array<mixed,mixed>> $paramList
+     * {@internal}
      */
     public static function fromRawAndGroup(array $paramList): self
     {
@@ -142,6 +151,7 @@ class Item
      *   dateTime?: bool,
      *   timeZone?: string,
      * }
+     * {@internal}
      */
     public function getRaw(): array
     {
@@ -156,12 +166,14 @@ class Item
             $raw['attribute'] = $this->attribute;
         }
 
-        if ($this->dateTime) {
-            $raw['dateTime'] = $this->dateTime;
-        }
+        if ($this->data instanceof DateTimeData) {
+            $raw['dateTime'] = true;
 
-        if ($this->timeZone) {
-            $raw['timeZone'] = $this->timeZone;
+            $timeZone = $this->data->getTimeZone();
+
+            if ($timeZone) {
+                $raw['timeZone'] = $timeZone;
+            }
         }
 
         return $raw;
@@ -172,8 +184,6 @@ class Item
      */
     public function getType(): string
     {
-        assert($this->type !== null);
-
         return $this->type;
     }
 
@@ -199,7 +209,6 @@ class Item
      * Get nested where items (for 'and', 'or' types).
      *
      * @return Item[]
-     *
      * @throws RuntimeException If a type does not support nested items.
      */
     public function getItemList(): array
@@ -218,19 +227,11 @@ class Item
     }
 
     /**
-     * Whether is 'date-time'.
+     * Get a data-object.
      */
-    public function isDateTime(): bool
+    public function getData(): ?Data
     {
-        return $this->dateTime;
-    }
-
-    /**
-     * Get a time zone. Actual only for 'date-time' items.
-     */
-    public function getTimeZone(): ?string
-    {
-        return $this->timeZone;
+        return $this->data;
     }
 
     /**
@@ -239,5 +240,18 @@ class Item
     public static function createBuilder(): ItemBuilder
     {
         return new ItemBuilder();
+    }
+
+    /**
+     * Clone with data.
+     *
+     * {@internal}
+     */
+    public function withData(?Data $data): self
+    {
+        $obj = clone $this;
+        $obj->data = $data;
+
+        return $obj;
     }
 }

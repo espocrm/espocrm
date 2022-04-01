@@ -102,8 +102,9 @@ class ItemGeneralConverter implements ItemConverter
         $type = $item->getType();
         $value = $item->getValue();
         $attribute = $item->getAttribute();
+        $data = $item->getData();
 
-        if ($item->isDateTime()) {
+        if ($data instanceof Item\Data\DateTime) {
             return $this->convert(
                 $queryBuilder,
                 $this->dateTimeItemTransformer->transform($item)

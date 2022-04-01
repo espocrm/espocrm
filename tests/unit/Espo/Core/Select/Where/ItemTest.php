@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\Core\Select\Where\Item;
-use Espo\Core\Select\Where\ItemBuilder;
+use Espo\Core\Select\Where\Item\Data\DateTime;
 
 use InvalidArgumentException;
 
@@ -51,8 +51,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('equals', $item->getType());
         $this->assertEquals('test', $item->getAttribute());
         $this->assertEquals('testValue', $item->getValue());
-        $this->assertFalse($item->isDateTime());
-        $this->assertEquals(null, $item->getTimeZone());
+        $this->assertNull($item->getData());
 
         $item1 = Item::createBuilder()
             ->setType('equals')
@@ -68,12 +67,13 @@ class ItemTest extends \PHPUnit\Framework\TestCase
             ->setType('equals')
             ->setAttribute('test')
             ->setValue('testValue')
-            ->setIsDateTime(true)
-            ->setTimeZone('Europe/London')
+            ->setData(
+                DateTime::create()->withTimeZone('Europe/London')
+            )
             ->build();
 
-        $this->assertTrue($item2->isDateTime());
-        $this->assertEquals('Europe/London', $item2->getTimeZone());
+        $this->assertNotNull($item2->getData());
+        $this->assertEquals('Europe/London', $item2->getData()->getTimeZone());
     }
 
     public function testEmpty()

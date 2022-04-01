@@ -62,12 +62,14 @@ class DateTimeItemTransformer
         $type = $item->getType();
         $value = $item->getValue();
         $attribute = $item->getAttribute();
-        $isDateTime = $item->isDateTime();
-        $timeZone =  $item->getTimeZone() ?? 'UTC';
 
-        if (!$isDateTime) {
+        $data = $item->getData();
+
+        if (!$data instanceof Item\Data\DateTime) {
             throw new Error("Bad where item.");
         }
+
+        $timeZone = $data->getTimeZone() ?? 'UTC';
 
         if (!$attribute) {
             throw new Error("Bad datetime where item. Empty 'attribute'.");
