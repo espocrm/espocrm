@@ -366,7 +366,7 @@ class Record extends RecordService implements
     }
 
     /**
-     * @deprecated Use `Espo\Core\Field\Currency\CurrencyConverter`.
+     * @deprecated Use `Espo\Core\Currency\Converter`.
      * @param ?string[] $fieldList
      * @return stdClass
      */

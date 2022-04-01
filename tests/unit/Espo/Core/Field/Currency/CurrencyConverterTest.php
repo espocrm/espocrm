@@ -31,9 +31,9 @@ namespace tests\unit\Espo\Core\Field\Currency;
 
 use Espo\Core\{
     Field\Currency,
-    Field\Currency\CurrencyConverter,
-    Field\Currency\CurrencyConfigDataProvider,
-    Field\Currency\CurrencyRates,
+    Currency\Converter as CurrencyConverter,
+    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
+    Currency\Rates as CurrencyRates,
 };
 
 class CurrencyConverterTest extends \PHPUnit\Framework\TestCase

@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Field\Currency;
 
 use Espo\Core\{
-    Field\Currency\CurrencyConfigDataProvider,
+    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
     Utils\Config,
 };
 

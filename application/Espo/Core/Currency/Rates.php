@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Field\Currency;
+namespace Espo\Core\Currency;
 
 use RuntimeException;
 
 /**
  * Currency rates.
  */
-class CurrencyRates
+class Rates
 {
     /**
      * @var array<string,float>
@@ -45,18 +45,31 @@ class CurrencyRates
     {
     }
 
-    public function hasRate(string $currencyCode): bool
+    public static function create(): self
     {
-        return array_key_exists($currencyCode, $this->data);
+        return new self();
     }
 
-    public function getRate(string $currencyCode): float
+    public function withRate(string $code, float $value): self
     {
-        if (!$this->hasRate($currencyCode)) {
-            throw new RuntimeException("No currency rate for '{$currencyCode}'.");
+        $obj = clone $this;
+        $obj->data[$code] = $value;
+
+        return $obj;
+    }
+
+    public function hasRate(string $code): bool
+    {
+        return array_key_exists($code, $this->data);
+    }
+
+    public function getRate(string $code): float
+    {
+        if (!$this->hasRate($code)) {
+            throw new RuntimeException("No currency rate for '{$code}'.");
         }
 
-        return $this->data[$currencyCode];
+        return $this->data[$code];
     }
 
     /**

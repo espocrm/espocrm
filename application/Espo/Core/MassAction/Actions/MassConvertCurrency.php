@@ -43,10 +43,10 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\Metadata,
-    Field\Currency\CurrencyConfigDataProvider,
-    Field\Currency\CurrencyConverter,
     Field\Currency,
-    Field\Currency\CurrencyRates,
+    Currency\ConfigDataProvider as CurrencyConfigDataProvider,
+    Currency\Converter as CurrencyConverter,
+    Currency\Rates as CurrencyRates,
 };
 
 use Espo\ORM\Entity;

@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Field\Currency;
+namespace Espo\Core\Currency;
 
 use Espo\Core\Utils\Config;
 
 use RuntimeException;
 
-class CurrencyConfigDataProvider
+class ConfigDataProvider
 {
     private Config $config;
 
@@ -95,12 +95,12 @@ class CurrencyConfigDataProvider
     /**
      * Get rates.
      */
-    public function getCurrencyRates(): CurrencyRates
+    public function getCurrencyRates(): Rates
     {
         $rates = $this->config->get('currencyRates') ?? [];
 
         $rates[$this->getBaseCurrency()] = 1.0;
 
-        return CurrencyRates::fromArray($rates);
+        return Rates::fromArray($rates);
     }
 }
