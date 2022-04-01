@@ -115,23 +115,19 @@ class ItemGeneralConverter implements ItemConverter
             throw new Error("Bad where item. No 'type'.");
         }
 
-        if ($attribute) {
-            if ($this->itemConverterFactory->has($this->entityType, $attribute, $type)) {
-                $converter = $this->itemConverterFactory->create(
-                    $this->entityType,
-                    $attribute,
-                    $type,
-                    $this->user
-                );
+        if (
+            $attribute &&
+            $this->itemConverterFactory->has($this->entityType, $attribute, $type)
+        ) {
 
-                return $converter->convert($queryBuilder, $item);
-            }
+            $converter = $this->itemConverterFactory->create(
+                $this->entityType,
+                $attribute,
+                $type,
+                $this->user
+            );
 
-            $methodName = 'convert' . ucfirst($attribute) . ucfirst($type);
-
-            if (method_exists($this, $methodName)) {
-                return $this->$methodName($queryBuilder, $value);
-            }
+            return $converter->convert($queryBuilder, $item);
         }
 
         switch ($type) {
@@ -156,7 +152,6 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         switch ($type) {
-
             case 'columnLike':
             case 'columnIn':
             case 'columnNotIn':
