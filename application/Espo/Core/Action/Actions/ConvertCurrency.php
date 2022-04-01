@@ -177,7 +177,7 @@ class ConvertCurrency implements Action
 
         $ratesArray[$baseCurrency] = 1.0;
 
-        return CurrencyRates::fromArray($ratesArray);
+        return CurrencyRates::fromArray($ratesArray, $baseCurrency);
     }
 
     /**
