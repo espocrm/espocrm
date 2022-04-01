@@ -44,6 +44,11 @@ class ItemBuilder
 
     private ?string $timeZone = null;
 
+    public static function create(): self
+    {
+        return new self();
+    }
+
     public function setType(string $type): self
     {
         $this->type = $type;

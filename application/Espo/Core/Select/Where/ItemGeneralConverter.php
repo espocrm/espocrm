@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Select\Where;
 
+use Espo\Core\Select\Where\Item\Type;
+
 use Espo\{
     Core\Exceptions\Error,
     ORM\Query\SelectBuilder as QueryBuilder,
@@ -115,7 +117,10 @@ class ItemGeneralConverter implements ItemConverter
         if ($attribute) {
             if ($this->itemConverterFactory->has($this->entityType, $attribute, $type)) {
                 $converter = $this->itemConverterFactory->create(
-                    $this->entityType, $attribute, $type, $this->user
+                    $this->entityType,
+                    $attribute,
+                    $type,
+                    $this->user
                 );
 
                 return $converter->convert($queryBuilder, $item);
@@ -129,17 +134,16 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         switch ($type) {
-
-            case 'or':
-            case 'and':
+            case Type::OR:
+            case Type::AND:
 
                 return WhereClause::fromRaw(
                     $this->groupProcessAndOr($queryBuilder, $type, $attribute, $value)
                 );
 
-            case 'not':
-            case 'subQueryNotIn':
-            case 'subQueryIn':
+            case Type::NOT:
+            case Type::SUBQUERY_NOT_IN:
+            case Type::SUBQUERY_IN:
 
                 return WhereClause::fromRaw(
                     $this->groupProcessSubQuery($queryBuilder, $type, $attribute, $value)
@@ -163,11 +167,11 @@ class ItemGeneralConverter implements ItemConverter
                     $this->groupProcessColumn($queryBuilder, $type, $attribute, $value)
                 );
 
-            case 'arrayAnyOf':
-            case 'arrayNoneOf':
-            case 'arrayIsEmpty':
-            case 'arrayIsNotEmpty':
-            case 'arrayAllOf':
+            case Type::ARRAY_ANY_OF:
+            case Type::ARRAY_NONE_OF:
+            case Type::ARRAY_IS_EMPTY:
+            case Type::ARRAY_IS_EMPTY:
+            case Type::ARRAY_ALL_OF:
 
                 return WhereClause::fromRaw(
                     $this->groupProcessArray($queryBuilder, $type, $attribute, $value)
@@ -246,7 +250,7 @@ class ItemGeneralConverter implements ItemConverter
             ->from($this->entityType);
 
         $whereItem = Item::fromRaw([
-            'type' => 'and',
+            'type' => Type::AND,
             'value' => $value,
         ]);
 
@@ -286,7 +290,6 @@ class ItemGeneralConverter implements ItemConverter
         $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
 
         $queryBuilder->distinct();
-
         $queryBuilder->leftJoin($link, $alias);
 
         $columnKey = $alias . 'Middle.' . $column;
@@ -393,7 +396,7 @@ class ItemGeneralConverter implements ItemConverter
             }
         }
 
-        if ($type === 'arrayAnyOf') {
+        if ($type === Type::ARRAY_ANY_OF) {
             if (is_null($value) || !$value && !is_array($value)) {
                 throw new Error("Bad where item. No value.");
             }
@@ -415,7 +418,7 @@ class ItemGeneralConverter implements ItemConverter
             ];
         }
 
-        if ($type === 'arrayNoneOf') {
+        if ($type === Type::ARRAY_NONE_OF) {
             if (is_null($value) || !$value && !is_array($value)) {
                 throw new Error("Bad where item 'array'. No value.");
             }
@@ -438,7 +441,7 @@ class ItemGeneralConverter implements ItemConverter
             ];
         }
 
-        if ($type === 'arrayIsEmpty') {
+        if ($type === Type::ARRAY_IS_EMPTY) {
             $queryBuilder->distinct();
 
             $queryBuilder->leftJoin(
@@ -456,7 +459,7 @@ class ItemGeneralConverter implements ItemConverter
             ];
         }
 
-        if ($type === 'arrayIsNotEmpty') {
+        if ($type === Type::ARRAY_IS_NOT_EMPTY) {
             $queryBuilder->distinct();
 
             $queryBuilder->leftJoin(
@@ -474,7 +477,7 @@ class ItemGeneralConverter implements ItemConverter
             ];
         }
 
-        if ($type === 'arrayAllOf') {
+        if ($type === Type::ARRAY_ALL_OF) {
             if (is_null($value) || !$value && !is_array($value)) {
                 throw new Error("Bad where item 'array'. No value.");
             }
@@ -1223,7 +1226,6 @@ class ItemGeneralConverter implements ItemConverter
         $alias = $link . 'IsLinkedFilter' . $this->randomStringGenerator->generate();
 
         $queryBuilder->distinct();
-
         $queryBuilder->leftJoin($link, $alias);
 
         return [

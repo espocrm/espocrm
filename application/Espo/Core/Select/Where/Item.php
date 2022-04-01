@@ -34,9 +34,9 @@ use RuntimeException;
 
 class Item
 {
-    public const TYPE_AND = 'and';
+    public const TYPE_AND = Item\Type::AND;
 
-    public const TYPE_OR = 'or';
+    public const TYPE_OR = Item\Type::OR;
 
     private string $type;
 
@@ -55,11 +55,11 @@ class Item
      * @var string[]
      */
     private $noAttributeTypeList = [
-        self::TYPE_OR,
-        self::TYPE_AND,
-        'not',
-        'subQueryNotIn',
-        'subQueryIn',
+        Item\Type::AND,
+        Item\Type::OR,
+        Item\Type::NOT,
+        Item\Type::SUBQUERY_IN,
+        Item\Type::SUBQUERY_NOT_IN,
         'having', // @todo Check usage. Maybe to be removed.
     ];
 
@@ -67,8 +67,8 @@ class Item
      * @var string[]
      */
     private $withNestedItemsTypeList = [
-        self::TYPE_OR,
-        self::TYPE_AND,
+        Item\Type::AND,
+        Item\Type::OR,
     ];
 
     private function __construct(string $type)
@@ -129,7 +129,7 @@ class Item
     public static function fromRawAndGroup(array $paramList): self
     {
         return self::fromRaw([
-            'type' => self::TYPE_AND,
+            'type' => Item\Type::AND,
             'value' => $paramList,
         ]);
     }
