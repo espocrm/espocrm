@@ -466,8 +466,8 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
 
                     var attributes = emailHelper.getForwardAttributes(model, data, cc);
 
-                    attributes.attachmentsIds = data.attachmentsIds;
-                    attributes.attachmentsNames = data.attachmentsNames;
+                    attributes.attachmentsIds = duplicateAttributes.attachmentsIds;
+                    attributes.attachmentsNames = duplicateAttributes.attachmentsNames;
 
                     this.notify('Loading...');
 
