@@ -380,37 +380,25 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
         },
 
         actionSend: function () {
-            var recordView = this.getView('record');
+            let recordView = this.getView('record');
 
-            var $send = this.$el.find('.header-buttons [data-action="send"]');
+            recordView
+                .send()
+                .then(() => {
+                    this.model.set('status', 'Sent');
 
-            $send.addClass('disabled');
-
-            this.listenToOnce(recordView, 'after:send', () => {
-                this.model.set('status', 'Sent');
-
-                $send.remove();
-
-                this.menu = this.backedMenu;
-
-                if (recordView.mode !== 'detail') {
-                    recordView.setDetailMode();
-                    recordView.setFieldReadOnly('dateSent');
-                    recordView.setFieldReadOnly('name');
-                    recordView.setFieldReadOnly('attachments');
-                    recordView.setFieldReadOnly('isHtml');
-                    recordView.setFieldReadOnly('from');
-                    recordView.setFieldReadOnly('to');
-                    recordView.setFieldReadOnly('cc');
-                    recordView.setFieldReadOnly('bcc');
-                }
-            });
-
-            this.listenToOnce(recordView, 'cancel:save', () => {
-                $send.removeClass('disabled');
-            });
-
-            recordView.send();
+                    if (recordView.mode !== 'detail') {
+                        recordView.setDetailMode();
+                        recordView.setFieldReadOnly('dateSent');
+                        recordView.setFieldReadOnly('name');
+                        recordView.setFieldReadOnly('attachments');
+                        recordView.setFieldReadOnly('isHtml');
+                        recordView.setFieldReadOnly('from');
+                        recordView.setFieldReadOnly('to');
+                        recordView.setFieldReadOnly('cc');
+                        recordView.setFieldReadOnly('bcc');
+                    }
+                });
         },
 
         actionReply: function (data, e, cc) {

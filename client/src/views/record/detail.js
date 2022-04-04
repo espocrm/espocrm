@@ -830,25 +830,35 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
-            var fields = this.getFieldViews(true);
+            return new Promise(resolve => {
+                let fields = this.getFieldViews(true);
 
-            for (var field in fields) {
-                var fieldView = fields[field];
+                let promiseList = [];
 
-                if (!fieldView.readOnly) {
-                    if (fieldView.mode === 'edit') {
-                        fieldView.fetchToModel();
-                        fieldView.removeInlineEditLinks();
-                        fieldView.setIsInlineEditMode(false);
+                for (let field in fields) {
+                    let fieldView = fields[field];
+
+                    if (!fieldView.readOnly) {
+                        if (fieldView.mode === 'edit') {
+                            fieldView.fetchToModel();
+                            fieldView.removeInlineEditLinks();
+                            fieldView.setIsInlineEditMode(false);
+                        }
+
+                        fieldView.setMode('edit');
+
+                        promiseList.push(
+                            fieldView.render()
+                        );
                     }
-
-                    fieldView.setMode('edit');
-                    fieldView.render();
                 }
-            }
-            this.mode = 'edit';
 
-            this.trigger('after:set-edit-mode');
+                this.mode = 'edit';
+
+                this.trigger('after:set-edit-mode');
+
+                Promise.all(promiseList).then(() => resolve());
+            });
         },
 
         setDetailMode: function () {
@@ -859,25 +869,34 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.inlineEditModeIsOn = false;
 
-            var fields = this.getFieldViews(true);
+            return new Promise(resolve => {
+                var fields = this.getFieldViews(true);
 
-            for (var field in fields) {
-                var fieldView = fields[field];
+                let promiseList = [];
 
-                if (fieldView.mode !== 'detail') {
-                    if (fieldView.mode === 'edit') {
-                        fieldView.trigger('inline-edit-off', {
-                            all: true,
-                        });
+                for (var field in fields) {
+                    var fieldView = fields[field];
+
+                    if (fieldView.mode !== 'detail') {
+                        if (fieldView.mode === 'edit') {
+                            fieldView.trigger('inline-edit-off', {
+                                all: true,
+                            });
+                        }
+
+                        fieldView.setMode('detail');
+
+                        promiseList.push(
+                            fieldView.render()
+                        );
                     }
-
-                    fieldView.setMode('detail');
-                    fieldView.render();
                 }
-            }
 
-            this.mode = 'detail';
-            this.trigger('after:set-detail-mode');
+                this.mode = 'detail';
+                this.trigger('after:set-detail-mode');
+
+                Promise.all(promiseList).then(() => resolve());
+            });
         },
 
         cancelEdit: function () {

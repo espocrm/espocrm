@@ -81,6 +81,12 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 style: 'primary',
             }, true);
 
+            this.addButton({
+                name: 'sendFromDetail',
+                label: 'Send',
+                hidden: true,
+            });
+
             this.controlSendButton();
 
             this.listenTo(this.model, 'change:status', () => this.controlSendButton());
@@ -179,12 +185,14 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             if (status === 'Draft') {
                 this.showActionItem('send');
                 this.showActionItem('saveDraft');
+                this.showActionItem('sendFromDetail');
                 this.hideActionItem('save');
                 this.hideActionItem('saveAndContinueEditing');
 
                 return;
             }
 
+            this.hideActionItem('sendFromDetail');
             this.hideActionItem('send');
             this.hideActionItem('saveDraft');
             this.showActionItem('save');
@@ -352,6 +360,16 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             });
 
             return this.save();
+        },
+
+        actionSendFromDetail: function () {
+            this.setEditMode()
+                .then(() => {
+                    return this.send();
+                })
+                .then(() => {
+                    this.setDetailMode();
+                });
         },
 
         exitAfterDelete: function () {
