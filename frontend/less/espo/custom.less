@@ -928,7 +928,7 @@ ul.dropdown-menu > li.checkbox:last-child {
     }
 }
 
-.field {
+.field, .cell {
     .checklist-label {
         color: @text-color;
         margin-bottom: 0;
@@ -943,13 +943,13 @@ ul.dropdown-menu > li.checkbox:last-child {
 
     .multi-enum-item-label-container {
         margin-bottom: 4px;
+        &:last-child {
+            margin-bottom: 0;
+        }
 
         .label-md {
             line-height: 1.5;
         }
-    }
-    .multi-enum-item-label-container:last-child {
-        margin-bottom: 0;
     }
 }
 
