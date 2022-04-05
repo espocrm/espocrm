@@ -90,35 +90,17 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 var id = $(e.currentTarget).data('id');
 
                 var attachmentIdList = this.model.get(this.idsName) || [];
-
                 var typeHash = this.model.get(this.typeHashName) || {};
 
-                var imageIdListRight = [];
-                var imageIdListLeft = [];
+                var imageIdList = [];
 
-                imageIdListLeft.push(id);
-
-                var met = false;
-
-                attachmentIdList.forEach((cId) => {
-                    if (cId === id) {
-                        met = true;
-
-                        return;
-                    }
-
+                attachmentIdList.forEach(cId => {
                     if (!this.isTypeIsImage(typeHash[cId])) {
                         return;
                     }
 
-                    if (met) {
-                        imageIdListLeft.push(cId);
-                    } else {
-                        imageIdListRight.push(cId);
-                    }
+                    imageIdList.push(cId);
                 });
-
-                var imageIdList = imageIdListLeft.concat(imageIdListRight);
 
                 var imageList = [];
 

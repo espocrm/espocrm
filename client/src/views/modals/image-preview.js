@@ -186,8 +186,12 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
             setTimeout(() => manageSize(), 100);
         },
 
+        isMulitple: function () {
+            return this.imageList.length > 1;
+        },
+
         switchToPrevious: function (noLoop) {
-            if (this.imageList.length === 1) {
+            if (!this.isMulitple()) {
                 return;
             }
 
@@ -220,7 +224,7 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
         },
 
         switchToNext: function (noLoop) {
-            if (this.imageList.length === 1) {
+            if (!this.isMulitple()) {
                 return;
             }
 
