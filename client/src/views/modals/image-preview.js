@@ -48,6 +48,26 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
             'transform-rotate-270',
         ],
 
+        events: {
+            'keydown': function (e) {
+                let keyCode = e.originalEvent.keyCode;
+
+                if (keyCode === 37) {
+                    // arrow-left
+                    this.switchToPrevious(true);
+
+                    return;
+                }
+
+                if (keyCode === 39) {
+                    // arrow-right
+                    this.switchToNext(true);
+
+                    return;
+                }
+            },
+        },
+
         data: function () {
             return {
                 name: this.options.name,
@@ -166,17 +186,58 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
             setTimeout(() => manageSize(), 100);
         },
 
-        switchToNext: function () {
-            this.transformClassList.forEach(item => {
-                this.$img.removeClass(item);
-            });
+        switchToPrevious: function (noLoop) {
+            if (this.imageList.length === 1) {
+                return;
+            }
 
-            var index = -1;
+            let index = -1;
 
             this.imageList.forEach((d, i) => {
                 if (d.id === this.options.id) {
                     index = i;
                 }
+            });
+
+            if (noLoop && index === 0) {
+                return;
+            }
+
+            this.transformClassList.forEach(item => {
+                this.$img.removeClass(item);
+            });
+
+            index--;
+
+            if (index < 0) {
+                index = this.imageList.length - 1;
+            }
+
+            this.options.id = this.imageList[index].id;
+            this.options.name = this.imageList[index].name;
+
+            this.reRender();
+        },
+
+        switchToNext: function (noLoop) {
+            if (this.imageList.length === 1) {
+                return;
+            }
+
+            let index = -1;
+
+            this.imageList.forEach((d, i) => {
+                if (d.id === this.options.id) {
+                    index = i;
+                }
+            });
+
+            if (noLoop && index === this.imageList.length - 1) {
+                return;
+            }
+
+            this.transformClassList.forEach(item => {
+                this.$img.removeClass(item);
             });
 
             index++;
@@ -185,7 +246,7 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
                 index = 0;
             }
 
-            this.options.id = this.imageList[index].id
+            this.options.id = this.imageList[index].id;
             this.options.name = this.imageList[index].name;
 
             this.reRender();
