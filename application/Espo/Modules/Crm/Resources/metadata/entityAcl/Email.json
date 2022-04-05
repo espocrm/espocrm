@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "tasks": {
+            "readOnly": true
+        }
+    },
+    "links": {
+        "tasks": {
+            "readOnly": true
+        }
+    }
+}

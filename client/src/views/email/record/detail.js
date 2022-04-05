@@ -166,6 +166,9 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
             });
 
+            this.handleTasksField();
+            this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
+
             this.listenTo(this.model, 'reply', () => {
                 this.showField('replies');
                 this.model.fetch();
@@ -176,6 +179,21 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                     label: 'View Users',
                     name: 'viewUsers'
                 });
+            }
+
+            if (this.model.get('status') === 'Draft') {
+                this.setFieldReadOnly('dateSent');
+            }
+
+            if (this.isRestricted) {
+                this.handleAttachmentField();
+                this.listenTo(this.model, 'change:attachmentsIds', () => this.handleAttachmentField());
+
+                this.handleCcField();
+                this.listenTo(this.model, 'change:cc', () => this.handleCcField());
+
+                this.handleBccField();
+                this.listenTo(this.model, 'change:bcc', () => this.handleBccField());
             }
         },
 
@@ -305,29 +323,7 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.model.get('status') === 'Draft') {
-                this.setFieldReadOnly('dateSent');
-            }
 
-            if (this.isRestricted) {
-                this.handleAttachmentField();
-
-                this.listenTo(this.model, 'change:attachmentsIds', () => {
-                    this.handleAttachmentField();
-                });
-
-                this.handleCcField();
-
-                this.listenTo(this.model, 'change:cc', () => {
-                    this.handleCcField();
-                });
-
-                this.handleBccField();
-
-                this.listenTo(this.model, 'change:bcc', () => {
-                    this.handleBccField();
-                });
-            }
         },
 
         send: function () {
@@ -459,6 +455,16 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             Espo.Ui.error(msg);
             console.error(msg);
+        },
+
+        handleTasksField: function () {
+            if ((this.model.get('tasksIds') || []).length === 0) {
+                this.hideField('tasks');
+
+                return;
+            }
+
+            this.showField('tasks');
         },
 
     });

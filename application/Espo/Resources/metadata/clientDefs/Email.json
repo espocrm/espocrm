@@ -25,7 +25,8 @@
         "teams",
         "status",
         "replied",
-        "replies"
+        "replies",
+        "tasks"
     ],
     "sidePanels": {
         "detail": [

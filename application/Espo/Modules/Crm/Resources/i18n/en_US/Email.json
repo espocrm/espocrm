@@ -6,5 +6,8 @@
         "Add to Lead": "Add to Lead",
         "Create Task": "Create Task",
         "Create Case": "Create Case"
+    },
+    "fields": {
+        "tasks": "Tasks"
     }
 }

@@ -145,6 +145,11 @@
         "contact": {
             "type": "belongsTo",
             "entity": "Contact"
+        },
+        "email": {
+            "type": "belongsTo",
+            "entity": "Email",
+            "foreign": "tasks"
         }
     },
     "collection": {

@@ -19,7 +19,8 @@
     "links": {
         "attachments": "Attachments",
         "account": "Account",
-        "contact": "Contact"
+        "contact": "Contact",
+        "email": "Email"
     },
     "options": {
         "status": {
@@ -47,5 +48,8 @@
         "deferred": "Deferred",
         "todays": "Today's",
         "overdue": "Overdue"
+    },
+    "nameOptions": {
+        "replyToEmail": "Reply to email"
     }
 }

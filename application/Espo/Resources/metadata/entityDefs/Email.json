@@ -364,6 +364,10 @@
             "type": "linkParent",
             "readOnly": true,
             "view": "views/email/fields/created-event"
+        },
+        "tasks": {
+            "type": "linkMultiple",
+            "readOnly": true
         }
     },
     "links": {

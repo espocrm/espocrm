@@ -285,23 +285,41 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
             attributes.parentId = this.model.get('parentId');
             attributes.parentName = this.model.get('parentName');
             attributes.parentType = this.model.get('parentType');
+            attributes.emailId = this.model.id;
 
-            attributes.description = '[' + this.model.get('name') + '](#Email/view/' + this.model.id + ')';
-
-            attributes.name = this.translate('Email', 'scopeNames') + ': ' + this.model.get('name');
+            attributes.description = '[' + this.translate('Email', 'scopeNames') + ']' +
+                '(#Email/view/' + this.model.id + ')\n';
 
             var viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
             this.notify('Loading...');
+
             this.createView('quickCreate', viewName, {
                 scope: 'Task',
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
+                let recordView = view.getRecordView();
+
+                let nameFieldView = recordView.getFieldView('name');
+
+                let nameOptionList = [];
+
+                if (nameFieldView && nameFieldView.params.options) {
+                    nameOptionList = nameOptionList.concat(nameFieldView.params.options);
+                }
+
+                nameOptionList.push(this.translate('replyToEmail', 'nameOptions', 'Task'));
+
+                recordView.setFieldOptionList('name', nameOptionList);
+
                 view.render();
+
                 view.notify(false);
 
                 this.listenToOnce(view, 'after:save', () => {
                     view.close();
+
+                    this.model.fetch();
                 });
             });
         },

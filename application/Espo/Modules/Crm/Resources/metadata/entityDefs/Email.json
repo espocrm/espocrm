@@ -12,6 +12,11 @@
         "account": {
             "type": "belongsTo",
             "entity": "Account"
+        },
+        "tasks": {
+            "type": "hasMany",
+            "entity": "Task",
+            "foreign": "email"
         }
     }
 }
