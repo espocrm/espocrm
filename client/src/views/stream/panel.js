@@ -370,6 +370,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         initPostEvents: function (view) {
             this.listenTo(view, 'add-files', (files) => {
                 this.getView('attachments').uploadFiles(files);
+
+                if (!this.postingMode) {
+                    this.enablePostingMode();
+                }
             });
         },
 
