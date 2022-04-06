@@ -56,6 +56,12 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
             this.listenToOnce(this.model, 'change:password', (model) => {
                 passwordChanged = true;
 
+                if (this.model.isNew()) {
+                    this.controlSendAccessInfoFieldForNew();
+
+                    return;
+                }
+
                 this.controlSendAccessInfoField();
             });
 
@@ -66,8 +72,15 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
 
                 if (
                     !model.hasChanged('emailAddress') &&
-                    !model.hasChanged('portalsIds')
+                    !model.hasChanged('portalsIds')&&
+                    !model.hasChanged('password')
                 ) {
+                    return;
+                }
+
+                if (this.model.isNew()) {
+                    this.controlSendAccessInfoFieldForNew();
+
                     return;
                 }
 
@@ -96,13 +109,33 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
         },
 
         controlSendAccessInfoField: function () {
+            if (this.isPasswordSendable() && this.model.get('password')) {
+                this.showField('sendAccessInfo');
+
+                return;
+            }
+
+            this.hideField('sendAccessInfo');
+
+            this.model.set('sendAccessInfo', false);
+        },
+
+        controlSendAccessInfoFieldForNew: function () {
+            let skipSettingTrue = this.recordHelper.getFieldStateParam('sendAccessInfo', 'hidden') === false;
+
             if (this.isPasswordSendable()) {
                 this.showField('sendAccessInfo');
-                this.model.set('sendAccessInfo', true);
-            } else {
-                this.hideField('sendAccessInfo');
-                this.model.set('sendAccessInfo', false);
+
+                if (!skipSettingTrue) {
+                    this.model.set('sendAccessInfo', true);
+                }
+
+                return;
             }
+
+            this.hideField('sendAccessInfo');
+
+            this.model.set('sendAccessInfo', false);
         },
 
         isPasswordSendable: function () {
