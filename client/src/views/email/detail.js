@@ -228,6 +228,10 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         attributes.accountName = accountName || accountId;
                     }
                 }
+                else if (parentType === 'Lead') {
+                    attributes.leadId = parentId;
+                    attributes.leadName = parentName;
+                }
             }
 
             attributes.emailsIds = [this.model.id];
