@@ -556,47 +556,58 @@ define(
         },
 
         validate: function () {
-            var notValid = false;
+            let notValid = false;
 
-            var fieldViews = this.getFieldViews();
+            this.getFieldList().forEach(field => {
+                notValid = this.validateField(field) || notValid;
+            });
 
-            var invalidFieldMap = {};
+            return notValid;
+        },
 
-            for (var field in fieldViews) {
-                var fieldView = fieldViews[field];
+        validateField: function (field) {
+            let fieldView = this.getFieldView(field);
 
-                if (fieldView.mode === 'edit' && !fieldView.disabled && !fieldView.readOnly) {
-                    var fieldInvalid = fieldView.validate();
+            if (!fieldView) {
+                return false;
+            }
 
-                    invalidFieldMap[field] = fieldInvalid;
+            let notValid = false;
 
-                    notValid = fieldInvalid  || notValid;
-                }
+            if (
+                fieldView.isEditMode() &&
+                !fieldView.disabled &&
+                !fieldView.readOnly
+            ) {
+                notValid = fieldView.validate() || notValid;
+            }
 
-                if (
-                    !invalidFieldMap[field] &&
-                    this.dynamicLogic &&
-                    this.dynamicLogicDefs &&
-                    this.dynamicLogicDefs.fields &&
-                    this.dynamicLogicDefs.fields[field] &&
-                    this.dynamicLogicDefs.fields[field].invalid &&
-                    this.dynamicLogicDefs.fields[field].invalid.conditionGroup
-                ) {
-                    var invalidConditionGroup = this.dynamicLogicDefs.fields[field].invalid.conditionGroup;
+            if (notValid) {
+                return true;
+            }
 
-                    var fieldInvalid = this.dynamicLogic.checkConditionGroup(invalidConditionGroup);
+            if (
+                this.dynamicLogic &&
+                this.dynamicLogicDefs &&
+                this.dynamicLogicDefs.fields &&
+                this.dynamicLogicDefs.fields[field] &&
+                this.dynamicLogicDefs.fields[field].invalid &&
+                this.dynamicLogicDefs.fields[field].invalid.conditionGroup
+            ) {
+                let invalidConditionGroup = this.dynamicLogicDefs.fields[field].invalid.conditionGroup;
 
-                    notValid = fieldInvalid  || notValid;
+                let fieldInvalid = this.dynamicLogic.checkConditionGroup(invalidConditionGroup);
 
-                    if (fieldInvalid) {
-                        var msg =
-                            this.translate('fieldInvalid', 'messages')
-                                .replace('{field}', this.translate(field, 'fields', this.entityType));
+                notValid = fieldInvalid || notValid;
 
-                        fieldView.showValidationMessage(msg);
+                if (fieldInvalid) {
+                    let msg =
+                        this.translate('fieldInvalid', 'messages')
+                            .replace('{field}', this.translate(field, 'fields', this.entityType));
 
-                        fieldView.trigger('invalid');
-                    }
+                    fieldView.showValidationMessage(msg);
+
+                    fieldView.trigger('invalid');
                 }
             }
 

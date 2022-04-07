@@ -266,6 +266,10 @@ define('views/record/panels/bottom', 'view', function (Dep) {
                 o.customOptionList = this.recordHelper.getFieldOptionList(field);
             }
 
+            if (this.recordViewObject) {
+                o.validateCallback = () => this.recordViewObject.validateField(field);
+            }
+
             var viewKey = field + 'Field';
 
             this.createView(viewKey, viewName, o);

@@ -68,6 +68,8 @@ define('views/fields/base', 'view', function (Dep) {
 
         VALIDATION_POPOVER_TIMEOUT: 3000,
 
+        validateCallback: null,
+
         isRequired: function () {
             return this.params.required;
         },
@@ -290,6 +292,8 @@ define('views/fields/base', 'view', function (Dep) {
             this.defs = this.options.defs || {};
             this.name = this.options.name || this.defs.name;
             this.params = this.options.params || this.defs.params || {};
+
+            this.validateCallback = this.options.validateCallback;
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
 
@@ -636,7 +640,9 @@ define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            if (this.validate()) {
+            let isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
+
+            if (isInvalid) {
                 this.notify('Not valid', 'error');
 
                 model.set(prev, {silent: true});

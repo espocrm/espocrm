@@ -2100,7 +2100,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             continue;
                         }
 
-                        var name = cellDefs.name;
+                        let name = cellDefs.name;
 
                         if (panel.name) {
                             this.panelFieldListMap[panel.name].push(name);
@@ -2170,6 +2170,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         if (this.recordHelper.hasFieldOptionList(name)) {
                             o.customOptionList = this.recordHelper.getFieldOptionList(name);
                         }
+
+                        o.validateCallback = () => this.validateField(name);
 
                         if (cellDefs.options) {
                             for (let optionName in cellDefs.options) {
