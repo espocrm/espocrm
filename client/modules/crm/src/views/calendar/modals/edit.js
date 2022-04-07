@@ -53,8 +53,9 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                 var scope = $('.scope-switcher input[name="scope"]:checked').val();
                 this.scope = scope;
 
-                this.getModelFactory().create(this.scope, function (model) {
+                this.getModelFactory().create(this.scope, model => {
                     model.populateDefaults();
+
                     var attributes = this.getView('edit').fetch();
 
                     attributes = _.extend(attributes, this.getView('edit').model.toJSON());
@@ -63,13 +64,13 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
 
                     this.model = model;
 
-                    this.createRecordView(model, function (view) {
+                    this.createRecordView(model, (view) => {
                         view.render();
                         view.notify(false);
                     });
 
                     this.handleAccess(model);
-                }.bind(this));
+                });
             },
         },
 
@@ -90,15 +91,17 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                         this.model.set('dateEndDate', this.options.dateEndDate);
 
                         if (this.options.dateEndDate !== this.options.dateStartDate) {
-                            this.model.set('dateStartDate', this.options.dateStartDate)
+                            this.model.set('dateStartDate', this.options.dateStartDate);
                         }
-                    } else if (this.getMetadata().get(['entityDefs', this.scope, 'fields', 'dateStartDate'])) {
+                    }
+                    else if (this.getMetadata().get(['entityDefs', this.scope, 'fields', 'dateStartDate'])) {
                         this.model.set('dateStart', null);
                         this.model.set('dateEnd', null);
                         this.model.set('dateStartDate', this.options.dateStartDate);
                         this.model.set('dateEndDate', this.options.dateEndDate);
                         this.model.set('isAllDay', true);
-                    } else {
+                    }
+                    else {
                         this.model.set('isAllDay', false);
                         this.model.set('dateStartDate', null);
                         this.model.set('dateEndDate', null);
@@ -106,30 +109,34 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                 }
             }
 
-            this.listenTo(this.model, 'change:dateStart', function (m, value, o) {
+            this.listenTo(this.model, 'change:dateStart', (m, value, o) => {
                 if (o.ui) {
                     this.dateIsChanged = true;
                 }
-            }, this);
+            });
 
-            this.listenTo(
-                this.model, 'change:dateEnd', function (m, value, o) {
+            this.listenTo(this.model, 'change:dateEnd', (m, value, o) => {
                 if (o.ui || o.updatedByDuration) {
                     this.dateIsChanged = true;
                 }
-            }, this);
+            });
 
             Dep.prototype.createRecordView.call(this, model, callback);
         },
 
         handleAccess: function (model) {
-            if (this.id && !this.getAcl().checkModel(model, 'edit') || !this.id && !this.getAcl().checkModel(model, 'create')) {
+            if (
+                this.id &&
+                !this.getAcl().checkModel(model, 'edit') || !this.id &&
+                !this.getAcl().checkModel(model, 'create')
+            ) {
                 this.hideButton('save');
                 this.hideButton('fullForm');
 
                 this.$el.find('button[data-name="save"]').addClass('hidden');
                 this.$el.find('button[data-name="fullForm"]').addClass('hidden');
-            } else {
+            }
+            else {
                 this.showButton('save');
                 this.showButton('fullForm');
             }
@@ -160,13 +167,13 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
             if (!this.options.id && !this.options.scope) {
                 var scopeList = [];
 
-                this.scopeList.forEach(function (scope) {
+                this.scopeList.forEach((scope) => {
                     if (this.getAcl().check(scope, 'create')) {
                         if (~this.enabledScopeList.indexOf(scope)) {
                             scopeList.push(scope);
                         }
                     }
-                }, this);
+                });
 
                 this.scopeList = scopeList;
 
@@ -178,11 +185,12 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                     this.options.scope = this.scopeList[0] || null;
                 }
 
-                if (this.scopeList.length == 0) {
+                if (this.scopeList.length === 0) {
                     this.remove();
                     return;
                 }
             }
+
             Dep.prototype.setup.call(this);
 
             if (!this.id) {
@@ -200,20 +208,21 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
         actionRemove: function () {
             var model = this.getView('edit').model;
 
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
+
                 $buttons.addClass('disabled');
 
                 model.destroy({
-                    success: function () {
+                    success: () => {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
-                    }.bind(this),
+                    },
                     error: function () {
                         $buttons.removeClass('disabled');
                     },
                 });
-            }, this);
+            });
         },
     });
 });
