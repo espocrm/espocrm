@@ -39,6 +39,7 @@ define('views/fields/user-with-avatar', 'views/fields/user', function (Dep) {
 
             if (this.mode === 'detail') {
                 o.avatar = this.getAvatarHtml();
+                o.isOwn = this.model.get(this.idName) === this.getUser().id;
             }
 
             return o;
