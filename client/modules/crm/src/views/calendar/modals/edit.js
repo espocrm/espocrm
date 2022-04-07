@@ -60,6 +60,8 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
 
                     attributes = _.extend(attributes, this.getView('edit').model.toJSON());
 
+                    this.filterAttributesForEntityType(attributes, scope);
+
                     model.set(attributes);
 
                     this.model = model;
@@ -72,6 +74,25 @@ define('crm:views/calendar/modals/edit', 'views/modals/edit', function (Dep) {
                     this.handleAccess(model);
                 });
             },
+        },
+
+        filterAttributesForEntityType: function (attributes, entityType) {
+            this.getHelper()
+                .fieldManager
+                .getEntityTypeFieldList(entityType, {type: 'enum'})
+                .forEach(field => {
+                    if (!(field in attributes)) {
+                        return;
+                    }
+
+                    let options = this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'options']) || [];
+
+                    let value = attributes[field];
+
+                    if (!~options.indexOf(value)) {
+                        delete attributes[field];
+                    }
+                });
         },
 
         createRecordView: function (model, callback) {
