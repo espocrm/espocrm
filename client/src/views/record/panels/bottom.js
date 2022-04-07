@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/panels/bottom', 'view', function (Dep) {
+define('views/record/panels/bottom', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -49,9 +49,11 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                 var $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof this[method] == 'function') {
+
+                if (typeof this[method] === 'function') {
                     var data = $el.data();
                     this[method](data, e);
+
                     e.preventDefault();
                 }
             }
@@ -92,31 +94,41 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
         setup: function () {
             this.setupFields();
 
-            this.fieldList = this.fieldList.map(function (d) {
+            this.fieldList = this.fieldList.map((d) => {
                 var item = d;
+
                 if (typeof item !== 'object') {
                     item = {
                         name: item,
-                        viewKey: item + 'Field'
-                    }
+                        viewKey: item + 'Field',
+                    };
                 }
+
                 item = Espo.Utils.clone(item);
                 item.viewKey = item.name + 'Field';
                 item.label = item.label || item.name;
 
                 if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
-                } else {
+                }
+                else {
                     this.recordHelper.setFieldStateParam(item.name, item.hidden || false);
                 }
-                return item;
-            }, this);
 
-            this.fieldList = this.fieldList.filter(function (item) {
-                if (!item.name) return;
-                if (!(item.name in (((this.model.defs || {}).fields) || {}))) return;
+                return item;
+            });
+
+            this.fieldList = this.fieldList.filter((item) => {
+                if (!item.name) {
+                    return;
+                }
+
+                if (!(item.name in (((this.model.defs || {}).fields) || {}))) {
+                    return;
+                }
+
                 return true;
-            }, this);
+            });
 
             this.createFields();
         },
@@ -135,11 +147,12 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
         getFieldViews: function () {
             var fields = {};
 
-            this.getFieldList().forEach(function (item) {
+            this.getFieldList().forEach((item) => {
                 if (this.hasView(item.viewKey)) {
                     fields[item.name] = this.getView(item.viewKey);
                 }
-            }, this);
+            });
+
             return fields;
         },
 
@@ -148,41 +161,48 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
         },
 
         getFieldList: function () {
-            return this.fieldList.map(function (item) {
+            return this.fieldList.map((item) => {
                 if (typeof item !== 'object') {
                     return {
                         name: item
                     };
                 }
+
                 return item;
-            }, this);
+            });
         },
 
         createFields: function () {
-            this.getFieldList().forEach(function (item) {
+            this.getFieldList().forEach((item) => {
                 var view = null;
                 var field;
                 var readOnly = null;
+
                 if (typeof item === 'object') {
                     field = item.name;
                     view = item.view;
                     if ('readOnly' in item) {
                         readOnly = item.readOnly;
                     }
-                } else {
+                }
+                else {
                    field = item;
                 }
+
                 if (!(field in this.model.defs.fields)) {
                     return;
                 }
-                this.createField(field, view, null, null, readOnly);
 
-            }, this);
+                this.createField(field, view, null, null, readOnly);
+            });
         },
 
         createField: function (field, viewName, params, mode, readOnly, options) {
             var type = this.model.getFieldType(field) || 'base';
-            viewName = viewName || this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+
+            viewName = viewName ||
+                this.model.getFieldParam(field, 'view') ||
+                this.getFieldManager().getViewName(type);
 
             var o = {
                 model: this.model,
@@ -191,7 +211,7 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
                     name: field,
                     params: params || {},
                 },
-                mode: mode || this.mode
+                mode: mode || this.mode,
             };
 
             if (options) {
@@ -204,14 +224,17 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
 
             if (this.readOnly) {
                 o.readOnly = true;
-            } else {
+            }
+            else {
                 if (readOnly !== null) {
-                    o.readOnly = readOnly
+                    o.readOnly = readOnly;
                 }
+
                 if (readOnly) {
                     readOnlyLocked = true;
                 }
             }
+
             if (this.inlineEditDisabled) {
                 o.inlineEditDisabled = true;
             }
@@ -222,12 +245,15 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             if (this.recordHelper.getFieldStateParam(field, 'hiddenLocked')) {
                 o.disabledLocked = true;
             }
+
             if (this.recordHelper.getFieldStateParam(field, 'readOnly')) {
                 o.readOnly = true;
             }
+
             if (this.recordHelper.getFieldStateParam(field, 'required') !== null) {
                 o.defs.params.required = this.recordHelper.getFieldStateParam(field, 'required');
             }
+
             if (!readOnlyLocked && this.recordHelper.getFieldStateParam(field, 'readOnlyLocked')) {
                 readOnlyLocked = true;
             }
@@ -241,8 +267,9 @@ Espo.define('views/record/panels/bottom', 'view', function (Dep) {
             }
 
             var viewKey = field + 'Field';
+
             this.createView(viewKey, viewName, o);
-        }
+        },
 
     });
 });
