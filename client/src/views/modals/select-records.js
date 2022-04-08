@@ -51,7 +51,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
         data: function () {
             return {
                 createButton: this.createButton,
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope)
+                createText: this.translate('Create ' + this.scope, 'labels', this.scope),
             };
         },
 
@@ -289,33 +289,31 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 return;
             }
 
-            var self = this;
-
             this.notify('Loading...');
 
             this.createView('quickCreate', 'views/modals/edit', {
                 scope: this.scope,
                 fullFormDisabled: true,
                 attributes: this.options.createAttributes,
-            }, function (view) {
+            }, (view) => {
                 view.once('after:render', () => {
-                    self.notify(false);
+                    this.notify(false);
                 });
 
                 view.render();
 
-                self.listenToOnce(view, 'leave', () => {
+                this.listenToOnce(view, 'leave', () => {
                     view.close();
-                    self.close();
+                    this.close();
                 });
 
-                self.listenToOnce(view, 'after:save', (model) => {
+                this.listenToOnce(view, 'after:save', (model) => {
                     view.close();
 
-                    self.trigger('select', model);
+                    this.trigger('select', model);
 
                     setTimeout(() => {
-                        self.close();
+                        this.close();
                     }, 10);
                 });
             });
