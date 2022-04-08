@@ -6,6 +6,14 @@
         },
         "parent": {
             "entityList": ["Account", "Lead", "Contact", "Opportunity", "Case"]
+        },
+        "tasks": {
+            "type": "linkMultiple",
+            "readOnly": true,
+            "columns": {
+                "status": "status"
+            },
+            "view": "views/fields/link-multiple-with-status"
         }
     },
     "links": {
