@@ -214,9 +214,14 @@ class NamespaceLoader
 
             foreach ($itemData as $prefix => $path) {
                 if (!$skipVendorNamespaces) {
-                    $vendorNamespaces = $this->getVendorNamespaces($path);
+                    $vendorPaths = is_array($path) ? $path : (array) $path;
 
-                    $this->addListToClassLoader($vendorNamespaces, true);
+                    foreach ($vendorPaths as $vendorPath) {
+                        $this->addListToClassLoader(
+                            $this->getVendorNamespaces($vendorPath),
+                            true
+                        );
+                    }
                 }
 
                 if ($this->hasNamespace($type, $prefix)) {
