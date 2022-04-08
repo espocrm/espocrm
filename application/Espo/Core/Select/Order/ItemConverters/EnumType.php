@@ -58,7 +58,7 @@ class EnumType implements ItemConverter
     {
         /** @var string */
         $orderBy = $item->getOrderBy();
-        $order = $item->getOrder() ?? SearchParams::ORDER_ASC;
+        $order = $item->getOrder();
 
         /** @var ?string[] */
         $list = $this->metadata->get([

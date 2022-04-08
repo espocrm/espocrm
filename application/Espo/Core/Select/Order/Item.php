@@ -35,66 +35,45 @@ use InvalidArgumentException;
 
 class Item
 {
-    /**
-     * @var mixed
-     */
-    private $orderBy = false;
+    private string $orderBy;
 
-    /**
-     * @var mixed
-     */
-    private $order = false;
+    private string $order;
 
-    private function __construct()
+    private function __construct(string $orderBy, string $order)
     {
-    }
-
-    /**
-     * @param array<string,mixed> $params
-     */
-    public static function fromArray(array $params): self
-    {
-        $object = new self();
-
-        $object->orderBy = $params['orderBy'] ?? null;
-        $object->order = $params['order'] ?? null;
-
-        foreach ($params as $key => $value) {
-            if (!property_exists($object, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
-            }
-        }
-
-        if ($object->orderBy && !is_string($object->orderBy)) {
-            throw new InvalidArgumentException("Bad orderBy.");
-        }
-
         if (
-            $object->order &&
-            $object->order !== SearchParams::ORDER_ASC &&
-            $object->order !== SearchParams::ORDER_DESC
+            $order !== SearchParams::ORDER_ASC &&
+            $order !== SearchParams::ORDER_DESC
         ) {
             throw new InvalidArgumentException("Bad order.");
         }
 
-        return $object;
+        $this->orderBy = $orderBy;
+        $this->order = $order;
+    }
+
+    public static function create(string $orderBy, ?string $order = null): self
+    {
+        if ($order === null) {
+            $order = SearchParams::ORDER_ASC;
+        }
+
+        return new self($orderBy, $order);
     }
 
     /**
-     * Get an order-by field.
+     * Get a field.
      */
-    public function getOrderBy(): ?string
+    public function getOrderBy(): string
     {
-        /** @var ?string */
         return $this->orderBy;
     }
 
     /**
-     * Get a direction of order.
+     * Get a direction.
      */
-    public function getOrder(): ?string
+    public function getOrder(): string
     {
-        /** @var ?string */
         return $this->order;
     }
 }

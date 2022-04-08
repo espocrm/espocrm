@@ -228,10 +228,7 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
                 ->with($this->entityType, $orderBy)
                 ->willReturn($converter);
 
-            $item = Item::fromArray([
-                'orderBy' => $orderBy,
-                'order' => $order,
-            ]);
+            $item = Item::create($orderBy, $order);
 
             $converter
                 ->expects($this->once())

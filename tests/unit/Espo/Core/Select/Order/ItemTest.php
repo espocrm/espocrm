@@ -29,62 +29,23 @@
 
 namespace tests\unit\Espo\Core\Select\Order;
 
-use Espo\Core\{
-    Select\Order\Item,
-};
+use Espo\Core\Select\Order\Item;
 
 use InvalidArgumentException;
 
 class ItemTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    public function testCreate1()
     {
-    }
-
-    public function testFromArray()
-    {
-        $item = Item::fromArray([
-            'order' => 'DESC',
-            'orderBy' => 'test',
-        ]);
+        $item = Item::create('test', 'DESC');
 
         $this->assertEquals('DESC', $item->getOrder());
         $this->assertEquals('test', $item->getOrderBy());
     }
-
-    public function testEmpty()
-    {
-        $item = Item::fromArray([
-        ]);
-
-        $this->assertEquals(null, $item->getOrder());
-        $this->assertEquals(null, $item->getOrderBy());
-    }
-
-    public function testBadOrderBy()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $params = Item::fromArray([
-            'orderBy' => 1,
-        ]);
-    }
-
-    public function testBadOrder()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $params = Item::fromArray([
-            'order' => 'd',
-        ]);
-    }
-
     public function testNonExistingParam()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $params = Item::fromArray([
-            'bad' => 'd',
-        ]);
+        Item::create('test', 'test');
     }
 }

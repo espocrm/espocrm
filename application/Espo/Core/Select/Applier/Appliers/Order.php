@@ -143,10 +143,7 @@ class Order
 
             $resultOrderBy = $this->orderListToArray(
                 $converter->convert(
-                    OrderItem::fromArray([
-                        'orderBy' => $orderBy,
-                        'order' => $order,
-                    ])
+                    OrderItem::create($orderBy, $order)
                 )
             );
         }

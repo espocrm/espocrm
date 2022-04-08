@@ -42,7 +42,7 @@ class AddressType implements ItemConverter
     public function convert(Item $item): OrderList
     {
         $orderBy = $item->getOrderBy();
-        $order = $item->getOrder() ?? Order::ASC;
+        $order = $item->getOrder();
 
         return OrderList::create([
             Order::fromString($orderBy . 'Country')->withDirection($order),
