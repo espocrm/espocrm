@@ -120,5 +120,8 @@
     "selectDefaultFilters": {
         "filter": "active"
     },
+    "selectRecords": {
+        "orderBy": "userNameOwnFirst"
+    },
     "iconClass": "fas fa-user-circle"
 }

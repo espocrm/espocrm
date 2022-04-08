@@ -118,6 +118,14 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
             this.scope = this.entityType = this.options.scope || this.scope;
 
+            let customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
+            let customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
+
+            if (customDefaultOrderBy) {
+                this.defaultOrderBy = customDefaultOrderBy;
+                this.defaultOrder = customDefaultOrder || false;
+            }
+
             if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
                 this.createButton = false;
             }
@@ -151,7 +159,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 this.collection = collection;
 
                 if (this.defaultOrderBy) {
-                    this.collection.setOrder(this.defaultOrderBy, this.defaultOrder || false, true);
+                    this.collection.setOrder(this.defaultOrderBy, this.defaultOrder || 'asc', true);
                 }
 
                 this.loadSearch();

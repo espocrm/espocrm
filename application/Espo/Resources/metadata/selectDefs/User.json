@@ -18,5 +18,8 @@
     },
     "boolFilterClassNameMap": {
         "onlyMyTeam": "Espo\\Classes\\Select\\User\\BoolFilters\\OnlyMyTeam"
+    },
+    "orderItemConverterClassNameMap": {
+        "userNameOwnFirst": "Espo\\Classes\\Select\\User\\OrderItemConverters\\UserNameOwnFirst"
     }
 }

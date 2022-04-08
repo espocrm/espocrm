@@ -80,12 +80,18 @@ class Item
         return $object;
     }
 
+    /**
+     * Get an order-by field.
+     */
     public function getOrderBy(): ?string
     {
         /** @var ?string */
         return $this->orderBy;
     }
 
+    /**
+     * Get a direction of order.
+     */
     public function getOrder(): ?string
     {
         /** @var ?string */
