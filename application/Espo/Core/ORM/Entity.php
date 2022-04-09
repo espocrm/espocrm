@@ -194,6 +194,10 @@ class Entity extends BaseEntity
         $orderParams = $this->getRelationOrderParams($field);
 
         if ($orderParams && $orderParams['orderBy']) {
+            if (!in_array($orderParams['orderBy'], $select)) {
+                $selectBuilder->select($orderParams['orderBy']);
+            }
+
             $selectBuilder->order($orderParams['orderBy'], $orderParams['order']);
         }
 
