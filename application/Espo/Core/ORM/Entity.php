@@ -101,7 +101,7 @@ class Entity extends BaseEntity
      *
      * @param string $link
      * @return ?array{
-     *   orderBy: ?string,
+     *   orderBy: string|array<int,array{string,string}>|null,
      *   order: ?string,
      * }
      */
@@ -191,14 +191,22 @@ class Entity extends BaseEntity
             ->getRelation($this, $field)
             ->select($select);
 
+        $orderBy = null;
+        $order = null;
+
         $orderParams = $this->getRelationOrderParams($field);
 
-        if ($orderParams && $orderParams['orderBy']) {
-            if (!in_array($orderParams['orderBy'], $select)) {
-                $selectBuilder->select($orderParams['orderBy']);
+        if ($orderParams) {
+            $orderBy = $orderParams['orderBy'] ?? null;
+            $order = $orderParams['order'] ?? null;
+        }
+
+        if ($orderBy) {
+            if (is_string($orderBy) && !in_array($orderBy, $select)) {
+                $selectBuilder->select($orderBy);
             }
 
-            $selectBuilder->order($orderParams['orderBy'], $orderParams['order']);
+            $selectBuilder->order($orderBy, $order);
         }
 
         $collection = $selectBuilder->find();
