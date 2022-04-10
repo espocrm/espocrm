@@ -52,21 +52,42 @@ class Converter
      */
     public function convert(Currency $value, string $targetCurrencyCode): Currency
     {
-        $amount = $value->getAmount();
-
         if (!$this->configDataProvider->hasCurrency($targetCurrencyCode)) {
             throw new RuntimeException("Can't convert currency to unknown currency '{$targetCurrencyCode}.");
         }
 
         $rate = $this->configDataProvider->getCurrencyRate($value->getCode());
-
         $targetRate = $this->configDataProvider->getCurrencyRate($targetCurrencyCode);
 
-        $amount *= $rate;
+        $convertedAmount = $this->convertAmount($value->getAmountAsString(), $rate, $targetRate);
 
-        $amount /= $targetRate;
+        return new Currency($convertedAmount, $targetCurrencyCode);
+    }
 
-        return new Currency($amount, $targetCurrencyCode);
+    /**
+     * Convert a currency value to a specific currency with specific rates.
+     * Base currency should has rate equal to `1.0`.
+     *
+     * @throws RuntimeException
+     */
+    public function convertWithRates(Currency $value, string $targetCurrencyCode, Rates $rates): Currency
+    {
+        $currencyCode = $value->getCode();
+
+        if (!$rates->hasRate($currencyCode)) {
+            throw new RuntimeException("No rate for the currency '{$currencyCode}.");
+        }
+
+        if (!$rates->hasRate($targetCurrencyCode)) {
+            throw new RuntimeException("No rate for the currency '{$targetCurrencyCode}.");
+        }
+
+        $rate = $rates->getRate($currencyCode);
+        $targetRate = $rates->getRate($targetCurrencyCode);
+
+        $convertedAmount = $this->convertAmount($value->getAmountAsString(), $rate, $targetRate);
+
+        return new Currency($convertedAmount, $targetCurrencyCode);
     }
 
     /**
@@ -79,34 +100,11 @@ class Converter
         return $this->convert($value, $targetCurrencyCode);
     }
 
-    /**
-     * Convert a currency value to a specific currency with specific rates.
-     * Base currency should has rate equal to `1.0`.
-     *
-     * @throws RuntimeException
-     */
-    public function convertWithRates(Currency $value, string $targetCurrencyCode, Rates $rates): Currency
+    private function convertAmount(string $amount, float $rate, float $targetRate): string
     {
-        $amount = $value->getAmount();
-
-        $currencyCode = $value->getCode();
-
-        if (!$rates->hasRate($currencyCode)) {
-            throw new RuntimeException("No rate for the currency '{$currencyCode}.");
-        }
-
-        if (!$rates->hasRate($targetCurrencyCode)) {
-            throw new RuntimeException("No rate for the currency '{$targetCurrencyCode}.");
-        }
-
-        $rate = $rates->getRate($currencyCode);
-
-        $targetRate = $rates->getRate($targetCurrencyCode);
-
-        $amount *= $rate;
-
-        $amount /= $targetRate;
-
-        return new Currency($amount, $targetCurrencyCode);
+        return CalculatorUtil::divide(
+            CalculatorUtil::multiply($amount, (string) $rate),
+            (string) $targetRate
+        );
     }
 }

@@ -29,21 +29,36 @@
 
 namespace Espo\Core\Field;
 
+use Espo\Core\Currency\CalculatorUtil;
+
 use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A currency value object. Immutable.
  */
 class Currency
 {
-    private $amount;
+    private string $amount;
 
-    private $code;
+    private string $code;
 
-    public function __construct(float $amount, string $code)
+    /**
+     * @param string|float $amount
+     * @throws RuntimeException
+     */
+    public function __construct($amount, string $code)
     {
+        if (!is_string($amount) && !is_float($amount)) {
+            throw new InvalidArgumentException();
+        }
+
         if (strlen($code) !== 3) {
             throw new RuntimeException("Bad currency code.");
+        }
+
+        if (is_float($amount)) {
+            $amount = (string) $amount;
         }
 
         $this->amount = $amount;
@@ -51,11 +66,19 @@ class Currency
     }
 
     /**
+     * Get an amount as string.
+     */
+    public function getAmountAsString(): string
+    {
+        return $this->amount;
+    }
+
+    /**
      * Get an amount.
      */
     public function getAmount(): float
     {
-        return $this->amount;
+        return (float) $this->amount;
     }
 
     /**
@@ -71,13 +94,14 @@ class Currency
      */
     public function add(self $value): self
     {
-        $amount = $this->getAmount();
-
         if ($this->getCode() !== $value->getCode()) {
             throw new RuntimeException("Can't add a currency value with a different code.");
         }
 
-        $amount += $value->getAmount();
+        $amount = CalculatorUtil::add(
+            $this->getAmountAsString(),
+            $value->getAmountAsString()
+        );
 
         return new self($amount, $this->getCode());
     }
@@ -87,13 +111,14 @@ class Currency
      */
     public function subtract(self $value): self
     {
-        $amount = $this->getAmount();
-
         if ($this->getCode() !== $value->getCode()) {
             throw new RuntimeException("Can't substract a currency value with a different code.");
         }
 
-        $amount -= $value->getAmount();
+        $amount = CalculatorUtil::subtract(
+            $this->getAmountAsString(),
+            $value->getAmountAsString()
+        );
 
         return new self($amount, $this->getCode());
     }
@@ -103,9 +128,10 @@ class Currency
      */
     public function multiply(float $multiplier): self
     {
-        $amount = $this->getAmount();
-
-        $amount *= $multiplier;
+        $amount = CalculatorUtil::multiply(
+            $this->getAmountAsString(),
+            (string) $multiplier
+        );
 
         return new self($amount, $this->getCode());
     }
@@ -115,9 +141,10 @@ class Currency
      */
     public function divide(float $divider): self
     {
-        $amount = $this->getAmount();
-
-        $amount /= $divider;
+        $amount = CalculatorUtil::divide(
+            $this->getAmountAsString(),
+            (string) $divider
+        );
 
         return new self($amount, $this->getCode());
     }
@@ -127,15 +154,18 @@ class Currency
      */
     public function round(int $precision = 0): self
     {
-        $amount = round($this->getAmount(), $precision);
+        $amount = CalculatorUtil::round($this->getAmountAsString(), $precision);
 
         return new self($amount, $this->getCode());
     }
 
     /**
      * Create from an amount and code.
+     *
+     * @param string|float $amount
+     * @throws RuntimeException
      */
-    public static function create(float $amount, string $code): self
+    public static function create($amount, string $code): self
     {
         return new self($amount, $code);
     }

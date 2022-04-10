@@ -38,11 +38,6 @@ use Espo\Core\{
 
 class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
-    {
-
-    }
-
     public function testConvert1()
     {
         $currencyConfigDataProvider = $this->createMock(CurrencyConfigDataProvider::class);

@@ -95,13 +95,40 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('USD', $value->getCode());
     }
 
-    public function testRound()
+    public function testRound1()
     {
         $value = (new Currency(2.306, 'USD'))->round(2);
 
         $this->assertEquals(2.31, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
+    }
+
+    public function testRound2()
+    {
+        $value = (new Currency(2.306, 'USD'))->round(4);
+
+        $this->assertEquals(2.306, $value->getAmount());
+    }
+
+    public function testRound3()
+    {
+        $value = (new Currency(2.306, 'USD'))->round(0);
+
+        $this->assertEquals(2, $value->getAmount());
+    }
+
+    public function testRound4()
+    {
+        $value = (new Currency(-2.306, 'USD'))->round(2);
+
+        $this->assertEquals(-2.31, $value->getAmount());
+    }
+
+    public function testRound5()
+    {
+        $value = (new Currency(-2.5, 'USD'))->round(0);
+
+        $this->assertEquals(-3, $value->getAmount());
     }
 
     public function testBadAdd()
