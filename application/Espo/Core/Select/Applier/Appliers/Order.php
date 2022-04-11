@@ -144,6 +144,10 @@ class Order
                 OrderItem::create($orderBy, $order)
             );
 
+            if ($order !== 'id') {
+                $queryBuilder->order('id', $order);
+            }
+
             return;
         }
 
