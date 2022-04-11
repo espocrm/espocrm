@@ -112,12 +112,10 @@ trait SelectingBuilderTrait
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param Order|Order[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction OrderExpression::ASC|OrderExpression::DESC.
-     *
-     * @phpstan-param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
      */
     public function order($orderBy, $direction = null): self
     {
