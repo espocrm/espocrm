@@ -90,7 +90,7 @@ define('views/modals/select-category-tree-records', 'views/modals/select-records
 
             Espo.require('search-manager', (SearchManager) => {
                 this.getCollectionFactory().create(this.scope, (collection) => {
-                    collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                    collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
 
                     this.collection = collection;
 

@@ -154,7 +154,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             }
 
             this.getCollectionFactory().create(this.scope, (collection) => {
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+                collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
 
                 this.collection = collection;
 

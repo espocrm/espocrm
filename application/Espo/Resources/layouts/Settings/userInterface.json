@@ -6,6 +6,7 @@
             [{"name": "applicationName"}, {"name": "userThemesDisabled"}],
             [{"name": "recordsPerPage"},{"name": "displayListViewRecordCount"}],
             [{"name": "recordsPerPageSmall"}, {"name": "avatarsDisabled"}],
+            [{"name": "recordsPerPageSelect"}, false],
             [{"name": "tabList"},{"name": "quickCreateList"}],
             [{"name": "scopeColorsDisabled"}, {"name": "tabColorsDisabled"}],
             [{"name": "tabIconsDisabled"}, false],
