@@ -29,16 +29,16 @@
 
 namespace Espo\Core\Select\Order;
 
-use Espo\Entities\User;
-
 use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 
+use Espo\Entities\User;
+
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 
-class ItemConverterFactory
+class OrdererFactory
 {
     private InjectableFactory $injectableFactory;
 
@@ -58,12 +58,12 @@ class ItemConverterFactory
         return (bool) $this->getClassName($entityType, $field);
     }
 
-    public function create(string $entityType, string $field): ItemConverter
+    public function create(string $entityType, string $field): Orderer
     {
         $className = $this->getClassName($entityType, $field);
 
         if (!$className) {
-            throw new Error("Order item converter class name is not defined.");
+            throw new Error("Orderer class name is not defined.");
         }
 
         $container = BindingContainerBuilder::create()
@@ -77,43 +77,13 @@ class ItemConverterFactory
     }
 
     /**
-     * @return ?class-string<ItemConverter>
+     * @return ?class-string<Orderer>
      */
     private function getClassName(string $entityType, string $field): ?string
     {
-        /** @var ?class-string<ItemConverter> */
-        $className1 = $this->metadata->get([
-            'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field
+        /** @var ?class-string<Orderer> */
+        return $this->metadata->get([
+            'selectDefs', $entityType, 'ordererClassNameMap', $field
         ]);
-
-        if ($className1) {
-            return $className1;
-        }
-
-        $type = $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
-        ]);
-
-        if (!$type) {
-            return null;
-        }
-
-        /** @var ?class-string<ItemConverter> */
-        $className2 = $this->metadata->get([
-            'app', 'select', 'orderItemConverterClassNameMap', $type
-        ]);
-
-        if ($className2) {
-            return $className2;
-        }
-
-        $className3 = 'Espo\\Core\\Select\\Order\\ItemConverters\\' . ucfirst($type) . 'Type';
-
-        if (class_exists($className3)) {
-            /** @var class-string<ItemConverter> */
-            return $className3;
-        }
-
-        return null;
     }
 }

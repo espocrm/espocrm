@@ -41,20 +41,23 @@ use Espo\Core\{
     Select\Order\ItemConverterFactory,
     Select\Order\ItemConverter,
     Select\Order\MetadataProvider,
+    Select\Order\OrdererFactory,
+    Select\Order\Orderer,
 };
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
 };
 
 class OrderApplierTest extends \PHPUnit\Framework\TestCase
 {
+    private ?OrdererFactory $ordererFactory = null;
+
     protected function setUp(): void
     {
-        $this->user = $this->createMock(User::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
         $this->itemConverterFactory = $this->createMock(ItemConverterFactory::class);
+        $this->ordererFactory = $this->createMock(OrdererFactory::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->params = $this->createMock(OrderParams::class);
 
@@ -62,9 +65,9 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
 
         $this->applier = new OrderApplier(
             $this->entityType,
-            $this->user,
             $this->metadataProvider,
-            $this->itemConverterFactory
+            $this->itemConverterFactory,
+            $this->ordererFactory
         );
     }
 
@@ -190,8 +193,54 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
         $this->applier->apply($this->queryBuilder, $this->params);
     }
 
+    public function testApplyWithOrderer()
+    {
+        $order = SearchParams::ORDER_DESC;
+        $orderBy = 'testField';
+
+        $this->params
+            ->expects($this->any())
+            ->method('forceDefault')
+            ->willReturn(false);
+
+        $this->params
+            ->expects($this->any())
+            ->method('getOrder')
+            ->willReturn($order);
+
+        $this->params
+            ->expects($this->any())
+            ->method('getOrderBy')
+            ->willReturn($orderBy);
+
+        $this->ordererFactory
+            ->expects($this->once())
+            ->method('has')
+            ->with($this->entityType, $orderBy)
+            ->willReturn(true);
+
+        $orderer = $this->createMock(Orderer::class);
+
+        $this->ordererFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with($this->entityType, $orderBy)
+            ->willReturn($orderer);
+
+        $orderer
+            ->expects($this->once())
+            ->method('apply')
+            ->with($this->queryBuilder, Item::create($orderBy, $order));
+
+        $this->applier->apply($this->queryBuilder, $this->params);
+    }
+
     protected function initApplyOrderTest(
-        string $orderBy, string $order, string $fieldType, ?OrderList $converterResult = null, bool $notExisting = false
+        string $orderBy,
+        string $order,
+        string $fieldType,
+        ?OrderList $converterResult = null,
+        bool $notExisting = false
     ) {
         $this->metadataProvider
             ->expects($this->any())
@@ -235,8 +284,8 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
                 ->method('convert')
                 ->with($item)
                 ->willReturn($converterResult);
-        } else {
-
+        }
+        else {
             if ($notExisting) {
                 $this->expectException(Error::class);
 

@@ -39,33 +39,31 @@ use Espo\Core\{
     Select\Order\Item as OrderItem,
     Select\Order\ItemConverterFactory,
     Select\Order\MetadataProvider,
+    Select\Order\OrdererFactory,
 };
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Order
 {
-    protected string $entityType;
+    private string $entityType;
 
-    protected User $user;
+    private MetadataProvider $metadataProvider;
 
-    protected MetadataProvider $metadataProvider;
+    private ItemConverterFactory $itemConverterFactory;
 
-    protected ItemConverterFactory $itemConverterFactory;
+    private OrdererFactory $ordererFactory;
 
     public function __construct(
         string $entityType,
-        User $user,
         MetadataProvider $metadataProvider,
-        ItemConverterFactory $itemConverterFactory
+        ItemConverterFactory $itemConverterFactory,
+        OrdererFactory $ordererFactory
     ) {
         $this->entityType = $entityType;
-        $this->user = $user;
         $this->metadataProvider = $metadataProvider;
         $this->itemConverterFactory = $itemConverterFactory;
+        $this->ordererFactory = $ordererFactory;
     }
 
     public function apply(QueryBuilder $queryBuilder, OrderParams $params): void
@@ -88,7 +86,9 @@ class Order
             }
         }
 
-        $orderBy = $orderBy ?? $this->metadataProvider->getDefaultOrderBy($this->entityType);
+        if ($orderBy === null) {
+            $orderBy = $this->metadataProvider->getDefaultOrderBy($this->entityType);
+        }
 
         if (!$orderBy) {
             return;
@@ -97,7 +97,7 @@ class Order
         $this->applyOrder($queryBuilder, $orderBy, $params->getOrder());
     }
 
-    protected function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order): void
+    private function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order): void
     {
         $orderBy = $this->metadataProvider->getDefaultOrderBy($this->entityType);
 
@@ -124,13 +124,28 @@ class Order
         $this->applyOrder($queryBuilder, $orderBy, $order);
     }
 
-    protected function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order): void
+    private function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order): void
     {
         if (!$orderBy) {
-            throw new Error("Could not apply order.");
+            throw new Error("Could not apply empty order.");
         }
 
-        $order = $order ?? SearchParams::ORDER_ASC;
+        if ($order === null) {
+            $order = SearchParams::ORDER_ASC;
+        }
+
+        $hasOrderer = $this->ordererFactory->has($this->entityType, $orderBy);
+
+        if ($hasOrderer) {
+            $orderer = $this->ordererFactory->create($this->entityType, $orderBy);
+
+            $orderer->apply(
+                $queryBuilder,
+                OrderItem::create($orderBy, $order)
+            );
+
+            return;
+        }
 
         $resultOrderBy = $orderBy;
 

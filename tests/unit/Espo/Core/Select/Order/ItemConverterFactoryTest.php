@@ -29,6 +29,8 @@
 
 namespace tests\unit\Espo\Core\Select\Order;
 
+use Espo\Entities\User;
+
 use Espo\Core\{
     Select\Order\ItemConverterFactory,
     Select\Order\ItemConverter,
@@ -37,16 +39,21 @@ use Espo\Core\{
     InjectableFactory,
 };
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\ContextualBinder;
+
 class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
+        $this->user = $this->createMock(User::class);
 
         $this->factory = new ItemConverterFactory(
             $this->injectableFactory,
-            $this->metadata
+            $this->metadata,
+            $this->user
         );
     }
 
@@ -105,14 +112,19 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($className);
 
+        $container = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->inContext($className, function (ContextualBinder $binder) use ($entityType) {
+                $binder->bindValue('$entityType', $entityType);
+            })
+            ->build();
+
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
+            ->method('createWithBinding')
             ->with(
                 $className,
-                [
-                    'entityType' => $entityType,
-                ]
+                $container
             )
             ->willReturn($object);
 
