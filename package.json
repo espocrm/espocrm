@@ -57,7 +57,7 @@
     "js-base64": "^3.7.2",
     "jsbarcode": "^3.11.4",
     "marked": "^4.0.10",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.33",
     "moment-timezone-data-build": "github:yurikuzn/moment-timezone-data-build#0.1.0",
     "qrcodejs": "^1.0.0",
