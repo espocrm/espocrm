@@ -91,6 +91,8 @@ class Currency
 
     /**
      * Add a currency value.
+     *
+     * @throws RuntimeException If currency codes are different.
      */
     public function add(self $value): self
     {
@@ -108,6 +110,8 @@ class Currency
 
     /**
      * Subtract a currency value.
+     *
+     * @throws RuntimeException If currency codes are different.
      */
     public function subtract(self $value): self
     {
@@ -157,6 +161,26 @@ class Currency
         $amount = CalculatorUtil::round($this->getAmountAsString(), $precision);
 
         return new self($amount, $this->getCode());
+    }
+
+    /**
+     * Compare with another currency value. Returns:
+     * - `1` if greater than the value;
+     * - `0` if equal to the value;
+     * - `-1` if less than the value.
+     *
+     * @throws RuntimeException If currency codes are different.
+     */
+    public function compare(self $value): int
+    {
+        if ($this->getCode() !== $value->getCode()) {
+            throw new RuntimeException("Can't compare currencies with different codes.");
+        }
+
+        return CalculatorUtil::compare(
+            $this->getAmountAsString(),
+            $value->getAmountAsString()
+        );
     }
 
     /**

@@ -119,4 +119,17 @@ class CalculatorUtil
             $precision
         );
     }
+
+    public static function compare(string $arg1, string $arg2): int
+    {
+        if (!function_exists('bccomp')) {
+            return (float) $arg1 <=> (float) $arg2;
+        }
+
+        return bccomp(
+            $arg1,
+            $arg2,
+            self::SCALE
+        );
+    }
 }

@@ -34,24 +34,17 @@ use Espo\Core\{
     Field\Currency\CurrencyFactory,
 };
 
-use Espo\{
-    ORM\Entity,
-};
+use Espo\ORM\Entity;
 
 use RuntimeException;
 
 class CurrencyTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
-    {
-    }
-
     public function testValue()
     {
         $value = Currency::create(2.0, 'USD');
 
         $this->assertEquals(2.0, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -62,7 +55,6 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals(3.0, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -73,7 +65,6 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals(-1.0, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -82,7 +73,6 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         $value = (new Currency(2.0, 'USD'))->multiply(3.0);
 
         $this->assertEquals(6.0, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -91,7 +81,6 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         $value = (new Currency(6.0, 'USD'))->divide(3.0);
 
         $this->assertEquals(2.0, $value->getAmount());
-
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -211,5 +200,48 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(
             $factory->isCreatableFromEntity($entity, 'test')
         );
+    }
+
+    public function testCompare1(): void
+    {
+        $this->assertEquals(
+            1,
+            Currency::create(2.0, 'USD')
+                ->compare(
+                    Currency::create(1.0, 'USD')
+                )
+        );
+    }
+
+    public function testCompare2(): void
+    {
+        $this->assertEquals(
+            0,
+            Currency::create(2.1, 'USD')
+                ->compare(
+                    Currency::create(2.1, 'USD')
+                )
+        );
+    }
+
+    public function testCompare3(): void
+    {
+        $this->assertEquals(
+            -1,
+            Currency::create(2.1, 'USD')
+                ->compare(
+                    Currency::create(3.1, 'USD')
+                )
+        );
+    }
+
+    public function testCompare4(): void
+    {
+        $this->expectException(RuntimeException::class);
+
+        Currency::create(2.1, 'EUR')
+            ->compare(
+                Currency::create(2.1, 'USD')
+            );
     }
 }
