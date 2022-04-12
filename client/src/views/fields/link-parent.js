@@ -230,7 +230,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+            var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
             if (!this.isForceSelectAllAttributes()) {
                 var select = ['id', 'name'];
