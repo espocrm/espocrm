@@ -41,6 +41,8 @@ use Espo\Core\{
 
 class EmailAddress extends RecordBase
 {
+    private const ADDRESS_MAX_SIZE = 50;
+
     /**
      * @return array<int,array<string,mixed>>
      */
@@ -62,8 +64,8 @@ class EmailAddress extends RecordBase
 
         $maxSize = intval($request->getQueryParam('maxSize'));
 
-        if (empty($maxSize) || $maxSize > 50) {
-            $maxSize = $this->config->get('recordsPerPage', 20);
+        if (!$maxSize || $maxSize > self::ADDRESS_MAX_SIZE) {
+            $maxSize = (int) $this->config->get('recordsPerPage');
         }
 
         $onlyActual = $request->getQueryParam('onlyActual') === 'true';

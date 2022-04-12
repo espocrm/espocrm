@@ -34,12 +34,16 @@ use Espo\Entities\EmailAddress as EmailAddressEntity;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
+use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
+
 /**
  * @extends Record<\Espo\Entities\EmailAddress>
  */
 class EmailAddress extends Record
 {
-    const ERASED_PREFIX = 'ERASED:';
+    private const ERASED_PREFIX = 'ERASED:';
+
+    private ?TextMetadataProvider $textMetadataProvider = null;
 
     /**
      * @param array<int,array<string,mixed>> $result
@@ -52,35 +56,56 @@ class EmailAddress extends Record
         bool $onlyActual = false
     ): void {
 
-        $whereClause = [
-            'OR' => [
-                [
-                    'name*' => $filter . '%',
-                ],
-                [
-                    'emailAddress*' => $filter . '%',
-                ],
-            ],
-            [
-                'emailAddress!=' => null,
-            ],
-        ];
+        $textFilter = null;
+        $whereClause = [];
 
-        $builder = $this->selectBuilderFactory
+        $byEmailAddress = false;
+
+        if (strpos($filter, '@') !== false) {
+            $byEmailAddress = true;
+        }
+
+        if (
+            !$byEmailAddress &&
+            mb_strlen($filter) < (int) $this->config->get('fullTextSearchMinLength') &&
+            $this->hasFullTextSearch($entityType)
+        ) {
+            $byEmailAddress = true;
+        }
+
+        if ($byEmailAddress) {
+            $whereClause = [
+                'emailAddress*' => $filter . '%',
+            ];
+        }
+        else {
+            $textFilter = $filter;
+        }
+
+        $selectBuilder = $this->selectBuilderFactory
             ->create()
             ->from($entityType)
-            ->withAccessControlFilter()
+            ->withAccessControlFilter();
+
+        if ($textFilter) {
+            $selectBuilder->withTextFilter($textFilter);
+        }
+
+        $builder = $selectBuilder
             ->buildQueryBuilder()
             ->where($whereClause)
             ->order('name')
             ->limit(0, $limit);
 
-        $handleMethodName = 'handleQueryBuilder' . $entityType;
-
-        if (method_exists($this, $handleMethodName)) {
-            $this->$handleMethodName($filter, $builder);
+        if ($textFilter) {
+            $builder
+                ->join('emailAddresses', 'emailAddressesJoin')
+                ->distinct();
         }
 
+        if ($entityType === 'User') {
+            $this->handleQueryBuilderUser($filter, $builder);
+        }
 
         $select = ['id', 'emailAddress', 'name'];
 
@@ -107,24 +132,26 @@ class EmailAddress extends Record
 
             $skipPrimaryEmailAddress = false;
 
-            if ($emailAddress) {
-                if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
+            if (!$emailAddress) {
+                continue;
+            }
+
+            if (strpos($emailAddress, self::ERASED_PREFIX) === 0) {
+                $skipPrimaryEmailAddress = true;
+            }
+
+            if ($onlyActual) {
+                if ($entity->get('emailAddressIsOptedOut')) {
                     $skipPrimaryEmailAddress = true;
                 }
 
-                if ($onlyActual) {
-                    if ($entity->get('emailAddressIsOptedOut')) {
-                        $skipPrimaryEmailAddress = true;
+                foreach ($emailAddressData as $item) {
+                    if ($emailAddress !== $item->emailAddress) {
+                        continue;
                     }
 
-                    foreach ($emailAddressData as $item) {
-                        if ($emailAddress !== $item->emailAddress) {
-                            continue;
-                        }
-
-                        if (!empty($item->invalid)) {
-                            $skipPrimaryEmailAddress = true;
-                        }
+                    if (!empty($item->invalid)) {
+                        $skipPrimaryEmailAddress = true;
                     }
                 }
             }
@@ -167,7 +194,7 @@ class EmailAddress extends Record
         }
     }
 
-    protected function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder): void
+    private function handleQueryBuilderUser(string $filter, QueryBuilder $queryBuilder): void
     {
         if ($this->acl->get('portalPermission') === 'no') {
             $queryBuilder->where([
@@ -297,5 +324,14 @@ class EmailAddress extends Record
     {
         /** @var Repository */
         return $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
+    }
+
+    private function hasFullTextSearch(string $entityType): bool
+    {
+        if ($this->textMetadataProvider === null) {
+            $this->textMetadataProvider = $this->injectableFactory->create(TextMetadataProvider::class);
+        }
+
+        return $this->textMetadataProvider->hasFullTextSearch($entityType);
     }
 }

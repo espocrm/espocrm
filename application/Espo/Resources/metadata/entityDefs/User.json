@@ -436,6 +436,6 @@
     "collection": {
         "orderBy": "userName",
         "order": "asc",
-        "textFilterFields": ["name", "userName"]
+        "textFilterFields": ["name", "userName", "emailAddress"]
     }
 }
