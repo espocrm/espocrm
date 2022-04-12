@@ -239,7 +239,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     select = select.concat(this.getMandatorySelectAttributeList());
                 }
 
-                url += '&select=' + select.join(',')
+                url += '&select=' + select.join(',');
             }
 
             var boolList = this.getSelectBoolFilterList();
