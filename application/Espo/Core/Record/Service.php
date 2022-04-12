@@ -819,13 +819,18 @@ class Service implements Crud,
      * @return RecordCollection<TEntity>
      * @throws Forbidden
      */
-    public function find(SearchParams $searchParams): RecordCollection
+    public function find(SearchParams $searchParams, ?FindParams $params = null): RecordCollection
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
 
+        if (!$params) {
+            $params = FindParams::create();
+        }
+
         $disableCount =
+            $params->noTotal() ||
             $this->listCountQueryDisabled ||
             $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled']);
 

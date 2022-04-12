@@ -38,6 +38,7 @@ use Espo\Core\Record\CreateParamsFetcher;
 use Espo\Core\Record\ReadParamsFetcher;
 use Espo\Core\Record\UpdateParamsFetcher;
 use Espo\Core\Record\DeleteParamsFetcher;
+use Espo\Core\Record\FindParamsFetcher;
 use Espo\Core\Record\Service as RecordService;
 
 use Espo\Core\Container;
@@ -69,30 +70,17 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
      */
     public static $defaultAction = 'list';
 
-    /**
-     * @var SearchParamsFetcher
-     */
-    protected $searchParamsFetcher;
+    protected SearchParamsFetcher $searchParamsFetcher;
 
-    /**
-     * @var CreateParamsFetcher
-     */
-    protected $createParamsFetcher;
+    protected CreateParamsFetcher $createParamsFetcher;
 
-    /**
-     * @var ReadParamsFetcher
-     */
-    protected $readParamsFetcher;
+    protected ReadParamsFetcher $readParamsFetcher;
 
-    /**
-     * @var UpdateParamsFetcher
-     */
-    protected $updateParamsFetcher;
+    protected UpdateParamsFetcher $updateParamsFetcher;
 
-    /**
-     * @var DeleteParamsFetcher
-     */
-    protected $deleteParamsFetcher;
+    protected DeleteParamsFetcher $deleteParamsFetcher;
+
+    protected FindParamsFetcher $findParamsFetcher;
 
     /**
      * @var RecordServiceContainer
@@ -127,6 +115,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         UpdateParamsFetcher $updateParamsFetcher,
         DeleteParamsFetcher $deleteParamsFetcher,
         RecordServiceContainer $recordServiceContainer,
+        FindParamsFetcher $findParamsFetcher,
         Config $config,
         User $user,
         Acl $acl,
@@ -141,6 +130,7 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         $this->readParamsFetcher = $readParamsFetcher;
         $this->updateParamsFetcher = $updateParamsFetcher;
         $this->deleteParamsFetcher = $deleteParamsFetcher;
+        $this->findParamsFetcher = $findParamsFetcher;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
         $this->user = $user;
@@ -251,8 +241,9 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         }
 
         $searchParams = $this->fetchSearchParamsFromRequest($request);
+        $findParams = $this->findParamsFetcher->fetch($request);
 
-        $recordCollection = $this->getRecordService()->find($searchParams);
+        $recordCollection = $this->getRecordService()->find($searchParams, $findParams);
 
         return (object) [
             'total' => $recordCollection->getTotal(),
