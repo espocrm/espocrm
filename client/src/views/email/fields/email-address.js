@@ -34,6 +34,7 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
@@ -42,14 +43,14 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
 
             this.$input = this.$el.find('input');
 
-            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
                 this.initSearchAutocomplete();
             }
 
-            if (this.mode == 'search') {
-                this.$input.on('input', function () {
+            if (this.mode === 'search') {
+                this.$input.on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -57,20 +58,24 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
             this.$input = this.$input || this.$el.find('input');
 
             this.$input.autocomplete({
-                serviceUrl: function (q) {
-                    return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
-                }.bind(this),
+                serviceUrl: (q) => {
+                    return 'EmailAddress/action/searchInAddressBook?maxSize=' +
+                        this.getAutocompleteMaxCount();
+                },
                 paramName: 'q',
                 minChars: 1,
                 autoSelectFirst: true,
                 triggerSelectOnValidInput: false,
-                formatResult: function (suggestion) {
-                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' + this.getHelper().escapeString(suggestion.id) + '&#62;';
-                }.bind(this),
-                transformResult: function (response) {
+                noCache: true,
+                formatResult: (suggestion) => {
+                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
+                        this.getHelper().escapeString(suggestion.id) + '&#62;';
+                },
+                transformResult: (response) => {
                     var response = JSON.parse(response);
                     var list = [];
-                    response.forEach(function(item) {
+
+                    response.forEach(item => {
                         list.push({
                             id: item.emailAddress,
                             name: item.entityName,
@@ -81,36 +86,42 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
                             data: item.emailAddress,
                             value: item.emailAddress,
                         });
-                    }, this);
+                    });
+
                     return {
                         suggestions: list
                     };
-                }.bind(this),
-                onSelect: function (s) {
+                },
+                onSelect: (s) => {
                     this.$input.val(s.emailAddress);
-                }.bind(this)
+                },
             });
 
-            this.once('render', function () {
+            this.once('render', () => {
                 this.$input.autocomplete('dispose');
-            }, this);
-            this.once('remove', function () {
+            });
+
+            this.once('remove', () => {
                 this.$input.autocomplete('dispose');
-            }, this);
+            });
         },
 
         fetchSearch: function () {
             var value = this.$element.val();
+
             if (typeof value.trim === 'function') {
                 value = value.trim();
             }
+
             if (value) {
                 var data = {
                     type: 'equals',
-                    value: value
-                }
+                    value: value,
+                };
+
                 return data;
             }
+
             return false;
         },
 

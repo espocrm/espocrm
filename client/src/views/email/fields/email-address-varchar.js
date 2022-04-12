@@ -50,6 +50,7 @@ define(
         events: {
             'click a[data-action="clearAddress"]': function (e) {
                 var address = $(e.currentTarget).data('address').toString();
+
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
@@ -57,7 +58,7 @@ define(
                     return;
                 }
 
-                if (e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 13) {
+                if (e.keyCode === 188 || e.keyCode === 186 || e.keyCode === 13) {
                     var $input = $(e.currentTarget);
                     var address = $input.val().replace(',', '').replace(';', '').trim();
 
@@ -178,6 +179,7 @@ define(
                     paramName: 'q',
                     minChars: 1,
                     autoSelectFirst: true,
+                    noCache: true,
                     triggerSelectOnValidInput: false,
                     formatResult: (suggestion) => {
                         return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
@@ -211,23 +213,23 @@ define(
                     },
                 });
 
-                this.once('render', function () {
+                this.once('render', () => {
                     this.$input.autocomplete('dispose');
-                }, this);
+                });
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     this.$input.autocomplete('dispose');
-                }, this);
+                });
             }
 
             if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
-            if (this.mode == 'search') {
-                this.$input.on('input', function () {
+            if (this.mode === 'search') {
+                this.$input.on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -271,6 +273,7 @@ define(
                 if (type) {
                     this.typeHash[address] = type;
                 }
+
                 if (id) {
                     this.idHash[address] = id;
                 }
@@ -335,7 +338,8 @@ define(
                 var data = {
                     type: 'equals',
                     value: value,
-                }
+                };
+
                 return data;
             }
 
