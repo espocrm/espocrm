@@ -70,8 +70,7 @@ class FullTextSearchDataComposer
         $useFullTextSearch = false;
 
         if (
-            $this->metadataProvider->hasFullTextSearch($this->entityType)
-            &&
+            $this->metadataProvider->hasFullTextSearch($this->entityType) &&
             !empty($fullTextSearchColumnList)
         ) {
             $fullTextSearchMinLength = $this->config->get('fullTextSearchMinLength') ?? self::MIN_LENGTH;
@@ -80,11 +79,13 @@ class FullTextSearchDataComposer
                 $fullTextSearchMinLength = 0;
             }
 
-            $filterWoWildcards = str_replace('*', '', $filter);
+            /*$filterWoWildcards = str_replace('*', '', $filter);
 
             if (mb_strlen($filterWoWildcards) >= $fullTextSearchMinLength) {
                 $useFullTextSearch = true;
-            }
+            }*/
+
+            $useFullTextSearch = true;
         }
 
         $fullTextSearchFieldList = [];
@@ -140,12 +141,9 @@ class FullTextSearchDataComposer
         if (
             $isAuxiliaryUse && mb_strpos($filter, '*') === false
             ||
-            mb_strpos($filter, ' ') === false
-            &&
-            mb_strpos($filter, '+') === false
-            &&
-            mb_strpos($filter, '-') === false
-            &&
+            mb_strpos($filter, ' ') === false &&
+            mb_strpos($filter, '+') === false &&
+            mb_strpos($filter, '-') === false &&
             mb_strpos($filter, '*') === false
         ) {
             $function = 'MATCH_NATURAL_LANGUAGE';
@@ -156,7 +154,6 @@ class FullTextSearchDataComposer
 
         $filter = str_replace('"*', '"', $filter);
         $filter = str_replace('*"', '"', $filter);
-
         $filter = str_replace('\'', '\'\'', $filter);
 
         while (strpos($filter, '**')) {

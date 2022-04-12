@@ -385,11 +385,7 @@ class SearchParams
         $rawParams['primaryFilter'] = $primaryFilter;
         $rawParams['textFilter'] = $textFilter;
         $rawParams['where'] = $where;
-
         $rawParams['noFullTextSearch'] = false;
-
-        $rawParams['noFullTextSearch'] = isset($params['q']);
-
         $rawParams['maxTextAttributeLength'] = $maxTextAttributeLength;
 
         if ($where) {

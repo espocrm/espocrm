@@ -100,7 +100,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('test', $params->getTextFilter());
 
-        $this->assertTrue($params->noFullTextSearch());
+        $this->assertFalse($params->noFullTextSearch());
     }
 
     public function testOrder()
