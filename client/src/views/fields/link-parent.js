@@ -165,7 +165,8 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
                 this.addActionHandler('clearLink', () => {
                     if (this.foreignScopeList.length) {
-                        this.$elementType.val(this.foreignScopeList[0]);
+                        this.foreignScope = this.foreignScopeList[0];
+                        this.$elementType.val(this.foreignScope);
                     }
 
                     this.$elementName.val('');
