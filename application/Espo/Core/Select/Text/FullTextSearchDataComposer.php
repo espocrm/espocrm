@@ -97,11 +97,7 @@ class FullTextSearchDataComposer
             return null;
         }
 
-        $preparedFilter = $this->prepareFilter($filter);
-
-        if ($params->isAuxiliaryUse()) {
-            $preparedFilter = str_replace('%', '', $preparedFilter);
-        }
+        $preparedFilter = $this->prepareFilter($filter, $params);
 
         $function = 'MATCH_BOOLEAN';
 
@@ -135,7 +131,7 @@ class FullTextSearchDataComposer
         );
     }
 
-    private function prepareFilter(string $filter): string
+    private function prepareFilter(string $filter, FullTextSearchDataComposerParams $params): string
     {
         $filter = str_replace(['(', ')'], '', $filter);
 
@@ -148,10 +144,14 @@ class FullTextSearchDataComposer
             );
         }
 
-        while (mb_substr($filter, -2)  === ' *') {
+        while (mb_substr($filter, -2) === ' *') {
             $filter = trim(
                 mb_substr($filter, 0, mb_strlen($filter) - 2)
             );
+        }
+
+        if ($params->isAuxiliaryUse()) {
+            $filter = str_replace('%', '', $filter);
         }
 
         return $filter;
