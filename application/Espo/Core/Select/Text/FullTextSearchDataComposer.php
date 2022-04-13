@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Text;
 
 use Espo\Core\Utils\Config;
+use Espo\Core\Select\Text\FullTextSearch\Mode;
 
 use Espo\ORM\Query\Part\Expression\Util as ExpressionUtil;
 use Espo\ORM\Query\Part\Expression;
@@ -41,6 +42,14 @@ class FullTextSearchDataComposer
     private Config $config;
 
     private MetadataProvider $metadataProvider;
+
+    /**
+     * @var array<Mode::*,string>
+     */
+    private array $functionMap = [
+        Mode::BOOLEAN => 'MATCH_BOOLEAN',
+        Mode::NATURAL_LANGUAGE => 'MATCH_NATURAL_LANGUAGE',
+    ];
 
     public function __construct(
         string $entityType,
@@ -99,7 +108,7 @@ class FullTextSearchDataComposer
 
         $preparedFilter = $this->prepareFilter($filter, $params);
 
-        $function = 'MATCH_BOOLEAN';
+        $mode = Mode::BOOLEAN;
 
         if (
             $params->isAuxiliaryUse() && mb_strpos($preparedFilter, '*') === false
@@ -109,7 +118,7 @@ class FullTextSearchDataComposer
             mb_strpos($preparedFilter, '-') === false &&
             mb_strpos($preparedFilter, '*') === false
         ) {
-            $function = 'MATCH_NATURAL_LANGUAGE';
+            $mode = Mode::NATURAL_LANGUAGE;
         }
 
         $argumentList = array_merge(
@@ -122,12 +131,15 @@ class FullTextSearchDataComposer
             [$preparedFilter]
         );
 
+        $function = $this->functionMap[$mode];
+
         $expression = ExpressionUtil::composeFunction($function, ...$argumentList);
 
         return new FullTextSearchData(
             $expression,
             $fieldList,
-            $columnList
+            $columnList,
+            $mode
         );
     }
 

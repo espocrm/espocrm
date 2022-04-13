@@ -107,27 +107,12 @@ class TextFilter
             $filter = str_replace('*', '%', $filter);
         }
 
-        $filterForFullTextSearch = str_replace('%', '*', $filterOriginal);
-
-        $skipFullTextSearch = false;
-
-        if (!$forceFullTextSearch) {
-            if (mb_strpos($filterForFullTextSearch, '*') === 0) {
-                $skipFullTextSearch = true;
-            }
-            else if (mb_strpos($filterForFullTextSearch, ' *') !== false) {
-                $skipFullTextSearch = true;
-            }
-        }
-
-        if ($params->noFullTextSearch()) {
-            $skipFullTextSearch = true;
-        }
-
         $fullTextSearchData = null;
 
-        if (!$skipFullTextSearch) {
+        if (!$params->noFullTextSearch()) {
             $fullTextSearchIsAuxiliary = !$preferFullTextSearch;
+
+            $filterForFullTextSearch = str_replace('%', '*', $filterOriginal);
 
             $fullTextSearchData = $this->getFullTextSearchData(
                 $filterForFullTextSearch,
@@ -141,21 +126,13 @@ class TextFilter
 
         $fullTextSearchFieldList = $fullTextSearchData ? $fullTextSearchData->getFieldList() : [];
 
-        $fieldList = array_filter(
-            $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
-            function ($field) use ($fullTextSearchFieldList, $forceFullTextSearch) {
-                if ($forceFullTextSearch) {
-                    return false;
+        $fieldList = $forceFullTextSearch ? [] :
+            array_filter(
+                $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
+                function ($field) use ($fullTextSearchFieldList) {
+                    return !in_array($field, $fullTextSearchFieldList);
                 }
-
-                // @todo Check this logic.
-                if (in_array($field, $fullTextSearchFieldList)) {
-                    return false;
-                }
-
-                return true;
-            }
-        );
+            );
 
         $filterData = FilterData::create($filter, $fieldList)
             ->withSkipWildcards($skipWildcards)

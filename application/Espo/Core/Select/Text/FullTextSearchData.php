@@ -31,6 +31,9 @@ namespace Espo\Core\Select\Text;
 
 use Espo\ORM\Query\Part\Expression;
 
+use Espo\Core\Select\Text\FullTextSearch\Mode;
+
+use InvalidArgumentException;
 
 class FullTextSearchData
 {
@@ -47,14 +50,25 @@ class FullTextSearchData
     private array $columnList;
 
     /**
+     * @var Mode::* $mode
+     */
+    private string $mode;
+
+    /**
      * @param string[] $fieldList
      * @param string[] $columnList
+     * @param Mode::* $mode
      */
-    public function __construct(Expression $expression, array $fieldList, array $columnList)
+    public function __construct(Expression $expression, array $fieldList, array $columnList, string $mode)
     {
         $this->expression = $expression;
         $this->fieldList = $fieldList;
         $this->columnList = $columnList;
+        $this->mode = $mode;
+
+        if (!in_array($mode, [Mode::NATURAL_LANGUAGE, Mode::BOOLEAN])) {
+            throw new InvalidArgumentException("Bad mode.");
+        }
     }
 
     public function getExpression(): Expression
@@ -76,5 +90,13 @@ class FullTextSearchData
     public function getColumnList(): array
     {
         return $this->columnList;
+    }
+
+    /**
+     * @return Mode::*
+     */
+    public function getMode(): string
+    {
+        return $this->mode;
     }
 }
