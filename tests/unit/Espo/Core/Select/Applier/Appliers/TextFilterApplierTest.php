@@ -233,9 +233,9 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
         $fullTextSearchDataComposer = $this->createMock(FullTextSearchDataComposer::class);
 
-        $fullTextSearchDataComposerParams = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => $isAuxiliaryUse,
-        ]);
+        $fullTextSearchDataComposerParams = FullTextSearchDataComposerParams
+            ::create()
+           ->withIsAuxiliaryUse($isAuxiliaryUse);
 
         $this->fullTextSearchDataComposerFactory
             ->expects($this->once())

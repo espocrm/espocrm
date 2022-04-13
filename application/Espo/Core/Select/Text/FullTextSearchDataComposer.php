@@ -36,8 +36,6 @@ use Espo\ORM\Query\Part\Expression;
 
 class FullTextSearchDataComposer
 {
-    private const MIN_LENGTH = 4;
-
     private string $entityType;
 
     private Config $config;
@@ -60,44 +58,15 @@ class FullTextSearchDataComposer
             return null;
         }
 
-        $isAuxiliaryUse = $params->isAuxiliaryUse();
+        $columnList = $this->metadataProvider->getFullTextSearchColumnList($this->entityType) ?? [];
 
-        $fieldList = $this->getTextFilterFieldList();
-
-        if ($isAuxiliaryUse) {
-            $filter = str_replace('%', '', $filter);
-        }
-
-        $fullTextSearchColumnList = $this->metadataProvider->getFullTextSearchColumnList($this->entityType);
-
-        $useFullTextSearch = false;
-
-        if (
-            $this->metadataProvider->hasFullTextSearch($this->entityType) &&
-            !empty($fullTextSearchColumnList)
-        ) {
-            $fullTextSearchMinLength = $this->config->get('fullTextSearchMinLength') ?? self::MIN_LENGTH;
-
-            if (!$fullTextSearchMinLength) {
-                $fullTextSearchMinLength = 0;
-            }
-
-            /*$filterWoWildcards = str_replace('*', '', $filter);
-
-            if (mb_strlen($filterWoWildcards) >= $fullTextSearchMinLength) {
-                $useFullTextSearch = true;
-            }*/
-
-            $useFullTextSearch = true;
-        }
-
-        $fullTextSearchFieldList = [];
-
-        if (!$useFullTextSearch) {
+        if (!count($columnList)) {
             return null;
         }
 
-        foreach ($fieldList as $field) {
+        $fieldList = [];
+
+        foreach ($this->getTextFilterFieldList() as $field) {
             if (strpos($field, '.') !== false) {
                 continue;
             }
@@ -110,64 +79,41 @@ class FullTextSearchDataComposer
                 continue;
             }
 
-            $fullTextSearchFieldList[] = $field;
+            $fieldList[] = $field;
         }
 
-        if (!count($fullTextSearchFieldList)) {
-            $useFullTextSearch = false;
-        }
-
-        if (substr_count($filter, '\'') % 2 != 0) {
-            $useFullTextSearch = false;
-        }
-
-        if (substr_count($filter, '"') % 2 != 0) {
-            $useFullTextSearch = false;
-        }
-
-        if (empty($fullTextSearchColumnList)) {
-            $useFullTextSearch = false;
-        }
-
-        if ($isAuxiliaryUse) {
-            if (mb_strpos($filter, '@') !== false) {
-                $useFullTextSearch = false;
-            }
-        }
-
-        if (!$useFullTextSearch) {
+        if (!count($fieldList)) {
             return null;
         }
 
-        $filter = str_replace(['(', ')'], '', $filter);
+        if (
+            substr_count($filter, '\'') % 2 !== 0 ||
+            substr_count($filter, '"') % 2 !== 0
+        ) {
+            return null;
+        }
+
+        if ($params->isAuxiliaryUse() && mb_strpos($filter, '@') !== false) {
+            return null;
+        }
+
+        $preparedFilter = $this->prepareFilter($filter);
+
+        if ($params->isAuxiliaryUse()) {
+            $preparedFilter = str_replace('%', '', $preparedFilter);
+        }
+
+        $function = 'MATCH_BOOLEAN';
 
         if (
-            $isAuxiliaryUse && mb_strpos($filter, '*') === false
+            $params->isAuxiliaryUse() && mb_strpos($preparedFilter, '*') === false
             ||
-            mb_strpos($filter, ' ') === false &&
-            mb_strpos($filter, '+') === false &&
-            mb_strpos($filter, '-') === false &&
-            mb_strpos($filter, '*') === false
+            mb_strpos($preparedFilter, ' ') === false &&
+            mb_strpos($preparedFilter, '+') === false &&
+            mb_strpos($preparedFilter, '-') === false &&
+            mb_strpos($preparedFilter, '*') === false
         ) {
             $function = 'MATCH_NATURAL_LANGUAGE';
-        }
-        else {
-            $function = 'MATCH_BOOLEAN';
-        }
-
-        $filter = str_replace('"*', '"', $filter);
-        $filter = str_replace('*"', '"', $filter);
-
-        while (strpos($filter, '**')) {
-            $filter = str_replace('**', '*', $filter);
-
-            $filter = trim($filter);
-        }
-
-        while (mb_substr($filter, -2)  === ' *') {
-            $filter = mb_substr($filter, 0, mb_strlen($filter) - 2);
-
-            $filter = trim($filter);
         }
 
         $argumentList = array_merge(
@@ -175,20 +121,46 @@ class FullTextSearchDataComposer
                 function ($item) {
                     return Expression::column($item);
                 },
-                $fullTextSearchColumnList ?? []
+                $columnList
             ),
-            [$filter]
+            [$preparedFilter]
         );
 
         $expression = ExpressionUtil::composeFunction($function, ...$argumentList);
 
-        return new FullTextSearchData($expression, $fullTextSearchFieldList, $fullTextSearchColumnList ?? []);
+        return new FullTextSearchData(
+            $expression,
+            $fieldList,
+            $columnList
+        );
+    }
+
+    private function prepareFilter(string $filter): string
+    {
+        $filter = str_replace(['(', ')'], '', $filter);
+
+        $filter = str_replace('"*', '"', $filter);
+        $filter = str_replace('*"', '"', $filter);
+
+        while (strpos($filter, '**')) {
+            $filter = trim(
+                str_replace('**', '*', $filter)
+            );
+        }
+
+        while (mb_substr($filter, -2)  === ' *') {
+            $filter = trim(
+                mb_substr($filter, 0, mb_strlen($filter) - 2)
+            );
+        }
+
+        return $filter;
     }
 
     /**
      * @return string[]
      */
-    protected function getTextFilterFieldList(): array
+    private function getTextFilterFieldList(): array
     {
         return $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'];
     }

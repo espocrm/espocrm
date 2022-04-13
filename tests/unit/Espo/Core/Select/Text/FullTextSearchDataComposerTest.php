@@ -114,9 +114,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 ['field1', 'field2', 'field3']
             );
 
-        $params = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => false,
-        ]);
+        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 
@@ -147,9 +145,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-        $params = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => false,
-        ]);
+        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 
@@ -172,9 +168,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-        $params = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => false,
-        ]);
+        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 

@@ -33,40 +33,20 @@ use Espo\Core\{
     Select\Text\FullTextSearchDataComposerParams,
 };
 
-use InvalidArgumentException;
-
 class FullTextSearchDataComposerParamsTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
-    {
-    }
-
     public function testFromArray()
     {
-        $item = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => true,
-        ]);
+        $item = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(true);
 
         $this->assertTrue($item->isAuxiliaryUse());
 
-        $item = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => false,
-        ]);
+        $item = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
 
         $this->assertFalse($item->isAuxiliaryUse());
 
-        $item = FullTextSearchDataComposerParams::fromArray([
-        ]);
+        $item = FullTextSearchDataComposerParams::create();
 
         $this->assertFalse($item->isAuxiliaryUse());
-    }
-
-    public function testNonExistingParam()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $params = FullTextSearchDataComposerParams::fromArray([
-            'bad' => 'd',
-        ]);
     }
 }

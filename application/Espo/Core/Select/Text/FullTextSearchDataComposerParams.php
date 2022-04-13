@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Select\Text;
 
-use InvalidArgumentException;
-
 class FullTextSearchDataComposerParams
 {
     private bool $isAuxiliaryUse = false;
@@ -39,22 +37,17 @@ class FullTextSearchDataComposerParams
     {
     }
 
-    /**
-     * @param array<string,mixed> $params
-     */
-    public static function fromArray(array $params): self
+    public static function create(): self
     {
-        $object = new self();
+        return new self();
+    }
 
-        $object->isAuxiliaryUse = $params['isAuxiliaryUse'] ?? false;
+    public function withIsAuxiliaryUse(bool $isAuxiliaryUse = true): self
+    {
+        $obj = clone $this;
+        $obj->isAuxiliaryUse = $isAuxiliaryUse;
 
-        foreach ($params as $key => $value) {
-            if (!property_exists($object, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
-            }
-        }
-
-        return $object;
+        return $obj;
     }
 
     public function isAuxiliaryUse(): bool

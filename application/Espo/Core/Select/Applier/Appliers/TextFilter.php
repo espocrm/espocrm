@@ -171,9 +171,9 @@ class TextFilter
     {
         $composer = $this->fullTextSearchDataComposerFactory->create($this->entityType);
 
-        $params = FullTextSearchDataComposerParams::fromArray([
-            'isAuxiliaryUse' => $isAuxiliaryUse,
-        ]);
+        $params = FullTextSearchDataComposerParams
+            ::create()
+            ->withIsAuxiliaryUse($isAuxiliaryUse);
 
         return $composer->compose($filter, $params);
     }

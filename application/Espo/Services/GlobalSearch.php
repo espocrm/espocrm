@@ -181,7 +181,7 @@ class GlobalSearch implements
 
         $fullTextSearchData = $fullTextSearchDataComposer->compose(
             $filter,
-            FullTextSearchDataComposerParams::fromArray([])
+            FullTextSearchDataComposerParams::create()
         );
 
         $isPerson = $this->metadata->get([
