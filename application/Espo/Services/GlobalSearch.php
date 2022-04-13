@@ -42,7 +42,7 @@ use Espo\Core\{
 };
 
 use PDO;
-use StdClass;
+use stdClass;
 
 class GlobalSearch implements
     Di\EntityManagerAware,
@@ -67,7 +67,7 @@ class GlobalSearch implements
         $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
-    public function find(string $filter, int $offset, int $maxSize): StdClass
+    public function find(string $filter, int $offset, int $maxSize): stdClass
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
 
