@@ -2268,7 +2268,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params ?? []);
 
-        if (!$fieldPath) {
+        if ($fieldPath === null || $fieldPath === '') {
             throw new LogicException("Could not handle 'order' for '".$entity->getEntityType()."'.");
         }
 
