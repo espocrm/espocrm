@@ -39,7 +39,8 @@ use Espo\Core\Select\Text\FilterFactory;
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
-use Espo\ORM\Query\Part\Where\AndGroup;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\WhereItem;
 
 use Espo\Entities\User;
 
@@ -134,65 +135,11 @@ class TextFilter
             );
         }
 
-        $fullTextGroup = [];
+        $fullTextWhere = $fullTextSearchData ?
+            $this->processFullTextSearch($queryBuilder, $fullTextSearchData) :
+            null;
 
-        $fullTextSearchFieldList = [];
-
-        $hasFullTextSearch = false;
-
-        if ($fullTextSearchData) {
-            if ($this->fullTextRelevanceThreshold) {
-                $fullTextGroup[] = [
-                    $fullTextSearchData->getExpression() . '>=' => $this->fullTextRelevanceThreshold
-                ];
-            }
-            else {
-                $fullTextGroup[] = $fullTextSearchData->getExpression();
-            }
-
-            $fullTextSearchFieldList = $fullTextSearchData->getFieldList();
-            $relevanceExpression = $fullTextSearchData->getExpression();
-
-            $fullTextOrderType = self::DEFAULT_FT_ORDER;
-
-            $orderTypeMap = [
-                'combined' => self::FT_ORDER_COMBINTED,
-                'relevance' => self::FT_ORDER_RELEVANCE,
-                'original' => self::FT_ORDER_ORIGINAL,
-            ];
-
-            $mOrderType = $this->metadataProvider->getFullTextSearchOrderType($this->entityType);
-
-            if ($mOrderType) {
-                $fullTextOrderType = $orderTypeMap[$mOrderType];
-            }
-
-            $previousOrderBy = $queryBuilder->build()->getOrder();
-
-            $hasOrderBy = !empty($previousOrderBy);
-
-            if (!$hasOrderBy || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
-                $queryBuilder->order([
-                    OrderExpr::fromString($relevanceExpression)->withDesc()
-                ]);
-            }
-            else if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
-                $relevanceExpression =
-                    'ROUND:(DIV:(' . $fullTextSearchData->getExpression() . ',' .
-                    $this->fullTextOrderRelevanceDivider . '))';
-
-                $newOrderBy = array_merge(
-                    [
-                        OrderExpr::fromString($relevanceExpression)->withDesc()
-                    ],
-                    $previousOrderBy
-                );
-
-                $queryBuilder->order($newOrderBy);
-            }
-
-            $hasFullTextSearch = true;
-        }
+        $fullTextSearchFieldList = $fullTextSearchData ? $fullTextSearchData->getFieldList() : [];
 
         $fieldList = array_filter(
             $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
@@ -213,9 +160,7 @@ class TextFilter
         $filterData = FilterData::create($filter, $fieldList)
             ->withSkipWildcards($skipWildcards)
             ->withForceFullTextSearch($forceFullTextSearch)
-            ->withFullTextSearchWhereItem(
-                $hasFullTextSearch ? AndGroup::fromRaw($fullTextGroup) : null
-            );
+            ->withFullTextSearchWhereItem($fullTextWhere);
 
         $this->filterFactory
             ->create($this->entityType, $this->user)
@@ -231,5 +176,56 @@ class TextFilter
         ]);
 
         return $composer->compose($filter, $params);
+    }
+
+    private function processFullTextSearch(QueryBuilder $queryBuilder, FullTextSearchData $data): WhereItem
+    {
+        $expression = $data->getExpression();
+
+        $fullTextOrderType = self::DEFAULT_FT_ORDER;
+
+        $orderTypeMap = [
+            'combined' => self::FT_ORDER_COMBINTED,
+            'relevance' => self::FT_ORDER_RELEVANCE,
+            'original' => self::FT_ORDER_ORIGINAL,
+        ];
+
+        $mOrderType = $this->metadataProvider->getFullTextSearchOrderType($this->entityType);
+
+        if ($mOrderType) {
+            $fullTextOrderType = $orderTypeMap[$mOrderType];
+        }
+
+        $previousOrderBy = $queryBuilder->build()->getOrder();
+
+        $hasOrderBy = !empty($previousOrderBy);
+
+        if (!$hasOrderBy || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
+            $queryBuilder->order([
+                OrderExpr::create($expression)->withDesc()
+            ]);
+        }
+        else if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
+            $orderExpression =
+                Expr::round(
+                    Expr::divide($expression, $this->fullTextOrderRelevanceDivider)
+                );
+
+            $newOrderBy = array_merge(
+                [OrderExpr::create($orderExpression)->withDesc()],
+                $previousOrderBy
+            );
+
+            $queryBuilder->order($newOrderBy);
+        }
+
+        if ($this->fullTextRelevanceThreshold) {
+            return Expr::greaterOrEqual(
+                $expression,
+                $this->fullTextRelevanceThreshold
+            );
+        }
+
+        return $expression;
     }
 }

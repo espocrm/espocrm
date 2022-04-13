@@ -38,7 +38,7 @@ use Espo\Core\{
 
 class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->config = $this->createMock(Config::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
@@ -125,7 +125,10 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['field1A', 'field1B', 'field2'], $data->getColumnList());
         $this->assertEquals(['field1', 'field2'], $data->getFieldList());
 
-        $this->assertEquals('MATCH_BOOLEAN:(field1A, field1B, field2, \'test filter\')', $data->getExpression());
+        $this->assertEquals(
+            'MATCH_BOOLEAN:(field1A, field1B, field2, \'test filter\')',
+            $data->getExpression()->getValue()
+        );
     }
 
     public function testCompose2()

@@ -29,47 +29,18 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Select\Text\FullTextSearchData,
-};
+use Espo\ORM\Query\Part\Expression as Expr;
 
-use InvalidArgumentException;
+use Espo\Core\Select\Text\FullTextSearchData;
 
 class FullTextSearchDataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    public function testGet1()
     {
-    }
+        $item = new FullTextSearchData(Expr::create('TEST:()'), ['test'], ['column']);
 
-    public function testFromArray()
-    {
-        $item = FullTextSearchData::fromArray([
-            'expression' => 'TEST',
-            'fieldList' => ['test'],
-            'columnList' => ['column'],
-        ]);
-
-        $this->assertEquals('TEST', $item->getExpression());
+        $this->assertEquals('TEST:()', $item->getExpression()->getValue());
         $this->assertEquals(['test'], $item->getFieldList());
         $this->assertEquals(['column'], $item->getColumnList());
-    }
-
-    public function testEmpty()
-    {
-        $item = FullTextSearchData::fromArray([
-            'expression' => 'TEST',
-        ]);
-
-        $this->assertEquals([], $item->getFieldList());
-        $this->assertEquals([], $item->getColumnList());
-    }
-
-    public function testNonExistingParam()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $params = FullTextSearchData::fromArray([
-            'bad' => 'd',
-        ]);
     }
 }

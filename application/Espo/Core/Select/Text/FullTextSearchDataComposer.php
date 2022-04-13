@@ -31,15 +31,18 @@ namespace Espo\Core\Select\Text;
 
 use Espo\Core\Utils\Config;
 
+use Espo\ORM\Query\Part\Expression\Util as ExpressionUtil;
+use Espo\ORM\Query\Part\Expression;
+
 class FullTextSearchDataComposer
 {
     private const MIN_LENGTH = 4;
 
-    protected string $entityType;
+    private string $entityType;
 
-    protected Config $config;
+    private Config $config;
 
-    protected MetadataProvider $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
     public function __construct(
         string $entityType,
@@ -154,7 +157,6 @@ class FullTextSearchDataComposer
 
         $filter = str_replace('"*', '"', $filter);
         $filter = str_replace('*"', '"', $filter);
-        $filter = str_replace('\'', '\'\'', $filter);
 
         while (strpos($filter, '**')) {
             $filter = str_replace('**', '*', $filter);
@@ -168,13 +170,19 @@ class FullTextSearchDataComposer
             $filter = trim($filter);
         }
 
-        $expression = $function . ':(' . implode(', ', $fullTextSearchColumnList ?? []) . ', ' . "'{$filter}'" . ')';
+        $argumentList = array_merge(
+            array_map(
+                function ($item) {
+                    return Expression::column($item);
+                },
+                $fullTextSearchColumnList ?? []
+            ),
+            [$filter]
+        );
 
-        return FullTextSearchData::fromArray([
-            'expression' => $expression,
-            'fieldList' => $fullTextSearchFieldList,
-            'columnList' => $fullTextSearchColumnList,
-        ]);
+        $expression = ExpressionUtil::composeFunction($function, ...$argumentList);
+
+        return new FullTextSearchData($expression, $fullTextSearchFieldList, $fullTextSearchColumnList ?? []);
     }
 
     /**

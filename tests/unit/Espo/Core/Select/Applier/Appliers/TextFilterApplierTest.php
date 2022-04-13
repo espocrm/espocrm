@@ -46,6 +46,7 @@ use Espo\Core\{
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
     ORM\Query\Part\Where\OrGroup,
+    ORM\Query\Part\Expression as Expr,
     ORM\Entity,
     Entities\User,
 };
@@ -203,7 +204,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
 
         if (!$noFullTextSearch) {
-            $expectedWhere[] = 'TEST:(test)';
+            $expectedWhere[] = ['TEST:(test):' => null];
         }
 
         $this->queryBuilder
@@ -250,7 +251,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $fullTextSearchData
             ->expects($this->any())
             ->method('getExpression')
-            ->willReturn($expression);
+            ->willReturn(Expr::create($expression));
 
         $fullTextSearchDataComposer
             ->expects($this->any())
