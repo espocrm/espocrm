@@ -73,8 +73,6 @@ class Applier
 
         $whereClause = $converter->convert($queryBuilder, $whereItem);
 
-        $queryBuilder->where(
-            $whereClause->getRaw()
-        );
+        $queryBuilder->where($whereClause);
     }
 }
