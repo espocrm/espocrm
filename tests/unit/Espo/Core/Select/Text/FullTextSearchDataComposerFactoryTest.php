@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Select\Text;
 
 use Espo\Core\{
     Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory,
-    Select\Text\FullTextSearch\DataComposer as FullTextSearchDataComposer,
+    Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer,
     Utils\Metadata,
     InjectableFactory,
 };

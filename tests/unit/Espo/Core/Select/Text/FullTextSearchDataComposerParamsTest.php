@@ -29,13 +29,13 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\Select\Text\FullTextSearch\DataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params;
 
 class FullTextSearchDataComposerParamsTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
-        $item = DataComposerParams::create();
+        $item = Params::create();
 
         $this->assertNotNull($item);
     }

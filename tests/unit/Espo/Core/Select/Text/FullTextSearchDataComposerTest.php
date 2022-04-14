@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Select\Text;
 
 use Espo\Core\{
-    Select\Text\FullTextSearch\DataComposer as FullTextSearchDataComposer,
-    Select\Text\FullTextSearch\DataComposerParams as FullTextSearchDataComposerParams,
+    Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer,
+    Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams,
     Select\Text\MetadataProvider,
     Utils\Config,
 };
@@ -46,7 +46,9 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
         $this->entityType = 'Test';
 
         $this->fullTextSearchDataComposer = new FullTextSearchDataComposer(
-            $this->entityType, $this->config, $this->metadataProvider
+            $this->entityType,
+            $this->config,
+            $this->metadataProvider
         );
     }
 

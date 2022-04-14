@@ -33,7 +33,7 @@ use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FilterParams;
 use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
-use Espo\Core\Select\Text\FullTextSearch\DataComposerParams as FullTextSearchDataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\Text\Filter\Data as FilterData;
 use Espo\Core\Select\Text\FilterFactory;
 
@@ -97,7 +97,7 @@ class TextFilter
         $fullTextSearchData = null;
 
         if (!$params->noFullTextSearch()) {
-            $fullTextSearchData = $this->getFullTextSearchData($filter);
+            $fullTextSearchData = $this->composeFullTextSearchData($filter);
         }
 
         $fullTextWhere = $fullTextSearchData ?
@@ -132,7 +132,7 @@ class TextFilter
             ->apply($queryBuilder, $filterData);
     }
 
-    private function getFullTextSearchData(string $filter): ?FullTextSearchData
+    private function composeFullTextSearchData(string $filter): ?FullTextSearchData
     {
         $composer = $this->fullTextSearchDataComposerFactory->create($this->entityType);
 

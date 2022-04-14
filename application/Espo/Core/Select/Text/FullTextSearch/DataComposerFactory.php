@@ -44,9 +44,6 @@ class DataComposerFactory
         $this->metadata = $metadata;
     }
 
-    /**
-     * @todo Use an interface `DataComposer`.
-     */
     public function create(string $entityType): DataComposer
     {
         $className = $this->getClassName($entityType);
@@ -65,6 +62,6 @@ class DataComposerFactory
             $this->metadata->get([
                 'selectDefs', $entityType, 'fullTextSearchDataComposerClassName'
             ]) ??
-            DataComposer::class;
+            DefaultDataComposer::class;
     }
 }

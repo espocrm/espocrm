@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Text\FullTextSearch;
+namespace Espo\Core\Select\Text\FullTextSearch\DataComposer;
 
-class DataComposerParams
+class Params
 {
     private function __construct() {}
 
