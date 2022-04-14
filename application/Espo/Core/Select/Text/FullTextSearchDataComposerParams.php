@@ -31,27 +31,10 @@ namespace Espo\Core\Select\Text;
 
 class FullTextSearchDataComposerParams
 {
-    private bool $isAuxiliaryUse = false;
-
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function create(): self
     {
         return new self();
-    }
-
-    public function withIsAuxiliaryUse(bool $isAuxiliaryUse = true): self
-    {
-        $obj = clone $this;
-        $obj->isAuxiliaryUse = $isAuxiliaryUse;
-
-        return $obj;
-    }
-
-    public function isAuxiliaryUse(): bool
-    {
-        return $this->isAuxiliaryUse;
     }
 }

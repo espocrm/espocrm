@@ -29,60 +29,21 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Select\Text\FilterParams,
-};
-
-use InvalidArgumentException;
+use Espo\Core\Select\Text\FilterParams;
 
 class FilterParamsTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    public function testCreate1(): void
     {
-    }
-
-    public function testFromArray()
-    {
-        $item = FilterParams::fromArray([
-            'noFullTextSearch' => true,
-            'preferFullTextSearch' => true,
-        ]);
+        $item = FilterParams::create()->withNoFullTextSearch(true);
 
         $this->assertTrue($item->noFullTextSearch());
-        $this->assertTrue($item->preferFullTextSearch());
-
-        $item = FilterParams::fromArray([
-            'noFullTextSearch' => false,
-            'preferFullTextSearch' => false,
-        ]);
-
-        $this->assertFalse($item->noFullTextSearch());
-        $this->assertFalse($item->preferFullTextSearch());
-
-        $item = FilterParams::fromArray([
-            'noFullTextSearch' => false,
-            'preferFullTextSearch' => true,
-        ]);
-
-        $this->assertFalse($item->noFullTextSearch());
-        $this->assertTrue($item->preferFullTextSearch());
     }
 
-    public function testEmpty()
+    public function testCreate2(): void
     {
-        $item = FilterParams::fromArray([
-        ]);
+        $item = FilterParams::create()->withNoFullTextSearch(false);
 
         $this->assertFalse($item->noFullTextSearch());
-        $this->assertFalse($item->preferFullTextSearch());
-    }
-
-    public function testNonExistingParam()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $params = FilterParams::fromArray([
-            'bad' => 'd',
-        ]);
     }
 }

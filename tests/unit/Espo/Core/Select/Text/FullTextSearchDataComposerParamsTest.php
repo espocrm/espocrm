@@ -29,24 +29,14 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Select\Text\FullTextSearchDataComposerParams,
-};
+use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
 
 class FullTextSearchDataComposerParamsTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFromArray()
+    public function testCreate()
     {
-        $item = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(true);
-
-        $this->assertTrue($item->isAuxiliaryUse());
-
-        $item = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
-
-        $this->assertFalse($item->isAuxiliaryUse());
-
         $item = FullTextSearchDataComposerParams::create();
 
-        $this->assertFalse($item->isAuxiliaryUse());
+        $this->assertNotNull($item);
     }
 }

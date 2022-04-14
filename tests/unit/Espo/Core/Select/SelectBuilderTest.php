@@ -137,9 +137,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 ]
             );
 
-        $textFilterParams = TextFilterParams::fromArray([
-            'noFullTextSearch' => false,
-        ]);
+        $textFilterParams = TextFilterParams::create();
 
         $this->textFilterApplier
             ->expects($this->once())

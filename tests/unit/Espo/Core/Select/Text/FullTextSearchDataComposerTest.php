@@ -114,7 +114,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 ['field1', 'field2', 'field3']
             );
 
-        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
+        $params = FullTextSearchDataComposerParams::create();
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 
@@ -145,7 +145,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
+        $params = FullTextSearchDataComposerParams::create();
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 
@@ -168,7 +168,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
                 )
             );
 
-        $params = FullTextSearchDataComposerParams::create()->withIsAuxiliaryUse(false);
+        $params = FullTextSearchDataComposerParams::create();
 
         $data = $this->fullTextSearchDataComposer->compose($filter, $params);
 

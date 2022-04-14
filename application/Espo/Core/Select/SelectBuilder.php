@@ -385,9 +385,7 @@ class SelectBuilder
             ->apply(
                 $this->queryBuilder,
                 $this->textFilter,
-                TextFilterParams::fromArray([
-                    'noFullTextSearch' => $noFullTextSearch,
-                ])
+                TextFilterParams::create()->withNoFullTextSearch($noFullTextSearch)
             );
     }
 

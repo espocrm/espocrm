@@ -95,30 +95,21 @@ class FullTextSearchDataComposer
             return null;
         }
 
-        if (
-            substr_count($filter, '\'') % 2 !== 0 ||
-            substr_count($filter, '"') % 2 !== 0
-        ) {
-            return null;
-        }
-
-        if ($params->isAuxiliaryUse() && mb_strpos($filter, '@') !== false) {
-            return null;
-        }
-
         $preparedFilter = $this->prepareFilter($filter, $params);
 
         $mode = Mode::BOOLEAN;
 
         if (
-            $params->isAuxiliaryUse() && mb_strpos($preparedFilter, '*') === false
-            ||
             mb_strpos($preparedFilter, ' ') === false &&
             mb_strpos($preparedFilter, '+') === false &&
             mb_strpos($preparedFilter, '-') === false &&
             mb_strpos($preparedFilter, '*') === false
         ) {
             $mode = Mode::NATURAL_LANGUAGE;
+        }
+
+        if ($mode === Mode::BOOLEAN) {
+            $preparedFilter = str_replace('@', '*', $preparedFilter);
         }
 
         $argumentList = array_merge(
@@ -145,8 +136,8 @@ class FullTextSearchDataComposer
 
     private function prepareFilter(string $filter, FullTextSearchDataComposerParams $params): string
     {
+        $filter = str_replace('%', '*', $filter);
         $filter = str_replace(['(', ')'], '', $filter);
-
         $filter = str_replace('"*', '"', $filter);
         $filter = str_replace('*"', '"', $filter);
 
@@ -162,8 +153,18 @@ class FullTextSearchDataComposer
             );
         }
 
-        if ($params->isAuxiliaryUse()) {
-            $filter = str_replace('%', '', $filter);
+        $filter = str_replace(['+-', '--', '-+', '++'], '', $filter);
+
+        while (strpos($filter, '+ ') !== false) {
+            $filter = str_replace('+ ', '', $filter);
+        }
+
+        while (strpos($filter, '- ') !== false) {
+            $filter = str_replace('- ', '', $filter);
+        }
+
+        while (in_array(substr($filter, -1), ['-', '+'])) {
+            $filter = substr($filter, 0, -1);
         }
 
         return $filter;

@@ -88,36 +88,16 @@ class TextFilter
     {
         $forceFullTextSearch = false;
 
-        $preferFullTextSearch = $params->preferFullTextSearch();
-
         if (mb_strpos($filter, 'ft:') === 0) {
             $filter = mb_substr($filter, 3);
 
-            $preferFullTextSearch = true;
             $forceFullTextSearch = true;
-        }
-
-        $filterOriginal = $filter;
-
-        $skipWildcards = false;
-
-        if (mb_strpos($filter, '*') !== false) {
-            $skipWildcards = true;
-
-            $filter = str_replace('*', '%', $filter);
         }
 
         $fullTextSearchData = null;
 
         if (!$params->noFullTextSearch()) {
-            $fullTextSearchIsAuxiliary = !$preferFullTextSearch;
-
-            $filterForFullTextSearch = str_replace('%', '*', $filterOriginal);
-
-            $fullTextSearchData = $this->getFullTextSearchData(
-                $filterForFullTextSearch,
-                $fullTextSearchIsAuxiliary
-            );
+            $fullTextSearchData = $this->getFullTextSearchData($filter);
         }
 
         $fullTextWhere = $fullTextSearchData ?
@@ -134,6 +114,14 @@ class TextFilter
                 }
             );
 
+        $skipWildcards = false;
+
+        if (mb_strpos($filter, '*') !== false) {
+            $skipWildcards = true;
+
+            $filter = str_replace('*', '%', $filter);
+        }
+
         $filterData = FilterData::create($filter, $fieldList)
             ->withSkipWildcards($skipWildcards)
             ->withForceFullTextSearch($forceFullTextSearch)
@@ -144,13 +132,11 @@ class TextFilter
             ->apply($queryBuilder, $filterData);
     }
 
-    private function getFullTextSearchData(string $filter, bool $isAuxiliaryUse = false): ?FullTextSearchData
+    private function getFullTextSearchData(string $filter): ?FullTextSearchData
     {
         $composer = $this->fullTextSearchDataComposerFactory->create($this->entityType);
 
-        $params = FullTextSearchDataComposerParams
-            ::create()
-            ->withIsAuxiliaryUse($isAuxiliaryUse);
+        $params = FullTextSearchDataComposerParams::create();
 
         return $composer->compose($filter, $params);
     }

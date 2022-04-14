@@ -29,17 +29,13 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\{
-    Query\Select,
-    Query\Part\Order,
-};
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Part\Order;
 
-use Espo\Core\{
-    Di,
-    Select\Text\FullTextSearchDataComposerFactory,
-    Select\Text\FullTextSearchDataComposerParams,
-    Select\SelectBuilderFactory,
-};
+use Espo\Core\Di;
+use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
+use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
+use Espo\Core\Select\SelectBuilderFactory;
 
 use PDO;
 use stdClass;
@@ -184,9 +180,8 @@ class GlobalSearch implements
             FullTextSearchDataComposerParams::create()
         );
 
-        $isPerson = $this->metadata->get([
-            'entityDefs', $entityType, 'fields', 'name', 'type'
-        ]) === 'personName';
+        $isPerson = $this->metadata
+            ->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName';
 
         if ($isPerson) {
             $selectList[] = 'firstName';
@@ -210,9 +205,11 @@ class GlobalSearch implements
         if ($fullTextSearchData) {
             $hasFullTextSearch = true;
 
-            $queryBuilder->select($fullTextSearchData->getExpression(), 'relevance');
+            $expression = $fullTextSearchData->getExpression();
 
-            $queryBuilder->order($fullTextSearchData->getExpression(), Order::DESC);
+            $queryBuilder
+                ->select($expression, 'relevance')
+                ->order($expression, Order::DESC);
         }
         else {
             $queryBuilder->select('VALUE:1.1', 'relevance');

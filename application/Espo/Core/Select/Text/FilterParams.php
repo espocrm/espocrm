@@ -29,44 +29,27 @@
 
 namespace Espo\Core\Select\Text;
 
-use InvalidArgumentException;
-
 class FilterParams
 {
     private bool $noFullTextSearch = false;
 
-    private bool $preferFullTextSearch = false;
+    private function __construct() {}
 
-    private function __construct()
+    public static function create(): self
     {
+        return new self();
     }
 
-    /**
-     * @param array<string,mixed> $params
-     */
-    public static function fromArray(array $params): self
+    public function withNoFullTextSearch(bool $noFullTextSearch = true): self
     {
-        $object = new self();
+        $obj = clone $this;
+        $obj->noFullTextSearch = $noFullTextSearch;
 
-        $object->noFullTextSearch = $params['noFullTextSearch'] ?? false;
-        $object->preferFullTextSearch = $params['preferFullTextSearch'] ?? false;
-
-        foreach ($params as $key => $value) {
-            if (!property_exists($object, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
-            }
-        }
-
-        return $object;
+        return $obj;
     }
 
     public function noFullTextSearch(): bool
     {
         return $this->noFullTextSearch;
-    }
-
-    public function preferFullTextSearch(): bool
-    {
-        return $this->preferFullTextSearch;
     }
 }

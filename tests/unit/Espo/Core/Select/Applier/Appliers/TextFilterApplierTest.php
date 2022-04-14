@@ -97,11 +97,6 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
         $filterParams
             ->expects($this->any())
-            ->method('preferFullTextSearch')
-            ->willReturn(false);
-
-        $filterParams
-            ->expects($this->any())
             ->method('noFullTextSearch')
             ->willReturn($noFullTextSearch);
 
@@ -181,7 +176,7 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
             );
 
         if (!$noFullTextSearch) {
-            $this->initFullTextSearchData($filter, true, ['fieldFullText'], 'TEST:(test)');
+            $this->initFullTextSearchData($filter, ['fieldFullText'], 'TEST:(test)');
         }
 
         $expectedWhere = [
@@ -201,7 +196,6 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
         $expectedWhere[] = ['fieldForeign*' => $filter . '%'];
         $expectedWhere[] = ['link2.field*' => $filter . '%'];
-
 
         if (!$noFullTextSearch) {
             $expectedWhere[] = ['TEST:(test):' => null];
@@ -227,15 +221,13 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->applier->apply($this->queryBuilder, $filter, $this->filterParams);
     }
 
-    protected function initFullTextSearchData(string $filter, bool $isAuxiliaryUse, array $fieldList, string $expression)
+    protected function initFullTextSearchData(string $filter, array $fieldList, string $expression)
     {
         $fullTextSearchData = $this->createMock(FullTextSearchData::class);
 
         $fullTextSearchDataComposer = $this->createMock(FullTextSearchDataComposer::class);
 
-        $fullTextSearchDataComposerParams = FullTextSearchDataComposerParams
-            ::create()
-           ->withIsAuxiliaryUse($isAuxiliaryUse);
+        $fullTextSearchDataComposerParams = FullTextSearchDataComposerParams::create();
 
         $this->fullTextSearchDataComposerFactory
             ->expects($this->once())
