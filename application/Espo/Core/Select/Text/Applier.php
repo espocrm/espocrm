@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Text;
 
 use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FilterParams;
@@ -44,7 +44,7 @@ use Espo\ORM\Query\Part\WhereItem;
 
 use Espo\Entities\User;
 
-class TextFilter
+class Applier
 {
     /** @todo Move to metadata. */
     private ?int $fullTextRelevanceThreshold = null;

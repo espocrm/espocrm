@@ -33,14 +33,15 @@ use Espo\Core\Select\{
     SelectBuilder,
     SearchParams,
     Applier\Factory as ApplierFactory,
-    Applier\Appliers\Where as WhereApplier,
-    Applier\Appliers\Select as SelectApplier,
-    Applier\Appliers\Order as OrderApplier,
-    Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
-    Applier\Appliers\PrimaryFilter as PrimaryFilterApplier,
-    Applier\Appliers\TextFilter as TextFilterApplier,
+    Where\Applier as WhereApplier,
+    Select\Applier as SelectApplier,
+    Order\Applier as OrderApplier,
+    AccessControl\Applier as AccessControlFilterApplier,
+    Primary\Applier as PrimaryFilterApplier,
+    Text\Applier as TextFilterApplier,
     Applier\Appliers\Additional as AdditionalApplier,
-    Applier\Appliers\BoolFilterList as BoolFilterListApplier,
+    Applier\Appliers\Limit as LimitApplier,
+    Bool\Applier as BoolFilterListApplier,
     Where\Params as WhereParams,
     Order\Params as OrderParams,
     Text\FilterParams as TextFilterParams,
@@ -58,7 +59,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $selectBuilder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
         $this->applierFactory = $this->createMock(ApplierFactory::class);
@@ -68,7 +69,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->whereApplier = $this->createMock(WhereApplier::class);
         $this->selectApplier = $this->createMock(SelectApplier::class);
         $this->orderApplier =  $this->createMock(OrderApplier::class);
-        $this->limitApplier = $this->createMock(WhereApplier::class);
+        $this->limitApplier = $this->createMock(LimitApplier::class);
         $this->accessControlFilterApplier = $this->createMock(AccessControlFilterApplier::class);
         $this->textFilterApplier = $selectApplier = $this->createMock(TextFilterApplier::class);
         $this->primaryFilterApplier = $selectApplier = $this->createMock(PrimaryFilterApplier::class);
@@ -77,20 +78,57 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->applierFactory
             ->expects($this->any())
-            ->method('create')
-            ->will(
-                $this->returnValueMap([
-                    [$this->entityType, $this->user, ApplierFactory::WHERE, $this->whereApplier],
-                    [$this->entityType, $this->user, ApplierFactory::SELECT, $this->selectApplier],
-                    [$this->entityType, $this->user, ApplierFactory::ORDER, $this->orderApplier],
-                    [$this->entityType, $this->user, ApplierFactory::LIMIT, $this->limitApplier],
-                    [$this->entityType, $this->user, ApplierFactory::ACCESS_CONTROL_FILTER, $this->accessControlFilterApplier],
-                    [$this->entityType, $this->user, ApplierFactory::TEXT_FILTER, $this->textFilterApplier],
-                    [$this->entityType, $this->user, ApplierFactory::PRIMARY_FILTER, $this->primaryFilterApplier],
-                    [$this->entityType, $this->user, ApplierFactory::BOOL_FILTER_LIST, $this->boolFilterListApplier],
-                    [$this->entityType, $this->user, ApplierFactory::ADDITIONAL, $this->additionalApplier],
-                ])
-            );
+            ->method('createWhere')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->whereApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createSelect')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->selectApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createOrder')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->orderApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createLimit')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->limitApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createAccessControlFilter')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->accessControlFilterApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createTextFilter')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->textFilterApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createPrimaryFilter')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->primaryFilterApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createBoolFilterList')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->boolFilterListApplier);
+
+        $this->applierFactory
+            ->expects($this->any())
+            ->method('createAdditional')
+            ->with($this->entityType, $this->user)
+            ->willReturn($this->additionalApplier);
 
         $this->selectBuilder = new SelectBuilder($this->user, $this->applierFactory);
     }

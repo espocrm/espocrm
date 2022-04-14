@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
-    Select\Applier\Appliers\Select as SelectApplier,
+    Select\Select\Applier as SelectApplier,
     Select\SearchParams,
     Select\Select\MetadataProvider,
     Utils\FieldUtil,

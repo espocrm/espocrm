@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\AccessControl;
 
 use Espo\Core\Select\OrmSelectBuilder;
 
@@ -43,7 +43,7 @@ use Espo\{
     Entities\User,
 };
 
-class AccessControlFilter
+class Applier
 {
     private string $entityType;
 

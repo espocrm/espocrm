@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Select\Applier\Appliers;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-};
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class Limit
 {

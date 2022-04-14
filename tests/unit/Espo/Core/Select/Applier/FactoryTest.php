@@ -33,14 +33,14 @@ use Espo\Core\{
     Select\Applier\Factory as ApplierFactory,
     Select\SelectManagerFactory,
     Select\SelectManager,
-    Select\Applier\Appliers\Where as WhereApplier,
-    Select\Applier\Appliers\Select as SelectApplier,
-    Select\Applier\Appliers\Order as OrderApplier,
+    Select\Where\Applier as WhereApplier,
+    Select\Select\Applier as SelectApplier,
+    Select\Order\Applier as OrderApplier,
     Select\Applier\Appliers\Limit as LimitApplier,
-    Select\Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
-    Select\Applier\Appliers\PrimaryFilter as PrimaryFilterApplier,
-    Select\Applier\Appliers\BoolFilterList as BoolFilterListApplier,
-    Select\Applier\Appliers\TextFilter as TextFilterApplier,
+    Select\AccessControl\Applier as AccessControlFilterApplier,
+    Select\Primary\Applier as PrimaryFilterApplier,
+    Select\Bool\Applier as BoolFilterListApplier,
+    Select\Text\Applier as TextFilterApplier,
     Select\Applier\Appliers\Additional as AdditionalApplier,
     Utils\Metadata,
     InjectableFactory,
@@ -55,7 +55,7 @@ use Espo\{
 
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
@@ -73,50 +73,53 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreate1()
     {
-        $this->prepareFactoryTest(null, SelectApplier::class, ApplierFactory::SELECT);
+        $this->prepareFactoryTest(null, SelectApplier::class, ApplierFactory::SELECT, 'createSelect');
     }
 
     public function testCreate2()
     {
-        $this->prepareFactoryTest('SomeClass', BoolFilterListApplier::class, ApplierFactory::BOOL_FILTER_LIST);
+        $this->prepareFactoryTest(
+            'SomeClass', BoolFilterListApplier::class, ApplierFactory::BOOL_FILTER_LIST, 'createBoolFilterList');
     }
 
     public function testCreate3()
     {
-        $this->prepareFactoryTest(null, TextFilterApplier::class, ApplierFactory::TEXT_FILTER);
+        $this->prepareFactoryTest(null, TextFilterApplier::class, ApplierFactory::TEXT_FILTER, 'createTextFilter');
     }
 
     public function testCreate4()
     {
-        $this->prepareFactoryTest(null, WhereApplier::class, ApplierFactory::WHERE);
+        $this->prepareFactoryTest(null, WhereApplier::class, ApplierFactory::WHERE, 'createWhere');
     }
 
     public function testCreate5()
     {
-        $this->prepareFactoryTest(null, OrderApplier::class, ApplierFactory::ORDER);
+        $this->prepareFactoryTest(null, OrderApplier::class, ApplierFactory::ORDER, 'createOrder');
     }
 
     public function testCreate6()
     {
-        $this->prepareFactoryTest(null, LimitApplier::class, ApplierFactory::LIMIT);
+        $this->prepareFactoryTest(null, LimitApplier::class, ApplierFactory::LIMIT, 'createLimit');
     }
 
     public function testCreate7()
     {
-        $this->prepareFactoryTest(null, AdditionalApplier::class, ApplierFactory::ADDITIONAL);
+        $this->prepareFactoryTest(null, AdditionalApplier::class, ApplierFactory::ADDITIONAL, 'createAdditional');
     }
 
     public function testCreate8()
     {
-        $this->prepareFactoryTest(null, PrimaryFilterApplier::class, ApplierFactory::PRIMARY_FILTER);
+        $this->prepareFactoryTest(
+            null, PrimaryFilterApplier::class, ApplierFactory::PRIMARY_FILTER, 'createPrimaryFilter');
     }
 
     public function testCreate9()
     {
-        $this->prepareFactoryTest(null, AccessControlFilterApplier::class, ApplierFactory::ACCESS_CONTROL_FILTER);
+        $this->prepareFactoryTest
+            (null, AccessControlFilterApplier::class, ApplierFactory::ACCESS_CONTROL_FILTER, 'createAccessControlFilter');
     }
 
-    protected function prepareFactoryTest(?string $className, string $defaultClassName, string $type)
+    protected function prepareFactoryTest(?string $className, string $defaultClassName, string $type, string $method)
     {
         $entityType = 'Test';
 
@@ -155,7 +158,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             ->with($applierClassName, $bindingContainer)
             ->willReturn($applier);
 
-        $resultApplier = $this->factory->create(
+        $resultApplier = $this->factory->$method(
             $entityType,
             $this->user,
             $type

@@ -27,30 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Primary;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Select\SelectManager;
+use Espo\Core\Select\Primary\FilterFactory;
 use Espo\Core\Select\OrmSelectBuilder;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\SelectManager,
-    Select\Primary\FilterFactory,
-};
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\Entities\User;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
-
-class PrimaryFilter
+class Applier
 {
-    protected string $entityType;
+    private string $entityType;
 
-    protected User $user;
+    private User $user;
 
-    protected SelectManager $selectManager;
+    private SelectManager $selectManager;
 
-    protected FilterFactory $primaryFilterFactory;
+    private FilterFactory $primaryFilterFactory;
 
     public function __construct(
         string $entityType,

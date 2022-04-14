@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Where;
 
 use Espo\Core\{
     Select\Where\Params,
@@ -41,15 +41,15 @@ use Espo\{
     Entities\User,
 };
 
-class Where
+class Applier
 {
-    protected string $entityType;
+    private string $entityType;
 
-    protected User $user;
+    private User $user;
 
-    protected ConverterFactory $converterFactory;
+    private ConverterFactory $converterFactory;
 
-    protected CheckerFactory $checkerFactory;
+    private CheckerFactory $checkerFactory;
 
     public function __construct(
         string $entityType,

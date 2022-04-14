@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
-    Select\Applier\Appliers\TextFilter as TextFilterApplier,
+    Select\Text\Applier as TextFilterApplier,
     Utils\Config,
     Select\Text\MetadataProvider,
     Select\Text\FilterParams,

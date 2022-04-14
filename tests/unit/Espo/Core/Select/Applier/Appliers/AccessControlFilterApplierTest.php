@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
     Exceptions\Error,
-    Select\Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
+    Select\AccessControl\Applier as AccessControlFilterApplier,
     Select\SelectManager,
     Select\AccessControl\FilterFactory as AccessControlFilterFactory,
     Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory,

@@ -30,20 +30,20 @@
 namespace Espo\Core\Select;
 
 use Espo\Core\Select\Applier\Factory as ApplierFactory;
-use Espo\Core\Select\Applier\Appliers\Where as WhereApplier;
-use Espo\Core\Select\Applier\Appliers\Select as SelectApplier;
-use Espo\Core\Select\Applier\Appliers\Order as OrderApplier;
-use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
-use Espo\Core\Select\Applier\Appliers\AccessControlFilter as AccessControlFilterApplier;
-use Espo\Core\Select\Applier\Appliers\PrimaryFilter as PrimaryFilterApplier;
-use Espo\Core\Select\Applier\Appliers\BoolFilterList as BoolFilterListApplier;
-use Espo\Core\Select\Applier\Appliers\TextFilter as TextFilterApplier;
-use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
-
 use Espo\Core\Select\Where\Params as WhereParams;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Select\Order\Params as OrderParams;
 use Espo\Core\Select\Text\FilterParams as TextFilterParams;
+
+use Espo\Core\Select\Where\Applier as WhereApplier;
+use Espo\Core\Select\Select\Applier as SelectApplier;
+use Espo\Core\Select\Order\Applier as OrderApplier;
+use Espo\Core\Select\AccessControl\Applier as AccessControlFilterApplier;
+use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
+use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
+use Espo\Core\Select\Text\Applier as TextFilterApplier;
+use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
+use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
 
 use Espo\ORM\Query\Select as Query;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -525,107 +525,62 @@ class SelectBuilder
     {
         assert($this->entityType !== null);
 
-        /** @var WhereApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::WHERE
-        );
+        return $this->applierFactory->createWhere($this->entityType, $this->user);
     }
 
     private function createSelectApplier(): SelectApplier
     {
         assert($this->entityType !== null);
 
-        /** @var SelectApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::SELECT
-        );
+        return $this->applierFactory->createSelect($this->entityType, $this->user);
     }
 
     private function createOrderApplier(): OrderApplier
     {
         assert($this->entityType !== null);
 
-        /** @var OrderApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::ORDER
-        );
+        return $this->applierFactory->createOrder($this->entityType, $this->user);
     }
 
     private function createLimitApplier(): LimitApplier
     {
         assert($this->entityType !== null);
 
-        /** @var LimitApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::LIMIT
-        );
+        return $this->applierFactory->createLimit($this->entityType, $this->user);
     }
 
     private function createAccessControlFilterApplier(): AccessControlFilterApplier
     {
         assert($this->entityType !== null);
 
-        /** @var AccessControlFilterApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::ACCESS_CONTROL_FILTER
-        );
+        return $this->applierFactory->createAccessControlFilter($this->entityType, $this->user);
     }
 
     private function createTextFilterApplier(): TextFilterApplier
     {
         assert($this->entityType !== null);
 
-        /** @var TextFilterApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::TEXT_FILTER
-        );
+        return $this->applierFactory->createTextFilter($this->entityType, $this->user);
     }
 
     private function createPrimaryFilterApplier(): PrimaryFilterApplier
     {
         assert($this->entityType !== null);
 
-        /** @var PrimaryFilterApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::PRIMARY_FILTER
-        );
+        return $this->applierFactory->createPrimaryFilter($this->entityType, $this->user);
     }
 
     private function createBoolFilterListApplier(): BoolFilterListApplier
     {
         assert($this->entityType !== null);
 
-        /** @var BoolFilterListApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::BOOL_FILTER_LIST
-        );
+        return $this->applierFactory->createBoolFilterList($this->entityType, $this->user);
     }
 
     private function createAdditionalApplier(): AdditionalApplier
     {
         assert($this->entityType !== null);
 
-        /** @var AdditionalApplier */
-        return $this->applierFactory->create(
-            $this->entityType,
-            $this->user,
-            ApplierFactory::ADDITIONAL
-        );
+        return $this->applierFactory->createAdditional($this->entityType, $this->user);
     }
 }

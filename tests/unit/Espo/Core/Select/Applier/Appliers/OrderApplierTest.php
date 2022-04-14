@@ -34,7 +34,7 @@ use Espo\ORM\Query\Part\Order;
 
 use Espo\Core\{
     Exceptions\Error,
-    Select\Applier\Appliers\Order as OrderApplier,
+    Select\Order\Applier as OrderApplier,
     Select\SearchParams,
     Select\Order\Params as OrderParams,
     Select\Order\Item,

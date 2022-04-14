@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Select;
 
 use Espo\Core\{
     Select\SearchParams,
@@ -41,12 +41,12 @@ use Espo\{
     Entities\User,
 };
 
-class Select
+class Applier
 {
     /**
      * @var string[]
      */
-    protected $aclAttributeList = [
+    private $aclAttributeList = [
         'assignedUserId',
         'createdById',
     ];
@@ -54,29 +54,20 @@ class Select
     /**
      * @var string[]
      */
-    protected $aclPortalAttributeList = [
+    private $aclPortalAttributeList = [
         'assignedUserId',
         'createdById',
         'contactId',
         'accountId',
     ];
 
-    protected string $entityType;
+    private string $entityType;
 
-    /**
-     * @var User
-     */
-    protected $user;
+    private User $user;
 
-    /**
-     * @var FieldUtil
-     */
-    protected $fieldUtil;
+    private FieldUtil $fieldUtil;
 
-    /**
-     * @var MetadataProvider
-     */
-    protected $metadataProvider;
+    private MetadataProvider $metadataProvider;
 
     public function __construct(
         string $entityType,
@@ -105,7 +96,7 @@ class Select
      * @param string[] $attributeList
      * @return array<int,array{string,string}|string>
      */
-    protected function prepareAttributeList(array $attributeList, SearchParams $searchParams): array
+    private function prepareAttributeList(array $attributeList, SearchParams $searchParams): array
     {
         $limit = $searchParams->getMaxTextAttributeLength();
 
@@ -138,7 +129,7 @@ class Select
     /**
      * @return ?string[]
      */
-    protected function getSelectAttributeList(SearchParams $searchParams): ?array
+    private function getSelectAttributeList(SearchParams $searchParams): ?array
     {
         $passedAttributeList = $searchParams->getSelect();
 
@@ -217,7 +208,7 @@ class Select
     /**
      * @return string[]
      */
-    protected function getAclAttributeList(): array
+    private function getAclAttributeList(): array
     {
         if ($this->user->isPortal()) {
             return

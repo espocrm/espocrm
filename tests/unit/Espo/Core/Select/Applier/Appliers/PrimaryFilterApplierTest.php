@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
     Exceptions\Error,
-    Select\Applier\Appliers\PrimaryFilter as PrimaryFilterApplier,
+    Select\Primary\Applier as PrimaryFilterApplier,
     Select\Primary\FilterFactory as PrimaryFilterFactory,
     Select\Primary\Filter as PrimaryFilter,
     Select\SelectManager,

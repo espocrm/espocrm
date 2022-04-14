@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Order;
 
 use Espo\ORM\Query\Part\OrderList;
 
@@ -44,7 +44,7 @@ use Espo\Core\{
 
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-class Order
+class Applier
 {
     private string $entityType;
 

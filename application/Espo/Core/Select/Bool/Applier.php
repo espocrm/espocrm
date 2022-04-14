@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Bool;
 
 use Espo\Core\Select\OrmSelectBuilder;
 use Espo\Core\Exceptions\Error;
@@ -41,15 +41,15 @@ use Espo\ORM\Query\Part\WhereClause;
 
 use Espo\Entities\User;
 
-class BoolFilterList
+class Applier
 {
-    protected string $entityType;
+    private string $entityType;
 
-    protected User $user;
+    private User $user;
 
-    protected SelectManager $selectManager;
+    private SelectManager $selectManager;
 
-    protected BoolFilterFactory $boolFilterFactory;
+    private BoolFilterFactory $boolFilterFactory;
 
     public function __construct(
         string $entityType,
@@ -89,7 +89,7 @@ class BoolFilterList
         );
     }
 
-    protected function applyBoolFilter(
+    private function applyBoolFilter(
         QueryBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
         string $filterName

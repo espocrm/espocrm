@@ -36,7 +36,7 @@ use Espo\Core\{
     Select\Where\ConverterFactory,
     Select\Where\CheckerFactory,
     Select\Where\Item as WhereItem,
-    Select\Applier\Appliers\Where as WhereApplier,
+    Select\Where\Applier as WhereApplier,
 };
 
 use Espo\{
