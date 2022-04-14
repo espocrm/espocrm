@@ -27,14 +27,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Text;
+namespace Espo\Core\Select\Text\FullTextSearch;
 
-class FullTextSearchDataComposerParams
+use Espo\ORM\Query\Part\Expression;
+
+use InvalidArgumentException;
+
+class Data
 {
-    private function __construct() {}
+    private Expression $expression;
 
-    public static function create(): self
+    /**
+     * @var string[]
+     */
+    private array $fieldList;
+
+    /**
+     * @var string[]
+     */
+    private array $columnList;
+
+    /**
+     * @var Mode::* $mode
+     */
+    private string $mode;
+
+    /**
+     * @param string[] $fieldList
+     * @param string[] $columnList
+     * @param Mode::* $mode
+     */
+    public function __construct(Expression $expression, array $fieldList, array $columnList, string $mode)
     {
-        return new self();
+        $this->expression = $expression;
+        $this->fieldList = $fieldList;
+        $this->columnList = $columnList;
+        $this->mode = $mode;
+
+        if (!in_array($mode, [Mode::NATURAL_LANGUAGE, Mode::BOOLEAN])) {
+            throw new InvalidArgumentException("Bad mode.");
+        }
+    }
+
+    public function getExpression(): Expression
+    {
+        return $this->expression;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFieldList(): array
+    {
+        return $this->fieldList;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getColumnList(): array
+    {
+        return $this->columnList;
+    }
+
+    /**
+     * @return Mode::*
+     */
+    public function getMode(): string
+    {
+        return $this->mode;
     }
 }

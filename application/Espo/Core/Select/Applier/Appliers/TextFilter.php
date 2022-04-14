@@ -31,9 +31,9 @@ namespace Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\Select\Text\MetadataProvider;
 use Espo\Core\Select\Text\FilterParams;
-use Espo\Core\Select\Text\FullTextSearchData;
-use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
-use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
+use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
+use Espo\Core\Select\Text\FullTextSearch\DataComposerParams as FullTextSearchDataComposerParams;
 use Espo\Core\Select\Text\Filter\Data as FilterData;
 use Espo\Core\Select\Text\FilterFactory;
 

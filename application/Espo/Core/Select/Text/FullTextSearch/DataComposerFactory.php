@@ -27,18 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Text;
+namespace Espo\Core\Select\Text\FullTextSearch;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
-class FullTextSearchDataComposerFactory
+class DataComposerFactory
 {
-    private $injectableFactory;
+    private InjectableFactory $injectableFactory;
 
-    private $metadata;
+    private Metadata $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -46,7 +44,10 @@ class FullTextSearchDataComposerFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $entityType): FullTextSearchDataComposer
+    /**
+     * @todo Use an interface `DataComposer`.
+     */
+    public function create(string $entityType): DataComposer
     {
         $className = $this->getClassName($entityType);
 
@@ -56,7 +57,7 @@ class FullTextSearchDataComposerFactory
     }
 
     /**
-     * @return class-string<FullTextSearchDataComposer>
+     * @return class-string<DataComposer>
      */
     private function getClassName(string $entityType): string
     {
@@ -64,6 +65,6 @@ class FullTextSearchDataComposerFactory
             $this->metadata->get([
                 'selectDefs', $entityType, 'fullTextSearchDataComposerClassName'
             ]) ??
-            FullTextSearchDataComposer::class;
+            DataComposer::class;
     }
 }

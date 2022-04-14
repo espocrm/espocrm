@@ -27,21 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Select\Text;
+namespace Espo\Core\Select\Text\FullTextSearch;
 
-use Espo\ORM\Query\Part\Expression as Expr;
-use Espo\Core\Select\Text\FullTextSearch\Data;
-use Espo\Core\Select\Text\FullTextSearch\Mode;
-
-class FullTextSearchDataTest extends \PHPUnit\Framework\TestCase
+class DataComposerParams
 {
-    public function testGet1(): void
-    {
-        $item = new Data(Expr::create('TEST:()'), ['test'], ['column'], Mode::BOOLEAN);
+    private function __construct() {}
 
-        $this->assertEquals('TEST:()', $item->getExpression()->getValue());
-        $this->assertEquals(['test'], $item->getFieldList());
-        $this->assertEquals(['column'], $item->getColumnList());
-        $this->assertEquals(Mode::BOOLEAN, $item->getMode());
+    public static function create(): self
+    {
+        return new self();
     }
 }

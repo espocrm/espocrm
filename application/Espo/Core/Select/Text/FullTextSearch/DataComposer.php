@@ -27,15 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Text;
+namespace Espo\Core\Select\Text\FullTextSearch;
 
 use Espo\Core\Utils\Config;
-use Espo\Core\Select\Text\FullTextSearch\Mode;
+use Espo\Core\Select\Text\MetadataProvider;
 
 use Espo\ORM\Query\Part\Expression\Util as ExpressionUtil;
 use Espo\ORM\Query\Part\Expression;
 
-class FullTextSearchDataComposer
+class DataComposer
 {
     private string $entityType;
 
@@ -61,10 +61,14 @@ class FullTextSearchDataComposer
         $this->metadataProvider = $metadataProvider;
     }
 
-    public function compose(string $filter, FullTextSearchDataComposerParams $params): ?FullTextSearchData
+    public function compose(string $filter, ?DataComposerParams $params = null): ?Data
     {
         if ($this->config->get('fullTextSearchDisabled')) {
             return null;
+        }
+
+        if (!$params) {
+            $params = DataComposerParams::create();
         }
 
         $columnList = $this->metadataProvider->getFullTextSearchColumnList($this->entityType) ?? [];
@@ -126,7 +130,7 @@ class FullTextSearchDataComposer
 
         $expression = ExpressionUtil::composeFunction($function, ...$argumentList);
 
-        return new FullTextSearchData(
+        return new Data(
             $expression,
             $fieldList,
             $columnList,
@@ -134,7 +138,7 @@ class FullTextSearchDataComposer
         );
     }
 
-    private function prepareFilter(string $filter, FullTextSearchDataComposerParams $params): string
+    private function prepareFilter(string $filter, DataComposerParams $params): string
     {
         $filter = str_replace('%', '*', $filter);
         $filter = str_replace(['(', ')'], '', $filter);

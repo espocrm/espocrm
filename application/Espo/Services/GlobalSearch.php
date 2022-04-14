@@ -33,8 +33,7 @@ use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\Order;
 
 use Espo\Core\Di;
-use Espo\Core\Select\Text\FullTextSearchDataComposerFactory;
-use Espo\Core\Select\Text\FullTextSearchDataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\SelectBuilderFactory;
 
 use PDO;
@@ -175,10 +174,7 @@ class GlobalSearch implements
 
         $fullTextSearchDataComposer = $this->fullTextSearchDataComposerFactory->create($entityType);
 
-        $fullTextSearchData = $fullTextSearchDataComposer->compose(
-            $filter,
-            FullTextSearchDataComposerParams::create()
-        );
+        $fullTextSearchData = $fullTextSearchDataComposer->compose($filter);
 
         $isPerson = $this->metadata
             ->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName';

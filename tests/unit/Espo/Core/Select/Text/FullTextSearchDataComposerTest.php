@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Select\Text;
 
 use Espo\Core\{
-    Select\Text\FullTextSearchDataComposer,
-    Select\Text\FullTextSearchDataComposerParams,
+    Select\Text\FullTextSearch\DataComposer as FullTextSearchDataComposer,
+    Select\Text\FullTextSearch\DataComposerParams as FullTextSearchDataComposerParams,
     Select\Text\MetadataProvider,
     Utils\Config,
 };
