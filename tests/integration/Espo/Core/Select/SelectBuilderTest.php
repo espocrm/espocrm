@@ -784,6 +784,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 
         $expectedWhereClause = [
             'OR' => [
+                ['MATCH_NATURAL_LANGUAGE:(name, bodyPlain, body, \'test@test.com\'):' => null],
                 ['fromEmailAddressId=' => $emailAddressId],
                 ['emailEmailAddress.emailAddressId=' => $emailAddressId],
             ],
