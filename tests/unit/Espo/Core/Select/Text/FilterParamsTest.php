@@ -35,15 +35,8 @@ class FilterParamsTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate1(): void
     {
-        $item = FilterParams::create()->withNoFullTextSearch(true);
+        $item = FilterParams::create();
 
-        $this->assertTrue($item->noFullTextSearch());
-    }
-
-    public function testCreate2(): void
-    {
-        $item = FilterParams::create()->withNoFullTextSearch(false);
-
-        $this->assertFalse($item->noFullTextSearch());
+        $this->assertNotNull($item);
     }
 }

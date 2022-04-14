@@ -375,17 +375,11 @@ class SelectBuilder
         assert($this->queryBuilder !== null);
         assert($this->textFilter !== null);
 
-        $noFullTextSearch = false;
-
-        if ($this->searchParams && $this->searchParams->noFullTextSearch()) {
-            $noFullTextSearch = true;
-        }
-
         $this->createTextFilterApplier()
             ->apply(
                 $this->queryBuilder,
                 $this->textFilter,
-                TextFilterParams::create()->withNoFullTextSearch($noFullTextSearch)
+                TextFilterParams::create()
             );
     }
 

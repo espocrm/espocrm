@@ -94,11 +94,7 @@ class Applier
             $forceFullTextSearch = true;
         }
 
-        $fullTextSearchData = null;
-
-        if (!$params->noFullTextSearch()) {
-            $fullTextSearchData = $this->composeFullTextSearchData($filter);
-        }
+        $fullTextSearchData = $this->composeFullTextSearchData($filter);
 
         $fullTextWhere = $fullTextSearchData ?
             $this->processFullTextSearch($queryBuilder, $fullTextSearchData) :

@@ -49,9 +49,7 @@ class SearchParams
 
     public const ORDER_DESC = 'DESC';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @return array<string,mixed>
@@ -120,11 +118,6 @@ class SearchParams
             'type' => 'and',
             'value' => $raw,
         ]);
-    }
-
-    public function noFullTextSearch(): bool
-    {
-        return $this->rawParams['noFullTextSearch'];
     }
 
     public function getMaxTextAttributeLength(): ?int
@@ -240,15 +233,6 @@ class SearchParams
         $rawWhere[] = $whereItem->getRaw();
 
         $obj->rawParams['where'] = $rawWhere;
-
-        return $obj;
-    }
-
-    public function withNoFullTextSearch(bool $value = true): self
-    {
-        $obj = clone $this;
-
-        $obj->rawParams['noFullTextSearch'] = $value;
 
         return $obj;
     }
@@ -385,7 +369,6 @@ class SearchParams
         $rawParams['primaryFilter'] = $primaryFilter;
         $rawParams['textFilter'] = $textFilter;
         $rawParams['where'] = $where;
-        $rawParams['noFullTextSearch'] = false;
         $rawParams['maxTextAttributeLength'] = $maxTextAttributeLength;
 
         if ($where) {
@@ -419,10 +402,6 @@ class SearchParams
             if (!is_null($leftParams[$name])) {
                 $params[$name] = $leftParams[$name];
             }
-        }
-
-        if ($leftParams['noFullTextSearch']) {
-            $params['noFullTextSearch'] = true;
         }
 
         foreach ($leftParams['boolFilterList'] as $item) {

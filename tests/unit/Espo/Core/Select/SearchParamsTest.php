@@ -73,14 +73,11 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $params->getTextFilter());
         $this->assertEquals('testPrimary', $params->getPrimaryFilter());
         $this->assertEquals($raw['where'], $params->getWhere()->getRaw()['value']);
-
-        $this->assertFalse($params->noFullTextSearch());
     }
 
     public function testFromRawEmpty()
     {
-        $params = SearchParams::fromRaw([
-        ]);
+        $params = SearchParams::fromRaw([]);
 
         $this->assertEquals(null, $params->getSelect());
         $this->assertEquals(null, $params->getOffset());
@@ -99,8 +96,6 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals('test', $params->getTextFilter());
-
-        $this->assertFalse($params->noFullTextSearch());
     }
 
     public function testOrder()
@@ -289,7 +284,6 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
             'offset' => null,
             'maxSize' => null,
             'primaryFilter' => null,
-            'noFullTextSearch' => false,
             'maxTextAttributeLength' => null,
         ];
 
@@ -309,7 +303,6 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
             ->withMaxSize(10)
             ->withOffset(0)
             ->withMaxTextAttributeLength(100)
-            ->withNoFullTextSearch()
             ->withOrder('DESC')
             ->withOrderBy('name')
             ->withPrimaryFilter('test')
@@ -321,7 +314,6 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(10, $params->getMaxSize());
         $this->assertEquals(0, $params->getOffset());
         $this->assertEquals(100, $params->getMaxTextAttributeLength());
-        $this->assertEquals(true, $params->noFullTextSearch());
         $this->assertEquals('DESC', $params->getOrder());
         $this->assertEquals('name', $params->getOrderBy());
         $this->assertEquals('test', $params->getPrimaryFilter());
