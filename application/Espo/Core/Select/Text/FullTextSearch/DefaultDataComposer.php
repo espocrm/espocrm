@@ -142,7 +142,7 @@ class DefaultDataComposer implements DataComposer
         $filter = str_replace('"*', '"', $filter);
         $filter = str_replace('*"', '"', $filter);
 
-        while (strpos($filter, '**')) {
+        while (strpos($filter, '**') !== false) {
             $filter = trim(
                 str_replace('**', '*', $filter)
             );
@@ -154,7 +154,7 @@ class DefaultDataComposer implements DataComposer
             );
         }
 
-        $filter = str_replace(['+-', '--', '-+', '++'], '', $filter);
+        $filter = str_replace(['+-', '--', '-+', '++', '+*', '-*'], '', $filter);
 
         while (strpos($filter, '+ ') !== false) {
             $filter = str_replace('+ ', '', $filter);
@@ -166,6 +166,10 @@ class DefaultDataComposer implements DataComposer
 
         while (in_array(substr($filter, -1), ['-', '+'])) {
             $filter = substr($filter, 0, -1);
+        }
+
+        if ($filter === '*') {
+            $filter = '';
         }
 
         return $filter;
