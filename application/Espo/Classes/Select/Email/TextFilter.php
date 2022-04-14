@@ -63,12 +63,12 @@ class TextFilter implements Filter
     public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $filter = $data->getFilter();
+        $ftWhereItem = $data->getFullTextSearchWhereItem();
 
         if (
             mb_strlen($filter) < $this->config->getMinLengthForContentSearch() ||
             strpos($filter, '@') === false ||
-            $data->forceFullTextSearch() ||
-            $data->getFullTextSearchWhereItem()
+            $data->forceFullTextSearch()
         ) {
             $this->defaultFilter->apply($queryBuilder, $data);
 
@@ -77,15 +77,25 @@ class TextFilter implements Filter
 
         $emailAddressId = $this->getEmailAddressIdByValue($filter);
 
+        $orGroupBuilder = OrGroup::createBuilder();
+
+        if ($ftWhereItem) {
+            $orGroupBuilder->add($ftWhereItem);
+        }
+
         if (!$emailAddressId) {
-            $queryBuilder->where(['id' => null]);
+            $orGroupBuilder->add(
+                Cmp::equal(Expr::column('id'), null)
+            );
+
+            $queryBuilder->where($orGroupBuilder->build());
 
             return;
         }
 
         $this->leftJoinEmailAddress($queryBuilder);
 
-        $orGroupBuilder = OrGroup::createBuilder()
+        $orGroupBuilder
             ->add(
                 Cmp::equal(
                     Expr::column('fromEmailAddressId'),
