@@ -16,7 +16,7 @@
     "chartGridColor": "#646060",
     "chartTickColor": "#575454",
     "chartSuccessColor": "#5d8a55",
-    "chartColorList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53", "#3a5691", "#9c7352", "#a17a97", "#858585"],
+    "chartColorList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53", "#3a5691", "#7c593d", "#a17a97", "#858585"],
     "chartColorAlternativeList": ["#7492cc", "#c29c4a", "#a1404a", "#6a5f96", "#b07e53"],
     "calendarColors": {
         "Meeting": "#6680b3",
