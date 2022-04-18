@@ -241,6 +241,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         minChars: 1,
                         paramName: 'q',
                         noCache: true,
+                        autoSelectFirst: true,
                         triggerSelectOnValidInput: false,
                         beforeRender: ($c) => {
                             if (this.$element.hasClass('input-sm')) {

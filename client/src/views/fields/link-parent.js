@@ -296,6 +296,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         paramName: 'q',
                         noCache: true,
                         triggerSelectOnValidInput: false,
+                        autoSelectFirst: true,
                         beforeRender: ($c) => {
                             if (this.$elementName.hasClass('input-sm')) {
                                 $c.addClass('small');
