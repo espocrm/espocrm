@@ -122,7 +122,7 @@ class Config
                 return $default;
             }
 
-            if (is_array($lastBranch) && !isset($lastBranch[$key])) {
+            if (is_array($lastBranch) && !array_key_exists($key, $lastBranch)) {
                 return $default;
             }
 
@@ -156,7 +156,7 @@ class Config
                 return false;
             }
 
-            if (is_array($lastBranch) && !isset($lastBranch[$key])) {
+            if (is_array($lastBranch) && !array_key_exists($key, $lastBranch)) {
                 return false;
             }
 
