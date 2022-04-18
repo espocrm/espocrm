@@ -116,7 +116,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             }
 
             if (this.mode !== 'list') {
-                this.addActionHandler('selectLink', function () {
+                this.addActionHandler('selectLink', () => {
                     this.notify('Loading...');
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
@@ -132,26 +132,26 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
                         filterList: this.getSelectFilterList(),
-                    }, function (view) {
+                    }, (view) => {
                         view.render();
 
                         this.notify(false);
 
-                        this.listenToOnce(view, 'select', function (model) {
+                        this.listenToOnce(view, 'select', (model) => {
                             this.clearView('dialog');
 
                             this.select(model);
-                        }, this);
-                    }, this);
+                        });
+                    });
                 });
 
-                this.addActionHandler('clearLink', function () {
+                this.addActionHandler('clearLink', () => {
                     this.clearLink();
                 });
             }
 
             if (this.mode === 'search') {
-                this.addActionHandler('selectLinkOneOf', function () {
+                this.addActionHandler('selectLinkOneOf', () => {
                     this.notify('Loading...');
 
                     var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
@@ -163,23 +163,23 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        multiple: true
-                    }, function (view) {
+                        multiple: true,
+                    }, (view) => {
                         view.render();
                         this.notify(false);
 
-                        this.listenToOnce(view, 'select', function (models) {
+                        this.listenToOnce(view, 'select', (models) => {
                             this.clearView('dialog');
 
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
 
-                            models.forEach(function (model) {
+                            models.forEach((model) => {
                                 this.addLinkOneOf(model.id, model.get('name'));
-                            }, this);
+                            });
                         });
-                    }, this);
+                    });
                 });
 
                 this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
@@ -289,146 +289,134 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
-                this.$elementName.on('change', function () {
+                this.$elementName.on('change', () => {
                     if (this.$elementName.val() === '') {
                         this.$elementName.val('');
                         this.$elementId.val('');
 
                         this.trigger('change');
                     }
-                }.bind(this));
+                });
 
                 if (this.mode === 'edit') {
-                    this.$elementName.on('blur', function (e) {
+                    this.$elementName.on('blur', (e) => {
                         if (this.model.has(this.nameName)) {
                             e.currentTarget.value = this.model.get(this.nameName);
                         }
-                    }.bind(this));
+                    });
                 }
 
                 var $elementName = this.$elementName;
 
                 if (!this.autocompleteDisabled) {
                     this.$elementName.autocomplete({
-                        beforeRender: function ($c) {
+                        beforeRender: $c => {
                             if (this.$elementName.hasClass('input-sm')) {
                                 $c.addClass('small');
                             }
-                        }.bind(this),
-
-                        serviceUrl: function (q) {
+                        },
+                        serviceUrl: q => {
                             return this.getAutocompleteUrl(q);
-                        }.bind(this),
-
+                        },
                         paramName: 'q',
                         minChars: 1,
                         triggerSelectOnValidInput: false,
                         autoSelectFirst: true,
                         noCache: true,
-
-                        formatResult: function (suggestion) {
+                        formatResult: suggestion => {
                             return this.getHelper().escapeString(suggestion.name);
-                        }.bind(this),
-
-                        transformResult: function (response) {
+                        },
+                        transformResult: response => {
                             var response = JSON.parse(response);
                             var list = [];
 
-                            response.list.forEach(function(item) {
+                            response.list.forEach(item => {
                                 list.push({
                                     id: item.id,
                                     name: item.name || item.id,
                                     data: item.id,
                                     value: item.name || item.id,
-                                    attributes: item
+                                    attributes: item,
                                 });
-                            }, this);
+                            });
 
-                            return {
-                                suggestions: list
-                            };
-                        }.bind(this),
-
-                        onSelect: function (s) {
-                            this.getModelFactory().create(this.foreignScope, function (model) {
+                            return {suggestions: list};
+                        },
+                        onSelect: (s) => {
+                            this.getModelFactory().create(this.foreignScope, (model) => {
                                 model.set(s.attributes);
 
                                 this.select(model);
-                            }, this);
-                        }.bind(this)
+                            });
+                        },
                     });
 
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);
 
-                    this.once('render', function () {
+                    this.once('render', () => {
                         $elementName.autocomplete('dispose');
-                    }, this);
+                    });
 
-                    this.once('remove', function () {
+                    this.once('remove', () => {
                         $elementName.autocomplete('dispose');
-                    }, this);
+                    });
 
                     if (this.mode === 'search') {
                         var $elementOneOf = this.$el.find('input.element-one-of');
 
                         $elementOneOf.autocomplete({
-                            serviceUrl: function (q) {
+                            serviceUrl: q => {
                                 return this.getAutocompleteUrl(q);
-                            }.bind(this),
-
+                            },
                             minChars: 1,
                             paramName: 'q',
                             noCache: true,
-
-                            formatResult: function (suggestion) {
+                            formatResult: suggestion => {
                                 return this.getHelper().escapeString(suggestion.name);
-                            }.bind(this),
-
-                            transformResult: function (response) {
+                            },
+                            transformResult: response => {
                                 var response = JSON.parse(response);
                                 var list = [];
 
-                                response.list.forEach(function(item) {
+                                response.list.forEach(item => {
                                     list.push({
                                         id: item.id,
                                         name: item.name || item.id,
                                         data: item.id,
                                         value: item.name || item.id,
                                     });
-                                }, this);
+                                });
 
-                                return {
-                                    suggestions: list
-                                };
-                            }.bind(this),
-
-                            onSelect: function (s) {
+                                return {suggestions: list};
+                            },
+                            onSelect: s => {
                                 this.addLinkOneOf(s.id, s.name);
+
                                 $elementOneOf.val('');
-                            }.bind(this)
+                            },
                         });
 
                         $elementOneOf.attr('autocomplete', 'espo-' + this.name);
 
-                        this.once('render', function () {
+                        this.once('render', () => {
                             $elementOneOf.autocomplete('dispose');
-                        }, this);
+                        });
 
-                        this.once('remove', function () {
+                        this.once('remove', () => {
                             $elementOneOf.autocomplete('dispose');
-                        }, this);
+                        });
 
-                        this.$el.find('select.search-type').on('change', function () {
+                        this.$el.find('select.search-type').on('change', () => {
                             this.trigger('change');
-                        }.bind(this));
+                        });
                     }
                 }
 
-                $elementName.on('change', function () {
+                $elementName.on('change', () => {
                     if (this.mode !== 'search' && !this.model.get(this.idName)) {
                         $elementName.val(this.model.get(this.nameName));
                     }
-                }.bind(this));
+                });
             }
 
             if (this.mode === 'search') {
@@ -437,9 +425,9 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.handleSearchType(type);
 
                 if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
-                    this.searchData.oneOfIdList.forEach(function (id) {
+                    this.searchData.oneOfIdList.forEach((id) => {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
-                    }, this);
+                    });
                 }
             }
         },
@@ -550,8 +538,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     type: 'isNotNull',
                     attribute: this.idName,
                     data: {
-                        type: type
-                    }
+                        type: type,
+                    },
                 };
 
                 return data;
@@ -565,8 +553,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     data: {
                         type: type,
                         oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash
-                    }
+                        oneOfNameHash: this.searchData.oneOfNameHash,
+                    },
                 };
 
                 return data;
@@ -579,17 +567,17 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         {
                             type: 'notIn',
                             attribute: this.idName,
-                            value: this.searchData.oneOfIdList
+                            value: this.searchData.oneOfIdList,
                         },
                         {
                             type: 'isNull',
-                            attribute: this.idName
-                        }
+                            attribute: this.idName,
+                        },
                     ],
                     data: {
                         type: type,
                         oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash
+                        oneOfNameHash: this.searchData.oneOfNameHash,
                     }
                 };
 
@@ -604,8 +592,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     data: {
                         type: type,
                         oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash
-                    }
+                        oneOfNameHash: this.searchData.oneOfNameHash,
+                    },
                 };
 
                 return data;
@@ -628,15 +616,16 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         },
                         {
                             type: 'isNull',
-                            attribute: this.idName
+                            attribute: this.idName,
                         }
                     ],
                     data: {
                         type: type,
                         idValue: value,
-                        nameValue: nameValue
+                        nameValue: nameValue,
                     }
                 };
+
                 return data;
             }
 
@@ -654,8 +643,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     data: {
                         type: type,
                         idValue: value,
-                        nameValue: nameValue
-                    }
+                        nameValue: nameValue,
+                    },
                 };
 
                 return data;
