@@ -279,7 +279,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
                 if (this.mode === 'edit') {
                     this.$elementName.on('blur', (e) => {
-                        setTimeout(() =>  {
+                        setTimeout(() => {
                             if (this.model.has(this.nameName)) {
                                 e.currentTarget.value = this.model.get(this.nameName);
                             }
