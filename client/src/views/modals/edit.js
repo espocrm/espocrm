@@ -128,11 +128,11 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                         model.id = this.id;
                     }
 
-                    model.once('sync', () => {
-                        this.createRecordView(model);
-                    });
-
-                    model.fetch();
+                    model
+                        .fetch()
+                        .then(() => {
+                            this.createRecordView(model);
+                        });
 
                     return;
                 }
