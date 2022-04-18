@@ -129,6 +129,7 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                     }
 
                     model.once('sync', () => {
+                        model.changed = {};
                         this.createRecordView(model);
                     });
 
