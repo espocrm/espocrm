@@ -2156,6 +2156,14 @@ stream-head-text-container .span {
     }
 }
 
+.list-group-item.active .complex-text-container.cut {
+    > .complex-text {
+        &::before {
+            background: linear-gradient(to bottom, transparent, var(--default-heading-bg-color));
+        }
+    }
+}
+
 .complex-text a {
     word-wrap: break-word;
 }
