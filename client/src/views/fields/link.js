@@ -86,6 +86,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
+        getEmptyAutocompleteResult: null,
+
         getSelectFilters: function () {},
 
         getSelectBoolFilterList: function () {
@@ -320,29 +322,30 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         serviceUrl: q => {
                             return this.getAutocompleteUrl(q);
                         },
-                        paramName: 'q',
-                        minChars: 1,
+                        lookup: (q, callback) => {
+                            if (q.length === 0) {
+
+                                if (this.getEmptyAutocompleteResult) {
+                                    callback(
+                                        this._transformAutocompleteResult(this.getEmptyAutocompleteResult())
+                                    );
+                                }
+
+                                return;
+                            }
+
+                            Espo.Ajax
+                                .getRequest(this.getAutocompleteUrl(q), {q: q})
+                                .then(response => {
+                                    callback(this._transformAutocompleteResult(response));
+                                });
+                        },
+                        minChars: 0,
                         triggerSelectOnValidInput: false,
                         autoSelectFirst: true,
                         noCache: true,
                         formatResult: suggestion => {
                             return this.getHelper().escapeString(suggestion.name);
-                        },
-                        transformResult: response => {
-                            var response = JSON.parse(response);
-                            var list = [];
-
-                            response.list.forEach(item => {
-                                list.push({
-                                    id: item.id,
-                                    name: item.name || item.id,
-                                    data: item.id,
-                                    value: item.name || item.id,
-                                    attributes: item,
-                                });
-                            });
-
-                            return {suggestions: list};
                         },
                         onSelect: (s) => {
                             this.getModelFactory().create(this.foreignScope, (model) => {
@@ -355,7 +358,15 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                     this.$elementName.off('focus.autocomplete');
 
-                    this.$elementName.on('focus', () => this.$elementName.get(0).select());
+                    this.$elementName.on('focus', () => {
+                        if (this.$elementName.val()) {
+                            this.$elementName.get(0).select();
+
+                            return;
+                        }
+
+                        this.$elementName.autocomplete('onFocus');
+                    });
 
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);
 
@@ -382,18 +393,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                             },
                             transformResult: response => {
                                 var response = JSON.parse(response);
-                                var list = [];
 
-                                response.list.forEach(item => {
-                                    list.push({
-                                        id: item.id,
-                                        name: item.name || item.id,
-                                        data: item.id,
-                                        value: item.name || item.id,
-                                    });
-                                });
-
-                                return {suggestions: list};
+                                return this._transformAutocompleteResult(response);
                             },
                             onSelect: s => {
                                 this.addLinkOneOf(s.id, s.name);
@@ -436,6 +437,22 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     });
                 }
             }
+        },
+
+        _transformAutocompleteResult: function (response) {
+            let list = [];
+
+            response.list.forEach(item => {
+                list.push({
+                    id: item.id,
+                    name: item.name || item.id,
+                    data: item.id,
+                    value: item.name || item.id,
+                    attributes: item,
+                });
+            });
+
+            return {suggestions: list};
         },
 
         getValueForDisplay: function () {
