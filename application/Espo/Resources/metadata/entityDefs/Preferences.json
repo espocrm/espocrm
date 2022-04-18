@@ -176,7 +176,7 @@
         "doNotFillAssignedUserIfNotRequired": {
             "type": "bool",
             "tooltip": true,
-            "default": false
+            "default": true
         },
         "followEntityOnStreamPost": {
             "type": "bool",
