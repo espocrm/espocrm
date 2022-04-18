@@ -329,6 +329,10 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         },
                     });
 
+                    this.$elementName.off('focus.autocomplete');
+
+                    this.$elementName.on('focus', () => this.$elementName.get(0).select());
+
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);
                 }
 
