@@ -300,9 +300,11 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 if (this.mode === 'edit') {
                     this.$elementName.on('blur', (e) => {
-                        if (this.model.has(this.nameName)) {
-                            e.currentTarget.value = this.model.get(this.nameName);
-                        }
+                        setTimeout(() =>  {
+                            if (this.model.has(this.nameName)) {
+                                e.currentTarget.value = this.model.get(this.nameName);
+                            }
+                        }, 100);
                     });
                 }
 
