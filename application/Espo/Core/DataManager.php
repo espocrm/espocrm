@@ -29,6 +29,8 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultParamsSaver;
+
 use Espo\Core\{
     Exceptions\Error,
     ORM\EntityManager,
@@ -74,6 +76,8 @@ class DataManager
 
     private $rebuildActionProcessor;
 
+    private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver;
+
     private string $cachePath = 'data/cache';
 
     public function __construct(
@@ -87,7 +91,8 @@ class DataManager
         SchemaProxy $schemaProxy,
         Log $log,
         Module $module,
-        RebuildActionProcessor $rebuildActionProcessor
+        RebuildActionProcessor $rebuildActionProcessor,
+        ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -100,6 +105,7 @@ class DataManager
         $this->log = $log;
         $this->module = $module;
         $this->rebuildActionProcessor = $rebuildActionProcessor;
+        $this->configMissingDefaultParamsSaver = $configMissingDefaultParamsSaver;
     }
 
     /**
@@ -110,13 +116,16 @@ class DataManager
     public function rebuild(?array $entityList = null): void
     {
         $this->clearCache();
+
         $this->disableHooks();
+
         $this->checkModules();
         $this->populateConfigParameters();
         $this->rebuildMetadata();
         $this->rebuildDatabase($entityList);
 
         $this->rebuildActionProcessor->process();
+        $this->configMissingDefaultParamsSaver->process();
 
         $this->enableHooks();
     }
