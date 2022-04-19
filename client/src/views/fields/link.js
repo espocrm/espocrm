@@ -300,19 +300,17 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 });
 
-                if (this.mode === 'edit') {
-                    this.$elementName.on('blur', (e) => {
-                        setTimeout(() =>  {
-                            if (this.model.has(this.nameName)) {
-                                e.currentTarget.value = this.model.get(this.nameName);
-                            }
+                this.$elementName.on('blur', e => {
+                    setTimeout(() => {
+                        if (this.mode === 'edit' && this.model.has(this.nameName)) {
+                            e.currentTarget.value = this.model.get(this.nameName);
+                        }
 
-                            if (!this.autocompleteDisabled) {
-                                this.$elementName.autocomplete('clear');
-                            }
-                        }, 100);
-                    });
-                }
+                        if (!this.autocompleteDisabled) {
+                            this.$elementName.autocomplete('clear');
+                        }
+                    }, 100);
+                });
 
                 var $elementName = this.$elementName;
 

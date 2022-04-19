@@ -277,19 +277,17 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     this.trigger('change');
                 });
 
-                if (this.mode === 'edit') {
-                    this.$elementName.on('blur', (e) => {
-                        setTimeout(() => {
-                            if (this.model.has(this.nameName)) {
-                                e.currentTarget.value = this.model.get(this.nameName);
-                            }
+                this.$elementName.on('blur', e => {
+                    setTimeout(() => {
+                        if (this.mode === 'edit') {
+                            e.currentTarget.value = this.model.get(this.nameName) || '';
+                        }
 
-                            if (!this.autocompleteDisabled) {
-                                this.$elementName.autocomplete('clear');
-                            }
-                        }, 100);
-                    });
-                }
+                        if (!this.autocompleteDisabled) {
+                            this.$elementName.autocomplete('clear');
+                        }
+                    }, 100);
+                });
 
                 if (!this.autocompleteDisabled) {
                     this.$elementName.autocomplete({
@@ -344,12 +342,6 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 }
 
                 var $elementName = this.$elementName;
-
-                $elementName.on('change', () => {
-                    if (!this.model.get(this.idName)) {
-                        $elementName.val(this.model.get(this.nameName));
-                    }
-                });
 
                 this.once('render', () => {
                     $elementName.autocomplete('dispose');

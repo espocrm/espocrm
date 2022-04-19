@@ -234,6 +234,10 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 var $element = this.$element;
 
                 if (!this.autocompleteDisabled) {
+                    this.$element.on('blur', () => {
+                        setTimeout(() => this.$element.autocomplete('clear'), 100);
+                    });
+
                     this.$element.autocomplete({
                         serviceUrl: (q) => {
                             return this.getAutocompleteUrl(q);
