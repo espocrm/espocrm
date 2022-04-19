@@ -88,7 +88,7 @@ select[name="user-lang"] {
 }
 
 .table {
-  border-bottom: 1px solid #e8eced;
+  border-bottom: 1px solid var(--default-border-color);
 }
 
 .setup-confirmation {
@@ -115,6 +115,7 @@ span.remark {
 	color: #a94442;
 	font-weight: 600;
 }
+
 span.ok {
 	color: #87c956;
 }
@@ -147,8 +148,12 @@ span.ok {
 }
 
 .main-header.panel-heading {
-    background-color: #546e7a !important;
+    background-color: var(--navbar-inverse-bg) !important;
     padding: 0px 2px;
+}
+
+.panel .modal-footer {
+    background-color: var(--panel-bg) !important;
 }
 
 #license-agree {
