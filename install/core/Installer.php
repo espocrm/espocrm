@@ -294,13 +294,18 @@ class Installer
             $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
         }
         catch (Exception $e) {
-
             if ($createDatabase && $e->getCode() == '1049') {
                 $pdo = $this->getDatabaseHelper()
                     ->createPdoConnection($params, true);
 
+                $dbname = preg_replace('/[^A-Za-z0-9_]+/', '', $params['dbname']);
+
+                if ($dbname !== $params['dbname']) {
+                    throw new Exception("Bad database name.");
+                }
+
                 $pdo->query(
-                    "CREATE DATABASE IF NOT EXISTS `" . $params['dbname'] . "`"
+                    "CREATE DATABASE IF NOT EXISTS `" . $dbname . "`"
                 );
 
                 return $this->checkDatabaseConnection($params, false);
