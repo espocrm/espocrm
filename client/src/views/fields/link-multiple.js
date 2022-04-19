@@ -235,7 +235,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 if (!this.autocompleteDisabled) {
                     this.$element.on('blur', () => {
-                        setTimeout(() => this.$element.autocomplete('clear'), 100);
+                        setTimeout(() => this.$element.autocomplete('clear'), 300);
                     });
 
                     this.$element.autocomplete({

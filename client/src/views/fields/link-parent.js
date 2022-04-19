@@ -282,11 +282,11 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                         if (this.mode === 'edit') {
                             e.currentTarget.value = this.model.get(this.nameName) || '';
                         }
-
-                        if (!this.autocompleteDisabled) {
-                            this.$elementName.autocomplete('clear');
-                        }
                     }, 100);
+
+                    if (!this.autocompleteDisabled) {
+                        setTimeout(() => this.$elementName.autocomplete('clear'), 300);
+                    }
                 });
 
                 if (!this.autocompleteDisabled) {
@@ -335,7 +335,6 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     });
 
                     this.$elementName.off('focus.autocomplete');
-
                     this.$elementName.on('focus', () => this.$elementName.get(0).select());
 
                     this.$elementName.attr('autocomplete', 'espo-' + this.name);

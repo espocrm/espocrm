@@ -305,11 +305,11 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         if (this.mode === 'edit' && this.model.has(this.nameName)) {
                             e.currentTarget.value = this.model.get(this.nameName);
                         }
-
-                        if (!this.autocompleteDisabled) {
-                            this.$elementName.autocomplete('clear');
-                        }
                     }, 100);
+
+                    if (!this.autocompleteDisabled) {
+                        setTimeout(() => this.$elementName.autocomplete('clear'), 300);
+                    }
                 });
 
                 var $elementName = this.$elementName;
