@@ -141,8 +141,8 @@
     </div>
 </div>
 <footer class="modal-footer">
-    <button class="btn btn-default pull-left" type="button" id="back">{$langs['labels']['Back']}</button>
-    <button class="btn btn-primary" type="button" id="next">{$langs['labels']['Next']}</button>
+    <button class="btn btn-default btn-s-wide pull-left" type="button" id="back">{$langs['labels']['Back']}</button>
+    <button class="btn btn-primary btn-s-wide" type="button" id="next">{$langs['labels']['Next']}</button>
 </footer>
 <script>
     {literal}

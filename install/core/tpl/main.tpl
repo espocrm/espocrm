@@ -31,7 +31,7 @@
 
     </div>
     <footer class="modal-footer">
-            <button class="btn btn-primary" type="button" id="start">{$langs['labels']['Start']}</button>
+        <button class="btn btn-primary btn-s-wide" type="button" id="start">{$langs['labels']['Start']}</button>
     </footer>
 </form>
 <script>
