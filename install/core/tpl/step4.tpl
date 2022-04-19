@@ -10,11 +10,11 @@
                         </label>
                         <div class="field field-dateFormat">
                             <select name="dateFormat" class="form-control main-element">
-                                {foreach from=$fields['dateFormat'].options item=lbl key=val}
+                                {foreach from=$fields['dateFormat'].options item=val}
                                     {if $val == $fields['dateFormat'].value}
-                                        <option selected="selected" value="{$val}">{$lbl}</option>
+                                        <option selected="selected" value="{$val}">{$val}</option>
                                     {else}
-                                        <option value="{$val}">{$lbl}</option>
+                                        <option value="{$val}">{$val}</option>
                                     {/if}
                                 {/foreach}
                             </select>
@@ -27,11 +27,11 @@
                         </label>
                         <div class="field field-timeFormat">
                             <select name="timeFormat" class="form-control main-element">
-                                {foreach from=$fields['timeFormat'].options item=lbl key=val}
+                                {foreach from=$fields['timeFormat'].options item=val}
                                     {if $val == $fields['timeFormat'].value}
-                                        <option selected="selected" value="{$val}">{$lbl}</option>
+                                        <option selected="selected" value="{$val}">{$val}</option>
                                     {else}
-                                        <option value="{$val}">{$lbl}</option>
+                                        <option value="{$val}">{$val}</option>
                                     {/if}
                                 {/foreach}
                             </select>

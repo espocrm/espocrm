@@ -660,10 +660,13 @@ class Installer
                     $value = (int) $value;
 
                 case 'enum':
-                    if (isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options'])) {
+                    if (
+                        isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options']) ||
+                        !isset($paramDefs['options'])
+                    ) {
                         $normalizedParams[$name] = $value;
                     }
-                    else if (array_key_exists('default', $paramDefs)) {
+                    else if (isset($paramDefs['options']) && array_key_exists('default', $paramDefs)) {
                         $normalizedParams[$name] = $paramDefs['default'];
 
                         $GLOBALS['log']->warning(
