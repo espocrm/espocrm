@@ -439,6 +439,19 @@ class Installer
 
         $result = $this->saveConfig($preferences);
 
+        $unsetList = [
+            'dateFormat',
+            'timeFormat',
+            'timeZone',
+            'weekStart',
+            'defaultCurrency',
+            'language',
+        ];
+
+        foreach ($unsetList as $item) {
+            unset($preferences[$item]);
+        }
+
         $this->saveAdminPreferences($preferences);
 
         return $result;
