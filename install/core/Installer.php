@@ -315,14 +315,14 @@ class Installer
                 $pdo = $this->getDatabaseHelper()
                     ->createPdoConnection($params, true);
 
-                $dbname = preg_replace('/[^A-Za-z0-9_]+/', '', $params['dbname']);
+                $dbname = preg_replace('/[^A-Za-z0-9_\-@$#\(\)]+/', '', $params['dbname']);
 
                 if ($dbname !== $params['dbname']) {
                     throw new Exception("Bad database name.");
                 }
 
                 $pdo->query(
-                    "CREATE DATABASE IF NOT EXISTS `" . $dbname . "`"
+                    "CREATE DATABASE IF NOT EXISTS `{$dbname}`"
                 );
 
                 return $this->checkDatabaseConnection($params, false);
@@ -335,17 +335,17 @@ class Installer
     }
 
     /**
-     * Save data
+     * Save data.
      *
-     * @param  array $database
-     * array (
+     * @param array $database
+     * array(
      *   'driver' => 'pdo_mysql',
      *   'host' => 'localhost',
      *   'dbname' => 'espocrm_test',
      *   'user' => 'root',
      *   'password' => '',
-     * ),
-     * @param  string $language
+     * )
+     * @param string $language
      * @return bool
      */
     public function saveData(array $saveData)
