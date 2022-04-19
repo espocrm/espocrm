@@ -28,19 +28,26 @@
  ************************************************************************/
 
 ob_start();
-$result = array('success' => true, 'errorMsg' => '');
+
+$result = [
+    'success' => true,
+    'errorMsg' => '',
+];
 
 // save settings
-$database = array(
+$database = [
     'driver' => 'pdo_mysql',
     'dbname' => $_SESSION['install']['db-name'],
     'user' => $_SESSION['install']['db-user-name'],
     'password' => $_SESSION['install']['db-user-password'],
-);
+];
+
 $host = $_SESSION['install']['host-name'];
+
 if (strpos($host,':') === false) {
-        $host .= ":";
+    $host .= ":";
 }
+
 list($database['host'], $database['port']) = explode(':', $host);
 
 $saveData = [
@@ -48,6 +55,10 @@ $saveData = [
     'language' => !empty($_SESSION['install']['user-lang']) ? $_SESSION['install']['user-lang'] : 'en_US',
     'siteUrl' => !empty($_SESSION['install']['site-url']) ? $_SESSION['install']['site-url'] : null,
 ];
+
+if (!empty($_SESSION['install']['theme'])) {
+    $saveData['theme'] = $_SESSION['install']['theme'];
+}
 
 if (!empty($_SESSION['install']['default-permissions-user']) && !empty($_SESSION['install']['default-permissions-group'])) {
     $saveData['defaultPermissions'] = [

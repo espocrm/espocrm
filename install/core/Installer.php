@@ -83,6 +83,7 @@ class Installer
         'outboundEmailFromName',
         'outboundEmailFromAddress',
         'outboundEmailIsShared',
+        'theme',
     ];
 
     public function __construct()
@@ -237,7 +238,15 @@ class Installer
         return $this->app->isInstalled();
     }
 
-    private function getLanguage(): Language
+    public function createLanguage(string $language): Language
+    {
+        return $this->app
+            ->getContainer()
+            ->get('injectableFactory')
+            ->createWith(Language::class, ['language' => $language]);
+    }
+
+    public function getLanguage(): Language
     {
         if (!isset($this->language)) {
             try {
@@ -253,6 +262,14 @@ class Installer
         }
 
         return $this->language;
+    }
+
+    public function getThemeList(): array
+    {
+        return [
+            'HazyblueVertical',
+            'DarkVertical',
+        ];
     }
 
     public function getLanguageList($isTranslated = true): array
@@ -349,6 +366,7 @@ class Installer
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
             'hashSecretKey' => Util::generateSecretKey(),
+            'theme' => $saveData['theme'] ?? 'HazyblueVertical',
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {
@@ -528,6 +546,7 @@ class Installer
             'thousandSeparator',
             'decimalMark',
             'language',
+            'theme',
         ];
 
         $data = array_intersect_key($preferences, array_flip($permittedSettingList));
@@ -604,6 +623,11 @@ class Installer
 
                     case 'language':
                         $settingDefs['language']['options'] = $this->getLanguageList(false);
+
+                        break;
+
+                    case 'theme':
+                        $settingDefs['theme']['options'] = $this->getThemeList();
 
                         break;
                 }

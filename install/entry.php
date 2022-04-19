@@ -62,6 +62,7 @@ $ignoredFields = [
     'dbDriver',
 ];
 
+
 if (!empty($allPostData)) {
     foreach ($allPostData as $key => $val) {
         if (!in_array($key, $ignoredFields)) {
@@ -152,8 +153,7 @@ $smarty->assign("langsJs", json_encode($langs));
 // include actions and set tpl name
 switch ($action) {
     case 'main':
-        $languageList = $installer->getLanguageList();
-        $smarty->assign("languageList", $languageList);
+        $smarty->assign("languageList", $installer->getLanguageList());
 
         break;
 
@@ -193,6 +193,11 @@ $smarty->assign('action', ucfirst($action));
 $smarty->assign('config', $config);
 $smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
+$theme = $_SESSION['install']['theme'] ?? 'HazyblueVertical';
+$stylesheet = $installer->getMetadata()->get(['themes', $theme, 'stylesheet']);
+
+$smarty->assign('stylesheet', $stylesheet);
+
 if (Utils::checkActionExists($action)) {
     include $actionFile;
 }
@@ -211,3 +216,4 @@ if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
 
     $smarty->display('index.tpl');
 }
+

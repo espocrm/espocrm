@@ -1,6 +1,7 @@
 <form id="nav">
     <div class="panel-body">
         <div id="msg-box" class="alert hide"></div>
+
         <div class="row">
             <div class="col-md-12">
                 <div align="center">
@@ -11,29 +12,53 @@
                 </div>
             </div>
         </div>
-        <div class="cell cell-website pull-left" align="left">
-            <label class="field-label-website control-label">{$langs['fields']['Choose your language']}</label>
-            <div class="field field-website">
-                <select name="user-lang" class="form-control">
-                    {foreach from=$languageList item=lbl key=val}
-                        {if $val == $fields['user-lang'].value}
-                            <option selected="selected" value="{$val}">{$lbl}</option>
-                        {else}
-                            <option value="{$val}">{$lbl}</option>
-                        {/if}
-                    {/foreach}
-                </select>
+
+        <div class="row margin-top">
+            <div class="cell cell-language col-md-4">
+                <label class="field-label-language control-label">{$langs['fields']['Choose your language']}</label>
+                <div class="field field-language">
+                    <select name="user-lang" class="form-control">
+                        {foreach from=$languageList item=lbl key=val}
+                            {if $val == $fields['user-lang'].value}
+                                <option selected="selected" value="{$val}">{$lbl}</option>
+                            {else}
+                                <option value="{$val}">{$lbl}</option>
+                            {/if}
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+
+            <div class="cell cell-theme col-md-4">
+                <label class="field-label-theme control-label">{$themeLabel}</label>
+                <div class="field field-language">
+                    <select name="theme" class="form-control">
+                        {foreach from=$themes item=lbl key=val}
+                            {if $val == $fields['theme'].value}
+                                <option selected="selected" value="{$val}">{$lbl}</option>
+                            {else}
+                                <option value="{$val}">{$lbl}</option>
+                            {/if}
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+
+            <div class="cell cell-website col-md-4" align="right" style="padding-top: 24px;">
+                <a
+                    target="_blank"
+                    href="https://www.espocrm.com/documentation/administration/installation/"
+                    style="font-weight: 600;"
+                >{$langs['labels']['Installation Guide']}</a>
             </div>
         </div>
-        <div class="cell cell-website pull-right" align="right">
-            <a target="_blank" href="https://www.espocrm.com/documentation/administration/installation/" style="font-weight:600;">{$langs['labels']['Installation Guide']}</a>
-        </div>
-
     </div>
+
     <footer class="modal-footer">
         <button class="btn btn-primary btn-s-wide" type="button" id="start">{$langs['labels']['Start']}</button>
     </footer>
 </form>
+
 <script>
     {literal}
     $(function(){

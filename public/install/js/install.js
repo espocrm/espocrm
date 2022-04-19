@@ -90,11 +90,15 @@ InstallScript.prototype.main = function() {
 	$("#start").click(function(){
 		$(this).attr('disabled', 'disabled');
 		self.goTo(nextAction);
-	})
+	});
 
-	$('[name="user-lang"]').change(function(){
-		self.goTo(self.action);
-	})
+	$('[name="user-lang"]').change(() => {
+		this.goTo(self.action);
+	});
+
+	$('[name="theme"]').change(() => {
+		this.goTo(self.action);
+	});
 }
 
 InstallScript.prototype.step1 = function() {

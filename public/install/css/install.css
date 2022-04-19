@@ -1,14 +1,15 @@
 
+
+body > .content {
+    padding-left: 0 !important;
+}
+
 .license-field {
 	width: 100%;
 }
 
 .point-lbl {
 	cursor: pointer;
-}
-
-select[name="user-lang"] {
-	width: 200px;
 }
 
 .subpanel {
@@ -73,7 +74,10 @@ select[name="user-lang"] {
 
 .cron-help {
 	margin-top: 40px;
-	color: #ad4846;
+	color: var(--state-danger-text);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cron-help pre {
@@ -84,7 +88,7 @@ select[name="user-lang"] {
 }
 
 .cron-help p {
-	color: #333;
+	color: var(--text-color);
 }
 
 .table {
@@ -127,23 +131,14 @@ span.ok {
 }
 
 .likes {
-	border-left-color: #D7983B;
-	-moz-border-bottom-colors: none;
-    -moz-border-left-colors: #F1AF4E;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: #eee;
-    border-image: none;
-    border-radius: 3px;
-    border-style: solid;
-    border-width: 1px 1px 1px 5px;
     margin: 20px 0;
     padding: 10px;
     text-align: center;
+    color: var(--state-success-text);
+    font-weight: 600;
 }
 
 .likes p {
-	color: #B56F08;
 	font-size: 15px;
 }
 

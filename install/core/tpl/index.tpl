@@ -15,7 +15,7 @@
         {/if}
 
         <script type="text/javascript" src="js/install.js"></script>
-        <link href="../client/css/espo/hazyblue.css" rel="stylesheet">
+        <link href="../{$stylesheet}" rel="stylesheet">
         <link href="css/install.css" rel="stylesheet">
         <link rel="shortcut icon" href="../client/img/favicon.ico" type="image/x-icon">
     </head>
