@@ -306,6 +306,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                             if (this.model.has(this.nameName)) {
                                 e.currentTarget.value = this.model.get(this.nameName);
                             }
+
+                            if (!this.autocompleteDisabled) {
+                                this.$elementName.autocomplete('clear');
+                            }
                         }, 100);
                     });
                 }
@@ -324,7 +328,6 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         },
                         lookup: (q, callback) => {
                             if (q.length === 0) {
-
                                 if (this.getEmptyAutocompleteResult) {
                                     callback(
                                         this._transformAutocompleteResult(this.getEmptyAutocompleteResult())

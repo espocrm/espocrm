@@ -283,6 +283,10 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             if (this.model.has(this.nameName)) {
                                 e.currentTarget.value = this.model.get(this.nameName);
                             }
+
+                            if (!this.autocompleteDisabled) {
+                                this.$elementName.autocomplete('clear');
+                            }
                         }, 100);
                     });
                 }
