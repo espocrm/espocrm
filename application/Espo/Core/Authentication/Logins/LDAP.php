@@ -395,6 +395,7 @@ class LDAP implements Login
             ]);
 
         $this->linkMultipleSaver->process($user, 'teams', $saverParams);
+        $this->linkMultipleSaver->process($user, 'portals', $saverParams);
         $this->linkMultipleSaver->process($user, 'portalRoles', $saverParams);
         $this->emailAddressSaver->process($user, $saverParams);
         $this->phoneNumberSaver->process($user, $saverParams);
