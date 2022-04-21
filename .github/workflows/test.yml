@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'master'
-      - 'hotfix/**'
+      - 'fix'
     paths:
       - '**.php'
       - '**.json'
