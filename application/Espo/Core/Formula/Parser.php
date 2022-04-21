@@ -449,133 +449,132 @@ class Parser
 
             return $this->applyOperator($firstOperator, $firstPart, $secondPart);
         }
-        else {
-            $expression = trim($expression);
 
-            if ($expression[0] === '!') {
-                return (object) [
-                    'type' => 'logical\\not',
-                    'value' => $this->split(substr($expression, 1))
-                ];
-            }
+        $expression = trim($expression);
 
-            if ($expression[0] === '-') {
-                return (object) [
-                    'type' => 'numeric\\subtraction',
-                    'value' => [
-                        $this->split('0'),
-                        $this->split(substr($expression, 1))
-                    ]
-                ];
-            }
+        if ($expression === '') {
+            throw SyntaxError::create("Empty attribute.");
+        }
 
-            if ($expression[0] === '+') {
-                return (object) [
-                    'type' => 'numeric\\summation',
-                    'value' => [
-                        $this->split('0'),
-                        $this->split(substr($expression, 1))
-                    ]
-                ];
-            }
+        if ($expression[0] === '!') {
+            return (object) [
+                'type' => 'logical\\not',
+                'value' => $this->split(substr($expression, 1))
+            ];
+        }
 
-            if (
-                $expression[0] === "'" && $expression[strlen($expression) - 1] === "'"
-                ||
-                $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
-            ) {
-                return (object) [
-                    'type' => 'value',
-                    'value' => substr($expression, 1, strlen($expression) - 2)
-                ];
-            }
+        if ($expression[0] === '-') {
+            return (object) [
+                'type' => 'numeric\\subtraction',
+                'value' => [
+                    $this->split('0'),
+                    $this->split(substr($expression, 1))
+                ]
+            ];
+        }
 
-            if ($expression[0] === "$") {
-                $value = substr($expression, 1);
+        if ($expression[0] === '+') {
+            return (object) [
+                'type' => 'numeric\\summation',
+                'value' => [
+                    $this->split('0'),
+                    $this->split(substr($expression, 1))
+                ]
+            ];
+        }
 
-                if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                    throw new SyntaxError("Bad varable name `{$value}`.");
-                }
+        if (
+            $expression[0] === "'" && $expression[strlen($expression) - 1] === "'"
+            ||
+            $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
+        ) {
+            return (object) [
+                'type' => 'value',
+                'value' => substr($expression, 1, strlen($expression) - 2)
+            ];
+        }
 
-                return (object) [
-                    'type' => 'variable',
-                    'value' => $value,
-                ];
-            }
+        if ($expression[0] === "$") {
+            $value = substr($expression, 1);
 
-            if (is_numeric($expression)) {
-                $value = filter_var($expression, FILTER_VALIDATE_INT) !== false ?
-                    (int) $expression :
-                    (float) $expression;
-
-                return (object) [
-                    'type' => 'value',
-                    'value' => $value,
-                ];
-            }
-
-            if ($expression === 'true') {
-                return (object) [
-                    'type' => 'value',
-                    'value' => true,
-                ];
-            }
-            else if ($expression === 'false') {
-                return (object) [
-                    'type' => 'value',
-                    'value' => false,
-                ];
-            }
-            else if ($expression === 'null') {
-                return (object) [
-                    'type' => 'value',
-                    'value' => null,
-                ];
-            }
-
-            if ($expression[strlen($expression) - 1] === ')') {
-                $firstOpeningBraceIndex = strpos($expression, '(');
-
-                if ($firstOpeningBraceIndex > 0) {
-                    $functionName = trim(substr($expression, 0, $firstOpeningBraceIndex));
-                    $functionContent = substr($expression, $firstOpeningBraceIndex + 1, -1);
-
-                    $argumentList = $this->parseArgumentListFromFunctionContent($functionContent);
-
-                    $argumentSplittedList = [];
-
-                    foreach ($argumentList as $argument) {
-                        $argumentSplittedList[] = $this->split($argument);
-                    }
-
-                    if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-                        throw new SyntaxError("Bad function name `{$functionName}`.");
-                    }
-
-                    return (object) [
-                        'type' => $functionName,
-                        'value' => $argumentSplittedList,
-                    ];
-                }
-            }
-
-            if ($expression === '') {
-                throw SyntaxError::create("Empty attribute.");
-            }
-
-            if (!preg_match($this->attributeNameRegExp, $expression)) {
-                throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
-            }
-
-            if (substr($expression, -1) === '.') {
-                throw SyntaxError::create("Attribute ends with dot.");
+            if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
+                throw new SyntaxError("Bad varable name `{$value}`.");
             }
 
             return (object) [
-                'type' => 'attribute',
-                'value' => $expression,
+                'type' => 'variable',
+                'value' => $value,
             ];
         }
+
+        if (is_numeric($expression)) {
+            $value = filter_var($expression, FILTER_VALIDATE_INT) !== false ?
+                (int) $expression :
+                (float) $expression;
+
+            return (object) [
+                'type' => 'value',
+                'value' => $value,
+            ];
+        }
+
+        if ($expression === 'true') {
+            return (object) [
+                'type' => 'value',
+                'value' => true,
+            ];
+        }
+        else if ($expression === 'false') {
+            return (object) [
+                'type' => 'value',
+                'value' => false,
+            ];
+        }
+        else if ($expression === 'null') {
+            return (object) [
+                'type' => 'value',
+                'value' => null,
+            ];
+        }
+
+        if ($expression[strlen($expression) - 1] === ')') {
+            $firstOpeningBraceIndex = strpos($expression, '(');
+
+            if ($firstOpeningBraceIndex > 0) {
+                $functionName = trim(substr($expression, 0, $firstOpeningBraceIndex));
+                $functionContent = substr($expression, $firstOpeningBraceIndex + 1, -1);
+
+                $argumentList = $this->parseArgumentListFromFunctionContent($functionContent);
+
+                $argumentSplittedList = [];
+
+                foreach ($argumentList as $argument) {
+                    $argumentSplittedList[] = $this->split($argument);
+                }
+
+                if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
+                    throw new SyntaxError("Bad function name `{$functionName}`.");
+                }
+
+                return (object) [
+                    'type' => $functionName,
+                    'value' => $argumentSplittedList,
+                ];
+            }
+        }
+
+        if (!preg_match($this->attributeNameRegExp, $expression)) {
+            throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
+        }
+
+        if (substr($expression, -1) === '.') {
+            throw SyntaxError::create("Attribute ends with dot.");
+        }
+
+        return (object) [
+            'type' => 'attribute',
+            'value' => $expression,
+        ];
     }
 
     private function stripComments(string &$expression, string &$modifiedExpression): void
