@@ -990,4 +990,18 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
             $this->evaluator->process($expression, null)
         );
     }
+
+    public function testEmpty1(): void
+    {
+        $expression = " ";
+
+        $this->assertNull($this->evaluator->process($expression, null));
+    }
+
+    public function testOnlyComment(): void
+    {
+        $expression = " // test";
+
+        $this->assertNull($this->evaluator->process($expression, null));
+    }
 }

@@ -251,7 +251,6 @@ class Parser
         $expression = trim($expression);
 
         $braceCounter = 0;
-        $singleQuoteCounter = 0;
         $hasExcessBraces = true;
         $modifiedExpression = '';
         $splitterIndexList = [];
@@ -346,7 +345,7 @@ class Parser
         $firstOperator = null;
         $minIndex = null;
 
-        if ($expression === '') {
+        if (trim($expression) === '') {
             return (object) [
                 'type' => 'value',
                 'value' => null,
@@ -370,6 +369,7 @@ class Parser
 
                     $startFrom = $index + 1;
                 }
+
                 if ($index !== false) {
                     $possibleRightOperator = null;
 
@@ -413,10 +413,8 @@ class Parser
                     $this->processStrings($secondPart, $modifiedSecondPart);
 
                     if (
-                        substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')')
-                        &&
-                        substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')')
-                        &&
+                        substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
+                        substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')') &&
                         !$isString
                     ) {
                         if ($minIndex === null) {
@@ -451,10 +449,6 @@ class Parser
         }
 
         $expression = trim($expression);
-
-        if ($expression === '') {
-            throw SyntaxError::create("Empty attribute.");
-        }
 
         if ($expression[0] === '!') {
             return (object) [
@@ -524,13 +518,15 @@ class Parser
                 'value' => true,
             ];
         }
-        else if ($expression === 'false') {
+
+        if ($expression === 'false') {
             return (object) [
                 'type' => 'value',
                 'value' => false,
             ];
         }
-        else if ($expression === 'null') {
+
+        if ($expression === 'null') {
             return (object) [
                 'type' => 'value',
                 'value' => null,
