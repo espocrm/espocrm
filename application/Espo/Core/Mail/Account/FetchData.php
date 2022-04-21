@@ -67,6 +67,11 @@ class FetchData
             return null;
         }
 
+        // For backward compatibility.
+        if ($value === 0) {
+            return null;
+        }
+
         if (!is_string($value)) {
             throw new RuntimeException("Bad value in fetch-data.");
         }
