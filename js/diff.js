@@ -366,7 +366,7 @@ class Diff
         if (
             currentBranch !== 'master' &&
             currentBranch !== 'stable' &&
-            currentBranch.indexOf('hotfix/') !== 0
+            currentBranch !== 'fix'
         ) {
             console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + currentBranch + " branch.");
         }
