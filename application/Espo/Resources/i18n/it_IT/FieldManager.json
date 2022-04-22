@@ -99,5 +99,11 @@
     "datetimeOptional": {
       "date": "Data"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Una singola linea di testo.",
+    "date": "Data senza ora",
+    "datetime": "Data e ora",
+    "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Puo' essere di tipi di entita' differenti."
   }
 }

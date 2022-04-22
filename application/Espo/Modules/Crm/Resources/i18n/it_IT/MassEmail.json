@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nome",
     "status": "Stato",
-    "storeSentEmails": "Archiviare email inviate",
+    "storeSentEmails": "Archivia email inviate",
     "startAt": "Data inizio",
     "fromAddress": "Indirizzo mittente",
     "fromName": "Dal nome",
@@ -40,7 +40,7 @@
     "group": "Gruppo"
   },
   "messages": {
-    "selectAtLeastOneTarget": "Selezionare almeno un destinatario.",
+    "selectAtLeastOneTarget": "Seleziona almeno un destinatario.",
     "testSent": "L'Email di prova dovrebbe essere stata inviata"
   },
   "tooltips": {

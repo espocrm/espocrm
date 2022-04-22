@@ -20,8 +20,8 @@
   "options": {
     "status": {
       "Planned": "Pianificato",
-      "Held": "Trattenuto",
-      "Not Held": "Non trattenuto"
+      "Held": "Effettuata",
+      "Not Held": "Non Effettuata"
     },
     "acceptanceStatus": {
       "None": "Nessuno",
@@ -31,13 +31,13 @@
     }
   },
   "massActions": {
-    "setHeld": "Trattenuto",
-    "setNotHeld": "Non trattenuto"
+    "setHeld": "Effettuata",
+    "setNotHeld": "Non Effettuata"
   },
   "labels": {
     "Create Meeting": "Crea Riunione",
-    "Set Held": "Trattenuto",
-    "Set Not Held": "Non trattenuto",
+    "Set Held": "Effettuata",
+    "Set Not Held": "Non Effettuata",
     "Send Invitations": "Inviare inviti",
     "on time": "Puntuale",
     "before": "prima",
@@ -45,7 +45,7 @@
   },
   "presetFilters": {
     "planned": "Pianificato",
-    "held": "Trattenuto",
+    "held": "Effettuata",
     "todays": "Di oggi"
   },
   "messages": {

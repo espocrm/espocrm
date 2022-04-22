@@ -17,6 +17,7 @@
     "exampleRequestMethod": "Metodo",
     "exampleRequestPayload": "Carico utile",
     "createLeadBeforeOptInConfirmation": "Crea lead prima della conferma",
+    "duplicateCheck": "Controllo Duplicati",
     "skipOptInConfirmationIfSubscribed": "Salta la conferma se il lead è già nell'elenco di destinazione",
     "smtpAccount": "Account SMTP",
     "inboundEmail": "Account e-mail di gruppo"
@@ -35,7 +36,7 @@
     "Confirm Opt-In": "L'iscrizione è confermata."
   },
   "messages": {
-    "generateApiKey": "Creare nuova API Key",
+    "generateApiKey": "Crea nuova API Key",
     "optInConfirmationExpired": "Link di conferma iscrizione è scaduto.",
     "optInIsConfirmed": "L'iscrizione è confermata."
   },

@@ -7,10 +7,10 @@
     "checkVersionUrl": "Un URL per controllare le nuove versioni"
   },
   "labels": {
-    "Uninstall": "Disinstallato",
+    "Uninstall": "Disinstalla",
     "Install": "Installa"
   },
   "messages": {
-    "uninstalled": "L'Estensione {nome} è stata disinstallata"
+    "uninstalled": "L'Estensione {name} è stata disinstallata"
   }
 }

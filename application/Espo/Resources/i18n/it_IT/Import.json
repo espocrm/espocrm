@@ -14,7 +14,7 @@
     "Remove Duplicates": "Rimuovi duplicati",
     "importedCount": "Importato (count)",
     "duplicateCount": "Duplicato (count)",
-    "updatedCount": "Aggiornato (conto)",
+    "updatedCount": "Aggiornato (conteggio)",
     "Create Only": "Crea Solo",
     "Create and Update": "Crea & Aggiorna",
     "Update Only": "Aggiorna solo",
@@ -46,8 +46,10 @@
     "Timezone": "Fuso orario",
     "Remove Import Log": "Rimuovi log di import",
     "New Import": "Nuova importazione",
-    "Import Results": "Importazione dei risultati",
-    "Silent Mode": "Modalità silenziosa"
+    "Import Results": "Risultati Importazioni",
+    "Silent Mode": "Modalità silenziosa",
+    "New import with same params": "Nuovo import con gli stessi parametri",
+    "Run Manually": "Avvia Manualmente"
   },
   "messages": {
     "utf8": "Dovrebbe avere codifica UTF-8",
@@ -57,7 +59,8 @@
     "removeDuplicates": "Questa operazione rimuoverà tutti i record importati riconosciuti come duplicati",
     "confirmRevert": "Questa operazione rimuoverà tutti i record importati definitivamente. Sei sicuro?",
     "confirmRemoveDuplicates": "Questo rimuoverà permanentemente tutti i record importati che sono stati riconosciuti come duplicati. Sei sicuro?",
-    "removeImportLog": "Questo rimuoverà il registro di importazione. Tutti i record importati verranno mantenuti. Usalo se sei sicuro che l'importazione va bene."
+    "removeImportLog": "Questo rimuoverà il registro di importazione. Tutti i record importati verranno mantenuti. Usalo se sei sicuro che l'importazione va bene.",
+    "confirmRemoveImportLog": "Cosi' facendo rimuoverai il log di importazione. Tutti i record importati rimarranno a sistema. Non sarai in grado di ripristinare i risultati di importazione. Sei sicuro?"
   },
   "fields": {
     "entityType": "Tipo di entità",
@@ -77,5 +80,9 @@
       "l f": "Cognome",
       "l, f": "Cognome, Nome"
     }
+  },
+  "strings": {
+    "commandToRun": "Comando da eseguire (da CLI)",
+    "saveAsDefault": "Salva come predefinito"
   }
 }

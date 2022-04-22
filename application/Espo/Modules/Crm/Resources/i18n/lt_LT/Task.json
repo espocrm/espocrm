@@ -24,6 +24,7 @@
   "options": {
     "status": {
       "Not Started": "Nepradėta",
+      "Started": "Pradėta",
       "Completed": "Užbaigta",
       "Canceled": "Atšaukta",
       "Deferred": "Atidėta"
@@ -41,8 +42,8 @@
     "overdue": "pradelstas"
   },
   "presetFilters": {
-    "actual": "Esamas",
-    "completed": "Užbaigta",
+    "actual": "Esamos",
+    "completed": "Užbaigtos",
     "todays": "Šiandienos",
     "overdue": "Vėluoja",
     "deferred": "Atidėta"

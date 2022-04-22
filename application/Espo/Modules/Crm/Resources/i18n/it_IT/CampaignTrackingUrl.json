@@ -1,6 +1,6 @@
 {
   "fields": {
-    "urlToUse": "Codice da inserire al posto dell' URL",
+    "urlToUse": "Codice da inserire al posto dell'URL",
     "campaign": "Campagna",
     "action": "Azione",
     "message": "Messaggio"
@@ -13,7 +13,11 @@
   },
   "options": {
     "action": {
+      "Redirect": "Reindirizza",
       "Show Message": "Vedi messaggio"
     }
+  },
+  "tooltips": {
+    "url": "Il destinatario sara' reindirizzato a questa posizione dopo aver seguito il link."
   }
 }

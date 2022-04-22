@@ -7,7 +7,8 @@
     "targetType": "Тип цілі",
     "authToken": "Токен аутентифікації",
     "ipAddress": "IP адреса",
-    "authLogRecord": "Запис Логу Аутентифікації"
+    "authLogRecord": "Запис Логу Аутентифікації",
+    "userType": "Тип користувача"
   },
   "links": {
     "authToken": "Токен аутентифікації",

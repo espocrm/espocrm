@@ -5,8 +5,9 @@
     "dateSent": "Data invio",
     "from": "Da",
     "to": "A",
+    "bcc": "CCN",
     "replyTo": "Rispondi a",
-    "replyToString": "Rispondi da (String)",
+    "replyToString": "Rispondi a (Stringa)",
     "isHtml": "È Html",
     "body": "Corpo",
     "subject": "Oggetto",
@@ -45,7 +46,7 @@
     "bccEmailAddresses": "CCN Email Destinatario",
     "replyToEmailAddresses": "Rispondi-a indirizzo email",
     "fromEmailAddress": "Dall'indirizzo (collegamento)",
-    "replyToName": "Nome di risposta",
+    "replyToName": "Rispondi a Nome",
     "replyToAddress": "Indirizzo di risposta"
   },
   "links": {
@@ -75,17 +76,17 @@
   "labels": {
     "Create Email": "Archivio email",
     "Archive Email": "Archivio email",
-    "Compose": "Comporre",
+    "Compose": "Componi",
     "Reply": "Rispondi",
     "Reply to All": "Rispondi a tutti",
-    "Forward": "Inoltrare",
+    "Forward": "Inoltra",
     "Original message": "Messaggio originale",
     "Forwarded message": "Messaggio inoltrato",
     "Email Accounts": "Accounts email personali",
     "Inbound Emails": "Gruppo di accounts email",
     "Email Templates": "Modelli email",
     "Send Test Email": "Invia mail di prova",
-    "Send": "Invio",
+    "Send": "Invia",
     "Email Address": "Indirizzo email",
     "Mark Read": "Contrassegna come letto",
     "Sending...": "Invio...",
@@ -100,7 +101,8 @@
     "Filters": "Filtri",
     "Folders": "Cartelle",
     "View Users": "Visualizza utenti",
-    "No Subject": "Nessun Oggetto"
+    "No Subject": "Nessun Oggetto",
+    "Insert Field": "Inserisci Campo"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",
@@ -108,7 +110,9 @@
     "savedAsDraft": "Salvato come bozza.",
     "confirmInsertTemplate": "Il corpo dell'email andrà perso. Sei sicuro di voler inserire il modello?",
     "noSmtpSetup": "SMTP non configurato: {link}",
-    "sendConfirm": "Invia email?"
+    "sendConfirm": "Invia email?",
+    "removeSelectedRecordsConfirmation": "Sei sicuro di voler rimuovere le mail selezionate?\n\nSaranno rimosse anche per gli altri utenti.",
+    "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSara' rimossa anche per gli altri utenti."
   },
   "presetFilters": {
     "sent": "Inviato",
@@ -126,5 +130,8 @@
     "moveToTrash": "Sposta nel Cestino",
     "moveToFolder": "Sposta nella Cartella",
     "retrieveFromTrash": "Recupera dal cestino"
+  },
+  "strings": {
+    "sendingFailed": "Invio email fallito"
   }
 }

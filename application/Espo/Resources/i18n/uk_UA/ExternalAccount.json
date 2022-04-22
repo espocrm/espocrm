@@ -1,6 +1,8 @@
 {
   "labels": {
     "Connect": "Під'єднати",
-    "Connected": "Під'єднаний"
+    "Connected": "Під'єднаний",
+    "Disconnect": "Від'єднати",
+    "Disconnected": "Від'єднаний"
   }
 }

@@ -2,7 +2,8 @@
   "labels": {
     "Fields": "Campi",
     "Relationships": "Relazioni",
-    "Schedule": "Programma"
+    "Schedule": "Programma",
+    "Layouts": "Layout"
   },
   "fields": {
     "name": "Nome",
@@ -14,9 +15,9 @@
     "entityForeign": "Entità esterna",
     "linkForeign": "Collegamento Esterno",
     "labelForeign": "Label  esterna",
-    "sortBy": "Impostazione predefinita ( campo)",
-    "sortDirection": "Impostazione predefinita ( indirizzo)",
-    "relationName": "Tab Secono Nome",
+    "sortBy": "Impostazione predefinita (campo)",
+    "sortDirection": "Impostazione predefinita (indirizzo)",
+    "relationName": "Tab Secondo Nome",
     "linkMultipleField": "Collegamento Multiplo ai Campi",
     "linkMultipleFieldForeign": "Collegamento Esterno Link Multiplo ai Campi",
     "disabled": "Disabilitato",
@@ -57,8 +58,9 @@
   },
   "messages": {
     "entityCreated": "L'Entità è stata creata",
-    "linkAlreadyExists": "Nome del link errato.",
-    "linkConflict": "Nome conflitto : link o campo con lo stesso nome già esistente"
+    "linkAlreadyExists": "Nome del link in conflitto.",
+    "linkConflict": "Conflitto: link o campo con lo stesso nome già esistente",
+    "confirmRemove": "Sei sicuro di voler rimuovere questo tipo di entita' dal sistema?"
   },
   "tooltips": {
     "statusField": "Gli aggiornamenti a questo campo verranno registrati nel flusso attività.",

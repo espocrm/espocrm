@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "Перетворено на",
-    "Create Lead": "Створити Лід",
+    "Create Lead": "Створити лід",
     "Convert": "Конвертувати",
     "convert": "конвертація"
   },
@@ -26,10 +26,11 @@
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
     "industry": "Промисловість",
-    "acceptanceStatus": "Ухвалення статусу",
+    "acceptanceStatus": "Статус підтвердження",
     "opportunityAmountCurrency": "Валюта суми угоди",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
-    "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)"
+    "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)",
+    "convertedAt": "Конвертований в"
   },
   "links": {
     "targetLists": "Цільові списки",

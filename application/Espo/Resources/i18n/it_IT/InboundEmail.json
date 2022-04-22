@@ -13,7 +13,7 @@
     "replyEmailTemplate": "Modello Email di Risposta ",
     "replyFromAddress": "Replica da (indirizzo)",
     "replyToAddress": "Replica a (indirizzo)",
-    "replyFromName": "Replica da (nome)",
+    "replyFromName": "Rispondi da (nome)",
     "targetUserPosition": "Obiettivo posizione utente",
     "fetchSince": "Recupera da",
     "addAllTeamUsers": "Per tutti gli utenti del team",
@@ -27,12 +27,13 @@
     "smtpSecurity": "Sicurezza SMTP",
     "smtpUsername": "Username SMTP",
     "smtpPassword": "Password SMTP",
-    "fromName": "DA Nome",
+    "fromName": "Da Nome",
     "smtpIsShared": "SMTP è condiviso",
     "smtpIsForMassEmail": "SMTP è per le mail di massa",
     "useImap": "Scarica email",
     "keepFetchedEmailsUnread": "Mantieni le email non lette",
-    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP"
+    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP",
+    "security": "Sicurezza"
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",

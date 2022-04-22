@@ -87,7 +87,8 @@
     "Log Call": "Записати дзвінок",
     "Archive Email": "Записати емейл",
     "Create Task": "Створити завдання",
-    "Tasks": "Завдання"
+    "Tasks": "Завдання",
+    "Scheduler": "Планувальник"
   },
   "fields": {
     "billingAddressCity": "Місто",

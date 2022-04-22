@@ -36,13 +36,14 @@
   },
   "labels": {
     "Create Task": "Crea Compito",
-    "Complete": "Completo"
+    "Complete": "Completo",
+    "overdue": "in ritardo"
   },
   "presetFilters": {
     "actual": "Attuale",
     "completed": "Completato",
     "todays": "Di oggi",
     "overdue": "In ritardo",
-    "deferred": "Prorogare"
+    "deferred": "Prorogato"
   }
 }

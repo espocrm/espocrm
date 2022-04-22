@@ -3,7 +3,7 @@
     "parent": "Genitore",
     "dateStart": "Data inizio",
     "dateEnd": "Data termine",
-    "duration": "Dirata",
+    "duration": "Durata",
     "status": "Stato",
     "reminders": "Promemoria",
     "dateStartDate": "Data inizio (tutto il giorno)",
@@ -16,24 +16,24 @@
   "options": {
     "status": {
       "Planned": "Pianificato",
-      "Held": "Trattenuto",
-      "Not Held": "Non trattenuto"
+      "Held": "Effettuata",
+      "Not Held": "Non Effettuata"
     }
   },
   "labels": {
     "Create {entityType}": "Crea {entityTypeTranslated}",
     "Schedule {entityType}": "Pianificazione {entityTypeTranslated}",
     "Log {entityType}": "Registro {entityTypeTranslated}",
-    "Set Held": "Imposta trattenuto",
-    "Set Not Held": "Imposta non trattenuto"
+    "Set Held": "Effettuata",
+    "Set Not Held": "Non Effettuata"
   },
   "massActions": {
-    "setHeld": "Imposta trattenuto",
-    "setNotHeld": "Imposta non trattenuto"
+    "setHeld": "Effettuata",
+    "setNotHeld": "Non Effettuata"
   },
   "presetFilters": {
     "planned": "Pianificato",
-    "held": "Trattenuto",
+    "held": "Effettuata",
     "todays": "Di oggi"
   }
 }

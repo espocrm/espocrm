@@ -25,10 +25,10 @@
     "Back": "Indietro",
     "Next": "Avanti",
     "Go to EspoCRM": "Vai a EspoCRM",
-    "Re-check": "Ricontrollare",
+    "Re-check": "Ricontrolla",
     "Version": "Versione",
     "Test settings": "Test Connessione",
-    "Database Settings Description": "Inserisci i tuoi dati di connessione al database MySQL (nome host , nome utente e password) . È possibile specificare anche la porta del server, esempio: localhost:3306.",
+    "Database Settings Description": "Inserisci i tuoi dati di connessione al database MySQL (nome host, nome utente e password). È possibile specificare anche la porta del server, esempio: localhost:3306.",
     "Configuration Instructions": "Istruzioni di configurazione",
     "phpVersion": "Versione PHP",
     "requiredMysqlVersion": "Versione MySQL",
@@ -89,9 +89,9 @@
     "Enable mod_rewrite in Apache server": "Attivare mod_rewrite in server Apache",
     "checkWritable error": "Seleziona errore scrivibile\n",
     "applySett error": "Applica errore Sett",
-    "buildDatabase error": "Creare un errore nel database",
+    "buildDatabase error": "Errore nel buildDatabase",
     "createUser error": "Generare errore utente",
-    "checkAjaxPermission error": "Controllare l'errore di autorizzazione Ajax",
+    "checkAjaxPermission error": "Errore checkAjaxPermission",
     "Cannot create user": "Non è possibile creare un utente",
     "Permission denied": "Permesso negato",
     "Permission denied to": "Permesso negato",
@@ -114,6 +114,7 @@
     "dbname": "Nome del database",
     "user": "Nome utente",
     "writable": "Scrivibile",
-    "readable": "Leggibile"
+    "readable": "Leggibile",
+    "requiredMariadbVersion": "Versione MariaDB"
   }
 }

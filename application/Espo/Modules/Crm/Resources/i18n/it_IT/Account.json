@@ -34,7 +34,7 @@
   "options": {
     "type": {
       "Customer": "Cliente",
-      "Investor": "Invetitore",
+      "Investor": "Investitore",
       "Reseller": "Rivenditore"
     },
     "industry": {

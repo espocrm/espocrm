@@ -3,7 +3,7 @@
     "targetLists": "Цільові списки"
   },
   "fields": {
-    "acceptanceStatus": "Ухвалення статусу",
+    "acceptanceStatus": "Статус підтвердження",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
     "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)"
   }

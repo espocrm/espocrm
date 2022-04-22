@@ -44,10 +44,10 @@
   },
   "actions": {
     "read": "Visualizzazione",
-    "edit": "Modificare",
-    "delete": "Cancellare",
+    "edit": "Modifica",
+    "delete": "Elimina",
     "stream": "Flusso attività",
-    "create": "Creare"
+    "create": "Crea"
   },
   "messages": {
     "changesAfterClearCache": "Verranno applicate tutte le modifiche del controllo di accesso dopo la cancellazione della cache."

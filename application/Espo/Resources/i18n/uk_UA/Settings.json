@@ -42,7 +42,7 @@
     "exportDisabled": "Вимкнути експортування (доступно лише адміністру)",
     "b2cMode": "Режим В2С",
     "avatarsDisabled": "Вимкнути аватари",
-    "displayListViewRecordCount": "Дисплей Загальна кількість (у вигляді списку)",
+    "displayListViewRecordCount": "Відображати загальну кількість (у вигляді списку)",
     "theme": "Тема",
     "userThemesDisabled": "Відключення теми користувача",
     "emailMessageMaxSize": "Емайл Максимальний розмір (Мб)",
@@ -80,6 +80,7 @@
     "activitiesEntityList": "Список сутностей Діяльності",
     "historyEntityList": "Список сутностей Історії",
     "currencyFormat": "Формат валюти",
+    "currencyDecimalPlaces": "Знаки після десяткової коми",
     "followCreatedEntities": "Підписатися на створені сутності",
     "aclAllowDeleteCreated": "Дозволити видаляти створені записи",
     "adminNotifications": "Системні сповіщення на адміністративній панелі",
@@ -99,32 +100,36 @@
     "ldapPortalUserLdapAuth": "Використовувати LDAP аутентифікацію для корисувачів порталу",
     "ldapPortalUserPortals": "Портал за замовчуванням для користувача порталу",
     "ldapPortalUserRoles": "Роль за замовчуванням для користувача порталу",
+    "addressCountryList": "Список автозаповнення країн",
     "fiscalYearShift": "Початок фіскального року",
     "jobRunInParallel": "Завдання виконуються паралельно",
     "jobMaxPortion": "Максимальна кількість завдань",
+    "jobPoolConcurrencyNumber": "Кількість одночасно запущених процесів планувальника",
     "daemonInterval": "Інтервал між процесами",
     "daemonMaxProcessNumber": "Максимальна кількість процесів",
     "daemonProcessTimeout": "Час виконання процесу",
+    "addressCityList": "Список автозаповнення міст",
+    "addressStateList": "Список автозаповнення регіонів",
     "cronDisabled": "Вимкнути Cron",
     "maintenanceMode": "Режим обслуговування",
     "useWebSocket": "Використовувати WebSocket",
-    "emailNotificationsDelay": "Затримка емейл сповіщення(в секундах)",
-    "massEmailOpenTracking": "Відстеження відкритих емейлів"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Неділя",
-      "1": "Понеділок"
-    },
-    "currencyFormat": {
-      "1": "10 UAH",
-      "2": "₴10"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Пости",
-      "Status": "Оновлення статусу",
-      "EmailReceived": "Отримані електронні листи"
-    }
+    "emailNotificationsDelay": "Затримка емейл сповіщення (в секундах)",
+    "massEmailOpenTracking": "Відстеження відкритих емейлів",
+    "passwordRecoveryDisabled": "Вимкнути відновлення пароля",
+    "passwordRecoveryForAdminDisabled": "Вимкнути відновлення пароля для адміністраторів",
+    "passwordGenerateLength": "Довжина згенерованих паролів",
+    "passwordStrengthLength": "Мінімальна довжина пароля",
+    "passwordStrengthLetterCount": "Кількість літер, необхідних у паролі",
+    "passwordStrengthNumberCount": "Кількість цифр, необхідних у паролі",
+    "passwordStrengthBothCases": "Пароль повинен містити літери верхнього та нижнього регістру",
+    "auth2FA": "Увімкнути двофакторну автентифікацію",
+    "auth2FAMethodList": "Доступні методи 2FA",
+    "personNameFormat": "Формат імені персони",
+    "newNotificationCountInTitle": "Показати новий номер сповіщення в заголовку сторінки",
+    "massEmailVerp": "Використовувати VERP",
+    "emailAddressLookupEntityTypeList": "Області пошуку електронної адреси",
+    "passwordRecoveryForInternalUsersDisabled": "Вимкнути відновлення пароля для внутрішніх користувачів",
+    "auth2FAForced": "Змусити звичайних користувачів налаштувати двофакторну аутентифікацію"
   },
   "tooltips": {
     "recordsPerPage": "Кількість записів, що початково відображаються у списках.",
@@ -155,7 +160,7 @@
     "ldapUserTeams": "Команди для створеного користувача. Детальніше в профілі користувача.",
     "ldapUserDefaultTeam": "Команди для створеного користувача за замовчуванням. Детальніше про це читайте профіль користувача.",
     "b2cMode": "За замовчуванням EspoCRM адаптований для B2B. Ви можете переключити його на B2C.",
-    "currencyDecimalPlaces": "Кількість знаків після десяткової коми. ",
+    "currencyDecimalPlaces": "Кількість знаків після десяткової коми.",
     "aclStrictMode": "Ввімкнено: доступ до функцій програми буде заборонено, якщо він не вказаний у ролях.\n\nВимкнено: Доступ до функцій програми дозволений, якщо він не вказаний у ролях.",
     "outboundEmailIsShared": "Дозволити користувачам надсилати повідомлення через цей SMTP.",
     "aclAllowDeleteCreated": "Користувачі зможуть видаляти створені ними записи, навіть якщо вони не мають доступу до видалення.",
@@ -167,20 +172,40 @@
     "ldapPortalUserLdapAuth": "Дозволити користувачам порталу використовувати аутентифікацію LDAP замість аутентифікації Espo",
     "ldapPortalUserPortals": "Портал за замовчуванням для створеного користувача порталу",
     "ldapPortalUserRoles": "Роль за замовчуванням для створеного користувача порталу",
-    "jobRunInParallel": "Завдання будуть виконуватися паралельно",
+    "jobRunInParallel": "Завдання будуть виконуватися паралельно.",
     "jobPoolConcurrencyNumber": "Макс. кількість процесів запускається одночасно.",
     "jobMaxPortion": "Макс. кількість завдань, оброблених за одне виконання.",
     "daemonInterval": "Інтервал між процесами cron в секундах.",
     "daemonMaxProcessNumber": "Макс. кількість процесів cron запускається одночасно.",
     "daemonProcessTimeout": "Макс. час виконання (у секундах), виділений для одного процесу cron.",
     "cronDisabled": "Cron буде вимкнено.",
-    "maintenanceMode": "Лише адміністратори матимуть доступ до системи."
+    "maintenanceMode": "Лише адміністратори матимуть доступ до системи.",
+    "ldapAccountCanonicalForm": "Тип канонічної форми вашого облікового запису. Є 4 варіанти:\n\n- 'Dn' - форма в форматі 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username' - форма 'tester'.\n\n- 'Backslash' - форма 'COMPANY\\tester'.\n\n- 'Principal' - форма 'tester@company.com'.",
+    "massEmailVerp": "Змінне значення шляху повернення конверта (VERP). Для кращої обробки відхилених повідомлень. Переконайтеся, що ваш SMTP-провайдер підтримує це.",
+    "displayListViewRecordCount": "Загальна кількість записів буде відображена в списку.",
+    "currencyList": "Які валюти будуть доступні в системі.",
+    "activitiesEntityList": "Які записи будуть доступні на панелі «Активність».",
+    "historyEntityList": "Які записи будуть доступні на панелі «Історія».",
+    "calendarEntityList": "Які записи будуть доступні в Календарі.",
+    "exportDisabled": "Користувачі не зможуть експортувати записи. Допускається лише адміністратор.",
+    "siteUrl": "URL-адреса цього екземпляра EspoCRM. Його потрібно змінити, якщо ви переходите в інший домен.",
+    "useCache": "Не рекомендується вимикати, якщо тільки для розробки.",
+    "useWebSocket": "WebSocket забезпечує двостороннє інтерактивне спілкування між сервером і браузером. Вимагає налаштування демона WebSocket на вашому сервері. Перегляньте документацію для отримання додаткової інформації.",
+    "passwordRecoveryForInternalUsersDisabled": "Лише користувачі порталу зможуть відновити пароль.",
+    "passwordRecoveryNoExposure": "Неможливо визначити, чи зареєстрована конкретна адреса електронної пошти в системі.",
+    "emailAddressLookupEntityTypeList": "Для автозаповнення електронної адреси.",
+    "emailNotificationsDelay": "Повідомлення можна відредагувати протягом зазначеного періоду часу до надсилання сповіщення.",
+    "outboundEmailFromAddress": "Системна електронна адреса.",
+    "smtpServer": "Якщо порожній, буде використано груповий обліковий запис електронної пошти з відповідною адресою електронної пошти.",
+    "busyRangesEntityList": "Що буде враховано при відображенні діапазонів зайнятості в планувальнику та часовій шкалі."
   },
   "labels": {
     "System": "Система",
     "Locale": "Локаль",
     "SMTP": "Протокол SMTP",
     "Configuration": "Конфігурація",
+    "In-app Notifications": "Сповіщення через додаток",
+    "Email Notifications": "Сповіщення по електронній пошті",
     "Currency Settings": "Налаштування валюти",
     "Currency Rates": "Курси валют",
     "Mass Email": "Масова розсилка електронної пошти",
@@ -188,9 +213,29 @@
     "Connecting": "Під’єднання",
     "Activities": "Активність",
     "Admin Notifications": "Сповіщення адміністратора",
-    "Search": "Пошук"
+    "Search": "Пошук",
+    "Misc": "Різне",
+    "Passwords": "Паролі",
+    "2-Factor Authentication": "Двофакторна автентифікація"
   },
   "messages": {
     "ldapTestConnection": "З'єднання успішно встановлено."
+  },
+  "options": {
+    "currencyFormat": {
+      "1": "10 UAH",
+      "2": "₴10"
+    },
+    "streamEmailNotificationsTypeList": {
+      "Post": "Пости",
+      "Status": "Оновлення статусу",
+      "EmailReceived": "Отримані електронні листи"
+    },
+    "personNameFormat": {
+      "firstLast": "Ім'я Прізвище",
+      "lastFirst": "Прізвище Ім'я",
+      "firstMiddleLast": "Ім'я По батькові Прізвище",
+      "lastFirstMiddle": "Прізвище Ім'я По батькові"
+    }
   }
 }

@@ -15,7 +15,8 @@
     "acceptanceStatus": "Stato accettazione",
     "accountIsInactive": "Account inattivo",
     "acceptanceStatusMeetings": "Stato accettazione (riunioni)",
-    "acceptanceStatusCalls": "Stato accettazione (chiamate)"
+    "acceptanceStatusCalls": "Stato accettazione (chiamate)",
+    "title": "Titolo Account"
   },
   "links": {
     "opportunities": "Opportunita'",

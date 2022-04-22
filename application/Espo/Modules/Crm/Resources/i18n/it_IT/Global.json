@@ -28,8 +28,9 @@
     "MassEmail": "Email massima",
     "EmailQueueItem": "Elemento di coda e-mail",
     "Activities": "Attività",
-    "KnowledgeBaseArticle": "Consocenza di Base degli Aticolo ",
-    "KnowledgeBaseCategory": "Consocenza di Basec della Categoria "
+    "KnowledgeBaseArticle": "Articoli Conoscenza di Base",
+    "KnowledgeBaseCategory": "Categoria Conoscenza di Base",
+    "CampaignLogRecord": "Registro della campagna"
   },
   "scopeNamesPlural": {
     "Account": "Account",
@@ -48,7 +49,8 @@
     "EmailQueueItem": "Elementi della coda e-mail",
     "Activities": "Attività",
     "KnowledgeBaseArticle": "Conoscenza di Base",
-    "KnowledgeBaseCategory": "Conoscenza di Base Categorie"
+    "KnowledgeBaseCategory": "Conoscenza di Base Categorie",
+    "CampaignLogRecord": "Registro delle campagne"
   },
   "dashlets": {
     "Leads": "I miei Lead",
@@ -65,7 +67,7 @@
     "Activities": "Le mie attività"
   },
   "labels": {
-    "Create InboundEmail": "Creare Email in entrata",
+    "Create InboundEmail": "Crea Email in entrata",
     "Activities": "Attività",
     "History": "Storico",
     "Attendees": "Partecipanti",
@@ -76,7 +78,8 @@
     "Log Call": "Registro chiamata",
     "Archive Email": "Archivio Email",
     "Create Task": "Crea Compito",
-    "Tasks": "Compiti"
+    "Tasks": "Compiti",
+    "Scheduler": "Pianificatore"
   },
   "fields": {
     "billingAddressCity": "Citta'",

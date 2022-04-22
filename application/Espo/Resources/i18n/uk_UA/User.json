@@ -15,7 +15,7 @@
     "currentPassword": "Поточний пароль",
     "passwordConfirm": "Підтвердити пароль",
     "newPassword": "Новий пароль",
-    "newPasswordConfirm": "Підтвердити Новий Пароль",
+    "newPasswordConfirm": "Підтвердити новий пароль",
     "avatar": "Аватар",
     "isActive": "Активний",
     "isPortalUser": "Користувач порталу",
@@ -33,7 +33,13 @@
     "type": "Тип",
     "apiKey": "API ключ",
     "secretKey": "Секретний ключ",
-    "authMethod": "Метод аутентифікації"
+    "authMethod": "Метод аутентифікації",
+    "yourPassword": "Ваш поточний пароль",
+    "dashboardTemplate": "Шаблон панелі дашлетів",
+    "auth2FAEnable": "Увімкнути двофакторну автентифікацію",
+    "auth2FAMethod": "2FA метод",
+    "auth2FATotpSecret": "2FA TOTP Секрет",
+    "auth2FA": "Двофакторна аутентифікація"
   },
   "links": {
     "teams": "Команди",
@@ -45,7 +51,9 @@
     "accounts": "Контрагенти",
     "account": "Контрагент (основний)",
     "tasks": "Завдання",
-    "defaultTeam": "Команда за замовчуванням"
+    "defaultTeam": "Команда за замовчуванням",
+    "dashboardTemplate": "Шаблон панелі дашлетів",
+    "userData": "Дані користувача"
   },
   "labels": {
     "Create User": "Створити користувача",
@@ -62,7 +70,14 @@
     "Portal": "Портали",
     "Create Portal User": "Створити портал користувача",
     "Proceed w/o Contact": "Продовжити без контакту",
-    "Generate New API Key": "Згенерувати новий API ключ"
+    "Generate New API Key": "Згенерувати новий API ключ",
+    "Generate New Password": "Згенерувати новий пароль",
+    "Code": "Код",
+    "Back to login form": "Повернутися до форми входу",
+    "Requirements": "Вимоги",
+    "Security": "Безпека",
+    "Reset 2FA": "Скинути 2FA",
+    "Secret": "Секрет"
   },
   "tooltips": {
     "defaultTeam": "Всі записи, створені цим користувачем, відноситимуться до цієї команди за замовчуванням.",
@@ -85,14 +100,29 @@
     "uniqueLinkHasBeenSent": "Унікальне посилання була відправлена на вказану адресу електронної пошти.",
     "passwordChangedByRequest": "Пароль було змінено.",
     "userNameExists": "Ім'я користувача вже існує",
-    "setupSmtpBefore": "Потрібно налаштувати [SMTP] ({url}), щоб система могла надсилати пароль електронною поштою."
+    "setupSmtpBefore": "Потрібно налаштувати [SMTP]({url}), щоб система могла надсилати пароль електронною поштою.",
+    "passwordStrengthLength": "Повинен бути довжиною не менше {length} символів.",
+    "passwordStrengthLetterCount": "Повинен містити не менше {count} літер.",
+    "passwordStrengthNumberCount": "Повинен містити не менше {count} цифр.",
+    "passwordStrengthBothCases": "Повинен містити літери верхнього та нижнього регістру.",
+    "wrongCode": "Хибний код",
+    "codeIsRequired": "Потрібен код",
+    "enterTotpCode": "Введіть код із додатка-автентифікатора.",
+    "verifyTotpCode": "Проскануйте QR-код за допомогою вашого мобільного додатка-аутентифікатора. Якщо у вас є проблеми зі скануванням, ви можете ввести секрет вручну. Після цього ви побачите 6-значний код у вашому додатку. Введіть цей код в поле нижче.",
+    "generateAndSendNewPassword": "Новий пароль буде згенерований та надісланий на електронну адресу користувача.",
+    "security2FaResetConfimation": "Ви впевнені, що хочете скинути поточні налаштування 2FA?",
+    "ldapUserInEspoNotFound": "Користувача не знайдено в EspoCRM. Зверніться до свого адміністратора, щоб створити користувача.",
+    "passwordRecoverySentIfMatched": "Припустимо, що введені дані відповідають будь-якому обліковому запису користувача.",
+    "auth2FARequiredHeader": "Потрібна двофакторна аутентифікація",
+    "auth2FARequired": "Вам потрібно налаштувати двофакторну аутентифікацію. Використовуйте програму аутентифікації на своєму мобільному телефоні (наприклад, Google Authenticator)."
   },
   "boolFilters": {
     "onlyMyTeam": "Тільки моя команда"
   },
   "presetFilters": {
     "active": "Актив",
-    "activePortal": "Портал активний"
+    "activePortal": "Портал активний",
+    "activeApi": "API Активний"
   },
   "options": {
     "gender": {
@@ -105,6 +135,7 @@
       "regular": "Звичайний",
       "admin": "Адміністратор",
       "portal": "Портал",
+      "system": "Системний",
       "super-admin": "Супер-адміністратор"
     },
     "authMethod": {

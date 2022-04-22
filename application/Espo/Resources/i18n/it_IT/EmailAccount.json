@@ -7,7 +7,7 @@
     "fetchSince": "Recupera da",
     "emailAddress": "Indirizzo email",
     "sentFolder": "Cartella Inviate",
-    "storeSentEmails": "Emailinviate",
+    "storeSentEmails": "Conserva Email Inviate",
     "keepFetchedEmailsUnread": "Mantieni le email non lette",
     "emailFolder": "Sposta nella Cartella",
     "useSmtp": "Usa SMTP",
@@ -18,7 +18,8 @@
     "smtpUsername": "Nome utente SMTP",
     "smtpPassword": "Password SMTP",
     "useImap": "Scarica email",
-    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP"
+    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP",
+    "security": "Sicurezza"
   },
   "links": {
     "filters": "Filtri"

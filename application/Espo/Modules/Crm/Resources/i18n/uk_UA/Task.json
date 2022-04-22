@@ -35,7 +35,8 @@
   },
   "labels": {
     "Create Task": "Створити завдання",
-    "Complete": "Завершити"
+    "Complete": "Завершити",
+    "overdue": "прострочений"
   },
   "presetFilters": {
     "actual": "Актуальні",

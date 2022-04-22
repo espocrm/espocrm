@@ -112,7 +112,7 @@
     "Sending...": "Siunčiama...",
     "Merging...": "Sujungiama...",
     "Merged": "Sujungta",
-    "Removed": "Pašalimta",
+    "Removed": "Ištrinta",
     "Posted": "Paskelbta",
     "Linked": "Susieta",
     "Unlinked": "Atsieta",
@@ -121,7 +121,7 @@
     "Not found": "Nerasta",
     "Access": "Prieiga",
     "Are you sure?": "Ar esate įsitikinę?",
-    "Record has been removed": "Įrašas buvo pašalintas",
+    "Record has been removed": "Įrašas buvo Ištrintas",
     "Wrong username/password": "Neteisingas prisijungimo vardas/slaptažodis",
     "Post cannot be empty": "Pranešimas negali būti tuščias",
     "Removing...": "Šalinama...",
@@ -152,7 +152,7 @@
     "Open": "Atidaryti",
     "About": "Apie",
     "Refresh": "Atnaujinti",
-    "Remove": "Pašalinti",
+    "Remove": "Ištrinti",
     "Options": "Pasirinkimai",
     "Username": "Vartotojo vardas",
     "Password": "Slaptažodis",
@@ -270,15 +270,15 @@
     "confirmation": "Ar esate įsitikinę?",
     "unlinkAllConfirmation": "Ar tikrai norite atsieti visus susijusius įrašus?",
     "resetPreferencesConfirmation": "Ar tikrai norite atstatyti parametrus pagal numatytuosius nustatymus?",
-    "removeRecordConfirmation": "Ar tikrai norite pašalinti įrašą?",
+    "removeRecordConfirmation": "Ar tikrai norite ištrinti įrašą?",
     "unlinkRecordConfirmation": "Ar tikrai norite atsieti susijusį įrašą?",
-    "removeSelectedRecordsConfirmation": "Ar tikrai norite pašalinti pasirinktus įrašus?",
+    "removeSelectedRecordsConfirmation": "Ar tikrai norite ištrinti pasirinktus įrašus?",
     "massUpdateResult": "{count} įrašai yra atnaujinti",
     "massUpdateResultSingle": "{count} įrašas yra atnaujintas",
     "noRecordsUpdated": "Jokių įrašų nebuvo atnaujinta",
-    "massRemoveResult": "{count} įrašai buvo pašalinti",
-    "massRemoveResultSingle": "{count} įrašas buvo pašalintas",
-    "noRecordsRemoved": "Jokie įrašai nebuvo pašalinti",
+    "massRemoveResult": "{count} įrašai buvo ištrinti",
+    "massRemoveResultSingle": "{count} įrašas buvo ištrintas",
+    "noRecordsRemoved": "Jokie įrašai nebuvo ištrinti",
     "clickToRefresh": "Spustelėkite, kad atnaujintumėte",
     "writeYourCommentHere": "Parašykite savo komentarą čia",
     "writeMessageToUser": "Parašykite žinute vsartotojui {user}",
@@ -330,7 +330,7 @@
     "all": "Visi"
   },
   "massActions": {
-    "remove": "Pašalinti",
+    "remove": "Ištrinti",
     "merge": "Sujungti",
     "massUpdate": "Masinis atnaujinimas",
     "export": "Eksportuoti",
@@ -396,7 +396,7 @@
   "notificationMessages": {
     "assign": "\n{entityType} {entity} buvo priskirta tau",
     "emailReceived": "Laiškas gautas nuo {from}",
-    "entityRemoved": "{user} pašalino {entityType} {entity}"
+    "entityRemoved": "{user} ištrynė {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} paskelbė {entityType} {entity}",
@@ -624,7 +624,7 @@
         "dragImageHere": "Vilkti paveiksliuką čia",
         "selectFromFiles": "Pasirinkti iš turimų failų",
         "url": "Paveiksliuko URL",
-        "remove": "Pašalinti paveiksliuką"
+        "remove": "Ištrinti paveiksliuką"
       },
       "link": {
         "link": "Nuoroda",

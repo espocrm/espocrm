@@ -17,7 +17,7 @@
     "fromAddress": "З адреси",
     "emailAddress": "Поштова скринька",
     "deliveryDate": "Дата доставки",
-    "account": "Контраґент",
+    "account": "Контрагент",
     "users": "Користувачі",
     "replied": "Відповіли",
     "replies": "Відповіді",
@@ -45,7 +45,11 @@
     "isSystem": "Системний",
     "toEmailAddresses": "Електронні адреси отримувачів",
     "bccEmailAddresses": "BCC Електронні адреси",
-    "replyToEmailAddresses": "Відповідь на адреси"
+    "replyToEmailAddresses": "Відповідь на адреси",
+    "personStringData": "Дані особи у форматі string",
+    "fromEmailAddress": "З адреси (посилання)",
+    "replyToName": "Відповідь до назви",
+    "replyToAddress": "Відповідь на адресу"
   },
   "links": {
     "replied": "Відповіли",
@@ -66,7 +70,7 @@
       "Draft": "Чернетка",
       "Sending": "Надсилається",
       "Sent": "Надіслано",
-      "Archived": "Архівовано",
+      "Archived": "В архіві",
       "Received": "Отримано",
       "Failed": "Невдало"
     }
@@ -76,46 +80,60 @@
     "Archive Email": "Архівувати листа",
     "Compose": "Написати",
     "Reply": "Відповісти",
-    "Reply to All": "Відповісти всим",
+    "Reply to All": "Відповісти всім",
     "Forward": "Переслати",
-    "Original message": "Ориґінал повідомлення",
+    "Original message": "Оригінал повідомлення",
     "Forwarded message": "Переслане повідомлення",
-    "Email Accounts": "Акаунти емейлів",
-    "Inbound Emails": "Групові поштові акаунти",
-    "Email Templates": "Поштові шаблони",
+    "Email Accounts": "Особисті поштові скриньки",
+    "Inbound Emails": "Групові поштові скриньки",
+    "Email Templates": "Шаблони листів",
     "Send Test Email": "Відправити тестове повідомлення",
     "Send": "Відправити",
     "Email Address": "Поштова скринька",
-    "Mark Read": "Прочитане",
-    "Sending...": "Шле...",
+    "Mark Read": "Позначити як прочитане",
+    "Sending...": "Відправлення...",
     "Save Draft": "Зберегти чернетку",
+    "Mark all as read": "Позначити все як прочитане",
+    "Show Plain Text": "Показати звичайний текст",
     "Mark as Important": "Відмітити важливим",
     "Unmark Importance": "Відмітити не важливим",
-    "Move to Trash": "Видалити в сміття",
-    "Retrieve from Trash": "Вилучити з сміття",
+    "Move to Trash": "Перемістити в кошик",
+    "Retrieve from Trash": "Вилучити з кошика",
     "Move to Folder": "Перейти до папки",
     "Filters": "Фільтри",
-    "Folders": "Папка"
+    "Folders": "Папка",
+    "View Users": "Переглянути користувачів",
+    "No Subject": "Без теми",
+    "Insert Field": "Вставити поле"
   },
   "messages": {
-    "testEmailSent": "Тестового листа було відправлено",
+    "testEmailSent": "Тестовий лист надіслано",
     "emailSent": "Листа було відправлено",
     "savedAsDraft": "Збережено як чернетку",
-    "confirmInsertTemplate": "Тіло електронного листа буде втрачено. Ви впевнені, що хочете вставити шаблон?"
+    "confirmInsertTemplate": "Тіло електронного листа буде втрачено. Ви впевнені, що хочете вставити шаблон?",
+    "noSmtpSetup": "SMTP не налаштовано: {link}",
+    "sendConfirm": "Надіслати емейл?",
+    "removeSelectedRecordsConfirmation": "Ви впевнені, що хочете видалити вибрані електронні листи?\n\nВони також будуть видалені для інших користувачів.",
+    "removeRecordConfirmation": "Ви впевнені, що хочете видалити електронний лист?\n\nВін також буде видалений для інших користувачів."
   },
   "presetFilters": {
     "sent": "Відправлено",
     "archived": "В архіві",
-    "trash": "Сміття",
+    "inbox": "Вхідні",
+    "drafts": "Чернетки",
+    "trash": "Кошик",
     "important": "Важливо"
   },
   "massActions": {
     "markAsRead": "Позначити прочитаним",
-    "markAsNotRead": "Позначити як прочитане",
+    "markAsNotRead": "Позначити непрочитаним",
     "markAsImportant": "Позначити як важливе",
     "markAsNotImportant": "Зняти відмітку про важливість",
-    "moveToTrash": "Вилучити в сміття",
+    "moveToTrash": "Перемістити в кошик",
     "moveToFolder": "Перемістити в папку",
     "retrieveFromTrash": "Вилучити зі сміття"
+  },
+  "strings": {
+    "sendingFailed": "Не вдалося надіслати електронний лист"
   }
 }

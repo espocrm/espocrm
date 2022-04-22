@@ -8,7 +8,7 @@
   },
   "labels": {
     "Uninstall": "Видалити",
-    "Install": "Установити"
+    "Install": "Встановити"
   },
   "messages": {
     "uninstalled": "Розширення {name} видалено"

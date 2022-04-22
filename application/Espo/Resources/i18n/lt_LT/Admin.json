@@ -304,7 +304,6 @@
   "keywords": {
     "settings": "sistema",
     "userInterface": "ui, tema, skirtukai, logotipas, prietaisų skydelis",
-    "authentication": "slaptažodis",
     "scheduledJob": "cron, darbo vietos",
     "integrations": "\"Google\", žemėlapiai, \"Google\" žemėlapiai",
     "authLog": "žurnalas, istorija",

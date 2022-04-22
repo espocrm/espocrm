@@ -88,7 +88,11 @@
     "listSmallPortal": "Lista (Piccolo, Portale)",
     "listPortal": "Lista (Portale)",
     "relationshipsPortal": "Pannello relazioni (Portale)",
-    "defaultSidePanel": "Campi del pannello laterale"
+    "defaultSidePanel": "Campi del pannello laterale",
+    "bottomPanelsDetail": "Pannelli inferiori",
+    "bottomPanelsEdit": "Pannelli inferiori (Modifica)",
+    "bottomPanelsDetailSmall": "Pannelli inferiori (Dettagli Piccolo)",
+    "bottomPanelsEditSmall": "Pannelli inferiori (Modifica Piccolo)"
   },
   "fieldTypes": {
     "address": "Indirizzo",
@@ -128,7 +132,7 @@
     "translation": "Traduzione",
     "previewSize": "Anteprima dimensione",
     "defaultType": "Tipo di Default",
-    "seeMoreDisabled": "Disabilitare taglio testo",
+    "seeMoreDisabled": "Disabilita taglio testo",
     "entityList": "Elenco entità",
     "isSorted": "Ordinato (alfabeticamente)",
     "audited": "Sottoposto a Revisione Contabile",
@@ -163,11 +167,13 @@
     "maxCount": "Numero massimo di articoli",
     "displayRawText": "Visualizza testo non elaborato (nessun markdown)",
     "notActualOptions": "Opzioni non effettive",
-    "accept": "Accettare",
+    "accept": "Accetta",
     "displayAsList": "Visualizza come elenco",
     "viewMap": "Vedi Pulsante Mappa",
     "codeType": "Tipo Codice",
-    "lastChar": "Ultimo Carattere"
+    "lastChar": "Ultimo Carattere",
+    "listPreviewSize": "Dimensione Anteprima in Vista Elenco",
+    "onlyDefaultCurrency": "Solo valuta predefinita"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -182,12 +188,13 @@
     "uninstallConfirmation": "Sei sicuro di voler disinstallare l'estensione?",
     "cronIsNotConfigured": "I lavori pianificati non sono in esecuzione. Pertanto, le e-mail in entrata, le notifiche e i promemoria non funzionano. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) per impostare il cron job.",
     "newExtensionVersionIsAvailable": "Nuova {extensionName} versione {latestVersion} è disponibile.\n",
-    "upgradeVersion": "EspoCRM verrà aggiornato alla versione ** {versione} **. Si prega di pazientare poiché ciò potrebbe richiedere del tempo.",
-    "upgradeDone": "EspoCRM è stato aggiornato alla versione ** {versione} **.",
+    "upgradeVersion": "EspoCRM verrà aggiornato alla versione **{version}**. Si prega di pazientare poiché ciò potrebbe richiedere del tempo.",
+    "upgradeDone": "EspoCRM è stato aggiornato alla versione **{version}**.",
     "downloadUpgradePackage": "Scarica i pacchetti di aggiornamento [qui]({url}).",
     "upgradeInfo": "Controlla la [documentazione]({url}) su come aggiornare l'istanza di EspoCRM.",
     "upgradeRecommendation": "Questo modo di aggiornamento non è raccomandato. È meglio eseguire l'aggiornamento dalla CLI.",
-    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza."
+    "newVersionIsAvailable": "È disponibile la nuova versione di EspoCRM {latestVersion}. Seguire le [istruzioni](https://www.espocrm.com/documentation/administration/upgrading/) per aggiornare l'istanza.",
+    "formulaFunctions": "Più funzioni possono essere trovate nella [documentazione]({documentationUrl})."
   },
   "descriptions": {
     "settings": "Impostazioni di sistema dell'applicazione.",
@@ -209,7 +216,7 @@
     "userInterface": "Configura Interfaccia.",
     "authTokens": "Sessioni autorizzate attive. indirizzo IP e data di ultimo accesso .",
     "authentication": "Impostazioni di autenticazione.",
-    "currency": "Impostazioni di valuta e tassi .",
+    "currency": "Impostazioni di valuta e tassi.",
     "extensions": "Installa o disinstalla le estensioni.",
     "integrations": "Integrazione con servizi di terze parti.",
     "notifications": "Impostazioni delle notifiche via email ed in-app.",
@@ -248,11 +255,20 @@
     "accessInfo": "Informazioni di accesso",
     "accessInfoPortal": "Accedi alle informazioni per i portali",
     "assignment": "Assegnato",
-    "mention": "Citare\n",
+    "mention": "Cita",
     "notePost": "Nota su post",
     "notePostNoParent": "Nota su post (nessun genitore)",
     "noteStatus": "Nota sull'aggiornamento dello stato",
     "passwordChangeLink": "Collegamento per la modifica della password",
     "noteEmailReceived": "Nota sull'e-mail ricevuta"
+  },
+  "strings": {
+    "rebuildRequired": "E' richiesta la ricostruzione"
+  },
+  "keywords": {
+    "userInterface": "ui,tema,schede,logo,dashboard",
+    "authLog": "storico log",
+    "authTokens": "storico log di accesso",
+    "templateManager": "notifiche"
   }
 }

@@ -15,9 +15,9 @@
   },
   "options": {
     "status": {
-      "Planned": "Pianificato",
-      "Held": "Tenere",
-      "Not Held": "Lasciare"
+      "Planned": "Pianificata",
+      "Held": "Effettuata",
+      "Not Held": "Non Effettuata"
     },
     "direction": {
       "Outbound": "In uscita",
@@ -31,17 +31,18 @@
     }
   },
   "massActions": {
-    "setHeld": "Trattenuto",
-    "setNotHeld": "Non trattenuto"
+    "setHeld": "Effettuata",
+    "setNotHeld": "Non Effettuata"
   },
   "labels": {
     "Create Call": "Crea chiamata",
-    "Set Held": "Trattenuto",
-    "Set Not Held": "Non trattenuto",
-    "Send Invitations": "Inviare inviti"
+    "Set Held": "Effettuata",
+    "Set Not Held": "Non Effettuata",
+    "Send Invitations": "Invia inviti"
   },
   "presetFilters": {
-    "planned": "Pianificato",
+    "planned": "Pianificata",
+    "held": "Effettuata",
     "todays": "Di oggi"
   }
 }

@@ -15,7 +15,8 @@
     "acceptanceStatus": "Статус підтвердження",
     "dateStartDate": "Дата початку (цілий день)",
     "dateEndDate": "Дата завершення (цілий день)",
-    "isAllDay": "Є цілий день"
+    "isAllDay": "Є цілий день",
+    "Acceptance": "Підтвердження"
   },
   "options": {
     "status": {
@@ -49,6 +50,7 @@
     "todays": "Сьогоднішнє"
   },
   "messages": {
-    "nothingHasBeenSent": "Нічого не надіслано"
+    "nothingHasBeenSent": "Нічого не надіслано",
+    "selectAcceptanceStatus": "Встановіть ваш статус підтвердження."
   }
 }

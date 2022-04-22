@@ -1,6 +1,6 @@
 {
   "messages": {
-    "infoMention": "Digita ** @ nome utente ** per menzionare l'utente nel post.",
+    "infoMention": "Digita **@nome utente** per menzionare l'utente nel post.",
     "infoSyntax": "Sintassi di markdown disponibile"
   },
   "syntaxItems": {

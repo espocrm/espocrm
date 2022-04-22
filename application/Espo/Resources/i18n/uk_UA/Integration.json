@@ -12,5 +12,9 @@
   },
   "titles": {
     "GoogleMaps": "Google Карти"
+  },
+  "help": {
+    "Google": "**Отримайте облікові дані OAuth 2.0 Google Developers Console.**\n\nВідвідайте [Google Developers Console](https://console.developers.google.com/project), щоб отримати облікові дані OAuth 2.0, такі як Client ID і Client Secret, відомі як Google, так і EspoCRM.",
+    "GoogleMaps": "Отримайте ключ API [тут](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

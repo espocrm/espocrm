@@ -14,12 +14,14 @@
     "weekStart": "Primo giorno della settimana",
     "defaultCurrency": "Valuta di default",
     "customUrl": "URL personalizzato",
-    "customId": "ID personalizzato"
+    "customId": "ID personalizzato",
+    "layoutSet": "Layout"
   },
   "links": {
     "users": "Utenti",
     "portalRoles": "Ruoli",
-    "notes": "Appunti"
+    "notes": "Appunti",
+    "layoutSet": "Layout"
   },
   "tooltips": {
     "portalRoles": "I Ruoli specificati verranno applicati a tutti gli utenti di questo portale ."

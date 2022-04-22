@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Створити вебхук"
+  },
+  "fields": {
+    "event": "Подія",
+    "isActive": "Активний",
+    "user": "API користувач",
+    "entityType": "Тип сутності",
+    "field": "Поле",
+    "secretKey": "Секретний ключ"
+  },
+  "links": {
+    "user": "Користувач"
+  }
+}

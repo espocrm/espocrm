@@ -42,7 +42,12 @@
     "MySQL Configuration": "Конфігурація бази даних",
     "Permission Requirements": "Дозволи",
     "Success": "Успіх",
-    "Fail": "Невдача"
+    "Fail": "Невдача",
+    "is recommended": "рекомендується",
+    "extension is missing": "розширення відсутнє",
+    "headerTitle": "Установка EspoCRM",
+    "Crontab setup instructions": "Без запуску запланованих завдань вхідні електронні листи, сповіщення та нагадування не працюватимуть. Тут ви можете прочитати {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "інструкції з налаштування"
   },
   "fields": {
     "Choose your language": "Оберіть Вашу мову",
@@ -80,7 +85,7 @@
     "1049": "Невідома база даних",
     "2005": "Невідомий хост сервера MySQL",
     "Some errors occurred!": "Деякі помилки!",
-    "phpVersion": "Ваша версія PHP не підтримує EspoCRM, будь ласка, оновіть принаймні до PHP {minVersion} at least",
+    "phpVersion": "Ваша версія PHP не підтримується EspoCRM, будь ласка, оновіть принаймні до PHP {minVersion}",
     "requiredMysqlVersion": "Ваша версія MySQL не підтримує EspoCRM, будь ласка, оновіть принаймні до MySQL {minVersion}",
     "The PHP extension was not found...": "Помилка PHP: розширення <b>{extName}</b> не знайдено.",
     "All Settings correct": "Всі налаштування правильні.",
@@ -104,23 +109,10 @@
     "option": "Рекомендоване значення {0}",
     "mysqlSettingError": "EspoCRM потребує, щоби MySQL \"{NAME}\" було встановлено на {VALUE}",
     "requiredMariadbVersion": "Ваша версія MariaDB не підтримується EspoCRM, оновіть принаймні до MariaDB {minVersion}",
-    "Ajax failed": "Неочікувана помилка"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Знайти файл httpd.conf файл (зазвичай його можна знайти у теці, званій conf, config або ще якось так)<br>2. Всередині файла httpd.conf розкоментувати рядок LoadModule rewrite_module модулі/через mod_rewrite.so (видалити знак '#' на початку рядка)<br>3. Також пересвідчитися, що рядок ClearModuleList некоментований і переконайтеся, що рядок AddModule mod_rewrite.c не закомментирований.</pre>"
-      },
-      "nginx": {
-        "linux": "<br> Додайте цей код до Вашого файлу конфігурації Nginx <code>{NGINX_PATH}</code> всередині блоку \"server\":<pre>{NGINX}</pre> <br> Для отримання більш детальної інформації, будь ласка, перейдіть <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>Помилка API: API EspoCRM недоступне.</h3><br> Виконуйте лише необхідні кроки. Після кожного кроку перевірте, чи проблема вирішена.",
-      "nginx": "<h3>Помилка API: API EspoCRM недоступне.</h3>",
-      "microsoft-iis": "<h3>Помилка API: EspoCRM API недоступне.</h3><br> Можлива проблема: вимкнено \"URL Rewrite\". Будь ласка, перевірте і включіть модуль \"URL Rewrite\" сервера IIS",
-      "default": "<h3>Помилка API: EspoCRM API недоступний.</h3><br> Можлива проблема: вимкнений Rewrite Module. Будь ласка, перевірте й увімкніть Rewrite Module у вашому сервері (наприклад mod_rewrite в Apache) і підтримку .htaccess."
-    }
+    "Ajax failed": "Неочікувана помилка",
+    "Bad init Permission": "Дозвіл відхилено для каталогу \"{*}\". Будь ласка, встановіть значення 775 для \"{*}\" або просто виконайте цю команду в терміналі <pre><b>{C}</b></pre> Операція заборонена? Спробуйте це: {CSU}",
+    "permissionInstruction": "<br>Запустіть цю команду в терміналі:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Операція заборонена? Спробуйте це: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "Версія PHP",

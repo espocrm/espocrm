@@ -14,7 +14,7 @@
     "campaign": "Кампанія",
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
-    "originalLead": "Початковий Лід",
+    "originalLead": "Початковий лід",
     "contactIsInactive": "Неактивний"
   },
   "links": {
@@ -30,7 +30,7 @@
     "campaignLogRecords": "Лоґ кампанії",
     "campaign": "Кампанія",
     "portalUsers": "Користувачі порталу",
-    "originalLead": "Початковий Лід"
+    "originalLead": "Початковий лід"
   },
   "options": {
     "type": {
@@ -99,6 +99,7 @@
     "Set Primary": "Встановити основним"
   },
   "presetFilters": {
+    "customers": "Замовники",
     "recentlyCreated": "Нещодавно Створений"
   }
 }

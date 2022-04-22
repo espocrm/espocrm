@@ -23,9 +23,9 @@
     "tabList": "Список меню",
     "theme": "Тема",
     "useCustomTabList": "Власний список меню",
-    "receiveAssignmentEmailNotifications": "Отримувати повідомлення при призначенні",
-    "receiveMentionEmailNotifications": "Сповіщення по електронні пошті про згадування в повідомленнях",
-    "receiveStreamEmailNotifications": "Сповіщення по електронні пошті про повідомлення та оновлення статусу",
+    "receiveAssignmentEmailNotifications": "Отримувати сповіщення при призначенні",
+    "receiveMentionEmailNotifications": "Сповіщення по електронній пошті про згадку в повідомленнях",
+    "receiveStreamEmailNotifications": "Сповіщення по електронній пошті про повідомлення та оновлення статусу",
     "dashboardLayout": "Макет панелі дашлетів",
     "emailReplyForceHtml": "Відправити відповідь в HTML",
     "autoFollowEntityTypeList": "Авто-підписка",
@@ -36,7 +36,9 @@
     "followCreatedEntityTypeList": "Автоматично підписатись на всі створені записи певного типу сутності",
     "emailUseExternalClient": "Використовуйте зовнішній поштовий клієнт",
     "scopeColorsDisabled": "Вимкнути кольори меж",
-    "tabColorsDisabled": "Вимкнути кольори вкладок"
+    "tabColorsDisabled": "Вимкнути кольори вкладок",
+    "assignmentNotificationsIgnoreEntityTypeList": "Сповіщення про призначення через додаток",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Сповіщення про призначення по емейлу"
   },
   "options": {
     "weekStart": {

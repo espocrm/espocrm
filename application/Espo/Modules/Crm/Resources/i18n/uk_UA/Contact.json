@@ -15,11 +15,12 @@
     "targetLists": "Цільові списки",
     "targetList": "Цільовий список",
     "portalUser": "Користувач порталів",
-    "originalLead": "Початковий Лід",
-    "acceptanceStatus": "Ухвалення статусу",
+    "originalLead": "Початковий лід",
+    "acceptanceStatus": "Статус підтвердження",
     "accountIsInactive": "Неактивний акаунт",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
-    "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)"
+    "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)",
+    "title": "Назва облікового запису"
   },
   "links": {
     "opportunities": "Угоди",
@@ -31,9 +32,10 @@
     "accounts": "Контрагенти",
     "casesPrimary": "Звернення (Основні)",
     "portalUser": "Користувач порталу",
-    "originalLead": "Початковий Лід",
+    "originalLead": "Початковий лід",
     "documents": "Документи",
-    "tasksPrimary": "Завдання (розширено)"
+    "tasksPrimary": "Завдання (розширено)",
+    "opportunitiesPrimary": "Угоди (Основні)"
   },
   "labels": {
     "Create Contact": "Створити контакт"
