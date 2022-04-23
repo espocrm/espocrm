@@ -315,6 +315,8 @@ class Upgrade implements Command
 
         if (!$useSingleProcess && $this->isShellEnabled()) {
             $this->runSteps($upgradeId, $stepList);
+
+            return;
         }
 
         $this->runStepsInSingleProcess($upgradeId, $stepList);
