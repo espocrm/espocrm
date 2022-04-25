@@ -295,17 +295,21 @@ class Util
      */
     public static function arrayToObject($array)
     {
-        /** @phpstan-var mixed $array */
+        /** @var \stdClass */
+        return self::arrayToObjectInternal($array);
+    }
 
-        if (is_array($array)) {
-            /** @var callable */
-            $callable = ['static', 'arrayToObject'];
-
-            return (object) array_map($callable, $array);
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private static function arrayToObjectInternal($value)
+    {
+        if (is_array($value)) {
+            return (object) array_map(fn($v) => self::arrayToObjectInternal($v), $value);
         }
 
-        /** @var \stdClass */
-        return $array;
+        return $value;
     }
 
     /**
@@ -316,16 +320,25 @@ class Util
      */
     public static function objectToArray($object)
     {
-        /** @phpstan-var mixed $object */
+        /** @var array<string,mixed> */
+        return self::objectToArrayInternal($object);
+    }
 
-        if (is_object($object)) {
-            $object = (array) $object;
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private static function objectToArrayInternal($value)
+    {
+        if (is_object($value)) {
+            $value = (array) $value;
         }
 
-        /** @var callable */
-        $callable = ['static', 'objectToArray'];
+        if (is_array($value)) {
+            return array_map(fn($v) => self::objectToArrayInternal($v), $value);
+        }
 
-        return is_array($object) ? array_map($callable, $object) : $object;
+        return $value;
     }
 
     /**
