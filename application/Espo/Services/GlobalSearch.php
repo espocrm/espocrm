@@ -31,6 +31,7 @@ namespace Espo\Services;
 
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Part\Expression as Expr;
 
 use Espo\Core\Di;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
@@ -219,7 +220,7 @@ class GlobalSearch implements
                 ->order($expression, Order::DESC);
         }
         else {
-            $queryBuilder->select('VALUE:1.1', 'relevance');
+            $queryBuilder->select(Expr::value(1.1), 'relevance');
         }
 
         $queryBuilder->order('name');
