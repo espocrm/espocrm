@@ -32,16 +32,10 @@ class BeforeUpgrade
     public function run(): void
     {
         if (php_sapi_name() === 'cli' && !in_array('-s', $_SERVER['argv'])) {
-            $contents = file_get_contents('application/Espo/Core/Console/Commands/Upgrade.php');
+            echo "\n\nPlease re-run upgrade command with -s parameter:\n";
+            echo "  php command.php upgrade -s\n\n";
 
-            $needle = "\$this->runSteps(\$upgradeId, \$stepList);\r\n        }";
-
-            if (strpos($contents, $needle) !== false) {
-                echo "\n\nPlease re-run upgrade command with -s parameter:\n";
-                echo "  php command.php upgrade -s\n\n";
-
-                throw new \Espo\Core\Exceptions\Error("Need -s parameter.");
-            }
+            throw new \Espo\Core\Exceptions\Error("Need -s parameter.");
         }
     }
 }
