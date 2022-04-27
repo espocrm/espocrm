@@ -10,7 +10,7 @@
 {{#unless rowList.length}}
     {{#if createDisabled}}
         {{#unless showRoot}}
-            {{translate 'No Data'}}
+            <div class="no-data">{{translate 'No Data'}}</div>
         {{/unless}}
     {{/if}}
 {{/unless}}

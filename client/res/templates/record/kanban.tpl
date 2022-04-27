@@ -73,7 +73,7 @@
 
 
 {{#if isEmptyList}}
-<div class="margin-top">
-{{translate 'No Data'}}
+<div class="margin-top no-data">
+    {{translate 'No Data'}}
 </div>
 {{/if}}

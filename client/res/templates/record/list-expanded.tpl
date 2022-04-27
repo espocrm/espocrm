@@ -75,5 +75,5 @@
 {{/if}}
 
 {{else}}
-    {{translate 'No Data'}}
+    <div class="no-data">{{translate 'No Data'}}</div>
 {{/if}}
