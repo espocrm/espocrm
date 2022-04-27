@@ -211,8 +211,6 @@ class Invitations
             ->withMessage($message)
             ->withAttachments([$attachment])
             ->send($email);
-
-        $this->entityManager->removeEntity($email);
     }
 
     protected function getIscContents(Entity $entity): string
