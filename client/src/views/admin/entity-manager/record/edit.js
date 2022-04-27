@@ -47,6 +47,8 @@ define('views/admin/entity-manager/record/edit', 'views/record/edit', function (
 
             this.scope = 'EntityManager';
 
+            this.subjectEntityType = this.options.subjectEntityType;
+
             if (!this.isCreate) {
                 this.buttonList = [
                     {
@@ -165,7 +167,7 @@ define('views/admin/entity-manager/record/edit', 'views/record/edit', function (
             let statusField = this.model.get('statusField');
 
             var optionList = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', statusField, 'options']) || [];
+                .get(['entityDefs', this.subjectEntityType, 'fields', statusField, 'options']) || [];
 
             this.setFieldOptionList('kanbanStatusIgnoreList', optionList);
 
@@ -186,8 +188,8 @@ define('views/admin/entity-manager/record/edit', 'views/record/edit', function (
             var statusField = this.model.get('statusField');
 
             var translation = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', statusField, 'translation']) ||
-                this.scope + '.options.' + statusField;
+                .get(['entityDefs', this.subjectEntityType, 'fields', statusField, 'translation']) ||
+                this.subjectEntityType + '.options.' + statusField;
 
             fieldView.params.translation = translation;
             fieldView.setupTranslation();

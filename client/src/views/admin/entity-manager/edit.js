@@ -391,6 +391,7 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 hasColorField: this.hasColorField,
                 hasStreamField: this.hasStreamField,
                 isCustom: this.isCustom,
+                subjectEntityType: this.scope,
             }).then(view => {
                 this.listenTo(view, 'save', () => this.actionSave());
                 this.listenTo(view, 'cancel', () => this.actionCancel());
