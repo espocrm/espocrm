@@ -3,7 +3,12 @@
         <div>
             {{#unless invalid}}
             {{#unless erased}}
-            <a href="tel:{{valueForLink}}" data-phone-number="{{valueForLink}}" data-action="dial">
+            <a
+                href="tel:{{valueForLink}}"
+                data-phone-number="{{valueForLink}}"
+                data-action="dial"
+                style="display: inline-block;"
+            >
             {{/unless}}
             {{/unless}}
             <span {{#if lineThrough}}style="text-decoration: line-through"{{/if}}>{{phoneNumber}}</span>
