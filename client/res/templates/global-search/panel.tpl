@@ -7,7 +7,7 @@
     </div>
     <div class="panel-body">
         <div class="list-container">
-            {{translate 'Loading...'}}
+            <span class="text-muted fas fa-spinner fa-spin"></span>
         </div>
     </div>
 </div>
