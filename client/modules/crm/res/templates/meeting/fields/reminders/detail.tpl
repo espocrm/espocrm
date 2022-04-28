@@ -1,6 +1,5 @@
 {{#if value}}
     {{{value}}}
 {{else}}
-    {{{translate 'None'}}}
+    <span class="none-value">{{translate 'None'}}</span>
 {{/if}}
-

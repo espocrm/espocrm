@@ -1,5 +1,5 @@
 {{#if hasAddress}}
 <div class="map"></div>
 {{else}}
-{{translate 'None'}}
+<span class="none-value">{{translate 'None'}}</span>
 {{/if}}

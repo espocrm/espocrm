@@ -2,7 +2,7 @@
     {{{value}}}
 {{else}}
     {{#if valueIsSet}}
-        {{{translate 'None'}}}
+        <span class="none-value">{{translate 'None'}}</span>
     {{else}}
         ...
     {{/if}}
