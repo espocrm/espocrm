@@ -150,11 +150,12 @@ define('views/detail', 'views/main', function (Dep) {
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
+
+                return;
             }
-            else {
-                if (this.getAcl().checkModel(this.model, 'stream')) {
-                    this.addFollowButtonToMenu();
-                }
+
+            if (this.getAcl().checkModel(this.model, 'stream')) {
+                this.addFollowButtonToMenu();
             }
         },
 

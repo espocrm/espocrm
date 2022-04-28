@@ -218,6 +218,14 @@ define('views/main', 'view', function (Dep) {
 
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
+
+                return;
+            }
+
+            if (!doNotReRender && this.isBeingRendered()) {
+                this.once('after:render', () => {
+                    this.getView('header').reRender();
+                });
             }
         },
 
@@ -242,10 +250,22 @@ define('views/main', 'view', function (Dep) {
 
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
+
+                return;
+            }
+
+            if (!doNotReRender && this.isBeingRendered()) {
+                this.once('after:render', () => {
+                    this.getView('header').reRender();
+                });
+
+                return;
             }
 
             if (doNotReRender && this.isRendered()) {
                 this.$el.find('.header .header-buttons [data-name="'+name+'"]').remove();
+
+                return;
             }
         },
 
