@@ -49,9 +49,9 @@ define('views/main', 'view', function (Dep) {
             this.options.params = this.options.params || {};
 
             if (this.name && this.scope) {
-                this.menu = this.getMetadata().get([
-                    'clientDefs', this.scope, 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
-                ]) || {};
+                this.menu = this.getMetadata()
+                    .get(['clientDefs', this.scope, 'menu',
+                        this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {};
             }
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
@@ -59,29 +59,35 @@ define('views/main', 'view', function (Dep) {
             var globalMenu = {};
 
             if (this.name) {
-                globalMenu = Espo.Utils.cloneDeep(this.getMetadata().get([
-                    'clientDefs', 'Global', 'menu', this.name.charAt(0).toLowerCase() + this.name.slice(1)
-                ]) || {});
+                globalMenu = Espo.Utils.cloneDeep(
+                    this.getMetadata()
+                        .get(['clientDefs', 'Global', 'menu',
+                            this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {}
+                );
             }
 
-            ['buttons', 'actions', 'dropdown'].forEach(function (type) {
+            ['buttons', 'actions', 'dropdown'].forEach((type) => {
                 this.menu[type] = this.menu[type] || [];
                 this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
 
                 var itemList = this.menu[type];
-                itemList.forEach(function (item) {
+
+                itemList.forEach((item) => {
                     var viewObject = this;
+
                     if (item.initFunction && item.data.handler) {
-                        this.wait(new Promise(function (resolve) {
-                            require(item.data.handler, function (Handler) {
+                        this.wait(new Promise(resolve => {
+                            require(item.data.handler, Handler => {
                                 var handler = new Handler(viewObject);
+
                                 handler[item.initFunction].call(handler);
+
                                 resolve();
                             });
                         }));
                     }
-                }, this);
-            }, this);
+                });
+            });
 
             this.updateLastUrl();
         },
@@ -91,18 +97,26 @@ define('views/main', 'view', function (Dep) {
         },
 
         getMenu: function () {
-            if (this.menuDisabled) return {};
+            if (this.menuDisabled) {
+                return {};
+            }
 
             var menu = {};
 
             if (this.menu) {
-                ['buttons', 'actions', 'dropdown'].forEach(function (type) {
-                    (this.menu[type] || []).forEach(function (item) {
+                ['buttons', 'actions', 'dropdown'].forEach((type) => {
+                    (this.menu[type] || []).forEach((item) => {
                         item = Espo.Utils.clone(item);
+
                         menu[type] = menu[type] || [];
 
-                        if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
-                        if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) return;
+                        if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                            return;
+                        }
+
+                        if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
+                            return;
+                        }
 
                         if (item.accessDataList) {
                             if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
@@ -118,9 +132,10 @@ define('views/main', 'view', function (Dep) {
                                 this.getLanguage().translatePath(item.labelTranslation)
                             );
                         }
+
                         menu[type].push(item);
-                    }, this);
-                }, this);
+                    });
+                });
             }
 
             return menu;
@@ -130,9 +145,10 @@ define('views/main', 'view', function (Dep) {
 
         buildHeaderHtml: function (arr) {
             var a = [];
-            arr.forEach(function (item) {
+
+            arr.forEach(item => {
                 a.push('<div class="breadcrumb-item">' + item + '</div>');
-            }, this);
+            });
 
             return '<div class="header-breadcrumbs">' +
                 a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
@@ -144,39 +160,48 @@ define('views/main', 'view', function (Dep) {
 
         actionShowModal: function (data) {
             var view = data.view;
+
             if (!view) {
                 return;
             };
+
             this.createView('modal', view, {
                 model: this.model,
-                collection: this.collection
-            }, function (view) {
+                collection: this.collection,
+            }, view => {
                 view.render();
-                this.listenTo(view, 'after:save', function () {
+
+                this.listenTo(view, 'after:save', () => {
                     if (this.model) {
                         this.model.fetch();
                     }
+
                     if (this.collection) {
                         this.collection.fetch();
                     }
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         addMenuItem: function (type, item, toBeginning, doNotReRender) {
             if (item) {
                 item.name = item.name || item.action;
+
                 var name = item.name;
 
                 if (name) {
                     var index = -1;
-                    this.menu[type].forEach(function (data, i) {
+
+                    this.menu[type].forEach((data, i) => {
                         data = data || {};
+
                         if (data.name === name) {
                             index = i;
+
                             return;
                         }
-                    }, this);
+                    });
+
                     if (~index) {
                         this.menu[type].splice(index, 1);
                     }
@@ -184,9 +209,11 @@ define('views/main', 'view', function (Dep) {
             }
 
             var method = 'push';
+
             if (toBeginning) {
                 method  = 'unshift';
             }
+
             this.menu[type][method](item);
 
             if (!doNotReRender && this.isRendered()) {
@@ -198,15 +225,16 @@ define('views/main', 'view', function (Dep) {
             var index = -1;
             var type = false;
 
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                (this.menu[t] || []).forEach(function (item, i) {
+            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+                (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
-                    if (item.name == name) {
+
+                    if (item.name === name) {
                         index = i;
                         type = t;
                     }
-                }, this);
-            }, this);
+                });
+            });
 
             if (~index && type) {
                 this.menu[type].splice(index, 1);
@@ -222,36 +250,49 @@ define('views/main', 'view', function (Dep) {
         },
 
         disableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').addClass('disabled').attr('disabled');
+            this.$el
+                .find('.header .header-buttons [data-name="'+name+'"]')
+                .addClass('disabled')
+                .attr('disabled');
         },
 
         enableMenuItem: function (name) {
-            this.$el.find('.header .header-buttons [data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
+            this.$el
+                .find('.header .header-buttons [data-name="'+name+'"]')
+                .removeClass('disabled')
+                .removeAttr('disabled');
         },
 
         actionNavigateToRoot: function (data, e) {
             e.stopPropagation();
 
-            this.getRouter().checkConfirmLeaveOut(function () {
+            this.getRouter().checkConfirmLeaveOut(() => {
                 var options = {
-                    isReturn: true
+                    isReturn: true,
                 };
+
                 var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
                 this.getRouter().navigate(rootUrl, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, options);
-            }, this);
+            });
         },
 
         hideHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                (this.menu[t] || []).forEach(function (item, i) {
+            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+                (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
-                    if (item.name == name) {
+
+                    if (item.name === name) {
                         item.hidden = true;
                     }
-                }, this);
-            }, this);
-            if (!this.isRendered()) return;
+                });
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().addClass('hidden');
             this.$el.find('.page-header a.action[data-name="'+name+'"]').addClass('hidden');
 
@@ -259,15 +300,20 @@ define('views/main', 'view', function (Dep) {
         },
 
         showHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach(function (t) {
-                (this.menu[t] || []).forEach(function (item, i) {
+            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+                (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
-                    if (item.name == name) {
+
+                    if (item.name === name) {
                         item.hidden = false;
                     }
-                }, this);
-            }, this);
-            if (!this.isRendered()) return;
+                });
+            });
+
+            if (!this.isRendered()) {
+                return;
+            }
+
             this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
             this.$el.find('.page-header a.action[data-name="'+name+'"]').removeClass('hidden');
 
@@ -276,9 +322,13 @@ define('views/main', 'view', function (Dep) {
 
         hasMenuVisibleDropdownItems: function () {
             var hasItems = false;
-            (this.menu.dropdown || []).forEach(function (item) {
-                if (!item.hidden) hasItems = true;
+
+            (this.menu.dropdown || []).forEach((item) => {
+                if (!item.hidden) {
+                    hasItems = true;
+                }
             });
+
             return hasItems;
         },
 
@@ -291,6 +341,5 @@ define('views/main', 'view', function (Dep) {
                 $d.addClass('hidden');
             }
         },
-
     });
 });
