@@ -211,21 +211,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.model.save(attributes, {
-                patch: true,
-            }).then(function () {
-                Espo.Ui.success(this.translate('Self-Assigned'));
-            }.bind(this));
+            this.model
+                .save(attributes, {patch: true})
+                .then(() => {
+                    Espo.Ui.success(this.translate('Self-Assigned'));
+                });
         },
 
         actionConvertCurrency: function () {
             this.createView('modalConvertCurrency', 'views/modals/convert-currency', {
                 entityType: this.entityType,
                 model: this.model,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:update', function (attributes) {
+                this.listenToOnce(view, 'after:update', (attributes) => {
                     var isChanged = false;
 
                     for (var a in attributes) {
@@ -242,10 +242,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         return;
                     }
 
-                    this.model.fetch().then(function () {
-                        Espo.Ui.success(this.translate('done', 'messages'));
-                    }.bind(this));
-                }, this);
+                    this.model
+                        .fetch()
+                        .then(() => {
+                            Espo.Ui.success(this.translate('done', 'messages'));
+                        });
+                });
             });
         },
 
@@ -276,10 +278,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             if (this.selfAssignAction) {
                 if (
-                    this.getAcl().check(this.entityType, 'edit')
-                    &&
-                    !~this.getAcl().getScopeForbiddenFieldList(this.entityType).indexOf('assignedUser')
-                    &&
+                    this.getAcl().check(this.entityType, 'edit') &&
+                    !~this.getAcl().getScopeForbiddenFieldList(this.entityType).indexOf('assignedUser') &&
                     !this.getUser().isPortal()
                 ) {
                     if (this.model.has('assignedUserId')) {
@@ -289,14 +289,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             'hidden': !!this.model.get('assignedUserId')
                         });
 
-                        this.listenTo(this.model, 'change:assignedUserId', function () {
+                        this.listenTo(this.model, 'change:assignedUserId', () => {
                             if (!this.model.get('assignedUserId')) {
                                 this.showActionItem('selfAssign');
                             }
                             else {
                                 this.hideActionItem('selfAssign');
                             }
-                        }, this);
+                        });
                     }
                 }
             }
@@ -363,7 +363,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         this.getMetadata().get(['clientDefs', 'Global', this.type + 'ActionList']) || []
                     );
 
-                actionDefsList.forEach(function (item) {
+                actionDefsList.forEach((item) => {
                     if (typeof item === 'string') {
                         item = {
                             name: item,
@@ -393,8 +393,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                     if (item.initFunction && handler) {
                         this.wait(
-                            new Promise(function (resolve) {
-                                require(handler, function (Handler) {
+                            new Promise(resolve => {
+                                require(handler, Handler => {
                                     var handler = new Handler(viewObject);
 
                                     handler[item.initFunction].call(handler);
@@ -408,19 +408,19 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
                         item.hidden = true;
                     }
-                }, this);
+                });
 
                 if (additionalActionList.length) {
-                    this.listenTo(this.model, 'sync', function () {
-                        additionalActionList.forEach(function (item) {
+                    this.listenTo(this.model, 'sync', () => {
+                        additionalActionList.forEach((item) => {
                             if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
                                 this.showActionItem(item.name);
                             }
                             else {
                                 this.hideActionItem(item.name);
                             }
-                        }, this);
-                    }, this);
+                        });
+                    });
                 }
 
                 if (this.saveAndContinueEditingAction) {
@@ -590,13 +590,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
             else if (this.bottomView) {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     var bottomView = this.getView('bottom');
 
                     if (bottomView && 'showPanel' in bottomView) {
                         bottomView.showPanel(name);
                     }
-                }, this);
+                });
             }
 
             var sideView = this.getView('side');
@@ -607,13 +607,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
             else if (this.sideView) {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     var sideView = this.getView('side');
 
                     if (sideView && 'showPanel' in sideView) {
                         sideView.showPanel(name);
                     }
-                }, this);
+                });
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
@@ -651,13 +651,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
             else if (this.bottomView) {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     var bottomView = this.getView('bottom');
 
                     if (bottomView && 'showPanel' in bottomView) {
                         bottomView.hidePanel(name);
                     }
-                }, this);
+                });
             }
 
             var sideView = this.getView('side');
@@ -668,13 +668,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
             else if (this.sideView) {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     var sideView = this.getView('side');
 
                     if (sideView && 'hidePanel' in sideView) {
                         sideView.hidePanel(name);
                     }
-                }, this);
+                });
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
@@ -752,7 +752,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             $window.off('scroll.detail-' + this.numId);
 
-            $window.on('scroll.detail-' + this.numId, function (e) {
+            $window.on('scroll.detail-' + this.numId, (e) => {
                 if ($(window.document).width() < screenWidthXs) {
                     $container.removeClass('stick-sub');
 
@@ -785,6 +785,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             $block.hide();
 
                             var $p = $('.popover');
+
                             $p.each(function (i, el) {
                                 $el = $(el);
                                 $el.css('top', ($el.position().top + blockHeight) + 'px');
@@ -798,7 +799,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     $container.hide();
                     $block.show();
                 }
-            }.bind(this));
+            });
         },
 
         fetch: function () {
@@ -931,7 +932,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.confirm({
                 message: this.translate('removeRecordConfirmation', 'messages', this.scope),
                 confirmText: this.translate('Remove'),
-            }, function () {
+            }, () => {
                 this.trigger('before:delete');
                 this.trigger('delete');
 
@@ -939,12 +940,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 var collection = this.model.collection;
 
-                this.model.destroy({
-                    wait: true,
-                    error: function () {
-                        this.notify('Error occurred', 'error');
-                    }.bind(this),
-                    success: function () {
+                this.model
+                    .destroy({wait: true})
+                    .then(() => {
                         if (collection) {
                             if (collection.total > 0) {
                                 collection.total--;
@@ -954,9 +952,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         this.notify('Removed', 'success');
                         this.trigger('after:delete');
                         this.exit('delete');
-                    }.bind(this),
-                });
-            }, this);
+                    });
+            });
         },
 
         getFieldViews: function (withHidden) {
@@ -1122,11 +1119,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var collection = this.collection = this.model.collection;
 
             if (collection) {
-                this.listenTo(this.model, 'destroy', function () {
+                this.listenTo(this.model, 'destroy', () => {
                     collection.remove(this.model.id);
-
                     collection.trigger('sync');
-                }, this);
+                });
 
                 if ('indexOfRecord' in this.options) {
                     this.indexOfRecord = this.options.indexOfRecord;
@@ -1145,14 +1141,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.isChanged) {
                     this.resetModelChanges();
                 }
                 this.setIsNotChanged();
 
                 $(window).off('scroll.detail-' + this.numId);
-            }, this);
+            });
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
 
@@ -1230,11 +1226,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             ) {
                 this.subscribeToWebSocket();
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     if (this.isSubscribedToWebSocked) {
                         this.unsubscribeFromWebSocket();
                     }
-                }.bind(this));
+                });
             }
 
             this.getHelper().processSetupHandlers(this, this.setupHandlerType);
@@ -1349,7 +1345,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.getMetadata().get(['clientDefs', this.scope, 'dynamicHandler']);
 
             var init = function (dynamicHandler) {
-                this.listenTo(this.model, 'change', function (model, o) {
+                this.listenTo(this.model, 'change', (model, o) => {
                     if ('onChange' in dynamicHandler) {
                         dynamicHandler.onChange.call(dynamicHandler, model, o);
                     }
@@ -1363,7 +1359,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             dynamicHandler[methodName].call(dynamicHandler, model, changedAttributes[attribute], o);
                         }
                     }
-                }, this);
+                });
 
                 if ('init' in dynamicHandler) {
                     dynamicHandler.init();
@@ -1372,16 +1368,15 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             if (dynamicHandlerClassName) {
                 this.wait(
-                    new Promise(
-                        function (resolve) {
-                            require(dynamicHandlerClassName, function (DynamicHandler) {
-                                var dynamicHandler = this.dynamicHandler = new DynamicHandler(this);
-                                init(dynamicHandler);
+                    new Promise(resolve => {
+                        require(dynamicHandlerClassName, (DynamicHandler) => {
+                            var dynamicHandler = this.dynamicHandler = new DynamicHandler(this);
 
-                                resolve();
-                            }.bind(this));
-                        }.bind(this)
-                    )
+                            init(dynamicHandler);
+
+                            resolve();
+                        });
+                    })
                 );
             }
 
@@ -1392,26 +1387,22 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 var promiseList = [];
 
-                handlerList.forEach(function (className, i) {
+                handlerList.forEach((className) => {
                     promiseList.push(
-                        new Promise(
-                            function (resolve) {
-                                require(className, function (DynamicHandler) {
-                                    resolve(new DynamicHandler(self));
-                                });
-                            }
-                        )
+                        new Promise(resolve => {
+                            require(className, (DynamicHandler) => {
+                                resolve(new DynamicHandler(self));
+                            });
+                        })
                     );
                 });
 
                 this.wait(
-                    Promise.all(promiseList).then(
-                        function (list) {
-                            list.forEach(function (dynamicHandler) {
-                                init(dynamicHandler);
-                            });
-                        }
-                    )
+                    Promise.all(promiseList).then(list => {
+                        list.forEach((dynamicHandler) => {
+                            init(dynamicHandler);
+                        });
+                    })
                 );
             }
         },
@@ -1542,12 +1533,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.switchToModelByIndex(indexOfRecord);
             }
             else {
-                collection.fetch({
-                    more: true,
-                    remove: false,
-                }).then(function () {
-                    this.switchToModelByIndex(indexOfRecord);
-                }.bind(this));
+                collection
+                    .fetch({
+                        more: true,
+                        remove: false,
+                    })
+                    .then(() => {
+                        this.switchToModelByIndex(indexOfRecord);
+                    });
             }
         },
 
@@ -1557,10 +1550,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }, function (view) {
                 view.render();
 
-                this.listenToOnce(view, 'erase', function () {
+                this.listenToOnce(view, 'erase', () => {
                     this.clearView('viewPersonalData');
                     this.model.fetch();
-                }, this);
+                });
             });
         },
 
@@ -1596,12 +1589,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
-            this.createView('modalRelatedList', viewName, options, function (view) {
+            this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);
 
                 view.render();
 
-                this.listenTo(view, 'action', function (action, data, e) {
+                this.listenTo(view, 'action', (action, data, e) => {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
                     if (typeof this[method] === 'function') {
@@ -1609,21 +1602,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                         e.preventDefault();
                     }
-                }, this);
+                });
 
-                this.listenToOnce(view, 'close', function () {
+                this.listenToOnce(view, 'close', () => {
                     this.clearView('modalRelatedList');
-                }, this);
+                });
             });
         },
 
         actionPrintPdf: function () {
             this.createView('pdfTemplate', 'views/modals/select-template', {
                 entityType: this.model.name,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'select', function (model) {
+                this.listenToOnce(view, 'select', (model) => {
                     this.clearView('pdfTemplate');
 
                     window.open(
@@ -1631,7 +1624,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         this.model.name+'&entityId=' +
                         this.model.id+'&templateId=' + model.id, '_blank'
                     );
-                }, this);
+                });
             });
         },
 
@@ -1647,9 +1640,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.setIsNotChanged();
 
-            setTimeout(function () {
+            setTimeout(() => {
                 this.unblockUpdateWebSocket();
-            }.bind(this), this.blockUpdateWebSocketPeriod || 500);
+            }, this.blockUpdateWebSocketPeriod || 500);
         },
 
         beforeSave: function () {
@@ -1713,11 +1706,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             var diffAttributeList = [];
 
-            attributeList.forEach(function (attribute) {
+            attributeList.forEach(attribute => {
                 if (this.attributes[attribute] !== values[attribute]) {
                     diffAttributeList.push(attribute);
                 }
-            }, this);
+            });
 
             if (diffAttributeList.length === 0) {
                 this.model.set('versionNumber', versionNumber, {silent: true});
@@ -1739,20 +1732,18 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     actualAttributes: Espo.Utils.cloneDeep(values),
                 }
             )
-            .then(
-                function (view) {
-                    view.render();
+            .then(view => {
+                view.render();
 
-                    this.listenTo(view, 'resolve', function () {
-                        this.model.set('versionNumber', versionNumber, {silent: true});
-                        this.attributes.versionNumber = versionNumber;
+                this.listenTo(view, 'resolve', () => {
+                    this.model.set('versionNumber', versionNumber, {silent: true});
+                    this.attributes.versionNumber = versionNumber;
 
-                        for (let attribute in values) {
-                            this.setInitalAttributeValue(attribute, values[attribute]);
-                        }
-                    }, this);
-                }.bind(this)
-            );
+                    for (let attribute in values) {
+                        this.setInitalAttributeValue(attribute, values[attribute]);
+                    }
+                });
+            });
         },
 
         setReadOnly: function () {
@@ -1772,9 +1763,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 sideView.setReadOnly();
             }
 
-            this.getFieldList().forEach(function (field) {
+            this.getFieldList().forEach((field) => {
                 this.setFieldReadOnly(field);
-            }, this);
+            });
         },
 
         setNotReadOnly: function (onlyNotSetAsReadOnly) {
@@ -1794,13 +1785,15 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 sideView.setNotReadOnly(onlyNotSetAsReadOnly);
             }
 
-            this.getFieldList().forEach(function (field) {
+            this.getFieldList().forEach((field) => {
                 if (onlyNotSetAsReadOnly) {
-                    if (this.recordHelper.getFieldStateParam(field, 'readOnly')) return;
+                    if (this.recordHelper.getFieldStateParam(field, 'readOnly')) {
+                        return;
+                    }
                 }
 
                 this.setFieldNotReadOnly(field);
-            }, this);
+            });
         },
 
         manageAccessEdit: function (second) {
@@ -1847,14 +1840,16 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (editAccess === null) {
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenToOnce(this.model, 'sync', () => {
                     this.manageAccessEdit(true);
-                }, this);
+                });
             }
         },
 
         manageAccessDelete: function (second) {
-            if (this.isNew) return;
+            if (this.isNew) {
+                return;
+            }
 
             var deleteAccess = this.getAcl().checkModel(this.model, 'delete', true);
 
@@ -1865,9 +1860,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (deleteAccess === null) {
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenToOnce(this.model, 'sync', () => {
                     this.manageAccessDelete(true);
-                }, this);
+                });
             }
         },
 
@@ -1895,9 +1890,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (streamAccess === null) {
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenToOnce(this.model, 'sync', () => {
                     this.manageAccessStream(true);
-                }, this);
+                });
             }
         },
 
@@ -2246,7 +2241,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 return;
             }
 
-            this._helper.layoutManager.get(this.model.name, this.layoutName, function (simpleLayout) {
+            this._helper.layoutManager.get(this.model.name, this.layoutName, (simpleLayout) => {
                 if (typeof this.modifyDetailLayout === 'function') {
                     var simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
 
@@ -2259,7 +2254,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 };
 
                 callback(this.gridLayout);
-            }.bind(this));
+            });
         },
 
         createSideView: function () {
@@ -2282,7 +2277,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.waitForView('middle');
 
-            this.getGridLayout(function (layout) {
+            this.getGridLayout((layout) => {
                 this.createView('middle', this.middleView, {
                     model: this.model,
                     scope: this.scope,
@@ -2296,7 +2291,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     recordViewObject: this,
                     panelFieldListMap: this.panelFieldListMap,
                 }, callback);
-            }.bind(this));
+            });
         },
 
         createBottomView: function () {
@@ -2424,9 +2419,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.isSubscribedToWebSocked = true;
 
-            this.getHelper().webSocketManager.subscribe(topic, function (t, data) {
+            this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
                 this.handleRecordUpdate();
-            }.bind(this))
+            });
         },
 
         unsubscribeFromWebSocket: function () {
@@ -2445,13 +2440,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             if (this.inlineEditModeIsOn || this.mode === 'edit') {
                 var m = this.model.clone();
 
-                m.fetch().then(
-                    function () {
-                        if (this.inlineEditModeIsOn || this.mode === 'edit') {
-                            this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
-                        }
-                    }.bind(this)
-                );
+                m.fetch().then(() => {
+                    if (this.inlineEditModeIsOn || this.mode === 'edit') {
+                        this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
+                    }
+                });
             } else {
                 this.model.fetch({highlight: true});
             }
@@ -2461,9 +2454,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.updateWebSocketIsBlocked = true;
 
             if (toUnblock) {
-                setTimeout(function () {
+                setTimeout(() => {
                     this.unblockUpdateWebSocket();
-                }.bind(this), this.blockUpdateWebSocketPeriod || 500);
+                }, this.blockUpdateWebSocketPeriod || 500);
             }
         },
 
@@ -2474,10 +2467,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         showMoreDetailPanels: function () {
             this.hidePanel('showMoreDelimiter');
 
-            this.underShowMoreDetailPanelList.forEach(function (item) {
-                this.showPanel(item)
-            }, this);
+            this.underShowMoreDetailPanelList.forEach((item) => {
+                this.showPanel(item);
+            });
         },
-
     });
 });
