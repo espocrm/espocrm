@@ -543,6 +543,7 @@ define('views/record/panels/relationship',
                     this.collection.fetch();
 
                     this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
                 }.bind(this));
             }, this);
         },
@@ -565,6 +566,7 @@ define('views/record/panels/relationship',
                         this.collection.fetch();
 
                         this.model.trigger('after:unrelate');
+                        this.model.trigger('after:unrelate:' + this.link);
                     }.bind(this),
                 });
             }, this);
@@ -589,6 +591,7 @@ define('views/record/panels/relationship',
                     this.collection.fetch();
 
                     this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
                 }.bind(this));
             }, this);
         },

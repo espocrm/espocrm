@@ -395,6 +395,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     this.collection.fetch();
 
                     this.model.trigger('after:unrelate');
+                    this.model.trigger('after:unrelate:' + this.link);
                 });
             });
         },
