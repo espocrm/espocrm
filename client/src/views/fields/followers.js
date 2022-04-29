@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/followers', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/followers', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
@@ -39,58 +39,70 @@ Espo.define('views/fields/followers', 'views/fields/link-multiple', function (De
 
             this.limit = this.portionSize;
 
-            this.listenTo(this.model, 'change:isFollowed', function () {
+            this.listenTo(this.model, 'change:isFollowed', () => {
+                let idList = this.model.get(this.idsName) || [];
+
                 if (this.model.get('isFollowed')) {
-                    var idList = this.model.get(this.idsName) || [];
                     if (!~idList.indexOf(this.getUser().id)) {
                         idList.unshift(this.getUser().id);
+
                         var nameMap = this.model.get(this.nameHashName) || {};
 
                         nameMap[this.getUser().id] = this.getUser().get('name');
+
                         this.model.trigger('change:' + this.idsName);
-                        this.render();
+
+                        this.reRender();
                     }
-                } else {
-                    var idList = this.model.get(this.idsName) || [];
-                    var index = idList.indexOf(this.getUser().id);
-                    if (~index) {
-                        idList.splice(index, 1);
-                        this.model.trigger('change:' + this.idsName);
-                        this.render();
-                    }
+
+                    return;
                 }
-            }, this);
+
+                let index = idList.indexOf(this.getUser().id);
+
+                if (~index) {
+                    idList.splice(index, 1);
+
+                    this.model.trigger('change:' + this.idsName);
+
+                    this.reRender();
+                }
+            });
 
             this.events['click [data-action="showMoreFollowers"]'] = function (e) {
                 this.showMoreFollowers();
+
                 $(e.currentTarget).remove();
             };
         },
 
         reloadFollowers: function () {
-            this.getCollectionFactory().create('User', function (collection) {
+            this.getCollectionFactory().create('User', (collection) => {
                 collection.url = this.model.name + '/' + this.model.id + '/followers';
                 collection.offset = 0;
                 collection.maxSize = this.limit;
 
-                this.listenToOnce(collection, 'sync', function () {
+                this.listenToOnce(collection, 'sync', () => {
                     var idList = [];
                     var nameMap = {};
-                    collection.forEach(function (user) {
+
+                    collection.forEach(user => {
                         idList.push(user.id);
                         nameMap[user.id] = user.get('name');
-                    }, this);
+                    });
+
                     this.model.set(this.idsName, idList);
                     this.model.set(this.nameHashName, nameMap);
-                    this.render();
-                }, this);
+
+                    this.reRender();
+                });
 
                 collection.fetch();
-            }, this);
+            });
         },
 
         showMoreFollowers: function () {
-            this.getCollectionFactory().create('User', function (collection) {
+            this.getCollectionFactory().create('User', (collection) => {
                 collection.url = this.model.name + '/' + this.model.id + '/followers';
                 collection.offset = this.ids.length || 0;
                 collection.maxSize = this.portionSize;
@@ -98,37 +110,44 @@ Espo.define('views/fields/followers', 'views/fields/link-multiple', function (De
                 collection.orderBy = null;
                 collection.order = null;
 
-                this.listenToOnce(collection, 'sync', function () {
+                this.listenToOnce(collection, 'sync', () => {
                     var idList = this.model.get(this.idsName) || [];
                     var nameMap = this.model.get(this.nameHashName) || {};
-                    collection.forEach(function (user) {
+
+                    collection.forEach(user => {
                         idList.push(user.id);
                         nameMap[user.id] = user.get('name');
-                    }, this);
+                    });
 
                     this.limit += this.portionSize;
 
                     this.model.trigger('change:' + this.idsName);
-                    this.render();
-                }, this);
+
+                    this.reRender();
+                });
 
                 collection.fetch();
-            }, this);
+            });
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
+            if (this.mode === 'detail' || this.mode === 'list') {
                 var list = [];
-                this.ids.forEach(function (id) {
+
+                this.ids.forEach(id =>{
                     list.push(this.getDetailLinkHtml(id));
-                }, this);
+                });
+
                 var str = null;
+
                 if (list.length) {
                     str = '' + list.join(', ') + '';
                 }
+
                 if (list.length >= this.limit) {
-                    str += ', <a href="javascript:" data-action="showMoreFollowers">...</a>'
+                    str += ', <a href="javascript:" data-action="showMoreFollowers">...</a>';
                 }
+
                 return str;
             }
         },
