@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body">
         <div class="list-container">
-            <span class="text-muted fas fa-spinner fa-spin"></span>
+            <span class="text-soft fas fa-spinner fa-spin"></span>
         </div>
     </div>
 </div>
