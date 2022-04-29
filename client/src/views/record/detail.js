@@ -1607,6 +1607,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.listenToOnce(view, 'close', () => {
                     this.clearView('modalRelatedList');
                 });
+
+                view.listenTo(this.model, 'after:relate:followers', () => {
+                    this.model.fetch();
+                });
+
+                view.listenTo(this.model, 'after:unrelate:followers', () => {
+                    this.model.fetch();
+                });
             });
         },
 
