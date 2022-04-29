@@ -32,10 +32,12 @@ define('views/fields/followers', 'views/fields/link-multiple', function (Dep) {
 
         foreignScope: 'User',
 
-        portionSize: 4,
+        portionSize: 6,
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.portionSize = this.getConfig().get('recordFollowersLoadLimit') || this.portionSize;
 
             this.limit = this.portionSize;
 
