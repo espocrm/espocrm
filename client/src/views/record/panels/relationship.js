@@ -107,6 +107,7 @@ define('views/record/panels/relationship',
                             link: this.link,
                         },
                     });
+
                     hasCreate = true;
                 }
             }
@@ -168,7 +169,8 @@ define('views/record/panels/relationship',
             this.setupSorting();
 
             this.wait(true);
-            this.getCollectionFactory().create(this.scope, function (collection) {
+
+            this.getCollectionFactory().create(this.scope, (collection) => {
                 collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
                 if (this.defs.filters) {
@@ -190,14 +192,14 @@ define('views/record/panels/relationship',
                 this.setFilter(this.filter);
 
                 if (this.fetchOnModelAfterRelate) {
-                    this.listenTo(this.model, 'after:relate', function () {
+                    this.listenTo(this.model, 'after:relate', () => {
                         collection.fetch();
-                    }, this);
+                    });
                 }
 
-                this.listenTo(this.model, 'update-all', function () {
+                this.listenTo(this.model, 'update-all', () => {
                     collection.fetch();
-                }, this);
+                });
 
                 var viewName =
                     this.defs.recordListView ||
@@ -208,7 +210,7 @@ define('views/record/panels/relationship',
                 this.listViewName = viewName;
                 this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
 
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     this.createView('list', viewName, {
                         collection: collection,
                         layoutName: layoutName,
@@ -221,24 +223,25 @@ define('views/record/panels/relationship',
                         rowActionsOptions: {
                             unlinkDisabled: this.defs.unlinkDisabled,
                         },
-                    }, function (view) {
-                        view.getSelectAttributeList(function (selectAttributeList) {
+                    }, (view) =>{
+                        view.getSelectAttributeList((selectAttributeList) => {
                             if (selectAttributeList) {
                                 collection.data.select = selectAttributeList.join(',');
                             }
+
                             if (!this.defs.hidden) {
                                 collection.fetch();
                             } else {
-                                this.once('show', function () {
+                                this.once('show', () => {
                                     collection.fetch();
                                 });
                             }
-                        }.bind(this));
+                        });
                     });
-                }, this);
+                });
 
                 this.wait(false);
-            }, this);
+            });
 
             this.setupFilterActions();
             this.setupLast();
@@ -296,10 +299,10 @@ define('views/record/panels/relationship',
             if (this.filterList && this.filterList.length) {
                 this.actionList.push(false);
 
-                this.filterList.slice(0).forEach(function (item) {
+                this.filterList.slice(0).forEach((item) => {
                     var selected = false;
 
-                    if (item == 'all') {
+                    if (item === 'all') {
                         selected = !this.filter;
                     }
                     else {
@@ -316,7 +319,7 @@ define('views/record/panels/relationship',
                             name: item,
                         },
                     });
-                }, this);
+                });
             }
         },
 
@@ -360,7 +363,7 @@ define('views/record/panels/relationship',
             this.storeFilter(filterInternal);
             this.setFilter(filterInternal);
 
-            this.filterList.forEach(function (item) {
+            this.filterList.forEach(item => {
                 var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
 
                 if (item === filter) {
@@ -368,7 +371,7 @@ define('views/record/panels/relationship',
                 } else {
                     $el.addClass('hidden');
                 }
-            }, this);
+            });
 
             this.collection.reset();
 
@@ -384,7 +387,7 @@ define('views/record/panels/relationship',
                 }
             }
 
-            this.collection.fetch().then(function () {
+            this.collection.fetch().then(() => {
                 listView.$el.parent().css('height', '');
             });
 
@@ -413,6 +416,7 @@ define('views/record/panels/relationship',
             var scope = data.scope || this.scope;
 
             var filter = this.filter;
+
             if (this.relatedListFiltersDisabled) {
                 filter = null;
             }
@@ -446,12 +450,12 @@ define('views/record/panels/relationship',
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
-            this.createView('modalRelatedList', viewName, options, function (view) {
+            this.createView('modalRelatedList', viewName, options, (view) => {
                 Espo.Ui.notify(false);
 
                 view.render();
 
-                this.listenTo(view, 'action', function (action, data, e) {
+                this.listenTo(view, 'action', (action, data, e) => {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
                     if (typeof this[method] === 'function') {
@@ -459,11 +463,11 @@ define('views/record/panels/relationship',
 
                         e.preventDefault();
                     }
-                }, this);
+                });
 
-                this.listenToOnce(view, 'close', function () {
+                this.listenToOnce(view, 'close', () => {
                     this.clearView('modalRelatedList');
-                }, this);
+                });
             });
         },
 
@@ -488,17 +492,17 @@ define('views/record/panels/relationship',
                 scope: scope,
                 id: id,
                 model: this.collection.get(id),
-            }, function (view) {
-                view.once('after:render', function () {
+            }, (view) => {
+                view.once('after:render', () => {
                     Espo.Ui.notify(false);
                 });
 
                 view.render();
 
-                view.once('after:save', function () {
+                view.once('after:save', () => {
                     this.collection.fetch();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         actionEditRelated: function (data) {
@@ -513,17 +517,17 @@ define('views/record/panels/relationship',
             this.createView('quickEdit', viewName, {
                 scope: scope,
                 id: id,
-            }, function (view) {
-                view.once('after:render', function () {
+            }, (view) => {
+                view.once('after:render', () => {
                     Espo.Ui.notify(false);
                 });
 
                 view.render();
 
-                view.once('after:save', function () {
+                view.once('after:save', () => {
                     this.collection.fetch();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         actionUnlinkRelated: function (data) {
@@ -531,21 +535,22 @@ define('views/record/panels/relationship',
 
             this.confirm({
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
-                confirmText: this.translate('Unlink')
-            }, function () {
+                confirmText: this.translate('Unlink'),
+            }, () => {
                 this.notify('Unlinking...');
 
-                Espo.Ajax.deleteRequest(this.collection.url, {
-                    id: id,
-                }).then(function () {
-                    this.notify('Unlinked', 'success');
+                Espo.Ajax
+                    .deleteRequest(this.collection.url, {
+                        id: id,
+                    }).then(() => {
+                        this.notify('Unlinked', 'success');
 
-                    this.collection.fetch();
+                        this.collection.fetch();
 
-                    this.model.trigger('after:unrelate');
-                    this.model.trigger('after:unrelate:' + this.link);
-                }.bind(this));
-            }, this);
+                        this.model.trigger('after:unrelate');
+                        this.model.trigger('after:unrelate:' + this.link);
+                    });
+            });
         },
 
         actionRemoveRelated: function (data) {
@@ -554,46 +559,42 @@ define('views/record/panels/relationship',
             this.confirm({
                 message: this.translate('removeRecordConfirmation', 'messages'),
                 confirmText: this.translate('Remove'),
-            }, function () {
+            }, () => {
                 var model = this.collection.get(id);
 
                 this.notify('Removing...');
 
-                model.destroy({
-                    success: function () {
+                model
+                    .destroy()
+                    .then(() => {
                         this.notify('Removed', 'success');
 
                         this.collection.fetch();
 
                         this.model.trigger('after:unrelate');
                         this.model.trigger('after:unrelate:' + this.link);
-                    }.bind(this),
-                });
-            }, this);
+                    });
+            });
         },
 
         actionUnlinkAllRelated: function (data) {
-            this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
+            this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                $.ajax({
-                    url: this.model.name + '/action/unlinkAll',
-                    type: 'POST',
-                    data: JSON.stringify({
+                Espo.Ajax
+                    .postRequest(this.model.name + '/action/unlinkAll', {
                         link: data.link,
                         id: this.model.id,
-                    }),
-                }).done(function () {
-                    this.notify(false);
+                    })
+                    .then(() => {
+                        this.notify('Unlinked', 'success');
 
-                    this.notify('Unlinked', 'success');
+                        this.collection.fetch();
 
-                    this.collection.fetch();
-
-                    this.model.trigger('after:unrelate');
-                    this.model.trigger('after:unrelate:' + this.link);
-                }.bind(this));
-            }, this);
+                        this.model.trigger('after:unrelate');
+                        this.model.trigger('after:unrelate:' + this.link);
+                    });
+            });
         },
     });
 });
