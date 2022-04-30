@@ -27,54 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Hooks\LayoutSet;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-/**
- * @extends \Espo\Core\Repositories\Database<\Espo\Entities\LayoutSet>
- */
-class LayoutSet extends \Espo\Core\Repositories\Database
+use Espo\Entities\LayoutSet;
+use Espo\Entities\Team;
+use Espo\Entities\Portal;
+
+class Removal
 {
-    protected function afterSave(Entity $entity, array $options = [])
+    private EntityManager $entityManager;
+
+    public function __construct(EntityManager $entityManager)
     {
-        parent::afterSave($entity);
-
-        if (!$entity->isNew() && $entity->has('layoutList')) {
-            $listBefore = $entity->getFetched('layoutList') ?? [];
-            $listNow = $entity->get('layoutList') ?? [];
-
-            foreach ($listBefore as $name) {
-                if (!in_array($name, $listNow)) {
-                    $layout = $this->entityManager
-                        ->getRDBRepository('LayoutRecord')
-                        ->where([
-                            'layoutSetId' => $entity->getId(),
-                            'name' => $name,
-                        ])
-                        ->findOne();
-
-                    if ($layout) {
-                        $this->entityManager->removeEntity($layout);
-                    }
-                }
-            }
-        }
+        $this->entityManager = $entityManager;
     }
 
-    protected function afterRemove(Entity $entity, array $options = [])
+    /**
+     * @param LayoutSet $entity
+     */
+    public function afterRemove(Entity $entity): void
     {
-        parent::afterRemove($entity);
-
-        $layoutList = $this->entityManager
-            ->getRDBRepository('LayoutRecord')
+        $updateQuery1 = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Team::ENTITY_TYPE)
+            ->set([
+                'layoutSetId' => null,
+            ])
             ->where([
                 'layoutSetId' => $entity->getId(),
             ])
-            ->find();
+            ->build();
 
-        foreach ($layoutList as $layout) {
-            $this->entityManager->removeEntity($layout);
-        }
+        $this->entityManager
+            ->getQueryExecutor()
+            ->execute($updateQuery1);
+
+        $updateQuery2 = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Portal::ENTITY_TYPE)
+            ->set([
+                'layoutSetId' => null,
+            ])
+            ->where([
+                'layoutSetId' => $entity->getId(),
+            ])
+            ->build();
+
+        $this->entityManager
+            ->getQueryExecutor()
+            ->execute($updateQuery2);
     }
 }
