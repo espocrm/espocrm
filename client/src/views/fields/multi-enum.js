@@ -40,6 +40,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         matchAnyWord: false,
 
+        MAX_ITEM_LENGTH: 100,
+
         events: {
         },
 
@@ -136,7 +138,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         afterRender: function () {
             if (this.mode === 'edit') {
-                var $element = this.$element = this.$el.find('[data-name="' + this.name + '"]');
+                this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
                 var data = [];
 
@@ -209,7 +211,17 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 if (this.allowCustomOptions) {
                     selectizeOptions.persist = false;
 
-                    selectizeOptions.create = function (input) {
+                    selectizeOptions.create = (input) => {
+                        if (input.length > this.MAX_ITEM_LENGTH) {
+                            Espo.Ui.error(
+                                this.translate('arrayItemMaxLength', 'messages')
+                                .replace('{max}', this.MAX_ITEM_LENGTH.toString()),
+                                true
+                            );
+
+                            return null;
+                        }
+
                         return {
                             value: input,
                             label: input,
