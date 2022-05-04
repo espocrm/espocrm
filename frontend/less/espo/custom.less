@@ -950,14 +950,24 @@ ul.dropdown-menu > li.checkbox:last-child {
     }
 
     .multi-enum-item-label-container {
-        margin-bottom: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-bottom: 4px;
+
         &:last-child {
-            margin-bottom: 0;
+            padding-bottom: 1px;
         }
 
         .label-md {
             line-height: 1.5;
         }
+    }
+}
+
+.field {
+    > .label {
+        white-space: normal;
     }
 }
 
