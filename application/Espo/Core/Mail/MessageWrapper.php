@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail;
 
 use Espo\Core\Mail\Account\Storage;
+use Espo\Core\Mail\Message\Part;
 
 use RuntimeException;
 
@@ -69,6 +70,17 @@ class MessageWrapper implements Message
         $this->storage = $storage;
         $this->parser = $parser;
         $this->fullRawContent = $fullRawContent;
+
+        if (
+            !$storage &&
+            $this->fullRawContent &&
+            strpos($this->fullRawContent, "\r\n\r\n") !== false
+        ) {
+            [$rawHeader, $rawBody] = explode("\r\n\r\n", $this->fullRawContent, 2);
+
+            $this->rawHeader = $rawHeader;
+            $this->rawContent = $rawBody;
+        }
     }
 
     public function getRawHeader(): string
@@ -132,5 +144,17 @@ class MessageWrapper implements Message
     public function isFetched(): bool
     {
         return (bool) $this->rawHeader;
+    }
+
+    /**
+     * @return Part[]
+     */
+    public function getPartList(): array
+    {
+        if (!$this->parser) {
+            throw new RuntimeException();
+        }
+
+        return $this->parser->getPartList($this);
     }
 }

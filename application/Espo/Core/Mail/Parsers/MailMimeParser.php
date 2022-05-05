@@ -36,6 +36,10 @@ use Espo\Entities\Attachment;
 
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Parser;
+use Espo\Core\Mail\Message\Part;
+
+use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
+
 use Espo\ORM\EntityManager;
 
 use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
@@ -209,6 +213,22 @@ class MailMimeParser implements Parser
         }
 
         return $addressList;
+    }
+
+    /**
+     * @return Part[]
+     */
+    public function getPartList(Message $message): array
+    {
+        $wrappeeList = $this->getMessage($message)->getChildParts();
+
+        $partList = [];
+
+        foreach ($wrappeeList as $wrappee) {
+            $partList[] = new WrapperPart($wrappee);
+        }
+
+        return $partList;
     }
 
     /**

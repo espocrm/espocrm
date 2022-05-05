@@ -1,0 +1,65 @@
+Delivered-To: me@test.com
+Received: by 10.213.9.17 with SMTP id j17csp4766ebj;
+        Tue, 8 May 2012 20:34:50 -0700 (PDT)
+Received: by 10.182.207.10 with SMTP id ls10mr30733797obc.9.1336534489928;
+        Tue, 08 May 2012 20:34:49 -0700 (PDT)
+Return-Path: <>
+Received: from mx3.name.com (mx3.name.com. [173.192.7.98])
+        by mx.google.com with ESMTP id s3si768112obn.1.2012.05.08.20.34.49;
+        Tue, 08 May 2012 20:34:49 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of mx3.name.com designates 173.192.7.98 as permitted sender) client-ip=173.192.7.98;
+Authentication-Results: mx.google.com; spf=pass (google.com: best guess record for domain of mx3.name.com designates 173.192.7.98 as permitted sender) smtp.mail=
+Received-SPF: None (no SPF record) identity=helo; client-ip=199.255.192.13; helo=a192-13.smtp-out.amazonses.com; envelope-from=<>; receiver=info@test.com
+Received: from a192-13.smtp-out.amazonses.com (a192-13.smtp-out.amazonses.com [199.255.192.13])
+	by mx3.name.com (Postfix) with ESMTP id 5972F6000074C
+	for <info@test.com>; Tue,  8 May 2012 22:34:49 -0500 (CDT)
+X-Original-To: 000001372d0dbf88-76d26d51-9d96-468a-9071-318ba2c35003-000000@amazonses.com
+Delivered-To: 000001372d0dbf88-76d26d51-9d96-468a-9071-318ba2c35003-000000@amazonses.com
+Message-Id: <000001372fa9d596-ec772006-9987-11e1-8d9b-433290f94ba3-000000@email.amazonses.com>
+Date: Wed, 9 May 2012 03:34:48 +0000
+To: info+bounce-qid-0011aa@test.com
+From: MAILER-DAEMON@amazonses.com
+Subject: Delivery Status Notification (Failure)
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="ACnzx.4lvBb052b.srYYd.CyGnkMZ"
+X-AWS-Outgoing: 199.255.192.13
+
+--ACnzx.4lvBb052b.srYYd.CyGnkMZ
+content-type: text/plain;
+    charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+The following message to <wrongster@test.com> was undeliverable.
+The reason for the problem:
+5.4.7 - Delivery expired (message too old) 'no valid ip addresses'
+
+--ACnzx.4lvBb052b.srYYd.CyGnkMZ
+content-type: message/delivery-status
+
+Reporting-MTA: dns; na-mm-outgoing-7101-bacon.iad7.amazon.com
+
+Final-Recipient: rfc822;wrongster@test.com
+Action: failed
+Status: 5.0.0 (permanent failure)
+Diagnostic-Code: smtp; 5.4.7 - Delivery expired (message too old) 'no valid ip addresses' (delivery attempts: 0)
+
+--ACnzx.4lvBb052b.srYYd.CyGnkMZ
+content-type: message/rfc822
+
+Received: from unknown (HELO aws-bacon-dlvr-svc-na-i-986ddefa.us-east-1.amazon.com) ([10.13.133.79])
+  by na-mm-outgoing-7101-bacon.iad7.amazon.com with ESMTP; 08 May 2012 16:15:55 +0000
+Return-Path: 000001372d0dbf88-76d26d51-9d96-468a-9071-318ba2c35003-000000@amazonses.com
+Date: Tue, 8 May 2012 15:25:04 +0000
+From: info@test.com
+To: wrongster@test.com
+Message-ID: <000001372d0dbf88-76d26d51-9d96-468a-9071-318ba2c35003-000000@email.amazonses.com>
+Subject: Test subject
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AWS-Outgoing: 199.127.232.7
+
+Test message.
+
+--ACnzx.4lvBb052b.srYYd.CyGnkMZ--

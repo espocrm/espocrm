@@ -34,6 +34,7 @@ use Espo\Core\Mail\Account\Hook\BeforeFetchResult;
 
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Message;
+use Espo\Core\Mail\Account\GroupAccount\BouncedRecognizer;
 
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
@@ -55,21 +56,25 @@ class BeforeFetch implements BeforeFetchInterface
 
     private InjectableFactory $injectableFactory;
 
+    private BouncedRecognizer $bouncedRecognizer;
+
     private ?CampaignService $campaignService = null;
 
-    public function __construct(Log $log, EntityManager $entityManager, InjectableFactory $injectableFactory)
-    {
+    public function __construct(
+        Log $log,
+        EntityManager $entityManager,
+        InjectableFactory $injectableFactory,
+        BouncedRecognizer $bouncedRecognizer
+    ) {
         $this->log = $log;
         $this->entityManager = $entityManager;
         $this->injectableFactory = $injectableFactory;
+        $this->bouncedRecognizer = $bouncedRecognizer;
     }
 
     public function process(Account $account, Message $message): BeforeFetchResult
     {
-        if (
-            $message->hasHeader('from') &&
-            preg_match('/MAILER-DAEMON|POSTMASTER/i', $message->getHeader('from') ?? '')
-        ) {
+        if ($this->bouncedRecognizer->isBounced($message)) {
             try {
                 $toSkip = $this->processBounced($message);
             }
@@ -94,32 +99,8 @@ class BeforeFetch implements BeforeFetchInterface
 
     private function processBounced(Message $message): bool
     {
-        $content = $message->getRawContent();
-
-        $isHard = false;
-
-        if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
-            $isHard = true;
-        }
-
-        $queueItemId = null;
-
-        if (preg_match('/X-Queue-Item-Id: [a-z0-9\-]*/', $content, $m)) {
-            /** @var array{string} */
-            $arr = preg_split('/X-Queue-Item-Id: /', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
-
-            $queueItemId = $arr[0];
-        }
-        else {
-            $to = $message->getHeader('to');
-
-            if (preg_match('/\+bounce-qid-[a-z0-9\-]*/', $to ?? '', $m)) {
-                /** @var array{string} */
-                $arr = preg_split('/\+bounce-qid-/', $m[0], -1, \PREG_SPLIT_NO_EMPTY);
-
-                $queueItemId = $arr[0];
-            }
-        }
+        $isHard = $this->bouncedRecognizer->isHard($message);
+        $queueItemId = $this->bouncedRecognizer->extractQueueItemId($message);
 
         if (!$queueItemId) {
             return false;

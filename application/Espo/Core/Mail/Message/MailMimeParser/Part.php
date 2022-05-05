@@ -27,39 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail;
+namespace Espo\Core\Mail\Message\MailMimeParser;
 
-use Espo\Entities\Email;
-use Espo\Entities\Attachment;
-use Espo\Core\Mail\Message;
-use Espo\Core\Mail\Message\Part;
+use Espo\Core\Mail\Message\Part as PartInterface;
 
-use stdClass;
+use ZBateson\MailMimeParser\Message\Part\MessagePart;
 
-interface Parser
+class Part implements PartInterface
 {
-    public function hasHeader(Message $message, string $name): bool;
+    private MessagePart $part;
 
-    public function getHeader(Message $message, string $name): ?string;
+    public function __construct(MessagePart $part)
+    {
+        $this->part = $part;
+    }
 
-    public function getMessageId(Message $message): ?string;
+    public function getContentType(): ?string
+    {
+        return $this->part->getContentType();
+    }
 
-    public function getAddressNameMap(Message $message): stdClass;
+    public function hasContent(): bool
+    {
+        return $this->part->hasContent();
+    }
 
-    public function getAddressData(Message $message, string $type): ?stdClass;
+    public function getContent(): ?string
+    {
+        return $this->part->getContent();
+    }
 
-    /**
-     * @return string[]
-     */
-    public function getAddressList(Message $message, string $type): array;
+    public function getContentId(): ?string
+    {
+        return $this->part->getContentId();
+    }
 
-    /**
-     * @return Attachment[] A list of inline attachments.
-     */
-    public function getInlineAttachmentList(Message $message, Email $email): array;
+    public function getCharset(): ?string
+    {
+        return $this->part->getCharset();
+    }
 
-    /**
-     * @return Part[]
-     */
-    public function getPartList(Message $message): array;
+    public function getContentDisposition(): ?string
+    {
+        return $this->part->getContentDisposition();
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->part->getFilename();
+    }
 }

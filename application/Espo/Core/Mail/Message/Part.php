@@ -27,39 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Mail;
+namespace Espo\Core\Mail\Message;
 
-use Espo\Entities\Email;
-use Espo\Entities\Attachment;
-use Espo\Core\Mail\Message;
-use Espo\Core\Mail\Message\Part;
-
-use stdClass;
-
-interface Parser
+interface Part
 {
-    public function hasHeader(Message $message, string $name): bool;
+    public function getContentType(): ?string;
 
-    public function getHeader(Message $message, string $name): ?string;
+    public function hasContent(): bool;
 
-    public function getMessageId(Message $message): ?string;
+    public function getContent(): ?string;
 
-    public function getAddressNameMap(Message $message): stdClass;
+    public function getContentId(): ?string;
 
-    public function getAddressData(Message $message, string $type): ?stdClass;
+    public function getCharset(): ?string;
 
-    /**
-     * @return string[]
-     */
-    public function getAddressList(Message $message, string $type): array;
+    public function getContentDisposition(): ?string;
 
-    /**
-     * @return Attachment[] A list of inline attachments.
-     */
-    public function getInlineAttachmentList(Message $message, Email $email): array;
-
-    /**
-     * @return Part[]
-     */
-    public function getPartList(Message $message): array;
+    public function getFilename(): ?string;
 }
