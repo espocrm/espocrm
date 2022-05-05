@@ -14,7 +14,7 @@
                             autocapitalize="off"
                             autocorrect="off"
                             tabindex="1"
-                            autocomplete="code"
+                            autocomplete="new-password"
                         >
                     </div>
                     <div>
