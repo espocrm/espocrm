@@ -1,12 +1,18 @@
 {
+  "labels": {
+    "Dynamic Logic": "Динамична логика",
+    "Name": "Име",
+    "Label": "Етикет",
+    "Type": "Тип"
+  },
   "options": {
     "dateTimeDefault": {
       "": "Нито един",
       "javascript: return this.dateTime.getNow(1);": "Сега",
-      "javascript: return this.dateTime.getNow(5);": "Сега (5 М)",
-      "javascript: return this.dateTime.getNow(15);": "Сега (петнайсетm)",
-      "javascript: return this.dateTime.getNow(30);": "Сега (трийсетм)",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "едночас",
+      "javascript: return this.dateTime.getNow(5);": "Сега (5мин.)",
+      "javascript: return this.dateTime.getNow(15);": "Сега (15мин.)",
+      "javascript: return this.dateTime.getNow(30);": "Сега (30мин.)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 час",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 часа",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 часа",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 часа",
@@ -18,18 +24,18 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 часа",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 часа",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 часа",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "еднаден",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 ден",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 дни",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 дни",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 дни",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 дни",
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 дни",
-      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "една седмица"
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 седмица"
     },
     "dateDefault": {
       "": "Нито един",
-      "javascript: return this.dateTime.getToday();": "днес",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "еднаден",
+      "javascript: return this.dateTime.getToday();": "Днес",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 ден",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 дни",
       "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 дни",
       "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 дни",
@@ -39,10 +45,10 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 дни",
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 дни",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 дни",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "една седмица",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 седмица",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 седмици",
       "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 седмици",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "милиардмесец",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 месец",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 месеца",
@@ -53,7 +59,7 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 месеца",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "милион години"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 година"
     },
     "barcodeType": {
       "UPC": "UPC (А)",
@@ -62,34 +68,35 @@
     }
   },
   "tooltips": {
-    "audited": "Актуализациите ще бъде записано в поток.",
-    "required": "Невярно ще бъде задължително. Не може да бъде оставено празно.",
-    "default": "Стойността ще бъде зададена по подразбиране при създаване.",
-    "min": "Мин приемлива стойност.",
-    "max": "Макс приемлива стойност.",
-    "seeMoreDisabled": "Ако не се проверява след дълги текстове ще бъдат съкратени.",
-    "lengthOfCut": "Колко дълго може да бъде текст, преди това ще бъдат отрязани.",
-    "maxLength": "Макс приемлива продължителност на текст.",
-    "before": "Стойността на датата трябва да е преди датата на стойността на указаното поле.",
-    "after": "Стойността на датата трябва да е след датата, стойността на указаното поле.",
-    "readOnly": "Стойността на полето не може да бъде определен от потребителя. Но може да бъде изчислена по формула.",
-    "maxFileSize": "Ако празно или 0 след няма ограничение.",
-    "fileAccept": "Кои типове файлове да приеме. Това е възможно да се добавят и други елементи.",
-    "barcodeLastChar": "За EAN-13 тип."
+    "audited": "Актуализациите ще бъдат записани в активността.",
+    "required": "Полето ще бъде задължително. Не може да остане празно.",
+    "default": "Стойността ще бъде зададена по подразбиране при създаването.",
+    "min": "Минимална приемлива стойност.",
+    "max": "Максимална приемлива стойност.",
+    "seeMoreDisabled": "Ако не е отметнато, дългите текстове ще бъдат съкратени.",
+    "lengthOfCut": "Колко дълъг може да бъде текстът, преди да бъде съкратен.",
+    "maxLength": "Максимална допустима дължина на текста.",
+    "before": "Стойността на датата трябва да е преди стойността на датата на посоченото поле.",
+    "after": "Стойността на датата трябва да е след стойността на датата на посоченото поле.",
+    "readOnly": "Стойността на полето не може да бъде посочена от потребителя. Но може да се изчисли по формула.",
+    "maxFileSize": "Ако е празно или 0, няма ограничение в размера.",
+    "fileAccept": "Кои типове файлове да приемате. Възможно е добавяне на персонализирани елементи.",
+    "barcodeLastChar": "За EAN-13 тип.",
+    "conversionDisabled": "Действието за конвертиране на валута няма да бъде приложено към това поле."
   },
   "fieldParts": {
     "address": {
-      "street": "улица",
-      "city": "град",
-      "state": "състояние",
-      "country": "Страна",
-      "postalCode": "пощенски код",
-      "map": "карта"
+      "street": "Улица",
+      "city": "Град",
+      "state": "Област",
+      "country": "Държава",
+      "postalCode": "Пощенски код",
+      "map": "Карта"
     },
     "personName": {
-      "salutation": "поздрав",
-      "first": "първи",
-      "last": "последно",
+      "salutation": "Обръщение",
+      "first": "Първо име",
+      "last": "Фамилия",
       "middle": "среден"
     },
     "currency": {
@@ -100,9 +107,33 @@
       "date": "Дата"
     }
   },
-  "labels": {
-    "Name": "име",
-    "Label": "етикет",
-    "Type": "Тип"
+  "fieldInfo": {
+    "varchar": "Текст от един ред.",
+    "enum": "Поле за избор, може да бъде избрана само една стойност.",
+    "text": "Многоредов текст с възможности за форматиране.",
+    "date": "Дата без час.",
+    "datetime": "Дата и час",
+    "currency": "Валутна стойност. Може да се използва за суми и пари.",
+    "int": "Цяло число.",
+    "float": "Число с десетична част.",
+    "bool": "Квадрат за отметка. Две възможни стойности: да или не.",
+    "multiEnum": "Списък със стойности, могат да бъдат избрани множество стойности. Списъкът е подреден.",
+    "checklist": "Списък с квадратчета за отметки.",
+    "array": "Списък със стойности, подобен на полето Multi-Enum.",
+    "address": "Адрес с улица, град, област, пощенски код и държава.",
+    "url": "За съхранение на линкове.",
+    "wysiwyg": "Текст с поддръжка за HTML.",
+    "file": "За качване на файлове.",
+    "image": "За качване на изображения.",
+    "attachmentMultiple": "Позволява качване на множество файлове.",
+    "number": "Автоматично нарастващо число с възможен префикс и конкретна дължина.",
+    "autoincrement": "Автоматично нарастващо число, с възможен префикс и конкретна дължина, НО не може да се редактира.",
+    "barcode": "Баркод. Може да се отпечата в PDF.",
+    "email": "Набор от имейл адреси с техните параметри: Отписан, Невалиден, Основен.",
+    "phone": "Набор от телефонни номера с техните параметри: Тип, Отписан, Невалиден, Основен.",
+    "foreign": "Поле на свързан запис. Само за четене.",
+    "link": "Запис, свързан чрез връзка „Принадлежи към (много към един или един към един).",
+    "linkParent": "Запис, свързан чрез връзката „Принадлежи на родител“. Може да бъде от различни типове обекти.",
+    "linkMultiple": "Набор от записи, свързани чрез релация Има-много (много към много или един към много). Не всички релации имат своите полета с множество връзки. Правят го само тези, при които е разрешен параметър(и) за връзка с множество."
   }
 }

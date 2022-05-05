@@ -1,32 +1,33 @@
 {
   "fields": {
-    "name": "име",
+    "name": "Име",
     "status": "Статус",
-    "body": "тяло",
-    "subject": "Предмет",
-    "attachments": "Прикачени",
-    "oneOff": "Еднократни",
-    "category": "категория"
+    "isHtml": "Имейлът е HTML",
+    "body": "Съдържание",
+    "subject": "Заглавие",
+    "attachments": "Прикачени файлове",
+    "oneOff": "Еднократно",
+    "category": "Категория"
   },
   "labels": {
-    "Create EmailTemplate": "Създаване Шаблон за имейл",
+    "Create EmailTemplate": "Създаване на Шаблон за имейл",
     "Info": "Информация",
-    "Available placeholders": "Налични контейнери"
+    "Available placeholders": "Налични placeholders"
   },
   "tooltips": {
-    "oneOff": "Проверете, ако ще се използва този шаблон само веднъж. Например за Маса Email."
+    "oneOff": "Отбележете, ако този шаблон ще се използва само веднъж. Например за масов имейл в имейл кампания."
   },
   "presetFilters": {
-    "actual": "действителен"
-  },
-  "messages": {
-    "infoText": "Предлагани заместители: {optOutUrl} & # 8211; URL за unsubscribe връзка; {OptOutLink} & # 8211; за връзка за отписване."
+    "actual": "Актуален"
   },
   "placeholderTexts": {
-    "optOutUrl": "URL за unsubsbribe връзка",
-    "optOutLink": "за връзка за отписване",
+    "optOutLink": "URL за отписване",
     "today": "Днешната дата",
     "now": "Текуща дата и време",
-    "currentYear": "Текуща година"
+    "currentYear": "Текуща година",
+    "optOutUrl": "URL за отписване"
+  },
+  "messages": {
+    "infoText": "Налични заместители:\n\n{optOutUrl} &#8211; URL линк за отписване;\n\n{optOutLink} &#8211; линк за отписване."
   }
 }

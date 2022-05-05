@@ -1,61 +1,62 @@
 {
   "fields": {
-    "name": "име",
-    "description": "описание",
+    "name": "Име",
+    "description": "Описание",
     "status": "Статус",
     "type": "Тип",
     "startDate": "Начална дата",
     "endDate": "Крайна дата",
     "targetLists": "Целеви списъци",
     "excludingTargetLists": "С изключение на целевите списъци",
-    "sentCount": "Изпратено",
-    "openedCount": "Отворен",
-    "clickedCount": "Кликване",
-    "optedOutCount": "Отказахте се",
-    "bouncedCount": "Върната",
-    "hardBouncedCount": "Hard Върната",
-    "softBouncedCount": "Мека Върната",
-    "leadCreatedCount": "Създадена Потенциална Продажба",
-    "revenue": "приход",
-    "revenueConverted": "Приходите (изчислена)",
-    "budget": "бюджет",
-    "budgetConverted": "Бюджет (изчислена)",
-    "contactsTemplate": "Контакти с шаблони",
-    "leadsTemplate": "Leads Шаблон",
-    "accountsTemplate": "сметки за шаблони",
-    "usersTemplate": "Потребителите на шаблона",
-    "mailMergeOnlyWithAddress": "Напред записи / М попълнено адрес",
+    "sentCount": "Изпратени",
+    "openedCount": "Отваряния",
+    "clickedCount": "Кликвания",
+    "optedOutCount": "Отписали се",
+    "bouncedCount": "Неуспешно получени",
+    "hardBouncedCount": "Неуспешно получени",
+    "softBouncedCount": "Неуспешно получени",
+    "leadCreatedCount": "Генерирани потенциални продажби",
+    "revenue": "Приход",
+    "revenueConverted": "Приходи (изчислени)",
+    "budget": "Бюджет",
+    "budgetConverted": "Бюджет (изчислен)",
+    "contactsTemplate": "Шаблон за контакти",
+    "leadsTemplate": "Шаблон за потенциална продажба",
+    "accountsTemplate": "Шаблон за Клиенти",
+    "usersTemplate": "Шаблон за потребители",
+    "mailMergeOnlyWithAddress": "Пропускане на записи без попълнен адрес",
     "optedInCount": "Избрал участие",
-    "budgetCurrency": "Бюджет на валута"
+    "budgetCurrency": "Валута на бюджета"
   },
   "links": {
     "targetLists": "Целеви списъци",
     "excludingTargetLists": "С изключение на целевите списъци",
-    "accounts": "сметки",
+    "accounts": "Клиенти",
     "contacts": "Контакти",
-    "leads": "Потенциална Продажба",
-    "opportunities": "възможности",
+    "leads": "Потенциални продажби",
+    "opportunities": "Сделки",
     "campaignLogRecords": "Вход",
     "massEmails": "Масови имейли",
     "trackingUrls": "Проследяване на URL адреси",
-    "contactsTemplate": "Контакти с шаблони",
-    "leadsTemplate": "Leads Шаблон",
-    "accountsTemplate": "сметки за шаблони",
+    "contactsTemplate": "Шаблон за контакти",
+    "leadsTemplate": "Шаблон за потенциални продажби",
+    "accountsTemplate": "Шаблон за Клиенти",
     "usersTemplate": "Потребителите на шаблона"
   },
   "options": {
     "type": {
-      "Email": "електронна поща",
-      "Web": "мрежа",
-      "Television": "телевизия",
-      "Radio": "радио",
-      "Mail": "поща"
+      "Email": "Електронна поща",
+      "Web": "Интернет",
+      "Television": "Телевизия",
+      "Radio": "Радио",
+      "Newsletter": "Имейл бюлетин",
+      "Mail": "Електронна поща"
     },
     "status": {
-      "Planning": "планиране",
-      "Active": "Активен",
-      "Inactive": "неактивен",
-      "Complete": "пълен"
+      "Planning": "Планиране",
+      "Active": "Активна",
+      "Inactive": "Неактивна",
+      "Complete": "Завършена"
     }
   },
   "labels": {
@@ -66,18 +67,19 @@
     "soft": "мек",
     "Unsubscribe": "Отписване",
     "Mass Emails": "Масови имейли",
-    "Email Templates": "Шаблони за имейл",
+    "Email Templates": "Шаблони за имейли",
     "Unsubscribe again": "Отписване отново",
     "Subscribe again": "Абонирайте се отново",
-    "Create Target List": "Създаване на Target Списък",
-    "Generate Mail Merge PDF": "Генериране на циркулярни PDF"
+    "Create Target List": "Създаване на целеви списък",
+    "Mail Merge": "Сливане на имейли",
+    "Generate Mail Merge PDF": "Генериране на Mail Merge PDF"
   },
   "presetFilters": {
     "active": "Активен"
   },
   "messages": {
-    "unsubscribed": "Отписахте се от нашия пощенски списък.",
-    "subscribedAgain": "Абонирани сте отново."
+    "unsubscribed": "Отписахте се от нашия имейл бюлетин",
+    "subscribedAgain": "Абонирахте се отново."
   },
   "tooltips": {
     "targetLists": "Цели, които трябва да получават съобщения.",

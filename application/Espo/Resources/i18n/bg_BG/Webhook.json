@@ -1,15 +1,16 @@
 {
   "labels": {
-    "Create Webhook": "Създаване Webhook"
+    "Create Webhook": "Създаване на Webhook"
   },
   "fields": {
-    "event": "събитие",
-    "isActive": "е активен",
-    "user": "API за потребителя",
+    "event": "Събитие",
+    "isActive": "Е активен",
+    "user": "API потребител",
     "entityType": "Тип на обекта",
-    "field": "поле"
+    "field": "Поле",
+    "secretKey": "Секретен ключ"
   },
   "links": {
-    "user": "потребител"
+    "user": "Потребител"
   }
 }

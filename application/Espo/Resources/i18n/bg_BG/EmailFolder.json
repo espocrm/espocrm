@@ -1,10 +1,10 @@
 {
   "fields": {
-    "skipNotifications": "Пропускане Известия"
+    "skipNotifications": "Пропускане на известия"
   },
   "labels": {
     "Create EmailFolder": "Създай папка",
     "Manage Folders": "Управление на папки",
-    "Emails": "имейли"
+    "Emails": "Имейли"
   }
 }

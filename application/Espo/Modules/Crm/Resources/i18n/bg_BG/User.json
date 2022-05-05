@@ -3,8 +3,8 @@
     "targetLists": "Целеви списъци"
   },
   "fields": {
-    "acceptanceStatus": "Приемане Статус",
-    "acceptanceStatusMeetings": "Приемане Статус (срещи)",
-    "acceptanceStatusCalls": "Приемане Статус (призовава)"
+    "acceptanceStatus": "Статус за приемане",
+    "acceptanceStatusMeetings": "Статус на приемане (Срещи)",
+    "acceptanceStatusCalls": "Статус на приемане (Разговори)"
   }
 }

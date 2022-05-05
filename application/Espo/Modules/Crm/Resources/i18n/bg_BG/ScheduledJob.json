@@ -1,8 +1,8 @@
 {
   "options": {
     "job": {
-      "ProcessMassEmail": "Изпрати Масови имейли",
-      "ControlKnowledgeBaseArticleStatus": "Контрол Статия от Базата знания Статус"
+      "ProcessMassEmail": "Изпращане на масови имейли",
+      "ControlKnowledgeBaseArticleStatus": "Управление на статуса на статиите от документацията"
     }
   }
 }

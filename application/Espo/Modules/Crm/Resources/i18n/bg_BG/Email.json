@@ -1,10 +1,13 @@
 {
   "labels": {
-    "Create Lead": "Създаване на олово",
+    "Create Lead": "Създаване на потенциална продажба",
     "Create Contact": "Създаване на контакт",
-    "Create Task": "Създаване на Task",
-    "Create Case": "Създаване на дело",
-    "Add to Contact": "Добави към контакти",
-    "Add to Lead": "Добави в Lead"
+    "Create Task": "Създаване на задача",
+    "Create Case": "Създаване на тикет",
+    "Add to Contact": "Добави към контакт",
+    "Add to Lead": "Добави към потенциална продажба"
+  },
+  "fields": {
+    "tasks": "Задачи"
   }
 }

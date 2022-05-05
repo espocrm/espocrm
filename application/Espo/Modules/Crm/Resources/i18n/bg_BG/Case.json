@@ -1,60 +1,61 @@
 {
   "fields": {
-    "name": "име",
-    "number": "номер",
+    "name": "Име",
+    "number": "Номер",
     "status": "Статус",
     "account": "Сметка",
-    "contact": "контакт",
+    "contact": "Контакт",
     "contacts": "Контакти",
-    "priority": "приоритет",
+    "priority": "Приоритет",
     "type": "Тип",
-    "description": "описание",
-    "lead": "Потенциална Продажба",
-    "attachments": "Прикачени",
-    "inboundEmail": "Група имейл акаунт"
+    "description": "Описание",
+    "lead": "Потенциална продажба",
+    "attachments": "Прикачени файлове",
+    "inboundEmail": "Групов имейл акаунт"
   },
   "links": {
-    "account": "Сметка",
-    "contact": "Свържи (Основно)",
+    "account": "Клиент",
+    "contact": "Контакт (Основен)",
     "Contacts": "Контакти",
-    "meetings": "срещи",
-    "calls": "призовава",
+    "meetings": "Срещи",
+    "calls": "Обаждания",
     "tasks": "Задачи",
-    "emails": "имейли",
+    "emails": "Имейли",
     "articles": "Статии от базата знания",
-    "lead": "Потенциална Продажба",
-    "attachments": "Прикачени",
-    "inboundEmail": "Група имейл акаунт"
+    "lead": "Потенциална продажба",
+    "attachments": "Прикачени файлове",
+    "inboundEmail": "Групов имейл акаунт"
   },
   "options": {
     "status": {
-      "New": "нов",
-      "Assigned": "целеви",
-      "Pending": "Предстоящо",
-      "Closed": "Затворена",
-      "Rejected": "Отхвърлени"
+      "New": "Нов",
+      "Assigned": "Назначен",
+      "Pending": "Отворен",
+      "Closed": "Затворен",
+      "Rejected": "Отхвърлен",
+      "Duplicate": "Дублиран"
     },
     "priority": {
-      "Low": "ниско",
-      "Normal": "нормален",
-      "High": "Високо",
-      "Urgent": "спешно"
+      "Low": "Нисък",
+      "Normal": "Нормален",
+      "High": "Висок",
+      "Urgent": "Спешен"
     },
     "type": {
-      "Question": "въпрос",
+      "Question": "Въпрос",
       "Incident": "Инцидент",
-      "Problem": "проблем"
+      "Problem": "Проблем"
     }
   },
   "labels": {
-    "Create Case": "Създаване на дело",
-    "Close": "Близо",
+    "Create Case": "Създаване на тикет",
+    "Close": "Затваряне",
     "Reject": "Отхвърляне",
-    "Closed": "Затворена",
-    "Rejected": "Отхвърлени"
+    "Closed": "Затворен",
+    "Rejected": "Отхвърлен"
   },
   "presetFilters": {
-    "open": "отворено",
-    "closed": "Затворена"
+    "open": "Отворени",
+    "closed": "Затворени"
   }
 }

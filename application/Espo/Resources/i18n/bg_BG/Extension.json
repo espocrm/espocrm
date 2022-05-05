@@ -1,15 +1,16 @@
 {
   "fields": {
-    "name": "име",
-    "version": "версия",
-    "description": "описание",
-    "isInstalled": "Инсталирана",
-    "checkVersionUrl": "Един URL за проверка на нови версии"
+    "name": "Име",
+    "version": "Версия",
+    "description": "Описание",
+    "isInstalled": "Инсталирано",
+    "checkVersionUrl": "URL за проверка на нови версии"
   },
   "labels": {
+    "Uninstall": "Деинсталиране",
     "Install": "Инсталирай"
   },
   "messages": {
-    "uninstalled": "Удължаване {име} е деинсталирана"
+    "uninstalled": "Разширението {name} беше деинсталирано"
   }
 }

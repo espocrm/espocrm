@@ -1,14 +1,14 @@
 {
   "fields": {
-    "name": "име",
+    "name": "Име",
     "status": "Статус",
-    "storeSentEmails": "Магазин изпращат съобщения",
-    "startAt": "Дата Старт",
-    "fromAddress": "От Адрес",
+    "storeSentEmails": "Съхраняване на изпратените имейли",
+    "startAt": "Дата на стартиране",
+    "fromAddress": "От адрес",
     "fromName": "От име",
     "replyToAddress": "Адрес за отговор",
     "replyToName": "Отговор до Наименование",
-    "campaign": "кампания",
+    "campaign": "Кампания",
     "emailTemplate": "Шаблон за имейл",
     "inboundEmail": "Имейл акаунт",
     "targetLists": "Целеви списъци",
@@ -19,40 +19,40 @@
   "links": {
     "targetLists": "Целеви списъци",
     "excludingTargetLists": "С изключение на целевите списъци",
-    "queueItems": "елемента от опашка",
-    "campaign": "кампания",
+    "queueItems": "Елементи от опашката",
+    "campaign": "Кампания",
     "emailTemplate": "Шаблон за имейл",
     "inboundEmail": "Имейл акаунт"
   },
   "options": {
     "status": {
-      "Draft": "проект",
+      "Draft": "Чернова",
       "Pending": "Предстоящо",
       "In Process": "В процес",
-      "Complete": "пълен",
+      "Complete": "Завършен",
       "Canceled": "Отменен",
-      "Failed": "Се провали"
+      "Failed": "Провален"
     }
   },
   "labels": {
-    "Create MassEmail": "Създаване на Маса Email",
-    "Send Test": "Изпрати Test",
-    "System SMTP": "система за SMTP",
+    "Create MassEmail": "Създаване на масов имейл",
+    "Send Test": "Изпрати тестов имейл",
+    "System SMTP": "Системен SMTP",
     "system": "система",
     "group": "група"
   },
   "messages": {
-    "selectAtLeastOneTarget": "Изберете поне една мишена.",
-    "testSent": "Тест имейл (и) трябва да бъде изпратен"
+    "selectAtLeastOneTarget": "Изберете поне една цел.",
+    "testSent": "Тестовият имейл би трябвало да е изпратен"
   },
   "tooltips": {
-    "optOutEntirely": "Имейл адресите на получателите, които се отписали, ще бъдат маркирани като се отказали и те няма да получават никакви масови имейли вече.",
+    "optOutEntirely": "Имейл адресите на получателите, които са се отказали, ще бъдат маркирани като отписали се и те няма да получават повече имейли.",
     "targetLists": "Цели, които трябва да получават съобщения.",
     "excludingTargetLists": "Цели, които не трябва да получават съобщения.",
     "storeSentEmails": "Имейлите ще бъдат съхранявани в CRM."
   },
   "presetFilters": {
-    "actual": "действителен",
-    "complete": "пълен"
+    "actual": "Актуални",
+    "complete": "Завършени"
   }
 }

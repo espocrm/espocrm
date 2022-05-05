@@ -1,50 +1,55 @@
 {
   "fields": {
-    "name": "име",
-    "parent": "родител",
+    "name": "Име",
+    "parent": "Родител",
     "status": "Статус",
-    "dateStart": "Дата Старт",
+    "dateStart": "Начална дата",
     "dateEnd": "Дата до",
-    "dateStartDate": "Дата Start (цял ден)",
+    "dateStartDate": "Начална дата (цял ден)",
     "dateEndDate": "Крайна дата (цял ден)",
-    "priority": "приоритет",
-    "description": "описание",
-    "isOverdue": "е просрочено",
-    "account": "Сметка",
-    "dateCompleted": "Дата Завършен",
-    "attachments": "Прикачени",
+    "priority": "Приоритет",
+    "description": "Описание",
+    "isOverdue": "Е просрочена",
+    "account": "Клиент",
+    "dateCompleted": "Дата на завършване",
+    "attachments": "Прикачени файлове",
     "reminders": "Напомняния",
-    "contact": "контакт"
+    "contact": "Контакт"
   },
   "links": {
-    "attachments": "Прикачени",
-    "account": "Сметка",
-    "contact": "контакт"
+    "attachments": "Прикачени файлове",
+    "account": "Клиент",
+    "contact": "Контакт",
+    "email": "Имейл"
   },
   "options": {
     "status": {
-      "Not Started": "Не е започнало",
+      "Not Started": "Не е стартирана",
       "Started": "Започната",
-      "Completed": "завършен",
-      "Canceled": "Отменен",
-      "Deferred": "Разсрочено"
+      "Completed": "Завършен",
+      "Canceled": "Отменена",
+      "Deferred": "Отложена"
     },
     "priority": {
-      "Low": "ниско",
-      "Normal": "нормален",
-      "High": "Високо",
-      "Urgent": "спешно"
+      "Low": "Нисък",
+      "Normal": "Нормален",
+      "High": "Висок",
+      "Urgent": "Спешен"
     }
   },
   "labels": {
-    "Create Task": "Създаване на Task",
-    "Complete": "пълен"
+    "Create Task": "Създаване на задача",
+    "Complete": "Завършване",
+    "overdue": "просрочена"
   },
   "presetFilters": {
-    "actual": "действителен",
-    "completed": "завършен",
+    "actual": "Актуални",
+    "completed": "Завършени",
     "todays": "Днешните",
-    "overdue": "просрочен",
+    "overdue": "Просрочени",
     "deferred": "Разсрочено"
+  },
+  "nameOptions": {
+    "replyToEmail": "Отговор до имейл"
   }
 }

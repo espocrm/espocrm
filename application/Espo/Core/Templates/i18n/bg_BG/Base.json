@@ -1,5 +1,5 @@
 {
   "labels": {
-    "Create {entityType}": "Създаване {entityTypeTranslated}"
+    "Create {entityType}": "Създаване на {entityTypeTranslated}"
   }
 }

@@ -1,10 +1,10 @@
 {
   "fields": {
     "type": "Тип",
-    "optOut": "Отказахте се",
-    "invalid": "невалиден"
+    "optOut": "Не звъни",
+    "invalid": "Невалиден"
   },
   "presetFilters": {
-    "orphan": "сирак"
+    "orphan": "Изоставени"
   }
 }

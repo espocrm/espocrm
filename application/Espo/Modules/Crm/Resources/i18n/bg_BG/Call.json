@@ -1,50 +1,50 @@
 {
   "fields": {
-    "name": "име",
-    "parent": "родител",
+    "name": "Име",
+    "parent": "Родител",
     "status": "Статус",
-    "dateStart": "Дата Старт",
+    "dateStart": "Начална дата",
     "dateEnd": "Крайна дата",
     "direction": "Посока",
-    "duration": "продължителност",
-    "description": "описание",
+    "duration": "Продължителност",
+    "description": "Описание",
     "users": "Потребители",
     "contacts": "Контакти",
-    "leads": "Потенциална Продажба",
+    "leads": "Потенциални продажби",
     "reminders": "Напомняния",
-    "account": "Сметка",
-    "acceptanceStatus": "Приемане Статус"
+    "account": "Клиент",
+    "acceptanceStatus": "Статус за приемане"
   },
   "options": {
     "status": {
-      "Planned": "Планирано",
-      "Held": "Държани",
-      "Not Held": "Не държани"
+      "Planned": "Планирани",
+      "Held": "Състояли се",
+      "Not Held": "Несъстояли се"
     },
     "direction": {
-      "Outbound": "Изходяща",
+      "Outbound": "Изходящ",
       "Inbound": "Входящ"
     },
     "acceptanceStatus": {
       "None": "Нито един",
-      "Accepted": "общоприет",
-      "Declined": "Отхвърлена",
-      "Tentative": "Експериментален"
+      "Accepted": "Прието",
+      "Declined": "Пропуснато",
+      "Tentative": "Колеблив"
     }
   },
   "massActions": {
-    "setHeld": "Задайте държани",
-    "setNotHeld": "Задайте не се държат"
+    "setHeld": "Задай като състоял се",
+    "setNotHeld": "Задай като несъстоял се"
   },
   "labels": {
-    "Create Call": "Създаване на Call",
-    "Set Held": "Задайте държани",
-    "Set Not Held": "Задайте не се държат",
+    "Create Call": "Създаване на Разговор",
+    "Set Held": "Задай като състоял се",
+    "Set Not Held": "Задай като несъстоял се",
     "Send Invitations": "Изпращането на покани"
   },
   "presetFilters": {
-    "planned": "Планирано",
-    "held": "Държани",
+    "planned": "Планирани",
+    "held": "Състояли се",
     "todays": "Днешните"
   }
 }
