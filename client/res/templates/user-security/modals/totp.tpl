@@ -3,7 +3,7 @@
 
         <p>{{translate 'verifyTotpCode' category='messages' scope='User'}}</p>
 
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; background: #FFF; padding: 20px;">
             <div class="qrcode"></div>
         </div>
     </div>
