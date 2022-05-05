@@ -73,10 +73,17 @@ class MessageWrapper implements Message
 
         if (
             !$storage &&
-            $this->fullRawContent &&
-            strpos($this->fullRawContent, "\r\n\r\n") !== false
+            $this->fullRawContent
         ) {
-            [$rawHeader, $rawBody] = explode("\r\n\r\n", $this->fullRawContent, 2);
+            $rawHeader = null;
+            $rawBody = null;
+
+            if (strpos($this->fullRawContent, "\r\n\r\n") !== false) {
+                [$rawHeader, $rawBody] = explode("\r\n\r\n", $this->fullRawContent, 2);
+            }
+            else if (strpos($this->fullRawContent, "\n\n") !== false) {
+                [$rawHeader, $rawBody] = explode("\n\n", $this->fullRawContent, 2);
+            }
 
             $this->rawHeader = $rawHeader;
             $this->rawContent = $rawBody;
