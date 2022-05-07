@@ -1,49 +1,47 @@
 {
   "fields": {
-    "name": "име",
-    "body": "тяло",
+    "name": "Име",
+    "body": "Съдържание",
     "entityType": "Тип на обекта",
-    "header": "удар с глава",
-    "leftMargin": "Ляво поле",
-    "topMargin": "Най-високо облагане на маржа",
-    "rightMargin": "Дясно поле",
-    "bottomMargin": "Долно поле",
-    "printFooter": "Печат Footer",
-    "footerPosition": "Footer Позиция",
-    "variables": "Налични Placeholders",
-    "pageFormat": "Формат на хартията",
-    "pageWidth": "Page Ширина (mm)",
-    "pageHeight": "Page Височина (mm)"
+    "header": "Хедър",
+    "footer": "Футър",
+    "leftMargin": "Отстояние от ляво",
+    "topMargin": "Отстояние от горе",
+    "rightMargin": "Отстояние от дясно",
+    "bottomMargin": "Отстояние от долу",
+    "printFooter": "Показване на футъра",
+    "footerPosition": "Позиция на футъра",
+    "variables": "Налични placeholders",
+    "pageOrientation": "Ориентация на страницата",
+    "pageFormat": "Хартиен формат",
+    "fontFace": "Шрифт",
+    "pageWidth": "Ширина на страницата (mm)",
+    "pageHeight": "Височина на страницата (mm)",
+    "headerPosition": "Позиция на хедъра",
+    "printHeader": "Принтирай хедъра",
+    "title": "Заглавие"
   },
   "labels": {
-    "Create Template": "Създаване на шаблони"
+    "Create Template": "Създаване на шаблон"
   },
   "tooltips": {
-    "footer": "Използвайте {PAGENUMBER} за отпечатване на номера на страницата.",
-    "variables": "Копиране и поставяне необходимо контейнер за Header, тяло или Footer."
+    "footer": "Използвайте {pageNumber} за отпечатване на номера на страницата.",
+    "variables": "Копирайте и поставете необходимия placeholder в хедъра, съдържанието или футъра."
   },
   "options": {
     "pageOrientation": {
       "Portrait": "Портрет",
-      "Landscape": "пейзаж"
+      "Landscape": "Пейзаж"
     },
     "placeholders": {
       "today": "Днес (дата)",
-      "now": "Сега (дата работен ден)",
+      "now": "Сега (дата-час)",
       "pagebreak": "Разделител на страница"
     },
     "fontFace": {
-      "aealarabiya": "Ал-Арабия",
       "cid0cs": "CID-0 CS",
       "cid0jp": "CID-0 JP",
-      "cid0kr": "CID-0 KR",
-      "courier": "куриер",
-      "dejavuserif": "DejaVu сериф",
-      "kozminproregular": "Козмин Pro Regular",
-      "pdfasymbol": "PDFA Символ",
-      "symbol": "символ",
-      "times": "пъти",
-      "dejavuserifcondensed": "DejaVu Сериф Condensed"
+      "cid0kr": "CID-0 KR"
     },
     "pageFormat": {
       "Custom": "Персонализиран"

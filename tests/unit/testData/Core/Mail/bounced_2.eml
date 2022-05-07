@@ -1,0 +1,41 @@
+Date: Thu, 7 Jul 1994 17:16:05 -0400
+From: Mail Delivery Subsystem
+<REPLACED_DAEMON@CS.UTK.EDU> Message-Id:
+<199407072116.RAA14128@CS.UTK.EDU>
+Subject: Returned mail: Cannot
+send message for 5 days
+To: <owner-info-mime@cs.utk.edu> MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="RAA14128.773615765/CS.UTK.EDU"
+
+--RAA14128.773615765/CS.UTK.EDU
+
+The original message was received at Sat, 2 Jul 1994 17:10:28 -0400
+from root@localhost
+
+    ----- The following addresses had delivery problems -----
+<louisl@larry.slip.umd.edu>  (unrecoverable error)
+
+----- Transcript of session follows -----
+<louisl@larry.slip.umd.edu>... Deferred: Connection timed out
+            with larry.slip.umd.edu.
+Message could not be delivered for 5 days
+Message will be deleted from queue
+
+--RAA14128.773615765/CS.UTK.EDU
+content-type: message/delivery-status
+
+Reporting-MTA: dns; cs.utk.edu
+
+Original-Recipient: rfc822;louisl@larry.slip.umd.edu
+Final-Recipient: rfc822;louisl@larry.slip.umd.edu
+Action: failed
+Status: 4.0.0
+Diagnostic-Code: smtp; 426 connection timed out
+Last-Attempt-Date: Thu, 7 Jul 1994 17:15:49 -0400
+
+--RAA14128.773615765/CS.UTK.EDU
+content-type: message/rfc822
+
+[original message goes here]
+
+--RAA14128.773615765/CS.UTK.EDU--

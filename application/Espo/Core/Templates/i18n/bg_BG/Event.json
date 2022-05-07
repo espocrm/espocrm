@@ -1,39 +1,39 @@
 {
   "fields": {
-    "parent": "родител",
-    "dateStart": "Дата Старт",
+    "parent": "Родител",
+    "dateStart": "Начална дата",
     "dateEnd": "Крайна дата",
-    "duration": "продължителност",
+    "duration": "Продължителност",
     "status": "Статус",
     "reminders": "Напомняния",
-    "dateStartDate": "Дата Start (цял ден)",
+    "dateStartDate": "Начална дата (цял ден)",
     "dateEndDate": "Крайна дата (цял ден)",
-    "isAllDay": "Дали през целия ден"
+    "isAllDay": "Цял ден"
   },
   "links": {
-    "parent": "родител"
+    "parent": "Родител"
   },
   "options": {
     "status": {
       "Planned": "Планирано",
-      "Held": "Държани",
-      "Not Held": "Не държани"
+      "Held": "Състояло се",
+      "Not Held": "Несъстояло се"
     }
   },
   "labels": {
-    "Create {entityType}": "Създаване {entityTypeTranslated}",
-    "Schedule {entityType}": "График {entityTypeTranslated}",
-    "Log {entityType}": "Вход {entityTypeTranslated}",
-    "Set Held": "Задайте държани",
-    "Set Not Held": "Задайте не се държат"
+    "Create {entityType}": "Създаване на {entityTypeTranslated}",
+    "Schedule {entityType}": "Насрочи {entityTypeTranslated}",
+    "Log {entityType}": "Регистрирай {entityTypeTranslated}",
+    "Set Held": "Задай като състояло се",
+    "Set Not Held": "Задай като несъстояло се"
   },
   "massActions": {
-    "setHeld": "Задайте държани",
-    "setNotHeld": "Задайте не се държат"
+    "setHeld": "Задай като състояло се",
+    "setNotHeld": "Задай като несъстояло се"
   },
   "presetFilters": {
     "planned": "Планирано",
-    "held": "Държани",
+    "held": "Състояли се",
     "todays": "Днешните"
   }
 }

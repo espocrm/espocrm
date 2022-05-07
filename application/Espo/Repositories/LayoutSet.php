@@ -64,6 +64,8 @@ class LayoutSet extends \Espo\Core\Repositories\Database
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
+        parent::afterRemove($entity);
+
         $layoutList = $this->entityManager
             ->getRDBRepository('LayoutRecord')
             ->where([

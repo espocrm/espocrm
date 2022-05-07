@@ -2,35 +2,35 @@
   "fields": {
     "username": "Потребител",
     "ipAddress": "IP адрес",
-    "requestTime": "Заявка за времето",
-    "createdAt": "поискано",
-    "isDenied": "е отказан",
-    "denialReason": "отказ Причина",
-    "portal": "портал",
-    "user": "потребител",
-    "authToken": "Означението за удостоверяване Създадена",
+    "requestTime": "Дата и време на заявката",
+    "createdAt": "Дата и време на заявката",
+    "isDenied": "Е неуспешно",
+    "denialReason": "Причина за отказ",
+    "portal": "Портал",
+    "user": "Потребител",
+    "authToken": "Създаден токън за автентификация",
     "requestUrl": "URL адрес на заявката",
-    "requestMethod": "Заявка Метод",
-    "authTokenIsActive": "Означението за удостоверяване е активен",
+    "requestMethod": "Метод на заявката",
+    "authTokenIsActive": "Сесията е активна",
     "authenticationMethod": "Метод за удостоверяване"
   },
   "links": {
-    "authToken": "Означението за удостоверяване Създадена",
-    "user": "потребител",
-    "portal": "портал",
+    "authToken": "Създаден токън за автентификация",
+    "user": "Потребител",
+    "portal": "Портал",
     "actionHistoryRecords": "История за действие"
   },
   "presetFilters": {
-    "denied": "Отказан",
-    "accepted": "общоприет"
+    "denied": "Неуспешен",
+    "accepted": "Успешен"
   },
   "options": {
     "denialReason": {
       "CREDENTIALS": "Невалидни идентификационни данни",
-      "INACTIVE_USER": "Inactive потребител",
-      "IS_PORTAL_USER": "портал на потребителя",
-      "IS_NOT_PORTAL_USER": "Не портал на потребителя",
-      "USER_IS_NOT_IN_PORTAL": "Потребителят не е свързан с портала"
+      "INACTIVE_USER": "Деактивиран потребител",
+      "IS_PORTAL_USER": "Потребителят е към външен портал",
+      "IS_NOT_PORTAL_USER": "Потребителят не е към външен портал",
+      "USER_IS_NOT_IN_PORTAL": "Потребителят не е свързан с този портал"
     }
   }
 }

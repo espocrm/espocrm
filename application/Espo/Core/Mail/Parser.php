@@ -32,6 +32,7 @@ namespace Espo\Core\Mail;
 use Espo\Entities\Email;
 use Espo\Entities\Attachment;
 use Espo\Core\Mail\Message;
+use Espo\Core\Mail\Message\Part;
 
 use stdClass;
 
@@ -56,4 +57,9 @@ interface Parser
      * @return Attachment[] A list of inline attachments.
      */
     public function getInlineAttachmentList(Message $message, Email $email): array;
+
+    /**
+     * @return Part[]
+     */
+    public function getPartList(Message $message): array;
 }

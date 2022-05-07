@@ -2,9 +2,9 @@
   "labels": {
     "Create KnowledgeBaseCategory": "Създаване на Категория",
     "Manage Categories": "Управление на категории",
-    "Articles": "статии"
+    "Articles": "Статии"
   },
   "links": {
-    "articles": "статии"
+    "articles": "Статии"
   }
 }

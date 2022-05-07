@@ -1,21 +1,22 @@
 {
   "modes": {
-    "month": "месец",
-    "week": "седмица",
-    "agendaWeek": "седмица",
-    "day": "ден",
-    "agendaDay": "ден"
+    "month": "Месец",
+    "week": "Седмица",
+    "agendaWeek": "Седмица",
+    "day": "Ден",
+    "agendaDay": "Ден",
+    "timeline": "Хронология"
   },
   "labels": {
-    "Today": "днес",
-    "Create": "създавам",
-    "Shared": "Споделено",
+    "Today": "Днес",
+    "Create": "Създаване",
+    "Shared": "Споделено с други потребители",
     "Add User": "Добавяне на потребител",
-    "current": "текущ",
-    "time": "път",
+    "current": "Текущ",
+    "time": "време",
     "User List": "Списък с потребители",
     "Manage Users": "Управление на потребителите",
-    "View Calendar": "Вижте Календар",
-    "Create Shared View": "Създаване на споделена View"
+    "View Calendar": "Вижте календара",
+    "Create Shared View": "Създаване на споделен изглед"
   }
 }

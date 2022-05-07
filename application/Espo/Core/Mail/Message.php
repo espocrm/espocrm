@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Message\Part;
+
 interface Message
 {
     /**
@@ -67,4 +69,9 @@ interface Message
      * Whether contents is fetched.
      */
     public function isFetched(): bool;
+
+    /**
+     * @return Part[]
+     */
+    public function getPartList(): array;
 }

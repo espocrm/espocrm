@@ -40,14 +40,14 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
             Dep.prototype.setup.call(this);
 
             this.addButton({
-                name: 'saveDraft',
-                 label: 'Save Draft',
-            }, true);
-
-            this.addButton({
                 name: 'send',
                 label: 'Send',
                 style: 'primary',
+            }, true);
+
+            this.addButton({
+                name: 'saveDraft',
+                 label: 'Save Draft',
             }, true);
 
             this.controlSendButton();

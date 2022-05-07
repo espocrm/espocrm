@@ -3,33 +3,35 @@
     "title": "Заглавие",
     "dateFrom": "Дата от",
     "dateTo": "До дата",
-    "autorefreshInterval": "Автоматично опресняване интервал",
-    "isDoubleHeight": "Ръст 2x",
-    "mode": "вид",
-    "enabledScopeList": "Какво да се дисплей",
+    "autorefreshInterval": "Интервал за автоматично опресняване",
+    "displayRecords": "Показване на записи",
+    "isDoubleHeight": "Височина x2",
+    "mode": "Начин",
+    "enabledScopeList": "Какво да се показва",
     "users": "Потребители",
     "entityType": "Тип на обекта",
-    "primaryFilter": "Основно Филтър",
+    "primaryFilter": "Основен филтър",
     "boolFilterList": "Допълнителни филтри",
-    "sortBy": "Поръчка (област)",
-    "sortDirection": "Поръчка (посока)",
-    "expandedLayout": "оформление",
-    "dateFilter": "Дата Филтър",
+    "sortBy": "Сортиране (поле)",
+    "sortDirection": "Сортиране (посока)",
+    "expandedLayout": "Оформление",
+    "dateFilter": "Филтър за дата",
     "skipOwn": "Да не се показват собствени записи"
   },
   "options": {
     "mode": {
-      "agendaWeek": "Седмица (програма)",
-      "basicWeek": "седмица",
-      "month": "месец",
-      "basicDay": "ден",
-      "agendaDay": "Ден (програма)"
+      "agendaWeek": "Седмица (календар)",
+      "basicWeek": "Седмица",
+      "month": "Месец",
+      "basicDay": "Ден",
+      "agendaDay": "Ден (календар)",
+      "timeline": "Хронология"
     }
   },
   "messages": {
-    "selectEntityType": "Изберете типа на обекта в опции dashlet."
+    "selectEntityType": "Изберете типа на обекта в опциите."
   },
   "tooltips": {
-    "skipOwn": "няма да бъдат показвани Действия, извършени от вашия потребителски акаунт."
+    "skipOwn": "Действията, извършени от вашия потребителски акаунт, няма да се показват.\n"
   }
 }

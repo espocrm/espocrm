@@ -1,13 +1,13 @@
 {
   "fields": {
-    "address": "адрес"
+    "address": "Адрес"
   },
   "links": {
-    "meetings": "срещи",
-    "calls": "призовава",
+    "meetings": "Срещи",
+    "calls": "Разговори",
     "tasks": "Задачи"
   },
   "labels": {
-    "Create {entityType}": "Създаване {entityTypeTranslated}"
+    "Create {entityType}": "Създаване на {entityTypeTranslated}"
   }
 }

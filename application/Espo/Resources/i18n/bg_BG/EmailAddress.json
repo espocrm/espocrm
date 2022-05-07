@@ -1,11 +1,11 @@
 {
   "labels": {
-    "Primary": "първичен",
-    "Opted Out": "Отказахте се",
-    "Invalid": "невалиден"
+    "Primary": "Основен",
+    "Opted Out": "Отказал се",
+    "Invalid": "Невалиден"
   },
   "fields": {
-    "optOut": "Отказахте се",
+    "optOut": "Отписал се",
     "invalid": "невалиден"
   },
   "presetFilters": {

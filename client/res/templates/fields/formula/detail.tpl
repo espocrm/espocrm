@@ -4,4 +4,4 @@
         <div id="{{containerId}}">{{value}}</div>
     </div>
 </div>
-{{else}}{{translate 'None'}}{{/if}}
+{{else}}<span class="none-value">{{translate 'None'}}</span>{{/if}}

@@ -73,6 +73,13 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
             data.dateValue = this.getDateStringValue();
 
+            data.isNone = data.dateValue === null;
+
+            if (data.dateValue === -1) {
+                data.dateValue = null;
+                data.isLoading = true;
+            }
+
             if (this.isSearchMode()) {
                 var value = this.getSearchParamsData().value || this.searchParams.dateValue;
                 var valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
@@ -108,7 +115,7 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                     return '';
                 }
 
-                return this.translate('None');
+                return null;
             }
 
             if (this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink') {
@@ -163,7 +170,7 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
         getDateStringValue: function () {
             if (this.mode === 'detail' && !this.model.has(this.name)) {
-                return '...';
+                return -1;
             }
 
             var value = this.model.get(this.name);

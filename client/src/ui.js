@@ -405,12 +405,27 @@ define('ui', [], function () {
             () => this.close()
         );
 
+        this.$el.on('mousedown', e => {
+            this.$mouseDownTarget = $(e.target);
+        });
+
         this.$el.on('click.dismiss.bs.modal', (e) => {
-            if (e.target === e.currentTarget) {
-                if (this.backdrop !== 'static') {
-                    this.close();
-                }
+            if (e.target !== e.currentTarget) {
+                return;
             }
+
+            if (this.backdrop === 'static') {
+                return;
+            }
+
+            if (
+                this.$mouseDownTarget &&
+                this.$mouseDownTarget.closest('.modal-content').length
+            ) {
+                return;
+            }
+
+            this.close();
         });
 
         $('body > .popover').addClass('hidden');

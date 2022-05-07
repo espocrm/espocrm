@@ -171,7 +171,7 @@ class CaseObj extends Record
      */
     protected function getLeadEmailAddress(CaseEntity $entity, array $dataList): ?stdClass
     {
-        $lead = $this->entityManager->getEntity('Account', $entity->get('leadId'));
+        $lead = $this->entityManager->getEntity('Lead', $entity->get('leadId'));
 
         if (!$lead || !$lead->get('emailAddress')) {
             return null;

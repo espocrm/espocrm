@@ -1,52 +1,53 @@
 {
   "fields": {
-    "name": "име",
-    "account": "Сметка",
-    "stage": "сцена",
-    "amount": "Количество",
-    "probability": "Вероятност,%",
-    "leadSource": "Водещ Източник",
+    "name": "Име",
+    "account": "Клиент",
+    "stage": "Фаза",
+    "amount": "Сума",
+    "probability": "Вероятност (%)",
+    "leadSource": "Източник на потенциалната продажба",
     "doNotCall": "Не звъни",
-    "closeDate": "Близо Дата",
+    "closeDate": "Дата на затваряне",
     "contacts": "Контакти",
-    "description": "описание",
-    "amountConverted": "Количество (изчислена)",
-    "amountWeightedConverted": "сума Weighted",
-    "campaign": "кампания",
-    "originalLead": "Оригинален Lead",
-    "amountCurrency": "сума на валута",
-    "contactRole": "Свържи Роля",
-    "lastStage": "Последният етап",
-    "contact": "Свържи (Основно)"
+    "description": "Описание",
+    "amountConverted": "Сума (изчислена)",
+    "amountWeightedConverted": "Сума (изчислена)",
+    "campaign": "Кампания",
+    "originalLead": "Оригинална потенциална продажба",
+    "amountCurrency": "Валута на сумата",
+    "contactRole": "Роля на контакта",
+    "lastStage": "Последна фаза",
+    "contact": "Контакт (Основен)"
   },
   "links": {
     "contacts": "Контакти",
     "documents": "Документи",
-    "campaign": "кампания",
-    "originalLead": "Оригинален Lead",
-    "contact": "Свържи (Основно)"
+    "campaign": "Кампания",
+    "originalLead": "Оригинална потенциална продажба",
+    "contact": "Контакт (Основен)"
   },
   "options": {
     "stage": {
-      "Qualification": "Квалификация",
-      "Needs Analysis": "Анализ на нуждите",
-      "Value Proposition": "Стойностно предложение",
-      "Id. Decision Makers": "Документ за самоличност. Хора, взимащи решения",
-      "Perception Analysis": "Схващането Анализ",
-      "Proposal/Price Quote": "Предложение / Цена цитат",
+      "Prospecting": "Проучване",
+      "Qualification": "Квалифициране",
+      "Needs Analysis": "Нужда от анализ",
+      "Value Proposition": "Предложение",
+      "Id. Decision Makers": "Вземане на решение",
+      "Perception Analysis": "Анализ",
+      "Proposal/Price Quote": "Изготвяне на оферта",
       "Negotiation/Review": "Преговори / Преглед",
-      "Closed Won": "Приключена спечелена",
-      "Closed Lost": "затворен Изгубени",
-      "Proposal": "предложение",
-      "Negotiation": "договаряне"
+      "Closed Won": "Приключена - спечелена",
+      "Closed Lost": "Приключена - загубена",
+      "Proposal": "Предложение",
+      "Negotiation": "Договаряне"
     }
   },
   "labels": {
-    "Create Opportunity": "Създаване на възможности"
+    "Create Opportunity": "Създаване на Сделка"
   },
   "presetFilters": {
-    "open": "отворено",
+    "open": "Отворени",
     "won": "Спечелени",
-    "lost": "загубен"
+    "lost": "Загубени"
   }
 }

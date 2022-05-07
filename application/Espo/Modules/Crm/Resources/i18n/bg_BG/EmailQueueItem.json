@@ -1,28 +1,29 @@
 {
   "fields": {
-    "name": "име",
+    "name": "Име",
     "status": "Статус",
     "target": "Цел",
     "sentAt": "Дата на изпращане",
     "attemptCount": "Опити",
     "emailAddress": "Имейл адрес",
-    "massEmail": "Маса Email"
+    "massEmail": "Масов имейл",
+    "isTest": "Е тестов"
   },
   "links": {
     "target": "Цел",
-    "massEmail": "Маса Email"
+    "massEmail": "Масов имейл"
   },
   "options": {
     "status": {
-      "Pending": "Предстоящо",
-      "Sent": "Изпратено",
-      "Failed": "Се провали",
+      "Pending": "Предстоящ",
+      "Sent": "Изпратен",
+      "Failed": "Провален",
       "Sending": "Изпращане"
     }
   },
   "presetFilters": {
-    "pending": "Предстоящо",
-    "sent": "Изпратено",
-    "failed": "Се провали"
+    "pending": "Предстоящ",
+    "sent": "Изпратен",
+    "failed": "Провален"
   }
 }
