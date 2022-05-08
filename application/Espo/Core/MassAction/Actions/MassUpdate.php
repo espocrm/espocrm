@@ -40,7 +40,7 @@ use Espo\Core\{
     MassAction\Data,
     MassAction\MassAction,
     Acl,
-    Record\ServiceContainer as RecordServiceContainer,
+    Record\ServiceFactory as RecordServiceFactory,
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\ObjectUtil,
@@ -63,9 +63,9 @@ class MassUpdate implements MassAction
     protected $acl;
 
     /**
-     * @var RecordServiceContainer
+     * @var RecordServiceFactory
      */
-    protected $recordServiceContainer;
+    protected $recordServiceFactory;
 
     /**
      * @var EntityManager
@@ -85,14 +85,14 @@ class MassUpdate implements MassAction
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
-        RecordServiceContainer $recordServiceContainer,
+        RecordServiceFactory $recordServiceFactory,
         EntityManager $entityManager,
         FieldUtil $fieldUtil,
         User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
-        $this->recordServiceContainer = $recordServiceContainer;
+        $this->recordServiceFactory = $recordServiceFactory;
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
         $this->user = $user;
@@ -112,7 +112,7 @@ class MassUpdate implements MassAction
 
         $valueMap = $data->getRaw();
 
-        $service = $this->recordServiceContainer->get($entityType);
+        $service = $this->recordServiceFactory->create($entityType);
 
         $repository = $this->entityManager->getRDBRepository($entityType);
 
