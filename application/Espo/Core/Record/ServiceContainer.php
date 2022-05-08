@@ -29,32 +29,18 @@
 
 namespace Espo\Core\Record;
 
-use Espo\Core\{
-    Exceptions\Error,
-    ServiceFactory,
-    Utils\Metadata,
-};
-
-use RuntimeException;
+use Espo\Core\Exceptions\Error;
 
 /**
  * Container for record services. Lazy loading is used.
  * Usually there's no need to have multiple record service instances of the same entity type.
  * Use this container instead of serviceFactory to get record services.
+ *
+ * Important. Returns services for the current user.
+ * Use the service-factory to create services for a specific user.
  */
 class ServiceContainer
 {
-    private const RECORD_SERVICE_NAME = 'Record';
-
-    private const RECORD_TREE_SERVICE_NAME = 'RecordTree';
-
-    /**
-     * @var array<string,string>
-     */
-    private $defaultTypeMap = [
-        'CategoryTree' => self::RECORD_TREE_SERVICE_NAME,
-    ];
-
     /**
      * @var array<string,Service<\Espo\ORM\Entity>>
      */
@@ -62,16 +48,14 @@ class ServiceContainer
 
     private ServiceFactory $serviceFactory;
 
-    private Metadata $metadata;
-
-    public function __construct(ServiceFactory $serviceFactory, Metadata $metadata)
+    public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
-        $this->metadata = $metadata;
     }
 
     /**
      * @return Service<\Espo\ORM\Entity>
+     * @throws Error
      */
     public function get(string $entityType): Service
     {
@@ -84,45 +68,6 @@ class ServiceContainer
 
     private function load(string $entityType): void
     {
-        if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
-            throw new Error("Can't create record service '{$entityType}', there's no such entity type.");
-        }
-
-        if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->createWith($entityType, ['entityType' => $entityType]);
-
-            if (!$service instanceof Service) {
-                $this->loadDefault($entityType);
-
-                return;
-            }
-
-            $this->data[$entityType] = $service;
-
-            return;
-        }
-
-        $this->loadDefault($entityType);
-    }
-
-    private function loadDefault(string $entityType): void
-    {
-        $default = self::RECORD_SERVICE_NAME;
-
-        $type = $this->metadata->get(['scopes', $entityType, 'type']);
-
-        if ($type) {
-            $default = $this->defaultTypeMap[$type] ?? $default;
-        }
-
-        $obj = $this->serviceFactory->createWith($default, ['entityType' => $entityType]);
-
-        if (!$obj instanceof Service) {
-            throw new RuntimeException("Service class {$default} is not instance of Record.");
-        }
-
-        //$obj->setEntityType($entityType);
-
-        $this->data[$entityType] = $obj;
+        $this->data[$entityType] = $this->serviceFactory->create($entityType);
     }
 }
