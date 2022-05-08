@@ -38,7 +38,7 @@ use Espo\Core\{
     MassAction\Data,
     MassAction\MassAction,
     Acl,
-    Record\ServiceContainer as RecordServiceContainer,
+    Record\ServiceFactory,
     ORM\EntityManager,
     Exceptions\Forbidden,
 };
@@ -56,9 +56,9 @@ class MassDelete implements MassAction
     protected $acl;
 
     /**
-     * @var RecordServiceContainer
+     * @var ServiceFactory
      */
-    protected $recordServiceContainer;
+    protected $serviceFactory;
 
     /**
      * @var EntityManager
@@ -73,13 +73,13 @@ class MassDelete implements MassAction
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
-        RecordServiceContainer $recordServiceContainer,
+        ServiceFactory $serviceFactory,
         EntityManager $entityManager,
         User $user
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
-        $this->recordServiceContainer = $recordServiceContainer;
+        $this->serviceFactory = $serviceFactory;
         $this->entityManager = $entityManager;
         $this->user = $user;
     }
@@ -96,7 +96,7 @@ class MassDelete implements MassAction
             throw new Forbidden("No mass-update permission.");
         }
 
-        $service = $this->recordServiceContainer->get($entityType);
+        $service = $this->serviceFactory->create($entityType);
 
         $repository = $this->entityManager->getRDBRepository($entityType);
 
