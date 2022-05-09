@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Sintaksės tikrinimas",
+    "Run": "Paleisti"
+  },
+  "fields": {
+    "target": "Tikslinė",
+    "targetType": "Tikslinis tipas",
+    "script": "Skriptas",
+    "output": "Išėjimas",
+    "error": "Klaida"
+  },
+  "messages": {
+    "runSuccess": "Sėkmingai įvykdyta.",
+    "runError": "Klaida.",
+    "checkSyntaxSuccess": "Sintaksė teisinga.",
+    "checkSyntaxError": "Sintaksės klaida.",
+    "emptyScript": "Scenarijus yra tuščias."
+  },
+  "tooltips": {
+    "output": "Spausdinkite reikšmes naudodami funkciją `output\\printLine`."
+  }
+}

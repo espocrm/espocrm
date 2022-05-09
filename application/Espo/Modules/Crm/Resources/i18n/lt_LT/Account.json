@@ -14,7 +14,7 @@
     "campaign": "Kampanija",
     "targetLists": "Adresatų sarašai",
     "targetList": "Adresatų sarašas",
-    "originalLead": "Originalus švinas",
+    "originalLead": "Pirminis Potencialus klientas",
     "contactIsInactive": "Neaktyvus"
   },
   "links": {
@@ -30,7 +30,8 @@
     "campaignLogRecords": "Kampanijos žurnalas",
     "campaign": "Kampanija",
     "portalUsers": "Portalo vartotojai",
-    "originalLead": "Originalus švinas"
+    "originalLead": "Pirminis Potencialus klientas",
+    "contactsPrimary": "Kontaktai (pagrindiniai)"
   },
   "options": {
     "type": {

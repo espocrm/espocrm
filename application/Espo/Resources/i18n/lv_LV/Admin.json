@@ -74,7 +74,11 @@
     "Dashboard Templates": "Informācijas paneļa veidnes",
     "Email Addresses": "E-pasta adreses",
     "Phone Numbers": "Tālruņu numuri",
-    "Layout Sets": "Izkārtojuma komplekti"
+    "Layout Sets": "Izkārtojuma komplekti",
+    "Messaging": "Ziņapmaiņa",
+    "Misc": "Dažādi",
+    "Job Settings": "Darba iestatījumi",
+    "Configuration Instructions": "Konfigurēšanas norādījumi"
   },
   "layouts": {
     "list": "Saraksts",
@@ -195,7 +199,7 @@
     "inlineEditDisabled": "Inline rediģēšanas atspējošana",
     "displayAsLabel": "Rādīt kā etiķeti",
     "allowCustomOptions": "Atļaut pielāgotās opcijas",
-    "maxCount": "Maksimālais vienību skaits",
+    "maxCount": "Maksimālais pozīciju skaits",
     "displayRawText": "Rādīt neapstrādātu tekstu (bez iezīmēšanas)",
     "notActualOptions": "Ne faktiskās opcijas",
     "accept": "Piekrist",
@@ -204,7 +208,10 @@
     "codeType": "Kods Veids",
     "lastChar": "Pēdējais raksturs",
     "listPreviewSize": "Priekšskatījuma lielums saraksta skatā",
-    "onlyDefaultCurrency": "Tikai noklusējuma valūta"
+    "onlyDefaultCurrency": "Tikai noklusējuma valūta",
+    "dynamicLogicInvalid": "Nosacījumi, kas padara lauku nederīgu",
+    "conversionDisabled": "Atslēgt konvertēšanu",
+    "decimalPlaces": "Decimālskaitļi aiz komata"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -270,7 +277,10 @@
     "dashboardTemplates": "Izvietojiet informācijas paneļus lietotājiem.",
     "phoneNumbers": "Visi sistēmā saglabātie tālruņa numuri.",
     "emailAddresses": "Visas sistēmā saglabātās e-pasta adreses.",
-    "layoutSets": "Izkārtojumu kolekcijas, ko var piešķirt komandām un portāliem."
+    "layoutSets": "Izkārtojumu kolekcijas, ko var piešķirt komandām un portāliem.",
+    "jobsSettings": "Darba apstrādes iestatījumi. Uzdevumi tiek izpildīti fonā.",
+    "sms": "SMS iestatījumi.",
+    "formulaSandbox": "Rakstīt un testēt formulas skriptus."
   },
   "options": {
     "previewSize": {
@@ -305,7 +315,8 @@
     "notePostNoParent": "Piezīme par ziņojumu (bez vecākiem)",
     "noteStatus": "Piezīme par statusa atjaunināšanu",
     "passwordChangeLink": "Paroles maiņas saite",
-    "noteEmailReceived": "Piezīme par saņemto e-pastu"
+    "noteEmailReceived": "Piezīme par saņemto e-pastu",
+    "twoFactorCode": "2FA kods"
   },
   "strings": {
     "rebuildRequired": "Nepieciešama pārbūve"
@@ -313,12 +324,12 @@
   "keywords": {
     "settings": "sistēma",
     "userInterface": "ui, tēma, cilnes, logotips, instrumentu panelis",
-    "authentication": "parole",
     "scheduledJob": "cron, darbavietas",
     "integrations": "Google, Google kartes, Google Maps",
     "authLog": "žurnāls,vēsture",
     "authTokens": "vēsture, piekļuve, žurnāls",
     "entityManager": "lauki,attiecības,attiecības,attiecības",
-    "templateManager": "paziņojumi"
+    "templateManager": "paziņojumi",
+    "authentication": "parole,drošība,ldap"
   }
 }

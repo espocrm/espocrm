@@ -124,5 +124,22 @@
     "writable": "Rakstiski",
     "readable": "Lasāmi",
     "requiredMariadbVersion": "MariaDB versija"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>API kļūda: </h3><br>Dariet tikai nepieciešamos soļus. Pēc katra soļa pārbaudiet, vai problēma ir atrisināta.",
+      "nginx": "<h3>API kļūda: EspoCRM API nav pieejams </h3>.",
+      "microsoft-iis": "<h3>API kļūda: </h3><br> Iespējamā problēma: atspējots \"URL Rewrite\". Lūdzu, pārbaudiet un iespējojiet \"URL Rewrite\" moduli IIS serverī.",
+      "default": "<h3>API kļūda: </h3><br> Iespējamās problēmas: atspējots Pārrakstīšanas modulis. Lūdzu, pārbaudiet un iespējojiet Rewrite moduli savā serverī (piemēram, mod_rewrite Apache) un .htaccess atbalstu."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Ieslēdziet \"mod_rewrite\".</h4> Lai iespējotu <i>mod_rewrite</i>, terminālī izpildiet šīs komandas:<br><br><pre>{APACHE1}</pre><hr><h4>2. Ja iepriekšējais solis nepalīdzēja, mēģiniet iespējot .htaccess atbalstu.</h4> Pievienojiet/rediģējiet servera konfigurācijas iestatījumus <code>{{APACHE2_PATH1}</code> vai <code>{APACHE2_PATH2}</code> (vai <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Pēc tam izpildiet šo komandu terminālī:<br><br><pre>{{APACHE3}</pre><hr><h4>3. Ja iepriekšējais solis nav palīdzējis, mēģiniet pievienot RewriteBase ceļu.</h4>Atveriet failu <code>{{API_PATH}.htaccess</code> un nomainiet šādu rindu:<br><br><pre>{{APACHE4}</pre>Uz<br><pre>{APACHE5}</pre><hr>Lai iegūtu vairāk informācijas, lūdzu, apmeklējiet vadlīnijas <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache servera konfigurācija EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Atrodiet httpd.conf failu.</h4>Parasti to var atrast mapē ar nosaukumu \"conf\", \"config\" vai līdzīgi.<br><br><h4>2. Rediģējiet httpd.conf failu.</h4> httpd.conf faila iekšpusē atkomentējiet rindu <code>{WINDOWS_APACHE1}</code> (noņemiet zīmi '#' rindas priekšā).<br><br><h4>3. Pārbaudiet citus parametrus </h4>Pārbaudiet arī, vai ir atkomentēta rinda <code>ClearModuleList</code>, un pārliecinieties, vai nav komentēta rinda <code>AddModule mod_rewrite.c</code>.\n"
+      },
+      "nginx": {
+        "linux": "<br> Pievienojiet šo kodu savam Nginx servera konfigurācijas failam <code>{NGINX_PATH}</code> sadaļā \"serveris\":<br><br><pre>{NGINX}</pre> <br> Lai iegūtu vairāk informācijas, lūdzu, apmeklējiet norādījumus <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx servera konfigurācija EspoCRM</a>.<br><br>."
+      }
+    }
   }
 }

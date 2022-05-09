@@ -36,7 +36,9 @@
     "fullTextSearch": "Pilna teksto paieška",
     "countDisabled": "Išjungti įrašų skaičių",
     "parentEntityTypeList": "Patronuojančių subjektų tipai",
-    "foreignLinkEntityTypeList": "Išorinės nuorodos"
+    "foreignLinkEntityTypeList": "Išorinės nuorodos",
+    "entity": "Subjektas",
+    "optimisticConcurrencyControl": "Optimistinis lygiagretumo valdymas"
   },
   "options": {
     "type": {
@@ -53,7 +55,7 @@
       "oneToMany": "Vienas-daugeliui",
       "manyToOne": "Daugelis-vienam",
       "parentToChildren": "Pagrindinis-antriniui",
-      "childrenToParent": "Vaikai tėvams",
+      "childrenToParent": "Vaikai-tėvams",
       "oneToOneRight": "Teisė \"vienas prieš vieną",
       "oneToOneLeft": "Vienas prie vieno kairėje"
     },
@@ -77,6 +79,7 @@
     "linkMultipleField": "\"Susieti daugelį laukelių\" yra patogus būdas redaguoti sasajas. Nenaudokite to, jei galite turėti daug panašių įrašų.",
     "entityType": "Bazė plius - rodo \"Veiklos\", \"Istorija\" ir \"Užduotys\" skiltis.\nĮvykis - pasiekiamas skiltyje \"Kalendorius\" ir \"Veiklos\".",
     "fullTextSearch": "Reikia atlikti rekonstrukciją.",
-    "countDisabled": "Bendras skaičius nebus rodomas sąrašo rodinyje. Gali sutrumpėti krovimo laikas, kai DB lentelė yra didelė."
+    "countDisabled": "Bendras skaičius nebus rodomas sąrašo rodinyje. Gali sutrumpėti krovimo laikas, kai DB lentelė yra didelė.",
+    "optimisticConcurrencyControl": "Užkerta kelią rašymo konfliktams."
   }
 }

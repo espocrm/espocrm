@@ -6,12 +6,12 @@
     "sentAt": "Išsiuntimo data",
     "attemptCount": "Bandymai",
     "emailAddress": "El. pašto adresas",
-    "massEmail": "Masinis el. Paštas",
+    "massEmail": "Masinis el. laiškas",
     "isTest": "Testuojama"
   },
   "links": {
     "target": "Adresatas",
-    "massEmail": "Masinis el. Paštas"
+    "massEmail": "Masinis el. laiškas"
   },
   "options": {
     "status": {

@@ -16,7 +16,10 @@
     "targetId": "Mērķa ID",
     "number": "Numurs",
     "queue": "Rinda",
-    "job": "Darbs"
+    "job": "Darbs",
+    "group": "Grupa",
+    "className": "Klases nosaukums",
+    "targetGroup": "Mērķa grupa"
   },
   "options": {
     "status": {

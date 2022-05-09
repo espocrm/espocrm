@@ -130,7 +130,10 @@
     "busyRangesEntityList": "Laisvų / užimtų subjektų sąrašas",
     "passwordRecoveryForInternalUsersDisabled": "Išjungti slaptažodžio atkūrimą vidaus naudotojams",
     "passwordRecoveryNoExposure": "Užkirsti kelią el. pašto adreso atskleidimui slaptažodžio atkūrimo formoje",
-    "auth2FAForced": "Priversti nuolatinius naudotojus nustatyti 2FA"
+    "auth2FAForced": "Priversti nuolatinius naudotojus nustatyti 2FA",
+    "smsProvider": "SMS paslaugų teikėjas",
+    "outboundSmsFromNumber": "SMS iš numerio",
+    "recordsPerPageSelect": "Įrašai viename puslapyje (pasirinkite)"
   },
   "tooltips": {
     "recordsPerPage": "Iš pradžių rodomas įrašų skaičius sąrašo rodinyje.",
@@ -202,7 +205,8 @@
     "emailNotificationsDelay": "Prieš išsiunčiant pranešimą, pranešimą galima redaguoti per nurodytą laikotarpį.",
     "outboundEmailFromAddress": "Sistemos el. pašto adresas.",
     "smtpServer": "Jei tuščia, bus naudojama grupės el. pašto paskyra su atitinkamu el. pašto adresu.",
-    "busyRangesEntityList": "Į ką bus atsižvelgta rodant užimto laiko intervalus tvarkaraštyje ir laiko juostoje."
+    "busyRangesEntityList": "Į ką bus atsižvelgta rodant užimto laiko intervalus tvarkaraštyje ir laiko juostoje.",
+    "recordsPerPageSelect": "Įrašų skaičius, iš pradžių rodomas pasirenkant įrašus."
   },
   "labels": {
     "System": "Sistema",
@@ -236,6 +240,9 @@
       "lastFirst": "Paskutinis Pirmas",
       "firstMiddleLast": "Pirmas Vidurinis Paskutinis",
       "lastFirstMiddle": "Pavardė Pirmas Vidurys"
+    },
+    "auth2FAMethodList": {
+      "Email": "El. paštas"
     }
   }
 }

@@ -5,6 +5,7 @@
     "createdAt": "Data",
     "target": "Tikslas",
     "targetType": "Adresatų tipas",
+    "authToken": "Autentifikavimo žetonas",
     "ipAddress": "IP Adresss",
     "authLogRecord": "Auth žurnalo įrašas",
     "userType": "Naudotojo tipas"

@@ -19,7 +19,7 @@
   "links": {
     "targetLists": "Mērķa adresātu saraksts",
     "excludingTargetLists": "Neiekļaujamo mērķa adresātu saraksts",
-    "queueItems": "Likt vienumus rindā",
+    "queueItems": "Likt pozīciju rindā",
     "campaign": "Kampaņa",
     "emailTemplate": "E-pasta veidne",
     "inboundEmail": "E-pasta konts"

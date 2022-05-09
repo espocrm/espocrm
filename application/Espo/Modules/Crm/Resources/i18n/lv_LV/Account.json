@@ -30,7 +30,8 @@
     "campaignLogRecords": "Kampaņu reģistri",
     "campaign": "Kampaņa",
     "portalUsers": "Portāla lietotāji",
-    "originalLead": "Oriģinālais potenciālā klienta ieraksts"
+    "originalLead": "Oriģinālais potenciālā klienta ieraksts",
+    "contactsPrimary": "Kontakti (primārie)"
   },
   "options": {
     "type": {

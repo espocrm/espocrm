@@ -76,7 +76,9 @@
     "Requirements": "Reikalavimai",
     "Security": "Apsauga",
     "Reset 2FA": "Iš naujo nustatyti 2FA",
-    "Secret": "Paslaptis"
+    "Secret": "Paslaptis",
+    "Send Password Change Link": "Siųsti slaptažodžio keitimo nuorodą",
+    "Send Code": "Siųsti kodą"
   },
   "tooltips": {
     "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
@@ -113,7 +115,14 @@
     "ldapUserInEspoNotFound": "Vartotojas nerastas \"EspoCRM\". Kreipkitės į administratorių, kad jis sukurtų naudotoją.",
     "passwordRecoverySentIfMatched": "Darant prielaidą, kad įvesti duomenys atitinka bet kurią naudotojo paskyrą.",
     "auth2FARequiredHeader": "Reikalingas 2 veiksnių autentiškumo patvirtinimas",
-    "auth2FARequired": "Reikia nustatyti 2 veiksnių autentifikavimą. Mobiliajame telefone naudokite autentifikavimo programą (pvz., \"Google Authenticator\")."
+    "auth2FARequired": "Reikia nustatyti 2 veiksnių autentifikavimą. Mobiliajame telefone naudokite autentifikavimo programą (pvz., \"Google Authenticator\").",
+    "sendPasswordChangeLinkConfirmation": "Naudotojui bus išsiųstas el. laiškas su unikalia nuoroda, kad jis galėtų pasikeisti slaptažodį. Nuoroda nustos galioti po tam tikro laiko.",
+    "yourAuthenticationCode": "Jūsų autentifikavimo kodas: Jūsų autentifikavimo kodas: {kodas}.",
+    "choose2FaSmsPhoneNumber": "Pasirinkite telefono numerį, kuris bus naudojamas 2FA.",
+    "choose2FaEmailAddress": "Pasirinkite el. pašto adresą, kuris bus naudojamas 2FA. Labai rekomenduojama naudoti ne pagrindinį el. pašto adresą.",
+    "enterCodeSentInEmail": "Įveskite į el. pašto adresą atsiųstą kodą.",
+    "enterCodeSentBySms": "Įveskite SMS žinute į savo telefono numerį atsiųstą kodą.",
+    "passwordChangeRequestNotFound": "Slaptažodžio keitimo užklausa nerasta. Gali būti, kad jo galiojimo laikas pasibaigęs. Pabandykite inicijuoti naujo slaptažodžio atkūrimą iš [prisijungimo puslapio]({url})."
   },
   "boolFilters": {
     "onlyMyTeam": "Tik mano komanda"

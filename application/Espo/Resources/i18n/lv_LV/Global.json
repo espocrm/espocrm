@@ -50,7 +50,8 @@
     "ApiUser": "API lietotājs",
     "DashboardTemplate": "Informācijas paneļa veidne",
     "Currency": "Valūta",
-    "LayoutSet": "Izkārtojuma komplekts"
+    "LayoutSet": "Izkārtojuma komplekts",
+    "Mass Action": "Masveida rīcība"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -112,7 +113,7 @@
     "Sending...": "Notiek sūtīšana...",
     "Merging...": "Notiek sapludināšana…",
     "Merged": "Sapludināts",
-    "Removed": "Noņemts",
+    "Removed": "Dzēsts",
     "Posted": "Publicēts",
     "Linked": "Saistīts",
     "Unlinked": "Nesaistīts",
@@ -121,7 +122,7 @@
     "Not found": "Nav atrasts",
     "Access": "Piekļuve",
     "Are you sure?": "Vai tiešām?",
-    "Record has been removed": "Ieraksts noņemts",
+    "Record has been removed": "Ieraksts dzēsts",
     "Wrong username/password": "Nepareizs lietotājvārds/parole",
     "Post cannot be empty": "Publicējums nedrīkst būt tukšs",
     "Removing...": "Notiek noņemšana...",
@@ -143,7 +144,7 @@
     "Filter": "Filtrs",
     "Edit Dashboard": "Rediģēt infopaneli",
     "Add": "Pievienot",
-    "Add Item": "Pievienot vienumu",
+    "Add Item": "Pievienot pozīciju",
     "Reset": "Atiestatīt",
     "Menu": "Izvēlne",
     "More": "Vairāk",
@@ -152,8 +153,8 @@
     "Open": "Atvērt",
     "Admin": "Administrators",
     "About": "Par",
-    "Refresh": "Atsvaidzināt",
-    "Remove": "Noņemt",
+    "Refresh": "Atjaunināt",
+    "Remove": "Dzēst",
     "Options": "Opcijas",
     "Username": "Lietotājvārds",
     "Password": "Parole",
@@ -254,7 +255,14 @@
     "View on Map": "Skatīt kartē",
     "Proceed": "Turpināt",
     "Attached": "Pievienots",
-    "Preview": "Priekšskatījums"
+    "Preview": "Priekšskatījums",
+    "Up": "Uz augšu",
+    "Save & Continue Editing": "Saglabāt un turpināt rediģēšanu",
+    "Save & New": "Saglabāt un jauns",
+    "Field": "Laukums",
+    "Resolution": "Rezolūcija",
+    "Resolve Conflict": "Konflikta atrisināšana",
+    "Download": "Lejupielādēt"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -270,16 +278,16 @@
     "confirmation": "Vai tiešām?",
     "unlinkAllConfirmation": "Vai tiešām vēlaties atsaistīt visus saistītos ierakstus?",
     "resetPreferencesConfirmation": "Vai tiešām vēlaties atiestatīt noklusējuma preferences?",
-    "removeRecordConfirmation": "Vai tiešām vēlaties noņemt ierakstu?",
+    "removeRecordConfirmation": "Vai tiešām vēlaties dzēst ierakstu?",
     "unlinkRecordConfirmation": "Vai tiešām vēlaties saistīto ierakstu atsaistīt?",
-    "removeSelectedRecordsConfirmation": "Vai tiešām vēlaties noņemt atlasītos ierakstus?",
+    "removeSelectedRecordsConfirmation": "Vai tiešām vēlaties dzēst atlasītos ierakstus?",
     "massUpdateResult": "{count} ieraksti tika atjaunināti",
     "massUpdateResultSingle": "{count} ieraksts tika atjaunināts",
     "noRecordsUpdated": "Neviens ieraksts netika atjaunināts",
-    "massRemoveResult": "{count} ieraksti tika noņemti",
-    "massRemoveResultSingle": "{count} ieraksts tika noņemts",
-    "noRecordsRemoved": "Neviens ieraksts netika noņemts",
-    "clickToRefresh": "Noklikšķiniet, lai atsvaidzinātu",
+    "massRemoveResult": "{count} ieraksti tika izdzēsti",
+    "massRemoveResultSingle": "{count} ieraksts tika dzēsts",
+    "noRecordsRemoved": "Neviens ieraksts nav dzēsts",
+    "clickToRefresh": "Noklikšķiniet, lai atjauninātu",
     "writeYourCommentHere": "Šeit ierakstiet komentāru",
     "writeMessageToUser": "Uzrakstiet ziņojumu lietotājam {user}",
     "typeAndPressEnter": "Padomi un taustiņš ENTER",
@@ -318,7 +326,9 @@
     "fieldExceedsMaxCount": "Skaits pārsniedz maksimālo atļauto {maxCount}",
     "notUpdated": "Nav atjaunināts",
     "maintenanceMode": "Pašlaik lietojumprogramma ir uzturēšanas režīmā. Piekļuve ir tikai administratoram.\n\nUzturēšanas režīmu var atspējot sadaļā Administrācija → Iestatījumi.",
-    "fieldInvalid": "{field} ir nederīgs"
+    "fieldInvalid": "{field} ir nederīgs",
+    "resolveSaveConflict": "Ieraksts ir mainīts. Pirms ieraksta saglabāšanas ir jāatrisina konflikts.",
+    "massActionProcessed": "Ir apstrādāta masveida darbība."
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
@@ -330,7 +340,7 @@
     "all": "Visus"
   },
   "massActions": {
-    "remove": "Noņemt",
+    "remove": "Dzēst",
     "merge": "Sapludināt",
     "massUpdate": "Atjaunināt masveidā",
     "export": "Eksportēt",
@@ -339,7 +349,8 @@
     "convertCurrency": "Konvertēt valūtu",
     "printPdf": "Izdrukāt PDF formātā",
     "unlink": "Atvienojiet saiti",
-    "recalculateFormula": "Pārrēķināt formulu"
+    "recalculateFormula": "Pārrēķināt formulu",
+    "update": "Atjaunināt"
   },
   "fields": {
     "name": "Nosaukums/vārds",
@@ -396,7 +407,7 @@
   "notificationMessages": {
     "assign": "Jums tika piešķirts {entityType} {entity} ",
     "emailReceived": "Saņemts e-pasts no {from}",
-    "entityRemoved": "{user} noņēma {entityType} {entity}"
+    "entityRemoved": "{user} izdzēsa {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} publicēja {entityType} {entity}",
@@ -665,6 +676,11 @@
       "Fax": "Fakss",
       "Home": "Sākums",
       "Other": "Cits"
+    },
+    "saveConflictResolution": {
+      "current": "Pašreizējais",
+      "actual": "Faktiskais",
+      "original": "Oriģinālais"
     }
   },
   "sets": {
@@ -675,7 +691,7 @@
         "italic": "Slīprakstā",
         "underline": "Pasvītrojums",
         "strike": "Pārsvītrojums",
-        "clear": "Noņemt fonta stilu",
+        "clear": "Dzēst fonta stilu",
         "height": "Rindiņas augstums",
         "name": "Fontu saime",
         "size": "Fonta lielums"
@@ -692,7 +708,7 @@
         "dragImageHere": "Ievilkt attēlu šeit",
         "selectFromFiles": "Atlasīt no failiem",
         "url": "Attēla vietrādis URL",
-        "remove": "Noņemt attēlu"
+        "remove": "Dzēst attēlu"
       },
       "link": {
         "link": "Saite",
@@ -778,5 +794,13 @@
   "listViewModes": {
     "list": "Saraksts",
     "kanban": "\"Kanban\""
+  },
+  "themes": {
+    "DarkVertical": "Tumšs",
+    "Dark": "Tumši horizontāli",
+    "Sakura": "Sakura horizontālais",
+    "Violet": "Violeta horizontālā",
+    "VioletVertical": "Violeta",
+    "Hazyblue": "Hazyblue Horizontālā"
   }
 }

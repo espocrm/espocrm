@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Ierakstiet **@ lietotājvārds**, lai ierakstītajā amatā minētu lietotāju.",
-    "infoSyntax": "Pieejamā marķēšanas sintakse"
+    "infoSyntax": "Pieejamā marķēšanas sintakse",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Nevar pievienot lietotāju '{userName}' sekotājiem. Lietotājam nav piekļuves ierakstam 'stream'."
   },
   "syntaxItems": {
     "code": "kods",

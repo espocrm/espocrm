@@ -79,8 +79,9 @@
     "after": "Datums vērtībai jābūt pēc norādītā lauka datuma vērtības.",
     "readOnly": "Lietotājs nevar norādīt lauka vērtību. Taču to iespējams aprēķināt pēc formulas.",
     "maxFileSize": "If tukšs vai 0, tad limita nav.",
-    "fileAccept": "Kādus failu tipus pieņemt. Ir iespējams pievienot pielāgotus vienumus.",
-    "barcodeLastChar": "EAN-13 tipam."
+    "fileAccept": "Kādus failu tipus pieņemt. Ir iespējams pievienot pielāgotas pozīcijas.",
+    "barcodeLastChar": "EAN-13 tipam.",
+    "conversionDisabled": "Šim laukam netiks piemērota valūtas konvertēšanas darbība."
   },
   "fieldParts": {
     "address": {
@@ -130,6 +131,7 @@
     "phone": "Tālruņu numuru kopums ar to parametriem: Tips, Atteikts, Nederīgs, Primārais.",
     "foreign": "Saistītā ieraksta lauks. Tikai nolasāms.",
     "link": "Ieraksts, kas saistīts ar pieder vienam vai vienam ar otru (daudzi ar vienu vai viens ar vienu).",
-    "linkParent": "Ieraksts, kas saistīts ar pieder vecākiem. Var būt dažādu tipu vienības."
+    "linkParent": "Ieraksts, kas saistīts ar pieder vecākiem. Var būt dažādu tipu vienības.",
+    "linkMultiple": "Ierakstu kopa, kas saistīta ar Has-Many (daudz-daudz vai viens-daudz) attiecībām. Ne visām attiecībām ir saite-daudzveidība lauki. Tie ir tikai tie, kuros ir iespējots(-i) parametrs(-i) Link-Multiple."
   }
 }

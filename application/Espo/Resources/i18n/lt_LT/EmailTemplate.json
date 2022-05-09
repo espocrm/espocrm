@@ -25,7 +25,8 @@
     "optOutLink": "atsisakyti prenumeratos nuorodą",
     "today": "Šiandienos data",
     "now": "Dabartinė data ir laikas",
-    "currentYear": "Einamieji metai"
+    "currentYear": "Einamieji metai",
+    "optOutUrl": "Atsisakymo nuo prenumeratos nuorodos URL"
   },
   "messages": {
     "infoText": "Galimos vietos žymos:\n\n{optOutUrl} &#8211; Atsisakymo nuorodos URL;\n\n{optOutLink} &#8211; prenumeratos atsisakymo nuoroda."

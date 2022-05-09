@@ -9,7 +9,8 @@
     "sticked": "Prikabinta",
     "isLarge": "Didelis šrifto dydis",
     "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas",
-    "hidden": "Paslėptas"
+    "hidden": "Paslėptas",
+    "dynamicLogicStyled": "Taikomas sąlygų sudarymo stilius"
   },
   "options": {
     "align": {
@@ -31,6 +32,14 @@
   },
   "tooltips": {
     "link": "Jei pažymėta, lauko reikšmė bus rodoma kaip nuoroda, nukreipianti į išsamią įrašo peržiūrą. Paprastai tai naudojama *Vardas* laukams.",
-    "hiddenPanel": "Norint pamatyti skydelį, reikia spustelėti \"Rodyti daugiau\"."
+    "hiddenPanel": "Norint pamatyti skydelį, reikia spustelėti \"Rodyti daugiau\".",
+    "sticked": "Plokštė bus priklijuota prie aukščiau esančios plokštės. Tarp plokščių nėra tarpo.",
+    "panelStyle": "Skydelio spalva.",
+    "dynamicLogicVisible": "Jei nustatyta, skydelis bus paslėptas, nebent bus įvykdyta sąlyga.",
+    "dynamicLogicStyled": "Spalva bus taikoma, jei bus įvykdyta tam tikra sąlyga . Spalva apibrėžiama parametru *Style*."
+  },
+  "messages": {
+    "cantBeEmpty": "Maketas negali būti tuščias.",
+    "fieldsIncompatible": "Laukai negali būti išdėstyti kartu: {fields}."
   }
 }

@@ -49,7 +49,13 @@
     "personStringData": "Peronas teksta dati",
     "fromEmailAddress": "No adreses (saite)",
     "replyToName": "Vārds Atbildēt",
-    "replyToAddress": "Atbildes adrese"
+    "replyToAddress": "Atbildes adrese",
+    "icsContents": "ICS saturs",
+    "icsEventData": "ICS notikumu dati",
+    "icsEventUid": "ICS notikuma UID",
+    "createdEvent": "Izveidotais notikums",
+    "event": "Pasākums",
+    "icsEventDateStart": "ICS Pasākuma datums Sākums"
   },
   "links": {
     "replied": "Atbildēts",
@@ -104,7 +110,8 @@
     "Folders": "Mapes",
     "View Users": "Skatīt lietotājus",
     "No Subject": "Nav tēmas",
-    "Insert Field": "Ievietot lauku"
+    "Insert Field": "Ievietot lauku",
+    "Event": "Pasākums"
   },
   "messages": {
     "testEmailSent": "Nosūtīts testa e-pasts",
@@ -113,8 +120,8 @@
     "confirmInsertTemplate": "E-pasta pamatteksts tiks zaudēts. Vai tiešām vēlaties ievietot veidni?",
     "noSmtpSetup": "SMTP nav konfigurēts: {link}",
     "sendConfirm": "Nosūtīt e-pastu?",
-    "removeSelectedRecordsConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst atlasītos e-pasta ziņojumus?\n\nTie tiks noņemti arī citiem lietotājiem.",
-    "removeRecordConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst e-pastu?\n\nTas tiks noņemts arī citiem lietotājiem."
+    "removeSelectedRecordsConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst atlasītos e-pasta ziņojumus?\n\nTie tiks dzēsti arī citiem lietotājiem.",
+    "removeRecordConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst e-pastu?\n\nTas tiks dzēsts arī citiem lietotājiem."
   },
   "presetFilters": {
     "sent": "Nosūtīts",

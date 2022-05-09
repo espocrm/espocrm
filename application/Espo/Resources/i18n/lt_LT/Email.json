@@ -38,16 +38,22 @@
     "messageId": "Pranešimo id",
     "messageIdInternal": "Pranešimo ID (vidinis)",
     "folderId": "Aplanko ID",
-    "fromName": "Iš vardo",
+    "fromName": "Nuo",
     "fromString": "Iš stygos",
-    "isSystem": "Ar sistema",
+    "isSystem": "Yra Sistema",
     "toEmailAddresses": "El. Pašto adresai",
     "bccEmailAddresses": "BCC el. Pašto adresai",
     "replyToEmailAddresses": "Atsakymas į el. Pašto adresus",
     "personStringData": "Asmens eilutės duomenys",
     "fromEmailAddress": "Iš Adresas (nuoroda)",
     "replyToName": "Atsakyti į pavadinimą",
-    "replyToAddress": "Atsakymo į adresą adresas"
+    "replyToAddress": "Atsakymo į adresą adresas",
+    "icsContents": "ICS turinys",
+    "icsEventData": "ICS įvykių duomenys",
+    "icsEventUid": "ICS įvykio UID",
+    "createdEvent": "Sukurtas įvykis",
+    "event": "Renginys",
+    "icsEventDateStart": "ICS Renginio data Pradžia"
   },
   "links": {
     "replied": "Atsakyta",
@@ -102,7 +108,8 @@
     "Folders": "Aplankai",
     "View Users": "Peržiūrėti naudotojus",
     "No Subject": "Nėra temos",
-    "Insert Field": "Įterpti lauką"
+    "Insert Field": "Įterpti lauką",
+    "Event": "Renginys"
   },
   "messages": {
     "testEmailSent": "Bandomasis el. laiškas išsiųstas",

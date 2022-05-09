@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Vārds",
+    "name": "Nosaukums",
     "status": "Statuss",
     "target": "Mērķa adresāts",
     "sentAt": "Datums nosūtīts",

@@ -7,13 +7,13 @@
     "parent": "Mērķa adresāti",
     "object": "Objekts",
     "application": "Lietotnes",
-    "queueItem": "Ielikt vienumu rindā",
+    "queueItem": "Ielikt pozīciju rindā",
     "stringData": "Virknes dati",
     "stringAdditionalData": "Virknes papildu dati",
     "isTest": "Ir tests"
   },
   "links": {
-    "queueItem": "Ielikt vienumu rindā",
+    "queueItem": "Ielikt pozīciju rindā",
     "parent": "Primārais elements",
     "object": "Objekts",
     "campaign": "Kampaņa"

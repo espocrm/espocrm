@@ -85,7 +85,7 @@
     "currencyFormat": "Valūtas formāts",
     "currencyDecimalPlaces": "Valūtas ciparu skaits aiz komata",
     "followCreatedEntities": "Sekot izveidotajiem ierakstiem",
-    "aclAllowDeleteCreated": "Ļaut noņemt izveidotos ierakstus",
+    "aclAllowDeleteCreated": "Ļaut dzēst izveidotos ierakstus",
     "adminNotifications": "Sistēmas paziņojumi administrēšanas panelī",
     "adminNotificationsNewVersion": "Rādīt paziņojumus, kad būs pieejami \"EspoCRM\" jaunā versija",
     "massEmailMaxPerHourCount": "Stundas laikā nosūtīto e-pastu maks. Skaits",
@@ -134,7 +134,10 @@
     "busyRangesEntityList": "Brīvo/aizņemto vienību saraksts",
     "passwordRecoveryForInternalUsersDisabled": "Paroles atjaunošanas atspējošanas atspējošana iekšējiem lietotājiem",
     "passwordRecoveryNoExposure": "Novērst e-pasta adreses atklāšanu paroles atgūšanas veidlapā",
-    "auth2FAForced": "Piespiest regulāros lietotājus iestatīt 2FA"
+    "auth2FAForced": "Piespiest regulāros lietotājus iestatīt 2FA",
+    "smsProvider": "SMS pakalpojumu sniedzējs",
+    "outboundSmsFromNumber": "SMS no numura",
+    "recordsPerPageSelect": "Ieraksti vienā lappusē (izvēlieties)"
   },
   "tooltips": {
     "recordsPerPage": "Saraksta skatījumos sākotnēji parādāmo ierakstu skaits.",
@@ -168,12 +171,12 @@
     "currencyDecimalPlaces": "Ciparu skaits aiz komata. Atstājot šo izvēli tukšu, tiks rādīti visi cipari aiz komata, kuri nebūs tukši.",
     "aclStrictMode": "Atļauts: piekļuve tvērumiem tiks liegta, ja lomās nebūs norādīts citādi.\n\nNav atļauts: piekļuve tvērumiem tiks atļauta, ja lomās nebūs norādīts citādi.",
     "outboundEmailIsShared": "Ļaut lietotājiem nosūtīt e-pastus no šīs adreses.",
-    "aclAllowDeleteCreated": "Lietotāji varēs noņemt ierakstus, kurus tie būs izveidojuši, pat ja tiem nebūs izdzēsta piekļuve.",
+    "aclAllowDeleteCreated": "Lietotāji varēs dzēst ierakstus, kurus tie būs izveidojuši, pat ja tiem nebūs izdzēsta piekļuve.",
     "textFilterUseContainsForVarchar": "Ja nebūs atzīmēts, tiks izmantots operators \"starts with\". Jūs varat izmantot aizstājējzīmi \"%\".",
     "streamEmailNotificationsEntityList": "E-pasta paziņojumi par sekojamo ierakstu straumes atjauninājumiem. Lietotāji saņems e-pasta paziņojumus tikai par norādītajiem vienību tipiem.",
     "authTokenPreventConcurrent": "Lietotāji nevarēs pieslēgties sistēmai no vairākām ierīcēm vienlaicīgi.",
     "emailAddressIsOptedOutByDefault": "Izveidojot jaunu ierakstu, e-pasta adrese tiks atzīmēta kā  neizvēlētā.",
-    "cleanupDeletedRecords": "Noņemtie ieraksti pēc brīža tiks izdzēsti no datu bāzes.",
+    "cleanupDeletedRecords": "Dzēstie ieraksti pēc brīža tiks izdzēsti no datu bāzes.",
     "ldapPortalUserLdapAuth": "Atļaut portāla lietotājiem izmantot Espo autentifikācijas vietā LDAP autentifikāciju.",
     "ldapPortalUserPortals": "Noklusējuma portāli izveidotā portāla lietotājam",
     "ldapPortalUserRoles": "Noklusējuma lomas izveidotā portāla lietotājam",
@@ -206,7 +209,8 @@
     "emailNotificationsDelay": "Ziņojumu var rediģēt norādītajā laikā pirms paziņojuma nosūtīšanas.",
     "outboundEmailFromAddress": "Sistēmas e-pasta adrese.",
     "smtpServer": "Ja tas ir tukšs, tiks izmantots grupas e-pasta konts ar atbilstošo e-pasta adresi.",
-    "busyRangesEntityList": "Kas tiks ņemts vērā, rādot aizņemtā laika diapazonus plānotājā un laika grafikā."
+    "busyRangesEntityList": "Kas tiks ņemts vērā, rādot aizņemtā laika diapazonus plānotājā un laika grafikā.",
+    "recordsPerPageSelect": "Ierakstu skaits, kas sākotnēji tiek parādīts, izvēloties ierakstus."
   },
   "labels": {
     "System": "Sistēma",
@@ -241,6 +245,9 @@
       "lastFirst": "Pēdējais Pirmais",
       "firstMiddleLast": "Pirmais vidējais uzvārds",
       "lastFirstMiddle": "Uzvārds Pirmais Vidējais"
+    },
+    "auth2FAMethodList": {
+      "Email": "E-pasts"
     }
   }
 }

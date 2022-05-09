@@ -6,5 +6,8 @@
     "Create Case": "Izveidot lietu",
     "Add to Contact": "Pievienot kontaktiem",
     "Add to Lead": "Pievienot potenciālajiem klientiem"
+  },
+  "fields": {
+    "tasks": "Uzdevumi"
   }
 }

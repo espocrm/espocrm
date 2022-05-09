@@ -19,7 +19,8 @@
   "links": {
     "attachments": "Prisegtukai",
     "account": "Paskyra",
-    "contact": "Kontaktai"
+    "contact": "Kontaktai",
+    "email": "El. paštas"
   },
   "options": {
     "status": {
@@ -47,5 +48,8 @@
     "todays": "Šiandienos",
     "overdue": "Vėluoja",
     "deferred": "Atidėta"
+  },
+  "nameOptions": {
+    "replyToEmail": "Atsakyti į el. laišką"
   }
 }

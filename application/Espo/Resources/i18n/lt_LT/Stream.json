@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Įveskite **@username**, kad pranešime paminėtumėte naudotoją.",
-    "infoSyntax": "Turima žymėjimo sintaksė"
+    "infoSyntax": "Turima žymėjimo sintaksė",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Nepavyko pridėti naudotojo '{userName}' prie sekėjų. Vartotojas neturi \"stream\" prieigos prie įrašo."
   },
   "syntaxItems": {
     "code": "kodas",

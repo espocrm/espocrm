@@ -9,7 +9,8 @@
     "sticked": "Nostiprināts",
     "isLarge": "Liels šrifta izmērs",
     "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams",
-    "hidden": "Slēptais"
+    "hidden": "Slēptais",
+    "dynamicLogicStyled": "Nosacījumi, kas nosaka piemērojamo stilu"
   },
   "options": {
     "align": {
@@ -31,6 +32,14 @@
   },
   "tooltips": {
     "link": "Ja ir atzīmēts, lauka vērtība tiks parādīta kā saite, kas norāda uz ieraksta detalizētu pārskatu. Parasti to izmanto *Nosaukums* laukiem.",
-    "hiddenPanel": "Lai redzētu paneli, ir jānoklikšķina uz \"parādīt vairāk\"."
+    "hiddenPanel": "Lai redzētu paneli, ir jānoklikšķina uz \"parādīt vairāk\".",
+    "sticked": "Panelis tiks piestiprināts pie paneļa virs tā. Starp paneļiem nav atstarpes.",
+    "panelStyle": "Paneļa krāsa.",
+    "dynamicLogicVisible": "Ja tas ir iestatīts, panelis tiks paslēpts, ja vien nosacījums nebūs izpildīts.",
+    "dynamicLogicStyled": "Krāsa tiks piemērota, ja tiks izpildīts konkrēts nosacījums . Krāsu nosaka parametrs *Style*."
+  },
+  "messages": {
+    "cantBeEmpty": "Izkārtojums nevar būt tukšs.",
+    "fieldsIncompatible": "Lauki nevar būt kopā izkārtojumā: {lauki}."
   }
 }

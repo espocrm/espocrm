@@ -8,7 +8,8 @@
     "groupEmailAccountPermission": "Grupės el. pašto paskyros leidimas",
     "exportPermission": "Eksportuoti leidimą",
     "dataPrivacyPermission": "Duomenų privatumo leidimas",
-    "massUpdatePermission": "Masinio atnaujinimo teisė"
+    "massUpdatePermission": "Masinio atnaujinimo teisė",
+    "followerManagementPermission": "Sekėjų valdymo leidimas"
   },
   "links": {
     "users": "Vartotojai",
@@ -21,7 +22,8 @@
     "groupEmailAccountPermission": "Nurodo prieigą prie grupės el. pašto abonementų, galimybę siųsti el. laiškus iš grupės SMTP.",
     "dataPrivacyPermission": "Leidžia peržiūrėti ir ištrinti asmens duomenis.",
     "exportPermission": "Nurodo, ar vartotojai gali eksportuoti įrašus.",
-    "massUpdatePermission": "Nurodo, ar vartotojai gali atlikti masinius įrašų atnaujinimus."
+    "massUpdatePermission": "Nurodo, ar vartotojai gali atlikti masinius įrašų atnaujinimus.",
+    "followerManagementPermission": "Leidžia valdyti konkrečių įrašų sekėjus."
   },
   "labels": {
     "Access": "Prieiga",

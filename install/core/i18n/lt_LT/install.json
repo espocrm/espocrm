@@ -120,5 +120,22 @@
     "writable": "Įrašymo",
     "readable": "Skaitymo",
     "requiredMariadbVersion": "MariaDB versija"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>API klaida: </h3><br>Darykite tik būtinus veiksmus. Po kiekvieno žingsnio patikrinkite, ar problema išspręsta.",
+      "nginx": "<h3>API klaida: </h3>: EspoCRM API nepasiekiama </h3>.",
+      "microsoft-iis": "<h3>API klaida: </h3><br>Galima problema: išjungtas \"URL Rewrite\". Patikrinkite ir įjunkite \"URL Rewrite\" modulį IIS serveryje.",
+      "default": "<h3>API klaida: </h3><br> Galimos problemos: išjungtas perrašymo modulis. Patikrinkite ir įjunkite Rewrite modulį savo serveryje (pvz., mod_rewrite \"Apache\") ir .htaccess palaikymą."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Įjunkite \"mod_rewrite\".</h4>Kad įjungtumėte <i>mod_rewrite</i>, terminale paleiskite šias komandas:<br><br><pre>{APACHE1}</pre><hr><h4>2. Jei ankstesnis žingsnis nepadėjo, pabandykite įjungti .htaccess palaikymą.</h4> Pridėkite / redaguokite serverio konfigūracijos nustatymus <code>{{APACHE2_PATH1}</code> arba <code>{APACHE2_PATH2}</code> (arba <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Po to terminale paleiskite šią komandą:<br><br><pre>{APACHE3}</pre><hr><h4>3. Jei ankstesnis žingsnis nepadėjo, pabandykite pridėti RewriteBase kelią.</h4>Atidarykite failą <code>{{API_PATH}.htaccess</code> ir pakeiskite šią eilutę:<br><br><pre>{APACHE4}</pre>Į<br><pre>{APACHE5}</pre><hr>Daugiau informacijos rasite gairėse <a href=\"{APACHE_LINK}\" target=\"_blank\">\"EspoCRM\" \"Apache\" serverio konfigūracija</a>.<br><br>Daugiau informacijos rasite gairėse <a href=\"{APACHE_LINK}\" target=\"_blank\">\"EspoCRM\" \"Apache\" serverio konfigūracija</a>.",
+        "windows": "<br><br> <h4>1. Raskite httpd.conf failą.</h4>Įprastai jį rasite aplanke, kuris vadinasi \"conf\", \"config\" ar panašiai.<br><br><h4>2. Redaguokite httpd.conf failą.</h4> httpd.conf failo viduje iškomentuokite eilutę <code>{WINDOWS_APACHE1}</code> (pašalinkite prieš eilutę esantį ženklą '#').<br><br><h4>3. Patikrinkite kitus parametrus.</h4>Taip pat patikrinkite, ar eilutė <code>ClearModuleList</code> nekomentuojama, ir įsitikinkite, kad eilutė <code>AddModule mod_rewrite.c</code> nekomentuojama.\n"
+      },
+      "nginx": {
+        "linux": "<br> Į savo \"Nginx\" serverio konfigūracijos failą <code>{NGINX_PATH}</code> skiltyje \"serveris\" įtraukite šį kodą:<br><br><pre>{NGINX}</pre> <br> Daugiau informacijos rasite gairėse <a href=\"{NGINX_LINK}\" target=\"_blank\">\"Nginx\" serverio konfigūracija EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }
