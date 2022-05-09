@@ -33,9 +33,9 @@ use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Api\RequestWrapper;
 
 use Espo\Core\Utils\Config;
+use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 
 use Slim\Psr7\Factory\RequestFactory;
-
 
 class SearchParamsFetcherTest extends \PHPUnit\Framework\TestCase
 {
@@ -44,6 +44,7 @@ class SearchParamsFetcherTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->config = $this->createMocK(Config::class);
+        $this->textMetadataProvider = $this->createMocK(TextMetadataProvider::class);
 
         $this->config
             ->method('get')
@@ -62,7 +63,7 @@ class SearchParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request = (new RequestFactory)->createRequest('GET', 'http://localhost/?' . $q);
 
-        $fetcher = new SearchParamsFetcher($this->config);
+        $fetcher = new SearchParamsFetcher($this->config, $this->textMetadataProvider);
 
         $params = $fetcher->fetch(new RequestWrapper($request));
 

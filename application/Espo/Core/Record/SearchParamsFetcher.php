@@ -29,14 +29,14 @@
 
 namespace Espo\Core\Record;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Utils\Config,
-    Api\Request,
-    Select\SearchParams,
-    Utils\Json,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
+
+use Espo\Core\Utils\Config;
+use Espo\Core\Api\Request;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
+use Espo\Core\Utils\Json;
 
 use JsonException;
 
@@ -46,9 +46,12 @@ class SearchParamsFetcher
 
     private Config $config;
 
-    public function __construct(Config $config)
+    private TextMetadataProvider $textMetadataProvider;
+
+    public function __construct(Config $config, TextMetadataProvider $textMetadataProvider)
     {
         $this->config = $config;
+        $this->textMetadataProvider = $textMetadataProvider;
     }
 
     public function fetch(Request $request): SearchParams
@@ -67,7 +70,7 @@ class SearchParamsFetcher
             $this->fetchRawJsonSearchParams($request):
             $this->fetchRawMultipleParams($request);
 
-        $this->handleRawParams($params);
+        $this->handleRawParams($params, $request);
 
         return $params;
     }
@@ -164,7 +167,7 @@ class SearchParamsFetcher
     /**
      * @param array<string,mixed> $params
      */
-    private function handleRawParams(array &$params): void
+    private function handleRawParams(array &$params, Request $request): void
     {
         if (isset($params['maxSize']) && !is_int($params['maxSize'])) {
             throw new BadRequest('maxSize must be integer.');
@@ -178,12 +181,28 @@ class SearchParamsFetcher
             strpos($q, '*') === false &&
             strpos($q, '"') === false &&
             strpos($q, '+') === false &&
-            strpos($q, '-') === false
+            strpos($q, '-') === false &&
+            $this->hasFullTextSearch($request)
         ) {
             $params['q'] = $q . '*';
         }
 
         $this->handleMaxSize($params);
+    }
+
+    private function hasFullTextSearch(Request $request): bool
+    {
+        $scope = $request->getRouteParam('controller');
+
+        if (!$scope) {
+            return false;
+        }
+
+        if ($request->getRouteParam('action') !== 'index') {
+            return false;
+        }
+
+        return $this->textMetadataProvider->hasFullTextSearch($scope);
     }
 
     /**
