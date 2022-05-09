@@ -6,5 +6,8 @@
     "Create Case": "Sukurti atvejį",
     "Add to Contact": "Pridėti prie kontaktų",
     "Add to Lead": "Pridėti prie švino"
+  },
+  "fields": {
+    "tasks": "Užduotys"
   }
 }

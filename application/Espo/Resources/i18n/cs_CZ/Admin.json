@@ -84,7 +84,7 @@
         "url": "Url",
         "varchar": "Varchar",
         "file": "Soubor",
-        "image": "Obrázenk",
+        "image": "Obrázek",
         "multiEnum": "Vícenásobný Enum"
     },
     "fields": {

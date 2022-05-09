@@ -50,7 +50,8 @@
     "ApiUser": "API naudotojas",
     "DashboardTemplate": "Prietaisų skydelio šablonas",
     "Currency": "Valiuta",
-    "LayoutSet": "Maketų rinkinys"
+    "LayoutSet": "Maketų rinkinys",
+    "Mass Action": "Masiniai veiksmai"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -254,7 +255,14 @@
     "View on Map": "Žiūrėti žemėlapyje",
     "Proceed": "Tęsti",
     "Attached": "Pridedamas",
-    "Preview": "Peržiūra"
+    "Preview": "Peržiūra",
+    "Up": "Į viršų",
+    "Save & Continue Editing": "Išsaugoti ir tęsti redagavimą",
+    "Save & New": "Išsaugoti ir nauja",
+    "Field": "Laukas",
+    "Resolution": "Rezoliucija",
+    "Resolve Conflict": "Išspręskite konfliktą",
+    "Download": "Atsisiųsti"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -300,7 +308,7 @@
     "massUnfollowZeroResult": "Nėra nesekamų įrašų",
     "fieldShouldBeEmail": "{laukas} turėtų būti tinkamas el. pašto adresas",
     "fieldShouldBeFloat": "{laukas} turėtų būti tinkamas",
-    "fieldShouldBeInt": "{laukas} turi būti teisingas sveikasis skaičius",
+    "fieldShouldBeInt": "{laukas} turi būti sveikasis skaičius",
     "fieldShouldBeDate": "{laukas} turėtų būti galiojanti data",
     "fieldShouldBeDatetime": "{field} turėtų būti teisinga data / laikas",
     "internalPostTitle": "Paštą mato tik vidiniai vartotojai",
@@ -318,7 +326,9 @@
     "fieldExceedsMaxCount": "Skaičius viršija didžiausią leistiną {maxCount}",
     "notUpdated": "Neatnaujinta",
     "maintenanceMode": "Šiuo metu programa veikia techninės priežiūros režimu. Prieigą turi tik administratoriaus naudotojai.\n\nPriežiūros režimą galima išjungti adresu Administravimas → Nustatymai.",
-    "fieldInvalid": "{field} yra negaliojantis"
+    "fieldInvalid": "{field} yra negaliojantis",
+    "resolveSaveConflict": "Įrašas buvo pakeistas. Prieš išsaugodami įrašą turite išspręsti konfliktą.",
+    "massActionProcessed": "Masinis veiksmas buvo apdorotas."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -339,7 +349,8 @@
     "convertCurrency": "Pakeisti valiutą",
     "printPdf": "Spausdinti PDF formatu",
     "unlink": "Atsieti",
-    "recalculateFormula": "Perskaičiuoti formulę"
+    "recalculateFormula": "Perskaičiuoti formulę",
+    "update": "Atnaujinti"
   },
   "fields": {
     "name": "Vardas",
@@ -598,6 +609,11 @@
       "Fax": "Faksas",
       "Home": "Namų",
       "Other": "Kitas"
+    },
+    "saveConflictResolution": {
+      "current": "Dabartinis",
+      "actual": "Tikrasis",
+      "original": "Originalus"
     }
   },
   "sets": {
@@ -711,5 +727,14 @@
   },
   "listViewModes": {
     "list": "Sąrašas"
+  },
+  "themes": {
+    "DarkVertical": "Tamsus",
+    "Dark": "Tamsus horizontalus",
+    "Espo": "\"Espo Horizontal",
+    "Sakura": "Sakura Horizontalusis",
+    "Violet": "Violetinė horizontali",
+    "VioletVertical": "Violetinė",
+    "Hazyblue": "Hazyblue Horizontalus"
   }
 }

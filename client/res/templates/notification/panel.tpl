@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body">
         <div class="list-container">
-            {{translate 'Loading...'}}
+            <span class="text-soft fas fa-spinner fa-spin"></span>
         </div>
     </div>
 </div>

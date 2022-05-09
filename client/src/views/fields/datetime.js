@@ -85,7 +85,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
 
         getDateStringValue: function () {
             if (this.mode === 'detail' && !this.model.has(this.name)) {
-                return '...';
+                return -1;
             }
 
             var value = this.model.get(this.name);
@@ -100,7 +100,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     return '';
                 }
 
-                return this.translate('None');
+                return null;
             }
 
             if (this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink') {

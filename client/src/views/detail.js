@@ -150,11 +150,12 @@ define('views/detail', 'views/main', function (Dep) {
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
+
+                return;
             }
-            else {
-                if (this.getAcl().checkModel(this.model, 'stream')) {
-                    this.addFollowButtonToMenu();
-                }
+
+            if (this.getAcl().checkModel(this.model, 'stream')) {
+                this.addFollowButtonToMenu();
             }
         },
 
@@ -296,6 +297,7 @@ define('views/detail', 'views/main', function (Dep) {
                     this.updateRelationshipPanel(link);
 
                     this.model.trigger('after:relate');
+                    this.model.trigger('after:relate:' + link);
                 });
             });
         },
@@ -427,7 +429,9 @@ define('views/detail', 'views/main', function (Dep) {
                         .then(() => {
                             this.notify('Linked', 'success');
                             this.updateRelationshipPanel(link);
+
                             this.model.trigger('after:relate');
+                            this.model.trigger('after:relate:' + link);
                         });
                 });
             });

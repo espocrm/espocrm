@@ -1,15 +1,15 @@
 {
   "fields": {
-    "billingAddress": "адрес на плащане",
+    "billingAddress": "Адрес за плащане",
     "shippingAddress": "Адрес за доставка",
-    "website": "уебсайт"
+    "website": "Уебсайт"
   },
   "links": {
-    "meetings": "срещи",
-    "calls": "призовава",
+    "meetings": "Срещи",
+    "calls": "Обаждане",
     "tasks": "Задачи"
   },
   "labels": {
-    "Create {entityType}": "Създаване {entityTypeTranslated}"
+    "Create {entityType}": "Създаване на {entityTypeTranslated}"
   }
 }

@@ -5,8 +5,8 @@
     "EmailTemplates": "Шаблони за имейл"
   },
   "fields": {
-    "order": "Поръчка",
-    "childList": "Списък на детето"
+    "order": "Подредба",
+    "childList": "Дъщерни записи"
   },
   "links": {
     "emailTemplates": "Шаблони за имейл"

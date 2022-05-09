@@ -80,7 +80,8 @@
     "readOnly": "artotojas negali nurodyti laukelio vertės. Bet gali būti apskaičiuojamas pagal formulę.",
     "maxFileSize": "Jei tuščia arba 0, tai nelimituojama",
     "fileAccept": "Kokius failų tipus priimti. Galima pridėti pasirinktinių elementų.",
-    "barcodeLastChar": "EAN-13 tipo."
+    "barcodeLastChar": "EAN-13 tipo.",
+    "conversionDisabled": "Šiam laukui valiutos konvertavimo veiksmas nebus taikomas."
   },
   "fieldParts": {
     "address": {
@@ -131,6 +132,7 @@
     "phone": "Telefono numerių ir jų parametrų rinkinys: Tipas, Atsisakyta, Negaliojantis, Pirminis.",
     "foreign": "Susijusio įrašo laukas. Tik nuskaitymui.",
     "link": "Įrašas, susijęs per ryšį \"Priklauso-tam\" (daug-prieš-vieną arba vienas-prieš-vieną).",
-    "linkParent": "Įrašas, susijęs per \"priklauso tėvams\" ryšį. Gali būti skirtingų tipų."
+    "linkParent": "Įrašas, susijęs per \"priklauso tėvams\" ryšį. Gali būti skirtingų tipų.",
+    "linkMultiple": "Įrašų rinkinys, susijęs Has-Many (daugelio su daugeliu arba vieno su daugeliu) ryšiu. Ne visi ryšiai turi savo nuorodų daugybinius laukus. Juos turi tik tie, kuriuose įjungtas (-i) parametras (-ai) Link-Multiple."
   }
 }

@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "status": "Statuss",
+    "processedCount": "Apstrādāto skaits"
+  },
+  "options": {
+    "status": {
+      "Pending": "Gaida",
+      "Success": "Panākumi",
+      "Failed": "Neveiksmīgs"
+    }
+  },
+  "messages": {
+    "infoText": "Masu darbība tiek apstrādāta dīkstāves režīmā, izmantojot cron. Tās pabeigšana var aizņemt kādu laiku. Šī modālā dialoglodziņa aizvēršana neietekmēs izpildes procesu."
+  }
+}

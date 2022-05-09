@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "Оформления"
+  },
+  "labels": {
+    "Create LayoutSet": "Създаване на оформление",
+    "Edit Layouts": "Редактиране на оформление"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "Sintakses pārbaude",
+    "Run": "Palaist"
+  },
+  "fields": {
+    "target": "Mērķis",
+    "targetType": "Mērķa tips",
+    "script": "Skripts",
+    "output": "Izvades",
+    "error": "Kļūda"
+  },
+  "messages": {
+    "runSuccess": "Izpildīts veiksmīgi.",
+    "runError": "Kļūda.",
+    "checkSyntaxSuccess": "Sintakse ir pareiza.",
+    "checkSyntaxError": "Sintakses kļūda.",
+    "emptyScript": "Skripts ir tukšs."
+  },
+  "tooltips": {
+    "output": "Vērtību drukāšana ar funkciju `output\\printLine`."
+  }
+}

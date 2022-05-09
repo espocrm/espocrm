@@ -4,7 +4,7 @@
     "ipAddress": "IP Adresss",
     "lastAccess": "Paskutinio prisijungimo data",
     "createdAt": "Prisijungimo data",
-    "isActive": "Yra aktyvus",
+    "isActive": "Yra Aktyvus",
     "portal": "Portalas"
   },
   "links": {
@@ -15,7 +15,7 @@
     "inactive": "Neaktyvus"
   },
   "labels": {
-    "Set Inactive": "Nustatyti neaktyvią"
+    "Set Inactive": "Nustatyti Neaktyviu"
   },
   "massActions": {
     "setInactive": "Nustatyti kaip neaktyvų"

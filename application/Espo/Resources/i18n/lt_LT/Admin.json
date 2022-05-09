@@ -74,7 +74,12 @@
     "Dashboard Templates": "Prietaisų skydelio šablonai",
     "Email Addresses": "El. pašto adresai",
     "Phone Numbers": "Telefono numeriai",
-    "Layout Sets": "Maketų rinkiniai"
+    "Layout Sets": "Maketų rinkiniai",
+    "Messaging": "Žinučių siuntimas",
+    "Misc": "Įvairūs",
+    "Job Settings": "Darbo nustatymai",
+    "Configuration Instructions": "Konfigūravimo instrukcijos",
+    "Formula Sandbox": "Formulės smėlio dėžė"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -195,7 +200,10 @@
     "codeType": "Kodo tipas",
     "lastChar": "Paskutinis simbolis",
     "listPreviewSize": "Peržiūros dydis sąrašo rodinyje",
-    "onlyDefaultCurrency": "Tik numatytoji valiuta"
+    "onlyDefaultCurrency": "Tik numatytoji valiuta",
+    "dynamicLogicInvalid": "Sąlygos, dėl kurių laukas negalioja",
+    "conversionDisabled": "Išjungti konversiją",
+    "decimalPlaces": "Dešimtainės vietos"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -261,7 +269,10 @@
     "dashboardTemplates": "Įdiegti prietaisų skydelius naudotojams.",
     "phoneNumbers": "Visi sistemoje išsaugoti telefono numeriai.",
     "emailAddresses": "Visi sistemoje saugomi el. pašto adresai.",
-    "layoutSets": "Maketų, kuriuos galima priskirti komandoms ir portalams, rinkiniai."
+    "layoutSets": "Maketų, kuriuos galima priskirti komandoms ir portalams, rinkiniai.",
+    "jobsSettings": "Darbo apdorojimo nustatymai. Užduotys vykdomos fone.",
+    "sms": "SMS nustatymai.",
+    "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus."
   },
   "options": {
     "previewSize": {
@@ -296,7 +307,8 @@
     "notePostNoParent": "Pranešimas apie įrašą (be susijusių)",
     "noteStatus": "Pranešimas apie statuso atnaujinimą",
     "passwordChangeLink": "Slaptažodžio keitimo nuoroda",
-    "noteEmailReceived": "Pranešimas apie gautą el. laišką"
+    "noteEmailReceived": "Pranešimas apie gautą el. laišką",
+    "twoFactorCode": "2FA kodas"
   },
   "strings": {
     "rebuildRequired": "Reikia atstatyti"
@@ -309,6 +321,7 @@
     "authLog": "žurnalas, istorija",
     "authTokens": "istorija, prieiga, žurnalas",
     "entityManager": "laukai,santykiai,ryšiai",
-    "templateManager": "pranešimai"
+    "templateManager": "pranešimai",
+    "authentication": "slaptažodis, saugumas, ldap"
   }
 }

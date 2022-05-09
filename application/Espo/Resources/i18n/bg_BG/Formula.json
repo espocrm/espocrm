@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "Проверка на синтаксис",
+    "Run": "Стартирай"
+  },
+  "fields": {
+    "target": "Целеви запис",
+    "targetType": "Тип обект",
+    "script": "Скрипт",
+    "output": "Резултат",
+    "error": "Грешка"
+  },
+  "messages": {
+    "runSuccess": "Изпълнено успешно.",
+    "runError": "Грешка.",
+    "checkSyntaxSuccess": "Синтаксисът е правилен.",
+    "checkSyntaxError": "Синтаксисът е грешен.",
+    "emptyScript": "Скриптът е празен."
+  },
+  "tooltips": {
+    "output": "Отпечатайте стойности с функцията `output\\printLine`."
+  }
+}

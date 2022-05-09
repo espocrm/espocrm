@@ -17,7 +17,9 @@
     "fontFace": "Šriftas",
     "pageWidth": "Puslapio plotis (mm)",
     "pageHeight": "Puslapio aukštis (mm)",
-    "headerPosition": "Antraštės padėtis"
+    "headerPosition": "Antraštės padėtis",
+    "printHeader": "Spausdinti antraštę",
+    "title": "Pavadinimas"
   },
   "labels": {
     "Create Template": "Sukurti šabloną"

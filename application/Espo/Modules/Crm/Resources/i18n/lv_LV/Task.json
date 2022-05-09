@@ -19,7 +19,8 @@
   "links": {
     "attachments": "Pielikumi",
     "account": "Konts",
-    "contact": "Kontakts"
+    "contact": "Kontakts",
+    "email": "E-pasts"
   },
   "options": {
     "status": {
@@ -47,5 +48,8 @@
     "todays": "Šīsdienas",
     "overdue": "Nokavēts",
     "deferred": "Atlikts"
+  },
+  "nameOptions": {
+    "replyToEmail": "Atbildēt uz e-pastu"
   }
 }

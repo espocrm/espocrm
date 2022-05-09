@@ -1,38 +1,39 @@
 {
   "fields": {
-    "name": "име",
-    "emailAddress": "електронна поща",
+    "name": "Име",
+    "emailAddress": "Електронна поща",
     "accountRole": "Заглавие",
-    "account": "Сметка",
-    "accounts": "сметки",
-    "phoneNumber": "телефон",
+    "account": "Клиент",
+    "accounts": "Клиенти",
+    "phoneNumber": "Телефон",
     "accountType": "Тип на профила",
     "doNotCall": "Не звъни",
-    "address": "адрес",
-    "opportunityRole": "възможност Роля",
-    "description": "описание",
-    "campaign": "кампания",
+    "address": "Адрес",
+    "opportunityRole": "Роля в сделка",
+    "description": "Описание",
+    "campaign": "Кампания",
     "targetLists": "Целеви списъци",
     "targetList": "Целева Списък",
-    "portalUser": "портал за потребителя",
-    "originalLead": "Оригинален Lead",
-    "acceptanceStatus": "Приемане Статус",
-    "accountIsInactive": "неактивен акаунт",
-    "acceptanceStatusMeetings": "Приемане Статус (срещи)",
-    "acceptanceStatusCalls": "Приемане Статус (призовава)",
-    "title": "Основно заглавие на профила"
+    "portalUser": "Потребител на портал",
+    "originalLead": "Оригинална потенциална продажба",
+    "acceptanceStatus": "Статус за приемане",
+    "accountIsInactive": "Неактивен клиент",
+    "acceptanceStatusMeetings": "Статус на приемане (Срещи)",
+    "acceptanceStatusCalls": "Статус на приемане (Разговори)",
+    "title": "Роля при клиент",
+    "hasPortalUser": "Притежава акаунт в портала"
   },
   "links": {
-    "opportunities": "възможности",
-    "cases": "случаи",
+    "opportunities": "Сделки",
+    "cases": "Тикети",
     "targetLists": "Целеви списъци",
-    "campaignLogRecords": "кампания Вход",
-    "campaign": "кампания",
-    "account": "Сметката (Основно)",
-    "accounts": "сметки",
-    "casesPrimary": "Случаи (Основно)",
-    "portalUser": "портал за потребителя",
-    "originalLead": "Оригинален Lead",
+    "campaignLogRecords": "Логове от кампания",
+    "campaign": "Кампания",
+    "account": "Клиент (Основен)",
+    "accounts": "Клиенти",
+    "casesPrimary": "Тикети (Основни)",
+    "portalUser": "Потребител в портал",
+    "originalLead": "Оригинална потенциална продажба",
     "documents": "Документи",
     "tasksPrimary": "Задачи (разширена)",
     "opportunitiesPrimary": "Възможности (Основно)"
@@ -42,12 +43,13 @@
   },
   "options": {
     "opportunityRole": {
-      "Decision Maker": "Решение Maker",
-      "Evaluator": "оценител"
+      "Decision Maker": "Вземащ решения",
+      "Evaluator": "Оценител",
+      "Influencer": "Инфлуенсър"
     }
   },
   "presetFilters": {
-    "portalUsers": "потребители на портала",
+    "portalUsers": "Потребители на портала",
     "notPortalUsers": "Не потребители на портала",
     "accountActive": "Активен"
   }

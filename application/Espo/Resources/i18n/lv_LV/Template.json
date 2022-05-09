@@ -17,7 +17,9 @@
     "fontFace": "Fonts",
     "pageWidth": "Lapas platums (mm)",
     "pageHeight": "Lapas augstums (mm)",
-    "headerPosition": "Virsraksta pozīcija"
+    "headerPosition": "Virsraksta pozīcija",
+    "printHeader": "Drukāt galveni",
+    "title": "Nosaukums"
   },
   "labels": {
     "Create Template": "Izveidot veidni"

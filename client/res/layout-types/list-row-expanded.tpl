@@ -5,7 +5,7 @@
 </div>
 <% } %>
 <% _.each(layout.rows, function (row, key) { %>
-    <div class="expanded-row"><% _.each(row, function (defs, key) { %>{{#if this.<%= defs.name %>}}<span class="cell" data-name="<%= defs.field %>"><%
+    <div class="expanded-row"><% _.each(row, function (defs, key) { %>{{#ifNotEmptyHtml this.<%= defs.name %>}}<span class="cell" data-name="<%= defs.field %>"><%
                 var tag = 'tag' in defs ? defs.tag : false;
                 if (tag) {
                     print( '<' + tag);
@@ -21,5 +21,5 @@
                 if (tag) {
                     print( '</' + tag + '>');
                 }
-        %></span>{{/if}}<% }); %></div>
+        %></span>{{/ifNotEmptyHtml}}<% }); %></div>
 <% }); %>

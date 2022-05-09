@@ -74,7 +74,9 @@
     "Requirements": "Prasības",
     "Security": "Drošība",
     "Reset 2FA": "2FA atiestatīšana",
-    "Secret": "Noslēpums"
+    "Secret": "Noslēpums",
+    "Send Password Change Link": "Nosūtīt paroles maiņas saiti",
+    "Send Code": "Nosūtīt kodu"
   },
   "tooltips": {
     "defaultTeam": "Visus šī lietotāja izveidotie ieraksti pēc noklusējuma tiks sasaistīti ar šo grupu.",
@@ -111,7 +113,14 @@
     "ldapUserInEspoNotFound": "Lietotājs nav atrodams EspoCRM. Sazinieties ar administratoru, lai izveidotu lietotāju.",
     "passwordRecoverySentIfMatched": "Pieņemot, ka ievadītie dati atbilst kādam lietotāja kontam.",
     "auth2FARequiredHeader": "Nepieciešama 2 faktoru autentifikācija",
-    "auth2FARequired": "Jums ir jāiestata 2 faktoru autentifikācija. Izmantojiet autentifikatora programmu savā mobilajā tālrunī (piemēram, Google Authenticator)."
+    "auth2FARequired": "Jums ir jāiestata 2 faktoru autentifikācija. Izmantojiet autentifikatora programmu savā mobilajā tālrunī (piemēram, Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Lietotājam tiks nosūtīts e-pasts ar unikālu saiti, kas ļaus mainīt paroli. Saites derīguma termiņš beigsies pēc noteikta laika.",
+    "yourAuthenticationCode": "Jūsu autentifikācijas kods: {kods}.",
+    "choose2FaSmsPhoneNumber": "Izvēlieties tālruņa numuru, kas tiks izmantots 2FA.",
+    "choose2FaEmailAddress": "Izvēlieties e-pasta adresi, kas tiks izmantota 2FA. Ieteicams izmantot ne primāro e-pasta adresi.",
+    "enterCodeSentInEmail": "Ievadiet kodu, kas nosūtīts uz jūsu e-pasta adresi.",
+    "enterCodeSentBySms": "Ievadiet kodu, kas nosūtīts ar SMS uz jūsu tālruņa numuru.",
+    "passwordChangeRequestNotFound": "Paroles maiņas pieprasījums nav atrasts. Iespējams, tā derīguma termiņš ir beidzies. Mēģiniet uzsākt jaunas paroles atjaunošanu no [pieteikšanās lapas]({url})."
   },
   "boolFilters": {
     "onlyMyTeam": "Tikai manai grupai"

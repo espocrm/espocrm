@@ -2,11 +2,22 @@
   "fields": {
     "fieldList": "Laukelių sąrašas",
     "exportAllFields": "Eksportuoti visus laukus",
-    "format": "Formatas"
+    "format": "Formatas",
+    "status": "Statusas"
   },
   "options": {
     "format": {
       "xlsx": "XLSX (Excel) "
+    },
+    "status": {
+      "Pending": "Laukiama",
+      "Running": "Bėgimas",
+      "Success": "Sėkmė",
+      "Failed": "Nepavyko"
     }
+  },
+  "messages": {
+    "exportProcessed": "Eksportas apdorotas. Atsisiųskite [failą]({url}).",
+    "infoText": "Eksportas apdorojamas neveikiant cron. Tai gali užtrukti šiek tiek laiko. Šio modalinio dialogo uždarymas neturės įtakos vykdymo procesui."
   }
 }

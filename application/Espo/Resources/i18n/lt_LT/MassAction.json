@@ -1,1 +1,17 @@
-{}
+{
+  "fields": {
+    "status": "Statusas",
+    "processedCount": "Apdorotas skaičius"
+  },
+  "options": {
+    "status": {
+      "Pending": "Laukiama",
+      "Running": "Bėgimas",
+      "Success": "Sėkmė",
+      "Failed": "Nepavyko"
+    }
+  },
+  "messages": {
+    "infoText": "Masinis veiksmas apdorojamas cron neveikimo režimu. Tai gali užtrukti šiek tiek laiko. Šio modalinio dialogo uždarymas neturės įtakos vykdymo procesui."
+  }
+}

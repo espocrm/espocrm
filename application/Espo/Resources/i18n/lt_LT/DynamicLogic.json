@@ -19,7 +19,10 @@
       "contains": "Turi",
       "has": "Turi",
       "notContains": "Neturi",
-      "notHas": "Neturi"
+      "notHas": "Neturi",
+      "startsWith": "Prasideda nuo",
+      "endsWith": "Baigiasi su",
+      "matches": "Rungtynės (reg exp)"
     }
   },
   "labels": {

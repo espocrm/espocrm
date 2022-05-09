@@ -202,6 +202,16 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
                 return options.inverse(this);
             });
 
+            Handlebars.registerHelper('ifNotEmptyHtml', function (value, options) {
+                value = value.replace(/\s/g, '');
+
+                if (value) {
+                    return options.fn(this);
+                }
+
+                return options.inverse(this);
+            });
+
             Handlebars.registerHelper('get', (model, name) => model.get(name));
 
             Handlebars.registerHelper('length', arr => arr.length);

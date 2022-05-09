@@ -1,55 +1,57 @@
 {
   "fields": {
-    "name": "име",
-    "parent": "родител",
+    "name": "Име",
+    "parent": "Родител",
     "status": "Статус",
-    "dateStart": "Дата Старт",
+    "dateStart": "Начална дата",
     "dateEnd": "Крайна дата",
-    "duration": "продължителност",
-    "description": "описание",
+    "duration": "Продължителност",
+    "description": "Описание",
     "users": "Потребители",
     "contacts": "Контакти",
+    "leads": "Потенциални продажби",
     "reminders": "Напомняния",
-    "account": "Сметка",
-    "acceptanceStatus": "Приемане Статус",
-    "dateStartDate": "Дата Start (цял ден)",
+    "account": "Клиент",
+    "acceptanceStatus": "Статус за приемане",
+    "dateStartDate": "Начална дата (цял ден)",
     "dateEndDate": "Крайна дата (цял ден)",
-    "isAllDay": "Дали през целия ден",
-    "Acceptance": "приемане"
+    "isAllDay": "Цял ден",
+    "Acceptance": "Приемане",
+    "sourceEmail": "Източник на имейла"
   },
   "options": {
     "status": {
-      "Planned": "Планирано",
-      "Held": "Държани",
-      "Not Held": "Не държани"
+      "Planned": "Планирана",
+      "Held": "Състояла се",
+      "Not Held": "Несъстояла се"
     },
     "acceptanceStatus": {
       "None": "Нито един",
-      "Accepted": "общоприет",
+      "Accepted": "Приета",
       "Declined": "Отхвърлена",
-      "Tentative": "Експериментален"
+      "Tentative": "Несигурна"
     }
   },
   "massActions": {
-    "setHeld": "Задайте държани",
-    "setNotHeld": "Задайте не се държат"
+    "setHeld": "Задай като състояла се",
+    "setNotHeld": "Задай като несъстояла се"
   },
   "labels": {
     "Create Meeting": "Създаване на среща",
-    "Set Held": "Задайте държани",
-    "Set Not Held": "Задайте не се държат",
+    "Set Held": "Задай като състояла се",
+    "Set Not Held": "Задай като състояла се",
     "Send Invitations": "Изпращането на покани",
     "on time": "на време",
     "before": "преди",
     "All-Day": "Цял ден"
   },
   "presetFilters": {
-    "planned": "Планирано",
-    "held": "Държани",
+    "planned": "Планирани",
+    "held": "Състояли се",
     "todays": "Днешните"
   },
   "messages": {
-    "nothingHasBeenSent": "Нищо не бяха изпратени",
-    "selectAcceptanceStatus": "Задайте състоянието си приемане."
+    "nothingHasBeenSent": "Нищо не беше изпратено",
+    "selectAcceptanceStatus": "Задайте състоянието на приемане."
   }
 }

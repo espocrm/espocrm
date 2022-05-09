@@ -16,7 +16,8 @@
     "dateStartDate": "Data Pradžia (visą dieną)",
     "dateEndDate": "Data Pabaiga (visą dieną)",
     "isAllDay": "Ar visą dieną",
-    "Acceptance": "Priėmimas"
+    "Acceptance": "Priėmimas",
+    "sourceEmail": "Šaltinis El. paštas"
   },
   "options": {
     "status": {

@@ -1,15 +1,16 @@
 {
   "messages": {
-    "infoMention": "Вид ** @ потребителско име ** да се споменава за употреба в гредата.",
-    "infoSyntax": "Предлага синтаксис евтино"
+    "infoMention": "Въведете **@username**, за да споменете потребителя в публикацията.",
+    "infoSyntax": "Наличен Markdown синтаксис",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Не може да се добави потребителят „{userName}“ към последователите. Потребителят няма права за обекта „Активност“ до записа."
   },
   "syntaxItems": {
     "code": "код",
-    "multilineCode": "многоредово код",
-    "strongText": "силен текст",
-    "emphasizedText": "подчерта текст",
-    "deletedText": "заличава текст",
-    "blockquote": "блоков цитат",
-    "link": "връзка"
+    "multilineCode": "многоредов код",
+    "strongText": "удебелен текст",
+    "emphasizedText": "подчертан текст",
+    "deletedText": "изтрит текст",
+    "blockquote": "цитат",
+    "link": "URL"
   }
 }

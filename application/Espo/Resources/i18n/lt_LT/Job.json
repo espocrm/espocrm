@@ -16,7 +16,10 @@
     "targetId": "Tikslinis ID",
     "number": "Numeris",
     "queue": "Eilė",
-    "job": "Darbas"
+    "job": "Darbas",
+    "group": "Grupė",
+    "className": "Klasės pavadinimas",
+    "targetGroup": "Tikslinė grupė"
   },
   "options": {
     "status": {

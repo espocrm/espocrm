@@ -69,16 +69,16 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.addButtonEdit({
-                name: 'saveDraft',
-                action: 'save',
-                label: 'Save Draft',
-            }, true);
-
-            this.addButtonEdit({
                 name: 'send',
                 action: 'send',
                 label: 'Send',
                 style: 'primary',
+            }, true);
+
+            this.addButtonEdit({
+                name: 'saveDraft',
+                action: 'save',
+                label: 'Save Draft',
             }, true);
 
             this.addButton({

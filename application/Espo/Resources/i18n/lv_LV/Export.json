@@ -2,11 +2,21 @@
   "fields": {
     "fieldList": "Lauku saraksts",
     "exportAllFields": "Eksportēt visus laukus",
-    "format": "Formāts"
+    "format": "Formāts",
+    "status": "Statuss"
   },
   "options": {
     "format": {
       "xlsx": "XLSX (\"Excel\")"
+    },
+    "status": {
+      "Pending": "Gaida",
+      "Success": "Panākumi",
+      "Failed": "Neveiksmīgs"
     }
+  },
+  "messages": {
+    "exportProcessed": "Eksports ir apstrādāts. Lejupielādēt [failu]({url}).",
+    "infoText": "Eksports tiek apstrādāts dīkstāves režīmā cron. Tas var aizņemt kādu laiku. Šī modālā dialoglodziņa aizvēršana neietekmēs izpildes procesu."
   }
 }

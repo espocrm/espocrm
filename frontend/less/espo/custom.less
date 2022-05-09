@@ -606,16 +606,16 @@ div.list-kanban > div > table {
 }
 
 table.table > thead th > a {
-    color: @gray-light;
+    color: var(--text-muted-color);
 }
 
 table.table > thead th {
-    color: @gray-light;
+    color: var(--text-muted-color);
 }
 
 .cell label,
 .filter label {
-    color: @gray-light;
+    color: var(--text-muted-color);
     font-weight: normal;
 }
 
@@ -636,6 +636,14 @@ table.table > thead th {
         -o-transition: color .5s ease;
         transition: color .5s ease;
     }
+}
+
+.cell .loading-value {
+    color: var(--text-muted-color);
+}
+
+.cell .none-value {
+    color: var(--text-gray-color);
 }
 
 .filter .selectize-input {
@@ -942,14 +950,24 @@ ul.dropdown-menu > li.checkbox:last-child {
     }
 
     .multi-enum-item-label-container {
-        margin-bottom: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-bottom: 4px;
+
         &:last-child {
-            margin-bottom: 0;
+            padding-bottom: 1px;
         }
 
         .label-md {
             line-height: 1.5;
         }
+    }
+}
+
+.field {
+    > .label {
+        white-space: normal;
     }
 }
 
@@ -1004,7 +1022,11 @@ ul.dropdown-menu > li.checkbox:last-child {
 }
 
 .panel-body .list-container > .no-data {
-    color: var(--gray-light);
+    color: var(--text-muted-color);
+}
+
+.nav .list-container > .no-data {
+    color: var(--text-color);
 }
 
 ul.dropdown-menu > li > a > .check-icon + div {
@@ -1042,7 +1064,7 @@ table.table-fixed {
 }
 
 .list-row-buttons span.caret {
-    border-top-color: @gray-light;
+    border-top-color: var(--text-muted-color);
 }
 
 .list > table {
@@ -1073,10 +1095,10 @@ table.table-fixed {
 }
 
 .list > table th span.caret {
-    border-top-color: @gray-light;
+    border-top-color: var(--text-muted-color);
 }
 .list > table th span.caret-up {
-    border-bottom-color: @gray-light;
+    border-bottom-color: var(--text-muted-color);
 }
 
 .filter a.remove-filter {
@@ -2486,7 +2508,7 @@ table.table td.cell .html-container {
 
 .post-container {
     .internal-mode-switcher {
-        color: @gray-light;
+        color: var(--text-muted-color);
         margin-left: 10px;
         display: inline-block;
         position: relative;
@@ -2627,7 +2649,7 @@ table.table-admin-panel {
 
             > .icon {
                 position: absolute;
-                color: @gray-light;
+                color: var(--text-muted-color);
                 top: 1px;
             }
             > a {

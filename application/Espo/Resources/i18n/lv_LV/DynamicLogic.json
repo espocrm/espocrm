@@ -19,7 +19,10 @@
       "contains": "Satur",
       "has": "Satur",
       "notContains": "Nesatur",
-      "notHas": "Nesatur"
+      "notHas": "Nesatur",
+      "startsWith": "Sākas ar",
+      "endsWith": "Beidzas ar",
+      "matches": "Sērkociņi (reg exp)"
     }
   },
   "labels": {

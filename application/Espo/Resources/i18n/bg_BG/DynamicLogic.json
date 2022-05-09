@@ -5,24 +5,27 @@
       "notEquals": "Не е равно на",
       "greaterThan": "По-голям от",
       "lessThan": "По-малко от",
-      "greaterThanOrEquals": "-Голямо или равно",
+      "greaterThanOrEquals": "По-голямо или равно на",
       "lessThanOrEquals": "По-малко или равно на",
-      "in": "в",
+      "in": "В",
       "notIn": "Не в",
       "inPast": "В минало",
-      "inFuture": "е готов за бъдещи",
-      "isToday": "днес",
-      "isTrue": "Истина е",
-      "isFalse": "е лъжа",
-      "isEmpty": "Празно е",
-      "isNotEmpty": "Не е празна",
+      "inFuture": "Е в бъдеще",
+      "isToday": "Днес",
+      "isTrue": "Да",
+      "isFalse": "Не",
+      "isEmpty": "Е празно",
+      "isNotEmpty": "Не е празно",
       "contains": "Съдържа",
       "has": "Съдържа",
       "notContains": "Не Съдържа",
-      "notHas": "Не Съдържа"
+      "notHas": "Не Съдържа",
+      "startsWith": "Започва с",
+      "endsWith": "Завършва с",
+      "matches": "Съвпада (regex)"
     }
   },
   "labels": {
-    "Field": "поле"
+    "Field": "Поле"
   }
 }

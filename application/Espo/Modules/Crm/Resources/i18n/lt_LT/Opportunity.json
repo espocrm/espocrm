@@ -13,7 +13,7 @@
     "amountConverted": "Suma (konvertuota)",
     "amountWeightedConverted": "Pasverta suma",
     "campaign": "Kampanija",
-    "originalLead": "Originalus švinas",
+    "originalLead": "Pirminis Potencialus klientas",
     "amountCurrency": "Valiutos suma",
     "contactRole": "Kontakto vaidmuo",
     "lastStage": "Paskutinis etapas",
@@ -23,7 +23,7 @@
     "contacts": "Kontaktai",
     "documents": "Dokumentai",
     "campaign": "Kampanija",
-    "originalLead": "Originalus švinas",
+    "originalLead": "Pirminis Potencialus klientas",
     "contact": "Kontaktinis asmuo (pagrindinis)"
   },
   "options": {

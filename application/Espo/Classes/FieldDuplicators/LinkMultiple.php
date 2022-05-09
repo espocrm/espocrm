@@ -71,7 +71,7 @@ class LinkMultiple implements FieldDuplicator
             ->getRelation($relationDefs->getForeignRelationName())
             ->getType();
 
-        if ($foreignRelationType !== Entity::HAS_MANY) {
+        if ($foreignRelationType !== Entity::MANY_MANY) {
             $valueMap->{$field . 'Ids'} = [];
             $valueMap->{$field . 'Names'} = (object) [];
             $valueMap->{$field . 'Columns'} = (object) [];

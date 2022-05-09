@@ -8,7 +8,8 @@
     "groupEmailAccountPermission": "Grupas e-pasta konta atļauja",
     "exportPermission": "Eksportēt atļauju",
     "dataPrivacyPermission": "Datu privātuma atļauja",
-    "massUpdatePermission": "Masu atjaunināšanas atļauja"
+    "massUpdatePermission": "Masu atjaunināšanas atļauja",
+    "followerManagementPermission": "Sekotāju pārvaldības atļauja"
   },
   "links": {
     "users": "Lietotāji",
@@ -21,7 +22,8 @@
     "groupEmailAccountPermission": "Nosaka piekļuvi grupas e-pasta kontiem un iespēju nosūtīt e-pastus no grupas SMTP.",
     "dataPrivacyPermission": "Ļauj skatīt un dzēst personas datus.",
     "exportPermission": "Nosaka, vai lietotāji var eksportēt ierakstus.",
-    "massUpdatePermission": "Nosaka, vai lietotāji spēj veikt ierakstu masveida atjaunināšanu."
+    "massUpdatePermission": "Nosaka, vai lietotāji spēj veikt ierakstu masveida atjaunināšanu.",
+    "followerManagementPermission": "Ļauj pārvaldīt konkrētu ierakstu sekotājus."
   },
   "labels": {
     "Access": "Piekļuve",

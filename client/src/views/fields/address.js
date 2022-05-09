@@ -71,6 +71,13 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             if (this.mode === 'detail' || this.mode === 'list') {
                 data.formattedAddress = this.getFormattedAddress();
 
+                data.isNone = data.formattedAddress === null;
+
+                if (data.formattedAddress === -1) {
+                    data.formattedAddress = null;
+                    data.isLoading = true;
+                }
+
                 if (this.params.viewMap && this.canBeDisplayedOnMap()) {
                     data.viewMap = true;
 
@@ -117,10 +124,10 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                 }
 
                 if (!isSet) {
-                    return this.translate('...');
+                    return -1;
                 }
 
-                return this.translate('None');
+                return null;
             }
 
             var methodName = 'getFormattedAddress' + this.getAddressFormat().toString();

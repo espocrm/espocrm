@@ -3,7 +3,7 @@
     "title": "Amats",
     "dateFrom": "Datums no",
     "dateTo": "Datums līdz",
-    "autorefreshInterval": "Autoatsvaidzes intervāls",
+    "autorefreshInterval": "Atjaunināšanas intervāls\n",
     "displayRecords": "Rādīt ierakstus",
     "isDoubleHeight": "Augstums 2x",
     "mode": "Režīms",

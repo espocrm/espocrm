@@ -36,7 +36,9 @@
     "fullTextSearch": "Pilna teksta meklēšana",
     "countDisabled": "Ierakstu skaita atspējošana",
     "parentEntityTypeList": "Mātesuzņēmumu tipi",
-    "foreignLinkEntityTypeList": "Ārvalstu saites"
+    "foreignLinkEntityTypeList": "Ārvalstu saites",
+    "entity": "Subjekts",
+    "optimisticConcurrencyControl": "Optimistiska vienlaicīguma kontrole"
   },
   "options": {
     "type": {
@@ -77,6 +79,7 @@
     "linkMultipleField": "Lauku kopa sasaiste ir ērts veids, kā rediģēt relācijas . Nelietojiet to, ja iespējams liels saistīto ierakstu skaits.",
     "entityType": "Pamats un vēl - ietver paneļus aktivitātēm, vēsturei un uzdevumiem.\n\nNotikums - pieejams kalendāra un aktivitāšu panelī.",
     "fullTextSearch": "Atkārtotas izveides izpildīšana ir obligāta.",
-    "countDisabled": "Kopējais skaits netiks parādīts saraksta skatā. Var samazināt ielādes laiku, ja DB tabula ir liela."
+    "countDisabled": "Kopējais skaits netiks parādīts saraksta skatā. Var samazināt ielādes laiku, ja DB tabula ir liela.",
+    "optimisticConcurrencyControl": "Novērš rakstīšanas konfliktus."
   }
 }

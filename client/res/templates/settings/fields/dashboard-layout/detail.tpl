@@ -1,6 +1,6 @@
 
 {{#if isEmpty}}
-{{translate 'None'}}
+<span class="none-value">{{translate 'None'}}</span>
 {{/if}}
 
 <div class="button-container clearfix">
@@ -12,6 +12,5 @@
     </div>
     {{/ifNotEqual}}
 </div>
-
 
 <div class="grid-stack grid-stack-12"></div>

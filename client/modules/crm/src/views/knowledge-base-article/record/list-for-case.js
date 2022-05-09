@@ -68,7 +68,7 @@ Espo.define('crm:views/knowledge-base-article/record/list-for-case', 'views/reco
                             }, function () {resolve([])});
                         }, this);
                     } else if (parentModel.get('leadId')) {
-                        this.getModelFactory().create('Lead', function (account) {
+                        this.getModelFactory().create('Lead', function (lead) {
                             lead.id = parentModel.get('leadId');
                             lead.fetch().then(function () {
                                 resolve([lead]);

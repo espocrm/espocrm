@@ -25,7 +25,8 @@
     "optOutLink": "atrakstīšanās saite",
     "today": "Šodienas datums",
     "now": "Pašreizējais laiks un datums",
-    "currentYear": "Esošais gads"
+    "currentYear": "Esošais gads",
+    "optOutUrl": "Saites URL, kas paredzēta atteikšanās saitei"
   },
   "messages": {
     "infoText": "Pieejamās vietzīmes:\n\nTālrunis URL norakstīšanās saitei;\n\n{optOutLink} &#8211; norakstīšanās saite."

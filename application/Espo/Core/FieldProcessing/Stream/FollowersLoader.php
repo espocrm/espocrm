@@ -48,7 +48,7 @@ use Espo\Services\Stream as StreamService;
  */
 class FollowersLoader implements LoaderInterface
 {
-    private const FOLLOWERS_LIMIT = 5;
+    private const FOLLOWERS_LIMIT = 6;
 
     private StreamService $streamService;
 

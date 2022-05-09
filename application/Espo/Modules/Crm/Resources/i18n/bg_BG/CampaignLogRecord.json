@@ -1,42 +1,44 @@
 {
   "fields": {
-    "action": "действие",
+    "action": "Действия",
     "actionDate": "Дата",
     "data": "Данни",
-    "campaign": "кампания",
+    "campaign": "Кампания",
     "parent": "Цел",
-    "object": "обект",
+    "object": "Обект",
     "application": "Приложение",
-    "queueItem": "опашка Точка",
-    "stringAdditionalData": "String Допълнителна данни"
+    "queueItem": "Елементи в опашката",
+    "stringData": "Низови данни",
+    "stringAdditionalData": "Допълнителни низови данни",
+    "isTest": "Е тестов"
   },
   "links": {
-    "queueItem": "опашка Точка",
-    "parent": "родител",
-    "object": "обект",
-    "campaign": "кампания"
+    "queueItem": "Елементи в опашката",
+    "parent": "Родител",
+    "object": "Обект",
+    "campaign": "Кампания"
   },
   "options": {
     "action": {
-      "Sent": "Изпратено",
-      "Opened": "Отворен",
-      "Opted Out": "Отказахте се",
-      "Bounced": "Върната",
-      "Clicked": "Кликване",
-      "Lead Created": "Създадена Потенциална Продажба",
+      "Sent": "Изпратени",
+      "Opened": "Отворени",
+      "Opted Out": "Отписали се",
+      "Bounced": "Неуспешно получени",
+      "Clicked": "Кликнали",
+      "Lead Created": "Създадени потенциални продажби",
       "Opted In": "Избрал участие"
     }
   },
   "labels": {
-    "All": "всичко"
+    "All": "Всички"
   },
   "presetFilters": {
-    "sent": "Изпратено",
-    "opened": "Отворен",
-    "optedOut": "Отказахте се",
-    "bounced": "Върната",
-    "clicked": "Кликване",
-    "leadCreated": "Създадена Потенциална Продажба",
+    "sent": "Изпратени",
+    "opened": "Отворени",
+    "optedOut": "Отказали се",
+    "bounced": "Неуспешно получени",
+    "clicked": "Кликвани",
+    "leadCreated": "Създадени потенциални продажби",
     "optedIn": "Избрал участие"
   }
 }

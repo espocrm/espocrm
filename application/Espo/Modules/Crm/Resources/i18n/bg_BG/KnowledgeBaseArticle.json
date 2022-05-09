@@ -1,47 +1,47 @@
 {
   "labels": {
-    "Create KnowledgeBaseArticle": "Създаване на член",
-    "Any": "който и да е",
-    "Send in Email": "Изпрати на Email",
+    "Create KnowledgeBaseArticle": "Създаване на статия",
+    "Any": "Всички",
+    "Send in Email": "Изпрати по имейл",
     "Move Up": "Премести нагоре",
     "Move Down": "Премести надолу",
-    "Move to Top": "Преминаване към Top",
+    "Move to Top": "Преместване най-отгоре",
     "Move to Bottom": "Преместване най-долу"
   },
   "fields": {
-    "name": "име",
+    "name": "Име",
     "status": "Статус",
     "type": "Тип",
     "attachments": "Прикачени",
     "publishDate": "Дата на публикуване",
     "expirationDate": "Срок на годност",
-    "description": "описание",
-    "body": "тяло",
+    "description": "Описание",
+    "body": "Съдържание",
     "categories": "Категории",
-    "language": "език",
+    "language": "Език",
     "portals": "Портали"
   },
   "links": {
-    "cases": "случаи",
-    "opportunities": "възможности",
+    "cases": "Тикети",
+    "opportunities": "Сделки",
     "categories": "Категории",
     "portals": "Портали"
   },
   "options": {
     "status": {
-      "In Review": "В Преглед",
-      "Draft": "проект",
+      "In Review": "Чернова",
+      "Draft": "Чернова",
       "Archived": "Архив",
-      "Published": "Публикуван"
+      "Published": "Публикувана"
     },
     "type": {
-      "Article": "статия"
+      "Article": "Статия"
     }
   },
   "presetFilters": {
     "published": "Публикуван"
   },
   "tooltips": {
-    "portals": "Член ще бъде достъпен само в определени портали."
+    "portals": "Статията ще бъде достъпна само в избраните портали."
   }
 }
