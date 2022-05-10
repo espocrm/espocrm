@@ -52,6 +52,10 @@ define('controller', [], function () {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
+        if (this.baseController) {
+            this.baseController.on('logout', () => this.clearAllStoredMainViews());
+        }
+
         this.set('masterRendered', false);
     };
 
@@ -173,6 +177,18 @@ define('controller', [], function () {
 
                 this.clearStoredMainView(key);
             }, this);
+        },
+
+        clearAllStoredMainViews: function () {
+            for (let k in this.params) {
+                if (k.indexOf('storedMainView-') !== 0) {
+                    continue;
+                }
+
+                let key = k.substr(15);
+
+                this.clearStoredMainView(key);
+            }
         },
 
         checkAccess: function (action) {
