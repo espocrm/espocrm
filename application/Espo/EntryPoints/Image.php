@@ -34,8 +34,8 @@ use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\NotFoundSilent,
-    Exceptions\Forbidden,
     Exceptions\BadRequest,
+    Exceptions\ForbiddenSilent,
     Exceptions\Error,
     EntryPoint\EntryPoint,
     Acl,
@@ -120,24 +120,24 @@ class Image implements EntryPoint
         }
 
         if (!$disableAccessCheck && !$this->acl->checkEntity($attachment)) {
-            throw new Forbidden();
+            throw new ForbiddenSilent("No access to attachment.");
         }
 
         $fileType = $attachment->get('type');
 
         if (!in_array($fileType, $this->getAllowedFileTypeList())) {
-            throw new Forbidden("Not allowed file type '{$fileType}'.");
+            throw new ForbiddenSilent("Not allowed file type '{$fileType}'.");
         }
 
         if ($this->allowedRelatedTypeList) {
             if (!in_array($attachment->get('relatedType'), $this->allowedRelatedTypeList)) {
-                throw new NotFound();
+                throw new NotFoundSilent();
             }
         }
 
         if ($this->allowedFieldList) {
             if (!in_array($attachment->get('field'), $this->allowedFieldList)) {
-                throw new NotFound();
+                throw new NotFoundSilent();
             }
         }
 
