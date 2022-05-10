@@ -29,40 +29,54 @@
 
 namespace Espo\Classes\MassAction\User;
 
-use Espo\Core\{
-    MassAction\Actions\MassUpdate as MassUpdateOriginal,
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
-    Utils\File\Manager as FileManager,
-    DataManager,
-    Acl,
-    ORM\EntityManager,
-    Exceptions\Forbidden,
-};
+use Espo\Core\MassAction\Actions\MassUpdate as MassUpdateOriginal;
+use Espo\Core\MassAction\QueryBuilder;
+use Espo\Core\MassAction\Params;
+use Espo\Core\MassAction\Result;
+use Espo\Core\MassAction\Data;
+use Espo\Core\MassAction\MassAction;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\DataManager;
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
 
-use Espo\{
-    Entities\User,
-    ORM\Entity,
-};
+use Espo\Core\Exceptions\Forbidden;
+
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+
+use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
 {
-    private $massUpdateOriginal;
+    private MassUpdateOriginal $massUpdateOriginal;
 
-    private $queryBuilder;
+    private QueryBuilder $queryBuilder;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $acl;
+    private Acl $acl;
 
-    private $user;
+    private User $user;
 
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private $dataManager;
+    private DataManager $dataManager;
+
+    private const PERMISSION = 'massUpdatePermission';
+
+    private const SYSTEM_USER_ID = 'system';
+
+    /** @var string[] */
+    private array $notAllowedAttributeList = [
+        'type',
+        'password',
+        'emailAddress',
+        'isAdmin',
+        'isSuperAdmin',
+        'isPortalUser',
+    ];
 
     public function __construct(
         MassUpdateOriginal $massUpdateOriginal,
@@ -86,48 +100,54 @@ class MassUpdate implements MassAction
     {
         $entityType = $params->getEntityType();
 
-        if (!$this->acl->check($entityType, 'edit')) {
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden("Only admin can mass-update users.");
+        }
+
+        if (!$this->acl->check($entityType, Table::ACTION_EDIT)) {
             throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->get('massUpdatePermission') !== 'yes') {
+        if ($this->acl->get(self::PERMISSION) !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
-        if (
-            $data->has('type') ||
-            $data->has('password') ||
-            $data->has('emailAddress') ||
-            $data->has('isAdmin') ||
-            $data->has('isSuperAdmin') ||
-            $data->has('isPortalUser')
-        ) {
-            throw new Forbidden("Not allowed fields.");
-        }
+        $massUpdateData = MassUpdateData::fromMassActionData($data);
+
+        $this->checkAccess($massUpdateData);
 
         $query = $this->queryBuilder->build($params);
 
         $collection = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->sth()
             ->select(['id'])
             ->find();
 
         foreach ($collection as $entity) {
-            $this->checkEntity($entity, $data);
+            $this->checkEntity($entity, $massUpdateData);
         }
 
         $result = $this->massUpdateOriginal->process($params, $data);
 
-        $this->afterProcess($result, $data);
+        $this->afterProcess($result, $massUpdateData);
 
         return $result;
     }
 
-    protected function checkEntity(Entity $entity, Data $data): void
+    private function checkAccess(MassUpdateData $data): void
     {
-        if ($entity->getId() === 'system') {
+        foreach ($this->notAllowedAttributeList as $attribute) {
+            if ($data->has($attribute)) {
+                throw new Forbidden("Attribute '{$attribute}' not allowed for mass-update.");
+            }
+        }
+    }
+
+    private function checkEntity(Entity $entity, MassUpdateData $data): void
+    {
+        if ($entity->getId() === self::SYSTEM_USER_ID) {
             throw new Forbidden("Can't update 'system' user.");
         }
 
@@ -138,9 +158,9 @@ class MassUpdate implements MassAction
         }
     }
 
-    protected function afterProcess(Result $result, Data $dataWrapped): void
+    private function afterProcess(Result $result, MassUpdateData $dataWrapped): void
     {
-        $data = $dataWrapped->getRaw();
+        $data = $dataWrapped->getValues();
 
         if (
             property_exists($data, 'rolesIds') ||
@@ -168,12 +188,12 @@ class MassUpdate implements MassAction
         }
     }
 
-    protected function clearRoleCache(string $id): void
+    private function clearRoleCache(string $id): void
     {
         $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
-    protected function clearPortalRolesCache(): void
+    private function clearPortalRolesCache(): void
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
     }

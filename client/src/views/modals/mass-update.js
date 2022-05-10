@@ -38,6 +38,12 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
 
         layoutName: 'massUpdate',
 
+        ACTION_UPDATE: 'update',
+
+        ACTION_ADD: 'add',
+
+        ACTION_REMOVE: 'remove',
+
         data: function () {
             return {
                 scope: this.scope,
@@ -81,6 +87,8 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
             this.searchParams = this.options.searchParams;
             this.byWhere = this.options.byWhere;
 
+            this.hasActionMap = {};
+
             let totalCount = this.options.totalCount;
 
             this.helper = new MassActionHelper(this);
@@ -120,8 +128,6 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
         },
 
         addField: function (name) {
-            this.enableButton('update');
-
             this.$el.find('[data-action="reset"]').removeClass('hidden');
 
             this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
@@ -130,19 +136,46 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
                 this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
             }
 
-            this.notify('Loading...');
+            this.addedFieldList.push(name);
 
-            var label = this.translate(name, 'fields', this.entityType);
+            let label = this.getHelper().escapeString(
+                this.translate(name, 'fields', this.entityType)
+            );
 
-            var html = '<div class="cell form-group" data-name="'+name+'">' +
-                '<label class="control-label">' + label + '</label>' +
-                '<div class="field" data-name="'+name+'" /></div>';
+            let $cell =
+                $('<div>')
+                    .addClass('cell form-group')
+                    .attr('data-name', name)
+                    .append(
+                        $('<label>')
+                            .addClass('control-label')
+                            .text(label)
+                    )
+                    .append(
+                        $('<div>')
+                            .addClass('field')
+                            .attr('data-name', name)
+                    );
 
-            this.$el.find('.fields-container').append(html);
+            let $row =
+                $('<div>')
+                    .addClass('item grid-auto-fill-md')
+                    .attr('data-name', name)
+                    .append($cell);
 
-            var type = this.model.getFieldType(name);
+            this.$el.find('.fields-container').append($row);
 
-            var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+            let type = this.model.getFieldType(name);
+            let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+            let actionList = this.getMetadata().get(['entityDefs', this.entityType, name, 'massUpdateActionList']) ||
+                this.getMetadata().get(['fields', type, 'massUpdateActionList']);
+
+            let hasActionDropdown = actionList !== null;
+
+            this.hasActionMap[name] = hasActionDropdown;
+
+            this.disableButton('update');
 
             this.createView(name, viewName, {
                 model: this.model,
@@ -151,108 +184,161 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
                     name: name,
                 },
                 mode: 'edit',
-            }, (view) => {
-                this.addedFieldList.push(name);
+            }, view => {
+                this.enableButton('update');
 
                 view.render();
-
-                view.notify(false);
             });
+
+            if (hasActionDropdown) {
+                let $select =
+                    $('<select>')
+                        .addClass('item-action form-control')
+                        .attr('data-name', name);
+
+                actionList.forEach(action => {
+                    let label = this.translate(Espo.Utils.upperCaseFirst(action));
+
+                    $select.append(
+                        $('<option>')
+                            .text(label)
+                            .val(action)
+                    );
+                });
+
+                let $cellAction =
+                    $('<div>')
+                        .addClass('cell call-action form-group')
+                        .attr('data-name', name)
+                        .append(
+                            $('<label>')
+                                .addClass('control-label hidden-xs')
+                                .html('&nbsp;')
+                        )
+                        .append(
+                            $('<div>')
+                                .addClass('field')
+                                .attr('data-name', name)
+                                .append($select)
+                        );
+
+                $row.append($cellAction);
+            }
         },
 
         actionUpdate: function () {
             this.disableButton('update');
 
-            var attributes = {};
+            let attributes = {};
+            let actions = {};
 
-            this.addedFieldList.forEach((field) => {
-                var view = this.getView(field);
+            this.addedFieldList.forEach(field => {
+                let action = this.fetchAction(field);
+                let itemAttributes = this.getView(field).fetch();
 
-                _.extend(attributes, view.fetch());
+                let itemActualAttributes = {};
+
+                this.getFieldManager()
+                    .getEntityTypeFieldActualAttributeList(this.entityType, field)
+                    .forEach(attribute => {
+                        actions[attribute] = action;
+
+                        itemActualAttributes[attribute] = itemAttributes[attribute];
+                    });
+
+                _.extend(attributes, itemActualAttributes);
             });
 
             this.model.set(attributes);
 
-            var notValid = false;
+            let notValid = false;
 
-            this.addedFieldList.forEach((field) => {
-                var view = this.getView(field);
+            this.addedFieldList.forEach(field => {
+                let view = this.getView(field);
 
                 notValid = view.validate() || notValid;
             });
 
-            if (!notValid) {
-                Espo.Ui.notify(
-                    this.translate('Saving...')
-                );
+            if (notValid) {
+                this.notify('Not valid', 'error');
+                this.enableButton('update');
 
-                Espo.Ajax
-                    .postRequest('MassAction', {
-                        action: 'update',
-                        entityType: this.entityType,
-                        params: {
-                            ids: this.ids || null,
-                            where: (!this.ids || this.ids.length === 0) ? this.options.where : null,
-                            searchParams: (!this.ids || this.ids.length === 0) ? this.options.searchParams : null,
-                        },
-                        data: attributes,
-                        idle: this.idle,
-                    })
-                    .then(result => {
-                        var result = result || {};
+                return;
+            }
 
-                        if (result.id) {
-                            this.helper
-                                .process(result.id, 'update')
-                                .then(view => {
-                                    this.listenToOnce(view, 'close', () => this.close());
+            Espo.Ui.notify(this.translate('Saving...'));
 
-                                    this.listenToOnce(view, 'success', result => {
-                                        this.trigger('after:update', {
-                                            count: result.count,
-                                            idle: true,
-                                        });
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    action: 'update',
+                    entityType: this.entityType,
+                    params: {
+                        ids: this.ids || null,
+                        where: (!this.ids || this.ids.length === 0) ? this.options.where : null,
+                        searchParams: (!this.ids || this.ids.length === 0) ? this.options.searchParams : null,
+                    },
+                    data: {
+                        values: attributes,
+                        actions: actions,
+                    },
+                    idle: this.idle,
+                })
+                .then(result => {
+                    result = result || {};
+
+                    if (result.id) {
+                        this.helper
+                            .process(result.id, 'update')
+                            .then(view => {
+                                this.listenToOnce(view, 'close', () => this.close());
+
+                                this.listenToOnce(view, 'success', result => {
+                                    this.trigger('after:update', {
+                                        count: result.count,
+                                        idle: true,
                                     });
                                 });
+                            });
 
-                            return;
-                        }
+                        return;
+                    }
 
-                        this.trigger('after:update', {
-                            count: result.count,
-                        });
-                    })
-                    .catch(() => {
-                        this.notify('Error occurred', 'error');
-
-                        this.enableButton('update');
+                    this.trigger('after:update', {
+                        count: result.count,
                     });
-            }
-            else {
-                this.notify('Not valid', 'error');
+                })
+                .catch(() => {
+                    this.enableButton('update');
+                });
+        },
 
-                this.enableButton('update');
+        fetchAction: function (name) {
+            if (!this.hasActionMap[name]) {
+                return this.ACTION_UPDATE;
             }
+
+            let $dropdown = this.$el.find('select.item-action[data-name="'+name+'"]');
+
+            return $dropdown.val() || this.ACTION_UPDATE;
         },
 
         reset: function () {
-            this.addedFieldList.forEach((field) => {
+            this.addedFieldList.forEach(field => {
                 this.clearView(field);
 
-                this.$el.find('.cell[data-name="'+field+'"]').remove();
+                this.$el.find('.item[data-name="'+field+'"]').remove();
             });
 
             this.addedFieldList = [];
+            this.hasActionMap = {};
 
             this.model.clear();
 
             this.$el.find('[data-action="reset"]').addClass('hidden');
-
             this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
             this.$el.find('ul.filter-list').find('li').removeClass('hidden');
 
             this.disableButton('update');
         },
-
     });
 });

@@ -54,5 +54,6 @@
    "notSortable": true,
    "filter": true,
    "personalData": true,
-    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple"
+   "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple",
+   "massUpdateActionList": ["update", "add"]
 }

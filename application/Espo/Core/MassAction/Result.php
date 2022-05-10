@@ -90,6 +90,7 @@ class Result
     }
 
     /**
+     * @deprecated
      * @param array{
      *   count?: ?int,
      *   ids?: ?string[],

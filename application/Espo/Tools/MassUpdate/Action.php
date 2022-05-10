@@ -27,29 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\MassAction\Actions;
+namespace Espo\Tools\MassUpdate;
 
-use Espo\Tools\MassUpdate\Processor;
-use Espo\Tools\MassUpdate\Data as MassUpdateData;
-
-use Espo\Core\MassAction\Params;
-use Espo\Core\MassAction\Result;
-use Espo\Core\MassAction\Data;
-use Espo\Core\MassAction\MassAction;
-
-class MassUpdate implements MassAction
+class Action
 {
-    private Processor $processor;
+    public const UPDATE = 'update';
 
-    public function __construct(Processor $processor)
-    {
-        $this->processor = $processor;
-    }
+    public const ADD = 'add';
 
-    public function process(Params $params, Data $data): Result
-    {
-        $massUpdateData = MassUpdateData::fromMassActionData($data);
-
-        return $this->processor->process($params, $massUpdateData);
-    }
+    public const REMOVE = 'remove';
 }

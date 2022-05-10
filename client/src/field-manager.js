@@ -162,8 +162,52 @@
 
             return _.union(
                 this.getAttributeList(type, field),
-                this.metadata.get(['entityDefs', entityType, 'fields', field, 'additionalAttributeList']) || []
+                this._getEntityTypeFieldAdditionalAttributeList(entityType, field)
             );
+        },
+
+        getEntityTypeFieldActualAttributeList: function (entityType, field) {
+            let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+
+            if (!type) {
+                return [];
+            }
+
+            return _.union(
+                this.getActualAttributeList(type, field),
+                this._getEntityTypeFieldAdditionalAttributeList(entityType, field)
+            );
+        },
+
+        _getEntityTypeFieldAdditionalAttributeList: function (entityType, field) {
+            let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+
+            if (!type) {
+                return [];
+            }
+
+            let partList = this.metadata
+                .get(['entityDefs', entityType, 'fields', field, 'additionalAttributeList']) || [];
+
+            if (partList.length === 0) {
+                return [];
+            }
+
+            let isPrefix = (this.defs[type] || {}).naming === 'prefix';
+
+            let list = [];
+
+            partList.forEach(item => {
+                if (isPrefix) {
+                    list.push(item + Espo.Utils.upperCaseFirst(field));
+
+                    return;
+                }
+
+                list.push(field + Espo.Utils.upperCaseFirst(item));
+            });
+
+            return list;
         },
 
         getAttributeList: function (fieldType, fieldName) {

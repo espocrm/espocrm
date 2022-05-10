@@ -27,29 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\MassAction\Actions;
-
-use Espo\Tools\MassUpdate\Processor;
-use Espo\Tools\MassUpdate\Data as MassUpdateData;
+namespace Espo\Tools\MassUpdate;
 
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
-use Espo\Core\MassAction\Data;
-use Espo\Core\MassAction\MassAction;
+use Espo\Core\MassAction\MassActionFactory;
 
-class MassUpdate implements MassAction
+use Espo\ORM\EntityManager;
+use Espo\Entities\User;
+
+use RuntimeException;
+
+/**
+ * Entry point for the mass-update tool.
+ */
+class MassUpdate
 {
-    private Processor $processor;
+    private MassActionFactory $massActionFactory;
 
-    public function __construct(Processor $processor)
+    private EntityManager $entityManager;
+
+    private const ACTION = 'massUpdate';
+
+    private const DEFAULT_USER_ID = 'system';
+
+    public function __construct(MassActionFactory $massActionFactory, EntityManager $entityManager)
     {
-        $this->processor = $processor;
+        $this->massActionFactory = $massActionFactory;
+        $this->entityManager = $entityManager;
     }
 
-    public function process(Params $params, Data $data): Result
+    /**
+     * @param ?User $user Under what user to perform mass-update. If not specified, the system user will be used.
+     *   Access control is applied for the user.
+     */
+    public function process(Params $params, Data $data, ?User $user = null): Result
     {
-        $massUpdateData = MassUpdateData::fromMassActionData($data);
+        $entityType = $params->getEntityType();
 
-        return $this->processor->process($params, $massUpdateData);
+        if (!$user) {
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, self::DEFAULT_USER_ID);
+        }
+
+        if (!$user) {
+            throw new RuntimeException("No user.");
+        }
+
+        $action = $this->massActionFactory->createForUser(self::ACTION, $entityType, $user);
+
+        return $action->process($params, $data->toMassActionData());
     }
 }

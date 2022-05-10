@@ -35,5 +35,6 @@
    "filter": true,
    "valueFactoryClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleFactory",
    "attributeExtractorClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleAttributeExtractor",
-    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\LinkMultiple"
+   "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\LinkMultiple",
+   "massUpdateActionList": ["update", "add", "remove"]
 }

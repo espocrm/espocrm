@@ -29,7 +29,7 @@
 
 {{/unless}}
 <div>
-    <div class="fields-container grid-auto-fill-md"></div>
+    <div class="fields-container"></div>
 </div>
 
 </div>

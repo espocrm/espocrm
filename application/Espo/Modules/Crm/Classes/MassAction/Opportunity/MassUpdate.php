@@ -35,38 +35,39 @@ use Espo\Core\MassAction\Result;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
 
+use Espo\Tools\MassUpdate\Data as MassUpdateData;
+
 use Espo\Core\Utils\Metadata;
 
 class MassUpdate implements MassAction
 {
-    private $massUpdateOriginal;
+    private MassUpdateOriginal $massUpdateOriginal;
 
-    private $metadata;
+    private Metadata $metadata;
 
-    public function __construct(
-        MassUpdateOriginal $massUpdateOriginal,
-        Metadata $metadata
-    ) {
+    public function __construct(MassUpdateOriginal $massUpdateOriginal, Metadata $metadata)
+    {
         $this->massUpdateOriginal = $massUpdateOriginal;
         $this->metadata = $metadata;
     }
 
     public function process(Params $params, Data $data): Result
     {
+        $massUpdateData = MassUpdateData::fromMassActionData($data);
+
         $probability = null;
 
-        if (
-            $data->get('stage') &&
-            !$data->has('probability')
-        ) {
+        $stage = $massUpdateData->getValue('stage');
+
+        if ($stage && !$massUpdateData->has('probability')) {
             $probability = $this->metadata
-                ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $data->get('stage')]);
+                ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap', $stage]);
         }
 
         if ($probability !== null) {
-            $data = $data->with('probability', $probability);
+            $massUpdateData = $massUpdateData->with('probability', $probability);
         }
 
-        return $this->massUpdateOriginal->process($params, $data);
+        return $this->massUpdateOriginal->process($params, $massUpdateData->toMassActionData());
     }
 }
