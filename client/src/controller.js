@@ -52,8 +52,8 @@ define('controller', [], function () {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
-        if (this.baseController) {
-            this.baseController.on('logout', () => this.clearAllStoredMainViews());
+        if (!this.baseController) {
+            this.on('logout', () => this.clearAllStoredMainViews());
         }
 
         this.set('masterRendered', false);
