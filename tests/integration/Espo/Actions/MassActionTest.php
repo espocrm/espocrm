@@ -47,6 +47,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Application,
     Exceptions\Forbidden,
+    Exceptions\Error,
 };
 
 class MassActionTest extends \tests\integration\Core\BaseTestCase
@@ -293,12 +294,15 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $process = $injectableFactory1->create(JobProcess::class);
 
+        // Mass-update for User entity type is allowed only for admins.
+        $this->expectException(Error::class);
+
         $process->run(JobData::create()->withTargetId($massActionId));
 
-        $em->refreshEntity($user);
+        /*$em->refreshEntity($user);
         $em->refreshEntity($user1);
 
         $this->assertEquals('Tester', $user->get('title'));
-        $this->assertEquals(null, $user1->get('title'));
+        $this->assertEquals(null, $user1->get('title'));*/
     }
 }
