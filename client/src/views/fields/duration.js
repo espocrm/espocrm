@@ -69,20 +69,21 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 this.seconds = moment(
                     this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)
                 ).unix();
-            }
-            else {
-                if (start) {
-                    var end = this._getDateEnd();
 
-                    this.model.set(this.endField, end, {silent: true});
-                }
+                return;
+            }
+
+            if (start) {
+                var end = this._getDateEnd();
+
+                this.model.set(this.endField, end, {silent: true});
             }
         },
 
         init: function () {
             Dep.prototype.init.call(this);
 
-            this.listenTo(this, 'render', function () {
+            this.listenTo(this, 'render', () => {
                 this.calculateSeconds();
 
                 var durationOptions = '';
@@ -93,19 +94,20 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                     options.push(this.seconds);
                 }
 
-                options.sort(function (a, b) {
+                options.sort((a, b) => {
                     return a - b;
                 });
 
-                options.forEach(function (d) {
+                options.forEach((d) => {
                     durationOptions += '<option value="' + d + '" ' +
-                        (d === this.seconds ? 'selected' : '') + '>' + this.stringifyDuration(d) + '</option>';
-                }.bind(this));
+                        (d === this.seconds ? 'selected' : '') + '>' +
+                        this.stringifyDuration(d) + '</option>';
+                });
 
                 this.durationOptions = durationOptions;
 
                 this.stringValue = this.stringifyDuration(this.seconds);
-            }.bind(this));
+            });
         },
 
         setup: function () {
@@ -172,19 +174,19 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             if (this.mode === 'edit') {
                 this.$duration = this.$el.find('.main-element');
 
-                this.$duration.on('change', function () {
+                this.$duration.on('change', () => {
                     this.seconds = parseInt(this.$duration.val());
 
                     this.updateDateEnd();
 
                     this.$duration.find('option.custom').remove();
-                }.bind(this));
+                });
             }
 
             this.stopListening(this.model, 'change:' + this.endField);
             this.stopListening(this.model, 'change:' + this.endField);
 
-            this.listenTo(this.model, 'change:' + this.endField, function () {
+            this.listenTo(this.model, 'change:' + this.endField, () => {
                 var start = this.model.get(this.startField);
                 var end = this.model.get(this.endField);
 
@@ -195,7 +197,7 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 this.seconds = moment(end).unix() - moment(start).unix();
 
                 this.updateDuration();
-            }.bind(this));
+            });
 
             this.listenTo(this.model, 'change:' + this.startField, this.updateDateEnd);
 
@@ -211,9 +213,9 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                             this.updateDateEnd();
                         }
                         else {
-                            this.endFieldView.once('after:render', function () {
+                            this.endFieldView.once('after:render', () => {
                                 this.updateDateEnd();
-                            }.bind(this));
+                            });
                         }
                     }
                 }
@@ -272,20 +274,19 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             if (this.model.get('isAllDay')) {
                 var end = this._getDateEndDate();
 
-                setTimeout(function () {
+                setTimeout(() => {
                     this.model.set(this.endField + 'Date', end, {updatedByDuration: true});
-                }.bind(this), 1);
+                }, 1);
 
                 return;
             }
 
             var end = this._getDateEnd();
 
-            setTimeout(function () {
+            setTimeout(() => {
                 this.model.set(this.endField, end, {updatedByDuration: true});
-
                 this.model.set(this.endField + 'Date', null);
-            }.bind(this), 1);
+            }, 1);
         },
 
         updateDuration: function () {
@@ -294,42 +295,46 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             if (seconds < 0) {
                 if (this.mode === 'edit') {
                     this.$duration.val('');
+
+                    return;
                 }
-                else {
-                    this.setup();
-                    this.render();
-                }
+
+                this.setup();
+                this.render();
+
+                return;
             }
-            else {
-                if (this.mode === 'edit') {
-                    this.$duration.find('option.custom').remove();
 
-                    var $o = $('<option>')
-                        .val(seconds)
-                        .text(this.stringifyDuration(seconds))
-                        .addClass('custom');
+            if (this.mode === 'edit') {
+                this.$duration.find('option.custom').remove();
 
-                    var $found = this.$duration.find('option').filter(function (i, el) {
+                var $o = $('<option>')
+                    .val(seconds)
+                    .text(this.stringifyDuration(seconds))
+                    .addClass('custom');
+
+                var $found = this.$duration.find('option')
+                    .filter((i, el) => {
                         return $(el).val() >= seconds;
-                    }).first();
+                    })
+                    .first();
 
-                    if ($found.length) {
-                        if (parseInt($found.val()) !== seconds) {
-                            $o.insertBefore($found);
-                        };
-                    }
-                    else {
-                        $o.appendTo(this.$duration);
-                    }
-
-                    this.$duration.val(seconds);
+                if ($found.length) {
+                    if (parseInt($found.val()) !== seconds) {
+                        $o.insertBefore($found);
+                    };
                 }
                 else {
-                    this.setup();
-
-                    this.render();
+                    $o.appendTo(this.$duration);
                 }
+
+                this.$duration.val(seconds);
+
+                return;
             }
+
+            this.setup();
+            this.render();
         },
 
         fetch: function () {
