@@ -84,7 +84,7 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
                 noneOption: [{
                     label: this.noneOption,
                     value: this.noneOption,
-                }]
+                }],
             };
 
             if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
@@ -93,7 +93,7 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
 
             $time.timepicker(o);
 
-            $time.parent().find('button.time-picker-btn').on('click', function () {
+            $time.parent().find('button.time-picker-btn').on('click', () => {
                 $time.timepicker('show');
             });
         },
@@ -113,7 +113,8 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
 
                 data[this.name] = value;
                 data[this.nameDate] = null;
-            } else {
+            }
+            else {
                 if (date !== '') {
                     data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
 
@@ -130,6 +131,7 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
                     data[this.name] = null;
                 }
             }
+
             return data;
         },
 
@@ -190,7 +192,8 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
