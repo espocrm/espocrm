@@ -60,7 +60,7 @@ define(
                 this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
             }
 
-            var processHtml = function () {
+            var processHtml = () => {
                 var fieldView = this.getFieldView(name);
 
                 if (fieldView) {
@@ -77,15 +77,15 @@ define(
                     this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
                 }
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 processHtml();
             }
             else {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     processHtml();
-                }, this);
+                });
             }
 
             var view = this.getFieldView(name);
@@ -102,7 +102,7 @@ define(
 
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
-            var processHtml = function () {
+            var processHtml = () => {
                 var fieldView = this.getFieldView(name);
 
                 if (fieldView) {
@@ -113,21 +113,22 @@ define(
                     $field.removeClass('hidden');
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
+
+                    return;
                 }
-                else {
-                    this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                    this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
-                    this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
-                }
-            }.bind(this);
+
+                this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
+                this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
+                this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
+            };
 
             if (this.isRendered()) {
                 processHtml();
             }
             else {
-                this.once('after:render', function () {
+                this.once('after:render', () => {
                     processHtml();
-                }, this);
+                });
             }
 
             var view = this.getFieldView(name);
@@ -192,6 +193,7 @@ define(
             this.recordHelper.setFieldStateParam(name, 'required', true);
 
             var view = this.getFieldView(name);
+
             if (view) {
                 view.setRequired();
             }
@@ -224,6 +226,7 @@ define(
             this.recordHelper.setFieldOptionList(name, list);
 
             var view = this.getFieldView(name);
+
             if (view) {
                 if ('setOptionList' in view) {
                     view.setOptionList(list);
@@ -272,7 +275,7 @@ define(
         stylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', true);
 
-            var process = function () {
+            var process = () => {
                 var $panel = this.$el.find('.panel[data-name="'+name+'"]');
                 var $btn = $panel.find('> .panel-heading .btn');
 
@@ -287,7 +290,7 @@ define(
 
                 $btn.removeClass('btn-default');
                 $btn.addClass('btn-' + style);
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 process();
@@ -295,15 +298,15 @@ define(
                 return;
             }
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 process();
-            }, this);
+            });
         },
 
         unstylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', false);
 
-            var process = function () {
+            var process = () => {
                 var $panel = this.$el.find('.panel[data-name="'+name+'"]');
                 var $btn = $panel.find('> .panel-heading .btn');
 
@@ -318,7 +321,7 @@ define(
 
                 $btn.removeClass('btn-' + style);
                 $btn.addClass('btn-default');
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 process();
@@ -326,9 +329,9 @@ define(
                 return;
             }
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 process();
-            }, this);
+            });
         },
 
         setConfirmLeaveOut: function (value) {
@@ -342,12 +345,13 @@ define(
         getFieldViews: function () {
             var fields = {};
 
-            this.fieldList.forEach(function (item) {
+            this.fieldList.forEach((item) => {
                 var view = this.getFieldView(item);
+
                 if (view) {
                     fields[item] = view;
                 }
-            }, this);
+            });
 
             return fields;
         },
@@ -394,11 +398,11 @@ define(
 
         // TODO remove
         handleDataBeforeRender: function (data) {
-            this.getFieldList().forEach(function (field) {
+            this.getFieldList().forEach((field) => {
                 var viewKey = field + 'Field';
 
                 data[field] = data[viewKey];
-            }, this);
+            });
         },
 
         setup: function () {
@@ -408,13 +412,13 @@ define(
 
             this.recordHelper = new ViewRecordHelper();
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.isChanged) {
                     this.resetModelChanges();
                 }
 
                 this.setIsNotChanged();
-            }, this);
+            });
 
             this.events = this.events || {};
 
@@ -501,6 +505,7 @@ define(
                     this.model.unset(item);
                 }
             }
+
             this.model.set(setAttributes, options || {});
         },
 
@@ -524,11 +529,11 @@ define(
         },
 
         initDependancy: function () {
-            Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
-                this.listenTo(this.model, 'change:' + attr, function () {
+            Object.keys(this.dependencyDefs || {}).forEach((attr) => {
+                this.listenTo(this.model, 'change:' + attr, () => {
                     this._handleDependencyAttribute(attr);
-                }, this);
-            }, this);
+                });
+            });
 
             this._handleDependencyAttributes();
         },
@@ -536,15 +541,15 @@ define(
         setupFieldLevelSecurity: function () {
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
-            forbiddenFieldList.forEach(function (field) {
+            forbiddenFieldList.forEach((field) => {
                 this.hideField(field, true);
-            }, this);
+            });
 
             var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
-            readOnlyFieldList.forEach(function (field) {
+            readOnlyFieldList.forEach((field) => {
                 this.setFieldReadOnly(field, true);
-            }, this);
+            });
         },
 
         setIsChanged: function () {
@@ -998,28 +1003,30 @@ define(
             this.model.set(defaultHash, {silent: true});
         },
 
-        errorHandlerDuplicate: function (duplicates) {
-        },
+        errorHandlerDuplicate: function (duplicates) {},
 
         _handleDependencyAttributes: function () {
-            Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
+            Object.keys(this.dependencyDefs || {}).forEach((attr) => {
                 this._handleDependencyAttribute(attr);
-            }, this);
+            });
         },
 
         _handleDependencyAttribute: function (attr) {
             var data = this.dependencyDefs[attr];
             var value = this.model.get(attr);
+
             if (value in (data.map || {})) {
-                (data.map[value] || []).forEach(function (item) {
+                (data.map[value] || []).forEach((item) => {
                     this._doDependencyAction(item);
-                }, this);
-            } else {
-                if ('default' in data) {
-                    (data.default || []).forEach(function (item) {
-                        this._doDependencyAction(item);
-                    }, this);
-                }
+                });
+
+                return;
+            }
+
+            if ('default' in data) {
+                (data.default || []).forEach((item) => {
+                    this._doDependencyAction(item);
+                });
             }
         },
 
@@ -1038,52 +1045,52 @@ define(
 
             switch (action) {
                 case 'hide':
-                    panelList.forEach(function (item) {
+                    panelList.forEach((item) => {
                         this.hidePanel(item);
-                    }, this);
+                    });
 
-                    fieldList.forEach(function (item) {
+                    fieldList.forEach((item) => {
                         this.hideField(item);
-                    }, this);
+                    });
 
                     break;
 
                 case 'show':
-                    panelList.forEach(function (item) {
+                    panelList.forEach((item) => {
                         this.showPanel(item);
-                    }, this);
+                    });
 
-                    fieldList.forEach(function (item) {
+                    fieldList.forEach((item) => {
                         this.showField(item);
-                    }, this);
+                    });
 
                     break;
 
                 case 'setRequired':
-                    fieldList.forEach(function (field) {
+                    fieldList.forEach((field) => {
                         this.setFieldRequired(field);
-                    }, this);
+                    });
 
                     break;
 
                 case 'setNotRequired':
-                    fieldList.forEach(function (field) {
+                    fieldList.forEach((field) => {
                         this.setFieldNotRequired(field);
-                    }, this);
+                    });
 
                     break;
 
                 case 'setReadOnly':
-                    fieldList.forEach(function (field) {
+                    fieldList.forEach((field) => {
                         this.setFieldReadOnly(field);
-                    }, this);
+                    });
 
                     break;
 
                 case 'setNotReadOnly':
-                    fieldList.forEach(function (field) {
+                    fieldList.forEach((field) => {
                         this.setFieldNotReadOnly(field);
-                    }, this);
+                    });
 
                     break;
             }
