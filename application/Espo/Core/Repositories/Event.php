@@ -40,7 +40,6 @@ use Espo\Core\{
 
 use DateTime;
 use DateTimeZone;
-use Exception;
 
 /**
  * @extends Database<\Espo\Core\ORM\Entity>
@@ -57,11 +56,6 @@ class Event extends Database implements
      * @var string[]
      */
     protected $reminderSkippingStatusList = ['Held', 'Not Held'];
-
-    /**
-     * @var bool
-     */
-    protected $preserveDuration = true;
 
     /**
      * @param array<string,mixed> $options
@@ -106,31 +100,6 @@ class Event extends Database implements
             }
             else {
                 $entity->set('dateEndDate', null);
-            }
-        }
-
-        if (
-            !$entity->isNew() &&
-            $this->preserveDuration &&
-            $entity->isAttributeChanged('dateStart') &&
-            $entity->get('dateStart') &&
-            !$entity->isAttributeChanged('dateEnd')
-        ) {
-            $dateEndPrevious = $entity->getFetched('dateEnd');
-            $dateStartPrevious = $entity->getFetched('dateStart');
-
-            if ($dateStartPrevious && $dateEndPrevious) {
-                $dtStart = new DateTime($dateStartPrevious);
-                $dtEnd = new DateTime($dateEndPrevious);
-                $dt = new DateTime($entity->get('dateStart'));
-
-                $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
-
-                $dt->modify('+' . $duration . ' seconds');
-
-                $dateEnd = $dt->format('Y-m-d H:i:s');
-
-                $entity->set('dateEnd', $dateEnd);
             }
         }
 

@@ -40,6 +40,10 @@
             "name":"todays"
         }
     ],
+    "forcePatchAttributeDependencyMap": {
+        "dateEnd": ["dateStart"],
+        "dateEndDate": ["dateStartDate"]
+    },
     "dynamicLogic":{
         "fields":{
             "duration": {

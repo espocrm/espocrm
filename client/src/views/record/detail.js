@@ -1236,6 +1236,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.getHelper().processSetupHandlers(this, this.setupHandlerType);
 
             this.initInlideEditDynamicWithLogicInteroperability();
+
+            this.forcePatchAttributeDependencyMap = this.getMetadata()
+                .get(['clientDefs', this.scope, 'forcePatchAttributeDependencyMap']) || {};
         },
 
         setupBeforeFinal: function () {

@@ -658,36 +658,58 @@ define(
 
             var headers = options.headers || {};
 
+            var model = this.model;
+
             this.lastSaveCancelReason = null;
 
             this.beforeBeforeSave();
 
-            var data = this.fetch();
-
-            var model = this.model;
-
+            let fetchedAttributes = this.fetch();
             var initialAttributes = this.attributes;
-
             var beforeSaveAttributes = this.model.getClonedAttributes();
 
-            data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
+            let attributes = _.extend(
+                Espo.Utils.cloneDeep(beforeSaveAttributes),
+                fetchedAttributes
+            );
 
-            var setAttributes = false;
+            let setAttributes = {};
 
             if (model.isNew()) {
-                setAttributes = data;
+                setAttributes = attributes;
             }
-            else {
-                for (var name in data) {
-                    if (_.isEqual(initialAttributes[name], data[name])) {
+
+            if (!model.isNew()) {
+                for (let attr in attributes) {
+                    if (_.isEqual(initialAttributes[attr], attributes[attr])) {
                         continue;
                     }
 
-                    (setAttributes || (setAttributes = {}))[name] = data[name];
+                    setAttributes[attr] = attributes[attr];
+                }
+
+                let forcePatchAttributeDependencyMap = this.forcePatchAttributeDependencyMap || {};
+
+                for (let attr in forcePatchAttributeDependencyMap) {
+                    if (attr in setAttributes) {
+                        continue;
+                    }
+
+                    if (!(attr in fetchedAttributes)) {
+                        continue;
+                    }
+
+                    let depAttributeList = forcePatchAttributeDependencyMap[attr];
+
+                    let treatAsChanged = !! depAttributeList.find(attr => attr in setAttributes);
+
+                    if (treatAsChanged) {
+                        setAttributes[attr] = attributes[attr];
+                    }
                 }
             }
 
-            if (!setAttributes) {
+            if (Object.keys(setAttributes).length === 0) {
                 if (!options.skipNotModifiedWarning) {
                     this.afterNotModified();
                 }

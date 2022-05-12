@@ -37,8 +37,6 @@ class Task extends EventRepository
 {
     protected $reminderSkippingStatusList = ['Completed', 'Canceled'];
 
-    protected $preserveDuration = false;
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('status')) {

@@ -4,5 +4,9 @@
     ],
     "saverClassNameList": [
         "Espo\\Core\\FieldProcessing\\Reminder\\Saver"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "__APPEND__",
+        "Espo\\Classes\\RecordHooks\\Event\\BeforeUpdatePreserveDuration"
     ]
 }

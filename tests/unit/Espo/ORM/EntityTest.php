@@ -75,7 +75,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Espo\ORM\Entity
+     * @return \Espo\ORM\BaseEntity
      */
     protected function createEntity(string $entityType, ?string $className = null)
     {
@@ -379,5 +379,24 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\RuntimeException::class);
 
         $entity->getId();
+    }
+
+    public function testIsAttributeWritten1(): void
+    {
+        $entity = $this->createEntity('Test');
+
+        $entity->set([
+            'int' => '1',
+            'object' => (object) [],
+        ]);
+
+        $entity->setAsFetched();
+
+        $this->assertEquals(false, $entity->isAttributeWritten('int'));
+
+        $entity->set('int', '1');
+
+        $this->assertEquals(true, $entity->isAttributeWritten('int'));
+        $this->assertEquals(false, $entity->isAttributeWritten('object'));
     }
 }

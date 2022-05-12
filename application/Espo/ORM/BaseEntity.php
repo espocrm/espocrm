@@ -101,6 +101,11 @@ class BaseEntity implements Entity
     private ?ValueAccessor $valueAccessor = null;
 
     /**
+     * @var array<string,bool>
+     */
+    private array $writtenMap = [];
+
+    /**
      * @param array{
      *   attributes?: array<string,array<string,mixed>>,
      *   relations?: array<string,array<string,mixed>>,
@@ -490,6 +495,8 @@ class BaseEntity implements Entity
         }
 
         $this->setInContainer($attribute, $preparedValue);
+
+        $this->writtenMap[$attribute] = true;
     }
 
     /**
@@ -898,6 +905,14 @@ class BaseEntity implements Entity
     }
 
     /**
+     * Whether an attribute was written (since syncing with DB) regardless being changed.
+     */
+    public function isAttributeWritten(string $name): bool
+    {
+        return $this->writtenMap[$name] ?? false;
+    }
+
+    /**
      * @param mixed $v1
      * @param mixed $v2
      */
@@ -1028,6 +1043,8 @@ class BaseEntity implements Entity
         foreach ($this->fetchedValuesContainer as $attribute => $value) {
             $this->setFetched($attribute, $value);
         }
+
+        $this->writtenMap = [];
     }
 
     /**
