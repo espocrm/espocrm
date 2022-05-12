@@ -34,12 +34,15 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
 
         listTemplate: 'fields/base/detail',
 
-        detailTemplate: 'fields/base/detail',
+        detailTemplate: 'fields/varchar/detail',
 
         editTemplate: 'fields/duration/edit',
 
         data: function () {
+            let valueIsSet = this.model.has(this.startField) && this.model.has(this.endField);
+
             return _.extend({
+                valueIsSet: valueIsSet,
                 durationOptions: this.durationOptions,
             }, Dep.prototype.data.call(this));
         },
@@ -51,7 +54,9 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             var end = this.model.get(this.endField);
 
             if (this.mode === 'edit' || this.mode === 'detail') {
-                this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
+                if (this.model.isNew()) {
+                    this.seconds = this.model.getFieldParam(this.name, 'default') || 0;
+                }
             }
 
             if (this.model.get('isAllDay')) {
@@ -66,9 +71,8 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             }
 
             if (start && end) {
-                this.seconds = moment(
-                    this.model.get(this.endField)).unix() - moment(this.model.get(this.startField)
-                ).unix();
+                this.seconds = moment(this.model.get(this.endField)).unix() -
+                    moment(this.model.get(this.startField)).unix();
 
                 return;
             }
@@ -119,6 +123,50 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             }
 
             this.calculateSeconds();
+
+            this.blockDateEndChangeListener = false;
+
+            this.listenTo(this.model, 'change:' + this.endField, () => {
+                if (this.blockDateEndChangeListener) {
+                    return;
+                }
+
+                var start = this.model.get(this.startField);
+                var end = this.model.get(this.endField);
+
+                if (!end || !start) {
+                    return;
+                }
+
+                this.seconds = moment(end).unix() - moment(start).unix();
+
+                this.updateDuration();
+            });
+
+            this.listenTo(this.model, 'change:' + this.startField, (m, v, o) => {
+                if (o.ui) {
+                    let isAllDay = this.model.get(this.startField + 'Date');
+
+                    if (isAllDay) {
+                        let remainder = this.seconds % (3600 * 24);
+
+                        if (remainder !== 0) {
+                            this.seconds = this.seconds - remainder + 3600 * 24;
+                        }
+                    }
+
+                    this.blockDateEndChangeListener = true;
+                    setTimeout(() => this.blockDateEndChangeListener = false, 100);
+
+                    this.updateDateEnd();
+
+                    setTimeout(() => this.updateDuration(), 50);
+
+                    return;
+                }
+
+                this.updateDateEnd();
+            });
         },
 
         getValueForDisplay: function () {
@@ -183,24 +231,6 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 });
             }
 
-            this.stopListening(this.model, 'change:' + this.endField);
-            this.stopListening(this.model, 'change:' + this.endField);
-
-            this.listenTo(this.model, 'change:' + this.endField, () => {
-                var start = this.model.get(this.startField);
-                var end = this.model.get(this.endField);
-
-                if (!end || !start) {
-                    return;
-                }
-
-                this.seconds = moment(end).unix() - moment(start).unix();
-
-                this.updateDuration();
-            });
-
-            this.listenTo(this.model, 'change:' + this.startField, this.updateDateEnd);
-
             if (this.mode === 'edit') {
                 var start = this.model.get(this.startField);
                 var end = this.model.get(this.endField);
@@ -223,28 +253,24 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
         },
 
         _getDateEndDate: function () {
-            var seconds = this.seconds;
+            let seconds = this.seconds;
 
-            var start = this.model.get(this.startField + 'Date');
+            let start = this.model.get(this.startField + 'Date');
 
             if (!start) {
                 return;
             }
 
-            var endUnix;
-            var end;
-
-            if (seconds) {
-                endUnix = moment.utc(start).unix() + seconds;
-
-                end = moment.unix(endUnix)
-                    .utc()
-                    .add(-1, 'day')
-                    .format(this.getDateTime().internalDateFormat);
+            if (!seconds) {
+                return start;
             }
-            else {
-                end = start;
-            }
+
+            let endUnix = moment.utc(start).unix() + seconds;
+
+            let end = moment.unix(endUnix)
+                .utc()
+                .add(-1, 'day')
+                .format(this.getDateTime().internalDateFormat);
 
             return end;
         },
@@ -308,7 +334,7 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                 return;
             }
 
-            if (this.mode === 'edit') {
+            if (this.mode === 'edit' && this.$duration && this.$duration.length) {
                 this.$duration.find('option.custom').remove();
 
                 var $o = $('<option>')
