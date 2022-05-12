@@ -36,6 +36,8 @@ define('crm:views/meeting/fields/date-end', 'views/fields/datetime-optional', fu
 
         noneOptionIsHidden: true,
 
+        isEnd: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 

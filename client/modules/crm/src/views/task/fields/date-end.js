@@ -34,6 +34,8 @@ Espo.define('crm:views/task/fields/date-end', 'views/fields/datetime-optional', 
 
         listTemplate: 'crm:task/fields/date-end/detail',
 
+        isEnd: true,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
 
