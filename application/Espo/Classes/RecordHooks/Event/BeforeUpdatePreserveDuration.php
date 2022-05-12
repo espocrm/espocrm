@@ -45,10 +45,6 @@ class BeforeUpdatePreserveDuration implements UpdateHook
 {
     private OrmDefs $ormDefs;
 
-    private const DATE_START = 'dateStart';
-
-    private const DATE_END = 'dateEnd';
-
     public function __construct(OrmDefs $ormDefs)
     {
         $this->ormDefs = $ormDefs;
