@@ -38,7 +38,7 @@
             "type": "duration",
             "start": "dateStart",
             "end": "dateEnd",
-            "options": [300, 600, 900, 1800, 2700, 3600, 7200],
+            "options": [300, 600, 900, 1800, 2700, 3600, 7200, 10800],
             "default": 300,
             "notStorable": true,
             "select": {
