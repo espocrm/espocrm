@@ -52,6 +52,10 @@ define('controller', [], function () {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
+        if (!this.baseController) {
+            this.on('logout', () => this.clearAllStoredMainViews());
+        }
+
         this.set('masterRendered', false);
     };
 
@@ -162,7 +166,7 @@ define('controller', [], function () {
         storeMainView: function (key, view) {
             this.set('storedMainView-' + key, view);
 
-            this.listenTo(view, 'remove', function (o) {
+            this.listenTo(view, 'remove', (o) => {
                 o = o || {};
 
                 if (o.ignoreCleaning) {
@@ -172,7 +176,19 @@ define('controller', [], function () {
                 this.stopListening(view, 'remove');
 
                 this.clearStoredMainView(key);
-            }, this);
+            });
+        },
+
+        clearAllStoredMainViews: function () {
+            for (let k in this.params) {
+                if (k.indexOf('storedMainView-') !== 0) {
+                    continue;
+                }
+
+                let key = k.substr(15);
+
+                this.clearStoredMainView(key);
+            }
         },
 
         checkAccess: function (action) {
@@ -244,27 +260,29 @@ define('controller', [], function () {
 
             let master = this.get('master');
 
-            if (!master) {
-                let masterView = this.masterView || 'views/site/master';
-
-                this.viewFactory.create(masterView, {el: 'body'}, function (master) {
-                    this.set('master', master);
-
-                    if (!this.get('masterRendered')) {
-                        master.render(function () {
-                            this.set('masterRendered', true);
-
-                            callback.call(this, master);
-                        }.bind(this));
-                        return;
-                    }
-
-                    callback.call(this, master);
-                }.bind(this));
-            }
-            else {
+            if (master) {
                 callback.call(this, master);
+
+                return;
             }
+
+            let masterView = this.masterView || 'views/site/master';
+
+            this.viewFactory.create(masterView, {el: 'body'}, (master) => {
+                this.set('master', master);
+
+                if (!this.get('masterRendered')) {
+                    master.render(() => {
+                        this.set('masterRendered', true);
+
+                        callback.call(this, master);
+                    });
+
+                    return;
+                }
+
+                callback.call(this, master);
+            });
         },
 
         /**
@@ -299,7 +317,7 @@ define('controller', [], function () {
                         this.storeMainView(storedKey, main);
                     }
 
-                    main.once('render', function () {
+                    main.once('render', () => {
                         main.updatePageTitle();
                     });
 
@@ -330,10 +348,11 @@ define('controller', [], function () {
                     main.once('after:render', () => {
                         if (useStored && this.has('storedScrollTop-' + storedKey)) {
                             $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
+
+                            return;
                         }
-                        else {
-                            $(window).scrollTop(0);
-                        }
+
+                        $(window).scrollTop(0);
                     });
 
                     if (isCanceled) {
@@ -342,10 +361,11 @@ define('controller', [], function () {
 
                     if (callback) {
                         callback.call(this, main);
+
+                        return;
                     }
-                    else {
-                        main.render();
-                    }
+
+                    main.render();
                 };
 
                 if (useStored) {
@@ -359,8 +379,7 @@ define('controller', [], function () {
                         }
 
                         if (
-                            (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl())
-                            &&
+                            (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) &&
                             isActual
                         ) {
                             process(main);
@@ -371,9 +390,8 @@ define('controller', [], function () {
 
                             return;
                         }
-                        else {
-                            this.clearStoredMainView(storedKey);
-                        }
+
+                        this.clearStoredMainView(storedKey);
                     }
                 }
 

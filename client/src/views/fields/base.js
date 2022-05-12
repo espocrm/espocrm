@@ -311,9 +311,9 @@ define('views/fields/base', 'view', function (Dep) {
 
             var additionaParamList = ['inlineEditDisabled'];
 
-            additionaParamList.forEach(function (item) {
+            additionaParamList.forEach((item) => {
                 this.params[item] = this.model.getFieldParam(this.name, item) || null;
-            }, this);
+            });
 
             this.mode = this.options.mode || this.mode;
 
@@ -365,19 +365,19 @@ define('views/fields/base', 'view', function (Dep) {
                 }, (this.highlightPeriod || 3000) + 2000);
             });
 
-            this.on('invalid', function () {
+            this.on('invalid', () => {
                 var $cell = this.getCellElement();
 
                 $cell.addClass('has-error');
 
-                this.$el.one('click', function () {
+                this.$el.one('click', () => {
                     $cell.removeClass('has-error');
                 });
 
-                this.once('render', function () {
+                this.once('render', () => {
                     $cell.removeClass('has-error');
                 });
-            }, this);
+            });
 
             this.on('after:render', () => {
                 if (this.mode === 'edit') {
@@ -564,24 +564,26 @@ define('views/fields/base', 'view', function (Dep) {
                 this.inlineEdit();
             });
 
-            $cell.on('mouseenter', (e) => {
-                e.stopPropagation();
+            $cell
+                .on('mouseenter', (e) => {
+                    e.stopPropagation();
 
-                if (this.disabled || this.readOnly) {
-                    return;
-                }
+                    if (this.disabled || this.readOnly) {
+                        return;
+                    }
 
-                if (this.mode === 'detail') {
-                    $editLink.removeClass('hidden');
-                }
-            }).on('mouseleave', (e) => {
-                e.stopPropagation();
+                    if (this.mode === 'detail') {
+                        $editLink.removeClass('hidden');
+                    }
+                })
+                .on('mouseleave', (e) => {
+                    e.stopPropagation();
 
-                if (this.mode === 'detail') {
-                    $editLink.addClass('hidden');
-                }
-            });
-        },
+                    if (this.mode === 'detail') {
+                        $editLink.addClass('hidden');
+                    }
+                });
+            },
 
         initElement: function () {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
@@ -631,7 +633,7 @@ define('views/fields/base', 'view', function (Dep) {
                     continue;
                 }
 
-                (attrs || (attrs = {}))[attr] =    data[attr];
+                (attrs || (attrs = {}))[attr] = data[attr];
             }
 
             if (!attrs) {
@@ -775,16 +777,18 @@ define('views/fields/base', 'view', function (Dep) {
                 $el = this.$element;
             }
 
-            $el.popover({
-                placement: 'bottom',
-                container: 'body',
-                content: message,
-                trigger: 'manual'
-            }).popover('show');
+            $el
+                .popover({
+                    placement: 'bottom',
+                    container: 'body',
+                    content: message,
+                    trigger: 'manual'
+                })
+                .popover('show');
 
             var isDestroyed = false;
 
-            $el.closest('.field').one('mousedown click', function () {
+            $el.closest('.field').one('mousedown click', () => {
                 if (isDestroyed) {
                     return;
                 }
@@ -793,7 +797,7 @@ define('views/fields/base', 'view', function (Dep) {
                 isDestroyed = true;
             });
 
-            this.once('render remove', function () {
+            this.once('render remove', () => {
                 if (isDestroyed) {
                     return;
                 }
@@ -808,7 +812,7 @@ define('views/fields/base', 'view', function (Dep) {
                 clearTimeout(this._timeout);
             }
 
-            this._timeout = setTimeout(function () {
+            this._timeout = setTimeout(() => {
                 if (isDestroyed) {
                     return;
                 }
@@ -871,7 +875,7 @@ define('views/fields/base', 'view', function (Dep) {
             if (value) {
                 var data = {
                     type: 'equals',
-                    value: value
+                    value: value,
                 };
 
                 return data;
@@ -883,6 +887,5 @@ define('views/fields/base', 'view', function (Dep) {
         fetchSearchType: function () {
             return this.$el.find('select.search-type').val();
         },
-
     });
 });
