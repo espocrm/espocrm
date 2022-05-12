@@ -54,11 +54,11 @@ class BeforeUpdatePreserveDuration implements UpdateHook
     {
         /** @var CoreEntity $entity */
 
-        if (!$entity->isAttributeChanged('dateStart')) {
+        if (!$entity->isAttributeChanged('dateStart') && !$entity->isAttributeChanged('dateStartDate')) {
             return;
         }
 
-        if ($entity->isAttributeWritten('dateEnd')) {
+        if ($entity->isAttributeWritten('dateEnd') || $entity->isAttributeWritten('dateEndDate')) {
             return;
         }
 
