@@ -120,8 +120,10 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
 
                     var dateTimeValue = data[this.nameDate] + ' 00:00:00';
 
-                    dateTimeValue = moment.utc(dateTimeValue)
-                        .tz(this.getConfig().get('timeZone') || 'UTC')
+                    dateTimeValue = moment
+                        .tz(dateTimeValue, this.getConfig().get('timeZone') || 'UTC')
+                        .add(this.isEnd ? 1 : 0, 'days')
+                        .utc()
                         .format(this.getDateTime().internalDateTimeFullFormat);
 
                     data[this.name] = dateTimeValue;

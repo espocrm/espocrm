@@ -237,7 +237,10 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
             if (seconds) {
                 endUnix = moment.utc(start).unix() + seconds;
 
-                end = moment.unix(endUnix).utc().format(this.getDateTime().internalDateFormat);
+                end = moment.unix(endUnix)
+                    .utc()
+                    .add(-1, 'day')
+                    .format(this.getDateTime().internalDateFormat);
             }
             else {
                 end = start;
