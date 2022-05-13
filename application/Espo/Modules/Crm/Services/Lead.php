@@ -252,6 +252,10 @@ class Lead extends Record implements
 
         $skipSave = false;
 
+        $contact = null;
+        $account = null;
+        $opportunity = null;
+
         if (!empty($recordsData->Account)) {
             $account = $entityManager->getNewEntity('Account');
 
@@ -286,7 +290,7 @@ class Lead extends Record implements
 
             $contact->set(get_object_vars($recordsData->Contact));
 
-            if (isset($account)) {
+            if ($account && $account->hasId()) {
                 $contact->set('accountId', $account->getId());
             }
 
@@ -321,11 +325,11 @@ class Lead extends Record implements
 
             $opportunity->set(get_object_vars($recordsData->Opportunity));
 
-            if (isset($account)) {
+            if ($account && $account->hasId()) {
                 $opportunity->set('accountId', $account->getId());
             }
 
-            if (isset($contact)) {
+            if ($contact && $contact->hasId()) {
                 $opportunity->set('contactId', $contact->getId());
             }
 
@@ -341,6 +345,7 @@ class Lead extends Record implements
                         $item = $e->getValueMap();
                         $item->_entityType = $e->getEntityType();
                         $duplicateList[] = $item;
+
                         $skipSave = true;
                     }
                 }
@@ -349,7 +354,7 @@ class Lead extends Record implements
             if (!$skipSave) {
                 $entityManager->saveEntity($opportunity);
 
-                if (isset($contact)) {
+                if ($contact && $contact->hasId()) {
                     $entityManager->getRDBRepository('Contact')->relate($contact, 'opportunities', $opportunity);
                 }
 
@@ -378,17 +383,17 @@ class Lead extends Record implements
             ->find();
 
         foreach ($meetings as $meeting) {
-            if (!empty($contact)) {
+            if ($contact &&  $contact->hasId()) {
                 $entityManager->getRDBRepository('Meeting')->relate($meeting, 'contacts', $contact);
             }
 
-            if (!empty($opportunity)) {
+            if ($opportunity && $opportunity->hasId()) {
                 $meeting->set('parentId', $opportunity->getId());
                 $meeting->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($meeting);
             }
-            else if (!empty($account)) {
+            else if ($account && $account->hasId()) {
                 $meeting->set('parentId', $account->getId());
                 $meeting->set('parentType', 'Account');
 
@@ -402,18 +407,17 @@ class Lead extends Record implements
             ->find();
 
         foreach ($calls as $call) {
-            if (!empty($contact)) {
-                $entityManager->getRDBRepository('Call')
-                    ->relate($call, 'contacts', $contact);
+            if ($contact && $contact->hasId()) {
+                $entityManager->getRDBRepository('Call')->relate($call, 'contacts', $contact);
             }
 
-            if (!empty($opportunity)) {
+            if ($opportunity && $opportunity->hasId()) {
                 $call->set('parentId', $opportunity->getId());
                 $call->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($call);
             }
-            else if (!empty($account)) {
+            else if ($account && $account->hasId()) {
                 $call->set('parentId', $account->getId());
                 $call->set('parentType', 'Account');
 
@@ -427,13 +431,13 @@ class Lead extends Record implements
             ->find();
 
         foreach ($emails as $email) {
-            if (!empty($opportunity)) {
+            if ($opportunity && $opportunity->hasId()) {
                 $email->set('parentId', $opportunity->getId());
                 $email->set('parentType', 'Opportunity');
 
                 $entityManager->saveEntity($email);
             }
-            else if (!empty($account)) {
+            else if ($account && $account->hasId()) {
                 $email->set('parentId', $account->getId());
                 $email->set('parentType', 'Account');
 
@@ -447,11 +451,11 @@ class Lead extends Record implements
             ->find();
 
         foreach ($documents as $document) {
-            if (!empty($account)) {
+            if ($account && $account->hasId()) {
                 $entityManager->getRDBRepository('Document')->relate($document, 'accounts', $account);
             }
 
-            if (!empty($opportunity)) {
+            if ($opportunity && $opportunity->hasId()) {
                 $entityManager->getRDBRepository('Document')->relate($document, 'opportunities', $opportunity);
             }
         }
@@ -459,15 +463,15 @@ class Lead extends Record implements
         $streamService = $this->getStreamService();
 
         if ($streamService->checkIsFollowed($lead, $this->getUser()->getId())) {
-            if (!empty($opportunity)) {
+            if ($opportunity && $opportunity->hasId()) {
                 $streamService->followEntity($opportunity, $this->getUser()->getId());
             }
 
-            if (!empty($account)) {
+            if ($account && $account->hasId()) {
                 $streamService->followEntity($account, $this->getUser()->getId());
             }
 
-            if (!empty($contact)) {
+            if ($contact && $contact->hasId()) {
                 $streamService->followEntity($contact, $this->getUser()->getId());
             }
         }
