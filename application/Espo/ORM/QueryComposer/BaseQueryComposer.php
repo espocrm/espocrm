@@ -2373,7 +2373,11 @@ abstract class BaseQueryComposer implements QueryComposer
             $string[0] = strtolower($string[0]);
 
             /** @var string */
-            $dbString = preg_replace_callback('/([A-Z])/', [$this, 'toDbMatchConversion'], $string);
+            $dbString = preg_replace_callback(
+                '/([A-Z])/',
+                fn($matches) => '_' . strtolower($matches[1]),
+                $string
+            );
 
             $this->attributeDbMapCache[$string] = $dbString;
         }
@@ -2381,13 +2385,6 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->attributeDbMapCache[$string];
     }
 
-    /**
-     * @param array<string> $matches
-     */
-    protected function toDbMatchConversion(array $matches): string
-    {
-        return '_' . strtolower($matches[1]);
-    }
 
     protected function getAlias(Entity $entity, string $relationName): ?string
     {
