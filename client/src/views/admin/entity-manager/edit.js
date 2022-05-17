@@ -557,6 +557,8 @@ define('views/admin/entity-manager/edit', ['view', 'model'], function (Dep, Mode
                 }
             }
 
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             Espo.Ajax
             .postRequest(url, data)
             .then(() => {
