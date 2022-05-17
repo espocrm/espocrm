@@ -27,39 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace tests\unit\Espo\Core\Console;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Console\CommandManager as ConsoleCommandManager;
+use Espo\Core\Console\IO;
 
-use Exception;
-
-/**
- * Runs a console command.
- */
-class Command implements Runner
+class IOTest extends \PHPUnit\Framework\TestCase
 {
-    use Cli;
-    use SetupSystemUser;
-
-    private ConsoleCommandManager $commandManager;
-
-    public function __construct(ConsoleCommandManager $commandManager)
+    public function testExitStatus(): void
     {
-        $this->commandManager = $commandManager;
-    }
+        $io = new IO();
 
-    public function run(): void
-    {
-        try {
-            $exitStatus = $this->commandManager->run($_SERVER['argv']);
-        }
-        catch (Exception $e) {
-            echo "Error: " . $e->getMessage() . "\n";
+        $this->assertEquals(0, $io->getExitStatus());
 
-            exit(1);
-        }
+        $io->setExitStatus(1);
 
-        exit($exitStatus);
+        $this->assertEquals(1, $io->getExitStatus());
     }
 }

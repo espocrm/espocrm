@@ -40,6 +40,11 @@ use const PHP_EOL;
 class IO
 {
     /**
+     * @var int<0, 255>
+     */
+    private int $exitStatus = 0;
+
+    /**
      * Write a string to output.
      */
     public function write(string $string): void
@@ -77,5 +82,28 @@ class IO
         fclose($resource);
 
         return $string;
+    }
+
+    /**
+     * Set exit-status.
+     *
+     * @param int<0, 255> $exitStatus
+     *   - `0` - success;
+     *   - `1` - error;
+     *   - `127` - command not found;
+     */
+    public function setExitStatus(int $exitStatus): void
+    {
+        $this->exitStatus = $exitStatus;
+    }
+
+    /**
+     * Get exit-status.
+     *
+     * @return int<0, 255>
+     */
+    public function getExitStatus(): int
+    {
+        return $this->exitStatus;
     }
 }

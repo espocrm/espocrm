@@ -89,6 +89,7 @@ class EntityUtil implements Command
             return;
         }
 
+        $io->setExitStatus(1);
         $io->write("Failed. ");
 
         $failReason = $result->getFailReason();
