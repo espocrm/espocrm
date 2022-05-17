@@ -70,6 +70,7 @@ class Extension implements Command
 
             if (!$name && !$id) {
                 $io->writeLine("Can't uninstall. Specify --name=\"Extension Name\".");
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -112,6 +113,7 @@ class Extension implements Command
 
         if (!$this->fileManager->isFile($file)) {
             $io->writeLine("File does not exist.");
+            $io->setExitStatus(1);
 
             return;
         }
@@ -125,6 +127,7 @@ class Extension implements Command
         }
         catch (Throwable $e) {
             $io->writeLine($e->getMessage());
+            $io->setExitStatus(1);
 
             return;
         }
@@ -136,6 +139,7 @@ class Extension implements Command
 
         if (!$name) {
             $io->writeLine("Can't install. Bad manifest.json file.");
+            $io->setExitStatus(1);
 
             return;
         }
@@ -148,6 +152,7 @@ class Extension implements Command
         catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
+            $io->setExitStatus(1);
 
             return;
         }
@@ -173,6 +178,7 @@ class Extension implements Command
 
             if (!$record) {
                 $io->writeLine("Extension with ID '{$id}' is not installed.");
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -182,6 +188,7 @@ class Extension implements Command
         else {
             if (!$name) {
                 $io->writeLine("Can't uninstall. No --name or --id specified.");
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -196,6 +203,7 @@ class Extension implements Command
 
             if (!$record) {
                 $io->writeLine("Extension '{$name}' is not installed.");
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -213,6 +221,7 @@ class Extension implements Command
         catch (Throwable $e) {
             $io->writeLine("");
             $io->writeLine($e->getMessage());
+            $io->setExitStatus(1);
 
             return;
         }
@@ -221,10 +230,10 @@ class Extension implements Command
 
         if ($toKeep) {
             $io->writeLine("Extension '{$name}' is uninstalled.");
+            $io->setExitStatus(1);
 
             return;
         }
-
 
         try {
             $manager->delete(['id' => $id]);

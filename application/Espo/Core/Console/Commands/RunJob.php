@@ -110,6 +110,7 @@ class RunJob implements Command
             }
 
             $io->writeLine($message);
+            $io->setExitStatus(1);
 
             return;
         }
