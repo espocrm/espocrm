@@ -74,8 +74,18 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
 
             if (type === 'any') {
                 return {
-                    type: 'in',
-                    value: [true, false],
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'isTrue',
+                            attribute: this.name,
+
+                        },
+                        {
+                            type: 'isFalse',
+                            attribute: this.name,
+                        },
+                    ],
                     data: {
                         type: type,
                     },
