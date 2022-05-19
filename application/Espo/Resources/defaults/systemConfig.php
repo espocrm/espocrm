@@ -34,28 +34,6 @@ return [
         'user' => '',
         'group' => '',
     ],
-    /** Max number of jobs per one execution. */
-    'jobMaxPortion' => 15,
-    /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
-    'jobPeriod' => 7800,
-    /**
-     * Max execution time (in seconds) allocated for a single job with active process.
-     * If exceeded then set to Failed.
-     */
-    'jobPeriodForActiveProcess' => 36000,
-    /** Number of attempts to re-run failed jobs. */
-    'jobRerunAttemptNumber' => 1,
-    /** Jobs will be executed in parallel processes. */
-    'jobRunInParallel' => false,
-    /** Max number of processes run simultaneously. */
-    'jobPoolConcurrencyNumber' => 8,
-    /** Min interval (in seconds) between two CRON runs. */
-    'cronMinInterval' => 2,
-    /** Max number of CRON processes run simultaneously. */
-    'daemonMaxProcessNumber' => 5,
-    /** Interval between process runs in seconds. */
-    'daemonInterval' => 10,
-    'daemonProcessTimeout' => 36000,
     'crud' => [
         'get' => 'read',
         'post' => 'create',

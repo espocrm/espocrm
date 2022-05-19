@@ -38,6 +38,26 @@ return [
         'password' => '',
     ],
     'useCache' => true,
+    /** Max number of jobs per one execution. */
+    'jobMaxPortion' => 15,
+    /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
+    'jobPeriod' => 7800,
+    /** Max execution time (in seconds) allocated for a single job with active process.
+      * If exceeded then set to Failed. */
+    'jobPeriodForActiveProcess' => 36000,
+    /** Number of attempts to re-run failed jobs. */
+    'jobRerunAttemptNumber' => 1,
+    /** Jobs will be executed in parallel processes. */
+    'jobRunInParallel' => false,
+    /** Max number of processes run simultaneously. */
+    'jobPoolConcurrencyNumber' => 8,
+    /** Min interval (in seconds) between two CRON runs. */
+    'cronMinInterval' => 2,
+    /** Max number of CRON processes run simultaneously. */
+    'daemonMaxProcessNumber' => 5,
+    /** Interval between process runs in seconds. */
+    'daemonInterval' => 10,
+    'daemonProcessTimeout' => 36000,
     'recordsPerPage' => 20,
     'recordsPerPageSmall' => 5,
     'recordsPerPageSelect' => 10,
@@ -78,8 +98,35 @@ return [
         'Lead',
         'Opportunity',
     ],
-    'tabList' => ["Account", "Contact", "Lead", "Opportunity", "Case", "Email", "Calendar", "Meeting", "Call", "Task", "_delimiter_", "Document", "Campaign", "KnowledgeBaseArticle", "Stream", "User"],
-    'quickCreateList' => ["Account", "Contact", "Lead", "Opportunity", "Meeting", "Call", "Task", "Case", "Email"],
+    'tabList' => [
+        "Account",
+        "Contact",
+        "Lead",
+        "Opportunity",
+        "Case",
+        "Email",
+        "Calendar",
+        "Meeting",
+        "Call",
+        "Task",
+        "_delimiter_",
+        "Document",
+        "Campaign",
+        "KnowledgeBaseArticle",
+        "Stream",
+        "User"
+    ],
+    'quickCreateList' => [
+        "Account",
+        "Contact",
+        "Lead",
+        "Opportunity",
+        "Meeting",
+        "Call",
+        "Task",
+        "Case",
+        "Email"
+    ],
     'exportDisabled' => false,
     'adminNotifications' => true,
     'adminNotificationsNewVersion' => true,
