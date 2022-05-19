@@ -41,6 +41,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
 
             var attributeList = this.getFieldManager()
                 .getEntityTypeAttributeList(this.options.scope)
+                .concat(['id'])
                 .sort();
 
             var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
