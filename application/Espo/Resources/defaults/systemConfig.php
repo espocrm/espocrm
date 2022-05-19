@@ -258,4 +258,13 @@ return [
     'recommendedMysqlParams' => [],
     'requiredMariadbVersion' => '10.1.0',
     'recommendedMariadbParams' => [],
+    /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
+    'jobPeriod' => 7800,
+    /** Max execution time (in seconds) allocated for a single job with active process.
+      * If exceeded then set to Failed. */
+    'jobPeriodForActiveProcess' => 36000,
+    /** Number of attempts to re-run failed jobs. */
+    'jobRerunAttemptNumber' => 1,
+    /** Min interval (in seconds) between two CRON runs. */
+    'cronMinInterval' => 2,
 ];
