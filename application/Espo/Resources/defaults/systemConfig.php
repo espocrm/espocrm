@@ -253,13 +253,6 @@ return [
         'aclAllowDeleteCreated',
     ],
     'isInstalled' => false,
-    'ldapUserNameAttribute' => 'sAMAccountName',
-    'ldapUserFirstNameAttribute' => 'givenName',
-    'ldapUserLastNameAttribute' => 'sn',
-    'ldapUserTitleAttribute' => 'title',
-    'ldapUserEmailAddressAttribute' => 'mail',
-    'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
-    'ldapUserObjectClass' => 'person',
     'requiredPhpVersion' => '7.4.0',
     'requiredPhpLibs' => [
         'json',
@@ -287,8 +280,4 @@ return [
     'recommendedMysqlParams' => [],
     'requiredMariadbVersion' => '10.1.0',
     'recommendedMariadbParams' => [],
-    'ldapPortalUserLdapAuth' => false,
-    'passwordGenerateLength' => 10,
-    'massActionIdleCountThreshold' => 100,
-    'exportIdleCountThreshold' => 1000,
 ];
