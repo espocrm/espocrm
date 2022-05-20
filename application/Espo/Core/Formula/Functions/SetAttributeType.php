@@ -48,6 +48,10 @@ class SetAttributeType extends Base
             throw new Error("SetAttribute: First argument is not string.");
         }
 
+        if ($name === 'id') {
+            throw new Error("Formula set-attribute: Not allowed to set `id` attribute.");
+        }
+
         $value = $this->evaluate($item->value[1]);
 
         $this->getEntity()->set($name, $value);

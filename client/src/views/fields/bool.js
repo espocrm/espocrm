@@ -46,36 +46,53 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.valueIsSet = this.model.has(this.name);
+
             return data;
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'search') {
-                this.$element.on('change', function () {
+            if (this.mode === 'search') {
+                this.$element.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
         fetch: function () {
             var value = this.$element.get(0).checked;
+
             var data = {};
+
             data[this.name] = value;
+
             return data;
         },
 
         fetchSearch: function () {
             var type = this.$element.val();
 
-            if (!type) return;
+            if (!type) {
+                return;
+            }
 
             if (type === 'any') {
                 return {
-                    type: 'in',
-                    value: [true, false],
+                    type: 'or',
+                    value: [
+                        {
+                            type: 'isTrue',
+                            attribute: this.name,
+
+                        },
+                        {
+                            type: 'isFalse',
+                            attribute: this.name,
+                        },
+                    ],
                     data: {
                         type: type,
                     },
@@ -88,6 +105,7 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
                     type: type,
                 },
             };
+
             return data;
         },
 
