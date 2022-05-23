@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/range-currency', 'views/fields/range-float', function (Dep, Float) {
+define('views/fields/range-currency', 'views/fields/range-float', function (Dep, Float) {
 
     return Dep.extend({
 
@@ -37,7 +37,8 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
         data: function () {
             return _.extend({
                 currencyField: this.currencyField,
-                currencyValue: this.model.get(this.fromCurrencyField) || this.getPreferences().get('defaultCurrency') || this.getConfig().get('defaultCurrency'),
+                currencyValue: this.model.get(this.fromCurrencyField) ||
+                    this.getPreferences().get('defaultCurrency') || this.getConfig().get('defaultCurrency'),
                 currencyOptions: this.currencyOptions,
                 currencyList: this.currencyList
             }, Dep.prototype.data.call(this));
@@ -57,7 +58,8 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (this.mode == 'edit') {
+
+            if (this.mode === 'edit') {
                 this.$currency = this.$el.find('[data-name="' + this.currencyField + '"]');
             }
         },
@@ -69,15 +71,19 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
             var fromValue = isNaN(fromValue) ? null : fromValue;
             var toValue = isNaN(toValue) ? null : toValue;
 
-            var currencyValue = this.model.get(this.fromCurrencyField) || this.model.get(this.toCurrencyField) ;
+            var currencyValue = this.model.get(this.fromCurrencyField) || this.model.get(this.toCurrencyField);
 
             if (fromValue !== null && toValue !== null) {
-                return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue) + ' '+currencyValue+'';
-            } else if (fromValue) {
+                return this.formatNumber(fromValue) + ' &#8211 ' +
+                    this.formatNumber(toValue) + ' ' + currencyValue + '';
+            }
+            else if (fromValue) {
                 return '&#62;&#61; ' + this.formatNumber(fromValue) + ' '+currencyValue+'';
-            } else if (toValue) {
+            }
+            else if (toValue) {
                 return '&#60;&#61; ' + this.formatNumber(toValue) + ' '+currencyValue+'';
-            } else {
+            }
+            else {
                 return this.translate('None');
             }
         },
@@ -90,12 +96,15 @@ Espo.define('views/fields/range-currency', 'views/fields/range-float', function 
 
             if (data[this.fromField] !== null) {
                 data[this.fromCurrencyField] = currencyValue;
-            } else {
+            }
+            else {
                 data[this.fromCurrencyField] = null;
             }
+
             if (data[this.toField] !== null) {
                 data[this.toCurrencyField] = currencyValue;
-            } else {
+            }
+            else {
                 data[this.toCurrencyField] = null;
             }
 
