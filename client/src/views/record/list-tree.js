@@ -95,6 +95,8 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                 data.showRootMenu = false;
             }
 
+            data.noData = data.createDisabled && !data.rowList.length && !data.showRoot;
+
             return data;
         },
 

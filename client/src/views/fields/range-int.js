@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], function (Dep, Int) {
+define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], function (Dep, Int) {
 
     return Dep.extend({
 
@@ -42,16 +42,20 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.fromValue = this.model.get(this.fromField);
             data.toValue = this.model.get(this.toField);
+
             return data;
         },
 
         init: function () {
             var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name);
+
             this.fromField = 'from' + ucName;
             this.toField = 'to' + ucName;
+
             Dep.prototype.init.call(this);
         },
 
@@ -64,11 +68,14 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
             if (fromValue !== null && toValue !== null) {
                 return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue);
-            } else if (fromValue) {
+            }
+            else if (fromValue) {
                 return '&#62;&#61; ' + this.formatNumber(fromValue);
-            } else if (toValue) {
+            }
+            else if (toValue) {
                 return '&#60;&#61; ' + this.formatNumber(toValue);
-            } else {
+            }
+            else {
                 return this.translate('None');
             }
         },
@@ -76,14 +83,17 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
         setup: function () {
             if (this.getPreferences().has('decimalMark')) {
                 this.decimalMark = this.getPreferences().get('decimalMark');
-            } else {
+            }
+            else {
                 if (this.getConfig().has('decimalMark')) {
                     this.decimalMark = this.getConfig().get('decimalMark');
                 }
             }
+
             if (this.getPreferences().has('thousandSeparator')) {
                 this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            } else {
+            }
+            else {
                 if (this.getConfig().has('thousandSeparator')) {
                     this.thousandSeparator = this.getConfig().get('thousandSeparator');
                 }
@@ -92,53 +102,63 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-            if (this.mode == 'edit') {
+
+            if (this.mode === 'edit') {
                 this.$from = this.$el.find('[data-name="' + this.fromField + '"]');
                 this.$to = this.$el.find('[data-name="' + this.toField + '"]');
 
-                this.$from.on('change', function () {
+                this.$from.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
-                this.$to.on('change', function () {
+                });
+
+                this.$to.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
         validateRequired: function () {
-            var validate = function (name) {
+            var validate = (name) => {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === null) {
                         var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                         return true;
                     }
                 }
-            }.bind(this);
+            };
 
             var result = false;
+
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
+
             return result;
         },
 
         validateInt: function () {
-            var validate = function (name) {
+            var validate = (name) => {
                 if (isNaN(this.model.get(name))) {
                     var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                     return true;
                 }
-            }.bind(this);
+            };
 
             var result = false;
+
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
+
             return result;
         },
 
         validateRange: function () {
-            var validate = function (name) {
+            var validate = (name) => {
                 var value = this.model.get(name);
 
                 if (value === null) {
@@ -150,34 +170,45 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
                 if (minValue !== null && maxValue !== null) {
                     if (value < minValue || value > maxValue ) {
-                        var msg = this.translate('fieldShouldBeBetween', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
-                                                                                    .replace('{min}', minValue)
-                                                                                    .replace('{max}', maxValue);
+                        var msg = this.translate('fieldShouldBeBetween', 'messages')
+                            .replace('{field}', this.translate(name, 'fields', this.model.name))
+                            .replace('{min}', minValue)
+                            .replace('{max}', maxValue);
+
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                         return true;
                     }
                 } else {
                     if (minValue !== null) {
                         if (value < minValue) {
-                            var msg = this.translate('fieldShouldBeLess', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
-                                                                                     .replace('{value}', minValue);
+                            var msg = this.translate('fieldShouldBeLess', 'messages')
+                                .replace('{field}', this.translate(name, 'fields', this.model.name))
+                                .replace('{value}', minValue);
+
                             this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                             return true;
                         }
                     } else if (maxValue !== null) {
                         if (value > maxValue) {
-                            var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name))
-                                                                                        .replace('{value}', maxValue);
+                            var msg = this.translate('fieldShouldBeGreater', 'messages')
+                                .replace('{field}', this.translate(name, 'fields', this.model.name))
+                                .replace('{value}', maxValue);
+
                             this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                             return true;
                         }
                     }
                 }
-            }.bind(this);
+            };
 
             var result = false;
+
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
+
             return result;
         },
 
@@ -187,10 +218,12 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
             if (fromValue !== null && toValue !== null) {
                 if (fromValue > toValue) {
-                    var msg = this.translate('fieldShouldBeGreater', 'messages').replace('{field}', this.translate(this.toField, 'fields', this.model.name))
-                                                                            .replace('{value}', this.translate(this.fromField, 'fields', this.model.name));
+                    var msg = this.translate('fieldShouldBeGreater', 'messages')
+                        .replace('{field}', this.translate(this.toField, 'fields', this.model.name))
+                        .replace('{value}', this.translate(this.fromField, 'fields', this.model.name));
 
                     this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
+
                     return true;
                 }
             }
@@ -198,7 +231,7 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         isRequired: function () {
             return this.model.getFieldParam(this.fromField, 'required') ||
-                   this.model.getFieldParam(this.toField, 'required');
+                this.model.getFieldParam(this.toField, 'required');
         },
 
         parse: function (value) {
@@ -207,16 +240,16 @@ Espo.define('views/fields/range-int', ['views/fields/base', 'views/fields/int'],
 
         formatNumber: function (value) {
             return value;
-            return Int.prototype.formatNumber.call(this, value);
+            //return Int.prototype.formatNumber.call(this, value);
         },
 
         fetch: function (form) {
             var data = {};
+
             data[this.fromField] = this.parse(this.$from.val().trim());
             data[this.toField] = this.parse(this.$to.val().trim());
-            return data;
-        }
 
+            return data;
+        },
     });
 });
-

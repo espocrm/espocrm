@@ -349,6 +349,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             var attributeList = this.getFieldManager()
                 .getEntityTypeAttributeList(this.targetEntityType)
+                .concat(['id'])
                 .sort();
 
             var links = this.getMetadata().get(['entityDefs', this.targetEntityType, 'links']) || {};

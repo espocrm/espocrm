@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields/float'], function (Dep, Float) {
+define('views/fields/range-float', ['views/fields/range-int', 'views/fields/float'], function (Dep, Float) {
 
     return Dep.extend({
 
@@ -35,17 +35,22 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
         validations: ['required', 'float', 'range', 'order'],
 
         validateFloat: function () {
-            var validate = function (name) {
+            var validate = (name) => {
                 if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldShouldBeFloat', 'messages')
+                        .replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                     return true;
                 }
-            }.bind(this);
+            };
 
             var result = false;
+
             result = validate(this.fromField) || result;
             result = validate(this.toField) || result;
+
             return result;
         },
 
@@ -55,6 +60,14 @@ Espo.define('views/fields/range-float', ['views/fields/range-int', 'views/fields
 
         formatNumber: function (value) {
             return Float.prototype.formatNumber.call(this, value);
+        },
+
+        formatNumberDetail: function (value) {
+            return Float.prototype.formatNumberDetail.call(this, value);
+        },
+
+        formatNumberEdit: function (value) {
+            return Float.prototype.formatNumberEdit.call(this, value);
         },
 
     });
