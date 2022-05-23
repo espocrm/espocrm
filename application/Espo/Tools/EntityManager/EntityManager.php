@@ -48,8 +48,6 @@ use Espo\Core\{
     Utils\Language,
     Utils\Config,
     Utils\Config\ConfigWriter,
-    ORM\EntityManager as OrmEntityManager,
-    ServiceFactory,
     DataManager,
     InjectableFactory,
 };
@@ -73,63 +71,13 @@ class EntityManager
 
     private $configWriter;
 
-    private $entityManager;
-
-    private $serviceFactory;
-
     private $injectableFactory;
 
     private $dataManager;
 
     private LinkHookProcessor $linkHookProcessor;
 
-    private const MAX_ENTITY_NAME = 100;
-
-    private const MAX_LINK_NAME = 100;
-
-    /**
-     * @var string[]
-     */
-    private $reservedWordList = [
-        '__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable',
-        'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default',
-        'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach',
-        'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach',
-        'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof',
-        'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private',
-        'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw',
-        'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn', 'parent',
-    ];
-
-    /**
-     * @var string[]
-     */
-    private $linkForbiddenNameList = [
-        'posts',
-        'stream',
-        'subscription',
-        'followers',
-        'action',
-        'null',
-        'false',
-        'true',
-    ];
-
-    /**
-     * @var string[]
-     */
-    private $forbiddenEntityTypeNameList = [
-        'Common',
-        'PortalUser',
-        'ApiUser',
-        'Timeline',
-        'About',
-        'Admin',
-        'Null',
-        'False',
-        'True',
-        'Base',
-    ];
+    private NameUtil $nameUtil;
 
     public function __construct(
         Metadata $metadata,
@@ -138,11 +86,10 @@ class EntityManager
         FileManager $fileManager,
         Config $config,
         ConfigWriter $configWriter,
-        OrmEntityManager $entityManager,
-        ServiceFactory $serviceFactory,
         DataManager $dataManager,
         InjectableFactory $injectableFactory,
-        LinkHookProcessor $linkHookProcessor
+        LinkHookProcessor $linkHookProcessor,
+        NameUtil $nameUtil
     ) {
         $this->metadata = $metadata;
         $this->language = $language;
@@ -150,74 +97,10 @@ class EntityManager
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->configWriter = $configWriter;
-        $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
         $this->dataManager = $dataManager;
         $this->injectableFactory = $injectableFactory;
         $this->linkHookProcessor = $linkHookProcessor;
-    }
-
-    protected function checkControllerExists(string $name): bool
-    {
-        $controllerClassName = 'Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
-
-        if (class_exists($controllerClassName)) {
-            return true;
-        }
-        else {
-            foreach ($this->metadata->getModuleList() as $moduleName) {
-                $controllerClassName =
-                    'Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
-
-                if (class_exists($controllerClassName)) {
-                    return true;
-                }
-            }
-
-            $controllerClassName = 'Espo\\Controllers\\' . Util::normilizeClassName($name);
-
-            if (class_exists($controllerClassName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function checkRelationshipExists(string $name): bool
-    {
-        $name = ucfirst($name);
-
-        /** @var string[] */
-        $scopeList = array_keys($this->metadata->get(['scopes'], []));
-
-        foreach ($scopeList as $entityType) {
-            $relationsDefs = $this->entityManager
-                ->getMetadata()
-                ->get($entityType, 'relations');
-
-            if (empty($relationsDefs)) {
-                continue;
-            }
-
-            foreach ($relationsDefs as $link => $item) {
-                if (empty($item['type'])) {
-                    continue;
-                }
-
-                if (empty($item['relationName'])) {
-                    continue;
-                }
-
-                if ($item['type'] === 'manyMany') {
-                    if (ucfirst($item['relationName']) === $name) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
+        $this->nameUtil = $nameUtil;
     }
 
     /**
@@ -236,14 +119,6 @@ class EntityManager
             throw new BadRequest();
         }
 
-        if (strlen($name) > self::MAX_ENTITY_NAME) {
-            throw new Error("Entity name should not be longer than " . self::MAX_ENTITY_NAME . ".");
-        }
-
-        if (is_numeric($name[0])) {
-            throw new Error('Bad entity name.');
-        }
-
         if (!in_array($type, $this->metadata->get(['app', 'entityTemplateList'], []))) {
             throw new Error('Type \''.$type.'\' does not exist.');
         }
@@ -254,48 +129,25 @@ class EntityManager
             throw new Error('Type \''.$type.'\' is not creatable.');
         }
 
-        if ($this->metadata->get('scopes.' . $name)) {
-            throw new Conflict('Entity \''.$name.'\' already exists.');
+        if ($this->nameUtil->nameIsBad($name)) {
+            throw new Error("Entity name should contain only letters and numbers, " .
+                "start with an upper case letter.");
         }
 
-        if ($this->metadata->get(['entityDefs.', $name])) {
-            throw new Conflict('Entity \''.$name.'\' already exists.');
+        if ($this->nameUtil->nameIsTooShort($name)) {
+            throw new Error("Entity name should not shorter than " . NameUtil::MIN_ENTITY_NAME_LENGTH . ".");
         }
 
-        if ($this->metadata->get(['clientDefs.', $name])) {
-            throw new Conflict('Entity \''.$name.'\' already exists.');
+        if ($this->nameUtil->nameIsTooLong($name)) {
+            throw new Error("Entity name should not be longer than " . NameUtil::MAX_ENTITY_NAME_LENGTH . ".");
         }
 
-        if ($this->checkControllerExists($name)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed. Controller already exists.');
+        if ($this->nameUtil->nameIsUsed($name)) {
+            throw new Conflict("Name '{$name}' is already used.");
         }
 
-        $serviceFactory = $this->serviceFactory;
-
-        if ($serviceFactory->checkExists($name)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
-        }
-
-        if (in_array($name, $this->forbiddenEntityTypeNameList)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
-        }
-
-        if (in_array(strtolower($name), $this->reservedWordList)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
-        }
-
-        if ($this->checkRelationshipExists($name)) {
-            throw new Conflict('Relationship with the same name \''.$name.'\' exists.');
-        }
-
-        if (preg_match('/[^a-zA-Z\d]/', $name)) {
-            throw new Error("Entity name should contain only letters and numbers.");
-        }
-
-        $firstLatter = $name[0];
-
-        if (preg_match('/[^A-Z]/', $firstLatter)) {
-            throw new Error("Entity name should start with an upper case letter.");
+        if ($this->nameUtil->nameIsNotAllowed($name)) {
+            throw new Conflict("Entity name '{$name}' is not allowed.");
         }
 
         $normalizedName = Util::normilizeClassName($name);
@@ -918,9 +770,9 @@ class EntityManager
                 lcfirst($entity) . $entityForeign;
 
             if (
-                strlen($relationName) > self::MAX_LINK_NAME
+                strlen($relationName) > NameUtil::MAX_LINK_NAME_LENGTH
             ) {
-                throw new Error("Relation name should not be longer than " . self::MAX_LINK_NAME . ".");
+                throw new Error("Relation name should not be longer than " . NameUtil::MAX_LINK_NAME_LENGTH . ".");
             }
 
             if (preg_match('/[^a-z]/', $relationName[0])) {
@@ -931,7 +783,7 @@ class EntityManager
                 throw new Conflict("Entity with the same name '{$relationName}' exists.");
             }
 
-            if ($this->checkRelationshipExists($relationName)) {
+            if ($this->nameUtil->relationshipExists($relationName)) {
                 throw new Conflict("Relationship with the same name '{$relationName}' exists.");
             }
         }
@@ -945,8 +797,8 @@ class EntityManager
             ->setName($relationName)
             ->build();
 
-        if (strlen($link) > self::MAX_LINK_NAME || strlen($linkForeign) > self::MAX_LINK_NAME) {
-            throw new Error("Link name should not be longer than " . self::MAX_LINK_NAME . ".");
+        if (strlen($link) > NameUtil::MAX_LINK_NAME_LENGTH || strlen($linkForeign) > NameUtil::MAX_LINK_NAME_LENGTH) {
+            throw new Error("Link name should not be longer than " . NameUtil::MAX_LINK_NAME_LENGTH . ".");
         }
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
@@ -961,11 +813,11 @@ class EntityManager
             throw new Error("Link name should start with a lower case letter.");
         }
 
-        if (in_array($link, $this->linkForbiddenNameList)) {
+        if (in_array($link, NameUtil::LINK_FORBIDDEN_NAME_LIST)) {
             throw new Conflict("Link name '{$link}' is not allowed.");
         }
 
-        if (in_array($linkForeign, $this->linkForbiddenNameList)) {
+        if (in_array($linkForeign, NameUtil::LINK_FORBIDDEN_NAME_LIST)) {
             throw new Conflict("Link name '{$linkForeign}' is not allowed.");
         }
 

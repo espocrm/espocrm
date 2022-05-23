@@ -57,8 +57,10 @@ class CommandManager
 
     /**
      * @param array<int,string> $argv
+     *
+     * @return int<0, 255> Exit-status.
      */
-    public function run(array $argv): void
+    public function run(array $argv): int
     {
         $command = $this->getCommandNameFromArgv($argv);
         $params = $this->createParamsFromArgv($argv);
@@ -89,10 +91,12 @@ class CommandManager
 
             $commandObj->run($params->getOptions(), $params->getFlagList(), $params->getArgumentList());
 
-            return;
+            return 0;
         }
 
         $commandObj->run($params, $io);
+
+        return $io->getExitStatus();
     }
 
     /**

@@ -27,83 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console;
+namespace Espo\Tools\EntityManager\Rename;
 
-use RuntimeException;
-
-use const STDOUT;
-use const PHP_EOL;
-
-/**
- * Input/Output methods.
- */
-class IO
+class Result
 {
-    /**
-     * @var int<0, 255>
-     */
-    private int $exitStatus = 0;
+    private bool $isFail = false;
 
     /**
-     * Write a string to output.
+     * @var FailReason::*|null
      */
-    public function write(string $string): void
+    private ?string $failReason = null;
+
+    public static function createSuccess(): self
     {
-        fwrite(STDOUT, $string);
+        return new self();
     }
 
     /**
-     * Write a string followed by the current line terminator to output.
+     * @param FailReason::* $reason
      */
-    public function writeLine(string $string): void
+    public static function createFail(string $reason): self
     {
-        fwrite(STDOUT, $string . PHP_EOL);
+        $obj = new self();
+
+        $obj->isFail = true;
+        $obj->failReason = $reason;
+
+        return $obj;
+    }
+
+    public function isFail(): bool
+    {
+        return $this->isFail;
     }
 
     /**
-     * Read a line from input. A string is trimmed.
+     * @return FailReason::*|null
      */
-    public function readLine(): string
+    public function getFailReason(): ?string
     {
-        $resource = fopen('php://stdin', 'r');
-
-        if ($resource === false) {
-            throw new RuntimeException("Could not open stdin.");
-        }
-
-        $readString = fgets($resource);
-
-        if ($readString === false) {
-            $readString = '';
-        }
-
-        $string = trim($readString);
-
-        fclose($resource);
-
-        return $string;
-    }
-
-    /**
-     * Set exit-status.
-     *
-     * @param int<0, 255> $exitStatus
-     *   - `0` - success;
-     *   - `1` - error;
-     *   - `127` - command not found;
-     */
-    public function setExitStatus(int $exitStatus): void
-    {
-        $this->exitStatus = $exitStatus;
-    }
-
-    /**
-     * Get exit-status.
-     *
-     * @return int<0, 255>
-     */
-    public function getExitStatus(): int
-    {
-        return $this->exitStatus;
+        return $this->failReason;
     }
 }

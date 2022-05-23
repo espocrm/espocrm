@@ -27,39 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Tools\EntityManager\Rename;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Console\CommandManager as ConsoleCommandManager;
-
-use Exception;
-
-/**
- * Runs a console command.
- */
-class Command implements Runner
+class MetadataType
 {
-    use Cli;
-    use SetupSystemUser;
+    public const ENTITY_DEFS = 'entityDefs';
 
-    private ConsoleCommandManager $commandManager;
+    public const SCOPES = 'scopes';
 
-    public function __construct(ConsoleCommandManager $commandManager)
-    {
-        $this->commandManager = $commandManager;
-    }
+    public const ACL_DEFS = 'aclDefs';
 
-    public function run(): void
-    {
-        try {
-            $exitStatus = $this->commandManager->run($_SERVER['argv']);
-        }
-        catch (Exception $e) {
-            echo "Error: " . $e->getMessage() . "\n";
+    public const ENTITY_ACL = 'entityAcl';
 
-            exit(1);
-        }
+    public const CLIENT_DEFS = 'clientDefs';
 
-        exit($exitStatus);
-    }
+    public const SELECT_DEFS = 'selectDefs';
+
+    public const RECORD_DEFS = 'recordDefs';
+
+    public const NOTIFICATION_DEFS = 'notificationDefs';
+
+    public const PDF_DEFS = 'pdfDefs';
+
+    public const FORMULA = 'formula';
 }

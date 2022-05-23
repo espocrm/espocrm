@@ -27,39 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Tools\EntityManager\Rename;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Console\CommandManager as ConsoleCommandManager;
-
-use Exception;
-
-/**
- * Runs a console command.
- */
-class Command implements Runner
+class FailReason
 {
-    use Cli;
-    use SetupSystemUser;
+    public const ENV_NOT_SUPPORTED = 'envNotSupported';
 
-    private ConsoleCommandManager $commandManager;
+    public const TABLE_EXISTS = 'tableExists';
 
-    public function __construct(ConsoleCommandManager $commandManager)
-    {
-        $this->commandManager = $commandManager;
-    }
+    public const DOES_NOT_EXIST = 'doesNotExist';
 
-    public function run(): void
-    {
-        try {
-            $exitStatus = $this->commandManager->run($_SERVER['argv']);
-        }
-        catch (Exception $e) {
-            echo "Error: " . $e->getMessage() . "\n";
+    public const NOT_CUSTOM = 'notCustom';
 
-            exit(1);
-        }
+    public const NAME_USED = 'nameUsed';
 
-        exit($exitStatus);
-    }
+    public const NAME_NOT_ALLOWED = 'nameIsNotAllosed';
+
+    public const NAME_BAD = 'nameBad';
+
+    public const NAME_TOO_LONG = 'nameTooLong';
+
+    public const NAME_TOO_SHORT = 'nameTooShort';
+
+    public const ERROR = 'error';
 }

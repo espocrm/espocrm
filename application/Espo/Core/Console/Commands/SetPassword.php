@@ -55,6 +55,7 @@ class SetPassword implements Command
 
         if (!$userName) {
             $io->writeLine("User name must be specified.");
+            $io->setExitStatus(1);
 
             return;
         }
@@ -67,6 +68,7 @@ class SetPassword implements Command
 
         if (!$user) {
             $io->writeLine("User '{$userName}' not found.");
+            $io->setExitStatus(1);
 
             return;
         }
@@ -74,9 +76,8 @@ class SetPassword implements Command
         if (!in_array($user->get('type'), ['admin', 'super-admin', 'portal', 'regular'])) {
             $userType = $user->get('type');
 
-            $io->writeLine(
-                "Can't set password for a user of the type '{$userType}'."
-            );
+            $io->writeLine("Can't set password for a user of the type '{$userType}'.");
+            $io->setExitStatus(1);
 
             return;
         }
@@ -87,13 +88,12 @@ class SetPassword implements Command
 
         if (!$password) {
             $io->writeLine("Password can not be empty.");
+            $io->setExitStatus(1);
 
             return;
         }
 
-        $hash = $this->passwordHash;
-
-        $user->set('password', $hash->hash($password));
+        $user->set('password', $this->passwordHash->hash($password));
 
         $em->saveEntity($user);
 
