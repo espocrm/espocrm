@@ -7,14 +7,11 @@
 </div>
 {{/if}}
 
-{{#unless rowList.length}}
-    {{#if createDisabled}}
-        {{#unless showRoot}}
-            <div class="no-data">{{translate 'No Data'}}</div>
-        {{/unless}}
-    {{/if}}
-{{/unless}}
-<div class="list list-expanded list-tree">
+{{#if noData}}
+<div class="no-data">{{translate 'No Data'}}</div>
+{{/if}}
+
+<div class="list list-expanded list-tree{{#if noData}} hidden{{/if}}">
     {{#if showRootMenu}}
     <div class="btn-group pull-right">
         <a href="javascript:" class="small dropdown-toggle btn-link" data-toggle="dropdown">
