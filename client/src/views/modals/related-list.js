@@ -119,6 +119,30 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     this.collection.fetch();
                 });
 
+                // Sync changing models.
+                this.listenTo(this.panelCollection, 'change', (m, o) => {
+                    // Prevent change after save.
+                    if (o.xhr || !m.id) {
+                        return;
+                    }
+
+                    let model = this.collection.get(m.id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    let attributes = {};
+
+                    for (let name in m.attributes) {
+                        if (m.hasChanged(name)) {
+                            attributes[name] = m.attributes[name];
+                        }
+                    }
+
+                    model.set(attributes);
+                });
+
                 if (this.model) {
                     this.listenTo(this.model, 'after:unrelate', () => {
                         this.panelCollection.fetch({
