@@ -446,43 +446,20 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 keyMap: keyMap,
                 callbacks: {
                     onImageUpload: (files) =>  {
-                        var file = files[0];
+                        let file = files[0];
 
-                        this.notify('Uploading...');
+                        Espo.Ui.notify(this.translate('Uploading...'));
 
-                        this.getModelFactory().create('Attachment', (attachment) => {
-                            var fileReader = new FileReader();
+                        this.uploadInlineAttachment(file)
+                            .then(attachment => {
+                                let url = '?entryPoint=attachment&id=' + attachment.id;
+                                this.$summernote.summernote('insertImage', url);
 
-                            fileReader.onload = (e) => {
-                                attachment.set('name', file.name);
-                                attachment.set('type', file.type);
-                                attachment.set('role', 'Inline Attachment');
-                                attachment.set('global', true);
-                                attachment.set('size', file.size);
-
-                                if (this.model.id) {
-                                    attachment.set('relatedId', this.model.id);
-                                }
-
-                                attachment.set('relatedType', this.model.name);
-                                attachment.set('file', e.target.result);
-                                attachment.set('field', this.name);
-
-                                attachment.once('sync', () => {
-                                    var url = '?entryPoint=attachment&id=' + attachment.id;
-                                    this.$summernote.summernote('insertImage', url);
-
-                                    this.notify(false);
-                                });
-
-                                attachment.save();
-                            };
-
-                            fileReader.readAsDataURL(file);
-                        });
+                                Espo.Ui.notify(false);
+                            });
                     },
                     onBlur: () => {
-                        this.trigger('change')
+                        this.trigger('change');
                     },
                 },
                 onCreateLink: function (link) {
@@ -523,55 +500,36 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
+        },
 
-            this.$area.on('paste', (e) => {
-                var items = e.originalEvent.clipboardData.items;
+        uploadInlineAttachment: function (file) {
+            return new Promise((resolve, reject) => {
+                this.getModelFactory().create('Attachment', attachment => {
+                    let fileReader = new FileReader();
 
-                if (items) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (!~items[i].type.indexOf('image')) {
-                            continue;
+                    fileReader.onload = (e) => {
+                        attachment.set('name', file.name);
+                        attachment.set('type', file.type);
+                        attachment.set('role', 'Inline Attachment');
+                        attachment.set('global', true);
+                        attachment.set('size', file.size);
+
+                        if (this.model.id) {
+                            attachment.set('relatedId', this.model.id);
                         }
 
-                        let file = items[i].getAsFile();
+                        attachment.set('relatedType', this.model.name);
+                        attachment.set('file', e.target.result);
+                        attachment.set('field', this.name);
 
-                        e.preventDefault();
-                        e.stopPropagation();
+                        attachment
+                            .save()
+                            .then(() => resolve(attachment))
+                            .catch(() => reject());
+                    };
 
-                        let fileReader = new FileReader();
-
-                        fileReader.onload = e => {
-                            this.getModelFactory().create('Attachment', attachment => {
-
-                                attachment.set('name', file.name);
-                                attachment.set('type', file.type);
-                                attachment.set('role', 'Inline Attachment');
-                                attachment.set('global', true);
-                                attachment.set('size', file.size);
-
-                                if (this.model.id) {
-                                    attachment.set('relatedId', this.model.id);
-                                }
-
-                                attachment.set('relatedType', this.model.name);
-                                attachment.set('file', e.target.result);
-                                attachment.set('field', this.name);
-
-                                attachment
-                                    .save()
-                                    .then(() => {
-                                        let url = '?entryPoint=attachment&id=' + attachment.id;
-                                        this.$summernote.summernote('insertImage', url);
-
-                                        this.notify(false);
-                                    });
-
-                            });
-                        };
-
-                        fileReader.readAsDataURL(file);
-                    }
-                }
+                    fileReader.readAsDataURL(file);
+                });
             });
         },
 
@@ -979,11 +937,13 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             this.$window.off('resize.summernote'  + self.cid);
                             this.resizeTo({ h: this.$editable.data('orgHeight') });
                             this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
+
                             if (this.isInModal) {
                                 this.$modal.css('overflow-y', '');
                             } else {
                                 this.$scrollbar.css('overflow', '');
                             }
+
                             this._isFullscreen = false;
                         }
 
