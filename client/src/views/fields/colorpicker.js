@@ -47,7 +47,7 @@ define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.isEditMode()) {
                 var isModal = !!this.$el.closest('.modal').length;
 
                 this.$element.parent().colorpicker({
@@ -58,13 +58,12 @@ define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], 
                 if (isModal) {
                     this.$el.find('.colorpicker').css('position', 'relative').addClass('pull-right');
                 }
-            }
-            if (this.mode === 'edit') {
-                this.$element.on('change', function () {
+
+                this.$element.on('change', () => {
                     if (this.$element.val() === '') {
                         this.$el.find('.input-group-addon > i').css('background-color', 'transparent');
                     }
-                }.bind(this));
+                });
             }
         }
 
