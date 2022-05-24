@@ -228,6 +228,26 @@ class DateTimeOptional implements DateTimeable
     }
 
     /**
+     * Clones and sets time. Null preserves a current value.
+     */
+    public function withTime(?int $hour, ?int $minute, ?int $second = 0): self
+    {
+        if ($this->isAllDay()) {
+            $dateTime = DateTime::fromDateTime($this->getActualValue()->getDateTime())
+                ->withTime($hour, $minute, $second);
+
+            return self::fromDateTime($dateTime->getDateTime());
+        }
+
+        /** @var DateTime */
+        $value = $this->getActualValue();
+
+        $dateTime = $value->withTime($hour, $minute, $second);
+
+        return self::fromDateTime($dateTime->getDateTime());
+    }
+
+    /**
      * Clones and modifies.
      */
     public function modify(string $modifier): self

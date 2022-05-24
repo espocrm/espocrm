@@ -217,6 +217,20 @@ class DateTime implements DateTimeable
     }
 
     /**
+     * Clones and sets time. Null preserves a current value.
+     */
+    public function withTime(?int $hour, ?int $minute, ?int $second = 0): self
+    {
+        $dateTime = $this->dateTime->setTime(
+            $hour ?? $this->getHour(),
+            $minute ?? $this->getMinute(),
+            $second ?? $this->getSecond()
+        );
+
+        return self::fromDateTime($dateTime);
+    }
+
+    /**
      * Create a current time.
      */
     public static function createNow(): self

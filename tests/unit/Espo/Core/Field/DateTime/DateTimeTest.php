@@ -178,4 +178,29 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNotNull($value);
     }
+
+    public function testWithTime(): void
+    {
+        $value = DateTime::fromString('2021-05-01 10:10:30');
+
+        $this->assertEquals(
+            '2021-05-01 00:00:00',
+            $value->withTime(0, 0, 0)->getString()
+        );
+
+        $this->assertEquals(
+            '2021-05-01 00:10:30',
+            $value->withTime(0, null, null)->getString()
+        );
+
+        $this->assertEquals(
+            '2021-05-01 10:00:00',
+            $value->withTime(null, 0)->getString()
+        );
+
+        $this->assertEquals(
+            '2021-05-01 10:00:10',
+            $value->withTime(null, 0, 10)->getString()
+        );
+    }
 }
