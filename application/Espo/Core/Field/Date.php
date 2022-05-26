@@ -173,6 +173,30 @@ class Date implements DateTimeable
     }
 
     /**
+     * Whether greater than a given value.
+     */
+    public function isGreaterThan(DateTimeable $other): bool
+    {
+        return $this->getDateTime() > $other->getDateTime();
+    }
+
+    /**
+     * Whether less than a given value.
+     */
+    public function isLessThan(DateTimeable $other): bool
+    {
+        return $this->getDateTime() < $other->getDateTime();
+    }
+
+    /**
+     * Whether equals to a given value.
+     */
+    public function isEqualTo(DateTimeable $other): bool
+    {
+        return $this->getDateTime() == $other->getDateTime();
+    }
+
+    /**
      * Create a today.
      */
     public static function createToday(?DateTimeZone $timezone = null): self

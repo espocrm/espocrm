@@ -147,4 +147,45 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, $value1->diff($value2)->invert);
     }
+
+    public function testComparison(): void
+    {
+        $value = Date::fromString('2021-05-01');
+
+        $this->assertTrue(
+            $value->isEqualTo(
+                $value->modify('+1 day')->modify('-1 day')
+            )
+        );
+
+        $this->assertFalse(
+            $value->isEqualTo(
+                $value->modify('+1 day')
+            )
+        );
+
+        $this->assertFalse(
+            $value->isGreaterThan(
+                $value->modify('+1 day')
+            )
+        );
+
+        $this->assertFalse(
+            $value->isLessThan(
+                $value->modify('-1 day')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isGreaterThan(
+                $value->modify('-1 day')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThan(
+                $value->modify('+1 day')
+            )
+        );
+    }
 }

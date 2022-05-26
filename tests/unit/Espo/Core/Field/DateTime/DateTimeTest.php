@@ -29,9 +29,7 @@
 
 namespace tests\unit\Espo\Core\Field\DateTime;
 
-use Espo\Core\{
-    Field\DateTime,
-};
+use Espo\Core\Field\DateTime;
 
 use DateTimeImmutable;
 use DateTimeZone;
@@ -203,4 +201,47 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
             $value->withTime(null, 0, 10)->getString()
         );
     }
+
+    public function testComparison(): void
+    {
+        $value = DateTime::fromString('2021-05-01 10:10:30')
+            ->withTimezone(new DateTimeZone('Europe/Kiev'));
+
+        $this->assertTrue(
+            $value->isEqualTo(
+                $value->withTimezone(new DateTimeZone('UTC'))
+            )
+        );
+
+        $this->assertFalse(
+            $value->isEqualTo(
+                $value->modify('+1 minute')
+            )
+        );
+
+        $this->assertFalse(
+            $value->isGreaterThan(
+                $value->modify('+1 minute')
+            )
+        );
+
+        $this->assertFalse(
+            $value->isLessThan(
+                $value->modify('-1 minute')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isGreaterThan(
+                $value->modify('-1 minute')
+            )
+        );
+
+        $this->assertTrue(
+            $value->isLessThan(
+                $value->modify('+1 minute')
+            )
+        );
+    }
 }
+
