@@ -195,7 +195,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $fm = $this->getContainer()->get('formulaManager');
         $em = $this->getContainer()->get('entityManager');
 
-        $m1 =$em->createEntity('Meeting', [
+        $m1 = $em->createEntity('Meeting', [
             'name' => '1',
             'status' => 'Held',
         ]);

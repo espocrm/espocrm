@@ -379,7 +379,7 @@ class LeadCapture
             }
         }
 
-        if ($toRelateLead  || !$leadCapture->get('subscribeToTargetList')) {
+        if ($toRelateLead || !$leadCapture->get('subscribeToTargetList')) {
             $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $targetLead->getId(),
                'targetType' => 'Lead',

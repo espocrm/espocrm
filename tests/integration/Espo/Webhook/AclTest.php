@@ -50,7 +50,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             [
                 'data' => [
                     'Webhook' => true,
-                    'Account' => ['create'=> 'yes', 'read' => 'own'],
+                    'Account' => ['create' => 'yes', 'read' => 'own'],
                 ],
             ]
         );

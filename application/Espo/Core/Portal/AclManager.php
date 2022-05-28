@@ -208,7 +208,7 @@ class AclManager extends InternalAclManager
      */
     public function checkReadOnlyContact(User $user, string $scope): bool
     {
-        return $this->getLevel($user, $scope, Table::ACTION_READ)=== Table::LEVEL_CONTACT;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_CONTACT;
     }
 
     public function check(User $user, $subject, ?string $action = null): bool

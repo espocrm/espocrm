@@ -118,7 +118,7 @@ class CampaignTrackOpened implements EntryPoint
 
         header('Content-Type: image/png');
 
-        $img  = imagecreatetruecolor(1, 1);
+        $img = imagecreatetruecolor(1, 1);
 
         if (!$img) {
             return;

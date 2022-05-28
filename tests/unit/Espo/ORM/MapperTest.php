@@ -1155,7 +1155,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testMax()
     {
         $query = "SELECT MAX(post.id) AS `value` FROM `post` WHERE post.deleted = 0";
-        $return =[
+        $return = [
             [
                 'value' => 10,
             ]

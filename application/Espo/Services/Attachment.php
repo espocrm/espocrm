@@ -412,7 +412,7 @@ class Attachment extends Record
         $httpHeaders = [];
         $httpHeaders[] = 'Expect:';
 
-        $opts[\CURLOPT_URL]  = $url;
+        $opts[\CURLOPT_URL] = $url;
         $opts[\CURLOPT_HTTPHEADER] = $httpHeaders;
         $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
         $opts[\CURLOPT_TIMEOUT] = 10;

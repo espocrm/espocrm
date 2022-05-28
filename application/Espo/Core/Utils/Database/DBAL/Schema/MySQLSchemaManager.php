@@ -97,14 +97,14 @@ class MySQLSchemaManager extends OriginalComparator
             $tableColumn['name'] = '';
         }
 
-        $scale     = null;
+        $scale = null;
         $precision = null;
 
         $type = $this->_platform->getDoctrineTypeMapping($dbType);
 
         // In cases where not connected to a database DESCRIBE $table does not return 'Comment'
         if (isset($tableColumn['comment'])) {
-            $type                   = $this->extractDoctrineTypeFromComment($tableColumn['comment'], $type);
+            $type = $this->extractDoctrineTypeFromComment($tableColumn['comment'], $type);
             $tableColumn['comment'] = $this->removeDoctrineTypeFromComment($tableColumn['comment'], $type);
         }
 
@@ -127,8 +127,8 @@ class MySQLSchemaManager extends OriginalComparator
                     ) === 1
                 ) {
                     $precision = $match[1];
-                    $scale     = $match[2];
-                    $length    = null;
+                    $scale = $match[2];
+                    $length = null;
                 }
 
                 break;
@@ -175,21 +175,21 @@ class MySQLSchemaManager extends OriginalComparator
         }
 
         $options = [
-            'length'        => $length !== null ? (int) $length : null,
-            'unsigned'      => strpos($tableColumn['type'], 'unsigned') !== false,
-            'fixed'         => (bool) $fixed,
-            'default'       => $columnDefault,
-            'notnull'       => $tableColumn['null'] !== 'YES',
-            'scale'         => null,
-            'precision'     => null,
+            'length' => $length !== null ? (int) $length : null,
+            'unsigned' => strpos($tableColumn['type'], 'unsigned') !== false,
+            'fixed' => (bool) $fixed,
+            'default' => $columnDefault,
+            'notnull' => $tableColumn['null'] !== 'YES',
+            'scale' => null,
+            'precision' => null,
             'autoincrement' => strpos($tableColumn['extra'], 'auto_increment') !== false,
-            'comment'       => isset($tableColumn['comment']) && $tableColumn['comment'] !== ''
+            'comment' => isset($tableColumn['comment']) && $tableColumn['comment'] !== ''
                 ? $tableColumn['comment']
                 : null,
         ];
 
         if ($scale !== null && $precision !== null) {
-            $options['scale']     = (int) $scale;
+            $options['scale'] = (int) $scale;
             $options['precision'] = (int) $precision;
         }
 

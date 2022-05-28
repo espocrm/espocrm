@@ -155,7 +155,7 @@ class Xlsx implements Processor
         ];
 
         $dateStyle = [
-            'font'  => [
+            'font' => [
                'size' => 12,
             ],
         ];
@@ -237,9 +237,9 @@ class Xlsx implements Processor
         $col = $azRange[$i];
 
         $headerStyle = [
-            'font'  => [
-                'bold'  => true,
-                'size'  => 12,
+            'font' => [
+                'bold' => true,
+                'size' => 12,
             ]
         ];
 
@@ -334,7 +334,7 @@ class Xlsx implements Processor
         }
 
         $linkStyle = [
-            'font'  => [
+            'font' => [
                 'color' => ['rgb' => '345b7c'],
                 'underline' => 'single',
             ]

@@ -84,10 +84,10 @@ class DataUtil
 
                         if ($removeEmptyItems) {
                             for ($j = count($elementArr); $j > 0; $j--) {
-                                $pointerBack =& $elementArr[$j];
+                                $pointerBack = & $elementArr[$j];
 
                                 if (is_object($pointerBack) && count(get_object_vars($pointerBack)) === 0) {
-                                    $previous =& $elementArr[$j - 1];
+                                    $previous = & $elementArr[$j - 1];
 
                                     if (is_object($previous)) {
                                         $key = $arr[$j - 1];

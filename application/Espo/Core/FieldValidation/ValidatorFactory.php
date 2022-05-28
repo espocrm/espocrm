@@ -50,7 +50,7 @@ class ValidatorFactory
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
         $this->metadata = $metadata;
-        $this->injectableFactory= $injectableFactory;
+        $this->injectableFactory = $injectableFactory;
     }
 
     /**

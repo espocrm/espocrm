@@ -155,7 +155,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $contact1->set('teamsIds', [$team1->getId()]);
 
         /* @var $contact2 Contact */
-        $contact2 =  $this->entityManager->getEntity('Contact');
+        $contact2 = $this->entityManager->getEntity('Contact');
 
         $emailAddressGroup2 = $contact1->getEmailAddressGroup()
             ->withAdded(EmailAddress::create('c2a@test.com'))

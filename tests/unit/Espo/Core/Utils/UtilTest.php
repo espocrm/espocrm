@@ -139,43 +139,43 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
     public function testMerge()
     {
-        $array1= array(
+        $array1 = array(
             'defaultPermissions',
             'logger',
             'devMode'
         );
-        $array2Main= array(
+        $array2Main = array(
             45 => '125',
-            'sub' =>  array (
+            'sub' => array (
                 'subV' => '125',
             ),
         );
-        $result= array(
+        $result = array(
             'defaultPermissions',
             'logger',
             'devMode',
             45 => '125',
-            'sub' =>  array (
+            'sub' => array (
                 'subV' => '125',
             ),
         );
         $this->assertEquals($result, Util::merge($array1, $array2Main));
 
 
-        $array1= array(
+        $array1 = array(
             'datetime' =>
               array (
                 'dateFormat' => 'Y-m-d',
                 'timeFormat' => 'H:i:s',
               ),
         );
-        $array2Main= array(
+        $array2Main = array(
             'datetime' =>
               array (
                 'dateFormat' => 'MyDateFormat',
               ),
         );
-        $result= array(
+        $result = array(
             'datetime' =>
               array (
                 'dateFormat' => 'MyDateFormat',
@@ -185,7 +185,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, Util::merge($array1, $array2Main));
 
 
-        $array1= array(
+        $array1 = array(
             'database' =>
               array (
                 'driver' => 'pdo_mysql',
@@ -195,13 +195,13 @@ class UtilTest extends \PHPUnit\Framework\TestCase
                 'password' => '',
               ),
         );
-        $array2Main= array(
+        $array2Main = array(
             'database' =>
               array (
                 'password' => 'MyPass',
               ),
         );
-        $result= array(
+        $result = array(
             'database' =>
               array (
                 'driver' => 'pdo_mysql',
@@ -772,7 +772,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray()
     {
         $currentArray = array(
-          'Call' =>array (
+          'Call' => array (
             'fields' =>
             array (
               'accountId' =>
@@ -795,7 +795,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         );
 
         $newArray = array(
-          'Call' =>array (
+          'Call' => array (
             'fields' =>
             array (
             ),
@@ -844,7 +844,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray3()
     {
         $currentArray = array(
-          'Call' =>array (
+          'Call' => array (
             'fields' =>
             array (
               'accountId' =>
@@ -1052,13 +1052,13 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
     public function testConcatPath()
     {
-        $result= Util::fixPath('dir1/dir2/file1.json');
+        $result = Util::fixPath('dir1/dir2/file1.json');
         $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2'), 'file1.json'));
 
-        $result= Util::fixPath('dir1/dir2/file1.json');
+        $result = Util::fixPath('dir1/dir2/file1.json');
         $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2/'), 'file1.json'));
 
-        $result= Util::fixPath('dir1/dir2/file1.json');
+        $result = Util::fixPath('dir1/dir2/file1.json');
         $this->assertEquals($result, Util::concatPath(Util::fixPath('dir1/dir2/file1.json')));
 
         $input = array('dir1/dir2', 'file1.json');
@@ -1074,9 +1074,9 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
     public function testArrayToObject()
     {
-        $testArr= array(
+        $testArr = array(
             'useCache' => true,
-            'sub' =>  array (
+            'sub' => array (
                 'subV' => '125',
                 'subO' => array(
                     'subOV' => '125',
@@ -1084,7 +1084,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $testResult= (object) array(
+        $testResult = (object) array(
             'useCache' => true,
         );
         $testResult->sub = (object) array (
@@ -1099,7 +1099,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
 
     public function testObjectToArray()
     {
-        $testObj= (object) array(
+        $testObj = (object) array(
             'useCache' => true,
         );
         $testObj->sub = (object) array (
@@ -1109,9 +1109,9 @@ class UtilTest extends \PHPUnit\Framework\TestCase
                 'subOV' => '125',
         );
 
-        $testResult= array(
+        $testResult = array(
             'useCache' => true,
-            'sub' =>  array (
+            'sub' => array (
                 'subV' => '125',
                 'subO' => array(
                     'subOV' => '125',
@@ -1178,7 +1178,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $input = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1197,7 +1197,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $result = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subO' => array(
                         'subOV2' => '125',
                     ),
@@ -1213,7 +1213,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $input = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1230,7 +1230,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $result = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subO' => array(
                         'subOV2' => '125',
                     ),
@@ -1246,7 +1246,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $input = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1266,7 +1266,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $result = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subO' => array(
                         'subOV2' => '125',
                     ),
@@ -1282,7 +1282,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $input = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1337,7 +1337,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $input = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1373,7 +1373,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $inputArray = array(
             'Account' => array(
                 'useCache' => true,
-                'sub' =>  array (
+                'sub' => array (
                     'subV' => '125',
                     'subO' => array(
                         'subOV' => '125',
@@ -1446,7 +1446,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $inputObject = (object) [
             'Account' => (object) [
                 'useCache' => true,
-                'sub' =>  (object) [
+                'sub' => (object) [
                     'subV' => '125',
                     'subO' => (object) [
                         'subOV' => '125',

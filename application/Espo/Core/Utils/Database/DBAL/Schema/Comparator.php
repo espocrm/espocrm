@@ -153,12 +153,12 @@ class Comparator extends OriginalComparator
 
     public function diffTable(Table $fromTable, Table $toTable)
     {
-        $changes                     = 0;
-        $tableDifferences            = new TableDiff($fromTable->getName());
+        $changes = 0;
+        $tableDifferences = new TableDiff($fromTable->getName());
         $tableDifferences->fromTable = $fromTable;
 
         $fromTableColumns = $fromTable->getColumns();
-        $toTableColumns   = $toTable->getColumns();
+        $toTableColumns = $toTable->getColumns();
 
         /* See if all the columns in "from" table exist in "to" table */
         foreach ($toTableColumns as $columnName => $column) {
@@ -188,7 +188,7 @@ class Comparator extends OriginalComparator
 
             $columnDiff = new ColumnDiff($column->getName(), $toTable->getColumn($columnName), $changedProperties);
 
-            $columnDiff->fromColumn                               = $column;
+            $columnDiff->fromColumn = $column;
             $tableDifferences->changedColumns[$column->getName()] = $columnDiff;
             $changes++;
         }
@@ -196,7 +196,7 @@ class Comparator extends OriginalComparator
         $this->detectColumnRenamings($tableDifferences);
 
         $fromTableIndexes = $fromTable->getIndexes();
-        $toTableIndexes   = $toTable->getIndexes();
+        $toTableIndexes = $toTable->getIndexes();
 
         /* See if all the indexes in "from" table exist in "to" table */
         foreach ($toTableIndexes as $indexName => $index) {
@@ -235,7 +235,7 @@ class Comparator extends OriginalComparator
         $this->detectIndexRenamings($tableDifferences);
 
         $fromForeignKeys = $fromTable->getForeignKeys();
-        $toForeignKeys   = $toTable->getForeignKeys();
+        $toForeignKeys = $toTable->getForeignKeys();
 
         foreach ($fromForeignKeys as $fromKey => $fromConstraint) {
             foreach ($toForeignKeys as $toKey => $toConstraint) {
@@ -289,8 +289,8 @@ class Comparator extends OriginalComparator
             }
 
             [$removedColumn, $addedColumn] = $candidateColumns[0];
-            $removedColumnName             = strtolower($removedColumn->getName());
-            $addedColumnName               = strtolower($addedColumn->getName());
+            $removedColumnName = strtolower($removedColumn->getName());
+            $addedColumnName = strtolower($addedColumn->getName());
 
             if (isset($tableDifferences->renamedColumns[$removedColumnName])) {
                 continue;
@@ -337,7 +337,7 @@ class Comparator extends OriginalComparator
             [$removedIndex, $addedIndex] = $candidateIndexes[0];
 
             $removedIndexName = strtolower($removedIndex->getName());
-            $addedIndexName   = strtolower($addedIndex->getName());
+            $addedIndexName = strtolower($addedIndex->getName());
 
             if (isset($tableDifferences->renamedIndexes[$removedIndexName])) {
                 continue;

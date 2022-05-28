@@ -287,7 +287,7 @@ class ItemGeneralConverter implements ItemConverter
             throw new Error("Bad where item 'column'.");
         }
 
-        $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
+        $alias = $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
 
         $queryBuilder->distinct();
         $queryBuilder->leftJoin($link, $alias);
@@ -1247,7 +1247,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $alias =  $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
+        $alias = $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
 
         if (is_null($value) || !$value && !is_array($value)) {
             throw new Error("Bad where item. Empty value.");
@@ -1313,7 +1313,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $alias =  $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
+        $alias = $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
 
         if (is_null($value)) {
             throw new Error("Bad where item. Empty value.");

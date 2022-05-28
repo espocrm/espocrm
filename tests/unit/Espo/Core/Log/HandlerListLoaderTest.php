@@ -58,7 +58,7 @@ class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
 
         $listLoader = new HandlerListLoader($this->injectableFactory, $defaultLoader);
 
-        $dataList =  [
+        $dataList = [
             [
                 'className' => 'Espo\\Core\\Log\\Handler\\EspoRotatingFileHandler',
                 'params' => [

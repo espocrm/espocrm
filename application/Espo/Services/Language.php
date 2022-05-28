@@ -198,7 +198,7 @@ class Language
                         continue;
                     }
 
-                    $pointer =& $data;
+                    $pointer = & $data;
 
                     foreach ($targetArr as $i => $k) {
                         if ($i === count($targetArr) - 1) {
@@ -210,7 +210,7 @@ class Language
                             $pointer[$k] = [];
                         }
 
-                        $pointer =& $pointer[$k];
+                        $pointer = & $pointer[$k];
                     }
                 }
             }

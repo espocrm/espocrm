@@ -1411,7 +1411,7 @@ class SelectManager
                 $this->applyLeftJoinsFromWhere($value, $sqResult);
                 $key = $type === 'subQueryIn' ? 'id=s' : 'id!=s';
                 $part[$key] = [
-                    'selectParams' =>  [
+                    'selectParams' => [
                         'select' => ['id'],
                         'whereClause' => $sqWhereClause,
                         'leftJoins' => $sqResult['leftJoins'] ?? [],
@@ -1686,7 +1686,7 @@ class SelectManager
             case 'columnNotIn':
                 $link = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
                 $column = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
-                $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                $alias = $link . 'Filter' . strval(rand(10000, 99999));
                 $this->setDistinct(true, $result);
                 $this->addLeftJoin([$link, $alias], $result);
                 $columnKey = $alias . 'Middle.' . $column;
@@ -1715,7 +1715,7 @@ class SelectManager
 
             case 'isNotLinked':
                 $part['id!=s'] = [
-                    'selectParams' =>  [
+                    'selectParams' => [
                         'select' => ['id'],
                         'joins' => [$attribute],
                     ]
@@ -1735,7 +1735,7 @@ class SelectManager
                 $link = $attribute;
                 if (!$seed->hasRelation($link)) break;
 
-                $alias =  $link . 'Filter' . strval(rand(10000, 99999));
+                $alias = $link . 'Filter' . strval(rand(10000, 99999));
 
                 if (is_null($value) || !$value && !is_array($value)) break;
 
@@ -2441,7 +2441,7 @@ class SelectManager
                 $textFilter = trim($textFilter);
             }
 
-            while (mb_substr($textFilter, -2)  === ' *') {
+            while (mb_substr($textFilter, -2) === ' *') {
                 $textFilter = mb_substr($textFilter, 0, mb_strlen($textFilter) - 2);
                 $textFilter = trim($textFilter);
             }

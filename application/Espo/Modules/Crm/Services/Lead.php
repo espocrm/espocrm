@@ -383,7 +383,7 @@ class Lead extends Record implements
             ->find();
 
         foreach ($meetings as $meeting) {
-            if ($contact &&  $contact->hasId()) {
+            if ($contact && $contact->hasId()) {
                 $entityManager->getRDBRepository('Meeting')->relate($meeting, 'contacts', $contact);
             }
 

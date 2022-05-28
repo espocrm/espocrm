@@ -388,38 +388,38 @@ class RouteTest extends \PHPUnit\Framework\TestCase
 
         $expected = [
             [
-                'route'  => '/Activities/{scope}/{id}/{name}',
+                'route' => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' => [
                     'controller' => 'TestExt',
-                    'action'     => 'list',
-                    'scope'      => ':scope',
-                    'id'         => ':id',
-                    'name'       => ':name',
+                    'action' => 'list',
+                    'scope' => ':scope',
+                    'id' => ':id',
+                    'name' => ':name',
                 ],
             ],
             [
-                'route'  => '/Activities',
+                'route' => '/Activities',
                 'method' => 'get',
                 'params' => [
                     'controller' => 'TestExt',
-                    'action'     => 'testExtListCalendarEvents'
+                    'action' => 'testExtListCalendarEvents'
                 ],
             ],
             [
-                'route'  => '/Product',
+                'route' => '/Product',
                 'method' => 'get',
                 'params' => [
                     'controller' => 'Product',
-                    'action'     => 'listProduct'
+                    'action' => 'listProduct'
                 ],
             ],
             [
-                'route'  => '/Test',
+                'route' => '/Test',
                 'method' => 'get',
                 'params' => [
                     'controller' => 'Test',
-                    'action'     => 'testAction'
+                    'action' => 'testAction'
                 ],
             ],
         ];

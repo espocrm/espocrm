@@ -170,7 +170,7 @@ class ScheduledJob
                     ],
                     [
                         ['executeTime>=' => $r1From->format($format)],
-                        ['executeTime<='=> $r1To->format($format)],
+                        ['executeTime<=' => $r1To->format($format)],
                         'scheduledJob.job' => 'Dummy',
                     ]
                 ]

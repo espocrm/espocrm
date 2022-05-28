@@ -36,7 +36,7 @@ use Espo\Core\{
 
 class ConfigDataProvider
 {
-    private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
+    private const FAILED_ATTEMPTS_PERIOD = '60 seconds';
 
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
 

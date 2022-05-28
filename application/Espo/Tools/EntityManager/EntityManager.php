@@ -996,9 +996,9 @@ class EntityManager
                     'fields' => [
                         $link => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "layoutMassUpdateDisabled" => !$linkMultipleField,
+                            "noLoad" => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
                             'isCustom' => true,
                         ],
@@ -1068,9 +1068,9 @@ class EntityManager
                     'fields' => [
                         $linkForeign => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "layoutMassUpdateDisabled" => !$linkMultipleFieldForeign,
+                            "noLoad" => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
                             'isCustom' => true,
                         ]
@@ -1093,10 +1093,10 @@ class EntityManager
                     'fields' => [
                         $link => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "layoutMassUpdateDisabled" => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
+                            "noLoad" => !$linkMultipleField,
                             'isCustom' => true,
                         ]
                     ],
@@ -1116,10 +1116,10 @@ class EntityManager
                     'fields' => [
                         $linkForeign => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "layoutMassUpdateDisabled" => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
+                            "noLoad" => !$linkMultipleFieldForeign,
                             'isCustom' => true,
                         ]
                     ],
@@ -1267,9 +1267,9 @@ class EntityManager
                     'fields' => [
                         $link => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleField,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleField,
-                            "noLoad"  => !$linkMultipleField,
+                            "layoutDetailDisabled" => !$linkMultipleField,
+                            "layoutMassUpdateDisabled" => !$linkMultipleField,
+                            "noLoad" => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
                             'isCustom' => true,
                         ]
@@ -1295,9 +1295,9 @@ class EntityManager
                     'fields' => [
                         $linkForeign => [
                             "type" => "linkMultiple",
-                            "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
-                            "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
-                            "noLoad"  => !$linkMultipleFieldForeign,
+                            "layoutDetailDisabled" => !$linkMultipleFieldForeign,
+                            "layoutMassUpdateDisabled" => !$linkMultipleFieldForeign,
+                            "noLoad" => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
                             'isCustom' => true,
                         ]

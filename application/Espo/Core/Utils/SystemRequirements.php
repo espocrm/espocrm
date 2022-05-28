@@ -137,7 +137,7 @@ class SystemRequirements
     {
         $databaseTypeName = 'Mysql';
 
-        $databaseHelper =  $this->databaseHelper;
+        $databaseHelper = $this->databaseHelper;
         $databaseParams = $additionalData['database'] ?? [];
 
         $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);

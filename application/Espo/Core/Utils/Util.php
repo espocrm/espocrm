@@ -477,10 +477,10 @@ class Util
 
                             if ($unsetParentEmptyArray) {
                                 for ($j = count($elementArr); $j > 0; $j--) {
-                                    $pointer =& $elementArr[$j];
+                                    $pointer = & $elementArr[$j];
 
                                     if (is_array($pointer) && empty($pointer)) {
-                                        $previous =& $elementArr[$j - 1];
+                                        $previous = & $elementArr[$j - 1];
                                         unset($previous[$keyArr[$j - 1]]);
                                     }
                                 }

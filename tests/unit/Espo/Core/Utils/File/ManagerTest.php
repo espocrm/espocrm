@@ -79,7 +79,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $testPath = $this->cachePath;
 
-        $result= 'next value';
+        $result = 'next value';
 
         $this->assertTrue(
             $this->fileManager->putContents($testPath . '/setContent.json', $result)

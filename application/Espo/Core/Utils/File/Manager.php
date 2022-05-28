@@ -129,8 +129,8 @@ class Manager
                 $add = false;
 
                 if (is_dir($path . Util::getSeparator() . $value)) {
-                    if ($recursively || (is_int($recursively) && $recursively!=0)) {
-                        $nextRecursively = is_int($recursively) ? ($recursively-1) : $recursively;
+                    if ($recursively || (is_int($recursively) && $recursively != 0)) {
+                        $nextRecursively = is_int($recursively) ? ($recursively - 1) : $recursively;
 
                         $result[$value] = $this->getFileList(
                             $path . Util::getSeparator() . $value,
@@ -988,7 +988,7 @@ class Manager
 
         if (!$isFullPath) {
             $pieces = explode('/', $dirName);
-            $dirName = $pieces[count($pieces)-1];
+            $dirName = $pieces[count($pieces) - 1];
         }
 
         return $dirName;

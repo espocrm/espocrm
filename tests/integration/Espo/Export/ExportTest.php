@@ -74,7 +74,7 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
 
     public function testCsvWithFieldList(): void
     {
-        $user =$this->entityManager->createEntity('User', [
+        $user = $this->entityManager->createEntity('User', [
             'id' => 'user-id',
             'userName' => 'user',
             'lastName' => 'User',

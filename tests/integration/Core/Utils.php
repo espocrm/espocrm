@@ -44,7 +44,7 @@ class Utils
 
         $buildDir = dir($path);
         while ($folderName = $buildDir->read()) {
-            if ($folderName === '.'|| $folderName === '..' || empty($folderName)) continue;
+            if ($folderName === '.' || $folderName === '..' || empty($folderName)) continue;
 
             $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)([0-9]+)?)?)?$/';
 

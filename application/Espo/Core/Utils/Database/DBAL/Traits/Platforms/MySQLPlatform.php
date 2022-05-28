@@ -43,9 +43,9 @@ trait MySQLPlatform
 {
     public function getAlterTableSQL(TableDiff $diff)
     {
-        $columnSql  = [];
+        $columnSql = [];
         $queryParts = [];
-        $newName    = $diff->getNewName();
+        $newName = $diff->getNewName();
 
         if ($newName !== false) {
             $queryParts[] = 'RENAME TO ' . $newName->getQuotedName($this);
@@ -67,14 +67,14 @@ trait MySQLPlatform
             }
             // Espo: end
 
-            $oldColumnName          = new Identifier($oldColumnName);
-            $columnArray            = $column->toArray();
+            $oldColumnName = new Identifier($oldColumnName);
+            $columnArray = $column->toArray();
             $columnArray['comment'] = $this->getColumnComment($column);
 
             // Espo: do not rename the column
             /* $queryParts[] = 'CHANGE ' . $oldColumnName->getQuotedName($this) . ' '
                    $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
-            $queryParts[]           =  'ADD '
+            $queryParts[] = 'ADD '
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
             // Espo: end
         }
@@ -150,7 +150,7 @@ trait MySQLPlatform
                 continue;
             }
 
-            $column      = $columnDiff->column;
+            $column = $columnDiff->column;
             $columnArray = $column->toArray();
 
             // Don't propagate default value changes for unsupported column types.
@@ -178,19 +178,19 @@ trait MySQLPlatform
             // Espo: end
 
             $columnArray['comment'] = $this->getColumnComment($column);
-            $queryParts[]           =  'CHANGE ' . ($columnDiff->getOldColumnName()->getQuotedName($this)) . ' '
+            $queryParts[] = 'CHANGE ' . ($columnDiff->getOldColumnName()->getQuotedName($this)) . ' '
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
         }
 
         if (isset($diff->addedIndexes['primary'])) {
-            $keyColumns   = array_unique(array_values($diff->addedIndexes['primary']->getColumns()));
+            $keyColumns = array_unique(array_values($diff->addedIndexes['primary']->getColumns()));
             $queryParts[] = 'ADD PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
             unset($diff->addedIndexes['primary']);
         } elseif (isset($diff->changedIndexes['primary'])) {
             // Necessary in case the new primary key includes a new auto_increment column
             foreach ($diff->changedIndexes['primary']->getColumns() as $columnName) {
                 if (isset($diff->addedColumns[$columnName]) && $diff->addedColumns[$columnName]->getAutoincrement()) {
-                    $keyColumns   = array_unique(array_values($diff->changedIndexes['primary']->getColumns()));
+                    $keyColumns = array_unique(array_values($diff->changedIndexes['primary']->getColumns()));
                     $queryParts[] = 'DROP PRIMARY KEY';
                     $queryParts[] = 'ADD PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
                     unset($diff->changedIndexes['primary']);
@@ -199,7 +199,7 @@ trait MySQLPlatform
             }
         }
 
-        $sql      = [];
+        $sql = [];
         $tableSql = [];
 
         if (! $this->onSchemaAlterTable($diff, $tableSql)) {
@@ -278,7 +278,7 @@ trait MySQLPlatform
 
             $check = ! empty($column['check']) ? ' ' . $column['check'] : '';
 
-            $typeDecl    = $column['type']->getSQLDeclaration($column, $this);
+            $typeDecl = $column['type']->getSQLDeclaration($column, $this);
             $declaration = $typeDecl . $charset . $default . $notnull . $unique . $check . $collation;
 
             // Espo: Unable to create autoindex column in existing table fix

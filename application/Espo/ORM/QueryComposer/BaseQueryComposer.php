@@ -2482,7 +2482,7 @@ abstract class BaseQueryComposer implements QueryComposer
                             $wsCount ++;
                         }
                         else {
-                            $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+                            $item = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
 
                             $foreign[$i] = "IFNULL({$item}, '')";
                         }

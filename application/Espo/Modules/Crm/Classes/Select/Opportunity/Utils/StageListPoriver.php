@@ -47,7 +47,7 @@ class StageListPoriver
     {
         $lostStageList = [];
 
-        $probabilityMap =  $this->metadata
+        $probabilityMap = $this->metadata
             ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
 
         $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];
@@ -68,7 +68,7 @@ class StageListPoriver
     {
         $wonStageList = [];
 
-        $probabilityMap =  $this->metadata
+        $probabilityMap = $this->metadata
             ->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap']) ?? [];
 
         $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options') ?? [];

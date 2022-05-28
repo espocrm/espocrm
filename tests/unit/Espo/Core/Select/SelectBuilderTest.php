@@ -68,7 +68,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->whereApplier = $this->createMock(WhereApplier::class);
         $this->selectApplier = $this->createMock(SelectApplier::class);
-        $this->orderApplier =  $this->createMock(OrderApplier::class);
+        $this->orderApplier = $this->createMock(OrderApplier::class);
         $this->limitApplier = $this->createMock(LimitApplier::class);
         $this->accessControlFilterApplier = $this->createMock(AccessControlFilterApplier::class);
         $this->textFilterApplier = $selectApplier = $this->createMock(TextFilterApplier::class);

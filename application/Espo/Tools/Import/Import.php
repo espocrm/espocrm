@@ -1061,14 +1061,14 @@ class Import
 
             if ($s == $linebreak) {
                 if ($esc) {
-                    $o[$num].= $s;
+                    $o[$num] .= $s;
                 } else {
                     $i++;
                     break;
                 }
             } else if ($s == $separator) {
                 if ($esc) {
-                    $o[$num].= $s;
+                    $o[$num] .= $s;
                 } else {
                     $num++;
                     $esc = false;
@@ -1076,7 +1076,7 @@ class Import
                 }
             } else if ($s == $enclosure) {
                 if ($escesc) {
-                    $o[$num].= $enclosure;
+                    $o[$num] .= $enclosure;
                     $escesc = false;
                 }
                 if ($esc) {

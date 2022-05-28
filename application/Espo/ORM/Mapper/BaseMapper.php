@@ -131,7 +131,7 @@ class BaseMapper implements RDBMapper
      */
     public function max(Select $select, string $attribute)
     {
-         $value =  $this->aggregate($select, 'MAX', $attribute);
+         $value = $this->aggregate($select, 'MAX', $attribute);
 
          return $this->castToNumber($value);
     }
@@ -561,7 +561,7 @@ class BaseMapper implements RDBMapper
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
-        $relType =  $entity->getRelationType($relationName);
+        $relType = $entity->getRelationType($relationName);
 
         switch ($relType) {
             case Entity::MANY_MANY:

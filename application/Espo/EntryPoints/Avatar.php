@@ -142,7 +142,7 @@ class Avatar extends Image implements Di\MetadataAware
     {
         ob_start();
 
-        $img  = imagecreatetruecolor(14, 14);
+        $img = imagecreatetruecolor(14, 14);
 
         if ($img === false) {
             throw new Error();

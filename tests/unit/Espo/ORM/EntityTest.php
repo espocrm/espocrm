@@ -294,7 +294,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
     public function testCloningArray(): void
     {
-        $original =  [
+        $original = [
             (object) [
                 'k1' => 'v1',
             ]

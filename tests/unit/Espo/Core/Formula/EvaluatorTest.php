@@ -470,7 +470,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
     public function testJsonRetrieve2()
     {
-        $value =  [
+        $value = [
             0 => 'test',
         ];
 
@@ -536,7 +536,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
     public function testJsonRetrieve6()
     {
-        $value =  [
+        $value = [
             0 => (object) [
                 'a' => 'test'
             ],

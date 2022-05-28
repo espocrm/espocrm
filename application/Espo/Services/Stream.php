@@ -1254,7 +1254,7 @@ class Stream
             ->getRDBRepository('User')
             ->select(['name'])
             ->where([
-                'id' =>  $entity->get('assignedUserId'),
+                'id' => $entity->get('assignedUserId'),
             ])
             ->findOne();
 

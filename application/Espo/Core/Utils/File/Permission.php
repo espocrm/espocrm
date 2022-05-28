@@ -244,7 +244,7 @@ class Permission
                 }
 
                 if (!empty($pKey)) {
-                    $permission[$pKey]= $val;
+                    $permission[$pKey] = $val;
                 }
 
                 $count++;

@@ -36,14 +36,14 @@ $fields = [
         'options' => $metadata->get(['app', 'dateTime', 'dateFormatList']) ?? [],
     ],
     'timeFormat' => [
-        'default'=> $config->get('timeFormat', ''),
+        'default' => $config->get('timeFormat', ''),
         'options' => $metadata->get(['app', 'dateTime', 'timeFormatList']) ?? [],
     ],
     'timeZone' => [
-        'default'=> $config->get('timeZone', 'UTC'),
+        'default' => $config->get('timeZone', 'UTC'),
     ],
     'weekStart' => [
-        'default'=> $config->get('weekStart', 0),
+        'default' => $config->get('weekStart', 0),
     ],
     'defaultCurrency' => [
         'default' => $config->get('defaultCurrency', 'USD'),

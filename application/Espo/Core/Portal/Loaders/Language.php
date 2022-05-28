@@ -60,7 +60,7 @@ class Language implements Loader
 
     public function load(): LanguageService
     {
-        $language =  $this->injectableFactory->createWith(LanguageService::class, [
+        $language = $this->injectableFactory->createWith(LanguageService::class, [
             'language' => LanguageService::detectLanguage($this->config, $this->preferences),
             'useCache' => $this->config->get('useCache') ?? false,
         ]);

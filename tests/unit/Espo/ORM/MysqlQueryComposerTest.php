@@ -1216,7 +1216,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql =  "SELECT comment.id AS `id` FROM `comment` WHERE post.name = 'test'";
+        $expectedSql = "SELECT comment.id AS `id` FROM `comment` WHERE post.name = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -2244,7 +2244,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql =  "SELECT comment.id AS `alias` FROM `comment`";
+        $expectedSql = "SELECT comment.id AS `alias` FROM `comment`";
 
         $this->assertEquals($expectedSql, $sql);
     }

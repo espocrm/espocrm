@@ -395,7 +395,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($paramsCloned['distinct']);
         $this->assertFalse($params['distinct'] ?? false);
 
-        $this->assertEquals(['test1' =>'1'], $params['whereClause']);
+        $this->assertEquals(['test1' => '1'], $params['whereClause']);
         $this->assertEquals(['test1' => '1', 'test2' => '2'], $paramsCloned['whereClause']);
     }
 
