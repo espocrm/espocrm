@@ -1010,7 +1010,7 @@ class EntityManager
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
                             'isCustom' => true,
-                       ],
+                        ],
                     ],
                 ];
 

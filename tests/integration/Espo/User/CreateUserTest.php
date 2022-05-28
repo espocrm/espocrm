@@ -100,12 +100,12 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
     public function testCreatePortalUserWithRole()
     {
         $newUser = $this->createUser(array(
-                'userName' => 'tester',
-                'lastName' => 'tester',
-                'portalsIds' => array(
-                    'testPortalId',
-                ),
-            ), array(
+            'userName' => 'tester',
+            'lastName' => 'tester',
+            'portalsIds' => array(
+                'testPortalId',
+            ),
+        ), array(
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',

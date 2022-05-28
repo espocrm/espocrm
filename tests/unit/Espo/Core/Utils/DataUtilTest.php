@@ -479,34 +479,34 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMerge8()
     {
         $d1 = (object) [
-          'hello' => 'world',
-          'man' => (object) [
-            'test' => [
-              0 => ['name' => 'test 1'],
-              1 => ['name' => 'test 2']
+            'hello' => 'world',
+            'man' => (object) [
+                'test' => [
+                    0 => ['name' => 'test 1'],
+                    1 => ['name' => 'test 2']
+                ]
             ]
-          ]
         ];
         $d2 = (object) [
-          'test' => []
+            'test' => []
         ];
         $d3 = (object) [
-          'man' => (object) [
-            'test' => [
-              0 => '__APPEND__',
-              1 => ['name' => 'test 3']
+            'man' => (object) [
+                'test' => [
+                    0 => '__APPEND__',
+                    1 => ['name' => 'test 3']
+                ]
             ]
-          ]
         ];
         $expected = (object) [
             'test' => [],
             'hello' => 'world',
             'man' => (object) [
-              'test' => [
-                0 => ['name' => 'test 1'],
-                1 => ['name' => 'test 2'],
-                2 => ['name' => 'test 3']
-              ]
+                'test' => [
+                    0 => ['name' => 'test 1'],
+                    1 => ['name' => 'test 2'],
+                    2 => ['name' => 'test 3']
+                ]
             ]
         ];
 
@@ -519,185 +519,185 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
         $data1 = (object) [
             'entityDefs' => (object) [
                 'Attachment' => (object) [
-                  'fields' => (object) [
-                    'name' => (object) [
-                      'type' => 'varchar',
-                      'required' => true,
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => true,
+                        ],
+                        'type' => (object) [
+                            'type' => 'varchar',
+                            'maxLength' => 36,
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ["v1", "v2", "v3"],
+                        ],
+                        'sizeInt' => (object) [
+                            'type' => 'enum',
+                            'value' => [0, 1, 2],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ["v1", "v2", "v3"],
+                        ],
+                        'mergedInt' => (object) [
+                            'type' => 'enum',
+                            'value' => [0, 1, 2],
+                        ],
                     ],
-                    'type' => (object) [
-                      'type' => 'varchar',
-                      'maxLength' => 36,
-                    ],
-                    'size' => (object) [
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ],
-                    'sizeInt' => (object) [
-                      'type' => 'enum',
-                      'value' => [0, 1, 2],
-                    ],
-                    'merged' => (object) [
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ],
-                    'mergedInt' => (object) [
-                      'type' => 'enum',
-                      'value' => [0, 1, 2],
-                    ],
-                  ],
                 ],
                 'Contact' => (object) [
-                  'fields' => (object) [
-                    'name' => (object) [
-                      'type' => 'varchar',
-                      'required' => true,
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => true,
+                        ],
+                        'type' => (object) [
+                            'type' => 'varchar',
+                            'maxLength' => 36,
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ["v1", "v2", "v3"],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ["v1", "v2", "v3"],
+                        ],
                     ],
-                    'type' => (object) [
-                      'type' => 'varchar',
-                      'maxLength' => 36,
-                    ],
-                    'size' => (object) [
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ],
-                    'merged' => (object) [
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ],
-                  ],
                 ],
             ],
-        'MyCustom' => (object) [
-              'fields' => (object) [
-                'name' => (object) [
-                  'type' => 'varchar',
-                  'required' => true,
+            'MyCustom' => (object) [
+                'fields' => (object) [
+                    'name' => (object) [
+                        'type' => 'varchar',
+                        'required' => true,
+                    ],
                 ],
-              ],
             ],
         ];
 
         $data2 = (object) [
             'entityDefs' => (object) [
                 'Attachment' => (object) [
-                  'fields' => (object) [
-                    'name' => (object) [
-                      'type' => 'varchar',
-                      'required' => false,
-                      'NEW' => 'NEWVAL',
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ],
+                        'type' => (object) [
+                            'type' => 'NETYPE',
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ["B1", "B2", "B3"],
+                        ],
+                        'sizeInt' => (object) [
+                            'type' => 'enum',
+                            'value' => [5, 8, 9],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ["__APPEND__", "B1", "B2", "B3"],
+                        ],
+                        'mergedInt' => (object) [
+                            'type' => 'enum',
+                            'value' => ['__APPEND__', 5, 8, 9],
+                        ],
                     ],
-                    'type' => (object) [
-                      'type' => 'NETYPE',
+                    'list' => (object) [
+                        'test' => 'Here',
                     ],
-                    'size' => (object) [
-                      'type' => 'enum',
-                      'value' => ["B1", "B2", "B3"],
-                    ],
-                    'sizeInt' => (object) [
-                      'type' => 'enum',
-                      'value' => [5, 8, 9],
-                    ],
-                    'merged' => (object) [
-                      'type' => 'enum',
-                      'value' => ["__APPEND__", "B1", "B2", "B3"],
-                    ],
-                    'mergedInt' => (object) [
-                      'type' => 'enum',
-                      'value' => ['__APPEND__', 5, 8, 9],
-                    ],
-                  ],
-                  'list' => (object) [
-                    'test' => 'Here',
-                  ],
                 ],
                 'Contact' => (object) [
-                  'fields' => (object) [
-                    'name' => (object) [
-                      'type' => 'varchar',
-                      'required' => false,
-                      'NEW' => 'NEWVAL',
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ],
+                        'type' => (object) [
+                            'type' => 'NEW',
+                            'maxLength' => 1000000,
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ["B1", "B2", "B3"],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ["__APPEND__", "B1", "B2", "B3"],
+                        ],
                     ],
-                    'type' => (object) [
-                      'type' => 'NEW',
-                      'maxLength' => 1000000,
-                    ],
-                    'size' => (object) [
-                      'type' => 'enum',
-                      'value' => ["B1", "B2", "B3"],
-                    ],
-                    'merged' => (object) [
-                      'type' => 'enum',
-                      'value' => ["__APPEND__", "B1", "B2", "B3"],
-                    ],
-                  ],
                 ],
             ],
         ];
 
         $expectedResultData = (object) [
-          'entityDefs' => (object) [
-            'Attachment' => (object) [
-              'fields' => (object) [
-                'name' => (object) [
-                  'type' => 'varchar',
-                  'required' => false,
-                  'NEW' => 'NEWVAL',
+            'entityDefs' => (object) [
+                'Attachment' => (object) [
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ],
+                        'type' => (object) [
+                            'type' => 'NETYPE',
+                            'maxLength' => 36,
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ['B1', 'B2', 'B3'],
+                        ],
+                        'sizeInt' => (object) [
+                            'type' => 'enum',
+                            'value' => [5, 8, 9],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
+                        ],
+                        'mergedInt' => (object) [
+                            'type' => 'enum',
+                            'value' => [0, 1, 2, 5, 8, 9],
+                        ],
+                    ],
+                    'list' => (object) [
+                        'test' => 'Here',
+                    ],
                 ],
-                'type' => (object) [
-                  'type' => 'NETYPE',
-                  'maxLength' => 36,
+                'Contact' => (object) [
+                    'fields' => (object) [
+                        'name' => (object) [
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ],
+                        'type' => (object) [
+                            'type' => 'NEW',
+                            'maxLength' => 1000000,
+                        ],
+                        'size' => (object) [
+                            'type' => 'enum',
+                            'value' => ['B1', 'B2', 'B3'],
+                        ],
+                        'merged' => (object) [
+                            'type' => 'enum',
+                            'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
+                        ],
+                    ],
                 ],
-                'size' => (object) [
-                  'type' => 'enum',
-                  'value' => ['B1', 'B2', 'B3'],
-                ],
-                'sizeInt' => (object) [
-                  'type' => 'enum',
-                  'value' => [5, 8, 9],
-                ],
-                'merged' => (object) [
-                  'type' => 'enum',
-                  'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
-                ],
-                'mergedInt' => (object) [
-                  'type' => 'enum',
-                  'value' => [0, 1, 2, 5, 8, 9],
-                ],
-              ],
-              'list' => (object) [
-                'test' => 'Here',
-              ],
             ],
-            'Contact' => (object) [
-              'fields' => (object) [
-                'name' => (object) [
-                  'type' => 'varchar',
-                  'required' => false,
-                  'NEW' => 'NEWVAL',
+            'MyCustom' => (object) [
+                'fields' => (object) [
+                    'name' => (object) [
+                        'type' => 'varchar',
+                        'required' => true,
+                    ],
                 ],
-                'type' => (object) [
-                  'type' => 'NEW',
-                  'maxLength' => 1000000,
-                ],
-                'size' => (object) [
-                  'type' => 'enum',
-                  'value' => ['B1', 'B2', 'B3'],
-                ],
-                'merged' => (object) [
-                  'type' => 'enum',
-                  'value' => ['v1', 'v2', 'v3', 'B1', 'B2', 'B3'],
-                ],
-              ],
             ],
-          ],
-          'MyCustom' => (object) [
-            'fields' => (object) [
-              'name' => (object) [
-                'type' => 'varchar',
-                'required' => true,
-              ],
-            ],
-          ],
         ];
 
         $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
@@ -786,76 +786,76 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeWithBool()
     {
         $data1 = (object) [
-          'fields' => (object) [
-            'accountId' => (object) [
-              'type' => 'varchar',
-              'where' => (object) [
-                '=' => 'contact.id IN ({value})',
-              ],
-              'len' => 255,
+            'fields' => (object) [
+                'accountId' => (object) [
+                    'type' => 'varchar',
+                    'where' => (object) [
+                        '=' => 'contact.id IN ({value})',
+                    ],
+                    'len' => 255,
+                ],
+                'deleted' => (object) [
+                    'type' => 'bool',
+                    'default' => false,
+                    'trueValue' => true,
+                ],
             ],
-            'deleted' => (object) [
-              'type' => 'bool',
-              'default' => false,
-              'trueValue' => true,
+            'relations' =>
+            (object) [
             ],
-          ],
-          'relations' =>
-          (object) [
-          ],
         ];
 
         $data2 = (object) [
-          'fields' => (object) [
-            'accountName' => (object) [
-              'type' => 'foreign',
-              'relation' => 'account',
-              'foreign' => 'name',
+            'fields' => (object) [
+                'accountName' => (object) [
+                    'type' => 'foreign',
+                    'relation' => 'account',
+                    'foreign' => 'name',
+                ],
+                'accountId' => (object) [
+                    'type' => 'foreignId',
+                    'index' => true,
+                ],
             ],
-            'accountId' => (object) [
-              'type' => 'foreignId',
-              'index' => true,
+            'relations' => (object) [
+                'createdBy' => (object) [
+                    'type' => 'belongsTo',
+                    'entity' => 'User',
+                    'key' => 'createdById',
+                    'foreignKey' => 'id',
+                ],
             ],
-          ],
-          'relations' => (object) [
-            'createdBy' => (object) [
-              'type' => 'belongsTo',
-              'entity' => 'User',
-              'key' => 'createdById',
-              'foreignKey' => 'id',
-            ],
-          ],
         ];
 
         $expectedResultData = (object) [
-          'fields' => (object) [
-            'accountName' => (object) [
-              'type' => 'foreign',
-              'relation' => 'account',
-              'foreign' => 'name',
+            'fields' => (object) [
+                'accountName' => (object) [
+                    'type' => 'foreign',
+                    'relation' => 'account',
+                    'foreign' => 'name',
+                ],
+                'accountId' => (object) [
+                    'type' => 'foreignId',
+                    'index' => true,
+                    'where' => (object) [
+                        '=' => 'contact.id IN ({value})',
+                    ],
+                    'len' => 255,
+                ],
+                'deleted' => (object) [
+                    'type' => 'bool',
+                    'default' => false,
+                    'trueValue' => true,
+                ],
             ],
-            'accountId' => (object) [
-              'type' => 'foreignId',
-              'index' => true,
-              'where' => (object) [
-                '=' => 'contact.id IN ({value})',
-              ],
-              'len' => 255,
+            'relations' => (object) [
+                'createdBy' => (object) [
+                    'type' => 'belongsTo',
+                    'entity' => 'User',
+                    'key' => 'createdById',
+                    'foreignKey' => 'id',
+                ],
             ],
-            'deleted' => (object) [
-              'type' => 'bool',
-              'default' => false,
-              'trueValue' => true,
-            ],
-          ],
-          'relations' => (object) [
-            'createdBy' => (object) [
-              'type' => 'belongsTo',
-              'entity' => 'User',
-              'key' => 'createdById',
-              'foreignKey' => 'id',
-            ],
-          ],
         ];
 
         $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
@@ -864,82 +864,82 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeWithFieldsDefs()
     {
         $data1 = (object) [
-          'fields' => (object) [
-            'aaa1' => (object) [
-              'type' => 'enum',
-              'required' => false,
-              'options' => [
-                0 => 'a1',
-                1 => 'a3',
-                2 => 'a3',
-              ],
-              'isCustom' => true,
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        0 => 'a1',
+                        1 => 'a3',
+                        2 => 'a3',
+                    ],
+                    'isCustom' => true,
+                ],
+                'hfghgfh' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'hfghfgh',
+                ],
+                'jghjghj' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'jghjghjhg',
+                ],
+                'gdfgdfg' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'gdfgdfg',
+                    'maxLength' => 70,
+                ],
             ],
-            'hfghgfh' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'hfghfgh',
-            ],
-            'jghjghj' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'jghjghjhg',
-            ],
-            'gdfgdfg' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'gdfgdfg',
-              'maxLength' => 70,
-            ],
-          ],
         ];
 
         $data2 = (object) [
-          'fields' => (object) [
-            'aaa1' => (object) [
-              'type' => 'enum',
-              'required' => false,
-              'options' => [
-                0 => 'a1',
-              ],
-              'isCustom' => true,
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        0 => 'a1',
+                    ],
+                    'isCustom' => true,
+                ],
             ],
-          ],
         ];
 
         $expectedResultData = (object) [
-          'fields' => (object) [
-            'aaa1' => (object) [
-              'type' => 'enum',
-              'required' => false,
-              'options' => [
-                0 => 'a1',
-              ],
-              'isCustom' => true,
+            'fields' => (object) [
+                'aaa1' => (object) [
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' => [
+                        0 => 'a1',
+                    ],
+                    'isCustom' => true,
+                ],
+                'hfghgfh' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'hfghfgh',
+                ],
+                'jghjghj' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'jghjghjhg',
+                ],
+                'gdfgdfg' => (object) [
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'gdfgdfg',
+                    'maxLength' => 70,
+                ],
             ],
-            'hfghgfh' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'hfghfgh',
-            ],
-            'jghjghj' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'jghjghjhg',
-            ],
-            'gdfgdfg' => (object) [
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'gdfgdfg',
-              'maxLength' => 70,
-            ],
-          ],
         ];
 
         $this->assertEquals($expectedResultData, DataUtil::merge($data1, $data2));
@@ -948,29 +948,29 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray()
     {
         $data1 = (object) [
-          'Call' => (object) [
-            'fields' => (object) [
-              'accountId' => (object) [
-                'type' => 'varchar',
-                'where' => (object) [
-                  '=' => 'contact.id IN ({value})',
+            'Call' => (object) [
+                'fields' => (object) [
+                    'accountId' => (object) [
+                        'type' => 'varchar',
+                        'where' => (object) [
+                            '=' => 'contact.id IN ({value})',
+                        ],
+                        'len' => 255,
+                    ],
+                    'deleted' => (object) [
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ],
                 ],
-                'len' => 255,
-              ],
-              'deleted' => (object) [
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ],
             ],
-          ],
         ];
 
         $data2 = (object) [
-          'Call' => (object) [
-            'fields' => (object) [
+            'Call' => (object) [
+                'fields' => (object) [
+                ],
             ],
-          ],
         ];
 
         $expectedResultData = $data1;
@@ -981,26 +981,26 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray2()
     {
         $data1 = (object) [
-          'Call' => (object) [
-            'fields' => (object) [
-              'accountId' => (object) [
-                'type' => 'varchar',
-                'where' => (object) [
-                  '=' => 'contact.id IN ({value})',
+            'Call' => (object) [
+                'fields' => (object) [
+                    'accountId' => (object) [
+                        'type' => 'varchar',
+                        'where' => (object) [
+                            '=' => 'contact.id IN ({value})',
+                        ],
+                        'len' => 255,
+                    ],
+                    'deleted' => (object) [
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ],
                 ],
-                'len' => 255,
-              ],
-              'deleted' => (object) [
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ],
             ],
-          ],
         ];
 
         $data2 = (object) [
-          'Call' => (object) [],
+            'Call' => (object) [],
         ];
 
         $expectedResultData = $data1;
@@ -1011,22 +1011,22 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray3()
     {
         $data1 = (object) [
-          'Call' => (object) [
-            'fields' => (object) [
-              'accountId' => (object) [
-                'type' => 'varchar',
-                'where' => (object) [
-                  '=' => 'contact.id IN ({value})',
+            'Call' => (object) [
+                'fields' => (object) [
+                    'accountId' => (object) [
+                        'type' => 'varchar',
+                        'where' => (object) [
+                            '=' => 'contact.id IN ({value})',
+                        ],
+                        'len' => 255,
+                    ],
+                    'deleted' => (object) [
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ],
                 ],
-                'len' => 255,
-              ],
-              'deleted' => (object) [
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ],
             ],
-          ],
         ];
 
         $data2 = (object) [

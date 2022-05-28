@@ -272,171 +272,171 @@ class MapTest extends \PHPUnit\Framework\TestCase
     private function getExpectedRawData(): StdClass
     {
         return (object) [
-          'table' => (object) [
-            'Test1' => (object) [
-              'read' => 'team',
-              'stream' => 'no',
-              'edit' => 'no',
-              'delete' => 'no',
-              'create' => 'yes'
+            'table' => (object) [
+                'Test1' => (object) [
+                    'read' => 'team',
+                    'stream' => 'no',
+                    'edit' => 'no',
+                    'delete' => 'no',
+                    'create' => 'yes'
+                ],
+                'Test2' => (object) [
+                    'read' => 'team',
+                    'stream' => 'no',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                    'create' => 'yes'
+                ],
+                'Test3' => false,
+                'Test4' => true,
+                'Test5' => true
             ],
-            'Test2' => (object) [
-              'read' => 'team',
-              'stream' => 'no',
-              'edit' => 'own',
-              'delete' => 'no',
-              'create' => 'yes'
+            'fieldTable' => (object) [
+                'Test1' => (object) [
+                    'field1' => (object) [
+                        'read' => 'yes',
+                        'edit' => 'no'
+                    ],
+                    'field2' => (object) [
+                        'read' => 'no',
+                        'edit' => 'yes'
+                    ],
+                    'field3' => (object) [
+                        'read' => 'no',
+                        'edit' => 'no'
+                    ]
+                ],
+                'Test2' => (object) [
+                    'field1' => (object) [
+                        'read' => 'no',
+                        'edit' => 'no'
+                    ]
+                ],
+                'Test3' => (object) [],
+                'Test4' => (object) []
             ],
-            'Test3' => false,
-            'Test4' => true,
-            'Test5' => true
-          ],
-          'fieldTable' => (object) [
-            'Test1' => (object) [
-              'field1' => (object) [
-                'read' => 'yes',
-                'edit' => 'no'
-              ],
-              'field2' => (object) [
-                'read' => 'no',
-                'edit' => 'yes'
-              ],
-              'field3' => (object) [
-                'read' => 'no',
-                'edit' => 'no'
-              ]
-            ],
-            'Test2' => (object) [
-              'field1' => (object) [
-                'read' => 'no',
-                'edit' => 'no'
-              ]
-            ],
-            'Test3' => (object) [],
-            'Test4' => (object) []
-          ],
-          'assignmentPermission' => 'yes',
-          'portalPermission' => 'no',
-          'fieldTableQuickAccess' => (object) [
-            'Test1' => (object) [
-              'attributes' => (object) [
-                'read' => (object) [
-                  'yes' => [
-                    'attr1a',
-                    'attr1b'
-                  ],
-                  'no' => [
-                    'field2',
-                    'field3'
-                  ]
+            'assignmentPermission' => 'yes',
+            'portalPermission' => 'no',
+            'fieldTableQuickAccess' => (object) [
+                'Test1' => (object) [
+                    'attributes' => (object) [
+                        'read' => (object) [
+                            'yes' => [
+                                'attr1a',
+                                'attr1b'
+                            ],
+                            'no' => [
+                                'field2',
+                                'field3'
+                            ]
+                        ],
+                        'edit' => (object) [
+                            'yes' => [
+                                'field2'
+                            ],
+                            'no' => [
+                                'attr1a',
+                                'attr1b',
+                                'field3'
+                            ]
+                        ]
+                    ],
+                    'fields' => (object) [
+                        'read' => (object) [
+                            'yes' => [
+                                'field1'
+                            ],
+                            'no' => [
+                                'field2',
+                                'field3'
+                            ]
+                        ],
+                        'edit' => (object) [
+                            'yes' => [
+                                'field2'
+                            ],
+                            'no' => [
+                                'field1',
+                                'field3'
+                            ]
+                        ]
+                    ]
                 ],
-                'edit' => (object) [
-                  'yes' => [
-                    'field2'
-                  ],
-                  'no' => [
-                    'attr1a',
-                    'attr1b',
-                    'field3'
-                  ]
-                ]
-              ],
-              'fields' => (object) [
-                'read' => (object) [
-                  'yes' => [
-                    'field1'
-                  ],
-                  'no' => [
-                    'field2',
-                    'field3'
-                  ]
+                'Test2' => (object) [
+                    'attributes' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => [
+                                'field1'
+                            ]
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => [
+                                'field1'
+                            ]
+                        ]
+                    ],
+                    'fields' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => [
+                                'field1'
+                            ]
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => [
+                                'field1'
+                            ]
+                        ]
+                    ]
                 ],
-                'edit' => (object) [
-                  'yes' => [
-                   'field2'
-                  ],
-                  'no' => [
-                    'field1',
-                    'field3'
-                  ]
-                ]
-              ]
-            ],
-            'Test2' => (object) [
-              'attributes' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => [
-                    'field1'
-                  ]
+                'Test3' => (object) [
+                    'attributes' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ]
+                    ],
+                    'fields' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ]
+                    ]
                 ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => [
-                    'field1'
-                  ]
+                'Test4' => (object) [
+                    'attributes' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ]
+                    ],
+                    'fields' => (object) [
+                        'read' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ],
+                        'edit' => (object) [
+                            'yes' => [],
+                            'no' => []
+                        ]
+                    ]
                 ]
-              ],
-              'fields' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => [
-                    'field1'
-                  ]
-                ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => [
-                    'field1'
-                  ]
-                ]
-              ]
-            ],
-            'Test3' => (object) [
-              'attributes' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ]
-              ],
-              'fields' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ]
-              ]
-            ],
-            'Test4' => (object) [
-              'attributes' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ]
-              ],
-              'fields' => (object) [
-                'read' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ],
-                'edit' => (object) [
-                  'yes' => [],
-                  'no' => []
-                ]
-              ]
             ]
-          ]
         ];
     }
 }

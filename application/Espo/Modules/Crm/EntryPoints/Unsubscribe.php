@@ -167,9 +167,9 @@ class Unsubscribe implements EntryPoint
 
                         if ($optedOutResult) {
                             $hookData = [
-                               'link' => $link,
-                               'targetId' => $targetId,
-                               'targetType' => $targetType,
+                                'link' => $link,
+                                'targetId' => $targetId,
+                                'targetType' => $targetType,
                             ];
 
                             $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);

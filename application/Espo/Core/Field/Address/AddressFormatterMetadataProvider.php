@@ -43,7 +43,7 @@ class AddressFormatterMetadataProvider
     public function getFormatterClassName(int $format): ?string
     {
         return $this->metadata->get([
-           'app', 'addressFormats', strval($format), 'formatterClassName',
+            'app', 'addressFormats', strval($format), 'formatterClassName',
         ]);
     }
 }

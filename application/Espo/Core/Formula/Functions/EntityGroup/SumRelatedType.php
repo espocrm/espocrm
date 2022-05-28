@@ -108,7 +108,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
                     $entity->getEntityType(),
                     $foreignLinkAlias,
                     [
-                         $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
+                        $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
                         'deleted' => false,
                         $foreignLinkAlias . '.id!=' => null,
                     ]

@@ -109,10 +109,10 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($selectBuilder));
 
         $this->repositoryMap = [
-             ['Email', $emailRepository],
-             ['Account', $emptyRepository],
-             ['Contact', $emptyRepository],
-             ['Lead', $emptyRepository],
+            ['Email', $emailRepository],
+            ['Account', $emptyRepository],
+            ['Contact', $emptyRepository],
+            ['Lead', $emptyRepository],
         ];
 
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');

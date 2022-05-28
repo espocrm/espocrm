@@ -72,7 +72,7 @@ class MassEmail extends Record
             ->delete()
             ->from('EmailQueueItem')
             ->where([
-                 'massEmailId' => $massEmail->getId(),
+                'massEmailId' => $massEmail->getId(),
             ])
             ->build();
 

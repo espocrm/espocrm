@@ -270,7 +270,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                     'ForeignPath',
                     'foreignPath',
                     [
-                         "foreignPath.descendorId:" => "testInCategoryFilterMiddle.foreignId",
+                        "foreignPath.descendorId:" => "testInCategoryFilterMiddle.foreignId",
                     ]
                 ]
             );

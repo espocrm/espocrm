@@ -321,7 +321,7 @@ class Phone extends Base
                                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],
                             ]
                         ],
-                       'order' => [
+                        'order' => [
                             'order' => [
                                 ['phoneNumbers.optOut', '{direction}'],
                             ],

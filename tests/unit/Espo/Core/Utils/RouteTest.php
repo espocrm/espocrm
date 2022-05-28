@@ -102,74 +102,74 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = array (
-          array (
-            'route' => '/Custom/{scope}/{id}/{name}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Custom',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'route' => '/Custom/{scope}/{id}/{name}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Custom',
+                    'action' => 'list',
+                    'scope' => ':scope',
+                    'id' => ':id',
+                    'name' => ':name',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Activities/{scope}/{id}/{name}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Activities',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'route' => '/Activities/{scope}/{id}/{name}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Activities',
+                    'action' => 'list',
+                    'scope' => ':scope',
+                    'id' => ':id',
+                    'name' => ':name',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Activities',
+                    'action' => 'listCalendarEvents',
+                ),
             ),
-          ),
-          array (
-            'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'App',
-              'action' => 'user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'App',
+                    'action' => 'user',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Metadata',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'post',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'post',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
         );
 
         $expectedItemList = array_map(
@@ -199,71 +199,71 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = array (
-          array (
-            'route' => '/Activities/{scope}/{id}/{name}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Activities',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'route' => '/Activities/{scope}/{id}/{name}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Activities',
+                    'action' => 'list',
+                    'scope' => ':scope',
+                    'id' => ':id',
+                    'name' => ':name',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Activities',
+                    'action' => 'listCalendarEvents',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Test',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Test',
-              'action' => 'listCalendarEvents',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Test',
+                    'action' => 'listCalendarEvents',
+                ),
             ),
-          ),
-          array (
-            'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'App',
-              'action' => 'user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'App',
+                    'action' => 'user',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Metadata',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'post',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'post',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
         );
 
         $expectedItemList = array_map(
@@ -293,71 +293,71 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = array (
-          array (
-            'route' => '/Activities/{scope}/{id}/{name}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Test',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'route' => '/Activities/{scope}/{id}/{name}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Test',
+                    'action' => 'list',
+                    'scope' => ':scope',
+                    'id' => ':id',
+                    'name' => ':name',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Activities',
+                    'action' => 'listCalendarEvents',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Test',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Test',
-              'action' => 'listCalendarEvents',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Test',
+                    'action' => 'listCalendarEvents',
+                ),
             ),
-          ),
-          array (
-            'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'App',
-              'action' => 'user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'App',
+                    'action' => 'user',
+                ),
             ),
-          ),
-          array (
-            'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => 'Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => 'Metadata',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'post',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'post',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
-          array (
-            'route' => '/{controller}/action/{action}',
-            'method' => 'get',
-            'params' =>
             array (
-              'controller' => ':controller',
-              'action' => ':action',
+                'route' => '/{controller}/action/{action}',
+                'method' => 'get',
+                'params' =>
+                array (
+                    'controller' => ':controller',
+                    'action' => ':action',
+                ),
             ),
-          ),
         );
 
         $expectedItemList = array_map(

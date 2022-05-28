@@ -106,8 +106,8 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             ->method('create')
               ->will(
                   $this->returnValueMap([
-                    [InboundEmailService::class, $inboundEmailService],
-                ])
+                      [InboundEmailService::class, $inboundEmailService],
+                  ])
               );
     }
 

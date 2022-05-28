@@ -398,9 +398,9 @@ class TargetList extends Record implements
             ->relateById($targetId, ['optedOut' => true]);
 
         $hookData = [
-           'link' => $link,
-           'targetId' => $targetId,
-           'targetType' => $targetType,
+            'link' => $link,
+            'targetId' => $targetId,
+            'targetType' => $targetType,
         ];
 
         $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
@@ -434,9 +434,9 @@ class TargetList extends Record implements
             ->updateColumnsById($targetId, ['optedOut' => false]);
 
         $hookData = [
-           'link' => $link,
-           'targetId' => $targetId,
-           'targetType' => $targetType,
+            'link' => $link,
+            'targetId' => $targetId,
+            'targetType' => $targetType,
         ];
 
         $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);

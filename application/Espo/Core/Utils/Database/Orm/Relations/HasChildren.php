@@ -46,7 +46,7 @@ class HasChildren extends Base
         return [
             $entityName => [
                 'fields' => [
-                       $linkName . 'Ids' => [
+                    $linkName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,

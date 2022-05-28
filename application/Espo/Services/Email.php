@@ -1055,9 +1055,9 @@ class Email extends Record implements
 
             $itemSelectBuilder->withWhere(
                 WhereItem::fromRaw([
-                   'type' => 'inFolder',
-                   'attribute' => 'folderId',
-                   'value' => $folderId,
+                    'type' => 'inFolder',
+                    'attribute' => 'folderId',
+                    'value' => $folderId,
                 ])
             );
 

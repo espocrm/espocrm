@@ -110,12 +110,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->expectException(Forbidden::class);
 
         $newUser = $this->createUser(array(
-                'userName' => 'tester',
-                'lastName' => 'tester',
-                'portalsIds' => array(
-                    'testPortalId'
-                )
-            ), array(
+            'userName' => 'tester',
+            'lastName' => 'tester',
+            'portalsIds' => array(
+                'testPortalId'
+            )
+        ), array(
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',

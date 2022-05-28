@@ -36,10 +36,10 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testParams()
     {
         $raw = [
-           'argumentList' => ['a1', 'a2'],
-           'flagList' => ['f1', 'f2', 'f3'],
-           'options' => [
-               'optionOne' => 'test',
+            'argumentList' => ['a1', 'a2'],
+            'flagList' => ['f1', 'f2', 'f3'],
+            'options' => [
+                'optionOne' => 'test',
             ],
         ];
 

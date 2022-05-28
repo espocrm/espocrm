@@ -73,7 +73,7 @@ class CommandManagerTest extends \PHPUnit\Framework\TestCase
 
         $expectedParams = new Params(
             [
-               'optionOne' => 'test',
+                'optionOne' => 'test',
             ],
             ['flag', 'flagA', 'f'],
             ['a1', 'a2']

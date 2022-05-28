@@ -246,23 +246,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testGetSingleFileListAll()
     {
         $input = array (
-          'custom' =>
-          array (
-            'Espo' =>
+            'custom' =>
             array (
-              'Custom' =>
-              array (
-                'Modules' =>
+                'Espo' =>
                 array (
-                  'ExtensionTest' =>
-                  array (
-                    0 => 'File.json',
-                    1 => 'File.php',
-                  ),
+                    'Custom' =>
+                    array (
+                        'Modules' =>
+                        array (
+                            'ExtensionTest' =>
+                            array (
+                                0 => 'File.json',
+                                1 => 'File.php',
+                            ),
+                        ),
+                    ),
                 ),
-              ),
             ),
-          ),
         );
 
         $result = array (
@@ -282,23 +282,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testGetSingeFileListOnlyFiles()
     {
         $input = array (
-          'custom' =>
-          array (
-            'Espo' =>
+            'custom' =>
             array (
-              'Custom' =>
-              array (
-                'Modules' =>
+                'Espo' =>
                 array (
-                  'ExtensionTest' =>
-                  array (
-                    0 => 'File.json',
-                    1 => 'File.php',
-                  ),
+                    'Custom' =>
+                    array (
+                        'Modules' =>
+                        array (
+                            'ExtensionTest' =>
+                            array (
+                                0 => 'File.json',
+                                1 => 'File.php',
+                            ),
+                        ),
+                    ),
                 ),
-              ),
             ),
-          ),
         );
 
         $result = array (
@@ -313,23 +313,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testGetSingeFileListOnlyDirs()
     {
         $input = array (
-          'custom' =>
-          array (
-            'Espo' =>
+            'custom' =>
             array (
-              'Custom' =>
-              array (
-                'Modules' =>
+                'Espo' =>
                 array (
-                  'ExtensionTest' =>
-                  array (
-                    0 => 'File.json',
-                    1 => 'File.php',
-                  ),
+                    'Custom' =>
+                    array (
+                        'Modules' =>
+                        array (
+                            'ExtensionTest' =>
+                            array (
+                                0 => 'File.json',
+                                1 => 'File.php',
+                            ),
+                        ),
+                    ),
                 ),
-              ),
             ),
-          ),
         );
 
         $result = array (
@@ -347,7 +347,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function fileListSets()
     {
         return array(
-          array( 'Set1', array(
+            array( 'Set1', array(
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -356,9 +356,9 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Modules/TestModule/SubFolder',
                 'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
             )
-          ),
+            ),
 
-          array( 'Set2', array(
+            array( 'Set2', array(
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -367,13 +367,13 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Resources/metadata/entityDefs',
                 'custom/Espo/Custom/Resources/metadata/entityDefs/Account.json',
             )
-          ),
+            ),
 
-          array( 'Set3', array(
+            array( 'Set3', array(
                 'custom',
                 'custom/test.file',
             )
-          ),
+            ),
         );
     }
 
@@ -403,11 +403,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function existsPathSet()
     {
         return array(
-          array( 'application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
-          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-          array( 'application/NoEspo/Core/Application.php', 'application'),
-          array( 'notRealPath/Espo/Core/Application.php', '.'),
+            array( 'application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
+            array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
+            array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
+            array( 'application/NoEspo/Core/Application.php', 'application'),
+            array( 'notRealPath/Espo/Core/Application.php', '.'),
         );
     }
 

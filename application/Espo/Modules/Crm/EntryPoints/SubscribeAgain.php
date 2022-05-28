@@ -162,9 +162,9 @@ class SubscribeAgain implements EntryPoint
 
                         if ($optedInResult) {
                             $hookData = [
-                               'link' => $link,
-                               'targetId' => $targetId,
-                               'targetType' => $targetType,
+                                'link' => $link,
+                                'targetId' => $targetId,
+                                'targetType' => $targetType,
                             ];
 
                             $this->hookManager

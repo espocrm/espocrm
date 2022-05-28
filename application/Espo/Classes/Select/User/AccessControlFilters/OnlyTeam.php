@@ -66,7 +66,7 @@ class OnlyTeam implements Filter
             ->distinct()
             ->leftJoin('teams', 'teamsAccess')
             ->where([
-               'OR' => $orGroup,
+                'OR' => $orGroup,
             ]);
     }
 }

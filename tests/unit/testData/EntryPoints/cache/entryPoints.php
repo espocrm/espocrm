@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
+    'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
 );
 
 ?>

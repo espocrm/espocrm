@@ -68,10 +68,10 @@ class Queue
             ->delete()
             ->from(EmailQueueItem::ENTITY_TYPE)
             ->where([
-                 'massEmailId' => $massEmail->getId(),
-                 'status' => [
-                     EmailQueueItem::STATUS_PENDING,
-                     EmailQueueItem::STATUS_FAILED,
+                'massEmailId' => $massEmail->getId(),
+                'status' => [
+                    EmailQueueItem::STATUS_PENDING,
+                    EmailQueueItem::STATUS_FAILED,
                 ],
             ])
             ->build();

@@ -92,15 +92,15 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     public function testSet()
     {
         $data = array (
-          'fields' =>
-          array (
-            'name' =>
+            'fields' =>
             array (
-              'required' => false,
-              'maxLength' => 150,
-              'view' => 'Views.Test.Custom',
+                'name' =>
+                array (
+                    'required' => false,
+                    'maxLength' => 150,
+                    'view' => 'Views.Test.Custom',
+                ),
             ),
-          ),
         );
 
         $this->object->set('entityDefs', 'Attachment', $data);
@@ -116,13 +116,13 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
         $data = array (
-          'fields' =>
-          array (
-            'name' =>
+            'fields' =>
             array (
-              'maxLength' => 200,
+                'name' =>
+                array (
+                    'maxLength' => 200,
+                ),
             ),
-          ),
         );
 
         $this->object->set('entityDefs', 'Attachment', $data);
@@ -132,15 +132,15 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $result = array(
             'entityDefs' => array(
                 'Attachment' => array (
-                  'fields' =>
-                  array (
-                    'name' =>
+                    'fields' =>
                     array (
-                      'required' => false,
-                      'maxLength' => 200,
-                      'view' => 'Views.Test.Custom',
+                        'name' =>
+                        array (
+                            'required' => false,
+                            'maxLength' => 200,
+                            'view' => 'Views.Test.Custom',
+                        ),
                     ),
-                  ),
                 ),
             ),
         );
@@ -206,13 +206,13 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
 
         $data = array (
-          'fields' =>
-          array (
-            'name' =>
+            'fields' =>
             array (
-              'type' => 'enum',
+                'name' =>
+                array (
+                    'type' => 'enum',
+                ),
             ),
-          ),
         );
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals('enum', $this->object->get('entityDefs.Attachment.fields.name.type'));
@@ -227,13 +227,13 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $data = array (
-          'fields' =>
-          array (
-            'name' =>
+            'fields' =>
             array (
-              'required' => true,
+                'name' =>
+                array (
+                    'required' => true,
+                ),
             ),
-          ),
         );
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals(true, $this->object->get('entityDefs.Attachment.fields.name.required'));
@@ -256,12 +256,12 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(is_object($customData));
 
         $data = (object) [
-          'fields' => (object) [
-            'status' => (object) [
-              "type" => "enum",
-              "options" => ["__APPEND__", "Test1", "Test2"],
+            'fields' => (object) [
+                'status' => (object) [
+                    "type" => "enum",
+                    "options" => ["__APPEND__", "Test1", "Test2"],
+                ],
             ],
-          ],
         ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $data);
@@ -274,12 +274,12 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     public function testSaveCustom1()
     {
         $data = (object) [
-          'fields' => (object) [
-            'status' => (object) [
-              "type" => "enum",
-              "options" => ["__APPEND__", "Test1", "Test2"],
+            'fields' => (object) [
+                'status' => (object) [
+                    "type" => "enum",
+                    "options" => ["__APPEND__", "Test1", "Test2"],
+                ],
             ],
-          ],
         ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $data);
@@ -297,12 +297,12 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
     public function testSaveCustom2()
     {
         $initData = (object) [
-          'fields' => (object) [
-            'status' => (object) [
-              "type" => "enum",
-              "options" => ["__APPEND__", "Test1", "Test2"],
+            'fields' => (object) [
+                'status' => (object) [
+                    "type" => "enum",
+                    "options" => ["__APPEND__", "Test1", "Test2"],
+                ],
             ],
-          ],
         ];
 
         $this->object->saveCustom('entityDefs', 'Lead', $initData);
@@ -320,11 +320,11 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $expectedData = (object) [
-          'fields' => (object) [
-            'status' => (object) [
-              "options" => ["__APPEND__", "Test1"],
+            'fields' => (object) [
+                'status' => (object) [
+                    "options" => ["__APPEND__", "Test1"],
+                ],
             ],
-          ],
         ];
 
         $this->assertEquals($expectedData, $savedData);

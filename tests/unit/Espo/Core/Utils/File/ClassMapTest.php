@@ -143,7 +143,7 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
-       ];
+        ];
 
         $this->assertEquals(
             $result,

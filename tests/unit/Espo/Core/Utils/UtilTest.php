@@ -102,34 +102,34 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMerge2()
     {
         $d1 = array(
-          'hello' => 'world',
-          'man' => array(
-            'test' => [
-              0 => ['name' => 'test 1'],
-              1 => ['name' => 'test 2']
-            ]
-          )
+            'hello' => 'world',
+            'man' => array(
+                'test' => [
+                    0 => ['name' => 'test 1'],
+                    1 => ['name' => 'test 2']
+                ]
+            )
         );
         $d2 = array(
-          'test' => []
+            'test' => []
         );
         $d3 = array(
-          'man' => array(
-            'test' => [
-              0 => '__APPEND__',
-              1 => ['name' => 'test 3']
-            ]
-          )
+            'man' => array(
+                'test' => [
+                    0 => '__APPEND__',
+                    1 => ['name' => 'test 3']
+                ]
+            )
         );
         $expected = array(
             'test' => [],
             'hello' => 'world',
             'man' => array(
-              'test' => [
-                0 => ['name' => 'test 1'],
-                1 => ['name' => 'test 2'],
-                2 => ['name' => 'test 3']
-              ]
+                'test' => [
+                    0 => ['name' => 'test 1'],
+                    1 => ['name' => 'test 2'],
+                    2 => ['name' => 'test 3']
+                ]
             )
         );
 
@@ -165,21 +165,21 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $array1 = array(
             'datetime' =>
               array (
-                'dateFormat' => 'Y-m-d',
-                'timeFormat' => 'H:i:s',
+                  'dateFormat' => 'Y-m-d',
+                  'timeFormat' => 'H:i:s',
               ),
         );
         $array2Main = array(
             'datetime' =>
               array (
-                'dateFormat' => 'MyDateFormat',
+                  'dateFormat' => 'MyDateFormat',
               ),
         );
         $result = array(
             'datetime' =>
               array (
-                'dateFormat' => 'MyDateFormat',
-                'timeFormat' => 'H:i:s',
+                  'dateFormat' => 'MyDateFormat',
+                  'timeFormat' => 'H:i:s',
               ),
         );
         $this->assertEquals($result, Util::merge($array1, $array2Main));
@@ -188,27 +188,27 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $array1 = array(
             'database' =>
               array (
-                'driver' => 'pdo_mysql',
-                'host' => 'localhost',
-                'dbname' => 'espocrm',
-                'user' => 'root',
-                'password' => '',
+                  'driver' => 'pdo_mysql',
+                  'host' => 'localhost',
+                  'dbname' => 'espocrm',
+                  'user' => 'root',
+                  'password' => '',
               ),
         );
         $array2Main = array(
             'database' =>
               array (
-                'password' => 'MyPass',
+                  'password' => 'MyPass',
               ),
         );
         $result = array(
             'database' =>
               array (
-                'driver' => 'pdo_mysql',
-                'host' => 'localhost',
-                'dbname' => 'espocrm',
-                'user' => 'root',
-                'password' => 'MyPass',
+                  'driver' => 'pdo_mysql',
+                  'host' => 'localhost',
+                  'dbname' => 'espocrm',
+                  'user' => 'root',
+                  'password' => 'MyPass',
               ),
         );
         $this->assertEquals($result, Util::merge($array1, $array2Main));
@@ -219,278 +219,278 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $currentArray = array(
             'entityDefs' =>
               array (
-                'Attachment' =>
-                array (
-                  'fields' =>
+                  'Attachment' =>
                   array (
-                    'name' =>
-                    array (
-                      'type' => 'varchar',
-                      'required' => true,
-                    ),
-                    'type' =>
-                    array (
-                      'type' => 'varchar',
-                      'maxLength' => 36,
-                    ),
-                    'size' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ),
-                    'sizeInt' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => [0, 1, 2],
-                    ),
-                    'merged' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ),
-                    'mergedInt' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => [0, 1, 2],
-                    ),
+                      'fields' =>
+                      array (
+                          'name' =>
+                          array (
+                              'type' => 'varchar',
+                              'required' => true,
+                          ),
+                          'type' =>
+                          array (
+                              'type' => 'varchar',
+                              'maxLength' => 36,
+                          ),
+                          'size' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["v1", "v2", "v3"],
+                          ),
+                          'sizeInt' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => [0, 1, 2],
+                          ),
+                          'merged' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["v1", "v2", "v3"],
+                          ),
+                          'mergedInt' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => [0, 1, 2],
+                          ),
+                      ),
                   ),
-                ),
-                'Contact' =>
-                array (
-                  'fields' =>
+                  'Contact' =>
                   array (
-                    'name' =>
-                    array (
-                      'type' => 'varchar',
-                      'required' => true,
-                    ),
-                    'type' =>
-                    array (
-                      'type' => 'varchar',
-                      'maxLength' => 36,
-                    ),
-                    'size' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ),
-                    'merged' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["v1", "v2", "v3"],
-                    ),
+                      'fields' =>
+                      array (
+                          'name' =>
+                          array (
+                              'type' => 'varchar',
+                              'required' => true,
+                          ),
+                          'type' =>
+                          array (
+                              'type' => 'varchar',
+                              'maxLength' => 36,
+                          ),
+                          'size' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["v1", "v2", "v3"],
+                          ),
+                          'merged' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["v1", "v2", "v3"],
+                          ),
+                      ),
                   ),
-                ),
-            ),
-        'MyCustom' =>
-            array (
-              'fields' =>
-              array (
-                'name' =>
-                array (
-                  'type' => 'varchar',
-                  'required' => true,
-                ),
               ),
-            ),
+            'MyCustom' =>
+                array (
+                    'fields' =>
+                    array (
+                        'name' =>
+                        array (
+                            'type' => 'varchar',
+                            'required' => true,
+                        ),
+                    ),
+                ),
         );
 
         $newArray = array(
             'entityDefs' =>
               array (
-                'Attachment' =>
-                array (
-                  'fields' =>
+                  'Attachment' =>
                   array (
-                    'name' =>
-                    array (
-                      'type' => 'varchar',
-                      'required' => false,
-                      'NEW' => 'NEWVAL',
-                    ),
-                    'type' =>
-                    array (
-                      'type' => 'NETYPE',
-                    ),
-                    'size' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["B1", "B2", "B3"],
-                    ),
-                    'sizeInt' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => [5, 8, 9],
-                    ),
-                    'merged' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["__APPEND__", "B1", "B2", "B3"],
-                    ),
-                    'mergedInt' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ['__APPEND__', 5, 8, 9],
-                    ),
+                      'fields' =>
+                      array (
+                          'name' =>
+                          array (
+                              'type' => 'varchar',
+                              'required' => false,
+                              'NEW' => 'NEWVAL',
+                          ),
+                          'type' =>
+                          array (
+                              'type' => 'NETYPE',
+                          ),
+                          'size' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["B1", "B2", "B3"],
+                          ),
+                          'sizeInt' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => [5, 8, 9],
+                          ),
+                          'merged' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["__APPEND__", "B1", "B2", "B3"],
+                          ),
+                          'mergedInt' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ['__APPEND__', 5, 8, 9],
+                          ),
+                      ),
+                      'list' =>
+                      array (
+                          'test' => 'Here',
+                      ),
                   ),
-                  'list' =>
+                  'Contact' =>
                   array (
-                    'test' => 'Here',
+                      'fields' =>
+                      array (
+                          'name' =>
+                          array (
+                              'type' => 'varchar',
+                              'required' => false,
+                              'NEW' => 'NEWVAL',
+                          ),
+                          'type' =>
+                          array (
+                              'type' => 'NEW',
+                              'maxLength' => 1000000,
+                          ),
+                          'size' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["B1", "B2", "B3"],
+                          ),
+                          'merged' =>
+                          array (
+                              'type' => 'enum',
+                              'value' => ["__APPEND__", "B1", "B2", "B3"],
+                          ),
+                      ),
                   ),
-                ),
-                'Contact' =>
-                array (
-                  'fields' =>
-                  array (
-                    'name' =>
-                    array (
-                      'type' => 'varchar',
-                      'required' => false,
-                      'NEW' => 'NEWVAL',
-                    ),
-                    'type' =>
-                    array (
-                      'type' => 'NEW',
-                      'maxLength' => 1000000,
-                    ),
-                    'size' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["B1", "B2", "B3"],
-                    ),
-                    'merged' =>
-                    array (
-                      'type' => 'enum',
-                      'value' => ["__APPEND__", "B1", "B2", "B3"],
-                    ),
-                  ),
-                ),
-            ),
+              ),
         );
 
 
         $result = array (
-          'entityDefs' =>
-          array (
-            'Attachment' =>
+            'entityDefs' =>
             array (
-              'fields' =>
-              array (
-                'name' =>
+                'Attachment' =>
                 array (
-                  'type' => 'varchar',
-                  'required' => false,
-                  'NEW' => 'NEWVAL',
+                    'fields' =>
+                    array (
+                        'name' =>
+                        array (
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ),
+                        'type' =>
+                        array (
+                            'type' => 'NETYPE',
+                            'maxLength' => 36,
+                        ),
+                        'size' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 'B1',
+                                1 => 'B2',
+                                2 => 'B3',
+                            ),
+                        ),
+                        'sizeInt' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 5,
+                                1 => 8,
+                                2 => 9,
+                            ),
+                        ),
+                        'merged' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 'v1',
+                                1 => 'v2',
+                                2 => 'v3',
+                                3 => 'B1',
+                                4 => 'B2',
+                                5 => 'B3',
+                            ),
+                        ),
+                        'mergedInt' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 0,
+                                1 => 1,
+                                2 => 2,
+                                3 => 5,
+                                4 => 8,
+                                5 => 9,
+                            ),
+                        ),
+                    ),
+                    'list' =>
+                    array (
+                        'test' => 'Here',
+                    ),
                 ),
-                'type' =>
+                'Contact' =>
                 array (
-                  'type' => 'NETYPE',
-                  'maxLength' => 36,
+                    'fields' =>
+                    array (
+                        'name' =>
+                        array (
+                            'type' => 'varchar',
+                            'required' => false,
+                            'NEW' => 'NEWVAL',
+                        ),
+                        'type' =>
+                        array (
+                            'type' => 'NEW',
+                            'maxLength' => 1000000,
+                        ),
+                        'size' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 'B1',
+                                1 => 'B2',
+                                2 => 'B3',
+                            ),
+                        ),
+                        'merged' =>
+                        array (
+                            'type' => 'enum',
+                            'value' =>
+                            array (
+                                0 => 'v1',
+                                1 => 'v2',
+                                2 => 'v3',
+                                3 => 'B1',
+                                4 => 'B2',
+                                5 => 'B3',
+                            ),
+                        ),
+                    ),
                 ),
-                'size' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 'B1',
-                    1 => 'B2',
-                    2 => 'B3',
-                  ),
-                ),
-                'sizeInt' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 5,
-                    1 => 8,
-                    2 => 9,
-                  ),
-                ),
-                'merged' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 'v1',
-                    1 => 'v2',
-                    2 => 'v3',
-                    3 => 'B1',
-                    4 => 'B2',
-                    5 => 'B3',
-                  ),
-                ),
-                'mergedInt' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 0,
-                    1 => 1,
-                    2 => 2,
-                    3 => 5,
-                    4 => 8,
-                    5 => 9,
-                  ),
-                ),
-              ),
-              'list' =>
-              array (
-                'test' => 'Here',
-              ),
             ),
-            'Contact' =>
+            'MyCustom' =>
             array (
-              'fields' =>
-              array (
-                'name' =>
+                'fields' =>
                 array (
-                  'type' => 'varchar',
-                  'required' => false,
-                  'NEW' => 'NEWVAL',
+                    'name' =>
+                    array (
+                        'type' => 'varchar',
+                        'required' => true,
+                    ),
                 ),
-                'type' =>
-                array (
-                  'type' => 'NEW',
-                  'maxLength' => 1000000,
-                ),
-                'size' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 'B1',
-                    1 => 'B2',
-                    2 => 'B3',
-                  ),
-                ),
-                'merged' =>
-                array (
-                  'type' => 'enum',
-                  'value' =>
-                  array (
-                    0 => 'v1',
-                    1 => 'v2',
-                    2 => 'v3',
-                    3 => 'B1',
-                    4 => 'B2',
-                    5 => 'B3',
-                  ),
-                ),
-              ),
             ),
-          ),
-          'MyCustom' =>
-          array (
-            'fields' =>
-            array (
-              'name' =>
-              array (
-                'type' => 'varchar',
-                'required' => true,
-              ),
-            ),
-          ),
         );
 
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
@@ -579,92 +579,92 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeWithBool()
     {
         $currentArray = array (
-          'fields' =>
-          array (
-            'accountId' =>
+            'fields' =>
             array (
-              'type' => 'varchar',
-              'where' =>
-              array (
-                '=' => 'contact.id IN ({value})',
-              ),
-              'len' => 255,
+                'accountId' =>
+                array (
+                    'type' => 'varchar',
+                    'where' =>
+                    array (
+                        '=' => 'contact.id IN ({value})',
+                    ),
+                    'len' => 255,
+                ),
+                'deleted' =>
+                array (
+                    'type' => 'bool',
+                    'default' => false,
+                    'trueValue' => true,
+                ),
             ),
-            'deleted' =>
+            'relations' =>
             array (
-              'type' => 'bool',
-              'default' => false,
-              'trueValue' => true,
             ),
-          ),
-          'relations' =>
-          array (
-          ),
         );
 
         $newArray = array (
-          'fields' =>
-          array (
-            'accountName' =>
+            'fields' =>
             array (
-              'type' => 'foreign',
-              'relation' => 'account',
-              'foreign' => 'name',
+                'accountName' =>
+                array (
+                    'type' => 'foreign',
+                    'relation' => 'account',
+                    'foreign' => 'name',
+                ),
+                'accountId' =>
+                array (
+                    'type' => 'foreignId',
+                    'index' => true,
+                ),
             ),
-            'accountId' =>
+            'relations' =>
             array (
-              'type' => 'foreignId',
-              'index' => true,
+                'createdBy' =>
+                array (
+                    'type' => 'belongsTo',
+                    'entity' => 'User',
+                    'key' => 'createdById',
+                    'foreignKey' => 'id',
+                ),
             ),
-          ),
-          'relations' =>
-          array (
-            'createdBy' =>
-            array (
-              'type' => 'belongsTo',
-              'entity' => 'User',
-              'key' => 'createdById',
-              'foreignKey' => 'id',
-            ),
-          ),
         );
 
         $result = array (
-          'fields' =>
-          array (
-            'accountName' =>
+            'fields' =>
             array (
-              'type' => 'foreign',
-              'relation' => 'account',
-              'foreign' => 'name',
+                'accountName' =>
+                array (
+                    'type' => 'foreign',
+                    'relation' => 'account',
+                    'foreign' => 'name',
+                ),
+                'accountId' =>
+                array (
+                    'type' => 'foreignId',
+                    'index' => true,
+                    'where' =>
+                    array (
+                        '=' => 'contact.id IN ({value})',
+                    ),
+                    'len' => 255,
+                ),
+                'deleted' =>
+                array (
+                    'type' => 'bool',
+                    'default' => false,
+                    'trueValue' => true,
+                ),
             ),
-            'accountId' =>
+            'relations' =>
             array (
-              'type' => 'foreignId',
-              'index' => true,
-              'where' =>
-              array (
-                '=' => 'contact.id IN ({value})',
-              ),
-              'len' => 255,
+                'createdBy' =>
+                array (
+                    'type' => 'belongsTo',
+                    'entity' => 'User',
+                    'key' => 'createdById',
+                    'foreignKey' => 'id',
+                ),
             ),
-            'deleted' =>
-            array (
-              'type' => 'bool',
-              'default' => false,
-              'trueValue' => true,
-            ),
-          ),
-          'relations' =>
-          array (
-            'createdBy' =>
-            array (
-              'type' => 'belongsTo',
-              'entity' => 'User',
-              'key' => 'createdById',
-              'foreignKey' => 'id',
-            ),
-          ),
         );
 
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
@@ -673,97 +673,97 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeWithFieldsDefs()
     {
         $currentArray = array (
-          'fields' =>
-          array (
-            'aaa1' =>
+            'fields' =>
             array (
-              'type' => 'enum',
-              'required' => false,
-              'options' =>
-              array (
-                0 => 'a1',
-                1 => 'a3',
-                2 => 'a3',
-              ),
-              'isCustom' => true,
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        0 => 'a1',
+                        1 => 'a3',
+                        2 => 'a3',
+                    ),
+                    'isCustom' => true,
+                ),
+                'hfghgfh' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'hfghfgh',
+                ),
+                'jghjghj' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'jghjghjhg',
+                ),
+                'gdfgdfg' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'gdfgdfg',
+                    'maxLength' => 70,
+                ),
             ),
-            'hfghgfh' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'hfghfgh',
-            ),
-            'jghjghj' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'jghjghjhg',
-            ),
-            'gdfgdfg' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'gdfgdfg',
-              'maxLength' => 70,
-            ),
-          ),
         );
 
         $newArray = array (
-          'fields' =>
-          array (
-            'aaa1' =>
+            'fields' =>
             array (
-              'type' => 'enum',
-              'required' => false,
-              'options' =>
-              array (
-                0 => 'a1',
-              ),
-              'isCustom' => true,
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        0 => 'a1',
+                    ),
+                    'isCustom' => true,
+                ),
             ),
-          ),
         );
 
         $result = array (
-          'fields' =>
-          array (
-            'aaa1' =>
+            'fields' =>
             array (
-              'type' => 'enum',
-              'required' => false,
-              'options' =>
-              array (
-                0 => 'a1',
-              ),
-              'isCustom' => true,
+                'aaa1' =>
+                array (
+                    'type' => 'enum',
+                    'required' => false,
+                    'options' =>
+                    array (
+                        0 => 'a1',
+                    ),
+                    'isCustom' => true,
+                ),
+                'hfghgfh' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'hfghfgh',
+                ),
+                'jghjghj' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'jghjghjhg',
+                ),
+                'gdfgdfg' =>
+                array (
+                    'type' => 'varchar',
+                    'required' => false,
+                    'isCustom' => true,
+                    'default' => 'gdfgdfg',
+                    'maxLength' => 70,
+                ),
             ),
-            'hfghgfh' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'hfghfgh',
-            ),
-            'jghjghj' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'jghjghjhg',
-            ),
-            'gdfgdfg' =>
-            array (
-              'type' => 'varchar',
-              'required' => false,
-              'isCustom' => true,
-              'default' => 'gdfgdfg',
-              'maxLength' => 70,
-            ),
-          ),
         );
 
         $this->assertEquals($result, Util::merge($currentArray, $newArray));
@@ -772,34 +772,34 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray()
     {
         $currentArray = array(
-          'Call' => array (
-            'fields' =>
-            array (
-              'accountId' =>
-              array (
-                'type' => 'varchar',
-                'where' =>
+            'Call' => array (
+                'fields' =>
                 array (
-                  '=' => 'contact.id IN ({value})',
+                    'accountId' =>
+                    array (
+                        'type' => 'varchar',
+                        'where' =>
+                        array (
+                            '=' => 'contact.id IN ({value})',
+                        ),
+                        'len' => 255,
+                    ),
+                    'deleted' =>
+                    array (
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ),
                 ),
-                'len' => 255,
-              ),
-              'deleted' =>
-              array (
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ),
             ),
-          ),
         );
 
         $newArray = array(
-          'Call' => array (
-            'fields' =>
-            array (
+            'Call' => array (
+                'fields' =>
+                array (
+                ),
             ),
-          ),
         );
 
         $result = $currentArray;
@@ -810,30 +810,30 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray2()
     {
         $currentArray = array(
-          'Call' => array (
-            'fields' =>
-            array (
-              'accountId' =>
-              array (
-                'type' => 'varchar',
-                'where' =>
+            'Call' => array (
+                'fields' =>
                 array (
-                  '=' => 'contact.id IN ({value})',
+                    'accountId' =>
+                    array (
+                        'type' => 'varchar',
+                        'where' =>
+                        array (
+                            '=' => 'contact.id IN ({value})',
+                        ),
+                        'len' => 255,
+                    ),
+                    'deleted' =>
+                    array (
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ),
                 ),
-                'len' => 255,
-              ),
-              'deleted' =>
-              array (
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ),
             ),
-          ),
         );
 
         $newArray = array(
-          'Call' => array (),
+            'Call' => array (),
         );
 
         $result = $currentArray;
@@ -844,26 +844,26 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testMergeEmptyArray3()
     {
         $currentArray = array(
-          'Call' => array (
-            'fields' =>
-            array (
-              'accountId' =>
-              array (
-                'type' => 'varchar',
-                'where' =>
+            'Call' => array (
+                'fields' =>
                 array (
-                  '=' => 'contact.id IN ({value})',
+                    'accountId' =>
+                    array (
+                        'type' => 'varchar',
+                        'where' =>
+                        array (
+                            '=' => 'contact.id IN ({value})',
+                        ),
+                        'len' => 255,
+                    ),
+                    'deleted' =>
+                    array (
+                        'type' => 'bool',
+                        'default' => false,
+                        'trueValue' => true,
+                    ),
                 ),
-                'len' => 255,
-              ),
-              'deleted' =>
-              array (
-                'type' => 'bool',
-                'default' => false,
-                'trueValue' => true,
-              ),
             ),
-          ),
         );
 
         $newArray = array(
@@ -1088,10 +1088,10 @@ class UtilTest extends \PHPUnit\Framework\TestCase
             'useCache' => true,
         );
         $testResult->sub = (object) array (
-                'subV' => '125',
+            'subV' => '125',
         );
         $testResult->sub->subO = (object) array (
-                'subOV' => '125',
+            'subOV' => '125',
         );
 
         $this->assertEquals($testResult, Util::arrayToObject($testArr));
@@ -1103,10 +1103,10 @@ class UtilTest extends \PHPUnit\Framework\TestCase
             'useCache' => true,
         );
         $testObj->sub = (object) array (
-                'subV' => '125',
+            'subV' => '125',
         );
         $testObj->sub->subO = (object) array (
-                'subOV' => '125',
+            'subOV' => '125',
         );
 
         $testResult = array(
@@ -1136,18 +1136,18 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $testArray = array(
             'option' => array(
                 'default' => '{0}',
-                 'testKey' => array(
+                'testKey' => array(
                     '{0}' => 'testVal',
-                 ),
+                ),
             ),
         );
 
         $testResult = array(
             'option' => array(
                 'default' => 'DONE',
-                 'testKey' => array(
+                'testKey' => array(
                     'DONE' => 'testVal',
-                 ),
+                ),
             ),
         );
 
@@ -1406,32 +1406,32 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         $inputArray = array(
             'fields' => array(
                 'varchar' => array (
-                      'params' =>
-                      array (
+                    'params' =>
+                    array (
                         array (
-                          'name' => 'required',
-                          'type' => 'bool',
-                          'default' => false,
+                            'name' => 'required',
+                            'type' => 'bool',
+                            'default' => false,
                         ),
                         array (
-                          'name' => 'default',
-                          'type' => 'varchar',
+                            'name' => 'default',
+                            'type' => 'varchar',
                         ),
                         array (
-                          'name' => 'maxLength',
-                          'type' => 'int',
+                            'name' => 'maxLength',
+                            'type' => 'int',
                         ),
                         array (
-                          'name' => 'trim',
-                          'type' => 'bool',
-                          'default' => true,
+                            'name' => 'trim',
+                            'type' => 'bool',
+                            'default' => true,
                         ),
                         array (
-                          'name' => 'audited',
-                          'type' => 'bool',
+                            'name' => 'audited',
+                            'type' => 'bool',
                         ),
-                      ),
-                      'filter' => true,
+                    ),
+                    'filter' => true,
                 ),
             )
         );
@@ -1520,66 +1520,66 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     public function testArrayDiff()
     {
         $array1 = array (
-          'type' => 'enum',
-          'options' =>
-          array (
-            0 => '',
-            1 => 'Call',
-            2 => 'Email',
-            3 => 'Existing Customer',
-            4 => 'Partner',
-            5 => 'Public Relations',
-            6 => 'Campaign',
-            7 => 'Other',
-          ),
-          'default' => '',
-          'required' => true,
-          'isSorted' => false,
-          'audited' => false,
-          'readOnly' => false,
-          'tooltip' => false,
-          'newAttr1' => false,
+            'type' => 'enum',
+            'options' =>
+            array (
+                0 => '',
+                1 => 'Call',
+                2 => 'Email',
+                3 => 'Existing Customer',
+                4 => 'Partner',
+                5 => 'Public Relations',
+                6 => 'Campaign',
+                7 => 'Other',
+            ),
+            'default' => '',
+            'required' => true,
+            'isSorted' => false,
+            'audited' => false,
+            'readOnly' => false,
+            'tooltip' => false,
+            'newAttr1' => false,
         );
 
         $array2 = array (
-          'type' => 'enum',
-          'options' =>
-          array (
-            0 => '',
-            1 => 'Call',
-            2 => 'Email',
-            3 => 'Existing Customer',
-            4 => 'Partner',
-            5 => 'Public Relations',
-            6 => 'Web Site',
-            7 => 'Campaign',
-            8 => 'Other',
-          ),
-          'default' => '',
-          'required' => false,
-          'isSorted' => false,
-          'audited' => false,
-          'readOnly' => false,
-          'tooltip' => false,
-          'newAttr2' => false,
+            'type' => 'enum',
+            'options' =>
+            array (
+                0 => '',
+                1 => 'Call',
+                2 => 'Email',
+                3 => 'Existing Customer',
+                4 => 'Partner',
+                5 => 'Public Relations',
+                6 => 'Web Site',
+                7 => 'Campaign',
+                8 => 'Other',
+            ),
+            'default' => '',
+            'required' => false,
+            'isSorted' => false,
+            'audited' => false,
+            'readOnly' => false,
+            'tooltip' => false,
+            'newAttr2' => false,
         );
 
         $result = array (
-          'options' =>
-          array (
-            0 => '',
-            1 => 'Call',
-            2 => 'Email',
-            3 => 'Existing Customer',
-            4 => 'Partner',
-            5 => 'Public Relations',
-            6 => 'Web Site',
-            7 => 'Campaign',
-            8 => 'Other',
-          ),
-          'required' => false,
-          'newAttr1' => false,
-          'newAttr2' => false,
+            'options' =>
+            array (
+                0 => '',
+                1 => 'Call',
+                2 => 'Email',
+                3 => 'Existing Customer',
+                4 => 'Partner',
+                5 => 'Public Relations',
+                6 => 'Web Site',
+                7 => 'Campaign',
+                8 => 'Other',
+            ),
+            'required' => false,
+            'newAttr1' => false,
+            'newAttr2' => false,
         );
 
         $this->assertEquals($result, \Espo\Core\Utils\Util::arrayDiff($array1, $array2));

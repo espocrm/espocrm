@@ -93,7 +93,7 @@ sudo service apache2 restart',
         deny all;
     }
 }',
-    'APACHE_LINK' => 'https://www.espocrm.com/documentation/administration/apache-server-configuration/',
-    'NGINX_LINK' => 'https://www.espocrm.com/documentation/administration/nginx-server-configuration/',
+        'APACHE_LINK' => 'https://www.espocrm.com/documentation/administration/apache-server-configuration/',
+        'NGINX_LINK' => 'https://www.espocrm.com/documentation/administration/nginx-server-configuration/',
     ],
 ];

@@ -133,11 +133,11 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     {
         $result = [
             'User' => [
-              'fields' => [
-                'name' => 'User',
-                'label' => 'Core',
-                'source' => 'Core',
-              ],
+                'fields' => [
+                    'name' => 'User',
+                    'label' => 'Core',
+                    'source' => 'Core',
+                ],
             ],
             'Account' => [
                 'fields' => [
@@ -156,7 +156,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
             'Global' => [
                 'options' => [
                     'language' => [
-                      'en_US' => 'English (United States)',
+                        'en_US' => 'English (United States)',
                     ]
                 ],
                 'testHtml' => '&lt;a href="javascript: alert(1)"&gt;test&lt;/a&gt;',

@@ -149,14 +149,14 @@ class Xlsx implements Processor
 
         $titleStyle = [
             'font' => [
-               'bold' => true,
-               'size' => 12,
+                'bold' => true,
+                'size' => 12,
             ],
         ];
 
         $dateStyle = [
             'font' => [
-               'size' => 12,
+                'size' => 12,
             ],
         ];
 

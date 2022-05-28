@@ -201,19 +201,19 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     public function acceptableVersions()
     {
         return array(
-          array( '11.5.2' ),
-          array( array('11.5.2') ),
-          array( array('1.4', '11.5.2')),
-          array( '11.*', ),
-          array( '11.5.*', ),
-          array( '~11.5', ),
-          array( '~11', ),
-          array( '^11.1', ),
-          array( '^11', ),
-          array( '11.1 - 11.9', ),
-          array( '>=11.1', ),
-          array( '<=12', ),
-          array( '>=11 <=12', ),
+            array( '11.5.2' ),
+            array( array('11.5.2') ),
+            array( array('1.4', '11.5.2')),
+            array( '11.*', ),
+            array( '11.5.*', ),
+            array( '~11.5', ),
+            array( '~11', ),
+            array( '^11.1', ),
+            array( '^11', ),
+            array( '11.1 - 11.9', ),
+            array( '>=11.1', ),
+            array( '<=12', ),
+            array( '>=11 <=12', ),
         );
     }
 
@@ -232,12 +232,12 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     public function unacceptableVersions()
     {
         return array(
-          array( '1.*', ),
-          array( '11\.*', ),
-          array( '11\.5\.2', ),
-          array( '11.5*', ),
-          array( '11.1-11.9', ),
-          array( '.0.1' ),
+            array( '1.*', ),
+            array( '11\.*', ),
+            array( '11\.5\.2', ),
+            array( '11.5*', ),
+            array( '11.1-11.9', ),
+            array( '.0.1' ),
         );
     }
 

@@ -352,9 +352,9 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             ],
             'whereClause' => [
                 'OR' => [
-                   'teamsAccessMiddle.teamId' => [],
-                   'emailUser.userId' => $userId,
-               ],
+                    'teamsAccessMiddle.teamId' => [],
+                    'emailUser.userId' => $userId,
+                ],
             ],
         ];
 
@@ -682,7 +682,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $em = $app->getContainer()->get('entityManager');
 
         $emailAddress = $em->createEntity('EmailAddress', [
-           'name' => 'test@test.com',
+            'name' => 'test@test.com',
         ]);
 
         $searchParams = SearchParams::fromRaw([
@@ -714,7 +714,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $em = $app->getContainer()->get('entityManager');
 
         $emailAddress = $em->createEntity('EmailAddress', [
-           'name' => 'test@test.com',
+            'name' => 'test@test.com',
         ]);
 
         $searchParams = SearchParams::fromRaw([

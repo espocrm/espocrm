@@ -535,8 +535,8 @@ class Activities implements
         }
         else {
             $builder->where([
-               'parentId' => $id,
-               'parentType' => $entityType,
+                'parentId' => $id,
+                'parentType' => $entityType,
             ]);
         }
 

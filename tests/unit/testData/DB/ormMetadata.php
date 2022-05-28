@@ -395,34 +395,34 @@ return [
     'Test' => [
         'fields' => [
             'id' => [
-                 'type' => Entity::ID,
-             ],
-             'name' => [
-                 'type' => Entity::VARCHAR,
-                 'len' => 255,
-             ],
-             'date' => [
-                 'type' => Entity::DATE
-             ],
-             'dateTime' => [
-                 'type' => Entity::DATETIME
-             ],
-             'int' => [
-                 'type' => Entity::INT
-             ],
-             'float' => [
-                 'type' => Entity::FLOAT
-             ],
-             'list' => [
-                 'type' => Entity::JSON_ARRAY
-             ],
-             'object' => [
-                 'type' => Entity::JSON_OBJECT
-             ],
-             'deleted' => [
-                 'type' => Entity::BOOL,
-                 'default' => 0,
-             ]
+                'type' => Entity::ID,
+            ],
+            'name' => [
+                'type' => Entity::VARCHAR,
+                'len' => 255,
+            ],
+            'date' => [
+                'type' => Entity::DATE
+            ],
+            'dateTime' => [
+                'type' => Entity::DATETIME
+            ],
+            'int' => [
+                'type' => Entity::INT
+            ],
+            'float' => [
+                'type' => Entity::FLOAT
+            ],
+            'list' => [
+                'type' => Entity::JSON_ARRAY
+            ],
+            'object' => [
+                'type' => Entity::JSON_OBJECT
+            ],
+            'deleted' => [
+                'type' => Entity::BOOL,
+                'default' => 0,
+            ]
         ],
         'relations' => [
 
@@ -454,58 +454,58 @@ return [
     'TestWhere' => [
         'fields' => [
             'id' => [
-                 'type' => Entity::ID,
+                'type' => Entity::ID,
             ],
             'test' => [
-                 'type' => Entity::VARCHAR,
+                'type' => Entity::VARCHAR,
             ],
             'test1' => [
                 'type' => Entity::VARCHAR,
                 'notStorable' => true,
                 'where' => [
-                     '=' => [
-                         'whereClause' => [
-                             'OR' => [
-                                 ['test' => '{value}'],
-                                 ['test' => '1'],
-                             ],
-                         ],
-                         'joins' => [
-                             ['Test', 't', ['t.id:' => 'id']],
-                         ],
-                     ],
-                     "IN" => [
-                         'whereClause' => [
-                             'test' => '{value}'
-                         ],
-                     ]
+                    '=' => [
+                        'whereClause' => [
+                            'OR' => [
+                                ['test' => '{value}'],
+                                ['test' => '1'],
+                            ],
+                        ],
+                        'joins' => [
+                            ['Test', 't', ['t.id:' => 'id']],
+                        ],
+                    ],
+                    "IN" => [
+                        'whereClause' => [
+                            'test' => '{value}'
+                        ],
+                    ]
                 ],
                 'order' => [
-                     'order' => [
-                         ['test', '{direction}'],
-                         ['t.id', '{direction}'],
-                     ],
-                     'joins' => [
-                         ['Test', 't', ['t.id:' => 'id']],
-                     ],
+                    'order' => [
+                        ['test', '{direction}'],
+                        ['t.id', '{direction}'],
+                    ],
+                    'joins' => [
+                        ['Test', 't', ['t.id:' => 'id']],
+                    ],
                 ],
                 'select' => [
-                     'select' => 'MUL:(t.id, test)',
-                     'joins' => [
-                         ['Test', 't', ['t.id:' => 'id']],
-                     ],
+                    'select' => 'MUL:(t.id, test)',
+                    'joins' => [
+                        ['Test', 't', ['t.id:' => 'id']],
+                    ],
                 ],
-             ],
+            ],
             'test2' => [
                 'type' => Entity::INT,
                 'notStorable' => true,
                 'where' => [
-                     '=' => [
-                         'whereClause' => [
-                             'test' => '{value}',
-                             'id!=' => null,
-                         ],
-                     ],
+                    '=' => [
+                        'whereClause' => [
+                            'test' => '{value}',
+                            'id!=' => null,
+                        ],
+                    ],
                 ],
             ],
         ],

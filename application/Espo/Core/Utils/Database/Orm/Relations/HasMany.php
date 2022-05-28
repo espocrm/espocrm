@@ -49,7 +49,7 @@ class HasMany extends Base
         $relation = [
             $entityName => [
                 'fields' => [
-                       $linkName . 'Ids' => [
+                    $linkName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,

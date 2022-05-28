@@ -65,15 +65,15 @@ class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
                     'filename' => 'data/logs/test-1.log',
                 ],
                 'level' => 'DEBUG',
-                    'formatter' => [
-                        'className' => 'Monolog\\Formatter\\LineFormatter',
-                        'params' => [
+                'formatter' => [
+                    'className' => 'Monolog\\Formatter\\LineFormatter',
+                    'params' => [
                         'dateFormat' => 'Y-m-d H:i:s',
                     ],
                 ]
             ],
             [
-            'loaderClassName' => EspoRotatingFileHandlerLoader::class,
+                'loaderClassName' => EspoRotatingFileHandlerLoader::class,
                 'params' => [
                     'filename' => 'data/logs/test-2.log',
                 ],

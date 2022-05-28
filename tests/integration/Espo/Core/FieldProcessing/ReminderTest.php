@@ -48,7 +48,7 @@ class ReminderTest extends \tests\integration\Core\BaseTestCase
                     'type' => 'Popup',
                     'seconds' => 0,
                 ],
-                 (object) [
+                (object) [
                     'type' => 'Popup',
                     'seconds' => 60,
                 ]

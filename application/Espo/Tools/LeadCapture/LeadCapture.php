@@ -304,10 +304,10 @@ class LeadCapture
 
                     if ($targetList) {
                         $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
-                           'link' => 'contacts',
-                           'targetId' => $contact->getId(),
-                           'targetType' => 'Contact',
-                           'leadCaptureId' => $leadCapture->getId(),
+                            'link' => 'contacts',
+                            'targetId' => $contact->getId(),
+                            'targetType' => 'Contact',
+                            'leadCaptureId' => $leadCapture->getId(),
                         ]);
                     }
                 }
@@ -333,12 +333,12 @@ class LeadCapture
             $leadCapture->get('subscribeContactToTargetList')
         ) {
             $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-               'targetId' => $contact->getId(),
-               'targetType' => 'Contact',
+                'targetId' => $contact->getId(),
+                'targetType' => 'Contact',
             ]);
 
             $this->hookManager->process('Contact', 'afterLeadCapture', $contact, [], [
-               'leadCaptureId' => $leadCapture->getId(),
+                'leadCaptureId' => $leadCapture->getId(),
             ]);
         }
 
@@ -371,22 +371,22 @@ class LeadCapture
 
             if ($targetList) {
                 $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
-                   'link' => 'leads',
-                   'targetId' => $targetLead->getId(),
-                   'targetType' => 'Lead',
-                   'leadCaptureId' => $leadCapture->getId(),
+                    'link' => 'leads',
+                    'targetId' => $targetLead->getId(),
+                    'targetType' => 'Lead',
+                    'leadCaptureId' => $leadCapture->getId(),
                 ]);
             }
         }
 
         if ($toRelateLead || !$leadCapture->get('subscribeToTargetList')) {
             $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-               'targetId' => $targetLead->getId(),
-               'targetType' => 'Lead',
+                'targetId' => $targetLead->getId(),
+                'targetType' => 'Lead',
             ]);
 
             $this->hookManager->process('Lead', 'afterLeadCapture', $targetLead, [], [
-               'leadCaptureId' => $leadCapture->getId(),
+                'leadCaptureId' => $leadCapture->getId(),
             ]);
         }
 

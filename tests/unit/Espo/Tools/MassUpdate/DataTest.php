@@ -62,10 +62,10 @@ class DataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['a1', 'a2', 'a3'], $data->getAttributeList());
         $this->assertEquals(
             (object) [
-                    'a1' => '1',
-                    'a2' => '2',
-                    'a3' => '3',
-                ],
+                'a1' => '1',
+                'a2' => '2',
+                'a3' => '3',
+            ],
             $data->getValues()
         );
 
