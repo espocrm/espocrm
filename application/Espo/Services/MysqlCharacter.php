@@ -95,7 +95,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
             $rowList = $sth->fetchAll();
 
             foreach ($rowList as $row) {
-                $columnParams[ $row['Field'] ] = $row;
+                $columnParams[$row['Field']] = $row;
             }
             // END: get table columns params
 
