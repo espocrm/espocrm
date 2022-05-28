@@ -38,10 +38,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 {
     public function testProcessNoteAcl()
     {
-        /** @var EntityManager $em*/
+        /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
-        /** @var StreamService $streamService*/
+        /** @var StreamService $streamService */
         $streamService = $this->getContainer()->get('serviceFactory')->create('Stream');
 
         $team1 = $em->createEntity('Team', [

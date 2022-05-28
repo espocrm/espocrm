@@ -101,74 +101,74 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm']
             );
 
-        $expected =  [
-             [
+        $expected = [
+            [
                 'route' => '/Custom/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Custom',
-                    'action' => 'list',
-                    'scope' => ':scope',
-                    'id' => ':id',
-                    'name' => ':name',
-                ],
+                     'controller' => 'Custom',
+                     'action' => 'list',
+                     'scope' => ':scope',
+                     'id' => ':id',
+                     'name' => ':name',
+                 ],
             ],
-             [
+            [
                 'route' => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Activities',
-                    'action' => 'list',
-                    'scope' => ':scope',
-                    'id' => ':id',
-                    'name' => ':name',
-                ],
+                     'controller' => 'Activities',
+                     'action' => 'list',
+                     'scope' => ':scope',
+                     'id' => ':id',
+                     'name' => ':name',
+                 ],
             ],
-             [
+            [
                 'route' => '/Activities',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Activities',
-                    'action' => 'listCalendarEvents',
-                ],
+                     'controller' => 'Activities',
+                     'action' => 'listCalendarEvents',
+                 ],
             ],
-             [
+            [
                 'route' => '/App/user',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'App',
-                    'action' => 'user',
-                ],
+                     'controller' => 'App',
+                     'action' => 'user',
+                 ],
             ],
-             [
+            [
                 'route' => '/Metadata',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Metadata',
-                ],
+                     'controller' => 'Metadata',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'post',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
         ];
 
@@ -198,71 +198,71 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm', 'Test']
             );
 
-        $expected =  [
-             [
+        $expected = [
+            [
                 'route' => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Activities',
-                    'action' => 'list',
-                    'scope' => ':scope',
-                    'id' => ':id',
-                    'name' => ':name',
-                ],
+                     'controller' => 'Activities',
+                     'action' => 'list',
+                     'scope' => ':scope',
+                     'id' => ':id',
+                     'name' => ':name',
+                 ],
             ],
-             [
+            [
                 'route' => '/Activities',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Activities',
-                    'action' => 'listCalendarEvents',
-                ],
+                     'controller' => 'Activities',
+                     'action' => 'listCalendarEvents',
+                 ],
             ],
-             [
+            [
                 'route' => '/Test',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Test',
-                    'action' => 'listCalendarEvents',
-                ],
+                     'controller' => 'Test',
+                     'action' => 'listCalendarEvents',
+                 ],
             ],
-             [
+            [
                 'route' => '/App/user',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'App',
-                    'action' => 'user',
-                ],
+                     'controller' => 'App',
+                     'action' => 'user',
+                 ],
             ],
-             [
+            [
                 'route' => '/Metadata',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Metadata',
-                ],
+                     'controller' => 'Metadata',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'post',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
         ];
 
@@ -292,71 +292,71 @@ class RouteTest extends \PHPUnit\Framework\TestCase
                 ['Crm', 'Test']
             );
 
-        $expected =  [
-             [
+        $expected = [
+            [
                 'route' => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Test',
-                    'action' => 'list',
-                    'scope' => ':scope',
-                    'id' => ':id',
-                    'name' => ':name',
-                ],
+                     'controller' => 'Test',
+                     'action' => 'list',
+                     'scope' => ':scope',
+                     'id' => ':id',
+                     'name' => ':name',
+                 ],
             ],
-             [
+            [
                 'route' => '/Activities',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Activities',
-                    'action' => 'listCalendarEvents',
-                ],
+                     'controller' => 'Activities',
+                     'action' => 'listCalendarEvents',
+                 ],
             ],
-             [
+            [
                 'route' => '/Test',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Test',
-                    'action' => 'listCalendarEvents',
-                ],
+                     'controller' => 'Test',
+                     'action' => 'listCalendarEvents',
+                 ],
             ],
-             [
+            [
                 'route' => '/App/user',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'App',
-                    'action' => 'user',
-                ],
+                     'controller' => 'App',
+                     'action' => 'user',
+                 ],
             ],
-             [
+            [
                 'route' => '/Metadata',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => 'Metadata',
-                ],
+                     'controller' => 'Metadata',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'post',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
-             [
+            [
                 'route' => '/{controller}/action/{action}',
                 'method' => 'get',
                 'params' =>
                  [
-                    'controller' => ':controller',
-                    'action' => ':action',
-                ],
+                     'controller' => ':controller',
+                     'action' => ':action',
+                 ],
             ],
         ];
 

@@ -184,8 +184,6 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
             ['fieldText*' => '%' . $filter . '%']
         ];
 
-
-
         if (is_numeric($filter)) {
             $expectedWhere[] = ['fieldInt=' => intval($filter)];
         }

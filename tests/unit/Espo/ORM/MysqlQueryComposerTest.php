@@ -625,7 +625,6 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "GROUP BY comment.post_id, post.name";
         $this->assertEquals($expectedSql, $sql);
 
-
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id', 'COUNT:id', 'MONTH:post.createdAt'],
@@ -865,8 +864,6 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
-
-
     }
 
     public function testSelectWithSubquery2()
@@ -955,7 +952,6 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "GROUP BY CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at))";
         $this->assertEquals($expectedSql, $sql);
 
-
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['COUNT:id', 'YEAR_5:comment.createdAt'],
@@ -970,7 +966,6 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) " .
             "ELSE YEAR(comment.created_at) - 1 END";
         $this->assertEquals($expectedSql, $sql);
-
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',

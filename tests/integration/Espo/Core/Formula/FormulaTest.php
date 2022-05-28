@@ -184,7 +184,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $result = $fm->run($script);
         $this->assertEquals(0, $result);
 
-
         $script = "record\\count('Meeting', 'planned')";
         $result = $fm->run($script);
         $this->assertEquals(1, $result);
@@ -358,7 +357,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
 
         $ow1 = $em->createEntity('Opportunity', []);
 
-
         $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 2, null, null, 'open')";
         $result = $fm->run($script);
         $this->assertIsArray($result);
@@ -372,7 +370,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(3, count($result));
         $this->assertEquals(true, in_array($o1->id, $result));
         $this->assertEquals(true, in_array($o2->id, $result));
-
 
         $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 3, 'name', 'asc')";
         $result = $fm->run($script);
@@ -465,7 +462,6 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
 
         $result = $fm->run($script, $lead);
         $this->assertTrue($result);
-
 
         $em->getRepository('Lead')->relate($lead, 'targetLists', $targetList->id, [
             'optedOut' => false,
@@ -726,14 +722,12 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('test.pdf', $attachment->get('name'));
         $this->assertTrue(file_exists('data/upload/' . $attachment->id));
 
-
         $script = "ext\\pdf\\generate('Account', '{$a->id}', '{$template->id}', 'test.pdf')";
         $id = $fm->run($script);
 
         $attachment = $em->getEntity('Attachment', $id);
 
         $this->assertEquals('test.pdf', $attachment->get('name'));
-
 
         $script = "ext\\pdf\\generate('Account', '{$a->id}', '{$template->id}')";
         $id = $fm->run($script);

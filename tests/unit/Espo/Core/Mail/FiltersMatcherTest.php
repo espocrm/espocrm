@@ -160,7 +160,6 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $filterList = [$filter];
         $this->assertFalse($this->object->match($email, $filterList));
 
-
         $email->set('name', 'test hello man');
         $email->set('from', 'test@tester');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
@@ -181,7 +180,6 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $filterList = [$filter];
         $this->assertFalse($this->object->match($email, $filterList));
 
-
         $email->set('name', 'test hello man');
         $email->set('body', 'one hello three');
         $filter = $this->createEntity('EmailFilter', EmailFilter::class, $this->filterDefs);
@@ -201,7 +199,6 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         ]);
         $filterList = [$filter];
         $this->assertTrue($this->object->match($email, $filterList));
-
 
         $email->set('name', 'Access information to the EspoCRM cloud');
         $email->set('from', 'no-reply@test.com');

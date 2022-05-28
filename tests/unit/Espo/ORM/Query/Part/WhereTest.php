@@ -57,7 +57,6 @@ class WhereTest extends \PHPUnit\Framework\TestCase
                 ->build()
                 ->getRaw();
 
-
         $expextedRaw = [
             'AND' => [
                 'test1' => '1',
@@ -84,7 +83,6 @@ class WhereTest extends \PHPUnit\Framework\TestCase
                 )
                 ->build()
                 ->getRaw();
-
 
         $expextedRaw = [
             'AND' => [
@@ -121,7 +119,6 @@ class WhereTest extends \PHPUnit\Framework\TestCase
                 )
                 ->build()
                 ->getRaw();
-
 
         $expextedRaw = [
             'AND' => [
@@ -171,7 +168,6 @@ class WhereTest extends \PHPUnit\Framework\TestCase
                 )
                 ->build()
                 ->getRaw();
-
 
         $expextedRaw = [
             'OR' => [

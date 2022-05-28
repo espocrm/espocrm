@@ -103,22 +103,22 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testHookExists(): void
     {
-        $data =  [
+        $data = [
             'Espo\\Hooks\\Note\\Stream' => 8,
             'Espo\\Hooks\\Note\\Mentions' => 9,
             'Espo\\Hooks\\Note\\Notifications' => 14,
         ];
 
-        $data =  [
-             [
+        $data = [
+            [
                 'className' => 'Espo\\Hooks\\Note\\Stream',
                 'order' => 8,
             ],
-             [
+            [
                 'className' => 'Espo\\Hooks\\Note\\Mentions',
                 'order' => 9,
             ],
-             [
+            [
                 'className' => 'Espo\\Hooks\\Note\\Notifications',
                 'order' => 14,
             ],
@@ -143,110 +143,110 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testSortHooks()
     {
-        $data =  [
+        $data = [
             'Common' =>
              [
-                'afterSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\AssignmentEmailNotification',
-                        'order' => 9,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Notifications',
-                        'order' => 10,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Stream',
-                        'order' => 9,
-                    ],
-                ],
-                'beforeSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Formula',
-                        'order' => 5,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\NextNumber',
-                        'order' => 10,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\CurrencyConverted',
-                        'order' => 1,
-                    ],
-                ],
-            ],
+                 'afterSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\AssignmentEmailNotification',
+                          'order' => 9,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Notifications',
+                          'order' => 10,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Stream',
+                          'order' => 9,
+                      ],
+                  ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Formula',
+                          'order' => 5,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\NextNumber',
+                          'order' => 10,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\CurrencyConverted',
+                          'order' => 1,
+                      ],
+                  ],
+             ],
             'Note' =>
              [
-                'beforeSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Note\\Mentions',
-                        'order' => 9,
-                    ],
-                ],
-                'afterSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Note\\Notifications',
-                        'order' => 14,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Note\\Mentions',
+                          'order' => 9,
+                      ],
+                  ],
+                 'afterSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Note\\Notifications',
+                          'order' => 14,
+                      ],
+                  ],
+             ],
         ];
 
-        $result =  [
+        $result = [
             'Common' =>
              [
-                'afterSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\AssignmentEmailNotification',
-                        'order' => 9,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Stream',
-                        'order' => 9,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Notifications',
-                        'order' => 10,
-                    ],
-                ],
-                'beforeSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\CurrencyConverted',
-                        'order' => 1,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\Formula',
-                        'order' => 5,
-                    ],
-                     [
-                        'className' => 'Espo\\Hooks\\Common\\NextNumber',
-                        'order' => 10,
-                    ],
-                ],
-            ],
+                 'afterSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\AssignmentEmailNotification',
+                          'order' => 9,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Stream',
+                          'order' => 9,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Notifications',
+                          'order' => 10,
+                      ],
+                  ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\CurrencyConverted',
+                          'order' => 1,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\Formula',
+                          'order' => 5,
+                      ],
+                      [
+                          'className' => 'Espo\\Hooks\\Common\\NextNumber',
+                          'order' => 10,
+                      ],
+                  ],
+             ],
             'Note' =>
              [
-                'beforeSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Note\\Mentions',
-                        'order' => 9,
-                    ],
-                ],
-                'afterSave' =>
-                 [
-                     [
-                        'className' => 'Espo\\Hooks\\Note\\Notifications',
-                        'order' => 14,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Note\\Mentions',
+                          'order' => 9,
+                      ],
+                  ],
+                 'afterSave' =>
+                  [
+                      [
+                          'className' => 'Espo\\Hooks\\Note\\Notifications',
+                          'order' => 14,
+                      ],
+                  ],
+             ],
         ];
 
         $this->assertEquals($result, $this->reflection->invokeMethod('sortHooks', [$data]) );
@@ -271,17 +271,17 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result =  [
+        $result = [
             'Note' =>
              [
-                'beforeSave' =>
-                [
-                    [
-                        'className' => 'tests\\unit\\testData\\Hooks\\testCase1\\custom\\Espo\\Custom\\Hooks\\Note\\Mentions',
-                        'order' => 7,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                 [
+                     [
+                         'className' => 'tests\\unit\\testData\\Hooks\\testCase1\\custom\\Espo\\Custom\\Hooks\\Note\\Mentions',
+                         'order' => 7,
+                     ],
+                 ],
+             ],
         ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
@@ -306,18 +306,18 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result =  [
+        $result = [
             'Note' =>
              [
-                'beforeSave' =>
-                 [
-                     [
-                        'className' =>
-                        'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Crm\\Hooks\\Note\\Mentions',
-                        'order' => 9,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' =>
+                          'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Crm\\Hooks\\Note\\Mentions',
+                          'order' => 9,
+                      ],
+                  ],
+             ],
         ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
@@ -342,18 +342,18 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result =  [
+        $result = [
             'Note' =>
              [
-                'beforeSave' =>
-                 [
-                     [
-                        'className' =>
-                            'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Test\\Hooks\\Note\\Mentions',
-                        'order' => 9,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' =>
+                              'tests\\unit\\testData\\Hooks\\testCase2\\application\\Espo\\Modules\\Test\\Hooks\\Note\\Mentions',
+                          'order' => 9,
+                      ],
+                  ],
+             ],
         ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
@@ -376,17 +376,17 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection->invokeMethod('loadHooks');
 
-        $result =  [
+        $result = [
             'Note' =>
              [
-                'beforeSave' =>
-                 [
-                     [
-                        'className' => 'tests\\unit\\testData\\Hooks\\testCase3\\application\\Espo\\Hooks\\Note\\Mentions',
-                        'order' => 9,
-                    ],
-                ],
-            ],
+                 'beforeSave' =>
+                  [
+                      [
+                          'className' => 'tests\\unit\\testData\\Hooks\\testCase3\\application\\Espo\\Hooks\\Note\\Mentions',
+                          'order' => 9,
+                      ],
+                  ],
+             ],
         ];
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));

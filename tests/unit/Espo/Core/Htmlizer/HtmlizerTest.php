@@ -117,7 +117,6 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
                 })
             );
 
-
         $this->fileManager
                     ->expects($this->any())
                     ->method('unlink');
@@ -171,7 +170,6 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $entity->set('float', 3);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('3.00', $html);
-
 
         $template = "{{float}}";
         $entity->set('float', 3);

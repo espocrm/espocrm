@@ -28,21 +28,21 @@ return  [
     ],
     'systemItems' =>
      [
-        'systemItems',
-        'adminItems',
-        'configPath',
-        'cachePath',
-        'database',
-        'customPath',
-        'defaultsPath',
-        'crud',
-    ],
+         'systemItems',
+         'adminItems',
+         'configPath',
+         'cachePath',
+         'database',
+         'customPath',
+         'defaultsPath',
+         'crud',
+     ],
     'adminItems' =>
      [
-        'defaultPermissions',
-        'logger',
-        'devMode',
-    ],
+         'defaultPermissions',
+         'logger',
+         'devMode',
+     ],
     'currency' =>
     [
         'base' => 'USD',

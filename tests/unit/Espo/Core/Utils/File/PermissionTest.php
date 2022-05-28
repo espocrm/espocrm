@@ -79,7 +79,6 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
         $result = 6;
         $this->assertEquals($result, $methodResult);
 
-
         $search = 'application/Espo/Controllers/Email.php';
         $methodResult = $this->reflection->invokeMethod('getSearchCount', [$search, $this->fileList]);
         $result = 1;

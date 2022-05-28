@@ -245,27 +245,27 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSingleFileListAll()
     {
-        $input =  [
+        $input = [
             'custom' =>
              [
-                'Espo' =>
-                 [
-                    'Custom' =>
-                     [
-                        'Modules' =>
-                         [
-                            'ExtensionTest' =>
-                             [
-                                0 => 'File.json',
-                                1 => 'File.php',
+                 'Espo' =>
+                  [
+                      'Custom' =>
+                       [
+                           'Modules' =>
+                            [
+                                'ExtensionTest' =>
+                                 [
+                                     0 => 'File.json',
+                                     1 => 'File.php',
+                                 ],
                             ],
-                        ],
-                    ],
-                ],
-            ],
+                       ],
+                  ],
+             ],
         ];
 
-        $result =  [
+        $result = [
             'custom',
             'custom/Espo',
             'custom/Espo/Custom',
@@ -281,27 +281,27 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSingeFileListOnlyFiles()
     {
-        $input =  [
+        $input = [
             'custom' =>
              [
-                'Espo' =>
-                 [
-                    'Custom' =>
-                     [
-                        'Modules' =>
-                         [
-                            'ExtensionTest' =>
-                             [
-                                0 => 'File.json',
-                                1 => 'File.php',
+                 'Espo' =>
+                  [
+                      'Custom' =>
+                       [
+                           'Modules' =>
+                            [
+                                'ExtensionTest' =>
+                                 [
+                                     0 => 'File.json',
+                                     1 => 'File.php',
+                                 ],
                             ],
-                        ],
-                    ],
-                ],
-            ],
+                       ],
+                  ],
+             ],
         ];
 
-        $result =  [
+        $result = [
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
         ];
@@ -312,27 +312,27 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSingeFileListOnlyDirs()
     {
-        $input =  [
+        $input = [
             'custom' =>
              [
-                'Espo' =>
-                 [
-                    'Custom' =>
-                     [
-                        'Modules' =>
-                         [
-                            'ExtensionTest' =>
-                             [
-                                0 => 'File.json',
-                                1 => 'File.php',
+                 'Espo' =>
+                  [
+                      'Custom' =>
+                       [
+                           'Modules' =>
+                            [
+                                'ExtensionTest' =>
+                                 [
+                                     0 => 'File.json',
+                                     1 => 'File.php',
+                                 ],
                             ],
-                        ],
-                    ],
-                ],
-            ],
+                       ],
+                  ],
+             ],
         ];
 
-        $result =  [
+        $result = [
             'custom',
             'custom/Espo',
             'custom/Espo/Custom',
@@ -386,7 +386,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $cachePath = Util::fixPath($this->cachePath . '/' . $name);
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $fileList =  [
+        $fileList = [
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.php',
         ];

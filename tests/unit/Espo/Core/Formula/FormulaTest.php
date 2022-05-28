@@ -86,7 +86,6 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['id', [], '1']
             ]));
 
-
         $containerMocker = new ContainerMocker($this);
 
         $this->container = $containerMocker->create([
@@ -1001,7 +1000,6 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->setEntityAttributes($this->entity, [
             'parent' => $parent
         ]);
-
 
         $result = $this->createProcessor()->process($item);
 

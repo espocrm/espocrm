@@ -209,7 +209,6 @@ class AfterFetch implements AfterFetchInterface
 
         $emailAddress = $emailAddressRepository->getByAddress($email->get('from'));
 
-
         if ($emailAddress) {
             $sentCount = $this->entityManager
                 ->getRDBRepository(Email::ENTITY_TYPE)

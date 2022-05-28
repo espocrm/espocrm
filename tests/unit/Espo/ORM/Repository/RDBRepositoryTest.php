@@ -1464,8 +1464,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $post = $this->entityFactory->create('Post');
         $post->id = 'postId';
 
-
-
         $comment = $this->entityFactory->create('Comment');
         $comment->set('id', 'commentId');
 
@@ -1518,7 +1516,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
 
-
         $this->createRepository('Account')->getRelation($account, 'teams')
             ->columnsWhere(['deleted' => false])
             ->find();
@@ -1547,7 +1544,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->method('selectRelated')
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
-
 
         $this->createRepository('Account')->getRelation($account, 'teams')
             ->columnsWhere([

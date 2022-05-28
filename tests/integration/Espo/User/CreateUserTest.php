@@ -70,26 +70,26 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
             'portalPermission' => 'not-set',
             'data' =>
              [
-                'Account' => false,
-                'Call' =>
-                 [
-                    'create' => 'yes',
-                    'read' => 'team',
-                    'edit' => 'team',
-                    'delete' => 'no',
-                ],
-            ],
+                 'Account' => false,
+                 'Call' =>
+                  [
+                      'create' => 'yes',
+                      'read' => 'team',
+                      'edit' => 'team',
+                      'delete' => 'no',
+                  ],
+             ],
             'fieldData' =>
              [
-                'Call' =>
-                 [
-                    'direction' =>
-                     [
-                        'read' => 'yes',
-                        'edit' => 'no',
-                    ],
-                ],
-            ],
+                 'Call' =>
+                  [
+                      'direction' =>
+                       [
+                           'read' => 'yes',
+                           'edit' => 'no',
+                       ],
+                  ],
+             ],
         ]);
 
         $this->assertInstanceOf('\\Espo\\Orm\\Entity', $newUser);
@@ -109,12 +109,12 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' =>  [
+            'data' => [
                 'Account' => false,
             ],
-            'fieldData' =>  [
-                'Call' =>  [
-                    'direction' =>  [
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
                         'read' => 'yes',
                         'edit' => 'no',
                     ],

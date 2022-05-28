@@ -42,383 +42,383 @@ class EmailTest extends \PHPUnit\Framework\TestCase
     protected $defs = [
         'fields' =>
          [
-            'id' =>
-             [
-                'type' => 'id',
-                'dbType' => 'varchar',
-                'len' => '24',
-            ],
-            'name' =>
-             [
-                'type' => 'varchar',
-                'len' => 255,
-            ],
-            'subject' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'fromName' =>
-             [
-                'type' => 'varchar',
-                'len' => 255,
-            ],
-            'from' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'to' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'cc' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'bcc' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'replyTo' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-                'len' => 255,
-            ],
-            'emailAddress' =>
-             [
-                'type' => 'base',
-                'notStorable' => true,
-            ],
-            'bodyPlain' =>
-             [
-                'type' => 'text',
-            ],
-            'body' =>
-             [
-                'type' => 'text',
-            ],
-            'isHtml' =>
-             [
-                'type' => 'bool',
-                'default' => true,
-            ],
-            'status' =>
-             [
-                'type' => 'varchar',
-                'default' => 'Archived',
-                'len' => 255,
-            ],
-            'parent' =>
-             [
-                'type' => 'linkParent',
-                'notStorable' => true,
-            ],
-            'dateSent' =>
-             [
-                'type' => 'datetime',
-                'notNull' => false,
-            ],
-            'createdAt' =>
-             [
-                'type' => 'datetime',
-                'notNull' => false,
-            ],
-            'modifiedAt' =>
-             [
-                'type' => 'datetime',
-                'notNull' => false,
-            ],
-            'deleted' =>
-             [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'bccEmailAddressesIds' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'bccEmailAddressesNames' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'ccEmailAddressesIds' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'ccEmailAddressesNames' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'toEmailAddressesIds' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'toEmailAddressesNames' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'fromEmailAddressName' =>
-             [
-                'type' => 'foreign',
-                'relation' => 'fromEmailAddress',
-                'foreign' => 'name',
-            ],
-            'fromEmailAddressId' =>
-             [
-                'type' => 'foreignId',
-                'index' => true,
-                'dbType' => 'varchar',
-                'len' => '24',
-                'notNull' => false,
-            ],
-            'attachmentsIds' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'attachmentsNames' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'assignedUserName' =>
-             [
-                'type' => 'foreign',
-                'relation' => 'assignedUser',
-                'foreign' =>
-                 [
-                    0 => 'firstName',
-                    1 => ' ',
-                    2 => 'lastName',
-                ],
-            ],
-            'assignedUserId' =>
-             [
-                'type' => 'foreignId',
-                'index' => true,
-                'dbType' => 'varchar',
-                'len' => '24',
-                'notNull' => false,
-            ],
-            'modifiedByName' =>
-             [
-                'type' => 'foreign',
-                'relation' => 'modifiedBy',
-                'foreign' =>
-                 [
-                    0 => 'firstName',
-                    1 => ' ',
-                    2 => 'lastName',
-                ],
-            ],
-            'modifiedById' =>
-             [
-                'type' => 'foreignId',
-                'index' => true,
-                'dbType' => 'varchar',
-                'len' => '24',
-                'notNull' => false,
-            ],
-            'createdByName' =>
-             [
-                'type' => 'foreign',
-                'relation' => 'createdBy',
-                'foreign' =>
-                 [
-                    0 => 'firstName',
-                    1 => ' ',
-                    2 => 'lastName',
-                ],
-            ],
-            'createdById' =>
-             [
-                'type' => 'foreignId',
-                'index' => true,
-                'dbType' => 'varchar',
-                'len' => '24',
-                'notNull' => false,
-            ],
-            'parentId' =>
-             [
-                'type' => 'foreignId',
-                'index' => 'parent',
-                'dbType' => 'varchar',
-                'len' => '24',
-                'notNull' => false,
-            ],
-            'parentType' =>
-             [
-                'type' => 'foreignType',
-                'notNull' => false,
-                'index' => 'parent',
-                'dbType' => 'varchar',
-                'len' => 255,
-            ],
-            'parentName' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'teamsIds' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-            'teamsNames' =>
-             [
-                'type' => 'varchar',
-                'notStorable' => true,
-            ],
-        ],
+             'id' =>
+              [
+                  'type' => 'id',
+                  'dbType' => 'varchar',
+                  'len' => '24',
+              ],
+             'name' =>
+              [
+                  'type' => 'varchar',
+                  'len' => 255,
+              ],
+             'subject' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'fromName' =>
+              [
+                  'type' => 'varchar',
+                  'len' => 255,
+              ],
+             'from' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'to' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'cc' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'bcc' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'replyTo' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+                  'len' => 255,
+              ],
+             'emailAddress' =>
+              [
+                  'type' => 'base',
+                  'notStorable' => true,
+              ],
+             'bodyPlain' =>
+              [
+                  'type' => 'text',
+              ],
+             'body' =>
+              [
+                  'type' => 'text',
+              ],
+             'isHtml' =>
+              [
+                  'type' => 'bool',
+                  'default' => true,
+              ],
+             'status' =>
+              [
+                  'type' => 'varchar',
+                  'default' => 'Archived',
+                  'len' => 255,
+              ],
+             'parent' =>
+              [
+                  'type' => 'linkParent',
+                  'notStorable' => true,
+              ],
+             'dateSent' =>
+              [
+                  'type' => 'datetime',
+                  'notNull' => false,
+              ],
+             'createdAt' =>
+              [
+                  'type' => 'datetime',
+                  'notNull' => false,
+              ],
+             'modifiedAt' =>
+              [
+                  'type' => 'datetime',
+                  'notNull' => false,
+              ],
+             'deleted' =>
+              [
+                  'type' => 'bool',
+                  'default' => false,
+              ],
+             'bccEmailAddressesIds' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'bccEmailAddressesNames' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'ccEmailAddressesIds' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'ccEmailAddressesNames' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'toEmailAddressesIds' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'toEmailAddressesNames' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'fromEmailAddressName' =>
+              [
+                  'type' => 'foreign',
+                  'relation' => 'fromEmailAddress',
+                  'foreign' => 'name',
+              ],
+             'fromEmailAddressId' =>
+              [
+                  'type' => 'foreignId',
+                  'index' => true,
+                  'dbType' => 'varchar',
+                  'len' => '24',
+                  'notNull' => false,
+              ],
+             'attachmentsIds' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'attachmentsNames' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'assignedUserName' =>
+              [
+                  'type' => 'foreign',
+                  'relation' => 'assignedUser',
+                  'foreign' =>
+                   [
+                       0 => 'firstName',
+                       1 => ' ',
+                       2 => 'lastName',
+                   ],
+              ],
+             'assignedUserId' =>
+              [
+                  'type' => 'foreignId',
+                  'index' => true,
+                  'dbType' => 'varchar',
+                  'len' => '24',
+                  'notNull' => false,
+              ],
+             'modifiedByName' =>
+              [
+                  'type' => 'foreign',
+                  'relation' => 'modifiedBy',
+                  'foreign' =>
+                   [
+                       0 => 'firstName',
+                       1 => ' ',
+                       2 => 'lastName',
+                   ],
+              ],
+             'modifiedById' =>
+              [
+                  'type' => 'foreignId',
+                  'index' => true,
+                  'dbType' => 'varchar',
+                  'len' => '24',
+                  'notNull' => false,
+              ],
+             'createdByName' =>
+              [
+                  'type' => 'foreign',
+                  'relation' => 'createdBy',
+                  'foreign' =>
+                   [
+                       0 => 'firstName',
+                       1 => ' ',
+                       2 => 'lastName',
+                   ],
+              ],
+             'createdById' =>
+              [
+                  'type' => 'foreignId',
+                  'index' => true,
+                  'dbType' => 'varchar',
+                  'len' => '24',
+                  'notNull' => false,
+              ],
+             'parentId' =>
+              [
+                  'type' => 'foreignId',
+                  'index' => 'parent',
+                  'dbType' => 'varchar',
+                  'len' => '24',
+                  'notNull' => false,
+              ],
+             'parentType' =>
+              [
+                  'type' => 'foreignType',
+                  'notNull' => false,
+                  'index' => 'parent',
+                  'dbType' => 'varchar',
+                  'len' => 255,
+              ],
+             'parentName' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'teamsIds' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+             'teamsNames' =>
+              [
+                  'type' => 'varchar',
+                  'notStorable' => true,
+              ],
+         ],
         'relations' =>
          [
-            'bccEmailAddresses' =>
-             [
-                'type' => 'manyMany',
-                'entity' => 'EmailAddress',
-                'foreignKey' => 'id',
-                'midKeys' =>
-                 [
-                    0 => 'emailId',
-                    1 => 'emailAddressId',
-                ],
-                'relationName' => 'EmailEmailAddress',
-                'conditions' =>
-                 [
-                    'addressType' => 'bcc',
-                ],
-                'additionalColumns' =>
-                 [
-                    'addressType' =>
-                     [
-                        'type' => 'varchar',
-                        'len' => '4',
-                    ],
-                ],
-            ],
-            'ccEmailAddresses' =>
-             [
-                'type' => 'manyMany',
-                'entity' => 'EmailAddress',
-                'foreignKey' => 'id',
-                'midKeys' =>
-                 [
-                    0 => 'emailId',
-                    1 => 'emailAddressId',
-                ],
-                'relationName' => 'EmailEmailAddress',
-                'conditions' =>
-                 [
-                    'addressType' => 'cc',
-                ],
-                'additionalColumns' =>
-                 [
-                    'addressType' =>
-                     [
-                        'type' => 'varchar',
-                        'len' => '4',
-                    ],
-                ],
-            ],
-            'toEmailAddresses' =>
-             [
-                'type' => 'manyMany',
-                'entity' => 'EmailAddress',
-                'foreignKey' => 'id',
-                'midKeys' =>
-                 [
-                    0 => 'emailId',
-                    1 => 'emailAddressId',
-                ],
-                'relationName' => 'EmailEmailAddress',
-                'conditions' =>
-                 [
-                    'addressType' => 'to',
-                ],
-                'additionalColumns' =>
-                 [
-                    'addressType' =>
-                     [
-                        'type' => 'varchar',
-                        'len' => '4',
-                    ],
-                ],
-            ],
-            'fromEmailAddress' =>
-             [
-                'type' => 'belongsTo',
-                'entity' => 'EmailAddress',
-                'key' => 'fromEmailAddressId',
-                'foreignKey' => 'id',
-            ],
-            'attachments' =>
-             [
-                'type' => 'hasChildren',
-                'entity' => 'Attachment',
-                'foreignKey' => 'parentId',
-                'foreignType' => 'parentType',
-            ],
-            'teams' =>
-             [
-                'type' => 'manyMany',
-                'entity' => 'Team',
-                'relationName' => 'entityTeam',
-                'midKeys' =>
-                 [
-                    0 => 'entity_id',
-                    1 => 'team_id',
-                ],
-                'conditions' =>
-                 [
-                    'entityType' => 'Email',
-                ],
-                'additionalColumns' =>
-                 [
-                    'entityType' =>
-                     [
-                        'type' => 'varchar',
-                        'len' => 100,
-                    ],
-                ],
-            ],
-            'assignedUser' =>
-             [
-                'type' => 'belongsTo',
-                'entity' => 'User',
-                'key' => 'assignedUserId',
-                'foreignKey' => 'id',
-            ],
-            'modifiedBy' =>
-             [
-                'type' => 'belongsTo',
-                'entity' => 'User',
-                'key' => 'modifiedById',
-                'foreignKey' => 'id',
-            ],
-            'createdBy' =>
-             [
-                'type' => 'belongsTo',
-                'entity' => 'User',
-                'key' => 'createdById',
-                'foreignKey' => 'id',
-            ],
-        ],
+             'bccEmailAddresses' =>
+              [
+                  'type' => 'manyMany',
+                  'entity' => 'EmailAddress',
+                  'foreignKey' => 'id',
+                  'midKeys' =>
+                   [
+                       0 => 'emailId',
+                       1 => 'emailAddressId',
+                   ],
+                  'relationName' => 'EmailEmailAddress',
+                  'conditions' =>
+                   [
+                       'addressType' => 'bcc',
+                   ],
+                  'additionalColumns' =>
+                   [
+                       'addressType' =>
+                        [
+                            'type' => 'varchar',
+                            'len' => '4',
+                        ],
+                   ],
+              ],
+             'ccEmailAddresses' =>
+              [
+                  'type' => 'manyMany',
+                  'entity' => 'EmailAddress',
+                  'foreignKey' => 'id',
+                  'midKeys' =>
+                   [
+                       0 => 'emailId',
+                       1 => 'emailAddressId',
+                   ],
+                  'relationName' => 'EmailEmailAddress',
+                  'conditions' =>
+                   [
+                       'addressType' => 'cc',
+                   ],
+                  'additionalColumns' =>
+                   [
+                       'addressType' =>
+                        [
+                            'type' => 'varchar',
+                            'len' => '4',
+                        ],
+                   ],
+              ],
+             'toEmailAddresses' =>
+              [
+                  'type' => 'manyMany',
+                  'entity' => 'EmailAddress',
+                  'foreignKey' => 'id',
+                  'midKeys' =>
+                   [
+                       0 => 'emailId',
+                       1 => 'emailAddressId',
+                   ],
+                  'relationName' => 'EmailEmailAddress',
+                  'conditions' =>
+                   [
+                       'addressType' => 'to',
+                   ],
+                  'additionalColumns' =>
+                   [
+                       'addressType' =>
+                        [
+                            'type' => 'varchar',
+                            'len' => '4',
+                        ],
+                   ],
+              ],
+             'fromEmailAddress' =>
+              [
+                  'type' => 'belongsTo',
+                  'entity' => 'EmailAddress',
+                  'key' => 'fromEmailAddressId',
+                  'foreignKey' => 'id',
+              ],
+             'attachments' =>
+              [
+                  'type' => 'hasChildren',
+                  'entity' => 'Attachment',
+                  'foreignKey' => 'parentId',
+                  'foreignType' => 'parentType',
+              ],
+             'teams' =>
+              [
+                  'type' => 'manyMany',
+                  'entity' => 'Team',
+                  'relationName' => 'entityTeam',
+                  'midKeys' =>
+                   [
+                       0 => 'entity_id',
+                       1 => 'team_id',
+                   ],
+                  'conditions' =>
+                   [
+                       'entityType' => 'Email',
+                   ],
+                  'additionalColumns' =>
+                   [
+                       'entityType' =>
+                        [
+                            'type' => 'varchar',
+                            'len' => 100,
+                        ],
+                   ],
+              ],
+             'assignedUser' =>
+              [
+                  'type' => 'belongsTo',
+                  'entity' => 'User',
+                  'key' => 'assignedUserId',
+                  'foreignKey' => 'id',
+              ],
+             'modifiedBy' =>
+              [
+                  'type' => 'belongsTo',
+                  'entity' => 'User',
+                  'key' => 'modifiedById',
+                  'foreignKey' => 'id',
+              ],
+             'createdBy' =>
+              [
+                  'type' => 'belongsTo',
+                  'entity' => 'User',
+                  'key' => 'createdById',
+                  'foreignKey' => 'id',
+              ],
+         ],
     ];
 
 

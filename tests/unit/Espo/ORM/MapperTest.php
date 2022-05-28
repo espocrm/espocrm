@@ -333,7 +333,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "ORDER BY contact.first_name DESC, contact.last_name DESC " .
             "LIMIT 0, 10";
 
-
         $contact = $this->entityFactory->create('Post');
         $contact->set([
             'id' => '1',

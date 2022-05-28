@@ -1163,7 +1163,6 @@ class BaseMapper implements RDBMapper
                 $entity->set($key, null);
                 $entity->setFetched($key, null);
 
-
                 if ($relType === Entity::BELONGS_TO_PARENT) {
                     $typeKey = $relationName . 'Type';
                     $update[$typeKey] = null;

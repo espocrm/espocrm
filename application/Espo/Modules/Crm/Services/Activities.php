@@ -540,7 +540,6 @@ class Activities implements
             ]);
         }
 
-
         if (!$this->isPerson($entityType) && !$this->isCompany($entityType)) {
             return $builder->build();
         }

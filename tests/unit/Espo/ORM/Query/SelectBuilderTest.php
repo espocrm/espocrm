@@ -263,7 +263,6 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ])
             ->build();
 
-
         $this->assertEquals(
             [
                 Expr::create('test1'),
@@ -280,7 +279,6 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->having(Cond::equal(Expr::column('test'), null))
             ->group(Expr::create('test'))
             ->build();
-
 
         $this->assertEquals(
             Cond::equal(Expr::column('test'), null)->getRaw(),

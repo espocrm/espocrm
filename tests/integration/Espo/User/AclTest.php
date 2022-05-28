@@ -73,11 +73,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'Account' => false,
                 'Call' =>
                  [
-                    'create' => 'yes',
-                    'read' => 'team',
-                    'edit' => 'team',
-                    'delete' => 'no'
-                ]
+                     'create' => 'yes',
+                     'read' => 'team',
+                     'edit' => 'team',
+                     'delete' => 'no'
+                 ]
             ],
             'fieldData' => [
                 'Call' => [
@@ -119,12 +119,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' =>  [
+            'data' => [
                 'Account' => false,
             ],
-            'fieldData' =>  [
-                'Call' =>  [
-                    'direction' =>  [
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
                         'read' => 'yes',
                         'edit' => 'no'
                     ]

@@ -1531,8 +1531,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $params,
             $entity->getEntityType()
         ) . '.' . $this->toDb(
-                $this->sanitize($attribute)
-            );
+            $this->sanitize($attribute)
+        );
 
         $part .= ' ' . $order;
 
@@ -1594,8 +1594,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $params,
             $entity->getEntityType()
         ) . '.' . $this->toDb(
-                $this->sanitize($attribute)
-            );
+            $this->sanitize($attribute)
+        );
     }
 
     /**

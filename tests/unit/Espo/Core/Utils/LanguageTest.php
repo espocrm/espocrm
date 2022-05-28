@@ -168,7 +168,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     public function testGet()
     {
-        $result =  [
+        $result = [
             'fields' =>
             [
                 'name' => 'User',

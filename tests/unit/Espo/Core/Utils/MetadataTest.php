@@ -91,16 +91,16 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testSet()
     {
-        $data =  [
+        $data = [
             'fields' =>
              [
-                'name' =>
-                 [
-                    'required' => false,
-                    'maxLength' => 150,
-                    'view' => 'Views.Test.Custom',
-                ],
-            ],
+                 'name' =>
+                  [
+                      'required' => false,
+                      'maxLength' => 150,
+                      'view' => 'Views.Test.Custom',
+                  ],
+             ],
         ];
 
         $this->object->set('entityDefs', 'Attachment', $data);
@@ -115,14 +115,14 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
-        $data =  [
+        $data = [
             'fields' =>
              [
-                'name' =>
-                 [
-                    'maxLength' => 200,
-                ],
-            ],
+                 'name' =>
+                  [
+                      'maxLength' => 200,
+                  ],
+             ],
         ];
 
         $this->object->set('entityDefs', 'Attachment', $data);
@@ -131,16 +131,16 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $result = [
             'entityDefs' => [
-                'Attachment' =>  [
+                'Attachment' => [
                     'fields' =>
                      [
-                        'name' =>
-                         [
-                            'required' => false,
-                            'maxLength' => 200,
-                            'view' => 'Views.Test.Custom',
-                        ],
-                    ],
+                         'name' =>
+                          [
+                              'required' => false,
+                              'maxLength' => 200,
+                              'view' => 'Views.Test.Custom',
+                          ],
+                     ],
                 ],
             ],
         ];
@@ -154,7 +154,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testDelete()
     {
-        $data =  [
+        $data = [
             'fields.name.type',
         ];
         $this->object->delete('entityDefs', 'Attachment', $data);
@@ -170,7 +170,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
-        $data =  [
+        $data = [
             'fields.name.required',
         ];
         $this->object->delete('entityDefs', 'Attachment', $data);
@@ -205,14 +205,14 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->object->delete('entityDefs', 'Attachment', $data);
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
 
-        $data =  [
+        $data = [
             'fields' =>
              [
-                'name' =>
-                 [
-                    'type' => 'enum',
-                ],
-            ],
+                 'name' =>
+                  [
+                      'type' => 'enum',
+                  ],
+             ],
         ];
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals('enum', $this->object->get('entityDefs.Attachment.fields.name.type'));
@@ -226,14 +226,14 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
-        $data =  [
+        $data = [
             'fields' =>
              [
-                'name' =>
-                 [
-                    'required' => true,
-                ],
-            ],
+                 'name' =>
+                  [
+                      'required' => true,
+                  ],
+             ],
         ];
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals(true, $this->object->get('entityDefs.Attachment.fields.name.required'));

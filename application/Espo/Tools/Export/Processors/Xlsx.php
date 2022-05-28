@@ -291,41 +291,41 @@ class Xlsx implements Processor
 
             switch ($type) {
                 case 'currency':
-                case 'currencyConverted': 
+                case 'currencyConverted':
 
                  break;
 
-                case 'int': 
+                case 'int':
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('0');
                  break;
 
-                case 'float': 
+                case 'float':
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                  break;
 
-                case 'date': 
+                case 'date':
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateFormat());
                  break;
 
-                case 'datetime': 
+                case 'datetime':
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
                  break;
 
-                case 'datetimeOptional': 
+                case 'datetimeOptional':
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
                  break;
 
-                default: 
+                default:
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('@');
