@@ -1,4 +1,5 @@
 <?php
+
 return (object) [
     'app' => (object) [
         'adminPanel' => (object) [
