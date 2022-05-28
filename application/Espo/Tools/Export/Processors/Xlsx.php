@@ -291,45 +291,45 @@ class Xlsx implements Processor
 
             switch ($type) {
                 case 'currency':
-                case 'currencyConverted': {
+                case 'currencyConverted': 
 
-                } break;
+                 break;
 
-                case 'int': {
+                case 'int': 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('0');
-                } break;
+                 break;
 
-                case 'float': {
+                case 'float': 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-                } break;
+                 break;
 
-                case 'date': {
+                case 'date': 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateFormat());
-                } break;
+                 break;
 
-                case 'datetime': {
+                case 'datetime': 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
-                } break;
+                 break;
 
-                case 'datetimeOptional': {
+                case 'datetimeOptional': 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
-                } break;
+                 break;
 
-                default: {
+                default: 
                     $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('@');
-                } break;
+                 break;
             }
         }
 
