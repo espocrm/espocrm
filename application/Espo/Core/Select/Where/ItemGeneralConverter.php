@@ -174,7 +174,7 @@ class ItemGeneralConverter implements ItemConverter
                 );
         }
 
-        $methodName = 'process' .  ucfirst($type);
+        $methodName = 'process' . ucfirst($type);
 
         if (method_exists($this, $methodName)) {
             return WhereClause::fromRaw(
@@ -490,7 +490,7 @@ class ItemGeneralConverter implements ItemConverter
 
             foreach ($value as $arrayValue) {
                 $whereList[] = [
-                    $idPart .'=s' => QueryBuilder::create()
+                    $idPart . '=s' => QueryBuilder::create()
                         ->from('ArrayValue')
                         ->select('entityId')
                         ->where([
@@ -885,7 +885,7 @@ class ItemGeneralConverter implements ItemConverter
 
         $number = strval(intval($value));
 
-        $dt2->modify('-'.$number.' days');
+        $dt2->modify('-' . $number . ' days');
 
         return [
             'AND' => [
@@ -1013,7 +1013,7 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                $attribute . '>=' => $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                 $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
             ]
         ];

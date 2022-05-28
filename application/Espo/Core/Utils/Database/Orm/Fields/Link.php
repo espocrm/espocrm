@@ -43,13 +43,13 @@ class Link extends Base
         $data = [
             $entityName => [
                 'fields' => [
-                    $fieldName.'Id' => [
+                    $fieldName . 'Id' => [
                         'type' => 'foreignId',
                         'index' => $fieldName,
                         'attributeRole' => 'id',
                         'fieldType' => 'link',
                     ],
-                    $fieldName.'Name' => [
+                    $fieldName . 'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'attributeRole' => 'name',
@@ -65,15 +65,15 @@ class Link extends Base
         ];
 
         if (!empty($fieldParams['notStorable'])) {
-            $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
+            $data[$entityName]['fields'][$fieldName . 'Id']['notStorable'] = true;
         }
 
         if (
             !empty($fieldParams['defaultAttributes']) &&
-            array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])
+            array_key_exists($fieldName . 'Id', $fieldParams['defaultAttributes'])
         ) {
-            $data[$entityName]['fields'][$fieldName.'Id']['default'] =
-                $fieldParams['defaultAttributes'][$fieldName.'Id'];
+            $data[$entityName]['fields'][$fieldName . 'Id']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName . 'Id'];
         }
 
         return $data;

@@ -84,7 +84,7 @@ class System
         $sysOS = strtolower(PHP_OS);
 
         foreach ($osList as $osName => $osSystem) {
-            if (preg_match('/^('.implode('|', $osSystem).')/i', $sysOS)) {
+            if (preg_match('/^(' . implode('|', $osSystem) . ')/i', $sysOS)) {
                 return $osName;
             }
         }

@@ -122,7 +122,7 @@ class Helper
                 }
 
                 if (isset($value)) {
-                    $paramValue = str_replace('{'.$matches[1].'}', $value, $paramValue);
+                    $paramValue = str_replace('{' . $matches[1] . '}', $value, $paramValue);
                 }
             }
         }

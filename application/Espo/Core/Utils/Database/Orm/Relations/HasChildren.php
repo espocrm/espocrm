@@ -46,12 +46,12 @@ class HasChildren extends Base
         return [
             $entityName => [
                 'fields' => [
-                       $linkName.'Ids' => [
+                       $linkName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
                     ],
-                    $linkName.'Names' => [
+                    $linkName . 'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
@@ -61,8 +61,8 @@ class HasChildren extends Base
                     $linkName => [
                         'type' => 'hasChildren',
                         'entity' => $foreignEntityName,
-                        'foreignKey' => $foreignLinkName.'Id',
-                        'foreignType' => $foreignLinkName.'Type',
+                        'foreignKey' => $foreignLinkName . 'Id',
+                        'foreignType' => $foreignLinkName . 'Type',
                         'foreign' => $foreignLinkName
                     ],
                 ],

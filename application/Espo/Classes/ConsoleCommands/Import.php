@@ -85,7 +85,7 @@ class Import implements Command
                 $countUpdated = $result->getCountUpdated();
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occurred: ". $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage() . "");
 
                 return;
             }

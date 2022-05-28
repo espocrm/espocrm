@@ -116,7 +116,7 @@ class VarcharFieldTest extends Base
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
 
         $this->executeQuery(
-            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(". $column['CHARACTER_MAXIMUM_LENGTH'] .") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
+            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(" . $column['CHARACTER_MAXIMUM_LENGTH'] . ") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
         );
 
         $column = $this->getColumnInfo('Test', 'testVarchar');
@@ -139,7 +139,7 @@ class VarcharFieldTest extends Base
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
 
         $this->executeQuery(
-            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(". $column['CHARACTER_MAXIMUM_LENGTH'] .") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
+            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(" . $column['CHARACTER_MAXIMUM_LENGTH'] . ") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
         );
 
         $column = $this->getColumnInfo('Test', 'testVarchar');

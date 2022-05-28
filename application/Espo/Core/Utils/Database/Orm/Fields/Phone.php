@@ -274,7 +274,7 @@ class Phone extends Base
                         'notStorable' => true,
                         'notExportable' => true,
                     ],
-                    $fieldName .'IsOptedOut' => [
+                    $fieldName . 'IsOptedOut' => [
                         'type' => 'bool',
                         'notStorable' => true,
                         'select' => [

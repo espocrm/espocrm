@@ -550,7 +550,7 @@ class LeadCapture
         $url = $this->config->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->get('name');
 
         $linkHtml =
-            '<a href='.$url.'>' .
+            '<a href=' . $url . '>' .
             $this->defaultLanguage->translateLabel('Confirm Opt-In', 'labels', 'LeadCapture') .
             '</a>';
 

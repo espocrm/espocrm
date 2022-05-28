@@ -61,7 +61,7 @@ class CheckCreatedIndexTest extends \tests\integration\Core\BaseTestCase
             return;
         }
 
-        $query = "SHOW INDEX FROM `". Util::toCamelCase($entityName) ."` WHERE Index_type = 'FULLTEXT'";
+        $query = "SHOW INDEX FROM `" . Util::toCamelCase($entityName) . "` WHERE Index_type = 'FULLTEXT'";
         $sth = $pdo->prepare($query);
         $sth->execute();
 

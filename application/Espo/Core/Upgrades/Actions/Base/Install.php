@@ -44,7 +44,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $processId = $data['id'];
 
-        $this->getLog()->debug('Installation process ['.$processId.']: start run.');
+        $this->getLog()->debug('Installation process [' . $processId . ']: start run.');
 
         $this->stepInit($data);
 
@@ -76,7 +76,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $this->stepFinalize($data);
 
-        $this->getLog()->debug('Installation process ['.$processId.']: end run.');
+        $this->getLog()->debug('Installation process [' . $processId . ']: end run.');
     }
 
     /**
@@ -114,7 +114,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "init" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "init" step.');
 
         if (!$this->systemRebuild()) {
             $this->throwErrorAndRemovePackage('Rebuild is failed. Fix all errors before upgrade.');
@@ -126,7 +126,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->beforeRunAction();
         $this->backupExistingFiles();
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "init" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "init" step.');
     }
 
     /**
@@ -137,13 +137,13 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "copyBefore" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "copyBefore" step.');
 
         if (!$this->copyFiles('before')) {
             $this->throwErrorAndRemovePackage('Cannot copy beforeInstall files.');
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copyBefore" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "copyBefore" step.');
     }
 
     /**
@@ -154,13 +154,13 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "beforeInstallScript" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "beforeInstallScript" step.');
 
         if (!isset($data['skipBeforeScript']) || !$data['skipBeforeScript']) {
             $this->runScript('before');
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "beforeInstallScript" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "beforeInstallScript" step.');
     }
 
     /**
@@ -171,7 +171,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "copy" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "copy" step.');
 
         /* remove files defined in a manifest */
         if (!$this->deleteFiles('delete', true)) {
@@ -191,7 +191,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->throwErrorAndRemovePackage('Cannot copy vendor files.');
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copy" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "copy" step.');
     }
 
     /**
@@ -202,7 +202,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "rebuild" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "rebuild" step.');
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
@@ -210,7 +210,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             }
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "rebuild" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "rebuild" step.');
     }
 
     /**
@@ -221,14 +221,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "copyAfter" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "copyAfter" step.');
 
         //afterInstallFiles
         if (!$this->copyFiles('after')) {
             $this->throwErrorAndRemovePackage('Cannot copy afterInstall files.');
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "copyAfter" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "copyAfter" step.');
     }
 
     /**
@@ -239,14 +239,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "afterInstallScript" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "afterInstallScript" step.');
 
         /* run after install script */
         if (!isset($data['skipAfterScript']) || !$data['skipAfterScript']) {
             $this->runScript('after');
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "afterInstallScript" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "afterInstallScript" step.');
     }
 
     /**
@@ -257,7 +257,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "finalize" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "finalize" step.');
 
         $this->disableMaintenanceMode();
         $this->afterRunAction();
@@ -273,7 +273,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
             $this->getFileManager()->removeInDir($path);
         }
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "finalize" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "finalize" step.');
     }
 
     /**
@@ -284,11 +284,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     {
         $this->initPackage($data);
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: Start "revert" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: Start "revert" step.');
 
         $this->restoreFiles();
 
-        $this->getLog()->info('Installation process ['. $this->getProcessId() .']: End "revert" step.');
+        $this->getLog()->info('Installation process [' . $this->getProcessId() . ']: End "revert" step.');
     }
 
     /**

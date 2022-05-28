@@ -227,7 +227,7 @@ class LDAP implements Login
                 $this->log->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
             }
 
-            $this->log->debug('User [' . $username . '] is found with this DN ['.$userDn.'].');
+            $this->log->debug('User [' . $username . '] is found with this DN [' . $userDn . '].');
 
             try {
                 $ldapClient->bind($userDn, $password);

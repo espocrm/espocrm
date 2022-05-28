@@ -80,10 +80,10 @@ class RelationManager
     {
         $relationName = ucfirst($relationName);
 
-        $className = 'Espo\Custom\Core\Utils\Database\Orm\Relations\\'.$relationName;
+        $className = 'Espo\Custom\Core\Utils\Database\Orm\Relations\\' . $relationName;
 
         if (!class_exists($className)) {
-            $className = 'Espo\Core\Utils\Database\Orm\Relations\\'.$relationName;
+            $className = 'Espo\Core\Utils\Database\Orm\Relations\\' . $relationName;
         }
 
         if (class_exists($className)) {

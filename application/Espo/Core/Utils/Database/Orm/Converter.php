@@ -536,7 +536,7 @@ class Converter
         }
 
         // @todo move to separate file
-        $scopeDefs = $this->getMetadata()->get('scopes.'.$entityType);
+        $scopeDefs = $this->getMetadata()->get('scopes.' . $entityType);
 
         if (isset($scopeDefs['stream']) && $scopeDefs['stream']) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {

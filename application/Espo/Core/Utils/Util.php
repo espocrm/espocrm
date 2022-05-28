@@ -364,7 +364,7 @@ class Util
     public static function normilizeScopeName($name)
     {
         foreach (self::$reservedWordList as $reservedWord) {
-            if ($reservedWord.'Obj' == $name) {
+            if ($reservedWord . 'Obj' == $name) {
                 return $reservedWord;
             }
         }
@@ -383,11 +383,11 @@ class Util
     ): ?string {
 
         if ($type == 'prefix') {
-            return static::toCamelCase($prePostFix.$symbol.$name, $symbol);
+            return static::toCamelCase($prePostFix . $symbol . $name, $symbol);
         }
 
         if ($type == 'postfix') {
-            return static::toCamelCase($name.$symbol.$prePostFix, $symbol);
+            return static::toCamelCase($name . $symbol . $prePostFix, $symbol);
         }
 
         return null;

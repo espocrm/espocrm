@@ -207,11 +207,11 @@ class LabelManager implements
             foreach ($item as $key => $categoryItem) {
                 if (is_array($categoryItem)) {
                     foreach ($categoryItem as $subKey => $subItem) {
-                        $finalData[$category][$category .'[.]' . $key .'[.]' . $subKey] = $subItem;
+                        $finalData[$category][$category . '[.]' . $key . '[.]' . $subKey] = $subItem;
                     }
                 }
                 else {
-                    $finalData[$category][$category .'[.]' . $key] = $categoryItem;
+                    $finalData[$category][$category . '[.]' . $key] = $categoryItem;
                 }
             }
         }

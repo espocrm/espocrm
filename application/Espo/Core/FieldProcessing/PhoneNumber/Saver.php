@@ -439,7 +439,7 @@ class Saver implements SaverInterface
                     }
 
                     $defaultType = $this->metadata
-                        ->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
+                        ->get('entityDefs.' . $entity->getEntityType() . '.fields.phoneNumber.defaultType');
 
                     $phoneNumberNew->set('type', $defaultType);
 

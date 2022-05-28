@@ -114,7 +114,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $packagePath = $this->reflection->invokeMethod('getPath');
         $manifestName = $this->reflection->getProperty('manifestName');
 
-        $filename = $packagePath . '/' .$manifestName;
+        $filename = $packagePath . '/' . $manifestName;
 
         $this->fileManagerOriginal = new FileManager();
 
@@ -277,7 +277,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array('packagePath')) );
 
         $postfix = $this->reflection->getProperty('packagePostfix');
-        $this->assertEquals( $packagePath.$postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
+        $this->assertEquals( $packagePath . $postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
 
         $backupPath = Util::fixPath($this->actionManagerParams['backupPath'] . '/' . $packageId);
 

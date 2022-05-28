@@ -103,7 +103,7 @@ class Tester
             $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
 
             if (!file_exists($params['dataFile'])) {
-                die('"dataFile" is not found, path: '.$params['dataFile'].'.');
+                die('"dataFile" is not found, path: ' . $params['dataFile'] . '.');
             }
         } else {
             $params['dataFile'] = realpath($this->testDataPath) . '/' .
@@ -114,7 +114,7 @@ class Tester
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
 
             if (!file_exists($params['pathToFiles'])) {
-                die('"pathToFiles" is not found, path: '.$params['pathToFiles'].'.');
+                die('"pathToFiles" is not found, path: ' . $params['pathToFiles'] . '.');
             }
         } else {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath);
@@ -146,7 +146,7 @@ class Tester
             $data = include($this->envConfigPath);
         }
         else {
-            die('Config for integration tests ['. $this->configPath .'] is not found');
+            die('Config for integration tests [' . $this->configPath . '] is not found');
         }
 
         $packageData = json_decode(file_get_contents($this->packageJsonPath));
@@ -299,7 +299,7 @@ class Tester
         }
 
         if (!is_writable($this->installPath)) {
-            die("Permission denied for directory [".$this->installPath."].\n");
+            die("Permission denied for directory [" . $this->installPath . "].\n");
         }
 
         //reset DB, remove and copy Espo files

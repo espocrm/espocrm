@@ -466,7 +466,7 @@ class Campaign extends Record implements
                 ->find();
 
             foreach ($entityList as $e) {
-                $hashId = $e->getEntityType() . '-'. $e->getId();
+                $hashId = $e->getEntityType() . '-' . $e->getId();
 
                 if (!empty($metTargetHash[$hashId])) {
                     continue;

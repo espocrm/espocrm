@@ -134,7 +134,7 @@ class Utils
         unset($options['dbname']);
 
         $pdo = static::createPdoConnection($options);
-        $pdo->query("CREATE DATABASE IF NOT EXISTS `". $dbname ."`");
+        $pdo->query("CREATE DATABASE IF NOT EXISTS `" . $dbname . "`");
     }
 
     public static function dropTables(array $options)
@@ -143,7 +143,7 @@ class Utils
 
         $result = $pdo->query("show tables");
         while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-            $pdo->query("DROP TABLE IF EXISTS `".$row[0]."`;");
+            $pdo->query("DROP TABLE IF EXISTS `" . $row[0] . "`;");
         }
     }
 
@@ -153,7 +153,7 @@ class Utils
 
         $result = $pdo->query("show tables");
         while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-            $pdo->query("TRUNCATE TABLE `".$row[0]."`;");
+            $pdo->query("TRUNCATE TABLE `" . $row[0] . "`;");
         }
     }
 
@@ -163,7 +163,7 @@ class Utils
         $port = empty($params['port']) ? '' : ';port=' . $params['port'];
         $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
 
-        $dsn = $platform . ':host='.$params['host'].$port.$dbname;
+        $dsn = $platform . ':host=' . $params['host'] . $port . $dbname;
         $dbh = new \PDO($dsn, $params['user'], $params['password']);
 
         return $dbh;

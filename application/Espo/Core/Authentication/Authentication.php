@@ -389,7 +389,7 @@ class Authentication
     {
         if (!$user->isActive()) {
             $this->log->info(
-                "AUTH: Trying to login as user '".$user->get('userName')."' which is not active."
+                "AUTH: Trying to login as user '" . $user->get('userName') . "' which is not active."
             );
 
             $this->logDenied($authLogRecord, 'INACTIVE_USER');
@@ -399,7 +399,7 @@ class Authentication
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $this->log->info(
-                "AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'."
+                "AUTH: Trying to login to crm as a portal user '" . $user->get('userName') . "'."
             );
 
             $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
@@ -409,7 +409,7 @@ class Authentication
 
         if ($this->isPortal() && !$user->isPortal()) {
             $this->log->info(
-                "AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user."
+                "AUTH: Trying to login to portal as user '" . $user->get('userName') . "' which is not portal user."
             );
 
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
@@ -424,7 +424,7 @@ class Authentication
 
             if (!$isPortalRelatedToUser) {
                 $this->log->info(
-                    "AUTH: Trying to login to portal as user '".$user->get('userName')."' ".
+                    "AUTH: Trying to login to portal as user '" . $user->get('userName') . "' " .
                     "which is portal user but does not belongs to portal."
                 );
 

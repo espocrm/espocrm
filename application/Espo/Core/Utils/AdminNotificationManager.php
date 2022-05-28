@@ -207,7 +207,7 @@ class AdminNotificationManager
     private function prepareMessage(string $message, array $data = []): string
     {
         foreach ($data as $name => $value) {
-            $message = str_replace('{'.$name.'}', $value, $message);
+            $message = str_replace('{' . $name . '}', $value, $message);
         }
 
         return $message;

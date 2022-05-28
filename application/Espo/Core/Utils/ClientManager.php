@@ -212,7 +212,7 @@ class ClientManager
         $html = $this->fileManager->getContents($htmlFilePath);
 
         foreach ($vars as $key => $value) {
-            $html = str_replace('{{'.$key.'}}', $value, $html);
+            $html = str_replace('{{' . $key . '}}', $value, $html);
         }
 
         foreach ($data as $key => $value) {
@@ -220,7 +220,7 @@ class ClientManager
                 continue;
             }
 
-            $html = str_replace('{{'.$key.'}}', $value, $html);
+            $html = str_replace('{{' . $key . '}}', $value, $html);
         }
 
         return $html;

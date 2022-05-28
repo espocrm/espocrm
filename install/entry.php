@@ -129,7 +129,7 @@ if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess']))
         die('The installation is disabled. It can be enabled in config files.');
     }
 
-    $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = preg_replace('/install\/?/', '', $url, 1);
     $url = strtok($url, '#');
     $url = strtok($url, '?');

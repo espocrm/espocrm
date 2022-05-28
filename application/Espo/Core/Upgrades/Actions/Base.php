@@ -380,7 +380,7 @@ abstract class Base
                     $res &= $this->checkVersions(
                         $manifest['database'][$databaseTypeLc],
                         $databaseVersion,
-                        'Your '. $databaseType .
+                        'Your ' . $databaseType .
                         ' version ({version}) is not supported. Required version: {requiredVersion}.'
                     );
                 }
@@ -429,7 +429,7 @@ abstract class Base
                 $isInRange = Semver::satisfies($currentVersion, $version);
             }
             catch (Throwable $e) {
-                $this->getLog()->error('SemVer: Version identification error: '.$e->getMessage().'.');
+                $this->getLog()->error('SemVer: Version identification error: ' . $e->getMessage() . '.');
             }
 
             if ($isInRange) {
@@ -465,7 +465,7 @@ abstract class Base
 
         if ($type != $manifestType) {
             $this->throwErrorAndRemovePackage(
-                'Wrong package type. You cannot install '.$manifestType.' package via '.ucfirst($type).' Manager.'
+                'Wrong package type. You cannot install ' . $manifestType . ' package via ' . ucfirst($type) . ' Manager.'
             );
         }
 
@@ -965,7 +965,7 @@ abstract class Base
 
         $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
         if ($res === false) {
-            $this->throwErrorAndRemovePackage('Unable to unzip the file - '.$packagePath.'.', false, false);
+            $this->throwErrorAndRemovePackage('Unable to unzip the file - ' . $packagePath . '.', false, false);
         }
     }
 
@@ -1013,7 +1013,7 @@ abstract class Base
         catch (Throwable $e) {
 
             try {
-                $this->getLog()->error('Database rebuild failure, details: '. $e->getMessage() .'.');
+                $this->getLog()->error('Database rebuild failure, details: ' . $e->getMessage() . '.');
             }
             catch (Throwable $e) {}
         }

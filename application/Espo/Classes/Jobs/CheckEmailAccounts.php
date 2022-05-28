@@ -59,7 +59,7 @@ class CheckEmailAccounts implements Job
         }
         catch (Throwable $e) {
             throw new Error(
-                'Job CheckEmailAccounts ' . $targetId . ': [' . $e->getCode() . '] ' .$e->getMessage()
+                'Job CheckEmailAccounts ' . $targetId . ': [' . $e->getCode() . '] ' . $e->getMessage()
             );
         }
     }

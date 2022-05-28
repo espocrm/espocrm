@@ -58,7 +58,7 @@ class CheckInboundEmails implements Job
         }
         catch (Throwable $e) {
             throw new Error(
-                'Job CheckInboundEmails ' . $targetId . ': [' . $e->getCode() . '] ' .$e->getMessage()
+                'Job CheckInboundEmails ' . $targetId . ': [' . $e->getCode() . '] ' . $e->getMessage()
             );
         }
     }

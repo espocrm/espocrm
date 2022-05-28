@@ -61,9 +61,9 @@ class Language{
             $language = $this->defaultLanguage;
         }
 
-        $langFileName = 'install/core/i18n/'.$language.'/install.json';
+        $langFileName = 'install/core/i18n/' . $language . '/install.json';
         if (!file_exists($langFileName)) {
-            $langFileName = 'install/core/i18n/'.$this->defaultLanguage.'/install.json';
+            $langFileName = 'install/core/i18n/' . $this->defaultLanguage . '/install.json';
         }
 
         $i18n = $this->getLangData($langFileName);
@@ -87,7 +87,7 @@ class Language{
      */
     protected function mergeWithDefaults($data)
     {
-        $defaultLangFile = 'install/core/i18n/'.$this->defaultLanguage.'/install.json';
+        $defaultLangFile = 'install/core/i18n/' . $this->defaultLanguage . '/install.json';
         $defaultData = $this->getLangData($defaultLangFile);
 
         foreach ($data as $categoryName => &$labels) {
@@ -148,7 +148,7 @@ class Language{
         if (isset($match[1])) {
             foreach ($match[1] as $varName) {
                 if (isset($rewriteRules[$varName])) {
-                    $label = str_replace('{'.$varName.'}', $rewriteRules[$varName], $label);
+                    $label = str_replace('{' . $varName . '}', $rewriteRules[$varName], $label);
                 }
             }
         }

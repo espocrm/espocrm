@@ -405,7 +405,7 @@ class Client
             case self::AUTH_TYPE_AUTHORIZATION_BASIC:
                 $params['client_id'] = $this->clientId;
 
-                $httpHeaders['Authorization'] = 'Basic ' . base64_encode($this->clientId .  ':' . $this->clientSecret);
+                $httpHeaders['Authorization'] = 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret);
 
                 break;
 

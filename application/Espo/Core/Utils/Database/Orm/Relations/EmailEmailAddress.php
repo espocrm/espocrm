@@ -53,8 +53,8 @@ class EmailEmailAddress extends HasMany
                 'relations' => array(
                     $linkName => array(
                         'midKeys' => array(
-                            lcfirst($entityName).'Id',
-                            lcfirst($foreignEntityName).'Id',
+                            lcfirst($entityName) . 'Id',
+                            lcfirst($foreignEntityName) . 'Id',
                         ),
                     ),
                 ),

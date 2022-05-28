@@ -157,7 +157,7 @@ class FiltersMatcher
         }
 
         $pattern = preg_quote($pattern, '#');
-        $pattern = str_replace('\*', '.*', $pattern).'\z';
+        $pattern = str_replace('\*', '.*', $pattern) . '\z';
 
         if (preg_match('#^' . $pattern . '#', $value)) {
             return true;

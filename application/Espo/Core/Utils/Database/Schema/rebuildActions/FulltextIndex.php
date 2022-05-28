@@ -79,7 +79,7 @@ class FulltextIndex extends BaseRebuildActions
 
                 foreach ($columns as $columnName) {
 
-                    $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
+                    $query = "SHOW FULL COLUMNS FROM `" . $tableName . "` WHERE Field = '" . $columnName . "'";
 
                     try {
                         /** @var array{Type: string, Collation: string} */
@@ -92,8 +92,8 @@ class FulltextIndex extends BaseRebuildActions
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
                             $alterQuery =
-                                "ALTER TABLE `". $tableName ."` " .
-                                "MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
+                                "ALTER TABLE `" . $tableName . "` " .
+                                "MODIFY `" . $columnName . "` MEDIUMTEXT COLLATE " . $row['Collation'] . "";
 
                             $this->log->info('SCHEMA, Execute Query: ' . $alterQuery);
 

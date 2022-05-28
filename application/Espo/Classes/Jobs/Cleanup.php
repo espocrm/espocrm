@@ -558,7 +558,7 @@ class Cleanup implements JobDataLess
             $fileList = $fileManager->getFileList($path, false, '', false);
 
             foreach ($fileList as $dirName) {
-                $dirPath = $path .  '/' . $dirName;
+                $dirPath = $path . '/' . $dirName;
 
                 $info = new SplFileInfo($dirPath);
 

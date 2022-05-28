@@ -164,7 +164,7 @@ class DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dtFrom->modify('-'.$number.' day');
+                $dtFrom->modify('-' . $number . ' day');
                 $dtFrom->setTime(0, 0, 0);
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
 
@@ -185,7 +185,7 @@ class DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dtTo->modify('+'.$number.' day');
+                $dtTo->modify('+' . $number . ' day');
                 $dtTo->setTime(24, 59, 59);
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -200,7 +200,7 @@ class DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dt->modify('-'.$number.' day');
+                $dt->modify('-' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -213,7 +213,7 @@ class DateTimeItemTransformer
 
                 $number = strval(intval($value));
 
-                $dt->modify('+'.$number.' day');
+                $dt->modify('+' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -335,7 +335,7 @@ class DateTimeItemTransformer
                     }
                 }
 
-                $dtFrom->add(new DateInterval('P'.(($quarter - 1) * 3).'M'));
+                $dtFrom->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'));
                 $dtTo = clone $dtFrom;
                 $dtTo->add(new DateInterval('P3M'));
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));

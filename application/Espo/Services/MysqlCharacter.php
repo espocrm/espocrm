@@ -79,7 +79,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
 
             // Get table columns params
             /** @phpstan-ignore-next-line */
-            $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE `Collation` <> 'utf8mb4_unicode_ci'";
+            $query = "SHOW FULL COLUMNS FROM `" . $tableName . "` WHERE `Collation` <> 'utf8mb4_unicode_ci'";
 
             try {
                 $sth = $sqlExecutor->execute($query);
@@ -123,9 +123,9 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                     case 'jsonObject':
                     case 'jsonArray':
                         /** @phpstan-ignore-next-line */
-                        $query = "ALTER TABLE `".$tableName."` ".
+                        $query = "ALTER TABLE `" . $tableName . "` " .
                             /** @phpstan-ignore-next-line */
-                            "CHANGE COLUMN `". $columnName ."` `". $columnName ."` ". $columnParams[$columnName]['Type'] .
+                            "CHANGE COLUMN `" . $columnName . "` `" . $columnName . "` " . $columnParams[$columnName]['Type'] .
                             /** @phpstan-ignore-next-line */
                             " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 
@@ -140,7 +140,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                     }
                     catch (\Exception $e) {
                         $GLOBALS['log']->warning(
-                            'Utf8mb4: FAILED executing the query - [' . $query . '], details: '. $e->getMessage() .'.'
+                            'Utf8mb4: FAILED executing the query - [' . $query . '], details: ' . $e->getMessage() . '.'
                         );
                     }
                 }

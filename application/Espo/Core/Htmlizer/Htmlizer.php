@@ -299,7 +299,7 @@ class Htmlizer
                         $entity->getRelationType($relation),
                         ['hasMany', 'manyMany', 'hasChildren']
                     ) &&
-                    mb_stripos($template, '{{#each '.$relation.'}}') !== false
+                    mb_stripos($template, '{{#each ' . $relation . '}}') !== false
                 ) {
                     $limit = 100;
 
@@ -546,11 +546,11 @@ class Htmlizer
                 $attributesPart = "";
 
                 if ($width) {
-                    $attributesPart .= " width=\"" .strval($width) . "\"";
+                    $attributesPart .= " width=\"" . strval($width) . "\"";
                 }
 
                 if ($height) {
-                    $attributesPart .= " height=\"" .strval($height) . "\"";
+                    $attributesPart .= " height=\"" . strval($height) . "\"";
                 }
 
                 $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
@@ -705,9 +705,9 @@ class Htmlizer
                 if (in_array($option, $list)) {
                     $html =
                         '<input type="checkbox" checked="checked" name="1" ' .
-                        'readonly="true" value="1" style="'.$css.'">';
+                        'readonly="true" value="1" style="' . $css . '">';
                 } else {
-                    $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
+                    $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: ' . $css . '">';
                 }
 
                 /** @phpstan-ignore-next-line */

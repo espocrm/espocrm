@@ -177,10 +177,10 @@ abstract class Base
         if (!method_exists($actionClass, $methodName)) {
             if (!empty($params['id'])) {
                 $actionClass->setProcessId($params['id']);
-                $actionClass->throwErrorAndRemovePackage('Step "'. $stepName .'" is not found.');
+                $actionClass->throwErrorAndRemovePackage('Step "' . $stepName . '" is not found.');
             }
 
-            throw new Error('Step "'. $stepName .'" is not found.');
+            throw new Error('Step "' . $stepName . '" is not found.');
         }
 
         $actionClass->$methodName($params); // throw an Exception on error

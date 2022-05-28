@@ -36,14 +36,14 @@ class AttachmentMultiple extends Base
         $data = array(
             $entityType => array(
                 'fields' => array(
-                    $fieldName.'Ids' => array(
+                    $fieldName . 'Ids' => array(
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'orderBy' => [['createdAt', 'ASC'], ['name', 'ASC']],
                         'isLinkMultipleIdList' => true,
                         'relation' => $fieldName
                     ),
-                    $fieldName.'Names' => array(
+                    $fieldName . 'Names' => array(
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkMultipleNameMap' => true
@@ -52,7 +52,7 @@ class AttachmentMultiple extends Base
             ),
             'unset' => array(
                 $entityType => array(
-                    'fields.'.$fieldName,
+                    'fields.' . $fieldName,
                 )
             )
         );

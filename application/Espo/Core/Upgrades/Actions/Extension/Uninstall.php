@@ -74,7 +74,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
         catch (Throwable $e) {
             $this->getLog()->error(
                 'Error saving Extension entity. The error occurred by existing Hook, more details: ' .
-                $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine()
+                $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine()
             );
 
             $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);

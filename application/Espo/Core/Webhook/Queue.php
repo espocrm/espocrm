@@ -330,7 +330,7 @@ class Queue
 
     protected function logSending(Webhook $webhook, int $code): void
     {
-        $this->log->debug("Webhook Queue: Webhook '" . $webhook->getId()  . "' sent, response code: {$code}.");
+        $this->log->debug("Webhook Queue: Webhook '" . $webhook->getId() . "' sent, response code: {$code}.");
     }
 
     /**

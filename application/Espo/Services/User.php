@@ -596,7 +596,7 @@ class User extends Record implements
 
             if ($userCount >= $this->getConfig()->get('userLimit')) {
                 throw new Forbidden(
-                    'User limit '.$this->getConfig()->get('userLimit').' is reached.'
+                    'User limit ' . $this->getConfig()->get('userLimit') . ' is reached.'
                 );
             }
         }
@@ -609,7 +609,7 @@ class User extends Record implements
 
             if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                 throw new Forbidden(
-                    'Portal user limit ' . $this->getConfig()->get('portalUserLimit').' is reached.'
+                    'Portal user limit ' . $this->getConfig()->get('portalUserLimit') . ' is reached.'
                 );
             }
         }
@@ -656,7 +656,7 @@ class User extends Record implements
                 $userCount = $this->getInternalUserCount();
 
                 if ($userCount >= $this->getConfig()->get('userLimit')) {
-                    throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
+                    throw new Forbidden('User limit ' . $this->getConfig()->get('userLimit') . ' is reached.');
                 }
             }
         }
@@ -671,7 +671,7 @@ class User extends Record implements
 
                 if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
                     throw new Forbidden(
-                        'Portal user limit '. $this->getConfig()->get('portalUserLimit').' is reached.'
+                        'Portal user limit ' . $this->getConfig()->get('portalUserLimit') . ' is reached.'
                     );
                 }
             }

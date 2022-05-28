@@ -183,7 +183,7 @@ class Language
         $translated = $this->get($key);
 
         if (!isset($translated)) {
-            $key = 'Global.'.$category.'.' . $label;
+            $key = 'Global.' . $category . '.' . $label;
             $translated = $this->get($key, $label);
         }
 
@@ -237,7 +237,7 @@ class Language
         $data = $this->getData();
 
         if (!isset($data)) {
-            throw new Error('Language: current language '.$this->currentLanguage.' not found');
+            throw new Error('Language: current language ' . $this->currentLanguage . ' not found');
         }
 
         return Util::getValueByKey($data, $key, $returns);

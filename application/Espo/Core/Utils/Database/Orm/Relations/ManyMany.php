@@ -99,12 +99,12 @@ class ManyMany extends Base
         return [
             $entityType => [
                 'fields' => [
-                    $linkName.'Ids' => [
+                    $linkName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
                     ],
-                    $linkName.'Names' => [
+                    $linkName . 'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,

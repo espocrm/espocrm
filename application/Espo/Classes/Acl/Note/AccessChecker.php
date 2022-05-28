@@ -116,7 +116,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         $noteEditThresholdPeriod =
-            '-' .  $this->config->get('noteEditThresholdPeriod', self::EDIT_PERIOD);
+            '-' . $this->config->get('noteEditThresholdPeriod', self::EDIT_PERIOD);
 
         $dt = new DateTime();
 

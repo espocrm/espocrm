@@ -149,7 +149,7 @@ class Manager
 
                 if ($add) {
                     if (!empty($filter)) {
-                        if (preg_match('/'.$filter.'/i', $value)) {
+                        if (preg_match('/' . $filter . '/i', $value)) {
                             $result[] = $value;
                         }
                     }
@@ -314,7 +314,7 @@ class Manager
     public function putContents(string $path, $data, int $flags = 0, bool $useRenaming = false): bool
     {
         if ($this->checkCreateFile($path) === false) {
-            throw new Error('Permission denied for '. $path);
+            throw new Error('Permission denied for ' . $path);
         }
 
         $result = false;
@@ -621,7 +621,7 @@ class Manager
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
 
-            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
+            throw new Error("Permission denied for <br>" . implode(", <br>", $betterPermissionList));
         }
 
         $res = true;
@@ -846,7 +846,7 @@ class Manager
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
 
-            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
+            throw new Error("Permission denied for <br>" . implode(", <br>", $betterPermissionList));
         }
 
         $result = true;
@@ -1162,7 +1162,7 @@ class Manager
         }
 
         /** @var string */
-        return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
+        return preg_replace('/^' . preg_quote($basePath, $dirSeparator) . '/', '', $path);
     }
 
     private function opcacheInvalidate(string $filepath, bool $force = false): void

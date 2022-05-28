@@ -200,7 +200,7 @@ class Schema
             $this->executeRebuildActions('beforeRebuild');
         }
         catch (Throwable $e) {
-            $this->log->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database fault: ' . $e);
 
             return false;
         }
@@ -211,13 +211,13 @@ class Schema
         $connection = $this->getConnection();
 
         foreach ($queries as $sql) {
-            $this->log->info('SCHEMA, Execute Query: '.$sql);
+            $this->log->info('SCHEMA, Execute Query: ' . $sql);
 
             try {
                 $result &= (bool) $connection->executeQuery($sql);
             }
             catch (Throwable $e) {
-                $this->log->alert('Rebuild database fault: '. $e);
+                $this->log->alert('Rebuild database fault: ' . $e);
 
                 $result = false;
             }
@@ -227,7 +227,7 @@ class Schema
             $this->executeRebuildActions('afterRebuild');
         }
         catch (Throwable $e) {
-            $this->log->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database fault: ' . $e);
 
             return false;
         }

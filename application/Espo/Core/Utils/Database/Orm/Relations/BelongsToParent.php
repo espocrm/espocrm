@@ -43,17 +43,17 @@ class BelongsToParent extends Base
         return [
             $entityName => [
                 'fields' => [
-                    $linkName.'Id' => [
+                    $linkName . 'Id' => [
                         'type' => 'foreignId',
                         'index' => $linkName,
                     ],
-                    $linkName.'Type' => [
+                    $linkName . 'Type' => [
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $linkName,
                         'len' => 100,
                     ],
-                    $linkName.'Name' => [
+                    $linkName . 'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                     ],
@@ -61,7 +61,7 @@ class BelongsToParent extends Base
                 'relations' => [
                     $linkName => [
                         'type' => 'belongsToParent',
-                        'key' => $linkName .'Id',
+                        'key' => $linkName . 'Id',
                         'foreign' => $linkParams['foreign'] ?? null,
                     ],
                 ],

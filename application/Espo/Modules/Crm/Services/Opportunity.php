@@ -112,7 +112,7 @@ class Opportunity extends Record
                 $stageField,
                 ['SUM:amountConverted', 'amount'],
             ])
-            ->order('LIST:'.$stageField.':' . implode(',', $options))
+            ->order('LIST:' . $stageField . ':' . implode(',', $options))
             ->group($stageField)
             ->where($whereClause);
 
@@ -470,7 +470,7 @@ class Opportunity extends Record
                 $dt->modify('first day of January this year');
 
                 return [
-                    $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                    $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                     $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
                 ];
 
@@ -514,12 +514,12 @@ class Opportunity extends Record
 
                 if ($quarterShift) {
                     if ($quarterShift >= 0) {
-                        $dt->add(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     }
                     else {
                         $quarterShift *= -1;
 
-                        $dt->sub(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     }
                 }
 

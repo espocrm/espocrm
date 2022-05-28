@@ -131,7 +131,7 @@ class Lead extends Record implements
             $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
 
             foreach ($fieldList as $field) {
-                if (!$this->metadata->get('entityDefs.'.$entityType.'.fields.' . $field)) {
+                if (!$this->metadata->get('entityDefs.' . $entityType . '.fields.' . $field)) {
                     continue;
                 }
 

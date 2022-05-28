@@ -67,13 +67,13 @@ class HasOne extends Base
         $relation = [
             $entityType => [
                 'fields' => [
-                    $linkName.'Id' => [
+                    $linkName . 'Id' => [
                         'type' => 'foreign',
                         'notStorable' => true,
                         'relation' => $linkName,
                         'foreign' => 'id',
                     ],
-                    $linkName.'Name' => [
+                    $linkName . 'Name' => [
                         'type' => 'foreign',
                         'notStorable' => true,
                         'relation' => $linkName,
@@ -84,7 +84,7 @@ class HasOne extends Base
                     $linkName => [
                         'type' => 'hasOne',
                         'entity' => $foreignEntityType,
-                        'foreignKey' => lcfirst($foreignLinkName.'Id'),
+                        'foreignKey' => lcfirst($foreignLinkName . 'Id'),
                         'foreign' => $foreignLinkName,
                     ],
                 ]
@@ -92,8 +92,8 @@ class HasOne extends Base
         ];
 
         if (!empty($linkParams['noJoin'])) {
-            $relation[$entityType]['fields'][$linkName.'Name']['type'] = 'varchar';
-            $relation[$entityType]['fields'][$linkName.'Id']['type'] = 'varchar';
+            $relation[$entityType]['fields'][$linkName . 'Name']['type'] = 'varchar';
+            $relation[$entityType]['fields'][$linkName . 'Id']['type'] = 'varchar';
         }
 
         return $relation;

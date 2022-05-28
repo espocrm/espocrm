@@ -79,7 +79,7 @@ class ConfirmOptIn implements EntryPoint
             Espo.require('controllers/lead-capture-opt-in-confirmation', function (Controller) {
                 var controller = new Controller(app.baseController.params, app.getControllerInjection());
                 controller.masterView = app.masterView;
-                controller.doAction('".$action."', ".json_encode($data).");
+                controller.doAction('" . $action . "', " . json_encode($data) . ");
             });
         ";
 

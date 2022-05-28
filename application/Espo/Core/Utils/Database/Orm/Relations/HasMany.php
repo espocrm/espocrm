@@ -49,12 +49,12 @@ class HasMany extends Base
         $relation = [
             $entityName => [
                 'fields' => [
-                       $linkName.'Ids' => [
+                       $linkName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
                     ],
-                    $linkName.'Names' => [
+                    $linkName . 'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkStub' => $isStub,
@@ -64,7 +64,7 @@ class HasMany extends Base
                     $linkName => [
                         'type' => $relationType,
                         'entity' => $foreignEntityName,
-                        'foreignKey' => lcfirst($foreignLinkName.'Id'),
+                        'foreignKey' => lcfirst($foreignLinkName . 'Id'),
                         'foreign' => $foreignLinkName
                     ],
                 ],

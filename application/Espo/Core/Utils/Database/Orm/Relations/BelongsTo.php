@@ -87,7 +87,7 @@ class BelongsTo extends Base
         $data = [
             $entityName => [
                 'fields' => [
-                    $linkName.'Id' => [
+                    $linkName . 'Id' => [
                         'type' => 'foreignId',
                         'index' => $index
                     ]
@@ -96,7 +96,7 @@ class BelongsTo extends Base
                     $linkName => [
                         'type' => 'belongsTo',
                         'entity' => $foreignEntityName,
-                        'key' => $linkName.'Id',
+                        'key' => $linkName . 'Id',
                         'foreignKey' => 'id',
                         'foreign' => $foreignLinkName
                     ]
@@ -105,7 +105,7 @@ class BelongsTo extends Base
         ];
 
         if (!$noForeignName) {
-            $data[$entityName]['fields'][$linkName.'Name'] = $fieldNameDefs;
+            $data[$entityName]['fields'][$linkName . 'Name'] = $fieldNameDefs;
         }
 
         return $data;

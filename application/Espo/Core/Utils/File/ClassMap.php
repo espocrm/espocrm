@@ -170,7 +170,7 @@ class ClassMap
                 if (is_array($file)) {
                     $this->fillHashFromFileList(
                         $file,
-                        $dir . '/'. $key,
+                        $dir . '/' . $key,
                         $allowedMethods,
                         $data,
                         $category . $key . '\\'

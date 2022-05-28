@@ -41,13 +41,13 @@ class LinkParent extends Base
         $data = [
             $entityName => [
                 'fields' => [
-                    $fieldName.'Id' => [
+                    $fieldName . 'Id' => [
                         'type' => 'foreignId',
                         'index' => $fieldName,
                         'attributeRole' => 'id',
                         'fieldType' => 'linkParent',
                     ],
-                    $fieldName.'Type' => [
+                    $fieldName . 'Type' => [
                         'type' => 'foreignType',
                         'notNull' => false,
                         'index' => $fieldName,
@@ -55,7 +55,7 @@ class LinkParent extends Base
                         'attributeRole' => 'type',
                         'fieldType' => 'linkParent',
                     ],
-                    $fieldName.'Name' => [
+                    $fieldName . 'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'relation' => $fieldName,
@@ -67,7 +67,7 @@ class LinkParent extends Base
             ],
             'unset' => [
                 $entityName => [
-                    'fields.'.$fieldName
+                    'fields.' . $fieldName
                 ]
             ]
         ];
@@ -76,18 +76,18 @@ class LinkParent extends Base
 
         if (
             !empty($fieldParams['defaultAttributes']) &&
-            array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])
+            array_key_exists($fieldName . 'Id', $fieldParams['defaultAttributes'])
         ) {
-            $data[$entityName]['fields'][$fieldName.'Id']['default'] =
-                $fieldParams['defaultAttributes'][$fieldName.'Id'];
+            $data[$entityName]['fields'][$fieldName . 'Id']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName . 'Id'];
         }
 
         if (
             !empty($fieldParams['defaultAttributes']) &&
-            array_key_exists($fieldName.'Type', $fieldParams['defaultAttributes'])
+            array_key_exists($fieldName . 'Type', $fieldParams['defaultAttributes'])
         ) {
-            $data[$entityName]['fields'][$fieldName.'Type']['default'] =
-                $fieldParams['defaultAttributes'][$fieldName.'Type'];
+            $data[$entityName]['fields'][$fieldName . 'Type']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName . 'Type'];
         }
 
         return $data;

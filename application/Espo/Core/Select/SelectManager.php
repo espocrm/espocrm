@@ -1110,7 +1110,7 @@ class SelectManager
                 $to = $dt->format($format);
 
                 $number = strval(intval($item['value']));
-                $dtFrom->modify('-'.$number.' day');
+                $dtFrom->modify('-' . $number . ' day');
                 $dtFrom->setTime(0, 0, 0);
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
 
@@ -1128,7 +1128,7 @@ class SelectManager
                 $from = $dt->format($format);
 
                 $number = strval(intval($item['value']));
-                $dtTo->modify('+'.$number.' day');
+                $dtTo->modify('+' . $number . ' day');
                 $dtTo->setTime(24, 59, 59);
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
 
@@ -1140,7 +1140,7 @@ class SelectManager
             case 'olderThanXDays':
                 $where['type'] = 'before';
                 $number = strval(intval($item['value']));
-                $dt->modify('-'.$number.' day');
+                $dt->modify('-' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
@@ -1149,7 +1149,7 @@ class SelectManager
             case 'afterXDays':
                 $where['type'] = 'after';
                 $number = strval(intval($item['value']));
-                $dt->modify('+'.$number.' day');
+                $dt->modify('+' . $number . ' day');
                 $dt->setTime(0, 0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
                 $where['value'] = $dt->format($format);
@@ -1242,7 +1242,7 @@ class SelectManager
                     }
                 }
 
-                $dtFrom->add(new DateInterval('P'.(($quarter - 1) * 3).'M'));
+                $dtFrom->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'));
                 $dtTo = clone $dtFrom;
                 $dtTo->add(new DateInterval('P3M'));
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
@@ -1306,10 +1306,10 @@ class SelectManager
                 $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
                 if ($quarterShift) {
                     if ($quarterShift >= 0) {
-                        $dt->add(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     } else {
                         $quarterShift *= -1;
-                        $dt->sub(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     }
                 }
                 if ($type === 'lastFiscalQuarter') {
@@ -1531,7 +1531,7 @@ class SelectManager
                 $dt2 = clone $dt1;
                 $number = strval(intval($value));
 
-                $dt2->modify('-'.$number.' days');
+                $dt2->modify('-' . $number . ' days');
                 $part['AND'] = [
                     $attribute . '>=' => $dt2->format('Y-m-d'),
                     $attribute . '<=' => $dt1->format('Y-m-d'),
@@ -1542,7 +1542,7 @@ class SelectManager
                 $dt1 = new DateTime();
                 $dt2 = clone $dt1;
                 $number = strval(intval($value));
-                $dt2->modify('+'.$number.' days');
+                $dt2->modify('+' . $number . ' days');
                 $part['AND'] = [
                     $attribute . '>=' => $dt1->format('Y-m-d'),
                     $attribute . '<=' => $dt2->format('Y-m-d'),
@@ -1552,14 +1552,14 @@ class SelectManager
             case 'olderThanXDays':
                 $dt1 = new DateTime();
                 $number = strval(intval($value));
-                $dt1->modify('-'.$number.' days');
+                $dt1->modify('-' . $number . ' days');
                 $part[$attribute . '<'] = $dt1->format('Y-m-d');
                 break;
 
             case 'afterXDays':
                 $dt1 = new DateTime();
                 $number = strval(intval($value));
-                $dt1->modify('+'.$number.' days');
+                $dt1->modify('+' . $number . ' days');
                 $part[$attribute . '>'] = $dt1->format('Y-m-d');
                 break;
 
@@ -1592,7 +1592,7 @@ class SelectManager
                 $quarter = ceil($dt->format('m') / 3);
                 $dt->modify('first day of January this year');
                 $part['AND'] = [
-                    $attribute . '>=' => $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                    $attribute . '>=' => $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                     $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
                 ];
                 break;
@@ -1607,7 +1607,7 @@ class SelectManager
                     $dt->modify('-1 year');
                 }
                 $part['AND'] = [
-                    $attribute . '>=' => $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                    $attribute . '>=' => $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
                     $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
                 ];
                 break;
@@ -1656,10 +1656,10 @@ class SelectManager
                 $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
                 if ($quarterShift) {
                     if ($quarterShift >= 0) {
-                        $dt->add(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     } else {
                         $quarterShift *= -1;
-                        $dt->sub(new DateInterval('P'.($quarterShift * 3).'M'));
+                        $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
                     }
                 }
                 if ($type === 'lastFiscalQuarter') {
@@ -1908,7 +1908,7 @@ class SelectManager
 
                     foreach ($value as $arrayValue) {
                         $part[] = [
-                            $idPart .'=s' => [
+                            $idPart . '=s' => [
                                 'entityType' => 'ArrayValue',
                                 'selectParams' => [
                                     'select' => ['entityId'],
@@ -2551,7 +2551,7 @@ class SelectManager
             } else {
                 if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
                     $relevanceExpression =
-                        'ROUND:(DIV:(' . $fullTextSearchData['where'] . ','.$this->fullTextOrderRelevanceDivider.'))';
+                        'ROUND:(DIV:(' . $fullTextSearchData['where'] . ',' . $this->fullTextOrderRelevanceDivider . '))';
 
                     if (is_string($result['orderBy'])) {
                         $result['orderBy'] = [

@@ -210,7 +210,7 @@ class Unsubscribe implements EntryPoint
             Espo.require('crm:controllers/unsubscribe', function (Controller) {
                 var controller = new Controller(app.baseController.params, app.getControllerInjection());
                 controller.masterView = app.masterView;
-                controller.doAction('unsubscribe', ".json_encode($data).");
+                controller.doAction('unsubscribe', " . json_encode($data) . ");
             });
         ";
 

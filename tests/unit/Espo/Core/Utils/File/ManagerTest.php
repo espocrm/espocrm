@@ -189,7 +189,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUnsetContents()
     {
-        $testPath = $this->cachePath.'/unsets.json';
+        $testPath = $this->cachePath . '/unsets.json';
 
         $initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
         $this->fileManager->putContents($testPath, $initData);

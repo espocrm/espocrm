@@ -99,7 +99,7 @@ return [
                 'select' => "TRIM(CONCAT(contact.first_name, ' ', contact.last_name))",
                 'where' => [
                     'LIKE' => "(contact.first_name LIKE {value} OR contact.last_name LIKE {value} OR "
-                        ."CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
+                        . "CONCAT(contact.first_name, ' ', contact.last_name) LIKE {value})",
                 ],
                 'order' => "contact.first_name {direction}, contact.last_name {direction}",
             ],

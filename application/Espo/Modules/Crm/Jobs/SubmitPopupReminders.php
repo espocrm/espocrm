@@ -162,7 +162,7 @@ class SubmitPopupReminders implements JobDataLess
                 ]);
             }
             catch (Throwable $e) {
-                $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
+                $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' . $e->getMessage());
             }
         }
     }

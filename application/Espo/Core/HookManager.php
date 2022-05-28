@@ -322,7 +322,7 @@ class HookManager
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 
         foreach ($hookData as $item) {
-            if (preg_match('/\\\\'.$class.'$/', $item['className'])) {
+            if (preg_match('/\\\\' . $class . '$/', $item['className'])) {
                 return true;
             }
         }

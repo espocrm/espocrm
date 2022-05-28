@@ -752,8 +752,8 @@ class Sender
         }
         else {
             $messageId =
-                '' . md5($email->get('name')) . '/' .time() . '/' .
-                $rand .  '@espo';
+                '' . md5($email->get('name')) . '/' . time() . '/' .
+                $rand . '@espo';
         }
 
         if ($email->get('isSystem')) {

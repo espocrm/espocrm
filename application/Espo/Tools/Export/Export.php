@@ -246,7 +246,7 @@ class Export
      */
     protected function getAttributeFromEntity(Entity $entity, string $attribute)
     {
-        $methodName = 'getAttribute' . ucfirst($attribute). 'FromEntity';
+        $methodName = 'getAttribute' . ucfirst($attribute) . 'FromEntity';
 
         if (method_exists($this, $methodName)) {
             return $this->$methodName($entity);

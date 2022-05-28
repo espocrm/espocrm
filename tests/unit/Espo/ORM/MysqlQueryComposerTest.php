@@ -221,7 +221,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `account` " .
-            "SET account.deleted = 0, account.name = 'hello' ".
+            "SET account.deleted = 0, account.name = 'hello' " .
             "WHERE account.name = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
@@ -242,8 +242,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `comment` " .
-            "JOIN `post` AS `post` ON comment.post_id = post.id ".
-            "SET comment.name = post.name ".
+            "JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "SET comment.name = post.name " .
             "WHERE comment.name = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
@@ -265,7 +265,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `account` " .
-            "SET account.deleted = 0, account.name = 'hello' ".
+            "SET account.deleted = 0, account.name = 'hello' " .
             "WHERE account.name = 'test' " .
             "ORDER BY account.name ASC";
 
@@ -289,7 +289,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "UPDATE `account` " .
-            "SET account.deleted = 0, account.name = 'hello' ".
+            "SET account.deleted = 0, account.name = 'hello' " .
             "WHERE account.name = 'test' " .
             "ORDER BY account.name ASC " .
             "LIMIT 1";
@@ -377,7 +377,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') ".
+            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') " .
             "ON DUPLICATE KEY UPDATE `deleted` = 0, `name` = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
@@ -427,7 +427,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     public function testSelectAllColumnsWithExtra()
     {
         $expectedSql =
-            "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted`, ".
+            "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted`, " .
             "LOWER(account.name) AS `lowerName` " .
             "FROM `account` " .
             "WHERE account.deleted = 0";
@@ -475,7 +475,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedSql =
-            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, ".
+            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, " .
             "comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0";
@@ -618,7 +618,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => array('postId', 'post.name')
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, ".
+            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, " .
             "COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
@@ -633,7 +633,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => array('MONTH:post.createdAt')
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, ".
+            "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, " .
             "DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
@@ -651,7 +651,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' " .
             "AND notesLeft.deleted = 0 " .
             "WHERE post.deleted = 0";
 
@@ -668,7 +668,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' " .
             "AND notesLeft.deleted = 0 " .
             "AND notesLeft.name IS NOT NULL " .
             "WHERE post.deleted = 0";
@@ -686,8 +686,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
-            "AND notesLeft.deleted = 0 ".
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' " .
+            "AND notesLeft.deleted = 0 " .
             "AND notesLeft.name = post.name " .
             "WHERE post.deleted = 0";
 
@@ -708,7 +708,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ".
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` " .
             "ON (post.name = 'test' OR post.name IS NULL)";
 
         $this->assertEquals($expectedSql, $sql);
@@ -729,7 +729,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL ".
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL " .
             "AND (post.name = 'test' OR post.name IS NULL)";
 
         $this->assertEquals($expectedSql, $sql);
@@ -839,8 +839,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
-            "WHERE post.id IN (SELECT post.id AS `id` FROM `post` ".
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "WHERE post.id IN (SELECT post.id AS `id` FROM `post` " .
             "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
@@ -860,8 +860,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
-            "WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` ".
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
+            "WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` " .
             "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
@@ -886,10 +886,10 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT post.id AS `id`, post.name AS `name` ".
-            "FROM `post` ".
-            "WHERE post.id IN ".
-            "(SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND ".
+            "SELECT post.id AS `id`, post.name AS `name` " .
+            "FROM `post` " .
+            "WHERE post.id IN " .
+            "(SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND " .
             "post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -911,7 +911,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedSql =
-            "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "WHERE NOT (post.name = 'test' AND post.created_by_id = '1') AND post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -935,7 +935,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedSql =
-            "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "WHERE NOT (((post.name = 'test1') OR (post.name = 'test2'))) AND post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -949,7 +949,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => ['QUARTER:comment.createdAt']
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', ".
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', " .
             "QUARTER(comment.created_at)) AS `QUARTER:comment.createdAt` FROM `comment` " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at))";
@@ -963,11 +963,11 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 ".
-            "THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` ".
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 " .
+            "THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` " .
             "FROM `comment` " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ".
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) " .
             "ELSE YEAR(comment.created_at) - 1 END";
         $this->assertEquals($expectedSql, $sql);
 
@@ -979,13 +979,13 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 ".
-            "THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ".
-            "ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 8) / 3)) ".
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 " .
+            "THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) " .
+            "ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 8) / 3)) " .
             "END AS `QUARTER_4:comment.createdAt` FROM `comment` " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', ".
-            "FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', ".
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', " .
+            "FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', " .
             "CEIL((MONTH(comment.created_at) + 8) / 3)) END";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1003,7 +1003,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY YEAR(post.created_at) ".
+            "GROUP BY YEAR(post.created_at) " .
             "ORDER BY 2 ASC";
         $this->assertEquals($expectedSql, $sql);
 
@@ -1019,7 +1019,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY post.name ".
+            "GROUP BY post.name " .
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
 
@@ -1034,12 +1034,12 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, ".
-            "post.name AS `post.name` ".
+            "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, " .
+            "post.name AS `post.name` " .
             "FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY YEAR(post.created_at), post.name ".
+            "GROUP BY YEAR(post.created_at), post.name " .
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1105,7 +1105,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
-            "FROM `article` WHERE article.deleted = 0 ".
+            "FROM `article` WHERE article.deleted = 0 " .
             "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
 
         $sql = $this->query->compose($select);
@@ -1125,7 +1125,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
-            "FROM `article` WHERE article.deleted = 0 ".
+            "FROM `article` WHERE article.deleted = 0 " .
             "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
 
         $sql = $this->query->compose($select);
@@ -1145,7 +1145,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT DISTINCT article.id AS `id` " .
-            "FROM `article` WHERE article.deleted = 0 ".
+            "FROM `article` WHERE article.deleted = 0 " .
             "ORDER BY 1 DESC";
 
         $sql = $this->query->compose($select);
@@ -1167,7 +1167,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT DISTINCT article.id AS `id`, article.name AS `name` " .
-            "FROM `article` ".
+            "FROM `article` " .
             "ORDER BY 1 ASC, 2 DESC";
 
         $sql = $this->query->compose($select);
@@ -1187,7 +1187,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ),
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` ".
+            "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
             "FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
@@ -1329,7 +1329,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' ".
+            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' " .
             "AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1526,7 +1526,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) ".
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) " .
             "AS `MONTH_NUMBER:TZ:(comment.created_at,-3.5)` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
@@ -1540,7 +1540,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) ".
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) " .
             "AS `MONTH_NUMBER:TZ:(comment.created_at,0)` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
@@ -1638,8 +1638,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT article.id AS `id`, ".
-            "MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:(description,'test')` ".
+            "SELECT article.id AS `id`, " .
+            "MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `MATCH_BOOLEAN:(description,'test')` " .
             "FROM `article` " .
             "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
@@ -1661,7 +1661,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ".
+            "SELECT article.id AS `id`, MATCH (article.description) AGAINST " .
             "('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
             "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
@@ -1742,9 +1742,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
-            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
+            "JOIN `test` AS `t` ON t.id = test_where.id " .
             "WHERE (((test_where.test = 'hello') OR (test_where.test = '1')))";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1766,8 +1766,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE (test_where.test = 1 AND test_where.id IS NOT NULL) AND test_where.test = 2";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1788,8 +1788,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE (test_where.test IN ('hello','test'))";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1808,9 +1808,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
-            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
+            "JOIN `test` AS `t` ON t.id = test_where.id " .
             "ORDER BY test_where.test DESC, t.id DESC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1848,8 +1848,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT (t.id * test_where.test) AS `test1` ".
-            "FROM `test_where` ".
+            "SELECT (t.id * test_where.test) AS `test1` " .
+            "FROM `test_where` " .
             "JOIN `test` AS `t` ON t.id = test_where.id";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1867,7 +1867,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT (test_select.id * 1) AS `test` ".
+            "SELECT (test_select.id * 1) AS `test` " .
             "FROM `test_select`";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1887,9 +1887,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT (left.id * 1) AS `left.test` ".
-            "FROM `test_select_right` ".
-            "JOIN `test_select` AS `left` ON test_select_right.left_id = left.id ".
+            "SELECT (left.id * 1) AS `left.test` " .
+            "FROM `test_select_right` " .
+            "JOIN `test_select` AS `left` ON test_select_right.left_id = left.id " .
             "ORDER BY (left.id * 1) ASC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1907,7 +1907,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT (test_select.id * 1) AS `testAnother` ".
+            "SELECT (test_select.id * 1) AS `testAnother` " .
             "FROM `test_select`";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1928,8 +1928,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE 'value' = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1950,8 +1950,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE 2 = test_where.test";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1972,8 +1972,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE TRUE = test_where.test";
 
         $this->assertEquals($expectedSql, $sql);
@@ -1994,8 +1994,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT test_where.id AS `id` ".
-            "FROM `test_where` ".
+            "SELECT test_where.id AS `id` " .
+            "FROM `test_where` " .
             "WHERE test_where.test = 4";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2099,8 +2099,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "SELECT a.id AS `value` FROM (SELECT 'test' AS `test`) AS `a` ".
-            "JOIN `account` AS `j` ON j.id = a.id ".
+            "SELECT a.id AS `value` FROM (SELECT 'test' AS `test`) AS `a` " .
+            "JOIN `account` AS `j` ON j.id = a.id " .
             "WHERE a.id = '1' " .
             "ORDER BY a.id ASC";
 
@@ -2227,8 +2227,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "(SELECT 'test1' AS `value`) ".
-            "UNION ".
+            "(SELECT 'test1' AS `value`) " .
+            "UNION " .
             "(SELECT 'test2' AS `value`)";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2272,9 +2272,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "(SELECT 'test1' AS `value`) ".
-            "UNION ALL ".
-            "(SELECT 'test2' AS `value`) ".
+            "(SELECT 'test1' AS `value`) " .
+            "UNION ALL " .
+            "(SELECT 'test2' AS `value`) " .
             "LIMIT 0, 2";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2304,10 +2304,10 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "(SELECT 'test1' AS `value`) ".
-            "UNION ALL ".
-            "(SELECT 'test2' AS `value`) ".
-            "ORDER BY 1 DESC ".
+            "(SELECT 'test1' AS `value`) " .
+            "UNION ALL " .
+            "(SELECT 'test2' AS `value`) " .
+            "ORDER BY 1 DESC " .
             "LIMIT 0, 2";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2336,9 +2336,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "(SELECT 'test1' AS `value`) ".
-            "UNION ALL ".
-            "(SELECT 'test2' AS `value`) ".
+            "(SELECT 'test1' AS `value`) " .
+            "UNION ALL " .
+            "(SELECT 'test2' AS `value`) " .
             "ORDER BY `value` DESC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2370,9 +2370,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($select);
 
         $expectedSql =
-            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
-            "UNION ALL ".
-            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) ".
+            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) " .
+            "UNION ALL " .
+            "(SELECT 'test1' AS `value1`, 'test2' AS `value2`) " .
             "ORDER BY `value1` DESC, `value2` ASC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2398,11 +2398,11 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($query);
 
         $expectedSql =
-            "SELECT a.id AS `id`, CONCAT(a.id, a.name) AS `c` ".
-            "FROM `account` AS `a` ".
-            "JOIN `some_table` AS `s` ON s.id = a.id ".
-            "WHERE a.name = 'Test' ".
-            "GROUP BY a.id ".
+            "SELECT a.id AS `id`, CONCAT(a.id, a.name) AS `c` " .
+            "FROM `account` AS `a` " .
+            "JOIN `some_table` AS `s` ON s.id = a.id " .
+            "WHERE a.name = 'Test' " .
+            "GROUP BY a.id " .
             "ORDER BY a.name ASC";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2423,8 +2423,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($query);
 
         $expectedSql =
-            "SELECT account.id AS `id` ".
-            "FROM `account` ".
+            "SELECT account.id AS `id` " .
+            "FROM `account` " .
             "FOR UPDATE";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2445,8 +2445,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose($query);
 
         $expectedSql =
-            "SELECT account.id AS `id` ".
-            "FROM `account` ".
+            "SELECT account.id AS `id` " .
+            "FROM `account` " .
             "FOR SHARE";
 
         $this->assertEquals($expectedSql, $sql);
@@ -2522,8 +2522,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $composer->compose($query);
 
         $expectedSql =
-            "SELECT account.id AS `id` ".
-            "FROM `account` ".
+            "SELECT account.id AS `id` " .
+            "FROM `account` " .
             "WHERE TEST(1, 2) = 'test'";
 
         $this->assertEquals($expectedSql, $sql);

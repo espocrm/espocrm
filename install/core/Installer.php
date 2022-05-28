@@ -481,7 +481,7 @@ class Installer
             if (!isset($entity)) {
                 $pdo = $this->getEntityManager()->getPDO();
 
-                $sql = "SELECT id FROM `".Util::toUnderScore($entityName)."` WHERE `id` = '".$data['id']."'";
+                $sql = "SELECT id FROM `" . Util::toUnderScore($entityName) . "` WHERE `id` = '" . $data['id'] . "'";
 
                 $sth = $pdo->prepare($sql);
                 $sth->execute();
@@ -490,8 +490,8 @@ class Installer
 
                 if ($deletedEntity) {
                     $sql =
-                        "UPDATE `". Util::toUnderScore($entityName)."` SET deleted = '0' " .
-                        "WHERE `id` = '".$data['id']."'";
+                        "UPDATE `" . Util::toUnderScore($entityName) . "` SET deleted = '0' " .
+                        "WHERE `id` = '" . $data['id'] . "'";
 
                     $pdo->prepare($sql)->execute();
 
@@ -683,8 +683,8 @@ class Installer
                         $normalizedParams[$name] = $paramDefs['default'];
 
                         $GLOBALS['log']->warning(
-                            'Incorrect value ['. $value .'] for Settings parameter ['. $name .']. ' .
-                            'Use default value ['. $paramDefs['default'] .'].'
+                            'Incorrect value [' . $value . '] for Settings parameter [' . $name . ']. ' .
+                            'Use default value [' . $paramDefs['default'] . '].'
                         );
                     }
 

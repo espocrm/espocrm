@@ -95,7 +95,7 @@ class ProcessMassEmail implements JobDataLess
             }
             catch (Throwable $e) {
                 $this->log->error(
-                    'Job ProcessMassEmail#processSending '. $massEmail->getId() . ': [' . $e->getCode() . '] ' .
+                    'Job ProcessMassEmail#processSending ' . $massEmail->getId() . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
                 );
             }

@@ -1938,7 +1938,7 @@ class Activities implements
         $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
 
         $now = $dt->format('Y-m-d H:i:s');
-        $nowShifted = $dt->sub(new DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
+        $nowShifted = $dt->sub(new DateInterval('PT' . strval($pastHours) . 'H'))->format('Y-m-d H:i:s');
 
         /** @var iterable<\Espo\Modules\Crm\Entities\Reminder> $reminderCollection */
         $reminderCollection = $this->entityManager

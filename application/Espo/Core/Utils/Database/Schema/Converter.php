@@ -203,9 +203,9 @@ class Converter
             $dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
 
             $this->log->debug(
-                'Rebuild Database for entities: ['.
-                implode(', ', $entityList).'] with dependent entities: ['.
-                implode(', ', $dependentEntities).']'
+                'Rebuild Database for entities: [' .
+                implode(', ', $entityList) . '] with dependent entities: [' .
+                implode(', ', $dependentEntities) . ']'
             );
 
             $ormMeta = array_intersect_key($ormMeta, array_flip($dependentEntities));
@@ -229,7 +229,7 @@ class Converter
                     $tables[$entityName] = $schema->getTable($tableName);
                 }
 
-                $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
+                $this->log->debug('DBAL: Table [' . $tableName . '] exists.');
 
                 continue;
             }
@@ -267,8 +267,8 @@ class Converter
 
                 if (!in_array($fieldType, $this->typeList)) {
                     $this->log->debug(
-                        'Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.
-                        $entityName.':'.$fieldName
+                        'Converters\Schema::process(): Field type [' . $fieldType . '] does not exist ' .
+                        $entityName . ':' . $fieldName
                     );
 
                     continue;
@@ -330,7 +330,7 @@ class Converter
         ]);
 
         if ($this->getSchema()->hasTable($tableName)) {
-            $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
+            $this->log->debug('DBAL: Table [' . $tableName . '] exists.');
 
             return $this->getSchema()->getTable($tableName);
         }

@@ -43,13 +43,13 @@ class LinkOne extends Base
         $data = [
             $entityType => [
                 'fields' => [
-                    $fieldName.'Id' => [
+                    $fieldName . 'Id' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'attributeRole' => 'id',
                         'fieldType' => 'linkOne',
                     ],
-                    $fieldName.'Name' => [
+                    $fieldName . 'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'attributeRole' => 'name',

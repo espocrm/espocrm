@@ -287,31 +287,31 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $em->getRepository('Account')->relate($account, 'contacts', $c1);
         $em->getRepository('Account')->relate($account, 'contacts', $c2);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'asc')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'meetings', 'name', 'asc')";
         $result = $fm->run($script);
         $this->assertEquals($m1->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'planned')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'meetings', 'name', 'desc', 'planned')";
         $result = $fm->run($script);
         $this->assertEquals($m4->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'held')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'meetings', 'name', 'desc', 'held')";
         $result = $fm->run($script);
         $this->assertEquals($m3->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetings', 'name', 'desc', 'status', 'Held')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'meetings', 'name', 'desc', 'status', 'Held')";
         $result = $fm->run($script);
         $this->assertEquals($m3->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'meetingsPrimary', 'name', 'asc')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'meetingsPrimary', 'name', 'asc')";
         $result = $fm->run($script);
         $this->assertEquals($m1->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'contacts', 'name', 'asc')";
         $result = $fm->run($script);
         $this->assertEquals($c1->id, $result);
 
-        $script = "record\\findRelatedOne('Account', '".$account->id."', 'contacts', 'name', 'asc', 'lastName', '2')";
+        $script = "record\\findRelatedOne('Account', '" . $account->id . "', 'contacts', 'name', 'asc', 'lastName', '2')";
         $result = $fm->run($script);
         $this->assertEquals($c2->id, $result);
     }
@@ -328,7 +328,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             'accountId' => $a->id,
         ]);
 
-        $script = "record\\findRelatedOne('Opportunity', '".$o->id."', 'account')";
+        $script = "record\\findRelatedOne('Opportunity', '" . $o->id . "', 'account')";
         $result = $fm->run($script);
         $this->assertEquals($a->id, $result);
     }
@@ -359,14 +359,14 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $ow1 = $em->createEntity('Opportunity', []);
 
 
-        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 2, null, null, 'open')";
+        $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 2, null, null, 'open')";
         $result = $fm->run($script);
         $this->assertIsArray($result);
         $this->assertEquals(2, count($result));
         $this->assertEquals(true, in_array($o1->id, $result));
         $this->assertEquals(true, in_array($o3->id, $result));
 
-        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3)";
+        $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 3)";
         $result = $fm->run($script);
         $this->assertIsArray($result);
         $this->assertEquals(3, count($result));
@@ -374,13 +374,13 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(true, in_array($o2->id, $result));
 
 
-        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3, 'name', 'asc')";
+        $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 3, 'name', 'asc')";
         $result = $fm->run($script);
         $this->assertIsArray($result);
         $this->assertEquals(3, count($result));
         $this->assertEquals([$o1->id, $o2->id, $o3->id], $result);
 
-        $script = "record\\findRelatedMany('Account', '".$a->id."', 'opportunities', 3, 'name', 'asc', 'stage=', 'Prospecting')";
+        $script = "record\\findRelatedMany('Account', '" . $a->id . "', 'opportunities', 3, 'name', 'asc', 'stage=', 'Prospecting')";
         $result = $fm->run($script);
         $this->assertIsArray($result);
         $this->assertEquals([$o1->id, $o3->id], $result);
@@ -396,7 +396,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             'status' => 'Held',
         ]);
 
-        $script = "record\\attribute('Meeting', '".$m1->id."', 'name')";
+        $script = "record\\attribute('Meeting', '" . $m1->id . "', 'name')";
         $result = $fm->run($script);
         $this->assertEquals('1', $result);
     }
@@ -487,7 +487,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             'name' => '1',
         ]);
 
-        $script = "record\\relate('Account', '".$a->id."', 'opportunities', '".$o->id."')";
+        $script = "record\\relate('Account', '" . $a->id . "', 'opportunities', '" . $o->id . "')";
         $result = $fm->run($script, $contact);
 
         $this->assertTrue($result);
@@ -506,7 +506,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             'name' => '1',
         ]);
 
-        $script = "record\\relate('Account', '".$a->id."', 'opportunities', list('".$o->id."'))";
+        $script = "record\\relate('Account', '" . $a->id . "', 'opportunities', list('" . $o->id . "'))";
         $result = $fm->run($script, $contact);
 
         $this->assertTrue($result);
@@ -527,7 +527,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
 
         $em->getRepository('Account')->relate($a, 'opportunities', $o);
 
-        $script = "record\\unrelate('Account', '".$a->id."', 'opportunities', '".$o->id."')";
+        $script = "record\\unrelate('Account', '" . $a->id . "', 'opportunities', '" . $o->id . "')";
         $result = $fm->run($script, $contact);
 
         $this->assertTrue($result);

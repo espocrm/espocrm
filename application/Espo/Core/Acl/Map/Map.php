@@ -139,7 +139,7 @@ class Map
             throw new RuntimeException("Bad threshold level.");
         }
 
-        $key = $scope . '_'. $action . '_' . $thresholdLevel;
+        $key = $scope . '_' . $action . '_' . $thresholdLevel;
 
         if (isset($this->forbiddenAttributesCache[$key])) {
             return $this->forbiddenAttributesCache[$key];
@@ -211,7 +211,7 @@ class Map
             throw new RuntimeException("Bad threshold level.");
         }
 
-        $key = $scope . '_'. $action . '_' . $thresholdLevel;
+        $key = $scope . '_' . $action . '_' . $thresholdLevel;
 
         if (isset($this->forbiddenFieldsCache[$key])) {
             return $this->forbiddenFieldsCache[$key];

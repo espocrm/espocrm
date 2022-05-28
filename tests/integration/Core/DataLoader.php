@@ -78,7 +78,7 @@ class DataLoader
         foreach ($fullData as $type => $data) {
             $methodName = 'load' . ucfirst($type);
             if (!method_exists($this, $methodName)) {
-                throw new \Exception('DataLoader: Data type is not supported in dataFile ['.$dataFile.'].');
+                throw new \Exception('DataLoader: Data type is not supported in dataFile [' . $dataFile . '].');
             }
 
             $this->$methodName($data);

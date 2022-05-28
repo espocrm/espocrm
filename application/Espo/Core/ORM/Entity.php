@@ -58,7 +58,7 @@ class Entity extends BaseEntity
 
     public function loadParentNameField(string $field): void
     {
-        if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) {
+        if (!$this->hasAttribute($field . 'Id') || !$this->hasAttribute($field . 'Type')) {
             throw new LogicException("There's no link-parent field '{$field}'.");
         }
 

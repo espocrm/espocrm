@@ -120,13 +120,13 @@ class EntityManager
         }
 
         if (!in_array($type, $this->metadata->get(['app', 'entityTemplateList'], []))) {
-            throw new Error('Type \''.$type.'\' does not exist.');
+            throw new Error('Type \'' . $type . '\' does not exist.');
         }
 
         $templateDefs = $this->metadata->get(['app', 'entityTemplates', $type], []);
 
         if (!empty($templateDefs['isNotCreatable']) && empty($params['forceCreate'])) {
-            throw new Error('Type \''.$type.'\' is not creatable.');
+            throw new Error('Type \'' . $type . '\' is not creatable.');
         }
 
         if ($this->nameUtil->nameIsBad($name)) {
@@ -164,45 +164,45 @@ class EntityManager
 
             $templateNamespace = "\Espo\Modules\\{$normalizedTemplateModuleName}\Core\Templates";
 
-            $templatePath = "application/Espo/Modules/".$normalizedTemplateModuleName."/Core/Templates";
+            $templatePath = "application/Espo/Modules/" . $normalizedTemplateModuleName . "/Core/Templates";
         }
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Entities;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n".
-            "{\n".
-            "    public const ENTITY_TYPE = '{$name}';\n\n".
-            "    protected \$entityType = '{$name}';\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Entities;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n" .
+            "{\n" .
+            "    public const ENTITY_TYPE = '{$name}';\n\n" .
+            "    protected \$entityType = '{$name}';\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";
 
         $this->fileManager->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Controllers;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Controllers;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n" .
+            "{\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
 
         $this->fileManager->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Services;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Services;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n" .
+            "{\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
 
         $this->fileManager->putContents($filePath, $contents);
 
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Repositories;\n\n".
-            "class {$normalizedName} extends {$templateNamespace}\Repositories\\{$type}\n".
-            "{\n".
+        $contents = "<" . "?" . "php\n\n" .
+            "namespace Espo\Custom\Repositories;\n\n" .
+            "class {$normalizedName} extends {$templateNamespace}\Repositories\\{$type}\n" .
+            "{\n" .
             "}\n";
 
         $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
@@ -210,10 +210,10 @@ class EntityManager
         $this->fileManager->putContents($filePath, $contents);
 
         if (file_exists($templatePath . '/SelectManagers/' . $type . '.php')) {
-            $contents = "<" . "?" . "php\n\n".
-                "namespace Espo\Custom\SelectManagers;\n\n".
-                "class {$normalizedName} extends {$templateNamespace}\SelectManagers\\{$type}\n".
-                "{\n".
+            $contents = "<" . "?" . "php\n\n" .
+                "namespace Espo\Custom\SelectManagers;\n\n" .
+                "class {$normalizedName} extends {$templateNamespace}\SelectManagers\\{$type}\n" .
+                "{\n" .
                 "}\n";
 
             $filePath = "custom/Espo/Custom/SelectManagers/{$normalizedName}.php";
@@ -261,7 +261,7 @@ class EntityManager
             $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
 
             foreach ($replaceData as $key => $value) {
-                $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
+                $languageContents = str_replace('{' . $key . '}', $value, $languageContents);
             }
 
             $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
@@ -276,7 +276,7 @@ class EntityManager
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
 
         foreach ($replaceData as $key => $value) {
-            $scopesDataContents = str_replace('{'.$key.'}', $value, $scopesDataContents);
+            $scopesDataContents = str_replace('{' . $key . '}', $value, $scopesDataContents);
         }
 
         $scopesData = Json::decode($scopesDataContents, true);
@@ -306,7 +306,7 @@ class EntityManager
         $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
 
         foreach ($replaceData as $key => $value) {
-            $entityDefsDataContents = str_replace('{'.$key.'}', $value, $entityDefsDataContents);
+            $entityDefsDataContents = str_replace('{' . $key . '}', $value, $entityDefsDataContents);
         }
 
         $entityDefsData = Json::decode($entityDefsDataContents, true);
@@ -320,7 +320,7 @@ class EntityManager
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
 
         foreach ($replaceData as $key => $value) {
-            $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
+            $clientDefsContents = str_replace('{' . $key . '}', $value, $clientDefsContents);
         }
 
         $clientDefsData = Json::decode($clientDefsContents, true);
@@ -423,7 +423,7 @@ class EntityManager
     public function update(string $name, array $data): void
     {
         if (!$this->metadata->get('scopes.' . $name)) {
-            throw new Error('Entity ['.$name.'] does not exist.');
+            throw new Error('Entity [' . $name . '] does not exist.');
         }
 
         $initialData = [
@@ -615,7 +615,7 @@ class EntityManager
         }
 
         if ((!empty($templateDefs['isNotRemovable']) || $isNotRemovable) && empty($params['forceRemove'])) {
-            throw new Error('Type \''.$type.'\' is not removable.');
+            throw new Error('Type \'' . $type . '\' is not removable.');
         }
 
         $unsets = [
@@ -852,12 +852,12 @@ class EntityManager
         }
 
         if ($this->metadata->get('entityDefs.' . $entity . '.links.' . $link)) {
-            throw new Conflict('Link ['.$entity.'::'.$link.'] already exists.');
+            throw new Conflict('Link [' . $entity . '::' . $link . '] already exists.');
         }
 
         if ($entityForeign) {
             if ($this->metadata->get('entityDefs.' . $entityForeign . '.links.' . $linkForeign)) {
-                throw new Conflict('Link ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                throw new Conflict('Link [' . $entityForeign . '::' . $linkForeign . '] already exists.');
             }
         }
 
@@ -869,13 +869,13 @@ class EntityManager
 
         if ($linkForeign === lcfirst($entityForeign)) {
             throw new Conflict(
-                'Link [' .$entityForeign . '::' . $linkForeign . '] shoud not match entity type name.'
+                'Link [' . $entityForeign . '::' . $linkForeign . '] shoud not match entity type name.'
             );
         }
 
         if ($link === lcfirst($entity)) {
             throw new Conflict(
-                'Link [' .$entity . '::' . $link . '] shoud not match entity type name.'
+                'Link [' . $entity . '::' . $link . '] shoud not match entity type name.'
             );
         }
 
@@ -884,27 +884,27 @@ class EntityManager
             case 'oneToOneLeft':
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . '] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Id] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Name] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link)) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . '] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Id] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Name] already exists.');
                 }
 
                 if ($linkType === 'oneToOneLeft') {
@@ -981,15 +981,15 @@ class EntityManager
             case 'oneToMany':
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . '] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Id] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
-                    throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
+                    throw new Conflict('Field [' . $entityForeign . '::' . $linkForeign . 'Name] already exists.');
                 }
 
                 $dataLeft = [
@@ -1036,15 +1036,15 @@ class EntityManager
             case 'manyToOne':
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link)) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . '] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Id] already exists.');
                 }
 
                 if ($this->metadata->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
-                    throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
+                    throw new Conflict('Field [' . $entity . '::' . $link . 'Name] already exists.');
                 }
 
                 $dataLeft = [

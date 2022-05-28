@@ -327,7 +327,7 @@ class Upgrade implements Command
      */
     private function runStepsInSingleProcess(string $upgradeId, array $stepList): void
     {
-        $this->log->debug('Installation process ['.$upgradeId.']: Single process mode.');
+        $this->log->debug('Installation process [' . $upgradeId . ']: Single process mode.');
 
         try {
             foreach ($stepList as $stepName) {
@@ -358,7 +358,7 @@ class Upgrade implements Command
         foreach ($stepList as $stepName) {
             $this->displayStep($stepName);
 
-            $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) .
+            $command = $phpExecutablePath . " command.php upgrade-step --step=" . ucfirst($stepName) .
                 " --id=" . $upgradeId;
 
             /** @var string */

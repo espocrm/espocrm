@@ -32,7 +32,7 @@ return [
         [
             'name' => 'Case-to-Email auto-reply',
             'subject' => 'Case has been created',
-            'body' => '<p>{Person.name},</p><p>Case \'{Case.name}\' has been created with number '.
+            'body' => '<p>{Person.name},</p><p>Case \'{Case.name}\' has been created with number ' .
                 '{Case.number} and assigned to {User.name}.</p>',
             'isHtml ' => '1',
         ]

@@ -140,7 +140,7 @@ class CommandManager
         $className = 'Espo\\Core\\Console\\Commands\\' . $command;
 
         if (!class_exists($className)) {
-            throw new CommandNotFound("Command '" . Util::camelCaseToHyphen($command) ."' does not exist.");
+            throw new CommandNotFound("Command '" . Util::camelCaseToHyphen($command) . "' does not exist.");
         }
 
         /** @var class-string<Command> */

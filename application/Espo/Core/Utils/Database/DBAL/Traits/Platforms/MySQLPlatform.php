@@ -284,7 +284,7 @@ trait MySQLPlatform
             // Espo: Unable to create autoindex column in existing table fix
             if (!empty($column['uniqueDeclaration'])) {
                 $declaration = $typeDecl . $charset . $default . $notnull . $check . $collation
-                    . ", ADD". $unique . " " . $column['uniqueDeclaration'];
+                    . ", ADD" . $unique . " " . $column['uniqueDeclaration'];
             }
             // Espo: end
 

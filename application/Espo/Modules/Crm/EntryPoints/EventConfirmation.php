@@ -146,7 +146,7 @@ class EventConfirmation implements EntryPoint
                 Espo.require('crm:controllers/event-confirmation', function (Controller) {
                     var controller = new Controller(app.baseController.params, app.getControllerInjection());
                     controller.masterView = app.masterView;
-                    controller.doAction('confirmEvent', ".json_encode($actionData).");
+                    controller.doAction('confirmEvent', " . json_encode($actionData) . ");
                 });
             ";
 

@@ -41,7 +41,7 @@ class LinkMultiple extends Base
         $data = [
             $entityName => [
                 'fields' => [
-                    $fieldName.'Ids' => [
+                    $fieldName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkMultipleIdList' => true,
@@ -50,7 +50,7 @@ class LinkMultiple extends Base
                         'attributeRole' => 'idList',
                         'fieldType' => 'linkMultiple',
                     ],
-                    $fieldName.'Names' => [
+                    $fieldName . 'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkMultipleNameMap' => true,

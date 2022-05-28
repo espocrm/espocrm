@@ -228,9 +228,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $query =
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), " .
-            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, ".
-             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, " .
+             "post.created_by_id AS `createdById`, post.deleted AS `deleted` " .
+            "FROM `post` " .
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = 0";
 
@@ -261,14 +261,14 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $sql =
             "SELECT post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), " .
             "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, " .
-            "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "post.created_by_id AS `createdById`, post.deleted AS `deleted` " .
+            "FROM `post` " .
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 ".
-            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = 0 ".
-            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = 0 ".
-            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = 0 ".
-            "ORDER BY post.name DESC ".
+            "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = 0 " .
+            "JOIN `tag` AS `tags` ON tags.id = tagsMiddle.tag_id AND tags.deleted = 0 " .
+            "JOIN `comment` AS `comments` ON post.id = comments.post_id AND comments.deleted = 0 " .
+            "WHERE post.name = 'test_1' AND (post.id = '100' OR post.name LIKE 'test_%') AND tags.name = 'yoTag' AND post.deleted = 0 " .
+            "ORDER BY post.name DESC " .
             "LIMIT 0, 10";
 
         $post1 = $this->entityFactory->create('Post');
@@ -324,13 +324,13 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $sql =
             "SELECT contact.id AS `id`, TRIM(CONCAT(contact.first_name, ' ', contact.last_name)) AS `name`, " .
-            "contact.first_name AS `firstName`, contact.last_name AS `lastName`, contact.deleted AS `deleted` ".
-            "FROM `contact` ".
+            "contact.first_name AS `firstName`, contact.last_name AS `lastName`, contact.deleted AS `deleted` " .
+            "FROM `contact` " .
             "WHERE " .
-            "(contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR ".
-            "CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') ".
-            "AND contact.deleted = 0 ".
-            "ORDER BY contact.first_name DESC, contact.last_name DESC ".
+            "(contact.first_name LIKE 'test%' OR contact.last_name LIKE 'test%' OR " .
+            "CONCAT(contact.first_name, ' ', contact.last_name) LIKE 'test%') " .
+            "AND contact.deleted = 0 " .
+            "ORDER BY contact.first_name DESC, contact.last_name DESC " .
             "LIMIT 0, 10";
 
 
@@ -361,9 +361,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $sql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, " .
-            "comment.deleted AS `deleted` ".
-            "FROM `comment` ".
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id ".
+            "comment.deleted AS `deleted` " .
+            "FROM `comment` " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0";
 
         $comment = $this->entityFactory->create('Comment');
@@ -397,9 +397,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedManyMany1()
     {
         $sql =
-            "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted`, postTag.role AS `postRole` ".
-            "FROM `tag` ".
-            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
+            "SELECT tag.id AS `id`, tag.name AS `name`, tag.deleted AS `deleted`, postTag.role AS `postRole` " .
+            "FROM `tag` " .
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 " .
             "WHERE tag.deleted = 0";
 
         $tag = $this->entityFactory->create('Tag');
@@ -429,9 +429,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedManyMany2()
     {
         $sql =
-            "SELECT tag.id AS `id`, postTag.role AS `postRole` ".
-            "FROM `tag` ".
-            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
+            "SELECT tag.id AS `id`, postTag.role AS `postRole` " .
+            "FROM `tag` " .
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 " .
             "WHERE tag.deleted = 0";
 
         $select = Select::fromRaw([
@@ -456,7 +456,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedManyManyWithConditions()
     {
         $sql =
-            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` ".
+            "SELECT team.id AS `id`, team.name AS `name`, team.deleted AS `deleted`, entityTeam.team_id AS `stub` FROM `team` " .
             "JOIN `entity_team` AS `entityTeam` ON entityTeam.team_id = team.id AND entityTeam.entity_id = '1' AND " .
             "entityTeam.deleted = 0 AND entityTeam.entity_type = 'Account' WHERE team.deleted = 0";
 
@@ -485,9 +485,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedHasChildren()
     {
         $sql =
-            "SELECT ".
-            "note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` ".
-            "FROM `note` ".
+            "SELECT " .
+            "note.id AS `id`, note.name AS `name`, note.parent_id AS `parentId`, note.parent_type AS `parentType`, note.deleted AS `deleted` " .
+            "FROM `note` " .
             "WHERE note.parent_id = '1' AND note.parent_type = 'Post' AND note.deleted = 0";
 
         $note = $this->entityFactory->create('Note');
@@ -520,13 +520,13 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedBelongsTo()
     {
         $query =
-            "SELECT ".
-            "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), ".
-            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, ".
-            "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
-            "FROM `post` ".
+            "SELECT " .
+            "post.id AS `id`, post.name AS `name`, NULLIF(TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), " .
+            "IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))), '') AS `createdByName`, " .
+            "post.created_by_id AS `createdById`, post.deleted AS `deleted` " .
+            "FROM `post` " .
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "WHERE post.id = '1' AND post.deleted = 0 ".
+            "WHERE post.id = '1' AND post.deleted = 0 " .
             "LIMIT 0, 1";
         $return = [
             [
@@ -549,9 +549,9 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testCountRelated()
     {
         $query =
-            "SELECT COUNT(tag.id) AS `value` ".
-            "FROM `tag` ".
-            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 ".
+            "SELECT COUNT(tag.id) AS `value` " .
+            "FROM `tag` " .
+            "JOIN `post_tag` AS `postTag` ON postTag.tag_id = tag.id AND postTag.post_id = '1' AND postTag.deleted = 0 " .
             "WHERE tag.deleted = 0";
 
         $return = [
@@ -822,7 +822,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testRemoveRelationManyManyWithCondition()
     {
         $query =
-            "UPDATE `entity_team` SET entity_team.deleted = 1 ".
+            "UPDATE `entity_team` SET entity_team.deleted = 1 " .
             "WHERE entity_team.entity_id = '1' AND entity_team.team_id = '100' AND entity_team.entity_type = 'Account'";
 
         $this->mockQuery($query, true);
@@ -835,7 +835,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testRemoveAllManyManyWithCondition()
     {
         $query =
-            "UPDATE `entity_team` SET entity_team.deleted = 1 ".
+            "UPDATE `entity_team` SET entity_team.deleted = 1 " .
             "WHERE entity_team.entity_id = '1' AND entity_team.entity_type = 'Account'";
 
         $this->mockQuery($query, true);
@@ -1170,8 +1170,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testMassRelate()
     {
         $query =
-            "INSERT INTO `post_tag` (`post_id`, `tag_id`) ".
-            "SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0 ".
+            "INSERT INTO `post_tag` (`post_id`, `tag_id`) " .
+            "SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0 " .
             "ON DUPLICATE KEY UPDATE `deleted` = 0";
 
         $return = true;

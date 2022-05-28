@@ -206,8 +206,8 @@ class Tcpdf extends TcpdfOriginal
             header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
             header('Pragma: public');
             header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-            header('Content-Disposition: inline; filename="'.$name.'"');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Content-Disposition: inline; filename="' . $name . '"');
             TCPDF_STATIC::sendOutputData($this->getBuffer(), $this->bufferlen);
 
             return '';

@@ -115,7 +115,7 @@ class Queue
                         ->find();
 
                     foreach ($excludingList as $excludingTarget) {
-                        $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->getId();
+                        $hashId = $excludingTarget->getEntityType() . '-' . $excludingTarget->getId();
 
                         $metTargetHash[$hashId] = true;
 
@@ -146,7 +146,7 @@ class Queue
                         ->find();
 
                     foreach ($recordList as $record) {
-                        $hashId = $record->getEntityType() . '-'. $record->getId();
+                        $hashId = $record->getEntityType() . '-' . $record->getId();
 
                         $emailAddress = $record->get('emailAddress');
 

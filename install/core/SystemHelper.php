@@ -97,9 +97,9 @@ class SystemHelper extends \Espo\Core\Utils\System
         }
 
         if (in_array($_SERVER["SERVER_PORT"], ['80', '443'])) {
-            $pageUrl .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+            $pageUrl .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
         } else {
-            $pageUrl .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+            $pageUrl .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
         }
 
         $baseUrl = str_ireplace('/install/index.php', '', $pageUrl);
@@ -138,7 +138,7 @@ class SystemHelper extends \Espo\Core\Utils\System
             $cd = $this->getCd(true);
         }
 
-        return $cd.$sudoStr.'chown -R '.$owner.':'.$group.' '.$path;
+        return $cd . $sudoStr . 'chown -R ' . $owner . ':' . $group . ' ' . $path;
     }
 
     public function getChmodCommand($path, $permissions = ['755'], $isRecursive = true, $isSudo = false, $isFile = null)
@@ -156,9 +156,9 @@ class SystemHelper extends \Espo\Core\Utils\System
 
         if (!isset($isFile) && count($permissions) == 1) {
             if ($isRecursive) {
-                return $sudoStr . 'find '. $path .' -type d -exec ' . $sudoStr . 'chmod '. $permissions[0] .' {} +';
+                return $sudoStr . 'find ' . $path . ' -type d -exec ' . $sudoStr . 'chmod ' . $permissions[0] . ' {} +';
             }
-            return $sudoStr . 'chmod '. $permissions[0] .' '. $path;
+            return $sudoStr . 'chmod ' . $permissions[0] . ' ' . $path;
         }
 
         $bufPerm = (count($permissions) == 1) ? array_fill(0, 2, $permissions[0]) : $permissions;
@@ -166,13 +166,13 @@ class SystemHelper extends \Espo\Core\Utils\System
         $commands = array();
 
         if ($isRecursive) {
-            $commands[] = $sudoStr. 'find '.$path.' -type f -exec ' .$sudoStr.'chmod '.$bufPerm[0].' {} +';
-            $commands[] = $sudoStr . 'find '.$path.' -type d -exec ' .$sudoStr. 'chmod '.$bufPerm[1].' {} +';
+            $commands[] = $sudoStr . 'find ' . $path . ' -type f -exec ' . $sudoStr . 'chmod ' . $bufPerm[0] . ' {} +';
+            $commands[] = $sudoStr . 'find ' . $path . ' -type d -exec ' . $sudoStr . 'chmod ' . $bufPerm[1] . ' {} +';
         } else {
             if (file_exists($path) && is_file($path)) {
-                $commands[] = $sudoStr. 'chmod '. $bufPerm[0] .' '. $path;
+                $commands[] = $sudoStr . 'chmod ' . $bufPerm[0] . ' ' . $path;
             } else {
-                $commands[] = $sudoStr. 'chmod '. $bufPerm[1] .' '. $path;
+                $commands[] = $sudoStr . 'chmod ' . $bufPerm[1] . ' ' . $path;
             }
         }
 
@@ -248,15 +248,15 @@ class SystemHelper extends \Espo\Core\Utils\System
                 $commands[] = $chown;
             }
         }
-        return implode(' ' . $this->combineOperator . ' ', $commands).';';
+        return implode(' ' . $this->combineOperator . ' ', $commands) . ';';
     }
 
     protected function getCd($isCombineOperator = false)
     {
-        $cd = 'cd '.$this->getRootDir();
+        $cd = 'cd ' . $this->getRootDir();
 
         if ($isCombineOperator) {
-            $cd .= ' '.$this->combineOperator.' ';
+            $cd .= ' ' . $this->combineOperator . ' ';
         }
 
         return $cd;

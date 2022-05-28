@@ -64,7 +64,7 @@ class ExternalAccount extends RecordBase
         foreach ($integrations as $entity) {
             if (
                 $entity->get('enabled') &&
-                $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
+                $this->metadata->get('integrations.' . $entity->getId() . '.allowUserAccounts')
             ) {
                 /** @var string */
                 $id = $entity->getId();

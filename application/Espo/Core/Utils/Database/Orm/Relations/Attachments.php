@@ -45,7 +45,7 @@ class Attachments extends HasChildren
         $relation = [
             $entityName => [
                 'fields' => [
-                    $linkName.'Types' => [
+                    $linkName . 'Types' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                     ],

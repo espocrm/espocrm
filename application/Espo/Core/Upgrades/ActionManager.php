@@ -159,7 +159,7 @@ class ActionManager
             $class = '\Espo\Core\Upgrades\Actions\\' . ucfirst($managerName) . '\\' . ucfirst($actionName);
 
             if (!class_exists($class)) {
-                throw new Error('Could not find an action ['.ucfirst($actionName).'], class ['.$class.'].');
+                throw new Error('Could not find an action [' . ucfirst($actionName) . '], class [' . $class . '].');
             }
 
             /** @var class-string<\Espo\Core\Upgrades\Actions\Base> $class */

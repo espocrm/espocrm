@@ -94,7 +94,7 @@ try {
     require('entry.php');
 }
 catch (\Throwable $e) {
-    fwrite(\STDOUT, "Error: ". $e->getMessage() .".\n");
+    fwrite(\STDOUT, "Error: " . $e->getMessage() . ".\n");
 
     exit;
 }
@@ -113,9 +113,9 @@ if (preg_match('/"success":false/i', $result)) {
 
     fwrite(
         \STDOUT,
-        "Error: ". (!empty($resultData['errors']) ?
+        "Error: " . (!empty($resultData['errors']) ?
             print_r($resultData['errors'], true) :
-            $resultData['errorMsg']) ."\n"
+            $resultData['errorMsg']) . "\n"
     );
 
     exit;

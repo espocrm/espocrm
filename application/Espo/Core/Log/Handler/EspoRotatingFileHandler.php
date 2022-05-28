@@ -111,7 +111,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
         );
 
         if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
+            $timedFilename .= '.' . $fileInfo['extension'];
         }
 
         return $timedFilename;
@@ -131,10 +131,10 @@ class EspoRotatingFileHandler extends EspoFileHandler
         );
 
         if (!empty($fileInfo['extension'])) {
-            $glob .= '\.'.$fileInfo['extension'];
+            $glob .= '\.' . $fileInfo['extension'];
         }
 
-        $glob = '^'.$glob.'$';
+        $glob = '^' . $glob . '$';
 
         return $glob;
     }

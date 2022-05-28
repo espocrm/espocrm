@@ -43,32 +43,32 @@ class File extends Base
         $data = array(
             $entityName => array(
                 'fields' => array(
-                    $fieldName.'Id' => array(
+                    $fieldName . 'Id' => array(
                         'type' => 'foreignId',
                         'index' => false
                     ),
-                    $fieldName.'Name' => array(
+                    $fieldName . 'Name' => array(
                         'type' => 'foreign'
                     )
                 )
             ),
             'unset' => array(
                 $entityName => array(
-                    'fields.'.$fieldName
+                    'fields.' . $fieldName
                 )
             )
         );
         if (!empty($fieldParams['notStorable'])) {
-            $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
-            $data[$entityName]['fields'][$fieldName.'Name']['type'] = 'varchar';
+            $data[$entityName]['fields'][$fieldName . 'Id']['notStorable'] = true;
+            $data[$entityName]['fields'][$fieldName . 'Name']['type'] = 'varchar';
         }
 
         if (
             !empty($fieldParams['defaultAttributes']) &&
-            array_key_exists($fieldName.'Id', $fieldParams['defaultAttributes'])
+            array_key_exists($fieldName . 'Id', $fieldParams['defaultAttributes'])
         ) {
-            $data[$entityName]['fields'][$fieldName.'Id']['default'] =
-                $fieldParams['defaultAttributes'][$fieldName.'Id'];
+            $data[$entityName]['fields'][$fieldName . 'Id']['default'] =
+                $fieldParams['defaultAttributes'][$fieldName . 'Id'];
         }
 
         if (empty($fieldParams['notStorable'])) {
@@ -80,7 +80,7 @@ class File extends Base
             $data[$entityName]['relations'][$linkName] = [
                 'type' => 'belongsTo',
                 'entity' => 'Attachment',
-                'key' => $linkName.'Id',
+                'key' => $linkName . 'Id',
                 'foreignKey' => 'id',
                 'foreign' => null,
             ];

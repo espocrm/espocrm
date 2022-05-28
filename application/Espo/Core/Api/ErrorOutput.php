@@ -179,7 +179,7 @@ class ErrorOutput
             $codeDesription = $this->getCodeDescription($statusCode);
 
             $statusText = isset($codeDesription) ?
-                $statusCode . ' '. $codeDesription :
+                $statusCode . ' ' . $codeDesription :
                 'HTTP ' . $statusCode;
 
             if ($message) {

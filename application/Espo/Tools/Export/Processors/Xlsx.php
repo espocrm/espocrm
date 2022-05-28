@@ -296,37 +296,37 @@ class Xlsx implements Processor
                 } break;
 
                 case 'int': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('0');
                 } break;
 
                 case 'float': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                 } break;
 
                 case 'date': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateFormat());
                 } break;
 
                 case 'datetime': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
                 } break;
 
                 case 'datetimeOptional': {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode($this->dateTime->getDateTimeFormat());
                 } break;
 
                 default: {
-                    $sheet->getStyle($col.$startingRowNumber.':'.$col.$rowNumber)
+                    $sheet->getStyle($col . $startingRowNumber . ':' . $col . $rowNumber)
                         ->getNumberFormat()
                         ->setFormatCode('@');
                 } break;
@@ -342,7 +342,7 @@ class Xlsx implements Processor
 
         foreach ($linkColList as $linkColumn) {
             $sheet
-                ->getStyle($linkColumn.$startingRowNumber . ':' . $linkColumn.$rowNumber)
+                ->getStyle($linkColumn . $startingRowNumber . ':' . $linkColumn . $rowNumber)
                 ->applyFromArray($linkStyle);
         }
 
@@ -428,13 +428,13 @@ class Xlsx implements Processor
             $typesCache[$name] = $type;
 
             if ($type === 'link' || $type === 'linkOne') {
-                if (array_key_exists($name.'Name', $row)) {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                if (array_key_exists($name . 'Name', $row)) {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name . 'Name']);
                 }
             }
             else if ($type === 'linkParent') {
-                if (array_key_exists($name.'Name', $row)) {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                if (array_key_exists($name . 'Name', $row)) {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name . 'Name']);
                 }
             }
             else if ($type === 'int') {
@@ -444,7 +444,7 @@ class Xlsx implements Processor
                 $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
             }
             else if ($type === 'currency') {
-                if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
+                if (array_key_exists($name . 'Currency', $row) && array_key_exists($name, $row)) {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
 
                     $currency = $row[$name . 'Currency'] ?? $this->config->get('defaultCurrency');
@@ -554,8 +554,8 @@ class Xlsx implements Processor
 
             }
             else if ($type === 'file') {
-                if (array_key_exists($name.'Name', $row)) {
-                    $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
+                if (array_key_exists($name . 'Name', $row)) {
+                    $sheet->setCellValue("$col$rowNumber", $row[$name . 'Name']);
                 }
             }
             else if ($type === 'enum') {
@@ -681,7 +681,7 @@ class Xlsx implements Processor
 
             if ($name === 'name') {
                 if (array_key_exists('id', $row)) {
-                    $link = $this->config->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
+                    $link = $this->config->getSiteUrl() . "/#" . $entityType . "/view/" . $row['id'];
                 }
             }
             else if ($type === 'url') {
@@ -690,7 +690,7 @@ class Xlsx implements Processor
                 }
             }
             else if ($type === 'link') {
-                if (array_key_exists($name.'Id', $row)) {
+                if (array_key_exists($name . 'Id', $row)) {
                     $foreignEntity = null;
 
                     if (!$isForeign) {
@@ -711,18 +711,18 @@ class Xlsx implements Processor
                     if ($foreignEntity) {
                         $link =
                             $this->config->getSiteUrl() .
-                            "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
+                            "/#" . $foreignEntity . "/view/" . $row[$name . 'Id'];
                     }
                 }
             }
             else if ($type === 'file') {
-                if (array_key_exists($name.'Id', $row)) {
-                    $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
+                if (array_key_exists($name . 'Id', $row)) {
+                    $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name . 'Id'];
                 }
             }
             else if ($type === 'linkParent') {
-                if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
-                    $link = $this->config->getSiteUrl() . "/#" . $row[$name.'Type']."/view/" . $row[$name.'Id'];
+                if (array_key_exists($name . 'Id', $row) && array_key_exists($name . 'Type', $row)) {
+                    $link = $this->config->getSiteUrl() . "/#" . $row[$name . 'Type'] . "/view/" . $row[$name . 'Id'];
                 }
             }
             else if ($type === 'phone') {
@@ -760,7 +760,7 @@ class Xlsx implements Processor
             return '#,##0.00_-"' . $currencySymbol . '"';
         }
 
-        return '[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00';
+        return '[$' . $currencySymbol . '-409]#,##0.00;-[$' . $currencySymbol . '-409]#,##0.00';
     }
 
     /**

@@ -96,7 +96,7 @@ class Helper
                 implode(', ', $extensionVersion) :
                 $extensionVersion;
 
-            $errorMessage = 'Dependency Error: The extension "' . $extensionName .'" with version "'.
+            $errorMessage = 'Dependency Error: The extension "' . $extensionName . '" with version "' .
                 $versionString . '" is missing.';
 
             if (

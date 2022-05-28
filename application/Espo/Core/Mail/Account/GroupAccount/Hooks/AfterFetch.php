@@ -279,7 +279,7 @@ class AfterFetch implements AfterFetchInterface
             $subject = $replyData['subject'];
 
             if ($case) {
-                $subject = '[#' . $case->get('number'). '] ' . $subject;
+                $subject = '[#' . $case->get('number') . '] ' . $subject;
             }
 
             $reply = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);

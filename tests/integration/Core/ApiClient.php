@@ -114,7 +114,7 @@ class ApiClient
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->userName . ':' . $this->password);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -124,7 +124,7 @@ class ApiClient
         if (isset($jsonData)) {
             if ($method == 'GET') {
                 $data = json_decode($jsonData, true);
-                curl_setopt($ch, CURLOPT_URL, $url. '?' . http_build_query($data));
+                curl_setopt($ch, CURLOPT_URL, $url . '?' . http_build_query($data));
             } else {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
@@ -185,7 +185,7 @@ class ApiClient
 
         foreach ($paramList as $name) {
             if (empty($this->$name)) {
-                throw new \Exception('EspoClient: Parameter "'.$name.'" is not defined.');
+                throw new \Exception('EspoClient: Parameter "' . $name . '" is not defined.');
             }
         }
 

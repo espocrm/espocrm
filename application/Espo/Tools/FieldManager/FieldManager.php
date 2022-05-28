@@ -458,8 +458,8 @@ class FieldManager
         $this->processHook('beforeRemove', $type, $scope, $name);
 
         $unsets = [
-            'fields.'.$name,
-            'links.'.$name,
+            'fields.' . $name,
+            'links.' . $name,
         ];
 
         $this->metadata->delete('entityDefs', $scope, $unsets);
