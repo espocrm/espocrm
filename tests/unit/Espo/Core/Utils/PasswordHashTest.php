@@ -67,7 +67,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
         $salt = $this->object->generateSalt();
 
         $result = '$6$' . $salt . '$';
-        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeSalt', array($salt)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeSalt', [$salt]));
     }
 
     public function testGetSalt()

@@ -48,18 +48,18 @@ class EmailEmailAddress extends HasMany
             throw new RuntimeException("No foreign-entity-type.");
         }
 
-        $relation = array(
-            $entityName => array(
-                'relations' => array(
-                    $linkName => array(
-                        'midKeys' => array(
+        $relation = [
+            $entityName => [
+                'relations' => [
+                    $linkName => [
+                        'midKeys' => [
                             lcfirst($entityName) . 'Id',
                             lcfirst($foreignEntityName) . 'Id',
-                        ),
-                    ),
-                ),
-            ),
-        );
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         /** @var array<string,mixed> */
         return \Espo\Core\Utils\Util::merge($parentRelation, $relation);

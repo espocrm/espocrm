@@ -1,18 +1,18 @@
 <?php
 
-return array(
+return [
 
-    'Comment' => array(
-        'fields' => array(
-            'id' => array(
+    'Comment' => [
+        'fields' => [
+            'id' => [
                 'type' => 'id',
-            ),
-            'name' => array(
+            ],
+            'name' => [
                 'type' => 'varchar',
                 'len' => '100',
-            ),
-        ),
-    ),
+            ],
+        ],
+    ],
 
-);
+];
 

@@ -33,13 +33,13 @@ $smarty->assign('phpRequirementList', $phpRequirementList);
 $installData = $_SESSION['install'];
 $hostData = explode(':', $installData['host-name']);
 
-$dbConfig = array(
+$dbConfig = [
     'host' => isset($hostData[0]) ? $hostData[0] : '',
     'port' => isset($hostData[1]) ? $hostData[1] : '',
     'dbname' => $installData['db-name'],
     'user' => $installData['db-user-name'],
     'password' => $installData['db-user-password'],
-);
+];
 
 $mysqlRequirementList = $installer->getSystemRequirementList('database', false, ['database' => $dbConfig]);
 $smarty->assign('mysqlRequirementList', $mysqlRequirementList);

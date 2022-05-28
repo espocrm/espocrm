@@ -47,12 +47,12 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
 
     public function testCreateUserWithAttributes()
     {
-        $newUser = $this->createUser(array(
+        $newUser = $this->createUser([
             'userName' => 'tester',
             'firstName' => 'Test',
             'lastName' => 'Tester',
             'emailAddress' => 'test@tester.com',
-        ));
+        ]);
 
         $this->assertInstanceOf('\\Espo\\Orm\\Entity', $newUser);
         $this->assertTrue(!empty($newUser->id));
@@ -64,33 +64,33 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
 
     public function testCreateUserWithRole()
     {
-        $newUser = $this->createUser('tester', array(
+        $newUser = $this->createUser('tester', [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
             'data' =>
-            array (
+             [
                 'Account' => false,
                 'Call' =>
-                array (
+                 [
                     'create' => 'yes',
                     'read' => 'team',
                     'edit' => 'team',
                     'delete' => 'no',
-                ),
-            ),
+                ],
+            ],
             'fieldData' =>
-            array (
+             [
                 'Call' =>
-                array (
+                 [
                     'direction' =>
-                    array (
+                     [
                         'read' => 'yes',
                         'edit' => 'no',
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
         $this->assertInstanceOf('\\Espo\\Orm\\Entity', $newUser);
         $this->assertTrue(!empty($newUser->id));
@@ -99,28 +99,28 @@ class CreateUserTest extends \tests\integration\Core\BaseTestCase
 
     public function testCreatePortalUserWithRole()
     {
-        $newUser = $this->createUser(array(
+        $newUser = $this->createUser([
             'userName' => 'tester',
             'lastName' => 'tester',
-            'portalsIds' => array(
+            'portalsIds' => [
                 'testPortalId',
-            ),
-        ), array(
+            ],
+        ], [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' => array (
+            'data' =>  [
                 'Account' => false,
-            ),
-            'fieldData' => array (
-                'Call' => array (
-                    'direction' => array (
+            ],
+            'fieldData' =>  [
+                'Call' =>  [
+                    'direction' =>  [
                         'read' => 'yes',
                         'edit' => 'no',
-                    ),
-                ),
-            ),
-        ), true);
+                    ],
+                ],
+            ],
+        ], true);
 
         $this->assertInstanceOf('\\Espo\\Orm\\Entity', $newUser);
         $this->assertTrue(!empty($newUser->id));

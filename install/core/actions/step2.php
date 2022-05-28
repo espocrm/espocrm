@@ -43,23 +43,23 @@ foreach ($clearedCookieList as $cookieName) {
 
 $config = $installer->getConfig();
 
-$fields = array(
-    'db-driver' => array(
+$fields = [
+    'db-driver' => [
         'default' => $config->get('database.driver', ''),
-    ),
-    'db-name' => array(
+    ],
+    'db-name' => [
         'default' => $config->get('database.dbname', ''),
-    ),
-    'host-name' => array(
+    ],
+    'host-name' => [
         'default' => $config->get('database.host', '') . ($config->get('database.port') ? ':' . $config->get('database.port') : ''),
-    ),
-    'db-user-name' => array(
+    ],
+    'db-user-name' => [
         'default' => $config->get('database.user', ''),
-    ),
-    'db-user-password' => array(
+    ],
+    'db-user-password' => [
         'default' => $config->get('database.password', ''),
-    ),
-);
+    ],
+];
 
 foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {

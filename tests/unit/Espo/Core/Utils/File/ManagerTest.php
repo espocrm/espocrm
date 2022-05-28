@@ -97,30 +97,30 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $input = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', [$input]) );
 
-        $input = array(
+        $input = [
             'application',
             'Espo/Resources/metadata/',
             'app',
             'panel.json',
-        );
+        ];
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', [$input]) );
 
-        $input = array(
+        $input = [
             'application/Espo/Resources/metadata/app',
             'panel.json',
-        );
+        ];
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', [$input]) );
 
-        $input = array(
+        $input = [
             'application/Espo/Resources/metadata/app/',
             'panel.json',
-        );
+        ];
         $result = Util::fixPath('application/Espo/Resources/metadata/app/panel.json');
-        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', array($input)) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('concatPaths', [$input]) );
     }
 
     public function testGetDirName()
@@ -245,27 +245,27 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSingleFileListAll()
     {
-        $input = array (
+        $input =  [
             'custom' =>
-            array (
+             [
                 'Espo' =>
-                array (
+                 [
                     'Custom' =>
-                    array (
+                     [
                         'Modules' =>
-                        array (
+                         [
                             'ExtensionTest' =>
-                            array (
+                             [
                                 0 => 'File.json',
                                 1 => 'File.php',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
-        $result = array (
+        $result =  [
             'custom',
             'custom/Espo',
             'custom/Espo/Custom',
@@ -273,81 +273,81 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules/ExtensionTest',
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
-        );
+        ];
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', [$input]));
     }
 
     public function testGetSingeFileListOnlyFiles()
     {
-        $input = array (
+        $input =  [
             'custom' =>
-            array (
+             [
                 'Espo' =>
-                array (
+                 [
                     'Custom' =>
-                    array (
+                     [
                         'Modules' =>
-                        array (
+                         [
                             'ExtensionTest' =>
-                            array (
+                             [
                                 0 => 'File.json',
                                 1 => 'File.php',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
-        $result = array (
+        $result =  [
             'custom/Espo/Custom/Modules/ExtensionTest/File.json',
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
-        );
+        ];
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input, true)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', [$input, true]));
     }
 
     public function testGetSingeFileListOnlyDirs()
     {
-        $input = array (
+        $input =  [
             'custom' =>
-            array (
+             [
                 'Espo' =>
-                array (
+                 [
                     'Custom' =>
-                    array (
+                     [
                         'Modules' =>
-                        array (
+                         [
                             'ExtensionTest' =>
-                            array (
+                             [
                                 0 => 'File.json',
                                 1 => 'File.php',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
-        $result = array (
+        $result =  [
             'custom',
             'custom/Espo',
             'custom/Espo/Custom',
             'custom/Espo/Custom/Modules',
             'custom/Espo/Custom/Modules/ExtensionTest',
-        );
+        ];
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input, false)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', [$input, false]));
     }
 
     public function fileListSets()
     {
-        return array(
-            array('Set1', array(
+        return [
+            ['Set1', [
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -355,10 +355,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Modules/TestModule',
                 'custom/Espo/Custom/Modules/TestModule/SubFolder',
                 'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
-            )
-            ),
+            ]
+            ],
 
-            array('Set2', array(
+            ['Set2', [
                 'custom',
                 'custom/Espo',
                 'custom/Espo/Custom',
@@ -366,15 +366,15 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
                 'custom/Espo/Custom/Resources/metadata',
                 'custom/Espo/Custom/Resources/metadata/entityDefs',
                 'custom/Espo/Custom/Resources/metadata/entityDefs/Account.json',
-            )
-            ),
+            ]
+            ],
 
-            array('Set3', array(
+            ['Set3', [
                 'custom',
                 'custom/test.file',
-            )
-            ),
-        );
+            ]
+            ],
+        ];
     }
 
     /**
@@ -386,10 +386,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $cachePath = Util::fixPath($this->cachePath . '/' . $name);
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $fileList = array (
+        $fileList =  [
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.json',
             $cachePath . '/custom/Espo/Custom/Modules/ExtensionTest/File.php',
-        );
+        ];
         $fileList = array_map('\Espo\Core\Utils\Util::fixPath', $fileList);
 
         $res = $this->fileManager->copy($path, $cachePath, true);
@@ -402,13 +402,13 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function existsPathSet()
     {
-        return array(
-            array('application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
-            array('application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-            array('application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-            array('application/NoEspo/Core/Application.php', 'application'),
-            array('notRealPath/Espo/Core/Application.php', '.'),
-        );
+        return [
+            ['application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ],
+            ['application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'],
+            ['application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'],
+            ['application/NoEspo/Core/Application.php', 'application'],
+            ['notRealPath/Espo/Core/Application.php', '.'],
+        ];
     }
 
     /**

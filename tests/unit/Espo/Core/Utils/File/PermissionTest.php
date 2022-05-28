@@ -49,7 +49,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection = new ReflectionHelper($this->object);
 
-        $this->fileList = array(
+        $this->fileList = [
             'application/Espo/Controllers/Email.php',
             'application/Espo/Controllers/EmailAccount.php',
             'application/Espo/Controllers/EmailAddress.php',
@@ -64,7 +64,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
             'application/Espo/Resources/layouts/User/filters.json',
             'application/Espo/Resources/metadata/app/acl.json',
             'application/Espo/Resources/metadata/app/defaultDashboardLayout.json'
-        );
+        ];
     }
 
     protected function tearDown(): void
@@ -75,30 +75,30 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
     public function testGetSearchCount()
     {
         $search = 'application/Espo/Controllers/';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', [$search, $this->fileList]);
         $result = 6;
         $this->assertEquals($result, $methodResult);
 
 
         $search = 'application/Espo/Controllers/Email.php';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', [$search, $this->fileList]);
         $result = 1;
         $this->assertEquals($result, $methodResult);
 
         $search = 'application/Espo/Controllers/NotReal';
-        $methodResult = $this->reflection->invokeMethod('getSearchCount', array($search, $this->fileList));
+        $methodResult = $this->reflection->invokeMethod('getSearchCount', [$search, $this->fileList]);
         $result = 0;
         $this->assertEquals($result, $methodResult);
     }
 
     public function testArrangePermissionList()
     {
-        $result = array(
+        $result = [
             'application/Espo/Controllers',
             'application/Espo/Modules/Crm/Resources/i18n/pl_PL',
             'application/Espo/Resources/layouts/User/filters.json',
             'application/Espo/Resources/metadata/app',
-        );
+        ];
         $this->assertEquals( $result, $this->object->arrangePermissionList($this->fileList) );
     }
 

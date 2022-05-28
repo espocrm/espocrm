@@ -63,7 +63,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
         $upgradeManager = new UpgradeManager($this->getContainer());
 
-        $upgradeManager->install(array('id' => $upgradeId));
+        $upgradeManager->install(['id' => $upgradeId]);
 
         $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId . 'z');
         $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId);
@@ -84,7 +84,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $upgradeId = $this->testInstall();
 
         $upgradeManager = new UpgradeManager($this->getContainer());
-        $upgradeManager->uninstall(array('id' => $upgradeId));
+        $upgradeManager->uninstall(['id' => $upgradeId]);
     }
 
     public function testDelete()
@@ -94,6 +94,6 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $upgradeId = $this->testInstall();
 
         $upgradeManager = new UpgradeManager($this->getContainer());
-        $upgradeManager->delete(array('id' => $upgradeId));
+        $upgradeManager->delete(['id' => $upgradeId]);
     }
 }

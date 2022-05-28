@@ -28,7 +28,7 @@
  ************************************************************************/ 
 
 ob_start();
-$result = array('success' => true, 'errorMsg' => '');
+$result = ['success' => true, 'errorMsg' => ''];
 
 $installer->buildDatabase();
 

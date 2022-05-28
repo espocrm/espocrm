@@ -50,35 +50,35 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
     protected $number;
 
     private $entityAttributes = [
-        'id' => array(
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 255,
-        ),
-        'date' => array(
+        ],
+        'date' => [
             'type' => Entity::DATE
-        ),
-        'dateTime' => array(
+        ],
+        'dateTime' => [
             'type' => Entity::DATETIME
-        ),
-        'int' => array(
+        ],
+        'int' => [
             'type' => Entity::INT
-        ),
-        'float' => array(
+        ],
+        'float' => [
             'type' => Entity::FLOAT
-        ),
-        'list' => array(
+        ],
+        'list' => [
             'type' => Entity::JSON_ARRAY
-        ),
-        'object' => array(
+        ],
+        'object' => [
             'type' => Entity::JSON_OBJECT
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        )
+        ]
     ];
 
     protected function setUp(): void

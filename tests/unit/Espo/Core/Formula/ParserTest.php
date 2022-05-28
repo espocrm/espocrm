@@ -824,7 +824,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         if ($variable instanceof \StdClass) {
             $result = "(object) " . $this->varExport(get_object_vars($variable), $level);
         } else if (is_array($variable)) {
-            $array = array();
+            $array = [];
             foreach ($variable as $key => $value) {
                 $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
             }

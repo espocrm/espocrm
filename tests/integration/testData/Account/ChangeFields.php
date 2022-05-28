@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return array(
-    'entities' => array(
+return [
+    'entities' => [
         'User' => [
-            array(
+            [
                 'id' => '1',
                 'type' => 'admin',
                 'userName' => 'admin',
@@ -40,31 +40,31 @@ return array(
                 'lastName' => 'Admin',
                 'title' => '',
                 'emailAddress' => 'demo@espocrm.com',
-                'phoneNumberData' => array(
-                    (object) array(
+                'phoneNumberData' => [
+                    (object) [
                         'phoneNumber' => '111',
                         'primary' => true,
                         'type' => 'Office',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
         ],
         'Account' => [
-            array(
+            [
                 'id' => '53203b942850b',
                 'name' => 'Besharp',
                 'website' => 'http://www.be.sharp.ca',
-                'phoneNumberData' => array(
-                    (object) array(
+                'phoneNumberData' => [
+                    (object) [
                         'phoneNumber' => '311-2233-11',
                         'primary' => true,
                         'type' => 'Office',
-                    ),
-                    (object) array(
+                    ],
+                    (object) [
                         'phoneNumber' => '311-2233-12',
                         'type' => 'Fax',
-                    ),
-                ),
+                    ],
+                ],
                 'type' => 'Customer',
                 'industry' => 'Apparel',
                 'sicCode' => '',
@@ -81,22 +81,22 @@ return array(
                 'description' => '',
                 'emailAddress' => 'supp@be.sharp-example.ca',
                 'assignedUserId' => '1',
-            ),
-            array(
+            ],
+            [
                 'id' => '53203b9428546',
                 'name' => 'Mein Heimathaus',
                 'website' => 'http://www.meinheimathaus.de',
-                'phoneNumberData' => array(
-                    (object) array(
+                'phoneNumberData' => [
+                    (object) [
                         'phoneNumber' => '165-681-158',
                         'primary' => true,
                         'type' => 'Office',
-                    ),
-                    (object) array(
+                    ],
+                    (object) [
                         'phoneNumber' => '165-681-159',
                         'type' => 'Other',
-                    ),
-                ),
+                    ],
+                ],
                 'type' => 'Partner',
                 'industry' => 'Finance',
                 'sicCode' => '',
@@ -113,7 +113,7 @@ return array(
                 'description' => '',
                 'emailAddress' => 'supp@be1.sharp-example.ca',
                 'assignedUserId' => '1',
-            ),
+            ],
         ],
-    ),
-);
+    ],
+];

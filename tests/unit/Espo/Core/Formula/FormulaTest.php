@@ -259,9 +259,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityFetchedAttributes($this->entity, array(
+        $this->setEntityFetchedAttributes($this->entity, [
             'name' => 'Test'
-        ));
+        ]);
 
         $this->entity
             ->expects($this->once())
@@ -417,9 +417,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'name' => 'Test'
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -467,9 +467,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'name' => 'Test'
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -515,9 +515,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'name' => 'Test'
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -563,9 +563,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'name' => 'Test'
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -720,9 +720,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 4
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -751,9 +751,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 4.2
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -845,9 +845,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'test' => true
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -893,10 +893,10 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'test' => false,
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -965,9 +965,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -994,13 +994,13 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $parent = $this->getEntityMock();
 
-        $this->setEntityAttributes($parent, array(
+        $this->setEntityAttributes($parent, [
             'amount' => 3
-        ));
+        ]);
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'parent' => $parent
-        ));
+        ]);
 
 
         $result = $this->createProcessor()->process($item);
@@ -1026,9 +1026,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1053,9 +1053,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1080,9 +1080,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
     }
@@ -1151,9 +1151,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1178,9 +1178,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 3
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1205,9 +1205,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 4
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1232,9 +1232,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'amount' => 4
-        ));
+        ]);
 
         $result = $this->createProcessor()->process($item);
 
@@ -1353,9 +1353,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         '));
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'dateStart' => '2017-01-01'
-        ));
+        ]);
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
 
@@ -1374,9 +1374,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         '));
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'dateStart' => '2017-01-01'
-        ));
+        ]);
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
 
@@ -1395,9 +1395,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ]
             }
         '));
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'dateStart' => '2017-01-01'
-        ));
+        ]);
         $result = $this->createProcessor()->process($item);
         $this->assertTrue($result);
     }
@@ -3099,9 +3099,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         '));
 
         $variables = (object) [];
-        $this->setEntityAttributes($this->entity, array(
+        $this->setEntityAttributes($this->entity, [
             'test' => 'hello'
-        ));
+        ]);
 
         $this->createProcessor($variables)->process($item);
 

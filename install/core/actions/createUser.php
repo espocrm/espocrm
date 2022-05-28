@@ -28,7 +28,7 @@
  ************************************************************************/ 
 
 ob_start();
-$result = array('success' => false, 'errorMsg' => '');
+$result = ['success' => false, 'errorMsg' => ''];
 
 // create user
 if (!empty($_SESSION['install']['user-name']) && !empty($_SESSION['install']['user-pass'])) {

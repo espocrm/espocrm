@@ -33,29 +33,29 @@ class AttachmentMultiple extends Base
 {
     protected function load($fieldName, $entityType)
     {
-        $data = array(
-            $entityType => array(
-                'fields' => array(
-                    $fieldName . 'Ids' => array(
+        $data = [
+            $entityType => [
+                'fields' => [
+                    $fieldName . 'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'orderBy' => [['createdAt', 'ASC'], ['name', 'ASC']],
                         'isLinkMultipleIdList' => true,
                         'relation' => $fieldName
-                    ),
-                    $fieldName . 'Names' => array(
+                    ],
+                    $fieldName . 'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
                         'isLinkMultipleNameMap' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityType => array(
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityType => [
                     'fields.' . $fieldName,
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         return $data;
     }

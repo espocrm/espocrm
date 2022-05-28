@@ -32,7 +32,7 @@ class Language{
 
     private $systemHelper;
 
-    private $data = array();
+    private $data = [];
 
     protected $defaultLabels = [
         'nginx' => 'linux',

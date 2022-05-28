@@ -74,7 +74,7 @@ try {
     $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
     $upgradeId = $upgradeManager->upload($fileData);
-    $upgradeManager->install(array('id' => $upgradeId));
+    $upgradeManager->install(['id' => $upgradeId]);
 }
 catch (\Exception $e) {
     die("Error: " . $e->getMessage() . "\n");

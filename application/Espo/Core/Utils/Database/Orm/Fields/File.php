@@ -40,24 +40,24 @@ class File extends Base
     {
         $fieldParams = $this->getFieldParams();
 
-        $data = array(
-            $entityName => array(
-                'fields' => array(
-                    $fieldName . 'Id' => array(
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName . 'Id' => [
                         'type' => 'foreignId',
                         'index' => false
-                    ),
-                    $fieldName . 'Name' => array(
+                    ],
+                    $fieldName . 'Name' => [
                         'type' => 'foreign'
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityName => [
                     'fields.' . $fieldName
-                )
-            )
-        );
+                ]
+            ]
+        ];
         if (!empty($fieldParams['notStorable'])) {
             $data[$entityName]['fields'][$fieldName . 'Id']['notStorable'] = true;
             $data[$entityName]['fields'][$fieldName . 'Name']['type'] = 'varchar';

@@ -55,13 +55,13 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
             $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
             if (!in_array($name, $list)) {
                 $list[] = $name;
-                $data = array(
-                    'fields' => array(
-                        'parent' => array(
+                $data = [
+                    'fields' => [
+                        'parent' => [
                             'entityList' => $list
-                        )
-                    )
-                );
+                        ]
+                    ]
+                ];
                 $this->metadata->set('entityDefs', $entityType, $data);
             }
         }
@@ -91,13 +91,13 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
 
                 $list = array_values($list);
 
-                $data = array(
-                    'fields' => array(
-                        'parent' => array(
+                $data = [
+                    'fields' => [
+                        'parent' => [
                             'entityList' => $list
-                        )
-                    )
-                );
+                        ]
+                    ]
+                ];
 
                 $this->metadata->set('entityDefs', $entityType, $data);
             }

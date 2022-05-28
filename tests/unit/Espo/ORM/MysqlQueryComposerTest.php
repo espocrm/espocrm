@@ -512,8 +512,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'name', 'postName'),
-            'leftJoins' => array('post'),
+            'select' => ['id', 'name', 'postName'],
+            'leftJoins' => ['post'],
         ]));
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name`, post.name AS `postName` FROM `comment` " .
@@ -524,8 +524,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'name'),
-            'leftJoins' => array('post')
+            'select' => ['id', 'name'],
+            'leftJoins' => ['post']
         ]));
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
@@ -613,9 +613,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'postId', 'post.name', 'COUNT:id'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('postId', 'post.name')
+            'select' => ['id', 'postId', 'post.name', 'COUNT:id'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['postId', 'post.name']
         ]));
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, " .
@@ -628,9 +628,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('id', 'COUNT:id', 'MONTH:post.createdAt'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('MONTH:post.createdAt')
+            'select' => ['id', 'COUNT:id', 'MONTH:post.createdAt'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['MONTH:post.createdAt']
         ]));
         $expectedSql =
             "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, " .
@@ -826,17 +826,17 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id', 'name'],
-            'whereClause' => array(
-                'post.id=s' => array(
+            'whereClause' => [
+                'post.id=s' => [
                     'entityType' => 'Post',
-                    'selectParams' => array(
+                    'selectParams' => [
                         'select' => ['id'],
-                        'whereClause' => array(
+                        'whereClause' => [
                             'name' => 'test'
-                        )
-                    )
-                )
-            )
+                        ]
+                    ]
+                ]
+            ]
         ]));
 
         $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
@@ -847,17 +847,17 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Post',
             'select' => ['id', 'name'],
-            'whereClause' => array(
-                'post.id!=s' => array(
+            'whereClause' => [
+                'post.id!=s' => [
                     'entityType' => 'Post',
-                    'selectParams' => array(
+                    'selectParams' => [
                         'select' => ['id'],
-                        'whereClause' => array(
+                        'whereClause' => [
                             'name' => 'test'
-                        )
-                    )
-                )
-            )
+                        ]
+                    ]
+                ]
+            ]
         ]));
 
         $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
@@ -994,9 +994,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('COUNT:id', 'YEAR:post.createdAt'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('YEAR:post.createdAt'),
+            'select' => ['COUNT:id', 'YEAR:post.createdAt'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['YEAR:post.createdAt'],
             'orderBy' => 2
         ]));
         $expectedSql =
@@ -1025,13 +1025,13 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('COUNT:id', 'YEAR:post.createdAt', 'post.name'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('YEAR:post.createdAt', 'post.name'),
-            'orderBy' => array(
-                array(2, 'DESC'),
-                array('LIST:post.name:Test,Hello')
-            )
+            'select' => ['COUNT:id', 'YEAR:post.createdAt', 'post.name'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['YEAR:post.createdAt', 'post.name'],
+            'orderBy' => [
+                [2, 'DESC'],
+                ['LIST:post.name:Test,Hello']
+            ]
         ]));
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, " .
@@ -1179,12 +1179,12 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('COUNT:comment.id', 'postId', 'postName'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('postId'),
-            'whereClause' => array(
+            'select' => ['COUNT:comment.id', 'postId', 'postName'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['postId'],
+            'whereClause' => [
                 'post.createdById' => 'id_1'
-            ),
+            ],
         ]));
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
@@ -1226,9 +1226,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'id' => ['id_1']
-            ),
+            ],
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
@@ -1238,9 +1238,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'id!=' => ['id_1']
-            ),
+            ],
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
@@ -1250,9 +1250,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'id' => []
-            ),
+            ],
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
@@ -1262,10 +1262,10 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id'],
-            'whereClause' => array(
+            'whereClause' => [
                 'name' => 'Test',
                 'id!=' => []
-            ),
+            ],
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .

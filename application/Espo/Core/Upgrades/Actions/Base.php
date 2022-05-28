@@ -126,10 +126,10 @@ abstract class Base
      *
      * @var array<string,string>
      */
-    protected $packageTypes = array(
+    protected $packageTypes = [
         'upgrade' => 'upgrade',
         'extension' => 'extension',
-    );
+    ];
 
     /**
      * Default package type.
@@ -539,7 +539,7 @@ abstract class Base
             return null;
         }
 
-        $beforeInstallScript = Util::concatPath(array($packagePath, self::SCRIPTS, $scriptName)) . '.php';
+        $beforeInstallScript = Util::concatPath([$packagePath, self::SCRIPTS, $scriptName]) . '.php';
 
         if (file_exists($beforeInstallScript)) {
             return $beforeInstallScript;
@@ -691,7 +691,7 @@ abstract class Base
     {
         $dirNames = $this->getParams('customDirNames');
 
-        $paths = array(self::FILES, $dirNames['before'], $dirNames['after']);
+        $paths = [self::FILES, $dirNames['before'], $dirNames['after']];
 
         if (isset($parentDirPath)) {
             foreach ($paths as &$path) {
@@ -918,10 +918,10 @@ abstract class Base
      */
     protected function checkManifest(array $manifest)
     {
-        $requiredFields = array(
+        $requiredFields = [
             'name',
             'version',
-        );
+        ];
 
         foreach ($requiredFields as $fieldName) {
             if (empty($manifest[$fieldName])) {

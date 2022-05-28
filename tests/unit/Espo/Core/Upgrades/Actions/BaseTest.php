@@ -50,18 +50,18 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected $actionManagerParams = array(
+    protected $actionManagerParams = [
         'name' => 'Extension',
         'packagePath' => 'tests/unit/testData/Upgrades/data/upload/extensions',
         'backupPath' => 'tests/unit/testData/Upgrades/data/.backup/extensions',
 
-        'scriptNames' => array(
+        'scriptNames' => [
             'before' => 'BeforeInstall',
             'after' => 'AfterInstall',
             'beforeUninstall' => 'BeforeUninstall',
             'afterUninstall' => 'AfterUninstall',
-        )
-    );
+        ]
+    ];
 
     protected $currentVersion = '11.5.2';
 
@@ -138,7 +138,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Espo\Core\Exceptions\Error');
 
-        $processId = $this->reflection->invokeMethod('createProcessId', array());
+        $processId = $this->reflection->invokeMethod('createProcessId', []);
     }
 
     public function testCreateProcessId()
@@ -175,7 +175,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->invokeMethod('getManifest', array());
+        $this->reflection->invokeMethod('getManifest', []);
     }
 
     public function testGetManifest()
@@ -200,21 +200,21 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     public function acceptableVersions()
     {
-        return array(
-            array('11.5.2'),
-            array(array('11.5.2')),
-            array(array('1.4', '11.5.2')),
-            array('11.*', ),
-            array('11.5.*', ),
-            array('~11.5', ),
-            array('~11', ),
-            array('^11.1', ),
-            array('^11', ),
-            array('11.1 - 11.9', ),
-            array('>=11.1', ),
-            array('<=12', ),
-            array('>=11 <=12', ),
-        );
+        return [
+            ['11.5.2'],
+            [['11.5.2']],
+            [['1.4', '11.5.2']],
+            ['11.*', ],
+            ['11.5.*', ],
+            ['~11.5', ],
+            ['~11', ],
+            ['^11.1', ],
+            ['^11', ],
+            ['11.1 - 11.9', ],
+            ['>=11.1', ],
+            ['<=12', ],
+            ['>=11 <=12', ],
+        ];
     }
 
     /**
@@ -226,19 +226,19 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             $currentVersion = $this->currentVersion;
         }
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error') ) );
+        $this->assertTrue( $this->reflection->invokeMethod('checkVersions', [$versions, $currentVersion, 'error'] ) );
     }
 
     public function unacceptableVersions()
     {
-        return array(
-            array('1.*', ),
-            array('11\.*', ),
-            array('11\.5\.2', ),
-            array('11.5*', ),
-            array('11.1-11.9', ),
-            array('.0.1'),
-        );
+        return [
+            ['1.*', ],
+            ['11\.*', ],
+            ['11\.5\.2', ],
+            ['11.5*', ],
+            ['11.1-11.9', ],
+            ['.0.1'],
+        ];
     }
 
     /**
@@ -257,14 +257,14 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
+        $this->reflection->invokeMethod('checkVersions', [$versions, $currentVersion, 'error']);
     }
 
     public function testIsAcceptableEmpty()
     {
-        $version = array();
+        $version = [];
 
-        $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
+        $this->reflection->setProperty('data', ['manifest' => ['acceptableVersions' => $version]]);
         $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
     }
 
@@ -273,23 +273,23 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $packageId = $this->reflection->invokeMethod('getProcessId');
         $packagePath = Util::fixPath($this->actionManagerParams['packagePath'] . '/' . $packageId);
 
-        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array()) );
-        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array('packagePath')) );
+        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', []) );
+        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', ['packagePath']) );
 
         $postfix = $this->reflection->getProperty('packagePostfix');
-        $this->assertEquals( $packagePath . $postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
+        $this->assertEquals( $packagePath . $postfix, $this->reflection->invokeMethod('getPath', ['packagePath', true]) );
 
         $backupPath = Util::fixPath($this->actionManagerParams['backupPath'] . '/' . $packageId);
 
-        $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', array('backupPath')) );
+        $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', ['backupPath']) );
     }
 
     public function testCheckPackageType()
     {
-        $this->reflection->setProperty('data', array('manifest' => array()));
+        $this->reflection->setProperty('data', ['manifest' => []]);
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
 
-        $this->reflection->setProperty('data', array('manifest' => array('type' => 'extension')));
+        $this->reflection->setProperty('data', ['manifest' => ['type' => 'extension']]);
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }
 
@@ -302,7 +302,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
+        $this->reflection->setProperty('data', ['manifest' => ['type' => 'upgrade']]);
 
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }

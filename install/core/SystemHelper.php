@@ -163,7 +163,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 
         $bufPerm = (count($permissions) == 1) ? array_fill(0, 2, $permissions[0]) : $permissions;
 
-        $commands = array();
+        $commands = [];
 
         if ($isRecursive) {
             $commands[] = $sudoStr . 'find ' . $path . ' -type f -exec ' . $sudoStr . 'chmod ' . $bufPerm[0] . ' {} +';
@@ -186,7 +186,7 @@ class SystemHelper extends \Espo\Core\Utils\System
     public function getFullPath($path)
     {
         if (is_array($path)) {
-            $pathList = array();
+            $pathList = [];
             foreach ($path as $pathItem) {
                 $pathList[] = $this->getFullPath($pathItem);
             }
@@ -216,7 +216,7 @@ class SystemHelper extends \Espo\Core\Utils\System
         }
         list($chmodPath, $chownPath) = $path;
 
-        $commands = array();
+        $commands = [];
 
         if ($isCd) {
             $commands[] = $this->getCd();

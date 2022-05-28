@@ -41,20 +41,20 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $objects;
 
-    protected $params = array(
+    protected $params = [
         'name' => 'Extension',
-        'params' => array(
+        'params' => [
             'packagePath' => 'tests/unit/testData/Upgrades/data/upload/extensions',
             'backupPath' => 'tests/unit/testData/Upgrades/data/.backup/extensions',
 
-            'scriptNames' => array(
+            'scriptNames' => [
                 'before' => 'BeforeInstall',
                 'after' => 'AfterInstall',
                 'beforeUninstall' => 'BeforeUninstall',
                 'afterUninstall' => 'AfterUninstall',
-            )
-        ),
-    );
+            ]
+        ],
+    ];
 
     protected function setUp(): void
     {
@@ -154,7 +154,7 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Uninstall', $class);
 
-        $class->run(array());
+        $class->run([]);
     }
 
     public function testGetObjectUpgradeDelete()
@@ -167,7 +167,7 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
         $class = $this->reflection->invokeMethod('getObject');
         $this->assertInstanceOf('\Espo\Core\Upgrades\Actions\Upgrade\Delete', $class);
 
-        $class->run(array());
+        $class->run([]);
     }
 
 }

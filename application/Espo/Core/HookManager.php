@@ -296,7 +296,7 @@ class HookManager
             if (isset($this->data[$scope][$hookName])) {
                 $hookList = array_merge($hookList, $this->data[$scope][$hookName]);
 
-                usort($hookList, array($this, 'cmpHooks'));
+                usort($hookList, [$this, 'cmpHooks']);
             }
 
             $normalizedList = [];

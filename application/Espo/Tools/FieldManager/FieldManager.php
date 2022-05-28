@@ -221,7 +221,7 @@ class FieldManager
             $fieldDefs['type'] :
             $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
-        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
+        $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
 
         if ($this->metadata->get(['fields', $type, 'translatedOptions'])) {
             if (isset($fieldDefs['translatedOptions'])) {
@@ -399,7 +399,7 @@ class FieldManager
         }
 
         if ($this->isChanged) {
-            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
+            $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
         }
 
         return (bool) $result;
@@ -431,15 +431,15 @@ class FieldManager
     protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
+            $clientDefs['dynamicLogic'] = [];
         }
 
         if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['options'] = array();
+            $clientDefs['dynamicLogic']['options'] = [];
         }
 
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
-            $clientDefs['dynamicLogic']['options'][$name] = array();
+            $clientDefs['dynamicLogic']['options'][$name] = [];
         }
     }
 
@@ -795,14 +795,14 @@ class FieldManager
         $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
         if (isset($linkDefs) || isset($metaLinkDefs)) {
-            $metaLinkDefs = isset($metaLinkDefs) ? $metaLinkDefs : array();
-            $linkDefs = isset($linkDefs) ? $linkDefs : array();
+            $metaLinkDefs = isset($metaLinkDefs) ? $metaLinkDefs : [];
+            $linkDefs = isset($linkDefs) ? $linkDefs : [];
 
             $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
             if (!empty($normalizedLinkedDefs)) {
-                $defs->links = (object) array(
+                $defs->links = (object) [
                     $fieldName => (object) $normalizedLinkedDefs,
-                );
+                ];
             }
         }
 

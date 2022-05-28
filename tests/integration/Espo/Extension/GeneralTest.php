@@ -66,7 +66,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionId = $this->testUpload();
 
         $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->install(array('id' => $extensionId));
+        $extensionManager->install(['id' => $extensionId]);
 
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
         $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
@@ -89,7 +89,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionId = $this->testInstall();
 
         $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->uninstall(array('id' => $extensionId));
+        $extensionManager->uninstall(['id' => $extensionId]);
 
         $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
         $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
@@ -112,7 +112,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionId = $this->testUninstall();
 
         $extensionManager = new ExtensionManager($this->getContainer());
-        $extensionManager->delete(array('id' => $extensionId));
+        $extensionManager->delete(['id' => $extensionId]);
 
         $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
         $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory

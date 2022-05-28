@@ -29,7 +29,7 @@
 
 ob_start();
 
-$result = array('success' => true, 'errors' => array());
+$result = ['success' => true, 'errors' => []];
 
 $phpRequiredList = $installer->getSystemRequirementList('php', true);
 

@@ -69,11 +69,11 @@ class SystemTest extends \PHPUnit\Framework\TestCase
 
     public function testGetOS()
     {
-        $possibleValues = array(
+        $possibleValues = [
             'windows',
             'mac',
             'linux',
-        );
+        ];
 
         $this->assertTrue( in_array($this->object->getOS(), $possibleValues));
     }

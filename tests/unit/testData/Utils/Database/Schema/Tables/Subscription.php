@@ -1,33 +1,33 @@
 <?php
 
-return array(
+return [
 
-    'Subscription' => array(
-        'fields' => array(
-            'id' => array(
+    'Subscription' => [
+        'fields' => [
+            'id' => [
                 'type' => 'id',
                 'dbType' => 'int',
                 'len' => '11',
                 'autoincrement' => true,
                 'unique' => true,
-            ),
-            'entityId' => array(
+            ],
+            'entityId' => [
                 'type' => 'varchar',
                 'len' => '24',
                 'index' => 'entity',
-            ),
-            'entityType' => array(
+            ],
+            'entityType' => [
                 'type' => 'varchar',
                 'len' => '100',
                 'index' => 'entity',
-            ),
-            'userId' => array(
+            ],
+            'userId' => [
                 'type' => 'varchar',
                 'len' => '24',
                 'index' => true,
-            ),
-        ),
-    ),
+            ],
+        ],
+    ],
 
-);
+];
 

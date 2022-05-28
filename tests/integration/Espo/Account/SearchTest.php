@@ -43,18 +43,18 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
     {
         $service = $this->getContainer()->get('serviceFactory')->create('Account');
 
-        $params = array(
-            'where' => array(
-                array(
+        $params = [
+            'where' => [
+                [
                     'type' => 'textFilter',
                     'value' => 'Besha',
-                ),
-            ),
+                ],
+            ],
             'offset' => 0,
             'maxSize' => 20,
             'asc' => true,
             'sortBy' => 'name',
-        );
+        ];
 
         $result = $service->find(SearchParams::fromRaw($params));
 

@@ -168,14 +168,14 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     public function testGet()
     {
-        $result = array (
+        $result =  [
             'fields' =>
-            array(
+            [
                 'name' => 'User',
                 'label' => 'Core',
                 'source' => 'Core',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($result, $this->object->get('User'));
 
         $result = 'User';
@@ -186,57 +186,57 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals('Core', $this->object->translate('label', 'fields', 'User'));
 
-        $input = array(
+        $input = [
             'name',
             'label',
-        );
-        $result = array(
+        ];
+        $result = [
             'name' => 'User',
             'label' => 'Core',
-        );
+        ];
         $this->assertEquals($result, $this->object->translate($input, 'fields', 'User'));
     }
 
     public function testTranslateTestGlobal()
     {
-        $result = array(
+        $result = [
             'en_US' => 'English (United States)',
-        );
+        ];
         $this->assertEquals($result, $this->object->translate('language', 'options', 'User'));
     }
 
     public function testTranslateOption()
     {
-        $result = array(
+        $result = [
             'en_US' => 'English (United States)',
-        );
+        ];
         $this->assertEquals($result, $this->object->translate('language', 'options'));
     }
 
     public function testTranslateOptionWithRequiredOptions()
     {
-        $result = array(
+        $result = [
             'en_US' => 'English (United States)',
             'de_DE' => 'de_DE',
-        );
-        $requiredOptions = array(
+        ];
+        $requiredOptions = [
             'en_US',
             'de_DE',
-        );
+        ];
 
         $this->assertEquals($result, $this->object->translate('language', 'options', 'Global', $requiredOptions));
     }
 
     public function testTranslateArray()
     {
-        $input = array(
+        $input = [
             'name',
             'label',
-        );
-        $result = array(
+        ];
+        $result = [
             'name' => 'User',
             'label' => 'Core',
-        );
+        ];
         $this->assertEquals($result, $this->object->translate($input, 'fields', 'User'));
     }
 
@@ -252,51 +252,51 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->object->set('User', 'fields', 'label', $label);
         $this->assertEquals($label, $this->object->translate('label', 'fields', 'User'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     'label' => 'TEST',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
         $label2 = 'TEST2';
         $this->object->set('User', 'fields', 'name', $label2);
         $this->assertEquals($label2, $this->object->translate('name', 'fields', 'User'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     'label' => 'TEST',
                     'name' => 'TEST2',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
         $label3 = 'TEST3';
         $this->object->set('Account', 'fields', 'name', $label3);
         $this->assertEquals($label3, $this->object->translate('name', 'fields', 'Account'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     'label' => 'TEST',
                     'name' => 'TEST2',
-                ),
-            ),
-            'Account' => array(
-                'fields' => array(
+                ],
+            ],
+            'Account' => [
+                'fields' => [
                     'name' => 'TEST3',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
         $this->object->clearChanges();
 
-        $this->assertEquals(array(), $this->reflection->getProperty('changedData'));
+        $this->assertEquals([], $this->reflection->getProperty('changedData'));
         $this->assertNotEquals('TEST', $this->object->get('User', 'fields', 'label'));
     }
 
@@ -305,26 +305,26 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->object->delete('User', 'fields', 'label');
         $this->assertNull($this->object->get('User.fields.label'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     'label',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $this->object->delete('User', 'fields', 'name');
         $this->assertNull($this->object->get('User.fields.name'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     'label',
                     'name',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $this->object->clearChanges();
@@ -332,7 +332,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($this->object->get('User.fields.label'));
         $this->assertNotNull($this->object->get('User.fields.name'));
 
-        $this->assertEquals(array(), $this->reflection->getProperty('deletedData'));
+        $this->assertEquals([], $this->reflection->getProperty('deletedData'));
     }
 
     public function testUndelete()
@@ -347,25 +347,25 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->object->set('User', 'fields', 'label', $label);
         $this->assertEquals($label, $this->object->translate('label', 'fields', 'User'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
+        $result = [
+            'User' => [
+                'fields' => [
                     1 => 'name',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $label2 = 'TEST2';
         $this->object->set('User', 'fields', 'name', $label2);
         $this->assertEquals($label2, $this->object->translate('name', 'fields', 'User'));
 
-        $result = array(
-            'User' => array(
-                'fields' => array(
-                ),
-            ),
-        );
+        $result = [
+            'User' => [
+                'fields' => [
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
     }
 

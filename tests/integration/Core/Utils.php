@@ -108,14 +108,14 @@ class Utils
     public static function fixUndefinedVariables()
     {
         /*SET UNDEFINED $_SERVER VARIABLES*/
-        $list = array(
+        $list = [
             'REQUEST_METHOD',
             'REMOTE_ADDR',
             'SERVER_NAME',
             'SERVER_PORT',
             'REQUEST_URI',
             'HTTPS',
-        );
+        ];
 
         foreach ($list as $name) {
             if (!array_key_exists($name, $_SERVER)) {

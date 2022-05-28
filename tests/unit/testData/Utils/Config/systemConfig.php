@@ -20,34 +20,34 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-return array (
+return  [
     'defaultPermissions' =>
-    array (
+     [
         'dir' => '0775',
         'file' => '0664',
         'user' => '',
         'group' => '',
-    ),
-    'cron' => array(
+    ],
+    'cron' => [
         'maxJobNumber' => 15, /** Max number of jobs per one execution */
         'jobPeriod' => 7800, /** Period for jobs, ex. if cron executed at 15:35, it will execute all pending jobs for times from 14:05 to 15:35 */
         'minExecutionTime' => 50, /** to avoid too frequency execution **/
-    ),
-    'crud' => array(
+    ],
+    'crud' => [
         'get' => 'read',
         'post' => 'create',
         'put' => 'update',
         'patch' => 'patch',
         'delete' => 'delete',
-    ),
-    'systemUser' => array(
+    ],
+    'systemUser' => [
         'id' => 'system',
         'userName' => 'system',
         'firstName' => '',
         'lastName' => 'System',
-    ),
+    ],
     'systemItems' =>
-    array (
+     [
         'systemItems',
         'adminItems',
         'configPath',
@@ -59,9 +59,9 @@ return array (
         'defaultPermissions',
         'systemUser',
         'userItems',
-    ),
+    ],
     'adminItems' =>
-    array (
+     [
         'devMode',
         'outboundEmailIsShared',
         'outboundEmailFromName',
@@ -73,9 +73,9 @@ return array (
         'smtpUsername',
         'smtpPassword',
         'cron',
-    ),
+    ],
     'userItems' =>
-    array (
+     [
         'currencyList',
         'addressFormat',
         'quickCreateList',
@@ -86,7 +86,7 @@ return array (
         'timeFormat',
         'timeZone',
         'weekStart'
-    ),
+    ],
     'isInstalled' => false,
-);
+];
 

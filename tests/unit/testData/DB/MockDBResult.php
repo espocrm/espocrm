@@ -4,7 +4,7 @@ class MockDBResult extends ArrayIterator
 {
     public function fetchAll()
     {
-        $arr = array();
+        $arr = [];
         foreach ($this as $value) {
             $arr[] = $value;
         }

@@ -172,7 +172,7 @@ class Converter
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         if (isset($ormMeta['unsetIgnore'])) {
-            $protectedOrmMeta = array();
+            $protectedOrmMeta = [];
 
             foreach ($ormMeta['unsetIgnore'] as $protectedKey) {
                 $protectedOrmMeta = Util::merge(
@@ -242,7 +242,7 @@ class Converter
                 }
             }
 
-            $primaryColumns = array();
+            $primaryColumns = [];
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 

@@ -91,99 +91,99 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testSet()
     {
-        $data = array (
+        $data =  [
             'fields' =>
-            array (
+             [
                 'name' =>
-                array (
+                 [
                     'required' => false,
                     'maxLength' => 150,
                     'view' => 'Views.Test.Custom',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->object->set('entityDefs', 'Attachment', $data);
 
         $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
         $this->assertEquals(150, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
 
-        $result = array(
-            'entityDefs' => array(
+        $result = [
+            'entityDefs' => [
                 'Attachment' => $data
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
-        $data = array (
+        $data =  [
             'fields' =>
-            array (
+             [
                 'name' =>
-                array (
+                 [
                     'maxLength' => 200,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals(200, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
         $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
 
-        $result = array(
-            'entityDefs' => array(
-                'Attachment' => array (
+        $result = [
+            'entityDefs' => [
+                'Attachment' =>  [
                     'fields' =>
-                    array (
+                     [
                         'name' =>
-                        array (
+                         [
                             'required' => false,
                             'maxLength' => 200,
                             'view' => 'Views.Test.Custom',
-                        ),
-                    ),
-                ),
-            ),
-        );
+                        ],
+                    ],
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('changedData'));
 
         $this->object->clearChanges();
 
-        $this->assertEquals(array(), $this->reflection->getProperty('changedData'));
+        $this->assertEquals([], $this->reflection->getProperty('changedData'));
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.maxLength'));
     }
 
     public function testDelete()
     {
-        $data = array (
+        $data =  [
             'fields.name.type',
-        );
+        ];
         $this->object->delete('entityDefs', 'Attachment', $data);
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
 
-        $result = array(
-            'entityDefs' => array(
-                'Attachment' => array(
+        $result = [
+            'entityDefs' => [
+                'Attachment' => [
                     'fields.name.type',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
-        $data = array (
+        $data =  [
             'fields.name.required',
-        );
+        ];
         $this->object->delete('entityDefs', 'Attachment', $data);
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.required'));
 
-        $result = array(
-            'entityDefs' => array(
-                'Attachment' => array(
+        $result = [
+            'entityDefs' => [
+                'Attachment' => [
                     'fields.name.type',
                     'fields.name.required',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $this->object->init(false);
@@ -205,45 +205,45 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->object->delete('entityDefs', 'Attachment', $data);
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
 
-        $data = array (
+        $data =  [
             'fields' =>
-            array (
+             [
                 'name' =>
-                array (
+                 [
                     'type' => 'enum',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals('enum', $this->object->get('entityDefs.Attachment.fields.name.type'));
 
-        $result = array(
-            'entityDefs' => array(
-                'Attachment' => array(
+        $result = [
+            'entityDefs' => [
+                'Attachment' => [
                     1 => 'fields.name.required',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
-        $data = array (
+        $data =  [
             'fields' =>
-            array (
+             [
                 'name' =>
-                array (
+                 [
                     'required' => true,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals(true, $this->object->get('entityDefs.Attachment.fields.name.required'));
 
-        $result = array(
-            'entityDefs' => array(
-                'Attachment' => array(
-                ),
-            ),
-        );
+        $result = [
+            'entityDefs' => [
+                'Attachment' => [
+                ],
+            ],
+        ];
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
     }
 

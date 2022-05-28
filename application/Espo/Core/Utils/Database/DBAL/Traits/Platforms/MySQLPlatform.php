@@ -124,10 +124,10 @@ trait MySQLPlatform
                 $changedColumn->setNotNull(false);
                 $changedColumn->setAutoincrement(false);
 
-                $changedProperties = array(
+                $changedProperties = [
                     'notnull',
                     'autoincrement',
-                );
+                ];
 
                 $diff->changedColumns[$columnName] = new ColumnDiff($columnName, $changedColumn, $changedProperties, $column);
 

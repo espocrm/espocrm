@@ -28,7 +28,7 @@
  ************************************************************************/
 
 ob_start();
-$result = array('success' => false, 'errorMsg' => '');
+$result = ['success' => false, 'errorMsg' => ''];
 
 if (!empty($_SESSION['install'])) {
 

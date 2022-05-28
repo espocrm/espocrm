@@ -65,29 +65,29 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->expectException(Forbidden::class);
 
-        $this->createUser('tester', array(
+        $this->createUser('tester', [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' => array(
+            'data' => [
                 'Account' => false,
                 'Call' =>
-                array (
+                 [
                     'create' => 'yes',
                     'read' => 'team',
                     'edit' => 'team',
                     'delete' => 'no'
-                )
-            ),
-            'fieldData' => array(
-                'Call' => array(
-                    'direction' => array(
+                ]
+            ],
+            'fieldData' => [
+                'Call' => [
+                    'direction' => [
                         'read' => 'yes',
                         'edit' => 'no'
-                    )
-                )
-            )
-        ));
+                    ]
+                ]
+            ]
+        ]);
 
         $this->auth('tester');
 
@@ -109,28 +109,28 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->expectException(Forbidden::class);
 
-        $newUser = $this->createUser(array(
+        $newUser = $this->createUser([
             'userName' => 'tester',
             'lastName' => 'tester',
-            'portalsIds' => array(
+            'portalsIds' => [
                 'testPortalId'
-            )
-        ), array(
+            ]
+        ], [
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
             'portalPermission' => 'not-set',
-            'data' => array (
+            'data' =>  [
                 'Account' => false,
-            ),
-            'fieldData' => array (
-                'Call' => array (
-                    'direction' => array (
+            ],
+            'fieldData' =>  [
+                'Call' =>  [
+                    'direction' =>  [
                         'read' => 'yes',
                         'edit' => 'no'
-                    )
-                )
-            )
-        ), true);
+                    ]
+                ]
+            ]
+        ], true);
 
         $this->auth('tester', null, 'testPortalId');
 

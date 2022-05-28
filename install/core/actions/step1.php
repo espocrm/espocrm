@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/ 
 
-$fields = array(
-    'license-agree' => array(
+$fields = [
+    'license-agree' => [
         'default' => '0',
-    ),
-);
+    ],
+];
 
 foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {

@@ -83,11 +83,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCoreField()
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => 100,
             "label" => "Modified Name",
-        );
+        ];
 
         $existingData = (object) [
             "type" => "varchar",
@@ -95,11 +95,11 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             "label" => "Name",
         ];
 
-        $map = array(
+        $map = [
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+        ];
 
         $this->language
             ->expects($this->once())
@@ -168,17 +168,17 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCoreFieldWithNoChanges()
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => 50,
             "label" => "Name",
-        );
+        ];
 
-        $map = array(
+        $map = [
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+        ];
 
         $this->metadata
             ->expects($this->never())
@@ -254,19 +254,19 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function dddtestUpdateCustomFieldIsNotChanged()
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => "50",
             "isCustom" => true,
-        );
+        ];
 
-        $map = array(
+        $map = [
             ['entityDefs.CustomEntity.fields.varName', [], $data],
             ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+        ];
 
         $this->metadata
             ->expects($this->any())
@@ -288,18 +288,18 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCustomField()
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => "50",
             "isCustom" => true,
-        );
+        ];
 
-        $map = array(
+        $map = [
             ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+        ];
 
         $this->metadata
             ->expects($this->any())
@@ -358,12 +358,12 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
                "fullTextSearch": true
             }', true)));
 
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => "150",
             "required" => true,
             "isCustom" => true,
-        );
+        ];
 
         $this->metadata
             ->expects($this->exactly(2))
@@ -398,19 +398,19 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
     public function testNormalizeDefs()
     {
         $input1 = 'fielName';
-        $input2 = array(
+        $input2 = [
             "type" => "varchar",
             "maxLength" => "50",
-        );
+        ];
 
-        $result = (object) array(
-            'fields' => (object) array(
-                'fielName' => (object) array(
+        $result = (object) [
+            'fields' => (object) [
+                'fielName' => (object) [
                     "type" => "varchar",
                     "maxLength" => "50",
-                ),
-            ),
-        );
-        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', array('CustomEntity', $input1, $input2)));
+                ],
+            ],
+        ];
+        $this->assertEquals($result, $this->reflection->invokeMethod('normalizeDefs', ['CustomEntity', $input1, $input2]));
     }
 }

@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$fields = array(
-    'user-name' => array(
+$fields = [
+    'user-name' => [
         'default' => (isset($langs['labels']['admin'])) ? $langs['labels']['admin'] : 'admin',
-    ),
-    'user-pass' => array(),
-    'user-confirm-pass' => array(),
-);
+    ],
+    'user-pass' => [],
+    'user-confirm-pass' => [],
+];
 
 foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {

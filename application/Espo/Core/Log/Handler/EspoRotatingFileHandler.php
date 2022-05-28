@@ -105,8 +105,8 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $fileInfo = pathinfo($this->filename);
 
         $timedFilename = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], date($this->dateFormat)),
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], date($this->dateFormat)],
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
 
@@ -125,8 +125,8 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $fileInfo = pathinfo($this->filename);
 
         $glob = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], '.*'),
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], '.*'],
             $this->filenameFormat
         );
 

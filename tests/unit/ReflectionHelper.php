@@ -44,7 +44,7 @@ class ReflectionHelper
     }
 
 
-    public function invokeMethod($methodName, array $parameters = array())
+    public function invokeMethod($methodName, array $parameters = [])
     {
         $method = $this->reflection->getMethod($methodName);
         $method->setAccessible(true);

@@ -29,35 +29,35 @@
 
 $config = $installer->getConfig();
 
-$fields = array(
-    'smtpServer' => array(
+$fields = [
+    'smtpServer' => [
         'default' => $config->get('smtpServer', ''),
-    ),
-    'smtpPort' => array(
+    ],
+    'smtpPort' => [
         'default' => $config->get('smtpPort', 25),
-    ),
-    'smtpAuth' => array(
+    ],
+    'smtpAuth' => [
         'default' => false,
-    ),
-    'smtpSecurity' => array(
+    ],
+    'smtpSecurity' => [
         'default' => $config->get('smtpSecurity', ''),
-    ),
-    'smtpUsername' => array(
+    ],
+    'smtpUsername' => [
         'default' => $config->get('smtpUsername', ''),
-    ),
-    'smtpPassword' => array(
+    ],
+    'smtpPassword' => [
         'default' => $config->get('smtpPassword', ''),
-    ),
-    'outboundEmailFromName' => array(
+    ],
+    'outboundEmailFromName' => [
         'default' => $config->get('outboundEmailFromName', ''),
-    ),
-    'outboundEmailFromAddress' => array(
+    ],
+    'outboundEmailFromAddress' => [
         'default' => $config->get('outboundEmailFromAddress', ''),
-    ),
-    'outboundEmailIsShared' => array(
+    ],
+    'outboundEmailIsShared' => [
         'default' => $config->get('outboundEmailIsShared', ''),
-    ),
-);
+    ],
+];
 
 foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {

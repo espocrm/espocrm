@@ -87,7 +87,7 @@ class InstallerConfig
     public function set($name, $value = null)
     {
         if (!is_array($name)) {
-            $name = array($name => $value);
+            $name = [$name => $value];
         }
 
         foreach ($name as $key => $value) {
