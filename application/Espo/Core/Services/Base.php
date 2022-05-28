@@ -34,7 +34,7 @@ use Espo\Core\Interfaces\Injectable;
 /** @deprecated */
 abstract class Base implements Injectable
 {
-    protected $dependencyList = [ /** @phpstan-ignore-line */
+    protected $dependencyList = [/** @phpstan-ignore-line */
         'config',
         'entityManager',
         'user',

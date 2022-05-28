@@ -44,7 +44,7 @@ use Espo\Core\{
 /** @deprecated */
 class RDB extends \Espo\Core\Repositories\Database implements Injectable /** @phpstan-ignore-line */
 {
-    protected $dependencyList = [ /** @phpstan-ignore-line */
+    protected $dependencyList = [/** @phpstan-ignore-line */
         'config',
     ];
 

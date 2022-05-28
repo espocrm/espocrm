@@ -31,7 +31,7 @@ namespace Espo\Core\Templates\SelectManagers;
 
 class Event extends \Espo\Core\Select\SelectManager
 {
-    protected $selectAttributesDependancyMap = [ /** @phpstan-ignore-line */
+    protected $selectAttributesDependancyMap = [/** @phpstan-ignore-line */
         'duration' => [
             'dateStart',
             'dateEnd',
