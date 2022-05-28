@@ -1273,7 +1273,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $result = $this->createProcessor((object)[
+        $result = $this->createProcessor((object) [
             'counter' => 4
         ])->process($item);
 
@@ -1298,7 +1298,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $variables = (object)[
+        $variables = (object) [
             'counter' => 4
         ];
         $this->createProcessor($variables)->process($item);
@@ -1324,7 +1324,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $variables = (object)[
+        $variables = (object) [
             'counter' => 4
         ];
 
@@ -3098,7 +3098,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             }
         '));
 
-        $variables = (object)[];
+        $variables = (object) [];
         $this->setEntityAttributes($this->entity, array(
             'test' => 'hello'
         ));
