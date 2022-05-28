@@ -520,7 +520,7 @@ class BaseEntity implements Entity
                 return $value;
 
             case self::BOOL:
-                return ($value === 1 || $value === '1' || $value === true || $value === 'true');
+                return $value === 1 || $value === '1' || $value === true || $value === 'true';
 
             case self::INT:
                 return intval($value);
