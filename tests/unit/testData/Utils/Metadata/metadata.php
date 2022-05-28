@@ -1,34 +1,34 @@
 <?php
 
 return array (
-  'app' => 
+  'app' =>
   array (
-    'adminPanel' => 
+    'adminPanel' =>
     array (
-      'system' => 
+      'system' =>
       array (
         'label' => 'System',
-        'items' => 
+        'items' =>
         array (
-          0 => 
+          0 =>
           array (
             'url' => '#Admin/settings',
             'label' => 'Settings',
             'description' => 'System settings of application.',
           ),
-          1 => 
+          1 =>
           array (
             'url' => '#ScheduledJob',
             'label' => 'Scheduled Jobs',
             'description' => 'Jobs which are executed by cron.',
           ),
-          2 => 
+          2 =>
           array (
             'url' => '#Admin/clearCache',
             'label' => 'Clear Cache',
             'description' => 'Clear all backend cache.',
           ),
-          3 => 
+          3 =>
           array (
             'url' => '#Admin/rebuild',
             'label' => 'Rebuild',
@@ -36,24 +36,24 @@ return array (
           ),
         ),
       ),
-      'users' => 
+      'users' =>
       array (
         'label' => 'Users',
-        'items' => 
+        'items' =>
         array (
-          0 => 
+          0 =>
           array (
             'url' => '#User',
             'label' => 'Users',
             'description' => 'Users management.',
           ),
-          1 => 
+          1 =>
           array (
             'url' => '#Team',
             'label' => 'Teams',
             'description' => 'Teams management.',
           ),
-          2 => 
+          2 =>
           array (
             'url' => '#Role',
             'label' => 'Roles',
@@ -61,24 +61,24 @@ return array (
           ),
         ),
       ),
-      'email' => 
+      'email' =>
       array (
         'label' => 'Email',
-        'items' => 
+        'items' =>
         array (
-          0 => 
+          0 =>
           array (
             'url' => '#Admin/outboundEmail',
             'label' => 'Outbound Emails',
             'description' => 'SMTP settings for outgoing emails.',
           ),
-          1 => 
+          1 =>
           array (
             'url' => '#InboundEmail',
             'label' => 'Inbound Emails',
             'description' => 'Group IMAP email accouts. Email import and Email-to-Case.',
           ),
-          2 => 
+          2 =>
           array (
             'url' => '#EmailTemplate',
             'label' => 'Email Templates',
@@ -86,12 +86,12 @@ return array (
           ),
         ),
       ),
-      'data' => 
+      'data' =>
       array (
         'label' => 'Data',
-        'items' => 
+        'items' =>
         array (
-          0 => 
+          0 =>
           array (
             'url' => '#Admin/import',
             'label' => 'Import',
@@ -99,24 +99,24 @@ return array (
           ),
         ),
       ),
-      'customization' => 
+      'customization' =>
       array (
         'label' => 'Customization',
-        'items' => 
+        'items' =>
         array (
-          0 => 
+          0 =>
           array (
             'url' => '#Admin/layouts',
             'label' => 'Layout Manager',
             'description' => 'Customize layouts (list, detail, edit, search, mass update).',
           ),
-          1 => 
+          1 =>
           array (
             'url' => '#Admin/fields',
             'label' => 'Field Manager',
             'description' => 'Create new fields or customize existing ones.',
           ),
-          2 => 
+          2 =>
           array (
             'url' => '#Admin/userInterface',
             'label' => 'User Interface',
@@ -125,24 +125,24 @@ return array (
         ),
       ),
     ),
-    'defaultDashboardLayout' => 
+    'defaultDashboardLayout' =>
     array (
-      0 => 
+      0 =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'Stream',
           'id' => 'd4',
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'Calendar',
           'id' => 'd1',
         ),
       ),
-      1 => 
+      1 =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'Tasks',
           'id' => 'd3',
@@ -150,12 +150,12 @@ return array (
       ),
     ),
   ),
-  'customTest' => 
+  'customTest' =>
   array (
-    'CustomTest' => 
+    'CustomTest' =>
     array (
       'name' => 'CustomTestModuleName',
-      'var1' => 
+      'var1' =>
       array (
         'subvar1' => 'NEWsubval1',
         'subvar2' => 'subval2',
@@ -164,174 +164,174 @@ return array (
       'module' => 'Test',
     ),
   ),
-  'dashlets' => 
+  'dashlets' =>
   array (
-    'Stream' => 
+    'Stream' =>
     array (
       'module' => false,
     ),
-    'Calendar' => 
+    'Calendar' =>
     array (
       'module' => 'Crm',
     ),
-    'Cases' => 
+    'Cases' =>
     array (
       'module' => 'Crm',
     ),
-    'Leads' => 
+    'Leads' =>
     array (
       'module' => 'Crm',
     ),
-    'Opportunities' => 
+    'Opportunities' =>
     array (
       'module' => 'Crm',
     ),
-    'OpportunitiesByLeadSource' => 
+    'OpportunitiesByLeadSource' =>
     array (
       'module' => 'Crm',
     ),
-    'OpportunitiesByStage' => 
+    'OpportunitiesByStage' =>
     array (
       'module' => 'Crm',
     ),
-    'SalesByMonth' => 
+    'SalesByMonth' =>
     array (
       'module' => 'Crm',
     ),
-    'SalesPipeline' => 
+    'SalesPipeline' =>
     array (
       'module' => 'Crm',
     ),
-    'Tasks' => 
+    'Tasks' =>
     array (
       'module' => 'Crm',
     ),
   ),
-  'entityDefs' => 
+  'entityDefs' =>
   array (
-    'Attachment' => 
+    'Attachment' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'type' => 
+        'type' =>
         array (
           'type' => 'varchar',
           'maxLength' => 36,
         ),
-        'size' => 
+        'size' =>
         array (
           'type' => 'int',
           'min' => 0,
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
           'foreign' => 'attachments',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
       ),
     ),
-    'Currency' => 
+    'Currency' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'rate' => 
+        'rate' =>
         array (
           'type' => 'float',
         ),
       ),
     ),
-    'Email' => 
+    'Email' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'subject' => 
+        'subject' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'db' => false,
         ),
-        'fromName' => 
+        'fromName' =>
         array (
           'type' => 'varchar',
         ),
-        'from' => 
-        array (
-          'type' => 'varchar',
-          'db' => false,
-          'required' => true,
-        ),
-        'to' => 
+        'from' =>
         array (
           'type' => 'varchar',
           'db' => false,
           'required' => true,
         ),
-        'cc' => 
+        'to' =>
+        array (
+          'type' => 'varchar',
+          'db' => false,
+          'required' => true,
+        ),
+        'cc' =>
         array (
           'type' => 'varchar',
           'db' => false,
         ),
-        'bcc' => 
+        'bcc' =>
         array (
           'type' => 'varchar',
           'db' => false,
         ),
-        'bodyPlain' => 
+        'bodyPlain' =>
         array (
           'type' => 'text',
           'readOnly' => true,
         ),
-        'body' => 
+        'body' =>
         array (
           'type' => 'text',
           'view' => 'Fields.Wysiwyg',
         ),
-        'isHtml' => 
+        'isHtml' =>
         array (
           'type' => 'bool',
           'default' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Draft',
             1 => 'Sending',
@@ -340,82 +340,82 @@ return array (
           ),
           'readOnly' => true,
         ),
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'linkMultiple',
           'view' => 'Fields.AttachmentMultiple',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'dateSent' => 
+        'dateSent' =>
         array (
           'type' => 'datetime',
         ),
-        'createdAt' => 
-        array (
-          'type' => 'datetime',
-          'readOnly' => true,
-        ),
-        'modifiedAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'modifiedAt' =>
+        array (
+          'type' => 'datetime',
+          'readOnly' => true,
+        ),
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Attachment',
           'foreign' => 'parent',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
-          'entities' => 
+          'entities' =>
           array (
             0 => 'Account',
             1 => 'Opportunity',
@@ -423,59 +423,59 @@ return array (
           ),
           'foreign' => 'emails',
         ),
-        'fromEmailAddress' => 
+        'fromEmailAddress' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'EmailAddress',
         ),
-        'toEmailAddresses' => 
+        'toEmailAddresses' =>
         array (
           'type' => 'hasMany',
           'entity' => 'EmailAddress',
           'relationName' => 'EmailEmailAddress',
-          'conditions' => 
+          'conditions' =>
           array (
             'addressType' => 'to',
           ),
-          'additionalColumns' => 
+          'additionalColumns' =>
           array (
-            'addressType' => 
+            'addressType' =>
             array (
               'type' => 'varchar',
               'len' => '4',
             ),
           ),
         ),
-        'ccEmailAddresses' => 
+        'ccEmailAddresses' =>
         array (
           'type' => 'hasMany',
           'entity' => 'EmailAddress',
           'relationName' => 'EmailEmailAddress',
-          'conditions' => 
+          'conditions' =>
           array (
             'addressType' => 'cc',
           ),
-          'additionalColumns' => 
+          'additionalColumns' =>
           array (
-            'addressType' => 
+            'addressType' =>
             array (
               'type' => 'varchar',
               'len' => '4',
             ),
           ),
         ),
-        'bccEmailAddresses' => 
+        'bccEmailAddresses' =>
         array (
           'type' => 'hasMany',
           'entity' => 'EmailAddress',
           'relationName' => 'EmailEmailAddress',
-          'conditions' => 
+          'conditions' =>
           array (
             'addressType' => 'bcc',
           ),
-          'additionalColumns' => 
+          'additionalColumns' =>
           array (
-            'addressType' => 
+            'addressType' =>
             array (
               'type' => 'varchar',
               'len' => '4',
@@ -483,155 +483,155 @@ return array (
           ),
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'dateSent',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'EmailAddress' => 
+    'EmailAddress' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'lower' => 
+        'lower' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'invalid' => 
+        'invalid' =>
         array (
           'type' => 'bool',
         ),
-        'optOut' => 
+        'optOut' =>
         array (
           'type' => 'bool',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'EmailTemplate' => 
+    'EmailTemplate' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'subject' => 
+        'subject' =>
         array (
           'type' => 'varchar',
         ),
-        'body' => 
+        'body' =>
         array (
           'type' => 'text',
           'view' => 'Fields.Wysiwyg',
         ),
-        'isHtml' => 
+        'isHtml' =>
         array (
           'type' => 'bool',
           'default' => true,
         ),
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'linkMultiple',
           'view' => 'Fields.AttachmentMultiple',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Attachment',
           'foreign' => 'parent',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'Job' => 
+    'Job' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Pending',
             1 => 'Running',
@@ -640,186 +640,186 @@ return array (
           ),
           'default' => 'Pending',
         ),
-        'executeTime' => 
+        'executeTime' =>
         array (
           'type' => 'datetime',
           'required' => true,
         ),
-        'serviceName' => 
+        'serviceName' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'len' => 100,
         ),
-        'method' => 
+        'method' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'len' => 100,
         ),
-        'data' => 
+        'data' =>
         array (
           'type' => 'text',
         ),
-        'scheduledJob' => 
+        'scheduledJob' =>
         array (
           'type' => 'link',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'scheduledJob' => 
+        'scheduledJob' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'ScheduledJob',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
       ),
     ),
-    'Note' => 
+    'Note' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'message' => 
+        'message' =>
         array (
           'type' => 'text',
         ),
-        'data' => 
+        'data' =>
         array (
           'type' => 'text',
         ),
-        'type' => 
+        'type' =>
         array (
           'type' => 'varchar',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'linkMultiple',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'attachments' => 
+        'attachments' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Attachment',
           'foreign' => 'parent',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
           'foreign' => 'notes',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
       ),
     ),
-    'Notification' => 
+    'Notification' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'data' => 
+        'data' =>
         array (
           'type' => 'text',
         ),
-        'type' => 
+        'type' =>
         array (
           'type' => 'varchar',
         ),
-        'read' => 
+        'read' =>
         array (
           'type' => 'bool',
         ),
-        'user' => 
+        'user' =>
         array (
           'type' => 'link',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'user' => 
+        'user' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
       ),
     ),
-    'OutboundEmail' => 
+    'OutboundEmail' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'server' => 
+        'server' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'port' => 
+        'port' =>
         array (
           'type' => 'int',
           'required' => true,
@@ -827,67 +827,67 @@ return array (
           'max' => 9999,
           'default' => 25,
         ),
-        'auth' => 
+        'auth' =>
         array (
           'type' => 'bool',
           'default' => true,
         ),
-        'security' => 
+        'security' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'SSL',
             2 => 'TLS',
           ),
         ),
-        'username' => 
+        'username' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'password' => 
+        'password' =>
         array (
           'type' => 'password',
         ),
-        'fromName' => 
+        'fromName' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'fromAddress' => 
+        'fromAddress' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'user' => 
+        'user' =>
         array (
           'type' => 'link',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'user' => 
+        'user' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
       ),
     ),
-    'Preferences' => 
+    'Preferences' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'timeZone' => 
+        'timeZone' =>
         array (
           'type' => 'enum',
           'detault' => 'UTC',
         ),
-        'dateFormat' => 
+        'dateFormat' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'MM/DD/YYYY',
             1 => 'YYYY-MM-DD',
@@ -895,10 +895,10 @@ return array (
           ),
           'default' => 'MM/DD/YYYY',
         ),
-        'timeFormat' => 
+        'timeFormat' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'HH:mm',
             1 => 'hh:mm A',
@@ -906,246 +906,246 @@ return array (
           ),
           'default' => 'HH:mm',
         ),
-        'weekStart' => 
+        'weekStart' =>
         array (
           'type' => 'enumInt',
-          'options' => 
+          'options' =>
           array (
             0 => 0,
             1 => 1,
           ),
           'default' => 0,
         ),
-        'thousandSeparator' => 
+        'thousandSeparator' =>
         array (
           'type' => 'varchar',
           'default' => ',',
         ),
-        'decimalMark' => 
+        'decimalMark' =>
         array (
           'type' => 'varchar',
           'default' => '.',
           'required' => true,
         ),
-        'defaultCurrency' => 
+        'defaultCurrency' =>
         array (
           'type' => 'enum',
           'default' => 'USD',
         ),
-        'dashboardLayout' => 
+        'dashboardLayout' =>
         array (
           'type' => 'text',
         ),
-        'dashletOptions' => 
+        'dashletOptions' =>
         array (
           'type' => 'text',
         ),
-        'smtpServer' => 
+        'smtpServer' =>
         array (
           'type' => 'varchar',
         ),
-        'smtpPort' => 
+        'smtpPort' =>
         array (
           'type' => 'int',
           'min' => 0,
           'max' => 9999,
           'default' => 25,
         ),
-        'smtpAuth' => 
+        'smtpAuth' =>
         array (
           'type' => 'bool',
           'default' => false,
         ),
-        'smtpSecurity' => 
+        'smtpSecurity' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'SSL',
             2 => 'TLS',
           ),
         ),
-        'smtpUsername' => 
+        'smtpUsername' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'smtpPassword' => 
+        'smtpPassword' =>
         array (
           'type' => 'password',
         ),
       ),
     ),
-    'Role' => 
+    'Role' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'maxLength' => 150,
           'required' => true,
           'type' => 'varchar',
         ),
-        'data' => 
+        'data' =>
         array (
           'type' => 'text',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'users' => 
+        'users' =>
         array (
           'type' => 'hasMany',
           'entity' => 'User',
           'foreign' => 'roles',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'foreign' => 'roles',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'ScheduledJob' => 
+    'ScheduledJob' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'job' => 
+        'job' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Active',
             1 => 'Inactive',
           ),
         ),
-        'scheduling' => 
+        'scheduling' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'lastRun' => 
+        'lastRun' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'log' => 
+        'log' =>
         array (
           'type' => 'hasMany',
           'entity' => 'ScheduledJobLogRecord',
           'foreign' => 'scheduledJob',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'ScheduledJobLogRecord' => 
+    'ScheduledJobLogRecord' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'readOnly' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'varchar',
           'readOnly' => true,
         ),
-        'executionTime' => 
+        'executionTime' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'scheduledJob' => 
+        'scheduledJob' =>
         array (
           'type' => 'link',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'scheduledJob' => 
+        'scheduledJob' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'ScheduledJob',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'executionTime',
         'asc' => false,
       ),
     ),
-    'Settings' => 
+    'Settings' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'useCache' => 
+        'useCache' =>
         array (
           'type' => 'bool',
           'default' => true,
         ),
-        'recordsPerPage' => 
+        'recordsPerPage' =>
         array (
           'type' => 'int',
           'minValue' => 1,
@@ -1153,7 +1153,7 @@ return array (
           'default' => 20,
           'required' => true,
         ),
-        'recordsPerPageSmall' => 
+        'recordsPerPageSmall' =>
         array (
           'type' => 'int',
           'minValue' => 1,
@@ -1161,11 +1161,11 @@ return array (
           'default' => 10,
           'required' => true,
         ),
-        'timeZone' => 
+        'timeZone' =>
         array (
           'type' => 'enum',
           'detault' => 'UTC',
-          'options' => 
+          'options' =>
           array (
             0 => 'UTC',
             1 => 'Africa/Abidjan',
@@ -1585,10 +1585,10 @@ return array (
             415 => 'Pacific/Wallis',
           ),
         ),
-        'dateFormat' => 
+        'dateFormat' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'MM/DD/YYYY',
             1 => 'YYYY-MM-DD',
@@ -1596,10 +1596,10 @@ return array (
           ),
           'default' => 'MM/DD/YYYY',
         ),
-        'timeFormat' => 
+        'timeFormat' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'HH:mm',
             1 => 'hh:mm A',
@@ -1607,36 +1607,36 @@ return array (
           ),
           'default' => 'HH:mm',
         ),
-        'weekStart' => 
+        'weekStart' =>
         array (
           'type' => 'enumInt',
-          'options' => 
+          'options' =>
           array (
             0 => 0,
             1 => 1,
           ),
           'default' => 0,
         ),
-        'thousandSeparator' => 
+        'thousandSeparator' =>
         array (
           'type' => 'varchar',
           'default' => ',',
         ),
-        'decimalMark' => 
+        'decimalMark' =>
         array (
           'type' => 'varchar',
           'default' => '.',
           'required' => true,
         ),
-        'currencyList' => 
+        'currencyList' =>
         array (
           'type' => 'array',
-          'default' => 
+          'default' =>
           array (
             0 => 'USD',
             1 => 'EUR',
           ),
-          'options' => 
+          'options' =>
           array (
             0 => 'AED',
             1 => 'ANG',
@@ -1730,35 +1730,35 @@ return array (
           ),
           'required' => true,
         ),
-        'defaultCurrency' => 
+        'defaultCurrency' =>
         array (
           'type' => 'enum',
           'default' => 'USD',
           'required' => true,
         ),
-        'outboundEmailIsShared' => 
+        'outboundEmailIsShared' =>
         array (
           'type' => 'bool',
           'default' => false,
         ),
-        'outboundEmailFromName' => 
+        'outboundEmailFromName' =>
         array (
           'type' => 'varchar',
           'default' => 'EspoCRM',
           'required' => true,
         ),
-        'outboundEmailFromAddress' => 
+        'outboundEmailFromAddress' =>
         array (
           'type' => 'varchar',
           'default' => 'crm@example.com',
           'required' => true,
         ),
-        'smtpServer' => 
+        'smtpServer' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'smtpPort' => 
+        'smtpPort' =>
         array (
           'type' => 'int',
           'required' => true,
@@ -1766,34 +1766,34 @@ return array (
           'max' => 9999,
           'default' => 25,
         ),
-        'smtpAuth' => 
+        'smtpAuth' =>
         array (
           'type' => 'bool',
           'default' => true,
         ),
-        'smtpSecurity' => 
+        'smtpSecurity' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'SSL',
             2 => 'TLS',
           ),
         ),
-        'smtpUsername' => 
+        'smtpUsername' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'smtpPassword' => 
+        'smtpPassword' =>
         array (
           'type' => 'password',
         ),
-        'tabList' => 
+        'tabList' =>
         array (
           'type' => 'array',
-          'default' => 
+          'default' =>
           array (
             0 => 'Account',
             1 => 'Contact',
@@ -1808,10 +1808,10 @@ return array (
           ),
           'translation' => 'App.scopeNamesPlural',
         ),
-        'quickCreateList' => 
+        'quickCreateList' =>
         array (
           'type' => 'array',
-          'default' => 
+          'default' =>
           array (
             0 => 'Account',
             1 => 'Contact',
@@ -1827,68 +1827,68 @@ return array (
         ),
       ),
     ),
-    'Team' => 
+    'Team' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'roles' => 
+        'roles' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'users' => 
+        'users' =>
         array (
           'type' => 'hasMany',
           'entity' => 'User',
           'foreign' => 'teams',
         ),
-        'roles' => 
+        'roles' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Role',
           'foreign' => 'teams',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'User' => 
+    'User' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'isAdmin' => 
+        'isAdmin' =>
         array (
           'type' => 'bool',
         ),
-        'userName' => 
+        'userName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 50,
           'required' => true,
           'unique' => true,
         ),
-        'name' => 
+        'name' =>
         array (
           'type' => 'personName',
         ),
-        'password' => 
+        'password' =>
         array (
           'type' => 'password',
         ),
-        'salutationName' => 
+        'salutationName' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Mr.',
@@ -1897,117 +1897,117 @@ return array (
             4 => 'Drs.',
           ),
         ),
-        'firstName' => 
+        'firstName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'lastName' => 
+        'lastName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
           'required' => true,
         ),
-        'title' => 
+        'title' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'emailAddress' => 
+        'emailAddress' =>
         array (
           'type' => 'email',
           'required' => false,
         ),
-        'phone' => 
+        'phone' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'defaultTeam' => 
+        'defaultTeam' =>
         array (
           'type' => 'link',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
-        'roles' => 
+        'roles' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'defaultTeam' => 
+        'defaultTeam' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Team',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'foreign' => 'users',
         ),
-        'roles' => 
+        'roles' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Role',
           'foreign' => 'users',
         ),
-        'preferences' => 
+        'preferences' =>
         array (
           'type' => 'hasOne',
           'entity' => 'Preferences',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Meeting',
           'foreign' => 'users',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Call',
           'foreign' => 'users',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'userName',
         'asc' => true,
       ),
     ),
-    'Account' => 
+    'Account' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'website' => 
+        'website' =>
         array (
           'type' => 'url',
         ),
-        'emailAddress' => 
+        'emailAddress' =>
         array (
           'type' => 'email',
         ),
-        'phone' => 
+        'phone' =>
         array (
           'type' => 'phone',
         ),
-        'fax' => 
+        'fax' =>
         array (
           'type' => 'phone',
         ),
-        'type' => 
+        'type' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Customer',
@@ -2016,10 +2016,10 @@ return array (
             4 => 'Reseller',
           ),
         ),
-        'industry' => 
+        'industry' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Apparel',
@@ -2031,182 +2031,182 @@ return array (
             7 => 'IT',
           ),
         ),
-        'sicCode' => 
+        'sicCode' =>
         array (
           'type' => 'varchar',
           'maxLength' => 40,
         ),
-        'billingAddress' => 
+        'billingAddress' =>
         array (
           'type' => 'address',
         ),
-        'billingAddressStreet' => 
+        'billingAddressStreet' =>
         array (
           'type' => 'varchar',
         ),
-        'billingAddressCity' => 
+        'billingAddressCity' =>
         array (
           'type' => 'varchar',
         ),
-        'billingAddressState' => 
+        'billingAddressState' =>
         array (
           'type' => 'varchar',
         ),
-        'billingAddressCountry' => 
+        'billingAddressCountry' =>
         array (
           'type' => 'varchar',
         ),
-        'billingAddressPostalCode' => 
+        'billingAddressPostalCode' =>
         array (
           'type' => 'varchar',
         ),
-        'shippingAddress' => 
+        'shippingAddress' =>
         array (
           'type' => 'address',
         ),
-        'shippingAddressStreet' => 
+        'shippingAddressStreet' =>
         array (
           'type' => 'varchar',
         ),
-        'shippingAddressCity' => 
+        'shippingAddressCity' =>
         array (
           'type' => 'varchar',
         ),
-        'shippingAddressState' => 
+        'shippingAddressState' =>
         array (
           'type' => 'varchar',
         ),
-        'shippingAddressCountry' => 
+        'shippingAddressCountry' =>
         array (
           'type' => 'varchar',
         ),
-        'shippingAddressPostalCode' => 
+        'shippingAddressPostalCode' =>
         array (
           'type' => 'varchar',
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Contact',
           'foreign' => 'account',
         ),
-        'opportunities' => 
+        'opportunities' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Opportunity',
           'foreign' => 'account',
         ),
-        'cases' => 
+        'cases' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Case',
           'foreign' => 'account',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Meeting',
           'foreign' => 'parent',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Call',
           'foreign' => 'parent',
         ),
-        'tasks' => 
+        'tasks' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Task',
           'foreign' => 'parent',
         ),
-        'emails' => 
+        'emails' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Email',
           'foreign' => 'parent',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'Call' => 
+    'Call' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Planned',
             1 => 'Held',
@@ -2214,30 +2214,30 @@ return array (
           ),
           'default' => 'Planned',
           'view' => 'Fields.EnumStyled',
-          'style' => 
+          'style' =>
           array (
             'Held' => 'success',
             'Not Held' => 'danger',
           ),
         ),
-        'dateStart' => 
+        'dateStart' =>
         array (
           'type' => 'datetime',
           'required' => true,
           'default' => 'javascript: return this.dateTime.getNow(15);',
         ),
-        'dateEnd' => 
+        'dateEnd' =>
         array (
           'type' => 'datetime',
           'required' => true,
           'after' => 'dateStart',
         ),
-        'duration' => 
+        'duration' =>
         array (
           'type' => 'duration',
           'start' => 'dateStart',
           'end' => 'dateEnd',
-          'options' => 
+          'options' =>
           array (
             0 => 300,
             1 => 600,
@@ -2249,114 +2249,114 @@ return array (
           ),
           'default' => 300,
         ),
-        'direction' => 
+        'direction' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Outbound',
             1 => 'Inbound',
           ),
           'default' => 'Outbound',
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'users' => 
+        'users' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'leads' => 
+        'leads' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'users' => 
+        'users' =>
         array (
           'type' => 'hasMany',
           'entity' => 'User',
           'foreign' => 'calls',
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Contact',
           'foreign' => 'calls',
         ),
-        'leads' => 
+        'leads' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Lead',
           'foreign' => 'calls',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
-          'entities' => 
+          'entities' =>
           array (
             0 => 'Account',
             1 => 'Opportunity',
@@ -2365,33 +2365,33 @@ return array (
           'foreign' => 'calls',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'dateStart',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'Case' => 
+    'Case' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'number' => 
+        'number' =>
         array (
           'type' => 'autoincrement',
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'New',
             1 => 'Assigned',
@@ -2402,17 +2402,17 @@ return array (
           ),
           'default' => 'New',
           'view' => 'Fields.EnumStyled',
-          'style' => 
+          'style' =>
           array (
             'Closed' => 'success',
             'Duplicate' => 'danger',
             'Rejected' => 'danger',
           ),
         ),
-        'priority' => 
+        'priority' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Low',
             1 => 'Normal',
@@ -2422,10 +2422,10 @@ return array (
           'default' => 'Normal',
           'audited' => true,
         ),
-        'type' => 
+        'type' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Question',
@@ -2434,131 +2434,131 @@ return array (
           ),
           'audited' => true,
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'link',
         ),
-        'contact' => 
+        'contact' =>
         array (
           'type' => 'link',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Account',
           'foreign' => 'cases',
         ),
-        'contact' => 
+        'contact' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Contact',
           'foreign' => 'cases',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Meeting',
           'foreign' => 'parent',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Call',
           'foreign' => 'parent',
         ),
-        'tasks' => 
+        'tasks' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Task',
           'foreign' => 'parent',
         ),
-        'emails' => 
+        'emails' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Email',
           'foreign' => 'parent',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'number',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
           1 => 'open',
         ),
       ),
     ),
-    'Contact' => 
+    'Contact' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'personName',
         ),
-        'salutationName' => 
+        'salutationName' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Mr.',
@@ -2567,176 +2567,176 @@ return array (
             4 => 'Drs.',
           ),
         ),
-        'firstName' => 
+        'firstName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'lastName' => 
+        'lastName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
           'required' => true,
         ),
-        'title' => 
+        'title' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'emailAddress' => 
+        'emailAddress' =>
         array (
           'type' => 'email',
         ),
-        'phone' => 
+        'phone' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'fax' => 
+        'fax' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'doNotCall' => 
+        'doNotCall' =>
         array (
           'type' => 'bool',
         ),
-        'phoneOffice' => 
+        'phoneOffice' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'address' => 
+        'address' =>
         array (
           'type' => 'address',
         ),
-        'addressStreet' => 
+        'addressStreet' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCity' => 
+        'addressCity' =>
         array (
           'type' => 'varchar',
         ),
-        'addressState' => 
+        'addressState' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCountry' => 
+        'addressCountry' =>
         array (
           'type' => 'varchar',
         ),
-        'addressPostalCode' => 
+        'addressPostalCode' =>
         array (
           'type' => 'varchar',
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'link',
         ),
-        'accountType' => 
+        'accountType' =>
         array (
           'type' => 'foreign',
           'link' => 'account',
           'field' => 'type',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'belongsTo',
           'jointTable' => true,
           'entity' => 'Account',
         ),
-        'opportunities' => 
+        'opportunities' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Opportunity',
           'foreign' => 'contacts',
         ),
-        'cases' => 
+        'cases' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Case',
           'foreign' => 'contact',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Meeting',
           'foreign' => 'contacts',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Call',
           'foreign' => 'contacts',
         ),
-        'tasks' => 
+        'tasks' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Task',
           'foreign' => 'parent',
         ),
-        'activities' => 
+        'activities' =>
         array (
           'type' => 'joint',
-          'links' => 
+          'links' =>
           array (
             0 => 'meetings',
             1 => 'calls',
@@ -2744,82 +2744,82 @@ return array (
           ),
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'InboundEmail' => 
+    'InboundEmail' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Active',
             1 => 'Inactive',
           ),
         ),
-        'host' => 
+        'host' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'port' => 
+        'port' =>
         array (
           'type' => 'varchar',
           'default' => '143',
           'required' => true,
         ),
-        'username' => 
+        'username' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'password' => 
+        'password' =>
         array (
           'type' => 'password',
         ),
-        'monitoredFolders' => 
+        'monitoredFolders' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'default' => 'INBOX',
         ),
-        'trashFolder' => 
+        'trashFolder' =>
         array (
           'type' => 'varchar',
           'required' => true,
           'default' => 'INBOX.Trash',
         ),
-        'assignToUser' => 
+        'assignToUser' =>
         array (
           'type' => 'link',
         ),
-        'team' => 
+        'team' =>
         array (
           'type' => 'link',
         ),
-        'createCase' => 
+        'createCase' =>
         array (
           'type' => 'bool',
         ),
-        'caseDistribution' => 
+        'caseDistribution' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Direct-Assignment',
             1 => 'Round-Robin',
@@ -2827,89 +2827,89 @@ return array (
           ),
           'default' => 'Direct-Assignment',
         ),
-        'reply' => 
+        'reply' =>
         array (
           'type' => 'bool',
         ),
-        'replyEmailTemplate' => 
+        'replyEmailTemplate' =>
         array (
           'type' => 'link',
         ),
-        'replyFromAddress' => 
+        'replyFromAddress' =>
         array (
           'type' => 'varchar',
         ),
-        'replyFromName' => 
+        'replyFromName' =>
         array (
           'type' => 'varchar',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignToUser' => 
+        'assignToUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'team' => 
+        'team' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Team',
         ),
-        'replyEmailTemplate' => 
+        'replyEmailTemplate' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'EmailTemplate',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'name',
         'asc' => true,
       ),
     ),
-    'Lead' => 
+    'Lead' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'personName',
         ),
-        'salutationName' => 
+        'salutationName' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Mr.',
@@ -2918,26 +2918,26 @@ return array (
             4 => 'Drs.',
           ),
         ),
-        'firstName' => 
+        'firstName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'lastName' => 
+        'lastName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
           'required' => true,
         ),
-        'title' => 
+        'title' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'New',
             1 => 'Assigned',
@@ -2948,17 +2948,17 @@ return array (
           ),
           'default' => 'New',
           'view' => 'Fields.EnumStyled',
-          'style' => 
+          'style' =>
           array (
             'Converted' => 'success',
             'Recycled' => 'danger',
             'Dead' => 'danger',
           ),
         ),
-        'source' => 
+        'source' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Call',
@@ -2971,184 +2971,184 @@ return array (
             8 => 'Other',
           ),
         ),
-        'opportunityAmount' => 
+        'opportunityAmount' =>
         array (
           'type' => 'currency',
           'audited' => true,
         ),
-        'website' => 
+        'website' =>
         array (
           'type' => 'url',
         ),
-        'address' => 
+        'address' =>
         array (
           'type' => 'address',
         ),
-        'addressStreet' => 
+        'addressStreet' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCity' => 
+        'addressCity' =>
         array (
           'type' => 'varchar',
         ),
-        'addressState' => 
+        'addressState' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCountry' => 
+        'addressCountry' =>
         array (
           'type' => 'varchar',
         ),
-        'addressPostalCode' => 
+        'addressPostalCode' =>
         array (
           'type' => 'varchar',
         ),
-        'emailAddress' => 
+        'emailAddress' =>
         array (
           'type' => 'email',
         ),
-        'phone' => 
+        'phone' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'fax' => 
+        'fax' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'phoneOffice' => 
+        'phoneOffice' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'doNotCall' => 
+        'doNotCall' =>
         array (
           'type' => 'bool',
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'accountName' => 
+        'accountName' =>
         array (
           'type' => 'varchar',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
-        'createdAccount' => 
+        'createdAccount' =>
         array (
           'type' => 'link',
           'disabled' => true,
           'readOnly' => true,
         ),
-        'createdContact' => 
+        'createdContact' =>
         array (
           'type' => 'link',
           'disabled' => true,
           'readOnly' => true,
         ),
-        'createdOpportunity' => 
+        'createdOpportunity' =>
         array (
           'type' => 'link',
           'disabled' => true,
           'readOnly' => true,
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'opportunities' => 
+        'opportunities' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Opportunity',
           'foreign' => 'leads',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Meeting',
           'foreign' => 'leads',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Call',
           'foreign' => 'leads',
         ),
-        'tasks' => 
+        'tasks' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Task',
           'foreign' => 'parent',
         ),
-        'createdAccount' => 
+        'createdAccount' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Account',
         ),
-        'createdContact' => 
+        'createdContact' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Contact',
         ),
-        'createdOpportunity' => 
+        'createdOpportunity' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Opportunity',
         ),
       ),
-      'convertFields' => 
+      'convertFields' =>
       array (
-        'Contact' => 
+        'Contact' =>
         array (
           'name' => 'name',
           'title' => 'title',
@@ -3158,7 +3158,7 @@ return array (
           'assignedUser' => 'assignedUser',
           'teams' => 'teams',
         ),
-        'Account' => 
+        'Account' =>
         array (
           'name' => 'accountName',
           'website' => 'website',
@@ -3167,7 +3167,7 @@ return array (
           'assignedUser' => 'assignedUser',
           'teams' => 'teams',
         ),
-        'Opportunity' => 
+        'Opportunity' =>
         array (
           'amount' => 'opportunityAmount',
           'leadSource' => 'source',
@@ -3175,29 +3175,29 @@ return array (
           'teams' => 'teams',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'Meeting' => 
+    'Meeting' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Planned',
             1 => 'Held',
@@ -3205,30 +3205,30 @@ return array (
           ),
           'default' => 'Planned',
           'view' => 'Fields.EnumStyled',
-          'style' => 
+          'style' =>
           array (
             'Held' => 'success',
             'Not Held' => 'danger',
           ),
         ),
-        'dateStart' => 
+        'dateStart' =>
         array (
           'type' => 'datetime',
           'required' => true,
           'default' => 'javascript: return this.dateTime.getNow(15);',
         ),
-        'dateEnd' => 
+        'dateEnd' =>
         array (
           'type' => 'datetime',
           'required' => true,
           'after' => 'dateStart',
         ),
-        'duration' => 
+        'duration' =>
         array (
           'type' => 'duration',
           'start' => 'dateStart',
           'end' => 'dateEnd',
-          'options' => 
+          'options' =>
           array (
             0 => 0,
             1 => 900,
@@ -3240,104 +3240,104 @@ return array (
           ),
           'default' => 3600,
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'users' => 
+        'users' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'leads' => 
+        'leads' =>
         array (
           'type' => 'linkMultiple',
           'disabled' => true,
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'users' => 
+        'users' =>
         array (
           'type' => 'hasMany',
           'entity' => 'User',
           'foreign' => 'meetings',
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Contact',
           'foreign' => 'meetings',
         ),
-        'leads' => 
+        'leads' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Lead',
           'foreign' => 'meetings',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
-          'entities' => 
+          'entities' =>
           array (
             0 => 'Account',
             1 => 'Opportunity',
@@ -3346,40 +3346,40 @@ return array (
           'foreign' => 'meetings',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'dateStart',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'Opportunity' => 
+    'Opportunity' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'amount' => 
+        'amount' =>
         array (
           'type' => 'currency',
           'required' => true,
           'audited' => true,
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'stage' => 
+        'stage' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Prospecting',
             1 => 'Qualification',
@@ -3395,17 +3395,17 @@ return array (
           'view' => 'Crm:Opportunity.Fields.Stage',
           'default' => 'Prospecting',
         ),
-        'probability' => 
+        'probability' =>
         array (
           'type' => 'int',
           'required' => true,
           'min' => 0,
           'max' => 100,
         ),
-        'leadSource' => 
+        'leadSource' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Other',
             1 => 'Call',
@@ -3417,129 +3417,129 @@ return array (
             7 => 'Campaign',
           ),
         ),
-        'closeDate' => 
+        'closeDate' =>
         array (
           'type' => 'date',
           'required' => true,
           'audited' => true,
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'account' => 
+        'account' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'Account',
           'foreign' => 'opportunities',
         ),
-        'contacts' => 
+        'contacts' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Contact',
           'foreign' => 'opportunities',
         ),
-        'meetings' => 
+        'meetings' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Meeting',
           'foreign' => 'parent',
         ),
-        'calls' => 
+        'calls' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Call',
           'foreign' => 'parent',
         ),
-        'tasks' => 
+        'tasks' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Task',
           'foreign' => 'parent',
         ),
-        'emails' => 
+        'emails' =>
         array (
           'type' => 'hasChildren',
           'entity' => 'Email',
           'foreign' => 'parent',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
           1 => 'open',
         ),
       ),
     ),
-    'Prospect' => 
+    'Prospect' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'personName',
         ),
-        'salutationName' => 
+        'salutationName' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => '',
             1 => 'Mr.',
@@ -3548,159 +3548,159 @@ return array (
             4 => 'Drs.',
           ),
         ),
-        'firstName' => 
+        'firstName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'lastName' => 
+        'lastName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
           'required' => true,
         ),
-        'title' => 
+        'title' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'accountName' => 
+        'accountName' =>
         array (
           'type' => 'varchar',
           'maxLength' => 100,
         ),
-        'website' => 
+        'website' =>
         array (
           'type' => 'url',
         ),
-        'address' => 
+        'address' =>
         array (
           'type' => 'address',
         ),
-        'addressStreet' => 
+        'addressStreet' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCity' => 
+        'addressCity' =>
         array (
           'type' => 'varchar',
         ),
-        'addressState' => 
+        'addressState' =>
         array (
           'type' => 'varchar',
         ),
-        'addressCountry' => 
+        'addressCountry' =>
         array (
           'type' => 'varchar',
         ),
-        'addressPostalCode' => 
+        'addressPostalCode' =>
         array (
           'type' => 'varchar',
         ),
-        'emailAddress' => 
+        'emailAddress' =>
         array (
           'type' => 'email',
         ),
-        'phone' => 
+        'phone' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'fax' => 
+        'fax' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'phoneOffice' => 
+        'phoneOffice' =>
         array (
           'type' => 'phone',
           'maxLength' => 50,
         ),
-        'doNotCall' => 
+        'doNotCall' =>
         array (
           'type' => 'bool',
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
         ),
       ),
     ),
-    'Task' => 
+    'Task' =>
     array (
-      'fields' => 
+      'fields' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'type' => 'varchar',
           'required' => true,
         ),
-        'status' => 
+        'status' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Not Started',
             1 => 'Started',
@@ -3708,16 +3708,16 @@ return array (
             3 => 'Canceled',
           ),
           'view' => 'Fields.EnumStyled',
-          'style' => 
+          'style' =>
           array (
             'Completed' => 'success',
             'Canceled' => 'danger',
           ),
         ),
-        'priority' => 
+        'priority' =>
         array (
           'type' => 'enum',
-          'options' => 
+          'options' =>
           array (
             0 => 'Low',
             1 => 'Normal',
@@ -3726,87 +3726,87 @@ return array (
           ),
           'default' => 'Normal',
         ),
-        'dateStart' => 
+        'dateStart' =>
         array (
           'type' => 'datetime',
           'before' => 'dateEnd',
         ),
-        'dateEnd' => 
+        'dateEnd' =>
         array (
           'type' => 'datetime',
           'after' => 'dateStart',
         ),
-        'isOverdue' => 
+        'isOverdue' =>
         array (
           'type' => 'base',
           'db' => false,
           'view' => 'Crm:Task.Fields.IsOverdue',
         ),
-        'description' => 
+        'description' =>
         array (
           'type' => 'text',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'linkParent',
         ),
-        'createdAt' => 
+        'createdAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'modifiedAt' => 
+        'modifiedAt' =>
         array (
           'type' => 'datetime',
           'readOnly' => true,
         ),
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'link',
           'readOnly' => true,
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'link',
           'required' => true,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'linkMultiple',
         ),
       ),
-      'links' => 
+      'links' =>
       array (
-        'createdBy' => 
+        'createdBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'modifiedBy' => 
+        'modifiedBy' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'assignedUser' => 
+        'assignedUser' =>
         array (
           'type' => 'belongsTo',
           'entity' => 'User',
         ),
-        'teams' => 
+        'teams' =>
         array (
           'type' => 'hasMany',
           'entity' => 'Team',
           'relationName' => 'EntityTeam',
         ),
-        'parent' => 
+        'parent' =>
         array (
           'type' => 'belongsToParent',
-          'entities' => 
+          'entities' =>
           array (
             0 => 'Account',
             1 => 'Contact',
@@ -3817,11 +3817,11 @@ return array (
           'foreign' => 'tasks',
         ),
       ),
-      'collection' => 
+      'collection' =>
       array (
         'sortBy' => 'createdAt',
         'asc' => false,
-        'boolFilters' => 
+        'boolFilters' =>
         array (
           0 => 'onlyMy',
           1 => 'active',
@@ -3829,11 +3829,11 @@ return array (
       ),
     ),
   ),
-  'fields' => 
+  'fields' =>
   array (
-    'address' => 
+    'address' =>
     array (
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'street',
         1 => 'city',
@@ -3841,700 +3841,700 @@ return array (
         3 => 'country',
         4 => 'postalCode',
       ),
-      'fields' => 
+      'fields' =>
       array (
-        'street' => 
+        'street' =>
         array (
           'type' => 'varchar',
         ),
-        'city' => 
+        'city' =>
         array (
           'type' => 'varchar',
         ),
-        'state' => 
+        'state' =>
         array (
           'type' => 'varchar',
         ),
-        'country' => 
+        'country' =>
         array (
           'type' => 'varchar',
         ),
-        'postalCode' => 
+        'postalCode' =>
         array (
           'type' => 'varchar',
         ),
       ),
       'mergable' => false,
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
     ),
-    'array' => 
+    'array' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'options',
           'type' => 'array',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'translation',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => false,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'json_array',
       ),
     ),
-    'autoincrement' => 
+    'autoincrement' =>
     array (
-      'params' => 
+      'params' =>
       array (
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'int',
         'autoincrement' => true,
         'unique' => true,
       ),
     ),
-    'base' => 
+    'base' =>
     array (
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => false,
       ),
-      'database' => 
+      'database' =>
       array (
         'notStorable' => true,
       ),
     ),
-    'bool' => 
+    'bool' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'default',
           'type' => 'bool',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
     ),
-    'currency' => 
+    'currency' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'min',
           'type' => 'float',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'max',
           'type' => 'float',
         ),
       ),
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'currency',
         1 => '',
       ),
-      'fields' => 
+      'fields' =>
       array (
-        'currency' => 
+        'currency' =>
         array (
           'type' => 'varchar',
           'disabled' => true,
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'float',
       ),
     ),
-    'date' => 
+    'date' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'after',
           'type' => 'varchar',
         ),
-        3 => 
+        3 =>
         array (
           'name' => 'before',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'notnull' => false,
       ),
     ),
-    'datetime' => 
+    'datetime' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'after',
           'type' => 'varchar',
         ),
-        3 => 
+        3 =>
         array (
           'name' => 'before',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => false,
       ),
-      'database' => 
+      'database' =>
       array (
         'notnull' => false,
       ),
     ),
-    'duration' => 
+    'duration' =>
     array (
-      'database' => 
+      'database' =>
       array (
         'type' => 'int',
       ),
     ),
-    'email' => 
+    'email' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'maxLength',
           'type' => 'int',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'notStorable' => true,
       ),
     ),
-    'enum' => 
+    'enum' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'options',
           'type' => 'array',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        3 => 
+        3 =>
         array (
           'name' => 'translation',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'varchar',
       ),
     ),
-    'enumFloat' => 
+    'enumFloat' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'options',
           'type' => 'array',
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'float',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'translation',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'float',
       ),
     ),
-    'enumInt' => 
+    'enumInt' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'options',
           'type' => 'array',
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'int',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'translation',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'int',
       ),
     ),
-    'float' => 
+    'float' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'float',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'min',
           'type' => 'float',
         ),
-        3 => 
+        3 =>
         array (
           'name' => 'max',
           'type' => 'float',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'notnull' => false,
       ),
     ),
-    'int' => 
+    'int' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'int',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'min',
           'type' => 'int',
         ),
-        3 => 
+        3 =>
         array (
           'name' => 'max',
           'type' => 'int',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
     ),
-    'link' => 
+    'link' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
       ),
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'id',
       ),
-      'notActualFields' => 
+      'notActualFields' =>
       array (
         0 => 'name',
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'skip' => true,
       ),
     ),
-    'linkMultiple' => 
+    'linkMultiple' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
       ),
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'ids',
       ),
-      'notActualFields' => 
+      'notActualFields' =>
       array (
         0 => 'names',
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
     ),
-    'linkParent' => 
+    'linkParent' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
       ),
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'id',
         1 => 'type',
       ),
-      'notActualFields' => 
+      'notActualFields' =>
       array (
         0 => 'name',
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'notStorable' => true,
       ),
     ),
-    'multienum' => 
+    'multienum' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'options',
           'type' => 'array',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'translation',
           'type' => 'varchar',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => false,
       ),
     ),
-    'password' => 
+    'password' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => false,
         'advanced' => false,
       ),
     ),
-    'personName' => 
+    'personName' =>
     array (
-      'actualFields' => 
+      'actualFields' =>
       array (
         0 => 'salutation',
         1 => 'first',
         2 => 'last',
       ),
-      'fields' => 
+      'fields' =>
       array (
-        'salutation' => 
+        'salutation' =>
         array (
           'type' => 'enum',
         ),
-        'first' => 
+        'first' =>
         array (
           'type' => 'varchar',
         ),
-        'last' => 
+        'last' =>
         array (
           'type' => 'varchar',
         ),
       ),
       'naming' => 'prefix',
       'mergable' => false,
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
     ),
-    'phone' => 
+    'phone' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'maxLength',
           'type' => 'int',
           'defalut' => 50,
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'varchar',
       ),
     ),
-    'text' => 
+    'text' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'text',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
     ),
-    'url' => 
+    'url' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'maxLength',
           'type' => 'int',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
-      'database' => 
+      'database' =>
       array (
         'type' => 'varchar',
       ),
     ),
-    'varchar' => 
+    'varchar' =>
     array (
-      'params' => 
+      'params' =>
       array (
-        0 => 
+        0 =>
         array (
           'name' => 'required',
           'type' => 'bool',
           'default' => false,
         ),
-        1 => 
+        1 =>
         array (
           'name' => 'default',
           'type' => 'varchar',
         ),
-        2 => 
+        2 =>
         array (
           'name' => 'maxLength',
           'type' => 'int',
         ),
       ),
-      'search' => 
+      'search' =>
       array (
         'basic' => true,
         'advanced' => true,
       ),
     ),
   ),
-  'scopes' => 
+  'scopes' =>
   array (
-    'Attachment' => 
+    'Attachment' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4542,7 +4542,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Currency' => 
+    'Currency' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4550,7 +4550,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'CustomTest' => 
+    'CustomTest' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4558,14 +4558,14 @@ return array (
       'acl' => false,
       'customizable' => true,
     ),
-    'Email' => 
+    'Email' =>
     array (
       'entity' => true,
       'layouts' => false,
       'tab' => false,
       'acl' => true,
     ),
-    'EmailAddress' => 
+    'EmailAddress' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4573,7 +4573,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'EmailTemplate' => 
+    'EmailTemplate' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4581,7 +4581,7 @@ return array (
       'acl' => true,
       'customizable' => false,
     ),
-    'Job' => 
+    'Job' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4589,7 +4589,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Note' => 
+    'Note' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4597,7 +4597,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Notification' => 
+    'Notification' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4605,7 +4605,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'OutboundEmail' => 
+    'OutboundEmail' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4613,7 +4613,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Role' => 
+    'Role' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4621,7 +4621,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'ScheduledJob' => 
+    'ScheduledJob' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4629,7 +4629,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'ScheduledJobLogRecord' => 
+    'ScheduledJobLogRecord' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4637,7 +4637,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Stream' => 
+    'Stream' =>
     array (
       'entity' => false,
       'layouts' => false,
@@ -4645,7 +4645,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'Team' => 
+    'Team' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4653,7 +4653,7 @@ return array (
       'acl' => false,
       'customizable' => false,
     ),
-    'User' => 
+    'User' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4661,7 +4661,7 @@ return array (
       'acl' => false,
       'customizable' => true,
     ),
-    'Account' => 
+    'Account' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4671,7 +4671,7 @@ return array (
       'customizable' => true,
       'stream' => true,
     ),
-    'Activities' => 
+    'Activities' =>
     array (
       'entity' => false,
       'layouts' => false,
@@ -4680,14 +4680,14 @@ return array (
       'module' => 'Crm',
       'customizable' => false,
     ),
-    'Calendar' => 
+    'Calendar' =>
     array (
       'entity' => false,
       'tab' => true,
       'acl' => false,
       'module' => 'Crm',
     ),
-    'Call' => 
+    'Call' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4696,17 +4696,7 @@ return array (
       'module' => 'Crm',
       'customizable' => true,
     ),
-    'Case' => 
-    array (
-      'entity' => true,
-      'layouts' => true,
-      'tab' => true,
-      'acl' => true,
-      'module' => 'Crm',
-      'customizable' => true,
-      'stream' => true,
-    ),
-    'Contact' => 
+    'Case' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4716,7 +4706,17 @@ return array (
       'customizable' => true,
       'stream' => true,
     ),
-    'InboundEmail' => 
+    'Contact' =>
+    array (
+      'entity' => true,
+      'layouts' => true,
+      'tab' => true,
+      'acl' => true,
+      'module' => 'Crm',
+      'customizable' => true,
+      'stream' => true,
+    ),
+    'InboundEmail' =>
     array (
       'entity' => true,
       'layouts' => false,
@@ -4724,7 +4724,7 @@ return array (
       'acl' => false,
       'module' => 'Crm',
     ),
-    'Lead' => 
+    'Lead' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4734,7 +4734,7 @@ return array (
       'customizable' => true,
       'stream' => true,
     ),
-    'Meeting' => 
+    'Meeting' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4743,7 +4743,7 @@ return array (
       'module' => 'Crm',
       'customizable' => true,
     ),
-    'Opportunity' => 
+    'Opportunity' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4753,7 +4753,7 @@ return array (
       'customizable' => true,
       'stream' => true,
     ),
-    'Prospect' => 
+    'Prospect' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4762,7 +4762,7 @@ return array (
       'module' => 'Crm',
       'customizable' => true,
     ),
-    'Task' => 
+    'Task' =>
     array (
       'entity' => true,
       'layouts' => true,
@@ -4772,109 +4772,109 @@ return array (
       'customizable' => true,
     ),
   ),
-  'viewDefs' => 
+  'viewDefs' =>
   array (
-    'Note' => 
+    'Note' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'edit' => 'Note.Record.Edit',
         'editQuick' => 'Note.Record.Edit',
       ),
     ),
-    'OutboundEmail' => 
+    'OutboundEmail' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'OutboundEmail.Record.Detail',
         'edit' => 'OutboundEmail.Record.Edit',
         'editQuick' => 'OutboundEmail.Record.Edit',
       ),
     ),
-    'Preferences' => 
+    'Preferences' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'edit' => 'Preferences.Record.Edit',
       ),
-      'ciews' => 
+      'ciews' =>
       array (
         'edit' => 'Preferences.Edit',
       ),
     ),
-    'Role' => 
+    'Role' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'Role.Record.Detail',
         'edit' => 'Role.Record.Edit',
         'editQuick' => 'Role.Record.Edit',
       ),
-      'relationshipPanels' => 
+      'relationshipPanels' =>
       array (
-        'users' => 
+        'users' =>
         array (
           'create' => false,
         ),
-        'teams' => 
+        'teams' =>
         array (
           'create' => false,
         ),
       ),
     ),
-    'ScheduledJob' => 
+    'ScheduledJob' =>
     array (
-      'relationshipPanels' => 
+      'relationshipPanels' =>
       array (
-        'log' => 
+        'log' =>
         array (
           'readOnly' => true,
         ),
       ),
     ),
-    'Team' => 
+    'Team' =>
     array (
-      'relationshipPanels' => 
+      'relationshipPanels' =>
       array (
-        'users' => 
+        'users' =>
         array (
           'create' => false,
         ),
       ),
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'Team.Detail',
         'edit' => 'Team.Edit',
       ),
     ),
-    'User' => 
+    'User' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'User.Record.Detail',
         'edit' => 'User.Record.Edit',
         'editQuick' => 'User.Record.Edit',
       ),
     ),
-    'Account' => 
+    'Account' =>
     array (
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'activities',
             'label' => 'Activities',
             'view' => 'Crm:Record.Panels.Activities',
           ),
-          1 => 
+          1 =>
           array (
             'name' => 'history',
             'label' => 'History',
             'view' => 'Crm:Record.Panels.History',
           ),
-          2 => 
+          2 =>
           array (
             'name' => 'tasks',
             'label' => 'Tasks',
@@ -4882,31 +4882,31 @@ return array (
           ),
         ),
       ),
-      'relationshipPanels' => 
+      'relationshipPanels' =>
       array (
-        'contacts' => 
+        'contacts' =>
         array (
-          'actions' => 
+          'actions' =>
           array (
           ),
           'layout' => 'listSmall',
         ),
       ),
     ),
-    'Call' => 
+    'Call' =>
     array (
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'attendees',
             'label' => 'Attendees',
             'view' => 'Record.Panels.Side',
-            'options' => 
+            'options' =>
             array (
-              'fields' => 
+              'fields' =>
               array (
                 0 => 'users',
                 1 => 'contacts',
@@ -4916,16 +4916,16 @@ return array (
             ),
           ),
         ),
-        'edit' => 
+        'edit' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'attendees',
             'label' => 'Attendees',
             'view' => 'Record.Panels.Side',
-            'options' => 
+            'options' =>
             array (
-              'fields' => 
+              'fields' =>
               array (
                 0 => 'users',
                 1 => 'contacts',
@@ -4937,31 +4937,31 @@ return array (
         ),
       ),
     ),
-    'Case' => 
+    'Case' =>
     array (
-      'bottomPanels' => 
+      'bottomPanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
         ),
       ),
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'activities',
             'label' => 'Activities',
             'view' => 'Crm:Record.Panels.Activities',
           ),
-          1 => 
+          1 =>
           array (
             'name' => 'history',
             'label' => 'History',
             'view' => 'Crm:Record.Panels.History',
           ),
-          2 => 
+          2 =>
           array (
             'name' => 'tasks',
             'label' => 'Tasks',
@@ -4970,29 +4970,29 @@ return array (
         ),
       ),
     ),
-    'Contact' => 
+    'Contact' =>
     array (
-      'views' => 
+      'views' =>
       array (
         'detail' => 'Crm:Contact.Detail',
       ),
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'activities',
             'label' => 'Activities',
             'view' => 'Crm:Record.Panels.Activities',
           ),
-          1 => 
+          1 =>
           array (
             'name' => 'history',
             'label' => 'History',
             'view' => 'Crm:Record.Panels.History',
           ),
-          2 => 
+          2 =>
           array (
             'name' => 'tasks',
             'label' => 'Tasks',
@@ -5001,41 +5001,41 @@ return array (
         ),
       ),
     ),
-    'InboundEmail' => 
+    'InboundEmail' =>
     array (
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'Crm:InboundEmail.Record.Detail',
         'edit' => 'Crm:InboundEmail.Record.Edit',
       ),
     ),
-    'Lead' => 
+    'Lead' =>
     array (
-      'views' => 
+      'views' =>
       array (
         'detail' => 'Crm:Lead.Detail',
       ),
-      'recordViews' => 
+      'recordViews' =>
       array (
         'detail' => 'Crm:Lead.Record.Detail',
       ),
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'activities',
             'label' => 'Activities',
             'view' => 'Crm:Record.Panels.Activities',
           ),
-          1 => 
+          1 =>
           array (
             'name' => 'history',
             'label' => 'History',
             'view' => 'Crm:Record.Panels.History',
           ),
-          2 => 
+          2 =>
           array (
             'name' => 'tasks',
             'label' => 'Tasks',
@@ -5044,24 +5044,24 @@ return array (
         ),
       ),
     ),
-    'Meeting' => 
+    'Meeting' =>
     array (
-      'views' => 
+      'views' =>
       array (
         'detail' => 'Crm:Meeting.Detail',
       ),
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'attendees',
             'label' => 'Attendees',
             'view' => 'Record.Panels.Side',
-            'options' => 
+            'options' =>
             array (
-              'fields' => 
+              'fields' =>
               array (
                 0 => 'users',
                 1 => 'contacts',
@@ -5071,16 +5071,16 @@ return array (
             ),
           ),
         ),
-        'edit' => 
+        'edit' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'attendees',
             'label' => 'Attendees',
             'view' => 'Record.Panels.Side',
-            'options' => 
+            'options' =>
             array (
-              'fields' => 
+              'fields' =>
               array (
                 0 => 'users',
                 1 => 'contacts',
@@ -5092,29 +5092,29 @@ return array (
         ),
       ),
     ),
-    'Opportunity' => 
+    'Opportunity' =>
     array (
-      'views' => 
+      'views' =>
       array (
         'detail' => 'Crm:Opportunity.Detail',
       ),
-      'sidePanels' => 
+      'sidePanels' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'activities',
             'label' => 'Activities',
             'view' => 'Crm:Record.Panels.Activities',
           ),
-          1 => 
+          1 =>
           array (
             'name' => 'history',
             'label' => 'History',
             'view' => 'Crm:Record.Panels.History',
           ),
-          2 => 
+          2 =>
           array (
             'name' => 'tasks',
             'label' => 'Tasks',
@@ -5123,19 +5123,19 @@ return array (
         ),
       ),
     ),
-    'Prospect' => 
+    'Prospect' =>
     array (
-      'views' => 
+      'views' =>
       array (
         'detail' => 'Crm:Prospect.Detail',
       ),
-      'menu' => 
+      'menu' =>
       array (
-        'detail' => 
+        'detail' =>
         array (
-          'buttons' => 
+          'buttons' =>
           array (
-            0 => 
+            0 =>
             array (
               'label' => 'Convert to Lead',
               'action' => 'convertToLead',

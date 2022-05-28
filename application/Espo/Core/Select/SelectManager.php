@@ -2797,7 +2797,6 @@ class SelectManager
             $selectParams1['havingClause'][] = $selectParams2['havingClause'];
         }
 
-
         if (!empty($selectParams2['joins'])) {
             foreach ($selectParams2['joins'] as $item) {
                 $this->addJoin($item, $selectParams1);

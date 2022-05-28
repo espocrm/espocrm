@@ -10,7 +10,7 @@ return array(
             'name' => array(
                 'type' => 'varchar',
                 'len' => '100',
-            ), 
+            ),
         ),
     ),
 

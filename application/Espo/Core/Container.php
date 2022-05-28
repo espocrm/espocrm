@@ -282,7 +282,7 @@ class Container implements ContainerInterface
      * @return ?class-string<Loader>
      */
     private function getLoaderClassName(string $name): ?string
-    {       
+    {
         $loader = $this->loaderClassNames[$name] ?? null;
 
         if ($loader) {

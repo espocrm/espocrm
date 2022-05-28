@@ -3462,7 +3462,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $sql .= "FROM " . $this->quoteIdentifier($table);
 
-
         if ($alias) {
             $sql .= " AS " . $this->quoteIdentifier($alias);
         }

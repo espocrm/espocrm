@@ -2,58 +2,58 @@
 
 return array(
     'fields' => array(
-      'id' => 
+      'id' =>
       array (
         'dbType' => 'varchar',
         'len' => 24,
         'type' => 'id',
       ),
-      'name' => 
+      'name' =>
       array (
         'type' => 'varchar',
         'len' => 255,
       ),
-      'deleted' => 
+      'deleted' =>
       array (
         'type' => 'bool',
         'default' => false,
       ),
-      'type' => 
+      'type' =>
       array (
         'type' => 'varchar',
         'len' => 100,
       ),
-      'size' => 
+      'size' =>
       array (
         'type' => 'int',
         'len' => 11,
       ),
-      'sourceId' => 
+      'sourceId' =>
       array (
         'type' => 'varchar',
         'len' => 36,
       ),
-      'createdAt' => 
+      'createdAt' =>
       array (
         'type' => 'datetime',
         'notNull' => false,
       ),
-      'contents' => 
+      'contents' =>
       array (
         'type' => 'text',
         'notStorable' => true,
       ),
-      'role' => 
+      'role' =>
       array (
         'type' => 'varchar',
         'len' => 36,
       ),
-      'global' => 
+      'global' =>
       array (
         'type' => 'bool',
         'default' => false,
       ),
-      'parentId' => 
+      'parentId' =>
       array (
         'dbType' => 'varchar',
         'len' => 24,
@@ -61,7 +61,7 @@ return array(
         'index' => 'parent',
         'notNull' => false,
       ),
-      'parentType' => 
+      'parentType' =>
       array (
         'type' => 'foreignType',
         'notNull' => false,
@@ -69,12 +69,12 @@ return array(
         'len' => 100,
         'dbType' => 'varchar',
       ),
-      'parentName' => 
+      'parentName' =>
       array (
         'type' => 'varchar',
         'notStorable' => true,
       ),
-      'relatedId' => 
+      'relatedId' =>
       array (
         'dbType' => 'varchar',
         'len' => 24,
@@ -82,7 +82,7 @@ return array(
         'index' => 'related',
         'notNull' => false,
       ),
-      'relatedType' => 
+      'relatedType' =>
       array (
         'type' => 'foreignType',
         'notNull' => false,
@@ -90,12 +90,12 @@ return array(
         'len' => 100,
         'dbType' => 'varchar',
       ),
-      'relatedName' => 
+      'relatedName' =>
       array (
         'type' => 'varchar',
         'notStorable' => true,
       ),
-      'createdById' => 
+      'createdById' =>
       array (
         'dbType' => 'varchar',
         'len' => 24,
@@ -103,12 +103,12 @@ return array(
         'index' => true,
         'notNull' => false,
       ),
-      'createdByName' => 
+      'createdByName' =>
       array (
         'type' => 'foreign',
         'notStorable' => false,
         'relation' => 'createdBy',
-        'foreign' => 
+        'foreign' =>
         array (
           0 => 'firstName',
           1 => ' ',
@@ -117,17 +117,17 @@ return array(
       ),
     ),
     'relations' => array(
-     'related' => 
+     'related' =>
       array (
         'type' => 'belongsToParent',
         'key' => 'relatedId',
       ),
-      'parent' => 
+      'parent' =>
       array (
         'type' => 'belongsToParent',
         'key' => 'parentId',
       ),
-      'createdBy' => 
+      'createdBy' =>
       array (
         'type' => 'belongsTo',
         'entity' => 'User',

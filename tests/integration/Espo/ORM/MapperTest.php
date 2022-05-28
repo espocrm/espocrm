@@ -179,7 +179,6 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $isRelated = $em->getRepository('Account')->isRelated($a2, 'originalLead', $l1);
         $this->assertFalse($isRelated);
 
-
         $em->getRepository('Lead')->relate($l1, 'createdAccount', $a2);
 
         $isRelated = $em->getRepository('Account')->isRelated($a2, 'originalLead', $l1);
@@ -287,7 +286,6 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
 
         $isRelated = $em->getRepository('Account')->isRelated($a1, 'originalLead', $l2);
         $this->assertFalse($isRelated);
-
 
         $em->getRepository('Lead')->relate($l2, 'createdAccount', $a1);
 
