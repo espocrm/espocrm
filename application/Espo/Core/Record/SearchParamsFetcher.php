@@ -67,7 +67,7 @@ class SearchParamsFetcher
     private function fetchRaw(Request $request): array
     {
         $params = $request->hasQueryParam('searchParams') ?
-            $this->fetchRawJsonSearchParams($request):
+            $this->fetchRawJsonSearchParams($request) :
             $this->fetchRawMultipleParams($request);
 
         $this->handleRawParams($params, $request);

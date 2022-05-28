@@ -125,7 +125,7 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
             ->with([
                 'selectDefs', $entityType,
                 !$this->user->isPortal() ?
-                    'accessControlFilterResolverClassName':
+                    'accessControlFilterResolverClassName' :
                     'portalAccessControlFilterResolverClassName'
             ])
             ->willReturn($className);

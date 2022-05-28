@@ -29,7 +29,7 @@
 
 $fields = array(
     'user-name' => array(
-        'default' => (isset($langs['labels']['admin']))? $langs['labels']['admin'] : 'admin',
+        'default' => (isset($langs['labels']['admin'])) ? $langs['labels']['admin'] : 'admin',
     ),
     'user-pass' => array(),
     'user-confirm-pass' => array(),
@@ -40,7 +40,7 @@ foreach ($fields as $fieldName => $field) {
         $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
     }
     else {
-        $fields[$fieldName]['value'] = (isset($fields[$fieldName]['default']))? $fields[$fieldName]['default'] : '';
+        $fields[$fieldName]['value'] = (isset($fields[$fieldName]['default'])) ? $fields[$fieldName]['default'] : '';
     }
 }
 

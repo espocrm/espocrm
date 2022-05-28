@@ -161,7 +161,7 @@ class SystemHelper extends \Espo\Core\Utils\System
             return $sudoStr . 'chmod '. $permissions[0] .' '. $path;
         }
 
-        $bufPerm = (count($permissions) == 1) ?  array_fill(0, 2, $permissions[0]) : $permissions;
+        $bufPerm = (count($permissions) == 1) ? array_fill(0, 2, $permissions[0]) : $permissions;
 
         $commands = array();
 

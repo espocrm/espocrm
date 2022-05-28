@@ -43,7 +43,7 @@ if (!isset($postData)) {
 
 $allPostData = $postData->getAll();
 
-$action = (!empty($allPostData['action']))? $allPostData['action'] : 'main';
+$action = (!empty($allPostData['action'])) ? $allPostData['action'] : 'main';
 
 require_once('install/core/Utils.php');
 
@@ -72,7 +72,7 @@ if (!empty($allPostData)) {
 }
 
 // get user selected language
-$userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
+$userLang = (!empty($_SESSION['install']['user-lang'])) ? $_SESSION['install']['user-lang'] : 'en_US';
 
 require_once 'install/core/Language.php';
 

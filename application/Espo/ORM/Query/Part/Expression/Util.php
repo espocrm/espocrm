@@ -73,7 +73,7 @@ class Util
         }
 
        if (is_bool($arg)) {
-            return $arg ? 'TRUE': 'FALSE';
+            return $arg ? 'TRUE' : 'FALSE';
         }
 
         if (is_int($arg)) {

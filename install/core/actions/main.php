@@ -42,7 +42,7 @@ foreach ($fields as $fieldName => $field) {
     if (isset($_SESSION['install'][$fieldName])) {
         $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
     } else {
-        $fields[$fieldName]['value'] = (isset($field['default']))? $field['default'] : '';
+        $fields[$fieldName]['value'] = (isset($field['default'])) ? $field['default'] : '';
     }
 }
 

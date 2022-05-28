@@ -299,7 +299,7 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
                 ->willReturn(false);
         }
 
-        $expectedOrderBy = ($converterResult ? $this->orderListToArray($converterResult): null)
+        $expectedOrderBy = ($converterResult ? $this->orderListToArray($converterResult) : null)
             ?? [[$orderBy, $order]];
 
         $expectedOrderBy[] = ['id', $order];
