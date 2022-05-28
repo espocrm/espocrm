@@ -51,7 +51,7 @@ class Portal extends Database implements
         }
 
         $siteUrl = $this->config->get('siteUrl');
-        $siteUrl = rtrim($siteUrl , '/') . '/';
+        $siteUrl = rtrim($siteUrl, '/') . '/';
 
         $url = $siteUrl . 'portal/';
 

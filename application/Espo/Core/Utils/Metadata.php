@@ -341,7 +341,8 @@ class Metadata
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
                     $field,
-                    Util::objectToArray($fieldDefsItem), $fieldDefinitionList
+                    Util::objectToArray($fieldDefsItem),
+                    $fieldDefinitionList
                 );
 
                 if (!$additionalFields) {

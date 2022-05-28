@@ -549,7 +549,8 @@ class Stream
 
                 $subscriptionBuilder->leftJoin(
                     'noteUser',
-                    'noteUser', [
+                    'noteUser',
+                    [
                         'noteUser.noteId=:' => 'id',
                         'noteUser.deleted' => false,
                         'note.relatedType' => 'Email',

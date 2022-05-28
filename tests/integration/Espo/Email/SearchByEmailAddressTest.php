@@ -85,7 +85,7 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(1, count($result->getCollection()));
 
         $result = $emailService->find(
-             SearchParams::fromRaw([
+            SearchParams::fromRaw([
                 'textFilter' => 'Improvements to our Privacy Policy'
             ])
         );

@@ -333,7 +333,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
                 ])
             )
             ->withWhereAdded(
-                 WhereItem::fromRaw([
+                WhereItem::fromRaw([
                     'type' => 'isTrue',
                     'attribute' => 'a2',
                 ])
@@ -368,7 +368,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $params = SearchParams
             ::create()
             ->withWhereAdded(
-                 WhereItem::fromRaw([
+                WhereItem::fromRaw([
                     'type' => 'isTrue',
                     'attribute' => 'a2',
                 ])

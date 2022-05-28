@@ -361,7 +361,8 @@ abstract class Base
         //check php version
         if (isset($manifest['php'])) {
             $res &= $this->checkVersions(
-                $manifest['php'], System::getPhpVersion(),
+                $manifest['php'],
+                System::getPhpVersion(),
                 'Your PHP version ({version}) is not supported. Required version: {requiredVersion}.'
             );
         }
@@ -1094,7 +1095,9 @@ abstract class Base
             $delimiter = $this->isCli() ? "\n" : "<br>";
 
             $this->throwErrorAndRemovePackage(
-                "Permission denied: " . $delimiter . implode($delimiter, $permissionDeniedList), false, false
+                "Permission denied: " . $delimiter . implode($delimiter, $permissionDeniedList),
+                false,
+                false
             );
         }
     }

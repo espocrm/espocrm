@@ -61,7 +61,9 @@ class Meeting extends EventRepository implements
 
                 foreach ($assignedUserIdList as $assignedUserId) {
                     $entity->addLinkMultipleId('users', $assignedUserId);
-                    $entity->setLinkMultipleName('users', $assignedUserId,
+                    $entity->setLinkMultipleName(
+                        'users',
+                        $assignedUserId,
                         $entity->getLinkMultipleName('assignedUsers', $assignedUserId)
                     );
                 }

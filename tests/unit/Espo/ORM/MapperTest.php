@@ -125,8 +125,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
         $this->db = new MysqlMapper(
-            $this->pdo, $this->entityFactory, $this->collectionFactory,
-            $this->query, $this->metadata, $this->sqlExecutor
+            $this->pdo,
+            $this->entityFactory,
+            $this->collectionFactory,
+            $this->query,
+            $this->metadata,
+            $this->sqlExecutor
         );
 
         $this->post = $entityFactory->create('Post');

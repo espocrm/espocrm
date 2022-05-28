@@ -2354,7 +2354,8 @@ class SelectManager
         }
 
         $fullTextSearchColumnList = $this->getEntityManager()->getMetadata()->get(
-            $this->getEntityType(), ['fullTextSearchColumnList']
+            $this->getEntityType(),
+            ['fullTextSearchColumnList']
         );
 
         $useFullTextSearch = false;

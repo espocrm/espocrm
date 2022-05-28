@@ -1529,8 +1529,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $part = $this->getFromAlias(
             $params,
-            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
-        );
+            $entity->getEntityType()
+        ) . '.' . $this->toDb(
+                $this->sanitize($attribute)
+            );
 
         $part .= ' ' . $order;
 
@@ -1590,8 +1592,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         return $this->getFromAlias(
             $params,
-            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
-        );
+            $entity->getEntityType()
+        ) . '.' . $this->toDb(
+                $this->sanitize($attribute)
+            );
     }
 
     /**

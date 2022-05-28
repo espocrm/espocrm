@@ -96,7 +96,8 @@ class StatsLoader implements Loader
 
         if ($sentCount > 0) {
             $openedPercentage = round(
-                $openedCount / $sentCount * 100, 2,
+                $openedCount / $sentCount * 100,
+                2,
                 PHP_ROUND_HALF_EVEN
             );
         }
@@ -130,7 +131,8 @@ class StatsLoader implements Loader
 
         if ($sentCount > 0) {
             $clickedPercentage = round(
-                $clickedCount / $sentCount * 100, 2,
+                $clickedCount / $sentCount * 100,
+                2,
                 PHP_ROUND_HALF_EVEN
             );
         }
@@ -167,7 +169,8 @@ class StatsLoader implements Loader
 
         if ($sentCount > 0) {
             $optedOutPercentage = round(
-                $optedOutCount / $sentCount * 100, 2,
+                $optedOutCount / $sentCount * 100,
+                2,
                 PHP_ROUND_HALF_EVEN
             );
         }
@@ -189,7 +192,8 @@ class StatsLoader implements Loader
 
         if ($sentCount && $sentCount > 0) {
             $bouncedPercentage = round(
-                $bouncedCount / $sentCount * 100, 2,
+                $bouncedCount / $sentCount * 100,
+                2,
                 PHP_ROUND_HALF_EVEN
             );
         }

@@ -90,7 +90,7 @@ class Csv implements Processor
         while (($row = $data->readRow()) !== null) {
             $preparedRow = $this->prepareRow($row);
 
-            fputcsv($fp, $preparedRow, $delimiter, '"' , "\0");
+            fputcsv($fp, $preparedRow, $delimiter, '"', "\0");
         }
 
         rewind($fp);

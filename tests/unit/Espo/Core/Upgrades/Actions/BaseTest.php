@@ -195,7 +195,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('getContents')
             ->will($this->returnValue($manifest));
 
-        $this->assertEquals( json_decode($manifest,true), $this->reflection->invokeMethod('getManifest') );
+        $this->assertEquals( json_decode($manifest, true), $this->reflection->invokeMethod('getManifest') );
     }
 
     public function acceptableVersions()

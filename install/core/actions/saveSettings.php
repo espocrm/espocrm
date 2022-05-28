@@ -44,7 +44,7 @@ $database = [
 
 $host = $_SESSION['install']['host-name'];
 
-if (strpos($host,':') === false) {
+if (strpos($host, ':') === false) {
     $host .= ":";
 }
 

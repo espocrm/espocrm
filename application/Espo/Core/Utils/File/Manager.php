@@ -198,7 +198,8 @@ class Manager
                 }
 
                 $singleFileList = array_merge(
-                    $singleFileList, $this->getSingleFileList($fileName, $onlyFileType, $basePath, $currentDir)
+                    $singleFileList,
+                    $this->getSingleFileList($fileName, $onlyFileType, $basePath, $currentDir)
                 );
             }
             else {

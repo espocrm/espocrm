@@ -282,7 +282,7 @@ class Route
         $serverRequestUri = $_SERVER['REQUEST_URI'];
 
         /** @var string */
-        $scriptName = parse_url($serverScriptName , PHP_URL_PATH);
+        $scriptName = parse_url($serverScriptName, PHP_URL_PATH);
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 

@@ -284,8 +284,16 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromjpeg($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
-                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                    $targetImage,
+                    $sourceImage,
+                    0,
+                    0,
+                    0,
+                    0, /** @phpstan-ignore-line */
+                    $targetWidth,
+                    $targetHeight,
+                    $originalWidth,
+                    $originalHeight
                 );
                 break;
 
@@ -302,8 +310,16 @@ class Image implements EntryPoint
                 imagefilledrectangle($targetImage, 0, 0, $targetWidth, $targetHeight, $transparent);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
-                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                    $targetImage,
+                    $sourceImage,
+                    0,
+                    0,
+                    0,
+                    0, /** @phpstan-ignore-line */
+                    $targetWidth,
+                    $targetHeight,
+                    $originalWidth,
+                    $originalHeight
                 );
 
                 break;
@@ -313,8 +329,16 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromgif($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
-                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                    $targetImage,
+                    $sourceImage,
+                    0,
+                    0,
+                    0,
+                    0, /** @phpstan-ignore-line */
+                    $targetWidth,
+                    $targetHeight,
+                    $originalWidth,
+                    $originalHeight
                 );
 
                 break;
@@ -324,8 +348,16 @@ class Image implements EntryPoint
                 $sourceImage = imagecreatefromwebp($filePath);
 
                 imagecopyresampled(
-                    $targetImage, $sourceImage, 0, 0, 0, 0, /** @phpstan-ignore-line */
-                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                    $targetImage,
+                    $sourceImage,
+                    0,
+                    0,
+                    0,
+                    0, /** @phpstan-ignore-line */
+                    $targetWidth,
+                    $targetHeight,
+                    $originalWidth,
+                    $originalHeight
                 );
 
                 break;

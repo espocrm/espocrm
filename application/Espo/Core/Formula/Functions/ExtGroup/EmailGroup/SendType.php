@@ -106,7 +106,7 @@ class SendType extends BaseFunction implements
             $service->sendEntity($email);
         } catch (\Exception $e) {
             $message = $e->getMessage();
-            $this->log("Error while sending. Message: {$message}." , 'error');
+            $this->log("Error while sending. Message: {$message}.", 'error');
             return false;
         }
 

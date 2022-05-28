@@ -108,7 +108,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             ->method('createEntity')
             ->with(
                 JobEntity::ENTITY_TYPE,
-               [
+                [
                     'name' => TestJob::class,
                     'className' => TestJob::class,
                     'queue' => null,

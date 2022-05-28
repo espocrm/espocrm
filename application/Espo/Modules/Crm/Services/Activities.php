@@ -1029,7 +1029,8 @@ class Activities implements
             }
 
             $statusList = $this->metadata->get(
-                ['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']
+                ['scopes', $entityType, 'historyStatusList'],
+                ['Held', 'Not Held']
             );
 
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList);

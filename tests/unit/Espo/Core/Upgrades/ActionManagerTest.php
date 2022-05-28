@@ -73,7 +73,9 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
             );
 
         $this->object = new \Espo\Core\Upgrades\ActionManager(
-            $this->params['name'], $this->objects['container'], $this->params['params']
+            $this->params['name'],
+            $this->objects['container'],
+            $this->params['params']
         );
 
         $this->reflection = new ReflectionHelper($this->object);

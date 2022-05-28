@@ -160,7 +160,7 @@ class Saver implements SaverInterface
             $seconds = intval($item->seconds);
             $type = $item->type;
 
-            if (!in_array($type , $reminderTypeList)) {
+            if (!in_array($type, $reminderTypeList)) {
                 continue;
             }
 

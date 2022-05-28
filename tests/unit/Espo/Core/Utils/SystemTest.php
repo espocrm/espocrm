@@ -81,7 +81,7 @@ class SystemTest extends \PHPUnit\Framework\TestCase
     public function testGetRootDir()
     {
         $rootDir = dirname(__FILE__);
-        $rootDir = str_replace(Util::fixPath('/tests/unit/Espo/Core/Utils'),'',$rootDir);
+        $rootDir = str_replace(Util::fixPath('/tests/unit/Espo/Core/Utils'), '', $rootDir);
 
         $this->assertEquals($rootDir, $this->object->getRootDir());
     }

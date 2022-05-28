@@ -79,7 +79,11 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreate2()
     {
         $this->prepareFactoryTest(
-            'SomeClass', BoolFilterListApplier::class, ApplierFactory::BOOL_FILTER_LIST, 'createBoolFilterList');
+            'SomeClass',
+            BoolFilterListApplier::class,
+            ApplierFactory::BOOL_FILTER_LIST,
+            'createBoolFilterList'
+        );
     }
 
     public function testCreate3()
@@ -110,7 +114,11 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreate8()
     {
         $this->prepareFactoryTest(
-            null, PrimaryFilterApplier::class, ApplierFactory::PRIMARY_FILTER, 'createPrimaryFilter');
+            null,
+            PrimaryFilterApplier::class,
+            ApplierFactory::PRIMARY_FILTER,
+            'createPrimaryFilter'
+        );
     }
 
     public function testCreate9()

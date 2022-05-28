@@ -452,7 +452,9 @@ class Htmlizer
                 if ($fieldType === 'enum') {
                     if ($this->language) {
                         $data[$attribute] = $this->language->translateOption(
-                            $data[$attribute], $attribute, $entity->getEntityType()
+                            $data[$attribute],
+                            $attribute,
+                            $entity->getEntityType()
                         );
                     }
                 }

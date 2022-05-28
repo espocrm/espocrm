@@ -706,7 +706,9 @@ class Import
 
                     if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
                         $personNameData['firstName'] = $this->prepareAttributeValue(
-                            $entity, $firstNameAttribute, $personNameData['firstName']
+                            $entity,
+                            $firstNameAttribute,
+                            $personNameData['firstName']
                         );
 
                         $entity->set($firstNameAttribute, $personNameData['firstName']);
@@ -714,7 +716,9 @@ class Import
 
                     if (!$entity->get($lastNameAttribute)) {
                         $personNameData['lastName'] = $this->prepareAttributeValue(
-                            $entity, $lastNameAttribute, $personNameData['lastName']
+                            $entity,
+                            $lastNameAttribute,
+                            $personNameData['lastName']
                         );
 
                         $entity->set($lastNameAttribute, $personNameData['lastName']);
@@ -722,7 +726,9 @@ class Import
 
                     if (!$entity->get($middleNameAttribute) && isset($personNameData['middleName'])) {
                         $personNameData['middleName'] = $this->prepareAttributeValue(
-                            $entity, $middleNameAttribute, $personNameData['middleName']
+                            $entity,
+                            $middleNameAttribute,
+                            $personNameData['middleName']
                         );
 
                         $entity->set($middleNameAttribute, $personNameData['middleName']);

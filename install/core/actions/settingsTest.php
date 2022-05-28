@@ -56,7 +56,7 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
     $connect = false;
 
     $dbName = trim($allPostData['dbName']);
-    if (strpos($allPostData['hostName'],':') === false) {
+    if (strpos($allPostData['hostName'], ':') === false) {
         $allPostData['hostName'] .= ":";
     }
     list($hostName, $port) = explode(':', trim($allPostData['hostName']));

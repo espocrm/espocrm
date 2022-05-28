@@ -105,10 +105,10 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('create')
               ->will(
-                $this->returnValueMap([
+                  $this->returnValueMap([
                     [InboundEmailService::class, $inboundEmailService],
                 ])
-            );
+              );
     }
 
     protected function createEmail(array $data): Email

@@ -83,7 +83,7 @@ class SendType extends BaseFunction implements
         catch (Exception $e) {
             $message = $e->getMessage();
 
-            $this->log("Error while sending SMS. Message: {$message}." , 'error');
+            $this->log("Error while sending SMS. Message: {$message}.", 'error');
 
             $sms->setStatus(Sms::STATUS_FAILED);
 

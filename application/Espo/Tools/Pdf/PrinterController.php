@@ -68,7 +68,7 @@ class PrinterController
         $params = $params ?? new Params();
         $data = $data ?? new Data();
 
-        return $this->createEntityPrinter()->print($this->template, $entity, $params,  $data);
+        return $this->createEntityPrinter()->print($this->template, $entity, $params, $data);
     }
 
     /**

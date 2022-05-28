@@ -540,7 +540,8 @@ class Opportunity extends Record
         $lostStageList = [];
 
         $probabilityMap =  $this->metadata->get(
-            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
+            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'],
+            []
         );
 
         $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);
@@ -562,7 +563,8 @@ class Opportunity extends Record
         $wonStageList = [];
 
         $probabilityMap =  $this->metadata->get(
-            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
+            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'],
+            []
         );
 
         $stageList = $this->metadata->get('entityDefs.Opportunity.fields.stage.options', []);

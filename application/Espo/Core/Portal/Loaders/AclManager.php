@@ -50,7 +50,7 @@ class AclManager implements Loader
 
     public function load(): PortalAclManager
     {
-        return $this->injectableFactory->createWith(PortalAclManager::class,[
+        return $this->injectableFactory->createWith(PortalAclManager::class, [
             'internalAclManager' => $this->internalAclManager,
         ]);
     }
