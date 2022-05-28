@@ -33,5 +33,4 @@ use Espo\Core\Controllers\RecordBase;
 
 class Note extends RecordBase
 {
-
 }

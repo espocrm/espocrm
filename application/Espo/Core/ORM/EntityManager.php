@@ -35,5 +35,4 @@ use Espo\ORM\{
 
 class EntityManager extends BaseEntityManager
 {
-
 }

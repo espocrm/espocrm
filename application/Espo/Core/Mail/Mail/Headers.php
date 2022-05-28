@@ -44,5 +44,4 @@ use Laminas\Loader\PluginClassLocator;
 
 class Headers extends \Laminas\Mail\Headers
 {
-
 }

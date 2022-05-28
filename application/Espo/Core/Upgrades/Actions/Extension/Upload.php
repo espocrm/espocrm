@@ -31,7 +31,6 @@ namespace Espo\Core\Upgrades\Actions\Extension;
 
 class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
 {
-
     /**
      * Check dependencies.
      *

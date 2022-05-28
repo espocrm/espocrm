@@ -31,5 +31,4 @@ namespace tests\unit\testClasses\Core\Binding;
 
 interface SomeInterface2
 {
-
 }

@@ -40,7 +40,6 @@ use Espo\Core\Api\RequestWrapper;
 
 class RequestTest extends \PHPUnit\Framework\TestCase
 {
-
     protected function setUp() : void
     {
         $this->request = $this->getMockBuilder(Psr7Request::class)->disableOriginalConstructor()->getMock();

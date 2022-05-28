@@ -36,5 +36,4 @@ use Espo\Core\EntryPoint\EntryPoint as EntryPointBase;
  */
 interface EntryPoint extends EntryPointBase
 {
-
 }

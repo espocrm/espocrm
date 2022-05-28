@@ -44,5 +44,4 @@ interface AccessEntityCREDChecker extends
     AccessEntityEditChecker,
     AccessEntityDeleteChecker
 {
-
 }

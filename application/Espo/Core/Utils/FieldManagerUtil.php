@@ -35,5 +35,4 @@ namespace Espo\Core\Utils;
  */
 class FieldManagerUtil extends FieldUtil
 {
-
 }

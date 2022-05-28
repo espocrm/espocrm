@@ -35,7 +35,6 @@ use Espo\Entities\EmailFilter;
 
 class ImporterDataTest extends \PHPUnit\Framework\TestCase
 {
-
     function testData1()
     {
         $filter = $this->createMock(EmailFilter::class);

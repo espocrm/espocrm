@@ -36,7 +36,6 @@ use Espo\ORM\Query\Part\WhereItem;
  */
 class OrGroup implements WhereItem
 {
-
     /**
      * @var array<mixed,mixed>
      */

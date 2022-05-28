@@ -31,5 +31,4 @@ namespace tests\integration\testClasses\Binding;
 
 class SomeService
 {
-
 }

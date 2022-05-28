@@ -31,7 +31,6 @@ namespace tests\integration\Espo\Settings;
 
 class AccessTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testGlobalAccess()
     {
         $app = $this->createApplication();

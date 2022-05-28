@@ -31,7 +31,6 @@ namespace tests\integration\Espo\Core\Formula;
 
 class FormulaTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testCountRelatedAndSumRelated()
     {
         $entityManager = $this->getContainer()->get('entityManager');

@@ -31,7 +31,6 @@ namespace tests\integration\Espo\Attachment;
 
 class RemoveDuplicateTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testRemoveDuplicate()
     {
         $entityManager = $this->getContainer()->get('entityManager');

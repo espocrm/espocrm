@@ -34,5 +34,4 @@ namespace Espo\Core\Templates\Services;
  */
 class Person extends \Espo\Services\Record
 {
-
 }

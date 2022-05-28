@@ -31,5 +31,4 @@ namespace Espo\Tools\EntityManager\Hooks;
 
 class CompanyType extends BasePlusType
 {
-
 }
