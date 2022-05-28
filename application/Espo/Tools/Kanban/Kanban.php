@@ -310,7 +310,7 @@ class Kanban
     protected function getStatusList(): array
     {
         assert(is_string($this->entityType));
-        
+
         $statusField = $this->getStatusField();
 
         $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
