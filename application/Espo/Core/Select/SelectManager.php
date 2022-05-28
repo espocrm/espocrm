@@ -1766,7 +1766,7 @@ class SelectManager
                     $part[$alias . '.id'] = $value;
 
                 } else {
-                    break;;
+                    break;
                 }
 
                 $this->setDistinct(true, $result);

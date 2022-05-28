@@ -42,7 +42,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $contact = $entityManager->getEntity('Contact');
-        $contact->set('lastName', 'Test');;
+        $contact->set('lastName', 'Test');
         $entityManager->saveEntity($contact);
 
         $entityManager->getRepository('Account')->relate($account, 'contacts', $contact);
@@ -65,7 +65,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $contact = $entityManager->getEntity('Contact');
-        $contact->set('lastName', 'Test');;
+        $contact->set('lastName', 'Test');
         $entityManager->saveEntity($contact);
 
         $entityManager->getRepository('Contact')->relate($contact, 'account', $account);
@@ -91,7 +91,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $contact = $entityManager->getEntity('Contact');
-        $contact->set('lastName', 'Test');;
+        $contact->set('lastName', 'Test');
         $entityManager->saveEntity($contact);
 
         $entityManager->getRepository('Contact')
@@ -132,7 +132,7 @@ class MapperTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $task = $entityManager->getEntity('Task');
-        $task->set('name', 'Test');;
+        $task->set('name', 'Test');
         $entityManager->saveEntity($task);
 
         $entityManager->getRepository('Task')->relate($task, 'parent', $account);

@@ -42,7 +42,7 @@ class ReplaceType extends BaseFunction
 
         if (count($args) < 3) {
             $this->throwTooFewArguments();
-        };
+        }
 
         $string = $args[0];
         $search = $args[1];

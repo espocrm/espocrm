@@ -184,7 +184,7 @@ class Language
                 foreach (($this->metadata->get(['app', 'language', 'aclDependencies']) ?? []) as $target => $item) {
                     $targetArr = explode('.', $target);
 
-                    $aclScope = $item['scope'] ?? null;;
+                    $aclScope = $item['scope'] ?? null;
                     $aclField = $item['field'] ?? null;
 
                     if (!$aclScope) {

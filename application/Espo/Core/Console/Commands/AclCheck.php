@@ -103,7 +103,7 @@ class AclCheck implements Command
                 $result = $this->check($user, $scope, $id, $action, $containerPortal);
 
                 if ($result) {
-                    $io->write('true');;
+                    $io->write('true');
 
                     return;
                 }
