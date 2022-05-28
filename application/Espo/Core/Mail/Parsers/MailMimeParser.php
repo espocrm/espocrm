@@ -383,7 +383,7 @@ class MailMimeParser implements Parser
             $email->set('body', $body);
         }
 
-        /** @var MessagePart|null $textCalendarPart  */
+        /** @var MessagePart|null $textCalendarPart */
         $textCalendarPart =
             $this->getMessage($message)->getAllPartsByMimeType('text/calendar')[0] ??
             $this->getMessage($message)->getAllPartsByMimeType('application/ics')[0] ??

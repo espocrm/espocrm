@@ -208,7 +208,7 @@ class Permission
             return false;
         }
 
-        /** @var array{mode: mixed}*/
+        /** @var array{mode: mixed} */
         $fileInfo = stat($filePath);
 
         return substr(base_convert((string) $fileInfo['mode'], 10, 8), -4);

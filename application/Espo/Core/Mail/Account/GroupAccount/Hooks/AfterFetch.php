@@ -504,7 +504,7 @@ class AfterFetch implements AfterFetchInterface
 
         $copiedAttachmentIdList = [];
 
-        /** @var AttachmentRepository $attachmentRepository*/
+        /** @var AttachmentRepository $attachmentRepository */
         $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
         foreach ($attachmentIdList as $attachmentId) {
