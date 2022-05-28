@@ -57,7 +57,7 @@ use Espo\{
 
 class ConverterTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->entityType = 'Test';
 

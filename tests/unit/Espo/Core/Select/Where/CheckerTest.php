@@ -42,7 +42,7 @@ use Espo\{
 
 class CheckerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->acl = $this->createMock(Acl::class);

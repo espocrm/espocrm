@@ -42,7 +42,7 @@ use Espo\Classes\{
 
 class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
 
     }

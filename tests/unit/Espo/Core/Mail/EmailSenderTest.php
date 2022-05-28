@@ -51,7 +51,7 @@ use Espo\Services\InboundEmail as InboundEmailService;
 
 class EmailSenderTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
@@ -111,7 +111,7 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
             );
     }
 
-    protected function createEmail(array $data) : Email
+    protected function createEmail(array $data): Email
     {
         $email = $this->getMockBuilder(Email::class)->disableOriginalConstructor()->getMock();
 

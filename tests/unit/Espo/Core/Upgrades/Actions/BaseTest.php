@@ -65,7 +65,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     protected $currentVersion = '11.5.2';
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->container = $this->getMockBuilder(Container::class)->disableOriginalConstructor()->getMock();
         $this->actionManager = $this->getMockBuilder(ActionManager::class)->disableOriginalConstructor()->getMock();
@@ -122,7 +122,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         /* END */
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->object = NULL;
 

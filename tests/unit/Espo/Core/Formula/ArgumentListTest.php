@@ -33,11 +33,11 @@ use Espo\Core\Formula\ArgumentList;
 
 class ArgumentListTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
     }
 

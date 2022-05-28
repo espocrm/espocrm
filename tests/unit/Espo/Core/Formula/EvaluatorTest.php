@@ -45,7 +45,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
      */
     private $evaluator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
@@ -60,7 +60,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->evaluator = new Evaluator($injectableFactory);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->evaluator = null;
     }
@@ -597,7 +597,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEmpty($id);
     }
 
-    public function testModulo1() : void
+    public function testModulo1(): void
     {
         $expression = "123 % 5";
         $actual = $this->evaluator->process($expression);
@@ -605,7 +605,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(123 % 5, $actual);
     }
 
-    public function testModulo2() : void
+    public function testModulo2(): void
     {
         $expression = "124 % 5";
         $actual = $this->evaluator->process($expression);

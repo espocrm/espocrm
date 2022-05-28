@@ -54,7 +54,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
     }
 
-    protected function initTest(array $aclData = [], bool $skipLogin = false, bool $isPortal = false) : Application
+    protected function initTest(array $aclData = [], bool $skipLogin = false, bool $isPortal = false): Application
     {
         $this->createUser('tester', [
             'data' => $aclData,
@@ -75,7 +75,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         return $app;
     }
 
-    protected function initTestPortal(array $aclData = [], bool $skipLogin = false) : Application
+    protected function initTestPortal(array $aclData = [], bool $skipLogin = false): Application
     {
         $app = $this->createApplication();
 
@@ -793,7 +793,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
     }
 
-    protected function createUserEmailAddress(Container $container) : string
+    protected function createUserEmailAddress(Container $container): string
     {
         $userId = $container->get('user')->id;
 

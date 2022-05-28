@@ -46,7 +46,7 @@ use Espo\{
 
 class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->filterFactory = $this->createMock(AccessControlFilterFactory::class);
         $this->filterResolverFactory = $this->createMock(AccessControlFilterResolverFactory::class);

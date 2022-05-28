@@ -40,7 +40,7 @@ use Espo\{
 
 class ScannerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
 

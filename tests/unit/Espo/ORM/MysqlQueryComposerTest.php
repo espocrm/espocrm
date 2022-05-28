@@ -123,7 +123,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->account = $entityFactory->create('Account');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($this->query);
         unset($this->pdo);

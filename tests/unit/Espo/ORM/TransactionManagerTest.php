@@ -39,7 +39,7 @@ use RuntimeException;
 
 class TransactionManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
 

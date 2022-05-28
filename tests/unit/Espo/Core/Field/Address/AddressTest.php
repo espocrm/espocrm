@@ -38,7 +38,7 @@ use Espo\ORM\Entity;
 
 class AddressTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
 
     }

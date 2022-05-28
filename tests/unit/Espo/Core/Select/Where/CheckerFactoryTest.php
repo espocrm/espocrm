@@ -45,7 +45,7 @@ use Espo\{
 
 class CheckerFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->aclManager = $this->createMock(AclManager::class);

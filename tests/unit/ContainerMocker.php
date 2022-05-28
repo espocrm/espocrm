@@ -44,7 +44,7 @@ class ContainerMocker
         $this->test = $test;
     }
 
-    public function create(array $serviceMap) : Container
+    public function create(array $serviceMap): Container
     {
         $container = $this->test->getMockBuilder(Container::class)->disableOriginalConstructor()->getMock();
 

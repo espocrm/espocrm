@@ -64,7 +64,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('internalConfigPath', $this->internalConfigPath);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->config = NULL;
     }

@@ -36,7 +36,7 @@ use Espo\Core\{
 
 class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->config = $this->createMock(Config::class);
 

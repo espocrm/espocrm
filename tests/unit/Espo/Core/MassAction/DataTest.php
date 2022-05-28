@@ -35,7 +35,7 @@ use Espo\Core\{
 
 class DataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 

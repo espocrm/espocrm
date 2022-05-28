@@ -53,7 +53,7 @@ class Import implements Command
         $this->fileManager = $fileManager;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $id = $params->getOption('id');
         $filePath = $params->getOption('file');

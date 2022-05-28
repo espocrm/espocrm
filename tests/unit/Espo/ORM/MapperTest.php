@@ -64,7 +64,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     protected $comment;
     protected $entityFactory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
         $this->pdo
@@ -140,7 +140,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->team = $entityFactory->create('Team');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($this->pdo, $this->db, $this->post, $this->comment);
     }
@@ -198,7 +198,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ->willReturn($collection);
     }
 
-    protected function createCollectionMock(array $itemList) : SthCollection
+    protected function createCollectionMock(array $itemList): SthCollection
     {
         $collection = $this->getMockBuilder(SthCollection::class)->disableOriginalConstructor()->getMock();
 

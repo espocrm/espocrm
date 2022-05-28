@@ -43,7 +43,7 @@ class ScopeCheckerTest extends \PHPUnit\Framework\TestCase
      */
     private $scopeChecker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->scopeChecker = new ScopeChecker();
     }

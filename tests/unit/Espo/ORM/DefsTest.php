@@ -38,7 +38,7 @@ use RuntimeException;
 
 class DefsTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 

@@ -133,7 +133,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository = $this->createRepository('Test');
     }
 
-    protected function createCollectionMock(?array $itemList = null) : SthCollection
+    protected function createCollectionMock(?array $itemList = null): SthCollection
     {
         $collection = $this->getMockBuilder(SthCollection::class)->disableOriginalConstructor()->getMock();
 

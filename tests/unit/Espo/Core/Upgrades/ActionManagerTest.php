@@ -56,7 +56,7 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
         ),
     );
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->objects['container'] =
             $container = $this->getMockBuilder('Espo\Core\Container')->disableOriginalConstructor()->getMock();
@@ -79,7 +79,7 @@ class ActionManagerTest extends \PHPUnit\Framework\TestCase
         $this->reflection = new ReflectionHelper($this->object);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->object = NULL;
     }

@@ -40,7 +40,7 @@ use RuntimeException;
 
 class RDBTransactionManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->wrappee = $this->getMockBuilder(TransactionManager::class)->disableOriginalConstructor()->getMock();
 

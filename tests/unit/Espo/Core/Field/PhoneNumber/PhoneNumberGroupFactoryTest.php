@@ -65,7 +65,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->metadata = $this->createMock(Metadata::class);
 
@@ -82,7 +82,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->phoneNumberRepository);
     }
 
-    private function initField(string $entityType, string $field, string $type) : void
+    private function initField(string $entityType, string $field, string $type): void
     {
         $this->metadata
             ->expects($this->any())
@@ -91,7 +91,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
             ->willReturn($type);
     }
 
-    private function createEntityMock(string $entityType) : Entity
+    private function createEntityMock(string $entityType): Entity
     {
         $entity = $this->createMock(Entity::class);
 
@@ -103,7 +103,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         return $entity;
     }
 
-    private function initPhoneNumberRepository(Entity $entity, array $dataList) : void
+    private function initPhoneNumberRepository(Entity $entity, array $dataList): void
     {
         $this->phoneNumberRepository
             ->expects($this->once())
@@ -112,7 +112,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
             ->willReturn($dataList);
     }
 
-    public function testIsCreatableFromEntityTrue() : void
+    public function testIsCreatableFromEntityTrue(): void
     {
         $this->initField('Test', 'test', 'phone');
 
@@ -121,7 +121,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->factory->isCreatableFromEntity($entity, 'test'));
     }
 
-    public function testIsCreatableFromEntityBad() : void
+    public function testIsCreatableFromEntityBad(): void
     {
         $this->initField('Test', 'test', 'varchar');
 
@@ -130,7 +130,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->factory->isCreatableFromEntity($entity, 'test'));
     }
 
-    public function testCreateException() : void
+    public function testCreateException(): void
     {
         $this->initField('Test', 'test', 'varchar');
 
@@ -141,7 +141,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->factory->createFromEntity($entity, 'test');
     }
 
-    public function testCreateFromPhoneNumberRepository() : void
+    public function testCreateFromPhoneNumberRepository(): void
     {
         $this->initField('Test', 'test', 'phone');
 
@@ -210,7 +210,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('+1', $group->getPrimary()->getNumber());
     }
 
-    public function testCreateFromDataAttribute() : void
+    public function testCreateFromDataAttribute(): void
     {
         $this->initField('Test', 'test', 'phone');
 
@@ -269,7 +269,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('+1', $group->getPrimary()->getNumber());
     }
 
-    public function testCreateEmpty1() : void
+    public function testCreateEmpty1(): void
     {
         $this->initField('Test', 'test', 'phone');
 
@@ -284,7 +284,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $group->getCount());
     }
 
-    public function testCreateEmpty2() : void
+    public function testCreateEmpty2(): void
     {
         $this->initField('Test', 'test', 'phone');
 

@@ -66,7 +66,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
      */
     private $user3;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -79,7 +79,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->entityManager = $this->container->get('entityManager');
     }
 
-    private function initTestData() : void
+    private function initTestData(): void
     {
         /* @var $configWriter ConfigWriter */
         $configWriter = $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
@@ -135,7 +135,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $em->saveEntity($preferences2);
     }
 
-    public function testAssignmentSelf() : void
+    public function testAssignmentSelf(): void
     {
         $meeting = $this->entityManager->createEntity('Meeting', [
             'name' => 'test',
@@ -156,7 +156,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->assertNull($notification, 'notification');
     }
 
-    public function testAssignmentEnabled() : void
+    public function testAssignmentEnabled(): void
     {
         $meeting = $this->entityManager->createEntity('Meeting', [
             'name' => 'test',
@@ -176,7 +176,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->assertNotNull($notification);
     }
 
-    public function testAssignmentDisabled() : void
+    public function testAssignmentDisabled(): void
     {
         $call = $this->entityManager->createEntity('Call', [
             'name' => 'test',
@@ -196,7 +196,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->assertNull($notification);
     }
 
-    public function testAssignmentIgnored() : void
+    public function testAssignmentIgnored(): void
     {
         $meeting = $this->entityManager->createEntity('Meeting', [
             'name' => 'test',
@@ -216,7 +216,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
         $this->assertNull($notification, 'notification');
     }
 
-    public function testAssignmentEmailYes() : void
+    public function testAssignmentEmailYes(): void
     {
         $email = $this->entityManager->createEntity('Email', [
             'name' => 'test',

@@ -122,7 +122,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
     {
         $bindingLoader = new class() implements BindingLoader
         {
-            public function load() : BindingData
+            public function load(): BindingData
             {
                 $data = new BindingData();
 
@@ -159,7 +159,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
     {
         $bindingLoader = new class() implements BindingLoader
         {
-            public function load() : BindingData
+            public function load(): BindingData
             {
                 $data = new BindingData();
 
@@ -197,7 +197,7 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
     {
         $bindingLoader = new class() implements BindingLoader
         {
-            public function load() : BindingData
+            public function load(): BindingData
             {
                 $data = new BindingData();
 

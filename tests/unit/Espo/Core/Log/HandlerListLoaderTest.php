@@ -43,7 +43,7 @@ use Monolog\{
 
 class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->getMockBuilder(InjectableFactory::class)
             ->disableOriginalConstructor()

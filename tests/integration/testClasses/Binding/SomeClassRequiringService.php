@@ -38,7 +38,7 @@ class SomeClassRequiringService
         $this->service = $service;
     }
 
-    public function getService() : SomeService
+    public function getService(): SomeService
     {
         return $this->service;
     }

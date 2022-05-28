@@ -39,7 +39,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
 {
     private $object;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->object = new FiltersMatcher();
 
@@ -86,7 +86,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->object = NULL;
     }

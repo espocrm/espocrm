@@ -44,7 +44,7 @@ class CommandManagerTest extends \PHPUnit\Framework\TestCase
 
     private $manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
 

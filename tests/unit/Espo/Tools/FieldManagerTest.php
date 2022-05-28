@@ -42,7 +42,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     private $reflection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->metadata = $this->createMock('Espo\\Core\\Utils\\Metadata');
         $this->language = $this->createMock('Espo\\Core\\Utils\\Language');

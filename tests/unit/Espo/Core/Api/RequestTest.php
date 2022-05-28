@@ -40,12 +40,12 @@ use Espo\Core\Api\RequestWrapper;
 
 class RequestTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->request = $this->getMockBuilder(Psr7Request::class)->disableOriginalConstructor()->getMock();
     }
 
-    protected function createRequest(array $queryParams, array $routeParams = []) : RequestWrapper
+    protected function createRequest(array $queryParams, array $routeParams = []): RequestWrapper
     {
         $this->request
             ->expects($this->any())
@@ -115,7 +115,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('2', $request->get('id'));
     }
 
-    protected function createRequestWithBody(string $contents) : RequestWrapper
+    protected function createRequestWithBody(string $contents): RequestWrapper
     {
         $body = $this->createMock(StreamInterface::class);
 

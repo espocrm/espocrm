@@ -44,7 +44,7 @@ use Espo\Core\Binding\ContextualBinder;
 
 class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);

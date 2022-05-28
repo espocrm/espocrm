@@ -31,12 +31,12 @@ namespace tests\unit\Espo\Core\Formula;
 
 class ParserTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->parser = new \Espo\Core\Formula\Parser();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->parser = null;
     }

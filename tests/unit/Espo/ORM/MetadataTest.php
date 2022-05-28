@@ -36,7 +36,7 @@ use Espo\ORM\{
 
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
 
     }
@@ -100,7 +100,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('hasMany', $metadata->get('Test', ['relations', 'test', 'type']));
     }
 
-    protected function createMetadata(array $data) : Metadata
+    protected function createMetadata(array $data): Metadata
     {
         $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
 

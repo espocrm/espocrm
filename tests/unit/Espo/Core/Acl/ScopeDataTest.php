@@ -39,7 +39,7 @@ use RuntimeException;
 
 class ScopeDataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 

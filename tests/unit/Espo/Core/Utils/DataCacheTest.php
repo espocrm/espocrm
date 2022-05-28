@@ -39,7 +39,7 @@ use InvalidArgumentException;
 
 class DataCacheTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
 

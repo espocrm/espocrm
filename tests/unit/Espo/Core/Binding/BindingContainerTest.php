@@ -69,7 +69,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->data);
     }
 
-    protected function createClassMock(string $className) : ReflectionClass
+    protected function createClassMock(string $className): ReflectionClass
     {
         $class = $this->createMock(ReflectionClass::class);
 
@@ -81,7 +81,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         return $class;
     }
 
-    protected function createParamMock(string $name, ?string $className = null) : ReflectionParameter
+    protected function createParamMock(string $name, ?string $className = null): ReflectionParameter
     {
         $param = $this->createMock(ReflectionParameter::class);
 

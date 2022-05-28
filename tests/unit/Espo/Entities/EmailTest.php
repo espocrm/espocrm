@@ -422,7 +422,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
   );
 
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder('\Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
 
@@ -436,7 +436,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->email = new Email('Email', $this->defs, $this->entityManager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->entityManager = null;
         $this->repository = null;

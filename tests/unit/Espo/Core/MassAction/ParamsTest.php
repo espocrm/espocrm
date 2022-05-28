@@ -38,7 +38,7 @@ use RuntimeException;
 
 class ParamsTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 

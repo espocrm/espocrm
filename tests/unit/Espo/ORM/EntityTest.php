@@ -45,7 +45,7 @@ require_once 'tests/unit/testData/DB/Entities.php';
 
 class EntityTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
 
@@ -70,7 +70,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
             ->willReturn($defs);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
     }
 
@@ -251,7 +251,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($job->isAttributeChanged('object'));
     }
 
-    public function testCloningObject() : void
+    public function testCloningObject(): void
     {
         $original = (object) [
             'k1' => (object) [
@@ -274,7 +274,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    public function testEmptyArray() : void
+    public function testEmptyArray(): void
     {
         $job = $this->createEntity('Job', Job::class);
 
@@ -283,7 +283,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $job->get('array'));
     }
 
-    public function testEmptyObject() : void
+    public function testEmptyObject(): void
     {
         $job = $this->createEntity('Job', Job::class);
 
@@ -292,7 +292,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals((object) [], $job->get('object'));
     }
 
-    public function testCloningArray() : void
+    public function testCloningArray(): void
     {
         $original =  [
             (object) [

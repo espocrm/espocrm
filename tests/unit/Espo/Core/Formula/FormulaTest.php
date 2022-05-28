@@ -53,7 +53,7 @@ use tests\unit\ContainerMocker;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->entity = $this->getEntityMock();
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
@@ -99,7 +99,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->container = null;
         $this->entity = null;

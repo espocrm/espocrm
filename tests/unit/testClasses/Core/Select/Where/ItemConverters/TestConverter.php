@@ -39,7 +39,7 @@ use Espo\{
 
 class TestConverter implements ItemConverter
 {
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         return WhereClause::fromRaw([]);
     }

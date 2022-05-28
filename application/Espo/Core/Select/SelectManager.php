@@ -139,42 +139,42 @@ class SelectManager
         $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
-    protected function getEntityManager() : EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
 
-    protected function getMetadata() : Metadata
+    protected function getMetadata(): Metadata
     {
         return $this->metadata;
     }
 
-    protected function getUser() : User
+    protected function getUser(): User
     {
         return $this->user;
     }
 
-    protected function getAcl() : Acl
+    protected function getAcl(): Acl
     {
         return $this->acl;
     }
 
-    protected function getConfig() : Config
+    protected function getConfig(): Config
     {
         return $this->config;
     }
 
-    protected function getAclManager() : AclManager
+    protected function getAclManager(): AclManager
     {
         return $this->aclManager;
     }
 
-    protected function getInjectableFactory() : InjectableFactory
+    protected function getInjectableFactory(): InjectableFactory
     {
         return $this->injectableFactory;
     }
 
-    protected function getFieldUtil() : FieldUtil
+    protected function getFieldUtil(): FieldUtil
     {
         return $this->fieldUtil;
     }
@@ -184,7 +184,7 @@ class SelectManager
         $this->entityType = $entityType;
     }
 
-    protected function getEntityType() : string
+    protected function getEntityType(): string
     {
         return $this->entityType;
     }
@@ -267,12 +267,12 @@ class SelectManager
         }
     }
 
-    protected function getTextFilterFieldList() : array
+    protected function getTextFilterFieldList(): array
     {
         return $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
     }
 
-    protected function getSeed() : Entity
+    protected function getSeed(): Entity
     {
         if (empty($this->seed)) {
             $this->seed = $this->entityManager->getEntity($this->entityType);
@@ -325,7 +325,7 @@ class SelectManager
      *
      * @return Where clause for ORM.
      */
-    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []) : array
+    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []): array
     {
         $whereClause = [];
 
@@ -547,7 +547,7 @@ class SelectManager
     /**
      * Get empty select parameters.
      */
-    public function getEmptySelectParams() : array
+    public function getEmptySelectParams(): array
     {
         $result = [];
         $this->prepareResult($result);
@@ -583,7 +583,7 @@ class SelectManager
         }
     }
 
-    protected function checkIsPortal() : bool
+    protected function checkIsPortal(): bool
     {
         return !!$this->getUser()->get('portalId');
     }
@@ -814,7 +814,7 @@ class SelectManager
         }
     }
 
-    protected function hasAssignedUsersField() : bool
+    protected function hasAssignedUsersField(): bool
     {
         if ($this->getSeed()->hasRelation('assignedUsers') && $this->getSeed()->hasAttribute('assignedUsersIds')) {
             return true;
@@ -822,7 +822,7 @@ class SelectManager
         return false;
     }
 
-    protected function hasAssignedUserField() : bool
+    protected function hasAssignedUserField(): bool
     {
         if ($this->getSeed()->hasAttribute('assignedUserId')) {
             return true;
@@ -830,7 +830,7 @@ class SelectManager
         return false;
     }
 
-    protected function hasCreatedByField() : bool
+    protected function hasCreatedByField(): bool
     {
         if ($this->getSeed()->hasAttribute('createdById')) {
             return true;
@@ -838,7 +838,7 @@ class SelectManager
         return false;
     }
 
-    protected function hasTeamsField() : bool
+    protected function hasTeamsField(): bool
     {
         if ($this->getSeed()->hasRelation('teams') && $this->getSeed()->hasAttribute('teamsIds')) {
             return true;
@@ -849,7 +849,7 @@ class SelectManager
     /**
      * @deprecated
      */
-    public function getAclParams() : array
+    public function getAclParams(): array
     {
         $result = [];
         $this->applyAccess($result);
@@ -870,7 +870,7 @@ class SelectManager
         bool $withAcl = false,
         bool $checkWherePermission = false,
         bool $forbidComplexExpressions = false
-    ) : array {
+    ): array {
 
         return $this->getSelectParams($params, $withAcl, $checkWherePermission, $forbidComplexExpressions);
     }
@@ -883,7 +883,7 @@ class SelectManager
         bool $withAcl = false,
         bool $checkWherePermission = false,
         bool $forbidComplexExpressions = false
-    ) : array {
+    ): array {
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1008,7 +1008,7 @@ class SelectManager
         }
     }
 
-    public function getUserTimeZone() : string
+    public function getUserTimeZone(): string
     {
         if (empty($this->userTimeZone)) {
             $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
@@ -1027,7 +1027,7 @@ class SelectManager
         return $this->userTimeZone;
     }
 
-    public function transformDateTimeWhereItem(array $item) : array
+    public function transformDateTimeWhereItem(array $item): array
     {
         $format = 'Y-m-d H:i:s';
 
@@ -1335,14 +1335,14 @@ class SelectManager
         return $where;
     }
 
-    public function convertDateTimeWhere(array $item) : ?array
+    public function convertDateTimeWhere(array $item): ?array
     {
         $where = $this->transformDateTimeWhereItem($item);
         $result = $this->getWherePart($where);
         return $result;
     }
 
-    protected function getWherePart(array $item, array &$result = []) : array
+    protected function getWherePart(array $item, array &$result = []): array
     {
         $type = $item['type'] ?? null;
         $value = $item['value'] ?? null;
@@ -1948,7 +1948,7 @@ class SelectManager
     /**
      * Fallback for backward compatibility.
      */
-    public function hasInheritedAccessMethod() : bool
+    public function hasInheritedAccessMethod(): bool
     {
         $method = new ReflectionMethod($this, 'access');
 
@@ -1970,7 +1970,7 @@ class SelectManager
     /**
      * Fallback for backward compatibility.
      */
-    public function hasInheritedAccessFilterMethod(string $filterName) : bool
+    public function hasInheritedAccessFilterMethod(string $filterName): bool
     {
         if (
             $this->metadata->get(
@@ -2008,7 +2008,7 @@ class SelectManager
     /**
      * Fallback for backward compatibility.
      */
-    public function hasBoolFilter(string $filter) : bool
+    public function hasBoolFilter(string $filter): bool
     {
         $method = 'boolFilter' . ucfirst($filter);
 
@@ -2018,7 +2018,7 @@ class SelectManager
     /**
      * Fallback for backward compatibility.
      */
-    public function applyBoolFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter) : array
+    public function applyBoolFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter): array
     {
         $result = $queryBuilder->build()->getRaw();
 
@@ -2038,7 +2038,7 @@ class SelectManager
     /**
      * Fallback for backward compatibility.
      */
-    public function hasPrimaryFilter(string $filter) : bool
+    public function hasPrimaryFilter(string $filter): bool
     {
         if (
             method_exists($this, 'filter' . ucfirst($filter))
@@ -2777,7 +2777,7 @@ class SelectManager
         return ['subscription.id!=' => null];
     }
 
-    public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array
+    public function mergeSelectParams(array $selectParams1, ?array $selectParams2): array
     {
         if (!$selectParams2) {
             return $selectParams1;
@@ -2925,7 +2925,7 @@ class SelectManager
         }
     }
 
-    public function getSelectAttributeList(array $params) : ?array
+    public function getSelectAttributeList(array $params): ?array
     {
         if (array_key_exists('select', $params)) {
             $passedAttributeList = $params['select'];

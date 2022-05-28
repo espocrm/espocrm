@@ -342,7 +342,7 @@ class Note extends Record
         }
     }
 
-    public function link(string $id, string $link, string $foreignId) : void
+    public function link(string $id, string $link, string $foreignId): void
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
@@ -351,7 +351,7 @@ class Note extends Record
         parent::link($id, $link, $foreignId);
     }
 
-    public function unlink(string $id, string $link, string $foreignId) : void
+    public function unlink(string $id, string $link, string $foreignId): void
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();

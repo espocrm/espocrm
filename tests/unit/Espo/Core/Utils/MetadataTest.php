@@ -76,7 +76,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('customPath', $this->customPath);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->object->clearChanges();
         $this->object = NULL;

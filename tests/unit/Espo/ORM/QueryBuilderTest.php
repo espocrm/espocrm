@@ -48,7 +48,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $queryBuilder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->queryBuilder = new QueryBuilder();
     }

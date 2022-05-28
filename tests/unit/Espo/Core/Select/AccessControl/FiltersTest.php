@@ -522,7 +522,7 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function createFilter(string $className) : AccessControlFilter
+    protected function createFilter(string $className): AccessControlFilter
     {
         return new $className(
             $this->user,
