@@ -135,7 +135,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $account1 = $this->entityManager->createEntity('Account', []);
         $account2 = $this->entityManager->createEntity('Account', []);
 
-        /* @var $contact1 Contact */
+        /** @var Contact $contact1 */
         $contact1 = $this->entityManager->getEntity('Contact');
 
         $emailAddressGroup1 = $contact1->getEmailAddressGroup()
@@ -154,7 +154,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
 
         $contact1->set('teamsIds', [$team1->getId()]);
 
-        /* @var $contact2 Contact */
+        /** @var Contact $contact2 */
         $contact2 = $this->entityManager->getEntity('Contact');
 
         $emailAddressGroup2 = $contact1->getEmailAddressGroup()
@@ -224,7 +224,7 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
 
         $this->actionProcessor->process('Action', 'process', $request, $response);
 
-        /* @var $contact1Reloaded Contact */
+        /** @var Contact $contact1Reloaded */
         $contact1Reloaded = $this->entityManager->getEntity('Contact', $contact1->getId());
         $contact2Reloaded = $this->entityManager->getEntity('Contact', $contact2->getId());
 

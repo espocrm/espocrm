@@ -85,7 +85,7 @@ class IcsDataLoader implements Loader
 
         $ical->initString($icsContents);
 
-        /* @var $event Event */
+        /** @var Event $event */
         $event = $ical->events()[0] ?? null;
 
         if ($event === null) {

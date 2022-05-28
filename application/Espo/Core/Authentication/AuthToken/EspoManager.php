@@ -83,7 +83,7 @@ class EspoManager implements Manager
 
     public function create(Data $data): AuthToken
     {
-        /** @var AuthTokenEntity */
+        /** @var AuthTokenEntity $authToken */
         $authToken = $this->repository->getNew();
 
         $authToken->set([
@@ -169,7 +169,7 @@ class EspoManager implements Manager
         }
 
         if (function_exists('openssl_random_pseudo_bytes')) {
-            /** @var string */
+            /** @var string $randomValue */
             $randomValue = openssl_random_pseudo_bytes($length);
 
             return bin2hex($randomValue);

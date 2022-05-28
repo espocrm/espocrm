@@ -81,7 +81,7 @@ class AssignmentNotificatorTest extends \tests\integration\Core\BaseTestCase
 
     private function initTestData(): void
     {
-        /* @var $configWriter ConfigWriter */
+        /** @var ConfigWriter $configWriter */
         $configWriter = $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
 
         $configWriter->set('assignmentNotificationsEntityList', [

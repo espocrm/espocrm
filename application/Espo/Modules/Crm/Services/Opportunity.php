@@ -583,7 +583,7 @@ class Opportunity extends Record
      */
     public function getEmailAddressList(string $id): array
     {
-        /** @var OpportunityEntity */
+        /** @var OpportunityEntity $entity */
         $entity = $this->getEntity($id);
 
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->getEntityType());

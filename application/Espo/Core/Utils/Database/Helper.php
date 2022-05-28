@@ -359,7 +359,7 @@ class Helper
 
         $sth->execute();
 
-        /** @var string|null|false */
+        /** @var string|null|false $result */
         $result = $sth->fetchColumn();
 
         if ($result === false || $result === null) {

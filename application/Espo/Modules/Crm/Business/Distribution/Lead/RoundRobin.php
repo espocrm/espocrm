@@ -61,9 +61,7 @@ class RoundRobin
             $where['@relation.role'] = $targetUserPosition;
         }
 
-        /**
-         * @var \Espo\ORM\Collection<User>
-         */
+        /** @var \Espo\ORM\Collection<User> */
         $userList = $this->entityManager
             ->getRDBRepository(Team::ENTITY_TYPE)
             ->getRelation($team, 'users')

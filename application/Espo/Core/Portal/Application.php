@@ -108,7 +108,7 @@ class Application extends BaseApplication
             throw new Forbidden("Portal {$portalId} is not active.");
         }
 
-        /** @var PortalContainer */
+        /** @var PortalContainer $container */
         $container = $this->container;
 
         $container->setPortal($portal);

@@ -1521,7 +1521,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $modifiedOrder[] = $newItem;
             }
 
-            /** @var string */
+            /** @var string $part */
             $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, $params, true);
 
             return $part;
@@ -1635,7 +1635,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
                         foreach ($j[2] as $k => $value) {
                             $value = str_replace('{alias}', $alias, $value);
-                            /** @var string */
+                            /** @var string $left */
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
 
@@ -1674,7 +1674,7 @@ abstract class BaseQueryComposer implements QueryComposer
                         foreach ($j[2] as $k => $value) {
                             $value = str_replace('{alias}', $alias, $value);
 
-                            /** @var string */
+                            /** @var string $left */
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
 
@@ -1950,7 +1950,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return null;
             }
 
-            /** @var string */
+            /** @var string $part */
             $part = $this->getAttributePath($entity, $attribute0, $params);
 
             return [$part, $alias];
@@ -1982,7 +1982,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        /** @var string */
+        /** @var string $fieldPath */
         $fieldPath = $this->getAttributePath($entity, $attribute, $params);
 
         if ($attributeType === Entity::TEXT && $maxTextColumnsLength !== null) {
@@ -2376,7 +2376,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!array_key_exists($string, $this->attributeDbMapCache)) {
             $string[0] = strtolower($string[0]);
 
-            /** @var string */
+            /** @var string $dbString */
             $dbString = preg_replace_callback(
                 '/([A-Z])/',
                 fn($matches) => '_' . strtolower($matches[1]),

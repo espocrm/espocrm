@@ -95,7 +95,7 @@ class Map
         $this->cacheKey = $cacheKeyProvider->get();
 
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
-            /** @var stdClass */
+            /** @var stdClass $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;

@@ -400,7 +400,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
     public function testSettings()
     {
-        /* @var $service SettingsService */
+        /** @var SettingsService $service */
         $service = $this->getContainer()->get('serviceFactory')->create('Settings');
 
         $this->expectException(BadRequest::class);

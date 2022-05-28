@@ -149,7 +149,7 @@ abstract class Base
         $this->actionManager = $actionManager;
         $this->params = $actionManager->getParams();
 
-        /** @var FileManager */
+        /** @var FileManager $fileManager */
         $fileManager = $container->get('fileManager');
 
         $this->zipUtil = new ZipArchive($fileManager);
@@ -258,7 +258,7 @@ abstract class Base
 
     public function createConfigWriter(): ConfigWriter
     {
-        /** @var \Espo\Core\InjectableFactory */
+        /** @var \Espo\Core\InjectableFactory $injectableFactory */
         $injectableFactory = $this->getContainer()->get('injectableFactory');
 
         return $injectableFactory->create(ConfigWriter::class);
@@ -437,9 +437,9 @@ abstract class Base
             }
         }
 
-        /** @var string */
+        /** @var string $errorMessage */
         $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
-        /** @var string */
+        /** @var string $errorMessage */
         $errorMessage = preg_replace('/\{requiredVersion\}/', $version ?? '', $errorMessage);
 
         $this->throwErrorAndRemovePackage($errorMessage);

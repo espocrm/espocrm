@@ -488,7 +488,7 @@ class AfterFetch implements AfterFetchInterface
 
         $bodyPlain = $email->getBodyPlain() ?? '';
 
-        /** @var string */
+        /** @var string $replacedBodyPlain */
         $replacedBodyPlain = preg_replace('/\s+/', '', $bodyPlain);
 
         if (trim($replacedBodyPlain) === '') {

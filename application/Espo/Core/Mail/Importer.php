@@ -184,7 +184,7 @@ class Importer
             $parser->hasHeader($message, 'message-Id') &&
             $parser->getHeader($message, 'message-Id')
         ) {
-            /** @var string */
+            /** @var string $messageId */
             $messageId = $parser->getMessageId($message);
 
             $email->set('messageId', $messageId);
@@ -220,7 +220,7 @@ class Importer
 
         if ($parser->hasHeader($message, 'date')) {
             try {
-                /** @var string */
+                /** @var string $dateHeaderValue */
                 $dateHeaderValue = $parser->getHeader($message, 'date');
 
                 $dt = new DateTime($dateHeaderValue);
@@ -239,7 +239,7 @@ class Importer
 
         if ($parser->hasHeader($message, 'delivery-Date')) {
             try {
-                /** @var string */
+                /** @var string $deliveryDateHeaderValue */
                 $deliveryDateHeaderValue = $parser->getHeader($message, 'delivery-Date');
 
                 $dt = new DateTime($deliveryDateHeaderValue);

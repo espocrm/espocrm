@@ -86,7 +86,7 @@ class ControlFollowers implements Job
             ->find();
 
         foreach ($userList as $user) {
-            /** @var string */
+            /** @var string $userId */
             $userId = $user->getId();
 
             if (!$user->isActive()) {

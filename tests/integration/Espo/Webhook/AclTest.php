@@ -203,7 +203,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        /* @var $em EntityManager */
+        /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
         $webhook = $em->createEntity('Webhook', [

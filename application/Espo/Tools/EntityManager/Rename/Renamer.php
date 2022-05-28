@@ -627,9 +627,9 @@ class Renamer
             ->find();
 
         foreach ($roleList as $role) {
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = $role->get('data');
-            /** @var \stdClass */
+            /** @var \stdClass $fieldData */
             $fieldData = $role->get('fieldData');
 
             if (isset($data->$from)) {
@@ -652,9 +652,9 @@ class Renamer
             ->find();
 
         foreach ($portalRoleList as $role) {
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = $role->get('data');
-            /** @var \stdClass */
+            /** @var \stdClass $fieldData */
             $fieldData = $role->get('fieldData');
 
             if (isset($data->$from)) {

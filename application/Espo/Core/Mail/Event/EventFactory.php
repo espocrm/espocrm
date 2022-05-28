@@ -38,7 +38,7 @@ class EventFactory
 {
     public static function createFromU01jmg3Ical(U01jmg3ICal $ical): Event
     {
-        /* @var $event U01jmg3Event */
+        /** @var U01jmg3Event $event */
         $event = $ical->events()[0] ?? null;
 
         if (!$event) {

@@ -563,7 +563,7 @@ class Authentication
             return null;
         }
 
-        /** @var AuthLogRecord */
+        /** @var AuthLogRecord $authLogRecord */
         $authLogRecord = $this->entityManager->getNewEntity('AuthLogRecord');
 
         $requestUrl =

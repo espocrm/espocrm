@@ -166,9 +166,7 @@ class DateTime implements DateTimeable
      */
     public function modify(string $modifier): self
     {
-        /**
-         * @var DateTimeImmutable|false
-         */
+        /** @var DateTimeImmutable|false $dateTime */
         $dateTime = $this->dateTime->modify($modifier);
 
         if (!$dateTime) {
@@ -275,7 +273,7 @@ class DateTime implements DateTimeable
      */
     public static function fromDateTime(DateTimeInterface $dateTime): self
     {
-        /** @var DateTimeImmutable */
+        /** @var DateTimeImmutable $value */
         $value = DateTimeImmutable::createFromFormat(
             self::SYSTEM_FORMAT,
             $dateTime->format(self::SYSTEM_FORMAT),

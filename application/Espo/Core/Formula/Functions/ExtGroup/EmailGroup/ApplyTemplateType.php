@@ -99,7 +99,7 @@ class ApplyTemplateType extends BaseFunction implements
             return false;
         }
 
-        /** @var \Espo\Services\EmailTemplate */
+        /** @var \Espo\Services\EmailTemplate $emailTemplateService */
         $emailTemplateService = $this->serviceFactory->create('EmailTemplate');
 
         $params = [];

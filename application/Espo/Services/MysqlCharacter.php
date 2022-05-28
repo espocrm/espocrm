@@ -52,7 +52,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
         $container = $this->getContainer();
 
 
-        /* @var $em \Espo\ORM\EntityManager */
+        /** @var \Espo\ORM\EntityManager $em */
         $em = $container->get('entityManager');
 
         $sqlExecutor = $em->getSqlExecutor();

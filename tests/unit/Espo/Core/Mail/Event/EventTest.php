@@ -146,7 +146,7 @@ END:VCALENDAR";
 
         $ical->initString($this->icsContents1);
 
-        /* @var $event Event */
+        /** @var Event $event */
         $event = $ical->events()[0];
 
         $espoEvent = MailEvent::create()
@@ -179,7 +179,7 @@ END:VCALENDAR";
 
         $ical->initString($this->icsContents2);
 
-        /* @var $event Event */
+        /** @var Event $event */
         $event = $ical->events()[0];
 
         $espoEvent = MailEvent::create()

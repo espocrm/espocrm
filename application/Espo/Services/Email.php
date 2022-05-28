@@ -451,7 +451,7 @@ class Email extends Record implements
 
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        /** @var EmailEntity */
+        /** @var EmailEntity $entity */
         $entity = parent::create($data, $params);
 
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
@@ -784,7 +784,7 @@ class Email extends Record implements
         $fromName = '';
 
         if ($string && stripos($string, '<') !== false) {
-            /** @var string */
+            /** @var string $replasedString */
             $replasedString = preg_replace('/(<.*>)/', '', $string);
 
             $fromName = trim($replasedString, '" ');

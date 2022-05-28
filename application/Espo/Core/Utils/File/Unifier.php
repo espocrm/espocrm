@@ -109,13 +109,13 @@ class Unifier
      */
     private function unifyObject(string $path, bool $noCustom = false)
     {
-        /** @var \stdClass */
+        /** @var \stdClass $data */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = DataUtil::merge(
                 $data,
                 $this->unifySingle($filePath, true)

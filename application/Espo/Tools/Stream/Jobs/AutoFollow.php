@@ -84,7 +84,7 @@ class AutoFollow implements Job
         }
 
         foreach ($userIdList as $i => $userId) {
-            /** @var User|null */
+            /** @var User|null $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {

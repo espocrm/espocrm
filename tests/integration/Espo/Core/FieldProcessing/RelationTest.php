@@ -35,7 +35,7 @@ class RelationTest extends \tests\integration\Core\BaseTestCase
 {
     public function testLinkMultiple1(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $contact1 = $entityManager->createEntity('Contact', []);
@@ -127,7 +127,7 @@ class RelationTest extends \tests\integration\Core\BaseTestCase
 
     public function testHasOne(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $lead1 = $entityManager->createEntity('Lead', []);
@@ -154,7 +154,7 @@ class RelationTest extends \tests\integration\Core\BaseTestCase
 
     public function testBelongsToHasOne(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $lead1 = $entityManager->createEntity('Lead', []);

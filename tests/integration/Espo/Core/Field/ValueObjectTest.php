@@ -316,9 +316,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Opportunity', $entity->id);
 
-        /**
-         * @var LinkMultiple
-         */
+        /** @var LinkMultiple $link */
         $link = $entity->getValueObject('contacts');
 
         $this->assertEquals(2, $link->getCount());
@@ -349,9 +347,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity->loadLinkMultipleField('contacts');
 
-        /**
-         * @var LinkMultiple
-         */
+        /** @var LinkMultiple $link */
         $link = $entity->getValueObject('contacts');
 
         $this->assertEquals(2, $link->getCount());

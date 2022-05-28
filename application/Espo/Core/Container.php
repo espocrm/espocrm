@@ -91,7 +91,7 @@ class Container implements ContainerInterface
 
         $this->bindingContainer = $bindingContainer;
 
-        /** @var InjectableFactory */
+        /** @var InjectableFactory $injectableFactory */
         $injectableFactory = $this->get('injectableFactory');
 
         $this->injectableFactory = $injectableFactory;

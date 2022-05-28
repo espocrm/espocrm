@@ -859,10 +859,10 @@ class SelectManager
     /**
      * Build select parameters for ORM from parameters in the frontend format.
      *
-     * @param $params Parameters in front-end format.
-     * @param $withAcl To apply ACL.
-     * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
-     * @param forbidComplexExpressions To forbid complex expression usage.
+     * @param Parameters $params in front-end format.
+     * @param To $withAcl apply ACL.
+     * @param To $checkWherePermission check passed filters, whether a user has an access to use these filters.
+     * @param To $forbidComplexExpressions forbid complex expression usage.
      * @return array Parameters for ORM.
      */
     public function buildSelectParams(
@@ -2277,7 +2277,7 @@ class SelectManager
     /**
      * Add LEFT JOIN.
      *
-     * @param string|array $join Format used for array: [link, alias, conditions].
+     * @param string|array $leftJoin Format used for array: [link, alias, conditions].
      */
     public function addLeftJoin($leftJoin, array &$result)
     {

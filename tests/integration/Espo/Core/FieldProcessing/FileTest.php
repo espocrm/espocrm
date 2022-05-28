@@ -37,7 +37,7 @@ class FileTest extends \tests\integration\Core\BaseTestCase
 {
     public function testFile1(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $attachment1 = $entityManager->createEntity('Attachment', [

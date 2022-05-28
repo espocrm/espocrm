@@ -184,7 +184,7 @@ class Processor
                 );
             }
 
-            /** @var \Espo\Services\InboundEmail */
+            /** @var \Espo\Services\InboundEmail $inboundEmailService */
             $inboundEmailService = $this->serviceFactory->create('InboundEmail');
 
             $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
@@ -548,7 +548,7 @@ class Processor
     protected function getEmailTemplateService(): EmailTemplateService
     {
         if (!$this->emailTemplateService) {
-            /** @var EmailTemplateService */
+            /** @var EmailTemplateService $service */
             $service = $this->serviceFactory->create('EmailTemplate');
 
             $this->emailTemplateService = $service;
@@ -560,7 +560,7 @@ class Processor
     protected function getCampaignService(): CampaignService
     {
         if (!$this->campaignService) {
-            /** @var CampaignService */
+            /** @var CampaignService $service */
             $service = $this->serviceFactory->create('Campaign');
 
             $this->campaignService = $service;

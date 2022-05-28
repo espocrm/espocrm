@@ -193,7 +193,7 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->objCacheKey) && !$reload) {
-            /** @var stdClass */
+            /** @var stdClass $data */
             $data = $this->dataCache->get($this->objCacheKey);
 
             $this->objData = $data;

@@ -102,7 +102,7 @@ class Lead extends Record implements
      */
     public function getConvertAttributes(string $id): array
     {
-        /** @var LeadEntity */
+        /** @var LeadEntity $lead */
         $lead = $this->getEntity($id);
 
         if (!$this->acl->check($lead, 'read')) {
@@ -236,7 +236,7 @@ class Lead extends Record implements
      */
     public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {
-        /** @var LeadEntity */
+        /** @var LeadEntity $lead */
         $lead = $this->getEntity($id);
 
         $additionalData = $additionalData ?? (object) [];

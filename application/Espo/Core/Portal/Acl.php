@@ -47,7 +47,7 @@ class Acl extends BaseAcl
      */
     public function checkReadOnlyAccount(string $scope): bool
     {
-        /** @var AclManager */
+        /** @var AclManager $aclManager */
         $aclManager = $this->aclManager;
 
         return $aclManager->checkReadOnlyAccount($this->user, $scope);
@@ -58,7 +58,7 @@ class Acl extends BaseAcl
      */
     public function checkReadOnlyContact(string $scope): bool
     {
-        /** @var AclManager */
+        /** @var AclManager $aclManager */
         $aclManager = $this->aclManager;
 
         return $aclManager->checkReadOnlyContact($this->user, $scope);
@@ -69,7 +69,7 @@ class Acl extends BaseAcl
      */
     public function checkOwnershipAccount(Entity $entity): bool
     {
-        /** @var AclManager */
+        /** @var AclManager $aclManager */
         $aclManager = $this->aclManager;
 
         return $aclManager->checkOwnershipAccount($this->user, $entity);
@@ -80,7 +80,7 @@ class Acl extends BaseAcl
      */
     public function checkOwnershipContact(Entity $entity): bool
     {
-        /** @var AclManager */
+        /** @var AclManager $aclManager */
         $aclManager = $this->aclManager;
 
         return $aclManager->checkOwnershipContact($this->user, $entity);

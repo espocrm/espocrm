@@ -104,7 +104,7 @@ class GlobalRestricton
         $useCache = $config->get('useCache');
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
-            /** @var stdClass */
+            /** @var stdClass $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;

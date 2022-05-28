@@ -147,7 +147,7 @@ class Schema
         $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
 
         foreach ($typeList as $name) {
-            /** @var string */
+            /** @var string $typeName */
             $typeName = preg_replace('/Type\.php$/i', '', $name);
             $dbalTypeName = strtolower($typeName);
 
@@ -164,7 +164,7 @@ class Schema
             }
 
             if (method_exists($class, 'getDbTypeName')) {
-                /** @var callable */
+                /** @var callable $getDbTypeNameCallable */
                 $getDbTypeNameCallable = [$class, 'getDbTypeName'];
 
                 $dbTypeName = call_user_func($getDbTypeNameCallable);

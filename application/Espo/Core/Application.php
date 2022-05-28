@@ -61,7 +61,7 @@ class Application
 
     protected function initContainer(): void
     {
-        /** @var Container */
+        /** @var Container $container */
         $container = (new ContainerBuilder())->build();
 
         $this->container = $container;

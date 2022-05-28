@@ -1966,7 +1966,7 @@ class Stream
         ];
 
         foreach ($userList as $user) {
-            /** @var string */
+            /** @var string $id */
             $id = $user->getId();
 
             $data['idList'][] = $id;
@@ -2223,7 +2223,7 @@ class Stream
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
 
-        /* @var $defs \Espo\ORM\Defs\EntityDefs */
+        /** @var \Espo\ORM\Defs\EntityDefs $defs */
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $userIdList = [];

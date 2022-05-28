@@ -40,7 +40,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 {
     public function testEmailAddress1(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $contact = $entityManager->createEntity('Contact', [
@@ -49,7 +49,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $contact = $entityManager->getEntity('Contact', $contact->getId());
 
-        /* @var $group1 EmailAddressGroup */
+        /** @var EmailAddressGroup $group1 */
         $group1 = $contact->getEmailAddressGroup();
 
         $this->assertEquals(1, $group1->getCount());
@@ -70,7 +70,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $contact = $entityManager->getEntity('Contact', $contact->getId());
 
-        /* @var $group3 EmailAddressGroup */
+        /** @var EmailAddressGroup $group3 */
         $group3 = $contact->getEmailAddressGroup();
 
         $this->assertEquals(2, $group3->getCount());
@@ -92,7 +92,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $contact = $entityManager->getEntity('Contact', $contact->getId());
 
-        /* @var $group5 EmailAddressGroup */
+        /** @var EmailAddressGroup $group5 */
         $group5 = $contact->getEmailAddressGroup();
 
         $this->assertEquals(1, $group5->getCount());
@@ -100,7 +100,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
     public function testEmailAddress2(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $lead = $entityManager->createEntity('Lead', [
@@ -113,7 +113,7 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $contactFetched = $entityManager->getEntity('Contact', $contact->getId());
 
-        /* @var $group EmailAddressGroup */
+        /** @var EmailAddressGroup $group */
         $group = $contactFetched->getEmailAddressGroup();
 
         $this->assertEquals(1, $group->getCount());

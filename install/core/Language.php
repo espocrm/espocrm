@@ -115,7 +115,7 @@ class Language{
      * After retrieve actions
      *
      * @param  array $i18n
-     * @return array $i18n
+     * @return array
      */
     protected function afterRetrieve(array &$i18n)
     {

@@ -58,7 +58,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        /* @var $em EntityManager */
+        /** @var EntityManager $em */
         $em = $this->getContainer()->get('entityManager');
 
         $em->createEntity(Webhook::ENTITY_TYPE, [
@@ -111,7 +111,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
+        /** @var Queue $queue */
         $queue = $app->getContainer()
             ->get('injectableFactory')
             ->createWith(Queue::class, [
@@ -169,7 +169,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        /* @var $em EntityManager */
+        /** @var EntityManager $em */
         $em = $app->getContainer()->get('entityManager');
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
@@ -197,7 +197,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
+        /** @var Queue $queue */
         $queue = $app->getContainer()
             ->get('injectableFactory')
             ->createWith(Queue::class, [
@@ -246,7 +246,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        /* @var $em EntityManager */
+        /** @var EntityManager $em */
         $em = $app->getContainer()->get('entityManager');
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
@@ -277,7 +277,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
+        /** @var Queue $queue */
         $queue = $app->getContainer()
             ->get('injectableFactory')
             ->createWith(Queue::class, [

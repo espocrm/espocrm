@@ -181,7 +181,7 @@ class ContainerBuilder
 
     public function build(): ContainerInterface
     {
-        /** @var Config */
+        /** @var Config $config */
         $config = $this->services['config'] ?? (
             new $this->configClassName(
                 new ConfigFileManager()
@@ -200,7 +200,7 @@ class ContainerBuilder
 
         $useCache = $config->get('useCache') ?? false;
 
-        /** @var Module */
+        /** @var Module $module */
         $module = $this->services['module'] ?? (
             new $this->moduleClassName($fileManager, $dataCache, $useCache)
         );

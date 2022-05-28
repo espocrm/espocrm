@@ -56,7 +56,7 @@ class EnumType implements ItemConverter
 
     public function convert(Item $item): OrderList
     {
-        /** @var string */
+        /** @var string $orderBy */
         $orderBy = $item->getOrderBy();
         $order = $item->getOrder();
 

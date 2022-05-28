@@ -148,7 +148,7 @@ class MassConvertCurrency implements MassAction
 
             $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
 
-            /** @var string */
+            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;

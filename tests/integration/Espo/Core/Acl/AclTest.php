@@ -36,7 +36,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 {
     public function testGetReadOwnerUserField()
     {
-        /* @var $aclManager AclManager */
+        /** @var AclManager $aclManager */
         $aclManager = $this->getContainer()->get('aclManager');
 
         $this->assertEquals(
@@ -62,7 +62,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testTryCheck(): void
     {
-        /* @var $Acl Acl */
+        /** @var Acl $Acl */
         $acl = $this->getContainer()->get('acl');
 
         $this->assertFalse($acl->tryCheck('NonExistingEntityType'));

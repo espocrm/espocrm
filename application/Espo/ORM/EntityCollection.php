@@ -222,7 +222,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
             throw new RuntimeException();
         }
 
-        /** @var mixed */
+        /** @var mixed $value */
         $value = $this->dataList[$offset];
 
         if ($value instanceof Entity) {
@@ -251,7 +251,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         assert($this->entityType !== null);
 
-        /** @var TEntity */
+        /** @var TEntity $entity */
         $entity = $this->entityFactory->create($this->entityType);
 
         $entity->set($dataArray);

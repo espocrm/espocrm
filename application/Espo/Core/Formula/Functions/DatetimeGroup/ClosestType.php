@@ -96,7 +96,7 @@ class ClosestType extends BaseFunction implements Di\ConfigAware
 
         $format = 'Y-m-d H:i:s';
 
-        /** @var DateTime */
+        /** @var DateTime $dt */
         $dt = DateTime::createFromFormat($format, $value, new DateTimeZone($timezone));
 
         $valueTimestamp = $dt->getTimestamp();

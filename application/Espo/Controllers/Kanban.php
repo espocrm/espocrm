@@ -53,7 +53,7 @@ class Kanban
 
     public function getActionGetData(Request $request): stdClass
     {
-        /** @var string */
+        /** @var string $entityType */
         $entityType = $request->getRouteParam('entityType');
 
         $searchParams = $this->searchParamsFetcher->fetch($request);

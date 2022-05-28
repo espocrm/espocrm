@@ -37,7 +37,7 @@ class ReminderTest extends \tests\integration\Core\BaseTestCase
 {
     public function testOne(): void
     {
-        /* @var $entityManager EntityManager */
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('entityManager');
 
         $meeting = $entityManager->createEntity('Meeting', [

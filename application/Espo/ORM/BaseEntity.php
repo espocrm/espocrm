@@ -893,7 +893,7 @@ class BaseEntity implements Entity
             return true;
         }
 
-        /** @var string */
+        /** @var string $type */
         $type = $this->getAttributeType($name);
 
         return !self::areValuesEqual(

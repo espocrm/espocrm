@@ -297,7 +297,7 @@ class Attachment extends Record
 
         $this->checkAttachmentField($relatedEntityType, $field);
 
-        /** @var AttachmentEntity|null */
+        /** @var AttachmentEntity|null $attachment */
         $attachment = $this->getEntity($data->id);
 
         if (!$attachment) {
@@ -430,7 +430,7 @@ class Attachment extends Record
 
         curl_setopt_array($ch, $opts);
 
-        /** @var string|false */
+        /** @var string|false $response */
         $response = curl_exec($ch);
 
         if ($response === false) {
@@ -494,7 +494,7 @@ class Attachment extends Record
 
     public function getFileData(string $id): stdClass
     {
-       /** @var AttachmentEntity|null */
+       /** @var AttachmentEntity|null $attachment */
         $attachment = $this->getEntity($id);
 
         if (!$attachment) {
