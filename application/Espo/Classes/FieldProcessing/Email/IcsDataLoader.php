@@ -44,7 +44,6 @@ use Espo\Core\{
 };
 
 use ICal\ICal;
-use ICal\Event;
 
 use Throwable;
 use stdClass;
@@ -85,7 +84,7 @@ class IcsDataLoader implements Loader
 
         $ical->initString($icsContents);
 
-        /* @var $event Event */
+        /* @var \ICal\Event|null $event */
         $event = $ical->events()[0] ?? null;
 
         if ($event === null) {
