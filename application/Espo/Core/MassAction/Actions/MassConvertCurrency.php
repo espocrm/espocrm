@@ -31,6 +31,8 @@ namespace Espo\Core\MassAction\Actions;
 
 use Espo\Entities\User;
 
+use Espo\Core\Acl\Table;
+
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
@@ -93,11 +95,11 @@ class MassConvertCurrency implements MassAction
     {
         $entityType = $params->getEntityType();
 
-        if (!$this->acl->check($entityType, 'delete')) {
-            throw new Forbidden("No delete access for '{$entityType}'.");
+        if (!$this->acl->checkScope($entityType, Table::ACTION_EDIT)) {
+            throw new Forbidden("No edit access for '{$entityType}'.");
         }
 
-        if ($this->acl->get('massUpdatePermission') !== 'yes') {
+        if ($this->acl->get('massUpdatePermission') !== Table::LEVEL_YES) {
             throw new Forbidden("No mass-update permission.");
         }
 
@@ -142,7 +144,7 @@ class MassConvertCurrency implements MassAction
         $count = 0;
 
         foreach ($collection as $entity) {
-            if (!$this->acl->checkEntity($entity, 'edit')) {
+            if (!$this->acl->checkEntity($entity, Table::ACTION_EDIT)) {
                 continue;
             }
 

@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Mail\Event;
 
-use ICal\Event as U01jmg3Event;
 use ICal\ICal as U01jmg3ICal;
 
 use RuntimeException;
@@ -38,7 +37,7 @@ class EventFactory
 {
     public static function createFromU01jmg3Ical(U01jmg3ICal $ical): Event
     {
-        /* @var $event U01jmg3Event */
+        /* @var \ICal\Event|null $event */
         $event = $ical->events()[0] ?? null;
 
         if (!$event) {
