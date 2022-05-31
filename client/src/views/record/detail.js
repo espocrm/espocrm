@@ -1307,6 +1307,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 this.save({
                     inline: true,
+                    field: field,
                     afterValidate: () => view.inlineEditClose(true),
                 })
                     .then(() => {
