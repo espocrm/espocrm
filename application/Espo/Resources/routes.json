@@ -277,6 +277,14 @@
         }
     },
     {
+        "route": "/Attachment/chunk/:id",
+        "method": "post",
+        "params": {
+            "controller": "Attachment",
+            "action": "chunk"
+        }
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {

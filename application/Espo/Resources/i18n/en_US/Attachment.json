@@ -7,7 +7,8 @@
         "field": "Field",
         "sourceId": "Source ID",
         "storage": "Storage",
-        "size": "Size (bytes)"
+        "size": "Size (bytes)",
+        "isBeingUploaded": "Is Being Uploaded"
     },
     "options": {
         "role": {

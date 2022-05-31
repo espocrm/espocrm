@@ -29,6 +29,8 @@
 
 namespace Espo\EntryPoints;
 
+use Espo\Entities\Attachment as AttachmentEntity;
+
 use Espo\Core\{
     Exceptions\BadRequest,
     Exceptions\Forbidden,
@@ -81,13 +83,18 @@ class Download implements EntryPoint
             throw new BadRequest();
         }
 
-        $attachment = $this->entityManager->getEntity('Attachment', $id);
+        /** @var AttachmentEntity|null $attachment */
+        $attachment = $this->entityManager->getEntityById('Attachment', $id);
 
         if (!$attachment) {
             throw new NotFoundSilent();
         }
 
         if (!$this->acl->checkEntity($attachment)) {
+            throw new Forbidden();
+        }
+
+        if ($attachment->isBeingUploaded()) {
             throw new Forbidden();
         }
 

@@ -45,6 +45,8 @@ class EspoUploadDir implements Storage, Local
 {
     protected FileManager $fileManager;
 
+    public const NAME = 'EspoUploadDir';
+
     public function __construct(FileManager $fileManager)
     {
         $this->fileManager = $fileManager;
@@ -72,7 +74,7 @@ class EspoUploadDir implements Storage, Local
             throw new Error("Could not get size for non-existing file '{$filePath}'.");
         }
 
-        return (int) filesize($filePath);
+        return $this->fileManager->getSize($filePath);
     }
 
     public function getStream(Attachment $attachment): StreamInterface

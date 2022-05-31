@@ -40,33 +40,44 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
             });
         },
 
-        handleFileUpload: function (file, contents, callback) {
-            this.createView('crop', 'views/modals/image-crop', {
-                contents: contents,
-            }, (view) => {
-                view.render();
+        handleUploadingFile: function (file) {
+            return new Promise((resolve, reject) => {
+                let fileReader = new FileReader();
 
-                let cropped = false;
+                fileReader.onload = (e) => {
+                    this.createView('crop', 'views/modals/image-crop', {contents: e.target.result})
+                        .then(view => {
+                            view.render();
 
-                this.listenToOnce(view, 'crop', (croppedContents, params) => {
-                    cropped = true;
+                            let cropped = false;
 
-                    setTimeout(() => {
-                        params = params || {};
-                        params.name = 'avatar.jpg';
-                        params.type = 'image/jpeg';
+                            this.listenToOnce(view, 'crop', (dataUrl) => {
+                                cropped = true;
 
-                        callback(croppedContents, params);
-                    }, 10);
-                });
+                                setTimeout(() => {
+                                    fetch(dataUrl)
+                                        .then(result => result.blob())
+                                        .then(blob => {
+                                            resolve(
+                                                new File([blob], 'avatar.jpg', {type: 'image/jpeg'})
+                                            );
+                                        });
+                                }, 10);
+                            });
 
-                this.listenToOnce(view, 'remove', () => {
-                    if (!cropped) {
-                        setTimeout(() => this.render(), 10);
-                    }
+                            this.listenToOnce(view, 'remove', () => {
+                                if (!cropped) {
+                                    setTimeout(() => this.render(), 10);
 
-                    this.clearView('crop');
-                });
+                                    reject();
+                                }
+
+                                this.clearView('crop');
+                            });
+                        });
+                };
+
+                fileReader.readAsDataURL(file);
             });
         },
 

@@ -450,6 +450,19 @@ class Cleanup implements JobDataLess
             }
         }
 
+        $isBeingUploadedCollection = $this->entityManager
+            ->getRDBRepository('Attachment')
+            ->sth()
+            ->where([
+                'isBeingUploaded' => true,
+                'createdAt<' => $datetime->format('Y-m-d H:i:s'),
+            ])
+            ->find();
+
+        foreach ($isBeingUploadedCollection as $e) {
+            $this->entityManager->removeEntity($e);
+        }
+
         $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()

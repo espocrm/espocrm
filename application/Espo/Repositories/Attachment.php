@@ -33,6 +33,8 @@ use Espo\ORM\Entity;
 use Espo\Entities\Attachment as AttachmentEntity;
 use Espo\Core\Repositories\Database;
 
+use Espo\Core\FileStorage\Storages\EspoUploadDir;
+
 use Espo\Core\Di;
 
 use Psr\Http\Message\StreamInterface;
@@ -84,6 +86,10 @@ class Attachment extends Database implements
 
     protected function processBeforeSaveNew(AttachmentEntity $entity): void
     {
+        if ($entity->isBeingUploaded()) {
+            $entity->set('storage', EspoUploadDir::NAME);
+        }
+
         if (!$entity->get('storage')) {
             $defaultStorage = $this->config->get('defaultFileStorage');
 
@@ -96,7 +102,9 @@ class Attachment extends Database implements
             return;
         }
 
-        $entity->set('size', strlen($contents));
+        if (!$entity->isBeingUploaded()) {
+            $entity->set('size', strlen($contents));
+        }
 
         $this->fileStorageManager->putContents($entity, $contents);
     }

@@ -37,6 +37,10 @@ class Attachment extends Entity
 {
     public const ENTITY_TYPE = 'Attachment';
 
+    public const ROLE_ATTACHMENT = 'Attachment';
+
+    public const ROLE_INLINE_ATTACHMENT = 'Inline Attachment';
+
     /**
      * Multiple attachment can refer to one file. Source ID is an original attachment.
      */
@@ -86,6 +90,16 @@ class Attachment extends Entity
     {
         /** @var ?LinkParent */
         return $this->getValueObject('related');
+    }
+
+    public function isBeingUploaded(): bool
+    {
+        return (bool) $this->get('isBeingUploaded');
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->get('role');
     }
 
     /**

@@ -509,6 +509,14 @@
             "view": "views/settings/fields/theme",
             "translation": "Global.themes"
         },
+        "attachmentUploadMaxSize": {
+            "type": "float",
+            "min": 0
+        },
+        "attachmentUploadChunkSize": {
+            "type": "float",
+            "min": 0
+        },
         "emailMessageMaxSize": {
             "type": "float",
             "min": 0,

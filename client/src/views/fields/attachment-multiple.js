@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
+define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-upload'], function (Dep, FileUpload) {
 
     return Dep.extend({
 
@@ -306,24 +306,24 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             this.model.set(this.typeHashName, {}, {silent: silent})
         },
 
-        pushAttachment: function (attachment, link) {
+        pushAttachment: function (attachment, link, ui) {
             var arr = _.clone(this.model.get(this.idsName) || []);
 
             arr.push(attachment.id);
 
-            this.model.set(this.idsName, arr);
+            this.model.set(this.idsName, arr, {ui: ui});
 
             var typeHash = _.clone(this.model.get(this.typeHashName) || {});
 
             typeHash[attachment.id] = attachment.get('type');
 
-            this.model.set(this.typeHashName, typeHash);
+            this.model.set(this.typeHashName, typeHash, {ui: ui});
 
             var nameHash = _.clone(this.model.get(this.nameHashName) || {});
 
             nameHash[attachment.id] = attachment.get('name');
 
-            this.model.set(this.nameHashName, nameHash);
+            this.model.set(this.nameHashName, nameHash, {ui: ui});
         },
 
         getEditPreview: function (name, type, id) {
@@ -388,8 +388,18 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
                 $att.on('ready', () => {
                     $loading.html(this.translate('Ready'));
+
+                    if (preview === name) {
+                        let id = $att.attr('data-id');
+
+                        preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' +
+                            id + '" target="_BLANK">' + name + '</a>';
+
+                        $att.find('.preview').html(preview);
+                    }
                 });
-            } else {
+            }
+            else {
                 $att.attr('data-id', id);
             }
 
@@ -407,31 +417,44 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             $label.attr('title', title);
         },
 
-        uploadFiles: function (files) {
-            var uploadedCount = 0;
-            var totalCount = 0;
+        getMaxFileSize: function () {
+            let maxFileSize = this.params.maxFileSize || 0;
 
-            var exceedsMaxFileSize = false;
+            let noChunk = !this.getConfig().get('attachmentUploadChunkSize');
+            let attachmentUploadMaxSize = this.getConfig().get('attachmentUploadMaxSize') || 0;
+            let appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
 
-            var maxFileSize = this.params.maxFileSize || 0;
+            if (!maxFileSize || maxFileSize > attachmentUploadMaxSize) {
+                maxFileSize = attachmentUploadMaxSize;
+            }
 
-            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
-
-            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
+            if (noChunk && maxFileSize > appMaxUploadSize) {
                 maxFileSize = appMaxUploadSize;
             }
 
+            return maxFileSize;
+        },
+
+        uploadFiles: function (files) {
+            let uploadedCount = 0;
+            let totalCount = 0;
+
+            let exceedsMaxFileSize = false;
+
+            let maxFileSize = this.getMaxFileSize();
+
             if (maxFileSize) {
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
 
                     if (file.size > maxFileSize * 1024 * 1024) {
                         exceedsMaxFileSize = true;
                     }
                 }
             }
+
             if (exceedsMaxFileSize) {
-                var msg = this.translate('fieldMaxFileSizeError', 'messages')
+                let msg = this.translate('fieldMaxFileSizeError', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{max}', maxFileSize);
 
@@ -442,19 +465,25 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
             this.isUploading = true;
 
-            this.getModelFactory().create('Attachment', (model) => {
-                var canceledList = [];
+            this.getModelFactory().create('Attachment', model => {
+                let canceledList = [];
 
-                var fileList = [];
+                let fileList = [];
 
-                for (var i = 0; i < files.length; i++) {
+                for (let i = 0; i < files.length; i++) {
                     fileList.push(files[i]);
 
                     totalCount++;
                 }
 
-                fileList.forEach((file) => {
-                    var $attachmentBox = this.addAttachmentBox(file.name, file.type);
+                let uploadHelper = new FileUpload(this.getConfig());
+
+                fileList.forEach(file => {
+                    let $attachmentBox = this.addAttachmentBox(file.name, file.type);
+
+                    let $uploadingMsg = $attachmentBox.parent().find('.uploading-message');
+
+                    let mediator = {};
 
                     $attachmentBox.find('.remove-attachment').on('click.uploading', () => {
                         canceledList.push(attachment.cid);
@@ -468,58 +497,66 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                                 this.afterAttachmentsUploaded.call(this);
                             }
                         }
+
+                        mediator.isCanceled = true;
                     });
 
-                    var attachment = model.clone();
+                    let attachment = model.clone();
 
-                    var fileReader = new FileReader();
+                    attachment.set('role', 'Attachment');
+                    attachment.set('parentType', this.model.name);
+                    attachment.set('field', this.name);
 
-                    fileReader.onload = (e) => {
-                        attachment.set('name', file.name);
-                        attachment.set('type', file.type || 'text/plain');
-                        attachment.set('role', 'Attachment');
-                        attachment.set('size', file.size);
-                        attachment.set('parentType', this.model.name);
-                        attachment.set('file', e.target.result);
-                        attachment.set('field', this.name);
+                    uploadHelper
+                        .upload(file, attachment, {
+                            afterChunkUpload: (size) => {
+                                let msg = Math.floor((size / file.size) * 100) + '%';
 
-                        attachment
-                            .save({}, {timeout: 0})
-                            .then(() => {
-                                if (canceledList.indexOf(attachment.cid) === -1) {
-                                    $attachmentBox.trigger('ready');
+                                $uploadingMsg.html(msg);
+                            },
+                            afterAttachmentSave: (attachment) => {
+                                $attachmentBox.attr('data-id', attachment.id);
+                            },
+                            mediator: mediator,
+                        })
+                        .then(() => {
+                            if (canceledList.indexOf(attachment.cid) !== -1) {
+                                return;
+                            }
 
-                                    this.pushAttachment(attachment);
+                            this.pushAttachment(attachment, null, true);
 
-                                    $attachmentBox.attr('data-id', attachment.id);
-                                    uploadedCount++;
+                            $attachmentBox.attr('data-id', attachment.id);
+                            $attachmentBox.trigger('ready');
 
-                                    if (uploadedCount === totalCount && this.isUploading) {
-                                        this.model.trigger('attachment-uploaded:' + this.name);
-                                        this.afterAttachmentsUploaded.call(this);
+                            uploadedCount++;
 
-                                        this.isUploading = false;
-                                    }
-                                }
-                            })
-                            .catch(() => {
-                                $attachmentBox.remove();
+                            if (uploadedCount === totalCount && this.isUploading) {
+                                this.model.trigger('attachment-uploaded:' + this.name);
+                                this.afterAttachmentsUploaded.call(this);
 
-                                totalCount--;
+                                this.isUploading = false;
+                            }
+                        })
+                        .catch(() => {
+                            if (mediator.isCenceled) {
+                                return;
+                            }
 
-                                if (!totalCount) {
-                                    this.isUploading = false;
-                                    this.$el.find('.uploading-message').remove();
-                                }
+                            $attachmentBox.remove();
+                            $uploadingMsg.remove();
 
-                                if (uploadedCount === totalCount && this.isUploading) {
-                                    this.isUploading = false;
-                                    this.afterAttachmentsUploaded.call(this);
-                                }
-                            });
-                    };
+                            totalCount--;
 
-                    fileReader.readAsDataURL(file);
+                            if (!totalCount) {
+                                this.isUploading = false;
+                            }
+
+                            if (uploadedCount === totalCount && this.isUploading) {
+                                this.isUploading = false;
+                                this.afterAttachmentsUploaded.call(this);
+                            }
+                        });
                 });
             });
         },
@@ -742,20 +779,23 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                         modelList.forEach((model) => {
                             if (model.name === 'Attachment') {
                                 this.pushAttachment(model);
+
+                                return;
                             }
-                            else {
-                                this.ajaxPostRequest(source + '/action/getAttachmentList', {
+
+                            this
+                                .ajaxPostRequest(source + '/action/getAttachmentList', {
                                     id: model.id,
-                                }).then((attachmentList) => {
-                                    attachmentList.forEach((item) => {
-                                        this.getModelFactory().create('Attachment', (attachment) => {
+                                })
+                                .then(attachmentList => {
+                                    attachmentList.forEach(item => {
+                                        this.getModelFactory().create('Attachment', attachment => {
                                             attachment.set(item);
 
                                             this.pushAttachment(attachment, true);
                                         });
                                     });
                                 });
-                            }
                         });
                     });
                 });

@@ -11,7 +11,7 @@
                 {"name": "type"}, {"name": "field"}
             ],
             [
-                {"name": "size"}, false
+                {"name": "size"}, {"name": "isBeingUploaded"}
             ],
             [
                 {"name": "storage"}, {"name": "sourceId"}

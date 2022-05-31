@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/file', 'views/fields/link', function (Dep) {
+define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], function (Dep, FileUpload) {
 
     return Dep.extend({
 
@@ -461,26 +461,39 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             }
         },
 
-        setAttachment: function (attachment) {
+        setAttachment: function (attachment, ui) {
             var o = {};
 
             o[this.idName] = attachment.id;
             o[this.nameName] = attachment.get('name');
 
-            this.model.set(o);
+            this.model.set(o, {ui: ui});
+        },
+
+        getMaxFileSize: function () {
+            let maxFileSize = this.params.maxFileSize || 0;
+
+            let noChunk = !this.getConfig().get('attachmentUploadChunkSize');
+            let attachmentUploadMaxSize = this.getConfig().get('attachmentUploadMaxSize') || 0;
+            let appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+
+            if (!maxFileSize || maxFileSize > attachmentUploadMaxSize) {
+                maxFileSize = attachmentUploadMaxSize;
+            }
+
+            if (noChunk && maxFileSize > appMaxUploadSize) {
+                maxFileSize = appMaxUploadSize;
+            }
+
+            return maxFileSize;
         },
 
         uploadFile: function (file) {
-            var isCanceled = false;
+            let isCanceled = false;
 
-            var exceedsMaxFileSize = false;
+            let exceedsMaxFileSize = false;
 
-            var maxFileSize = this.params.maxFileSize || 0;
-            var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
-
-            if (!maxFileSize || maxFileSize > appMaxUploadSize) {
-                maxFileSize = appMaxUploadSize;
-            }
+            let maxFileSize = this.getMaxFileSize();
 
             if (maxFileSize) {
                 if (file.size > maxFileSize * 1024 * 1024) {
@@ -489,7 +502,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             if (exceedsMaxFileSize) {
-                var msg = this.translate('fieldMaxFileSizeError', 'messages')
+                let msg = this.translate('fieldMaxFileSizeError', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{max}', maxFileSize);
 
@@ -500,67 +513,77 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             this.isUploading = true;
 
-            this.getModelFactory().create('Attachment', (attachment) => {
-                var $attachmentBox = this.addAttachmentBox(file.name, file.type);
+            let uploadHelper = new FileUpload(this.getConfig());
+
+            this.getModelFactory().create('Attachment', attachment => {
+                let $attachmentBox = this.addAttachmentBox(file.name, file.type);
+
+                let $uploadingMsg = $attachmentBox.parent().find('.uploading-message');
 
                 this.$el.find('.attachment-button').addClass('hidden');
 
+                let mediator = {};
+
                 $attachmentBox.find('.remove-attachment').on('click.uploading', () => {
                     isCanceled = true;
-
-                    this.$el.find('.attachment-button').removeClass('hidden');
-
                     this.isUploading = false;
 
+                    this.$el.find('.attachment-button').removeClass('hidden');
                     this.$el.find('input.file').val(null);
+
+                    mediator.isCanceled = true;
                 });
 
-                var fileReader = new FileReader();
+                attachment.set('role', 'Attachment');
+                attachment.set('relatedType', this.model.name);
+                attachment.set('field', this.name);
 
-                fileReader.onload = (e) => {
-                    this.handleFileUpload(file, e.target.result, (result, fileParams) => {
-                        attachment.set('name', fileParams.name);
-                        attachment.set('type', fileParams.type || 'text/plain');
-                        attachment.set('size', fileParams.size);
-                        attachment.set('role', 'Attachment');
-                        attachment.set('relatedType', this.model.name);
-                        attachment.set('file', result);
-                        attachment.set('field', this.name);
+                this.handleUploadingFile(file).then(file => {
+                    uploadHelper
+                        .upload(file, attachment, {
+                            afterChunkUpload: (size) => {
+                                let msg = Math.floor((size / file.size) * 100) + '%';
 
-                        attachment
-                            .save({}, {timeout: 0})
-                            .then(() => {
-                                if (!isCanceled && this.isUploading) {
-                                    $attachmentBox.trigger('ready');
+                                $uploadingMsg.html(msg);
+                            },
+                            afterAttachmentSave: (attachment) => {
+                                $attachmentBox.attr('data-id', attachment.id);
+                            },
+                            mediator: mediator,
+                        })
+                        .then(() => {
+                            if (isCanceled) {
+                                return;
+                            }
 
-                                    this.setAttachment(attachment);
+                            if (!this.isUploading) {
+                                return;
+                            }
 
-                                    this.isUploading = false;
-                                }
-                            })
-                            .fail(() => {
-                                $attachmentBox.remove();
+                            this.setAttachment(attachment, true);
 
-                                this.$el.find('.uploading-message').remove();
-                                this.$el.find('.attachment-button').removeClass('hidden');
+                            $attachmentBox.trigger('ready');
 
-                                this.isUploading = false;
-                            });
-                    });
-                };
+                            this.isUploading = false;
+                        })
+                        .catch(() => {
+                            if (mediator.isCenceled) {
+                                return;
+                            }
 
-                fileReader.readAsDataURL(file);
+                            $attachmentBox.remove();
+
+                            this.$el.find('.uploading-message').remove();
+                            this.$el.find('.attachment-button').removeClass('hidden');
+
+                            this.isUploading = false;
+                        });
+                });
             });
         },
 
-        handleFileUpload: function (file, contents, callback) {
-            var params = {
-                name: file.name,
-                type: file.type,
-                size: file.size,
-            };
-
-            callback(contents, params);
+        handleUploadingFile: function (file) {
+            return new Promise(resolve => resolve(file));
         },
 
         addAttachmentBox: function (name, type, id) {
@@ -595,13 +618,22 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             this.$attachment.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small uploading-message">' +
+                let $loading = $('<span class="small uploading-message">' +
                     this.translate('Uploading...') + '</span>');
 
                 $container.append($loading);
 
                 $att.on('ready', () => {
                     $loading.html(this.translate('Ready'));
+
+                    if (preview === name) {
+                        let id = this.model.get(this.idName);
+
+                        preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' +
+                            id + '" target="_BLANK">' + name + '</a>';
+
+                        $att.find('.preview').html(preview);
+                    }
                 });
             }
 
@@ -686,7 +718,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                                         this.getModelFactory().create('Attachment', (attachment) => {
                                             attachment.set(item);
 
-                                            this.setAttachment(attachment, true);
+                                            this.setAttachment(attachment);
                                         });
                                     });
                                 });

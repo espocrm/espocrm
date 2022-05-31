@@ -31,6 +31,8 @@ namespace Espo\EntryPoints;
 
 use Espo\Core\Utils\Metadata;
 
+use Espo\Entities\Attachment as AttachmentEntity;
+
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\Forbidden,
@@ -73,6 +75,7 @@ class Attachment implements EntryPoint
             throw new BadRequest();
         }
 
+        /** @var AttachmentEntity|null $attachment */
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 
         if (!$attachment) {
@@ -87,13 +90,17 @@ class Attachment implements EntryPoint
             throw new NotFound();
         }
 
-        $fileType = $attachment->get('type');
+        $fileType = $attachment->getType();
 
         if (!in_array($fileType, $this->getAllowedFileTypeList())) {
             throw new Forbidden("Not allowed file type '{$fileType}'.");
         }
 
-        if ($attachment->get('type')) {
+        if ($attachment->isBeingUploaded()) {
+            throw new Forbidden("Attachment is being-uploaded.");
+        }
+
+        if ($fileType) {
             $response->setHeader('Content-Type', $fileType);
         }
 

@@ -39,6 +39,15 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment as AttachmentEntity;
 
+use Espo\Core\FileStorage\Storages\EspoUploadDir;
+
+use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Job\Job\Data as JobData;
+
+use Espo\Tools\Attachment\Jobs\MoveToStorage;
+
+use Espo\Core\Acl\Table;
+
 use stdClass;
 
 /**
@@ -123,6 +132,8 @@ class Attachment extends Record
 
         unset($data->relatedId);
         unset($data->relatedType);
+
+        unset($data->isBeingUploaded);
     }
 
     public function filterCreateInput(stdClass $data): void
@@ -132,29 +143,34 @@ class Attachment extends Record
         unset($data->parentId);
         unset($data->relatedId);
 
-        if (!property_exists($data, 'file')) {
-            throw new BadRequest("No file contents.");
-        }
-
-        if (!is_string($data->file)) {
-            throw new BadRequest("Non-string file contents.");
-        }
-
-        $arr = explode(',', $data->file);
+        $isBeingUploaded = (bool) $data->isBeingUploaded;
 
         $contents = '';
 
-        if (count($arr) > 1) {
-            $contents = $arr[1];
-        }
+        if (!$isBeingUploaded) {
+            if (!property_exists($data, 'file')) {
+                throw new BadRequest("No file contents.");
+            }
 
-        $contents = base64_decode($contents);
+            if (!is_string($data->file)) {
+                throw new BadRequest("Non-string file contents.");
+            }
+
+            $arr = explode(',', $data->file);
+
+            if (count($arr) > 1) {
+                $contents = $arr[1];
+            }
+
+            $contents = base64_decode($contents);
+        }
 
         $data->contents = $contents;
 
         $relatedEntityType = null;
         $field = null;
-        $role = 'Attachment';
+
+        $role = AttachmentEntity::ROLE_ATTACHMENT;
 
         if (isset($data->parentType)) {
             $relatedEntityType = $data->parentType;
@@ -177,7 +193,13 @@ class Attachment extends Record
             throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
         }
 
-        if (!$role || !in_array($role, ['Attachment', 'Inline Attachment'])) {
+        if (
+            !$role ||
+            !in_array($role, [
+                AttachmentEntity::ROLE_ATTACHMENT,
+                AttachmentEntity::ROLE_INLINE_ATTACHMENT,
+            ])
+        ) {
             throw new BadRequest("Not supported attachment 'role'.");
         }
 
@@ -185,33 +207,31 @@ class Attachment extends Record
 
         $size = mb_strlen($contents, '8bit');
 
-        if ($role === 'Attachment') {
-            $maxSize = $this->getMetadata()->get(
-                ['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']
-            );
+        if ($role === AttachmentEntity::ROLE_ATTACHMENT) {
+            $maxSize = $this->metadata
+                ->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
 
             if (!$maxSize) {
-                $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
+                $maxSize = $this->config->get('attachmentUploadMaxSize');
             }
 
-            if ($maxSize) {
-                if ($size > $maxSize * 1024 * 1024) {
-                    throw new Error("File size should not exceed {$maxSize}Mb.");
-                }
+            if ($maxSize && $size > $maxSize * 1024 * 1024) {
+                throw new Error("File size should not exceed {$maxSize}Mb.");
             }
-        } else if ($role === 'Inline Attachment') {
-            $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
+        }
 
-            if ($inlineAttachmentUploadMaxSize) {
-                if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
-                    throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
-                }
+        if ($role === AttachmentEntity::ROLE_INLINE_ATTACHMENT) {
+            $inlineAttachmentUploadMaxSize = $this->config->get('inlineAttachmentUploadMaxSize');
+
+            if ($inlineAttachmentUploadMaxSize && $size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
+                throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
             }
-        } else {
-            throw new BadRequest("Not supported attachment role.");
         }
     }
 
+    /**
+     * @param AttachmentEntity $entity
+     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');
@@ -221,6 +241,22 @@ class Attachment extends Record
             !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
         ) {
             $entity->clear('storage');
+        }
+
+        if (!$entity->getRole()) {
+            $entity->set('role', AttachmentEntity::ROLE_ATTACHMENT);
+        }
+
+        $role = $entity->getRole();
+
+        $size = $entity->getSize();
+
+        if ($role === AttachmentEntity::ROLE_ATTACHMENT) {
+            $maxSize = $this->getUploadMaxSize($entity);
+
+            if ($size && $size > $maxSize) {
+                throw new Forbidden("Attachment size exceeds `attachmentUploadMaxSize`.");
+            }
         }
     }
 
@@ -317,7 +353,7 @@ class Attachment extends Record
         }
 
         $attachment->set('field', $field);
-        $attachment->set('role', 'Attachment');
+        $attachment->set('role', AttachmentEntity::ROLE_ATTACHMENT);
 
         $this->getAttachmentRepository()->save($attachment);
 
@@ -366,7 +402,7 @@ class Attachment extends Record
         $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
 
         if (!$maxSize) {
-            $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
+            $maxSize = $this->config->get('attachmentUploadMaxSize');
         }
 
         if ($maxSize) {
@@ -379,7 +415,7 @@ class Attachment extends Record
             'name' => $url,
             'type' => $type,
             'contents' => $contents,
-            'role' => 'Attachment',
+            'role' => AttachmentEntity::ROLE_ATTACHMENT,
         ]);
 
         if (isset($data->parentType)) {
@@ -509,6 +545,97 @@ class Attachment extends Record
         ];
 
         return $data;
+    }
+
+    public function uploadChunk(string $id, string $fileData): void
+    {
+        if (!$this->acl->checkScope(AttachmentEntity::ENTITY_TYPE, Table::ACTION_CREATE)) {
+            throw new Forbidden();
+        }
+
+        /** @var AttachmentEntity|null $attachment */
+        $attachment = $this->getEntity($id);
+
+        if (!$attachment) {
+            throw new NotFound();
+        }
+
+        if (!$attachment->isBeingUploaded()) {
+            throw new Forbidden("Attachment is not being-uploaded.");
+        }
+
+        if ($attachment->getStorage() !== EspoUploadDir::NAME) {
+            throw new Forbidden("Attachment storage is not 'EspoUploadDir'.");
+        }
+
+        $arr = explode(';base64,', $fileData);
+
+        if (count($arr) < 2) {
+            throw new BadRequest("Bad file data.");
+        }
+
+        $contents = base64_decode($arr[1]);
+
+        $filePath = $this->getAttachmentRepository()->getFilePath($attachment);
+
+        $chunkSize = strlen($contents);
+
+        $actualFileSize = 0;
+
+        if ($this->fileManager->isFile($filePath)) {
+            $actualFileSize = $this->fileManager->getSize($filePath);
+        }
+
+        $maxFileSize = $this->getUploadMaxSize($attachment);
+
+        if ($actualFileSize + $chunkSize > $maxFileSize) {
+            throw new Forbidden("Max attachment size exceeded.");
+        }
+
+        $this->fileManager->appendContents($filePath, $contents);
+
+        if ($actualFileSize + $chunkSize === $attachment->getSize()) {
+            $attachment->set('isBeingUploaded', false);
+
+            $this->entityManager->saveEntity($attachment);
+
+            $this->createJobMoveToStorage($attachment);
+        }
+
+        if ($actualFileSize + $chunkSize > $attachment->getSize()) {
+            throw new Error("File size mismatch.");
+        }
+    }
+
+    private function getUploadMaxSize(AttachmentEntity $attachment): int
+    {
+        $field = $attachment->get('field');
+        $parentType = $attachment->get('parentType') ?? $attachment->get('relatedType');
+
+        if ($field && $parentType) {
+            $maxSize = ($this->metadata
+                ->get(['entityDefs', $parentType, 'fields', $field, 'maxFileSize']) ?? 0) * 1024 * 1024;
+
+            if ($maxSize) {
+                return $maxSize;
+            }
+        }
+
+        return (int) $this->config->get('attachmentUploadMaxSize', 0) * 1024 * 1024;
+    }
+
+    private function createJobMoveToStorage(AttachmentEntity $attachment): void
+    {
+        /** @var JobSchedulerFactory $jobSchedulerFactory */
+        $jobSchedulerFactory = $this->injectableFactory->create(JobSchedulerFactory::class);
+
+        $jobSchedulerFactory->create()
+            ->setClassName(MoveToStorage::class)
+            ->setData(
+                JobData::create()
+                    ->withTargetId($attachment->getId())
+            )
+            ->schedule();
     }
 
     private function getAttachmentRepository(): AttachmentRepository

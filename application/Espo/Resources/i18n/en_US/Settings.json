@@ -76,6 +76,8 @@
         "displayListViewRecordCount": "Display Total Count (on List View)",
         "theme": "Theme",
         "userThemesDisabled": "Disable User Themes",
+        "attachmentUploadMaxSize": "Upload Max Size (Mb)",
+        "attachmentUploadChunkSize": "Upload Chunk Size (Mb)",
         "emailMessageMaxSize": "Email Max Size (Mb)",
         "massEmailMaxPerHourCount": "Max number of emails sent per hour",
         "personalEmailMaxPortionSize": "Max email portion size for personal account fetching",
@@ -253,7 +255,8 @@
         "Activities": "Activities",
         "Admin Notifications": "Admin Notifications",
         "Passwords": "Passwords",
-        "2-Factor Authentication": "2-Factor Authentication"
+        "2-Factor Authentication": "2-Factor Authentication",
+        "Attachments": "Attachments"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."

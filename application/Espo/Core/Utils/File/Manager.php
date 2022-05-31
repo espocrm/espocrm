@@ -900,6 +900,20 @@ class Manager
     }
 
     /**
+     * Get a file size in bytes.
+     */
+    public function getSize(string $path): int
+    {
+        $size = filesize($path);
+
+        if ($size === false) {
+            throw new Error("Could not get file size for `{$path}`.");
+        }
+
+        return $size;
+    }
+
+    /**
      * Check whether a file or directory exists.
      */
     public function exists(string $path): bool

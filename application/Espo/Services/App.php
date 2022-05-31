@@ -362,12 +362,6 @@ class App
             $maxSize = $postMaxSize;
         }
 
-        $attachmentUploadMaxSize = $this->config->get('attachmentUploadMaxSize');
-
-        if ($attachmentUploadMaxSize && (!$maxSize || $attachmentUploadMaxSize < $maxSize)) {
-            $maxSize = $attachmentUploadMaxSize;
-        }
-
         return $maxSize;
     }
 

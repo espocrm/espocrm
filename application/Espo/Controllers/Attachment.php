@@ -103,6 +103,20 @@ class Attachment extends RecordBase
             ->setBody($fileData->stream);
     }
 
+    public function postActionChunk(Request $request, Response $response): void
+    {
+        $id = $request->getRouteParam('id');
+        $body = $request->getBodyContents();
+
+        if (!$id || !$body) {
+            throw new BadRequest();
+        }
+
+        $this->getAttachmentService()->uploadChunk($id, $body);
+
+        $response->writeBody('true');
+    }
+
     private function getAttachmentService(): Service
     {
         /** @var Service */

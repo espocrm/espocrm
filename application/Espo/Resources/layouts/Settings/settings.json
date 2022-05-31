@@ -40,5 +40,11 @@
             [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],
             [{"name": "busyRangesEntityList"}, {"name": "historyEntityList"}]
         ]
+    },
+    {
+        "label": "Attachments",
+        "rows": [
+            [{"name": "attachmentUploadMaxSize"}, {"name": "attachmentUploadChunkSize"}]
+        ]
     }
 ]
