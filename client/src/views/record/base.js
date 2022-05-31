@@ -739,6 +739,10 @@ define(
                 });
             }
 
+            if (options.afterValidate) {
+                options.afterValidate();
+            }
+
             var optimisticConcurrencyControl = this.getMetadata()
                 .get(['entityDefs', this.entityType, 'optimisticConcurrencyControl']);
 

@@ -44,6 +44,8 @@ define('view-record-helper', [], function () {
         this.hiddenPanels = {};
 
         this.fieldOptionListMap = {};
+
+        _.extend(this, Backbone.Events);
     };
 
     _.extend(ViewRecordHelper.prototype, {

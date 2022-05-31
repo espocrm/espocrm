@@ -70,6 +70,8 @@ define('views/fields/base', 'view', function (Dep) {
 
         validateCallback: null,
 
+        recordHelper: null,
+
         isRequired: function () {
             return this.params.required;
         },
@@ -296,6 +298,8 @@ define('views/fields/base', 'view', function (Dep) {
             this.validateCallback = this.options.validateCallback;
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
+
+            this.recordHelper = this.options.recordHelper;
 
             this.getFieldManager().getParamList(this.type).forEach(function (d) {
                 var name = d.name;
@@ -618,6 +622,12 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEditSave: function () {
+            if (this.recordHelper) {
+                this.recordHelper.trigger('inline-edit-save', this.name);
+
+                return;
+            }
+
             var data = this.fetch();
 
             var model = this.model;

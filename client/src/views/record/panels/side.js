@@ -171,7 +171,7 @@ define('views/record/panels/side', 'view', function (Dep) {
             }
             else {
                 if (readOnly !== null) {
-                    o.readOnly = readOnly
+                    o.readOnly = readOnly;
                 }
 
                 if (readOnly) {
@@ -213,6 +213,8 @@ define('views/record/panels/side', 'view', function (Dep) {
             if (this.recordViewObject) {
                 o.validateCallback = () => this.recordViewObject.validateField(field);
             }
+
+            o.recordHelper = this.recordHelper;
 
             var viewKey = field + 'Field';
 

@@ -1116,6 +1116,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
+            this._initInlineEditSave();
+
             var collection = this.collection = this.model.collection;
 
             if (collection) {
@@ -1297,6 +1299,26 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
+        },
+
+        _initInlineEditSave: function () {
+            this.listenTo(this.recordHelper, 'inline-edit-save', field => {
+                let view = this.getFieldView(field);
+
+                this.save({
+                    inline: true,
+                    afterValidate: () => view.inlineEditClose(true),
+                })
+                    .then(() => {
+                        view.trigger('after:inline-save');
+                        view.trigger('after:save');
+                    })
+                    .catch(reason => {
+                        if (reason === 'notModified') {
+                            view.inlineEditClose(true);
+                        }
+                    });
+            });
         },
 
         initInlideEditDynamicWithLogicInteroperability: function () {
@@ -2178,6 +2200,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                         }
 
                         o.validateCallback = () => this.validateField(name);
+
+                        o.recordHelper = this.recordHelper;
 
                         if (cellDefs.options) {
                             for (let optionName in cellDefs.options) {
