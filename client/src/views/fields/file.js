@@ -586,56 +586,64 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             return new Promise(resolve => resolve(file));
         },
 
-        addAttachmentBox: function (name, type, id) {
-            this.$attachment.empty();
-
-            var removeLink = '<a href="javascript:" class="remove-attachment pull-right">' +
-                '<span class="fas fa-times"></span></a>';
-
-            var preview = name;
+        getBoxPreviewHtml: function (name, type, id) {
+            let preview = name;
 
             if (this.showPreview && id) {
                 preview = this.getEditPreview(name, type, id);
-            }
-            else {
+            } else {
                 preview = Handlebars.Utils.escapeExpression(preview);
             }
 
             if (preview === name && id) {
                 preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
-                    preview + '</a>';
+                    name + '</a>';
             }
 
-            var $att = $('<div>')
+            return preview;
+        },
+
+        addAttachmentBox: function (name, type, id) {
+            this.$attachment.empty();
+
+            let removeLink = '<a href="javascript:" class="remove-attachment pull-right">' +
+                '<span class="fas fa-times"></span></a>';
+
+            let previewHtml = this.getBoxPreviewHtml(name, type, id);
+
+            let $att = $('<div>')
                 .append(removeLink)
                 .append(
-                    $('<span class="preview">' + preview + '</span>')
+                    $('<span class="preview">' + previewHtml + '</span>')
                         .addClass('gray-box')
                 );
 
-            var $container = $('<div>').append($att);
+            let $container = $('<div>').append($att);
 
             this.$attachment.append($container);
 
-            if (!id) {
-                let $loading = $('<span class="small uploading-message">' +
-                    this.translate('Uploading...') + '</span>');
-
-                $container.append($loading);
-
-                $att.on('ready', () => {
-                    $loading.html(this.translate('Ready'));
-
-                    if (preview === name) {
-                        let id = this.model.get(this.idName);
-
-                        preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' +
-                            id + '" target="_BLANK">' + name + '</a>';
-
-                        $att.find('.preview').html(preview);
-                    }
-                });
+            if (id) {
+                return $att;
             }
+
+            let $loading = $('<span class="small uploading-message">' +
+                this.translate('Uploading...') + '</span>');
+
+            $container.append($loading);
+
+            $att.on('ready', () => {
+                let id = this.model.get(this.idName);
+
+                let previewHtml = this.getBoxPreviewHtml(name, type, id);
+
+                $att.find('.preview').html(previewHtml);
+
+                $loading.html(this.translate('Ready'));
+
+                if ($att.find('.preview').children().get(0).tagName === 'IMG') {
+                    $loading.remove();
+                }
+            });
 
             return $att;
         },

@@ -348,15 +348,8 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
             return html;
         },
 
-        addAttachmentBox: function (name, type, id) {
-            id = Handlebars.Utils.escapeExpression(id);
-
-            var $attachments = this.$attachments;
-
-            var removeLink = '<a href="javascript:" class="remove-attachment pull-right">'+
-                '<span class="fas fa-times"></span></a>';
-
-            var preview = name;
+        getBoxPreviewHtml: function (name, type, id) {
+            let preview = name;
 
             if (this.showPreviews && id) {
                 preview = this.getEditPreview(name, type, id);
@@ -366,42 +359,57 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
 
             if (preview === name && id) {
                 preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
-                    preview + '</a>';
+                    name + '</a>';
             }
 
-            var $att = $('<div>')
+            return preview;
+        },
+
+        addAttachmentBox: function (name, type, id) {
+            id = Handlebars.Utils.escapeExpression(id);
+
+            let $attachments = this.$attachments;
+
+            let removeLink = '<a href="javascript:" class="remove-attachment pull-right">'+
+                '<span class="fas fa-times"></span></a>';
+
+            let previewHtml = this.getBoxPreviewHtml(name, type, id);
+
+            let $att = $('<div>')
                 .addClass('gray-box')
                 .append(removeLink)
                 .append(
-                    $('<span class="preview">' + preview + '</span>')
+                    $('<span class="preview">' + previewHtml + '</span>')
                 );
 
-            var $container = $('<div>').append($att);
+            let $container = $('<div>').append($att);
 
             $attachments.append($container);
 
-            if (!id) {
-                var $loading = $('<span class="small uploading-message">' +
-                    this.translate('Uploading...') + '</span>');
-
-                $container.append($loading);
-
-                $att.on('ready', () => {
-                    $loading.html(this.translate('Ready'));
-
-                    if (preview === name) {
-                        let id = $att.attr('data-id');
-
-                        preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' +
-                            id + '" target="_BLANK">' + name + '</a>';
-
-                        $att.find('.preview').html(preview);
-                    }
-                });
-            }
-            else {
+            if (id) {
                 $att.attr('data-id', id);
+
+                return $att;
             }
+
+            let $loading = $('<span class="small uploading-message">' +
+                this.translate('Uploading...') + '</span>');
+
+            $container.append($loading);
+
+            $att.on('ready', () => {
+                $loading.html(this.translate('Ready'));
+
+                let id = $att.attr('data-id');
+
+                let previewHtml = this.getBoxPreviewHtml(name, type, id);
+
+                $att.find('.preview').html(previewHtml);
+
+                if ($att.find('.preview').children().get(0).tagName === 'IMG') {
+                    $loading.remove();
+                }
+            });
 
             return $att;
         },
