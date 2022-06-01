@@ -784,8 +784,8 @@ define(
 
                         resolve();
                     })
-                    .catch((xhr) => {
-                        this.handleSaveError(xhr);
+                    .catch(xhr => {
+                        this.handleSaveError(xhr, options);
 
                         this.afterSaveError();
 
@@ -801,7 +801,7 @@ define(
             });
         },
 
-        handleSaveError: function (xhr) {
+        handleSaveError: function (xhr, options) {
             var response = null;
 
             if (~[409, 500].indexOf(xhr.status)) {
@@ -848,7 +848,7 @@ define(
                 require(handlerName, (Handler) => {
                     var handler = new Handler(this);
 
-                    handler.process(response.data);
+                    handler.process(response.data, options);
                 });
 
                 xhr.errorIsHandled = true;
@@ -861,7 +861,7 @@ define(
             if (methodName in this) {
                 xhr.errorIsHandled = true;
 
-                this[methodName](response.data);
+                this[methodName](response.data, options);
             }
         },
 

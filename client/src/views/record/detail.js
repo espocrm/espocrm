@@ -169,7 +169,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var modeBeforeSave = this.mode;
 
             this.save(data.options)
-                .catch((reason) => {
+                .catch(reason => {
                     if (modeBeforeSave === 'edit' && reason === 'error') {
                         this.setEditMode();
                     }
@@ -1303,23 +1303,41 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         _initInlineEditSave: function () {
             this.listenTo(this.recordHelper, 'inline-edit-save', field => {
-                let view = this.getFieldView(field);
-
-                this.save({
-                    inline: true,
-                    field: field,
-                    afterValidate: () => view.inlineEditClose(true),
-                })
-                    .then(() => {
-                        view.trigger('after:inline-save');
-                        view.trigger('after:save');
-                    })
-                    .catch(reason => {
-                        if (reason === 'notModified') {
-                            view.inlineEditClose(true);
-                        }
-                    });
+                this.inlineEditSave(field);
             });
+        },
+
+        inlineEditSave: function (field, options) {
+            let view = this.getFieldView(field);
+
+            if (!view) {
+                throw new Error(`No field '${field}'.`);
+            }
+
+            options = _.extend({
+                inline: true,
+                field: field,
+                afterValidate: () => view.inlineEditClose(true),
+            }, options || {});
+
+            this.save(options)
+                .then(() => {
+                    view.trigger('after:inline-save');
+                    view.trigger('after:save');
+                })
+                .catch(reason => {
+                    if (reason === 'notModified') {
+                        view.inlineEditClose(true);
+
+                        return;
+                    }
+
+                    if (reason === 'error') {
+                        view.inlineEdit();
+
+                        return;
+                    }
+                });
         },
 
         initInlideEditDynamicWithLogicInteroperability: function () {
@@ -1729,7 +1747,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             });
         },
 
-        errorHandlerModified: function (data) {
+        errorHandlerModified: function (data, options) {
             Espo.Ui.notify(false);
 
             var versionNumber = data.versionNumber;
@@ -1747,10 +1765,18 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             });
 
             if (diffAttributeList.length === 0) {
-                this.model.set('versionNumber', versionNumber, {silent: true});
-                this.attributes.versionNumber = versionNumber;
+                setTimeout(() => {
+                    this.model.set('versionNumber', versionNumber, {silent: true});
+                    this.attributes.versionNumber = versionNumber;
 
-                this.actionSave();
+                    if (options.inline && options.field) {
+                        this.inlineEditSave(options.field);
+
+                        return;
+                    }
+
+                    this.actionSave();
+                }, 5);
 
                 return;
             }
