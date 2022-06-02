@@ -722,8 +722,10 @@ define('views/fields/base', 'view', function (Dep) {
             this._isInlineEditMode = value;
         },
 
-        inlineEditClose: function (dontReset) {
-            this.trigger('inline-edit-off');
+        inlineEditClose: function (noReset) {
+            this.trigger('inline-edit-off', {
+                noReset: noReset,
+            });
 
             this._isInlineEditMode = false;
 
@@ -737,13 +739,15 @@ define('views/fields/base', 'view', function (Dep) {
                 this.removeInlineEditLinks();
             });
 
-            if (!dontReset) {
+            if (!noReset) {
                 this.model.set(this.initialAttributes);
             }
 
             this.reRender(true);
 
-            this.trigger('after:inline-edit-off');
+            this.trigger('after:inline-edit-off', {
+                noReset: noReset,
+            });
         },
 
         inlineEdit: function () {

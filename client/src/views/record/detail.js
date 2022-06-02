@@ -717,8 +717,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     this.setIsNotChanged();
                 });
 
-                this.listenTo(fieldView, 'after:inline-edit-off', () => {
-                    if (this.updatedAttributes) {
+                this.listenTo(fieldView, 'after:inline-edit-off', o => {
+                    if (this.updatedAttributes && !o.noReset) {
                         this.resetModelChanges();
                     }
                 });
@@ -1717,6 +1717,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             Espo.Ui.warning(msg, 'warning');
 
             this.enableButtons();
+            this.setIsNotChanged();
         },
 
         afterNotValid: function () {
