@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Utils\Json;
+use Espo\Core\Exceptions\Error;
+
 use Psr\Http\Message\{
     ServerRequestInterface as Psr7Request,
     UriInterface,
@@ -187,7 +190,9 @@ class RequestWrapper implements ApiRequest
             $this->initParsedBody();
         }
 
-        assert($this->parsedBody !== null);
+        if ($this->parsedBody === null) {
+            throw new Error();
+        }
 
         return Util::cloneObject($this->parsedBody);
     }
@@ -197,7 +202,7 @@ class RequestWrapper implements ApiRequest
         $contents = $this->getBodyContents();
 
         if ($this->getContentType() === 'application/json' && $contents) {
-            $this->parsedBody = json_decode($contents);
+            $this->parsedBody = Json::decode($contents);
 
             if (is_array($this->parsedBody)) {
                 $this->parsedBody = (object) [
