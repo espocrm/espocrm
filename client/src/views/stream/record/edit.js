@@ -181,11 +181,11 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 if (this.postingMode) {
                     this.setConfirmLeaveOut(true);
                 }
-            }, this);
+            });
         },
 
         disablePostingMode: function () {
@@ -206,33 +206,33 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
             if (!this.postingMode) {
                 $('body').off('click.stream-create-post');
 
-                $('body').on('click.stream-create-post', function (e) {
+                $('body').on('click.stream-create-post', (e) => {
                     if (
                         $.contains(window.document.body, e.target) &&
                         !$.contains(this.$el.get(0), e.target) &&
                         !$(e.target).closest('.modal-dialog').length
                     ) {
-                        if (this.getFieldView('post') && this.getFieldView('post').$element.val() == '') {
+                        if (this.getFieldView('post') && this.getFieldView('post').$element.val() === '') {
                             if (!(this.model.get('attachmentsIds') || []).length) {
                                 this.disablePostingMode();
                             }
                         }
                     }
-                }.bind(this));
+                });
             }
 
             this.postingMode = true;
         },
 
         afterRender: function () {
-            this.$post = this.$el.find('button.post');
+            this.$postButton = this.$el.find('button.post');
 
             var postView = this.getFieldView('post');
 
             if (postView) {
                 this.stopListening(postView, 'add-files');
 
-                this.listenTo(postView, 'add-files', function (files) {
+                this.listenTo(postView, 'add-files', (files) => {
                     this.enablePostingMode();
 
                     var attachmentsView = this.getFieldView('attachments');
@@ -242,7 +242,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                     }
 
                     attachmentsView.uploadFiles(files);
-                }, this);
+                });
             }
         },
 
@@ -260,14 +260,17 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.save();
         },
 
+        beforeBeforeSave: function () {
+            this.disablePostButton();
+        },
+
         beforeSave: function () {
             Espo.Ui.notify(this.translate('posting', 'messages'));
-
-            this.$post.addClass('disabled');
         },
 
         afterSave: function () {
             Espo.Ui.success(this.translate('Posted'));
+
             if (this.options.interactiveMode) {
                 this.model.clear();
                 this.model.set('targetType', 'self');
@@ -275,14 +278,26 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
                 this.disablePostingMode();
 
-                this.$post.removeClass('disabled');
+                this.enablePostButton();
 
                 this.getFieldView('post').$element.prop('rows', 1);
             }
         },
 
         afterNotValid: function () {
-            this.$post.removeClass('disabled');
+            this.enablePostButton();
+        },
+
+        disablePostButton: function () {
+            this.trigger('disable-post-button');
+
+            this.$postButton.addClass('disable').attr('disabled', 'disabled');
+        },
+
+        enablePostButton: function () {
+            this.trigger('enable-post-button');
+
+            this.$postButton.removeClass('disable').removeAttr('disabled');
         },
 
     });
