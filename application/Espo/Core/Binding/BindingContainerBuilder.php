@@ -109,7 +109,7 @@ class BindingContainerBuilder
     }
 
     /**
-     * Creates a contextual binder.
+     * Creates a contextual binder and pass it as an argument of a callback.
      *
      * @param string $className A context.
      * @param Closure(ContextualBinder): void $callback A callback with a `ContextualBinder` argument.

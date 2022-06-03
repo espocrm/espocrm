@@ -179,6 +179,22 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testHasContextTrue0()
+    {
+        $this->binder
+            ->inContext('Espo\\Context', function (ContextualBinder $binder): void {
+                $binder->bindService('Espo\\Test', 'test');
+            });
+
+        $class = $this->createClassMock('Espo\\Context');
+
+        $param = $this->createParamMock('test', 'Espo\\Test');
+
+        $this->assertTrue(
+            $this->createContainer()->has($class, $param)
+        );
+    }
+
     public function testHasContextTrue1()
     {
         $this->binder

@@ -30,10 +30,11 @@
 namespace Espo\Core\Binding;
 
 use LogicException;
+use Closure;
 
 class Binder
 {
-    private $data;
+    private BindingData $data;
 
     public function __construct(BindingData $data)
     {
@@ -126,6 +127,21 @@ class Binder
             $key,
             Binding::createFromFactoryClassName($factoryClassName)
         );
+
+        return $this;
+    }
+
+    /**
+     * Creates a contextual binder and pass it as an argument of a callback.
+     *
+     * @param string $className A context.
+     * @param Closure(ContextualBinder): void $callback A callback with a `ContextualBinder` argument.
+     */
+    public function inContext(string $className, Closure $callback): self
+    {
+        $contextualBinder = new ContextualBinder($this->data, $className);
+
+        $callback($contextualBinder);
 
         return $this;
     }
