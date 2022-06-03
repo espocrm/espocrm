@@ -106,7 +106,7 @@ var Espo = Espo || {classMap: {}};
                 return'client/modules/' + modulePart + '/src/' + namePart + '.js';
             }
 
-            return 'client/custom/modules/' + modulePart + '/src/' + namePart + '.js';
+            return 'client/modules/' + modulePart + '/src/' + namePart + '.js';
         },
 
         _execute: function (script) {

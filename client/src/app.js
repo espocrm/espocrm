@@ -592,7 +592,7 @@ define(
                     return 'client/modules/' + mod + '/' + getResourceInnerPath(type, path);
                 }
 
-                return 'client/custom/modules/' + mod + '/' + getResourceInnerPath(type, path);
+                return 'client/modules/' + mod + '/' + getResourceInnerPath(type, path);
             };
 
             this.viewFactory = new Bull.Factory({
