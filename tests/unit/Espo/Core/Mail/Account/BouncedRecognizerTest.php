@@ -93,4 +93,14 @@ class BouncedRecognizerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($this->bouncedRecognizer->isBounced($message));
     }
+
+    public function testBounced3(): void
+    {
+        $contents = file_get_contents('tests/unit/testData/Core/Mail/bounced_3.eml');
+
+        $message = $this->createMessage($contents);
+
+        $this->assertTrue($this->bouncedRecognizer->isBounced($message));
+        $this->assertFalse($this->bouncedRecognizer->isHard($message));
+    }
 }
