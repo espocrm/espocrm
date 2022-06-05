@@ -101,6 +101,7 @@ class BouncedRecognizerTest extends \PHPUnit\Framework\TestCase
         $message = $this->createMessage($contents);
 
         $this->assertTrue($this->bouncedRecognizer->isBounced($message));
-        $this->assertFalse($this->bouncedRecognizer->isHard($message));
+        $this->assertTrue($this->bouncedRecognizer->isHard($message));
+        $this->assertEquals('5.4.1', $this->bouncedRecognizer->extractStatus($message));
     }
 }

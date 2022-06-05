@@ -34,6 +34,15 @@ use Espo\Core\Mail\Message\Part;
 
 class BouncedRecognizer
 {
+    /** @var string[] */
+    private array $hardBounceCodeList = [
+        '5.0.0',
+        '5.1.1', // bad destination mailbox address
+        '5.1.2', // bad destination system address
+        '5.1.6', // destination mailbox has moved, no forwarding address
+        '5.4.1', // no answer from host
+    ];
+
     public function isBounced(Message $message): bool
     {
         $from = $message->getHeader('From');
@@ -72,7 +81,36 @@ class BouncedRecognizer
             return true;
         }
 
+        $m = null;
+
+        $has5xxStatus = preg_match('/Status: (5\.[0-9]\.[0-9])/', $content, $m);
+
+        if ($has5xxStatus) {
+            $status = $m[1] ?? null;
+
+            if (in_array($status, $this->hardBounceCodeList)) {
+                return true;
+            }
+        }
+
         return false;
+    }
+
+    public function extractStatus(Message $message): ?string
+    {
+        $content = $message->getRawContent();
+
+        $m = null;
+
+        $hasStatus = preg_match('/Status: ([0-9]\.[0-9]\.[0-9])/', $content, $m);
+
+        if ($hasStatus) {
+            $status = $m[1] ?? null;
+
+            return $status;
+        }
+
+        return null;
     }
 
     public function extractQueueItemId(Message $message): ?string
