@@ -1616,6 +1616,12 @@ define(
                     return;
                 }
 
+                if (options.noRebuild) {
+                    this.noRebuild = null;
+
+                    return;
+                }
+
                 this.checkedList = [];
 
                 this.allResultIsChecked = false;
@@ -2225,6 +2231,7 @@ define(
                 }
             });
 
+            // If using promise callback, then need to pass `noRebuild: true`.
             collection.fetch({
                 success: success,
                 remove: false,
