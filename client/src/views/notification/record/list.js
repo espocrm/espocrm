@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/record/list', 'views/record/list-expanded', function (Dep) {
+define('views/notification/record/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
 
@@ -36,37 +36,41 @@ Espo.define('views/notification/record/list', 'views/record/list-expanded', func
 
             var $list = this.$el.find(this.listContainerEl);
 
-            var success = function () {
+            var success = () => {
                 if (initialCount === 0) {
                     this.reRender();
+                    
                     return;
                 }
+
                 var rowCount = collection.length - initialCount;
                 var rowsReady = 0;
+
                 for (var i = rowCount - 1; i >= 0; i--) {
                     var model = collection.at(i);
 
-                    this.buildRow(i, model, function (view) {
-                        view.getHtml(function (html) {
+                    this.buildRow(i, model, view => {
+                        view.getHtml(html => {
                             var $row = $(this.getRowContainerHtml(model.id));
+
                             $row.append(html);
                             $list.prepend($row);
                             rowsReady++;
                             view._afterRender();
+
                             if (view.options.el) {
                                 view.setElement(view.options.el);
                             }
-                        }.bind(this));
+                        });
                     });
                 }
+
                 this.noRebuild = true;
-            }.bind(this);
+            };
 
             collection.fetchNew({
                 success: success,
             });
-        }
-
+        },
     });
-
 });

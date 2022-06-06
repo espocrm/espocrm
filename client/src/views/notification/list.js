@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/list', 'view', function (Dep) {
+define('views/notification/list', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -37,10 +37,10 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                 $.ajax({
                     url: 'Notification/action/markAllRead',
                     type: 'POST'
-                }).done(function (count) {
+                }).then((count) => {
                     this.trigger('all-read');
                     this.$el.find('.badge-circle-warning').remove();
-                }.bind(this));
+                });
             },
             'click [data-action="refresh"]': function () {
                 this.getView('list').showNewRecords();
@@ -49,16 +49,20 @@ Espo.define('views/notification/list', 'view', function (Dep) {
 
         setup: function () {
             this.wait(true);
-            this.getCollectionFactory().create('Notification', function (collection) {
+
+            this.getCollectionFactory().create('Notification', (collection) => {
                 this.collection = collection;
                 collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
+
                 this.wait(false);
-            }, this);
+            });
         },
 
         afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', function () {
-                var viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) || 'views/notification/record/list';
+            this.listenToOnce(this.collection, 'sync', () => {
+                var viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+                        'views/notification/record/list';
+
                 this.createView('list', viewName, {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
@@ -81,13 +85,13 @@ Espo.define('views/notification/list', 'view', function (Dep) {
                             width: '10px'
                         }
                     }
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
-            }, this);
+            });
+
             this.collection.fetch();
-        }
+        },
 
     });
-
 });
