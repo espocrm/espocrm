@@ -172,8 +172,9 @@ define(
                     view.setNotReadOnly();
 
                     if (this.mode === 'edit') {
-                        if (!view.readOnlyLocked && view.mode === 'detail') {
-                            view.setMode('edit');
+                        if (!view.readOnlyLocked && view.isDetailMode()) {
+                            view.setEditMode();
+
                             if (view.isRendered()) {
                                 view.reRender();
                             }
@@ -872,7 +873,7 @@ define(
             for (var i in fieldViews) {
                 var view = fieldViews[i];
 
-                if (view.mode === 'edit') {
+                if (view.isEditMode()) {
                     if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
                         _.extend(data, view.fetch());
                     }

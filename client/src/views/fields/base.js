@@ -153,7 +153,7 @@ define('views/fields/base', 'view', function (Dep) {
                     return;
                 }
 
-                this.setMode('detail');
+                this.setDetailMode();
 
                 if (this.isRendered()) {
                     this.reRender();
@@ -248,9 +248,16 @@ define('views/fields/base', 'view', function (Dep) {
             return this.mode === 'search';
         },
 
+        setDetailMode: function () {
+            return this.setMode('detail');
+        },
+
+        setEditMode: function () {
+            return this.setMode('edit');
+        },
 
         setMode: function (mode) {
-            var modeIsChanged = this.mode !== mode;
+            var modeIsChanged = this.mode !== mode && this.mode;
 
             this.mode = mode;
 
@@ -723,9 +730,7 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         inlineEditClose: function (noReset) {
-            this.trigger('inline-edit-off', {
-                noReset: noReset,
-            });
+            this.trigger('inline-edit-off', {noReset: noReset});
 
             this._isInlineEditMode = false;
 
@@ -733,36 +738,30 @@ define('views/fields/base', 'view', function (Dep) {
                 return;
             }
 
-            this.setMode('detail');
-
-            this.once('after:render', () => {
-                this.removeInlineEditLinks();
-            });
+            this.setDetailMode();
 
             if (!noReset) {
                 this.model.set(this.initialAttributes);
             }
 
-            this.reRender(true);
+            this.reRender(true)
+                .then(() => this.removeInlineEditLinks());
 
-            this.trigger('after:inline-edit-off', {
-                noReset: noReset,
-            });
+            this.trigger('after:inline-edit-off', {noReset: noReset});
         },
 
         inlineEdit: function () {
             this.trigger('edit', this);
-            this.setMode('edit');
+
+            this.setEditMode();
 
             this.initialAttributes = this.model.getClonedAttributes();
 
-            this.once('after:render', () => {
-                this.addInlineEditLinks();
-            });
-
             this._isInlineEditMode = true;
 
-            this.reRender(true);
+            this.reRender(true)
+                .then(() => this.addInlineEditLinks());
+
             this.trigger('inline-edit-on');
         },
 

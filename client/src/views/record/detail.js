@@ -846,7 +846,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             fieldView.setIsInlineEditMode(false);
                         }
 
-                        fieldView.setMode('edit');
+                        fieldView.setEditMode();
 
                         promiseList.push(
                             fieldView.render()
@@ -878,14 +878,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 for (var field in fields) {
                     var fieldView = fields[field];
 
-                    if (fieldView.mode !== 'detail') {
-                        if (fieldView.mode === 'edit') {
+                    if (!fieldView.isDetailMode()) {
+                        if (fieldView.isEditMode()) {
                             fieldView.trigger('inline-edit-off', {
                                 all: true,
                             });
                         }
 
-                        fieldView.setMode('detail');
+                        fieldView.setDetailMode();
 
                         promiseList.push(
                             fieldView.render()
