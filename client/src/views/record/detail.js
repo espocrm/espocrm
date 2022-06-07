@@ -1893,7 +1893,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 if (!this.readOnlyLocked) {
                     if (this.readOnly && second) {
-                        this.setNotReadOnly(true);
+                        if (this.isReady) {
+                            this.setNotReadOnly(true);
+                        }
+                        else {
+                            this.on('ready', () => this.setNotReadOnly(true));
+                        }
                     }
 
                     this.readOnly = false;

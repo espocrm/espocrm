@@ -52,18 +52,21 @@ define('views/stream/modals/create-post', 'views/modal', function (Dep) {
 
             this.wait(true);
 
-            this.getModelFactory().create('Note', function (model) {
+            this.getModelFactory().create('Note', (model) => {
                 this.createView('record', 'views/stream/record/edit', {
                     model: model,
                     el: this.options.el + ' .record',
-                }, function (view) {
-                    this.listenTo(view, 'after:save', function () {
+                }, (view) => {
+                    this.listenTo(view, 'after:save', () => {
                         this.trigger('after:save');
-                    }, this);
-                }, this);
+                    });
+
+                    this.listenTo(view, 'disable-post-button', () => this.disableButton('post'));
+                    this.listenTo(view, 'enable-post-button', () => this.enableButton('post'));
+                });
 
                 this.wait(false);
-            }, this);
+            });
         },
 
         actionPost: function () {

@@ -39,7 +39,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
         },
 
         afterRender: function () {
-            this.getCollectionFactory().create('Note', function (collection) {
+            this.getCollectionFactory().create('Note', (collection) => {
                 this.collection = collection;
 
                 collection.url = 'Stream';
@@ -49,20 +49,19 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
                     collection.data.skipOwn = true;
                 }
 
-                this.listenToOnce(collection, 'sync', function () {
+                this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/stream/record/list', {
                         el: this.getSelector() + ' > .list-container',
                         collection: collection,
                         isUserStream: true,
                         noEdit: false,
-                    }, function (view) {
+                    }, (view) => {
                         view.render();
                     });
-                }.bind(this));
+                });
 
                 collection.fetch();
-
-            }, this);
+            });
         },
 
         setupActionList: function () {
@@ -83,14 +82,15 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
         },
 
         actionCreate: function () {
-            this.createView('dialog', 'views/stream/modals/create-post', {}, function (view) {
+            this.createView('dialog', 'views/stream/modals/create-post', {}, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', function () {
+                this.listenToOnce(view, 'after:save', () => {
                     view.close();
+
                     this.actionRefresh();
-                }, this);
-            }, this)
+                });
+            });
         },
 
         actionViewList: function () {

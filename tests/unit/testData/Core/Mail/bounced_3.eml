@@ -1,0 +1,154 @@
+Delivered-To: sender@test.com
+Received: by 2002:a19:6744:0:0:0:0:0 with SMTP id e4csp3204114lfj;
+        Sat, 4 Jun 2022 10:36:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzf3v1KzitiqMiTsWR4SafNSt+al3w8WzhfNPmKPzXTPD3/+/7EohOWE8Jb7Gt3mVRa1IHT
+X-Received: by 2002:a81:2008:0:b0:2f8:3968:e70a with SMTP id g8-20020a812008000000b002f83968e70amr17803229ywg.321.1654364179333;
+        Sat, 04 Jun 2022 10:36:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1654364179; cv=none;
+        d=google.com; s=arc-20160816;
+        b=SBqKk7I6+ZCnMO5O89hsg8qEb97WyzZqcwwF4FQlr+4Yp5TzzzTrD2xHXbg/ZKDWdQ
+         voyAVm1mcIBXzDcpHJnPJiYV41cQEarjQimT0xNJbPwnC4o5w2qgciABM0qb5yVxmGGV
+         tXYN85McX04dxYF35wdLRCwILax/lPi3dQN5yH9/IrxFq8idqhq3JFNuZBl8iuyo2DCi
+         54ESr2kL66aLutyDKNb7xB4YlzFw6RPzFJ+0qDzijEtcH/YCsXtTZ1fob6cSPJ831wK8
+         vPFqF9p5/6q3inIbYf0eAQafsad9mSbYEmKkkLevQ9A3FSlH0MM04x4g005q1P9qZmte
+         zgrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=date:subject:to:from:message-id;
+        bh=v5l/AwBBOPrcBz8xiEDSmv65U9LJSD7iEm/7YNYPLcI=;
+        b=XQWA80tMtZqdIj12rFSwD7gKsTVRzRRhlii0VobazBeczj1aXC8DukTvDzQTetlPh0
+         yGgdfI0fyTcpN1VMeVCMEPLvXLHkKOAW5/g1i7WWxx/Lh4j2LE7IxcP9ccWHZV7t/Yi9
+         2XTn74p585oVxqULzNL60mYhv7Ysq+Hik7HCkgZnMfGUTSDagf9XKMM0FxHp3L3uzLPq
+         vYvdssfW3u9+B0WAgGSadZz+a/qEF8RdrkhpxeTWEVpOi+VITsq4lgRVhZUxT7l74XDx
+         ZJgRcjG/4vQegeXD9147LzFokWoTKw61REGTlr+6ARniEybIuvf16EwJbUtuzi3rtU6E
+         8Q4Q==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of postmaster@mail2.bemta31.messagelabs.com designates 67.219.000.000 as permitted sender) smtp.helo=mail2.bemta31.messagelabs.com
+Return-Path: <>
+Received: from mail2.bemta31.messagelabs.com (mail2.bemta31.messagelabs.com. [67.219.000.000])
+        by mx.google.com with ESMTPS id z69-20020a814c48000000b0030c1cfcc067si13622741ywa.550.2022.06.04.10.36.19
+        for <sender@test.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 Jun 2022 10:36:19 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of postmaster@mail2.bemta31.messagelabs.com designates 67.219.000.000 as permitted sender) client-ip=67.219.000.000;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of postmaster@mail2.bemta31.messagelabs.com designates 67.219.000.000 as permitted sender) smtp.helo=mail2.bemta31.messagelabs.com
+Message-ID: <629b9813.1c69fb81.b066d.1c7fSMTPIN_ADDED_MISSING@mx.google.com>
+X-Msg-Ref: server-6.tower-521.messagelabs.com!1654364176!27886!1
+X-Originating-IP: [85.158.142.144]
+X-StarScan-Received:
+X-StarScan-Version: 9.86.7; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 21263 invoked from network); 4 Jun 2022 17:36:17 -0000
+Received: from mail5.bemta37.messagelabs.com (HELO mail5.bemta37.messagelabs.com) (85.158.142.144)
+  by server-6.tower-521.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Jun 2022 17:36:17 -0000
+Return-Path: <>
+From: Mail Delivery System <MAILER-DAEMON@messagelabs.com>
+To: <sender@test.com>
+Subject: Mail Delivery Failure
+Date: Sat, 04 Jun 2022 17:36:15 +0000
+Content-Type: multipart/report; report-type=delivery-status;
+  boundary="dsn_001654364175_000510273818"
+
+--dsn_001654364175_000510273818
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+This is the mail delivery agent at Symantec Email Security.cloud.
+
+I was unable to deliver your message to the following addresses:
+
+receiver@test.com
+
+Reason: 550 5.4.1 Recipient address rejected: Access denied. AS(201806281) =
+[VE1EUR03FT020.eop-EUR03.prod.protection.outlook.com]
+
+The message subject was: Test bounced
+The message date was: Sat, 4 Jun 2022 20:36:01 +0300
+The message identifier was: 9A/6A-26664-E089B926
+The message reference was: server-22.tower-727.messagelabs.com!1654364173!1=
+21509!1
+
+Please do not reply to this email as it is sent from an unattended mailbox.
+Contact your email administrator if you need more information, or
+instructions for resolving this issue.
+
+--dsn_001654364175_000510273818
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; server-3.bemta.az-a.eu-north-1.aws.ess.symcld.net
+Arrival-Date: Sat, 04 Jun 2022 17:36:15 +0000
+
+Action: failed
+Final-Recipient: rfc822; receiver@test.com
+Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access denied. AS(201806281) [VE1EUR03FT020.eop-EUR03.prod.protection.outlook.com]
+Last-Attempt-Date: Sat, 04 Jun 2022 17:36:15 +0000
+Status: 5.4.1
+
+--dsn_001654364175_000510273818
+Content-Type: text/rfc822-headers
+
+Authentication-Results: mx.messagelabs.com; spf=pass
+  (server-22.tower-727.messagelabs.com: domain of gmail.com designates
+  209.85.208.172 as permitted sender) smtp.mailfrom=gmail.com; dkim=pass
+  (good signature) header.i=@gmail.com header.s=20210112; dmarc=pass
+  (p=none sp=quarantine adkim=r aspf=r) header.from=gmail.com
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRWlGSWpSXmKPExsVyMfTCGl3eGbO
+  TDHZ9MbJoOPKfyYHRo3HKbqYAxijWzLyk/IoE1oym0/kFVxkrjk3vZm1gPMrYxcjFISQwjVFi
+  +643zCAOi8AdFonzR6eAORICP1gkjt85BlTGCeRUSXxdcIUZwi6SmHrmBCNE0QpGid7u2ewgC
+  V4BQYmTM5+wgNhsAloSa2c/Z+ti5AAaqyLxvjERoiRA4l5rL9hMYQFRiQ2rmsBaRQTkJe6+/Q
+  rWyizgI/HwyUzWCYy8s5BMnYUkBWFrSrRu/80OYWtILLizj3EBI8sqRpukosz0jJLcxMwcXUM
+  DA11DQ1NdSzNdQ0tjvcQq3US91FLdvPyikgxdQ73E8mK91OJiveLK3OScFL281JJNjMDATClO
+  OLiDccW+X3qHGCU5mJREed9PnZUkxJeUn1KZkVicEV9UmpNafIhRhoNDSYJ3/bTZSUKCRanpq
+  RVpmTnAKIFJS3DwKInwcrQCpXmLCxJzizPTIVKnGF051rfs38vM8e7LeSC58vAVILkbTN7+DS
+  SFWPLy81KlxHltQWYLgDRnlObBjYZF+CVGWSlhXkYGBgYhnoLUotzMElT5V4ziHIxKwrxN04G
+  m8GTmlcBd8AroOCag40pezwA5riQRISXVwLSg7PomwVaPPIPVRpr/vX9q/ZVhFS/I0m/3/Dnz
+  EP++WSfTvWcdjkj4aXDlpObGz/u+vJn32v/B0RcBDz2/rjzDfKH4oIRGmXvdDc6/01mOXT8eo
+  V6XYXmQx0nxluL5+JoLk6ef3X5R7nNT1pd1bNIBR9b4/Oqfdr3N6gunuVjpTpGpHl5rO+tjnB
+  fpxeTf5pY+s0K79Zh9UOts9VsNFzijV53ur7wwc3un3lnTd/MnHNNc1WJ0+P3ZhU4bg1O2hHx
+  9d22/lZnex5X8C6ouLViv+86xb+lGPW037c+icXPsqs47fVeS7lhx3kb3lcLB3ceL055+71yp
+  Y64Q9fEB95Hl//w0CsMUFYTNRZ9EHJutxFKckWioxVxUnAgAfBfZtWsDAAA=
+X-Env-Sender: sender@test.com
+X-Msg-Ref: server-22.tower-727.messagelabs.com!1654364173!121509!1
+X-Originating-IP: [209.85.208.172]
+X-StarScan-Received:
+X-StarScan-Version: 9.86.7; banners=-,-,-
+Received: (qmail 9118 invoked from network); 4 Jun 2022 17:36:13 -0000
+Received: from mail-lj1-f172.google.com (HELO mail-lj1-f172.google.com) (209.85.208.172)
+  by server-22.tower-727.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Jun 2022 17:36:13 -0000
+Received: by mail-lj1-f172.google.com with SMTP id t13so11631540ljd.6
+        for <receiver@test.com>; Sat, 04 Jun 2022 10:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=xFh/FA5+5DNZ2/JLOLU7mMMt1uI12BZ7phvcaV8eILo=;
+        b=d9qgKypHOWzUt75eGsZQFQJw9g76hEEW3wxHwUfo8duK9UBfXGLZidKbh+nlc9S/dJ
+         2vkpdQMNGv/Relnc97pfG0Kot7haq81K6zv8vDy5axBLVpAcnTIxqapxxYU7Fv4LfBwt
+         FCDd+KwMpo/cPUMNhyHTcZTC9Vgy9CYeaLSWPuklrZFY067MFY4+h1lCqAenii79fgds
+         jdJO4gxtmxqiylkZ5Zg47vRGC/QBcujfM+yqlnmceFcl/zk7VjUwy0cWL8RJyY3/SsMu
+         uCUfVcJW9g479x0xGlsDo5R+Hki//3/tuntiGrX0dZ/ZYoO82V0MXI6wyciCTPlnTBZe
+         LALg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=xFh/FA5+5DNZ2/JLOLU7mMMt1uI12BZ7phvcaV8eILo=;
+        b=TgsBJOHXrUhjG4M2YBQM8eq1DUenJXHfsvPa3kv0gmz4uXm4WW+nJBI6a/AwYAcQLU
+         KDMu2frSMo6NWOuwliF9fFOhvmXoSsa0t/+Egf6JjdyWf4E/43FuXUDmTFAc64QOjNn4
+         2JKKZTvtZIb2mr2KlV8aIo2a3zGoOTHkr9+wam6VLrYA8ZEq9/iWepb5bZCDhL87Ejok
+         c/ZXS94CA61bs3fNC2+0BH0Ip+2NoT7gCmPa4BD1UcLFEeRNXMIPXvU7d9q9+7/a0av1
+         PxaeXBZAmOzBi8jnk0MWqvgKXGb15iXMxIzJ26kLh1pr5qvnjDnn4lDekLQ3nBOhTnTW
+         JFYw==
+X-Gm-Message-State: AOAM530iYJA0d0Tz8dZX0NsFF+7q99Wa030oXlAWhBcG+1aXSEUFzIz3
+	1n67maV///D1r2j+jce8tVk4kduRkdorqTrv6FJdMGzi
+X-Google-Smtp-Source: ABdhPJxKO7OXGi0lFlyBHW1Dp/vUKk6Je8jHhcrK4jHsQiUCGDG0xW1l0zR987O4jGj6v7OuFooO9NrmgtZZAz9OnVs=
+X-Received: by 2002:a2e:8752:0:b0:255:6df7:7ad5 with SMTP id
+ q18-20020a2e8752000000b002556df77ad5mr10128289ljj.73.1654364172861; Sat, 04
+ Jun 2022 10:36:12 -0700 (PDT)
+MIME-Version: 1.0
+From: Sender <sender@test.com>
+Date: Sat, 4 Jun 2022 20:36:01 +0300
+Message-ID: <CAKouvC4fBcE7qfvhEq0-qOtsD45mWckUfhtr7KHhobwwvy0thA@mail.gmail.com>
+Subject: Test bounced
+To: receiver@test.com
+Content-Type: multipart/alternative; boundary="000000000000da472305e0a2ac8e"
+
+--dsn_001654364175_000510273818--

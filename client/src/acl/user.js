@@ -37,7 +37,7 @@ define('acl/user', 'acl', function (Dep) {
                 }
             }
 
-            return Dep.prototype.checkModelRead.call(this, model, data, precise);
+            return this.checkModel(model, data, 'read', precise);
         },
 
         checkIsOwner: function (model) {

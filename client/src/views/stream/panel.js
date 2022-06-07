@@ -93,7 +93,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         controlPreviewButton: function () {
             this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
 
-            if (this.$textarea.val() == '') {
+            if (this.$textarea.val() === '') {
                 this.$previewButton.addClass('hidden');
             } else {
                 this.$previewButton.removeClass('hidden');
@@ -570,13 +570,15 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
         },
 
         post: function () {
-            var message = this.$textarea.val();
+            let message = this.$textarea.val();
 
+            this.disablePostButton();
             this.$textarea.prop('disabled', true);
 
-            this.getModelFactory().create('Note', (model) => {
+            this.getModelFactory().create('Note', model => {
                 if (this.getView('attachments').validateReady()) {
                     this.$textarea.prop('disabled', false);
+                    this.enablePostButton();
 
                     return;
                 }
@@ -584,26 +586,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
+                    this.enablePostButton();
 
                     return;
                 }
-
-                this.listenToOnce(model, 'sync', () => {
-                    this.notify('Posted', 'success');
-                    this.collection.fetchNew();
-
-                    this.$textarea.prop('disabled', false);
-                    this.disablePostingMode();
-                    this.afterPost();
-
-                    if (this.getPreferences().get('followEntityOnStreamPost')) {
-                        this.model.set('isFollowed', true);
-                    }
-
-                    this.getSessionStorage().clear(this.storageTextKey);
-                    this.getSessionStorage().clear(this.storageAttachmentsKey);
-                    this.getSessionStorage().clear(this.storageIsInernalKey);
-                });
 
                 model.set('post', message);
                 model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
@@ -614,11 +600,27 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
                 this.notify('Posting...');
 
-                model.save(null, {
-                    error: () => {
+                model.save(null)
+                    .then(() => {
+                        this.notify('Posted', 'success');
+                        this.collection.fetchNew();
+
                         this.$textarea.prop('disabled', false);
-                    }
-                });
+                        this.disablePostingMode();
+                        this.afterPost();
+
+                        if (this.getPreferences().get('followEntityOnStreamPost')) {
+                            this.model.set('isFollowed', true);
+                        }
+
+                        this.getSessionStorage().clear(this.storageTextKey);
+                        this.getSessionStorage().clear(this.storageAttachmentsKey);
+                        this.getSessionStorage().clear(this.storageIsInernalKey);
+                    })
+                    .catch(() => {
+                        this.$textarea.prop('disabled', false);
+                        this.enablePostButton();
+                    });
             });
         },
 
@@ -735,7 +737,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     return;
                 }
 
-                this.$postButton.addClass('disabled').attr('disabled', 'disabled');
+                this.disablePostButton();
 
                 return;
             }
@@ -744,8 +746,15 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 return;
             }
 
-            this.$postButton.removeClass('disabled').removeAttr('disabled');
+            this.enablePostButton();
         },
 
+        disablePostButton: function () {
+            this.$postButton.addClass('disabled').attr('disabled', 'disabled');
+        },
+
+        enablePostButton: function () {
+            this.$postButton.removeClass('disabled').removeAttr('disabled');
+        },
     });
 });

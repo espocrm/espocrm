@@ -26,47 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/record/list', 'views/record/list-expanded', function (Dep) {
+define('views/notification/record/list', 'views/record/list-expanded', function (Dep) {
 
     return Dep.extend({
 
-        showNewRecords: function () {
-            var collection = this.collection;
-            var initialCount = collection.length;
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-            var $list = this.$el.find(this.listContainerEl);
-
-            var success = function () {
-                if (initialCount === 0) {
-                    this.reRender();
+            this.listenTo(this.collection, 'sync', (c, r, options) => {
+                if (!options.fetchNew) {
                     return;
                 }
-                var rowCount = collection.length - initialCount;
-                var rowsReady = 0;
-                for (var i = rowCount - 1; i >= 0; i--) {
-                    var model = collection.at(i);
 
-                    this.buildRow(i, model, function (view) {
-                        view.getHtml(function (html) {
-                            var $row = $(this.getRowContainerHtml(model.id));
+                let lengthBeforeFetch = options.lengthBeforeFetch || 0;
+
+                if (lengthBeforeFetch === 0) {
+                    this.reRender();
+
+                    return;
+                }
+
+                let $list = this.$el.find(this.listContainerEl);
+
+                let rowCount = this.collection.length - lengthBeforeFetch;
+
+                for (let i = rowCount - 1; i >= 0; i--) {
+                    let model = this.collection.at(i);
+
+                    this.buildRow(i, model, view => {
+                        view.getHtml(html => {
+                            let $row = $(this.getRowContainerHtml(model.id));
+
                             $row.append(html);
                             $list.prepend($row);
-                            rowsReady++;
+
                             view._afterRender();
+
                             if (view.options.el) {
                                 view.setElement(view.options.el);
                             }
-                        }.bind(this));
+                        });
                     });
                 }
-                this.noRebuild = true;
-            }.bind(this);
-
-            collection.fetchNew({
-                success: success,
             });
-        }
+        },
 
+        showNewRecords: function () {
+            this.collection.fetchNew();
+        },
     });
-
 });

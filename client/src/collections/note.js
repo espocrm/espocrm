@@ -42,13 +42,18 @@ define('collections/note', 'collection', function (Dep) {
                     this.total = total;
                 }
             }
+
             return list;
         },
 
         fetchNew: function (options) {
-            var options = options || {};
+            options = options || {};
 
             options.data = options.data || {};
+
+            options.fetchNew = true;
+            options.noRebuild = true;
+            options.lengthBeforeFetch = this.length;
 
             if (this.length) {
                 options.data.after = this.models[0].get('createdAt');
@@ -57,9 +62,8 @@ define('collections/note', 'collection', function (Dep) {
                 options.maxSize = null;
             }
 
-            this.fetch(options);
+            return this.fetch(options);
         },
 
     });
-
 });
