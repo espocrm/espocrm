@@ -428,12 +428,16 @@ define('views/fields/base', 'view', function (Dep) {
                     this.trigger('mode-changed');
                 }
 
-                if (this.isEditMode()) {
-                    return this.onEditModeSet() || Promise.resolve();
+                if (this.isListMode()) {
+                    return this.onListModeSet() || Promise.resolve();
                 }
 
                 if (this.isDetailMode()) {
                     return this.onDetailModeSet() || Promise.resolve();
+                }
+
+                if (this.isEditMode()) {
+                    return this.onEditModeSet() || Promise.resolve();
                 }
             }
 
@@ -455,6 +459,15 @@ define('views/fields/base', 'view', function (Dep) {
          * @returns {Promise}
          */
         onEditModeSet: function () {
+            return Promise.resolve();
+        },
+
+        /**
+         * For additional initialization for the list mode.
+         *
+         * @returns {Promise}
+         */
+        onListModeSet: function () {
             return Promise.resolve();
         },
 
