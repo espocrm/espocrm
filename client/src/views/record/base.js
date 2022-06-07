@@ -173,11 +173,8 @@ define(
 
                     if (this.mode === 'edit') {
                         if (!view.readOnlyLocked && view.isDetailMode()) {
-                            view.setEditMode();
-
-                            if (view.isRendered()) {
-                                view.reRender();
-                            }
+                            view.setEditMode()
+                                .then(() => view.reRender());
                         }
                     }
                 }
@@ -719,9 +716,7 @@ define(
 
                 this.trigger('cancel:save', {reason: 'notModified'});
 
-                return new Promise((resolve, reject) => {
-                    reject('notModified');
-                });
+                return Promise.reject('notModified');
             }
 
             model.set(setAttributes, {silent: true});
@@ -735,9 +730,7 @@ define(
 
                 this.trigger('cancel:save', {reason: 'invalid'});
 
-                return new Promise((resolve, reject) => {
-                    reject('invalid');
-                });
+                return Promise.reject('invalid');
             }
 
             if (options.afterValidate) {

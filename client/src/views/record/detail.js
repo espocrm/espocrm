@@ -686,15 +686,15 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         initFieldsControlBehaviour: function () {
-            var fields = this.getFieldViews();
+            let fields = this.getFieldViews();
 
-            var fieldInEditMode = null;
+            let fieldInEditMode = null;
 
-            for (var field in fields) {
-                var fieldView = fields[field];
+            for (let field in fields) {
+                let fieldView = fields[field];
 
                 this.listenTo(fieldView, 'edit', (view) => {
-                    if (fieldInEditMode && fieldInEditMode.mode === 'edit') {
+                    if (fieldInEditMode && fieldInEditMode.isEditMode()) {
                         fieldInEditMode.inlineEditClose();
                     }
 
@@ -839,19 +839,23 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 for (let field in fields) {
                     let fieldView = fields[field];
 
-                    if (!fieldView.readOnly) {
-                        if (fieldView.mode === 'edit') {
-                            fieldView.fetchToModel();
-                            fieldView.removeInlineEditLinks();
-                            fieldView.setIsInlineEditMode(false);
-                        }
-
-                        fieldView.setEditMode();
-
-                        promiseList.push(
-                            fieldView.render()
-                        );
+                    if (fieldView.readOnly) {
+                        continue;
                     }
+
+                    if (fieldView.isEditMode()) {
+                        fieldView.fetchToModel();
+                        fieldView.removeInlineEditLinks();
+                        fieldView.setIsInlineEditMode(false);
+                    }
+
+                    promiseList.push(
+                        fieldView
+                            .setEditMode()
+                            .then(() => {
+                                return fieldView.render();
+                            })
+                    );
                 }
 
                 this.mode = 'edit';
@@ -871,12 +875,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.inlineEditModeIsOn = false;
 
             return new Promise(resolve => {
-                var fields = this.getFieldViews(true);
+                let fields = this.getFieldViews(true);
 
                 let promiseList = [];
 
-                for (var field in fields) {
-                    var fieldView = fields[field];
+                for (let field in fields) {
+                    let fieldView = fields[field];
 
                     if (!fieldView.isDetailMode()) {
                         if (fieldView.isEditMode()) {
@@ -885,10 +889,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             });
                         }
 
-                        fieldView.setDetailMode();
-
                         promiseList.push(
-                            fieldView.render()
+                            fieldView
+                                .setDetailMode()
+                                .then(() => fieldView.render())
                         );
                     }
                 }
@@ -1143,6 +1147,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
+            this.numId = Math.floor((Math.random() * 10000) + 1);
+
+            // For testing purpose.
+            $(window).on('fetch-record.' + this.cid, () => this.handleRecordUpdate());
+
             this.once('remove', () => {
                 if (this.isChanged) {
                     this.resetModelChanges();
@@ -1150,9 +1159,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.setIsNotChanged();
 
                 $(window).off('scroll.detail-' + this.numId);
+                $(window).off('fetch-record.' + this.cid);
             });
-
-            this.numId = Math.floor((Math.random() * 10000) + 1);
 
             this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 

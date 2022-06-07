@@ -28,42 +28,102 @@
 
 define('views/fields/base', 'view', function (Dep) {
 
+    /**
+     * A base field view. Can be in different modes. Each mode uses a separate template.
+     *
+     * @todo Document all options.
+     */
     return Dep.extend({
 
+        /**
+         * @property {string} A field type.
+         */
         type: 'base',
 
+        /**
+         * @property {string} List mode template.
+         */
         listTemplate: 'fields/base/list',
 
+        /**
+         * @property {string} List-link mode template.
+         */
         listLinkTemplate: 'fields/base/list-link',
 
+        /**
+         * @property {string} Detail mode template.
+         */
         detailTemplate: 'fields/base/detail',
 
+        /**
+         * @property {string} Edit mode template.
+         */
         editTemplate: 'fields/base/edit',
 
+        /**
+         * @property {string} Search mode template.
+         */
         searchTemplate: 'fields/base/search',
 
+        /**
+         * @property {Array.<string>} A validation list. There should be a validate{Name} method for each item.
+         */
         validations: ['required'],
 
+        MODE_LIST: 'list',
+
+        MODE_LIST_LINK: 'listLink',
+
+        MODE_DETAIL: 'detail',
+
+        MODE_EDIT: 'edit',
+
+        MODE_SEARCH: 'search',
+
+        /**
+         * @property A field name.
+         */
         name: null,
 
         defs: null,
 
+        /**
+         * @property Field params.
+         */
         params: null,
 
+        /**
+         * @property A mode.
+         */
         mode: null,
 
+        /**
+         * @property Search params.
+         */
         searchParams: null,
 
         _timeout: null,
 
+        /**
+         * @property Inlide edit disabled.
+         */
         inlineEditDisabled: false,
 
+        /**
+         * @property Field is disabled.
+         */
         disabled: false,
 
+        /**
+         * @property Field is read-only.
+         */
         readOnly: false,
 
         attributeList: null,
 
+        /**
+         * @property Attribute values before edit.
+         */
         initialAttributes: null,
 
         VALIDATION_POPOVER_TIMEOUT: 3000,
@@ -72,22 +132,37 @@ define('views/fields/base', 'view', function (Dep) {
 
         recordHelper: null,
 
+        /**
+         * Is the field required.
+         *
+         * @returns {Boolean}
+         */
         isRequired: function () {
             return this.params.required;
         },
 
         /**
          * Get cell element. Works only after rendered.
-         * {jQuery}
+         * @retrun {$}
          */
         getCellElement: function () {
             return this.$el.parent();
         },
 
+        /**
+         * Is in inline-edit mode.
+         *
+         * @returns {Boolean}
+         */
         isInlineEditMode: function () {
             return !!this._isInlineEditMode;
         },
 
+        /**
+         * Set disabled.
+         *
+         * @param {Boolean} locked Won't be able to set back.
+         */
         setDisabled: function (locked) {
             this.disabled = true;
 
@@ -96,6 +171,9 @@ define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Set not-disabled.
+         */
         setNotDisabled: function () {
             if (this.disabledLocked) {
                 return;
@@ -104,10 +182,13 @@ define('views/fields/base', 'view', function (Dep) {
             this.disabled = false;
         },
 
+        /**
+         * Set required.
+         */
         setRequired: function () {
             this.params.required = true;
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.showRequiredSign();
                 }
@@ -119,11 +200,14 @@ define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Set not required.
+         */
         setNotRequired: function () {
             this.params.required = false;
             this.getCellElement().removeClass('has-error');
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.hideRequiredSign();
                 }
@@ -135,9 +219,16 @@ define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Set read-only.
+         *
+         * @param {Boolean} locked Won't be able to set back.
+         *
+         * @return {Promise}
+         */
         setReadOnly: function (locked) {
             if (this.readOnlyLocked) {
-                return;
+                return Promise.reject();
             }
 
             this.readOnly = true;
@@ -146,21 +237,21 @@ define('views/fields/base', 'view', function (Dep) {
                 this.readOnlyLocked = true;
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isInlineEditMode()) {
-                    this.inlineEditClose();
-
-                    return;
+                    return this.inlineEditClose();
                 }
 
-                this.setDetailMode();
-
-                if (this.isRendered()) {
-                    this.reRender();
-                }
+                return this.setDetailMode()
+                    .then(() => this.reRender());
             }
+
+            return Promise.resolve();
         },
 
+        /**
+         * Set not read only.
+         */
         setNotReadOnly: function () {
             if (this.readOnlyLocked) {
                 return;
@@ -170,8 +261,9 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         /**
-         * Get label element. Works only after rendered.
-         * {jQuery}
+         * Get a label element. Works only after rendered.
+         *
+         * @return {$}
          */
         getLabelElement: function () {
             if (!this.$label || !this.$label.length) {
@@ -204,6 +296,11 @@ define('views/fields/base', 'view', function (Dep) {
             $cell.removeClass('hidden-cell');
         },
 
+        /**
+         * Get data for a template.
+         *
+         * @returns {Object}
+         */
         data: function () {
             var data = {
                 scope: this.model.name,
@@ -213,7 +310,7 @@ define('views/fields/base', 'view', function (Dep) {
                 value: this.getValueForDisplay(),
             };
 
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 data.searchParams = this.searchParams;
                 data.searchData = this.searchData;
                 data.searchValues = this.getSearchValues();
@@ -228,40 +325,82 @@ define('views/fields/base', 'view', function (Dep) {
             return this.model.get(this.name);
         },
 
+        /**
+         * Is in list, detail or list-link mode.
+         *
+         * @returns {Boolean}
+         */
         isReadMode: function () {
-            return this.mode === 'list' || this.mode === 'detail' || this.mode === 'listLink';
+            return this.mode === this.MODE_LIST ||
+                this.mode === this.MODE_DETAIL ||
+                this.mode === this.MODE_LIST_LINK;
         },
 
+        /**
+         * Is in list or list-link mode.
+         *
+         * @returns {Boolean}
+         */
         isListMode: function () {
-            return this.mode === 'list' || this.mode === 'listLink';
+            return this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK;
         },
 
+        /**
+         * Is in detail node.
+         *
+         * @returns {Boolean}
+         */
         isDetailMode: function () {
-            return this.mode === 'detail';
+            return this.mode === this.MODE_DETAIL;
         },
 
+        /**
+         * Is in edit node.
+         *
+         * @returns {Boolean}
+         */
         isEditMode: function () {
-            return this.mode === 'edit';
+            return this.mode === this.MODE_EDIT;
         },
 
+        /**
+         * Is in search node.
+         *
+         * @returns {Boolean}
+         */
         isSearchMode: function () {
-            return this.mode === 'search';
+            return this.mode === this.MODE_SEARCH;
         },
 
+        /**
+         * Set detail mode.
+         *
+         * @returns {Promise}
+         */
         setDetailMode: function () {
-            return this.setMode('detail');
+            return this.setMode(this.MODE_DETAIL);
         },
 
+        /**
+         * Set edit mode.
+         *
+         * @returns {Promise}
+         */
         setEditMode: function () {
-            return this.setMode('edit');
+            return this.setMode(this.MODE_EDIT);
         },
 
+        /**
+         * @internal
+         * @returns {Promise}
+         */
         setMode: function (mode) {
-            var modeIsChanged = this.mode !== mode && this.mode;
+            let modeIsChanged = this.mode !== mode;
+            let modeBefore = this.mode;
 
             this.mode = mode;
 
-            var property = mode + 'Template';
+            let property = mode + 'Template';
 
             if (!(property in this)) {
                 this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
@@ -269,7 +408,7 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.template = this[property];
 
-            var contentProperty = mode + 'TemplateContent';
+            let contentProperty = mode + 'TemplateContent';
 
             if (!this._template) {
                 this._templateCompiled = null;
@@ -285,10 +424,43 @@ define('views/fields/base', 'view', function (Dep) {
             }
 
             if (modeIsChanged) {
-                this.trigger('mode-changed');
+                if (modeBefore) {
+                    this.trigger('mode-changed');
+                }
+
+                if (this.isEditMode()) {
+                    return this.onEditModeSet() || Promise.resolve();
+                }
+
+                if (this.isDetailMode()) {
+                    return this.onDetailModeSet() || Promise.resolve();
+                }
             }
+
+            return Promise.resolve();
         },
 
+        /**
+         * For additional initialization for the detail mode.
+         *
+         * @returns {Promise}
+         */
+        onDetailModeSet: function () {
+            return Promise.resolve();
+        },
+
+        /**
+         * For additional initialization for the edit mode.
+         *
+         * @returns {Promise}
+         */
+        onEditModeSet: function () {
+            return Promise.resolve();
+        },
+
+        /**
+         * @internal
+         */
         init: function () {
             if (this.events) {
                 this.events = _.clone(this.events);
@@ -308,7 +480,7 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.recordHelper = this.options.recordHelper;
 
-            this.getFieldManager().getParamList(this.type).forEach(function (d) {
+            this.getFieldManager().getParamList(this.type).forEach(d => {
                 var name = d.name;
 
                 if (!(name in this.params)) {
@@ -318,15 +490,13 @@ define('views/fields/base', 'view', function (Dep) {
                         this.params[name] = null;
                     }
                 }
-            }, this);
+            });
 
             var additionaParamList = ['inlineEditDisabled'];
 
             additionaParamList.forEach((item) => {
                 this.params[item] = this.model.getFieldParam(this.name, item) || null;
             });
-
-            this.mode = this.options.mode || this.mode;
 
             this.readOnly = this.readOnly || this.params.readOnly ||
                 this.model.getFieldParam(this.name, 'readOnly') ||
@@ -349,13 +519,19 @@ define('views/fields/base', 'view', function (Dep) {
             this.disabledLocked = this.options.disabledLocked || false;
             this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 
-            if (this.mode === 'edit' && this.readOnly) {
-                this.mode = 'detail';
+            let mode = this.options.mode || this.mode || this.MODE_DETAIL;
+
+            if (mode === this.MODE_EDIT && this.readOnly) {
+                mode = this.MODE_DETAIL;
             }
 
-            this.setMode(this.mode || 'detail');
+            this.mode = null;
 
-            if (this.mode === 'search') {
+            this.wait(
+                this.setMode(mode)
+            );
+
+            if (this.isSearchMode()) {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.searchData = {};
                 this.setupSearch();
@@ -371,7 +547,7 @@ define('views/fields/base', 'view', function (Dep) {
                     $cell.removeClass('highlighted');
                 }, this.highlightPeriod || 3000);
 
-                setTimeout(function () {
+                setTimeout(() => {
                     $cell.removeClass('transition');
                 }, (this.highlightPeriod || 3000) + 2000);
             });
@@ -391,16 +567,20 @@ define('views/fields/base', 'view', function (Dep) {
             });
 
             this.on('after:render', () => {
-                if (this.mode === 'edit') {
+                if (this.isEditMode()) {
                     if (this.hasRequiredMarker()) {
                         this.showRequiredSign();
-                    } else {
-                        this.hideRequiredSign();
+
+                        return;
                     }
-                } else {
-                    if (this.hasRequiredMarker()) {
-                        this.hideRequiredSign();
-                    }
+
+                    this.hideRequiredSign();
+
+                    return;
+                }
+
+                if (this.hasRequiredMarker()) {
+                    this.hideRequiredSign();
                 }
             });
 
@@ -408,13 +588,13 @@ define('views/fields/base', 'view', function (Dep) {
                 this.initTooltip();
             }
 
-            if (this.mode === 'detail') {
+            if (this.isDetailMode()) {
                 if (!this.inlineEditDisabled) {
                     this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
                 }
             }
 
-            if (this.mode !== 'search') {
+            if (!this.isSearchMode()) {
                 this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
                 this.listenTo(this.model, 'change', (model, options) => {
@@ -449,6 +629,9 @@ define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        /**
+         * @internal
+         */
         initTooltip: function () {
             var $a;
 
@@ -519,6 +702,9 @@ define('views/fields/base', 'view', function (Dep) {
             });
         },
 
+        /**
+         * Show a required-field sign.
+         */
         showRequiredSign: function () {
             var $label = this.getLabelElement();
             var $sign = $label.find('span.required-sign');
@@ -532,6 +718,9 @@ define('views/fields/base', 'view', function (Dep) {
             $sign.show();
         },
 
+        /**
+         * Hide a required-field sign.
+         */
         hideRequiredSign: function () {
             var $label = this.getLabelElement();
             var $sign = $label.find('span.required-sign');
@@ -539,22 +728,45 @@ define('views/fields/base', 'view', function (Dep) {
             $sign.hide();
         },
 
+        /**
+         * Get search-params data.
+         *
+         * @returns {object}
+         */
         getSearchParamsData: function () {
             return this.searchParams.data || {};
         },
 
+        /**
+         * Get search values.
+         *
+         * @returns {object}
+         */
         getSearchValues: function () {
             return this.getSearchParamsData().values || {};
         },
 
+        /**
+         * Get a current search type.
+         *
+         * @return {string}
+         */
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.type;
         },
 
+        /**
+         * Get the search type list.
+         *
+         * @returns {Array.<string>}
+         */
         getSearchTypeList: function () {
             return this.searchTypeList;
         },
 
+        /**
+         * @internal
+         */
         initInlineEdit: function () {
             var $cell = this.getCellElement();
 
@@ -583,19 +795,22 @@ define('views/fields/base', 'view', function (Dep) {
                         return;
                     }
 
-                    if (this.mode === 'detail') {
+                    if (this.isDetailMode()) {
                         $editLink.removeClass('hidden');
                     }
                 })
                 .on('mouseleave', (e) => {
                     e.stopPropagation();
 
-                    if (this.mode === 'detail') {
+                    if (this.isDetailMode()) {
                         $editLink.addClass('hidden');
                     }
                 });
-            },
+        },
 
+        /**
+         * @internal
+         */
         initElement: function () {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
@@ -607,27 +822,90 @@ define('views/fields/base', 'view', function (Dep) {
                 this.$element = this.$el.find('.main-element');
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$element.on('change', () => {
                     this.trigger('change');
                 });
             }
         },
 
+        /**
+         * Called after the view is rendered.
+         */
         afterRender: function () {
-            if (this.mode === 'edit' || this.mode === 'search') {
+            if (this.isEditMode() || this.isSearchMode()) {
                 this.initElement();
+            }
+
+            if (this.isReadMode()) {
+                this.afterRenderRead();
+            }
+
+            if (this.isListMode()) {
+                this.afterRenderList();
+            }
+
+            if (this.isDetailMode()) {
+                this.afterRenderDetail();
+            }
+
+            if (this.isEditMode()) {
+                this.afterRenderEdit();
+            }
+
+            if (this.isSearchMode()) {
+                this.afterRenderSearch();
             }
         },
 
+        /**
+         * Called after the view is rendered in list or read mode.
+         */
+        afterRenderRead: function () {},
+
+        /**
+         * Called after the view is rendered in list mode.
+         */
+        afterRenderList: function () {},
+
+        /**
+         * Called after the view is rendered in detail mode.
+         */
+        afterRenderDetail: function () {},
+
+        /**
+         * Called after the view is rendered in edit mode.
+         */
+        afterRenderEdit: function () {},
+
+        /**
+         * Called after the view is rendered in search mode.
+         */
+        afterRenderSearch: function () {},
+
+        /**
+         * Initialization.
+         */
         setup: function () {},
 
+        /**
+         * Initialization for search mode.
+         */
         setupSearch: function () {},
 
+        /**
+         * Get list of model attributes that relate to the field.
+         * Changing of any of attributes makes the field to re-render.
+         *
+         * @returns {Array.<string>}
+         */
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
         },
 
+        /**
+         * Invoke inline-edit saving.
+         */
         inlineEditSave: function () {
             if (this.recordHelper) {
                 this.recordHelper.trigger('inline-edit-save', this.name);
@@ -692,6 +970,9 @@ define('views/fields/base', 'view', function (Dep) {
             this.inlineEditClose(true);
         },
 
+        /**
+         * @internal
+         */
         removeInlineEditLinks: function () {
             var $cell = this.getCellElement();
 
@@ -700,6 +981,9 @@ define('views/fields/base', 'view', function (Dep) {
             $cell.find('.inline-edit-link').addClass('hidden');
         },
 
+        /**
+         * @internal
+         */
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
 
@@ -725,44 +1009,59 @@ define('views/fields/base', 'view', function (Dep) {
             });
         },
 
+        /**
+         * @internal
+         */
         setIsInlineEditMode: function (value) {
             this._isInlineEditMode = value;
         },
 
+        /**
+         * Exist inline-edit mode.
+         *
+         * @return {Promise}
+         */
         inlineEditClose: function (noReset) {
             this.trigger('inline-edit-off', {noReset: noReset});
 
             this._isInlineEditMode = false;
 
-            if (this.mode !== 'edit') {
+            if (!this.isEditMode()) {
                 return;
             }
 
-            this.setDetailMode();
+            let promise = this.setDetailMode()
+                .then(() => this.reRender(true))
+                .then(() => this.removeInlineEditLinks());
 
             if (!noReset) {
                 this.model.set(this.initialAttributes);
             }
 
-            this.reRender(true)
-                .then(() => this.removeInlineEditLinks());
-
             this.trigger('after:inline-edit-off', {noReset: noReset});
+
+            return promise;
         },
 
+        /**
+         * Switch to inline-edit mode.
+         *
+         * @return {Promise}
+         */
         inlineEdit: function () {
             this.trigger('edit', this);
-
-            this.setEditMode();
 
             this.initialAttributes = this.model.getClonedAttributes();
 
             this._isInlineEditMode = true;
 
-            this.reRender(true)
+            let promise = this.setEditMode()
+                .then(() => this.reRender(true))
                 .then(() => this.addInlineEditLinks());
 
             this.trigger('inline-edit-on');
+
+            return promise;
         },
 
         suspendValidatinMessage: function (time) {
@@ -771,6 +1070,12 @@ define('views/fields/base', 'view', function (Dep) {
             setTimeout(() => this.validationMessageSuspended = false, time || 200);
         },
 
+        /**
+         * Show validation message.
+         *
+         * @param {string} message
+         * @param {string|$|Element} target
+         */
         showValidationMessage: function (message, target) {
             if (this.validationMessageSuspended) {
                 return;
@@ -836,6 +1141,11 @@ define('views/fields/base', 'view', function (Dep) {
             }, this.VALIDATION_POPOVER_TIMEOUT);
         },
 
+        /**
+         * Validate field values.
+         *
+         * @returns {Boolean} True if not valid.
+         */
         validate: function () {
             for (var i in this.validations) {
                 var method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
@@ -850,10 +1160,20 @@ define('views/fields/base', 'view', function (Dep) {
             return false;
         },
 
+        /**
+         * Get a label text.
+         *
+         * @returns {string}
+         */
         getLabelText: function () {
             return this.options.labelText || this.translate(this.name, 'fields', this.model.name);
         },
 
+        /**
+         * Validate required.
+         *
+         * @returns {Boolean}
+         */
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
@@ -866,14 +1186,27 @@ define('views/fields/base', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Has a required marked.
+         *
+         * @returns {Boolean}
+         */
         hasRequiredMarker: function () {
             return this.isRequired();
         },
 
+        /**
+         * Fetch values to the model.
+         */
         fetchToModel: function () {
             this.model.set(this.fetch(), {silent: true});
         },
 
+        /**
+         * Fetch field values from DOM.
+         *
+         * @return {Object}
+         */
         fetch: function () {
             var data = {};
 
@@ -882,6 +1215,11 @@ define('views/fields/base', 'view', function (Dep) {
             return data;
         },
 
+        /**
+         * Fetch search data from DOM.
+         *
+         * @return {Object}
+         */
         fetchSearch: function () {
             var value = this.$element.val().toString().trim();
 
@@ -897,6 +1235,11 @@ define('views/fields/base', 'view', function (Dep) {
             return false;
         },
 
+        /**
+         * Fetch a search type from DOM.
+         *
+         * @returns {string}
+         */
         fetchSearchType: function () {
             return this.$el.find('select.search-type').val();
         },
