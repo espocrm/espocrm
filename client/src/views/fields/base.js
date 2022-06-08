@@ -766,7 +766,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Get search-params data.
          *
-         * @returns {object}
+         * @returns {Object}
          */
         getSearchParamsData: function () {
             return this.searchParams.data || {};
@@ -775,7 +775,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Get search values.
          *
-         * @returns {object}
+         * @returns {Object}
          */
         getSearchValues: function () {
             return this.getSearchParamsData().values || {};
