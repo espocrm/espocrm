@@ -81,41 +81,41 @@ define('views/fields/base', 'view', function (Dep) {
         MODE_SEARCH: 'search',
 
         /**
-         * @property A field name.
+         * @property {string} A field name.
          */
         name: null,
 
         defs: null,
 
         /**
-         * @property Field params.
+         * @property {Object} Field params.
          */
         params: null,
 
         /**
-         * @property A mode.
+         * @property {string} A mode.
          */
         mode: null,
 
         /**
-         * @property Search params.
+         * @property {Object|null} Search params.
          */
         searchParams: null,
 
         _timeout: null,
 
         /**
-         * @property Inlide edit disabled.
+         * @property {boolean} Inline edit disabled.
          */
         inlineEditDisabled: false,
 
         /**
-         * @property Field is disabled.
+         * @property {boolean} Field is disabled.
          */
         disabled: false,
 
         /**
-         * @property Field is read-only.
+         * @property {boolean} Field is read-only.
          */
         readOnly: false,
 
@@ -664,20 +664,23 @@ define('views/fields/base', 'view', function (Dep) {
          * @internal
          */
         initTooltip: function () {
-            var $a;
+            let $a;
 
             this.once('after:render', () => {
-                $a = $(
-                    '<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>'
-                );
+                $a = $('<a>')
+                    .attr('href', 'javascript:')
+                    .addClass('text-muted field-info')
+                    .append(
+                        $('<span>').addClass('fas fa-info-circle')
+                    );
 
-                var $label = this.getLabelElement();
+                let $label = this.getLabelElement();
 
                 $label.append(' ');
 
                 this.getLabelElement().append($a);
 
-                var tooltipText = this.options.tooltipText || this.tooltipText;
+                let tooltipText = this.options.tooltipText || this.tooltipText;
 
                 if (!tooltipText && typeof this.tooltip === 'string') {
                     tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);
@@ -686,8 +689,8 @@ define('views/fields/base', 'view', function (Dep) {
                 tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
                 tooltipText = this.getHelper().transfromMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
-                var hidePopover = () => {
-                    $('body').off('click.popover-' + this.id);
+                let hidePopover = () => {
+                    $('body').off('click.popover-' + this.cid);
 
                     this.stopListening(this, 'mode-changed', hidePopover);
 
@@ -699,12 +702,13 @@ define('views/fields/base', 'view', function (Dep) {
                     container: 'body',
                     html: true,
                     content: tooltipText,
-                }).on('shown.bs.popover', () => {
-                    $('body').off('click.popover-' + this.id);
+                })
+                .on('shown.bs.popover', () => {
+                    $('body').off('click.popover-' + this.cid);
 
                     this.stopListening(this, 'mode-changed', hidePopover);
 
-                    $('body').on('click.popover-' + this.id , (e) => {
+                    $('body').on('click.popover-' + this.cid , (e) => {
                         if ($(e.target).closest('.popover-content').get(0)) {
                             return;
                         }
@@ -726,10 +730,10 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.on('remove', () => {
                 if ($a) {
-                    $a.popover('destroy')
+                    $a.popover('destroy');
                 }
 
-                $('body').off('click.popover-' + this.id);
+                $('body').off('click.popover-' + this.cid);
             });
         },
 
