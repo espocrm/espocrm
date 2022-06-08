@@ -135,7 +135,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is the field required.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isRequired: function () {
             return this.params.required;
@@ -152,7 +152,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in inline-edit mode.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isInlineEditMode: function () {
             return !!this._isInlineEditMode;
@@ -161,7 +161,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Set disabled.
          *
-         * @param {Boolean} locked Won't be able to set back.
+         * @param {boolean} locked Won't be able to set back.
          */
         setDisabled: function (locked) {
             this.disabled = true;
@@ -222,7 +222,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Set read-only.
          *
-         * @param {Boolean} locked Won't be able to set back.
+         * @param {boolean} locked Won't be able to set back.
          *
          * @return {Promise}
          */
@@ -328,7 +328,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in list, detail or list-link mode.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isReadMode: function () {
             return this.mode === this.MODE_LIST ||
@@ -339,7 +339,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in list or list-link mode.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isListMode: function () {
             return this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK;
@@ -348,7 +348,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in detail node.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isDetailMode: function () {
             return this.mode === this.MODE_DETAIL;
@@ -357,7 +357,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in edit node.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isEditMode: function () {
             return this.mode === this.MODE_EDIT;
@@ -366,7 +366,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in search node.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         isSearchMode: function () {
             return this.mode === this.MODE_SEARCH;
@@ -395,7 +395,7 @@ define('views/fields/base', 'view', function (Dep) {
          * @returns {Promise}
          */
         setMode: function (mode) {
-            let modeIsChanged = this.mode !== mode;
+            let modeIsChanged = this.mode !== mode && this.mode;
             let modeBefore = this.mode;
 
             this.mode = mode;
@@ -428,17 +428,26 @@ define('views/fields/base', 'view', function (Dep) {
                     this.trigger('mode-changed');
                 }
 
-                if (this.isListMode()) {
-                    return this.onListModeSet() || Promise.resolve();
-                }
+                return this._onModeSet();
+            }
 
-                if (this.isDetailMode()) {
-                    return this.onDetailModeSet() || Promise.resolve();
-                }
+            return Promise.resolve();
+        },
 
-                if (this.isEditMode()) {
-                    return this.onEditModeSet() || Promise.resolve();
-                }
+        /**
+         * @returns {Promise}
+         */
+        _onModeSet: function () {
+            if (this.isListMode()) {
+                return this.onListModeSet() || Promise.resolve();
+            }
+
+            if (this.isDetailMode()) {
+                return this.onDetailModeSet() || Promise.resolve();
+            }
+
+            if (this.isEditMode()) {
+                return this.onEditModeSet() || Promise.resolve();
             }
 
             return Promise.resolve();
@@ -640,6 +649,15 @@ define('views/fields/base', 'view', function (Dep) {
                     this.model.set(attributes, {ui: true});
                 });
             }
+        },
+
+        /**
+         * @internal
+         */
+        setupFinal: function () {
+            this.wait(
+                this._onModeSet()
+            );
         },
 
         /**
@@ -1157,7 +1175,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Validate field values.
          *
-         * @returns {Boolean} True if not valid.
+         * @returns {boolean} True if not valid.
          */
         validate: function () {
             for (var i in this.validations) {
@@ -1185,7 +1203,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Validate required.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         validateRequired: function () {
             if (this.isRequired()) {
@@ -1202,7 +1220,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Has a required marked.
          *
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         hasRequiredMarker: function () {
             return this.isRequired();
