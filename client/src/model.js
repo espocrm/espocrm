@@ -31,14 +31,53 @@ define('model', [], function () {
     let Dep = Backbone.Model;
 
     /**
+     * Save values to the backend.
+     *
+     * @function save
+     * @memberof Backbone.Model
+     * @param {Object} [attributes] Attribute values.
+     * @param {Object} [options] Options.
+     * @returns {Promise}
+     */
+
+    /**
+     * Whether an attribute is changed. To be used only within a callback of a 'change' event listener.
+     *
+     * @function changed
+     * @memberof Backbone.Model
+     * @param {string} attribute An attribute name.
+     * @returns {boolean}
+     */
+
+    /**
+     * Removes all attributes from the model, including the `id` attribute.
+     * Fires a `change` event unless `silent` is passed as an option.
+     *
+     * @function clear
+     * @memberof Backbone.Model
+     * @param {Object} [options] Options.
+     */
+
+    /**
      * @class Espo.Model
      * @extends Backbone.Model
+     * @mixes Backbone.Events
+     *
+     * @property {string|null} id - An ID.
+     * @property {Object} attributes - Attribute values.
+     * @property {string} cid - An ID unique among all models.
      */
     let Model = Dep.extend(/** @lends Espo.Model */{
 
         /**
+         * A root URL.
+         * @property {string|null}
+         */
+        urlRoot: null,
+
+        /**
          * An entity type.
-         * @property {string} name
+         * @property {string}
          */
         name: null,
 
@@ -46,6 +85,10 @@ define('model', [], function () {
 
         _user: null,
 
+        /**
+         * Definitions.
+         * @property {Object|null}
+         */
         defs: null,
 
         initialize: function () {
@@ -74,9 +117,11 @@ define('model', [], function () {
         },
 
         /**
-         * @param {string|Object} key
-         * @param {*} val
-         * @param {Object} options
+         * Set an attribute value or multiple values.
+         *
+         * @param {string|Object} key An attribute name or a {key => value} object.
+         * @param {*} [val] A value or options if the first argument is an object.
+         * @param {Object} [options] Options. `silent` won't trigger a `change` event.
          * @returns {this}
          */
         set: function (key, val, options) {
@@ -95,7 +140,9 @@ define('model', [], function () {
         },
 
         /**
-         * @param {string} key
+         * Get an attribute value.
+         *
+         * @param {string} key An attribute name.
          * @returns {*}
          */
         get: function (key) {
@@ -107,7 +154,9 @@ define('model', [], function () {
         },
 
         /**
-         * @param {string} key
+         * Whether attribute is set.
+         *
+         * @param {string} key An attribute name.
          * @returns {boolean}
          */
         has: function (key) {
@@ -117,6 +166,8 @@ define('model', [], function () {
         },
 
         /**
+         * Is new.
+         *
          * @returns {boolean}
          */
         isNew: function () {
@@ -133,6 +184,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get cloned attribute values.
+         *
          * @returns {Object}
          */
         getClonedAttributes: function () {
@@ -146,6 +199,7 @@ define('model', [], function () {
         },
 
         /**
+         * Populate default values.
          */
         populateDefaults: function () {
             var defaultHash = {};
@@ -205,6 +259,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get a link multiple column value.
+         *
          * @param {string} field
          * @param {string} column
          * @param {string} id
@@ -268,6 +324,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get a field type.
+         *
          * @param {string} field
          * @returns {string|null}
          */
@@ -280,6 +338,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get a field param.
+         *
          * @param {string} field
          * @param {string} param
          * @returns {*}
@@ -295,6 +355,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get a link type.
+         *
          * @param {string} link
          * @returns {string|null}
          */
@@ -307,6 +369,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get a link param.
+         *
          * @param {string} link
          * @param {string} param
          * @returns {*}
@@ -322,6 +386,8 @@ define('model', [], function () {
         },
 
         /**
+         * Is a field read-only.
+         *
          * @param {string} field
          * @returns {bool}
          */
@@ -330,6 +396,8 @@ define('model', [], function () {
         },
 
         /**
+         * If a field required.
+         *
          * @param {string} field
          * @returns {bool}
          */
@@ -338,6 +406,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get IDs of a link-multiple field.
+         *
          * @param {type} field
          * @returns {string[]}
          */
@@ -346,6 +416,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get team IDs.
+         *
          * @param {type} field
          * @returns {string[]}
          */
@@ -362,6 +434,8 @@ define('model', [], function () {
         },
 
         /**
+         * Whether has a field.
+         *
          * @param {string} field
          * @returns {boolean}
          */
@@ -370,6 +444,8 @@ define('model', [], function () {
         },
 
         /**
+         * Whether has a link.
+         *
          * @param {string} field
          * @returns {boolean}
          */
@@ -392,6 +468,8 @@ define('model', [], function () {
         },
 
         /**
+         * Get an entity type.
+         *
          * @returns {string}
          */
         getEntityType: function () {
@@ -399,8 +477,9 @@ define('model', [], function () {
         },
 
         /**
-         * @param {Object} options
-         * @returns {Promise}
+         * Fetch values from the backend.
+         * @param {Object} options Options.
+         * @returns {Promise<Object>}
          */
         fetch: function (options) {
             this.lastXhr = Dep.prototype.fetch.call(this, options);
@@ -409,6 +488,7 @@ define('model', [], function () {
         },
 
         /**
+         * Abort the last fetch.
          */
         abortLastFetch: function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {

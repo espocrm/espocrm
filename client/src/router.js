@@ -28,7 +28,11 @@
 
 define('router', [], function () {
 
-    let Router = Backbone.Router.extend({
+    /**
+     * @class Espo.Router
+     * @mixes Espo.Events
+     */
+    let Router = Backbone.Router.extend(/** @lends Espo.Router */ {
 
         routeList: [
             {
@@ -190,10 +194,22 @@ define('router', [], function () {
             });
         },
 
+        /**
+         * Get a current URL.
+         *
+         * @returns {string}
+         */
         getCurrentUrl: function () {
             return '#' + Backbone.history.fragment;
         },
 
+        /**
+         * Process confirm-leave-out.
+         *
+         * @param {Function} callback Proceed if confirmed.
+         * @param {Object|null} [context] A context.
+         * @param {boolean} [navigateBack] To navigate back if not confirmed.
+         */
         checkConfirmLeaveOut: function (callback, context, navigateBack) {
             if (this.confirmLeaveOutDisplayed) {
                 this.navigateBack({trigger: false});
@@ -232,10 +248,11 @@ define('router', [], function () {
                         }
                     }
                 );
+
+                return;
             }
-            else {
-                callback.call(context);
-            }
+
+            callback.call(context);
         },
 
         route: function (route, name, callback) {
@@ -299,12 +316,23 @@ define('router', [], function () {
             }, null, true);
         },
 
+        /**
+         * Navigate.
+         *
+         * @param {string} fragment
+         * @param {Options} options Options: trigger, replace.
+         */
         navigate: function (fragment, options) {
             this.history.push(fragment);
 
             return Backbone.Router.prototype.navigate.call(this, fragment, options);
         },
 
+        /**
+         * Navigate back.
+         *
+         * @param {Options} options Options: trigger, replace.
+         */
         navigateBack: function (options) {
             let url;
 
@@ -393,6 +421,14 @@ define('router', [], function () {
             this.dispatch(null, 'clearCache');
         },
 
+        /**
+         * Dispatch a controller action.
+         *
+         * @param {string} controller A controller.
+         * @param {string} action An action.
+         * @param {Object} options Options.
+         * @returns {undefined}
+         */
         dispatch: function (controller, action, options) {
             let o = {
                 controller: controller,
@@ -405,6 +441,11 @@ define('router', [], function () {
             this.trigger('routed', o);
         },
 
+        /**
+         * Get the last route data.
+         *
+         * @returns {Object}
+         */
         getLast: function () {
             return this._last;
         },

@@ -29,10 +29,48 @@
 define('collection', [], function () {
 
     /**
+     * Add a model or models. Firing an `add` event for each model, and an `update` event afterwards.
+     *
+     * @function add
+     * @memberof Backbone.Collection
+     * @param {Backbone.Model|Backbone.Model[]} models A model or models.
+     * @param {Object} [options] Options.
+     */
+
+    /**
+     * Remove a model or models. Fires a `remove` event for each model, and a single `update` event afterwards,
+     * unless `{silent: true}`.
+     *
+     * @function remove
+     * @memberof Backbone.Collection
+     * @param {Backbone.Model|Backbone.Model[]|string|string[]} models A model, models, ID or IDs.
+     * @param {Object} [options] Options.
+     */
+
+    /**
+     * Append a model.
+     *
+     * @function push
+     * @memberof Backbone.Collection
+     * @param {Backbone.Model} model A model.
+     * @param {Object} [options] Options.
+     */
+
+    /**
+     * Remove and return the last model from the collection.
+     *
+     * @function pop
+     * @memberof Backbone.Collection
+     * @param {Object} [options] Options.
+     */
+
+    /**
      * @class Espo.Collection
      * @extends Backbone.Collection
+     * @mixes Backbone.Events
      *
      * @property {number} length - A number of records.
+     * @property {Espo.Model[]} models - Models.
      */
     var Collection = Backbone.Collection.extend(/** @lends Espo.Collection */ {
 
@@ -158,6 +196,7 @@ define('collection', [], function () {
         },
 
         /**
+         * Next page.
          */
         nextPage: function () {
             var offset = this.offset + this.maxSize;
@@ -166,6 +205,7 @@ define('collection', [], function () {
         },
 
         /**
+         * Previous page.
          */
         previousPage: function () {
             var offset = this.offset - this.maxSize;
@@ -174,12 +214,14 @@ define('collection', [], function () {
         },
 
         /**
+         * First page.
          */
         firstPage: function () {
             this.setOffset(0);
         },
 
         /**
+         * Last page.
          */
         lastPage: function () {
             let offset = this.total - this.total % this.maxSize;
@@ -192,7 +234,9 @@ define('collection', [], function () {
         },
 
         /**
-         * @param {number} offset
+         * Set an offset.
+         *
+         * @param {number} offset Offset.
          */
         setOffset: function (offset) {
             if (offset < 0) {
@@ -221,7 +265,9 @@ define('collection', [], function () {
         },
 
         /**
-         * @param {Object} options
+         * Fetches from the backend.
+         *
+         * @param {Object} options Options.
          * @returns {Promise}
          */
         fetch: function (options) {
@@ -269,6 +315,7 @@ define('collection', [], function () {
         },
 
         /**
+         * Abort the last fetch.
          */
         abortLastFetch: function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {
@@ -277,6 +324,8 @@ define('collection', [], function () {
         },
 
         /**
+         * Get a where clause.
+         *
          * @returns {Array.{Object}}
          */
         getWhere: function () {
@@ -301,6 +350,7 @@ define('collection', [], function () {
         },
 
         /**
+         * Reset the order to default.
          */
         resetOrderToDefault: function () {
             this.orderBy = this.defaultOrderBy;
@@ -308,6 +358,8 @@ define('collection', [], function () {
         },
 
         /**
+         * Set an order.
+         *
          * @param {string} orderBy
          * @param {boolean} [order]
          * @param {boolean} [setDefault]

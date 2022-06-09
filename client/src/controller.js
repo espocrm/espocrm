@@ -32,6 +32,7 @@ define('controller', [], function () {
      * Controller. Views, Models and Collections are created here.
      *
      * @class Espo.Controller
+     * @mixes Backbone.Events
      *
      * @param {Object} params
      * @param {Object} injections
