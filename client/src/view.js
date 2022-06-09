@@ -34,8 +34,8 @@ define('view', [], function () {
      * @class Espo.View
      * @extends Bull.View
      *
-     * @property {Espo.Model|undefined} model - A model.
-     * @property {Espo.Collection|undefined} collection - A collection.
+     * @property {(Espo.Model|undefined)} model - A model.
+     * @property {(Espo.Collection|undefined)} collection - A collection.
      * @property {Object} options - Passed options.
      */
     return Bull.View.extend(/** @lends Espo.View */{
