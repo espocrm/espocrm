@@ -293,6 +293,10 @@ class LabelManager implements
 
         $languageObj->save();
 
+        if ($returnDataHash === []) {
+            return (object) [];
+        }
+
         return json_decode(Json::encode($returnDataHash));
     }
 }
