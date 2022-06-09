@@ -64,6 +64,8 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
             'HH:mm': 'H:i',
             'hh:mm A': 'h:i A',
             'hh:mm a': 'h:i a',
+            'hh:mmA': 'h:iA',
+            'hh:mma': 'h:ia',
         },
 
         data: function () {
