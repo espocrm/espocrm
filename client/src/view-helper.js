@@ -28,6 +28,9 @@
 
 define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPurify) {
 
+    /**
+     * @class Espo.ViewHelper
+     */
     let ViewHelper = function () {
         this._registerHandlebarsHelpers();
 
@@ -73,24 +76,41 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
                 }
             }
         });
-    }
+    };
 
-    _.extend(ViewHelper.prototype, {
+    _.extend(ViewHelper.prototype, /** @lends Espo.ViewHelper */{
 
         layoutManager: null,
 
+        /**
+         * @property {Espo.Modles.Settings} settings
+         */
         settings: null,
 
+        /**
+         * @property {Espo.Modles.Settings} settings
+         */
         user: null,
 
         preferences: null,
 
+        /**
+         * @property {Espo.Language} language
+         */
         language: null,
 
+        /**
+         * @param {string} name
+         * @returns {*}
+         */
         getAppParam: function (name) {
             return (this.appParams || {})[name];
         },
 
+        /**
+         * @param {string} text
+         * @returns {string}
+         */
         stripTags: function (text) {
             text = text || '';
 
@@ -101,10 +121,21 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return text;
         },
 
+        /**
+         * @param {string} text
+         * @returns {string}
+         */
         escapeString: function (text) {
             return Handlebars.Utils.escapeExpression(text);
         },
 
+        /**
+         * @param {string} id
+         * @param {'small'|'medium'|'large'} size
+         * @param {int} width
+         * @param {string} additionalClassName
+         * @returns {string}
+         */
         getAvatarHtml: function (id, size, width, additionalClassName) {
             if (this.config.get('avatarsDisabled')) {
                 return '';
@@ -368,10 +399,19 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             });
         },
 
+        /**
+         * @param {string} text
+         * @returns {string}
+         */
         transfromMarkdownInlineText: function (text) {
             return this.transfromMarkdownText(text, {inline: true});
         },
 
+        /**
+         * @param {string} text
+         * @param {{inline: boolean, linksInNewTab: boolean}} options
+         * @returns {string}
+         */
         transfromMarkdownText: function (text, options) {
             text = text || '';
 
@@ -404,6 +444,12 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return new Handlebars.SafeString(text);
         },
 
+        /**
+         * @param {string} scope
+         * @param {boolean} noWhiteSpace
+         * @param {string} additionalClassName
+         * @returns {string}
+         */
         getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
             if (this.config.get('scopeColorsDisabled') || this.preferences.get('scopeColorsDisabled')) {
                 return '';
@@ -434,10 +480,19 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return html;
         },
 
+        /**
+         * @param {type} text
+         * @param {Object} options
+         * @returns {string}
+         */
         sanitizeHtml: function (text, options) {
             return DOMPurify.sanitize(text, options);
         },
 
+        /**
+         * @param {string} value
+         * @returns {string}
+         */
         moderateSanitizeHtml: function (value) {
             value = value || '';
             value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
@@ -471,6 +526,10 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return value;
         },
 
+        /**
+         * @param {string} html
+         * @returns {string}
+         */
         stripEventHandlersInHtml: function (html) {
             function stripHTML() {
                 html = html.slice(0, strip) + html.slice(j);
@@ -525,6 +584,10 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return html;
         },
 
+        /**
+         * @param {$} $el
+         * @returns {number}
+         */
         calculateContentContainerHeight: function ($el) {
             var smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
@@ -551,6 +614,11 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             return $window.height() - spaceHeight - 20;
         },
 
+        /**
+         * @param {Espo.View} view
+         * @param {string} type
+         * @param {string} scope
+         */
         processSetupHandlers: function (view, type, scope) {
             scope = scope || view.scope;
 

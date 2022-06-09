@@ -28,30 +28,74 @@
 
 define('collection', [], function () {
 
-    var Collection = Backbone.Collection.extend({
+    /**
+     * @class Espo.Collection
+     * @extends Backbone.Collection
+     *
+     * @property {number} length - A number of records.
+     */
+    var Collection = Backbone.Collection.extend(/** @lends Espo.Collection */ {
 
+        /**
+         * An entity type.
+         * @property {string}
+         */
         name: null,
 
+        /**
+         * A total number of records.
+         * @property {number}
+         */
         total: 0,
 
+        /**
+         * A current offset (for pagination).
+         * @property {number}
+         */
         offset: 0,
 
+        /**
+         * A max size (for pagination).
+         * @property {number}
+         */
         maxSize: 20,
 
+        /**
+         * True for desc order.
+         * @property {boolean|null}
+         */
         order: null,
 
+        /**
+         * An order-by field.
+         * @property {string|null}
+         */
         orderBy: null,
 
+        /**
+         * A where clause.
+         * @property {Array.{Object}|null}
+         */
         where: null,
 
         whereAdditional: null,
 
+        /**
+         * @property {number}
+         */
         lengthCorrection: 0,
 
+        /**
+         * @property {number}
+         */
         maxMaxSize: 0,
 
         _user: null,
 
+        /**
+         * @param {Espo.Model[]} models
+         * @param {Object} options
+         */
         initialize: function (models, options) {
             options = options || {};
 
@@ -78,12 +122,21 @@ define('collection', [], function () {
             Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
         },
 
+        /**
+         * @param {Espo.Model[]} models
+         * @param {Object} options
+         */
         reset: function (models, options) {
             this.lengthCorrection = 0;
 
             Backbone.Collection.prototype.reset.call(this, models, options);
         },
 
+        /**
+         * @param {string} orderBy
+         * @param {bool|undefined} order
+         * @returns {Promise}
+         */
         sort: function (orderBy, order) {
             this.orderBy = orderBy;
 
@@ -104,22 +157,30 @@ define('collection', [], function () {
             return this.fetch();
         },
 
+        /**
+         */
         nextPage: function () {
             var offset = this.offset + this.maxSize;
 
             this.setOffset(offset);
         },
 
+        /**
+         */
         previousPage: function () {
             var offset = this.offset - this.maxSize;
 
             this.setOffset(offset);
         },
 
+        /**
+         */
         firstPage: function () {
             this.setOffset(0);
         },
 
+        /**
+         */
         lastPage: function () {
             let offset = this.total - this.total % this.maxSize;
 
@@ -130,6 +191,9 @@ define('collection', [], function () {
             this.setOffset(offset);
         },
 
+        /**
+         * @param {number} offset
+         */
         setOffset: function (offset) {
             if (offset < 0) {
                 throw new RangeError('offset can not be less than 0');
@@ -156,6 +220,10 @@ define('collection', [], function () {
             return response.list;
         },
 
+        /**
+         * @param {Object} options
+         * @returns {Promise}
+         */
         fetch: function (options) {
             options = options || {};
 
@@ -200,12 +268,17 @@ define('collection', [], function () {
             return this.lastXhr;
         },
 
+        /**
+         */
         abortLastFetch: function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {
                 this.lastXhr.abort();
             }
         },
 
+        /**
+         * @returns {Array.{Object}}
+         */
         getWhere: function () {
             var where = (this.where || []).concat(this.whereAdditional || []);
 
@@ -220,15 +293,25 @@ define('collection', [], function () {
             return this._user;
         },
 
+        /**
+         * @returns {string}
+         */
         getEntityType: function () {
             return this.name;
         },
 
+        /**
+         */
         resetOrderToDefault: function () {
             this.orderBy = this.defaultOrderBy;
             this.order = this.defaultOrder;
         },
 
+        /**
+         * @param {string} orderBy
+         * @param {boolean} [order]
+         * @param {boolean} [setDefault]
+         */
         setOrder: function (orderBy, order, setDefault) {
             this.orderBy = orderBy;
             this.order = order;

@@ -28,6 +28,9 @@
 
 define('model-factory', [], function () {
 
+    /**
+     * @class Espo.ModelFactory
+     */
     let ModelFactory = function (loader, metadata, user) {
         this.loader = loader;
         this.metadata = metadata;
@@ -36,7 +39,7 @@ define('model-factory', [], function () {
         this.seeds = {};
     };
 
-    _.extend(ModelFactory.prototype, {
+    _.extend(ModelFactory.prototype, /** @lends Espo.ModelFactory */ {
 
         loader: null,
 
@@ -48,6 +51,10 @@ define('model-factory', [], function () {
 
         user: null,
 
+        /**
+         * @param {string} name Entity Type.
+         * @returns {Promise<Espo.Model>}
+         */
         create: function (name, callback, context) {
             return new Promise(resolve => {
                 context = context || this;

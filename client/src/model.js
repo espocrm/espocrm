@@ -30,8 +30,16 @@ define('model', [], function () {
 
     let Dep = Backbone.Model;
 
-    let Model = Dep.extend({
+    /**
+     * @class Espo.Model
+     * @extends Backbone.Model
+     */
+    let Model = Dep.extend(/** @lends Espo.Model */{
 
+        /**
+         * An entity type.
+         * @property {string} name
+         */
         name: null,
 
         dateTime: null,
@@ -51,6 +59,12 @@ define('model', [], function () {
             Dep.prototype.initialize.call(this);
         },
 
+        /**
+         * @param {'patch'|'put'} method
+         * @param {Espo.Model} model
+         * @param {Object} options
+         * @returns {Promise}
+         */
         sync: function (method, model, options) {
             if (method === 'patch') {
                 options.type = 'PUT';
@@ -59,6 +73,12 @@ define('model', [], function () {
             return Dep.prototype.sync.call(this, method, model, options);
         },
 
+        /**
+         * @param {string|Object} key
+         * @param {*} val
+         * @param {Object} options
+         * @returns {this}
+         */
         set: function (key, val, options) {
             if (typeof key === 'object') {
                 let o = key;
@@ -74,6 +94,10 @@ define('model', [], function () {
             return Dep.prototype.set.call(this, key, val, options);
         },
 
+        /**
+         * @param {string} key
+         * @returns {*}
+         */
         get: function (key) {
             if (key === 'id' && this.id) {
                 return this.id;
@@ -82,22 +106,35 @@ define('model', [], function () {
             return Dep.prototype.get.call(this, key);
         },
 
+        /**
+         * @param {string} key
+         * @returns {boolean}
+         */
         has: function (key) {
             let value = this.get(key);
 
             return (typeof value !== 'undefined');
         },
 
+        /**
+         * @returns {boolean}
+         */
         isNew: function () {
             return !this.id;
         },
 
+        /**
+         * @param {Object} defs
+         */
         setDefs: function (defs) {
             this.defs = defs || {};
 
             this.defs.fields = this.defs.fields || {};
         },
 
+        /**
+         * @returns {Object}
+         */
         getClonedAttributes: function () {
             var attributes = {};
 
@@ -108,6 +145,8 @@ define('model', [], function () {
             return attributes;
         },
 
+        /**
+         */
         populateDefaults: function () {
             var defaultHash = {};
 
@@ -147,6 +186,11 @@ define('model', [], function () {
             this.set(defaultHash, {silent: true});
         },
 
+        /**
+         * @param {*} defaultValue
+         * @returns {*}
+         * @deprecated
+         */
         parseDefaultValue: function (defaultValue) {
             if (
                 typeof defaultValue === 'string' &&
@@ -160,10 +204,19 @@ define('model', [], function () {
             return defaultValue;
         },
 
+        /**
+         * @param {string} field
+         * @param {string} column
+         * @param {string} id
+         * @returns {*}
+         */
         getLinkMultipleColumn: function (field, column, id) {
             return ((this.get(field + 'Columns') || {})[id] || {})[column];
         },
 
+        /**
+         * @param {Object} data
+         */
         setRelate: function (data) {
             let setRelate = options => {
                 var link = options.link;
@@ -214,6 +267,10 @@ define('model', [], function () {
             }
         },
 
+        /**
+         * @param {string} field
+         * @returns {string|null}
+         */
         getFieldType: function (field) {
             if (this.defs && this.defs.fields && (field in this.defs.fields)) {
                 return this.defs.fields[field].type || null;
@@ -222,6 +279,11 @@ define('model', [], function () {
             return null;
         },
 
+        /**
+         * @param {string} field
+         * @param {string} param
+         * @returns {*}
+         */
         getFieldParam: function (field, param) {
             if (this.defs && this.defs.fields && (field in this.defs.fields)) {
                 if (param in this.defs.fields[field]) {
@@ -232,6 +294,10 @@ define('model', [], function () {
             return null;
         },
 
+        /**
+         * @param {string} link
+         * @returns {string|null}
+         */
         getLinkType: function (link) {
             if (this.defs && this.defs.links && (link in this.defs.links)) {
                 return this.defs.links[link].type || null;
@@ -240,6 +306,11 @@ define('model', [], function () {
             return null;
         },
 
+        /**
+         * @param {string} link
+         * @param {string} param
+         * @returns {*}
+         */
         getLinkParam: function (link, param) {
             if (this.defs && this.defs.links && (link in this.defs.links)) {
                 if (param in this.defs.links[link]) {
@@ -250,18 +321,34 @@ define('model', [], function () {
             return null;
         },
 
+        /**
+         * @param {string} field
+         * @returns {bool}
+         */
         isFieldReadOnly: function (field) {
             return this.getFieldParam(field, 'readOnly') || false;
         },
 
+        /**
+         * @param {string} field
+         * @returns {bool}
+         */
         isRequired: function (field) {
             return this.getFieldParam(field, 'required') || false;
         },
 
+        /**
+         * @param {type} field
+         * @returns {string[]}
+         */
         getLinkMultipleIdList: function (field) {
             return this.get(field + 'Ids') || [];
         },
 
+        /**
+         * @param {type} field
+         * @returns {string[]}
+         */
         getTeamIdList: function () {
             return this.get('teamsIds') || [];
         },
@@ -274,32 +361,55 @@ define('model', [], function () {
             return this._user;
         },
 
+        /**
+         * @param {string} field
+         * @returns {boolean}
+         */
         hasField: function (field) {
             return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
         },
 
+        /**
+         * @param {string} field
+         * @returns {boolean}
+         */
         hasLink: function (link) {
             return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
         },
 
+        /**
+         * @returns {boolean}
+         */
         isEditable: function () {
             return true;
         },
 
+        /**
+         * @returns {boolean}
+         */
         isRemovable: function () {
             return true;
         },
 
+        /**
+         * @returns {string}
+         */
         getEntityType: function () {
             return this.name;
         },
 
+        /**
+         * @param {Object} options
+         * @returns {Promise}
+         */
         fetch: function (options) {
             this.lastXhr = Dep.prototype.fetch.call(this, options);
 
             return this.lastXhr;
         },
 
+        /**
+         */
         abortLastFetch: function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {
                 this.lastXhr.abort();

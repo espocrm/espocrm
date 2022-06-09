@@ -26,11 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/**
- * Controller. Views, Models and Collections are created here.*/
-
 define('controller', [], function () {
 
+    /**
+     * Controller. Views, Models and Collections are created here.
+     *
+     * @class Espo.Controller
+     *
+     * @param {Object} params
+     * @param {Object} injections
+     */
     var Controller = function (params, injections) {
         this.params = params || {};
 
@@ -59,66 +64,123 @@ define('controller', [], function () {
         this.set('masterRendered', false);
     };
 
-    _.extend(Controller.prototype, {
+    _.extend(Controller.prototype, /** @lends Espo.Controller */ {
 
+        /**
+         * A default action.
+         * @param {string}
+         */
         defaultAction: 'index',
 
+        /**
+         * A name.
+         * @param {string|false}
+         */
         name: false,
 
+        /**
+         * Params.
+         * @param {Object}
+         */
         params: null,
 
+        /**
+         * A view factory.
+         * @param {Bull.ViewFactory}
+         */
         viewFactory: null,
 
+        /**
+         * A model factory.
+         * @param {Espo.ModelFactory}
+         */
         modelFactory: null,
 
+        /**
+         * A controller factory.
+         * @param {Espo.ControllerFactory}
+         */
         controllerFactory: null,
 
+        /**
+         * Initialize.
+         */
         initialize: function () {},
 
+        /**
+         * @param {Espo.Router} router
+         */
         setRouter: function (router) {
             this._router = router;
         },
 
+        /**
+         * @returns {Espo.Models.Settings}
+         */
         getConfig: function () {
             return this._settings;
         },
 
+        /**
+         * @returns {Espo.Models.User}
+         */
         getUser: function () {
             return this._user;
         },
 
+        /**
+         * @returns {Espo.Models.Preferences}
+         */
         getPreferences: function () {
             return this._preferences;
         },
 
+        /**
+         * @returns {Espo.Acl}
+         */
         getAcl: function () {
             return this._acl;
         },
 
+        /**
+         * @returns {Espo.Cache}
+         */
         getCache: function () {
             return this._cache;
         },
 
+        /**
+         * @returns {Espo.Router}
+         */
         getRouter: function () {
             return this._router;
         },
 
+        /**
+         * @returns {Espo.Storage}
+         */
         getStorage: function () {
             return this._storage;
         },
 
+        /**
+         * @returns {Espo.Metadata}
+         */
         getMetadata: function () {
             return this._metadata;
         },
 
+        /**
+         * @returns {Espo.DateTime}
+         */
         getDateTime: function () {
             return this._dateTime;
         },
 
         /**
-         * Get parameter of all controllers.
-         * @param key
-         * @return null if doesn't exist.
+         * Get a parameter of all controllers.
+         * @param {string} key
+         * @return {*} Null if doesn't exist.
          */
         get: function (key) {
             if (key in this.params) {
@@ -129,30 +191,53 @@ define('controller', [], function () {
         },
 
         /**
-         * Set paramer for all controllers.
-         * @param key Name of view.
-         * @param value.
+         * Set a paramer for all controllers.
+         * @param {key} Name of view.
+         * @param {*} value
          */
         set: function (key, value) {
             this.params[key] = value;
         },
 
+        /**
+         * Unset a parameter.
+         * @param {string} key
+         */
         unset: function (key) {
             delete this.params[key];
         },
 
+        /**
+         * Has a parameter.
+         * @param {string} key
+         * @returns {boolean}
+         */
         has: function (key) {
             return key in this.params;
         },
 
+        /**
+         * Get a stored main view.
+         * @param {string} key
+         * @returns {Espo.View|null}
+         */
         getStoredMainView: function (key) {
             return this.get('storedMainView-' + key);
         },
 
+        /**
+         * Has a stored main view.
+         * @param {string} key
+         * @returns {boolean}
+         */
         hasStoredMainView: function (key) {
             return this.has('storedMainView-' + key);
         },
 
+        /**
+         * Clear a stored main view.
+         * @param {string} key
+         */
         clearStoredMainView: function (key) {
             var view = this.getStoredMainView(key);
 
@@ -163,6 +248,11 @@ define('controller', [], function () {
             this.unset('storedMainView-' + key);
         },
 
+        /**
+         * Store a main view.
+         * @param {string} key
+         * @param {Espo.View} view
+         */
         storeMainView: function (key, view) {
             this.set('storedMainView-' + key, view);
 
@@ -179,6 +269,9 @@ define('controller', [], function () {
             });
         },
 
+        /**
+         * Clear all stored main views.
+         */
         clearAllStoredMainViews: function () {
             for (let k in this.params) {
                 if (k.indexOf('storedMainView-') !== 0) {
@@ -191,6 +284,11 @@ define('controller', [], function () {
             }
         },
 
+        /**
+         * Check access to an action.
+         * @param {string} action
+         * @returns {boolean}
+         */
         checkAccess: function (action) {
             return true;
         },
@@ -201,10 +299,17 @@ define('controller', [], function () {
             }
         },
 
+        /**
+         * Check access to the controller.
+         * @returns {Boolean}
+         */
         checkAccessGlobal: function () {
             return true;
         },
 
+        /**
+         * @param {string} action
+         */
         handleCheckAccess: function (action) {
             if (!this.checkAccess(action)) {
                 let msg;
@@ -220,6 +325,10 @@ define('controller', [], function () {
             }
         },
 
+        /**
+         * @param {string} action
+         * @param {Object} options
+         */
         doAction: function (action, options) {
             this.handleAccessGlobal();
 
@@ -246,8 +355,8 @@ define('controller', [], function () {
         },
 
         /**
-         * Create master view, render it if not rendered and return it.
-         * @param {Function} callback Master view will be argument for this.
+         * Create a master view, render if not already rendered.
+         * @param {Function<Espo.View>} callback Master view will be argument for this.
          */
         master: function (callback) {
             let entire = this.get('entire');
@@ -286,19 +395,22 @@ define('controller', [], function () {
         },
 
         /**
-         * Create main view in master and return it.
+         * Create a main view in the master.
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
-         * @return {view}
+         * @param {Function<Espo.View>|null} [callback]
+         * @param {boolean} [useStored] Use a stored view if available.
+         * @param {boolean} [storedKey] A stored view key.
          */
         main: function (view, options, callback, useStored, storedKey) {
-            var isCanceled = false;
+            let isCanceled = false;
+            let isRendered = false;
 
             this.listenToOnce(this.baseController, 'action', () => {
                 isCanceled = true;
             });
 
-            var view = view || 'views/base';
+            view = view || 'views/base';
 
             this.master(master => {
                 if (isCanceled) {
@@ -317,11 +429,11 @@ define('controller', [], function () {
                         this.storeMainView(storedKey, main);
                     }
 
-                    main.once('render', () => {
-                        main.updatePageTitle();
-                    });
-
                     main.listenToOnce(this.baseController, 'action', () => {
+                        if (isRendered) {
+                            return;
+                        }
+
                         main.cancelRender();
 
                         isCanceled = true;
@@ -342,10 +454,13 @@ define('controller', [], function () {
                     }
 
                     master.currentViewKey = storedKey;
-
                     master.setView('main', main);
 
-                    main.once('after:render', () => {
+                    let afterRender = () => {
+                        isRendered = true;
+
+                        main.updatePageTitle();
+
                         if (useStored && this.has('storedScrollTop-' + storedKey)) {
                             $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
 
@@ -353,46 +468,43 @@ define('controller', [], function () {
                         }
 
                         $(window).scrollTop(0);
-                    });
-
-                    if (isCanceled) {
-                        return;
-                    }
+                    };
 
                     if (callback) {
+                        this.listenToOnce(main, 'after:render', afterRender);
+
                         callback.call(this, main);
 
                         return;
                     }
 
-                    main.render();
+                    main.render()
+                        .then(afterRender);
                 };
 
-                if (useStored) {
-                    if (this.hasStoredMainView(storedKey)) {
-                        let main = this.getStoredMainView(storedKey);
+                if (useStored && this.hasStoredMainView(storedKey)) {
+                    let main = this.getStoredMainView(storedKey);
 
-                        let isActual = true;
+                    let isActual = true;
 
-                        if (main && typeof main.isActualForReuse === 'function') {
-                            isActual = main.isActualForReuse();
-                        }
-
-                        if (
-                            (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) &&
-                            isActual
-                        ) {
-                            process(main);
-
-                            if (main && typeof main.applyRoutingParams === 'function') {
-                                main.applyRoutingParams(options.params || {});
-                            }
-
-                            return;
-                        }
-
-                        this.clearStoredMainView(storedKey);
+                    if (main && typeof main.isActualForReuse === 'function') {
+                        isActual = main.isActualForReuse();
                     }
+
+                    if (
+                        (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) &&
+                        isActual
+                    ) {
+                        process(main);
+
+                        if (main && typeof main.applyRoutingParams === 'function') {
+                            main.applyRoutingParams(options.params || {});
+                        }
+
+                        return;
+                    }
+
+                    this.clearStoredMainView(storedKey);
                 }
 
                 this.viewFactory.create(view, options, process);
@@ -416,10 +528,10 @@ define('controller', [], function () {
         },
 
         /**
-         * Create view in the body tag.
+         * Create a view in the <body> element.
          * @param {String} view Name of view.
          * @param {Object} options Options for view.
-         * @return {Espo.View}
+         * @param {Function<Espo.View>}
          */
         entire: function (view, options, callback) {
             let master = this.get('master');

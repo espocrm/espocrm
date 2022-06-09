@@ -28,8 +28,22 @@
 
 define('view', [], function () {
 
-    return Bull.View.extend({
+    /**
+     * A base view.
+     *
+     * @class Espo.View
+     * @extends Bull.View
+     *
+     * @property {Espo.Model|undefined} model - A model.
+     * @property {Espo.Collection|undefined} collection - A collection.
+     * @property {Object} options - Passed options.
+     */
+    return Bull.View.extend(/** @lends Espo.View */{
 
+        /**
+         * @param {string} action
+         * @param {function} handler
+         */
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
 
@@ -37,6 +51,10 @@ define('view', [], function () {
             this.events[fullAction] = handler;
         },
 
+        /**
+         * @param {string} string
+         * @returns {string}
+         */
         escapeString: function (string) {
             return Handlebars.Utils.escapeExpression(string);
         },
@@ -60,106 +78,160 @@ define('view', [], function () {
             Espo.Ui.notify(text, type, timeout);
         },
 
+        /**
+         * @returns {Espo.ViewHelper}
+         */
         getHelper: function () {
             return this._helper;
         },
 
+        /**
+         * @returns {Espo.Models.User}
+         */
         getUser: function () {
             if (this._helper) {
                 return this._helper.user;
             }
         },
 
+        /**
+         * @returns {Espo.Models.Preferences}
+         */
         getPreferences: function () {
             if (this._helper) {
                 return this._helper.preferences;
             }
         },
 
+        /**
+         * @returns {Espo.Models.Settings}
+         */
         getConfig: function () {
             if (this._helper) {
                 return this._helper.settings;
             }
         },
 
+        /**
+         * @returns {Espo.Acl}
+         */
         getAcl: function () {
             if (this._helper) {
                 return this._helper.acl;
             }
         },
 
+        /**
+         * @returns {Espo.ModelFactory}
+         */
         getModelFactory: function () {
             if (this._helper) {
                 return this._helper.modelFactory;
             }
         },
 
+        /**
+         * @returns {Espo.CollectionFactory}
+         */
         getCollectionFactory: function () {
             if (this._helper) {
                 return this._helper.collectionFactory;
             }
         },
 
+        /**
+         * @returns {Espo.Router}
+         */
         getRouter: function () {
             if (this._helper) {
                 return this._helper.router;
             }
         },
 
+        /**
+         * @returns {Espo.Storage}
+         */
         getStorage: function () {
             if (this._helper) {
                 return this._helper.storage;
             }
         },
 
+        /**
+         * @returns {Espo.SessionStorage}
+         */
         getSessionStorage: function () {
             if (this._helper) {
                 return this._helper.sessionStorage;
             }
         },
 
+        /**
+         * @returns {Espo.Language}
+         */
         getLanguage: function () {
             if (this._helper) {
                 return this._helper.language;
             }
         },
 
+        /**
+         * @returns {Espo.Metadata}
+         */
         getMetadata: function () {
             if (this._helper) {
                 return this._helper.metadata;
             }
         },
 
+        /**
+         * @returns {Espo.Cache}
+         */
         getCache: function () {
             if (this._helper) {
                 return this._helper.cache;
             }
         },
 
+        /**
+         * @returns {Espo.DateTime}
+         */
         getDateTime: function () {
             if (this._helper) {
                 return this._helper.dateTime;
             }
         },
 
+        /**
+         * @returns {Espo.Number}
+         */
         getNumberUtil: function () {
             if (this._helper) {
                 return this._helper.numberUtil;
             }
         },
 
+        /**
+         * @returns {Espo.FieldManager}
+         */
         getFieldManager: function () {
             if (this._helper) {
                 return this._helper.fieldManager;
             }
         },
 
+        /**
+         * @returns {Espo.Controllers.Base}
+         */
         getBaseController: function () {
             if (this._helper) {
                 return this._helper.baseController;
             }
         },
 
+        /**
+         * @returns {Espo.ThemeManager}
+         */
         getThemeManager: function () {
             if (this._helper) {
                 return this._helper.themeManager;
@@ -171,14 +243,26 @@ define('view', [], function () {
             this.setPageTitle(title);
         },
 
+        /**
+         * @param {string} title
+         */
         setPageTitle: function (title) {
             this.getHelper().pageTitle.setTitle(title);
         },
 
+        /**
+         * @param {string} label
+         * @param {string} category
+         * @param {string} scope
+         * @returns {string}
+         */
         translate: function (label, category, scope) {
             return this.getLanguage().translate(label, category, scope);
         },
 
+        /**
+         * @returns {string}
+         */
         getBasePath: function () {
             return this._helper.basePath || '';
         },
@@ -235,6 +319,10 @@ define('view', [], function () {
             return this.ajaxRequest(url, 'DELETE', data, options);
         },
 
+        /**
+         * @param {string|Object} o
+         * @returns {Promise}
+         */
         confirm: function (o, callback, context) {
             let message;
 

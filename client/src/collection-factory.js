@@ -28,13 +28,16 @@
 
  define('collection-factory', [], function () {
 
+    /**
+     * @class Espo.CollectionFactory
+     */
     var CollectionFactory = function (loader, modelFactory, config) {
         this.loader = loader;
         this.modelFactory = modelFactory;
         this.config = config;
     };
 
-    _.extend(CollectionFactory.prototype, {
+    _.extend(CollectionFactory.prototype, /** @lends Espo.CollectionFactory */ {
 
         loader: null,
 
@@ -42,6 +45,10 @@
 
         recordListMaxSizeLimit: 200,
 
+        /**
+         * @param {string} name Entity Type.
+         * @returns {Promise<Espo.Collection>}
+         */
         create: function (name, callback, context) {
             return new Promise(resolve => {
                 context = context || this;
