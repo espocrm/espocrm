@@ -75,7 +75,7 @@ define('controller', [], function () {
 
         /**
          * A name.
-         * @param {string|false}
+         * @param {(string|false)}
          */
         name: false,
 
@@ -302,7 +302,7 @@ define('controller', [], function () {
 
         /**
          * Check access to the controller.
-         * @returns {Boolean}
+         * @returns {boolean}
          */
         checkAccessGlobal: function () {
             return true;

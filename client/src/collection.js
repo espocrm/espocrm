@@ -100,19 +100,19 @@ define('collection', [], function () {
 
         /**
          * True for desc order.
-         * @property {boolean|null}
+         * @property {?boolean}
          */
         order: null,
 
         /**
          * An order-by field.
-         * @property {string|null}
+         * @property {?string}
          */
         orderBy: null,
 
         /**
          * A where clause.
-         * @property {Array.{Object}|null}
+         * @property {?Array.{Object}}
          */
         where: null,
 
@@ -171,8 +171,8 @@ define('collection', [], function () {
         },
 
         /**
-         * @param {string} orderBy
-         * @param {bool|undefined} order
+         * @param {string} orderBy An order field.
+         * @param {?bool} [order] True for desc.
          * @returns {Promise}
          */
         sort: function (orderBy, order) {

@@ -32,41 +32,51 @@ define('views/fields/base', 'view', function (Dep) {
      * A base field view. Can be in different modes. Each mode uses a separate template.
      *
      * @todo Document all options.
+     *
+     * @class Espo.Views.Fields.Base
+     * @extends Espo.View
      */
-    return Dep.extend({
+    return Dep.extend(/** @lends Espo.Views.Fields.Base */ {
 
         /**
-         * @property {string} A field type.
+         * A field type.
+         * @property {string}
          */
         type: 'base',
 
         /**
-         * @property {string} List mode template.
+         * List mode template.
+         * @property {string}
          */
         listTemplate: 'fields/base/list',
 
         /**
-         * @property {string} List-link mode template.
+         * List-link mode template.
+         * @property {string}
          */
         listLinkTemplate: 'fields/base/list-link',
 
         /**
-         * @property {string} Detail mode template.
+         * Detail mode template.
+         * @property {string}
          */
         detailTemplate: 'fields/base/detail',
 
         /**
-         * @property {string} Edit mode template.
+         * Edit mode template.
+         * @property {string}
          */
         editTemplate: 'fields/base/edit',
 
         /**
-         * @property {string} Search mode template.
+         * Search mode template.
+         * @property {string}
          */
         searchTemplate: 'fields/base/search',
 
         /**
-         * @property {Array.<string>} A validation list. There should be a validate{Name} method for each item.
+         * A validation list. There should be a validate{Name} method for each item.
+         * @property {Array.<string>}
          */
         validations: ['required'],
 
@@ -81,48 +91,56 @@ define('views/fields/base', 'view', function (Dep) {
         MODE_SEARCH: 'search',
 
         /**
-         * @property {string} A field name.
+         * A field name.
+         * @property {string}
          */
         name: null,
 
         defs: null,
 
         /**
-         * @property {Object} Field params.
+         * Field params.
+         * @property {Object}
          */
         params: null,
 
         /**
-         * @property {string} A mode.
+         * A mode.
+         * @property {string}
          */
         mode: null,
 
         /**
-         * @property {Object|null} Search params.
+         * Search params.
+         * @property {?Object}
          */
         searchParams: null,
 
         _timeout: null,
 
         /**
-         * @property {boolean} Inline edit disabled.
+         * Inline edit disabled.
+         * @property {boolean}
          */
         inlineEditDisabled: false,
 
         /**
-         * @property {boolean} Field is disabled.
+         * Field is disabled.
+         * @property {boolean}
          */
         disabled: false,
 
         /**
-         * @property {boolean} Field is read-only.
+         * Field is read-only.
+         * @property {boolean}
          */
         readOnly: false,
 
         attributeList: null,
 
         /**
-         * @property Attribute values before edit.
+         * Attribute values before edit.
+         * @property {Object}
          */
         initialAttributes: null,
 
@@ -130,6 +148,10 @@ define('views/fields/base', 'view', function (Dep) {
 
         validateCallback: null,
 
+        /**
+         * A record helper.
+         * @property {Espo.ViewRecordHelper}
+         */
         recordHelper: null,
 
         /**
@@ -143,6 +165,7 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * Get cell element. Works only after rendered.
+         *
          * @retrun {$}
          */
         getCellElement: function () {
@@ -152,7 +175,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Is in inline-edit mode.
          *
-         * @returns {boolean}
+         * @return {boolean}
          */
         isInlineEditMode: function () {
             return !!this._isInlineEditMode;
@@ -161,7 +184,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Set disabled.
          *
-         * @param {boolean} locked Won't be able to set back.
+         * @param {boolean} [locked] Won't be able to set back.
          */
         setDisabled: function (locked) {
             this.disabled = true;
@@ -222,8 +245,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Set read-only.
          *
-         * @param {boolean} locked Won't be able to set back.
-         *
+         * @param {boolean} [locked] Won't be able to set back.
          * @return {Promise}
          */
         setReadOnly: function (locked) {
@@ -766,7 +788,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Get search-params data.
          *
-         * @returns {Object}
+         * @return {Object}
          */
         getSearchParamsData: function () {
             return this.searchParams.data || {};
@@ -775,7 +797,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Get search values.
          *
-         * @returns {Object}
+         * @return {Object}
          */
         getSearchValues: function () {
             return this.getSearchParamsData().values || {};
@@ -932,7 +954,7 @@ define('views/fields/base', 'view', function (Dep) {
          * Get list of model attributes that relate to the field.
          * Changing of any of attributes makes the field to re-render.
          *
-         * @returns {Array.<string>}
+         * @return {Array.<string>}
          */
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
@@ -1109,7 +1131,7 @@ define('views/fields/base', 'view', function (Dep) {
          * Show validation message.
          *
          * @param {string} message
-         * @param {string|$|Element} target
+         * @param {string|$|Element} [target]
          */
         showValidationMessage: function (message, target) {
             if (this.validationMessageSuspended) {
@@ -1179,7 +1201,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Validate field values.
          *
-         * @returns {boolean} True if not valid.
+         * @return {boolean} True if not valid.
          */
         validate: function () {
             for (var i in this.validations) {
@@ -1207,7 +1229,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Validate required.
          *
-         * @returns {boolean}
+         * @return {boolean}
          */
         validateRequired: function () {
             if (this.isRequired()) {
@@ -1224,7 +1246,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Has a required marked.
          *
-         * @returns {boolean}
+         * @return {boolean}
          */
         hasRequiredMarker: function () {
             return this.isRequired();
@@ -1273,7 +1295,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Fetch a search type from DOM.
          *
-         * @returns {string}
+         * @return {string}
          */
         fetchSearchType: function () {
             return this.$el.find('select.search-type').val();

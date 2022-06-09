@@ -320,7 +320,7 @@ define('view', [], function () {
         },
 
         /**
-         * @param {string|Object} o
+         * @param {(string|Object)} o
          * @returns {Promise}
          */
         confirm: function (o, callback, context) {

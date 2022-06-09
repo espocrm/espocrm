@@ -207,7 +207,7 @@ define('router', [], function () {
          * Process confirm-leave-out.
          *
          * @param {Function} callback Proceed if confirmed.
-         * @param {Object|null} [context] A context.
+         * @param {?Object} [context] A context.
          * @param {boolean} [navigateBack] To navigate back if not confirmed.
          */
         checkConfirmLeaveOut: function (callback, context, navigateBack) {
@@ -331,7 +331,7 @@ define('router', [], function () {
         /**
          * Navigate back.
          *
-         * @param {Options} options Options: trigger, replace.
+         * @param {Object} options Options: trigger, replace.
          */
         navigateBack: function (options) {
             let url;

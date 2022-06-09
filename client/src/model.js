@@ -63,7 +63,7 @@ define('model', [], function () {
      * @extends Backbone.Model
      * @mixes Backbone.Events
      *
-     * @property {string|null} id - An ID.
+     * @property {?string} id - An ID.
      * @property {Object} attributes - Attribute values.
      * @property {string} cid - An ID unique among all models.
      */
@@ -71,7 +71,7 @@ define('model', [], function () {
 
         /**
          * A root URL.
-         * @property {string|null}
+         * @property {?string}
          */
         urlRoot: null,
 
@@ -87,7 +87,7 @@ define('model', [], function () {
 
         /**
          * Definitions.
-         * @property {Object|null}
+         * @property {?Object}
          */
         defs: null,
 
@@ -103,9 +103,9 @@ define('model', [], function () {
         },
 
         /**
-         * @param {'patch'|'put'} method
-         * @param {Espo.Model} model
-         * @param {Object} options
+         * @param {string} [method] HTTP method.
+         * @param {Espo.Model} [model]
+         * @param {Object} [options]
          * @returns {Promise}
          */
         sync: function (method, model, options) {
@@ -119,7 +119,7 @@ define('model', [], function () {
         /**
          * Set an attribute value or multiple values.
          *
-         * @param {string|Object} key An attribute name or a {key => value} object.
+         * @param {(string|Object)} key An attribute name or a {key => value} object.
          * @param {*} [val] A value or options if the first argument is an object.
          * @param {Object} [options] Options. `silent` won't trigger a `change` event.
          * @returns {this}
@@ -327,7 +327,7 @@ define('model', [], function () {
          * Get a field type.
          *
          * @param {string} field
-         * @returns {string|null}
+         * @returns {?string}
          */
         getFieldType: function (field) {
             if (this.defs && this.defs.fields && (field in this.defs.fields)) {
@@ -358,7 +358,7 @@ define('model', [], function () {
          * Get a link type.
          *
          * @param {string} link
-         * @returns {string|null}
+         * @returns {?string}
          */
         getLinkType: function (link) {
             if (this.defs && this.defs.links && (link in this.defs.links)) {
