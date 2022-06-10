@@ -34,24 +34,34 @@ define('view', [], function () {
      * @class Espo.View
      * @extends Bull.View
      *
-     * @property {(Espo.Model|undefined)} model - A model.
-     * @property {(Espo.Collection|undefined)} collection - A collection.
+     * @property {?Espo.Model} model - A model.
+     * @property {?Espo.Collection} collection - A collection.
      * @property {Object} options - Passed options.
      */
-    return Bull.View.extend(/** @lends Espo.View */{
+    return Bull.View.extend(/** @lends Espo.View.prototype */{
 
         /**
+         * @callback Espo.View.actionHandlerCallback
+         * @param {jQuery.Event} e
+         */
+
+        /**
+         * Add a DOM action event handler.
+         *
          * @param {string} action
-         * @param {function} handler
+         * @param {Espo.View.actionHandlerCallback} handler
          */
         addActionHandler: function (action, handler) {
             this.events = this.events || {};
 
-            var fullAction = 'click button[data-action=\"'+action+'\"]';
+            let fullAction = 'click button[data-action=\"'+action+'\"]';
+
             this.events[fullAction] = handler;
         },
 
         /**
+         * Escape a string.
+         *
          * @param {string} string
          * @returns {string}
          */
@@ -59,6 +69,15 @@ define('view', [], function () {
             return Handlebars.Utils.escapeExpression(string);
         },
 
+        /**
+         * Show a notify-message.
+         *
+         * @deprecated Use `Espo.Ui.notify`.
+         * @param {string} label
+         * @param {string} [type]
+         * @param {number} [timeout]
+         * @param {string} [scope]
+         */
         notify: function (label, type, timeout, scope) {
             if (label == false) {
                 Espo.Ui.notify(false);
@@ -79,6 +98,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the view-helper.
+         *
          * @returns {Espo.ViewHelper}
          */
         getHelper: function () {
@@ -86,6 +107,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the current user.
+         *
          * @returns {Espo.Models.User}
          */
         getUser: function () {
@@ -95,6 +118,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the preferences.
+         *
          * @returns {Espo.Models.Preferences}
          */
         getPreferences: function () {
@@ -104,6 +129,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the config.
+         *
          * @returns {Espo.Models.Settings}
          */
         getConfig: function () {
@@ -113,6 +140,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the ACL.
+         *
          * @returns {Espo.Acl}
          */
         getAcl: function () {
@@ -122,6 +151,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the model factory.
+         *
          * @returns {Espo.ModelFactory}
          */
         getModelFactory: function () {
@@ -131,6 +162,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the collection factory.
+         *
          * @returns {Espo.CollectionFactory}
          */
         getCollectionFactory: function () {
@@ -140,6 +173,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the router.
+         *
          * @returns {Espo.Router}
          */
         getRouter: function () {
@@ -149,6 +184,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the storage-util.
+         *
          * @returns {Espo.Storage}
          */
         getStorage: function () {
@@ -167,6 +204,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the language-util.
+         *
          * @returns {Espo.Language}
          */
         getLanguage: function () {
@@ -176,6 +215,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get metadata.
+         *
          * @returns {Espo.Metadata}
          */
         getMetadata: function () {
@@ -185,6 +226,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the cache-util.
+         *
          * @returns {Espo.Cache}
          */
         getCache: function () {
@@ -194,6 +237,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the date-time util.
+         *
          * @returns {Espo.DateTime}
          */
         getDateTime: function () {
@@ -203,6 +248,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the number-util.
+         *
          * @returns {Espo.Number}
          */
         getNumberUtil: function () {
@@ -212,6 +259,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the field manager.
+         *
          * @returns {Espo.FieldManager}
          */
         getFieldManager: function () {
@@ -221,6 +270,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the base-controller.
+         *
          * @returns {Espo.Controllers.Base}
          */
         getBaseController: function () {
@@ -230,6 +281,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the theme manager.
+         *
          * @returns {Espo.ThemeManager}
          */
         getThemeManager: function () {
@@ -238,12 +291,18 @@ define('view', [], function () {
             }
         },
 
+        /**
+         * Update a page title. Supposed to be overridden if needed.
+         */
         updatePageTitle: function () {
             var title = this.getConfig().get('applicationName') || 'EspoCRM';
+
             this.setPageTitle(title);
         },
 
         /**
+         * Set a page title.
+         *
          * @param {string} title
          */
         setPageTitle: function (title) {
@@ -251,9 +310,11 @@ define('view', [], function () {
         },
 
         /**
-         * @param {string} label
-         * @param {string} category
-         * @param {string} scope
+         * Translate a label.
+         *
+         * @param {string} label Label.
+         * @param {string} category Category.
+         * @param {string} scope Scope.
          * @returns {string}
          */
         translate: function (label, category, scope) {
@@ -261,12 +322,22 @@ define('view', [], function () {
         },
 
         /**
+         * Get a base path.
          * @returns {string}
          */
         getBasePath: function () {
             return this._helper.basePath || '';
         },
 
+        /**
+         * Ajax request.
+         *
+         * @param {string} url An URL.
+         * @param {string} type A method.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxRequest: function (url, type, data, options) {
             options = options || {};
 
@@ -283,6 +354,14 @@ define('view', [], function () {
             return xhr;
         },
 
+        /**
+         * POST request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxPostRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -291,6 +370,14 @@ define('view', [], function () {
             return this.ajaxRequest(url, 'POST', data, options);
         },
 
+        /**
+         * PATCH request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxPatchRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -299,6 +386,14 @@ define('view', [], function () {
             return this.ajaxRequest(url, 'PATCH', data, options);
         },
 
+        /**
+         * PUT request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxPutRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -307,10 +402,26 @@ define('view', [], function () {
             return this.ajaxRequest(url, 'PUT', data, options);
         },
 
+        /**
+         * GET request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxGetRequest: function (url, data, options) {
             return this.ajaxRequest(url, 'GET', data, options);
         },
 
+        /**
+         * DELETE request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Object} [options] Options.
+         * @returns {Promise<any>}
+         */
         ajaxDeleteRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -320,8 +431,12 @@ define('view', [], function () {
         },
 
         /**
-         * @param {(string|Object)} o
-         * @returns {Promise}
+         * Show a confirmation dialog.
+         *
+         * @param {(string|Object)} o A message or options.
+         * @param [callback]
+         * @param [context]
+         * @returns {Promise} To be resolved if confirmed.
          */
         confirm: function (o, callback, context) {
             let message;

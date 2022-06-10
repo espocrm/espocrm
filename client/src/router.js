@@ -32,8 +32,11 @@ define('router', [], function () {
      * @class Espo.Router
      * @mixes Espo.Events
      */
-    let Router = Backbone.Router.extend(/** @lends Espo.Router */ {
+    let Router = Backbone.Router.extend(/** @lends Espo.Router.prototype */ {
 
+        /**
+         * @private
+         */
         routeList: [
             {
                 route: "clearCache",
@@ -81,8 +84,14 @@ define('router', [], function () {
             },
         ],
 
+        /**
+         * @private
+         */
         _bindRoutes: function() {},
 
+        /**
+         * @private
+         */
         setupRoutes: function () {
             this.routeParams = {};
 
@@ -117,18 +126,48 @@ define('router', [], function () {
             });
         },
 
+        /**
+         * @private
+         */
         _last: null,
 
+        /**
+         * Whether a confirm-leave-out was set.
+         *
+         * @public
+         * @property {boolean}
+         */
         confirmLeaveOut: false,
 
+        /**
+         * Whether back has been processed.
+         *
+         * @public
+         * @property {boolean}
+         */
         backProcessed: false,
 
+        /**
+         * @property {string}
+         * @internal
+         */
         confirmLeaveOutMessage: 'Are you sure?',
 
+        /**
+         * @property {string}
+         * @internal
+         */
         confirmLeaveOutConfirmText: 'Yes',
 
+        /**
+         * @property {string}
+         * @internal
+         */
         confirmLeaveOutCancelText: 'No',
 
+        /**
+         * @private
+         */
         initialize: function (options) {
             this.options = options || {};
             this.setupRoutes();
@@ -136,33 +175,33 @@ define('router', [], function () {
             this.history = [];
 
             let detectBackOrForward = (onBack, onForward) => {
-                hashHistory = [window.location.hash];
-                historyLength = window.history.length;
+                let hashHistory = [window.location.hash];
+                let historyLength = window.history.length;
 
                 return function () {
                     let hash = window.location.hash, length = window.history.length;
 
                     if (hashHistory.length && historyLength === length) {
                         if (hashHistory[hashHistory.length - 2] === hash) {
-
                             hashHistory = hashHistory.slice(0, -1);
 
                             if (onBack) {
                                 onBack();
                             }
-                        }
-                        else {
-                            hashHistory.push(hash);
 
-                            if (onForward) {
-                                onForward();
-                            }
+                            return;
                         }
-                    }
-                    else {
+
                         hashHistory.push(hash);
-                        historyLength = length;
+
+                        if (onForward) {
+                            onForward();
+                        }
+
+                        return;
                     }
+
+                    hashHistory.push(hash);
                 };
             };
 
@@ -204,9 +243,13 @@ define('router', [], function () {
         },
 
         /**
+         * @callback Espo.Router.checkConfirmLeaveOutCallback
+         */
+
+        /**
          * Process confirm-leave-out.
          *
-         * @param {Function} callback Proceed if confirmed.
+         * @param {Espo.Router.checkConfirmLeaveOutCallback} callback Proceed if confirmed.
          * @param {?Object} [context] A context.
          * @param {boolean} [navigateBack] To navigate back if not confirmed.
          */
@@ -255,6 +298,9 @@ define('router', [], function () {
             callback.call(context);
         },
 
+        /**
+         * @private
+         */
         route: function (route, name, callback) {
             let routeOriginal = route;
 
@@ -304,6 +350,9 @@ define('router', [], function () {
             return this;
         },
 
+        /**
+         * @private
+         */
         execute: function (callback, args, name, routeOriginal, options) {
             this.checkConfirmLeaveOut(function () {
                 if (name === 'defaultRoute') {
@@ -319,7 +368,7 @@ define('router', [], function () {
         /**
          * Navigate.
          *
-         * @param {string} fragment
+         * @param {string} fragment An URL fragment.
          * @param {Options} options Options: trigger, replace.
          */
         navigate: function (fragment, options) {
@@ -346,6 +395,9 @@ define('router', [], function () {
             this.navigate(url, options);
         },
 
+        /**
+         * @private
+         */
         _parseOptionsParams: function (string) {
             if (!string) {
                 return {};
@@ -372,6 +424,9 @@ define('router', [], function () {
             return options;
         },
 
+        /**
+         * @private
+         */
         defaultRoute: function (params, options) {
             let controller = params.controller || options.controller;
             let action = params.action || options.action;
@@ -379,6 +434,9 @@ define('router', [], function () {
             this.dispatch(controller, action, options);
         },
 
+        /**
+         * @private
+         */
         record: function (controller, action, id, options) {
             options = this._parseOptionsParams(options);
 
@@ -387,36 +445,60 @@ define('router', [], function () {
             this.dispatch(controller, action, options);
         },
 
+        /**
+         * @private
+         */
         view: function (controller, id, options) {
             this.record(controller, 'view', id, options);
         },
 
+        /**
+         * @private
+         */
         edit: function (controller, id, options) {
             this.record(controller, 'edit', id, options);
         },
 
+        /**
+         * @private
+         */
         create: function (controller, options) {
             this.record(controller, 'create', null, options);
         },
 
+        /**
+         * @private
+         */
         action: function (controller, action, options) {
             this.dispatch(controller, action, this._parseOptionsParams(options));
         },
 
+        /**
+         * @private
+         */
         defaultAction: function (controller) {
             this.dispatch(controller, null);
         },
 
+        /**
+         * @private
+         */
         home: function () {
             this.dispatch('Home', null);
         },
 
+        /**
+         * Process `logout` route.
+         */
         logout: function () {
             this.dispatch(null, 'logout');
 
             this.navigate('', {trigger: false});
         },
 
+        /**
+         * @private
+         */
         clearCache: function () {
             this.dispatch(null, 'clearCache');
         },
@@ -452,7 +534,6 @@ define('router', [], function () {
     });
 
     return Router;
-
 });
 
 function isIOS9UIWebView() {

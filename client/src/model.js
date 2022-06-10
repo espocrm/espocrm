@@ -34,7 +34,7 @@ define('model', [], function () {
      * Save values to the backend.
      *
      * @function save
-     * @memberof Backbone.Model
+     * @memberof Backbone.Model.prototype
      * @param {Object} [attributes] Attribute values.
      * @param {Object} [options] Options.
      * @returns {Promise}
@@ -44,7 +44,7 @@ define('model', [], function () {
      * Whether an attribute is changed. To be used only within a callback of a 'change' event listener.
      *
      * @function changed
-     * @memberof Backbone.Model
+     * @memberof Backbone.Model.prototype
      * @param {string} attribute An attribute name.
      * @returns {boolean}
      */
@@ -54,7 +54,7 @@ define('model', [], function () {
      * Fires a `change` event unless `silent` is passed as an option.
      *
      * @function clear
-     * @memberof Backbone.Model
+     * @memberof Backbone.Model.prototype
      * @param {Object} [options] Options.
      */
 
@@ -67,7 +67,7 @@ define('model', [], function () {
      * @property {Object} attributes - Attribute values.
      * @property {string} cid - An ID unique among all models.
      */
-    let Model = Dep.extend(/** @lends Espo.Model */{
+    let Model = Dep.extend(/** @lends Espo.Model.prototype */{
 
         /**
          * A root URL.
@@ -81,8 +81,14 @@ define('model', [], function () {
          */
         name: null,
 
+        /**
+         * @private
+         */
         dateTime: null,
 
+        /**
+         * @private
+         */
         _user: null,
 
         /**
@@ -91,6 +97,9 @@ define('model', [], function () {
          */
         defs: null,
 
+        /**
+         * @protected
+         */
         initialize: function () {
             this.urlRoot = this.urlRoot || this.name;
 
@@ -164,7 +173,7 @@ define('model', [], function () {
         },
 
         /**
-         * Is new.
+         * Whether is new.
          *
          * @returns {boolean}
          */
@@ -173,6 +182,8 @@ define('model', [], function () {
         },
 
         /**
+         * Set defs.
+         *
          * @param {Object} defs
          */
         setDefs: function (defs) {
@@ -239,6 +250,8 @@ define('model', [], function () {
         },
 
         /**
+         * @protected
+         *
          * @param {*} defaultValue
          * @returns {*}
          * @deprecated
@@ -369,8 +382,8 @@ define('model', [], function () {
         /**
          * Get a link param.
          *
-         * @param {string} link
-         * @param {string} param
+         * @param {string} link A link.
+         * @param {string} param A param.
          * @returns {*}
          */
         getLinkParam: function (link, param) {
@@ -386,7 +399,7 @@ define('model', [], function () {
         /**
          * Is a field read-only.
          *
-         * @param {string} field
+         * @param {string} field A field.
          * @returns {bool}
          */
         isFieldReadOnly: function (field) {
@@ -396,7 +409,7 @@ define('model', [], function () {
         /**
          * If a field required.
          *
-         * @param {string} field
+         * @param {string} field A field.
          * @returns {bool}
          */
         isRequired: function (field) {
@@ -406,7 +419,7 @@ define('model', [], function () {
         /**
          * Get IDs of a link-multiple field.
          *
-         * @param {type} field
+         * @param {type} field A link-multiple field name.
          * @returns {string[]}
          */
         getLinkMultipleIdList: function (field) {
@@ -416,17 +429,25 @@ define('model', [], function () {
         /**
          * Get team IDs.
          *
-         * @param {type} field
          * @returns {string[]}
          */
         getTeamIdList: function () {
             return this.get('teamsIds') || [];
         },
 
+
+        /**
+         * @protected
+         * @returns {Espo.DateTime}
+         */
         getDateTime: function () {
             return this.dateTime;
         },
 
+        /**
+         * @protected
+         * @returns {Espo.Models.User}
+         */
         getUser: function () {
             return this._user;
         },
@@ -434,7 +455,7 @@ define('model', [], function () {
         /**
          * Whether has a field.
          *
-         * @param {string} field
+         * @param {string} field A field.
          * @returns {boolean}
          */
         hasField: function (field) {
@@ -444,7 +465,7 @@ define('model', [], function () {
         /**
          * Whether has a link.
          *
-         * @param {string} field
+         * @param {string} link A link.
          * @returns {boolean}
          */
         hasLink: function (link) {
@@ -476,6 +497,7 @@ define('model', [], function () {
 
         /**
          * Fetch values from the backend.
+         *
          * @param {Object} options Options.
          * @returns {Promise<Object>}
          */

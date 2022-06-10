@@ -32,7 +32,7 @@ define('collection', [], function () {
      * Add a model or models. Firing an `add` event for each model, and an `update` event afterwards.
      *
      * @function add
-     * @memberof Backbone.Collection
+     * @memberof Backbone.Collection.prototype
      * @param {Backbone.Model|Backbone.Model[]} models A model or models.
      * @param {Object} [options] Options.
      */
@@ -42,7 +42,7 @@ define('collection', [], function () {
      * unless `{silent: true}`.
      *
      * @function remove
-     * @memberof Backbone.Collection
+     * @memberof Backbone.Collection.prototype
      * @param {Backbone.Model|Backbone.Model[]|string|string[]} models A model, models, ID or IDs.
      * @param {Object} [options] Options.
      */
@@ -51,7 +51,7 @@ define('collection', [], function () {
      * Append a model.
      *
      * @function push
-     * @memberof Backbone.Collection
+     * @memberof Backbone.Collection.prototype
      * @param {Backbone.Model} model A model.
      * @param {Object} [options] Options.
      */
@@ -60,19 +60,19 @@ define('collection', [], function () {
      * Remove and return the last model from the collection.
      *
      * @function pop
-     * @memberof Backbone.Collection
+     * @memberof Backbone.Collection.prototype
      * @param {Object} [options] Options.
      */
 
     /**
      * @class Espo.Collection
-     * @extends Backbone.Collection
+     * @extends Backbone.Collection.prototype
      * @mixes Backbone.Events
      *
      * @property {number} length - A number of records.
      * @property {Espo.Model[]} models - Models.
      */
-    var Collection = Backbone.Collection.extend(/** @lends Espo.Collection */ {
+    var Collection = Backbone.Collection.extend(/** @lends Espo.Collection.prototype */ {
 
         /**
          * An entity type.

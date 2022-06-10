@@ -37,16 +37,29 @@
         this.config = config;
     };
 
-    _.extend(CollectionFactory.prototype, /** @lends Espo.CollectionFactory */ {
+    _.extend(CollectionFactory.prototype, /** @lends Espo.CollectionFactory.prototype */ {
 
+        /**
+         * @private
+         */
         loader: null,
 
+        /**
+         * @private
+         */
         modelFactory: null,
 
+        /**
+         * @private
+         */
         recordListMaxSizeLimit: 200,
 
         /**
-         * @param {string} name Entity Type.
+         * Create a collection.
+         *
+         * @param {string} name An entity Type.
+         * @param {Function} [callback] Deprecated.
+         * @param {Object} [context] Deprecated.
          * @returns {Promise<Espo.Collection>}
          */
         create: function (name, callback, context) {

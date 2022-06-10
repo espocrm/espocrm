@@ -39,20 +39,39 @@ define('model-factory', [], function () {
         this.seeds = {};
     };
 
-    _.extend(ModelFactory.prototype, /** @lends Espo.ModelFactory */ {
+    _.extend(ModelFactory.prototype, /** @lends Espo.ModelFactory.prototype */ {
 
+        /**
+         * @private
+         */
         loader: null,
 
+        /**
+         * @private
+         */
         metadata: null,
 
+        /**
+         * @private
+         */
         seeds: null,
 
+        /**
+         * @private
+         */
         dateTime: null,
 
+        /**
+         * @private
+         */
         user: null,
 
         /**
-         * @param {string} name Entity Type.
+         * Create a model.
+         *
+         * @param {string} name An entity type.
+         * @param {Function} [callback] Deprecated.
+         * @param {Object} [context] Deprecated.
          * @returns {Promise<Espo.Model>}
          */
         create: function (name, callback, context) {
@@ -71,6 +90,9 @@ define('model-factory', [], function () {
             });
         },
 
+        /**
+         * @private
+         */
         getSeed: function (name, callback) {
             if ('name' in this.seeds) {
                 callback(this.seeds[name]);
