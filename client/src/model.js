@@ -98,8 +98,6 @@ define('model', [], function () {
 
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
-
-            Dep.prototype.initialize.call(this);
         },
 
         /**

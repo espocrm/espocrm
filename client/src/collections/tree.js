@@ -32,6 +32,7 @@ define('collections/tree', 'collection', function (Dep) {
 
         createSeed: function () {
             var seed = new this.constructor();
+
             seed.url = this.url;
             seed.model = this.model;
             seed._user = this._user;
@@ -89,11 +90,11 @@ define('collections/tree', 'collection', function (Dep) {
             if (this.parentId) {
                 options.data.parentId = this.parentId;
             }
+
             options.data.maxDepth = this.maxDepth;
 
             return Dep.prototype.fetch.call(this, options);
         },
 
     });
-
 });

@@ -25,23 +25,23 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('models/preferences', 'model', function (Dep) {
+
+define('models/preferences', 'model', function (Dep) {
 
     return Dep.extend({
 
-        name: "Preferences",
+        name: 'Preferences',
 
         settings: null,
 
         getDashletOptions: function (id) {
             var value = this.get('dashletsOptions') || {};
+
             return value[id] || false;
         },
 
         isPortal: function () {
             return this.get('isPortalUser');
-        }
-
+        },
     });
-
 });

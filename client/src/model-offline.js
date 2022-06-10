@@ -40,9 +40,9 @@ define('model-offline', 'model', function (Model) {
         _key: null,
 
         initialize: function (attributes, options) {
-            options = options || {};
-
             Model.prototype.initialize.apply(this, arguments);
+
+            options = options || {};
 
             this._key = this.url = this.name;
 

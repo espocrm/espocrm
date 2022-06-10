@@ -148,8 +148,6 @@ define('collection', [], function () {
             this.defaultOrderBy = this.orderBy;
 
             this.data = {};
-
-            Backbone.Collection.prototype.initialize.call(this);
         },
 
         _onModelEvent: function(event, model, collection, options) {

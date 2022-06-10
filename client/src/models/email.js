@@ -25,10 +25,10 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('models/email', 'model', function (Dep) {
+
+define('models/email', 'model', function (Dep) {
 
     return Dep.extend({
 
     });
-
 });
