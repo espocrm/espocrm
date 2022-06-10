@@ -27,3 +27,5 @@
 client/css/espo/*
 client/lib/*
 client/modules/crm/lib/*
+
+.idea
