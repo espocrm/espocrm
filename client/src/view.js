@@ -46,6 +46,7 @@ define('view', [], function () {
          *
          * @name model
          * @type {?Espo.Model}
+         * @memberof Espo.View.prototype
          * @public
          */
 
@@ -54,6 +55,7 @@ define('view', [], function () {
          *
          * @name collection
          * @type {?Espo.Collection}
+         * @memberof Espo.View.prototype
          * @public
          */
 

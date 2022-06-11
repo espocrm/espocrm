@@ -93,6 +93,7 @@ define('collection', [], function () {
          *
          * @name entityType
          * @type {string}
+         * @memberof Espo.Collection.prototype
          */
 
         /**
@@ -100,6 +101,7 @@ define('collection', [], function () {
          *
          * @name length
          * @type {number}
+         * @memberof Espo.Collection.prototype
          */
 
         /**
@@ -107,6 +109,7 @@ define('collection', [], function () {
          *
          * @name length
          * @type {Espo.Model[]}
+         * @memberof Espo.Collection.prototype
          */
 
         /**

@@ -88,6 +88,7 @@ define('model', [], function () {
          * @name entityType
          * @property {string}
          * @public
+         * @memberof Espo.Model.prototype
          */
 
         /**
@@ -96,6 +97,7 @@ define('model', [], function () {
          * @name cid
          * @type {?string}
          * @public
+         * @memberof Espo.Model.prototype
          */
 
         /**
@@ -104,6 +106,7 @@ define('model', [], function () {
          * @name cid
          * @type {string}
          * @public
+         * @memberof Espo.Model.prototype
          */
 
         /**
@@ -112,6 +115,7 @@ define('model', [], function () {
          * @name attributes
          * @type {Object}
          * @public
+         * @memberof Espo.Model.prototype
          */
 
         /**
