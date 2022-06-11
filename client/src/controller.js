@@ -29,7 +29,7 @@
 define('controller', [], function () {
 
     /**
-     * @callback Espo.Controller.viewCallback
+     * @callback Espo.Controller~viewCallback
      * @param {Espo.View} view A view.
      */
 
@@ -75,35 +75,37 @@ define('controller', [], function () {
         /**
          * A default action.
          *
-         * @param {string}
+         * @type {string}
          */
         defaultAction: 'index',
 
         /**
          * A name.
          *
-         * @param {(string|false)}
+         * @type {(string|false)}
          */
         name: false,
 
         /**
          * Params.
          *
-         * @param {Object}
+         * @type {Object}
+         * @private
          */
         params: null,
 
         /**
          * A view factory.
          *
-         * @param {Bull.ViewFactory}
+         * @type {Bull.ViewFactory}
+         * @protected
          */
         viewFactory: null,
 
         /**
          * A model factory.
          *
-         * @param {Espo.ModelFactory}
+         * @type {Espo.ModelFactory}
          * @protected
          */
         modelFactory: null,
@@ -111,7 +113,7 @@ define('controller', [], function () {
         /**
          * A controller factory.
          *
-         * @param {Espo.ControllerFactory}
+         * @type {Espo.ControllerFactory}
          * @protected
          */
         controllerFactory: null,
@@ -400,7 +402,7 @@ define('controller', [], function () {
         /**
          * Create a master view, render if not already rendered.
          *
-         * @param {Espo.Controller.viewCallback} callback A callback with a created master view.
+         * @param {Espo.Controller~viewCallback} callback A callback with a created master view.
          */
         master: function (callback) {
             let entire = this.get('entire');
@@ -442,7 +444,7 @@ define('controller', [], function () {
          * Create a main view in the master.
          * @param {String} view A view name.
          * @param {Object} options Options for view.
-         * @param {Espo.Controller.viewCallback} [callback] A callback with a created view.
+         * @param {Espo.Controller~viewCallback} [callback] A callback with a created view.
          * @param {boolean} [useStored] Use a stored view if available.
          * @param {boolean} [storedKey] A stored view key.
          */
@@ -582,7 +584,7 @@ define('controller', [], function () {
          *
          * @param {String} view A view name.
          * @param {Object} options Options for a view.
-         * @param {Espo.Controller.viewCallback} [callback] A callback with a created view.
+         * @param {Espo.Controller~viewCallback} [callback] A callback with a created view.
          */
         entire: function (view, options, callback) {
             let master = this.get('master');

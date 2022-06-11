@@ -33,27 +33,38 @@ define('view', [], function () {
      *
      * @class Espo.View
      * @extends Bull.View
-     *
-     * @property {?Espo.Model} model - A model.
-     * @property {?Espo.Collection} collection - A collection.
-     * @property {Object} options - Passed options.
      */
     return Bull.View.extend(/** @lends Espo.View.prototype */{
 
         /**
-         * @callback Espo.View.actionHandlerCallback
-         * @param {jQuery.Event} e
+         * @callback Espo.View~actionHandlerCallback
+         * @param {jQuery.Event} e A DOM event.
          */
 
         /**
-         * Add a DOM action event handler.
+         * A model.
          *
+         * @name model
+         * @type {?Espo.Model}
+         * @public
+         */
+
+        /**
+         * A collection.
+         *
+         * @name collection
+         * @type {?Espo.Collection}
+         * @public
+         */
+
+        /**
+         * Add a DOM button-action event handler.
+         *
+         * @deprecated Use the `events` property.
          * @param {string} action
-         * @param {Espo.View.actionHandlerCallback} handler
+         * @param {Espo.View~actionHandlerCallback} handler
          */
         addActionHandler: function (action, handler) {
-            this.events = this.events || {};
-
             let fullAction = 'click button[data-action=\"'+action+'\"]';
 
             this.events[fullAction] = handler;
@@ -195,6 +206,8 @@ define('view', [], function () {
         },
 
         /**
+         * Get the session-storage-util.
+         *
          * @returns {Espo.SessionStorage}
          */
         getSessionStorage: function () {
@@ -303,7 +316,7 @@ define('view', [], function () {
         /**
          * Set a page title.
          *
-         * @param {string} title
+         * @param {string} title A title.
          */
         setPageTitle: function (title) {
             this.getHelper().pageTitle.setTitle(title);
@@ -323,6 +336,7 @@ define('view', [], function () {
 
         /**
          * Get a base path.
+         *
          * @returns {string}
          */
         getBasePath: function () {
@@ -332,6 +346,7 @@ define('view', [], function () {
         /**
          * Ajax request.
          *
+         * @deprecated Use `Espo.Ajax`.
          * @param {string} url An URL.
          * @param {string} type A method.
          * @param {any} [data] Data.
@@ -357,6 +372,7 @@ define('view', [], function () {
         /**
          * POST request.
          *
+         * @deprecated Use `Espo.Ajax.postRequest`.
          * @param {string} url An URL.
          * @param {any} [data] Data.
          * @param {Object} [options] Options.
@@ -373,6 +389,7 @@ define('view', [], function () {
         /**
          * PATCH request.
          *
+         * @deprecated Use `Espo.Ajax.patchRequest`.
          * @param {string} url An URL.
          * @param {any} [data] Data.
          * @param {Object} [options] Options.
@@ -389,6 +406,7 @@ define('view', [], function () {
         /**
          * PUT request.
          *
+         * @deprecated Use `Espo.Ajax.putRequest`.
          * @param {string} url An URL.
          * @param {any} [data] Data.
          * @param {Object} [options] Options.
@@ -405,6 +423,7 @@ define('view', [], function () {
         /**
          * GET request.
          *
+         * @deprecated Use `Espo.Ajax.getRequest`.
          * @param {string} url An URL.
          * @param {any} [data] Data.
          * @param {Object} [options] Options.
@@ -417,6 +436,7 @@ define('view', [], function () {
         /**
          * DELETE request.
          *
+         * @deprecated Use `Espo.Ajax.deleteRequest`.
          * @param {string} url An URL.
          * @param {any} [data] Data.
          * @param {Object} [options] Options.
@@ -467,6 +487,6 @@ define('view', [], function () {
                 noCancelButton: o.noCancelButton,
                 backdrop: ('backdrop' in o) ? o.backdrop : true,
             }, callback, context);
-        }
+        },
     });
 });

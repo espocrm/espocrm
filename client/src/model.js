@@ -59,25 +59,74 @@ define('model', [], function () {
      */
 
     /**
+     * When attributes have changed.
+     *
+     * @event Espo.Model#change
+     * @param {Espo.Model} model A model.
+     * @param {Object} o Options.
+     */
+
+    /**
+     * On sync with backend.
+     *
+     * @event Espo.Model#sync
+     * @param {Espo.Model} model A model.
+     * @param {Object} response Response from backend.
+     * @param {Object} o Options.
+     */
+
+    /**
      * @class Espo.Model
      * @extends Backbone.Model
      * @mixes Backbone.Events
-     *
-     * @property {?string} id - An ID.
-     * @property {Object} attributes - Attribute values.
-     * @property {string} cid - An ID unique among all models.
      */
     let Model = Dep.extend(/** @lends Espo.Model.prototype */{
 
         /**
+         * An entity type.
+         *
+         * @name entityType
+         * @property {string}
+         * @public
+         */
+
+        /**
+         * A record ID.
+         *
+         * @name cid
+         * @type {?string}
+         * @public
+         */
+
+        /**
+         * An ID, unique among all models.
+         *
+         * @name cid
+         * @type {string}
+         * @public
+         */
+
+        /**
+         * Attribute values.
+         *
+         * @name attributes
+         * @type {Object}
+         * @public
+         */
+
+        /**
          * A root URL.
-         * @property {?string}
+         *
+         * @type {?string}
+         * @public
          */
         urlRoot: null,
 
         /**
-         * An entity type.
-         * @property {string}
+         * A name.
+         *
+         * @type {string}
+         * @public
          */
         name: null,
 
@@ -93,7 +142,7 @@ define('model', [], function () {
 
         /**
          * Definitions.
-         * @property {?Object}
+         * @type {?Object}
          */
         defs: null,
 

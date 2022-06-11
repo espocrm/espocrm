@@ -29,6 +29,14 @@
 define('router', [], function () {
 
     /**
+     * On route.
+     *
+     * @event Backbone.Router#route
+     * @param {string} name A route name.
+     * @param {any[]} args Arguments.
+     */
+
+    /**
      * @class Espo.Router
      * @mixes Espo.Events
      */
@@ -135,7 +143,7 @@ define('router', [], function () {
          * Whether a confirm-leave-out was set.
          *
          * @public
-         * @property {boolean}
+         * @type {boolean}
          */
         confirmLeaveOut: false,
 
@@ -143,24 +151,24 @@ define('router', [], function () {
          * Whether back has been processed.
          *
          * @public
-         * @property {boolean}
+         * @type {boolean}
          */
         backProcessed: false,
 
         /**
-         * @property {string}
+         * @type {string}
          * @internal
          */
         confirmLeaveOutMessage: 'Are you sure?',
 
         /**
-         * @property {string}
+         * @type {string}
          * @internal
          */
         confirmLeaveOutConfirmText: 'Yes',
 
         /**
-         * @property {string}
+         * @type {string}
          * @internal
          */
         confirmLeaveOutCancelText: 'No',
@@ -243,13 +251,13 @@ define('router', [], function () {
         },
 
         /**
-         * @callback Espo.Router.checkConfirmLeaveOutCallback
+         * @callback Espo.Router~checkConfirmLeaveOutCallback
          */
 
         /**
          * Process confirm-leave-out.
          *
-         * @param {Espo.Router.checkConfirmLeaveOutCallback} callback Proceed if confirmed.
+         * @param {Espo.Router~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
          * @param {?Object} [context] A context.
          * @param {boolean} [navigateBack] To navigate back if not confirmed.
          */

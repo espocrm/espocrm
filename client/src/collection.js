@@ -29,6 +29,23 @@
 define('collection', [], function () {
 
     /**
+     * On sync with backend.
+     *
+     * @event Espo.Collection#sync
+     * @param {Espo.Collection} collection A collection.
+     * @param {Object} response Response from backend.
+     * @param {Object} o Options.
+     */
+
+    /**
+     * Any number of models have been added, removed or changed.
+     *
+     * @event Espo.Collection#update
+     * @param {Espo.Collection} collection A collection.
+     * @param {Object} o Options.
+     */
+
+    /**
      * Add a model or models. Firing an `add` event for each model, and an `update` event afterwards.
      *
      * @function add
@@ -68,69 +85,98 @@ define('collection', [], function () {
      * @class Espo.Collection
      * @extends Backbone.Collection.prototype
      * @mixes Backbone.Events
-     *
-     * @property {number} length - A number of records.
-     * @property {Espo.Model[]} models - Models.
      */
     var Collection = Backbone.Collection.extend(/** @lends Espo.Collection.prototype */ {
 
         /**
          * An entity type.
-         * @property {string}
+         *
+         * @name entityType
+         * @type {string}
+         */
+
+        /**
+         * A number of records.
+         *
+         * @name length
+         * @type {number}
+         */
+
+        /**
+         * Models.
+         *
+         * @name length
+         * @type {Espo.Model[]}
+         */
+
+        /**
+         * A name.
+         *
+         * @type {string}
          */
         name: null,
 
         /**
          * A total number of records.
-         * @property {number}
+         *
+         * @type {number}
          */
         total: 0,
 
         /**
          * A current offset (for pagination).
-         * @property {number}
+         *
+         * @type {number}
          */
         offset: 0,
 
         /**
          * A max size (for pagination).
-         * @property {number}
+         *
+         * @type {number}
          */
         maxSize: 20,
 
         /**
          * True for desc order.
-         * @property {?boolean}
+         *
+         * @type {?boolean}
          */
         order: null,
 
         /**
          * An order-by field.
-         * @property {?string}
+         *
+         * @type {?string}
          */
         orderBy: null,
 
         /**
          * A where clause.
-         * @property {?Array.{Object}}
+         *
+         * @type {?Array.<Object>}
          */
         where: null,
 
         whereAdditional: null,
 
         /**
-         * @property {number}
+         * @type {number}
          */
         lengthCorrection: 0,
 
         /**
-         * @property {number}
+         * @type {number}
          */
         maxMaxSize: 0,
 
+        /**
+         * @private
+         */
         _user: null,
 
         /**
+         * @protected
          * @param {Espo.Model[]} models
          * @param {Object} options
          */
@@ -150,6 +196,9 @@ define('collection', [], function () {
             this.data = {};
         },
 
+        /**
+         * @private
+         */
         _onModelEvent: function(event, model, collection, options) {
             if (event === 'sync' && collection !== this) {
                 return;
@@ -159,6 +208,8 @@ define('collection', [], function () {
         },
 
         /**
+         * Reset.
+         *
          * @param {Espo.Model[]} models
          * @param {Object} options
          */
@@ -336,6 +387,9 @@ define('collection', [], function () {
             return where;
         },
 
+        /**
+         * @protected
+         */
         getUser: function () {
             return this._user;
         },
