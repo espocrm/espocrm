@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": "client",
+        "paths": {
+            "*": ["src/*"],
+            "crm:*": ["modules/crm/src/*"]
+        },
+        "module": "AMD"
+    }
+}
