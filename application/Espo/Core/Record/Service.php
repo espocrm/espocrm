@@ -286,7 +286,8 @@ class Service implements Crud,
      *
      * @return TEntity
      * @throws Error
-     * @throws NotFoundSilent If no read access.
+     * @throws NotFoundSilent If not found.
+     * @throws ForbiddenSilent If no read access.
      */
     public function read(string $id, ReadParams $params): Entity
     {
@@ -315,7 +316,6 @@ class Service implements Crud,
      * Get an entity by ID. Access control check is performed.
      *
      * @throws ForbiddenSilent If no read access.
-     *
      * @return TEntity|null
      */
     public function getEntity(string $id): ?Entity
