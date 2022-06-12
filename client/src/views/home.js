@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/home', 'view', function (Dep) {
+define('views/home', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,6 +34,7 @@ define('views/home', 'view', function (Dep) {
 
         setup: function () {
             var view = this.getMetadata().get(['clientDefs', 'Home', 'view']) || 'views/dashboard';
+
             this.createView('content', view, {
                 el: this.options.el + ' > .home-content'
             });

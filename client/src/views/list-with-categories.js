@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/list-with-categories', 'views/list', function (Dep) {
+define('views/list-with-categories', ['views/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -390,7 +390,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.nestedCategoriesCollection.parentId = this.currentCategoryId;
 
             this.nestedCategoriesCollection.currentCategoryId = this.currentCategoryId;
-            this.nestedCategoriesCollection.currentCategoryName = this.currentCategoryName || this.currentCategoryId;
+            this.nestedCategoriesCollection.currentCategoryName = this.currentCategoryName ||
+                this.currentCategoryId;
 
             this.nestedCategoriesCollection.where = [filter];
         },

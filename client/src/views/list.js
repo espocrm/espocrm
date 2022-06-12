@@ -517,6 +517,5 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
         isActualForReuse: function () {
             return this.collection.isFetched;
         },
-
     });
 });

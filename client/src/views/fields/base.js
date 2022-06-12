@@ -26,12 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/base', 'view', function (Dep) {
+define('views/fields/base', ['view'], function (Dep) {
 
     /**
      * A base field view. Can be in different modes. Each mode uses a separate template.
      *
      * @todo Document all options.
+     * @todo Document events.
      *
      * @class Espo.Views.Fields.Base
      * @extends Espo.View
@@ -40,43 +41,43 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * A field type.
-         * @property {string}
+         * @type {string}
          */
         type: 'base',
 
         /**
          * List mode template.
-         * @property {string}
+         * @type {string}
          */
         listTemplate: 'fields/base/list',
 
         /**
          * List-link mode template.
-         * @property {string}
+         * @type {string}
          */
         listLinkTemplate: 'fields/base/list-link',
 
         /**
          * Detail mode template.
-         * @property {string}
+         * @type {string}
          */
         detailTemplate: 'fields/base/detail',
 
         /**
          * Edit mode template.
-         * @property {string}
+         * @type {string}
          */
         editTemplate: 'fields/base/edit',
 
         /**
          * Search mode template.
-         * @property {string}
+         * @type {string}
          */
         searchTemplate: 'fields/base/search',
 
         /**
-         * A validation list. There should be a validate{Name} method for each item.
-         * @property {Array.<string>}
+         * A validation list. There should be a `validate{Name}` method for each item.
+         * @type {Array.<string>}
          */
         validations: ['required'],
 
@@ -92,27 +93,30 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * A field name.
-         * @property {string}
+         * @type {string}
          */
         name: null,
 
+        /**
+         * @type {Object}
+         */
         defs: null,
 
         /**
          * Field params.
-         * @property {Object}
+         * @type {Object}
          */
         params: null,
 
         /**
          * A mode.
-         * @property {string}
+         * @type {string}
          */
         mode: null,
 
         /**
          * Search params.
-         * @property {?Object}
+         * @type {?Object}
          */
         searchParams: null,
 
@@ -120,19 +124,19 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * Inline edit disabled.
-         * @property {boolean}
+         * @type {boolean}
          */
         inlineEditDisabled: false,
 
         /**
          * Field is disabled.
-         * @property {boolean}
+         * @type {boolean}
          */
         disabled: false,
 
         /**
          * Field is read-only.
-         * @property {boolean}
+         * @type {boolean}
          */
         readOnly: false,
 
@@ -140,7 +144,7 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * Attribute values before edit.
-         * @property {Object}
+         * @type {Object}
          */
         initialAttributes: null,
 
@@ -150,7 +154,7 @@ define('views/fields/base', 'view', function (Dep) {
 
         /**
          * A record helper.
-         * @property {Espo.ViewRecordHelper}
+         * @type {Espo.ViewRecordHelper}
          */
         recordHelper: null,
 
@@ -166,7 +170,7 @@ define('views/fields/base', 'view', function (Dep) {
         /**
          * Get cell element. Works only after rendered.
          *
-         * @retrun {$}
+         * @returns {$}
          */
         getCellElement: function () {
             return this.$el.parent();

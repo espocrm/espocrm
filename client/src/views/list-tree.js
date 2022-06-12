@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/list-tree', 'views/list', function (Dep) {
+define('views/list-tree', ['views/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,8 +37,8 @@ define('views/list-tree', 'views/list', function (Dep) {
         name: 'listTree',
 
         getRecordViewName: function () {
-            return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listTree') || 'views/record/list-tree';
+            return this.getMetadata()
+                .get('clientDefs.' + this.scope + '.recordViews.listTree') || 'views/record/list-tree';
         },
-
     });
 });

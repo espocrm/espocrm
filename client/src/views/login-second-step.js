@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/login-second-step', 'view', function (Dep) {
+define('views/login-second-step', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,8 +42,6 @@ define('views/login-second-step', 'view', function (Dep) {
         events: {
             'submit #login-form': function (e) {
                 this.send();
-
-                return;
             },
             'click [data-action="backToLogin"]': function () {
                 this.trigger('back');

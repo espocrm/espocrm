@@ -377,7 +377,7 @@ define('router', [], function () {
          * Navigate.
          *
          * @param {string} fragment An URL fragment.
-         * @param {Options} options Options: trigger, replace.
+         * @param {Object} options Options: trigger, replace.
          */
         navigate: function (fragment, options) {
             this.history.push(fragment);
