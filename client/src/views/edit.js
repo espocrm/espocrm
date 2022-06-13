@@ -29,6 +29,8 @@
 define('views/edit', ['views/main'], function (Dep) {
 
     /**
+     * An edit view page.
+     *
      * @class
      * @name Class
      * @extends module:views/main.Class

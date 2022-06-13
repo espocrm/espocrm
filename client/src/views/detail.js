@@ -29,6 +29,8 @@
 define('views/detail', ['views/main'], function (Dep) {
 
     /**
+     * A detail view page.
+     *
      * @class
      * @name Class
      * @extends module:views/main.Class

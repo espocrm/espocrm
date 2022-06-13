@@ -28,44 +28,135 @@
 
 define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
 
-    return Dep.extend({
+    /**
+     * A list view page.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/main.Class
+     * @memberOf module:views/list
+     */
+    return Dep.extend(/** @lends module:views/list.Class.prototype */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'list',
 
+        /**
+         * @inheritDoc
+         */
         scope: null,
 
+        /**
+         * @inheritDoc
+         */
         name: 'List',
 
+        /**
+         * A header view name.
+         *
+         * @type {string}
+         */
         headerView: 'views/header',
 
+        /**
+         * A search view name.
+         *
+         * @type {string}
+         */
         searchView: 'views/record/search',
 
+        /**
+         * A record/list view name.
+         *
+         * @type {string}
+         */
         recordView: 'views/record/list',
 
+        /**
+         * A record/kanban view name.
+         *
+         * @type {string}
+         */
         recordKanbanView: 'views/record/kanban',
 
+        /**
+         * Has a search panel.
+         *
+         * @type {boolean}
+         */
         searchPanel: true,
 
+        /**
+         * @type {module:search-manager.Class}
+         */
         searchManager: null,
 
+        /**
+         * Has a create button.
+         *
+         * @type {boolean}
+         */
         createButton: true,
 
+        /**
+         * To use a modal dialog when creating a record.
+         *
+         * @type {boolean}
+         */
         quickCreate: false,
 
+        /**
+         * @inheritDoc
+         */
         optionsToPass: [],
 
+        /**
+         * After create a view will be stored, so it can be re-used after.
+         * Useful to avoid re-rendering when come back the list view.
+         *
+         * @type {boolean}
+         */
         storeViewAfterCreate: false,
 
+        /**
+         * After update a view will be stored, so it can be re-used after.
+         * Useful to avoid re-rendering when come back the list view.
+         *
+         * @type {boolean}
+         */
         storeViewAfterUpdate: true,
 
+        /**
+         * Use a current URL as a root URL when open a record. To be able to return to the same URL.
+         */
         keepCurrentRootUrl: false,
 
+        /**
+         * A view mode. 'list', 'kanban`.
+         *
+         * @type {string}
+         */
         viewMode: null,
 
+        /**
+         * An available view mode list.
+         *
+         * @type {string[]}
+         */
         viewModeList: null,
 
+        /**
+         * A default view mode.
+         *
+         * @type {string}
+         */
         defaultViewMode: 'list',
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
@@ -124,6 +215,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             this.getHelper().processSetupHandlers(this, 'list');
         },
 
+        /**
+         * Set up modes.
+         */
         setupModes: function () {
             this.defaultViewMode = this.options.defaultViewMode ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listDefaultViewMode']) ||
@@ -168,6 +262,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             }
         },
 
+        /**
+         * Set up a header.
+         */
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 collection: this.collection,
@@ -177,6 +274,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             });
         },
 
+        /**
+         * Set up a create button.
+         */
         setupCreateButton: function () {
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
@@ -187,20 +287,25 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
                 });
+
+                return;
             }
-            else {
-                this.menu.buttons.unshift({
-                    link: '#' + this.scope + '/create',
-                    action: 'create',
-                    html: '<span class="fas fa-plus fa-sm"></span> ' +
-                        this.translate('Create ' +  this.scope,  'labels', this.scope),
-                    style: 'default',
-                    acl: 'create',
-                    aclScope: this.entityType || this.scope,
-                });
-            }
+
+            this.menu.buttons.unshift({
+                link: '#' + this.scope + '/create',
+                action: 'create',
+                html: '<span class="fas fa-plus fa-sm"></span> ' +
+                    this.translate('Create ' +  this.scope,  'labels', this.scope),
+                style: 'default',
+                acl: 'create',
+                aclScope: this.entityType || this.scope,
+            });
+
         },
 
+        /**
+         * Set up a search panel.
+         */
         setupSearchPanel: function () {
             this.createView('search', this.searchView, {
                 collection: this.collection,
@@ -221,6 +326,11 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             });
         },
 
+        /**
+         * Switch a view mode.
+         *
+         * @param {string} mode
+         */
         switchViewMode: function (mode) {
             this.clearView('list');
             this.collection.isFetched = false;
@@ -230,6 +340,12 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             this.loadList();
         },
 
+        /**
+         * Set a view mode.
+         *
+         * @param {string} mode A mode.
+         * @param {boolean} toStore To preserve a mode being set.
+         */
         setViewMode: function (mode, toStore) {
             this.viewMode = mode;
 
@@ -250,27 +366,37 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             if (this[methodName]) {
                 this[methodName]();
-
-                return;
             }
         },
 
+        /**
+         * Called when the kanban mode is set.
+         */
         setViewModeKanban: function () {
             this.collection.url = 'Kanban/' + this.scope;
-
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
-
             this.collection.resetOrderToDefault();
         },
 
+        /**
+         * Reset sorting in a storage.
+         */
         resetSorting: function () {
             this.getStorage().clear('listSorting', this.collection.name);
         },
 
+        /**
+         * Get default search data.
+         *
+         * @returns {Object}
+         */
         getSearchDefaultData: function () {
             return this.getMetadata().get('clientDefs.' + this.scope + '.defaultFilterData');
         },
 
+        /**
+         * Set up a search manager.
+         */
         setupSearchManager: function () {
             var collection = this.collection;
 
@@ -291,6 +417,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             this.searchManager = searchManager;
         },
 
+        /**
+         * Set up sorting.
+         */
         setupSorting: function () {
             if (!this.searchPanel) {
                 return;
@@ -299,6 +428,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             this.applyStoredSorting();
         },
 
+        /**
+         * Apply stored sorting.
+         */
         applyStoredSorting: function () {
             var sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
 
@@ -311,6 +443,11 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             }
         },
 
+        /**
+         * Get a record view name.
+         *
+         * @returns {string}
+         */
         getRecordViewName: function () {
             if (this.viewMode === 'list') {
                 return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
@@ -323,12 +460,18 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 this[propertyName];
         },
 
+        /**
+         * @inheritDoc
+         */
         afterRender: function () {
             if (!this.hasView('list')) {
                 this.loadList();
             }
         },
 
+        /**
+         * Load a record list view.
+         */
         loadList: function () {
             var methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
 
@@ -340,16 +483,27 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             if (this.collection.isFetched) {
                 this.createListRecordView(false);
-            }
-            else {
-                Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                this.createListRecordView(true);
+                return;
             }
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            this.createListRecordView(true);
         },
 
+        /**
+         * Prepare record view options. Options can be modified in an extended method.
+         *
+         * @param {Object} options Options
+         */
         prepareRecordViewOptions: function (options) {},
 
+        /**
+         * Create a record list view.
+         *
+         * @param {boolean} [fetch=false] To fetch after creation.
+         */
         createListRecordView: function (fetch) {
             var o = {
                 collection: this.collection,
@@ -408,13 +562,17 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
                         this.collection.fetch();
                     });
+
+                    return;
                 }
-                else {
-                    view.render();
-                }
+
+                view.render();
             });
         },
 
+        /**
+         * @inheritDoc
+         */
         getHeader: function () {
             if (this.options.params && this.options.params.fromAdmin) {
                 return this.buildHeaderHtml([
@@ -430,14 +588,39 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             ]);
         },
 
+        /**
+         * @inheritDoc
+         */
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         },
 
+        /**
+         * Create attributes for an entity being created.
+         *
+         * @return {Object}
+         */
         getCreateAttributes: function () {},
 
+        /**
+         * Prepare return dispatch parameters to pass to a view when creating a record.
+         * To pass some data to restore when returning to the list view.
+         *
+         * Example:
+         * ```
+         * params.options.categoryId = this.currentCategoryId;
+         * params.options.categoryName = this.currentCategoryName;
+         * ```
+         *
+         * @param {Object} params Parameters to be modified.
+         */
         prepareCreateReturnDispatchParams: function (params) {},
 
+        /**
+         * Action `quickCreate`.
+         *
+         * @returns {Promise<module:views/modals/edit.Class>}
+         */
         actionQuickCreate: function () {
             var attributes = this.getCreateAttributes() || {};
 
@@ -481,6 +664,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             }.bind(this));
         },
 
+        /**
+         * Action `create'.
+         */
         actionCreate: function () {
             var router = this.getRouter();
 
@@ -514,6 +700,11 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             router.dispatch(this.scope, 'create', options);
         },
 
+        /**
+         * Whether the view is actual to be reused.
+         *
+         * @returns {boolean}
+         */
         isActualForReuse: function () {
             return this.collection.isFetched;
         },
