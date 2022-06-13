@@ -32,6 +32,16 @@ var Espo = Espo || {classMap: {}};
 
     let root = this;
 
+    /**
+     * @callback Espo.Loader~requireCallback
+     * @param {...any} arguments Resolved dependencies.
+     */
+
+    /**
+     * @class Espo.Loader
+     * @param {?Espo.Cache} [cache=null]
+     * @param {?int} [_cacheTimestamp=null]
+     */
     Espo.Loader = function (cache, _cacheTimestamp) {
         this._cacheTimestamp = _cacheTimestamp || null;
         this._cache = cache || null;
@@ -48,35 +58,56 @@ var Espo = Espo || {classMap: {}};
         this.isDeveloperMode = false;
     };
 
-    _.extend(Espo.Loader.prototype, {
+    _.extend(Espo.Loader.prototype, /** @lends Espo.Loader.prototype */{
 
         _classMap: Espo,
 
+        /**
+         * @param {string} basePath
+         */
         setBasePath: function (basePath) {
             this._basePath = basePath;
         },
 
+        /**
+         * @returns {Number}
+         */
         getCacheTimestamp: function () {
             return this._cacheTimestamp;
         },
 
+        /**
+         * @param {Number} cacheTimestamp
+         */
         setCacheTimestamp: function (cacheTimestamp) {
             this._cacheTimestamp = cacheTimestamp;
         },
 
+        /**
+         * @param {Espo.Cache} cache
+         */
         setCache: function (cache) {
             this._cache = cache;
         },
 
+        /**
+         * @param {Cache} responseCache
+         */
         setResponseCache: function (responseCache) {
             this._responseCache = responseCache;
         },
 
+        /**
+         * @param {string[]} internalModuleList
+         */
         setInternalModuleList: function (internalModuleList) {
             this._internalModuleList = internalModuleList;
             this._internalModuleMap = {};
         },
 
+        /**
+         * @private
+         */
         _getClass: function (name) {
             if (name in this._classMap) {
                 return this._classMap[name];
@@ -85,10 +116,16 @@ var Espo = Espo || {classMap: {}};
             return false;
         },
 
+        /**
+         * @private
+         */
         _setClass: function (name, o) {
             this._classMap[name] = o;
         },
 
+        /**
+         * @private
+         */
         _nameToPath: function (name) {
             if (name.indexOf(':') === -1) {
                 return 'client/src/' + name + '.js';
@@ -109,10 +146,16 @@ var Espo = Espo || {classMap: {}};
             return 'client/custom/modules/' + modulePart + '/src/' + namePart + '.js';
         },
 
+        /**
+         * @private
+         */
         _execute: function (script) {
             eval.call(root, script);
         },
 
+        /**
+         * @private
+         */
         _executeLoadCallback: function (subject, o) {
             if (subject in this._loadCallbacks) {
                 this._loadCallbacks[subject].forEach(callback => callback(o));
@@ -121,6 +164,13 @@ var Espo = Espo || {classMap: {}};
             }
         },
 
+        /**
+         * Define a module.
+         *
+         * @param {string} subject A module name to be defined.
+         * @param {string[]} dependency A dependency list.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         */
         define: function (subject, dependency, callback) {
             if (subject) {
                 subject = this._normalizeClassName(subject);
@@ -133,7 +183,7 @@ var Espo = Espo || {classMap: {}};
             }
 
             if (!dependency) {
-                this._defineProceedproceed(callback, subject, []);
+                this._defineProceed(callback, subject, []);
 
                 return;
             }
@@ -158,6 +208,13 @@ var Espo = Espo || {classMap: {}};
             this._executeLoadCallback(subject, o);
         },
 
+        /**
+         * Require a module or multiple modules.
+         *
+         * @param {string|string[]} subject A module or modules to require.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         * @param {Function|null} [errorCallback] An error callback.
+         */
         require: function (subject, callback, errorCallback) {
             let list;
 
@@ -398,6 +455,9 @@ var Espo = Espo || {classMap: {}};
                 });
         },
 
+        /**
+         * @private
+         */
         _fetchObject: function (exportsTo, exportsAs) {
             let from = root;
 
@@ -419,6 +479,9 @@ var Espo = Espo || {classMap: {}};
             }
         },
 
+        /**
+         * @private
+         */
         _processCached: function (dto, cached) {
             let name = dto.name;
             let callback = dto.callback;
@@ -460,6 +523,9 @@ var Espo = Espo || {classMap: {}};
             callback(data);
         },
 
+        /**
+         * @private
+         */
         _processRequest: function (dto) {
             let name = dto.name;
             let url = dto.url;
@@ -498,6 +564,9 @@ var Espo = Espo || {classMap: {}};
             });
         },
 
+        /**
+         * @private
+         */
         _handleResponse: function (dto, response) {
             let name = dto.name;
             let callback = dto.callback;
@@ -539,10 +608,17 @@ var Espo = Espo || {classMap: {}};
             this._executeLoadCallback(name, data);
         },
 
+        /**
+         * @param {Object} data
+         * @internal
+         */
         addLibsConfig: function (data) {
             this._libsConfig = _.extend(this._libsConfig, data);
         },
 
+        /**
+         * @private
+         */
         _isModuleInternal: function (moduleName) {
             if (!(moduleName in this._internalModuleMap)) {
                 this._internalModuleMap[moduleName] = this._internalModuleList.indexOf(moduleName) !== -1;
@@ -551,6 +627,12 @@ var Espo = Espo || {classMap: {}};
             return this._internalModuleMap[moduleName];
         },
 
+        /**
+         * Require a module or multiple modules.
+         *
+         * @param {string|string[]} subject A module or modules to require.
+         * @returns {Promise<unknown>}
+         */
         requirePromise: function (subject) {
             return new Promise((resolve, reject) => {
                 this.require(
@@ -564,6 +646,14 @@ var Espo = Espo || {classMap: {}};
 
     Espo.loader = new Espo.Loader();
 
+    /**
+     * Require a module or multiple modules.
+     *
+     * @param {string|string[]} subject A module or modules to require.
+     * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+     * @param {Object} [context] A context.
+     * @param {Function|null} [errorCallback] An error callback.
+     */
     root.require = Espo.require = function (subject, callback, context, errorCallback) {
         if (context) {
             callback = callback.bind(context);
@@ -572,6 +662,13 @@ var Espo = Espo || {classMap: {}};
         Espo.loader.require(subject, callback, errorCallback);
     };
 
+    /**
+     * Define a module.
+     *
+     * @param {string|string[]} arg1 A module name to be defined or a dependency list.
+     * @param {string[]|Espo.Loader~requireCallback} arg2 A dependency list or a callback with resolved dependencies.
+     * @param {Espo.Loader~requireCallback|undefined} [arg3] A callback with resolved dependencies.
+     */
     root.define = Espo.define = function (arg1, arg2, arg3) {
         let subject = null;
         let dependency = null;

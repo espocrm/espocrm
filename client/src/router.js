@@ -258,7 +258,7 @@ define('router', [], function () {
          * Process confirm-leave-out.
          *
          * @param {Espo.Router~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
-         * @param {?Object} [context] A context.
+         * @param {Object|null} [context] A context.
          * @param {boolean} [navigateBack] To navigate back if not confirmed.
          */
         checkConfirmLeaveOut: function (callback, context, navigateBack) {

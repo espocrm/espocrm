@@ -116,7 +116,7 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Search params.
-         * @type {?Object}
+         * @type {Object|null}
          */
         searchParams: null,
 

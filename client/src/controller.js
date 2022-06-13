@@ -254,7 +254,7 @@ define('controller', [], function () {
          * Get a stored main view.
          *
          * @param {string} key A key.
-         * @returns {?Espo.View}
+         * @returns {Espo.View|null}
          */
         getStoredMainView: function (key) {
             return this.get('storedMainView-' + key);

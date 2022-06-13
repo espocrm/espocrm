@@ -115,7 +115,7 @@ define('collection', [], function () {
         /**
          * A name.
          *
-         * @type {string}
+         * @type {string|null}
          */
         name: null,
 
@@ -141,23 +141,23 @@ define('collection', [], function () {
         maxSize: 20,
 
         /**
-         * True for desc order.
+         * An order.
          *
-         * @type {?boolean}
+         * @type {boolean|'asc'|'desc'|null}
          */
         order: null,
 
         /**
          * An order-by field.
          *
-         * @type {?string}
+         * @type {string|null}
          */
         orderBy: null,
 
         /**
          * A where clause.
          *
-         * @type {?Array.<Object>}
+         * @type {Array.<Object>|null}
          */
         where: null,
 
@@ -224,7 +224,7 @@ define('collection', [], function () {
 
         /**
          * @param {string} orderBy An order field.
-         * @param {?bool} [order] True for desc.
+         * @param {bool|null|'desc'|'asc'} [order] True for desc.
          * @returns {Promise}
          */
         sort: function (orderBy, order) {
@@ -378,7 +378,7 @@ define('collection', [], function () {
         /**
          * Get a where clause.
          *
-         * @returns {Array.{Object}}
+         * @returns {Object[]}
          */
         getWhere: function () {
             var where = (this.where || []).concat(this.whereAdditional || []);
@@ -416,7 +416,7 @@ define('collection', [], function () {
          * Set an order.
          *
          * @param {string} orderBy
-         * @param {boolean} [order]
+         * @param {boolean|'asc'|'desc'|null} [order]
          * @param {boolean} [setDefault]
          */
         setOrder: function (orderBy, order, setDefault) {

@@ -95,7 +95,7 @@ define('model', [], function () {
          * A record ID.
          *
          * @name cid
-         * @type {?string}
+         * @type {string|null}
          * @public
          * @memberof Espo.Model.prototype
          */
@@ -121,7 +121,7 @@ define('model', [], function () {
         /**
          * A root URL.
          *
-         * @type {?string}
+         * @type {string|null}
          * @public
          */
         urlRoot: null,
@@ -146,7 +146,7 @@ define('model', [], function () {
 
         /**
          * Definitions.
-         * @type {?Object}
+         * @type {Object|null}
          */
         defs: null,
 
@@ -391,7 +391,7 @@ define('model', [], function () {
          * Get a field type.
          *
          * @param {string} field
-         * @returns {?string}
+         * @returns {string|null}
          */
         getFieldType: function (field) {
             if (this.defs && this.defs.fields && (field in this.defs.fields)) {
@@ -422,7 +422,7 @@ define('model', [], function () {
          * Get a link type.
          *
          * @param {string} link
-         * @returns {?string}
+         * @returns {string|null}
          */
         getLinkType: function (link) {
             if (this.defs && this.defs.links && (link in this.defs.links)) {
