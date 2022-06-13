@@ -5,6 +5,7 @@
             "*": ["src/*"],
             "crm:*": ["modules/crm/src/*"]
         },
-        "module": "AMD"
+        "module": "AMD",
+        "target": "ES2018"
     }
 }
