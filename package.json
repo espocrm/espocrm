@@ -10,7 +10,8 @@
     "build": "grunt",
     "test": "grunt run-tests",
     "test-unit": "grunt run-unit-tests",
-    "test-integration": "grunt run-integration-tests"
+    "test-integration": "grunt run-integration-tests",
+    "postinstall": "node js/scripts/postinstall-cleanup"
   },
   "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
   "license": "GPL-3.0",
