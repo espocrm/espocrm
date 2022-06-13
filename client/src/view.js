@@ -31,13 +31,15 @@ define('view', [], function () {
     /**
      * A base view.
      *
-     * @class Espo.View
+     * @class
+     * @name Class
      * @extends Bull.View
+     * @memberOf module:view
      */
-    return Bull.View.extend(/** @lends Espo.View.prototype */{
+    return Bull.View.extend(/** @lends module:view.Class.prototype */{
 
         /**
-         * @callback Espo.View~actionHandlerCallback
+         * @callback module:view.Class~actionHandlerCallback
          * @param {jQuery.Event} e A DOM event.
          */
 
@@ -46,7 +48,7 @@ define('view', [], function () {
          *
          * @name model
          * @type {Espo.Model|null}
-         * @memberof Espo.View.prototype
+         * @memberOf module:view.Class.prototype
          * @public
          */
 
@@ -55,7 +57,7 @@ define('view', [], function () {
          *
          * @name collection
          * @type {Espo.Collection|null}
-         * @memberof Espo.View.prototype
+         * @memberOf module:view.Class.prototype
          * @public
          */
 
@@ -64,7 +66,7 @@ define('view', [], function () {
          *
          * @deprecated Use the `events` property.
          * @param {string} action
-         * @param {Espo.View~actionHandlerCallback} handler
+         * @param {module:view.Class~actionHandlerCallback} handler
          */
         addActionHandler: function (action, handler) {
             let fullAction = 'click button[data-action=\"'+action+'\"]';

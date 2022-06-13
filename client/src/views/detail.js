@@ -28,22 +28,58 @@
 
 define('views/detail', ['views/main'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/main.Class
+     * @memberOf module:views/detail
+     */
+    return Dep.extend(/** @lends module:views/detail.Class.prototype */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'detail',
 
-        scope: null,
-
+        /**
+         * @inheritDoc
+         */
         name: 'Detail',
 
-        optionsToPass: ['attributes', 'returnUrl', 'returnDispatchParams', 'rootUrl'],
+        /**
+         * @inheritDoc
+         */
+        optionsToPass: [
+            'attributes',
+            'returnUrl',
+            'returnDispatchParams',
+            'rootUrl',
+        ],
 
+        /**
+         * A header view name.
+         *
+         * @type {string}
+         */
         headerView: 'views/header',
 
+        /**
+         * A record view name.
+         *
+         * @type {string}
+         */
         recordView: 'views/record/detail',
 
+        /**
+         * A root breadcrumb item not to be a link.
+         *
+         * @type {boolean}
+         */
         rootLinkDisabled: false,
 
+        /**
+         * Add an un-follow button.
+         */
         addUnfollowButtonToMenu: function () {
             this.removeMenuItem('follow', true);
 
@@ -55,6 +91,9 @@ define('views/detail', ['views/main'], function (Dep) {
             }, true);
         },
 
+        /**
+         * Add a follow button.
+         */
         addFollowButtonToMenu: function () {
             this.removeMenuItem('unfollow', true);
 
@@ -67,6 +106,9 @@ define('views/detail', ['views/main'], function (Dep) {
             }, true);
         },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -91,6 +133,9 @@ define('views/detail', ['views/main'], function (Dep) {
             this.getHelper().processSetupHandlers(this, 'detail');
         },
 
+        /**
+         * Set up a page title.
+         */
         setupPageTitle: function () {
             this.listenTo(this.model, 'after:save', () => {
                 this.updatePageTitle();
@@ -103,6 +148,9 @@ define('views/detail', ['views/main'], function (Dep) {
             });
         },
 
+        /**
+         * Set up a header.
+         */
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
@@ -120,6 +168,9 @@ define('views/detail', ['views/main'], function (Dep) {
             });
         },
 
+        /**
+         * Set up a record.
+         */
         setupRecord: function () {
             var o = {
                 model: this.model,
@@ -142,11 +193,19 @@ define('views/detail', ['views/main'], function (Dep) {
             return this.createView('record', this.getRecordViewName(), o);
         },
 
+        /**
+         * Get a record view name.
+         *
+         * @returns {string}
+         */
         getRecordViewName: function () {
             return this.getMetadata()
                 .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
         },
 
+        /**
+         * Control follow/unfollow buttons visibility..
+         */
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
@@ -159,6 +218,9 @@ define('views/detail', ['views/main'], function (Dep) {
             }
         },
 
+        /**
+         * Action 'follow'.
+         */
         actionFollow: function () {
             this.disableMenuItem('follow');
 
@@ -174,6 +236,9 @@ define('views/detail', ['views/main'], function (Dep) {
                 });
         },
 
+        /**
+         * Action 'unfollow'.
+         */
         actionUnfollow: function () {
             this.disableMenuItem('unfollow');
 
@@ -189,6 +254,9 @@ define('views/detail', ['views/main'], function (Dep) {
                 });
         },
 
+        /**
+         * @inheritDoc
+         */
         getHeader: function () {
             var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
@@ -221,6 +289,9 @@ define('views/detail', ['views/main'], function (Dep) {
             ]);
         },
 
+        /**
+         * @inheritDoc
+         */
         updatePageTitle: function () {
             if (this.model.has('name')) {
                 this.setPageTitle(this.model.get('name'));
@@ -230,27 +301,120 @@ define('views/detail', ['views/main'], function (Dep) {
             }
         },
 
+        /**
+         * Update a relationship panel (fetch data).
+         *
+         * @param {string} name A relationship name.
+         */
         updateRelationshipPanel: function (name) {
             var bottom = this.getView('record').getView('bottom');
 
             if (bottom) {
                 var rel = bottom.getView(name);
+
                 if (rel) {
                     rel.collection.fetch();
                 }
             }
         },
 
+        /**
+         * When a related record created, attributes will be copied from a current entity.
+         *
+         * Example:
+         * ```
+         * {
+         *     'linkName': {
+         *         'attributeNameOfCurrentEntity': 'attributeNameOfCreatedRelatedEntity',
+         *     }
+         * }
+         * ```
+         *
+         * @type {Object}
+         */
         relatedAttributeMap: {},
 
+        /**
+         * When a related record created, use a function to obtain some attributes for a created entity.
+         *
+         * Example:
+         * ```
+         * {
+         *     'linkName': function () {
+         *         return {
+         *            'someAttribute': this.model.get('attribute1') + ' ' +
+         *                 this.model.get('attribute2')
+         *         };
+         *     },
+         * }
+         * ```
+         *
+         * @type {Object}
+         */
         relatedAttributeFunctions: {},
 
+        /**
+         * When selecting a related record, field filters can be automatically applied.
+         *
+         * Example:
+         * ```
+         * {
+         *     'linkName': {
+         *         'field1': function () {
+         *             return {
+         *                 attribute: 'field1',
+         *                 type: 'equals',
+         *                 value: this.model.get('someField'),
+         *                 data: {},// Additional filter data specific for a field type.
+         *             };
+         *         },
+         *     },
+         * }
+         * ```
+         *
+         * @type {Object}
+         */
         selectRelatedFilters: {},
 
+        /**
+         * When selecting a related record, a primary filter can be automatically applied.
+         *
+         * Example:
+         * ```
+         * {
+         *     'linkName1': 'primaryFilterName',
+         *     'linkName2': function () {
+         *         return 'primaryFilterName';
+         *     },
+         * }
+         * ```
+         *
+         * @type {Object}
+         */
         selectPrimaryFilterNames: {},
 
+        /**
+         * When selecting a related record, bool filters can be automatically applied.
+         *
+         * Example:
+         * ```
+         * {
+         *     'linkName1': ['onlyMy', 'followed'],
+         *     'linkName2': function () {
+         *         return ['someBoolFilterName];
+         *     },
+         * }
+         * ```
+         *
+         * @type {Object}
+         */
         selectBoolFilterLists: [],
 
+        /**
+         * Action 'createRelated'.
+         *
+         * @param {Object} data
+         */
         actionCreateRelated: function (data) {
             data = data || {};
 
@@ -267,9 +431,10 @@ define('views/detail', ['views/main'], function (Dep) {
                 attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
             }
 
-            Object.keys(this.relatedAttributeMap[link] || {}).forEach((attr) => {
-                attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
-            });
+            Object.keys(this.relatedAttributeMap[link] || {})
+                .forEach(attr => {
+                    attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
+                });
 
             this.notify('Loading...');
 
@@ -302,6 +467,11 @@ define('views/detail', ['views/main'], function (Dep) {
             });
         },
 
+        /**
+         * Action 'selectRelated'.
+         *
+         * @param {Object} data
+         */
         actionSelectRelated: function (data) {
             var link = data.link;
 
@@ -437,6 +607,9 @@ define('views/detail', ['views/main'], function (Dep) {
             });
         },
 
+        /**
+         * Action 'duplicate'.
+         */
         actionDuplicate: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 

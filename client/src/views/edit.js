@@ -28,16 +28,37 @@
 
 define('views/edit', ['views/main'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/main.Class
+     * @memberOf module:views/edit
+     */
+    return Dep.extend(/** @lends module:views/edit.Class.prototype */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'edit',
 
+        /**
+         * @inheritDoc
+         */
         scope: null,
 
+        /**
+         * @inheritDoc
+         */
         name: 'Edit',
 
+        /**
+         * @inheritDoc
+         */
         menu: null,
 
+        /**
+         * @inheritDoc
+         */
         optionsToPass: [
             'returnUrl',
             'returnDispatchParams',
@@ -47,12 +68,30 @@ define('views/edit', ['views/main'], function (Dep) {
             'returnAfterCreate',
         ],
 
+        /**
+         * A header view name.
+         *
+         * @type {string}
+         */
         headerView: 'views/header',
 
+        /**
+         * A record view name.
+         *
+         * @type {string}
+         */
         recordView: 'views/record/edit',
 
+        /**
+         * A root breadcrumb item not to be a link.
+         *
+         * @type {boolean}
+         */
         rootLinkDisabled: false,
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
@@ -63,6 +102,9 @@ define('views/edit', ['views/main'], function (Dep) {
             this.getHelper().processSetupHandlers(this, 'edit');
         },
 
+        /**
+         * Set up a header.
+         */
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
@@ -71,6 +113,9 @@ define('views/edit', ['views/main'], function (Dep) {
             });
         },
 
+        /**
+         * Set up a record.
+         */
         setupRecord: function () {
             var o = {
                 model: this.model,
@@ -89,10 +134,18 @@ define('views/edit', ['views/main'], function (Dep) {
             return this.createView('record', this.getRecordViewName(), o);
         },
 
+        /**
+         * Get a record view name.
+         *
+         * @returns {string}
+         */
         getRecordViewName: function () {
             return this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.edit') || this.recordView;
         },
 
+        /**
+         * @inheritDoc
+         */
         getHeader: function () {
             var headerIconHtml = this.getHeaderIconHtml();
 
@@ -133,6 +186,9 @@ define('views/edit', ['views/main'], function (Dep) {
             return this.buildHeaderHtml(arr);
         },
 
+        /**
+         * @inheritDoc
+         */
         updatePageTitle: function () {
             var title;
 

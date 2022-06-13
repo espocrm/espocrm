@@ -28,20 +28,49 @@
 
 define('views/main', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A base main view. The detail, edit, list views to be extended from.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/main
+     */
+    return Dep.extend(/** @lends module:views/main.Class.prototype */{
 
+        /**
+         * A scope name.
+         *
+         * @type {string} scope
+         */
         scope: null,
 
+        /**
+         * A name.
+         *
+         * @type {string} name
+         */
         name: null,
 
+        /**
+         * Top-right menu definitions.
+         *
+         * @type {Object} menu
+         */
         menu: null,
 
+        /**
+         * @inheritDoc
+         */
         events: {
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
             },
         },
 
+        /**
+         * @inheritDoc
+         */
         init: function () {
             this.scope = this.options.scope || this.scope;
             this.menu = {};
@@ -92,10 +121,17 @@ define('views/main', ['view'], function (Dep) {
             this.updateLastUrl();
         },
 
+        /**
+         * Update a last history URL.
+         */
         updateLastUrl: function () {
             this.lastUrl = this.getRouter().getCurrentUrl();
         },
 
+        /**
+         * @internal
+         * @returns {Object}
+         */
         getMenu: function () {
             if (this.menuDisabled) {
                 return {};
@@ -141,8 +177,21 @@ define('views/main', ['view'], function (Dep) {
             return menu;
         },
 
-        getHeader: function () {},
+        /**
+         * Get a header HTML. To be overridden.
+         *
+         * @returns {string} HTML.
+         */
+        getHeader: function () {
+            return '';
+        },
 
+        /**
+         * Build a header HTML. To be called from the #getHeader method.
+         *
+         * @param {string[]} arr A breadcrumb path. Like: Account > Name > edit.
+         * @returns {string} HTML
+         */
         buildHeaderHtml: function (arr) {
             var a = [];
 
@@ -154,16 +203,29 @@ define('views/main', ['view'], function (Dep) {
                 a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
         },
 
+
+        /**
+         * Get an icon HTML.
+         *
+         * @returns {string} HTML
+         */
         getHeaderIconHtml: function () {
             return this.getHelper().getScopeColorIconHtml(this.scope);
         },
 
+        /**
+         * Action 'showModal'.
+         *
+         * @todo Revise. To be removed?
+         *
+         * @param {Object} data
+         */
         actionShowModal: function (data) {
             var view = data.view;
 
             if (!view) {
                 return;
-            };
+            }
 
             this.createView('modal', view, {
                 model: this.model,
@@ -183,6 +245,14 @@ define('views/main', ['view'], function (Dep) {
             });
         },
 
+        /**
+         * Add a menu item.
+         *
+         * @param {'buttons'|'dropdown'|'actions'} type A type.
+         * @param {Object} item Item definitions.
+         * @param {boolean} [toBeginning=false] To beginning.
+         * @param {boolean} [doNotReRender=false] Skip re-render.
+         */
         addMenuItem: function (type, item, toBeginning, doNotReRender) {
             if (item) {
                 item.name = item.name || item.action;
@@ -197,8 +267,6 @@ define('views/main', ['view'], function (Dep) {
 
                         if (data.name === name) {
                             index = i;
-
-                            return;
                         }
                     });
 
@@ -229,6 +297,12 @@ define('views/main', ['view'], function (Dep) {
             }
         },
 
+        /**
+         * Remove a menu item.
+         *
+         * @param {string} name An item name.
+         * @param {boolean} doNotReRender Skip re-render.
+         */
         removeMenuItem: function (name, doNotReRender) {
             var index = -1;
             var type = false;
@@ -264,11 +338,14 @@ define('views/main', ['view'], function (Dep) {
 
             if (doNotReRender && this.isRendered()) {
                 this.$el.find('.header .header-buttons [data-name="'+name+'"]').remove();
-
-                return;
             }
         },
 
+        /**
+         * Disable a menu item.
+         *
+         * @param {string} name A name.
+         */
         disableMenuItem: function (name) {
             this.$el
                 .find('.header .header-buttons [data-name="'+name+'"]')
@@ -276,6 +353,11 @@ define('views/main', ['view'], function (Dep) {
                 .attr('disabled');
         },
 
+        /**
+         * Enable a menu item.
+         *
+         * @param {string} name A name.
+         */
         enableMenuItem: function (name) {
             this.$el
                 .find('.header .header-buttons [data-name="'+name+'"]')
@@ -283,6 +365,12 @@ define('views/main', ['view'], function (Dep) {
                 .removeAttr('disabled');
         },
 
+        /**
+         * Action 'navigateToRoot'.
+         *
+         * @param {Object} data
+         * @param {jQuery.Event} e
+         */
         actionNavigateToRoot: function (data, e) {
             e.stopPropagation();
 
@@ -298,6 +386,11 @@ define('views/main', ['view'], function (Dep) {
             });
         },
 
+        /**
+         * Hide a menu item.
+         *
+         * @param {string} name A name.
+         */
         hideHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach((t) => {
                 (this.menu[t] || []).forEach((item, i) => {
@@ -319,6 +412,11 @@ define('views/main', ['view'], function (Dep) {
             this.controlMenuDropdownVisibility();
         },
 
+        /**
+         * Show a hidden menu item.
+         *
+         * @param {string} name A name.
+         */
         showHeaderActionItem: function (name) {
             ['actions', 'dropdown', 'buttons'].forEach((t) => {
                 (this.menu[t] || []).forEach((item, i) => {
@@ -340,6 +438,12 @@ define('views/main', ['view'], function (Dep) {
             this.controlMenuDropdownVisibility();
         },
 
+        /**
+         * Whether a menu has any non-hidden dropdown items.
+         *
+         * @private
+         * @returns {boolean}
+         */
         hasMenuVisibleDropdownItems: function () {
             var hasItems = false;
 
@@ -352,6 +456,9 @@ define('views/main', ['view'], function (Dep) {
             return hasItems;
         },
 
+        /**
+         * @private
+         */
         controlMenuDropdownVisibility: function () {
             var $d = this.$el.find('.page-header .dropdown-group');
 
