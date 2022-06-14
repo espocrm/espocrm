@@ -29,15 +29,17 @@
 define('controller', [], function () {
 
     /**
-     * @callback Espo.Controller~viewCallback
-     * @param {Espo.View} view A view.
+     * @callback module:controller.Class~viewCallback
+     * @param {module:view.Class} view A view.
      */
 
     /**
-     * Controller. Views, Models and Collections are created here.
+     * A controller. To be extended.
      *
-     * @class Espo.Controller
+     * @class
+     * @name Class
      * @mixes Backbone.Events
+     * @memberOf module:controller
      *
      * @param {Object} params
      * @param {Object} injections
@@ -70,7 +72,7 @@ define('controller', [], function () {
         this.set('masterRendered', false);
     };
 
-    _.extend(Controller.prototype, /** @lends Espo.Controller.prototype */ {
+    _.extend(Controller.prototype, /** @lends module:controller.Class# */ {
 
         /**
          * A default action.
@@ -105,18 +107,10 @@ define('controller', [], function () {
         /**
          * A model factory.
          *
-         * @type {Espo.ModelFactory}
+         * @type {module:model-factory.Class}
          * @protected
          */
         modelFactory: null,
-
-        /**
-         * A controller factory.
-         *
-         * @type {Espo.ControllerFactory}
-         * @protected
-         */
-        controllerFactory: null,
 
         /**
          * Initialize.
@@ -129,7 +123,7 @@ define('controller', [], function () {
          * Set the router.
          *
          * @internal
-         * @param {Espo.Router} router
+         * @param {module:router.Class} router
          */
         setRouter: function (router) {
             this._router = router;
@@ -137,7 +131,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Models.Settings}
+         * @returns {modules:models/settings.Class}
          */
         getConfig: function () {
             return this._settings;
@@ -145,7 +139,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Models.User}
+         * @returns {modules:models/user.Class}
          */
         getUser: function () {
             return this._user;
@@ -153,7 +147,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Models.Preferences}
+         * @returns {modules:models/preferences.Class}
          */
         getPreferences: function () {
             return this._preferences;
@@ -161,7 +155,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Acl}
+         * @returns {modules:acl.Class}
          */
         getAcl: function () {
             return this._acl;
@@ -169,7 +163,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Cache}
+         * @returns {modules:cache.Class}
          */
         getCache: function () {
             return this._cache;
@@ -177,7 +171,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Router}
+         * @returns {modules:router.Class}
          */
         getRouter: function () {
             return this._router;
@@ -185,7 +179,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Storage}
+         * @returns {modules:storage.Class}
          */
         getStorage: function () {
             return this._storage;
@@ -193,7 +187,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.Metadata}
+         * @returns {modules:metadata.Class}
          */
         getMetadata: function () {
             return this._metadata;
@@ -201,7 +195,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {Espo.DateTime}
+         * @returns {modules:date-time.Class}
          */
         getDateTime: function () {
             return this._dateTime;
@@ -211,7 +205,7 @@ define('controller', [], function () {
          * Get a parameter of all controllers.
          *
          * @param {string} key A key.
-         * @return {*} Null if doesn't exist.
+         * @return {*} Null if a key doesn't exist.
          */
         get: function (key) {
             if (key in this.params) {
@@ -254,7 +248,7 @@ define('controller', [], function () {
          * Get a stored main view.
          *
          * @param {string} key A key.
-         * @returns {Espo.View|null}
+         * @returns {module:view.Class|null}
          */
         getStoredMainView: function (key) {
             return this.get('storedMainView-' + key);
@@ -287,7 +281,7 @@ define('controller', [], function () {
          * Store a main view.
          *
          * @param {string} key A key.
-         * @param {Espo.View} view A view.
+         * @param {module:view.Class} view A view.
          */
         storeMainView: function (key, view) {
             this.set('storedMainView-' + key, view);
@@ -402,7 +396,7 @@ define('controller', [], function () {
         /**
          * Create a master view, render if not already rendered.
          *
-         * @param {Espo.Controller~viewCallback} callback A callback with a created master view.
+         * @param {module:controller.Class~viewCallback} callback A callback with a created master view.
          */
         master: function (callback) {
             let entire = this.get('entire');
@@ -444,7 +438,7 @@ define('controller', [], function () {
          * Create a main view in the master.
          * @param {String} view A view name.
          * @param {Object} options Options for view.
-         * @param {Espo.Controller~viewCallback} [callback] A callback with a created view.
+         * @param {module:controller.Class~viewCallback} [callback] A callback with a created view.
          * @param {boolean} [useStored] Use a stored view if available.
          * @param {boolean} [storedKey] A stored view key.
          */
@@ -584,7 +578,7 @@ define('controller', [], function () {
          *
          * @param {String} view A view name.
          * @param {Object} options Options for a view.
-         * @param {Espo.Controller~viewCallback} [callback] A callback with a created view.
+         * @param {module:controller.Class~viewCallback} [callback] A callback with a created view.
          */
         entire: function (view, options, callback) {
             let master = this.get('master');

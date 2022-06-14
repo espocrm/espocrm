@@ -37,10 +37,12 @@ define('router', [], function () {
      */
 
     /**
-     * @class Espo.Router
+     * @class
+     * @name Class
+     * @memberOf module:router
      * @mixes Espo.Events
      */
-    let Router = Backbone.Router.extend(/** @lends Espo.Router.prototype */ {
+    let Router = Backbone.Router.extend(/** @lends module:router.Class# */ {
 
         /**
          * @private
@@ -251,13 +253,13 @@ define('router', [], function () {
         },
 
         /**
-         * @callback Espo.Router~checkConfirmLeaveOutCallback
+         * @callback module:router.Class~checkConfirmLeaveOutCallback
          */
 
         /**
          * Process confirm-leave-out.
          *
-         * @param {Espo.Router~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
+         * @param {module:router.Class~checkConfirmLeaveOutCallback} callback Proceed if confirmed.
          * @param {Object|null} [context] A context.
          * @param {boolean} [navigateBack] To navigate back if not confirmed.
          */

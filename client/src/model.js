@@ -61,26 +61,30 @@ define('model', [], function () {
     /**
      * When attributes have changed.
      *
-     * @event Espo.Model#change
-     * @param {Espo.Model} model A model.
+     * @event module:model.Class#change
+     * @param {module:model.Class} model A model.
      * @param {Object} o Options.
      */
 
     /**
      * On sync with backend.
      *
-     * @event Espo.Model#sync
-     * @param {Espo.Model} model A model.
+     * @event module:model.Class#sync
+     * @param {module:model.Class} model A model.
      * @param {Object} response Response from backend.
      * @param {Object} o Options.
      */
 
     /**
-     * @class Espo.Model
+     * A model.
+     *
+     * @class
+     * @name Class
      * @extends Backbone.Model
      * @mixes Backbone.Events
+     * @memberOf module:model
      */
-    let Model = Dep.extend(/** @lends Espo.Model.prototype */{
+    return Dep.extend(/** @lends module:model.Class.prototype */{
 
         /**
          * An entity type.
@@ -88,7 +92,7 @@ define('model', [], function () {
          * @name entityType
          * @property {string}
          * @public
-         * @memberof Espo.Model.prototype
+         * @memberof module:model.Class.prototype
          */
 
         /**
@@ -97,7 +101,7 @@ define('model', [], function () {
          * @name cid
          * @type {string|null}
          * @public
-         * @memberof Espo.Model.prototype
+         * @memberof module:model.Class.prototype
          */
 
         /**
@@ -106,7 +110,7 @@ define('model', [], function () {
          * @name cid
          * @type {string}
          * @public
-         * @memberof Espo.Model.prototype
+         * @memberof module:model.Class.prototype
          */
 
         /**
@@ -115,7 +119,7 @@ define('model', [], function () {
          * @name attributes
          * @type {Object}
          * @public
-         * @memberof Espo.Model.prototype
+         * @memberof module:model.Class.prototype
          */
 
         /**
@@ -146,6 +150,7 @@ define('model', [], function () {
 
         /**
          * Definitions.
+         *
          * @type {Object|null}
          */
         defs: null,
@@ -164,7 +169,7 @@ define('model', [], function () {
 
         /**
          * @param {string} [method] HTTP method.
-         * @param {Espo.Model} [model]
+         * @param {module:model.Class} [model]
          * @param {Object} [options]
          * @returns {Promise}
          */
@@ -568,8 +573,5 @@ define('model', [], function () {
                 this.lastXhr.abort();
             }
         },
-
     });
-
-    return Model;
 });

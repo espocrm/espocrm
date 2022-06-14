@@ -55,8 +55,8 @@ define('collection', [], function () {
      */
 
     /**
-     * Remove a model or models. Fires a `remove` event for each model, and a single `update` event afterwards,
-     * unless `{silent: true}`.
+     * Remove a model or models. Fires a `remove` event for each model, and a single `update` event
+     * afterwards, unless `{silent: true}`.
      *
      * @function remove
      * @memberof Backbone.Collection.prototype
@@ -82,18 +82,20 @@ define('collection', [], function () {
      */
 
     /**
-     * @class Espo.Collection
+     * @class
+     * @name Class
+     * @memberOf module:collection
      * @extends Backbone.Collection.prototype
      * @mixes Backbone.Events
      */
-    var Collection = Backbone.Collection.extend(/** @lends Espo.Collection.prototype */ {
+    return Backbone.Collection.extend(/** @lends module:collection.Class# */ {
 
         /**
          * An entity type.
          *
          * @name entityType
          * @type {string}
-         * @memberof Espo.Collection.prototype
+         * @memberof module:collection.Class#
          */
 
         /**
@@ -101,15 +103,15 @@ define('collection', [], function () {
          *
          * @name length
          * @type {number}
-         * @memberof Espo.Collection.prototype
+         * @memberof module:collection.Class#
          */
 
         /**
          * Models.
          *
          * @name length
-         * @type {Espo.Model[]}
-         * @memberof Espo.Collection.prototype
+         * @type {module:model.Class[]}
+         * @memberof module:collection.Class#
          */
 
         /**
@@ -180,7 +182,7 @@ define('collection', [], function () {
 
         /**
          * @protected
-         * @param {Espo.Model[]} models
+         * @param {module:model.Class[]} models
          * @param {Object} options
          */
         initialize: function (models, options) {
@@ -213,7 +215,7 @@ define('collection', [], function () {
         /**
          * Reset.
          *
-         * @param {Espo.Model[]} models
+         * @param {module:model.Class[]} models
          * @param {Object} options
          */
         reset: function (models, options) {
@@ -319,7 +321,7 @@ define('collection', [], function () {
         /**
          * Fetches from the backend.
          *
-         * @param {Object} options Options.
+         * @param {Object} [options] Options.
          * @returns {Promise}
          */
         fetch: function (options) {
@@ -429,6 +431,4 @@ define('collection', [], function () {
             }
         },
     });
-
-    return Collection;
 });

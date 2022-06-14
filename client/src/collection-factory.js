@@ -29,7 +29,11 @@
  define('collection-factory', [], function () {
 
     /**
-     * @class Espo.CollectionFactory
+     * A collection factory.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:collection-factory
      */
     var CollectionFactory = function (loader, modelFactory, config) {
         this.loader = loader;
@@ -37,7 +41,7 @@
         this.config = config;
     };
 
-    _.extend(CollectionFactory.prototype, /** @lends Espo.CollectionFactory.prototype */ {
+    _.extend(CollectionFactory.prototype, /** @lends module:collection-factory.Class# */ {
 
         /**
          * @private
@@ -57,10 +61,10 @@
         /**
          * Create a collection.
          *
-         * @param {string} name An entity Type.
+         * @param {string} name An entity type.
          * @param {Function} [callback] Deprecated.
          * @param {Object} [context] Deprecated.
-         * @returns {Promise<Espo.Collection>}
+         * @returns {Promise<module:collection.Class>}
          */
         create: function (name, callback, context) {
             return new Promise(resolve => {
