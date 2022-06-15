@@ -28,20 +28,59 @@
 
 define('dynamic-handler', [], function () {
 
+    /**
+     * A dynamic handler. To be extended by a specific handler.
+     *
+     * @class
+     * @name Class
+     * @param {module:views/record/detail.Class} recordView A record view.
+     * @memberOf module:dynamic-handler
+     */
     let DynamicHandler = function (recordView) {
+        /**
+         * A record view.
+         *
+         * @protected
+         * @type {module:views/record/detail.Class}
+         */
         this.recordView = recordView;
+
+        /**
+         * A model.
+         *
+         * @protected
+         * @type {module:model.Class}
+         */
         this.model = recordView.model;
     };
 
-    _.extend(DynamicHandler.prototype, {
+    _.extend(DynamicHandler.prototype, /** @lends module:dynamic-handler.Class# */{
 
+        /**
+         * Initialization logic. To be extended.
+         *
+         * @protected
+         */
         init: function () {},
 
+        /**
+         * Called on model change. To be extended.
+         *
+         * @protected
+         * @param {module:views/record/detail.Class} model A model.
+         * @param {Object} o Options.
+         */
         onChange: function (model, o) {},
 
+        /**
+         * Get a metadata.
+         *
+         * @protected
+         * @returns {module:metadata.Class}
+         */
         getMetadata: function () {
             return this.recordView.getMetadata()
-        }
+        },
     });
 
     DynamicHandler.extend = Backbone.Router.extend;

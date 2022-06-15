@@ -418,7 +418,6 @@ define('dynamic-logic', [], function () {
 
             this.processPanel(name, 'styled');
         },
-
     });
 
     return DynamicLogic;
