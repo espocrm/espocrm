@@ -28,7 +28,10 @@
 
 define('broadcast-channel', [], function () {
 
-    return class {
+    /**
+     * @memberOf module:broadcast-channel
+     */
+    class Class {
         constructor() {
             this.object = null;
 
@@ -37,6 +40,11 @@ define('broadcast-channel', [], function () {
             }
         }
 
+        /**
+         * Post a message.
+         *
+         * @param {string} message A message.
+         */
         postMessage(message) {
             if (!this.object) {
                 return;
@@ -45,6 +53,17 @@ define('broadcast-channel', [], function () {
             this.object.postMessage(message);
         }
 
+        /**
+         * @callback module:broadcast-channel.Class~callback
+         *
+         * @param {Event} event An event. A message can be obtained from the `data` property.
+         */
+
+        /**
+         * Subscribe to a message.
+         *
+         * @param {module:broadcast-channel.Class~callback} callback A callback.
+         */
         subscribe(callback) {
             if (!this.object) {
                 return;
@@ -52,5 +71,7 @@ define('broadcast-channel', [], function () {
 
             this.object.addEventListener('message', callback);
         }
-    };
+    }
+
+    return Class;
 });

@@ -31,7 +31,14 @@ function (
     Dep,
     /** typeof module:acl-portal-manager.Class */ AclPortalManager
 ) {
-    return Dep.extend({
+    /**
+     * A portal application class.
+     * @class
+     * @name Class
+     * @extends module:app.Class
+     * @memberOf module:app-portal
+     */
+    return Dep.extend(/** @lends module:app-portal.Class# */{
 
         /**
          * @inheritDoc

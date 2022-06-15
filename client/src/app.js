@@ -141,41 +141,49 @@ function (
 
         /**
          * @private
+         * @type {boolean}
          */
         useCache: false,
 
         /**
          * @private
+         * @type {module:models/user.Class}
          */
         user: null,
 
         /**
          * @private
+         * @type {module:models/preferences.Class}
          */
         preferences: null,
 
         /**
          * @private
+         * @type {module:models/settings.Class}
          */
         settings: null,
 
         /**
          * @private
+         * @type {module:metadata.Class}
          */
         metadata: null,
 
         /**
          * @private
+         * @type {module:language.Class}
          */
         language: null,
 
         /**
          * @private
+         * @type {module:field-manager.Class}
          */
         fieldManager: null,
 
         /**
          * @private
+         * @type {module:cache.Class}
          */
         cache: null,
 
@@ -185,17 +193,23 @@ function (
         loader: null,
 
         /**
+         * An API URL.
+         *
          * @private
          */
         apiUrl: 'api/v1',
 
         /**
+         * An auth credentials string.
+         *
          * @private
+         * @type {string|null}
          */
         auth: null,
 
         /**
          * @private
+         * @type {module:controllers/base.Class}
          */
         baseController: null,
 
@@ -206,16 +220,19 @@ function (
 
         /**
          * @private
+         * @type {module:router.Class}
          */
         router: null,
 
         /**
          * @private
+         * @type {module:model-factory.Class}
          */
         modelFactory: null,
 
         /**
          * @private
+         * @type {module:collection-factory.Class}
          */
         collectionFactory: null,
 
@@ -231,6 +248,7 @@ function (
 
         /**
          * @private
+         * @type {module:view-helper.Class}
          */
         viewHelper: null,
 
@@ -238,16 +256,19 @@ function (
          * A body view.
          *
          * @protected
+         * @type {string}
          */
         masterView: 'views/site/master',
 
         /**
          * @private
+         * @type {Cache|null}
          */
         responseCache: null,
 
         /**
          * @private
+         * @type {module:broadcast-channel.Class|null}
          */
         broadcastChannel: null,
 
