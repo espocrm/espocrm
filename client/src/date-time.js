@@ -354,28 +354,35 @@ define('date-time', [], function () {
             return moment().tz(this.getTimeZone()).format(this.internalDateFormat);
         },
 
+        /**
+         * Get a date-time value in a system representation, shifted from now.
+         *
+         * @param {Number} shift A number to shift by.
+         * @param {'minutes'|'hours'|'days'|'weeks'|'months'|'years'} type A shift unit.
+         * @param {Number} [multiplicity] A number of minutes a value will be aliquot to.
+         * @returns {string} A date-time value in a system representation
+         */
         getDateTimeShiftedFromNow: function (shift, type, multiplicity) {
             if (!multiplicity) {
-                return moment.utc().add(type, shift).format(this.internalDateTimeFormat);
+                return moment.utc().add(shift, type).format(this.internalDateTimeFormat);
             }
 
             let unix = moment().unix();
 
             unix = unix - (unix % (multiplicity * 60));
 
-            return moment.unix(unix).utc().add(type, shift).format(this.internalDateTimeFormat);
-
+            return moment.unix(unix).utc().add(shift, type).format(this.internalDateTimeFormat);
         },
 
         /**
          * Get a date value in a system representation, shifted from today.
          *
          * @param {Number} shift A number to shift by.
-         * @param {'day'|'week'|'month'|'year'} type A shift unit.
+         * @param {'days'|'weeks'|'months'|'years'} type A shift unit.
          * @returns {string} A date value in a system representation
          */
         getDateShiftedFromToday: function (shift, type) {
-            return moment.tz(this.getTimeZone()).add(type, shift).format(this.internalDateFormat);
+            return moment.tz(this.getTimeZone()).add(shift, type).format(this.internalDateFormat);
         },
 
         /**
