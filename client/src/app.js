@@ -237,7 +237,10 @@ function (
         collectionFactory: null,
 
         /**
+         * A view factory.
+         *
          * @private
+         * @type {Bull.Factory}
          */
         viewFactory: null,
 

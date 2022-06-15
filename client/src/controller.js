@@ -99,7 +99,7 @@ define('controller', [], function () {
         /**
          * A view factory.
          *
-         * @type {Bull.ViewFactory}
+         * @type {Bull.Factory}
          * @protected
          */
         viewFactory: null,

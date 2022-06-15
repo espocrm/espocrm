@@ -28,6 +28,14 @@
 
 define('cache', [], function () {
 
+    /**
+     * Cache for source and resource files.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:cache
+     * @param {Number} [cacheTimestamp] A cache timestamp.
+     */
     var Cache = function (cacheTimestamp) {
         this.basePrefix = this.prefix;
 
@@ -40,19 +48,25 @@ define('cache', [], function () {
         }
     };
 
-    _.extend(Cache.prototype, {
+    _.extend(Cache.prototype, /** @lends module:cache.Class# */ {
 
+        /**
+         * @private
+         */
         prefix: 'cache',
 
+        /**
+         * Handle actuality. Clears cache if not actual.
+         *
+         * @param {Number} cacheTimestamp A cache timestamp.
+         */
         handleActuality: function (cacheTimestamp) {
             let storedTimestamp = this.getCacheTimestamp();
 
             if (storedTimestamp) {
                 if (storedTimestamp !== cacheTimestamp) {
                     this.clear();
-
                     this.set('app', 'cacheTimestamp', cacheTimestamp);
-
                     this.storeTimestamp();
                 }
 
@@ -60,36 +74,65 @@ define('cache', [], function () {
             }
 
             this.clear();
-
             this.set('app', 'cacheTimestamp', cacheTimestamp);
-
             this.storeTimestamp();
         },
 
+        /**
+         * Get a cache timestamp.
+         *
+         * @returns {number}
+         */
         getCacheTimestamp: function () {
             return parseInt(this.get('app', 'cacheTimestamp') || 0);
         },
 
+        /**
+         * @deprecated
+         * @todo Revise whether is needed.
+         */
         storeTimestamp: function () {
             let frontendCacheTimestamp = Date.now();
 
             this.set('app', 'timestamp', frontendCacheTimestamp);
         },
 
+        /**
+         * @private
+         * @param {string} type
+         * @returns {string}
+         */
         composeFullPrefix: function (type) {
             return this.prefix + '-' + type;
         },
 
+        /**
+         * @private
+         * @param {string} type
+         * @param {string} name
+         * @returns {string}
+         */
         composeKey: function (type, name) {
             return this.composeFullPrefix(type) + '-' + name;
         },
 
+        /**
+         * @private
+         * @param {string} type
+         */
         checkType: function (type) {
             if (typeof type === 'undefined' && toString.call(type) !== '[object String]') {
                 throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
             }
         },
 
+        /**
+         * Get a stored value.
+         *
+         * @param {string} type A type/category.
+         * @param {string} name A name.
+         * @returns {string|null} Null if no stored value.
+         */
         get: function (type, name) {
             this.checkType(type);
 
@@ -126,6 +169,13 @@ define('cache', [], function () {
             return null;
         },
 
+        /**
+         * Store a value.
+         *
+         * @param {string} type A type/category.
+         * @param {string} name A name.
+         * @param {any} value A value.
+         */
         set: function (type, name, value) {
             this.checkType(type);
 
@@ -143,6 +193,12 @@ define('cache', [], function () {
             }
         },
 
+        /**
+         * Clear a stored value.
+         *
+         * @param {string} type A type/category.
+         * @param {string} name A name.
+         */
         clear: function (type, name) {
             let reText;
 
