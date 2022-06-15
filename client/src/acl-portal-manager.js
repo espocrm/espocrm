@@ -28,16 +28,39 @@
 
 define('acl-portal-manager', ['acl-manager', 'acl-portal'], function (Dep, AclPortal) {
 
-    return Dep.extend({
+    /**
+     * Portal access checking.
+     *
+     * @class
+     * @name Class
+     * @extends module:acl-manager.Class
+     * @memberOf module:acl-portal-manager
+     */
+    return Dep.extend(/** @lends module:acl-portal-manager.Class# */{
 
+        /**
+         * Check if a user in an account of a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if in an account, null if not clear.
+         */
         checkInAccount: function (model) {
             return this.getImplementation(model.name).checkInAccount(model);
         },
 
+        /**
+         * Check if a user is a contact-owner to a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if in a contact-owner, null if not clear.
+         */
         checkIsOwnContact: function (model) {
             return this.getImplementation(model.name).checkIsOwnContact(model);
         },
 
+        /**
+         * @inheritDoc
+         */
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
                 let implementationClass = AclPortal;
@@ -53,7 +76,5 @@ define('acl-portal-manager', ['acl-manager', 'acl-portal'], function (Dep, AclPo
 
             return this.implementationHash[scope];
         },
-
     });
 });
-

@@ -28,8 +28,29 @@
 
 define('ajax', [], function () {
 
+    /**
+     * Ajax request functions.
+     */
     let Ajax = Espo.Ajax = {
 
+        /**
+         * Options.
+         *
+         * @typedef {Object} Espo.Ajax~Options
+         *
+         * @property {Number} timeout A timeout.
+         * @property {Object.<string,string>} headers A request headers.
+         */
+
+        /**
+         * Request.
+         *
+         * @param {string} url An URL.
+         * @param {string} type A method.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         request: function (url, type, data, options) {
             options = options || {};
 
@@ -43,6 +64,14 @@ define('ajax', [], function () {
             return $.ajax(options);
         },
 
+        /**
+         * POST request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         postRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -51,6 +80,14 @@ define('ajax', [], function () {
             return Ajax.request(url, 'POST', data, options);
         },
 
+        /**
+         * PATCH request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         patchRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -59,6 +96,14 @@ define('ajax', [], function () {
             return Ajax.request(url, 'PATCH', data, options);
         },
 
+        /**
+         * PUT request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         putRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -67,6 +112,14 @@ define('ajax', [], function () {
             return Ajax.request(url, 'PUT', data, options);
         },
 
+        /**
+         * DELETE request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         deleteRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
@@ -75,6 +128,14 @@ define('ajax', [], function () {
             return Ajax.request(url, 'DELETE', data, options);
         },
 
+        /**
+         * GET request.
+         *
+         * @param {string} url An URL.
+         * @param {any} [data] Data.
+         * @param {Espo.Ajax~Options} [options] Options.
+         * @returns {Promise<any>}
+         */
         getRequest: function (url, data, options) {
             return Ajax.request(url, 'GET', data, options);
         },

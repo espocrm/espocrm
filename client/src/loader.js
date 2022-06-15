@@ -38,8 +38,11 @@ var Espo = Espo || {classMap: {}};
      */
 
     /**
-     * @class Espo.Loader
-     * @param {?Espo.Cache} [cache=null]
+     * A loader. Used for loading and defining AMD modules, resource loading.
+     * Handles caching.
+     *
+     * @class
+     * @param {?module:cache.Class} [cache=null]
      * @param {?int} [_cacheTimestamp=null]
      */
     Espo.Loader = function (cache, _cacheTimestamp) {
@@ -84,7 +87,7 @@ var Espo = Espo || {classMap: {}};
         },
 
         /**
-         * @param {Espo.Cache} cache
+         * @param {module:cache.Class} cache
          */
         setCache: function (cache) {
             this._cache = cache;
@@ -193,6 +196,9 @@ var Espo = Espo || {classMap: {}};
             });
         },
 
+        /**
+         * @private
+         */
         _defineProceed: function (callback, subject, args) {
             let o = callback.apply(this, args);
 
@@ -270,6 +276,9 @@ var Espo = Espo || {classMap: {}};
             callback.apply(this);
         },
 
+        /**
+         * @private
+         */
         _convertCamelCaseToHyphen: function (string) {
             if (string === null) {
                 return string;
@@ -278,6 +287,9 @@ var Espo = Espo || {classMap: {}};
             return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         },
 
+        /**
+         * @private
+         */
         _normalizeClassName: function (name) {
             let normalizedName = name;
 
@@ -306,6 +318,9 @@ var Espo = Espo || {classMap: {}};
             return normalizedName;
         },
 
+        /**
+         * @private
+         */
         _addLoadCallback: function (name, callback) {
             if (!(name in this._loadCallbacks)) {
                 this._loadCallbacks[name] = [];
@@ -314,6 +329,9 @@ var Espo = Espo || {classMap: {}};
             this._loadCallbacks[name].push(callback);
         },
 
+        /**
+         * @private
+         */
         load: function (name, callback, errorCallback) {
             let dataType, type, path, exportsTo, exportsAs;
 
@@ -663,10 +681,11 @@ var Espo = Espo || {classMap: {}};
     };
 
     /**
-     * Define a module.
+     * Define an [AMD](https://github.com/amdjs/amdjs-api/blob/master/AMD.md) module.
      *
      * @param {string|string[]} arg1 A module name to be defined or a dependency list.
-     * @param {string[]|Espo.Loader~requireCallback} arg2 A dependency list or a callback with resolved dependencies.
+     * @param {string[]|Espo.Loader~requireCallback} arg2 A dependency list or a callback with resolved
+     *   dependencies.
      * @param {Espo.Loader~requireCallback|undefined} [arg3] A callback with resolved dependencies.
      */
     root.define = Espo.define = function (arg1, arg2, arg3) {

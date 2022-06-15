@@ -28,6 +28,13 @@
 
 define('action-handler', [], function () {
 
+    /**
+     * An action handler.
+     *
+     * @class
+     * @name Class
+     * @param {module:view.Class} view A view.
+     */
     let ActionHandler = function (view) {
         this.view = view;
     };
@@ -84,7 +91,7 @@ define('action-handler', [], function () {
 
         confirm: function () {
             return this.view.confirm.apply(this.view, arguments);
-        }
+        },
     });
 
     ActionHandler.extend = Backbone.Router.extend;

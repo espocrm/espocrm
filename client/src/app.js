@@ -28,71 +28,79 @@
 
 define(
     'app',
-    [
-        'lib!espo',
-        'lib!jquery',
-        'lib!backbone',
-        'lib!underscore',
-        'ui',
-        'utils',
-        'acl-manager',
-        'cache',
-        'storage',
-        'models/settings',
-        'language',
-        'metadata',
-        'field-manager',
-        'models/user',
-        'models/preferences',
-        'model-factory',
-        'collection-factory',
-        'pre-loader',
-        'controllers/base',
-        'router',
-        'date-time',
-        'layout-manager',
-        'theme-manager',
-        'session-storage',
-        'view-helper',
-        'web-socket-manager',
-        'ajax',
-        'number',
-        'page-title',
-        'broadcast-channel'
-    ],
-    function (
-        Espo,
-        $,
-        Backbone,
-        _,
-        Ui,
-        Utils,
-        AclManager,
-        Cache,
-        Storage,
-        Settings,
-        Language,
-        Metadata,
-        FieldManager,
-        User,
-        Preferences,
-        ModelFactory,
-        CollectionFactory,
-        PreLoader,
-        BaseController,
-        Router,
-        DateTime,
-        LayoutManager,
-        ThemeManager,
-        SessionStorage,
-        ViewHelper,
-        WebSocketManager,
-        Ajax,
-        NumberUtil,
-        PageTitle,
-        BroadcastChannel
-    ) {
-
+[
+    'lib!espo',
+    'lib!jquery',
+    'lib!backbone',
+    'lib!underscore',
+    'ui',
+    'utils',
+    'acl-manager',
+    'cache',
+    'storage',
+    'models/settings',
+    'language',
+    'metadata',
+    'field-manager',
+    'models/user',
+    'models/preferences',
+    'model-factory',
+    'collection-factory',
+    'pre-loader',
+    'controllers/base',
+    'router',
+    'date-time',
+    'layout-manager',
+    'theme-manager',
+    'session-storage',
+    'view-helper',
+    'web-socket-manager',
+    'ajax',
+    'number',
+    'page-title',
+    'broadcast-channel'
+],
+function (
+    Espo,
+    $,
+    Backbone,
+    _,
+    Ui,
+    Utils,
+    AclManager,
+    Cache,
+    Storage,
+    Settings,
+    Language,
+    Metadata,
+    FieldManager,
+    User,
+    Preferences,
+    ModelFactory,
+    CollectionFactory,
+    PreLoader,
+    BaseController,
+    Router,
+    DateTime,
+    LayoutManager,
+    ThemeManager,
+    SessionStorage,
+    ViewHelper,
+    WebSocketManager,
+    Ajax,
+    NumberUtil,
+    PageTitle,
+    BroadcastChannel
+) {
+    /**
+     * A main application class.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:app
+     * @param {module:app.Class~Options} options Options.
+     * @param {module:app.Class~callback} callback A callback.
+     */
     let App = function (options, callback) {
         options = options || {};
 
@@ -108,52 +116,144 @@ define(
             .then(() => this.init(options, callback));
     };
 
-    _.extend(App.prototype, {
+    /**
+     * @callback module:app.Class~callback
+     *
+     * @param {module:app.Class} app A created application instance.
+     */
 
+    /**
+     * Application options.
+     *
+     * @typedef {Object} module:app.Class~Options
+     *
+     * @property {string} [id] An application ID.
+     * @property {string} [basePath] A base path.
+     * @property {boolean} [useCache] Use cache.
+     * @property {string} [apiUrl] An API URL.
+     * @property {Number} [ajaxTimeout] A default ajax request timeout.
+     * @property {string} [internalModuleList] A list of internal modules.
+     *   Internal modules located in the `client/modules` directory.
+     * @property {Number|null} [cacheTimestamp] A cache timestamp.
+     */
+
+    _.extend(App.prototype, /** @lends module:app.Class# */{
+
+        /**
+         * @private
+         */
         useCache: false,
 
+        /**
+         * @private
+         */
         user: null,
 
+        /**
+         * @private
+         */
         preferences: null,
 
+        /**
+         * @private
+         */
         settings: null,
 
+        /**
+         * @private
+         */
         metadata: null,
 
+        /**
+         * @private
+         */
         language: null,
 
+        /**
+         * @private
+         */
         fieldManager: null,
 
+        /**
+         * @private
+         */
         cache: null,
 
+        /**
+         * @private
+         */
         loader: null,
 
+        /**
+         * @private
+         */
         apiUrl: 'api/v1',
 
+        /**
+         * @private
+         */
         auth: null,
 
+        /**
+         * @private
+         */
         baseController: null,
 
+        /**
+         * @private
+         */
         controllers: null,
 
+        /**
+         * @private
+         */
         router: null,
 
+        /**
+         * @private
+         */
         modelFactory: null,
 
+        /**
+         * @private
+         */
         collectionFactory: null,
 
+        /**
+         * @private
+         */
         viewFactory: null,
 
+        /**
+         * @private
+         */
         viewLoader: null,
 
+        /**
+         * @private
+         */
         viewHelper: null,
 
+        /**
+         * A body view.
+         *
+         * @protected
+         */
         masterView: 'views/site/master',
 
+        /**
+         * @private
+         */
         responseCache: null,
 
+        /**
+         * @private
+         */
         broadcastChannel: null,
 
+        /**
+         * @private
+         */
         initCache: function (options) {
             let cacheTimestamp = options.cacheTimestamp || null;
             let storedCacheTimestamp = null;
@@ -206,6 +306,9 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         init: function (options, callback) {
             this.appParams = {};
             this.controllers = {};
@@ -267,6 +370,9 @@ define(
             });
         },
 
+        /**
+         * Start the application.
+         */
         start: function () {
             this.initAuth();
 
@@ -282,6 +388,9 @@ define(
             this.on('auth', this.onAuth, this);
         },
 
+        /**
+         * @private
+         */
         onAuth: function () {
             this.metadata.load().then(() => {
                 this.fieldManager.defs = this.metadata.get('fields');
@@ -361,6 +470,9 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         initRouter: function () {
             let routes = this.metadata.get(['app', 'clientRoutes']) || {};
 
@@ -386,6 +498,9 @@ define(
             }
         },
 
+        /**
+         * @private
+         */
         doAction: function (params) {
             this.trigger('action', params);
 
@@ -418,12 +533,18 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         initBaseController: function () {
             this.baseController = new BaseController({}, this.getControllerInjection());
 
             this.viewHelper.baseController = this.baseController;
         },
 
+        /**
+         * @private
+         */
         getControllerInjection: function () {
             return {
                 viewFactory: this.viewFactory,
@@ -442,6 +563,9 @@ define(
             };
         },
 
+        /**
+         * @private
+         */
         getController: function (name, callback) {
             if (!(name || false)) {
                 callback(this.baseController);
@@ -488,10 +612,16 @@ define(
             }
         },
 
+        /**
+         * @private
+         */
         preLoad: function (callback) {
             this.preLoader.load(callback, this);
         },
 
+        /**
+         * @private
+         */
         initUtils: function () {
             this.dateTime = new DateTime();
 
@@ -502,10 +632,19 @@ define(
             this.numberUtil = new NumberUtil(this.settings, this.preferences);
         },
 
+        /**
+         * Create an acl-manager.
+         *
+         * @protected
+         * @return {module:acl-manager}
+         */
         createAclManager: function () {
             return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));
         },
 
+        /**
+         * @private
+         */
         initView: function () {
             let helper = this.viewHelper = new ViewHelper();
 
@@ -617,6 +756,9 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         initAuth: function () {
             this.auth = this.storage.get('user', 'auth') || null;
 
@@ -645,6 +787,9 @@ define(
             this.baseController.on('logout', () => this.logout());
         },
 
+        /**
+         * @private
+         */
         logout: function () {
             if (this.auth) {
                 let arr = Base64.decode(this.auth).split(':');
@@ -689,6 +834,9 @@ define(
             this.loadStylesheet();
         },
 
+        /**
+         * @private
+         */
         loadStylesheet: function () {
             if (!this.metadata.get(['themes'])) {
                 return;
@@ -699,6 +847,9 @@ define(
             $('#main-stylesheet').attr('href', stylesheetPath);
         },
 
+        /**
+         * @private
+         */
         setCookieAuth: function (username, token) {
             var date = new Date();
 
@@ -708,11 +859,17 @@ define(
             document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
         },
 
+        /**
+         * @private
+         */
         unsetCookieAuth: function () {
             document.cookie = 'auth-username' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
             document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
         },
 
+        /**
+         * @private
+         */
         initUserData: function (options, callback) {
             options = options || {};
 
@@ -786,12 +943,18 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         requestUserData: function (callback) {
             Ajax
                 .getRequest('App/user')
                 .then(callback);
         },
 
+        /**
+         * @private
+         */
         setupAjax: function () {
             $.ajaxSetup({
                 beforeSend: (xhr, options) => {
@@ -887,6 +1050,9 @@ define(
             });
         },
 
+        /**
+         * @private
+         */
         _processErrorAlert: function (xhr, label, noDetail) {
             let msg = this.language.translate('Error') + ' ' + xhr.status;
 
@@ -947,6 +1113,9 @@ define(
             Ui.error(obj.msg, obj.closeButton);
         },
 
+        /**
+         * @private
+         */
         initBroadcastChannel: function () {
             this.broadcastChannel = new BroadcastChannel();
 

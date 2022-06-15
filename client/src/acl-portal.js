@@ -28,14 +28,32 @@
 
 define('acl-portal', ['acl'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * Internal class for portal access checking. Can be extended to customize access checking
+     * for a specific scope.
+     *
+     * @class
+     * @name Class
+     * @extends module:acl.Class
+     * @memberOf module:acl-portal
+     */
+    return Dep.extend(/** @lends module:acl-portal.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         user: null,
 
+        /**
+         * @inheritDoc
+         */
         getUser: function () {
             return this.user;
         },
 
+        /**
+         * @inheritDoc
+         */
         checkScope: function (data, action, precise, entityAccessData) {
             entityAccessData = entityAccessData || {};
 
@@ -142,6 +160,9 @@ define('acl-portal', ['acl'], function (Dep) {
             return result;
         },
 
+        /**
+         * @inheritDoc
+         */
         checkModel: function (model, data, action, precise) {
             if (this.getUser().isAdmin()) {
                 return true;
@@ -156,6 +177,9 @@ define('acl-portal', ['acl'], function (Dep) {
             return this.checkScope(data, action, precise, entityAccessData);
         },
 
+        /**
+         * @inheritDoc
+         */
         checkIsOwner: function (model) {
             if (model.hasField('createdBy')) {
                 if (this.getUser().id === model.get('createdById')) {
@@ -166,6 +190,12 @@ define('acl-portal', ['acl'], function (Dep) {
             return false;
         },
 
+        /**
+         * Check if a user in an account of a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if in an account, null if not clear.
+         */
         checkInAccount: function (model) {
             let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
 
@@ -212,6 +242,12 @@ define('acl-portal', ['acl'], function (Dep) {
             return result;
         },
 
+        /**
+         * Check if a user is a contact-owner to a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if in a contact-owner, null if not clear.
+         */
         checkIsOwnContact: function (model) {
             let contactId = this.getUser().get('contactId');
 
@@ -254,8 +290,6 @@ define('acl-portal', ['acl'], function (Dep) {
             }
 
             return result;
-        }
-
+        },
     });
 });
-

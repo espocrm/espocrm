@@ -28,6 +28,17 @@
 
 define('acl', [], function () {
 
+    /**
+     * Internal class for access checking. Can be extended to customize access checking
+     * for a specific scope.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:acl
+     * @param {module:models/user.Class} user A user.
+     * @param {string} scope A scope.
+     * @param {Object} params Parameters.
+     */
     let Acl = function (user, scope, params) {
         this.user = user || null;
         this.scope = scope;
@@ -39,14 +50,35 @@ define('acl', [], function () {
         this.forbiddenFieldList = params.forbiddenFieldList;
     };
 
-    _.extend(Acl.prototype, {
+    _.extend(Acl.prototype, /** @lends module:acl.Class# */ {
 
+        /**
+         * A user.
+         *
+         * @type {module:models/user.Class}
+         * @protected
+         */
         user: null,
 
+        /**
+         * Get a user.
+         *
+         * @returns {module:models/user.Class}
+         * @protected
+         */
         getUser: function () {
             return this.user;
         },
 
+        /**
+         * Check access to a scope.
+         *
+         * @param {string|boolean|Object} data Access data.
+         * @param {module:acl-manager.Class~action|null} [action=null] An action.
+         * @param {boolean} [precise=false] To return `null` if `inTeam == null`.
+         * @param {Object|null} [entityAccessData=null] Entity access data. `inTeam`, `isOwner`.
+         * @returns {boolean|null} True if has access.
+         */
         checkScope: function (data, action, precise, entityAccessData) {
             entityAccessData = entityAccessData || {};
 
@@ -136,6 +168,16 @@ define('acl', [], function () {
             return result;
         },
 
+        /**
+         * Check access to model (entity).
+         *
+         * @param {module:model.Class} model A model.
+         * @param {Object|string|null} data Access data.
+         * @param {module:acl-manager.Class~action|null} [action=null] Action to check.
+         * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
+         *   E.g. the `teams` field is not yet loaded.
+         * @returns {boolean|null} True if has access, null if not clear.
+         */
         checkModel: function (model, data, action, precise) {
             if (this.getUser().isAdmin()) {
                 return true;
@@ -149,6 +191,15 @@ define('acl', [], function () {
             return this.checkScope(data, action, precise, entityAccessData);
         },
 
+        /**
+         * Check `delete` access to model.
+         *
+         * @param {module:model.Class} model A model.
+         * @param {Object|string|null} data Access data.
+         * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
+         *   E.g. the `teams` field is not yet loaded.
+         * @returns {boolean} True if has access.
+         */
         checkModelDelete: function (model, data, precise) {
             let result = this.checkModel(model, data, 'delete', precise);
 
@@ -186,6 +237,12 @@ define('acl', [], function () {
             return result;
         },
 
+        /**
+         * Check if a user is owner to a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if owner. Null if not clear.
+         */
         checkIsOwner: function (model) {
             let result = false;
 
@@ -225,6 +282,12 @@ define('acl', [], function () {
             return result;
         },
 
+        /**
+         * Check if a user in a team of a model.
+         *
+         * @param {module:model.Class} model A model.
+         * @returns {boolean|null} True if in a team. Null if not clear.
+         */
         checkInTeam: function (model) {
             var userTeamIdList = this.getUser().getTeamIdList();
 

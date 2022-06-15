@@ -47,7 +47,7 @@ define('view', [], function () {
          * A model.
          *
          * @name model
-         * @type {Espo.Model|null}
+         * @type {module:model.Class|null}
          * @memberOf module:view.Class.prototype
          * @public
          */
@@ -56,7 +56,7 @@ define('view', [], function () {
          * A collection.
          *
          * @name collection
-         * @type {Espo.Collection|null}
+         * @type {module:collection.Class|null}
          * @memberOf module:view.Class.prototype
          * @public
          */
@@ -115,7 +115,7 @@ define('view', [], function () {
         /**
          * Get the view-helper.
          *
-         * @returns {Espo.ViewHelper}
+         * @returns {module:view-helper}
          */
         getHelper: function () {
             return this._helper;
@@ -124,7 +124,7 @@ define('view', [], function () {
         /**
          * Get the current user.
          *
-         * @returns {Espo.Models.User}
+         * @returns {module:models/user.Class}
          */
         getUser: function () {
             if (this._helper) {
@@ -135,7 +135,7 @@ define('view', [], function () {
         /**
          * Get the preferences.
          *
-         * @returns {Espo.Models.Preferences}
+         * @returns {module:models/preferences.Class}
          */
         getPreferences: function () {
             if (this._helper) {
@@ -146,7 +146,7 @@ define('view', [], function () {
         /**
          * Get the config.
          *
-         * @returns {Espo.Models.Settings}
+         * @returns {module:models/settings.Class}
          */
         getConfig: function () {
             if (this._helper) {
@@ -157,7 +157,7 @@ define('view', [], function () {
         /**
          * Get the ACL.
          *
-         * @returns {Espo.Acl}
+         * @returns {module:acl-manager.Class}
          */
         getAcl: function () {
             if (this._helper) {
@@ -168,7 +168,7 @@ define('view', [], function () {
         /**
          * Get the model factory.
          *
-         * @returns {Espo.ModelFactory}
+         * @returns {module:model-factory.Class}
          */
         getModelFactory: function () {
             if (this._helper) {
@@ -179,7 +179,7 @@ define('view', [], function () {
         /**
          * Get the collection factory.
          *
-         * @returns {Espo.CollectionFactory}
+         * @returns {module:collection-factory.Class}
          */
         getCollectionFactory: function () {
             if (this._helper) {
@@ -190,7 +190,7 @@ define('view', [], function () {
         /**
          * Get the router.
          *
-         * @returns {Espo.Router}
+         * @returns {module:router.Class}
          */
         getRouter: function () {
             if (this._helper) {
@@ -201,7 +201,7 @@ define('view', [], function () {
         /**
          * Get the storage-util.
          *
-         * @returns {Espo.Storage}
+         * @returns {module:storage.Class}
          */
         getStorage: function () {
             if (this._helper) {
@@ -212,7 +212,7 @@ define('view', [], function () {
         /**
          * Get the session-storage-util.
          *
-         * @returns {Espo.SessionStorage}
+         * @returns {module:session-storage.Class}
          */
         getSessionStorage: function () {
             if (this._helper) {
@@ -223,7 +223,7 @@ define('view', [], function () {
         /**
          * Get the language-util.
          *
-         * @returns {Espo.Language}
+         * @returns {module:language.Class}
          */
         getLanguage: function () {
             if (this._helper) {
@@ -234,7 +234,7 @@ define('view', [], function () {
         /**
          * Get metadata.
          *
-         * @returns {Espo.Metadata}
+         * @returns {module:metadata.Class}
          */
         getMetadata: function () {
             if (this._helper) {
@@ -245,7 +245,7 @@ define('view', [], function () {
         /**
          * Get the cache-util.
          *
-         * @returns {Espo.Cache}
+         * @returns {module:cache.Class}
          */
         getCache: function () {
             if (this._helper) {
@@ -256,7 +256,7 @@ define('view', [], function () {
         /**
          * Get the date-time util.
          *
-         * @returns {Espo.DateTime}
+         * @returns {module:date-time.Class}
          */
         getDateTime: function () {
             if (this._helper) {
@@ -267,7 +267,7 @@ define('view', [], function () {
         /**
          * Get the number-util.
          *
-         * @returns {Espo.Number}
+         * @returns {module:number.Class}
          */
         getNumberUtil: function () {
             if (this._helper) {
@@ -278,7 +278,7 @@ define('view', [], function () {
         /**
          * Get the field manager.
          *
-         * @returns {Espo.FieldManager}
+         * @returns {module:field-manager.Class}
          */
         getFieldManager: function () {
             if (this._helper) {
@@ -289,7 +289,7 @@ define('view', [], function () {
         /**
          * Get the base-controller.
          *
-         * @returns {Espo.Controllers.Base}
+         * @returns {module:controllers/base.Class}
          */
         getBaseController: function () {
             if (this._helper) {
@@ -300,7 +300,7 @@ define('view', [], function () {
         /**
          * Get the theme manager.
          *
-         * @returns {Espo.ThemeManager}
+         * @returns {module:theme-manager.Class}
          */
         getThemeManager: function () {
             if (this._helper) {
@@ -458,8 +458,8 @@ define('view', [], function () {
          * Show a confirmation dialog.
          *
          * @param {(string|Object)} o A message or options.
-         * @param [callback]
-         * @param [context]
+         * @param [callback] A callback. Deprecated, use a promise.
+         * @param [context] A context. Deprecated.
          * @returns {Promise} To be resolved if confirmed.
          */
         confirm: function (o, callback, context) {
