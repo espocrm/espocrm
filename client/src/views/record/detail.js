@@ -1121,7 +1121,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             if (collection) {
                 this.listenTo(this.model, 'destroy', () => {
                     collection.remove(this.model.id);
-                    collection.trigger('sync');
+                    collection.trigger('sync', {});
                 });
 
                 if ('indexOfRecord' in this.options) {
