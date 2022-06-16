@@ -26,22 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- define('field-manager', [], function () {
+define('field-manager', [], function () {
 
+    /**
+     * Utility for getting field related meta information.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:field-manager
+     *
+     * @param {Object} defs Field type definitions (metadata > fields).
+     * @param {module:metadata.Class} metadata Metadata.
+     * @param {modules:acl-manager.Class} [acl] An ACL.
+     */
     let FieldManager = function (defs, metadata, acl) {
+        /**
+         * @private
+         * @type {Object}
+         */
         this.defs = defs || {};
+
+        /**
+         * @private
+         * @type {module:metadata.Class}
+         */
         this.metadata = metadata;
+
+        /**
+         * @private
+         * @type {module:acl-manager.Class|null}
+         */
         this.acl = acl || null;
     };
 
-    _.extend(FieldManager.prototype, {
+    _.extend(FieldManager.prototype, /** @lends module:field-manager.Class# */{
 
-        defs: null,
-
-        metadata: null,
-
-        acl: null,
-
+        /**
+         * Get a list of parameters for a specific field type.
+         *
+         * @param {string} fieldType A field type.
+         * @returns {string[]}
+         */
         getParamList: function (fieldType) {
             if (fieldType in this.defs) {
                 return this.defs[fieldType].params || [];
@@ -50,19 +75,30 @@
             return [];
         },
 
+        /**
+         * Whether search filters are allowed for a field type.
+         *
+         * @param {string} fieldType A field type.
+         * @returns {boolean}
+         */
         checkFilter: function (fieldType) {
             if (fieldType in this.defs) {
                 if ('filter' in this.defs[fieldType]) {
                     return this.defs[fieldType].filter;
                 }
-                else {
-                    return false;
-                }
+
+                return false;
             }
 
             return false;
         },
 
+        /**
+         * Whether a merge operation is allowed for a field type.
+         *
+         * @param {string} fieldType A field type.
+         * @returns {boolean}
+         */
         isMergeable: function (fieldType) {
             if (fieldType in this.defs) {
                 return !this.defs[fieldType].notMergeable;
@@ -71,6 +107,12 @@
             return false;
         },
 
+        /**
+         * Get a list of attributes of an entity type.
+         *
+         * @param {string} entityType An entity type.
+         * @returns {string}
+         */
         getEntityTypeAttributeList: function (entityType) {
             let list = [];
 
@@ -87,6 +129,15 @@
             return list;
         },
 
+        /**
+         * Get a list of actual attributes by a given field type and field name.
+         * Non-actual attributes contains data that for a representation-only purpose.
+         * E.g. `accountId` is actual, `accountName` is non-actual.
+         *
+         * @param {string} fieldType A field type.
+         * @param {string} fieldName A field name.
+         * @returns {string}
+         */
         getActualAttributeList: function (fieldType, fieldName) {
             let fieldNames = [];
 
@@ -119,6 +170,15 @@
             return fieldNames;
         },
 
+        /**
+         * Get a list of non-actual attributes by a given field type and field name.
+         * Non-actual attributes contains data that for a representation-only purpose.
+         * E.g. `accountId` is actual, `accountName` is non-actual.
+         *
+         * @param {string} fieldType A field type.
+         * @param {string} fieldName A field name.
+         * @returns {string}
+         */
         getNotActualAttributeList: function (fieldType, fieldName) {
             let fieldNames = [];
 
@@ -153,6 +213,13 @@
             return fieldNames;
         },
 
+        /**
+         * Get an attribute list of a specific field.
+         *
+         * @param {string} entityType An entity type.
+         * @param {string} field A field.
+         * @returns {string[]}
+         */
         getEntityTypeFieldAttributeList: function (entityType, field) {
             let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
@@ -166,6 +233,13 @@
             );
         },
 
+        /**
+         * Get an actual attribute list of a specific field.
+         *
+         * @param {string} entityType An entity type.
+         * @param {string} field A field.
+         * @returns {string[]}
+         */
         getEntityTypeFieldActualAttributeList: function (entityType, field) {
             let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
@@ -179,6 +253,9 @@
             );
         },
 
+        /**
+         * @private
+         */
         _getEntityTypeFieldAdditionalAttributeList: function (entityType, field) {
             let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
@@ -210,6 +287,13 @@
             return list;
         },
 
+        /**
+         * Get a list of attributes by a given field type and field name.
+         *
+         * @param {string} fieldType A field type.
+         * @param {string} fieldName A field name.
+         * @returns {string}
+         */
         getAttributeList: function (fieldType, fieldName) {
             return _.union(
                 this.getActualAttributeList(fieldType, fieldName),
@@ -217,6 +301,23 @@
             );
         },
 
+        /**
+         * @typedef {Object} module:field-manager.Class~FieldFilters
+         *
+         * @property {string} [type] Only of a specific field type.
+         * @property {string[]} [typeList] Only of a specific field types.
+         * @property {boolean} [onlyAvailable] To exclude disabled, admin-only, internal, forbidden fields.
+         * @property {'read'|'edit'} [acl] To exclude fields not accessible for a current user over
+         *   a specified access level.
+         */
+
+        /**
+         * Get a list of fields of a specific entity type.
+         *
+         * @param {string} entityType An entity type.
+         * @param {module:field-manager.Class~FieldFilters} [o] Filters.
+         * @returns {string[]}
+         */
         getEntityTypeFieldList: function (entityType, o) {
             let list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
 
@@ -255,14 +356,31 @@
             return list;
         },
 
-        getScopeFieldList: function (entityType) { // TODO remove in 5.8.0
+        /**
+         * @deprecated Since v5.7.
+         */
+        getScopeFieldList: function (entityType) {
             return this.getEntityTypeFieldList(entityType);
         },
 
+        /**
+         * Get a field parameter value.
+         *
+         * @param {string} entityType An entity type.
+         * @param {string} field A field name.
+         * @param {string} param A parameter name.
+         * @returns {*}
+         */
         getEntityTypeFieldParam: function (entityType, field, param) {
             return this.metadata.get(['entityDefs', entityType, 'fields', field, param]);
         },
 
+        /**
+         * Get a view name/path for a specific field type.
+         *
+         * @param {string} fieldType A field type.
+         * @returns {string}
+         */
         getViewName: function (fieldType) {
             if (fieldType in this.defs) {
                 if ('view' in this.defs[fieldType]) {
@@ -273,22 +391,41 @@
             return 'views/fields/' + Espo.Utils.camelCaseToHyphen(fieldType);
         },
 
+        /**
+         * @deprecated Use `getParamList`.
+         */
         getParams: function (fieldType) {
             return this.getParamList(fieldType);
         },
 
+        /**
+         * @deprecated Use `getAttributeList`.
+         */
         getAttributes: function (fieldType, fieldName) {
             return this.getAttributeList(fieldType, fieldName);
         },
 
+        /**
+         * @deprecated Use `getActualAttributeList`.
+         */
         getActualAttributes: function (fieldType, fieldName) {
             return this.getActualAttributeList(fieldType, fieldName);
         },
 
+        /**
+         * @deprecated Use `getNotActualAttributeList`.
+         */
         getNotActualAttributes: function (fieldType, fieldName) {
             return this.getNotActualAttributeList(fieldType, fieldName);
         },
 
+        /**
+         * Check whether a field is not disabled, not only-admin, not forbidden and not internal.
+         *
+         * @param {string} entityType An entity type.
+         * @param {string} field A field name.
+         * @returns {boolean}
+         */
         isEntityTypeFieldAvailable: function (entityType, field) {
             if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) {
                 return false;
@@ -305,10 +442,12 @@
             return true;
         },
 
+        /**
+         * @deprecated Use `isEntityTypeFieldAvailable`.
+         */
         isScopeFieldAvailable: function (entityType, field) {
             return this.isEntityTypeFieldAvailable(entityType, field);
         },
-
     });
 
     return FieldManager;
