@@ -61,7 +61,9 @@ define('model-factory', [], function () {
         seeds: null,
 
         /**
-         * @private
+         * @public
+         * @type {module:date-time.Class|null}
+         * @internal
          */
         dateTime: null,
 
@@ -104,9 +106,9 @@ define('model-factory', [], function () {
                 return;
             }
 
-            var className = this.metadata.get('clientDefs.' + name + '.model') || 'model';
+            let className = this.metadata.get('clientDefs.' + name + '.model') || 'model';
 
-            Espo.loader.require(className, modelClass => {
+            require(className, modelClass => {
                 this.seeds[name] = modelClass.extend({
                     name: name,
                     entityType: name,

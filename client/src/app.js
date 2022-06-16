@@ -632,7 +632,7 @@ function (
          * @private
          */
         getController: function (name, callback) {
-            if (!(name || false)) {
+            if (!name) {
                 callback(this.baseController);
 
                 return;
@@ -645,32 +645,34 @@ function (
             }
 
             try {
-                let className = this.metadata.get('clientDefs.' + name + '.controller');
+                let className = this.metadata.get(['clientDefs', name, 'controller']);
 
                 if (!className) {
-                    let module = this.metadata.get('scopes.' + name + '.module');
+                    let module = this.metadata.get(['scopes', name, 'module']);
 
                     className = Utils.composeClassName(module, name, 'controllers');
                 }
 
-                Espo.require(
+                require(
                     className,
+                    /** typeof module:controller.Class */
                     controllerClass => {
-                        var injections = this.getControllerInjection();
+                        let injections = this.getControllerInjection();
 
                         injections.baseController = this.baseController;
 
-                        this.controllers[name] = new controllerClass(this.baseController.params, injections);
-                        this.controllers[name].name = name;
-                        this.controllers[name].masterView = this.masterView;
+                        let controller = new controllerClass(this.baseController.params, injections);
 
-                        callback(this.controllers[name]);
+                        controller.name = name;
+                        controller.masterView = this.masterView;
+
+                        this.controllers[name] = controller
+
+                        callback(controller);
                     },
                     this,
                     () => this.baseController.error404()
                 );
-
-                return;
             }
             catch (e) {
                 this.baseController.error404();
@@ -689,11 +691,8 @@ function (
          */
         initUtils: function () {
             this.dateTime = new DateTime();
-
             this.modelFactory.dateTime = this.dateTime;
-
             this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
-
             this.numberUtil = new NumberUtil(this.settings, this.preferences);
         },
 

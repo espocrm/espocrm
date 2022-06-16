@@ -71,16 +71,16 @@
                 context = context || this;
 
                 this.modelFactory.getSeed(name, seed => {
-                    var orderBy = this.modelFactory.metadata
+                    let orderBy = this.modelFactory.metadata
                         .get(['entityDefs', name, 'collection', 'orderBy']);
 
-                    var order = this.modelFactory.metadata
+                    let order = this.modelFactory.metadata
                         .get(['entityDefs', name, 'collection', 'order']);
 
-                    var className = this.modelFactory.metadata
+                    let className = this.modelFactory.metadata
                         .get(['clientDefs', name, 'collection']) || 'collection';
 
-                    Espo.loader.require(className, collectionClass => {
+                    require(className, collectionClass => {
                         let collection = new collectionClass(null, {
                             name: name,
                             orderBy: orderBy,

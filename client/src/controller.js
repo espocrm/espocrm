@@ -84,9 +84,10 @@ define('controller', [], function () {
         /**
          * A name.
          *
-         * @type {(string|false)}
+         * @type {string|null}
+         * @public
          */
-        name: false,
+        name: null,
 
         /**
          * Params.
@@ -111,6 +112,14 @@ define('controller', [], function () {
          * @protected
          */
         modelFactory: null,
+
+        /**
+         * A body view.
+         *
+         * @public
+         * @type {string|null}
+         */
+        masterView: null,
 
         /**
          * Initialize.
