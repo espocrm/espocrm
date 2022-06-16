@@ -28,21 +28,43 @@
 
 define('metadata', [], function () {
 
+    /**
+     * Application metadata.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:metadata
+     *
+     * @param {module:cache.Class} [cache] A cache.
+     */
     let Metadata = function (cache) {
+        /**
+         * @private
+         * @type {module:cache.Class|null}
+         */
         this.cache = cache || null;
 
+        /**
+         * @private
+         * @type {Object}
+         */
         this.data = {};
-        this.ajax = $.ajax;
     };
 
-    _.extend(Metadata.prototype, {
+    _.extend(Metadata.prototype, /** @lends module:metadata.Class# */{
 
-        cache: null,
-
-        data: null,
-
+        /**
+         * @private
+         */
         url: 'Metadata',
 
+        /**
+         * Load from cache or the backend (if not yet cached).
+         *
+         * @param {Function|null} [callback] Deprecated. Use a promise.
+         * @param {boolean} [disableCache=false] Bypass cache.
+         * @returns {Promise}
+         */
         load: function (callback, disableCache) {
             this.off('sync');
 
@@ -64,25 +86,38 @@ define('metadata', [], function () {
             });
         },
 
+        /**
+         * Load from the server.
+         *
+         * @returns {Promise}
+         */
         loadSkipCache: function () {
             return this.load(null, true);
         },
 
+        /**
+         * @private
+         * @returns {Promise}
+         */
         fetch: function () {
-            return this.ajax({
-                url: this.url,
-                type: 'GET',
-                dataType: 'JSON',
-                success: data => {
-                    this.data = data;
-
-                    this.storeToCache();
-
-                    this.trigger('sync');
-                },
-            });
+            return Espo.Ajax
+                .getRequest(this.url, null, {
+                    dataType: 'json',
+                    success: data => {
+                        this.data = data;
+                        this.storeToCache();
+                        this.trigger('sync');
+                    },
+                });
         },
 
+        /**
+         * Get a value.
+         *
+         * @param {string[]|string} path A key path.
+         * @param {*} [defaultValue] A value to return if not set.
+         * @returns {*} Null if not set.
+         */
         get: function (path, defaultValue) {
             defaultValue = defaultValue || null;
 
@@ -117,6 +152,10 @@ define('metadata', [], function () {
             return result;
         },
 
+        /**
+         * @private
+         * @returns {boolean} True if success.
+         */
         loadFromCache: function () {
             if (this.cache) {
                 let cached = this.cache.get('app', 'metadata');
@@ -131,12 +170,18 @@ define('metadata', [], function () {
             return null;
         },
 
+        /**
+         * @private
+         */
         storeToCache: function () {
             if (this.cache) {
                 this.cache.set('app', 'metadata', this.data);
             }
         },
 
+        /**
+         * Clear cache.
+         */
         clearCache: function () {
             if (!this.cache) {
                 return;
@@ -145,6 +190,11 @@ define('metadata', [], function () {
             this.cache.clear('app', 'metadata');
         },
 
+        /**
+         * Get a scope list.
+         *
+         * @returns {string}
+         */
         getScopeList: function () {
             let scopes = this.get('scopes') || {};
             let scopeList = [];
@@ -162,6 +212,11 @@ define('metadata', [], function () {
             return scopeList;
         },
 
+        /**
+         * Get an object-scope list. An object-scope represents a business entity.
+         *
+         * @returns {string[]}
+         */
         getScopeObjectList: function () {
             let scopes = this.get('scopes') || {};
             let scopeList = [];
@@ -183,6 +238,11 @@ define('metadata', [], function () {
             return scopeList;
         },
 
+        /**
+         * Get an entity-scope list. Scopes that represents entities.
+         *
+         * @returns {string[]}
+         */
         getScopeEntityList: function () {
             var scopes = this.get('scopes') || {};
             var scopeList = [];

@@ -26,14 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/**
- * @internal Not used.
- */
-define('model-offline', 'model', function (Model) {
+define('model-offline', ['model'], function (Model) {
 
-    let ModelOffline = Model.extend({
-
-        name: null,
+    /**
+     * @internal Not used.
+     *
+     * @class
+     * @name Class
+     * @extends module:model.Class
+     * @memberOf module:model-offline
+     */
+    return Model.extend(/** @lends module:model-offline.Class# */{
 
         cache: null,
 
@@ -97,8 +100,5 @@ define('model-offline', 'model', function (Model) {
         isNew: function () {
             return false;
         },
-
     });
-
-    return ModelOffline;
 });

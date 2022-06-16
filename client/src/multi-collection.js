@@ -28,21 +28,35 @@
 
 define('multi-collection', ['collection'], function (Collection) {
 
-    let MultiCollection = Collection.extend({
+    /**
+     * A collection that can contain entities of different entity types.
+     *
+     * @class
+     * @name Class
+     * @extends module:collection.Class
+     * @memberOf module:multi-collection
+     */
+    return Collection.extend(/** @lends module:multi-collection.Class# */{
 
         /**
-         * @prop {Object} seeds Hash off model classes.
+         * @private
          */
         seeds: null,
 
+        /**
+         * @inheritDoc
+         */
         initialize: function (models, options) {
             options = options || {};
 
             this.data = {};
 
-            Backbone.Collection.prototype.initialize.call(this);
+            Backbone.Collection.prototype.initialize.call(this, options);
         },
 
+        /**
+         * @inheritDoc
+         */
         parse: function (resp, options) {
             this.total = resp.total;
 
@@ -54,8 +68,5 @@ define('multi-collection', ['collection'], function (Collection) {
                 return new this.seeds[attributes._scope](a, options);
             });
         },
-
     });
-
-    return MultiCollection;
 });

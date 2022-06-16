@@ -151,7 +151,6 @@ define('number', [], function () {
 
             return decimalMark;
         },
-
     });
 
     return NumberUtil;

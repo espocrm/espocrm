@@ -26,4 +26,4 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-var Espo = {};
+let Espo = {};

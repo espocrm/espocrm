@@ -156,6 +156,8 @@ define('model', [], function () {
         defs: null,
 
         /**
+         * Initialize.
+         *
          * @protected
          */
         initialize: function () {

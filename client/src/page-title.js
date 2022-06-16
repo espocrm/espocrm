@@ -66,7 +66,6 @@ define('page-title', [], function () {
 
             $('head title').text(value);
         },
-
     });
 
     return PageTitle;

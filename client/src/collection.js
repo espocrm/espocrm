@@ -181,9 +181,11 @@ define('collection', [], function () {
         _user: null,
 
         /**
+         * Initialize.
+         *
          * @protected
-         * @param {module:model.Class[]} models
-         * @param {Object} options
+         * @param {module:model.Class[]} models Models.
+         * @param {Object} options Options.
          */
         initialize: function (models, options) {
             options = options || {};
@@ -305,7 +307,14 @@ define('collection', [], function () {
             this.fetch();
         },
 
-        parse: function (response) {
+        /**
+         * Parse a response from the backend.
+         *
+         * @param {Object} response A response.
+         * @param {Object} options Options.
+         * @returns {module:collection.Class[]}
+         */
+        parse: function (response, options) {
             this.total = response.total;
 
             if ('additionalData' in response) {

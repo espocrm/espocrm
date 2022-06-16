@@ -86,6 +86,5 @@ define('session-storage', ['storage'], function (Dep) {
                 }
             }
         },
-
     });
 });
