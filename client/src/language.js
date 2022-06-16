@@ -28,20 +28,50 @@
 
 define('language', ['ajax'], function (Ajax) {
 
+    /**
+     * A language.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:language
+     * @param {module:cache.Class} [cache] A cache.
+     */
     let Language = function (cache) {
+        /**
+         * @private
+         * @type {module:cache.Class|null}
+         */
         this.cache = cache || null;
+
+        /**
+         * @private
+         * @type {Object}
+         */
         this.data = {};
+
+        /**
+         * A name.
+         *
+         * @type {string}
+         */
         this.name = 'default';
     };
 
-    _.extend(Language.prototype, {
+    _.extend(Language.prototype, /** @lends module:language.Class# */{
 
-        data: null,
-
-        cache: null,
-
+        /**
+         * @private
+         */
         url: 'I18n',
 
+        /**
+         * Whether an item is set in language data.
+         *
+         * @param {string} scope A scope.
+         * @param category A category.
+         * @param {string} name An item name.
+         * @returns {boolean}
+         */
         has: function (name, category, scope) {
             if (scope in this.data) {
                 if (category in this.data[scope]) {
@@ -50,8 +80,18 @@ define('language', ['ajax'], function (Ajax) {
                     }
                 }
             }
+
+            return false;
         },
 
+        /**
+         * Get a value set in language data.
+         *
+         * @param {string} scope A scope.
+         * @param category A category.
+         * @param {string} name An item name.
+         * @returns {*}
+         */
         get: function (scope, category, name) {
             if (scope in this.data) {
                 if (category in this.data[scope]) {
@@ -68,6 +108,14 @@ define('language', ['ajax'], function (Ajax) {
             return false;
         },
 
+        /**
+         * Translate a label.
+         *
+         * @param {string} name An item name.
+         * @param {string} [category='labels'] A category.
+         * @param {string} [scope='Global'] A scope.
+         * @returns {string}
+         */
         translate: function (name, category, scope) {
             scope = scope || 'Global';
             category = category || 'labels';
@@ -81,6 +129,14 @@ define('language', ['ajax'], function (Ajax) {
             return res;
         },
 
+        /**
+         * Translation an option item value.
+         *
+         * @param {string} value An option value.
+         * @param {string} field A field name.
+         * @param {string} [scope='Global'] A scope.
+         * @returns {string}
+         */
         translateOption: function (value, field, scope) {
             let translation = this.translate(field, 'options', scope);
 
@@ -91,6 +147,9 @@ define('language', ['ajax'], function (Ajax) {
             return translation[value] || value;
         },
 
+        /**
+         * @private
+         */
         loadFromCache: function (loadDefault) {
             let name = this.name;
             if (loadDefault) {
@@ -110,12 +169,18 @@ define('language', ['ajax'], function (Ajax) {
             return null;
         },
 
+        /**
+         * Clear a language cache.
+         */
         clearCache: function () {
             if (this.cache) {
                 this.cache.clear('app', 'language-' + this.name);
             }
         },
 
+        /**
+         * @private
+         */
         storeToCache: function (loadDefault) {
             let name = this.name;
 
@@ -128,6 +193,14 @@ define('language', ['ajax'], function (Ajax) {
             }
         },
 
+        /**
+         * Load data from cache or backend (if not yet cached).
+         *
+         * @param {Function} [callback] Deprecated.
+         * @param {boolean} [disableCache=false] Deprecated
+         * @param {boolean} [loadDefault=false] Deprecated.
+         * @returns {Promise}
+         */
         load: function (callback, disableCache, loadDefault) {
             if (callback) {
                 this.once('sync', callback);
@@ -147,28 +220,54 @@ define('language', ['ajax'], function (Ajax) {
             });
         },
 
+        /**
+         * Load default-language data from the backend.
+         *
+         * @returns {Promise}
+         */
         loadDefault: function () {
             return this.load(null, false, true);
         },
 
+        /**
+         * Load data from the backend.
+         *
+         * @returns {Promise}
+         */
         loadSkipCache: function () {
             return this.load(null, true);
         },
 
+        /**
+         * Load default-language data from the backend.
+         *
+         * @returns {Promise}
+         */
         loadDefaultSkipCache: function () {
             return this.load(null, true, true);
         },
 
+        /**
+         * @private
+         * @param {boolean} loadDefault
+         * @returns {Promise}
+         */
         fetch: function (loadDefault) {
             return Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
                 this.data = data;
 
                 this.storeToCache(loadDefault);
-
                 this.trigger('sync');
             });
         },
 
+        /**
+         * Sort a field list by a translated name.
+         *
+         * @param {string} scope An entity type.
+         * @param {string[]} fieldList A field list.
+         * @returns {string[]}
+         */
         sortFieldList: function (scope, fieldList) {
             return fieldList.sort((v1, v2) => {
                  return this.translate(v1, 'fields', scope)
@@ -176,6 +275,13 @@ define('language', ['ajax'], function (Ajax) {
             });
         },
 
+        /**
+         * Sort an entity type list by a translated name.
+         *
+         * @param {string[]} entityList An entity type list.
+         * @param {boolean} [plural=false] Use a plural label.
+         * @returns {string[]}
+         */
         sortEntityList: function (entityList, plural) {
             let category = 'scopeNames';
 
@@ -189,6 +295,12 @@ define('language', ['ajax'], function (Ajax) {
             });
         },
 
+        /**
+         * Get a value by a path.
+         *
+         * @param {string[]|string} path A path.
+         * @returns {*}
+         */
         translatePath: function (path) {
             if (typeof path === 'string' || path instanceof String) {
                 path = path.split('.');
@@ -208,5 +320,4 @@ define('language', ['ajax'], function (Ajax) {
     }, Backbone.Events);
 
     return Language;
-
 });
