@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "title": "العنوان",
+    "dateFrom": "التاريخ من",
+    "dateTo": "التاريخ إلى",
+    "autorefreshInterval": "الفاصل الزمني للتحديث التلقائي",
+    "displayRecords": "سجلات العرض",
+    "isDoubleHeight": "ضعف الإرتفاع",
+    "mode": "النمط",
+    "enabledScopeList": "ما يتم عرضه",
+    "users": "المستخدمين",
+    "entityType": "نوع الكيان",
+    "primaryFilter": "عامل التصفية الأساسي",
+    "boolFilterList": "مرشحات إضافية",
+    "sortBy": "تنظيم (الخانة)",
+    "sortDirection": "ترتيب (اتجاه)",
+    "expandedLayout": "تَخطِيط",
+    "dateFilter": "مرشح التاريخ",
+    "skipOwn": "لا تظهر السجلات الخاصة"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "الأسبوع (جدول الأعمال)",
+      "basicWeek": "الأسبوع",
+      "month": "الشهر",
+      "basicDay": "اليوم",
+      "agendaDay": "اليوم (جدول الأعمال)",
+      "timeline": "الجدول الزمني"
+    }
+  },
+  "messages": {
+    "selectEntityType": "حدد نوع الكيان في خيارات dashlet."
+  },
+  "tooltips": {
+    "skipOwn": "لن يتم عرض الإجراءات التي قام بها حساب المستخدم الخاص بك."
+  }
+}

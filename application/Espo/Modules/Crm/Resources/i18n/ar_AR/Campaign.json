@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "description": "الوصف",
+    "status": "الحالة",
+    "type": "النوع",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "targetLists": "قوائم الاستهداف",
+    "excludingTargetLists": "إستثناء قوائم الاستهداف",
+    "sentCount": "تم الارسال",
+    "openedCount": "تم الفتح",
+    "clickedCount": "تم النقر",
+    "optedOutCount": "تم سحبها",
+    "bouncedCount": "ارتدت",
+    "hardBouncedCount": "ارتدت بعنف",
+    "softBouncedCount": "ارتد لينة",
+    "leadCreatedCount": "تم انشاء فرص",
+    "revenue": "إيرادات",
+    "revenueConverted": "الإيرادات (المحولة)",
+    "budget": "ميزانية",
+    "budgetConverted": "الميزانية (المحولة)",
+    "contactsTemplate": "نموذج جهات الاتصال",
+    "leadsTemplate": "نموذج العملاء المحتملين",
+    "accountsTemplate": "نموذج الحسابات",
+    "usersTemplate": "قالب المستخدمين",
+    "mailMergeOnlyWithAddress": "تخطي السجلات بدون عنوان معبأ",
+    "optedInCount": "اختارت في",
+    "budgetCurrency": "عملة الميزانية"
+  },
+  "links": {
+    "targetLists": "القوائم المستهدفة",
+    "excludingTargetLists": "باستثناء القوائم المستهدفة",
+    "accounts": "الحسابات",
+    "contacts": "جهات الاتصال",
+    "leads": "الفرص",
+    "opportunities": "الفرص",
+    "campaignLogRecords": "سجل",
+    "massEmails": "رسائل بريد الكتروني متعدد",
+    "trackingUrls": "روابط التتبع",
+    "contactsTemplate": "نموذج جهات الاتصال",
+    "leadsTemplate": "نموذج العملاء المحتملين",
+    "accountsTemplate": "نموذج الحسابات",
+    "usersTemplate": "قالب المستخدمين"
+  },
+  "options": {
+    "type": {
+      "Email": "البريد الإلكتروني",
+      "Web": "موقع الويب",
+      "Television": "التلفاز",
+      "Radio": "راديو",
+      "Newsletter": "النشرة الإخبارية",
+      "Mail": "بريد"
+    },
+    "status": {
+      "Planning": "تخطيط",
+      "Active": "نشط",
+      "Inactive": "غير نشط",
+      "Complete": "اكتملت"
+    }
+  },
+  "labels": {
+    "Create Campaign": "انشاء حملة اعلانية",
+    "Target Lists": "القوائم المستهدفة",
+    "Statistics": "الاحصائيات",
+    "hard": "مطبوعة",
+    "soft": "الكترونية",
+    "Unsubscribe": "إلغاء الاشتراك",
+    "Mass Emails": "رسائل البريد الإلكتروني المتعددة",
+    "Email Templates": "قوالب البريد الإلكتروني",
+    "Unsubscribe again": "إلغاء الاشتراك مرة أخرى",
+    "Subscribe again": "اشترك مرة أخرى",
+    "Create Target List": "إنشاء قائمة الهدف",
+    "Mail Merge": "دمج المراسلات",
+    "Generate Mail Merge PDF": "إنشاء دمج المراسلات PDF"
+  },
+  "presetFilters": {
+    "active": "نشط"
+  },
+  "messages": {
+    "unsubscribed": "لقد تم إلغاء اشتراكك من قائمتنا البريدية.",
+    "subscribedAgain": "أنت مشترك مرة أخرى."
+  },
+  "tooltips": {
+    "targetLists": "الأهداف التي يجب أن تتلقى الرسائل.",
+    "excludingTargetLists": "الأهداف التي يجب ألا تتلقى رسائل."
+  }
+}

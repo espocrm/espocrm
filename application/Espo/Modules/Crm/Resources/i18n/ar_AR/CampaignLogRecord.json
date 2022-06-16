@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "الإجراء",
+    "actionDate": "تاريخ",
+    "data": "تاريخ",
+    "campaign": "حملة إعلانية",
+    "parent": "الإستهداف",
+    "object": "كائن",
+    "application": "تطبيق",
+    "queueItem": "قائمة انتظار البند",
+    "stringData": "سلسلة البيانات",
+    "stringAdditionalData": "سلسلة بيانات إضافية",
+    "isTest": "هو اختبار"
+  },
+  "links": {
+    "queueItem": "بند قائمة الانتظار",
+    "parent": "الأب",
+    "object": "كائن",
+    "campaign": "الحملة الانتخابية"
+  },
+  "options": {
+    "action": {
+      "Sent": "أرسلت",
+      "Opened": "افتتح",
+      "Opted Out": "انسحبت",
+      "Bounced": "اردتدت",
+      "Clicked": "النقر",
+      "Lead Created": "تم انشاء فرصة",
+      "Opted In": "اختارت في"
+    }
+  },
+  "labels": {
+    "All": "الكل"
+  },
+  "presetFilters": {
+    "sent": "تم الارسال",
+    "opened": "تم الفتح",
+    "optedOut": "انسحبت",
+    "bounced": "ارتدت",
+    "clicked": "تم النقر",
+    "leadCreated": "تم انشاء فرصة",
+    "optedIn": "اختارت في"
+  }
+}

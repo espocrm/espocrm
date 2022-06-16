@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "storeSentEmails": "تخزين رسائل البريد الإلكتروني المرسلة",
+    "startAt": "تاريخ البداية",
+    "fromAddress": "من عنوان",
+    "fromName": "اسم النموذج",
+    "replyToAddress": "الرد إلى العنوان",
+    "replyToName": "الرد إلى الاسم",
+    "campaign": "حملة",
+    "emailTemplate": "قالب البريد الإلكتروني",
+    "inboundEmail": "حساب البريد الإلكتروني",
+    "targetLists": "القوائم الهدف",
+    "excludingTargetLists": "استثناء قوائم الهدف",
+    "optOutEntirely": "الانسحاب بالكامل",
+    "smtpAccount": "حساب SMTP"
+  },
+  "links": {
+    "targetLists": "قوائم الهدف",
+    "excludingTargetLists": "استثناء قوائم الهدف",
+    "queueItems": "عناصر قائمة الانتظار",
+    "campaign": "الحملة الانتخابية",
+    "emailTemplate": "قالب البريد الإلكتروني",
+    "inboundEmail": "حساب البريد الإلكتروني"
+  },
+  "options": {
+    "status": {
+      "Draft": "مسودة",
+      "Pending": "قيد الإنتظار",
+      "In Process": "قيد المعالجة",
+      "Complete": "مكتمل",
+      "Canceled": "تم الإلغاء",
+      "Failed": "فشل"
+    }
+  },
+  "labels": {
+    "Create MassEmail": " إنشاء بريد الكتروني متعدد",
+    "Send Test": "إرسال إختبار",
+    "System SMTP": "نظام SMTP",
+    "system": "النظام",
+    "group": "مجموعة"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "إختر على الأقل هدف واحد",
+    "testSent": "من المفترض إرسال رسائل البريد الإلكتروني التجريبية"
+  },
+  "tooltips": {
+    "optOutEntirely": "سيتم وضع علامة على عناوين البريد الإلكتروني للمستلمين الذين تم إلغاء اشتراكهم على أنهم غير مشتركين ولن يتلقوا أي رسائل بريد إلكتروني جماعية بعد الآن.",
+    "targetLists": "الأهداف التي يجب أن تتلقى الرسائل.",
+    "excludingTargetLists": "الأهداف التي لا ينبغي أن تتلقى رسائل.",
+    "storeSentEmails": "سيتم تخزين رسائل البريد الإلكتروني في CRM."
+  },
+  "presetFilters": {
+    "actual": "فِعلي",
+    "complete": "مكتمل"
+  }
+}

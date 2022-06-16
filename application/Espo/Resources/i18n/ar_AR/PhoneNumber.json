@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "type": "يكتب",
+    "optOut": "انسحبت",
+    "invalid": "غير صالح"
+  },
+  "presetFilters": {
+    "orphan": "يتيم"
+  }
+}

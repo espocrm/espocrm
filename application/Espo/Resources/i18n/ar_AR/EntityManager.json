@@ -1,0 +1,86 @@
+{
+  "labels": {
+    "Fields": "حقول",
+    "Relationships": "الروابط",
+    "Schedule": "برنامج",
+    "Log": "سجل",
+    "Formula": "معادلة",
+    "Layouts": "التخطيطات"
+  },
+  "fields": {
+    "name": "الاسم",
+    "type": "النوع",
+    "labelSingular": "تسمية المفرد",
+    "labelPlural": "تسمية الجمع",
+    "stream": "الاستريم",
+    "label": "اللافتة",
+    "linkType": "نوع الرابط",
+    "entityForeign": "حقل مرتبط",
+    "linkForeign": "رابط خارجي",
+    "link": "الرابط",
+    "labelForeign": "علامة خارجية",
+    "sortBy": "الترتيب الافتراضي (الخانة)",
+    "sortDirection": "الترتيب الافتراضي (الاتجاه)",
+    "relationName": "اسم الجدول الأوسط",
+    "linkMultipleField": " رابط متعدد الخانات",
+    "linkMultipleFieldForeign": "رابط خارجي متعدد الخانات",
+    "disabled": "معطل",
+    "textFilterFields": "خانات تصفية النص",
+    "audited": "مدقق",
+    "auditedForeign": "المدققة الخارجية",
+    "statusField": "خانة الحالة",
+    "beforeSaveCustomScript": "قبل حفظ البرنامج النصي المخصص",
+    "color": "اللون",
+    "kanbanViewMode": "عرض كانبان",
+    "kanbanStatusIgnoreList": "المجموعات التي تم تجاهلها في طريقة عرض كانبان",
+    "iconClass": "أيقونة",
+    "fullTextSearch": "البحث عن نص كامل",
+    "countDisabled": "تعطيل عدد السجلات",
+    "parentEntityTypeList": "أنواع الكيانات الأم",
+    "foreignLinkEntityTypeList": "روابط خارجية",
+    "entity": "كيان",
+    "optimisticConcurrencyControl": "تحكم التزامن متفائل"
+  },
+  "options": {
+    "type": {
+      "": "لا شيء",
+      "Base": "قاعدة",
+      "Person": "شخص",
+      "CategoryTree": "هيكل الاقسام",
+      "Event": "حدث",
+      "BasePlus": "بيس بلس",
+      "Company": "شركة"
+    },
+    "linkType": {
+      "manyToMany": "الكثير للكثيرين",
+      "oneToMany": "واحد لكثير",
+      "manyToOne": "الكثير لواحد",
+      "parentToChildren": "من الاصل للفروع",
+      "childrenToParent": "من الفروع للاصل",
+      "oneToOneRight": "حق واحد لواحد",
+      "oneToOneLeft": "واحد لواحد اليسار"
+    },
+    "sortDirection": {
+      "asc": "تصاعدي",
+      "desc": "تنازلي"
+    }
+  },
+  "messages": {
+    "entityCreated": "تم انشاء المنشأة",
+    "linkAlreadyExists": "تعارض اسم الرابط.",
+    "linkConflict": "اسم النزاع: رابط أو حقل بنفس الاسم موجود بالفعل.",
+    "confirmRemove": "هل أنت متأكد أنك تريد إزالة نوع الكيان من النظام؟"
+  },
+  "tooltips": {
+    "statusField": "يتم تسجيل تحديثات هذه الخانة في الاحداث",
+    "textFilterFields": "الخانات المستخدمة للبحث عن النص.",
+    "stream": "ما إذا كان الكيان لديه دفق.",
+    "disabled": "تحقق مما إذا كنت لا تحتاج إلى هذا الكيان في نظامك.",
+    "linkAudited": " سيتم تسجيل إنشاء سجل ذي صلة والربط بالسجل الحالي في ساحة المشاركات.",
+    "linkMultipleField": "رابط متعدد الخانات يوفر طريقة يدوية لتعديل العلاقات. لا تستخدمها إذا كان يمكنك الحصول على عدد كبير من السجلات ذات الصلة.",
+    "entityType": "Base Plus - به لوحات الأنشطة والتاريخ والمهام.\n\nالحدث - متوفر في التقويم ولوحة الأنشطة.",
+    "fullTextSearch": "تشغيل إعادة البناء مطلوب.",
+    "countDisabled": "لن يتم عرض العدد الإجمالي في عرض القائمة. يمكن أن تقلل من وقت التحميل عندما يكون جدول قاعدة البيانات كبير.",
+    "optimisticConcurrencyControl": "يمنع تعارضات الكتابة."
+  }
+}

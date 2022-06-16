@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "job": "وظيفة",
+    "scheduling": "مقررة"
+  },
+  "links": {
+    "log": "السجل"
+  },
+  "labels": {
+    "Create ScheduledJob": "إنشاء مهمة مجدولة",
+    "As often as possible": "كلما كان ذلك ممكنا"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "نظف",
+      "CheckInboundEmails": "تحقق من حسابات البريد الإلكتروني للمجموعة",
+      "CheckEmailAccounts": "تحقق من حسابات البريد الإلكتروني الشخصية",
+      "SendEmailReminders": "إرسال رسائل تذكير عبر البريد الإلكتروني",
+      "AuthTokenControl": "التحكم في الرمز المميز",
+      "SendEmailNotifications": "إرسال إشعارات البريد الإلكتروني",
+      "CheckNewVersion": "تحقق من الإصدار الجديد",
+      "ProcessWebhookQueue": "معالجة قائمة انتظار Webhook"
+    },
+    "cronSetup": {
+      "linux": "ملاحظة: أضف هذا السطر إلى ملف crontab لتشغيل وظائف  Espo EngazMedia المجدولة:",
+      "mac": "ملاحظة: أضف هذا السطر إلى ملف crontab لتشغيل وظائف  Espo EngazMedia المجدولة:",
+      "windows": "ملاحظة: قم بإنشاء ملف دفعي (Patch File) يتضمّن الأوامر التالية لتشغيل مهام Espo المُجدولة باستخدام مهام ويندوز المُجدولة:",
+      "default": "ملاحظة: أضف هذا الأمر إلى Cron Job (مهمة مجدولة):"
+    },
+    "status": {
+      "Active": "مفعل",
+      "Inactive": "غير مفعل"
+    }
+  },
+  "tooltips": {
+    "scheduling": "تدوين كرونتاب. يحدد تكرار تشغيل الوظائف.\n\n\"* / 5 * * * *\" - كل 5 دقائق\n\n\"0 * / 2 * * *\" - كل ساعتين\n\n\"30 1 * * *\" - الساعة 01:30 مرة في اليوم\n\n\"0 0 1 * *\" - في اليوم الأول من الشهر"
+  }
+}

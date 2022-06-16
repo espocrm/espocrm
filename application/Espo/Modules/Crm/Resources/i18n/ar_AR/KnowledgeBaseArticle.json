@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "أنشئ مقال",
+    "Any": "أي",
+    "Send in Email": "إرسال بالبريد الإلكتروني",
+    "Move Up": "تحرك",
+    "Move Down": "تحرك لأسفل",
+    "Move to Top": "الانتقال إلى الأعلى",
+    "Move to Bottom": "انتقل إلى الأسفل"
+  },
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "type": "نوع",
+    "attachments": "المرفقات",
+    "publishDate": "تاريخ الإنشاء",
+    "expirationDate": "تاريخ الانتهاء",
+    "description": "الوصف",
+    "body": "الجسم",
+    "categories": "الاقسام",
+    "language": "اللغة",
+    "portals": "البوابات"
+  },
+  "links": {
+    "cases": "تذاكر",
+    "opportunities": "الفرص",
+    "categories": "الاقسام",
+    "portals": "البوابات"
+  },
+  "options": {
+    "status": {
+      "In Review": "تحت المراجعة",
+      "Draft": "مسودة",
+      "Archived": "المؤرشفة",
+      "Published": "تم النشر"
+    },
+    "type": {
+      "Article": "مقالة"
+    }
+  },
+  "presetFilters": {
+    "published": "تم الإنشاء"
+  },
+  "tooltips": {
+    "portals": "المادة ستكون متاحة فقط في بوابات محددة."
+  }
+}

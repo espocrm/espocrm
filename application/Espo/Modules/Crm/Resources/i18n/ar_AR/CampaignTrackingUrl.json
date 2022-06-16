@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "url": "رابط",
+    "urlToUse": "رمز لإدراجه بدلاً من عنوان الرابط",
+    "campaign": "حملة اعلانية",
+    "action": "عمل",
+    "message": "رسالة"
+  },
+  "links": {
+    "campaign": "الحملة"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "إنشاء رابط للتتبع"
+  },
+  "options": {
+    "action": {
+      "Redirect": "إعادة توجيه",
+      "Show Message": "اظهر الرسالة"
+    }
+  },
+  "tooltips": {
+    "url": "سيتم إعادة توجيه المستلم إلى هذا الموقع بعد اتباع الارتباط.",
+    "message": "سيتم عرض الرسالة على المستلم بعد اتباع الارتباط. Markdown مدعوم."
+  }
+}

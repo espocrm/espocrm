@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "الحالة",
+    "executionTime": "زمن التنفيذ",
+    "target": "الهدف"
+  }
+}

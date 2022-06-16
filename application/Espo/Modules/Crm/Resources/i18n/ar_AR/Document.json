@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "إنشاء وثيقة",
+    "Details": "تفاصيل"
+  },
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "file": "ملف",
+    "type": "النوع",
+    "publishDate": "تاريخ النشر",
+    "expirationDate": "تاريخ إنتهاء الصلاحية",
+    "description": "الوصف",
+    "accounts": "الحسابات",
+    "folder": "المجلد"
+  },
+  "links": {
+    "accounts": "الحسابات",
+    "opportunities": "الفرص",
+    "folder": "ملف",
+    "leads": "الفرص",
+    "contacts": "جهات الاتصال"
+  },
+  "options": {
+    "status": {
+      "Active": "نشط",
+      "Draft": "مسودة",
+      "Expired": "منتهية الصلاحية",
+      "Canceled": "ملغية"
+    },
+    "type": {
+      "": "لاشئ",
+      "Contract": "عقد",
+      "License Agreement": "اتفاقية الترخيص"
+    }
+  },
+  "presetFilters": {
+    "active": "نشط",
+    "draft": "مسودة"
+  }
+}

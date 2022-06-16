@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "تحقق من النحو",
+    "Run": "تشغيل"
+  },
+  "fields": {
+    "target": "استهداف",
+    "targetType": "نوع الهدف",
+    "script": "النصي",
+    "output": "مخرجات",
+    "error": "خطأ"
+  },
+  "messages": {
+    "runSuccess": "تم التنفيذ بنجاح.",
+    "runError": "خطأ.",
+    "checkSyntaxSuccess": "النحو صحيح.",
+    "checkSyntaxError": "خطأ في بناء الجملة.",
+    "emptyScript": "البرنامج النصي فارغ."
+  },
+  "tooltips": {
+    "output": "قم بطباعة القيم باستخدام الوظيفة \"output \\ printLine\"."
+  }
+}

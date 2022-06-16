@@ -1,0 +1,19 @@
+{
+  "links": {
+    "users": "المستخدمين"
+  },
+  "labels": {
+    "Access": "طريقة الدخول",
+    "Create PortalRole": "إنشاء دور علي البوابة",
+    "Scope Level": "مستوى النطاق",
+    "Field Level": "مستوي الخانات"
+  },
+  "fields": {
+    "exportPermission": "إذن التصدير",
+    "massUpdatePermission": "إذن التحديث الشامل"
+  },
+  "tooltips": {
+    "exportPermission": "يحدد ما إذا كان مستخدمو البوابة الإلكترونية لديهم القدرة على تصدير السجلات.",
+    "massUpdatePermission": "يحدد ما إذا كان مستخدمو البوابة الإلكترونية لديهم القدرة على إجراء تحديث جماعي للسجلات."
+  }
+}

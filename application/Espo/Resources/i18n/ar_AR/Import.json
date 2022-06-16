@@ -1,0 +1,101 @@
+{
+  "labels": {
+    "Revert Import": "العودة الى الوراء",
+    "Return to Import": "العودة الى ادخال البيانات",
+    "Run Import": "تشغيل الادخال من الخارج",
+    "Back": "رجوع",
+    "Field Mapping": "تخطيط الخانات",
+    "Default Values": "قيم افتراضية",
+    "Add Field": "إضافة خانة",
+    "Created": "تم الإنشاء",
+    "Updated": "تم التحديث",
+    "Result": "نتيجة",
+    "Show records": "عرض السجلات",
+    "Remove Duplicates": "حذف المكرر",
+    "importedCount": "المدخلة (عدد)",
+    "duplicateCount": "المكرر (عدد)",
+    "updatedCount": "تم التحديث (عدد)",
+    "Create Only": "إنشئ فقط",
+    "Create and Update": "إنشئ وحدث",
+    "Update Only": "تحديث فقط",
+    "Update by": "تم التحديث بواسطة",
+    "Set as Not Duplicate": "ضبط كا غير مكرر",
+    "File (CSV)": "ملف (CSV)",
+    "First Row Value": "قيمة الصف الأول",
+    "Skip": "تخطى",
+    "Header Row Value": "قيمة الصف الرأسي",
+    "Field": "خانة",
+    "What to Import?": "ماذا تدخل من الخارج؟",
+    "Entity Type": "نوع المنشأه",
+    "What to do?": "ماذا أفعل؟",
+    "Properties": "الخصائص",
+    "Header Row": "الصف الرأسي",
+    "Person Name Format": "تنسيق اسم الشخص",
+    "John Smith": "محمد حسام",
+    "Field Delimiter": "محدد الخانات",
+    "Date Format": "صيغة التاريخ",
+    "Decimal Mark": "علامة عشرية",
+    "Text Qualifier": "نص مؤهل",
+    "Time Format": "صيغة الوقت",
+    "Currency": "العملة",
+    "Preview": "معاينة",
+    "Next": "التالي",
+    "Step 1": "الخطوة الاولي",
+    "Step 2": "الخطوة الثانية",
+    "Double Quote": "اقتباس مزدوج",
+    "Single Quote": "اقتباس واحد",
+    "Imported": "تم ادخالها من الخارج",
+    "Duplicates": "التكرارات",
+    "Skip searching for duplicates": "تخطي البحث عن التكرارات",
+    "Timezone": "المنطقة الزمنية",
+    "Remove Import Log": "حذف سجل الادخال من الخارج",
+    "New Import": "استيراد جديد",
+    "Import Results": "نتائج الاستيراد",
+    "Silent Mode": "الوضع الصامت",
+    "New import with same params": "استيراد جديد بنفس المعلمات",
+    "Run Manually": "تشغيل يدويًا"
+  },
+  "messages": {
+    "utf8": "يجب أن يكون UTF-8 مشفر",
+    "duplicatesRemoved": "تمت إزالة التكرارات",
+    "inIdle": "تنفيذ في وضع الخمول (for big data; via cron)",
+    "revert": "سيؤدي هذا إلى إزالة جميع السجلات المخلة من الخارج بشكل دائم.",
+    "removeDuplicates": "سيؤدي هذا إلى إزالة جميع السجلات المدخلة من الخارج التي تم التعرف عليها على أنها مكررة بشكل دائم.",
+    "confirmRevert": "سيؤدي هذا إلى إزالة جميع السجلات المدخلة من الخارج بشكل دائم. هل أنت واثق؟",
+    "confirmRemoveDuplicates": "سيؤدي هذا إلى إزالة جميع السجلات المدخلة من الخارج التي تم التعرف عليها على أنها مكررة بشكل دائم. هل أنت واثق؟",
+    "removeImportLog": "سيؤدي هذا إلى إزالة سجل المدخلات من الخارج. سيتم الاحتفاظ بجميع السجلات المخلة من الخارج. استخدمها إذا كنت متأكدًا من أن الادخال من الخارج جيد.",
+    "confirmRemoveImportLog": "سيؤدي هذا إلى إزالة سجل الاستيراد. سيتم الاحتفاظ بجميع السجلات المستوردة. لن تتمكن من التراجع عن نتائج الاستيراد. هل أنت واثق؟"
+  },
+  "fields": {
+    "file": "ملف",
+    "entityType": "نوع المنشأة",
+    "imported": "سجلات مدخلة من الخارج",
+    "duplicates": "سجلات مكررة",
+    "updated": "السجلات المحدثة",
+    "status": "الحالة"
+  },
+  "options": {
+    "status": {
+      "Failed": "فشل",
+      "In Process": "تحت التشغيل",
+      "Complete": "تم الإنتهاء",
+      "Standby": "تعليق",
+      "Pending": "قيد الانتظار"
+    },
+    "personNameFormat": {
+      "f l": "اول الاخر",
+      "l f": "آخر أولا",
+      "f m l": "اول وسط اخير",
+      "l f m": "اخر المتوسط الاول",
+      "l, f": "آخر أولا"
+    }
+  },
+  "strings": {
+    "commandToRun": "أمر للتشغيل (من CLI)",
+    "saveAsDefault": "إحفظ كافتراضي"
+  },
+  "tooltips": {
+    "manualMode": "إذا تم تحديده ، فستحتاج إلى تشغيل الاستيراد يدويًا من CLI. سيظهر الأمر بعد إعداد الاستيراد.",
+    "silentMode": "سيتم تخطي غالبية البرامج النصية بعد الحفظ ، ولن يتم إنشاء ملاحظات البث. سيتم تشغيل الاستيراد بشكل أسرع."
+  }
+}

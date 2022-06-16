@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "العنوان"
+  },
+  "links": {
+    "meetings": "الاجتماعات",
+    "calls": "المكالمات",
+    "tasks": "مهام"
+  },
+  "labels": {
+    "Create {entityType}": "إنشاء {الكيانTypeTranslated}"
+  }
+}

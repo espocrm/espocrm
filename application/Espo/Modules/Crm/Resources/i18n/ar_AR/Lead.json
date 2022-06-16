@@ -1,0 +1,70 @@
+{
+  "labels": {
+    "Converted To": "تحويل لـ",
+    "Create Lead": "إنشاء فرصة",
+    "Convert": "تحويل",
+    "convert": "يتحول"
+  },
+  "fields": {
+    "name": "الاسم",
+    "emailAddress": "الإيميل",
+    "title": "العنوان",
+    "website": "الموقع الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "accountName": "اسم الحساب",
+    "doNotCall": "لا تتصل",
+    "address": "العنوان",
+    "status": "الحالة",
+    "source": "المصدر",
+    "opportunityAmount": "قيمة الصفقة",
+    "opportunityAmountConverted": "مبلغ الفرصة (تم تحويله)",
+    "description": "الوصف",
+    "createdAccount": "الحساب",
+    "createdContact": "اتصل",
+    "createdOpportunity": "الصفقات",
+    "campaign": "الحملة",
+    "targetLists": "القوائم الهدف",
+    "targetList": "القائمة الهدف",
+    "industry": "صناعة",
+    "acceptanceStatus": "حالة القبول",
+    "opportunityAmountCurrency": "قيمة عملة الصفقة",
+    "acceptanceStatusMeetings": "حالة القبول (اجتماعات)",
+    "acceptanceStatusCalls": "حالة القبول (المكالمات)",
+    "convertedAt": "تم التحويل عند"
+  },
+  "links": {
+    "targetLists": "القوائم الهدف",
+    "campaignLogRecords": "سجل الحملة",
+    "campaign": "الحملة",
+    "createdAccount": "حساب",
+    "createdContact": "جهة اتصال",
+    "createdOpportunity": "صفقة",
+    "cases": "تذاكر",
+    "documents": "وثاق"
+  },
+  "options": {
+    "status": {
+      "New": "جديد",
+      "Assigned": "مخصص",
+      "In Process": "تحت المعالجة",
+      "Converted": "تم التحويل",
+      "Recycled": "المعاد تدويره",
+      "Dead": "في ذمة الله تعالى"
+    },
+    "source": {
+      "Call": "اتصال",
+      "Email": "البريد الإلكتروني",
+      "Existing Customer": "زبون موجود",
+      "Partner": "شريك",
+      "Public Relations": "علاقة عامة",
+      "Web Site": "موقع ويب",
+      "Campaign": "حملة",
+      "Other": "غير ذلك"
+    }
+  },
+  "presetFilters": {
+    "active": "فعال",
+    "actual": "الفعلي",
+    "converted": "تم تحويله"
+  }
+}

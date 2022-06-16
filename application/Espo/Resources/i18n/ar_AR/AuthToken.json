@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "المستخدم",
+    "ipAddress": "عنوان الـ أي بي",
+    "lastAccess": "تاريخ الدخول الأخير",
+    "createdAt": "تاريخ تسجيل الدخول",
+    "isActive": "نشط",
+    "portal": "منفذ"
+  },
+  "links": {
+    "actionHistoryRecords": "تاريخ العمل"
+  },
+  "presetFilters": {
+    "active": "نشيط",
+    "inactive": "غير نشط"
+  },
+  "labels": {
+    "Set Inactive": "تعيين غير نشط"
+  },
+  "massActions": {
+    "setInactive": "تعيين غير نشط"
+  }
+}

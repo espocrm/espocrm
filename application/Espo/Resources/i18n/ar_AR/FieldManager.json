@@ -1,0 +1,138 @@
+{
+  "labels": {
+    "Dynamic Logic": "المنطق الديناميكي",
+    "Name": "اسم",
+    "Label": "مُلصَق",
+    "Type": "يكتب"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "لاشئ",
+      "javascript: return this.dateTime.getNow(1);": "حالا",
+      "javascript: return this.dateTime.getNow(5);": "حالا (5 دقائق)",
+      "javascript: return this.dateTime.getNow(15);": "حالا (15 دقائق)",
+      "javascript: return this.dateTime.getNow(30);": "حالا (30 دقائق)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 ساعة",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 ساعة",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ساعة",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 ساعات",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ساعة",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ساعة",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 يوم",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 يوم",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 أيام",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 أيام",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 أيام",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 أيام",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 أسبوع"
+    },
+    "dateDefault": {
+      "": "لاشئ",
+      "javascript: return this.dateTime.getToday();": "اليوم",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 يوم",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 يوم",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 أيام",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 أسبوع",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 أسبوع",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 أسابيع",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 شهر",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 شهر",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 شهور",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 شهر",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 سنة"
+    },
+    "barcodeType": {
+      "pharmacode": "فارماكود",
+      "QRcode": "رمز الاستجابة السريعة"
+    }
+  },
+  "tooltips": {
+    "audited": "سيتم تسجيل التحديثات في الدفق.",
+    "required": "ستكون الخانة إلزاميًه. لا يمكن تركها فارغة.",
+    "default": "سيتم تعيين القيمة بشكل افتراضي عند الإنشاء.",
+    "min": "الحد الأدنى للقيمة المقبولة.",
+    "max": "أقصى قيمة مقبولة.",
+    "seeMoreDisabled": "إذا لم يتم تحديده ، فسيتم تقصير النصوص الطويلة.",
+    "lengthOfCut": "كم من الوقت يمكن أن يكون النص قبل أن يتم قصه.",
+    "maxLength": "أقصى طول مقبول للنص.",
+    "before": "يجب أن تكون قيمة التاريخ قبل قيمة التاريخ للخانة المحدده.",
+    "after": "يجب أن تكون قيمة التاريخ بعد قيمة التاريخ للخانة المحدده.",
+    "readOnly": "لا يمكن تحديد قيمة الخانة من قبل المستخدم. ولكن يمكن حسابها بالمعادلة.",
+    "maxFileSize": "إذا كانت فارغة أو 0 فلا حدود.",
+    "fileAccept": "أنواع الملفات التي يجب قبولها. من الممكن إضافة عناصر مخصصة.",
+    "barcodeLastChar": "بالنسبة لنوع EAN-13.",
+    "conversionDisabled": "لن يتم تطبيق إجراء تحويل العملة في هذا الحقل."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "شارع",
+      "city": "المدينة",
+      "state": "المحافظة",
+      "country": "الدولة",
+      "postalCode": "الرمز البريدي",
+      "map": "الخريطة"
+    },
+    "personName": {
+      "salutation": "تحية",
+      "first": "أولاً",
+      "last": "آخر",
+      "middle": "وسط"
+    },
+    "currency": {
+      "converted": "(تم التحويل)",
+      "currency": "(عملة)"
+    },
+    "datetimeOptional": {
+      "date": "تاريخ"
+    }
+  },
+  "fieldInfo": {
+    "varchar": "نص من سطر واحد.",
+    "enum": "مربع الاختيار ، يمكن تحديد قيمة واحدة فقط.",
+    "text": "نص متعدد الأسطر مع دعم تخفيض السعر.",
+    "date": "التاريخ بدون الوقت.",
+    "datetime": "التاريخ و الوقت",
+    "currency": "قيمة العملة. رقم عائم مع رمز العملة.",
+    "int": "عدد صحيح.",
+    "float": "رقم به جزء عشري.",
+    "bool": "مربع اختيار. قيمتان محتملتان: صحيح وخطأ.",
+    "multiEnum": "قائمة القيم ، يمكن تحديد قيم متعددة. تم ترتيب القائمة.",
+    "checklist": "قائمة مربعات الاختيار.",
+    "array": "قائمة القيم المشابهة لحقل التعداد المتعدد.",
+    "address": "عنوان بالشارع والمدينة والولاية والرمز البريدي والبلد.",
+    "url": "لتخزين الروابط.",
+    "wysiwyg": "نص مع دعم HTML.",
+    "file": "لتحميل الملف.",
+    "image": "لتحميل الصور.",
+    "attachmentMultiple": "يسمح بتحميل ملفات متعددة.",
+    "number": "عدد متزايد تلقائيًا لنوع السلسلة ببادئة محتملة وطول محدد.",
+    "autoincrement": "رقم صحيح مُنشأ للقراءة فقط يتزايد تلقائيًا.",
+    "barcode": "الباركود. يمكن طباعتها إلى PDF.",
+    "email": "مجموعة من عناوين البريد الإلكتروني مع معلماتها: مُعطلة ، غير صالحة ، أساسية.",
+    "phone": "مجموعة من أرقام الهواتف مع معلماتها: النوع ، تم إلغاء الاشتراك ، غير صالح ، أساسي.",
+    "foreign": "مجال من السجلات ذات الصلة. يقرأ فقط.",
+    "link": "سجل مرتبط من خلال علاقة ينتمي إلى (متعدد إلى واحد أو واحد إلى واحد).",
+    "linkParent": "سجل مرتبط من خلال علاقة Belongs-To-Parent. يمكن أن يكون من أنواع كيانات مختلفة.",
+    "linkMultiple": "مجموعة من السجلات المرتبطة من خلال علاقة Has-Many (متعدد بأطراف أو واحد بأطراف). لا تحتوي كل العلاقات على حقول ارتباط متعددة. فقط تلك التي تفعل ذلك ، حيث يتم تمكين معلمات الارتباط المتعددة."
+  }
+}

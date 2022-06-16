@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "الأسم",
+    "parent": "الأصل",
+    "status": "الحالة",
+    "dateStart": "تاريخ البداية",
+    "dateEnd": "تاريخ النتهاء",
+    "direction": "اتجاه",
+    "duration": "المدة الزمنية",
+    "description": "وصف",
+    "users": "المستخدمين",
+    "contacts": "جهات الاتصال",
+    "leads": "الفرص",
+    "reminders": "تنبيهات",
+    "account": "حساب",
+    "acceptanceStatus": "حالة القبول"
+  },
+  "options": {
+    "status": {
+      "Planned": "مخططة",
+      "Held": "تمت",
+      "Not Held": "لم يعقد"
+    },
+    "direction": {
+      "Outbound": "صادرة",
+      "Inbound": "واردة"
+    },
+    "acceptanceStatus": {
+      "None": "لاشئ",
+      "Accepted": "تم القبول",
+      "Declined": "تم الرفض",
+      "Tentative": "متردد"
+    }
+  },
+  "massActions": {
+    "setHeld": "تمت",
+    "setNotHeld": "لم تتم"
+  },
+  "labels": {
+    "Create Call": "إنشئ مكالمة",
+    "Set Held": "تمت",
+    "Set Not Held": "لم تتم",
+    "Send Invitations": "إرسل دعاوي"
+  },
+  "presetFilters": {
+    "planned": "مخططة",
+    "held": "تمت",
+    "todays": "اليوم الحاضر"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "الأبوين",
+    "dateStart": "تاريخ البدء",
+    "dateEnd": "تاريخ الانتهاء",
+    "duration": "مدة",
+    "status": "حالة",
+    "reminders": "تذكير",
+    "dateStartDate": "تاريخ البدء (طوال اليوم)",
+    "dateEndDate": "تاريخ الانتهاء (طوال اليوم)",
+    "isAllDay": "طوال اليوم"
+  },
+  "links": {
+    "parent": "الأبوين"
+  },
+  "options": {
+    "status": {
+      "Planned": "مخطط",
+      "Held": "محتجز",
+      "Not Held": "لم يعقد"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "إنشاء {الكيانTypeTranslated}",
+    "Schedule {entityType}": "جدولة {الكيانTypeTranslated}",
+    "Log {entityType}": "سجل {الكيانTypeTranslated}",
+    "Set Held": "مجموعة معلقة",
+    "Set Not Held": "التعيين لم يتم عقده"
+  },
+  "massActions": {
+    "setHeld": "مجموعة معلقة",
+    "setNotHeld": "التعيين لم يتم عقده"
+  },
+  "presetFilters": {
+    "planned": "مخطط",
+    "held": "محتجز",
+    "todays": "اليوم"
+  }
+}

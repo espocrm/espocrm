@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "status": "الحالة",
+    "executeTime": "تنفيذ في",
+    "attempts": "عدد المحاولات المتبقية",
+    "failedAttempts": "المحاولات الفاشلة",
+    "serviceName": "خدمة",
+    "methodName": "طريقة",
+    "scheduledJob": "الوظيفة المقررة",
+    "data": "بيانات",
+    "method": "طريقة (مهملة)",
+    "scheduledJobJob": "اسم الوظيفة المجدولة",
+    "executedAt": "أعدم في",
+    "startedAt": "بدأت في",
+    "targetType": "نوع الهدف",
+    "targetId": "معرف الهدف",
+    "number": "رقم",
+    "queue": "طابور",
+    "job": "مهنة",
+    "group": "مجموعه",
+    "className": "اسم الفصل",
+    "targetGroup": "المجموعة المستهدفة"
+  },
+  "options": {
+    "status": {
+      "Pending": "معلق",
+      "Success": "نجاح",
+      "Running": "تشغيل",
+      "Failed": "فشل"
+    }
+  }
+}

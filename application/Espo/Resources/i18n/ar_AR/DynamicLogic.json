@@ -1,0 +1,31 @@
+{
+  "options": {
+    "operators": {
+      "equals": "يساوي",
+      "notEquals": "لا تُساوي",
+      "greaterThan": "أكبر من",
+      "lessThan": "أقل من",
+      "greaterThanOrEquals": "أكبر من أو تُساوي",
+      "lessThanOrEquals": "أقل من أو تُساوي",
+      "in": "في",
+      "notIn": "لا تحتوي",
+      "inPast": "في السابق",
+      "inFuture": "في المستقبل",
+      "isToday": "في اليوم",
+      "isTrue": "حقيقي",
+      "isFalse": "خاطئ",
+      "isEmpty": "فارغ",
+      "isNotEmpty": "ليس فارغاً",
+      "contains": "يحتوي",
+      "has": "يحتوي",
+      "notContains": "لا يحتوي",
+      "notHas": "لا يحتوي",
+      "startsWith": "ابدا ب",
+      "endsWith": "ينتهي بـ",
+      "matches": "المطابقات (reg exp)"
+    }
+  },
+  "labels": {
+    "Field": "خانة"
+  }
+}

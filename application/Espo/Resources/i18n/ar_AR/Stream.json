@@ -1,0 +1,15 @@
+{
+  "messages": {
+    "infoMention": "اكتب ** @ username ** للإشارة إلى المستخدم في المنشور.",
+    "infoSyntax": "صيغة التخفيض المتاحة",
+    "couldNotAddFollowerUserHasNoAccessToStream": "تعذرت إضافة المستخدم '{userName}' إلى المتابعين. المستخدم ليس لديه وصول \"تدفق\" إلى السجل."
+  },
+  "syntaxItems": {
+    "code": "الشفرة",
+    "multilineCode": "كود متعدد الأسطر",
+    "strongText": "نص قوي",
+    "emphasizedText": "كتابة بارزة",
+    "deletedText": "نص محذوف",
+    "link": "حلقة الوصل"
+  }
+}

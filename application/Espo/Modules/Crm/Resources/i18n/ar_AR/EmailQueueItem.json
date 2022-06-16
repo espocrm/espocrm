@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "target": "الهدف",
+    "sentAt": "تاريخ الارسال",
+    "attemptCount": "المحاولات",
+    "emailAddress": "البريد الإلكتروني",
+    "massEmail": "البريد الإلكتروني المتعدد",
+    "isTest": "تحت الاختبار"
+  },
+  "links": {
+    "target": "الهدف",
+    "massEmail": "البريد الإلكتروني المتعدد"
+  },
+  "options": {
+    "status": {
+      "Pending": "قيد النتظار",
+      "Sent": "ارسل",
+      "Failed": "فشل",
+      "Sending": "إرسال"
+    }
+  },
+  "presetFilters": {
+    "pending": "قيد النتظار",
+    "sent": "ارسل",
+    "failed": "فشل"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "post": "منشور",
+    "attachments": "مرفقات",
+    "targetType": "هدف",
+    "teams": "فرق",
+    "users": "مستخدمين",
+    "portals": "بوابات",
+    "type": "يكتب",
+    "isGlobal": "هو عالمي",
+    "isInternal": "داخلي (للمستخدمين الداخليين)",
+    "related": "متعلق ب",
+    "createdByGender": "تم إنشاؤها حسب الجنس",
+    "data": "بيانات",
+    "number": "رقم"
+  },
+  "filters": {
+    "all": "الكل",
+    "posts": "المشاركات",
+    "updates": "تحديثات"
+  },
+  "messages": {
+    "writeMessage": "قم بكتابة رسالتك هنا"
+  },
+  "options": {
+    "targetType": {
+      "self": "لنفسي",
+      "users": "لمستخدم (مستخدمين) معين",
+      "teams": "لفريق معين (ق)",
+      "all": "لجميع المستخدمين الداخليين",
+      "portals": "لمستخدمي البوابة"
+    },
+    "type": {
+      "Post": "بريد"
+    }
+  },
+  "links": {
+    "superParent": "سوبر الوالد",
+    "related": "متعلق ب"
+  }
+}

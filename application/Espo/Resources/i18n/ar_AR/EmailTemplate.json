@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "الإسم",
+    "status": "الحالة",
+    "isHtml": "كود (HTML)",
+    "body": "محتوي الرسالة",
+    "subject": "عنوان الرسالة",
+    "attachments": "المرفقات",
+    "oneOff": "لمرة واحدة",
+    "category": "فئة",
+    "insertField": "العناصر النائبة"
+  },
+  "labels": {
+    "Create EmailTemplate": "إنشاء قالب بريد إلكتروني",
+    "Info": "معلومات",
+    "Available placeholders": "العناصر النائبة المتاحة"
+  },
+  "tooltips": {
+    "oneOff": "تحقق إذا ما كنت ستستخدم هذا القالب مرة واحدة فقط. علي سبيل المثال للبريد الإلكتروني الشامل"
+  },
+  "presetFilters": {
+    "actual": "فعلي"
+  },
+  "placeholderTexts": {
+    "optOutLink": "رابط إلغاء الاشتراك",
+    "today": "تاريخ اليوم",
+    "now": "التاريخ والوقت الحالي",
+    "currentYear": "السنة الحالية",
+    "optOutUrl": "URL لرابط إلغاء الاشتراك"
+  },
+  "messages": {
+    "infoText": "العناصر النائبة المتوفرة:\n\n{optOutUrl} & # 8211 ؛ URL لرابط إلغاء الاشتراك ؛\n\n{optOutLink} & # 8211 ؛ رابط إلغاء الاشتراك."
+  }
+}

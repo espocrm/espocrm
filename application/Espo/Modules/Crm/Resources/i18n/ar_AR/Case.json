@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "number": "الرقم",
+    "status": "الحالة",
+    "account": "حساب",
+    "contact": "جهة إتصال",
+    "contacts": "جهات إتصال",
+    "priority": "الأولوية",
+    "type": "نوع",
+    "description": "الوصف",
+    "lead": "فرصة",
+    "attachments": "مرفقات",
+    "inboundEmail": "حساب البريد الإلكتروني للمجموعة"
+  },
+  "links": {
+    "account": "حساب",
+    "contact": "جهة الاتصال (المبدئية)",
+    "Contacts": "جهات الإتصال",
+    "meetings": "إجتماعات",
+    "calls": "المكالمات",
+    "tasks": "المهام",
+    "emails": "رسائل البريد الإلكتروني",
+    "articles": "مقالات قاعدة المعلومات",
+    "lead": "فرصة",
+    "attachments": "مرفقات",
+    "inboundEmail": "حساب البريد الإلكتروني للمجموعة"
+  },
+  "options": {
+    "status": {
+      "New": "جديد",
+      "Assigned": "تم التعيين",
+      "Pending": "معلق",
+      "Closed": "تم الإنتهاء",
+      "Rejected": "مرفوض",
+      "Duplicate": "مكرر"
+    },
+    "priority": {
+      "Low": "ضعيف",
+      "Normal": "عادي",
+      "High": "مرتفع",
+      "Urgent": "ضروري"
+    },
+    "type": {
+      "Question": "سؤال",
+      "Incident": "حادث عرضي",
+      "Problem": "مشكلة"
+    }
+  },
+  "labels": {
+    "Create Case": "إنشاء تذكرة",
+    "Close": "غلق",
+    "Reject": "رفض",
+    "Closed": "تم الإنتهاء",
+    "Rejected": "مرفوض"
+  },
+  "presetFilters": {
+    "open": "مفتوح",
+    "closed": "تم الإنتهاء"
+  }
+}

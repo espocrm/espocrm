@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "username": "اسم المستخدم",
+    "ipAddress": "عنوان IP",
+    "requestTime": "طلب الوقت",
+    "createdAt": "مطلوب في",
+    "isDenied": "مرفوض",
+    "denialReason": "سبب الرفض",
+    "portal": "منفذ",
+    "user": "المستعمل",
+    "authToken": "تم إنشاء رمز المصادقة",
+    "requestUrl": "طلب URL",
+    "requestMethod": "طريقة الطلب",
+    "authTokenIsActive": "رمز المصادقة نشط",
+    "authenticationMethod": "طريقة المصادقة"
+  },
+  "links": {
+    "authToken": "تم إنشاء رمز المصادقة",
+    "user": "المستعمل",
+    "portal": "منفذ",
+    "actionHistoryRecords": "تاريخ العمل"
+  },
+  "presetFilters": {
+    "denied": "رفض",
+    "accepted": "وافقت"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "بيانات الاعتماد غير صالحة",
+      "INACTIVE_USER": "مستخدم غير نشط",
+      "IS_PORTAL_USER": "مستخدم البوابة",
+      "IS_NOT_PORTAL_USER": "ليس مستخدم البوابة",
+      "USER_IS_NOT_IN_PORTAL": "لا يرتبط المستخدم بالبوابة الإلكترونية"
+    }
+  }
+}

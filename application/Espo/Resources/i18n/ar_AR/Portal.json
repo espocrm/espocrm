@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "إسم",
+    "logo": "شعار",
+    "companyLogo": "شعار",
+    "url": "رابط",
+    "portalRoles": "البوابات",
+    "isActive": "نشط",
+    "isDefault": "إفتراضي",
+    "tabList": "قائمة علامات التبويب",
+    "quickCreateList": "إنشاء سريع للقائمة",
+    "theme": "المظهر",
+    "language": "لغة",
+    "dashboardLayout": "مظهرالرئيسية",
+    "dateFormat": "صيغة التاريخ",
+    "timeFormat": "صيغة الوقت",
+    "timeZone": "المنطقة الزمنية",
+    "weekStart": "أول ايام الإسبوع",
+    "defaultCurrency": "العملة الإفتراضية",
+    "customUrl": "رابط العميل",
+    "customId": "معرف مخصص",
+    "layoutSet": "مجموعة التخطيط"
+  },
+  "links": {
+    "users": "المستخدمين",
+    "portalRoles": "الأدوار",
+    "notes": "الملاحظات",
+    "layoutSet": "مجموعة التخطيط"
+  },
+  "tooltips": {
+    "portalRoles": "سيتم تطبيق أدوار البوابة المحددة على جميع مستخدمي هذه البوابة.",
+    "layoutSet": "يوفر القدرة على الحصول على تخطيطات تختلف عن التخطيطات القياسية."
+  },
+  "labels": {
+    "Create Portal": "إنشاء بوابة",
+    "User Interface": "واجهة المستخدم",
+    "General": "عام",
+    "Settings": "الإعدادات"
+  }
+}
