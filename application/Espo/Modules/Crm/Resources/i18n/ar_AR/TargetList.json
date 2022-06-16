@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "description": "الوصف",
+    "entryCount": "عدد الدخول",
+    "campaigns": "الحملات",
+    "endDate": "تاريخ النهاية",
+    "targetLists": "القوائم الهدف",
+    "includingActionList": "مشتمل",
+    "excludingActionList": "ازالة",
+    "optedOutCount": "عدد المعوقين",
+    "targetStatus": "الوضع الهدف",
+    "isOptedOut": "تم الانسحاب"
+  },
+  "links": {
+    "accounts": "الحسابات",
+    "contacts": "جهات الاتصال",
+    "leads": "الفرص",
+    "campaigns": "الحملات",
+    "massEmails": " رسائل البريد الإلكتروني المتعددة"
+  },
+  "options": {
+    "type": {
+      "Email": "البريد الإلكتروني",
+      "Web": "ويب",
+      "Television": "التلفاز",
+      "Radio": "الراديو",
+      "Newsletter": "النشرة الإخبارية"
+    },
+    "targetStatus": {
+      "Opted Out": "انسحبت",
+      "Listed": "مدرج"
+    }
+  },
+  "labels": {
+    "Create TargetList": "إنشاء قائمة الهدف",
+    "Opted Out": "انسحبت",
+    "Cancel Opt-Out": "إلغاء الانسحاب",
+    "Opt-Out": "انسحب"
+  }
+}

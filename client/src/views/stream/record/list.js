@@ -39,8 +39,15 @@ define('views/stream/record/list', 'views/record/list-expanded', function (Dep) 
 
             Dep.prototype.setup.call(this);
 
+            this.isRenderingNew = false;
+
             this.listenTo(this.collection, 'sync', (c, r, options) => {
                 if (!options.fetchNew) {
+                    return;
+                }
+
+                if (this.isRenderingNew) {
+                    // Prevent race condition.
                     return;
                 }
 
@@ -56,15 +63,35 @@ define('views/stream/record/list', 'views/record/list-expanded', function (Dep) 
 
                 let rowCount = this.collection.length - lengthBeforeFetch;
 
+                if (rowCount === 0) {
+                    return;
+                }
+
+                this.isRenderingNew = true;
+
                 for (let i = rowCount - 1; i >= 0; i--) {
                     let model = this.collection.at(i);
 
                     this.buildRow(i, model, view => {
                         view.getHtml(html => {
+                            if (i === 0) {
+                                this.isRenderingNew = false;
+                            }
+
                             let $row = $(this.getRowContainerHtml(model.id));
 
+                            // Prevent a race condition issue.
+                            let $existingRow = this.$el.find(`[data-id="${model.id}"]`);
+
+                            if ($existingRow.length) {
+                                $row = $existingRow;
+                            }
+
                             $row.append(html);
-                            $list.prepend($row);
+
+                            if (!$existingRow.length) {
+                                $list.prepend($row);
+                            }
 
                             view._afterRender();
 

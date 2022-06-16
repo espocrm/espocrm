@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "رقم",
+    "data": "بيانات",
+    "target": "استهداف",
+    "leadCapture": "القبض على الرصاص",
+    "createdAt": "دخلت في",
+    "isCreated": "يتم إنشاء الرصاص"
+  },
+  "links": {
+    "leadCapture": "القبض على الرصاص",
+    "target": "استهداف"
+  }
+}

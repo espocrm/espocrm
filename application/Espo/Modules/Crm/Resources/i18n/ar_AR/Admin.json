@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "تحويل الفرصة",
+    "listForAccount": "قائمة (للحساب)",
+    "listForContact": "قائمة (للاتصال)"
+  },
+  "templates": {
+    "invitation": "رسالة دعوة",
+    "reminder": "تذكير"
+  }
+}

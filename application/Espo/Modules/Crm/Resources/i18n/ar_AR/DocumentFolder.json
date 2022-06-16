@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "إنشاء ",
+    "Manage Categories": "إدارة المجلدات",
+    "Documents": "مستندات"
+  },
+  "links": {
+    "documents": "مستندات"
+  }
+}

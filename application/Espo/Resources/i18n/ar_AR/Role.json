@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "roles": "الأدوار",
+    "assignmentPermission": "إذن التخصيص",
+    "userPermission": "إذن المستخدم",
+    "portalPermission": "إذن البوابة",
+    "groupEmailAccountPermission": "إذن حساب البريد الإلكتروني الجماعي",
+    "exportPermission": "إذن التصدير",
+    "dataPrivacyPermission": "إذن خصوصية البيانات",
+    "massUpdatePermission": "إذن التحديث الشامل",
+    "followerManagementPermission": "إذن إدارة التابع"
+  },
+  "links": {
+    "users": "المستخدمين",
+    "teams": "الفرق"
+  },
+  "tooltips": {
+    "assignmentPermission": "يسمح لتقييد القدرة على تعيين السجلات ونشر الرسائل للمستخدمين الآخرين.\n\nكل شيء - لا يوجد قيود\n\nفريق - يمكن تعيين وتعيين فقط لزملائه\n\nلا - يمكن أن تعين وتنشر فقط على لنفسك",
+    "userPermission": "يسمح لتقييد القدرة للمستخدمين لعرض الأنشطة والتقويم ودفق المستخدمين الآخرين.\n\nكل - يمكن عرض كل شيء\n\nفريق - يمكن عرض أنشطة زملائه فقط\n\nلا - لا يمكن مشاهدته",
+    "portalPermission": "يحدد الوصول إلى معلومات البوابة الإلكترونية ، والقدرة على نشر الرسائل لمستخدمي البوابة.",
+    "groupEmailAccountPermission": "يحدد الوصول إلى حسابات البريد الإلكتروني الجماعية ، والقدرة على إرسال رسائل البريد الإلكتروني من مجموعة SMTP.",
+    "dataPrivacyPermission": "يسمح لعرض ومحو البيانات الشخصية.",
+    "exportPermission": "يحدد ما إذا كان لدى المستخدمين القدرة على تصدير السجلات.",
+    "massUpdatePermission": "يحدد ما إذا كان لدى المستخدمين القدرة على إجراء تحديث جماعي للسجلات.",
+    "followerManagementPermission": "يسمح بإدارة متابعي سجلات محددة."
+  },
+  "labels": {
+    "Access": "طريقة الدخول",
+    "Create Role": "إنشاء دور",
+    "Scope Level": "مستوى النطاق",
+    "Field Level": "مستوي الخانات"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "غير مضبوط",
+      "enabled": "مفعل",
+      "disabled": "معطل"
+    },
+    "levelList": {
+      "all": "الكل",
+      "team": "فريق",
+      "account": "حساب",
+      "contact": "جهة إتصال",
+      "own": "ما يملكه",
+      "no": "لا",
+      "yes": "نعم",
+      "not-set": "غير مضبوط"
+    }
+  },
+  "actions": {
+    "read": "قراءة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "stream": "مشاركة في الاحداث",
+    "create": "إنشاء"
+  },
+  "messages": {
+    "changesAfterClearCache": "سيتم تطبيق جميع التغييرات في التحكم في الدخول بعد مسح ذاكرة التخزين المؤقت."
+  }
+}

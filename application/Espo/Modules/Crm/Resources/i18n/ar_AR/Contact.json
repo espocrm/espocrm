@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "emailAddress": "البريد الإلكتروني",
+    "accountRole": "الوظيفة",
+    "account": "الحساب ",
+    "accounts": "حساسبات العملاء",
+    "phoneNumber": "رقم التليفون",
+    "accountType": "نوع الحساب",
+    "doNotCall": "لا تتصل",
+    "address": "العنوان",
+    "opportunityRole": "دور الصفقة",
+    "description": "الوصف",
+    "campaign": "حملة اعلانية",
+    "targetLists": "قوائم الاستهداف",
+    "targetList": "قائمة الاستهداف",
+    "portalUser": "مستخدم البوابة",
+    "originalLead": "الفرصة الأصلية",
+    "acceptanceStatus": "حالة القبول",
+    "accountIsInactive": "الحساب غير نشط",
+    "acceptanceStatusMeetings": "حالة القبول (اجتماعات)",
+    "acceptanceStatusCalls": "حالة القبول (المكالمات)",
+    "title": "عنوان الحساب",
+    "hasPortalUser": "مستخدم البوابة"
+  },
+  "links": {
+    "opportunities": "الصفقات",
+    "cases": "تذاكر",
+    "targetLists": "قوائم الاستهداف",
+    "campaignLogRecords": "سجل الحملة",
+    "campaign": "حملة اعلانية",
+    "account": "الحساب (المبدئي)",
+    "accounts": "الحسابات",
+    "casesPrimary": "التذاكر (المبدئية)",
+    "portalUser": "مستخدم البوابة",
+    "originalLead": "الفرصة الأصلية",
+    "documents": "وثائق",
+    "tasksPrimary": "المهام (موسعة)",
+    "opportunitiesPrimary": "الفرص (الأساسية)"
+  },
+  "labels": {
+    "Create Contact": "انشاء جهة اتصال"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "صانع القرار",
+      "Evaluator": "مقيم الاداء",
+      "Influencer": "المؤثر"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "مستخدمي البوابة",
+    "notPortalUsers": "لا يوجد مستخدمين للبوابة",
+    "accountActive": "نشيط"
+  }
+}

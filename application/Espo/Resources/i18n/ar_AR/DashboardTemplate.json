@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "تَخطِيط",
+    "append": "إلحاق (لا تقم بإزالة علامات تبويب المستخدم)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "إنشاء نموذج",
+    "Deploy to Users": "انشر إلى المستخدمين",
+    "Deploy to Team": "انشر إلى الفريق"
+  }
+}

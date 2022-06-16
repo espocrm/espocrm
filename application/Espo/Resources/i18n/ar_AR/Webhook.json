@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create Webhook": "إنشاء Webhook"
+  },
+  "fields": {
+    "event": "حدث",
+    "isActive": "نشط",
+    "user": "مستخدم API",
+    "entityType": "نوع الكيان",
+    "field": "مجال",
+    "secretKey": "المفتاح السري"
+  },
+  "links": {
+    "user": "المستعمل"
+  }
+}

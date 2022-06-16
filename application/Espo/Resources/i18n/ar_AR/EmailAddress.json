@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "أساسي",
+    "Opted Out": "تم إلغاء الاشتراك",
+    "Invalid": "غير صالح"
+  },
+  "fields": {
+    "optOut": "انسحبت",
+    "invalid": "غير صالح"
+  },
+  "presetFilters": {
+    "orphan": "يتيم"
+  }
+}

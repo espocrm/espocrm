@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "أنشئ قسم",
+    "Manage Categories": "إدارة الفئات",
+    "Articles": "مقالات"
+  },
+  "links": {
+    "articles": "مقالات"
+  }
+}

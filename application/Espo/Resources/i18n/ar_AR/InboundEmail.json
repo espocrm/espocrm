@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "emailAddress": "عنوان البريد الإلكتروني",
+    "status": "حالة",
+    "assignToUser": "مخصصة لمستخدم",
+    "host": "المستضيف",
+    "username": "اسم المستخدم",
+    "password": "كلمة السر",
+    "port": "منفذ",
+    "monitoredFolders": "المجلدات المراقبة",
+    "trashFolder": "ملف المهملات",
+    "createCase": "إنشاء تذكرة",
+    "reply": "رد آلي",
+    "caseDistribution": "توزيع التذاكر",
+    "replyEmailTemplate": "الرد على قالب البريد الإلكتروني",
+    "replyFromAddress": "الرد من عنوان",
+    "replyToAddress": "الرد علي عنوان",
+    "replyFromName": "الرد من الإسم",
+    "targetUserPosition": "استهدف وظيفة المستخدم",
+    "fetchSince": "الجلب منذ ذلك الحين",
+    "addAllTeamUsers": "لكل أعضاء الفريق",
+    "team": "الفريق المستهدف",
+    "teams": "الفرق",
+    "sentFolder": "المجلد المرسل",
+    "storeSentEmails": "تخزين رسائل البريد الإلكتروني المرسلة",
+    "useSmtp": "استخدم SMTP",
+    "smtpHost": "مضيف SMTP",
+    "smtpPort": "منفذ SMTP",
+    "smtpAuth": "مصادقة SMTP",
+    "smtpSecurity": "أمان SMTP",
+    "smtpUsername": "اسم مستخدم SMTP",
+    "smtpPassword": "كلمة مرور SMTP",
+    "fromName": "من الاسم",
+    "smtpIsShared": "SMTP مشترك",
+    "smtpIsForMassEmail": "SMTP هو للبريد الإلكتروني الشامل",
+    "useImap": "إحضار رسائل البريد الإلكتروني",
+    "keepFetchedEmailsUnread": "إبقاء رسائل البريد الإلكتروني التي تم جلبها غير مقروءة",
+    "smtpAuthMechanism": "آلية مصادقة SMTP",
+    "security": "حماية"
+  },
+  "tooltips": {
+    "reply": "أبلغ مرسلي البريد الإلكتروني أنه تم استلام رسائل البريد الإلكتروني الخاصة بهم.\n\nسيتم إرسال بريد إلكتروني واحد فقط إلى مستلم معين خلال فترة زمنية معينة لمنع التكرار.",
+    "createCase": "إنشاء تذكرة تلقائيا من رسائل البريد الإلكتروني الواردة.",
+    "replyToAddress": "حدد عنوان البريد الإلكتروني لصندوق البريد هذا للحصول على ردود تأتي هنا.",
+    "caseDistribution": "كيف سيتم تعيين التذاكر. يتم تعيينها مباشرة للمستخدم أو بين الفريق.",
+    "assignToUser": "سيتم تعيين تذاكر المستخدم إلى.",
+    "team": "سيتم تعيين تذاكر الفريق إلى.",
+    "teams": "سيتم تعيين رسائل البريد الإلكتروني للفرق.",
+    "addAllTeamUsers": "ستظهر الرسائل الإلكترونية في Inbox لجميع مستخدمي فرق محددة.",
+    "targetUserPosition": "سيتم توزيع المستخدمين ذوي المناصب المحدده مع التذاكر.",
+    "monitoredFolders": "يجب فصل المجلدات المتعددة بفاصلة.",
+    "smtpIsShared": "إذا تم تحديده ، فسيكون المستخدمون قادرين على إرسال رسائل البريد الإلكتروني باستخدام SMTP هذا. يتم التحكم في التوفر من خلال الأدوار من خلال إذن حساب البريد الإلكتروني الجماعي.",
+    "smtpIsForMassEmail": "إذا تم تحديده ، فسيكون SMTP متاحًا للبريد الإلكتروني الشامل.",
+    "storeSentEmails": "سيتم تخزين رسائل البريد الإلكتروني المرسلة على خادم IMAP.",
+    "useSmtp": "القدرة على إرسال رسائل البريد الإلكتروني."
+  },
+  "links": {
+    "filters": "الفلاتر",
+    "emails": "رسائل البريد الإلكتروني",
+    "assignToUser": "تعيين للمستخدم"
+  },
+  "options": {
+    "status": {
+      "Active": "نشط",
+      "Inactive": "غير نشط"
+    },
+    "caseDistribution": {
+      "": "لاشئ",
+      "Direct-Assignment": "تعيين-مباشر"
+    },
+    "smtpAuthMechanism": {
+      "plain": "عادي",
+      "login": "تسجيل الدخول",
+      "crammd5": "كرام MD5"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "إنشاء بريد إلكتروني",
+    "Actions": "تصرفات",
+    "Main": "الرئيسي"
+  },
+  "messages": {
+    "couldNotConnectToImap": "لم يتمكن من الاتصال بـ خادم IMAP"
+  }
+}

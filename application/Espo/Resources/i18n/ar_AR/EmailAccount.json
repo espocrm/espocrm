@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "status": "الحالة",
+    "host": "المستضيف",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "port": "المنفذ",
+    "monitoredFolders": "المجلدات التي تمت مراقبتها",
+    "fetchSince": "الجلب منذ",
+    "emailAddress": "البريد الإلكتروني",
+    "sentFolder": "مجلد المرسل",
+    "storeSentEmails": "تخزين رسائل البريد الإلكتروني المرسلة",
+    "keepFetchedEmailsUnread": "الاحتفاظ بالبريد الإلكتروني غير المرغوب فيه غير مقروءة",
+    "emailFolder": "وضع في مجلد",
+    "useSmtp": "استخدام SMTP",
+    "smtpHost": "مضيف SMTP",
+    "smtpPort": "منفذ SMTP",
+    "smtpAuth": "مصادقة SMTP",
+    "smtpSecurity": "أمان SMTP",
+    "smtpUsername": "اسم مستخدم SMTP",
+    "smtpPassword": "كلمة مرور SMTP",
+    "useImap": "إحضار رسائل البريد الإلكتروني",
+    "smtpAuthMechanism": "آلية مصادقة SMTP",
+    "security": "حماية"
+  },
+  "links": {
+    "filters": "الفلاتر",
+    "emails": "رسائل البريد الإلكتروني"
+  },
+  "options": {
+    "status": {
+      "Active": "نشط",
+      "Inactive": "غير نشط"
+    },
+    "smtpAuthMechanism": {
+      "plain": "عادي",
+      "login": "تسجيل الدخول",
+      "crammd5": "كرام MD5"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "إنشاء بريد إلكتروني",
+    "Main": "الرئيسي",
+    "Test Connection": "إختبر الإتصال",
+    "Send Test Email": "إرسال اختبار البريد الإلكتروني"
+  },
+  "messages": {
+    "couldNotConnectToImap": "تعذر الاتصال بسيرفر IMAP",
+    "connectionIsOk": "الإتصال يعمل بشكل جيد"
+  },
+  "tooltips": {
+    "monitoredFolders": "يجب فصل المجلدات المتعددة بفاصلة.\n\nيمكنك إضافة مجلد \"مرسل\" لمزامنة رسائل البريد الإلكتروني المرسلة من عميل بريد إلكتروني خارجي.",
+    "storeSentEmails": "سيتم تخزين رسائل البريد الإلكتروني المرسلة على سيرفر IMAP. يجب أن تتطابق خانة عنوان البريد الإلكتروني مع عنوان البريد الإلكتروني الذي سيتم الإرسال منه.",
+    "useSmtp": "القدرة على إرسال رسائل البريد الإلكتروني.",
+    "emailAddress": "يجب أن يكون لسجل المستخدم (المستخدم المعين) نفس عنوان البريد الإلكتروني لتتمكن من استخدام حساب البريد الإلكتروني هذا للإرسال."
+  }
+}

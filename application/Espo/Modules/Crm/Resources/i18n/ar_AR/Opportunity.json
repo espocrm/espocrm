@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "account": "الحساب",
+    "stage": "المرحلة",
+    "amount": "القيمة",
+    "probability": "الإحتمالية, %",
+    "leadSource": "مصدر الفرصة",
+    "doNotCall": "لا تتصل",
+    "closeDate": "تاريخ الإقفال",
+    "contacts": "جهات الإتصال",
+    "description": "الوصف",
+    "amountConverted": "القيمة (المحولة)",
+    "amountWeightedConverted": "المبلغ المرجح",
+    "campaign": "الحملة",
+    "originalLead": "الفرصة الأصلية",
+    "amountCurrency": "العملة كمية",
+    "contactRole": "دور الاتصال",
+    "lastStage": "اخر مرحلة",
+    "contact": "جهة اتصال (أساسية)"
+  },
+  "links": {
+    "contacts": "جهات الإتصال",
+    "documents": "المستندات",
+    "campaign": "الحملة",
+    "originalLead": "الفرصة الأصلية",
+    "contact": "جهة اتصال (أساسية)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "التنقيب",
+      "Qualification": "المُؤهّل",
+      "Needs Analysis": "يحتاج إلى تحليل",
+      "Value Proposition": "موقع ذو قيمة",
+      "Id. Decision Makers": "في انتظار صناع القرار",
+      "Perception Analysis": "تحليل التصور",
+      "Proposal/Price Quote": "عرض سعر",
+      "Negotiation/Review": "التفاوض/مراجعة",
+      "Closed Won": "ناجحة",
+      "Closed Lost": "مغلق فقدت",
+      "Proposal": "عرض",
+      "Negotiation": "تفاوض"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "إنشاء صفقة"
+  },
+  "presetFilters": {
+    "open": "مفتوح",
+    "won": "ربح",
+    "lost": "خسارة"
+  }
+}

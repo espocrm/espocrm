@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "version": "الإصدار",
+    "description": "الوصف",
+    "isInstalled": "تم التنصيب",
+    "checkVersionUrl": "عنوان URL لفحص الإصدارات الجديدة"
+  },
+  "labels": {
+    "Uninstall": "الغاء التثبيت",
+    "Install": "تثبيت"
+  },
+  "messages": {
+    "uninstalled": "إضافة {name} تم إلغاء تثبيتها"
+  }
+}

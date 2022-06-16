@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "اسم",
+    "parent": "الأبوين",
+    "status": "الحاله",
+    "dateStart": "تاريخ البدايه",
+    "dateEnd": "تاريخ الاستحقاق",
+    "dateStartDate": "تاريخ البدايه (لكل الايام)",
+    "dateEndDate": "تاريخ النهايه (لكل الايام)",
+    "priority": "الاولويات",
+    "description": "الوصف",
+    "isOverdue": "متأخر",
+    "account": "حساب",
+    "dateCompleted": "تاريخ الإنهاء",
+    "attachments": "المرفقات",
+    "reminders": "تذكير",
+    "contact": "اتصال"
+  },
+  "links": {
+    "attachments": "المرفقات",
+    "account": "الحساب",
+    "contact": "جهة إتصال",
+    "email": "بريد"
+  },
+  "options": {
+    "status": {
+      "Not Started": "لم تبدأ",
+      "Started": "بدأت",
+      "Completed": "انتهت",
+      "Canceled": "تم إلغاءها",
+      "Deferred": "تم تأجيلها"
+    },
+    "priority": {
+      "Low": "مُنخفض",
+      "Normal": "عادي",
+      "High": "مُرتفع",
+      "Urgent": "عاجل"
+    }
+  },
+  "labels": {
+    "Create Task": "إنشاء مُهمّة",
+    "Complete": "إنهاء",
+    "overdue": "متأخر"
+  },
+  "presetFilters": {
+    "actual": "فعلي",
+    "completed": "تم إنهاءها",
+    "todays": "اليوم",
+    "overdue": "مُتأخّر",
+    "deferred": "مؤجل"
+  },
+  "nameOptions": {
+    "replyToEmail": "الرد ع البريد"
+  }
+}

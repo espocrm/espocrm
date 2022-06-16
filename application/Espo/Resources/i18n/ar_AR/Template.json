@@ -1,0 +1,69 @@
+{
+  "fields": {
+    "name": "الاسم",
+    "body": "هيكل",
+    "entityType": "إسم المنشأه",
+    "header": "رأس الصفحة",
+    "footer": "ذيل الصفحة",
+    "leftMargin": "الهامش الأيسر",
+    "topMargin": "الهامش الأعلي",
+    "rightMargin": "الهامش الأيمن",
+    "bottomMargin": "الهامش السفلي",
+    "printFooter": "اطبع ذيل الصفحة",
+    "footerPosition": "موضع ذيل الصفحة",
+    "variables": "العناصر النائبة المتاحة",
+    "pageOrientation": "اتجاه الصفحة",
+    "pageFormat": "تنسيق الورق",
+    "fontFace": "الخط",
+    "pageWidth": "عرض الصفحة (مم)",
+    "pageHeight": "ارتفاع الصفحة (مم)",
+    "headerPosition": "موقف الرأس",
+    "printHeader": "رأس الطباعة",
+    "title": "عنوان"
+  },
+  "labels": {
+    "Create Template": "إنشاء قالب"
+  },
+  "tooltips": {
+    "footer": "استخدم {page Number} لطباعة رقم الصفحة.",
+    "variables": "نسخ ولصق العنصر النائب المطلوب إلى الرأس أو النص الأساسي أو التذييل."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "لَوحَة",
+      "Landscape": "المناظر الطبيعيه"
+    },
+    "placeholders": {
+      "today": "تاريخ اليوم)",
+      "now": "الآن (التاريخ والوقت)",
+      "pagebreak": "فاصل صفحة"
+    },
+    "fontFace": {
+      "aealarabiya": "قناة العربية",
+      "aefurat": "عيفورات",
+      "cid0cs": "CID-0 CS",
+      "cid0ct": "CID-0 قيراط",
+      "cid0jp": "CID-0 جب",
+      "cid0kr": "CID-0 كرونة",
+      "courier": "ساعي",
+      "dejavusans": "DejaVu بلا",
+      "dejavusanscondensed": "DejaVu بلا مكثف",
+      "dejavusansmono": "ديجافو بلا مونو",
+      "freemono": "فري مونو",
+      "freesans": "فري سانس",
+      "freeserif": "فريسيريف",
+      "helvetica": "هيلفيتيكا",
+      "hysmyeongjostdmedium": "Hysmyeongjostd متوسطة",
+      "kozgopromedium": "كوزجو برو متوسط",
+      "kozminproregular": "كوزمين برو عادي",
+      "pdfasymbol": "رمز PDFA",
+      "pdfatimes": "PDFA تايمز",
+      "symbol": "رمز",
+      "times": "مرات",
+      "dejavuserifcondensed": "مكثف DejaVu Serif"
+    },
+    "pageFormat": {
+      "Custom": "العادة"
+    }
+  }
+}

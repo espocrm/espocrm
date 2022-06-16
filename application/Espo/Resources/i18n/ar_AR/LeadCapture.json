@@ -1,0 +1,47 @@
+{
+  "fields": {
+    "name": "اسم",
+    "campaign": "الحملة الانتخابية",
+    "isActive": "نشط",
+    "subscribeToTargetList": "اشترك في قائمة الهدف",
+    "subscribeContactToTargetList": "اشترك جهة الاتصال إن وجدت",
+    "targetList": "قائمة الهدف",
+    "fieldList": "حقول الحمولة",
+    "optInConfirmation": "الاشتراك المزدوج",
+    "optInConfirmationEmailTemplate": "نموذج البريد الإلكتروني لتأكيد الاشتراك",
+    "optInConfirmationLifetime": "مدة تأكيد الاشتراك (بالساعات)",
+    "optInConfirmationSuccessMessage": "النص الذي سيظهر بعد تأكيد الاشتراك",
+    "leadSource": "مصدر الدليل",
+    "apiKey": "مفتاح API",
+    "targetTeam": "الفريق المستهدف",
+    "exampleRequestMethod": "طريقة",
+    "exampleRequestPayload": "الحمولة",
+    "createLeadBeforeOptInConfirmation": "تكوين الرصاص قبل التأكيد",
+    "duplicateCheck": "تحقق مكرر",
+    "skipOptInConfirmationIfSubscribed": "تخطي التأكيد إذا كان العميل المتوقع موجودًا بالفعل في قائمة الهدف",
+    "smtpAccount": "حساب SMTP",
+    "inboundEmail": "حساب البريد الإلكتروني الجماعي"
+  },
+  "links": {
+    "targetList": "قائمة الهدف",
+    "campaign": "الحملة الانتخابية",
+    "optInConfirmationEmailTemplate": "نموذج البريد الإلكتروني لتأكيد الاشتراك",
+    "targetTeam": "الفريق المستهدف",
+    "logRecords": "سجل",
+    "inboundEmail": "حساب البريد الإلكتروني الجماعي"
+  },
+  "labels": {
+    "Create LeadCapture": "أنشئ نقطة دخول",
+    "Generate New API Key": "إنشاء مفتاح API جديد",
+    "Request": "طلب",
+    "Confirm Opt-In": "قم بتأكيد الاشتراك"
+  },
+  "messages": {
+    "generateApiKey": "إنشاء مفتاح API جديد",
+    "optInConfirmationExpired": "انتهت صلاحية رابط تأكيد الاشتراك.",
+    "optInIsConfirmed": "تم تأكيد الاشتراك."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown مدعوم."
+  }
+}

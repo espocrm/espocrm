@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create Lead": "إنشاء فرصة",
+    "Create Contact": "إنشاء جهة اتصال",
+    "Create Task": "إنشاء مهمة",
+    "Create Case": "إنشاء تذكرة",
+    "Add to Contact": "إضافة لقائمة المتصلين",
+    "Add to Lead": "أضف للفرصة"
+  },
+  "fields": {
+    "tasks": "مهام"
+  }
+}

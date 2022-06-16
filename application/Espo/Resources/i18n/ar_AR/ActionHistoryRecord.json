@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "user": "المستعمل",
+    "action": "عمل",
+    "createdAt": "تاريخ",
+    "target": "استهداف",
+    "targetType": "نوع الهدف",
+    "authToken": "رمز المصادقة",
+    "ipAddress": "الأي بي",
+    "authLogRecord": "سجل سجل المصادقة",
+    "userType": "نوع المستخدم"
+  },
+  "links": {
+    "authToken": "رمز المصادقة",
+    "user": "المستعمل",
+    "target": "استهداف",
+    "authLogRecord": "سجل سجل المصادقة"
+  },
+  "presetFilters": {
+    "onlyMy": "أنا لوحدي"
+  },
+  "options": {
+    "action": {
+      "read": "اقرأ",
+      "update": "تحديث",
+      "delete": "حذف",
+      "create": "خلق"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "enabled": "مفعل",
+    "clientId": "رقم العميل",
+    "clientSecret": "سر العميل",
+    "redirectUri": "إعادة توجيه الرابط",
+    "apiKey": "مفتاح API"
+  },
+  "messages": {
+    "selectIntegration": "حدد التكامل من القائمة.",
+    "noIntegrations": "لا يوجد تكاملات متاحة."
+  },
+  "titles": {
+    "GoogleMaps": "خرائط جوجل"
+  },
+  "help": {
+    "Google": "** احصل على بيانات اعتماد OAuth 2.0 من Google Developers Console. **\n\nتفضل بزيارة [Google Developers Console] (https://console.developers.google.com/project) للحصول على بيانات اعتماد OAuth 2.0 مثل معرف العميل وسر العميل المعروفين لكل من Google وتطبيق EspoCRM.",
+    "GoogleMaps": "احصل على مفتاح API [هنا] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
+  }
+}

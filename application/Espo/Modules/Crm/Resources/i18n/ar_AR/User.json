@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "قوائم الهدف"
+  },
+  "fields": {
+    "acceptanceStatus": "حالة القبول",
+    "acceptanceStatusMeetings": "حالة القبول (اجتماعات)",
+    "acceptanceStatusCalls": "حالة القبول (المكالمات)"
+  }
+}

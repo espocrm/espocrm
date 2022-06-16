@@ -1,0 +1,28 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "إدراج مستند"
+  },
+  "fields": {
+    "role": "دور",
+    "related": "متعلق ب",
+    "file": "ملف",
+    "type": "يكتب",
+    "field": "مجال",
+    "sourceId": "معرف المصدر",
+    "storage": "تخزين",
+    "size": "الحجم (بايت)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "المرفق",
+      "Inline Attachment": "مرفق مضمن",
+      "Import File": "استيراد ملف",
+      "Export File": "ملف التصدير",
+      "Mail Merge": "دمج المراسلات",
+      "Mass Pdf": "قداس Pdf"
+    }
+  },
+  "presetFilters": {
+    "orphan": "يتيم"
+  }
+}

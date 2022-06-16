@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "إنشاء فئة",
+    "Manage Categories": "إدارة الفئات",
+    "EmailTemplates": "قوالب البريد الإلكتروني"
+  },
+  "fields": {
+    "order": "ترتيب",
+    "childList": "قائمة فرعية"
+  },
+  "links": {
+    "emailTemplates": "قوالب البريد الإلكتروني"
+  }
+}

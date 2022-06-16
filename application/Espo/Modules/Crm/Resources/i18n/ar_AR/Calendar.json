@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "شهر",
+    "week": "إسبوع",
+    "agendaWeek": "إسبوع",
+    "day": "يوم",
+    "agendaDay": "يوم",
+    "timeline": "الجدول الزمني"
+  },
+  "labels": {
+    "Today": "اليوم",
+    "Create": "إنشاء",
+    "Shared": "مشترك",
+    "Add User": "اضافة مستخدم",
+    "current": "الحالي",
+    "time": "الوقت",
+    "User List": "قائمة المستخدمين",
+    "Manage Users": "ادارة المستخدمين",
+    "View Calendar": "مشاهدة التقويم",
+    "Create Shared View": "إنشاء طريقة عرض مشتركة"
+  }
+}

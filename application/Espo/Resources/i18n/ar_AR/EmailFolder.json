@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": " تخطي الاشعارات"
+  },
+  "labels": {
+    "Create EmailFolder": "أنشئ مجلد",
+    "Manage Folders": "إدارة المجلدات",
+    "Emails": "رسائل البريد الإلكتروني"
+  }
+}

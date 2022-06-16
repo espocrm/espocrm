@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "عنوان وصول الفواتير",
+    "shippingAddress": "عنوان الشحن",
+    "website": "موقع الكتروني"
+  },
+  "links": {
+    "meetings": "الاجتماعات",
+    "calls": "المكالمات",
+    "tasks": "مهام"
+  },
+  "labels": {
+    "Create {entityType}": "إنشاء {الكيانTypeTranslated}"
+  }
+}

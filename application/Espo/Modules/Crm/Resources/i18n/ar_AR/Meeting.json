@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "الإسم",
+    "parent": "الأبوين",
+    "status": "الحاله",
+    "dateStart": "تاريخ البدايه",
+    "dateEnd": "تاريخ النهاية",
+    "duration": "المده",
+    "description": "الوصف",
+    "users": "المستخدمين",
+    "contacts": "جهات الاتصال",
+    "leads": "الفرص",
+    "reminders": "التذكيرات",
+    "account": "الحساب",
+    "acceptanceStatus": "حالة القبول",
+    "dateStartDate": "تاريخ البدء (طوال اليوم)",
+    "dateEndDate": "تاريخ الانتهاء (طوال اليوم)",
+    "isAllDay": "طوال اليوم",
+    "Acceptance": "قبول",
+    "sourceEmail": "البريد الإلكتروني المصدر"
+  },
+  "options": {
+    "status": {
+      "Planned": "مخطط له",
+      "Held": "تم حضوره",
+      "Not Held": "لم يتم حضوره"
+    },
+    "acceptanceStatus": {
+      "None": "لاشئ",
+      "Accepted": "تم القبول",
+      "Declined": "تم الرفض",
+      "Tentative": "مُتَردِّد"
+    }
+  },
+  "massActions": {
+    "setHeld": "حفظ على أنه تم الحضور",
+    "setNotHeld": "حفظ على أنه لم يتم الحضور"
+  },
+  "labels": {
+    "Create Meeting": "إنشاء إجتماع",
+    "Set Held": "حفظ على أنه تم الحضور",
+    "Set Not Held": "حفظ على أنه لم يتم الحضور",
+    "Send Invitations": "إرسال الدعوات",
+    "on time": "في الوقت",
+    "before": "قبل",
+    "All-Day": "طوال اليوم"
+  },
+  "presetFilters": {
+    "planned": "مخطط له",
+    "held": "تم الحضور",
+    "todays": "في هذا اليوم"
+  },
+  "messages": {
+    "nothingHasBeenSent": "لم يتم إرسال أي شيء",
+    "selectAcceptanceStatus": "قم بتعيين حالة القبول الخاصة بك."
+  }
+}
