@@ -33,6 +33,7 @@ define(
     'lib!jquery',
     'lib!backbone',
     'lib!underscore',
+    'lib!bullbone',
     'ui',
     'utils',
     'acl-manager',
@@ -61,10 +62,11 @@ define(
     'broadcast-channel'
 ],
 function (
-    Espo,
-    $,
-    Backbone,
-    _,
+    /** Espo */Espo,
+    /** $ */$,
+    /** Backbone */Backbone,
+    /** _ */_,
+    /** Bull */Bull,
     Ui,
     Utils,
     AclManager,
@@ -104,12 +106,45 @@ function (
     let App = function (options, callback) {
         options = options || {};
 
+        /**
+         * An application ID.
+         *
+         * @private
+         * @type {string}
+         */
         this.id = options.id || 'espocrm-application-id';
 
+        /**
+         * Use cache.
+         *
+         * @private
+         * @type {boolean}
+         */
         this.useCache = options.useCache || this.useCache;
+
         this.apiUrl = options.apiUrl || this.apiUrl;
+
+        /**
+         * A base path.
+         *
+         * @type {string}
+         */
         this.basePath = options.basePath || '';
+
+        /**
+         * A default ajax request timeout.
+         *
+         * @private
+         * @type {Number}
+         */
         this.ajaxTimeout = options.ajaxTimeout || 0;
+
+        /**
+         * A list of internal modules.
+         *
+         * @private
+         * @type {string[]}
+         */
         this.internalModuleList = options.internalModuleList || [];
 
         this.initCache(options)
@@ -183,9 +218,15 @@ function (
 
         /**
          * @private
-         * @type {module:cache.Class}
+         * @type {module:cache.Class|null}
          */
         cache: null,
+
+        /**
+         * @private
+         * @type {module:storage.Class|null}
+         */
+        storage: null,
 
         /**
          * @private
@@ -674,7 +715,7 @@ function (
 
             // @todo Use `helper.container`.
 
-            helper.layoutManager = new LayoutManager({cache: this.cache, applicationId: this.id});
+            helper.layoutManager = new LayoutManager(this.cache, this.id);
             helper.settings = this.settings;
             helper.config = this.settings;
             helper.user = this.user;

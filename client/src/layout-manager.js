@@ -28,22 +28,62 @@
 
 define('layout-manager', [], function () {
 
-    let LayoutManager = function (options, userId) {
-        options = options || {};
+    /**
+     * A layout manager.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:layout-manager
+     *
+     * @param {module:cache.Class|null} [cache] A cache.
+     * @param {string} [applicationId] An application ID.
+     * @param {string} [userId] A user ID.
+     */
+    let LayoutManager = function (cache, applicationId, userId) {
+        /**
+         * @private
+         * @type {module:cache.Class|null}
+         */
+        this.cache = cache || null;
 
-        this.cache = options.cache || null;
-        this.applicationId = options.applicationId || 'default-id';
+        /**
+         * @private
+         * @type {string}
+         */
+        this.applicationId = applicationId || 'default-id';
+
+        /**
+         * @private
+         * @type {string|null}
+         */
+        this.userId = userId || null;
+
+        /**
+         * @private
+         * @type {Object}
+         */
         this.data = {};
-        this.ajax = $.ajax;
-        this.userId = userId;
     };
 
-    _.extend(LayoutManager.prototype, {
+    _.extend(LayoutManager.prototype, /** @lends module:layout-manager.Class# */{
 
-        cache: null,
+        /**
+         * Set a user ID. To be used for the cache purpose.
+         *
+         * @param {string} userId A user ID.
+         *
+         * @todo Throw an exception if already set.
+         */
+        setUserId: function (userId) {
+            this.userId = userId
+        },
 
-        data: null,
-
+        /**
+         * @private
+         * @param {string} scope
+         * @param {string} type
+         * @returns {string}
+         */
         getKey: function (scope, type) {
             if (this.userId) {
                 return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
@@ -52,6 +92,13 @@ define('layout-manager', [], function () {
             return this.applicationId + '-' + scope + '-' + type;
         },
 
+        /**
+         * @private
+         * @param {string} scope
+         * @param {string} type
+         * @param {string} [setId]
+         * @returns {string}
+         */
         getUrl: function (scope, type, setId) {
             let url = scope + '/layout/' + type;
 
@@ -62,6 +109,20 @@ define('layout-manager', [], function () {
             return url;
         },
 
+        /**
+         * @callback module:layout-manager~getCallback
+         *
+         * @param {*} layout A layout.
+         */
+
+        /**
+         * Get a layout.
+         *
+         * @param {string} scope A scope (entity type).
+         * @param {string} type A layout type (name).
+         * @param {module:layout-manager~getCallback} callback
+         * @param {boolean} [cache=true] Use cache.
+         */
         get: function (scope, type, callback, cache) {
             if (typeof cache === 'undefined') {
                 cache = true;
@@ -110,6 +171,14 @@ define('layout-manager', [], function () {
                 );
         },
 
+        /**
+         * Get an original layout.
+         *
+         * @param {string} scope A scope (entity type).
+         * @param {string} type A layout type (name).
+         * @param {string} [setId]
+         * @param {module:layout-manager~getCallback} callback
+         */
         getOriginal: function (scope, type, setId, callback) {
             let url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
 
@@ -128,6 +197,16 @@ define('layout-manager', [], function () {
                 );
         },
 
+        /**
+         * Store and set a layout.
+         *
+         * @param {string} scope A scope (entity type).
+         * @param {string} type A type (name).
+         * @param {*} layout A layout.
+         * @param {Function} callback A callback.
+         * @param {string} [setId] A set ID.
+         * @returns {Promise}
+         */
         set: function (scope, type, layout, callback, setId) {
             return Espo.Ajax
                 .putRequest(this.getUrl(scope, type, setId), layout)
@@ -150,6 +229,14 @@ define('layout-manager', [], function () {
                 );
         },
 
+        /**
+         * Reset a layout to default.
+         *
+         * @param {string} scope A scope (entity type).
+         * @param {string} type A type (name).
+         * @param {Function} callback A callback.
+         * @param {string} [setId] A set ID.
+         */
         resetToDefault: function (scope, type, callback, setId) {
             Espo.Ajax
                 .postRequest('Layout/action/resetToDefault', {
@@ -176,6 +263,9 @@ define('layout-manager', [], function () {
                 );
         },
 
+        /**
+         * Clear loaded data.
+         */
         clearLoadedData: function () {
             this.data = {};
         },
