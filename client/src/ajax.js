@@ -26,6 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * @module ajax
+ */
 define('ajax', [], function () {
 
     /**
@@ -38,8 +41,8 @@ define('ajax', [], function () {
          *
          * @typedef {Object} Espo.Ajax~Options
          *
-         * @property {Number} timeout A timeout.
-         * @property {Object.<string,string>} headers A request headers.
+         * @property {Number} [timeout] A timeout.
+         * @property {Object.<string,string>} [headers] A request headers.
          */
 
         /**
