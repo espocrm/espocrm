@@ -68,7 +68,7 @@ define('language', ['ajax'], function (Ajax) {
          * Whether an item is set in language data.
          *
          * @param {string} scope A scope.
-         * @param category A category.
+         * @param {string} category A category.
          * @param {string} name An item name.
          * @returns {boolean}
          */
@@ -88,7 +88,7 @@ define('language', ['ajax'], function (Ajax) {
          * Get a value set in language data.
          *
          * @param {string} scope A scope.
-         * @param category A category.
+         * @param {string} category A category.
          * @param {string} name An item name.
          * @returns {*}
          */
