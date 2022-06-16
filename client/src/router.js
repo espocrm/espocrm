@@ -37,6 +37,8 @@ define('router', [], function () {
      */
 
     /**
+     * A router.
+     *
      * @class
      * @name Class
      * @memberOf module:router

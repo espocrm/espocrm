@@ -28,12 +28,43 @@
 
 define('number', [], function () {
 
+    /**
+     * A number util.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:number
+     *
+     * @param {module:models/settings.Class} config A config.
+     * @param {module:models/preferences.Class} preferences Preferences.
+     */
     let NumberUtil = function (config, preferences) {
+        /**
+         * @private
+         * @type {module:models/settings.Class}
+         */
         this.config = config;
 
+        /**
+         * @private
+         * @type {module:models/preferences.Class}
+         */
         this.preferences = preferences;
 
+        /**
+         * A thousand separator.
+         *
+         * @private
+         * @type {string|null}
+         */
         this.thousandSeparator = null;
+
+        /**
+         * A decimal mark.
+         *
+         * @private
+         * @type {string|null}
+         */
         this.decimalMark = null;
 
         this.config.on('change', () => {
@@ -46,11 +77,23 @@ define('number', [], function () {
             this.decimalMark = null;
         });
 
+        /**
+         * A max decimal places.
+         *
+         * @private
+         * @type {number}
+         */
         this.maxDecimalPlaces = 10;
     };
 
-    _.extend(NumberUtil.prototype, {
+    _.extend(NumberUtil.prototype, /** @lends module:number.Class# */{
 
+        /**
+         * Format an integer number.
+         *
+         * @param {number} value A value.
+         * @returns {string}
+         */
         formatInt: function (value) {
             if (value === null || value === undefined) {
                 return '';
@@ -63,6 +106,13 @@ define('number', [], function () {
             return stringValue;
         },
 
+        /**
+         * Format a float number.
+         *
+         * @param {number} value A value.
+         * @param {number} [decimalPlaces] Decimal places.
+         * @returns {string}
+         */
         formatFloat: function (value, decimalPlaces) {
             if (value === null || value === undefined) {
                 return '';
@@ -80,7 +130,8 @@ define('number', [], function () {
                 );
             }
 
-            var parts = value.toString().split(".");
+            var parts = value.toString().split('.');
+
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.getThousandSeparator());
 
             if (decimalPlaces === 0) {
@@ -107,9 +158,12 @@ define('number', [], function () {
             }
 
             return parts.join(this.getDecimalMark());
-
         },
 
+        /**
+         * @private
+         * @returns {string}
+         */
         getThousandSeparator: function () {
             if (this.thousandSeparator !== null) {
                 return this.thousandSeparator;
@@ -120,17 +174,25 @@ define('number', [], function () {
             if (this.preferences.has('thousandSeparator')) {
                 thousandSeparator = this.preferences.get('thousandSeparator');
             }
-            else {
-                if (this.config.has('thousandSeparator')) {
-                    thousandSeparator = this.config.get('thousandSeparator');
-                }
+            else if (this.config.has('thousandSeparator')) {
+                thousandSeparator = this.config.get('thousandSeparator');
             }
 
+            /**
+             * A thousand separator.
+             *
+             * @private
+             * @type {string|null}
+             */
             this.thousandSeparator = thousandSeparator;
 
             return thousandSeparator;
         },
 
+        /**
+         * @private
+         * @returns {string}
+         */
         getDecimalMark: function () {
             if (this.decimalMark !== null) {
                 return this.decimalMark;
@@ -147,6 +209,12 @@ define('number', [], function () {
                 }
             }
 
+            /**
+             * A decimal mark.
+             *
+             * @private
+             * @type {string|null}
+             */
             this.decimalMark = decimalMark;
 
             return decimalMark;

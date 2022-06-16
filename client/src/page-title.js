@@ -28,21 +28,53 @@
 
 define('page-title', [], function () {
 
+    /**
+     * A page-title util.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:page-title
+     *
+     * @param {module:models/settings.Class} config A config.
+     */
     let PageTitle = function (config) {
+        /**
+         * @private
+         * @type {boolean}
+         */
         this.displayNotificationNumber = config.get('newNotificationCountInTitle') || false;
 
+        /**
+         * @private
+         * @type {string}
+         */
         this.title = $('head title').text() || '';
 
+        /**
+         * @private
+         * @type {number}
+         */
         this.notificationNumber = 0;
     };
 
-    _.extend(PageTitle.prototype, {
+    _.extend(PageTitle.prototype, /** @lends module:page-title.Class# */{
+
+        /**
+         * Set a title.
+         *
+         * @param {string} title A title.
+         */
         setTitle: function (title) {
             this.title = title;
 
             this.update();
         },
 
+        /**
+         * Set a notification number.
+         *
+         * @param {number} notificationNumber A number.
+         */
         setNotificationNumber: function (notificationNumber) {
             this.notificationNumber = notificationNumber;
 
@@ -51,6 +83,9 @@ define('page-title', [], function () {
             }
         },
 
+        /**
+         * Update a page title.
+         */
         update: function () {
             let value = '';
 

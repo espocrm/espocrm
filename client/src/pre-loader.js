@@ -28,20 +28,51 @@
 
 define('pre-loader', [], function () {
 
+    /**
+     * A pre-loader.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:pre-loader
+     *
+     * @param {module:cache.Class} cache A cache.
+     * @param {Bull.Factory} viewFactory A view factory.
+     * @param {string} [basePath] A base path.
+     */
     let PreLoader = function (cache, viewFactory, basePath) {
+        /**
+         * @private
+         * @type {module:cache.Class}
+         */
         this.cache = cache;
+
+        /**
+         * @private
+         * @type {Bull.Factory}
+         */
         this.viewFactory = viewFactory;
+
+        /**
+         * @private
+         * @type {string}
+         */
         this.basePath = basePath || '';
     };
 
-    _.extend(PreLoader.prototype, {
+    _.extend(PreLoader.prototype, /** @lends module:pre-loader.Class# */{
 
+        /**
+         * @private
+         * @type {string}
+         */
         configUrl: 'client/cfg/pre-load.json',
 
-        cache: null,
-
-        viewFactory: null,
-
+        /**
+         * Load.
+         *
+         * @param {Function} callback A callback.
+         * @param {module:app.Class} app An application instance.
+         */
         load: function (callback, app) {
             let bar = $(
                 '<div class="progress pre-loading">' +
@@ -132,12 +163,12 @@ define('pre-loader', [], function () {
                 loadClasses();
             };
 
-            $.ajax({
-                url: this.basePath + this.configUrl,
-                dataType: 'json',
-                local: true,
-                success: data => load(data),
-            });
+            Espo.Ajax
+                .getRequest(this.basePath + this.configUrl, null, {
+                    dataType: 'json',
+                    local: true,
+                })
+                .then(data => load(data));
         }
     });
 
