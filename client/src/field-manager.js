@@ -54,9 +54,9 @@ define('field-manager', [], function () {
 
         /**
          * @private
-         * @type {module:acl-manager.Class|null}
+         * @type {module:acl-manager.Class}
          */
-        this.acl = acl || null;
+        this.acl = acl;
     };
 
     _.extend(FieldManager.prototype, /** @lends module:field-manager.Class# */{
@@ -111,7 +111,7 @@ define('field-manager', [], function () {
          * Get a list of attributes of an entity type.
          *
          * @param {string} entityType An entity type.
-         * @returns {string}
+         * @returns {string[]}
          */
         getEntityTypeAttributeList: function (entityType) {
             let list = [];
@@ -136,7 +136,7 @@ define('field-manager', [], function () {
          *
          * @param {string} fieldType A field type.
          * @param {string} fieldName A field name.
-         * @returns {string}
+         * @returns {string[]}
          */
         getActualAttributeList: function (fieldType, fieldName) {
             let fieldNames = [];
@@ -177,7 +177,7 @@ define('field-manager', [], function () {
          *
          * @param {string} fieldType A field type.
          * @param {string} fieldName A field name.
-         * @returns {string}
+         * @returns {string[]}
          */
         getNotActualAttributeList: function (fieldType, fieldName) {
             let fieldNames = [];
