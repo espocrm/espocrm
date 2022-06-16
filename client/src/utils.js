@@ -26,20 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * @module utils
+ */
 define('utils', [], function () {
 
-    let Utils = Espo.utils = Espo.Utils = {
+    return Espo.utils = Espo.Utils = {
 
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
-
             var action = $target.data('action');
-
             var fired = false;
 
             if (action) {
                 var data = $target.data();
-
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
                 if (typeof viewObject[method] === 'function') {
@@ -287,11 +287,12 @@ define('utils', [], function () {
         },
 
         /**
-         * Compose class name.
-         * @param {String} module
-         * @param {String} name
-         * @param {String} location
-         * @return {String}
+         * Compose a class name.
+         *
+         * @param {string} module
+         * @param {string} name
+         * @param {string} location
+         * @return {string}
          */
         composeClassName: function (module, name, location) {
             if (module) {
@@ -420,6 +421,4 @@ define('utils', [], function () {
             return options;
         },
     };
-
-    return Utils;
 });

@@ -26,6 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * @module ui
+ */
 define('ui', [], function () {
 
     var Dialog = function (options) {
