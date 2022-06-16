@@ -26,19 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
- define('field-language', [], function () {
+define('field-language', [], function () {
 
+    /**
+     * A field-language util.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:field-language
+     *
+     * @param {module:metadata.Class} metadata A metadata.
+     * @param {module:language.Class} language A language.
+     */
     let FieldLanguage = function (metadata, language) {
+        /**
+         * @private
+         * @type {module:metadata.Class}
+         */
         this.metadata = metadata;
+
+        /**
+         * @private
+         * @type {module:language.Class}
+         */
         this.language = language;
     };
 
-    _.extend(FieldLanguage.prototype, {
+    _.extend(FieldLanguage.prototype, /** @lends module:field-language.Class# */{
 
-        metadata: null,
-
-        language: null,
-
+        /**
+         * Translate an attribute.
+         *
+         * @param {string} scope A scope.
+         * @param {string} name An attribute name.
+         * @returns {string}
+         */
         translateAttribute: function (scope, name) {
             let label = this.language.translate(name, 'fields', scope);
 
@@ -94,7 +116,6 @@
 
             return label;
         },
-
     });
 
     return FieldLanguage;

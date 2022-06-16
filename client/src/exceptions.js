@@ -28,6 +28,12 @@
 
 Espo.Exceptions = Espo.Exceptions || {};
 
+/**
+ * An access denied exception.
+ *
+ * @param {string} message A message.
+ * @class
+ */
 Espo.Exceptions.AccessDenied = function (message) {
     this.message = message;
 
@@ -37,6 +43,12 @@ Espo.Exceptions.AccessDenied = function (message) {
 Espo.Exceptions.AccessDenied.prototype = new Error();
 Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';
 
+/**
+ * A not found exception.
+ *
+ * @param {string} message A message.
+ * @class
+ */
 Espo.Exceptions.NotFound = function (message) {
     this.message = message;
 

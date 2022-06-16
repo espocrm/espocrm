@@ -28,33 +28,85 @@
 
 define('email-helper', [], function () {
 
+    /**
+     * An email helper.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:email-helper
+     *
+     * @param {module:language.Class} language A language.
+     * @param {module:models/user.Class} user A user.
+     * @param {module:date-time.Class} dateTime A date-time util.
+     * @param {module:acl-manager.Class} acl An ACL manager.
+     */
     let EmailHelper = function (language, user, dateTime, acl) {
+        /**
+         * @type {module:language.Class}
+         * @private
+         */
         this.language = language;
+
+        /**
+         * @type {module:models/user.Class}
+         * @private
+         */
         this.user = user;
+
+        /**
+         * @type {module:date-time.Class}
+         * @private
+         */
         this.dateTime = dateTime;
+
+        /**
+         * @type {module:acl-manager.Class}
+         * @private
+         */
         this.acl = acl;
 
+        /**
+         * @type {string}
+         * @private
+         */
         this.erasedPlaceholder = 'ERASED:';
     };
 
     _.extend(EmailHelper.prototype, {
 
+        /**
+         * @returns {module:language.Class}
+         */
         getLanguage: function () {
             return this.language;
         },
 
+        /**
+         * @returns {module:models/user.Class}
+         */
         getUser: function () {
             return this.user;
         },
 
+        /**
+         * @returns {module:date-time.Class}
+         */
         getDateTime: function () {
             return this.dateTime;
         },
 
+        /**
+         * Get reply email attributes.
+         *
+         * @param {module:model.Class} model An email model.
+         * @param {Object|null} [data=null] Action data. Unused.
+         * @param {boolean} [cc=false] To include CC (reply-all).
+         * @returns {Object}
+         */
         getReplyAttributes: function (model, data, cc) {
             let attributes = {
                 status: 'Draft',
-                isHtml: model.get('isHtml')
+                isHtml: model.get('isHtml'),
             };
 
             let subject = model.get('name') || '';
@@ -207,9 +259,7 @@ define('email-helper', [], function () {
             }
 
             attributes.nameHash = nameHash;
-
             attributes.repliedId = model.id;
-
             attributes.inReplyTo = model.get('messageId');
 
             this.addReplyBodyAttributes(model, attributes);
@@ -217,7 +267,13 @@ define('email-helper', [], function () {
             return attributes;
         },
 
-        getForwardAttributes: function (model, data, cc) {
+        /**
+         * Get forward email attributes.
+         *
+         * @param {module:model.Class} model An email model.
+         * @returns {Object}
+         */
+        getForwardAttributes: function (model) {
             let attributes = {
                 status: 'Draft',
                 isHtml: model.get('isHtml'),
@@ -243,6 +299,12 @@ define('email-helper', [], function () {
             return attributes;
         },
 
+        /**
+         * Add body attributes for a forward email.
+         *
+         * @param {module:model.Class} model An email model.
+         * @param {Object} attributes
+         */
         addForwardBodyAttributes: function (model, attributes) {
             let prepending = '';
 
@@ -341,6 +403,12 @@ define('email-helper', [], function () {
             }
         },
 
+        /**
+         * Parse a name from a string address.
+         *
+         * @param {string} value A string address. E.g. `Test Name <address@domain>`.
+         * @returns {string|null}
+         */
         parseNameFromStringAddress: function (value) {
             if (~value.indexOf('<')) {
                 let name = value.replace(/<(.*)>/, '').trim();
@@ -355,6 +423,12 @@ define('email-helper', [], function () {
             return null;
         },
 
+        /**
+         * Parse an address from a string address.
+         *
+         * @param {string} value A string address. E.g. `Test Name <address@domain>`.
+         * @returns {string|null}
+         */
         parseAddressFromStringAddress: function (value) {
             let r = value.match(/<(.*)>/);
             let address = null;
@@ -369,6 +443,12 @@ define('email-helper', [], function () {
             return address;
         },
 
+        /**
+         * Add body attributes for a reply email.
+         *
+         * @param {module:model.Class} model An email model.
+         * @param {Object} attributes
+         */
         addReplyBodyAttributes: function (model, attributes) {
             let format = this.getDateTime().getReadableShortDateTimeFormat();
 
@@ -422,6 +502,13 @@ define('email-helper', [], function () {
             }
         },
 
+        /**
+         * Compose a mailto link.
+         *
+         * @param {Object} attributes Attributes.
+         * @param {boolean} [bcc=false] To include BCC.
+         * @returns {string} A mailto link.
+         */
         composeMailToLink: function (attributes, bcc) {
             let link = 'mailto:';
 
@@ -479,6 +566,12 @@ define('email-helper', [], function () {
             return link;
         },
 
+        /**
+         * Convert an HTML to a plain text.
+         *
+         * @param {string} text A text.
+         * @returns {string}
+         */
         htmlToPlain: function (text) {
             text = text || '';
 
