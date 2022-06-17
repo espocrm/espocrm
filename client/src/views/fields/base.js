@@ -34,49 +34,58 @@ define('views/fields/base', ['view'], function (Dep) {
      * @todo Document all options.
      * @todo Document events.
      *
-     * @class Espo.Views.Fields.Base
-     * @extends Espo.View
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/fields/base
      */
-    return Dep.extend(/** @lends Espo.Views.Fields.Base */ {
+    return Dep.extend(/** @lends module:views/fields/base.Class# */ {
 
         /**
          * A field type.
+         *
          * @type {string}
          */
         type: 'base',
 
         /**
          * List mode template.
+         *
          * @type {string}
          */
         listTemplate: 'fields/base/list',
 
         /**
          * List-link mode template.
+         *
          * @type {string}
          */
         listLinkTemplate: 'fields/base/list-link',
 
         /**
          * Detail mode template.
+         *
          * @type {string}
          */
         detailTemplate: 'fields/base/detail',
 
         /**
          * Edit mode template.
+         *
          * @type {string}
          */
         editTemplate: 'fields/base/edit',
 
         /**
          * Search mode template.
+         *
          * @type {string}
          */
         searchTemplate: 'fields/base/search',
 
         /**
          * A validation list. There should be a `validate{Name}` method for each item.
+         *
          * @type {Array.<string>}
          */
         validations: ['required'],
@@ -93,68 +102,89 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * A field name.
+         *
          * @type {string}
          */
         name: null,
 
         /**
+         * Definitions.
+         *
          * @type {Object}
          */
         defs: null,
 
         /**
          * Field params.
+         *
          * @type {Object}
          */
         params: null,
 
         /**
          * A mode.
+         *
          * @type {string}
          */
         mode: null,
 
         /**
          * Search params.
+         *
          * @type {Object|null}
          */
         searchParams: null,
 
+        /**
+         * @private
+         */
         _timeout: null,
 
         /**
          * Inline edit disabled.
+         *
          * @type {boolean}
          */
         inlineEditDisabled: false,
 
         /**
          * Field is disabled.
+         *
          * @type {boolean}
          */
         disabled: false,
 
         /**
          * Field is read-only.
+         *
          * @type {boolean}
          */
         readOnly: false,
 
+        /**
+         * @type {string[]|null}
+         */
         attributeList: null,
 
         /**
          * Attribute values before edit.
+         *
          * @type {Object}
          */
         initialAttributes: null,
 
         VALIDATION_POPOVER_TIMEOUT: 3000,
 
+        /**
+         * @type [Function]
+         * @internal
+         */
         validateCallback: null,
 
         /**
-         * A record helper.
-         * @type {Espo.ViewRecordHelper}
+         * A record-view helper.
+         *
+         * @type {module:record-view-helper.Class}
          */
         recordHelper: null,
 
@@ -713,7 +743,8 @@ define('views/fields/base', ['view'], function (Dep) {
                 }
 
                 tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
-                tooltipText = this.getHelper().transfromMarkdownText(tooltipText, {linksInNewTab: true}).toString();
+                tooltipText = this.getHelper()
+                    .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
                 let hidePopover = () => {
                     $('body').off('click.popover-' + this.cid);

@@ -83,10 +83,11 @@ define('views/admin/field-manager/modals/add-field', 'views/modal', function (De
 
                 if (text === type) {
                     $el.addClass('hidden');
+
                     return;
                 }
 
-                var text = this.getHelper().transfromMarkdownText(text, {linksInNewTab: true}).toString();
+                text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
 
                 Espo.Ui.popover($el, {
                     content: text,

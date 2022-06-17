@@ -28,10 +28,26 @@
 
 define('session-storage', ['storage'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A session storage. Cleared when a page session ends.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:session-storage
+     */
+    return Dep.extend(/** @lends module:session-storage.Class# */{
 
+        /**
+         * @private
+         */
         storageObject: sessionStorage,
 
+        /**
+         * Get a value.
+         *
+         * @param {string} name A name.
+         * @returns {*} Null if not set.
+         */
         get: function (name) {
             try {
                 var stored = this.storageObject.getItem(name);
@@ -62,6 +78,12 @@ define('session-storage', ['storage'], function (Dep) {
             return null;
         },
 
+        /**
+         * Set (store) a value.
+         *
+         * @param {string} name A name.
+         * @param {*} value A value.
+         */
         set: function (name, value) {
             if (value instanceof Object || Array.isArray(value) || value === true || value === false) {
                 value = '__JSON__:' + JSON.stringify(value);
@@ -75,10 +97,21 @@ define('session-storage', ['storage'], function (Dep) {
             }
         },
 
+        /**
+         * Has a value.
+         *
+         * @param {string} name A name.
+         * @returns {boolean}
+         */
         has: function (name) {
             return this.storageObject.getItem(name) !== null;
         },
 
+        /**
+         * Clear a value.
+         *
+         * @param {string} name A name.
+         */
         clear: function (name) {
             for (let i in this.storageObject) {
                 if (i === name) {

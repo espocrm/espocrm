@@ -45,7 +45,7 @@ define('views/admin/complex-expression/modals/add-function', ['views/modal', 'mo
         data: function () {
             var text = this.translate('formulaFunctions', 'messages', 'Admin')
                 .replace('{documentationUrl}', this.documentationUrl);
-            text = this.getHelper().transfromMarkdownText(text, {linksInNewTab: true}).toString();
+            text = this.getHelper().transformMarkdownText(text, {linksInNewTab: true}).toString();
 
             return {
                 functionDataList: this.functionDataList,

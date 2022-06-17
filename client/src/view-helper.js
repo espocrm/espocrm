@@ -26,19 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPurify) {
+define('view-helper', ['lib!marked', 'lib!dompurify', 'lib!handlebars'],
+function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
 
     /**
-     * @class Espo.ViewHelper
+     * A view helper.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:view-helper
      */
     let ViewHelper = function () {
         this._registerHandlebarsHelpers();
 
+        /**
+         * @private
+         */
         this.mdBeforeList = [
             {
                 regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
                 value: function (s, string) {
-                    return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
+                    return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') +
+                        '</code></pre>';
                 }
             },
             {
@@ -78,97 +87,159 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         });
     };
 
-    _.extend(ViewHelper.prototype, /** @lends Espo.ViewHelper */{
+    _.extend(ViewHelper.prototype, /** @lends module:view-helper.Class# */{
 
+        /**
+         * A layout manager.
+         *
+         * @type {module:layout-manager.Class}
+         */
         layoutManager: null,
 
         /**
-         * @property {Espo.Modles.Settings} settings
+         * A config.
+         *
+         * @type {module:models/settings.Class}
          */
         settings: null,
 
         /**
-         * @property {Espo.Modles.Settings} settings
+         * A config.
+         *
+         * @type {module:models/settings.Class}
+         */
+        config: null,
+
+        /**
+         * A current user.
+         *
+         * @type {module:models/user.Class}
          */
         user: null,
 
+        /**
+         * A preferences.
+         *
+         * @type {module:models/preferences.Class}
+         */
         preferences: null,
 
         /**
-         * @property {Espo.Language} language
+         * An ACL manager.
+         *
+         * @type {module:acl-manager.Class}
+         */
+        acl: null,
+
+        /**
+         * A model factory.
+         *
+         * @type {module:model-factory.Class}
+         */
+        modelFactory: null,
+
+        /**
+         * A collection factory.
+         *
+         * @type {module:collection-factory.Class}
+         */
+        collectionFactory: null,
+
+        /**
+         * A storage.
+         *
+         * @type {module:storage.Class}
+         */
+        storage: null,
+
+        /**
+         * A session storage.
+         *
+         * @type {module:session-storage.Class}
+         */
+        sessionStorage: null,
+
+        /**
+         * A date-time util.
+         *
+         * @type {module:date-time.Class}
+         */
+        dateTime: null,
+
+        /**
+         * A language.
+         *
+         * @type {module:language.Class}
          */
         language: null,
 
         /**
-         * @param {string} name
-         * @returns {*}
+         * A metadata.
+         *
+         * @type {module:metadata.Class}
          */
-        getAppParam: function (name) {
-            return (this.appParams || {})[name];
-        },
+        metadata: null,
 
         /**
-         * @param {string} text
-         * @returns {string}
+         * A field-manager util.
+         *
+         * @type {module:field-manager.Class}
          */
-        stripTags: function (text) {
-            text = text || '';
-
-            if (typeof text === 'string' || text instanceof String) {
-                return text.replace(/<\/?[^>]+(>|$)/g, '');
-            }
-
-            return text;
-        },
+        fieldManager: null,
 
         /**
-         * @param {string} text
-         * @returns {string}
+         * A cache.
+         *
+         * @type {module:cache.Class}
          */
-        escapeString: function (text) {
-            return Handlebars.Utils.escapeExpression(text);
-        },
+        cache: null,
 
         /**
-         * @param {string} id
-         * @param {'small'|'medium'|'large'} size
-         * @param {int} width
-         * @param {string} additionalClassName
-         * @returns {string}
+         * A theme manager.
+         *
+         * @type {module:theme-manager.Class}
          */
-        getAvatarHtml: function (id, size, width, additionalClassName) {
-            if (this.config.get('avatarsDisabled')) {
-                return '';
-            }
+        themeManager: null,
 
-            var t;
+        /**
+         * A web-socket manager
+         *
+         * @type {module:web-socket-manager.Class}
+         */
+        webSocketManager: null,
 
-            var cache = this.cache;
+        /**
+         * A number util.
+         *
+         * @type {module:number.Class}
+         */
+        numberUtil: null,
 
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            }
-            else {
-                t = Date.now();
-            }
+        /**
+         * A page-title util.
+         *
+         * @type {module:page-title.Class}
+         */
+        pageTitle: null,
 
-            var basePath = this.basePath || '';
-            var size = size || 'small';
+        /**
+         * A base path.
+         *
+         * @type {string}
+         */
+        basePath: '',
 
-            var width = (width || 16).toString();
+        /**
+         * Application parameters.
+         *
+         * @type {Object}
+         */
+        appParams: null,
 
-            var className = 'avatar';
-
-            if (additionalClassName) {
-                className += ' ' + additionalClassName;
-            }
-
-            return '<img class="'+className+'" width="'+width+'" src="'+basePath+
-                '?entryPoint=avatar&size='+size+'&id=' + id + '&t='+t+'">';
-        },
-
+        /**
+         * @private
+         */
         _registerHandlebarsHelpers: function () {
-
             Handlebars.registerHelper('img', img => {
                 return new Handlebars.SafeString("<img src=\"img/" + img + "\"></img>");
             });
@@ -268,7 +339,7 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
                     options.hash.text ||
                     this.language.translate(label, 'labels', scope);
 
-                className = options.hash.className || '';
+                let className = options.hash.className || '';
 
                 if (className) {
                     className = ' ' + className;
@@ -297,7 +368,7 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
             });
 
             Handlebars.registerHelper('complexText', (text, options) => {
-                return this.transfromMarkdownText(text, options.hash);
+                return this.transformMarkdownText(text, options.hash);
             });
 
             Handlebars.registerHelper('translateOption', (name, options) => {
@@ -400,19 +471,100 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {string} text
-         * @returns {string}
+         * Get an application parameter.
+         *
+         * @param {string} name
+         * @returns {*}
          */
-        transfromMarkdownInlineText: function (text) {
-            return this.transfromMarkdownText(text, {inline: true});
+        getAppParam: function (name) {
+            return (this.appParams || {})[name];
         },
 
         /**
+         * Strip tags.
+         *
+         * @deprecated
          * @param {string} text
-         * @param {{inline: boolean, linksInNewTab: boolean}} options
          * @returns {string}
          */
-        transfromMarkdownText: function (text, options) {
+        stripTags: function (text) {
+            text = text || '';
+
+            if (typeof text === 'string' || text instanceof String) {
+                return text.replace(/<\/?[^>]+(>|$)/g, '');
+            }
+
+            return text;
+        },
+
+        /**
+         * Escape a string.
+         *
+         * @param {string} text A string.
+         * @returns {string}
+         */
+        escapeString: function (text) {
+            return Handlebars.Utils.escapeExpression(text);
+        },
+
+        /**
+         * Get a user avatar HTML.
+         *
+         * @param {string} id A user ID.
+         * @param {'small'|'medium'|'large'} [size='small'] A size.
+         * @param {int} [width=16]
+         * @param {string} [additionalClassName]  An additional class-name.
+         * @returns {string}
+         */
+        getAvatarHtml: function (id, size, width, additionalClassName) {
+            if (this.config.get('avatarsDisabled')) {
+                return '';
+            }
+
+            var t;
+
+            var cache = this.cache;
+
+            if (cache) {
+                t = cache.get('app', 'timestamp');
+            }
+            else {
+                t = Date.now();
+            }
+
+            var basePath = this.basePath || '';
+            var size = size || 'small';
+
+            var width = (width || 16).toString();
+
+            var className = 'avatar';
+
+            if (additionalClassName) {
+                className += ' ' + additionalClassName;
+            }
+
+            return '<img class="'+className+'" width="'+width+'" src="'+basePath+
+                '?entryPoint=avatar&size='+size+'&id=' + id + '&t='+t+'">';
+        },
+
+        /**
+         * A Markdown text to HTML (one-line).
+         *
+         * @param {string} text A text.
+         * @returns {string} HTML.
+         */
+        transformMarkdownInlineText: function (text) {
+            return this.transformMarkdownText(text, {inline: true});
+        },
+
+        /**
+         * A Markdown text to HTML.
+         *
+         * @param {string} text A text.
+         * @param {{inline?: boolean, linksInNewTab?: boolean}} [options] Options.
+         * @returns {string} HTML.
+         */
+        transformMarkdownText: function (text, options) {
             text = text || '';
 
             text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
@@ -445,9 +597,11 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {string} scope
-         * @param {boolean} noWhiteSpace
-         * @param {string} additionalClassName
+         * Get a color-icon HTML for a scope.
+         *
+         * @param {string} scope A scope.
+         * @param {boolean} [noWhiteSpace=false] No white space.
+         * @param {string} [additionalClassName] An additional class-name.
          * @returns {string}
          */
         getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
@@ -481,8 +635,10 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {type} text
-         * @param {Object} options
+         * Sanitize HTML.
+         *
+         * @param {type} text HTML.
+         * @param {Object} [options] Options.
          * @returns {string}
          */
         sanitizeHtml: function (text, options) {
@@ -490,7 +646,9 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {string} value
+         * Moderately sanitize HTML.
+         *
+         * @param {string} value HTML.
          * @returns {string}
          */
         moderateSanitizeHtml: function (value) {
@@ -527,7 +685,9 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {string} html
+         * Strip event handlers in HTML.
+         *
+         * @param {string} html HTML.
          * @returns {string}
          */
         stripEventHandlersInHtml: function (html) {
@@ -566,11 +726,11 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
                             continue;
                         }
 
-                        if (!lastQuote && html[j - 1] === "=" && (html[j] === "'" || html[j] === '"')){
+                        if (!lastQuote && html[j - 1] === "=" && (html[j] === "'" || html[j] === '"')) {
                             lastQuote = html[j];
                         }
 
-                        if (!lastQuote && html[j - 2] === " " && html[j - 1] === "o" && html[j] === "n"){
+                        if (!lastQuote && html[j - 2] === " " && html[j - 1] === "o" && html[j] === "n") {
                             strip = j - 2;
                         }
 
@@ -585,7 +745,9 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {$} $el
+         * Calculate a content container height.
+         *
+         * @param {$} $el Element.
          * @returns {number}
          */
         calculateContentContainerHeight: function ($el) {
@@ -615,9 +777,11 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
         },
 
         /**
-         * @param {Espo.View} view
-         * @param {string} type
-         * @param {string} scope
+         * Process view-setup-handlers.
+         *
+         * @param {module:view} view A view.
+         * @param {string} type A view-setup-handler type.
+         * @param {string} [scope] A scope.
          */
         processSetupHandlers: function (view, type, scope) {
             scope = scope || view.scope;
@@ -654,6 +818,22 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
 
                 view.wait(promise);
             }
+        },
+
+        /**
+         * @deprecated Use `transformMarkdownText`.
+         * @internal Used in extensions.
+         */
+        transfromMarkdownText: function (text, options) {
+            this.transformMarkdownText(text, options);
+        },
+
+        /**
+         * @deprecated Use `transformMarkdownInlineText`.
+         * @internal Used in extensions.
+         */
+        transfromMarkdownInlineText: function (text) {
+            return this.transformMarkdownInlineText(text);
         },
     });
 

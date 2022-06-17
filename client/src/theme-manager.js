@@ -28,20 +28,39 @@
 
 define('theme-manager', [], function () {
 
+    /**
+     * A theme manager.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:theme-manager
+     *
+     * @param {module:models/settings.Class} config A config.
+     * @param {module:models/preferences.Class} preferences Preferences.
+     * @param {module:metadata.Class} metadata Metadata.
+     */
     let ThemeManager = function (config, preferences, metadata) {
         this.config = config;
         this.preferences = preferences;
         this.metadata = metadata;
     };
 
-    _.extend(ThemeManager.prototype, {
+    _.extend(ThemeManager.prototype, /** module:theme-manager.Class# */{
 
+        /**
+         * @private
+         */
         defaultParams: {
             screenWidthXs: 768,
             dashboardCellHeight: 155,
             dashboardCellMargin: 19,
         },
 
+        /**
+         * Get a theme name for the current user.
+         *
+         * @returns {string}
+         */
         getName: function () {
             if (!this.config.get('userThemesDisabled')) {
                 let name = this.preferences.get('theme');
@@ -54,6 +73,11 @@ define('theme-manager', [], function () {
             return this.config.get('theme');
         },
 
+        /**
+         * Get a theme name currently applied to the DOM.
+         *
+         * @returns {string|null} Null if not applied.
+         */
         getAppliedName: function () {
             let name = window.getComputedStyle(document.body).getPropertyValue('--theme-name');
 
@@ -64,6 +88,11 @@ define('theme-manager', [], function () {
             return name.trim();
         },
 
+        /**
+         * Whether a current theme is applied to the DOM.
+         *
+         * @returns {boolean}
+         */
         isApplied: function () {
             let appliedName = this.getAppliedName();
 
@@ -74,8 +103,14 @@ define('theme-manager', [], function () {
             return this.getName() === appliedName;
         },
 
+        /**
+         * Get a stylesheet path for a current theme.
+         *
+         * @returns {string}
+         */
         getStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheet']) || 'client/css/espo/espo.css';
+            let link = this.metadata.get(['themes', this.getName(), 'stylesheet']) ||
+                'client/css/espo/espo.css';
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -84,6 +119,11 @@ define('theme-manager', [], function () {
             return link;
         },
 
+        /**
+         * Get an iframe stylesheet path for a current theme.
+         *
+         * @returns {string}
+         */
         getIframeStylesheet: function () {
             let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) ||
                 'client/css/espo/espo-iframe.css';
@@ -95,6 +135,11 @@ define('theme-manager', [], function () {
             return link;
         },
 
+        /**
+         * Get an iframe-fallback stylesheet path for a current theme.
+         *
+         * @returns {string}
+         */
         getIframeFallbackStylesheet: function () {
             let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframeFallback']) ||
                 'client/css/espo/espo-iframe.css';
@@ -106,10 +151,22 @@ define('theme-manager', [], function () {
             return link;
         },
 
+        /**
+         * Get a theme parameter.
+         *
+         * @param {string} name A parameter name.
+         * @returns {*} Null if not set.
+         */
         getParam: function (name) {
-            return this.metadata.get(['themes', this.getName(), name]) || this.defaultParams[name] || null;
+            return this.metadata.get(['themes', this.getName(), name]) ||
+                this.defaultParams[name] || null;
         },
 
+        /**
+         * Whether a current theme is different from a system default theme.
+         *
+         * @returns {boolean}
+         */
         isUserTheme: function () {
             if (!this.config.get('userThemesDisabled')) {
                 let name = this.preferences.get('theme');
@@ -122,8 +179,7 @@ define('theme-manager', [], function () {
             }
 
             return false;
-        }
-
+        },
     });
 
     return ThemeManager;

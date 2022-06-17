@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/list', ['views/main', 'search-manager'], function (Dep, SearchManager) {
+define('views/list', ['views/main', 'search-manager'],
+function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
     /**
      * A list view page.
@@ -409,7 +410,6 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             );
 
             searchManager.scope = this.scope;
-
             searchManager.loadStored();
 
             collection.where = searchManager.getWhere();

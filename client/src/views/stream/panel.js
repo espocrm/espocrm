@@ -482,10 +482,10 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             var $a = this.$el.find('.buttons-panel a.stream-post-info');
 
-            var message = this.getHelper().transfromMarkdownInlineText(
+            var message = this.getHelper().transformMarkdownInlineText(
                 this.translate('infoMention', 'messages', 'Stream')
             ) + '<br><br>' +
-            this.getHelper().transfromMarkdownInlineText(
+            this.getHelper().transformMarkdownInlineText(
                 this.translate('infoSyntax', 'messages', 'Stream') + ':'
             ) + '<br>';
 

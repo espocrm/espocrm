@@ -28,14 +28,93 @@
 
 define('search-manager', [], function () {
 
-    let SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
+    /**
+     * Search data.
+     *
+     * @typedef {Object} module:search-manager~data
+     *
+     * @property {string} primary A primary filter.
+     * @property {Object.<string,boolean>} bool Bool filters.
+     * @property {Object} advanced Advanced filters (field filters). Contains data needed for both
+     *   the backend and frontend.
+     */
+
+    /**
+     * A where item. Sent to the backend.
+     *
+     * @typedef {Object} module:search-manager~whereItem
+     *
+     * @property {string} type A type.
+     * @property {string} [attribute] An attribute (field).
+     * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
+     * @property {boolean} [dateTime] Is a date-time item.
+     * @property {string} [timeZone] A time-zone (for date-time items).
+     */
+
+    /**
+     * A search manager.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:search-manager
+     *
+     * @param {module:collection.Class} collection A collection.
+     * @param {string|null} type A type. Used for a storage key.
+     * @param {module:storage.Class|null} storage A storage.
+     * @param {module:date-time.Class|null} dateTime A date-time util.
+     * @param {module:search-manager~data|null} [defaultData=null] Default search data.
+     * @param {boolean} [emptyOnReset=false] To empty on reset.
+     */
+    let SearchManager = function (
+        collection,
+        type,
+        storage,
+        dateTime,
+        defaultData,
+        emptyOnReset
+    ) {
+        /**
+         * @private
+         * @type {module:collection.Class}
+         */
         this.collection = collection;
+
+        /**
+         * An entity type.
+         *
+         * @public
+         * @type {string}
+         */
         this.scope = collection.name;
+
+        /**
+         * @private
+         * @type {module:storage.Class|null}
+         */
         this.storage = storage;
+
+        /**
+         * @private
+         * @type {string}
+         */
         this.type = type || 'list';
+
+        /**
+         * @private
+         * @type {module:date-time.Class|null}
+         */
         this.dateTime = dateTime;
+
+        /**
+         * @private
+         * @type {boolean}
+         */
         this.emptyOnReset = emptyOnReset;
 
+        /**
+         * @private
+         * @type {Object}
+         */
         this.emptyData = {
             textFilter: '',
             bool: {},
@@ -58,10 +137,11 @@ define('search-manager', [], function () {
         this.sanitizeData();
     };
 
-    _.extend(SearchManager.prototype, {
+    _.extend(SearchManager.prototype, /** @lends module:search-manager.Class# */{
 
-        data: null,
-
+        /**
+         * @private
+         */
         sanitizeData: function () {
             if (!('advanced' in this.data)) {
                 this.data.advanced = {};
@@ -76,6 +156,11 @@ define('search-manager', [], function () {
             }
         },
 
+        /**
+         * Get a where clause. The where clause to be sent to the backend.
+         *
+         * @returns {module:search-manager~whereItem[]}
+         */
         getWhere: function () {
             let where = [];
 
@@ -131,6 +216,9 @@ define('search-manager', [], function () {
             return where;
         },
 
+        /**
+         * @private
+         */
         getWherePart: function (name, defs) {
             var attribute = name;
 
@@ -182,6 +270,11 @@ define('search-manager', [], function () {
             };
         },
 
+        /**
+         * Load stored data.
+         *
+         * @returns {module:search-manager.Class}
+         */
         loadStored: function () {
             this.data =
                 this.storage.get(this.type + 'Search', this.scope) ||
@@ -193,28 +286,53 @@ define('search-manager', [], function () {
             return this;
         },
 
+        /**
+         * Get data.
+         *
+         * @returns {module:search-manager~data}
+         */
         get: function () {
             return this.data;
         },
 
+        /**
+         * Set advanced filters.
+         *
+         * @param {Object} advanced Advanced filters.
+         */
         setAdvanced: function (advanced) {
             this.data = Espo.Utils.clone(this.data);
 
             this.data.advanced = advanced;
         },
 
+        /**
+         * Set bool filters.
+         *
+         * @param {Object.<string, boolean>} bool Bool filters.
+         */
         setBool: function (bool) {
             this.data = Espo.Utils.clone(this.data);
 
             this.data.bool = bool;
         },
 
+        /**
+         * Set a primary filter.
+         *
+         * @param {string} primary A filter.
+         */
         setPrimary: function (primary) {
             this.data = Espo.Utils.clone(this.data);
 
             this.data.primary = primary;
         },
 
+        /**
+         * Set data.
+         *
+         * @param {module:search-manager~data} data Data.
+         */
         set: function (data) {
             this.data = data;
 
@@ -223,6 +341,9 @@ define('search-manager', [], function () {
             }
         },
 
+        /**
+         * Empty data.
+         */
         empty: function () {
             this.data = Espo.Utils.clone(this.emptyData);
 
@@ -231,6 +352,9 @@ define('search-manager', [], function () {
             }
         },
 
+        /**
+         * Reset.
+         */
         reset: function () {
             if (this.emptyOnReset) {
                 this.empty();
@@ -245,6 +369,9 @@ define('search-manager', [], function () {
             }
         },
 
+        /**
+         * @private
+         */
         getDateTimeWhere: function (type, field, value) {
             var where = {
                 field: field

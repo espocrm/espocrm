@@ -270,7 +270,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
 
             var msg = this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
 
-            msg = this.getHelper().transfromMarkdownInlineText(msg);
+            msg = this.getHelper().transformMarkdownInlineText(msg);
 
             return msg;
         },

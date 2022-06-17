@@ -26,10 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/base', 'controller', function (Dep) {
+define('controllers/base', ['controller'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A base controller.
+     *
+     * @class
+     * @name Class
+     * @extends module:controller.Class
+     * @memberOf module:controllers/base
+     */
+    return Dep.extend(/** @lends module:controllers/base.Class# */{
 
+        /**
+         * Log in.
+         */
         login: function () {
             var viewName = this.getConfig().get('loginView') || 'views/login';
 
@@ -64,6 +75,9 @@ define('controllers/base', 'controller', function (Dep) {
             });
         },
 
+        /**
+         * @private
+         */
         normalizeLoginData: function (userName, data) {
             return {
                 auth: {
@@ -79,15 +93,29 @@ define('controllers/base', 'controller', function (Dep) {
             };
         },
 
-        actionLogin: function () {
-            this.login();
-        },
-
+        /**
+         * Log out.
+         */
         logout: function () {
             var title = this.getConfig().get('applicationName') || 'EspoCRM';
             $('head title').text(title);
 
             this.trigger('logout');
+        },
+
+        /**
+         * Clear cache.
+         */
+        clearCache: function () {
+            this.entire('views/clear-cache', {
+                cache: this.getCache()
+            }, view => {
+                view.render();
+            });
+        },
+
+        actionLogin: function () {
+            this.login();
         },
 
         actionLogout: function () {
@@ -98,20 +126,18 @@ define('controllers/base', 'controller', function (Dep) {
             this.clearCache();
         },
 
-        clearCache: function () {
-            this.entire('views/clear-cache', {
-                cache: this.getCache()
-            }, (view) => {
-                view.render();
-            });
-        },
-
+        /**
+         * Error Not Found.
+         */
         error404: function () {
             this.entire('views/base', {template: 'errors/404'}, (view) => {
                 view.render();
             });
         },
 
+        /**
+         * Error Forbidden.
+         */
         error403: function () {
             this.entire('views/base', {template: 'errors/403'}, (view) => {
                 view.render();

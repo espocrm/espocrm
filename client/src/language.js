@@ -112,8 +112,8 @@ define('language', ['ajax'], function (Ajax) {
          * Translate a label.
          *
          * @param {string} name An item name.
-         * @param {string} [category='labels'] A category.
-         * @param {string} [scope='Global'] A scope.
+         * @param {string|null} [category='labels'] A category.
+         * @param {string|null} [scope='Global'] A scope.
          * @returns {string}
          */
         translate: function (name, category, scope) {

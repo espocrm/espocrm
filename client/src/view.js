@@ -113,16 +113,16 @@ define('view', [], function () {
         },
 
         /**
-         * Get the view-helper.
+         * Get a view-helper.
          *
-         * @returns {module:view-helper}
+         * @returns {module:view-helper.Class}
          */
         getHelper: function () {
             return this._helper;
         },
 
         /**
-         * Get the current user.
+         * Get a current user.
          *
          * @returns {module:models/user.Class}
          */
@@ -477,7 +477,7 @@ define('view', [], function () {
             }
 
             if (message) {
-                message = this.getHelper().transfromMarkdownText(message, {linksInNewTab: true}).toString();
+                message = this.getHelper().transformMarkdownText(message, {linksInNewTab: true}).toString();
             }
 
             let confirmText = o.confirmText || this.translate('Yes');

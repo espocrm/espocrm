@@ -69,30 +69,30 @@ function (
     /** Bull */Bull,
     Ui,
     Utils,
-    AclManager,
-    Cache,
-    Storage,
-    Settings,
-    Language,
-    Metadata,
-    FieldManager,
-    User,
-    Preferences,
-    ModelFactory,
-    CollectionFactory,
-    PreLoader,
-    BaseController,
-    Router,
-    DateTime,
-    LayoutManager,
-    ThemeManager,
-    SessionStorage,
-    ViewHelper,
-    WebSocketManager,
+    /** typeof module:acl-manager.Class */AclManager,
+    /** typeof module:cache.Class */Cache,
+    /** typeof module:storage.Class */Storage,
+    /** typeof module:models/settings.Class */Settings,
+    /** typeof module:language.Class */Language,
+    /** typeof module:metadata.Class */Metadata,
+    /** typeof module:field-manager.Class */FieldManager,
+    /** typeof module:models/user.Class */User,
+    /** typeof module:models/preferences.Class */Preferences,
+    /** typeof module:model-factory.Class */ModelFactory,
+    /** typeof module:collection-factory.Class */CollectionFactory,
+    /** typeof module:pre-loader.Class */PreLoader,
+    /** typeof module:controllers/base.Class */BaseController,
+    /** typeof module:router.Class */Router,
+    /** typeof module:date-time.Class */DateTime,
+    /** typeof module:layout-manager.Class */LayoutManager,
+    /** typeof module:theme-manager.Class */ThemeManager,
+    /** typeof module:session-storage.Class */SessionStorage,
+    /** typeof module:view-helper.Class */ViewHelper,
+    /** typeof module:web-socket-manager.Class */WebSocketManager,
     Ajax,
-    NumberUtil,
-    PageTitle,
-    BroadcastChannel
+    /** typeof module:number.Class */NumberUtil,
+    /** typeof module:page-title.Class */PageTitle,
+    /** typeof module:broadcast-channel.Class */BroadcastChannel
 ) {
     /**
      * A main application class.
@@ -249,6 +249,8 @@ function (
         auth: null,
 
         /**
+         * A base controller.
+         *
          * @private
          * @type {module:controllers/base.Class}
          */
@@ -286,6 +288,7 @@ function (
         viewFactory: null,
 
         /**
+         * @type {Function}
          * @private
          */
         viewLoader: null,
@@ -712,8 +715,6 @@ function (
         initView: function () {
             let helper = this.viewHelper = new ViewHelper();
 
-            // @todo Use `helper.container`.
-
             helper.layoutManager = new LayoutManager(this.cache, this.id);
             helper.settings = this.settings;
             helper.config = this.settings;
@@ -723,19 +724,18 @@ function (
             helper.modelFactory = this.modelFactory;
             helper.collectionFactory = this.collectionFactory;
             helper.storage = this.storage;
+            helper.sessionStorage = this.sessionStorage;
             helper.dateTime = this.dateTime;
             helper.language = this.language;
             helper.metadata = this.metadata;
             helper.fieldManager = this.fieldManager;
             helper.cache = this.cache;
-            helper.storage = this.storage;
             helper.themeManager = this.themeManager;
-            helper.sessionStorage = this.sessionStorage;
-            helper.basePath = this.basePath;
-            helper.appParams = this.appParams;
             helper.webSocketManager = this.webSocketManager;
             helper.numberUtil = this.numberUtil;
             helper.pageTitle = new PageTitle(this.settings);
+            helper.basePath = this.basePath;
+            helper.appParams = this.appParams;
 
             this.viewLoader = (viewName, callback) => {
                 require(Utils.composeViewClassName(viewName), callback);

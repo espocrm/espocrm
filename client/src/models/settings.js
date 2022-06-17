@@ -26,12 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/settings', 'model', function (Dep) {
+define('models/settings', ['model'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A config.
+     *
+     * @class
+     * @name Class
+     * @extends module:model.Class
+     * @memberOf module:models/settings
+     */
+    return Dep.extend(/** @lends module:models/settings.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         name: 'Settings',
 
+        /**
+         * Load.
+         *
+         * @returns {Promise}
+         */
         load: function () {
             return new Promise(resolve => {
                 this.fetch()
@@ -39,6 +55,12 @@ define('models/settings', 'model', function (Dep) {
             });
         },
 
+        /**
+         * Get a value by a path.
+         *
+         * @param {string} arr A path.
+         * @returns {*} Null if not set.
+         */
         getByPath: function (arr) {
             if (!arr.length) {
                 return null;

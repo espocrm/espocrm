@@ -28,28 +28,66 @@
 
 define('storage', [], function () {
 
+    /**
+     * A storage. Data is saved across browser sessions, has no expiration time.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:storage
+     */
     let Storage = function () {};
 
-    _.extend(Storage.prototype, {
+    _.extend(Storage.prototype, /** @lends module:storage.Class# */{
 
+        /**
+         * @protected
+         */
         prefix: 'espo',
 
+        /**
+         * @protected
+         */
         storageObject: localStorage,
 
+        /**
+         * @private
+         * @param {string} type
+         * @returns {string}
+         */
         composeFullPrefix: function (type) {
             return this.prefix + '-' + type;
         },
 
+        /**
+         * @private
+         * @param {string} type
+         * @param {string} name
+         * @returns {string}
+         */
         composeKey: function (type, name) {
             return this.composeFullPrefix(type) + '-' + name;
         },
 
+        /**
+         * @private
+         * @param {string} type
+         */
         checkType: function (type) {
-            if (typeof type === 'undefined' && toString.call(type) !== '[object String]' || type === 'cache') {
+            if (
+                typeof type === 'undefined' &&
+                toString.call(type) !== '[object String]' || type === 'cache'
+            ) {
                 throw new TypeError("Bad type \"" + type + "\" passed to Espo.Storage.");
             }
         },
 
+        /**
+         * Has a value.
+         *
+         * @param {string} type A type (category).
+         * @param {string} name A name.
+         * @returns {boolean}
+         */
         has: function (type, name) {
             this.checkType(type);
 
@@ -58,6 +96,13 @@ define('storage', [], function () {
             return this.storageObject.getItem(key) !== null;
         },
 
+        /**
+         * Get a value.
+         *
+         * @param {string} type A type (category).
+         * @param {string} name A name.
+         * @returns {*} Null if not stored.
+         */
         get: function (type, name) {
             this.checkType(type);
 
@@ -100,6 +145,13 @@ define('storage', [], function () {
             return null;
         },
 
+        /**
+         * Set (store) a value.
+         *
+         * @param {string} type A type (category).
+         * @param {string} name A name.
+         * @param {*} value A value.
+         */
         set: function (type, name, value) {
             this.checkType(type);
 
@@ -118,6 +170,12 @@ define('storage', [], function () {
             }
         },
 
+        /**
+         * Clear a value.
+         *
+         * @param {string} type A type (category).
+         * @param {string} name A name.
+         */
         clear: function (type, name) {
             let reText;
 
