@@ -31,7 +31,10 @@
  */
 define('utils', [], function () {
 
-    return Espo.utils = Espo.Utils = {
+    /**
+     * Utility functions.
+     */
+    Espo.Utils = {
 
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
@@ -421,4 +424,11 @@ define('utils', [], function () {
             return options;
         },
     };
+
+    /**
+     * @deprecated Use `Espo.Utils`.
+     */
+    Espo.utils = Espo.Utils;
+
+    return Espo.Utils;
 });

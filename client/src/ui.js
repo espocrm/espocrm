@@ -31,28 +31,83 @@
  */
 define('ui', [], function () {
 
-    var Dialog = function (options) {
+    /**
+     * Dialog parameters.
+     *
+     * @typedef {Object} module:ui.Dialog~Params
+     *
+     * @property {string} [className='dialog'] A class-name or multiple space separated.
+     * @property {'static'|true|false} [static='static'] A backdrop.
+     * @property {boolean} [closeButton=true] A close button.
+     * @property {boolean} [collapseButton=false] A collapse button.
+     * @property {string|null} [header] A header HTML.
+     * @property {string} [body] A body HTML.
+     * @property {number|null} [width] A width.
+     * @property {boolean} [removeOnClose=true] To remove on close.
+     * @property {boolean} [draggable=false] Is draggable.
+     * @property {Function} [onRemove] An on-remove callback.
+     * @property {Function} [onClose] An on-close callback.
+     * @property {string} [container='body'] A container selector.
+     * @property {boolean} [keyboard=false] Enable a keyboard control. The `Esc` key closes a dialog.
+     * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
+     * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
+     * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
+     */
+
+    /**
+     * A button or a dropdown action item.
+     *
+     * @typedef {Object} module:ui.Dialog~Button
+     *
+     * @property {boolean} [hidden] Is hidden.
+     * @property {string} name A name.
+     * @property {boolean} [pullLeft=false] To put the button to the other side.
+     * @property {string} [html] HTML.
+     * @property {string} [text] A title.
+     * @property {boolean} [disabled=false] Disabled.
+     * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
+     * @property {Function} [onClick] An on-click callback.
+     */
+
+    /**
+     * @class
+     * @param {module:ui.Dialog~Params} options Options.
+     */
+    let Dialog = function (options) {
         options = options || {};
 
+        /** @private */
         this.className = 'dialog';
+        /** @private */
         this.backdrop = 'static';
+        /** @private */
         this.closeButton = true;
+        /** @private */
         this.collapseButton = false;
-        this.header = false;
+        /** @private */
+        this.header = null;
+        /** @private */
         this.body = '';
-        this.width = false;
-        this.height = false;
+        /** @private */
+        this.width = null;
+        /** @private */
         this.buttonList = [];
+        /** @private */
         this.dropdownItemList = [];
+        /** @private */
         this.removeOnClose = true;
+        /** @private */
         this.draggable = false;
+        /** @private */
         this.container = 'body';
+        /** @private */
         this.onRemove = function () {};
+        /** @private */
         this.onClose = function () {};
-
+        /** @private */
         this.options = options;
 
-        var params = [
+        let params = [
             'className',
             'backdrop',
             'keyboard',
@@ -79,15 +134,18 @@ define('ui', [], function () {
             }
         });
 
+        /** @private */
         this.onCloseIsCalled = false;
 
         if (this.buttons && this.buttons.length) {
+            /** @private */
             this.buttonList = this.buttons;
         }
 
         this.id = 'dialog-' + Math.floor((Math.random() * 100000));
 
         if (typeof this.backdrop === 'undefined') {
+            /** @private */
             this.backdrop = 'static';
         }
 
@@ -167,7 +225,17 @@ define('ui', [], function () {
             .html(contentsHtml)
             .appendTo($(this.container));
 
+        /**
+         * An element.
+         *
+         * @type {JQuery}
+         */
         this.$el = $('#' + this.id);
+
+        /**
+         * @private
+         * @type {Element}
+         */
         this.el = this.$el.get(0);
 
         this.$el.find('header a.close').on('click', () => {
@@ -204,7 +272,7 @@ define('ui', [], function () {
             });
         }
 
-        $window = $(window);
+        let $window = $(window);
 
         this.$el.on('shown.bs.modal', (e, r) => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
@@ -269,6 +337,9 @@ define('ui', [], function () {
         });
     };
 
+    /**
+     * @private
+     */
     Dialog.prototype.initButtonEvents = function () {
         this.buttonList.forEach(o => {
             if (typeof o.onClick === 'function') {
@@ -289,6 +360,9 @@ define('ui', [], function () {
         });
     };
 
+    /**
+     * @private
+     */
     Dialog.prototype.getFooterHtml = function () {
         let footer = '';
 
@@ -376,6 +450,9 @@ define('ui', [], function () {
         return footer;
     };
 
+    /**
+     * Show.
+     */
     Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
@@ -434,15 +511,20 @@ define('ui', [], function () {
         $('body > .popover').addClass('hidden');
     };
 
+    /**
+     * Hide.
+     */
     Dialog.prototype.hide = function () {
         this.$el.find('.modal-content').addClass('hidden');
     };
 
+    /**
+     * Hide with a backdrop.
+     */
     Dialog.prototype.hideWithBackdrop = function () {
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().addClass('hidden');
-
         $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
 
         let $modalConainer = $('.modal-container');
@@ -456,51 +538,73 @@ define('ui', [], function () {
         }, 50);
 
         this.$el.modal('hide');
-
         this.$el.find('.modal-content').addClass('hidden');
     };
 
+    /**
+     * @private
+     */
     Dialog.prototype._close = function () {
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().removeClass('hidden');
 
-        let $modalConainer = $('.modal-container');
+        let $modalContainer = $('.modal-container');
 
-        $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
+        $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
     };
 
+    /**
+     * Close.
+     */
     Dialog.prototype.close = function () {
         if (!this.onCloseIsCalled) {
             this.onClose();
-
             this.onCloseIsCalled = true;
         }
 
         this._close();
-
         this.$el.modal('hide');
-
         $(this).trigger('dialog:close');
     };
 
+    /**
+     * Remove.
+     */
     Dialog.prototype.remove = function () {
         this.onRemove();
 
         // Hack allowing multiple backdrops.
         // `close` function may be called twice.
         this._close();
-
         this.$el.remove();
 
         $(this).off();
         $(window).off('resize.modal-height');
     };
 
-    let Ui = Espo.Ui = Espo.ui = {
+    /**
+     * UI utils.
+     */
+    Espo.Ui = {
 
         Dialog: Dialog,
 
+        /**
+         * Show a confirm dialog.
+         *
+         * @param {string} message A message.
+         * @param {{
+         *     confirmText?: string,
+         *     cancelText?: string,
+         *     confirmStyle?: 'danger'|'success'|'warning'|'default',
+         *     backdrop?: boolean,
+         *     cancelCallback?: Function,
+         * }} o Options.
+         * @param callback
+         * @param context
+         * @returns {Promise} Resolves if confirmed.
+         */
         confirm: function (message, o, callback, context) {
             o = o || {};
 
@@ -565,7 +669,6 @@ define('ui', [], function () {
                                 isResolved = true;
 
                                 dialog.close();
-
                                 processCancel();
                             },
                             pullRight: true,
@@ -585,10 +688,29 @@ define('ui', [], function () {
             });
         },
 
+        /**
+         * Create a dialog.
+         *
+         * @param {module:ui.Dialog~Params} options Options.
+         * @returns {Dialog}
+         */
         dialog: function (options) {
             return new Dialog(options);
         },
 
+        /**
+         * Init a popover.
+         *
+         * @param {JQuery} $el An element.
+         * @param {{
+         *     placement: 'bottom'|'top',
+         *     container: string,
+         *     content: string,
+         *     trigger: 'manual'|'click'|'hover'|'focus',
+         *     noToggleInit: boolean,
+         * }} o Options.
+         * @param {module:view} [view] A view.
+         */
         popover: function ($el, o, view) {
             $el.popover({
                 placement: o.placement || 'bottom',
@@ -638,6 +760,15 @@ define('ui', [], function () {
             }
         },
 
+        /**
+         * Show a notify-message.
+         *
+         * @param {string|false} message A message. False removes an already displayed message.
+         * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
+         * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
+         *   Should be hidden manually or by displaying another message.
+         * @param {boolean} [closeButton] A close button.
+         */
         notify: function (message, type, timeout, closeButton) {
             $('#nofitication').remove();
 
@@ -651,6 +782,7 @@ define('ui', [], function () {
             closeButton = closeButton || false;
 
             if (type === 'error') {
+                // For bc.
                 type = 'danger';
             }
 
@@ -667,11 +799,11 @@ define('ui', [], function () {
                 .html('<div class="message">' + message + '</div>');
 
             if (closeButton) {
-                $close = $(
+                let $close = $(
                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
                 );
 
-                $btnContainer = $('<div class="close-container">').append($close);
+                let $btnContainer = $('<div class="close-container">').append($close);
 
                 $el.append($btnContainer);
 
@@ -690,25 +822,51 @@ define('ui', [], function () {
                 );
         },
 
+        /**
+         * Show a warning message.
+         *
+         * @param {string} message A message.
+         */
         warning: function (message) {
             Espo.Ui.notify(message, 'warning', 2000);
         },
 
+        /**
+         * Show a success message.
+         *
+         * @param {string} message A message.
+         */
         success: function (message) {
             Espo.Ui.notify(message, 'success', 2000);
         },
 
+        /**
+         * Show an error message.
+         *
+         * @param {string} message A message.
+         * @param {boolean} [closeButton] A close button.
+         */
         error: function (message, closeButton) {
             closeButton = closeButton || false;
-            timeout = closeButton ? 0 : 4000;
+            let timeout = closeButton ? 0 : 4000;
 
-            Espo.Ui.notify(message, 'error', timeout, closeButton);
+            Espo.Ui.notify(message, 'danger', timeout, closeButton);
         },
 
+        /**
+         * Show an info message.
+         *
+         * @param {string} message A message.
+         */
         info: function (message) {
             Espo.Ui.notify(message, 'info', 2000);
         },
     };
 
-    return Ui;
+    /**
+     * @deprecated Use `Espo.Ui`.
+     */
+    Espo.ui = Espo.Ui;
+
+    return Espo.Ui;
 });
