@@ -591,18 +591,23 @@ define('ui', [], function () {
         Dialog: Dialog,
 
         /**
-         * Show a confirm dialog.
+         * @typedef {Object} Espo.Ui~ConfirmOptions
+         *
+         * @property {string} confirmText A confirm-button text.
+         * @property {string} cancelText A cancel-button text.
+         * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger']
+         *   A confirm-button style.
+         * @property {'static'|boolean} [backdrop=false] A backdrop.
+         * @property {Function} [cancelCallback] A cancel-callback.
+         */
+
+        /**
+         * Show a confirmation dialog.
          *
          * @param {string} message A message.
-         * @param {{
-         *     confirmText?: string,
-         *     cancelText?: string,
-         *     confirmStyle?: 'danger'|'success'|'warning'|'default',
-         *     backdrop?: boolean,
-         *     cancelCallback?: Function,
-         * }} o Options.
-         * @param callback
-         * @param context
+         * @param {Espo.Ui~ConfirmOptions} o Options.
+         * @param {Function} [callback] Deprecated. Use a promise.
+         * @param {Object} [context] Deprecated.
          * @returns {Promise} Resolves if confirmed.
          */
         confirm: function (message, o, callback, context) {
@@ -611,7 +616,6 @@ define('ui', [], function () {
             var confirmText = o.confirmText;
             var cancelText = o.cancelText;
             var confirmStyle = o.confirmStyle || 'danger';
-
             var backdrop = o.backdrop;
 
             if (typeof backdrop === 'undefined') {

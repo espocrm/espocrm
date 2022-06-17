@@ -62,6 +62,15 @@ define('view', [], function () {
          */
 
         /**
+         * A helper.
+         *
+         * @name _helper
+         * @type {module:view-helper.Class}
+         * @memberOf module:view.Class.prototype
+         * @private
+         */
+
+        /**
          * Add a DOM button-action event handler.
          *
          * @deprecated Use the `events` property.
@@ -127,9 +136,7 @@ define('view', [], function () {
          * @returns {module:models/user.Class}
          */
         getUser: function () {
-            if (this._helper) {
-                return this._helper.user;
-            }
+            return this._helper.user;
         },
 
         /**
@@ -138,9 +145,7 @@ define('view', [], function () {
          * @returns {module:models/preferences.Class}
          */
         getPreferences: function () {
-            if (this._helper) {
-                return this._helper.preferences;
-            }
+            return this._helper.preferences;
         },
 
         /**
@@ -149,9 +154,7 @@ define('view', [], function () {
          * @returns {module:models/settings.Class}
          */
         getConfig: function () {
-            if (this._helper) {
-                return this._helper.settings;
-            }
+            return this._helper.settings;
         },
 
         /**
@@ -160,9 +163,7 @@ define('view', [], function () {
          * @returns {module:acl-manager.Class}
          */
         getAcl: function () {
-            if (this._helper) {
-                return this._helper.acl;
-            }
+            return this._helper.acl;
         },
 
         /**
@@ -171,9 +172,7 @@ define('view', [], function () {
          * @returns {module:model-factory.Class}
          */
         getModelFactory: function () {
-            if (this._helper) {
-                return this._helper.modelFactory;
-            }
+            return this._helper.modelFactory;
         },
 
         /**
@@ -182,9 +181,7 @@ define('view', [], function () {
          * @returns {module:collection-factory.Class}
          */
         getCollectionFactory: function () {
-            if (this._helper) {
-                return this._helper.collectionFactory;
-            }
+            return this._helper.collectionFactory;
         },
 
         /**
@@ -193,9 +190,7 @@ define('view', [], function () {
          * @returns {module:router.Class}
          */
         getRouter: function () {
-            if (this._helper) {
-                return this._helper.router;
-            }
+            return this._helper.router;
         },
 
         /**
@@ -204,9 +199,7 @@ define('view', [], function () {
          * @returns {module:storage.Class}
          */
         getStorage: function () {
-            if (this._helper) {
-                return this._helper.storage;
-            }
+            return this._helper.storage;
         },
 
         /**
@@ -215,9 +208,7 @@ define('view', [], function () {
          * @returns {module:session-storage.Class}
          */
         getSessionStorage: function () {
-            if (this._helper) {
-                return this._helper.sessionStorage;
-            }
+            return this._helper.sessionStorage;
         },
 
         /**
@@ -226,9 +217,7 @@ define('view', [], function () {
          * @returns {module:language.Class}
          */
         getLanguage: function () {
-            if (this._helper) {
-                return this._helper.language;
-            }
+            return this._helper.language;
         },
 
         /**
@@ -237,9 +226,7 @@ define('view', [], function () {
          * @returns {module:metadata.Class}
          */
         getMetadata: function () {
-            if (this._helper) {
-                return this._helper.metadata;
-            }
+            return this._helper.metadata;
         },
 
         /**
@@ -248,9 +235,7 @@ define('view', [], function () {
          * @returns {module:cache.Class}
          */
         getCache: function () {
-            if (this._helper) {
-                return this._helper.cache;
-            }
+            return this._helper.cache;
         },
 
         /**
@@ -259,9 +244,7 @@ define('view', [], function () {
          * @returns {module:date-time.Class}
          */
         getDateTime: function () {
-            if (this._helper) {
-                return this._helper.dateTime;
-            }
+            return this._helper.dateTime;
         },
 
         /**
@@ -270,9 +253,7 @@ define('view', [], function () {
          * @returns {module:number.Class}
          */
         getNumberUtil: function () {
-            if (this._helper) {
-                return this._helper.numberUtil;
-            }
+            return this._helper.numberUtil;
         },
 
         /**
@@ -281,9 +262,7 @@ define('view', [], function () {
          * @returns {module:field-manager.Class}
          */
         getFieldManager: function () {
-            if (this._helper) {
-                return this._helper.fieldManager;
-            }
+            return this._helper.fieldManager;
         },
 
         /**
@@ -292,9 +271,7 @@ define('view', [], function () {
          * @returns {module:controllers/base.Class}
          */
         getBaseController: function () {
-            if (this._helper) {
-                return this._helper.baseController;
-            }
+            return this._helper.baseController;
         },
 
         /**
@@ -303,9 +280,7 @@ define('view', [], function () {
          * @returns {module:theme-manager.Class}
          */
         getThemeManager: function () {
-            if (this._helper) {
-                return this._helper.themeManager;
-            }
+            return this._helper.themeManager;
         },
 
         /**
@@ -330,8 +305,8 @@ define('view', [], function () {
          * Translate a label.
          *
          * @param {string} label Label.
-         * @param {string} category Category.
-         * @param {string} scope Scope.
+         * @param {string} [category] Category.
+         * @param {string} [scope] Scope.
          * @returns {string}
          */
         translate: function (label, category, scope) {
@@ -368,9 +343,7 @@ define('view', [], function () {
                 options.data = data;
             }
 
-            let xhr = $.ajax(options);
-
-            return xhr;
+            return $.ajax(options);
         },
 
         /**
@@ -455,9 +428,20 @@ define('view', [], function () {
         },
 
         /**
+         * @typedef {Object} module:view.Class~ConfirmOptions
+         *
+         * @property {string} message A message.
+         * @property {string} [confirmText] A confirm-button text.
+         * @property {string} [cancelText] A cancel-button text.
+         * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger'] A confirm-button style.
+         * @property {'static'|boolean} [backdrop=false] A backdrop.
+         * @property {Function} [cancelCallback] A cancel-callback.
+         */
+
+        /**
          * Show a confirmation dialog.
          *
-         * @param {(string|Object)} o A message or options.
+         * @param {string|module:view.Class~ConfirmOptions} o A message or options.
          * @param [callback] A callback. Deprecated, use a promise.
          * @param [context] A context. Deprecated.
          * @returns {Promise} To be resolved if confirmed.
@@ -477,7 +461,9 @@ define('view', [], function () {
             }
 
             if (message) {
-                message = this.getHelper().transformMarkdownText(message, {linksInNewTab: true}).toString();
+                message = this.getHelper()
+                    .transformMarkdownText(message, {linksInNewTab: true})
+                    .toString();
             }
 
             let confirmText = o.confirmText || this.translate('Yes');
@@ -488,7 +474,6 @@ define('view', [], function () {
                 confirmText: confirmText,
                 cancelText: cancelText,
                 confirmStyle: confirmStyle,
-                noCancelButton: o.noCancelButton,
                 backdrop: ('backdrop' in o) ? o.backdrop : true,
             }, callback, context);
         },
