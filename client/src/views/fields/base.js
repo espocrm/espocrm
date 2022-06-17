@@ -802,7 +802,8 @@ define('views/fields/base', ['view'], function (Dep) {
             var $sign = $label.find('span.required-sign');
 
             if ($label.length && !$sign.length) {
-                $text = $label.find('span.label-text');
+                let $text = $label.find('span.label-text');
+
                 $('<span class="required-sign"> *</span>').insertAfter($text);
                 $sign = $label.find('span.required-sign');
             }

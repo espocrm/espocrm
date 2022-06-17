@@ -237,7 +237,7 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                 );
             }
 
-            $left = $('<div class="pull-left">');
+            let $left = $('<div class="pull-left">');
 
             if ($role) {
                 $left.append($role);
@@ -247,7 +247,7 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
 
             $el.append($left);
 
-            $right = $('<div>');
+            let $right = $('<div>');
 
             $right.append(removeHtml);
 

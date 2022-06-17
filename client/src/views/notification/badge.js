@@ -445,7 +445,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 });
             });
 
-            $document = $(document);
+            let $document = $(document);
 
             $document.on('mouseup.notification', e => {
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {

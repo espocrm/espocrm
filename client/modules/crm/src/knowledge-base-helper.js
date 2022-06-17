@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:knowledge-base-helper', 'ajax', function (Ajax) {
+define('crm:knowledge-base-helper', ['ajax'], function (Ajax) {
 
     var KnowledgeBaseHelper = function (language) {
         this.language = language;
@@ -41,25 +41,27 @@ Espo.define('crm:knowledge-base-helper', 'ajax', function (Ajax) {
         getAttributesForEmail: function (model, attributes, callback) {
             attributes = attributes || {};
             attributes.body = model.get('body');
+
             if (attributes.name) {
                 attributes.name = attributes.name + ' ';
             } else {
                 attributes.name = '';
             }
-            attributes.name += this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' + model.get('name');
+
+            attributes.name += this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' +
+                model.get('name');
 
             Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
                 id: model.id
-            }).then(function (data) {
+            }).then((data) => {
                 attributes.attachmentsIds = data.ids;
                 attributes.attachmentsNames = data.names;
                 attributes.isHtml = true;
 
                 callback(attributes);
-            }.bind(this));
-        }
+            });
+        },
     });
 
     return KnowledgeBaseHelper;
-
 });

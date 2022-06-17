@@ -552,8 +552,8 @@ define('views/site/navbar', 'view', function (Dep) {
 
             this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightHorizontal';
 
-            $moreDd = $('#nav-more-tabs-dropdown');
-            $moreLi = $moreDd.closest('li');
+            let $moreDd = $('#nav-more-tabs-dropdown');
+            let $moreLi = $moreDd.closest('li');
 
             var updateWidth = () => {
                 var windowWidth = window.innerWidth;

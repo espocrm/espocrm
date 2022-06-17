@@ -121,7 +121,8 @@ define('views/role/record/table', 'view', function (Dep) {
                     $dropdowns.removeAttr('disabled');
                     $dropdowns.removeClass('hidden');
                     $dropdowns.each(function (i, select) {
-                        $select = $(select);
+                        let $select = $(select);
+
                         if (this.lowestLevelByDefault) {
                             $select.find('option').last().prop('selected', true);
                         } else {
@@ -140,7 +141,9 @@ define('views/role/record/table', 'view', function (Dep) {
                                 $select.find('option').first().prop('selected', true);
                             }
                         }
+
                         $select.trigger('change');
+
                         this.controlSelectColor($select);
                     }.bind(this));
                 } else {

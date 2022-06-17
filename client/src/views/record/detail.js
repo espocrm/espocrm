@@ -774,7 +774,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             var $p = $('.popover');
 
                             $p.each(function (i, el) {
-                                $el = $(el);
+                                let $el = $(el);
                                 $el.css('top', ($el.position().top - blockHeight) + 'px');
                             });
                         }
@@ -787,7 +787,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                             var $p = $('.popover');
 
                             $p.each(function (i, el) {
-                                $el = $(el);
+                                let $el = $(el);
                                 $el.css('top', ($el.position().top + blockHeight) + 'px');
                             });
                         }

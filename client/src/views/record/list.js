@@ -200,7 +200,7 @@ define(
             },
 
             'click .actions-menu a.mass-action': function (e) {
-                $el = $(e.currentTarget);
+                let $el = $(e.currentTarget);
 
                 var action = $el.data('action');
 

@@ -35,12 +35,21 @@ define(
 
         events: {
             'click [data-action="switchPrimary"]': function (e) {
-                $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
+
                 var id = $target.data('id');
 
                 if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]').removeClass('active').children().addClass('text-muted');
-                    $target.addClass('active').children().removeClass('text-muted');
+                    this.$el.find('button[data-action="switchPrimary"]')
+                        .removeClass('active')
+                        .children()
+                        .addClass('text-muted');
+
+                    $target
+                        .addClass('active')
+                        .children()
+                        .removeClass('text-muted');
+
                     this.setPrimaryId(id);
                 }
             }
@@ -48,8 +57,10 @@ define(
 
          getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push(this.primaryIdFieldName);
             list.push(this.primaryNameFieldName);
+
             return list;
         },
 
@@ -138,7 +149,10 @@ define(
             var isPrimary = (id == this.primaryId);
             var iconHtml = '<span class="fas fa-star fa-sm ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
             var title = this.translate('Primary');
-            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>');
+
+            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" ' +
+                'title="'+title+'" data-action="switchPrimary" data-id="' + id + '">' + iconHtml + '</button>');
+
             $primary.insertAfter($el.children().first().children().first());
 
             this.managePrimaryButton();
@@ -148,6 +162,7 @@ define(
 
         managePrimaryButton: function () {
             var $primary = this.$el.find('button[data-action="switchPrimary"]');
+
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
             } else {
@@ -175,7 +190,9 @@ define(
         getSelectFilters: function () {
             if (this.model.get('accountId')) {
                 var nameHash = {};
+
                 nameHash[this.model.get('accountId')] = this.model.get('accountName');
+
                 return {
                     'accounts': {
                         type: 'linkedWith',
@@ -197,6 +214,5 @@ define(
                 }
             }
         },
-
     });
 });

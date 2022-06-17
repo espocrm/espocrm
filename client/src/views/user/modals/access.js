@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
+define('views/user/modals/access', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -68,14 +68,22 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
             ];
 
             var fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
+
             for (var scope in fieldTable) {
                 var scopeData = fieldTable[scope] || {};
+
                 for (var field in scopeData) {
-                    if (this.getMetadata().get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null) {
+                    if (
+                        this.getMetadata()
+                            .get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null
+                    ) {
                         delete scopeData[field];
                     }
 
-                    if (scopeData[field] && this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])) {
+                    if (
+                        scopeData[field] &&
+                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'readOnly'])
+                    ) {
                         if (scopeData[field].edit === 'no' && scopeData[field].read === 'yes') {
                             delete scopeData[field];
                         }
@@ -92,7 +100,6 @@ Espo.define('views/user/modals/access', 'views/modal', function (Dep) {
             });
 
             this.headerHtml = this.translate('Access');
-        }
-
+        },
     });
 });

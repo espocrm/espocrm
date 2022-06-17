@@ -34,12 +34,19 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
         events: {
             'click [data-action="switchPrimary"]': function (e) {
-                $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
                 var id = $target.data('id');
 
                 if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]').removeClass('active').children().addClass('text-muted');
-                    $target.addClass('active').children().removeClass('text-muted');
+                    this.$el.find('button[data-action="switchPrimary"]')
+                        .removeClass('active')
+                        .children()
+                        .addClass('text-muted');
+
+                    $target.addClass('active')
+                        .children()
+                        .removeClass('text-muted');
+
                     this.setPrimaryId(id);
                 }
             }
@@ -47,9 +54,11 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push('accountId');
             list.push('accountName');
             list.push('title');
+
             return list;
         },
 
@@ -67,7 +76,6 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
                 this.primaryId = this.model.get(this.primaryIdFieldName);
                 this.primaryName = this.model.get(this.primaryNameFieldName);
             }, this);
-
 
             if (this.mode === 'edit' || this.mode === 'detail') {
                 this.events['click a[data-action="setPrimary"]'] = function (e) {
@@ -111,6 +119,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
                         names.push(this.getDetailLinkHtml(id));
                     }
                 }, this);
+
                 return names.join('');
             }
         },
@@ -207,8 +216,6 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             }
 
             return data;
-        }
-
+        },
     });
-
 });

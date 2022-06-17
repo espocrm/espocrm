@@ -128,7 +128,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                         this.post();
                     }
                     else if (e.keyCode === 9) {
-                        $text = $(e.currentTarget);
+                        let $text = $(e.currentTarget);
 
                         if ($text.val() === '') {
                             this.disablePostingMode();

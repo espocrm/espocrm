@@ -130,7 +130,8 @@ define('views/modals/password-change-request', 'views/modal', function (Dep) {
 
             if (!isValid) return;
 
-            $submit = this.$el.find('button[data-name="submit"]');
+            let $submit = this.$el.find('button[data-name="submit"]');
+
             $submit.addClass('disabled');
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));

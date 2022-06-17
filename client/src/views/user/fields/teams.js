@@ -96,10 +96,13 @@ define('views/user/fields/teams', 'views/fields/link-multiple-with-role', functi
 
             if (role != '') {
                 role = this.getHelper().escapeString(role);
-                roleHtml = ' <span class="text-muted chevron-right"></span> <span class="text-muted">' + role + '</span>';
+
+                roleHtml = ' <span class="text-muted chevron-right"></span> <span class="text-muted">' + role +
+                    '</span>';
             }
 
-            var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' +
+                roleHtml + '</div>';
 
             return lineHtml;
         },
@@ -109,25 +112,33 @@ define('views/user/fields/teams', 'views/fields/link-multiple-with-role', functi
 
             if (!roleList.length) {
                 return;
-            };
+            }
+
             if (roleList.length || roleValue) {
-                $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
+                let $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
 
                 roleList.unshift('');
-                roleList.forEach(function (role) {
+
+                roleList.forEach(role => {
                     var selectedHtml = (role == roleValue) ? 'selected': '';
+
                     role = this.getHelper().escapeString(role);
+
                     var label = role;
+
                     if (role == '') {
                         label = '--' + this.translate('None', 'labels') + '--';
                     }
-                    option = '<option value="'+role+'" ' + selectedHtml + '>' + label + '</option>';
-                    $role.append(option);
-                }, this);
+
+                    let optionHtml = '<option value="'+role+'" ' + selectedHtml + '>' + label + '</option>';
+
+                    $role.append(optionHtml);
+                });
+
                 return $role;
-            } else {
-                return $('<div class="small pull-right text-muted">').html(roleValue);
             }
+
+            return $('<div class="small pull-right text-muted">').html(roleValue);
         },
     });
 });

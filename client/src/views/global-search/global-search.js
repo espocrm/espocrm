@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/global-search', 'view', function (Dep) {
+define('views/global-search/global-search', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,7 @@ define('views/global-search/global-search', 'view', function (Dep) {
 
         events: {
             'keypress input.global-search-input': function (e) {
-                if (e.keyCode == 13) {
+                if (e.keyCode === 13) {
                     this.runSearch();
                 }
             },
@@ -48,12 +48,13 @@ define('views/global-search/global-search', 'view', function (Dep) {
 
         setup: function () {
             this.wait(true);
-            this.getCollectionFactory().create('GlobalSearch', function (collection) {
+
+            this.getCollectionFactory().create('GlobalSearch', (collection) => {
                 this.collection = collection;
                 collection.name = 'GlobalSearch';
-                this.wait(false);
-            }, this);
 
+                this.wait(false);
+            });
         },
 
         afterRender: function () {
@@ -62,8 +63,8 @@ define('views/global-search/global-search', 'view', function (Dep) {
 
         runSearch: function () {
             var text = this.$input.val().trim();
-            if (text != '' && text.length >= 2) {
-                text = text;
+
+            if (text !== '' && text.length >= 2) {
                 this.search(text);
             }
         },
@@ -90,39 +91,44 @@ define('views/global-search/global-search', 'view', function (Dep) {
                 this.listenToOnce(view, 'close', this.closePanel);
             });
 
-            $document = $(document);
-            $document.on('mouseup.global-search', function (e) {
-                if (e.which !== 1) return;
+            let $document = $(document);
+
+            $document.on('mouseup.global-search', (e) => {
+                if (e.which !== 1) {
+                    return;
+                }
+
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
                     this.closePanel();
                 }
-            }.bind(this));
-            $document.on('click.global-search', function (e) {
+            });
+
+            $document.on('click.global-search', (e) => {
                 if (
-                    e.target.tagName == 'A' &&
-                    $(e.target).data('action') != 'showMore' &&
+                    e.target.tagName === 'A' &&
+                    $(e.target).data('action') !== 'showMore' &&
                     !$(e.target).hasClass('global-search-button')
                 ) {
-                    setTimeout(function () {
+                    setTimeout(() => {
                         this.closePanel();
-                    }.bind(this), 100);
-                    return;
+                    }, 100);
                 }
-            }.bind(this));
+            });
         },
 
         closePanel: function () {
-            $container = $('#global-search-panel');
+            let $container = $('#global-search-panel');
 
-            $('#global-search-panel').remove();
-            $document = $(document);
+            $container.remove();
+
+            let $document = $(document);
+
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
-            };
+            }
+
             $document.off('mouseup.global-search');
             $document.off('click.global-search');
-            $container.remove();
         },
-
     });
 });

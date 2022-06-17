@@ -106,7 +106,7 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            $container = $('#mapping-container');
+            let $container = $('#mapping-container');
 
             var $table = $('<table>').addClass('table').addClass('table-bordered').css('table-layout', 'fixed');
 
@@ -152,7 +152,8 @@ define('views/import/step2', 'view', function (Dep) {
                 }
 
 
-                $select = this.getFieldDropdown(i, selectedName);
+                let $select = this.getFieldDropdown(i, selectedName);
+
                 $cell = $('<td>').append($select);
 
                 $row.append($cell);

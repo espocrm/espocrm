@@ -68,7 +68,7 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
 
                 this.$container.append($row);
 
-                $input = $row.find('input');
+                let $input = $row.find('input');
 
                 $input.selectize({
                     options: fieldDataList,

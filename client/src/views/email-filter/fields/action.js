@@ -25,13 +25,16 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email-filter/fields/action', 'views/fields/enum', function (Dep) {
+
+define('views/email-filter/fields/action', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.controlActionOptions();
+
             this.listenTo(this.model, 'change:parentType', this.controlActionOptions, this);
         },
 
@@ -41,11 +44,10 @@ Espo.define('views/email-filter/fields/action', 'views/fields/enum', function (D
             } else {
                 this.params.options = ['Skip'];
             }
+
             if (this.isRendered()) {
                 this.reRender();
             }
-        }
-
+        },
     });
-
 });

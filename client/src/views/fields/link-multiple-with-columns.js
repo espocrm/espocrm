@@ -326,7 +326,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                 }
             }, this);
 
-            $left = $('<div>');
+            let $left = $('<div>');
 
             if (columnFormElementJQList.length === 1) {
                 $left.append(columnFormElementJQList[0]);
@@ -358,7 +358,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
             $el.append($left);
 
 
-            $right = $('<div>');
+            let $right = $('<div>');
 
             $right.append(removeHtml);
             $el.append($right);

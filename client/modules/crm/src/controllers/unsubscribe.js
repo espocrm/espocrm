@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:controllers/unsubscribe', 'controller', function (Dep) {
+define('crm:controllers/unsubscribe', ['controller'], function (Dep) {
 
     return Dep.extend({
 
@@ -54,7 +54,6 @@ Espo.define('crm:controllers/unsubscribe', 'controller', function (Dep) {
             }, function (view) {
                 view.render();
             });
-        }
-
+        },
     });
 });

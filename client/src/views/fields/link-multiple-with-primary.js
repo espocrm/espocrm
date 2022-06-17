@@ -34,7 +34,7 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
 
         events: {
             'click [data-action="switchPrimary"]': function (e) {
-                $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
 
                 var id = $target.data('id');
 
@@ -161,11 +161,11 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
             var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink">' +
                 '<span class="fas fa-times"></a>';
 
-            $left = $('<div>');
+            let $left = $('<div>');
             $left.append(nameHtml);
             $el.append($left);
 
-            $right = $('<div>');
+            let $right = $('<div>');
             $right.append(removeHtml);
             $el.append($right);
 
