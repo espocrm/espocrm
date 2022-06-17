@@ -38,6 +38,8 @@ define('model', [], function () {
      * @param {Object} [attributes] Attribute values.
      * @param {Object} [options] Options.
      * @returns {Promise}
+     *
+     * @fires module:model.Class#sync
      */
 
     /**
@@ -190,6 +192,8 @@ define('model', [], function () {
          * @param {*} [val] A value or options if the first argument is an object.
          * @param {Object} [options] Options. `silent` won't trigger a `change` event.
          * @returns {this}
+         *
+         * @fires module:model.Class#change Unless `{silent: true}`.
          */
         set: function (key, val, options) {
             if (typeof key === 'object') {
@@ -560,6 +564,8 @@ define('model', [], function () {
          *
          * @param {Object} options Options.
          * @returns {Promise<Object>}
+         *
+         * @fires module:model.Class#sync
          */
         fetch: function (options) {
             this.lastXhr = Dep.prototype.fetch.call(this, options);

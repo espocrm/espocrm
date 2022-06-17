@@ -31,8 +31,8 @@ define('collection', [], function () {
     /**
      * On sync with backend.
      *
-     * @event Espo.Collection#sync
-     * @param {Espo.Collection} collection A collection.
+     * @event module:collection.Class#sync
+     * @param {module:collection.Class} collection A collection.
      * @param {Object} response Response from backend.
      * @param {Object} o Options.
      */
@@ -40,36 +40,39 @@ define('collection', [], function () {
     /**
      * Any number of models have been added, removed or changed.
      *
-     * @event Espo.Collection#update
-     * @param {Espo.Collection} collection A collection.
+     * @event module:collection.Class#update
+     * @param {module:collection.Class} collection A collection.
      * @param {Object} o Options.
      */
 
     /**
-     * Add a model or models. Firing an `add` event for each model, and an `update` event afterwards.
+     * Add a model or models.
      *
      * @function add
-     * @memberof Backbone.Collection.prototype
-     * @param {Backbone.Model|Backbone.Model[]} models A model or models.
+     * @memberof module:collection.Class#
+     * @param {module:model.Class|module:model.Class[]} models A model or models.
      * @param {Object} [options] Options.
+     *
+     * @fires module:collection.Class#update Unless `{silent: true}`.
      */
 
     /**
-     * Remove a model or models. Fires a `remove` event for each model, and a single `update` event
-     * afterwards, unless `{silent: true}`.
+     * Remove a model or models.
      *
      * @function remove
-     * @memberof Backbone.Collection.prototype
-     * @param {Backbone.Model|Backbone.Model[]|string|string[]} models A model, models, ID or IDs.
+     * @memberof module:collection.Class#
+     * @param {module:model.Class|module:model.Class[]|string|string[]} models A model, models, ID or IDs.
      * @param {Object} [options] Options.
+     *
+     * @fires module:collection.Class#update Unless `{silent: true}`.
      */
 
     /**
      * Append a model.
      *
      * @function push
-     * @memberof Backbone.Collection.prototype
-     * @param {Backbone.Model} model A model.
+     * @memberof module:collection.Class#
+     * @param {module:model.Class} model A model.
      * @param {Object} [options] Options.
      */
 
@@ -77,7 +80,7 @@ define('collection', [], function () {
      * Remove and return the last model from the collection.
      *
      * @function pop
-     * @memberof Backbone.Collection.prototype
+     * @memberof module:collection.Class#
      * @param {Object} [options] Options.
      */
 
@@ -332,6 +335,8 @@ define('collection', [], function () {
          *
          * @param {Object} [options] Options.
          * @returns {Promise}
+         *
+         * @fires module:collection.Class#sync Unless `{silent: true}`.
          */
         fetch: function (options) {
             options = options || {};
