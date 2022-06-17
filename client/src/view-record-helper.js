@@ -28,40 +28,84 @@
 
 define('view-record-helper', [], function () {
 
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:view-record-helper
+     *
+     * @mixes Backbone.Events
+     *
+     * @param {Object.<string,*>} [defaultFieldStates] Default field states.
+     * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
+     */
     let ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
-        if (defaultFieldStates) {
-            this.defaultFieldStates = defaultFieldStates;
-        }
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.defaultFieldStates = defaultFieldStates || {};
 
-        if (defaultPanelStates) {
-            this.defaultPanelStates = defaultPanelStates;
-        }
+        /**
+         * @private
+         * @type {Object}
+         */
+        this.defaultPanelStates = defaultPanelStates || {};
 
+        /**
+         * @private
+         */
         this.fieldStateMap = {};
+
+        /**
+         * @private
+         */
         this.panelStateMap = {};
 
+        /**
+         * @private
+         */
         this.hiddenFields = {};
+
+        /**
+         * @private
+         */
         this.hiddenPanels = {};
 
+        /**
+         * @private
+         */
         this.fieldOptionListMap = {};
 
         _.extend(this, Backbone.Events);
     };
 
-    _.extend(ViewRecordHelper.prototype, {
+    _.extend(ViewRecordHelper.prototype, /** @lends module:view-record-helper.Class# */{
 
-        defaultFieldStates: {},
-
-        defaultPanelStates: {},
-
+        /**
+         * Get hidden fields.
+         *
+         * @returns {Object.<string, boolean>}
+         */
         getHiddenFields: function () {
             return this.hiddenFields;
         },
 
+        /**
+         * Get hidden panels.
+         *
+         * @returns {Object.<string,boolean>}
+         */
         getHiddenPanels: function () {
             return this.hiddenPanels;
         },
 
+        /**
+         * Set a field-state parameter.
+         *
+         * @param {string} field A field name.
+         * @param {string} name A parameter.
+         * @param {*} value A value.
+         */
         setFieldStateParam: function (field, name, value) {
             switch (name) {
                 case 'hidden':
@@ -79,6 +123,13 @@ define('view-record-helper', [], function () {
             this.fieldStateMap[field][name] = value;
         },
 
+        /**
+         * Get a field-state parameter.
+         *
+         * @param {string} field A field name.
+         * @param {string} name A parameter.
+         * @returns {*} A value.
+         */
         getFieldStateParam: function (field, name) {
             if (field in this.fieldStateMap) {
                 if (name in this.fieldStateMap[field]) {
@@ -93,6 +144,13 @@ define('view-record-helper', [], function () {
             return null;
         },
 
+        /**
+         * Set a panel-state parameter.
+         *
+         * @param {string} panel A panel name.
+         * @param {string} name A parameter.
+         * @param {*} value A value.
+         */
         setPanelStateParam: function (panel, name, value) {
             switch (name) {
                 case 'hidden':
@@ -108,6 +166,13 @@ define('view-record-helper', [], function () {
             this.panelStateMap[panel][name] = value;
         },
 
+        /**
+         * Get a panel-state parameter.
+         *
+         * @param {string} panel A panel name.
+         * @param {string} name A parameter.
+         * @returns {*} A value.
+         */
         getPanelStateParam: function (panel, name) {
             if (panel in this.panelStateMap) {
                 if (name in this.panelStateMap[panel]) {
@@ -122,18 +187,41 @@ define('view-record-helper', [], function () {
             return null;
         },
 
+        /**
+         * Set a field option list.
+         *
+         * @param {string} field A field name.
+         * @param {string[]} list An option list.
+         */
         setFieldOptionList: function (field, list) {
             this.fieldOptionListMap[field] = list;
         },
 
+        /**
+         * Clear a field option list.
+         *
+         * @param {string} field A field name.
+         */
         clearFieldOptionList: function (field) {
             delete this.fieldOptionListMap[field];
         },
 
+        /**
+         * Get a field option list.
+         *
+         * @param {string} field A field name.
+         * @returns {string|null} Null if not set.
+         */
         getFieldOptionList: function (field) {
             return this.fieldOptionListMap[field] || null;
         },
 
+        /**
+         * Whether a field option list is set.
+         *
+         * @param {string} field A field name.
+         * @returns {boolean}
+         */
         hasFieldOptionList: function (field) {
             return (field in this.fieldOptionListMap);
         },
