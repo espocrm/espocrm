@@ -34,8 +34,10 @@ define('controllers/preferences', ['controllers/record', 'models/preferences'], 
 
         getModel: function (callback) {
             var model = new Preferences();
+
             model.settings = this.getConfig();
             model.defs = this.getMetadata().get('entityDefs.Preferences');
+
             if (callback) {
                 callback.call(this, model);
             }
@@ -54,6 +56,6 @@ define('controllers/preferences', ['controllers/record', 'models/preferences'], 
             });
         },
 
-        actionList: function () {}
+        actionList: function () {},
     });
 });

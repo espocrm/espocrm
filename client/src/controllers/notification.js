@@ -26,18 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/notification', 'controller', function (Dep) {
+define('controllers/notification', ['controller'], function (Dep) {
 
     return Dep.extend({
 
         defaultAction: 'index',
 
         actionIndex: function () {
-            this.main('views/notification/list', {
-            }, function (view) {
+            this.main('views/notification/list', {}, (view) => {
                 view.render();
             });
-        }
-
+        },
     });
 });

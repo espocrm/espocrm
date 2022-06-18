@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/stream', 'controller', function (Dep) {
+define('controllers/stream', ['controller'], function (Dep) {
 
     return Dep.extend({
 
@@ -57,6 +57,5 @@ define('controllers/stream', 'controller', function (Dep) {
                 view.render();
             });
         },
-
     });
 });

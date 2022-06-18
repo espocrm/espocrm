@@ -26,13 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/file-upload', ['lib!espo'], function (Espo) {
+define('helpers/file-upload', [], function () {
 
-    return class {
+    /**
+     * A file-upload helper.
+     *
+     * @memberOf module:helpers/file-upload
+     */
+    class Class {
+        /**
+         * @param {module:models/settings.Class} config A config.
+         */
         constructor(config) {
+            /**
+             * @private
+             * @type {module:models/settings.Class}
+             */
             this.config = config;
         }
 
+        /**
+         * @typedef {Object} module:helpers/file-upload~Options
+         *
+         * @property {Function} [afterChunkUpload] After every chunk is uploaded.
+         * @property {Function} [afterAttachmentSave] After an attachment is saved.
+         * @property {{isCanceled?: boolean}} [mediator] A mediator.
+         */
+
+        /**
+         * Upload.
+         *
+         * @param {File} file A file.
+         * @param {module:model.Class} attachment An attachment model.
+         * @param {module:helpers/file-upload~Options} [options] Options.
+         * @returns {Promise<unknown>}
+         */
         upload(file, attachment, options) {
             options = options || {};
 
@@ -64,11 +92,13 @@ define('helpers/file-upload', ['lib!espo'], function (Espo) {
             });
         }
 
+        /**
+         * @private
+         */
         _uploadByChunks(file, attachment, options) {
             return new Promise((resolve, reject) => {
                 attachment.set('isBeingUploaded', true);
 
-                // todo test catching
                 attachment
                     .save()
                     .then(() => {
@@ -86,6 +116,9 @@ define('helpers/file-upload', ['lib!espo'], function (Espo) {
             });
         }
 
+        /**
+         * @private
+         */
         _uploadChunks(file, attachment, resolve, reject, options, start) {
             start = start || 0;
             let end = start + this._getChunkSize() + 1;
@@ -139,6 +172,9 @@ define('helpers/file-upload', ['lib!espo'], function (Espo) {
             fileReader.readAsDataURL(blob);
         }
 
+        /**
+         * @private
+         */
         _useChunks(file) {
             let chunkSize = this._getChunkSize();
 
@@ -153,8 +189,13 @@ define('helpers/file-upload', ['lib!espo'], function (Espo) {
             return false;
         }
 
+        /**
+         * @private
+         */
         _getChunkSize() {
             return (this.config.get('attachmentUploadChunkSize') || 0) * 1024 * 1024;
         }
-    };
+    }
+
+    return Class;
 });

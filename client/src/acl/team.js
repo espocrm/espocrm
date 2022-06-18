@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl/team', 'acl', function (Dep) {
+define('acl/team', ['acl'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,6 +35,5 @@ define('acl/team', 'acl', function (Dep) {
 
             return (userTeamIdList.indexOf(model.id) != -1);
         },
-
     });
 });

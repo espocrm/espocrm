@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('acl/preferences', 'acl', function (Dep) {
+define('acl/preferences', ['acl'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,10 +34,8 @@ Espo.define('acl/preferences', 'acl', function (Dep) {
             if (this.getUser().id === model.id) {
                 return true;
             }
+
             return false;
-        }
-
+        },
     });
-
 });
-

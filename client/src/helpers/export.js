@@ -26,15 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/export', ['lib!espo'], function (Espo) {
+define('helpers/export', [], function () {
 
-    return class {
+    /**
+     * An export helper.
+     *
+     * @memberOf module:helpers/export
+     */
+     class Class {
+        /**
+         * @param {module:view.Class} view A view.
+         */
         constructor(view) {
+            /**
+             * @private
+             * @type {module:view.Class}
+             */
             this.view = view;
 
+            /**
+             * @private
+             * @type {module:models/settings.Class}
+             */
             this.config = view.getConfig();
         }
 
+        /**
+         * Check whether an export should be run in idle.
+         *
+         * @param {number} totalCount A total record count.
+         * @returns {boolean}
+         */
         checkIsIdle(totalCount) {
             if (this.view.getUser().isPortal()) {
                 return false;
@@ -47,10 +69,17 @@ define('helpers/export', ['lib!espo'], function (Espo) {
             return totalCount === -1 || totalCount > this.config.get('exportIdleCountThreshold');
         }
 
+        /**
+         * Process export.
+         *
+         * @param {string} id An ID.
+         * @returns {Promise<module:view.Class>} Resolves with a dialog view.
+         *   The view emits the 'close:success' event.
+         */
         process(id) {
             Espo.Ui.notify(false);
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 this.view
                     .createView('dialog', 'views/export/modals/idle', {
                         id: id,
@@ -70,5 +99,7 @@ define('helpers/export', ['lib!espo'], function (Espo) {
                     });
             });
         }
-    };
+    }
+
+    return Class;
 });

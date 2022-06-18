@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/address-map', 'controller', function (Dep) {
+define('controllers/address-map', ['controller'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,7 +43,9 @@ define('controllers/address-map', 'controller', function (Dep) {
                     model.id = o.id;
                     model.fetch().then(
                         function () {
-                            var viewName = this.getMetadata().get(['AddressMap', 'view']) || 'views/address-map/view';
+                            var viewName = this.getMetadata().get(['AddressMap', 'view']) ||
+                                'views/address-map/view';
+
                             this.main(viewName, {
                                 model: model,
                                 field: o.field,
@@ -53,6 +55,5 @@ define('controllers/address-map', 'controller', function (Dep) {
                 }.bind(this)
             );
         },
-
     });
 });

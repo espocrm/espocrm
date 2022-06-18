@@ -26,15 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('helpers/mass-action', ['lib!espo'], function (Espo) {
+define('helpers/mass-action', [], function () {
 
-    return class {
+    /**
+     * A mass-action helper.
+     *
+     * @memberOf module:helpers/mass-action
+     */
+    class Class {
+        /**
+         * @param {module:view.Class} view A view.
+         */
         constructor(view) {
+            /**
+             * @private
+             * @type {module:view.Class}
+             */
             this.view = view;
 
+            /**
+             * @private
+             * @type {module:models/settings.Class}
+             */
             this.config = view.getConfig();
         }
 
+        /**
+         * Check whether an action should be run in idle.
+         *
+         * @param {number} totalCount A total record count.
+         * @returns {boolean}
+         */
         checkIsIdle(totalCount) {
             if (this.view.getUser().isPortal()) {
                 return false;
@@ -47,10 +69,18 @@ define('helpers/mass-action', ['lib!espo'], function (Espo) {
             return totalCount === -1 || totalCount > this.config.get('massActionIdleCountThreshold');
         }
 
+        /**
+         * Process.
+         *
+         * @param {string} id An ID.
+         * @param {string} action An action.
+         * @returns {Promise<module:view.Class>}  Resolves with a dialog view.
+         *   The view emits the 'close:success' event.
+         */
         process(id, action) {
             Espo.Ui.notify(false);
 
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 this.view
                     .createView('dialog', 'views/modals/mass-action', {
                         id: id,
@@ -71,5 +101,7 @@ define('helpers/mass-action', ['lib!espo'], function (Espo) {
                     });
             });
         }
-    };
+    }
+
+    return Class;
 });

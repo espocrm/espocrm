@@ -26,34 +26,76 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/user', 'model', function (Dep) {
+define('models/user', ['model'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A user.
+     *
+     * @class
+     * @name Class
+     * @extends module:model.Class
+     *
+     * @memberOf module:models/user
+     */
+    return Dep.extend({/** @lends module:models/user.Class# */
 
+        /**
+         * @inheritDoc
+         */
         name: 'User',
 
+        /**
+         * Is admin.
+         *
+         * @returns {boolean}
+         */
         isAdmin: function () {
-            return this.get('type') == 'admin' || this.isSuperAdmin();
+            return this.get('type') === 'admin' || this.isSuperAdmin();
         },
 
+        /**
+         * Is portal.
+         *
+         * @returns {boolean}
+         */
         isPortal: function () {
-            return this.get('type') == 'portal';
+            return this.get('type') === 'portal';
         },
 
+        /**
+         * Is API.
+         *
+         * @returns {boolean}
+         */
         isApi: function () {
-            return this.get('type') == 'api';
+            return this.get('type') === 'api';
         },
 
+        /**
+         * Is regular.
+         *
+         * @returns {boolean}
+         */
         isRegular: function () {
-            return this.get('type') == 'regular';
+            return this.get('type') === 'regular';
         },
 
+        /**
+         * Is system.
+         *
+         * @returns {boolean}
+         */
         isSystem: function () {
-            return this.get('type') == 'system';
+            return this.get('type') === 'system';
         },
 
+        /**
+         * Is super-admin.
+         *
+         * @returns {boolean}
+         */
         isSuperAdmin: function () {
-            return this.get('type') == 'super-admin';
+            return this.get('type') === 'super-admin';
         },
     });
 });

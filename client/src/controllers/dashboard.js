@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/dashboard', 'controller', function (Dep) {
+define('controllers/dashboard', ['controller'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,11 +35,9 @@ define('controllers/dashboard', 'controller', function (Dep) {
         actionIndex: function () {
             this.main('views/dashboard', {
                 displayTitle: true,
-            }, function (view) {
+            }, (view) => {
                 view.render();
             });
-        }
-
+        },
     });
-
 });

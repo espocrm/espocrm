@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/role', 'controllers/record', function (Dep) {
+define('controllers/role', ['controllers/record'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,8 +34,8 @@ define('controllers/role', 'controllers/record', function (Dep) {
             if (this.getUser().isAdmin()) {
                 return true;
             }
-            return false;
-        }
 
+            return false;
+        },
     });
 });

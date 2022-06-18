@@ -26,15 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/api-user', 'controllers/record', function (Dep) {
+define('controllers/api-user', ['controllers/record'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:controllers/record.Class
+     * @memberOf module:controllers/api-user
+     */
+    return Dep.extend(/** @lends module:controllers/api-user.Class# */{
 
         entityType: 'User',
 
         getCollection: function (callback, context, usePreviouslyFetched) {
-            context = context || this;
-            Dep.prototype.getCollection.call(this, function (collection) {
+            return Dep.prototype.getCollection.call(this, (collection) => {
                 collection.data.userType = 'api';
 
                 callback.call(context, collection);
@@ -59,6 +64,5 @@ define('controllers/api-user', 'controllers/record', function (Dep) {
             options.attributes.type = 'api';
             Dep.prototype.actionCreate.call(this, options);
         },
-
     });
 });

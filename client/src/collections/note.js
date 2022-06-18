@@ -26,10 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collections/note', 'collection', function (Dep) {
+define('collections/note', ['collection'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:collection.Class
+     * @memberOf module:collections/note
+     */
+    return Dep.extend(/** @lends module:collections/note.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         parse: function (response, params) {
             var total = this.total;
 
@@ -46,6 +55,12 @@ define('collections/note', 'collection', function (Dep) {
             return list;
         },
 
+        /**
+         * Fetch new records.
+         *
+         * @param {Object} options Options.
+         * @returns {Promise}
+         */
         fetchNew: function (options) {
             options = options || {};
 
@@ -64,6 +79,5 @@ define('collections/note', 'collection', function (Dep) {
 
             return this.fetch(options);
         },
-
     });
 });

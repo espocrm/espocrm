@@ -26,9 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('models/email', 'model', function (Dep) {
+define('models/email', ['model'], function (Dep) {
 
-    return Dep.extend({
-
-    });
+    return Dep.extend({});
 });

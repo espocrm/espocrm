@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl/user', 'acl', function (Dep) {
+define('acl/user', ['acl'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,5 @@ define('acl/user', 'acl', function (Dep) {
         checkIsOwner: function (model) {
             return this.getUser().id === model.id;
         },
-
     });
 });

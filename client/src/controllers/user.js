@@ -26,13 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/user', 'controllers/record', function (Dep) {
+define('controllers/user', ['controllers/record'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:controllers/record.Class
+     * @memberOf module:controllers/user
+     */
+    return Dep.extend(/** @lends module:controllers/user.Class */{
 
         getCollection: function (callback, context, usePreviouslyFetched) {
-            context = context || this;
-            Dep.prototype.getCollection.call(this, function (collection) {
+            return Dep.prototype.getCollection.call(this, (collection) => {
                 collection.data.userType = 'internal';
 
                 callback.call(context, collection);
@@ -43,18 +48,23 @@ define('controllers/user', 'controllers/record', function (Dep) {
             if (model.get('deleted')) {
                 view = 'views/deleted-detail';
                 Dep.prototype.createViewView.call(this, options, model, view);
+
                 return;
             }
+
             if (model.isPortal()) {
                 this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
+
                 return;
             }
+
             if (model.isApi()) {
                 this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
+
                 return;
             }
+
             Dep.prototype.createViewView.call(this, options, model, view);
         },
-
     });
 });

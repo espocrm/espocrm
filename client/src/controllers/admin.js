@@ -26,10 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], function (Dep, SearchManager, _) {
+define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'],
+function (Dep, /** typeof module:search-manager.Class */SearchManager, _) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:controllers/admin
+     * @extends module:controller.Class
+     */
+    return Dep.extend(/** @lends module:controllers/admin.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         checkAccessGlobal: function () {
             if (this.getUser().isAdmin()) {
                 return true;
@@ -271,6 +281,9 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
             this.main('views/admin/system-requirements/index');
         },
 
+        /**
+         * @returns {module:models/settings.Class}
+         */
         getSettingsModel: function () {
             let model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
@@ -408,6 +421,9 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
                 });
         },
 
+        /**
+         * @returns {Object|null}
+         */
         getPageDefs: function (page) {
             let panelsDefs = this.getMetadata().get(['app', 'adminPanel']) || {};
 

@@ -703,7 +703,7 @@ function (
          * Create an acl-manager.
          *
          * @protected
-         * @return {module:acl-manager}
+         * @return {module:acl-manager.Class}
          */
         createAclManager: function () {
             return new AclManager(this.user, null, this.settings.get('aclAllowDeleteCreated'));

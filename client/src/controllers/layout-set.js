@@ -26,13 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/layout-set', 'controllers/record', function (Dep) {
+define('controllers/layout-set', ['controllers/record'], function (Dep) {
 
     return Dep.extend({
 
         actionEditLayouts: function (options) {
             var id = options.id;
-            if (!id) throw new Error("ID not passed.");
+
+            if (!id) {
+                throw new Error("ID not passed.");
+            }
 
             this.main('views/layout-set/layouts', {
                 layoutSetId: id,

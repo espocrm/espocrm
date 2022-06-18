@@ -26,14 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/record', 'controller', function (Dep) {
+define('controllers/record', ['controller'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A record controller.
+     *
+     * @class
+     * @name Class
+     * @extends module:controller.Class
+     * @memberOf module:controllers/record
+     */
+    return Dep.extend(/** @lends module:controllers/record.Class# */{
 
+        /**
+         * A type => view-name map.
+         * @protected
+         * @type {Object.<string,string>}
+         */
         viewMap: null,
 
+        /**
+         * @inheritDoc
+         */
         defaultAction: 'list',
 
+        /**
+         * @inheritDoc
+         */
         checkAccess: function (action) {
             if (this.getAcl().check(this.name, action)) {
                 return true;
@@ -42,12 +61,32 @@ define('controllers/record', 'controller', function (Dep) {
             return false;
         },
 
+        /**
+         * @inheritDoc
+         */
         initialize: function () {
+            /**
+             * A type => view-name map.
+             * @protected
+             * @type {Object.<string,string>}
+             */
             this.viewMap = this.viewMap || {};
             this.viewsMap = this.viewsMap || {};
+
+            /**
+             * @private
+             * @type {Object}
+             */
             this.collectionMap = {};
         },
 
+        /**
+         * Get a view name/path.
+         *
+         * @protected
+         * @param {'list'|'detail'|'edit'|'create'} type A type.
+         * @returns {string}
+         */
         getViewName: function (type) {
             return this.viewMap[type] ||
                 this.getMetadata().get(['clientDefs', this.name, 'views', type]) ||
@@ -93,7 +132,7 @@ define('controllers/record', 'controller', function (Dep) {
         },
 
         createViewView: function (options, model, view) {
-            var view = view || this.getViewName('detail');
+            view = view || this.getViewName('detail');
 
             this.main(view, {
                 scope: this.name,
@@ -104,6 +143,11 @@ define('controllers/record', 'controller', function (Dep) {
             });
         },
 
+        /**
+         * @protected
+         * @param {module:model.Class} model
+         * @param {Object} options
+         */
         prepareModelView: function (model, options) {},
 
         actionView: function (options) {
@@ -182,8 +226,13 @@ define('controllers/record', 'controller', function (Dep) {
             this.handleCheckAccess('create');
         },
 
+        /**
+         * @protected
+         * @param {module:model.Class} model
+         * @param {Object} options
+         */
         prepareModelCreate: function (model, options) {
-            this.listenToOnce(model, 'before:save', function () {
+            this.listenToOnce(model, 'before:save', () => {
                 var key = this.name + 'List';
 
                 var stored = this.getStoredMainView(key);
@@ -191,7 +240,7 @@ define('controllers/record', 'controller', function (Dep) {
                 if (stored && !stored.storeViewAfterCreate) {
                     this.clearStoredMainView(key);
                 }
-            }, this);
+            });
 
             this.listenToOnce(model, 'after:save', () => {
                 var key = this.name + 'List';
@@ -246,6 +295,11 @@ define('controllers/record', 'controller', function (Dep) {
             this.handleCheckAccess('edit');
         },
 
+        /**
+         * @protected
+         * @param {module:model.Class} model
+         * @param {Object} options
+         */
         prepareModelEdit: function (model, options) {
             this.listenToOnce(model, 'before:save', () => {
                 var key = this.name + 'List';
@@ -344,8 +398,13 @@ define('controllers/record', 'controller', function (Dep) {
         },
 
         /**
-         * Get collection for the current controller.
-         * @param {collection}.
+         * Get a collection for the current controller.
+         *
+         * @protected
+         * @param {Function|null} [callback]
+         * @param {Object|null} [context]
+         * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
+         * @return {Promise<module:collection.Class>}
          */
         getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
@@ -354,34 +413,38 @@ define('controllers/record', 'controller', function (Dep) {
                 throw new Error('No collection for unnamed controller');
             }
 
-            var collectionName = this.entityType || this.name;
+            let collectionName = this.entityType || this.name;
 
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
-                    var collection = this.collectionMap[collectionName];
+                    let collection = this.collectionMap[collectionName];
 
                     callback.call(context, collection);
 
-                    return;
+                    return Promise.resolve(collection);
                 }
             }
 
-            return this.collectionFactory.create(collectionName, function (collection) {
+            return this.collectionFactory.create(collectionName, (collection) => {
                 this.collectionMap[collectionName] = collection;
 
-                this.listenTo(collection, 'sync', function () {
+                this.listenTo(collection, 'sync', () => {
                     collection.isFetched = true;
-                }, this);
+                });
 
                 if (callback) {
                     callback.call(context, collection);
                 }
-            }, context);
+            });
         },
 
         /**
-         * Get model for the current controller.
-         * @param {model}.
+         * Get a model for the current controller.
+         *
+         * @protected
+         * @param {Function} [callback]
+         * @param {Object} [context]
+         * @return {Promise<module:model.Class>}
          */
         getModel: function (callback, context) {
             context = context || this;
@@ -390,14 +453,13 @@ define('controllers/record', 'controller', function (Dep) {
                 throw new Error('No collection for unnamed controller');
             }
 
-            var modelName = this.entityType || this.name;
+            let modelName = this.entityType || this.name;
 
-            return this.modelFactory.create(modelName, function (model) {
+            return this.modelFactory.create(modelName, (model) => {
                 if (callback) {
                     callback.call(context, model);
                 }
-            }, context);
+            });
         },
-
     });
 });
