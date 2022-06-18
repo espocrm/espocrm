@@ -55,22 +55,24 @@ define('ui', [], function () {
      */
 
     /**
-     * A button or a dropdown action item.
+     * A button or dropdown action item.
      *
      * @typedef {Object} module:ui.Dialog~Button
      *
-     * @property {boolean} [hidden] Is hidden.
      * @property {string} name A name.
      * @property {boolean} [pullLeft=false] To put the button to the other side.
      * @property {string} [html] HTML.
      * @property {string} [text] A title.
      * @property {boolean} [disabled=false] Disabled.
+     * @property {boolean} [hidden=false] Hidden.
      * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
-     * @property {Function} [onClick] An on-click callback.
+     * @property {function():void} [onClick] An on-click callback.
      */
 
     /**
      * @class
+     * @name Espo.Ui.Dialog
+     *
      * @param {module:ui.Dialog~Params} options Options.
      */
     let Dialog = function (options) {

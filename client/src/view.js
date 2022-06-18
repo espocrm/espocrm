@@ -31,12 +31,14 @@ define('view', [], function () {
     /**
      * A base view.
      *
+     * @see {@link https://docs.espocrm.com/development/view/}
+     *
      * @class
      * @name Class
      * @extends Bull.View
      * @memberOf module:view
      */
-    return Bull.View.extend(/** @lends module:view.Class.prototype */{
+    return Bull.View.extend(/** @lends module:view.Class# */{
 
         /**
          * @callback module:view.Class~actionHandlerCallback
