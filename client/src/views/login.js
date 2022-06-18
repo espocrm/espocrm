@@ -40,7 +40,7 @@ define('views/login', ['view'], function (Dep) {
         },
 
         events: {
-            'submit #login-form': function (e) {
+            'submit #login-form': function () {
                 this.login();
             },
             'click a[data-action="passwordChangeRequest"]': function () {
