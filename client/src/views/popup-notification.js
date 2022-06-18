@@ -48,9 +48,10 @@ define('views/popup-notification', ['view'], function (Dep) {
 
             this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
-            this.soundPath = this.getBasePath() + (this.getConfig().get('popupNotificationSound') || this.soundPath);
+            this.soundPath = this.getBasePath() +
+                (this.getConfig().get('popupNotificationSound') || this.soundPath);
 
-            this.on('render', function () {
+            this.on('render', () => {
                 $(containerSelector).remove();
 
                 var className = 'popup-notification-' + Espo.Utils.toDom(this.type);
@@ -61,17 +62,17 @@ define('views/popup-notification', ['view'], function (Dep) {
                           .addClass('popup-notification-' + this.style)
                           .appendTo('#popup-notifications-container');
                 this.setElement(containerSelector);
-            }, this);
+            });
 
-            this.on('after:render', function () {
-                this.$el.find('[data-action="close"]').on('click', function () {
+            this.on('after:render', () => {
+                this.$el.find('[data-action="close"]').on('click', () =>{
                     this.cancel();
-                }.bind(this));
-            }, this);
+                });
+            });
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 this.onShow();
-            }.bind(this));
+            });
 
             this.once('remove', function () {
                 $(containerSelector).remove();
@@ -86,12 +87,14 @@ define('views/popup-notification', ['view'], function (Dep) {
             return {
                 closeButton: this.closeButton,
                 notificationData: this.notificationData,
-                notificationId: this.notificationId
+                notificationId: this.notificationId,
             };
         },
 
         playSound: function () {
-            if (this.notificationSoundsDisabled) return;
+            if (this.notificationSoundsDisabled) {
+                return;
+            }
 
             var html = '' +
                 '<audio autoplay="autoplay">'+
@@ -125,6 +128,6 @@ define('views/popup-notification', ['view'], function (Dep) {
             this.onCancel();
             this.trigger('cancel');
             this.remove();
-        }
+        },
     });
 });

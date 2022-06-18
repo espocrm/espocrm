@@ -33,7 +33,8 @@ define('views/header', ['view'], function (Dep) {
         template: 'header',
 
         data: function () {
-            var data = {};
+            let data = {};
+
             if ('getHeader' in this.getParentView()) {
                 data.header = this.getParentView().getHeader();
             }
@@ -41,7 +42,7 @@ define('views/header', ['view'], function (Dep) {
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
 
-            var dropdown = (data.items || {}).dropdown || [];
+            let dropdown = (data.items || {}).dropdown || [];
 
             data.hasVisibleDropdownItems = false;
             dropdown.forEach(function (item) {
@@ -61,12 +62,13 @@ define('views/header', ['view'], function (Dep) {
 
         setup: function () {
             this.scope = this.options.scope;
+
             if (this.model) {
-                this.listenTo(this.model, 'after:save', function () {
+                this.listenTo(this.model, 'after:save', () => {
                     if (this.isRendered()) {
                         this.reRender();
                     }
-                }, this);
+                });
             }
         },
 
@@ -79,43 +81,53 @@ define('views/header', ['view'], function (Dep) {
         adjustFontSize: function (step) {
             step = step || 0;
 
-            if (!step) this.fontSizePercentage = 100;
+            if (!step) {
+                this.fontSizePercentage = 100;
+            }
 
-            var $container = this.$el.find('.header-breadcrumbs');
-            var containerWidth = $container.width();
-            var childrenWidth = 0;
-            $container.children().each(function (i, el) {
+            let $container = this.$el.find('.header-breadcrumbs');
+            let containerWidth = $container.width();
+            let childrenWidth = 0;
+
+            $container.children().each((i, el) => {
                 childrenWidth += $(el).outerWidth(true);
             });
 
             if (containerWidth < childrenWidth) {
                 if (step > 7) {
                     $container.addClass('overlapped');
-                    this.$el.find('.title').each(function (i, el) {
-                        var $el = $(el);
-                        var text = $(el).text();
+
+                    this.$el.find('.title').each((i, el) => {
+                        let $el = $(el);
+                        let text = $(el).text();
+
                         $el.attr('title', text);
 
-                        var isInitialized = false;
-                        $el.on('touchstart', function () {
+                        let isInitialized = false;
+
+                        $el.on('touchstart', () => {
                             if (!isInitialized) {
                                 $el.attr('title', '');
                                 isInitialized = true;
+
                                 Espo.Ui.popover($el, {
                                     content: text,
                                     noToggleInit: true,
                                 }, this);
                             }
+
                             $el.popover('toggle');
-                        }.bind(this));
-                    }.bind(this));
+                        });
+                    });
+
                     return;
                 }
 
-                var fontSizePercentage = this.fontSizePercentage -= 4;
-                var $flexible = this.$el.find('.font-size-flexible');
-                $flexible.css('font-size', this.fontSizePercentage + '%');
+                this.fontSizePercentage -= 4;
 
+                let $flexible = this.$el.find('.font-size-flexible');
+
+                $flexible.css('font-size', this.fontSizePercentage + '%');
                 $flexible.css('position', 'relative');
 
                 if (step > 6) {
@@ -129,9 +141,7 @@ define('views/header', ['view'], function (Dep) {
         },
 
         getItems: function () {
-            var items = this.getParentView().getMenu() || {};
-
-            return items;
+            return this.getParentView().getMenu() || {};
         },
     });
 });

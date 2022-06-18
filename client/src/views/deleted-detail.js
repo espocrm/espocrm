@@ -45,6 +45,5 @@ define('views/deleted-detail', ['views/detail'], function (Dep) {
         getRecordViewName: function () {
             return this.recordView;
         },
-
     });
 });

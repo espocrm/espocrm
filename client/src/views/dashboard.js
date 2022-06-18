@@ -40,7 +40,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
         events: {
             'click button[data-action="selectTab"]': function (e) {
-                var tab = parseInt($(e.currentTarget).data('tab'));
+                let tab = parseInt($(e.currentTarget).data('tab'));
+
                 this.selectTab(tab);
             },
             'click button[data-action="addDashlet"]': function () {
@@ -196,7 +197,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.dashletsReadOnly = true;
             }
             else {
-                var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+                var forbiddenPreferencesFieldList = this.getAcl()
+                    .getScopeForbiddenFieldList('Preferences', 'edit');
 
                 if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
                     this.layoutReadOnly = true;
@@ -513,7 +515,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             $container.attr('data-y', o.y);
             $container.attr('data-height', o.height);
             $container.attr('data-width', o.width);
-            $container.css('height', (o.height * this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
+            $container.css('height', (o.height *
+                this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
 
             $item.attr('data-id', o.id);
             $item.attr('data-name', o.name);
@@ -628,7 +631,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         createDashletView: function (id, name, label, callback, context) {
-            var context = context || this;
+            context = context || this;
 
             var o = {
                 id: id,

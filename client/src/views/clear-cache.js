@@ -59,7 +59,6 @@ define('views/clear-cache', ['view'], function (Dep) {
 
         returnToApplication: function () {
             this.getRouter().navigate('', {trigger: true});
-        }
-
+        },
     });
 });

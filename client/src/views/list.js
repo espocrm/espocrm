@@ -37,7 +37,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
      * @extends module:views/main.Class
      * @memberOf module:views/list
      */
-    return Dep.extend(/** @lends module:views/list.Class.prototype */{
+    return Dep.extend(/** @lends module:views/list.Class# */{
 
         /**
          * @inheritDoc
@@ -165,7 +165,6 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             this.collectionMaxSize = this.collection.maxSize;
 
             this.setupModes();
-
             this.setViewMode(this.viewMode);
 
             if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
@@ -345,7 +344,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * Set a view mode.
          *
          * @param {string} mode A mode.
-         * @param {boolean} toStore To preserve a mode being set.
+         * @param {boolean} [toStore=false] To preserve a mode being set.
          */
         setViewMode: function (mode, toStore) {
             this.viewMode = mode;
@@ -653,15 +652,14 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 returnDispatchParams: returnDispatchParams,
             });
 
-            return this.createView('quickCreate', viewName, options, function (view) {
+            return this.createView('quickCreate', viewName, options, (view) => {
                 view.render();
-
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:save', function () {
+                this.listenToOnce(view, 'after:save', () => {
                     this.collection.fetch();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         /**

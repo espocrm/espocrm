@@ -50,7 +50,7 @@ define('views/modal', ['view'], function (Dep) {
 
         dropdownItemList: [],
 
-        // TODO remove it as deprecated.
+        // @todo Remove it as deprecated.
         buttons: [],
 
         width: false,
@@ -98,7 +98,7 @@ define('views/modal', ['view'], function (Dep) {
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
             this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 
-            // TODO remove it as deprecated
+            // @todo Remove it as deprecated.
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
             this.on('render', () => {
@@ -110,7 +110,10 @@ define('views/modal', ['view'], function (Dep) {
 
                 $(containerSelector).remove();
 
-                $('<div />').css('display', 'none').attr('id', id).addClass('modal-container').appendTo('body');
+                $('<div />').css('display', 'none')
+                    .attr('id', id)
+                    .addClass('modal-container')
+                    .appendTo('body');
 
                 var modalBodyDiffHeight = 92;
 
@@ -293,7 +296,9 @@ define('views/modal', ['view'], function (Dep) {
                 return;
             }
 
-            this.$el.find('footer button[data-name="'+name+'"]').addClass('disabled').attr('disabled', 'disabled');
+            this.$el.find('footer button[data-name="'+name+'"]')
+                .addClass('disabled')
+                .attr('disabled', 'disabled');
         },
 
         enableButton: function (name) {
@@ -309,7 +314,9 @@ define('views/modal', ['view'], function (Dep) {
                 return;
             }
 
-            this.$el.find('footer button[data-name="'+name+'"]').removeClass('disabled').removeAttr('disabled');
+            this.$el.find('footer button[data-name="'+name+'"]')
+                .removeClass('disabled')
+                .removeAttr('disabled');
         },
 
         addButton: function (o, position, doNotReRender) {

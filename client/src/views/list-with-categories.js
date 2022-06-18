@@ -62,7 +62,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             var data = {};
 
             data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
-
             data.hasNestedCategories = !this.isExpanded;
 
             return data;

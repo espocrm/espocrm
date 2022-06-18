@@ -36,7 +36,7 @@ define('views/edit', ['views/main'], function (Dep) {
      * @extends module:views/main.Class
      * @memberOf module:views/edit
      */
-    return Dep.extend(/** @lends module:views/edit.Class.prototype */{
+    return Dep.extend(/** @lends module:views/edit.Class# */{
 
         /**
          * @inheritDoc

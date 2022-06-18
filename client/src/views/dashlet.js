@@ -28,16 +28,46 @@
 
 define('views/dashlet', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A base dashlet view.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:views/dashlet
+     * @extends module:view.Class
+     */
+    return Dep.extend(/** @lends module:views/dashlet.Class# */{
 
+        /**
+         * A dashlet name.
+         *
+         * @type {string}
+         */
         name: null,
 
+        /**
+         * A dashlet ID.
+         *
+         * @type {string}
+         */
         id: null,
 
-        elId: null,
-
+        /**
+         * @inheritDoc
+         */
         template: 'dashlet',
 
+        /**
+         * An options view name.
+         *
+         * @protected
+         * @type {string|null}
+         */
+        optionsView: null,
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             return {
                 name: this.name,
@@ -45,23 +75,30 @@ define('views/dashlet', ['view'], function (Dep) {
                 title: this.getTitle(),
                 actionList: (this.getView('body') || {}).actionList || [],
                 buttonList: (this.getView('body') || {}).buttonList || [],
-                noPadding: (this.getView('body') || {}).noPadding
+                noPadding: (this.getView('body') || {}).noPadding,
             };
         },
 
+        /**
+         * @inheritDoc
+         */
         events: {
             'click .action': function (e) {
                 var $target = $(e.currentTarget);
                 var action = $target.data('action');
                 var data = $target.data();
+
                 if (action) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
                     delete data['action'];
+
                     if (typeof this[method] == 'function') {
                         e.preventDefault();
                         this[method].call(this, data);
                     } else {
                         var bodyView = this.getView('body');
+
                         if (typeof bodyView[method] == 'function') {
                             e.preventDefault();
                             bodyView[method].call(bodyView, data);
@@ -71,15 +108,22 @@ define('views/dashlet', ['view'], function (Dep) {
             },
         },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.name = this.options.name;
             this.id = this.options.id;
 
-            this.on('resize', function () {
-                var bodyView = this.getView('body');
-                if (!bodyView) return;
+            this.on('resize', () => {
+                let bodyView = this.getView('body');
+
+                if (!bodyView) {
+                    return;
+                }
+
                 bodyView.trigger('resize');
-            }, this);
+            });
 
             var viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
                 'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
@@ -92,6 +136,9 @@ define('views/dashlet', ['view'], function (Dep) {
             });
         },
 
+        /**
+         * Refresh.
+         */
         refresh: function () {
             this.getView('body').actionRefresh();
         },
@@ -101,7 +148,7 @@ define('views/dashlet', ['view'], function (Dep) {
         },
 
         actionOptions: function () {
-            var optionsView =
+            let optionsView =
                 this.getMetadata().get(['dashlets', this.name, 'options', 'view']) ||
                 this.optionsView ||
                 'views/dashlets/options/base';
@@ -110,49 +157,67 @@ define('views/dashlet', ['view'], function (Dep) {
                 name: this.name,
                 optionsData: this.getOptionsData(),
                 fields: this.getView('body').optionsFields,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'save', function (attributes) {
-                    var id = this.id;
+                this.listenToOnce(view, 'save', (attributes) => {
+                    let id = this.id;
+
                     this.notify('Saving...');
-                    this.getPreferences().once('sync', function () {
+
+                    this.getPreferences().once('sync', () => {
                         this.getPreferences().trigger('update');
                         this.notify(false);
+
                         view.close();
-
                         this.trigger('change');
-                    }, this);
+                    });
 
-                    var o = this.getPreferences().get('dashletsOptions') || {};
+                    let o = this.getPreferences().get('dashletsOptions') || {};
+
                     o[id] = attributes;
 
                     this.getPreferences().save({
                         dashletsOptions: o
                     }, {patch: true});
-                }, this);
-            }, this);
+                });
+            });
         },
 
+        /**
+         * Get options data.
+         *
+         * @returns {Object}
+         */
         getOptionsData: function () {
             return this.getView('body').optionsData;
         },
 
+        /**
+         * Get an option value.
+         *
+         * @param {string} key A option name.
+         * @returns {*}
+         */
         getOption: function (key) {
             return this.getView('body').getOption(key);
         },
 
+        /**
+         * Get a dashlet title.
+         *
+         * @returns {string}
+         */
         getTitle: function () {
             return this.getView('body').getTitle();
         },
 
         actionRemove: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.trigger('remove-dashlet');
                 this.$el.remove();
                 this.remove();
-            }, this);
-        }
-
+            });
+        },
     });
 });
