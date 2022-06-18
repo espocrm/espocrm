@@ -824,7 +824,7 @@ define('ui', [], function () {
                 .appendTo('body')
                 .css(
                     'left',
-                    ($(window).width() - $el.width()) / 2 + $(window).scrollLeft()  + "px"
+                    ($(window).width() - $el.width()) / 2 + $(window).scrollLeft() + "px"
                 );
         },
 
