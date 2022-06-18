@@ -42,8 +42,6 @@ define('views/login', ['view'], function (Dep) {
         events: {
             'submit #login-form': function (e) {
                 this.login();
-
-                return false;
             },
             'click a[data-action="passwordChangeRequest"]': function () {
                 this.showPasswordChangeRequest();
