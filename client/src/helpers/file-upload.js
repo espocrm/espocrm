@@ -48,8 +48,8 @@ define('helpers/file-upload', [], function () {
         /**
          * @typedef {Object} module:helpers/file-upload~Options
          *
-         * @property {Function} [afterChunkUpload] After every chunk is uploaded.
-         * @property {Function} [afterAttachmentSave] After an attachment is saved.
+         * @property {function(number):void} [afterChunkUpload] After every chunk is uploaded.
+         * @property {function(module:model.Class):void} [afterAttachmentSave] After an attachment is saved.
          * @property {{isCanceled?: boolean}} [mediator] A mediator.
          */
 

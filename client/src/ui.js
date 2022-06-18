@@ -598,7 +598,7 @@ define('ui', [], function () {
          * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger']
          *   A confirm-button style.
          * @property {'static'|boolean} [backdrop=false] A backdrop.
-         * @property {Function} [cancelCallback] A cancel-callback.
+         * @property {function():void} [cancelCallback] A cancel-callback.
          */
 
         /**
@@ -606,7 +606,7 @@ define('ui', [], function () {
          *
          * @param {string} message A message.
          * @param {Espo.Ui~ConfirmOptions} o Options.
-         * @param {Function} [callback] Deprecated. Use a promise.
+         * @param {function} [callback] Deprecated. Use a promise.
          * @param {Object} [context] Deprecated.
          * @returns {Promise} Resolves if confirmed.
          */

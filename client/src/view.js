@@ -435,7 +435,7 @@ define('view', [], function () {
          * @property {string} [cancelText] A cancel-button text.
          * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger'] A confirm-button style.
          * @property {'static'|boolean} [backdrop=false] A backdrop.
-         * @property {Function} [cancelCallback] A cancel-callback.
+         * @property {function():void} [cancelCallback] A cancel-callback.
          */
 
         /**
