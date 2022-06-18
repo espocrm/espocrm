@@ -33,8 +33,12 @@ var Espo = Espo || {classMap: {}};
     let root = this;
 
     /**
+     * A callback with resolved dependencies passed as parameters.
+     *   Should return a value to define a module.
+     *
      * @callback Espo.Loader~requireCallback
      * @param {...any} arguments Resolved dependencies.
+     * @returns {*}
      */
 
     /**
@@ -169,10 +173,10 @@ var Espo = Espo || {classMap: {}};
 
         /**
          * Define a module.
-         *
          * @param {string} subject A module name to be defined.
          * @param {string[]} dependency A dependency list.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies passed as parameters.
+         *   Should return a value to define the module.
          */
         define: function (subject, dependency, callback) {
             if (subject) {
@@ -683,10 +687,16 @@ var Espo = Espo || {classMap: {}};
     /**
      * Define an [AMD](https://github.com/amdjs/amdjs-api/blob/master/AMD.md) module.
      *
-     * @param {string|string[]} arg1 A module name to be defined or a dependency list.
-     * @param {string[]|Espo.Loader~requireCallback} arg2 A dependency list or a callback with resolved
+     * 3 signatures:
+     * 1. `(callback)` – Unnamed, no dependencies.
+     * 2. `(dependencyList, callback)` – Unnamed, with dependencies.
+     * 3. `(moduleName, dependencyList, callback)` – Named.
+     *
+     * @param {string|string[]|Espo.Loader~requireCallback} arg1 A module name to be defined,
+     *   a dependency list or a callback.
+     * @param {string[]|Espo.Loader~requireCallback} [arg2] A dependency list or a callback with resolved
      *   dependencies.
-     * @param {Espo.Loader~requireCallback|undefined} [arg3] A callback with resolved dependencies.
+     * @param {Espo.Loader~requireCallback} [arg3] A callback with resolved dependencies.
      */
     root.define = Espo.define = function (arg1, arg2, arg3) {
         let subject = null;
