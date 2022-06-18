@@ -228,7 +228,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
          *
          * @param {module:model.Class} model A model.
          * @param {module:acl-manager.Class~action|null} [action=null] An action.
-         * @param {boolean} [precise=false]  To return `null` if not enough data is set in a model.
+         * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
          *   E.g. the `teams` field is not yet loaded.
          * @returns {boolean|null} True if has access, null if not clear.
          */

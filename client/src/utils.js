@@ -36,77 +36,106 @@ define('utils', [], function () {
      */
     Espo.Utils = {
 
+        /**
+         * Process a view event action.
+         *
+         * @param {module:view.Class} viewObject A view.
+         * @param {Event} e An event.
+         */
         handleAction: function (viewObject, e) {
-            var $target = $(e.currentTarget);
-            var action = $target.data('action');
-            var fired = false;
+            let $target = $(e.currentTarget);
+            let action = $target.data('action');
+            let fired = false;
 
-            if (action) {
-                var data = $target.data();
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+            if (!action) {
+                return;
+            }
 
-                if (typeof viewObject[method] === 'function') {
-                    viewObject[method].call(viewObject, data, e);
+            let data = $target.data();
+            let method = 'action' + Espo.Utils.upperCaseFirst(action);
 
-                    e.preventDefault();
-                    e.stopPropagation();
+            if (typeof viewObject[method] === 'function') {
+                viewObject[method].call(viewObject, data, e);
 
-                    fired = true;
-                }
-                else if (data.handler) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                e.preventDefault();
+                e.stopPropagation();
 
-                    fired = true;
+                fired = true;
+            }
+            else if (data.handler) {
+                e.preventDefault();
+                e.stopPropagation();
 
-                    require(data.handler, function (Handler) {
-                        var handler = new Handler(viewObject);
+                fired = true;
 
-                        handler[method].call(handler, data, e);
-                    });
-                }
+                require(data.handler, function (Handler) {
+                    let handler = new Handler(viewObject);
 
-                if (fired) {
-                    var $dropdown = $target.closest('.dropdown-menu');
+                    handler[method].call(handler, data, e);
+                });
+            }
 
-                    if ($dropdown.length) {
-                        var $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
+            if (!fired) {
+                return;
+            }
 
-                        if ($dropdownToggle.length) {
-                            var isDisabled = false;
+            let $dropdown = $target.closest('.dropdown-menu');
 
-                            if ($dropdownToggle.attr('disabled')) {
-                                isDisabled = true;
+            if (!$dropdown.length) {
+                return;
+            }
 
-                                $dropdownToggle.removeAttr('disabled').removeClass('disabled');
-                            }
+            let $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
 
-                            $dropdownToggle.dropdown('toggle');
+            if (!$dropdownToggle.length) {
+                return;
+            }
 
-                            if (isDisabled) {
-                                $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
-                            }
-                        }
-                    }
-                }
+            let isDisabled = false;
+
+            if ($dropdownToggle.attr('disabled')) {
+                isDisabled = true;
+
+                $dropdownToggle.removeAttr('disabled').removeClass('disabled');
+            }
+
+            $dropdownToggle.dropdown('toggle');
+
+            if (isDisabled) {
+                $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
             }
         },
 
+        /**
+         * @typedef {Object} module:utils~ActionAvailabilityDefs
+         *
+         * @property {string|null} [configCheck] A config path to check. Path items are separated
+         *   by the dot. If a config value is not empty, then the action is allowed.
+         *   The `!` prefix reverses the check.
+         */
+
+        /**
+         * Check action availability.
+         *
+         * @param {module:view-helper.Class} helper A view helper.
+         * @param {module:utils~ActionAvailabilityDefs} item Definitions.
+         * @returns {boolean}
+         */
         checkActionAvailability: function (helper, item) {
-            var config = helper.config;
+            let config = helper.config;
 
             if (item.configCheck) {
-                var configCheck = item.configCheck;
+                let configCheck = item.configCheck;
 
-                var opposite = false;
+                let opposite = false;
 
-                if (configCheck.substr(0, 1) === '!') {
+                if (configCheck.substring(0, 1) === '!') {
                     opposite = true;
 
-                    configCheck = configCheck.substr(1);
+                    configCheck = configCheck.substring(1);
                 }
 
-                var configCheckResult = config.getByPath(configCheck.split('.'));
+                let configCheckResult = config.getByPath(configCheck.split('.'));
 
                 if (opposite) {
                     configCheckResult = !configCheckResult;
@@ -120,8 +149,26 @@ define('utils', [], function () {
             return true;
         },
 
+        /**
+         * @typedef {Object} module:utils~ActionAccessDefs
+         *
+         * @property {'create'|'read'|'edit'|'stream'|'delete'|null} acl An ACL action to check.
+         * @property {string|null} [aclScope] A scope to check.
+         * @property {string|null} [scope] Deprecated. Use `aclScope`.
+         */
+
+        /**
+         * Check access to an action.
+         *
+         * @param {module:acl-manager.Class} acl An ACL manager.
+         * @param {string|module:model.Class|null} [obj] A scope or a model.
+         * @param {module:utils~ActionAccessDefs} item Definitions.
+         * @param {boolean} [isPrecise=false] To return `null` if not enough data is set in a model.
+         *   E.g. the `teams` field is not yet loaded.
+         * @returns {boolean|null}
+         */
         checkActionAccess: function (acl, obj, item, isPrecise) {
-            var hasAccess = true;
+            let hasAccess = true;
 
             if (item.acl) {
                 if (!item.aclScope) {
@@ -148,6 +195,28 @@ define('utils', [], function () {
             return hasAccess;
         },
 
+        /**
+         * @typedef {Object} module:utils~AccessDefs
+         *
+         * @property {'create'|'read'|'edit'|'stream'|'delete'|null} action An ACL action to check.
+         * @property {string|null} [scope] A scope to check.
+         * @property {string[]} [portalIdList] A portal ID list. To check whether a user in one of portals.
+         * @property {string[]} [teamIdList] A team ID list. To check whether a user in one of teams.
+         * @property {boolean} [isPortalOnly=false] Allow for portal users only.
+         * @property {boolean} [inPortalDisabled=false] Disable for portal users.
+         * @property {boolean} [isAdminOnly=false] Allow for admin users only.
+         */
+
+        /**
+         * Check access to an action.
+         *
+         * @param {module:utils~AccessDefs[]} dataList List of definitions.
+         * @param {module:acl-manager.Class} acl An ACL manager.
+         * @param {module:modles/user.Class} user A user.
+         * @param {module:model.Class|null} [entity] A model.
+         * @param {boolean} [allowAllForAdmin=false] Allow all for an admin.
+         * @returns {boolean}
+         */
         checkAccessDataList: function (dataList, acl, user, entity, allowAllForAdmin) {
             if (!dataList || !dataList.length) {
                 return true;
@@ -233,6 +302,12 @@ define('utils', [], function () {
             return true;
         },
 
+        /**
+         * @private
+         * @param {string} string
+         * @param {string} p
+         * @returns {string}
+         */
         convert: function (string, p) {
             if (string === null) {
                 return string;
@@ -261,6 +336,12 @@ define('utils', [], function () {
             return result;
         },
 
+        /**
+         * Is object.
+         *
+         * @param {*} obj What to check.
+         * @returns {boolean}
+         */
         isObject: function (obj) {
             if (obj === null) {
                 return false;
@@ -269,6 +350,12 @@ define('utils', [], function () {
             return typeof obj === 'object';
         },
 
+        /**
+         * A shallow clone.
+         *
+         * @param {*} obj An object.
+         * @returns {*}
+         */
         clone: function (obj) {
             if (!Espo.Utils.isObject(obj)) {
                 return obj;
@@ -277,6 +364,12 @@ define('utils', [], function () {
             return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
         },
 
+        /**
+         * A deep clone.
+         *
+         * @param {*} data An object.
+         * @returns {*}
+         */
         cloneDeep: function (data) {
             data = Espo.Utils.clone(data);
 
@@ -292,9 +385,9 @@ define('utils', [], function () {
         /**
          * Compose a class name.
          *
-         * @param {string} module
-         * @param {string} name
-         * @param {string} location
+         * @param {string} module A module.
+         * @param {string} name A name.
+         * @param {string} [location=''] A location.
          * @return {string}
          */
         composeClassName: function (module, name, location) {
@@ -312,6 +405,12 @@ define('utils', [], function () {
             }
         },
 
+        /**
+         * Compose a view class name.
+         *
+         * @param {string} name A name.
+         * @returns {string}
+         */
         composeViewClassName: function (name) {
             if (name && name[0] === name[0].toLowerCase()) {
                 return name;
@@ -334,10 +433,25 @@ define('utils', [], function () {
             }
         },
 
+        /**
+         * Convert a string from camelCase to hyphen and replace dots with hyphens.
+         * Useful for setting to DOM attributes.
+         *
+         * @param {string} string A string.
+         * @returns {string}
+         */
         toDom: function (string) {
-            return Espo.Utils.convert(string, 'c-h').split('.').join('-');
+            return Espo.Utils.convert(string, 'c-h')
+                .split('.')
+                .join('-');
         },
 
+        /**
+         * Lower-case a first character.
+         *
+         * @param  {string} string A string.
+         * @returns {string}
+         */
         lowerCaseFirst: function (string) {
             if (string === null) {
                 return string;
@@ -346,6 +460,12 @@ define('utils', [], function () {
             return string.charAt(0).toLowerCase() + string.slice(1);
         },
 
+        /**
+         * Upper-case a first character.
+         *
+         * @param  {string} string A string.
+         * @returns {string}
+         */
         upperCaseFirst: function (string) {
             if (string === null) {
                 return string;
@@ -354,6 +474,12 @@ define('utils', [], function () {
             return string.charAt(0).toUpperCase() + string.slice(1);
         },
 
+        /**
+         * Hyphen to UpperCamelCase.
+         *
+         * @param {string} string A string.
+         * @returns {string}
+         */
         hyphenToUpperCamelCase: function (string) {
             if (string === null) {
                 return string;
@@ -369,6 +495,12 @@ define('utils', [], function () {
             );
         },
 
+        /**
+         * Hyphen to camelCase.
+         *
+         * @param {string} string A string.
+         * @returns {string}
+         */
         hyphenToCamelCase: function (string) {
             if (string === null) {
                 return string;
@@ -382,6 +514,12 @@ define('utils', [], function () {
             );
         },
 
+        /**
+         * CamelCase to hyphen.
+         *
+         * @param {string} string A string.
+         * @returns {string}
+         */
         camelCaseToHyphen: function (string) {
             if (string === null) {
                 return string;
@@ -390,27 +528,39 @@ define('utils', [], function () {
             return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         },
 
+        /**
+         * Trim an ending slash.
+         *
+         * @param {String} str A string.
+         * @returns {string}
+         */
         trimSlash: function (str) {
-            if (str.substr(-1) === '/') {
-                return str.substr(0, str.length - 1);
+            if (str.slice(-1) === '/') {
+                return str.slice(0, -1);
             }
 
             return str;
         },
 
+        /**
+         * Parse params in string URL options.
+         *
+         * @param {string} string An URL part.
+         * @returns {Object.<string,string>}
+         */
         parseUrlOptionsParam: function (string) {
             if (!string) {
                 return {};
             }
 
             if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
-                return string;
+                return {};
             }
 
             let options = {};
 
             if (typeof string !== 'undefined') {
-                string.split('&').forEach((item, i) => {
+                string.split('&').forEach(item => {
                     let p = item.split('=');
 
                     options[p[0]] = true;

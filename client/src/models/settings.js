@@ -58,7 +58,7 @@ define('models/settings', ['model'], function (Dep) {
         /**
          * Get a value by a path.
          *
-         * @param {string} arr A path.
+         * @param {string[]} arr A path.
          * @returns {*} Null if not set.
          */
         getByPath: function (arr) {
