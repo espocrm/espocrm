@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A link-multiple field with a primary.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/link-multiple.Class
+     * @memberOf module:views/fields/link-multiple-with-primary
+     */
+    return Dep.extend(/** @lends module:views/fields/link-multiple-with-primary.Class# */{
 
         primaryLink: null,
 
@@ -48,9 +56,12 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
 
                     this.setPrimaryId(id);
                 }
-            }
+            },
         },
 
+        /**
+         * @inheritDoc
+         */
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
 
@@ -71,10 +82,10 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
             this.primaryId = this.model.get(this.primaryIdFieldName);
             this.primaryName = this.model.get(this.primaryNameFieldName);
 
-            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, function () {
+            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
                 this.primaryId = this.model.get(this.primaryIdFieldName);
                 this.primaryName = this.model.get(this.primaryNameFieldName);
-            }.bind(this));
+            });
         },
 
         setPrimaryId: function (id) {
@@ -95,11 +106,11 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
                 this.addLinkHtml(this.primaryId, this.primaryName);
             }
 
-            this.ids.forEach(function (id) {
+            this.ids.forEach((id) => {
                 if (id !== this.primaryId) {
                     this.addLinkHtml(id, this.nameHash[id]);
                 }
-            }, this);
+            });
         },
 
         getValueForDisplay: function () {
@@ -114,11 +125,11 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
                     return;
                 }
 
-                this.ids.forEach(function (id) {
+                this.ids.forEach((id) => {
                     if (id !== this.primaryId) {
                         names.push(this.getDetailLinkHtml(id));
                     }
-                }, this);
+                });
 
                 return '<div>' + names.join('</div><div>') + '</div>';
             }
@@ -158,7 +169,8 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
 
             var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
 
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink">' +
+            var removeHtml = '<a href="javascript:" class="pull-right" ' +
+                'data-id="' + id + '" data-action="clearLink">' +
                 '<span class="fas fa-times"></a>';
 
             let $left = $('<div>');
@@ -224,7 +236,6 @@ define('views/fields/link-multiple-with-primary', 'views/fields/link-multiple', 
 
             return data;
         },
-
     });
 });
 

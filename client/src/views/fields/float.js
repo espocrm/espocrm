@@ -46,6 +46,9 @@ define('views/fields/float', ['views/fields/int'], function (Dep) {
 
         validations: ['required', 'float', 'range'],
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             Dep.prototype.setup.call(this);
 

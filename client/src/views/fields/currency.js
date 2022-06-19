@@ -60,6 +60,9 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
 
         maxDecimalPlaces: 3,
 
+        /**
+         * @inheritDoc
+         */
         data: function () {
             var currencyValue = this.model.get(this.currencyFieldName) ||
                 this.getPreferences().get('defaultCurrency') ||
@@ -74,6 +77,9 @@ define('views/fields/currency', ['views/fields/float'], function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             Dep.prototype.setup.call(this);
 
