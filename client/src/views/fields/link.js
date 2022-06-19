@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link', 'views/fields/base', function (Dep) {
+define('views/fields/link', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A link field (belongs-to relation).
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/link
+     */
+    return Dep.extend(/** @lends module:views/fields/link.Class# */{
 
         type: 'link',
 
@@ -40,16 +48,46 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/link/search',
 
+        /**
+         * A name attribute name.
+         *
+         * @type {string}
+         */
         nameName: null,
 
+        /**
+         * An ID attribute name.
+         *
+         * @type {string}
+         */
         idName: null,
 
+        /**
+         * A foreign entity type.
+         *
+         * @type {string}
+         */
         foreignScope: null,
 
+        /**
+         * A select-record view.
+         *
+         * @type {string}
+         */
         selectRecordsView: 'views/modals/select-records',
 
+        /**
+         * Autocomplete disabled.
+         *
+         * @type {boolean}
+         */
         autocompleteDisabled: false,
 
+        /**
+         * Create disabled.
+         *
+         * @type {boolean}
+         */
         createDisabled: false,
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
@@ -121,7 +159,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', () => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                    var viewName = this.getMetadata()
+                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
@@ -156,7 +195,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLinkOneOf', () => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                    var viewName = this.getMetadata()
+                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
@@ -697,6 +737,5 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
         },
-
     });
 });

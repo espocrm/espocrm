@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/json-object', 'views/fields/base', function (Dep) {
+define('views/fields/json-object', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,22 +38,27 @@ Espo.define('views/fields/json-object', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.valueIsSet = this.model.has(this.name);
             data.isNotEmpty = !!this.model.get(this.name);
+
             return data;
         },
 
         getValueForDisplay: function () {
-            if (!this.model.get(this.name)) return null;
-            var text = JSON.stringify(this.model.get(this.name), false, 2).replace(/(\r\n|\n|\r)/gm, '<br>').replace(/\s/g, '&nbsp;');
+            if (!this.model.get(this.name)) {
+                return null;
+            }
+
+            var text = JSON.stringify(this.model.get(this.name), false, 2)
+                .replace(/(\r\n|\n|\r)/gm, '<br>').replace(/\s/g, '&nbsp;');
 
             return text;
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
-        }
-
+        },
     });
 });
 

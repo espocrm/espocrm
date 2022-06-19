@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-currency-converted', 'views/fields/currency-converted', function (Dep) {
+define('views/fields/foreign-currency-converted', ['views/fields/currency-converted'], function (Dep) {
 
     return Dep.extend({
 
         type: 'foreign',
-
     });
 });

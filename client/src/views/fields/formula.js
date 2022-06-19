@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/formula', 'views/fields/text', function (Dep) {
+define('views/fields/formula', ['views/fields/text'], function (Dep) {
 
     return Dep.extend({
 
@@ -424,10 +424,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     }
 
                     Espo.Ui.error(message);
-
-                    return;
                 });
         },
-
     });
 });

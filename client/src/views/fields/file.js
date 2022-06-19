@@ -28,7 +28,15 @@
 
 define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], function (Dep, FileUpload) {
 
-    return Dep.extend({
+    /**
+     * A file field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/link.Class
+     * @memberOf module:views/fields/file
+     */
+    return Dep.extend(/** @lends module:views/fields/file.Class# */{
 
         type: 'file',
 
@@ -125,7 +133,8 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     var $target;
 
@@ -596,7 +605,8 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             }
 
             if (preview === name && id) {
-                preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
+                preview = '<a href="' + this.getBasePath() +
+                    '?entryPoint=download&id=' + id + '" target="_BLANK">' +
                     name + '</a>';
             }
 
@@ -733,8 +743,6 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                         });
                     });
                 });
-
-                return;
             }
         },
 
@@ -745,6 +753,5 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
             return data;
         },
-
     });
 });

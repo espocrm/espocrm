@@ -29,6 +29,7 @@
 define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (Dep, moment) {
 
     /**
+     * A date-time field.
      * @class
      * @name Class
      * @extends module:views/fields/date.Class

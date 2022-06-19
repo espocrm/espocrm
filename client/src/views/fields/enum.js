@@ -26,9 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!underscore'], function (Dep, Selectize, _) {
+define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!underscore'],
+function (Dep, Selectize, _) {
 
-    return Dep.extend({
+    /**
+     * An enum field (select-box).
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/enum
+     */
+    return Dep.extend(/** @lends module:views/fields/enum.Class# */{
 
         type: 'enum',
 
@@ -106,7 +115,8 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
             this.setupTranslation();
 
             if (this.translatedOptions === null) {
-                this.translatedOptions = this.getLanguage().translate(this.name, 'options', this.model.name) || {};
+                this.translatedOptions = this.getLanguage()
+                    .translate(this.name, 'options', this.model.name) || {};
 
                 if (this.translatedOptions === this.name) {
                     this.translatedOptions = null;
@@ -117,7 +127,8 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
                 this.params.options = Espo.Utils.clone(this.params.options) || [];
 
                 this.params.options = this.params.options.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                     return (this.translatedOptions[v1] || v1)
+                         .localeCompare(this.translatedOptions[v2] || v2);
                 });
             }
 
@@ -179,9 +190,16 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
             this.translatedOptions = translatedOptions;
         },
 
-        setupOptions: function () {
-        },
+        /**
+         * Set up options.
+         */
+        setupOptions: function () {},
 
+        /**
+         * Set an option list.
+         *
+         * @param {string[]} optionList An option list.
+         */
         setOptionList: function (optionList) {
             let previousOptions = this.params.options;
 
@@ -211,6 +229,9 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
             }
         },
 
+        /**
+         * Reset a previously set option list.
+         */
         resetOptionList: function () {
             if (this.originalOptionList) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
@@ -314,7 +335,8 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
@@ -450,6 +472,5 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize', 'lib!undersco
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
         },
-
     });
 });

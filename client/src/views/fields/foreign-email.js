@@ -26,13 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-email', 'views/fields/email', function (Dep) {
+define('views/fields/foreign-email', ['views/fields/email'], function (Dep) {
 
     return Dep.extend({
 
         type: 'foreign',
 
         readOnly: true,
-
     });
 });

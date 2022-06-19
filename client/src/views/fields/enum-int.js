@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/enum-int', 'views/fields/enum', function (Dep) {
+define('views/fields/enum-int', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,8 +51,7 @@ Espo.define('views/fields/enum-int', 'views/fields/enum', function (Dep) {
 
         parseItemForSearch: function (item) {
             return parseInt(item);
-        }
-
+        },
     });
 });
 

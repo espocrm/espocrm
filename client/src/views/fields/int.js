@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/int', 'views/fields/base', function (Dep) {
+define('views/fields/int', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * An integer field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/int
+     */
+    return Dep.extend(/** module:views/fields/int.Class# */{
 
         type: 'int',
 
@@ -288,7 +296,8 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
                 var value = this.model.get(this.name);
 
                 if (value === null || value === false) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
@@ -378,6 +387,5 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
         getSearchType: function () {
             return this.searchParams.typeFront || this.searchParams.type;
         },
-
     });
 });

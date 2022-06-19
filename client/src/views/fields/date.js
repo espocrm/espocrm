@@ -29,6 +29,8 @@
 define('views/fields/date', ['views/fields/base'], function (Dep) {
 
     /**
+     * A date field.
+     *
      * @class
      * @name Class
      * @extends module:views/fields/base.Class

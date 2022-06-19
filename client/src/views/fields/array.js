@@ -30,6 +30,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
 function (Dep, Selectize, _) {
 
     /**
+     * An array field.
+     *
      * @class
      * @name Class
      * @extends module:views/fields/base.Class

@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/float', 'views/fields/int', function (Dep) {
+define('views/fields/float', ['views/fields/int'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A float field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/int.Class
+     * @memberOf module:views/fields/float
+     */
+    return Dep.extend(/** @lends module:views/fields/float.Class# */{
 
         type: 'float',
 

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-checklist', 'views/fields/checklist', function (Dep) {
+define('views/fields/foreign-checklist', ['views/fields/checklist'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,22 +35,29 @@ define('views/fields/foreign-checklist', 'views/fields/checklist', function (Dep
         setupOptions: function () {
             this.params.options = [];
 
-            if (!this.params.field || !this.params.link) return;
+            if (!this.params.field || !this.params.link) {
+                return;
+            }
 
-            var scope = this.getMetadata().get(['entityDefs', this.model.name, 'links', this.params.link, 'entity']);
+            var scope = this.getMetadata()
+                .get(['entityDefs', this.model.name, 'links', this.params.link, 'entity']);
+
             if (!scope) {
                 return;
             }
 
-            this.params.isSorted = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
+            this.params.isSorted = this.getMetadata()
+                .get(['entityDefs', scope, 'fields', this.params.field, 'isSorted']) || false;
 
-            this.params.options = this.getMetadata().get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
+            this.params.options = this.getMetadata()
+                .get(['entityDefs', scope, 'fields', this.params.field, 'options']) || [];
 
             this.translatedOptions = {};
-            this.params.options.forEach(function(item) {
-                this.translatedOptions[item] = this.getLanguage().translateOption(item, this.params.field, scope);
-            }, this);
-        },
 
+            this.params.options.forEach(item => {
+                this.translatedOptions[item] = this.getLanguage()
+                    .translateOption(item, this.params.field, scope);
+            });
+        },
     });
 });

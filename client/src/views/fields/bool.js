@@ -29,6 +29,8 @@
 define('views/fields/bool', ['views/fields/base'], function (Dep) {
 
     /**
+     * A boolean field (checkbox).
+     *
      * @class
      * @name Class
      * @extends module:views/fields/base.Class

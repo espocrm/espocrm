@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/foreign-bool', 'views/fields/bool', function (Dep) {
+define('views/fields/foreign-bool', ['views/fields/bool'], function (Dep) {
 
     return Dep.extend({
 
-        type: 'foreign'
-
+        type: 'foreign',
     });
 });

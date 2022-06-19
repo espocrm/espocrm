@@ -29,6 +29,8 @@
 define('views/fields/address', ['views/fields/base'], function (Dep) {
 
     /**
+     * An address field.
+     *
      * @class
      * @name Class
      * @extends module:views/fields/base.Class
