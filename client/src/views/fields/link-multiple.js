@@ -26,40 +26,172 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
+define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A link-multiple field (has-many relation).
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/link-multiple
+     */
+    return Dep.extend(/** @lends module:views/fields/link-multiple.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         type: 'linkMultiple',
 
+        /**
+         * @inheritDoc
+         */
         listTemplate: 'fields/link-multiple/list',
 
+        /**
+         * @inheritDoc
+         */
         detailTemplate: 'fields/link-multiple/detail',
 
+        /**
+         * @inheritDoc
+         */
         editTemplate: 'fields/link-multiple/edit',
 
+        /**
+         * @inheritDoc
+         */
         searchTemplate: 'fields/link-multiple/search',
 
+        /**
+         * A name-hash attribute name.
+         *
+         * @protected
+         * @type {string}
+         */
         nameHashName: null,
 
+        /**
+         * A IDs attribute name.
+         *
+         * @protected
+         * @type {string}
+         */
         idsName: null,
 
+        /**
+         * @protected
+         * @type {Object.<string.name>|null}
+         */
         nameHash: null,
 
+        /**
+         * @protected
+         * @type {string[]|null}
+         */
+        ids: null,
+
+        /**
+         * A foreign entity type.
+         *
+         * @protected
+         * @type {string}
+         */
         foreignScope: null,
 
+        /**
+         * Autocomplete disabled.
+         *
+         * @protected
+         * @type {boolean}
+         */
         autocompleteDisabled: false,
 
+        /**
+         * A select-record view.
+         *
+         * @protected
+         * @type {string}
+         */
         selectRecordsView: 'views/modals/select-records',
 
+        /**
+         * Create disabled.
+         *
+         * @protected
+         * @type {boolean}
+         */
         createDisabled: false,
 
+        /**
+         * @protected
+         * @type {boolean}
+         */
         sortable: false,
 
-        searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf', 'allOf'],
+        /**
+         * A search type list.
+         *
+         * @protected
+         * @type {string[]}
+         */
+        searchTypeList: [
+            'anyOf',
+            'isEmpty',
+            'isNotEmpty',
+            'noneOf',
+            'allOf',
+        ],
 
+        /**
+         * A primary filter list that will be available when selecting a record.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
         selectFilterList: null,
 
+        /**
+         * A select bool filter list.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        selectBoolFilterList: null,
+
+        /**
+         * A select primary filter.
+         *
+         * @protected
+         * @type {string|null}
+         */
+        selectPrimaryFilterName: null,
+
+        /**
+         * An autocomplete max record number.
+         *
+         * @protected
+         * @type {number|null}
+         */
+        autocompleteMaxCount: null,
+
+        /**
+         * Select all attributes.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        forceSelectAllAttributes: false,
+
+        /**
+         * @protected
+         * @type {string}
+         */
+        iconHtml: '',
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -72,22 +204,62 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {},
+        /**
+         * Get advanced filters (field filters) to be applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {Object.<string,module:search-manager~advancedFilter>|null}
+         */
+        getSelectFilters: function () {
+            return null;
+        },
 
+        /**
+         * Get a select bool filter list. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string[]|null}
+         */
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
         },
 
+        /**
+         * Get a select primary filter. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string|null}
+         */
         getSelectPrimaryFilterName: function () {
             return this.selectPrimaryFilterName;
         },
 
+        /**
+         * Get a primary filter list that will be available when selecting a record.
+         * Can be extended.
+         *
+         * @return {string[]|null}
+         */
         getSelectFilterList: function () {
             return this.selectFilterList;
         },
 
-        getCreateAttributes: function () {},
+        /**
+         * Attributes to pass to a model when creating a new record.
+         * Can be extended.
+         *
+         * @return {Object.<string,*>|null}
+         */
+        getCreateAttributes: function () {
+            return null;
+        },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
@@ -101,11 +273,10 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.createDisabled = this.options.createDisabled;
             }
 
-            var self = this;
-
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 var nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
                 var idList = this.getSearchParamsData().idList || this.searchParams.value || [];
+
                 this.nameHash = Espo.Utils.clone(nameHash);
                 this.ids = Espo.Utils.clone(idList);
             }
@@ -121,9 +292,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
 
-            if (this.mode !== 'list') {
+            if (!this.isListMode()) {
                 this.addActionHandler('selectLink', () => {
-                    self.notify('Loading...');
+                    this.notify('Loading...');
 
                     var viewName = this.getMetadata()
                             .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
@@ -131,19 +302,19 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode !== 'search',
+                        createButton: !this.createDisabled && !this.isSearchMode(),
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         filterList: this.getSelectFilterList(),
                         multiple: true,
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
-                    }, (dialog) => {
+                    }, dialog => {
                         dialog.render();
 
-                        self.notify(false);
+                        Espo.Ui.notify(false);
 
                         this.listenToOnce(dialog, 'select', (models) => {
                             this.clearView('dialog');
@@ -152,8 +323,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                                 models = [models];
                             }
 
-                            models.forEach((model) => {
-                                self.addLink(model.id, model.get('name'));
+                            models.forEach(model => {
+                                this.addLink(model.id, model.get('name'));
                             });
                         });
                     });
@@ -167,11 +338,20 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * Copy values from a model to view properties.
+         */
         copyValuesFromModel: function () {
             this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
             this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
         },
 
+        /**
+         * Handle a search type.
+         *
+         * @protected
+         * @param {string} type A type.
+         */
         handleSearchType: function (type) {
             if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 this.$el.find('div.link-group-container').removeClass('hidden');
@@ -181,6 +361,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         setupSearch: function () {
             this.events = _.extend({
                 'change select.search-type': (e) => {
@@ -191,6 +374,12 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }, this.events || {});
         },
 
+        /**
+         * Get an autocomplete max record number. Can be extended.
+         *
+         * @protected
+         * @return {number}
+         */
         getAutocompleteMaxCount: function () {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
@@ -199,6 +388,12 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return this.getConfig().get('recordsPerPage');
         },
 
+        /**
+         * Compose an autocomplete URL. Can be extended.
+         *
+         * @protected
+         * @return {string}
+         */
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?&maxSize=' + this.getAutocompleteMaxCount();
 
@@ -228,8 +423,11 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return url;
         },
 
+        /**
+         * @inheritDoc
+         */
         afterRender: function () {
-            if (this.mode === 'edit' || this.mode === 'search') {
+            if (this.isEditMode() || this.isSearchMode()) {
                 this.$element = this.$el.find('input.main-element');
 
                 var $element = this.$element;
@@ -256,8 +454,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         formatResult: (suggestion) => {
                             return this.getHelper().escapeString(suggestion.name);
                         },
-                        transformResult: (response) => {
-                            var response = JSON.parse(response);
+                        transformResult: response => {
+                            response = JSON.parse(response);
 
                             var list = [];
 
@@ -298,7 +496,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 this.renderLinks();
 
-                if (this.mode === 'edit') {
+                if (this.isEditMode()) {
                     if (this.sortable) {
                         this.$el.find('.link-container').sortable({
                             stop: () => {
@@ -309,7 +507,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     }
                 }
 
-                if (this.mode === 'search') {
+                if (this.isSearchMode()) {
                     var type = this.$el.find('select.search-type').val();
 
                     this.handleSearchType(type);
@@ -321,12 +519,23 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * Render items.
+         *
+         * @protected
+         */
         renderLinks: function () {
-            this.ids.forEach((id) => {
+            this.ids.forEach(id => {
                 this.addLinkHtml(id, this.nameHash[id]);
             });
         },
 
+        /**
+         * Delete an item.
+         *
+         * @protected
+         * @param {string} id An ID.
+         */
         deleteLink: function (id) {
             this.trigger('delete-link', id);
             this.trigger('delete-link:' + id);
@@ -342,10 +551,16 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             delete this.nameHash[id];
 
             this.afterDeleteLink(id);
-
             this.trigger('change');
         },
 
+        /**
+         * Add an item.
+         *
+         * @protected
+         * @param {string} id An ID.
+         * @param {string} name A name.
+         */
         addLink: function (id, name) {
             if (!~this.ids.indexOf(id)) {
                 this.ids.push(id);
@@ -362,14 +577,32 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.trigger('change');
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         afterDeleteLink: function (id) {},
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         afterAddLink: function (id) {},
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         deleteLinkHtml: function (id) {
             this.$el.find('.link-' + id).remove();
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         * @param {string} name A name.
+         * @return {JQuery}
+         */
         addLinkHtml: function (id, name) {
             name = name || id;
 
@@ -401,10 +634,20 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return $el;
         },
 
+        /**
+         * @param {string} id An ID.
+         * @return {string|null}
+         */
         getIconHtml: function (id) {
             return this.iconHtml;
         },
 
+        /**
+         * Get an item HTML for detail mode.
+         *
+         * @param {string} id An ID.
+         * @return {string}
+         */
         getDetailLinkHtml: function (id) {
             var name = this.nameHash[id] || id;
 
@@ -417,7 +660,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             var iconHtml = '';
 
-            if (this.mode === 'detail') {
+            if (this.isDetailMode()) {
                 iconHtml = this.getIconHtml(id);
             }
 
@@ -425,8 +668,11 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 iconHtml + name + '</a>';
         },
 
+        /**
+         * @inheritDoc
+         */
         getValueForDisplay: function () {
-            if (this.mode !== 'detail' && this.mode !== 'list') {
+            if (!this.isDetailMode() && !this.isListMode()) {
                 return null;
             }
 
@@ -450,6 +696,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 .join('');
         },
 
+        /**
+         * @inheritDoc
+         */
         validateRequired: function () {
             if (this.isRequired()) {
                 var idList = this.model.get(this.idsName) || [];
@@ -465,6 +714,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         fetch: function () {
             var data = {};
 
@@ -474,6 +726,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        /**
+         * @inheritDoc
+         */
         fetchFromDom: function () {
             this.ids = [];
 
@@ -488,6 +743,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             });
         },
 
+        /**
+         * @inheritDoc
+         */
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
             var idList = this.ids || [];
@@ -502,8 +760,10 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 };
             }
 
+            var data;
+
             if (type === 'anyOf') {
-                var data = {
+                data = {
                     type: 'linkedWith',
                     value: idList,
                     data: {
@@ -516,7 +776,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
 
             if (type === 'allOf') {
-                var data = {
+                data = {
                     type: 'linkedWithAll',
                     value: idList,
                     data: {
@@ -533,7 +793,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
 
             if (type === 'noneOf') {
-                var data = {
+                data = {
                     type: 'notLinkedWith',
                     value: idList,
                     data: {
@@ -546,7 +806,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
 
             if (type === 'isEmpty') {
-                var data = {
+                data = {
                     type: 'isNotLinked',
                     data: {
                         type: type,
@@ -557,7 +817,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
 
             if (type === 'isNotEmpty') {
-                var data = {
+                data = {
                     type: 'isLinked',
                     data: {
                         type: type,
@@ -568,6 +828,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         getSearchType: function () {
             return this.getSearchParamsData().type ||
                 this.searchParams.typeFront ||

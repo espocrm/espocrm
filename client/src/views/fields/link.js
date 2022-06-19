@@ -156,6 +156,14 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         autocompleteMaxCount: null,
 
         /**
+         * Select all attributes.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        forceSelectAllAttributes: false,
+
+        /**
          * @inheritDoc
          */
         data: function () {
@@ -235,11 +243,17 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
         /**
          * Attributes to pass to a model when creating a new record.
+         * Can be extended.
          *
-         * @return {Object.<string,*>}
+         * @return {Object.<string,*>|null}
          */
-        getCreateAttributes: function () {},
+        getCreateAttributes: function () {
+            return null;
+        },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.nameName = this.name + 'Name';
             this.idName = this.name + 'Id';
@@ -263,11 +277,11 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode !== 'search',
+                        createButton: !this.createDisabled && !this.isSearchMode(),
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
                         filterList: this.getSelectFilterList(),
@@ -384,6 +398,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
          * Handle a search type.
          *
          * @protected
+         * @param {string} type A type.
          */
         handleSearchType: function (type) {
             if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {

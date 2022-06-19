@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-category-tree', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/link-multiple-category-tree', ['views/fields/link-multiple'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,9 @@ define('views/fields/link-multiple-category-tree', 'views/fields/link-multiple',
         fetchSearch: function () {
             var data = Dep.prototype.fetchSearch.call(this);
 
-            if (!data) return data;
+            if (!data) {
+                return data;
+            }
 
             data.type = 'inCategory';
 
