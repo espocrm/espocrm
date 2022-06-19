@@ -125,7 +125,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.addActionHandler('selectLink', () => {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                    var viewName = this.getMetadata()
+                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
@@ -572,6 +573,5 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.searchParams.typeFront ||
                 this.searchParams.type || 'anyOf';
         },
-
     });
 });

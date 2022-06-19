@@ -38,14 +38,29 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
      */
     return Dep.extend(/** @lends module:views/fields/link.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         type: 'link',
 
+        /**
+         * @inheritDoc
+         */
         listTemplate: 'fields/link/list',
 
+        /**
+         * @inheritDoc
+         */
         detailTemplate: 'fields/link/detail',
 
+        /**
+         * @inheritDoc
+         */
         editTemplate: 'fields/link/edit',
 
+        /**
+         * @inheritDoc
+         */
         searchTemplate: 'fields/link/search',
 
         /**
@@ -72,6 +87,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         /**
          * A select-record view.
          *
+         * @protected
          * @type {string}
          */
         selectRecordsView: 'views/modals/select-records',
@@ -79,6 +95,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         /**
          * Autocomplete disabled.
          *
+         * @protected
          * @type {boolean}
          */
         autocompleteDisabled: false,
@@ -86,14 +103,61 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         /**
          * Create disabled.
          *
+         * @protected
          * @type {boolean}
          */
         createDisabled: false,
 
-        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
+        /**
+         * A search type list.
+         *
+         * @protected
+         * @type {string[]}
+         */
+        searchTypeList: [
+            'is',
+            'isEmpty',
+            'isNotEmpty',
+            'isNot',
+            'isOneOf',
+            'isNotOneOf',
+        ],
 
+        /**
+         * A primary filter list that will be available when selecting a record.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
         selectFilterList: null,
 
+        /**
+         * A select primary filter.
+         *
+         * @protected
+         * @type {string|null}
+         */
+        selectPrimaryFilterName: null,
+
+        /**
+         * A select bool filter list.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        selectBoolFilterList: null,
+
+        /**
+         * An autocomplete max record number.
+         *
+         * @protected
+         * @type {number|null}
+         */
+        autocompleteMaxCount: null,
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             var nameValue = this.model.has(this.nameName) ?
                 this.model.get(this.nameName) :
@@ -126,20 +190,54 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
         getEmptyAutocompleteResult: null,
 
-        getSelectFilters: function () {},
+        /**
+         * Get advanced filters (field filters) to be applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {Object.<string,module:search-manager~advancedFilter>|null}
+         */
+        getSelectFilters: function () {
+            return null;
+        },
 
+        /**
+         * Get a select bool filter list. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string[]|null}
+         */
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
         },
 
+        /**
+         * Get a select primary filter. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string|null}
+         */
         getSelectPrimaryFilterName: function () {
             return this.selectPrimaryFilterName;
         },
 
+        /**
+         * Get a primary filter list that will be available when selecting a record.
+         * Can be extended.
+         *
+         * @return {string[]|null}
+         */
         getSelectFilterList: function () {
             return this.selectFilterList;
         },
 
+        /**
+         * Attributes to pass to a model when creating a new record.
+         *
+         * @return {Object.<string,*>}
+         */
         getCreateAttributes: function () {},
 
         setup: function () {
@@ -173,12 +271,12 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                         forceSelectAllAttributes: this.forceSelectAllAttributes,
                         filterList: this.getSelectFilterList(),
-                    }, (view) => {
+                    }, view => {
                         view.render();
 
-                        this.notify(false);
+                        Espo.Ui.notify(false);
 
-                        this.listenToOnce(view, 'select', (model) => {
+                        this.listenToOnce(view, 'select', model => {
                             this.clearView('dialog');
 
                             this.select(model);
@@ -232,6 +330,9 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         select: function (model) {
             this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
@@ -244,12 +345,18 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             this.trigger('change');
         },
 
+        /**
+         * Clear.
+         */
         clearLink: function () {
             this.$elementName.val('');
             this.$elementId.val('');
             this.trigger('change');
         },
 
+        /**
+         * @inheritDoc
+         */
         setupSearch: function () {
             this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
                 this.searchParams.oneOfIdList || [];
@@ -273,6 +380,11 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }, this.events || {});
         },
 
+        /**
+         * Handle a search type.
+         *
+         * @protected
+         */
         handleSearchType: function (type) {
             if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
@@ -289,6 +401,12 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * Get an autocomplete max record number. Can be extended.
+         *
+         * @protected
+         * @return {number}
+         */
         getAutocompleteMaxCount: function () {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
@@ -297,6 +415,12 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return this.getConfig().get('recordsPerPage');
         },
 
+        /**
+         * Compose an autocomplete URL. Can be extended.
+         *
+         * @protected
+         * @return {string}
+         */
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
@@ -326,8 +450,11 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return url;
         },
 
+        /**
+         * @inheritDoc
+         */
         afterRender: function () {
-            if (this.mode === 'edit' || this.mode === 'search') {
+            if (this.isEditMode() || this.isSearchMode()) {
                 this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
@@ -419,7 +546,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         $elementName.autocomplete('dispose');
                     });
 
-                    if (this.mode === 'search') {
+                    if (this.isSearchMode()) {
                         var $elementOneOf = this.$el.find('input.element-one-of');
 
                         $elementOneOf.autocomplete({
@@ -467,19 +594,22 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                 });
             }
 
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 var type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
 
                 if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
-                    this.searchData.oneOfIdList.forEach((id) => {
+                    this.searchData.oneOfIdList.forEach(id => {
                         this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                     });
                 }
             }
         },
 
+        /**
+         * @private
+         */
         _transformAutocompleteResult: function (response) {
             let list = [];
 
@@ -496,10 +626,16 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return {suggestions: list};
         },
 
+        /**
+         * @inheritDoc
+         */
         getValueForDisplay: function () {
             return this.model.get(this.nameName);
         },
 
+        /**
+         * @inheritDoc
+         */
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
@@ -513,6 +649,11 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * Delete a one-of item. For search mode.
+         *
+         * @param {string} id An ID.
+         */
         deleteLinkOneOf: function (id) {
             this.deleteLinkOneOfHtml(id);
 
@@ -527,6 +668,12 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             this.trigger('change');
         },
 
+        /**
+         * Add a one-of item. For search mode.
+         *
+         * @param {string} id An ID.
+         * @param {string} name A name.
+         */
         addLinkOneOf: function (id, name) {
             if (!~this.searchData.oneOfIdList.indexOf(id)) {
                 this.searchData.oneOfIdList.push(id);
@@ -537,10 +684,20 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         deleteLinkOneOfHtml: function (id) {
             this.$el.find('.link-one-of-container .link-' + id).remove();
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         * @param {string} name A name.
+         * @return {JQuery}
+         */
         addLinkOneOfHtml: function (id, name) {
             id = Handlebars.Utils.escapeExpression(id);
 
@@ -562,6 +719,9 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return $el;
         },
 
+        /**
+         * @inheritDoc
+         */
         fetch: function () {
             var data = {};
 
@@ -571,6 +731,9 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return data;
         },
 
+        /**
+         * @inheritDoc
+         */
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[data-name="' + this.idName + '"]').val();
@@ -734,8 +897,13 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             return data;
         },
 
+        /**
+         * @inheritDoc
+         */
         getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+            return this.getSearchParamsData().type ||
+                this.searchParams.typeFront ||
+                this.searchParams.type;
         },
     });
 });

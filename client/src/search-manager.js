@@ -35,8 +35,8 @@ define('search-manager', [], function () {
      *
      * @property {string} primary A primary filter.
      * @property {Object.<string,boolean>} bool Bool filters.
-     * @property {Object} advanced Advanced filters (field filters). Contains data needed for both
-     *   the backend and frontend.
+     * @property {{string: module:search-manager~advancedFilter}} advanced Advanced filters (field filters).
+     * Contains data needed for both the backend and frontend. Keys are field names.
      */
 
     /**
@@ -49,6 +49,17 @@ define('search-manager', [], function () {
      * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
      * @property {boolean} [dateTime] Is a date-time item.
      * @property {string} [timeZone] A time-zone (for date-time items).
+     */
+
+    /**
+     * An advanced filter
+     *
+     * @typedef {Object} module:search-manager~advancedFilter
+     *
+     * @property {string} type A type. E.g. `equals`.
+     * @property {string} attribute An attribute.
+     * @property {*} [value] A value.
+     * @property {Object.<string,*>} [data] Additional data for UI.
      */
 
     /**
@@ -298,7 +309,8 @@ define('search-manager', [], function () {
         /**
          * Set advanced filters.
          *
-         * @param {Object} advanced Advanced filters.
+         * @param {{string: module:search-manager~advancedFilter}} advanced Advanced filters.
+         *   Pairs of field => advancedFilter.
          */
         setAdvanced: function (advanced) {
             this.data = Espo.Utils.clone(this.data);

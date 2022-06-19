@@ -42,7 +42,7 @@ define('view', [], function () {
 
         /**
          * @callback module:view.Class~actionHandlerCallback
-         * @param {jQuery.Event} e A DOM event.
+         * @param {Event} e A DOM event.
          */
 
         /**
@@ -75,9 +75,9 @@ define('view', [], function () {
         /**
          * Add a DOM button-action event handler.
          *
-         * @deprecated Use the `events` property.
-         * @param {string} action
-         * @param {module:view.Class~actionHandlerCallback} handler
+         * @todo Add an `<a>` tag support.
+         * @param {string} action An action name.
+         * @param {module:view.Class~actionHandlerCallback} handler A handler.
          */
         addActionHandler: function (action, handler) {
             let fullAction = 'click button[data-action=\"'+action+'\"]';
