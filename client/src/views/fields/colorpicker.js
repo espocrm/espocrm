@@ -65,7 +65,6 @@ define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], 
                     }
                 });
             }
-        }
-
+        },
     });
 });

@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/currency-converted', 'views/fields/currency', function (Dep) {
+define('views/fields/currency-converted', ['views/fields/currency'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/currency.Class
+     * @memberOf module:views/fields/currency-converted
+     */
+    return Dep.extend(/** @lends module:views/fields/currency-converted.Class# */{
 
         data: function () {
             var currencyValue = this.getConfig().get('defaultCurrency');
@@ -36,10 +42,10 @@ Espo.define('views/fields/currency-converted', 'views/fields/currency', function
             var data = Dep.prototype.data.call(this);
 
             data.currencyValue = currencyValue;
-            data.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '';
+            data.currencySymbol = this.getMetadata()
+                .get(['app', 'currency', 'symbolMap', currencyValue]) || '';
 
             return data;
-        }
-
+        },
     });
 });

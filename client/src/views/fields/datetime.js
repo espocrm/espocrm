@@ -28,7 +28,13 @@
 
 define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (Dep, moment) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/date.Class
+     * @memberOf module:views/fields/datetime
+     */
+    return Dep.extend(/** @lends module:views/fields/datetime.Class# */{
 
         type: 'datetime',
 
@@ -293,6 +299,5 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
 
             return data;
         },
-
     });
 });

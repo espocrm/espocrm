@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
+define('views/fields/autoincrement', ['views/fields/int'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,6 +42,7 @@ Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
 
         parse: function (value) {
             value = (value !== '') ? value : null;
+
             if (value !== null) {
                  if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
                      value = NaN;
@@ -49,6 +50,7 @@ Espo.define('views/fields/autoincrement', 'views/fields/int', function (Dep) {
                      value = parseInt(value);
                  }
             }
+
             return value;
         },
 

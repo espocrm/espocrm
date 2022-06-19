@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/assigned-user', 'views/fields/user-with-avatar', function (Dep) {
+define('views/fields/assigned-user', ['views/fields/user-with-avatar'], function (Dep) {
 
     return Dep.extend({
 

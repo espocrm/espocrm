@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/complex-created', 'views/fields/base', function (Dep) {
+define('views/fields/complex-created', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -67,7 +67,8 @@ define('views/fields/complex-created', 'views/fields/base', function (Dep) {
 
             var type = this.model.getFieldType(field) || 'base';
 
-            var viewName = this.model.getFieldParam(field, 'view') || this.getFieldManager().getViewName(type);
+            var viewName = this.model.getFieldParam(field, 'view') ||
+                this.getFieldManager().getViewName(type);
 
             this.createView(part + 'Field', viewName, {
                 name: field,
@@ -82,6 +83,5 @@ define('views/fields/complex-created', 'views/fields/base', function (Dep) {
         fetch: function () {
             return {};
         },
-
     });
 });

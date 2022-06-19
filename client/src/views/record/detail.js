@@ -1364,7 +1364,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     let fieldView = this.getFieldView(field);
 
                     if (fieldView.validateRequired) {
-                        fieldView.suspendValidatinMessage();
+                        fieldView.suspendValidationMessage();
 
                         try {
                             if (!fieldView.validateRequired()) {

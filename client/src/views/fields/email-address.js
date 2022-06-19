@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/email-address', 'views/fields/varchar', function (Dep) {
+define('views/fields/email-address', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -44,7 +44,8 @@ define('views/fields/email-address', 'views/fields/varchar', function (Dep) {
             }
 
             if (value !== '' && !this.emailAddressRe.test(value)) {
-                let msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+                let msg = this.translate('fieldShouldBeEmail', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
 

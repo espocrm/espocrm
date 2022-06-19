@@ -26,9 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!underscore'], function (Dep, Selectize, _) {
+define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!underscore'],
+function (Dep, Selectize, _) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/array
+     */
+    return Dep.extend(/** @lends module:views/fields/array.Class# */{
 
         type: 'array',
 
@@ -50,6 +57,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
 
         itemDelimiter: ':,:',
 
+        /**
+         * @inheritDoc
+         */
         data: function () {
             var itemHtmlList = [];
 
@@ -69,6 +79,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
             }, Dep.prototype.data.call(this));
         },
 
+        /**
+         * @inheritDoc
+         */
         events: {
             'click [data-action="removeValue"]': function (e) {
                 var value = $(e.currentTarget).attr('data-value').toString();
@@ -496,7 +509,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
                 }
             }
             var html =
-                '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
+                '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' +
+                label +
                 '&nbsp;<a href="javascript:" class="pull-right" ' +
                 'data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
                 '</div>';
@@ -539,7 +553,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
 
             if (this.params.isSorted && this.translatedOptions) {
                 list = list.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                     return (this.translatedOptions[v1] || v1)
+                         .localeCompare(this.translatedOptions[v2] || v2);
                 });
             }
 
@@ -664,7 +679,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!undersc
                 var value = this.model.get(this.name);
 
                 if (!value || value.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '.array-control-container');
 

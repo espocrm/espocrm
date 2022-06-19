@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/address', 'views/fields/base', function (Dep) {
+define('views/fields/address', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/address
+     */
+    return Dep.extend(/** @lends module:views/fields/address.Class# */{
 
         type: 'address',
 
@@ -48,6 +54,9 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/address/search',
 
+        /**
+         * @inheritDoc
+         */
         events: {
             'click [data-action="viewMap"]': function (e) {
                 e.preventDefault();
@@ -674,6 +683,5 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                 field: this.name,
             }, view => view.render());
         },
-
     });
 });

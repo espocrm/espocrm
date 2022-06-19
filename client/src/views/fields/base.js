@@ -51,6 +51,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * List mode template.
          *
+         * @protected
          * @type {string}
          */
         listTemplate: 'fields/base/list',
@@ -58,6 +59,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * List-link mode template.
          *
+         * @protected
          * @type {string}
          */
         listLinkTemplate: 'fields/base/list-link',
@@ -65,6 +67,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Detail mode template.
          *
+         * @protected
          * @type {string}
          */
         detailTemplate: 'fields/base/detail',
@@ -72,6 +75,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Edit mode template.
          *
+         * @protected
          * @type {string}
          */
         editTemplate: 'fields/base/edit',
@@ -79,6 +83,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Search mode template.
          *
+         * @protected
          * @type {string}
          */
         searchTemplate: 'fields/base/search',
@@ -86,18 +91,33 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * A validation list. There should be a `validate{Name}` method for each item.
          *
-         * @type {Array.<string>}
+         * @type {string[]}
          */
         validations: ['required'],
 
+        /**
+         * @const
+         */
         MODE_LIST: 'list',
 
+        /**
+         * @const
+         */
         MODE_LIST_LINK: 'listLink',
 
+        /**
+         * @const
+         */
         MODE_DETAIL: 'detail',
 
+        /**
+         * @const
+         */
         MODE_EDIT: 'edit',
 
+        /**
+         * @const
+         */
         MODE_SEARCH: 'search',
 
         /**
@@ -117,21 +137,21 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Field params.
          *
-         * @type {Object}
+         * @type {Object.<string,*>}
          */
         params: null,
 
         /**
          * A mode.
          *
-         * @type {string}
+         * @type {'list'|'listLink'|'detail'|'edit'|'search'}
          */
         mode: null,
 
         /**
          * Search params.
          *
-         * @type {Object|null}
+         * @type {Object.<string,*>|null}
          */
         searchParams: null,
 
@@ -169,24 +189,43 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Attribute values before edit.
          *
-         * @type {Object}
+         * @type {Object.<string,*>|{}}
          */
         initialAttributes: null,
 
+        /**
+         * @const
+         */
         VALIDATION_POPOVER_TIMEOUT: 3000,
 
         /**
-         * @type [Function]
+         * @type {(function:boolean)|null}
+         * @private
          * @internal
          */
         validateCallback: null,
 
         /**
-         * A record-view helper.
+         * A view-record helper.
          *
-         * @type {module:record-view-helper.Class}
+         * @type {module:view-record-helper.Class|null}
          */
         recordHelper: null,
+
+        /**
+         * @type {JQuery|null}
+         * @private
+         * @internal
+         */
+        $label: null,
+
+        /**
+         * A form element.
+         *
+         * @type {JQuery|null}
+         * @protected
+         */
+        $element: null,
 
         /**
          * Is the field required.
@@ -198,9 +237,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Get cell element. Works only after rendered.
+         * Get a cell element. Available only after the view is  rendered.
          *
-         * @returns {$}
+         * @returns {JQuery}
          */
         getCellElement: function () {
             return this.$el.parent();
@@ -317,9 +356,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Get a label element. Works only after rendered.
+         * Get a label element. Available only after the view is rendered.
          *
-         * @return {$}
+         * @return {JQuery}
          */
         getLabelElement: function () {
             if (!this.$label || !this.$label.length) {
@@ -330,35 +369,33 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Hide field and label. Works only after rendered.
+         * Hide field and label. Available only after the view is rendered.
          */
         hide: function () {
             this.$el.addClass('hidden');
-            var $cell = this.getCellElement();
+            let $cell = this.getCellElement();
 
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
         },
 
         /**
-         * Show field and label. Works only after rendered.
+         * Show field and label. Available only after the view is rendered.
          */
         show: function () {
             this.$el.removeClass('hidden');
 
-            var $cell = this.getCellElement();
+            let $cell = this.getCellElement();
 
             $cell.children('label').removeClass('hidden');
             $cell.removeClass('hidden-cell');
         },
 
         /**
-         * Get data for a template.
-         *
-         * @returns {Object}
+         * @inheritDoc
          */
         data: function () {
-            var data = {
+            let data = {
                 scope: this.model.name,
                 name: this.name,
                 defs: this.defs,
@@ -377,6 +414,11 @@ define('views/fields/base', ['view'], function (Dep) {
             return data;
         },
 
+        /**
+         * Get a value for display. Is available by using a `{value}` placeholder in templates.
+         *
+         * @return {*}
+         */
         getValueForDisplay: function () {
             return this.model.get(this.name);
         },
@@ -402,7 +444,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Is in detail node.
+         * Is in detail mode.
          *
          * @returns {boolean}
          */
@@ -411,7 +453,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Is in edit node.
+         * Is in edit mode.
          *
          * @returns {boolean}
          */
@@ -420,7 +462,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Is in search node.
+         * Is in search mode.
          *
          * @returns {boolean}
          */
@@ -447,6 +489,8 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
+         * Set a mode.
+         *
          * @internal
          * @returns {Promise}
          */
@@ -491,6 +535,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
+         * @private
          * @returns {Promise}
          */
         _onModeSet: function () {
@@ -510,8 +555,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * For additional initialization for the detail mode.
+         * Additional initialization for the detail mode.
          *
+         * @protected
          * @returns {Promise}
          */
         onDetailModeSet: function () {
@@ -519,8 +565,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * For additional initialization for the edit mode.
+         * Additional initialization for the edit mode.
          *
+         * @protected
          * @returns {Promise}
          */
         onEditModeSet: function () {
@@ -528,8 +575,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * For additional initialization for the list mode.
+         * Additional initialization for the list mode.
          *
+         * @protected
          * @returns {Promise}
          */
         onListModeSet: function () {
@@ -537,7 +585,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * @inheritDoc
          */
         init: function () {
             if (this.events) {
@@ -708,7 +756,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * @inheritDoc
          */
         setupFinal: function () {
             this.wait(
@@ -718,6 +766,7 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * @internal
+         * @private
          */
         initTooltip: function () {
             let $a;
@@ -796,6 +845,8 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Show a required-field sign.
+         *
+         * @private
          */
         showRequiredSign: function () {
             var $label = this.getLabelElement();
@@ -813,6 +864,8 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Hide a required-field sign.
+         *
+         * @private
          */
         hideRequiredSign: function () {
             var $label = this.getLabelElement();
@@ -824,7 +877,8 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Get search-params data.
          *
-         * @return {Object}
+         * @protected
+         * @return {Object.<string,*>}
          */
         getSearchParamsData: function () {
             return this.searchParams.data || {};
@@ -833,7 +887,8 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Get search values.
          *
-         * @return {Object}
+         * @protected
+         * @return {Object.<string,*>}
          */
         getSearchValues: function () {
             return this.getSearchParamsData().values || {};
@@ -842,6 +897,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Get a current search type.
          *
+         * @protected
          * @return {string}
          */
         getSearchType: function () {
@@ -851,25 +907,27 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Get the search type list.
          *
-         * @returns {Array.<string>}
+         * @protected
+         * @returns {string[]}
          */
         getSearchTypeList: function () {
             return this.searchTypeList;
         },
 
         /**
+         * @private
          * @internal
          */
         initInlineEdit: function () {
-            var $cell = this.getCellElement();
+            let $cell = this.getCellElement();
 
-            var $editLink = $(
+            let $editLink = $(
                 '<a href="javascript:" class="pull-right inline-edit-link hidden">' +
                 '<span class="fas fa-pencil-alt fa-sm"></span></a>'
             );
 
             if ($cell.length === 0) {
-                this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
+                this.listenToOnce(this, 'after:render', () => this.initInlineEdit());
 
                 return;
             }
@@ -902,7 +960,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * Initializes a form element reference.
+         *
+         * @protected
          */
         initElement: function () {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
@@ -923,7 +983,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Called after the view is rendered.
+         * @inheritDoc
          */
         afterRender: function () {
             if (this.isEditMode() || this.isSearchMode()) {
@@ -953,26 +1013,36 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Called after the view is rendered in list or read mode.
+         *
+         * @protected
          */
         afterRenderRead: function () {},
 
         /**
          * Called after the view is rendered in list mode.
+         *
+         * @protected
          */
         afterRenderList: function () {},
 
         /**
          * Called after the view is rendered in detail mode.
+         *
+         * @protected
          */
         afterRenderDetail: function () {},
 
         /**
          * Called after the view is rendered in edit mode.
+         *
+         * @protected
          */
         afterRenderEdit: function () {},
 
         /**
          * Called after the view is rendered in search mode.
+         *
+         * @protected
          */
         afterRenderSearch: function () {},
 
@@ -983,14 +1053,16 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Initialization for search mode.
+         *
+         * @protected
          */
         setupSearch: function () {},
 
         /**
          * Get list of model attributes that relate to the field.
-         * Changing of any of attributes makes the field to re-render.
+         * Changing of any attributes makes the field to re-render.
          *
-         * @return {Array.<string>}
+         * @return {string[]}
          */
         getAttributeList: function () {
             return this.getFieldManager().getAttributes(this.fieldType, this.name);
@@ -1064,7 +1136,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * @private
          */
         removeInlineEditLinks: function () {
             var $cell = this.getCellElement();
@@ -1075,17 +1147,19 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * @private
          */
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
 
             var $saveLink = $(
-                '<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>'
+                '<a href="javascript:" class="pull-right inline-save-link">' +
+                this.translate('Update') + '</a>'
             );
 
             var $cancelLink = $(
-                '<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>'
+                '<a href="javascript:" class="pull-right inline-cancel-link">' +
+                this.translate('Cancel') + '</a>'
             );
 
             $cell.prepend($saveLink);
@@ -1103,7 +1177,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * @internal
+         * @private
          */
         setIsInlineEditMode: function (value) {
             this._isInlineEditMode = value;
@@ -1157,17 +1231,23 @@ define('views/fields/base', ['view'], function (Dep) {
             return promise;
         },
 
-        suspendValidatinMessage: function (time) {
+        /**
+         * Suspend a validation message.
+         *
+         * @internal
+         * @param {number} [time=200]
+         */
+        suspendValidationMessage: function (time) {
             this.validationMessageSuspended = true;
 
             setTimeout(() => this.validationMessageSuspended = false, time || 200);
         },
 
         /**
-         * Show validation message.
+         * Show a validation message.
          *
-         * @param {string} message
-         * @param {string|$|Element} [target]
+         * @param {string} message A message.
+         * @param {string|JQuery|Element} [target] A target element or selector.
          */
         showValidationMessage: function (message, target) {
             if (this.validationMessageSuspended) {
@@ -1270,7 +1350,8 @@ define('views/fields/base', ['view'], function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
@@ -1280,8 +1361,9 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Has a required marked.
+         * Defines whether the field should have a required-marker rendered.
          *
+         * @protected
          * @return {boolean}
          */
         hasRequiredMarker: function () {
@@ -1289,7 +1371,7 @@ define('views/fields/base', ['view'], function (Dep) {
         },
 
         /**
-         * Fetch values to the model.
+         * Fetch field values to the model.
          */
         fetchToModel: function () {
             this.model.set(this.fetch(), {silent: true});
@@ -1298,10 +1380,10 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Fetch field values from DOM.
          *
-         * @return {Object}
+         * @return {Object.<string,any>}
          */
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.name] = this.$element.val();
 
@@ -1311,21 +1393,19 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Fetch search data from DOM.
          *
-         * @return {Object}
+         * @return {Object.<string,any>|null}
          */
         fetchSearch: function () {
-            var value = this.$element.val().toString().trim();
+            let value = this.$element.val().toString().trim();
 
             if (value) {
-                var data = {
+                return {
                     type: 'equals',
                     value: value,
                 };
-
-                return data;
             }
 
-            return false;
+            return null;
         },
 
         /**

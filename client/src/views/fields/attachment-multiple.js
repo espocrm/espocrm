@@ -26,9 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-upload'], function (Dep, FileUpload) {
+define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-upload'],
+function (Dep, FileUpload) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/attachment-multiple
+     */
+    return Dep.extend(/** @lends module:views/fields/attachment-multiple.Class# */{
 
         type: 'attachmentMultiple',
 
@@ -278,23 +285,16 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
 
         removeId: function (id) {
             var arr = _.clone(this.model.get(this.idsName) || []);
-
             var i = arr.indexOf(id);
-
             arr.splice(i, 1);
-
             this.model.set(this.idsName, arr);
 
             var nameHash = _.clone(this.model.get(this.nameHashName) || {});
-
             delete nameHash[id];
-
             this.model.set(this.nameHashName, nameHash);
 
             var typeHash = _.clone(this.model.get(this.typeHashName) || {});
-
             delete typeHash[id];
-
             this.model.set(this.typeHashName, typeHash);
         },
 
@@ -358,7 +358,8 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
             }
 
             if (preview === name && id) {
-                preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
+                preview = '<a href="' + this.getBasePath() +
+                    '?entryPoint=download&id=' + id + '" target="_BLANK">' +
                     name + '</a>';
             }
 
@@ -484,6 +485,7 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
                     totalCount++;
                 }
 
+                /** @type module:helpers/file-upload.Class */
                 let uploadHelper = new FileUpload(this.getConfig());
 
                 fileList.forEach(file => {
@@ -739,7 +741,10 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
                     filters = this['getSelectFilters' + source]();
 
                     if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
-                        if (this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link') {
+                        if (
+                            this.getMetadata()
+                                .get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
+                        ) {
                             filters = {
                                 account: {
                                     type: 'equals',
@@ -815,7 +820,8 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
         validateRequired: function () {
             if (this.isRequired()) {
                 if ((this.model.get(this.idsName) || []).length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'label');
 
@@ -826,7 +832,8 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
 
         validateReady: function () {
             if (this.isUploading) {
-                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.getLabelText());
+                var msg = this.translate('fieldIsUploading', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'label');
 
@@ -870,6 +877,5 @@ define('views/fields/attachment-multiple', ['views/fields/base', 'helpers/file-u
                 return data;
             }
         },
-
     });
 });

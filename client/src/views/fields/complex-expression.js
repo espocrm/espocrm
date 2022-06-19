@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
+define('views/fields/complex-expression', ['views/fields/text'], function (Dep) {
 
     return Dep.extend({
 
@@ -330,6 +330,5 @@ define('views/fields/complex-expression', 'views/fields/text', function (Dep) {
                 });
             });
         },
-
     });
 });

@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/currency', 'views/fields/float', function (Dep) {
+define('views/fields/currency', ['views/fields/float'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/float.Class
+     * @memberOf module:views/fields/currency
+     */
+    return Dep.extend(/** @lends module:views/fields/currency.Class# */{
 
         type: 'currency',
 
@@ -81,7 +87,8 @@ define('views/fields/currency', 'views/fields/float', function (Dep) {
 
             this.isSingleCurrency = this.currencyList.length <= 1;
 
-            var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) || this.defaultCurrency;
+            var currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+                this.defaultCurrency;
 
             if (!~this.currencyList.indexOf(currencyValue)) {
                 this.currencyList = Espo.Utils.clone(this.currencyList);
@@ -98,10 +105,10 @@ define('views/fields/currency', 'views/fields/float', function (Dep) {
                 var prop;
 
                 if (this.mode === 'list') {
-                    var prop = 'listTemplate' + this.getCurrencyFormat().toString();
+                    prop = 'listTemplate' + this.getCurrencyFormat().toString();
                 }
                 else {
-                    var prop = 'detailTemplate' + this.getCurrencyFormat().toString();
+                    prop = 'detailTemplate' + this.getCurrencyFormat().toString();
                 }
 
                 if (this.options.hideCurrency) {
@@ -135,6 +142,7 @@ define('views/fields/currency', 'views/fields/float', function (Dep) {
                 if (parts.length > 1) {
                     if (currencyDecimalPlaces && parts[1].length < currencyDecimalPlaces) {
                         var limit = currencyDecimalPlaces - parts[1].length;
+
                         for (var i = 0; i < limit; i++) {
                             parts[1] += '0';
                         }
@@ -226,6 +234,5 @@ define('views/fields/currency', 'views/fields/float', function (Dep) {
 
             return data;
         },
-
     });
 });

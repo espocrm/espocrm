@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/bool', 'views/fields/base', function (Dep) {
+define('views/fields/bool', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/bool
+     */
+    return Dep.extend(/** @lends module:views/fields/bool.Class# */{
 
         type: 'bool',
 
@@ -45,7 +51,7 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
         initialSearchIsNotIdle: true,
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.valueIsSet = this.model.has(this.name);
 
@@ -112,6 +118,5 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.type || 'isTrue';
         },
-
     });
 });

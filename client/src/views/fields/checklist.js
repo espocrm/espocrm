@@ -28,7 +28,13 @@
 
 define('views/fields/checklist', ['views/fields/array'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/checklist
+     */
+    return Dep.extend(/** @lends module:views/fields/checklist.Class# */{
 
         type: 'checklist',
 
@@ -40,8 +46,7 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
 
         isInversed: false,
 
-        events: {
-        },
+        events: {},
 
         data: function () {
             return _.extend({
@@ -58,14 +63,14 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         },
 
         afterRender: function () {
-            if (this.mode == 'search') {
+            if (this.isSearchMode()) {
                 this.renderSearch();
             }
 
             if (this.isEditMode()) {
-                this.$el.find('input').on('change', function () {
+                this.$el.find('input').on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -73,12 +78,15 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
             var valueList = this.model.get(this.name) || [];
             var list = [];
 
-            this.params.options.forEach(function (item) {
+            this.params.options.forEach((item) => {
                 var isChecked = ~valueList.indexOf(item);
                 var dataName = 'checklistItem-' + this.name + '-' + item;
                 var id = 'checklist-item-' + this.name + '-' + item;
 
-                if (this.isInversed) isChecked = !isChecked;
+                if (this.isInversed) {
+                    isChecked = !isChecked;
+                }
+
                 list.push({
                     name: item,
                     isChecked: isChecked,
@@ -86,7 +94,7 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
                     id: id,
                     label: this.translatedOptions[item] || item,
                 });
-            }, this);
+            });
 
             return list;
         },
@@ -94,16 +102,21 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         fetch: function () {
             var list = [];
 
-            this.params.options.forEach(function (item) {
+            this.params.options.forEach((item) => {
                 var $item = this.$el.find('input[data-name="checklistItem-' + this.name + '-' + item + '"]');
                 var isChecked = $item.get(0) && $item.get(0).checked;
-                if (this.isInversed)
+
+                if (this.isInversed) {
                     isChecked = !isChecked;
-                if (isChecked)
+                }
+
+                if (isChecked) {
                     list.push(item);
-            }, this);
+                }
+            });
 
             var data = {};
+
             data[this.name] = list;
 
             return data;
@@ -112,9 +125,13 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
+
                 if (!value || value.length == 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '.checklist-item-container:last-child input');
+
                     return true;
                 }
             }
@@ -123,12 +140,15 @@ define('views/fields/checklist', ['views/fields/array'], function (Dep) {
         validateMaxCount: function () {
             if (this.params.maxCount) {
                 var itemList = this.model.get(this.name) || [];
+
                 if (itemList.length > this.params.maxCount) {
                     var msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());
+
                     this.showValidationMessage(msg, '.checklist-item-container:last-child input');
+
                     return true;
                 }
             }

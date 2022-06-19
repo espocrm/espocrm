@@ -28,7 +28,7 @@
 
 define('views/fields/barcode',
     ['views/fields/varchar', 'lib!JsBarcode', 'lib!qrcode'],
-    function (Dep, JsBarcode, QRCode) {
+function (Dep, JsBarcode, QRCode) {
 
     return Dep.extend({
 
@@ -151,6 +151,5 @@ define('views/fields/barcode',
         controlWidth: function () {
             this.$el.find('.barcode').css('max-width', this.$el.width() + 'px');
         },
-
     });
 });

@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep) {
+define('views/fields/datetime-optional', ['views/fields/datetime'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/datetime.Class
+     * @memberOf module:views/fields/datetime-optional
+     */
+    return Dep.extend(/** @lends module:views/fields/datetime-optional.Class# */{
 
         type: "datetimeOptional",
 
@@ -203,6 +209,5 @@ define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep)
                 }
             }
         },
-
     });
 });

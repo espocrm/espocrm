@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/date', 'views/fields/base', function (Dep) {
+define('views/fields/date', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/date
+     */
+    return Dep.extend(/** @lends module:views/fields/date.Class# */{
 
         type: 'date',
 
@@ -87,7 +93,10 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
                 data.dateValue = this.getDateTime().toDisplayDate(value);
                 data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-                if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(this.getSearchType())) {
+                if (
+                    ~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
+                        .indexOf(this.getSearchType())
+                ) {
                     data.number = this.searchParams.value;
                 }
             }
@@ -351,7 +360,8 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
@@ -362,7 +372,8 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validateDate: function () {
             if (this.model.get(this.name) === -1) {
-                var msg = this.translate('fieldShouldBeDate', 'messages').replace('{field}', this.getLabelText());
+                var msg = this.translate('fieldShouldBeDate', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
 
