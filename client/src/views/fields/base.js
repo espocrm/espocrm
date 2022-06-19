@@ -228,6 +228,15 @@ define('views/fields/base', ['view'], function (Dep) {
         $element: null,
 
         /**
+         * Is searchable once a search filter is added (no need to type or selecting anything).
+         * Actual for search mode.
+         *
+         * @public
+         * @type {boolean}
+         */
+        initialSearchIsNotIdle: false,
+
+        /**
          * Is the field required.
          *
          * @returns {boolean}

@@ -164,6 +164,12 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         forceSelectAllAttributes: false,
 
         /**
+         * @protected
+         * @type {string[]|null}
+         */
+        mandatorySelectAttributeList: null,
+
+        /**
          * @inheritDoc
          */
         data: function () {
@@ -345,7 +351,10 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
         },
 
         /**
-         * @inheritDoc
+         * Select.
+         *
+         * @param {module:model.Class} model A model.
+         * @protected
          */
         select: function (model) {
             this.$elementName.val(model.get('name') || model.id);

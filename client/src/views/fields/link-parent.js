@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-parent', 'views/fields/base', function (Dep) {
+define('views/fields/link-parent', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A link-parent field (belongs-to-parent relation).
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/link-parent
+     */
+    return Dep.extend(/** @lends module:views/fields/link-parent.Class# */{
 
         type: 'linkParent',
 
@@ -42,20 +50,128 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         listLinkTemplate: 'fields/link-parent/list-link',
 
+        /**
+         * A name attribute name.
+         *
+         * @type {string}
+         */
         nameName: null,
 
+        /**
+         * An ID attribute name.
+         *
+         * @type {string}
+         */
         idName: null,
 
+        /**
+         * A type attribute name.
+         *
+         * @type {string}
+         */
+        typeName: null,
+
+        /**
+         * A current foreign entity type.
+         *
+         * @type {string|null}
+         */
+        foreignScope: null,
+
+        /**
+         * A foreign entity type list.
+         *
+         * @type {string[]}
+         */
         foreignScopeList: null,
 
+        /**
+         * Autocomplete disabled.
+         *
+         * @protected
+         * @type {boolean}
+         */
         autocompleteDisabled: false,
 
+        /**
+         * A select-record view.
+         *
+         * @protected
+         * @type {string}
+         */
         selectRecordsView: 'views/modals/select-records',
 
+        /**
+         * Create disabled.
+         *
+         * @protected
+         * @type {boolean}
+         */
         createDisabled: false,
 
-        searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
+        /**
+         * A search type list.
+         *
+         * @protected
+         * @type {string[]}
+         */
+        searchTypeList: [
+            'is',
+            'isEmpty',
+            'isNotEmpty',
+        ],
 
+        /**
+         * A primary filter list that will be available when selecting a record.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        selectFilterList: null,
+
+        /**
+         * A select primary filter.
+         *
+         * @protected
+         * @type {string|null}
+         */
+        selectPrimaryFilterName: null,
+
+        /**
+         * A select bool filter list.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        selectBoolFilterList: null,
+
+        /**
+         * An autocomplete max record number.
+         *
+         * @protected
+         * @type {number|null}
+         */
+        autocompleteMaxCount: null,
+
+        /**
+         * Select all attributes.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        forceSelectAllAttributes: false,
+
+        /**
+         * Mandatory select attributes.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        mandatorySelectAttributeList: null,
+
+        /**
+         * @inheritDoc
+         */
         initialSearchIsNotIdle: true,
 
         data: function () {
@@ -92,18 +208,52 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }, Dep.prototype.data.call(this));
         },
 
-        getSelectFilters: function () {},
+        /**
+         * Get advanced filters (field filters) to be applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {Object.<string,module:search-manager~advancedFilter>|null}
+         */
+        getSelectFilters: function () {
+            return null;
+        },
 
+        /**
+         * Get a select bool filter list. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string[]|null}
+         */
         getSelectBoolFilterList: function () {
             return this.selectBoolFilterList;
         },
 
+        /**
+         * Get a select primary filter. Applied when select a record.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string|null}
+         */
         getSelectPrimaryFilterName: function () {
             return this.selectPrimaryFilterName;
         },
 
-        getCreateAttributes: function () {},
+        /**
+         * Attributes to pass to a model when creating a new record.
+         * Can be extended.
+         *
+         * @return {Object.<string,*>|null}
+         */
+        getCreateAttributes: function () {
+            return null;
+        },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.nameName = this.name + 'Name';
             this.typeName = this.name + 'Type';
@@ -135,23 +285,24 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 this.createDisabled = this.options.createDisabled;
             }
 
-            if (this.mode !== 'list') {
+            if (!this.isListMode()) {
                 this.addActionHandler('selectLink', () => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                    var viewName = this.getMetadata()
+                            .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode !== 'search',
+                        createButton: !this.createDisabled && !this.isSearchMode(),
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
-                        createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
+                        createAttributes: this.isEditMode() ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
                         forceSelectAllAttributes: this.isForceSelectAllAttributes(),
-                    }, (dialog) => {
+                    }, dialog => {
                         dialog.render();
 
                         Espo.Ui.notify(false);
@@ -171,6 +322,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
                     this.$elementName.val('');
                     this.$elementId.val('');
+
                     this.trigger('change');
                 });
 
@@ -182,13 +334,19 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         setupSearch: function () {
             var type = this.getSearchParamsData().type;
 
             if (type === 'is' || !type) {
-                this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.valueId;
-                this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.valueName;
-                this.searchData.typeValue = this.getSearchParamsData().typeValue || this.searchParams.valueType;
+                this.searchData.idValue = this.getSearchParamsData().idValue ||
+                    this.searchParams.valueId;
+                this.searchData.nameValue = this.getSearchParamsData().nameValue ||
+                    this.searchParams.valueName;
+                this.searchData.typeValue = this.getSearchParamsData().typeValue ||
+                    this.searchParams.valueType;
             }
 
             this.events = _.extend({
@@ -199,6 +357,12 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }, this.events || {});
         },
 
+        /**
+         * Handle a search type.
+         *
+         * @protected
+         * @param {string} type A type.
+         */
         handleSearchType: function (type) {
             if (~['is'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
@@ -207,20 +371,46 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * Select.
+         *
+         * @param {module:model.Class} model A model.
+         * @protected
+         */
         select: function (model) {
             this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
+
             this.trigger('change');
         },
 
+        /**
+         * Attributes to select regardless availability on a list layout.
+         * Can be extended.
+         *
+         * @protected
+         * @return {string[]|null}
+         */
         getMandatorySelectAttributeList: function () {
             return this.mandatorySelectAttributeList;
         },
 
+        /**
+         * Select all attributes. Can be extended.
+         *
+         * @protected
+         * @return {boolean}
+         */
         isForceSelectAllAttributes: function () {
             return this.forceSelectAllAttributes;
         },
 
+        /**
+         * Get an autocomplete max record number. Can be extended.
+         *
+         * @protected
+         * @return {number}
+         */
         getAutocompleteMaxCount: function () {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
@@ -229,6 +419,12 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             return this.getConfig().get('recordsPerPage');
         },
 
+        /**
+         * Compose an autocomplete URL. Can be extended.
+         *
+         * @protected
+         * @return {string}
+         */
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
@@ -258,7 +454,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         afterRender: function () {
-            if (this.mode === 'edit' || this.mode === 'search') {
+            if (this.isEditMode() || this.isSearchMode()) {
                 this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
                 this.$elementType = this.$el.find('select[data-name="' + this.typeName + '"]');
@@ -267,6 +463,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                     if (this.$elementName.val() === '') {
                         this.$elementName.val('');
                         this.$elementId.val('');
+
                         this.trigger('change');
                     }
                 });
@@ -274,6 +471,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                 this.$elementType.on('change', () => {
                     this.$elementName.val('');
                     this.$elementId.val('');
+
                     this.trigger('change');
                 });
 
@@ -308,7 +506,7 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             return this.getHelper().escapeString(suggestion.name);
                         },
                         transformResult: (response) => {
-                            var response = JSON.parse(response);
+                            response = JSON.parse(response);
                             var list = [];
 
                             response.list.forEach(item => {
@@ -317,13 +515,11 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                                     name: item.name || item.id,
                                     data: item.id,
                                     value: item.name || item.id,
-                                    attributes: item
+                                    attributes: item,
                                 });
                             });
 
-                            return {
-                                suggestions: list
-                            };
+                            return {suggestions: list};
                         },
                         onSelect: (s) => {
                             this.getModelFactory().create(this.foreignScope, (model) => {
@@ -362,14 +558,21 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         getValueForDisplay: function () {
             return this.model.get(this.nameName);
         },
 
+        /**
+         * @inheritDoc
+         */
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) === null || !this.model.get(this.typeName)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 
@@ -378,6 +581,9 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         fetch: function () {
             var data = {};
 
@@ -392,89 +598,89 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             return data;
         },
 
+        /**
+         * @inheritDoc
+         */
         fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
+            let type = this.$el.find('select.search-type').val();
 
             if (type === 'isEmpty') {
-                var data = {
+                return {
                     type: 'isNull',
                     field: this.idName,
                     data: {
-                        type: type
+                        type: type,
                     }
                 };
-
-                return data;
             }
 
             if (type === 'isNotEmpty') {
-                var data = {
+                return {
                     type: 'isNotNull',
                     field: this.idName,
                     data: {
-                        type: type
+                        type: type,
                     }
                 };
-
-                return data;
             }
 
-            var entityType = this.$elementType.val();
-            var entityName = this.$elementName.val()
-            var entityId = this.$elementId.val();
+            let entityType = this.$elementType.val();
+            let entityName = this.$elementName.val()
+            let entityId = this.$elementId.val();
 
             if (!entityType) {
-                return false;
+                return null;
             }
 
-            var data;
             if (entityId) {
-                data = {
+                return {
                     type: 'and',
                     attribute: this.idName,
                     value: [
                         {
                             type: 'equals',
                             field: this.idName,
-                            value: entityId
+                            value: entityId,
                         },
                         {
                             type: 'equals',
                             field: this.typeName,
-                            value: entityType
+                            value: entityType,
                         }
                     ],
                     data: {
                         type: 'is',
                         idValue: entityId,
                         nameValue: entityName,
-                        typeValue: entityType
-                    }
-                };
-            } else {
-                data = {
-                    type: 'and',
-                    attribute: this.idName,
-                    value: [
-                        {
-                            type: 'isNotNull',
-                            field: this.idName
-                        },
-                        {
-                            type: 'equals',
-                            field: this.typeName,
-                            value: entityType
-                        }
-                    ],
-                    data: {
-                        type: 'is',
-                        typeValue: entityType
+                        typeValue: entityType,
                     }
                 };
             }
-            return data;
+
+            return {
+                type: 'and',
+                attribute: this.idName,
+                value: [
+                    {
+                        type: 'isNotNull',
+                        field: this.idName,
+                    },
+                    {
+                        type: 'equals',
+                        field: this.typeName,
+                        value: entityType,
+                    }
+                ],
+                data: {
+                    type: 'is',
+                    typeValue: entityType,
+                }
+            };
         },
 
+        /**
+         * @inheritDoc
+         */
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront;
         },

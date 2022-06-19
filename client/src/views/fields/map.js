@@ -19,7 +19,7 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
-define('views/fields/map', 'views/fields/base', function (Dep) {
+define('views/fields/map', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,9 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.hasAddress = this.hasAddress();
+
             return data;
         },
 
@@ -47,35 +49,35 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
             this.provider = this.options.provider || this.params.provider;
             this.height = this.options.height || this.params.height || this.height;
 
-            var addressAttributeList = Object.keys(this.getMetadata().get('fields.address.fields') || {}).map(
-                function (a) {
+            var addressAttributeList = Object.keys(this.getMetadata().get('fields.address.fields') || {})
+                .map(a => {
                     return this.addressField + Espo.Utils.upperCaseFirst(a);
-                },
-                this
-            );
+                });
 
-            this.listenTo(this.model, 'sync', function (model) {
-                var isChanged = false;
-                addressAttributeList.forEach(function (attribute) {
+            this.listenTo(this.model, 'sync', model => {
+                let isChanged = false;
+
+                addressAttributeList.forEach(attribute => {
                     if (model.hasChanged(attribute)) {
                         isChanged = true;
                     }
-                }, this);
+                });
 
                 if (isChanged && this.isRendered()) {
                     this.reRender();
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'after:save', function () {
+            this.listenTo(this.model, 'after:save', () => {
                 if (this.isRendered()) {
                     this.reRender();
                 }
-            }, this);
+            });
         },
 
         hasAddress: function () {
-            return !!this.model.get(this.addressField + 'City') || !!this.model.get(this.addressField + 'PostalCode');
+            return !!this.model.get(this.addressField + 'City') ||
+                !!this.model.get(this.addressField + 'PostalCode');
         },
 
         onRemove: function () {
@@ -88,7 +90,7 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
                 street: this.model.get(this.addressField + 'Street'),
                 postalCode: this.model.get(this.addressField + 'PostalCode'),
                 country: this.model.get(this.addressField + 'Country'),
-                state: this.model.get(this.addressField + 'State')
+                state: this.model.get(this.addressField + 'State'),
             };
 
             this.$map = this.$el.find('.map');
@@ -101,15 +103,19 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
                     $(window).on('resize.' + this.cid, this.processSetHeight.bind(this));
                 }
 
-                var methodName = 'afterRender' + this.provider.replace(/\s+/g, '');
+                let methodName = 'afterRender' + this.provider.replace(/\s+/g, '');
+
                 if (typeof this[methodName] === 'function') {
                     this[methodName]();
-                } else {
-                    var implClassName = this.getMetadata().get(['clientDefs', 'AddressMap', 'implementations', this.provider]);
+                }
+                else {
+                    let implClassName = this.getMetadata()
+                        .get(['clientDefs', 'AddressMap', 'implementations', this.provider]);
+
                     if (implClassName) {
-                        require(implClassName, function (impl) {
+                        require(implClassName, impl => {
                             impl.render(this);
-                        }.bind(this));
+                        });
                     }
                 }
             }
@@ -118,38 +124,51 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
         afterRenderGoogle: function () {
             if (window.google && window.google.maps) {
                 this.initMapGoogle();
-            } else if (typeof window.mapapiloaded === 'function') {
-                var mapapiloaded = window.mapapiloaded;
-                window.mapapiloaded = function() {
-                  this.initMapGoogle();
-                  mapapiloaded();
-                }.bind(this);
-            } else {
-                window.mapapiloaded = function () {
-                    this.initMapGoogle();
-                }.bind(this);
-                var src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded';
-                var apiKey = this.getConfig().get('googleMapsApiKey');
-                if (apiKey) {
-                    src += '&key=' + apiKey;
-                }
 
-                var s = document.createElement('script');
-                s.setAttribute('async', 'async');
-                s.src = src;
-                document.head.appendChild(s);
+                return;
             }
+
+            if (typeof window.mapapiloaded === 'function') {
+                let mapapiloaded = window.mapapiloaded;
+
+                window.mapapiloaded = () => {
+                    this.initMapGoogle();
+                    mapapiloaded();
+                };
+
+                return;
+            }
+
+            window.mapapiloaded = () => {
+                this.initMapGoogle();
+            };
+
+            let src = 'https://maps.googleapis.com/maps/api/js?callback=mapapiloaded';
+            let apiKey = this.getConfig().get('googleMapsApiKey');
+
+            if (apiKey) {
+                src += '&key=' + apiKey;
+            }
+
+            let scriptElement = document.createElement('script');
+
+            scriptElement.setAttribute('async', 'async');
+            scriptElement.src = src;
+
+            document.head.appendChild(scriptElement);
         },
 
         processSetHeight: function (init) {
             var height = this.height;
+
             if (this.height === 'auto') {
                 height = this.$el.parent().height();
 
                 if (init && height <= 0) {
-                    setTimeout(function () {
+                    setTimeout(() => {
                         this.processSetHeight(true);
-                    }.bind(this), 50);
+                    }, 50);
+
                     return;
                 }
             }
@@ -164,61 +183,68 @@ define('views/fields/map', 'views/fields/base', function (Dep) {
                 var map = new google.maps.Map(this.$el.find('.map').get(0), {
                     zoom: 15,
                     center: {lat: 0, lng: 0},
-                    scrollwheel: false
+                    scrollwheel: false,
                 });
-            } catch (e) {
+            }
+            catch (e) {
                 console.error(e.message);
+
                 return;
             }
 
-            var address = '';
+            let address = '';
 
             if (this.addressData.street) {
                 address += this.addressData.street;
             }
 
             if (this.addressData.city) {
-                if (address != '') {
+                if (address !== '') {
                     address += ', ';
                 }
+
                 address += this.addressData.city;
             }
 
             if (this.addressData.state) {
-                if (address != '') {
+                if (address !== '') {
                     address += ', ';
                 }
+
                 address += this.addressData.state;
             }
 
             if (this.addressData.postalCode) {
                 if (this.addressData.state || this.addressData.city) {
                     address += ' ';
-                } else {
+                }
+                else {
                     if (address) {
                         address += ', ';
                     }
                 }
+
                 address += this.addressData.postalCode;
             }
 
             if (this.addressData.country) {
-                if (address != '') {
+                if (address !== '') {
                     address += ', ';
                 }
+
                 address += this.addressData.country;
             }
 
-            geocoder.geocode({'address': address}, function (results, status) {
+            geocoder.geocode({'address': address}, (results, status) => {
                 if (status === google.maps.GeocoderStatus.OK) {
                     map.setCenter(results[0].geometry.location);
-                    var marker = new google.maps.Marker({
+
+                    new google.maps.Marker({
                         map: map,
-                        position: results[0].geometry.location
+                        position: results[0].geometry.location,
                     });
                 }
-            }.bind(this));
+            });
         },
-
     });
 });
