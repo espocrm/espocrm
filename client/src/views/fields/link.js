@@ -460,7 +460,6 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
             var boolList = this.getSelectBoolFilterList();
 
-
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
