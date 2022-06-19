@@ -55,9 +55,31 @@ function (Dep, Selectize, _) {
 
         validations: ['required', 'maxCount'],
 
+        /**
+         * An add-item model view.
+         *
+         * @protected
+         * @type {string}
+         */
         addItemModalView: 'views/modals/array-field-add',
 
+        /**
+         * @protected
+         * @type {string}
+         */
         itemDelimiter: ':,:',
+
+        /**
+         * @protected
+         * @type {boolean}
+         */
+        matchAnyWord: false,
+
+        /**
+         * @protected
+         * @type {Object|null}
+         */
+        translatedOptions: null,
 
         /**
          * @inheritDoc
@@ -117,6 +139,7 @@ function (Dep, Selectize, _) {
             if ('translatedOptions' in this.options) {
                 this.translatedOptions = this.options.translatedOptions;
             }
+
             if ('translatedOptions' in this.params) {
                 this.translatedOptions = this.params.translatedOptions;
             }

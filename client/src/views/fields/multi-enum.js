@@ -28,7 +28,15 @@
 
 define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], function (Dep, Selectize) {
 
-    return Dep.extend({
+    /**
+     * A multi-enum field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/array.Class
+     * @memberOf module:views/fields/multi-enum
+     */
+    return Dep.extend(/** @lends module:views/fields/multi-enum.Class# */{
 
         type: 'multiEnum',
 
@@ -38,13 +46,22 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         editTemplate: 'fields/multi-enum/edit',
 
-        matchAnyWord: false,
-
+        /**
+         * @const
+         */
         MAX_ITEM_LENGTH: 100,
 
-        events: {
-        },
+        /**
+         * @protected
+         * @type {boolean}
+         */
+        restoreOnBackspace: false,
 
+        events: {},
+
+        /**
+         * @inheritDoc
+         */
         data: function () {
             return _.extend({
                 optionList: this.params.options || []
@@ -66,7 +83,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.restoreOnBackspace &&  !('restore_on_backspace_espo' in Selectize.plugins)) {
+            if (this.restoreOnBackspace && !('restore_on_backspace_espo' in Selectize.plugins)) {
                 this.loadRestoreOnBackspavePlugin();
             }
         },
@@ -87,7 +104,11 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     return function(e) {
                         var index, option;
 
-                        if (e.keyCode === 8 && this.$control_input.val() === '' && !this.$activeItems.length) {
+                        if (
+                            e.keyCode === 8 &&
+                            this.$control_input.val() === '' &&
+                            !this.$activeItems.length
+                        ) {
                             index = this.caretPos - 1;
 
                             if (index >= 0 && index < this.items.length) {
@@ -230,7 +251,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                     selectizeOptions.render = {
                         option_create: function (data, escape) {
-                            return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                            return '<div class="create"><strong>' + escape(data.input) +
+                                '</strong>&hellip;</div>';
                         }
                     };
                 }
@@ -262,7 +284,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
             if (this.params.isSorted && this.translatedOptions) {
                 list = list.sort((v1, v2) => {
-                     return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+                     return (this.translatedOptions[v1] || v1)
+                         .localeCompare(this.translatedOptions[v2] || v2);
                 });
             }
 
@@ -278,7 +301,8 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 var value = this.model.get(this.name);
 
                 if (!value || value.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '.selectize-control');
 
