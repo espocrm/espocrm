@@ -321,7 +321,10 @@ function (Dep, ViewRecordHelper) {
             if (this.type === 'detail' && this.printPdfAction) {
                 var printPdfAction = true;
 
-                if (!~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)) {
+                if (
+                    !~(this.getHelper().getAppParam('templateEntityTypeList') || [])
+                        .indexOf(this.entityType)
+                ) {
                     printPdfAction = false;
                 }
 
@@ -335,25 +338,28 @@ function (Dep, ViewRecordHelper) {
 
             if (this.type === 'detail' && this.convertCurrencyAction) {
                 if (
-                    this.getAcl().check(this.entityType, 'edit')
-                    &&
+                    this.getAcl().check(this.entityType, 'edit') &&
                     !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled'])
                 ) {
-                    var currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
-                        type: 'currency',
-                        acl: 'edit',
-                    });
+                    var currencyFieldList = this.getFieldManager()
+                        .getEntityTypeFieldList(this.entityType, {
+                            type: 'currency',
+                            acl: 'edit',
+                        });
 
                     if (currencyFieldList.length) {
                         this.addDropdownItem({
                             label: 'Convert Currency',
-                            name: 'convertCurrency'
+                            name: 'convertCurrency',
                         });
                     }
                 }
             }
 
-            if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
+            if (
+                this.type === 'detail' &&
+                this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
+            ) {
                 if (this.getAcl().get('dataPrivacyPermission') === 'yes') {
                     this.dropdownItemList.push({
                         'label': 'View Personal Data',
@@ -380,14 +386,14 @@ function (Dep, ViewRecordHelper) {
                         this.getMetadata().get(['clientDefs', 'Global', this.type + 'ActionList']) || []
                     );
 
-                actionDefsList.forEach((item) => {
+                actionDefsList.forEach(item => {
                     if (typeof item === 'string') {
                         item = {
                             name: item,
                         };
                     }
 
-                    var item = Espo.Utils.clone(item);
+                    item = Espo.Utils.clone(item);
                     var name = item.name;
 
                     if (!item.label) {
@@ -403,9 +409,7 @@ function (Dep, ViewRecordHelper) {
                     additionalActionList.push(item);
 
                     var viewObject = this;
-
                     var data = item.data || {};
-
                     var handler = item.handler || data.handler;
 
                     if (item.initFunction && handler) {
@@ -1211,7 +1215,8 @@ function (Dep, ViewRecordHelper) {
                 $(window).off('fetch-record.' + this.cid);
             });
 
-            this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
+            this.id = Espo.Utils.toDom(this.entityType) + '-' +
+                Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             this.isNew = this.model.isNew();
 
@@ -1253,7 +1258,8 @@ function (Dep, ViewRecordHelper) {
             this.readOnly = this.options.readOnly || this.readOnly;
 
             if (!this.readOnly && !this.isNew) {
-                this.readOnly = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || false;
+                this.readOnly = this.getMetadata()
+                    .get(['clientDefs', this.scope, 'editDisabled']) || false;
             }
 
             this.readOnlyLocked = this.readOnly;
@@ -1263,7 +1269,8 @@ function (Dep, ViewRecordHelper) {
                 false;
 
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.inlineEditDisabled;
-            this.navigateButtonsDisabled = this.options.navigateButtonsDisabled || this.navigateButtonsDisabled;
+            this.navigateButtonsDisabled = this.options.navigateButtonsDisabled ||
+                this.navigateButtonsDisabled;
             this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
             this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
 
@@ -1274,8 +1281,10 @@ function (Dep, ViewRecordHelper) {
 
             this.on('after:render', () => {
                 this.$detailButtonContainer = this.$el.find('.detail-button-container');
-                this.$dropdownItemListButton = this.$detailButtonContainer.find('.dropdown-item-list-button');
-                this.$dropdownEditItemListButton = this.$detailButtonContainer.find('.dropdown-edit-item-list-button');
+                this.$dropdownItemListButton = this.$detailButtonContainer
+                    .find('.dropdown-item-list-button');
+                this.$dropdownEditItemListButton = this.$detailButtonContainer
+                    .find('.dropdown-edit-item-list-button');
             });
 
             if (
@@ -1389,8 +1398,6 @@ function (Dep, ViewRecordHelper) {
 
                     if (reason === 'error') {
                         view.inlineEdit();
-
-                        return;
                     }
                 });
         },
@@ -1455,7 +1462,8 @@ function (Dep, ViewRecordHelper) {
                         var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
 
                         if (methodName in dynamicHandler) {
-                            dynamicHandler[methodName].call(dynamicHandler, model, changedAttributes[attribute], o);
+                            dynamicHandler[methodName]
+                                .call(dynamicHandler, model, changedAttributes[attribute], o);
                         }
                     }
                 });
@@ -2464,9 +2472,9 @@ function (Dep, ViewRecordHelper) {
         },
 
         /**
-         * Called after save or cancel.
-         * By default redirects page. Can be orverridden in options.
-         * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.
+         * Called after save or cancel. By default, redirects a page. Can be overridden in options.
+         *
+         * @param {string} after Name of an action (`save`, `cancel,` etc.) after which #exit is invoked.
          */
         exit: function (after) {
             if (after) {

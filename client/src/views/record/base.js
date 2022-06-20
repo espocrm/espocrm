@@ -1471,7 +1471,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         /**
          * Process exit.
          *
-         * @param {string} [after] An exit parameter..
+         * @param {string} [after] An exit parameter.
          */
         exit: function (after) {},
     });
