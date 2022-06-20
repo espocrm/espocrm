@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep) {
+define('views/fields/varchar-column', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,7 +38,7 @@ Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep
             var data;
 
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type == 'isEmpty') {
+                if (type === 'isEmpty') {
                     data = {
                         typeFront: type,
                         where: {
@@ -76,10 +76,15 @@ Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep
                         }
                     }
                 }
+
                 return data;
-            } else {
+            }
+            else {
+
                 var value = this.$element.val().toString().trim();
+
                 value = value.trim();
+
                 if (value) {
                     data = {
                         value: value,
@@ -89,12 +94,13 @@ Espo.define('views/fields/varchar-column', 'views/fields/varchar', function (Dep
                             value: value
                         }
                     }
+
                     return data;
                 }
             }
-            return false;
-        }
 
+            return null;
+        }
     });
 });
 

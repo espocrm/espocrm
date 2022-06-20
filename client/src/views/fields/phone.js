@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/phone', 'views/fields/varchar', function (Dep) {
+define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,9 +42,12 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (!this.model.get(this.name) || !this.model.get(this.name) === '') {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                if (!this.model.get(this.name)) {
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input');
+
                     return true;
                 }
             }
@@ -52,23 +55,33 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
         validatePhoneData: function () {
             var data = this.model.get(this.dataFieldName);
-            if (!data || !data.length) return;
+
+            if (!data || !data.length) {
+                return;
+            }
 
             var numberList = [];
-
             var notValid = false;
-            data.forEach(function (row, i) {
+
+            data.forEach((row, i) => {
                 var number = row.phoneNumber;
                 var numberClean = String(number).replace(/[\s\+]/g, '');
 
                 if (~numberList.indexOf(numberClean)) {
-                    var msg = this.translate('fieldValueDuplicate', 'messages').replace('{field}', this.getLabelText());
-                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1).toString() + ') input');
+                    var msg = this.translate('fieldValueDuplicate', 'messages')
+                        .replace('{field}', this.getLabelText());
+
+                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
+                        .toString() + ') input');
+
                     notValid = true;
+
                     return;
                 }
+
                 numberList.push(numberClean);
-            }, this);
+            });
+
             if (notValid) {
                 return true;
             }
@@ -76,23 +89,26 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
         data: function () {
             var phoneNumberData;
-            if (this.mode == 'edit') {
+
+            if (this.mode === 'edit') {
                 phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 
                 if (this.model.isNew() || !this.model.get(this.name)) {
                     if (!phoneNumberData || !phoneNumberData.length) {
                         var optOut = false;
+
                         if (this.model.isNew()) {
                             optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
                         } else {
                             optOut = this.model.get(this.isOptedOutFieldName)
                         }
+
                         phoneNumberData = [{
                             phoneNumber: this.model.get(this.name) || '',
                             primary: true,
                             type: this.defaultType,
                             optOut: optOut,
-                            invalid: false
+                            invalid: false,
                         }];
                     }
                 }
@@ -102,14 +118,18 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
             if (phoneNumberData) {
                 phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
-                phoneNumberData.forEach(function (item) {
+
+                phoneNumberData.forEach((item) => {
                     var number = item.phoneNumber || '';
+
                     item.erased = number.indexOf(this.erasedPlaceholder) === 0;
+
                     if (!item.erased) {
                         item.valueForLink = number.replace(/ /g, '');
                     }
+
                     item.lineThrough = item.optOut || item.invalid || this.model.get('doNotCall');
-                }, this);
+                });
             }
 
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
@@ -131,17 +151,20 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             var data = _.extend({
                 phoneNumberData: phoneNumberData,
                 doNotCall: this.model.get('doNotCall'),
-                lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName)
+                lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName),
             }, Dep.prototype.data.call(this));
 
             if (this.isReadMode()) {
                 data.isOptedOut = this.model.get(this.isOptedOutFieldName);
+
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
+
                     if (!data.isErased) {
                         data.valueForLink = this.model.get(this.name).replace(/ /g, '');
                     }
                 }
+
                 data.valueIsSet = this.model.has(this.name);
             }
 
@@ -156,31 +179,36 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 var $block = $(e.currentTarget).closest('div.phone-number-block');
                 var property = $target.data('property-type');
 
-
-                if (property == 'primary') {
+                if (property === 'primary') {
                     if (!$target.hasClass('active')) {
-                        if ($block.find('input.phone-number').val() != '') {
-                            this.$el.find('button.phone-property[data-property-type="primary"]').removeClass('active').children().addClass('text-muted');
+                        if ($block.find('input.phone-number').val() !== '') {
+                            this.$el.find('button.phone-property[data-property-type="primary"]')
+                                .removeClass('active').children().addClass('text-muted');
+
                             $target.addClass('active').children().removeClass('text-muted');
                         }
                     }
-                } else {
+                }
+                else {
                     if ($target.hasClass('active')) {
                         $target.removeClass('active').children().addClass('text-muted');
                     } else {
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
+
                 this.trigger('change');
             },
 
             'click [data-action="removePhoneNumber"]': function (e) {
                 var $block = $(e.currentTarget).closest('div.phone-number-block');
-                if ($block.parent().children().length == 1) {
+
+                if ($block.parent().children().length === 1) {
                     $block.find('input.phone-number').val('');
                 } else {
                     this.removePhoneNumberBlock($block);
                 }
+
                 this.trigger('change');
             },
 
@@ -189,7 +217,7 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
                 var $block = $input.closest('div.phone-number-block');
 
                 if ($input.val() == '') {
-                    if ($block.parent().children().length == 1) {
+                    if ($block.parent().children().length === 1) {
                         $block.find('input.phone-number').val('');
                     } else {
                         this.removePhoneNumberBlock($block);
@@ -216,7 +244,7 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
                 o = {
                     phoneNumber: '',
-                    primary: data.length ? false : true,
+                    primary: !data.length,
                     type: false,
                     optOut: this.emailAddressOptedOutByDefault,
                     invalid: false,
@@ -243,7 +271,11 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             $block.remove();
 
             if (changePrimary) {
-                this.$el.find('button[data-property-type="primary"]').first().addClass('active').children().removeClass('text-muted');
+                this.$el.find('button[data-property-type="primary"]')
+                    .first()
+                    .addClass('active')
+                    .children()
+                    .removeClass('text-muted');
             }
 
             this.manageButtonsVisibility();
@@ -260,15 +292,20 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             });
 
             if (c == $input.length) {
-                this.$el.find('[data-action="addPhoneNumber"]').removeClass('disabled').removeAttr('disabled');
+                this.$el.find('[data-action="addPhoneNumber"]')
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
             } else {
-                this.$el.find('[data-action="addPhoneNumber"]').addClass('disabled').attr('disabled', 'disabled');
+                this.$el.find('[data-action="addPhoneNumber"]')
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
             }
         },
 
         manageButtonsVisibility: function () {
             var $primary = this.$el.find('button[data-property-type="primary"]');
             var $remove = this.$el.find('button[data-action="removePhoneNumber"]');
+
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
                 $remove.removeClass('hidden');
@@ -280,23 +317,32 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
 
         setup: function () {
             this.dataFieldName = this.name + 'Data';
-            this.defaultType = this.defaultType || this.getMetadata().get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
+            this.defaultType = this.defaultType ||
+                this.getMetadata()
+                    .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
 
             this.isOptedOutFieldName = this.name + 'IsOptedOut';
 
             this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
 
             if (this.model.has('doNotCall')) {
-                this.listenTo(this.model, 'change:doNotCall', function (model, value, o) {
-                    if (this.mode !== 'detail' && this.mode !== 'list') return;
-                    if (!o.ui) return;
+                this.listenTo(this.model, 'change:doNotCall', (model, value, o) => {
+                    if (this.mode !== 'detail' && this.mode !== 'list') {
+                        return;
+                    }
+
+                    if (!o.ui) {
+                        return;
+                    }
+
                     this.reRender();
-                }, this);
+                });
             }
 
             this.erasedPlaceholder = 'ERASED:';
 
-            this.itemMaxLength = this.getMetadata().get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
+            this.itemMaxLength = this.getMetadata()
+                .get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
         },
 
         fetchPhoneNumberData: function () {
@@ -305,19 +351,23 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             var $list = this.$el.find('div.phone-number-block');
 
             if ($list.length) {
-                $list.each(function (i, d) {
+                $list.each((i, d) => {
                     var row = {};
                     var $d = $(d);
+
                     row.phoneNumber = $d.find('input.phone-number').val().trim();
+
                     if (row.phoneNumber == '') {
                         return;
                     }
+
                     row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
                     row.type = $d.find('select[data-property-type="type"]').val();
                     row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
                     row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
+
                     data.push(row);
-                }.bind(this));
+                });
             }
 
             return data;
@@ -332,18 +382,20 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             data[this.isOptedOutFieldName] = false;
 
             var primaryIndex = 0;
-            addressData.forEach(function (item, i) {
+
+            addressData.forEach((item, i) => {
                 if (item.primary) {
                     primaryIndex = i;
+
                     if (item.optOut) {
                         data[this.isOptedOutFieldName] = true;
                     }
-                    return;
                 }
-            }, this);
+            });
 
             if (addressData.length && primaryIndex > 0) {
                 var t = addressData[0];
+
                 addressData[0] = addressData[primaryIndex];
                 addressData[primaryIndex] = t;
             }
@@ -355,7 +407,6 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             return data;
-        }
-
+        },
     });
 });

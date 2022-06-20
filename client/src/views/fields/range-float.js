@@ -69,7 +69,6 @@ define('views/fields/range-float', ['views/fields/range-int', 'views/fields/floa
         formatNumberEdit: function (value) {
             return Float.prototype.formatNumberEdit.call(this, value);
         },
-
     });
 });
 

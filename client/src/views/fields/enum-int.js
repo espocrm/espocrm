@@ -45,7 +45,9 @@ define('views/fields/enum-int', ['views/fields/enum'], function (Dep) {
         fetch: function () {
             var value = parseInt(this.$element.val());
             var data = {};
+
             data[this.name] = value;
+
             return data;
         },
 

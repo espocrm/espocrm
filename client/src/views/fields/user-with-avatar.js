@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/user-with-avatar', 'views/fields/user', function (Dep) {
+define('views/fields/user-with-avatar',[ 'views/fields/user'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,8 +46,8 @@ define('views/fields/user-with-avatar', 'views/fields/user', function (Dep) {
         },
 
         getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+            return this.getHelper()
+                .getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
         },
-
     });
 });

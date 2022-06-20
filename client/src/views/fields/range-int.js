@@ -63,8 +63,8 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
             var fromValue = this.model.get(this.fromField);
             var toValue = this.model.get(this.toField);
 
-            var fromValue = isNaN(fromValue) ? null : fromValue;
-            var toValue = isNaN(toValue) ? null : toValue;
+            fromValue = isNaN(fromValue) ? null : fromValue;
+            toValue = isNaN(toValue) ? null : toValue;
 
             if (fromValue !== null && toValue !== null) {
                 return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue);
@@ -121,7 +121,8 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
             var validate = (name) => {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === null) {
-                        var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                        var msg = this.translate('fieldIsRequired', 'messages')
+                            .replace('{field}', this.getLabelText());
 
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
 
@@ -141,7 +142,8 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
         validateInt: function () {
             var validate = (name) => {
                 if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldShouldBeInt', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
 
@@ -240,7 +242,6 @@ define('views/fields/range-int', ['views/fields/base', 'views/fields/int'], func
 
         formatNumber: function (value) {
             return value;
-            //return Int.prototype.formatNumber.call(this, value);
         },
 
         fetch: function (form) {

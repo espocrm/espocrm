@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/user', 'views/fields/link', function (Dep) {
+define('views/fields/user',[ 'views/fields/link'], function (Dep) {
 
     return Dep.extend({
 
@@ -103,54 +103,55 @@ define('views/fields/user', 'views/fields/link', function (Dep) {
                 var $elemeneTeams = this.$el.find('input.element-teams');
 
                 $elemeneTeams.autocomplete({
-                    serviceUrl: function (q) {
+                    serviceUrl: (q) => {
                         return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
-                    }.bind(this),
+                    },
                     minChars: 1,
                     triggerSelectOnValidInput: false,
                     paramName: 'q',
                     noCache: true,
-                    formatResult: function (suggestion) {
+                    formatResult: (suggestion) => {
                         return this.getHelper().escapeString(suggestion.name);
-                    }.bind(this),
-                    transformResult: function (response) {
+                    },
+                    transformResult: (response) => {
                         var response = JSON.parse(response);
                         var list = [];
-                        response.list.forEach(function(item) {
+
+                        response.list.forEach(item => {
                             list.push({
                                 id: item.id,
                                 name: item.name,
                                 data: item.id,
                                 value: item.name
                             });
-                        }, this);
+                        });
+
                         return {
                             suggestions: list
                         };
-                    }.bind(this),
-                    onSelect: function (s) {
+                    },
+                    onSelect: (s) => {
                         this.addLinkTeams(s.id, s.name);
-
                         $elemeneTeams.val('');
-                    }.bind(this)
+                    },
                 });
 
                 $elemeneTeams.attr('autocomplete', 'espo-' + this.name);
 
-                this.once('render', function () {
+                this.once('render', () => {
                     $elemeneTeams.autocomplete('dispose');
-                }, this);
+                });
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     $elemeneTeams.autocomplete('dispose');
-                }, this);
+                });
 
                 var type = this.$el.find('select.search-type').val();
 
                 if (type === 'isFromTeams') {
-                    this.searchData.teamIdList.forEach(function (id) {
+                    this.searchData.teamIdList.forEach(id => {
                         this.addLinkTeamsHtml(id, this.searchData.teamNameHash[id]);
-                    }, this);
+                    });
                 }
             }
         },
@@ -208,17 +209,16 @@ define('views/fields/user', 'views/fields/link', function (Dep) {
             var type = this.$el.find('select.search-type').val();
 
             if (type === 'isFromTeams') {
-                var data = {
+                return {
                     type: 'isUserFromTeams',
                     field: this.name,
                     value: this.searchData.teamIdList,
                     data: {
                         type: type,
                         teamIdList: this.searchData.teamIdList,
-                        teamNameHash: this.searchData.teamNameHash
+                        teamNameHash: this.searchData.teamNameHash,
                     }
                 };
-                return data;
             }
 
             return Dep.prototype.fetchSearch.call(this);

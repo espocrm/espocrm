@@ -88,7 +88,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
         validateRequired: function () {
             if (this.isRequired()) {
-                if (!this.model.get(this.name) || !this.model.get(this.name) === '') {
+                if (!this.model.get(this.name)) {
                     var msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
@@ -102,7 +102,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         data: function () {
             var emailAddressData;
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 emailAddressData = Espo.Utils.clone(this.model.get(this.dataFieldName));
 
                 if (this.model.isNew() || !this.model.get(this.name)) {

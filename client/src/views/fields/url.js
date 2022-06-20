@@ -101,6 +101,5 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
 
             return data;
         },
-
     });
 });

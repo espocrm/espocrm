@@ -36,13 +36,14 @@ define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
             var type = this.fetchSearchType();
 
             var list = this.$element.val().split(':,:');
+
             if (list.length === 1 && list[0] === '') {
                 list = [];
             }
 
-            list.forEach(function (item, i) {
+            list.forEach((item, i) => {
                 list[i] = this.parseItemForSearch(item);
-            }, this);
+            });
 
             if (type === 'anyOf') {
                 if (list.length === 0) {
@@ -53,6 +54,7 @@ define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
                         }
                     };
                 }
+
                 return {
                     type: 'columnIn',
                     value: list,
@@ -61,7 +63,8 @@ define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
                         valueList: list
                     }
                 };
-            } else if (type === 'noneOf') {
+            }
+            else if (type === 'noneOf') {
                 if (list.length === 0) {
                     return {
                         data: {
@@ -70,6 +73,7 @@ define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
                         }
                     };
                 }
+
                 return {
                     type: 'or',
                     value: [

@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/text', 'views/fields/base', function (Dep) {
+define('views/fields/text', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A text field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/text
+     */
+    return Dep.extend(/** @lends module:views/fields/text.Class# */{
 
         type: 'text',
 
@@ -78,11 +86,8 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.params.rows = this.params.rows || this.rowsDefault;
-
             this.noResize = this.options.noResize || this.params.noResize || this.noResize;
-
             this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
-
             this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
                 this.autoHeightDisabled;
 
@@ -245,6 +250,7 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                     this.$element.val(text);
                 }
             }
+
             if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
 
@@ -342,7 +348,8 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
         },
 
         getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+            return this.getSearchParamsData().type || this.searchParams.typeFront ||
+                this.searchParams.type;
         },
 
         mailTo: function (emailAddress) {
@@ -359,7 +366,8 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
                 require('email-helper', (EmailHelper) => {
                     var emailHelper = new EmailHelper();
 
-                    var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+                    var link = emailHelper
+                        .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
 
                     document.location.href = link;
                 });
@@ -374,11 +382,10 @@ define('views/fields/text', 'views/fields/base', function (Dep) {
 
             this.createView('quickCreate', viewName, {
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
             });
         },
-
     });
 });

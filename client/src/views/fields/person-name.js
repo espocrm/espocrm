@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
+define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -44,6 +44,7 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
             data.salutationValue = this.model.get(this.salutationField);
             data.firstValue = this.model.get(this.firstField);
@@ -60,12 +61,17 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             data.valueIsSet = this.model.has(this.firstField) || this.model.has(this.lastField);
 
             if (this.mode === 'detail') {
-                data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.salutationValue || !!data.middleValue;
-            } else if (this.mode === 'list' || this.mode === 'listLink') {
+                data.isNotEmpty = !!data.firstValue || !!data.lastValue ||
+                    !!data.salutationValue || !!data.middleValue;
+            }
+            else if (this.mode === 'list' || this.mode === 'listLink') {
                 data.isNotEmpty = !!data.firstValue || !!data.lastValue || !!data.middleValue;
             }
 
-            if (data.isNotEmpty && this.mode == 'detail' || this.mode == 'list' || this.mode === 'listLink') {
+            if (
+                data.isNotEmpty && this.mode == 'detail' ||
+                this.mode == 'list' || this.mode === 'listLink'
+            ) {
                 data.formattedValue = this.getFormattedValue();
             }
 
@@ -74,6 +80,7 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             var ucName = Espo.Utils.upperCaseFirst(this.name)
             this.salutationField = 'salutation' + ucName;
             this.firstField = 'first' + ucName;
@@ -83,6 +90,7 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             if (this.mode == 'edit') {
                 this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
                 this.$first = this.$el.find('[data-name="' + this.firstField + '"]');
@@ -92,15 +100,17 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
                     this.$middle = this.$el.find('[data-name="' + this.middleField + '"]');
                 }
 
-                this.$salutation.on('change', function () {
+                this.$salutation.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
-                this.$first.on('change', function () {
+                });
+
+                this.$first.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
-                this.$last.on('change', function () {
+                });
+
+                this.$last.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -111,7 +121,8 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
             var middle = this.model.get(this.middleField);
 
             if (salutation) {
-                salutation = this.getLanguage().translateOption(salutation, 'salutationName', this.model.entityType);
+                salutation = this.getLanguage()
+                    .translateOption(salutation, 'salutationName', this.model.entityType);
             }
 
             var value = '';
@@ -120,33 +131,78 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
             switch (format) {
                 case 'lastFirst':
-                    if (salutation) value += salutation;
-                    if (last) value += ' ' + last;
-                    if (first) value += ' ' + first;
+                    if (salutation) {
+                        value += salutation;
+                    }
+
+                    if (last) {
+                        value += ' ' + last;
+                    }
+
+                    if (first) {
+                        value += ' ' + first;
+                    }
+
                     break;
 
                 case 'lastFirstMiddle':
                     var arr = [];
-                    if (salutation) arr.push(salutation);
-                    if (last) arr.push(last);
-                    if (first) arr.push(first);
-                    if (middle) arr.push(middle);
+
+                    if (salutation) {
+                        arr.push(salutation);
+                    }
+
+                    if (last) {
+                        arr.push(last);
+                    }
+
+                    if (first) {
+                        arr.push(first);
+                    }
+
+                    if (middle) {
+                        arr.push(middle);
+                    }
+
                     value = arr.join(' ');
+
                     break;
 
                 case 'firstMiddleLast':
                     var arr = [];
-                    if (salutation) arr.push(salutation);
-                    if (first) arr.push(first);
-                    if (middle) arr.push(middle);
-                    if (last) arr.push(last);
+
+                    if (salutation) {
+                        arr.push(salutation);
+                    }
+
+                    if (first) {
+                        arr.push(first);
+                    }
+
+                    if (middle) {
+                        arr.push(middle);
+                    }
+
+                    if (last) {
+                        arr.push(last);
+                    }
+
                     value = arr.join(' ');
+
                     break;
 
                 default:
-                    if (salutation) value += salutation;
-                    if (first) value += ' ' + first;
-                    if (last) value += ' ' + last;
+                    if (salutation) {
+                        value += salutation;
+                    }
+
+                    if (first) {
+                        value += ' ' + first;
+                    }
+
+                    if (last) {
+                        value += ' ' + last;
+                    }
             }
 
             value = value.trim();
@@ -157,10 +213,12 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         _getTemplateName: function () {
             if (this.mode == 'edit') {
                 var prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+
                 if (prop in this) {
                     return this[prop];
                 }
             }
+
             return Dep.prototype._getTemplateName.call(this);
         },
 
@@ -179,34 +237,44 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
         validateRequired: function () {
             var isRequired = this.isRequired();
 
-            var validate = function (name) {
+            var validate = (name) => {
                 if (this.model.isRequired(name)) {
                     if (!this.model.get(name)) {
-                        var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name));
+                        var msg = this.translate('fieldIsRequired', 'messages')
+                            .replace('{field}', this.translate(name, 'fields', this.model.name));
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                         return true;
                     }
                 }
-            }.bind(this);
+            };
 
             if (isRequired) {
                 if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
+
                     return true;
                 }
             }
 
             var result = false;
+
             result = validate(this.salutationField) || result;
             result = validate(this.firstField) || result;
             result = validate(this.lastField) || result;
             result = validate(this.middleField) || result;
+
             return result;
         },
 
         hasRequiredMarker: function () {
-            if (this.isRequired()) return true;
+            if (this.isRequired()) {
+                return true;
+            }
+
             return this.model.getFieldParam(this.salutationField, 'required') ||
                    this.model.getFieldParam(this.firstField, 'required') ||
                    this.model.getFieldParam(this.middleField, 'required') ||
@@ -215,6 +283,7 @@ define('views/fields/person-name', 'views/fields/varchar', function (Dep) {
 
         fetch: function (form) {
             var data = {};
+
             data[this.salutationField] = this.$salutation.val() || null;
             data[this.firstField] = this.$first.val().trim() || null;
             data[this.lastField] = this.$last.val().trim() || null;

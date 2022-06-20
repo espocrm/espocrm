@@ -660,7 +660,8 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
         insertFromSource: function (source) {
             var viewName =
-                this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
+                this.getMetadata()
+                    .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
                 this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
                 'views/modals/select-records';
 
@@ -674,7 +675,8 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
 
                     if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
                         if (
-                            this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
+                            this.getMetadata()
+                                .get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
                         ) {
                             filters = {
                                 account: {

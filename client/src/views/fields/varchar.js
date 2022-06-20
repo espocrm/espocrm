@@ -28,7 +28,15 @@
 
 define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A varchar field.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/base.Class
+     * @memberOf module:views/fields/varchar
+     */
+    return Dep.extend(/** @lends module:views/fields/varchar.Class# */{
 
         type: 'varchar',
 
@@ -43,7 +51,13 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
             'notEquals', 'notLike', 'isEmpty', 'isNotEmpty',
         ],
 
-        useAutocompleteUrl: null,
+        /**
+         * Use an autocomplete requesting data from the backend.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        useAutocompleteUrl: false,
 
         setup: function () {
             this.setupOptions();
@@ -53,9 +67,17 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * Set up options.
+         */
         setupOptions: function () {
         },
 
+        /**
+         * Set options.
+         *
+         * @param {string[]} optionList Options.
+         */
         setOptionList: function (optionList) {
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options || [];
@@ -70,6 +92,9 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
             }
         },
 
+        /**
+         * Reset options.
+         */
         resetOptionList: function () {
             if (this.originalOptionList) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
@@ -82,7 +107,15 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
             }
         },
 
-        getAutocompleteUrl: function (q) {},
+        /**
+         * Compose an autocomplete URL.
+         *
+         * @param {string} q A query.
+         * @return {string}
+         */
+        getAutocompleteUrl: function (q) {
+            return '';
+        },
 
         transformAutocompleteResult: function (response) {
             let responseParsed = JSON.parse(response);
@@ -115,11 +148,10 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             if (
-                this.model.get(this.name) !== null
-                &&
-                this.model.get(this.name) !== ''
-                &&
+                this.model.get(this.name) !== null &&
+                this.model.get(this.name) !== '' &&
                 this.model.has(this.name)
             ) {
                 data.isNotEmpty = true;
@@ -190,7 +222,8 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
                 if (this.useAutocompleteUrl) {
                     autocompleteOptions.serviceUrl = q => this.getAutocompleteUrl(q);
-                    autocompleteOptions.transformResult = response => this.transformAutocompleteResult(response);
+                    autocompleteOptions.transformResult = response =>
+                        this.transformAutocompleteResult(response);
                     autocompleteOptions.noCache = true;
                     autocompleteOptions.lookup = null;
                 }
@@ -313,8 +346,8 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         },
 
         getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+            return this.getSearchParamsData().type || this.searchParams.typeFront ||
+                this.searchParams.type;
         },
-
     });
 });

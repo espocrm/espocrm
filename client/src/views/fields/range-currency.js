@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/range-currency', 'views/fields/range-float', function (Dep, Float) {
+define('views/fields/range-currency', ['views/fields/range-float'], function (Dep, Float) {
 
     return Dep.extend({
 
@@ -38,7 +38,8 @@ define('views/fields/range-currency', 'views/fields/range-float', function (Dep,
             return _.extend({
                 currencyField: this.currencyField,
                 currencyValue: this.model.get(this.fromCurrencyField) ||
-                    this.getPreferences().get('defaultCurrency') || this.getConfig().get('defaultCurrency'),
+                    this.getPreferences().get('defaultCurrency') ||
+                    this.getConfig().get('defaultCurrency'),
                 currencyOptions: this.currencyOptions,
                 currencyList: this.currencyList
             }, Dep.prototype.data.call(this));
@@ -68,10 +69,11 @@ define('views/fields/range-currency', 'views/fields/range-float', function (Dep,
             var fromValue = this.model.get(this.fromField);
             var toValue = this.model.get(this.toField);
 
-            var fromValue = isNaN(fromValue) ? null : fromValue;
-            var toValue = isNaN(toValue) ? null : toValue;
+            fromValue = isNaN(fromValue) ? null : fromValue;
+            toValue = isNaN(toValue) ? null : toValue;
 
-            var currencyValue = this.model.get(this.fromCurrencyField) || this.model.get(this.toCurrencyField);
+            var currencyValue = this.model.get(this.fromCurrencyField) ||
+                this.model.get(this.toCurrencyField);
 
             if (fromValue !== null && toValue !== null) {
                 return this.formatNumber(fromValue) + ' &#8211 ' +
@@ -109,8 +111,6 @@ define('views/fields/range-currency', 'views/fields/range-float', function (Dep,
             }
 
             return data;
-        }
-
+        },
     });
 });
-
