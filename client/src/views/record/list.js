@@ -26,92 +26,389 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/record/list',
-    ['view', 'helpers/mass-action', 'helpers/export', 'lib!espo'],
-    function (Dep, MassActionHelper, ExportHelper, Espo) {
+define('views/record/list', ['view', 'helpers/mass-action', 'helpers/export'],
+function (Dep, MassActionHelper, ExportHelper) {
 
-    return Dep.extend({
+    /**
+     * A record-list view. Renders and processes list items, actions.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/list
+     */
+    return Dep.extend(/** @lends module:views/record/list.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'record/list',
 
         /**
-         * Type of the list. Can be 'list', 'listSmall'.
+         * A type. Can be 'list', 'listSmall'.
          */
         type: 'list',
 
+        /**
+         * @inheritDoc
+         */
         name: 'list',
 
+        /**
+         * A presentation type.
+         */
         presentationType: 'table',
 
         /**
-         * If true checkboxes will be shown.
+         * If true checkboxes will be shown. Can be overridden by an option parameter.
+         *
+         * @protected
          */
         checkboxes: true,
 
         /**
          * If true clicking on the record link will trigger 'select' event with model passed.
+         * Can be overridden by an option parameter.
          */
         selectable: false,
 
+        /**
+         * A row-actions view. A dropdown on the right side.
+         *
+         * @protected
+         * @type {string}
+         */
         rowActionsView: 'views/record/row-actions/default',
 
+        /**
+         * Disable row-actions. Can be overridden by an option parameter.
+         */
         rowActionsDisabled: false,
 
         /**
-         * Set automatically.
+         * An entity type. Set automatically.
+         *
+         * @type {string|null}
          */
         entityType: null,
 
         /**
-         * Set automatically.
+         * A scope. Set automatically.
+         *
+         * @type {string|null}
          */
         scope: null,
 
+        /**
+         * @protected
+         */
         _internalLayoutType: 'list-row',
 
+        /**
+         * A selector to a list container.
+         *
+         * @protected
+         */
         listContainerEl: '.list > table > tbody',
 
+        /**
+         * To show number of records. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         showCount: true,
 
+        /**
+         * @protected
+         */
         rowActionsColumnWidth: 25,
 
+        /**
+         * @protected
+         */
         checkboxColumnWidth: 40,
 
-        buttonList: [],
-
-        headerDisabled: false,
-
-        massActionsDisabled: false,
-
-        portalLayoutDisabled: false,
-
-        dropdownItemList: [],
-
+        /**
+         * @protected
+         */
         minColumnWidth: 100,
 
+        /**
+         * A button. Handled by a class method `action{Name}`.
+         *
+         * @typedef {Object} module:record/list~button
+         *
+         * @property {string} name A name.
+         * @property {string} label A label. To be translated in a current scope.
+         * @property {'default'|'danger'|'warning'|'success'} [style] A style.
+         * @property {boolean} [hidden] Hidden.
+         */
+
+        /**
+         * A button list.
+         *
+         * @protected
+         * @type {module:record/list~button[]}
+         */
+        buttonList: [],
+
+        /**
+         * A dropdown item. Handled by a class method `action{Name}`.
+         *
+         * @typedef {Object} module:record/list~dropdownItem
+         *
+         * @property {string} name A name.
+         * @property {string} [label] A label. To be translated in a current scope.
+         * @property {string} [html] An HTML.
+         * @property {boolean} [hidden] Hidden.
+         */
+
+        /**
+         * A dropdown item list. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {module:record/list~dropdownItem[]}
+         */
+        dropdownItemList: [],
+
+        /**
+         * Disable a header. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        headerDisabled: false,
+
+        /**
+         * Disable mass actions. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        massActionsDisabled: false,
+
+        /**
+         * Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        portalLayoutDisabled: false,
+
+        /**
+         * Mandatory select attributes. Can be overridden by an option parameter.
+         * Attributes to be selected regardless being on a layout.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
         mandatorySelectAttributeList: null,
 
         /**
          * A layout name. If null, a value from `type` property will be used.
+         * Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {string|null}
          */
         layoutName: null,
 
         /**
          * A scope name for layout loading. If null, an entity type of collection will be used.
+         * Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {string|null}
          */
         layoutScope: null,
 
         /**
          * To disable field-level access check for a layout.
+         * Can be overridden by an option parameter.
+         *
+         * @protected
          */
         layoutAclDisabled: false,
 
+        /**
+         * A setup-handler type.
+         *
+         * @protected
+         */
         setupHandlerType: 'record/list',
 
+        /**
+         * @internal
+         * @private
+         */
         checkboxesDisabled: false,
 
+        /**
+         * Where to display the pagination. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {'top'|'bottom'|boolean|null}
+         */
+        pagination: false,
+
+        /**
+         * To display a table header with column names. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        header: true,
+
+        /**
+         * A show-more button. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        showMore: true,
+
+        /**
+         * A mass-action list.
+         *
+         * @protected
+         * @type {string[]}
+         */
+        massActionList: [
+            'remove',
+            'merge',
+            'massUpdate',
+            'export',
+        ],
+
+        /**
+         * A mass-action list available when selecting all results.
+         *
+         * @protected
+         * @type {string[]}
+         */
+        checkAllResultMassActionList: [
+            'remove',
+            'massUpdate',
+            'export',
+        ],
+
+        /**
+         * Disable quick-detail (viewing a record in modal)
+         *
+         * @protected
+         */
+        quickDetailDisabled: false,
+
+        /**
+         * Disable quick-edit (editing a record in modal)
+         *
+         * @protected
+         */
+        quickEditDisabled: false,
+
+        /**
+         * A list layout. Can be overridden by an option parameter.
+         * If empty, then will be loaded from the backend (using the `layoutName` value).
+         *
+         * @protected
+         * @type {Object[]|null}
+         */
+        listLayout: null,
+
+        /**
+         * @private
+         */
+        _internalLayout: null,
+
+        /**
+         * A list of record IDs currently selected. Only for reading.
+         *
+         * @protected
+         * @type {string[]|null}
+         */
+        checkedList: null,
+
+        /**
+         * Whether all results currently selected. Only for reading.
+         *
+         * @protected
+         */
+        allResultIsChecked: false,
+
+        /**
+         * Disable the ability to select all results. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        checkAllResultDisabled: false,
+
+        /**
+         * Disable buttons. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        buttonsDisabled: false,
+
+        /**
+         * Disable edit. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        editDisabled: false,
+
+        /**
+         * Disable remove. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        removeDisabled: false,
+
+        /**
+         * Disable a stick-bar. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        stickedBarDisabled: false,
+
+        /**
+         * Disable the follow/unfollow mass action.
+         *
+         * @protected
+         */
+        massFollowDisabled: false,
+
+        /**
+         * Disable the print-pdf mass action.
+         *
+         * @protected
+         */
+        massPrintPdfDisabled: false,
+
+        /**
+         * Disable the convert-currency mass action.
+         *
+         * @protected
+         */
+        massConvertCurrencyDisabled: false,
+
+        /**
+         * Disable mass-update.
+         *
+         * @protected
+         */
+        massUpdateDisabled: false,
+
+        /**
+         * Disable export.
+         *
+         * @protected
+         */
+        exportDisabled: false,
+
+        /**
+         * @inheritDoc
+         */
         events: {
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click a.link': function (e) {
                 e.stopPropagation();
 
@@ -122,9 +419,7 @@ define(
                 e.preventDefault();
 
                 var id = $(e.currentTarget).attr('data-id');
-
                 var model = this.collection.get(id);
-
                 var scope = this.getModelScope(id);
 
                 var options = {
@@ -137,20 +432,27 @@ define(
                 }
 
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
-
                 this.getRouter().dispatch(scope, 'view', options);
             },
-
+            /**
+             * @this module:views/record/list.Class
+             */
             'click [data-action="showMore"]': function () {
                 this.showMoreRecords();
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click a.sort': function (e) {
                 var field = $(e.currentTarget).data('name');
 
                 this.toggleSort(field);
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click .pagination a': function (e) {
                 var page = $(e.currentTarget).data('page');
 
@@ -174,7 +476,10 @@ define(
 
                 this.deactivate();
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click .record-checkbox': function (e) {
                 var $target = $(e.currentTarget);
 
@@ -186,24 +491,34 @@ define(
                     this.uncheckRecord(id, $target);
                 }
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click .select-all': function (e) {
                 this.selectAllHandler(e.currentTarget.checked);
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
             },
-
-            'click .checkbox-dropdown [data-action="selectAllResult"]': function (e) {
+            /**
+             * @this module:views/record/list.Class
+             */
+            'click .checkbox-dropdown [data-action="selectAllResult"]': function () {
                 this.selectAllResult();
             },
-
+            /**
+             * @param {Event} e
+             * @this module:views/record/list.Class
+             */
             'click .actions-menu a.mass-action': function (e) {
                 let $el = $(e.currentTarget);
 
                 var action = $el.data('action');
-
                 var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
 
                 if (method in this) {
@@ -214,6 +529,9 @@ define(
             }
         },
 
+        /**
+         * @protected
+         */
         toggleSort: function (orderBy) {
             var asc = true;
             if (orderBy === this.collection.orderBy && this.collection.order === 'asc') {
@@ -243,6 +561,9 @@ define(
             this.deactivate();
         },
 
+        /**
+         * @protected
+         */
         initStickedBar: function () {
             var $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
             var $middle = this.$el.find('> .list');
@@ -342,16 +663,26 @@ define(
             };
         },
 
+        /**
+         * @protected
+         */
         showActions: function () {
             this.$el.find('.actions-button').removeClass('hidden');
 
-            if (!this.options.stickedBarDisabled && !this.stickedBarDisabled && this.massActionList.length) {
+            if (
+                !this.options.stickedBarDisabled &&
+                !this.stickedBarDisabled &&
+                this.massActionList.length
+            ) {
                 if (!this.$stickedBar) {
                     this.initStickedBar();
                 }
             }
         },
 
+        /**
+         * @protected
+         */
         hideActions: function () {
             this.$el.find('.actions-button').addClass('hidden');
 
@@ -360,6 +691,9 @@ define(
             }
         },
 
+        /**
+         * @protected
+         */
         selectAllHandler: function (isChecked) {
             this.checkedList = [];
 
@@ -380,9 +714,7 @@ define(
                 }
 
                 this.$el.find('input.record-checkbox').prop('checked', false);
-
                 this.hideActions();
-
                 this.$el.find('.list > table tbody tr').removeClass('active');
             }
 
@@ -390,37 +722,8 @@ define(
         },
 
         /**
-         * @param {string} or {bool} ['both', 'top', 'bottom', false, true] Where to display paginations.
+         * @inheritDoc
          */
-        pagination: false,
-
-        /**
-         * @param {bool} To dispaly table header with column names.
-         */
-        header: true,
-
-        showMore: true,
-
-        massActionList: ['remove', 'merge', 'massUpdate', 'export'],
-
-        checkAllResultMassActionList: ['remove', 'massUpdate', 'export'],
-
-        quickDetailDisabled: false,
-
-        quickEditDisabled: false,
-
-        listLayout: null,
-
-        _internalLayout: null,
-
-        checkedList: null,
-
-        checkAllResultDisabled: false,
-
-        buttonsDisabled: false,
-
-        allResultIsChecked: false,
-
         data: function () {
             var paginationTop = this.pagination === 'both' ||
                 this.pagination === 'top';
@@ -454,7 +757,8 @@ define(
                 paginationEnabled: this.pagination,
                 paginationTop: paginationTop,
                 paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length || this.collection.total === -1,
+                showMoreActive: this.collection.total > this.collection.length ||
+                    this.collection.total === -1,
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: moreCount,
@@ -475,6 +779,9 @@ define(
             };
         },
 
+        /**
+         * @inheritDoc
+         */
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
 
@@ -496,8 +803,10 @@ define(
                 this.pagination :
                 this.options.pagination;
 
-            this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
-            this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
+            this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes :
+                this.options.checkboxes;
+            this.selectable = _.isUndefined(this.options.selectable) ? this.selectable :
+                this.options.selectable;
 
             this.checkboxesDisabled = this.options.checkboxes === false;
 
@@ -516,7 +825,8 @@ define(
 
             this.rowActionsDisabled = this.options.rowActionsDisabled || this.rowActionsDisabled;
 
-            this.dropdownItemList = Espo.Utils.cloneDeep(this.options.dropdownItemList || this.dropdownItemList);
+            this.dropdownItemList = Espo.Utils.cloneDeep(
+                this.options.dropdownItemList || this.dropdownItemList);
 
             if ('buttonsDisabled' in this.options) {
                 this.buttonsDisabled = this.options.buttonsDisabled;
@@ -527,10 +837,19 @@ define(
             }
         },
 
+        /**
+         * Get a record entity type (scope).
+         *
+         * @param {string} id A record ID.
+         * @return {string}
+         */
         getModelScope: function (id) {
             return this.scope;
         },
 
+        /**
+         * Select all results.
+         */
         selectAllResult: function () {
             this.allResultIsChecked = true;
 
@@ -559,24 +878,29 @@ define(
             this.trigger('select-all-results');
         },
 
+        /**
+         * Unselect all results.
+         */
         unselectAllResult: function () {
             this.allResultIsChecked = false;
 
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
-            this.massActionList.forEach(function(item) {
+            this.massActionList.forEach(item => {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
                     this.$el
-                        .find(
-                            'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
-                        )
+                        .find('div.list-buttons-container .actions-menu ' +
+                            'li a.mass-action[data-action="'+item+'"]')
                         .parent()
                         .removeClass('hidden');
                 }
-            }, this);
+            });
         },
 
+        /**
+         * @protected
+         */
         deactivate: function () {
             if (this.$el) {
                 this.$el.find(".pagination li").addClass('disabled');
@@ -584,6 +908,13 @@ define(
             }
         },
 
+        /**
+         * Process export.
+         *
+         * @param {Object<string,*>} [data]
+         * @param {string} [url='Export'] An API URL.
+         * @param {string[]} [fieldList] A field list.
+         */
         export: function (data, url, fieldList) {
             if (!data) {
                 data = {
@@ -600,7 +931,7 @@ define(
                 }
             }
 
-            var url = url || 'Export';
+            url = url || 'Export';
 
             var o = {
                 scope: this.entityType
@@ -671,6 +1002,11 @@ define(
             });
         },
 
+        /**
+         * Process a mass-action.
+         *
+         * @param {string} name An action.
+         */
         massAction: function (name) {
             var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', name]) || {};
 
@@ -902,7 +1238,8 @@ define(
                         helper
                             .process(result.id, 'delete')
                             .then(view => {
-                                this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
+                                this.listenToOnce(view, 'close:success', result =>
+                                    afterAllResult(result.count));
                             });
 
                         return;
@@ -1133,7 +1470,8 @@ define(
                 ids = this.checkedList;
             }
 
-            var viewName = this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
+            var viewName = this.getMetadata()
+                    .get(['clientDefs', this.entityType, 'modalViews', 'massUpdate']) ||
                 'views/modals/mass-update';
 
             this.createView('massUpdate', viewName, {
@@ -1337,6 +1675,9 @@ define(
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             if (typeof this.collection === 'undefined') {
                 throw new Error('Collection has not been injected into views/record/list view.');
@@ -1355,10 +1696,10 @@ define(
                 this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || []
             );
 
-            this.editDisabled = this.options.editDisabled ||
+            this.editDisabled = this.options.editDisabled || this.editDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);
 
-            this.removeDisabled = this.options.removeDisabled ||
+            this.removeDisabled = this.options.removeDisabled || this.removeDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']);
 
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
@@ -1421,7 +1762,8 @@ define(
                 }
 
                 if (~this.massActionList.indexOf(item)) {
-                    var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
+                    var defs = this.getMetadata()
+                        .get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
 
                     if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) {
                         return;
@@ -1438,7 +1780,8 @@ define(
             metadataMassActionList
                 .concat(metadataCheckkAllMassActionList)
                 .forEach((action) => {
-                       var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', action]) || {};
+                       var defs = this.getMetadata()
+                           .get(['clientDefs', this.scope, 'massActionDefs', action]) || {};
 
                     if (!defs.initFunction || !defs.handler) {
                         return;
@@ -1460,16 +1803,19 @@ define(
                 });
 
             if (
-                this.getConfig().get('exportDisabled') && !this.getUser().isAdmin()
-                ||
-                this.getAcl().get('exportPermission') === 'no'
-                ||
-                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled'])
+                this.getConfig().get('exportDisabled') && !this.getUser().isAdmin() ||
+                this.getAcl().get('exportPermission') === 'no' ||
+                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled']) ||
+                this.exportDisabled
             ) {
                 this.removeMassAction('export');
             }
 
-            if (this.getAcl().get('massUpdatePermission') !== 'yes' || this.editDisabled) {
+            if (
+                this.getAcl().get('massUpdatePermission') !== 'yes' ||
+                this.editDisabled ||
+                this.massUpdateDisabled
+            ) {
                 this.removeMassAction('massUpdate');
             }
 
@@ -1483,8 +1829,7 @@ define(
             }
 
             if (
-                !this.massPrintPdfDisabled
-                &&
+                !this.massPrintPdfDisabled &&
                 ~(this.getHelper().getAppParam('templateEntityTypeList') || []).indexOf(this.entityType)
             ) {
                 this.addMassAction('printPdf');
@@ -1651,8 +1996,14 @@ define(
             }
         },
 
+        /**
+         * @protected
+         */
         setupMassActionItems: function () {},
 
+        /**
+         * @protected
+         */
         filterListLayout: function (listLayout) {
             if (this._cachedFilteredListLayout) {
                 return this._cachedFilteredListLayout;
@@ -1688,6 +2039,11 @@ define(
             return this._cachedFilteredListLayout;
         },
 
+        /**
+         * @protected
+         * @param {function(Object[]):void} callback A callback.
+         * @private
+         */
         _loadListLayout: function (callback) {
             this.layoutLoadCallbackList.push(callback);
 
@@ -1712,6 +2068,11 @@ define(
             });
         },
 
+        /**
+         * Get a select-attribute list.
+         *
+         * @param {function(string[]):void} callback A callback.
+         */
         getSelectAttributeList: function (callback) {
             if (this.scope === null || this.rowHasOwnLayout) {
                 callback(null);
@@ -1726,23 +2087,24 @@ define(
 
                 return;
             }
-            else {
-                this._loadListLayout((listLayout) => {
-                    this.listLayout = listLayout;
 
-                    var attributeList = this.fetchAttributeListFromLayout();
+            this._loadListLayout((listLayout) => {
+                this.listLayout = listLayout;
 
-                    if (this.mandatorySelectAttributeList) {
-                        attributeList = attributeList.concat(attributeList);
-                    }
+                var attributeList = this.fetchAttributeListFromLayout();
 
-                    callback(attributeList);
-                });
+                if (this.mandatorySelectAttributeList) {
+                    attributeList = attributeList.concat(attributeList);
+                }
 
-                return;
-            }
+                callback(attributeList);
+            });
         },
 
+        /**
+         * @protected
+         * @return {Object[]}
+         */
         fetchAttributeListFromLayout: function () {
             var list = [];
 
@@ -1769,6 +2131,9 @@ define(
             return list;
         },
 
+        /**
+         * @protected
+         */
         _getHeaderDefs: function () {
             var defs = [];
 
@@ -1809,7 +2174,7 @@ define(
                 }
 
                 defs.push(item);
-            };
+            }
 
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
@@ -1820,6 +2185,9 @@ define(
             return defs;
         },
 
+        /**
+         * @protected
+         */
         _convertLayout: function (listLayout, model) {
             model = model || this.collection.model.prototype;
 
@@ -1880,6 +2248,13 @@ define(
             return layout;
         },
 
+        /**
+         * Select a record.
+         *
+         * @param {string} id An ID.
+         * @param {JQuery} [$target]
+         * @param {boolean} [isSilent] Do not trigger the `check` event.
+         */
         checkRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
@@ -1900,6 +2275,13 @@ define(
             this.handleAfterCheck(isSilent);
         },
 
+        /**
+         * Unselect a record.
+         *
+         * @param {string} id An ID.
+         * @param {JQuery} [$target]
+         * @param {boolean} [isSilent] Do not trigger the `check` event.
+         */
         uncheckRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
@@ -1920,6 +2302,10 @@ define(
             this.handleAfterCheck(isSilent);
         },
 
+        /**
+         * @protected
+         * @param {boolean} [isSilent]
+         */
         handleAfterCheck: function (isSilent) {
             if (this.checkedList.length) {
                 this.showActions();
@@ -1940,6 +2326,11 @@ define(
             }
         },
 
+        /**
+         * Get row-actions defs.
+         *
+         * @return {Object}
+         */
         getRowActionsDefs: function () {
             var options = {
                 defs: {
@@ -1962,8 +2353,9 @@ define(
         },
 
         /**
-         * Returns checked models.
-         * @return {Array} Array of models
+         * Get selected models.
+         *
+         * @return {module:model[]}
          */
         getSelected: function () {
             var list = [];
@@ -1980,6 +2372,9 @@ define(
             return list;
         },
 
+        /**
+         * @protected
+         */
         getInternalLayoutForModel: function (callback, model) {
             var scope = model.name;
 
@@ -1994,6 +2389,9 @@ define(
             callback(this._internalLayout[scope]);
         },
 
+        /**
+         * @protected
+         */
         getInternalLayout: function (callback, model) {
             if (this.scope === null || this.rowHasOwnLayout) {
                 if (!model) {
@@ -2027,11 +2425,16 @@ define(
                 this._internalLayout = this._convertLayout(listLayout);
 
                 callback(this._internalLayout);
-
-                return;
             });
         },
 
+        /**
+         * Compose a cell selector for a layout item.
+         *
+         * @param {module:model} model A model.
+         * @param {Object} item An item.
+         * @return {string}
+         */
         getItemEl: function (model, item) {
             return this.options.el + ' tr[data-id="' + model.id + '"] ' +
                 'td.cell[data-name="' + item.columnName + '"]';
@@ -2043,6 +2446,13 @@ define(
             });
         },
 
+        /**
+         * Build a row.
+         *
+         * @param {number} i An index.
+         * @param {module:model} model A model.
+         * @param {function(module:view):void} [callback] A callback.
+         */
         buildRow: function (i, model, callback) {
             var key = model.id;
 
@@ -2074,6 +2484,11 @@ define(
             }, model);
         },
 
+        /**
+         * Build rows.
+         *
+         * @param {function():void} [callback] A callback.
+         */
         buildRows: function (callback) {
             this.checkedList = [];
 
@@ -2124,7 +2539,6 @@ define(
                 });
             });
 
-
             if (this.pagination) {
                 this.createView('pagination', 'views/record/list-pagination', {
                     collection: this.collection,
@@ -2132,6 +2546,14 @@ define(
             }
         },
 
+        /**
+         * Show more records.
+         *
+         * @param {module:collection.Class} [collection]
+         * @param {JQuery} [$list]
+         * @param {JQuery} [$showMore]
+         * @param {function(): void} [callback] A callback.
+         */
         showMoreRecords: function (collection, $list, $showMore, callback) {
             collection = collection || this.collection;
 
@@ -2243,6 +2665,12 @@ define(
             return null;
         },
 
+        /**
+         * Compose a row-container HTML.
+         *
+         * @param {string} id A record ID.
+         * @return {string} HTML.
+         */
         getRowContainerHtml: function (id) {
             return '<tr data-id="'+id+'" class="list-row"></tr>';
         },
@@ -2401,6 +2829,12 @@ define(
             }
         },
 
+        /**
+         * Compose a row selector.
+         *
+         * @param {string} id A record ID.
+         * @return {string}
+         */
         getRowSelector: function (id) {
             return 'tr[data-id="' + id + '"]';
         },
@@ -2443,6 +2877,10 @@ define(
             });
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         removeRecordFromList: function (id) {
             this.collection.remove(id);
 
@@ -2471,6 +2909,10 @@ define(
             }
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         removeRowHtml: function (id) {
             this.$el.find(this.getRowSelector(id)).remove();
 
@@ -2530,6 +2972,5 @@ define(
 
             return minWidth;
         },
-
     });
 });

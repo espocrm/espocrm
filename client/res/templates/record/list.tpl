@@ -33,8 +33,7 @@
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
                 {{#if this}}
-                <li class="{{#if hidden}}hidden{{/if}}"
-                >
+                <li class="{{#if hidden}}hidden{{/if}}">
                 <a
                     href="javascript:"
                     class="action"
