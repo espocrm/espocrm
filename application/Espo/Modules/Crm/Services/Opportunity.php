@@ -701,8 +701,21 @@ class Opportunity extends Record
                 'emailAddress' => $emailAddress,
                 'name' => $contact->get('name'),
                 'entityType' => 'Contact',
+                'entityId' => $contact->getId(),
             ];
         }
+
+        usort($dataList, function (stdClass $o1, stdClass $o2) use ($entity) {
+            if ($o1->entityId == $entity->get('contactId')) {
+                return -1;
+            }
+
+            if ($o2->entityId == $entity->get('contactId')) {
+                return +1;
+            }
+
+            return 0;
+        });
 
         return $dataList;
     }
