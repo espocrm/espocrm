@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail', ['views/record/base', 'view-record-helper'], function (Dep, ViewRecordHelper) {
+define('views/record/detail', ['views/record/base', 'view-record-helper'],
+function (Dep, ViewRecordHelper) {
 
     return Dep.extend({
 
@@ -122,7 +123,23 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         saveAndContinueEditingAction: true,
 
-        panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
+        /**
+         * A panel soft-locked type.
+         *
+         * @typedef {'default'|'acl'|'delimiter'|'dynamicLogic'
+         * } module:views/record/detail~panelSoftLockedType
+         */
+
+        /**
+         * @private
+         * @type {module:views/record/detail~panelSoftLockedType[]}
+         */
+        panelSoftLockedTypeList: [
+            'default',
+            'acl',
+            'delimiter',
+            'dynamicLogic',
+        ],
 
         confirmLeaveDisabled: false,
 
@@ -546,6 +563,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
         },
 
+        /**
+         * Show a panel.
+         *
+         * @param {string} name A panel name.
+         * @param {module:views/record/detail~panelSoftLockedType} [softLockedType='default']
+         *   A soft-locked type.
+         */
         showPanel: function (name, softLockedType) {
             if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
                 return;
@@ -554,7 +578,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             softLockedType = softLockedType || 'default';
 
             this.recordHelper
-                .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
+                .setPanelStateParam(name,
+                    'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
 
             if (softLockedType === 'dynamicLogic') {
                 if (this.recordHelper.getPanelStateParam(name, 'hidden') === false) {
@@ -619,6 +644,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
         },
 
+        /**
+         * Hide a panel.
+         *
+         * @param {string} name A panel name.
+         * @param {boolean} [locked=false] Won't be able to un-hide.
+         * @param {module:views/record/detail~panelSoftLockedType} [softLockedType='default']
+         *   A soft-locked type.
+         */
         hidePanel: function (name, locked, softLockedType) {
             softLockedType = softLockedType || 'default';
 
@@ -628,7 +661,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             if (softLockedType) {
                 this.recordHelper
-                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true);
+                    .setPanelStateParam(name,
+                        'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true);
             }
 
             if (softLockedType === 'dynamicLogic') {
@@ -960,29 +994,44 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             });
         },
 
+        /**
+         * Get field views.
+         *
+         * @param {boolean} [withHidden] With hidden.
+         * @return {Object.<string,module:views/fields/base.Class>}
+         */
         getFieldViews: function (withHidden) {
-            var fields = {};
+            let fields = {};
 
             if (this.hasView('middle')) {
                 if ('getFieldViews' in this.getView('middle')) {
                     _.extend(fields, Espo.Utils.clone(this.getView('middle').getFieldViews(withHidden)));
                 }
             }
+
             if (this.hasView('side')) {
                 if ('getFieldViews' in this.getView('side')) {
                     _.extend(fields, this.getView('side').getFieldViews(withHidden));
                 }
             }
+
             if (this.hasView('bottom')) {
                 if ('getFieldViews' in this.getView('bottom')) {
                     _.extend(fields, this.getView('bottom').getFieldViews(withHidden));
                 }
             }
+
             return fields;
         },
 
+        /**
+         * Get a field view.
+         *
+         * @param {string} name A field name.
+         * @return {module:views/fields/base.Class|null}
+         */
         getFieldView: function (name) {
-            var view;
+            let view;
 
             if (this.hasView('middle')) {
                 view = (this.getView('middle').getFieldViews(true) || {})[name];
@@ -999,7 +1048,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             return view || null;
         },
 
-        // TODO remove
+        // @todo Remove.
         handleDataBeforeRender: function (data) {},
 
         data: function () {
@@ -1303,9 +1352,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.dynamicLogicDefs = _.extend(dynamicLogic, this.dynamicLogicDefs);
 
             this.initDynamicLogic();
-
             this.setupFieldLevelSecurity();
-
             this.initDynamicHandler();
         },
 
@@ -1809,7 +1856,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     this.attributes.versionNumber = versionNumber;
 
                     for (let attribute in values) {
-                        this.setInitalAttributeValue(attribute, values[attribute]);
+                        this.setInitialAttributeValue(attribute, values[attribute]);
                     }
                 });
             });

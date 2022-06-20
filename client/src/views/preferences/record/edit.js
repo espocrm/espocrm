@@ -268,7 +268,7 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
                     this.model.set(data);
 
                     for (var attribute in data) {
-                        this.setInitalAttributeValue(attribute, data[attribute]);
+                        this.setInitialAttributeValue(attribute, data[attribute]);
                     }
 
                     this.getPreferences().set(this.model.toJSON());
@@ -283,13 +283,13 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
             this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.ajaxPostRequest('Preferences/action/resetDashboard', {
                     id: this.model.id
-                }).then((data) =>  {
+                }).then(data =>  {
                     Espo.Ui.success(this.translate('Done'));
 
                     this.model.set(data);
 
                     for (var attribute in data) {
-                        this.setInitalAttributeValue(attribute, data[attribute]);
+                        this.setInitialAttributeValue(attribute, data[attribute]);
                     }
 
                     this.getPreferences().set(this.model.toJSON());

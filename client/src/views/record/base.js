@@ -29,30 +29,87 @@
 define(
     'views/record/base',
     ['view', 'view-record-helper', 'dynamic-logic', 'lib!underscore'],
-    function (Dep, ViewRecordHelper, DynamicLogic, _) {
+function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
-    return Dep.extend({
+    /**
+     * A base record view. To be extended.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/base
+     */
+    return Dep.extend(/** @lends module:views/record/base.Class# */{
 
+        /**
+         * A type.
+         */
         type: 'edit',
 
-        fieldsMode: 'edit',
-
+        /**
+         * An entity type.
+         */
         entityType: null,
 
+        /**
+         * A scope.
+         */
         scope: null,
 
+        /**
+         * Is new. Is set automatically.
+         */
         isNew: false,
 
+        /**
+         * @deprecated
+         * @protected
+         */
         dependencyDefs: {},
 
+        /**
+         * Dynamic logic.
+         *
+         * @type {Object}
+         */
         dynamicLogicDefs: {},
 
+        /**
+         * A field list.
+         *
+         * @protected
+         */
         fieldList: null,
 
+        /**
+         * A mode.
+         *
+         * @type {'detail'|'edit'|null}
+         */
         mode: null,
 
+        /**
+         * A last save cancel reason.
+         *
+         * @protected
+         * @type {string|null}
+         */
         lastSaveCancelReason: null,
 
+        /**
+         * A record-helper.
+         *
+         * @protected
+         * @type {module:view-record-helper.Class}
+         */
+        recordHelper: null,
+
+        /**
+         * Hide a field.
+         *
+         * @param {string} name A field name.
+         * @param {boolean } [locked] To lock. Won't be able to un-hide.
+         */
         hideField: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
@@ -88,13 +145,18 @@ define(
                 });
             }
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 view.setDisabled(locked);
             }
         },
 
+        /**
+         * Show a field.
+         *
+         * @param {string} name A field name.
+         */
         showField: function (name) {
             if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
                 return;
@@ -131,7 +193,7 @@ define(
                 });
             }
 
-            var view = this.getFieldView(name);
+            let view = this.getFieldView(name);
 
             if (view) {
                 if (!view.disabledLocked) {
@@ -140,6 +202,12 @@ define(
             }
         },
 
+        /**
+         * Set a field as read-only.
+         *
+         * @param {string} name A field name.
+         * @param {boolean } [locked] To lock. Won't be able to un-set.
+         */
         setFieldReadOnly: function (name, locked) {
             let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
@@ -160,6 +228,11 @@ define(
             }
         },
 
+        /**
+         * Set a field as not read-only.
+         *
+         * @param {string} name A field name.
+         */
         setFieldNotReadOnly: function (name) {
             let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
@@ -185,6 +258,11 @@ define(
             }
         },
 
+        /**
+         * Set a field as required.
+         *
+         * @param {string} name A field name.
+         */
         setFieldRequired: function (name) {
             let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
 
@@ -201,6 +279,11 @@ define(
             }
         },
 
+        /**
+         * Set a field as not required.
+         *
+         * @param {string} name A field name.
+         */
         setFieldNotRequired: function (name) {
             let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
 
@@ -217,6 +300,12 @@ define(
             }
         },
 
+        /**
+         * Set an option list for a field.
+         *
+         * @param {string} name A field name.
+         * @param {string[]} list Options.
+         */
         setFieldOptionList: function (name, list) {
             let had = this.recordHelper.hasFieldOptionList(name);
             let previousList = this.recordHelper.getFieldOptionList(name);
@@ -236,6 +325,11 @@ define(
             }
         },
 
+        /**
+         * Reset field options (revert to default).
+         *
+         * @param {string} name A field name.
+         */
         resetFieldOptionList: function (name) {
             let had = this.recordHelper.hasFieldOptionList(name);
 
@@ -254,6 +348,11 @@ define(
             }
         },
 
+        /**
+         * Show a panel.
+         *
+         * @param {string} name A panel name.
+         */
         showPanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
@@ -262,6 +361,11 @@ define(
             }
         },
 
+        /**
+         * Hide a panel.
+         *
+         * @param {string} name A panel name.
+         */
         hidePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
 
@@ -270,6 +374,11 @@ define(
             }
         },
 
+        /**
+         * Style a panel. Style is set in the `data-style` DOM attribute.
+         *
+         * @param {string} name A panel name.
+         */
         stylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', true);
 
@@ -301,6 +410,11 @@ define(
             });
         },
 
+        /**
+         * Un-style a panel.
+         *
+         * @param {string} name A panel name.
+         */
         unstylePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'styled', false);
 
@@ -332,6 +446,11 @@ define(
             });
         },
 
+        /**
+         * Set/unset a confirmation upon leaving the form.
+         *
+         * @param {boolean} value True sets a required confirmation.
+         */
         setConfirmLeaveOut: function (value) {
             if (!this.getRouter()) {
                 return;
@@ -340,10 +459,15 @@ define(
             this.getRouter().confirmLeaveOut = value;
         },
 
+        /**
+         * Get field views.
+         *
+         * @return {Object.<string,module:views/fields/base.Class>}
+         */
         getFieldViews: function () {
             var fields = {};
 
-            this.fieldList.forEach((item) => {
+            this.fieldList.forEach(item => {
                 var view = this.getFieldView(item);
 
                 if (view) {
@@ -354,14 +478,25 @@ define(
             return fields;
         },
 
+        /**
+         * @deprecated Use `getFieldViews`.
+         * @return {Object<string, module:views/fields/base.Class>}
+         */
         getFields: function () {
             return this.getFieldViews();
         },
 
+        /**
+         * Get a field view.
+         *
+         * @param {string} name A field name.
+         * @return {module:views/fields/base.Class|null}
+         */
         getFieldView: function (name) {
-            var view =  this.getView(name + 'Field') || null;
+            /** @type {module:views/fields/base.Class|null} */
+            let view =  this.getView(name + 'Field') || null;
 
-            // TODO remove
+            // @todo Remove.
             if (!view) {
                 view = this.getView(name) || null;
             }
@@ -369,22 +504,37 @@ define(
             return view;
         },
 
+        /**
+         * @deprecated Use `getFieldView`.
+         * @return {module:views/fields/base.Class|null}
+         */
         getField: function (name) {
             return this.getFieldView(name);
         },
 
+        /**
+         * Get a field list.
+         *
+         * @return {string[]}
+         */
         getFieldList: function () {
-            var fieldViews = this.getFieldViews();
-
-            return Object.keys(fieldViews);
+            return Object.keys(this.getFieldViews());
         },
 
+        /**
+         * Get a field view list.
+         *
+         * @return {module:views/fields/base.Class[]}
+         */
         getFieldViewList: function () {
             return this.getFieldList()
                 .map(field => this.getFieldView(field))
                 .filter(view => view !== null);
         },
 
+        /**
+         * @inheritDoc
+         */
         data: function () {
             return {
                 scope: this.scope,
@@ -394,7 +544,10 @@ define(
             };
         },
 
-        // TODO remove
+        /**
+         * @todo Remove.
+         * @private
+         */
         handleDataBeforeRender: function (data) {
             this.getFieldList().forEach((field) => {
                 var viewKey = field + 'Field';
@@ -403,6 +556,9 @@ define(
             });
         },
 
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             if (typeof this.model === 'undefined') {
                 throw new Error('Model has not been injected into record view.');
@@ -427,7 +583,8 @@ define(
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
 
-            this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
+            this.id = Espo.Utils.toDom(this.entityType) + '-' +
+                Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             if (this.model.isNew()) {
                 this.isNew = true;
@@ -436,6 +593,11 @@ define(
             this.setupBeforeFinal();
         },
 
+        /**
+         * Set up before final.
+         *
+         * @protected
+         */
         setupBeforeFinal: function () {
             this.attributes = this.model.getClonedAttributes();
 
@@ -471,14 +633,30 @@ define(
             this.initDynamicLogic();
         },
 
-        setInitalAttributeValue: function (attribute, value) {
+        /**
+         * Set an initial attribute value.
+         *
+         * @protected
+         * @param {string} attribute An attribute name.
+         * @param {*} value
+         */
+        setInitialAttributeValue: function (attribute, value) {
             this.attributes[attribute] = value;
         },
 
+        /**
+         * Check whether a current attribute value differs from initial.
+         *
+         * @param {string} name An attribute name.
+         * @return {boolean}
+         */
         checkAttributeIsChanged: function (name) {
             return !_.isEqual(this.attributes[name], this.model.get(name));
         },
 
+        /**
+         * Reset model changes.
+         */
         resetModelChanges: function () {
             if (this.updatedAttributes) {
                 this.attributes = this.updatedAttributes;
@@ -497,6 +675,12 @@ define(
             this.model.set(this.attributes, {skipReRender: true});
         },
 
+        /**
+         * Set model attribute values.
+         *
+         * @param {Object.<string,*>} setAttributes Values.
+         * @param {Object.<string,*>} [options] Options.
+         */
         setModelAttributes: function (setAttributes, options) {
             for (var item in this.model.attributes) {
                 if (!(item in setAttributes)) {
@@ -507,6 +691,11 @@ define(
             this.model.set(setAttributes, options || {});
         },
 
+        /**
+         * Init dynamic logic.
+         *
+         * @protected
+         */
         initDynamicLogic: function () {
             this.dynamicLogicDefs = Espo.Utils.clone(this.dynamicLogicDefs || {});
             this.dynamicLogicDefs.fields = Espo.Utils.clone(this.dynamicLogicDefs.fields);
@@ -514,18 +703,29 @@ define(
 
             this.dynamicLogic = new DynamicLogic(this.dynamicLogicDefs, this);
 
-            this.listenTo(this.model, 'change', this.processDynamicLogic, this);
+            this.listenTo(this.model, 'change', () => this.processDynamicLogic());
             this.processDynamicLogic();
         },
 
+        /**
+         * Process dynamic logic.
+         *
+         * @protected
+         */
         processDynamicLogic: function () {
             this.dynamicLogic.process();
         },
 
+        /**
+         * @deprecated
+         */
         applyDependancy: function () {
             this._handleDependencyAttributes();
         },
 
+        /**
+         * @deprecated
+         */
         initDependancy: function () {
             Object.keys(this.dependencyDefs || {}).forEach((attr) => {
                 this.listenTo(this.model, 'change:' + attr, () => {
@@ -536,6 +736,11 @@ define(
             this._handleDependencyAttributes();
         },
 
+        /**
+         * Set up a field level security.
+         *
+         * @protected
+         */
         setupFieldLevelSecurity: function () {
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
@@ -543,21 +748,36 @@ define(
                 this.hideField(field, true);
             });
 
-            var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+            let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
             readOnlyFieldList.forEach((field) => {
                 this.setFieldReadOnly(field, true);
             });
         },
 
+        /**
+         * Set is changed.
+         *
+         * @protected
+         */
         setIsChanged: function () {
             this.isChanged = true;
         },
 
+        /**
+         * Set is not changed.
+         *
+         * @protected
+         */
         setIsNotChanged: function () {
             this.isChanged = false;
         },
 
+        /**
+         * Validate.
+         *
+         * @return {boolean} True if not valid.
+         */
         validate: function () {
             let notValid = false;
 
@@ -568,6 +788,12 @@ define(
             return notValid;
         },
 
+        /**
+         * Validate a specific field.
+         *
+         * @param {string} field A field name.
+         * @return {boolean} True if not valid.
+         */
         validateField: function (field) {
             let fieldView = this.getFieldView(field);
 
@@ -617,6 +843,9 @@ define(
             return notValid;
         },
 
+        /**
+         * Processed after save.
+         */
         afterSave: function () {
             if (this.isNew) {
                 this.notify('Created', 'success');
@@ -628,29 +857,57 @@ define(
             this.setIsNotChanged();
         },
 
-        beforeBeforeSave: function () {
+        /**
+         * Processed before before-save.
+         */
+        beforeBeforeSave: function () {},
 
-        },
-
+        /**
+         * Processed before save.
+         */
         beforeSave: function () {
             this.notify('Saving...');
         },
 
-        afterSaveError: function () {
-        },
+        /**
+         * Processed after save error.
+         */
+        afterSaveError: function () {},
 
+        /**
+         * Processed after save a not modified record.
+         */
         afterNotModified: function () {
             var msg = this.translate('notModified', 'messages');
 
-            Espo.Ui.warning(msg, 'warning');
+            Espo.Ui.warning(msg);
 
             this.setIsNotChanged();
         },
 
+        /**
+         * Processed after save not valid.
+         */
         afterNotValid: function () {
             this.notify('Not valid', 'error');
         },
 
+        /**
+         * Save options.
+         *
+         * @typedef {Object} module:views/record/base~saveOptions
+         *
+         * @property {Object.<string,string>} [headers] HTTP headers.
+         * @property {boolean} [skipNotModifiedWarning] Don't show a not-modified warning.
+         * @property {function():void} [afterValidate] A callback called after validate.
+         */
+
+        /**
+         * Save.
+         *
+         * @param {module:views/record/base~saveOptions} [options] Options.
+         * @return {Promise<never,string>}
+         */
         save: function (options) {
             options = options || {};
 
@@ -795,6 +1052,12 @@ define(
             });
         },
 
+        /**
+         * Handle a save error.
+         *
+         * @param {JQueryXHR} xhr XHR.
+         * @param {module:views/record/base~saveOptions} [options] Options.
+         */
         handleSaveError: function (xhr, options) {
             var response = null;
 
@@ -803,7 +1066,7 @@ define(
 
                 if (statusReason) {
                     try {
-                        var response = JSON.parse(statusReason);
+                        response = JSON.parse(statusReason);
                     }
                     catch (e) {}
 
@@ -859,6 +1122,11 @@ define(
             }
         },
 
+        /**
+         * Fetch data from the form.
+         *
+         * @return {Object.<string,*>}
+         */
         fetch: function () {
             var data = {};
             var fieldViews = this.getFieldViews();
@@ -871,23 +1139,31 @@ define(
                         _.extend(data, view.fetch());
                     }
                 }
-            };
+            }
 
             return data;
         },
 
+        /**
+         * Process fetch.
+         *
+         * @return {Object<string,*>|null}
+         */
         processFetch: function () {
             var data = this.fetch();
 
             this.model.set(data);
 
             if (this.validate()) {
-                return;
+                return null;
             }
 
             return data;
         },
 
+        /**
+         * Populate defaults.
+         */
         populateDefaults: function () {
             this.model.populateDefaults();
 
@@ -1023,14 +1299,24 @@ define(
             this.model.set(defaultHash, {silent: true});
         },
 
+        /**
+         * @protected
+         * @param duplicates
+         */
         errorHandlerDuplicate: function (duplicates) {},
 
+        /**
+         * @private
+         */
         _handleDependencyAttributes: function () {
             Object.keys(this.dependencyDefs || {}).forEach((attr) => {
                 this._handleDependencyAttribute(attr);
             });
         },
 
+        /**
+         * @private
+         */
         _handleDependencyAttribute: function (attr) {
             var data = this.dependencyDefs[attr];
             var value = this.model.get(attr);
@@ -1050,6 +1336,9 @@ define(
             }
         },
 
+        /**
+         * @private
+         */
         _doDependencyAction: function (data) {
             var action = data.action;
 
@@ -1116,6 +1405,16 @@ define(
             }
         },
 
+        /**
+         * Create a field view.
+         *
+         * @param {string} name A field name.
+         * @param {string|null} [view] A view name/path.
+         * @param {Object<string,*>} [params] Field params.
+         * @param {'detail'|'edit'} [mode='edit'] A mode.
+         * @param {boolean} [readOnly] Read-only.
+         * @param {Object<string,*>} [options] View options.
+         */
         createField: function (name, view, params, mode, readOnly, options) {
             var o = {
                 model: this.model,
@@ -1169,7 +1468,11 @@ define(
             }
         },
 
+        /**
+         * Process exit.
+         *
+         * @param {string} [after] An exit parameter..
+         */
         exit: function (after) {},
-
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-for-modal', 'views/record/edit', function (Dep) {
+define('views/record/edit-for-modal', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,6 +41,5 @@ define('views/record/edit-for-modal', 'views/record/edit', function (Dep) {
         accessControlDisabled: true,
 
         confirmLeaveDisabled: true,
-
     });
 });
