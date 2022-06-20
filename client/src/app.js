@@ -321,6 +321,18 @@ function (
 
         /**
          * @private
+         * @type {module:date-time.Class|null}
+         */
+        dateTime: null,
+
+        /**
+         * @private
+         * @type {module:number.Class|null}
+         */
+        numberUtil: null,
+
+        /**
+         * @private
          */
         initCache: function (options) {
             let cacheTimestamp = options.cacheTimestamp || null;
