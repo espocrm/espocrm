@@ -70,6 +70,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         /**
          * Dynamic logic.
          *
+         * @protected
          * @type {Object}
          */
         dynamicLogicDefs: {},
@@ -462,9 +463,10 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         /**
          * Get field views.
          *
+         * @param {boolean} [withHidden] With hidden.
          * @return {Object.<string,module:views/fields/base.Class>}
          */
-        getFieldViews: function () {
+        getFieldViews: function (withHidden) {
             var fields = {};
 
             this.fieldList.forEach(item => {
@@ -1408,6 +1410,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         /**
          * Create a field view.
          *
+         * @protected
          * @param {string} name A field name.
          * @param {string|null} [view] A view name/path.
          * @param {Object<string,*>} [params] Field params.

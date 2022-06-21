@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail-middle', 'view', function (Dep) {
+define('views/record/detail-middle', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A detail-middle record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/detail-middle
+     */
+    return Dep.extend(/** @lends module:views/record/detail-middle.Class# */{
 
         init: function () {
             this.recordHelper = this.options.recordHelper;
@@ -42,6 +50,11 @@ define('views/record/detail-middle', 'view', function (Dep) {
             };
         },
 
+        /**
+         * Show a panel.
+         *
+         * @param {string} name
+         */
         showPanel: function (name) {
             if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
                 return;
@@ -52,6 +65,10 @@ define('views/record/detail-middle', 'view', function (Dep) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
         },
 
+        /**
+         * @private
+         * @param {string} name
+         */
         showPanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
@@ -76,18 +93,32 @@ define('views/record/detail-middle', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Hide a panel.
+         *
+         * @param {string} name
+         */
         hidePanel: function (name) {
             this.hidePanelInternal(name);
 
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
         },
 
+        /**
+         * @private
+         * @param {string} name
+         */
         hidePanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
         },
 
+        /**
+         * Hide a field.
+         *
+         * @param {string} name
+         */
         hideField: function (name) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
@@ -126,6 +157,11 @@ define('views/record/detail-middle', 'view', function (Dep) {
             }
         },
 
+        /**
+         * Show a field.
+         *
+         * @param {string} name
+         */
         showField: function (name) {
             if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
                 return;
@@ -170,10 +206,18 @@ define('views/record/detail-middle', 'view', function (Dep) {
             }
         },
 
+        /**
+         * @deprecated Use `getFieldViews`.
+         */
         getFields: function () {
             return this.getFieldViews();
         },
 
+        /**
+         * Get field views.
+         *
+         * @return {{string: module:views/fields/base.Class}}
+         */
         getFieldViews: function () {
             var fieldViews = {};
 
@@ -186,11 +230,21 @@ define('views/record/detail-middle', 'view', function (Dep) {
             return fieldViews;
         },
 
+        /**
+         * Get a field view.
+         *
+         * @param {string} name A field name.
+         * @return {module:views/fields/base.Class}
+         */
         getFieldView: function (name) {
             return (this.getFieldViews() || {})[name];
         },
 
-        // @todo remove
+        /**
+         * For backward compatibility.
+         *
+         * @todo Remove.
+         */
         getView: function (name) {
             var view = Dep.prototype.getView.call(this, name);
 
@@ -200,6 +254,5 @@ define('views/record/detail-middle', 'view', function (Dep) {
 
             return view;
         },
-
     });
 });

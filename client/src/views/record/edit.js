@@ -28,18 +28,44 @@
 
 define('views/record/edit', ['views/record/detail'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * An edit-record view. Used for create and edit.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/detail.Class
+     * @memberOf module:views/record/edit
+     */
+    return Dep.extend(/** @lends module:views/record/edit.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'record/edit',
 
+        /**
+         * @inheritDoc
+         */
         type: 'edit',
 
+        /**
+         * @inheritDoc
+         */
         name: 'edit',
 
+        /**
+         * @inheritDoc
+         */
         fieldsMode: 'edit',
 
+        /**
+         * @inheritDoc
+         */
         mode: 'edit',
 
+        /**
+         * @inheritDoc
+         */
         buttonList: [
             {
                 name: 'save',
@@ -52,20 +78,44 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             }
         ],
 
+        /**
+         * @inheritDoc
+         */
         dropdownItemList: [],
 
+        /**
+         * @inheritDoc
+         */
         sideView: 'views/record/edit-side',
 
+        /**
+         * @inheritDoc
+         */
         bottomView: 'views/record/edit-bottom',
 
+        /**
+         * @inheritDoc
+         */
         duplicateAction: false,
 
+        /**
+         * @inheritDoc
+         */
         saveAndContinueEditingAction: true,
 
+        /**
+         * @inheritDoc
+         */
         saveAndNewAction: true,
 
+        /**
+         * @inheritDoc
+         */
         setupHandlerType: 'record/edit',
 
+        /**
+         * @inheritDoc
+         */
         actionSave: function (data) {
             var isNew = this.isNew;
 
@@ -78,10 +128,16 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 .catch(function () {});
         },
 
+        /**
+         * A `cancel` action.
+         */
         actionCancel: function () {
             this.cancel();
         },
 
+        /**
+         * Cancel.
+         */
         cancel: function () {
             if (this.isChanged) {
                 this.resetModelChanges();
@@ -91,6 +147,9 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             this.exit('cancel');
         },
 
+        /**
+         * @inheritDoc
+         */
         setupBeforeFinal: function () {
             if (this.model.isNew()) {
                 this.populateDefaults();
@@ -99,6 +158,9 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             Dep.prototype.setupBeforeFinal.call(this);
         },
 
+        /**
+         * @inheritDoc
+         */
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
@@ -124,6 +186,9 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             }
         },
 
+        /**
+         * A `save-and-create-new` action.
+         */
         actionSaveAndNew: function (data) {
             data = data || {};
 
@@ -145,6 +210,5 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                  proceedCallback();
             }
         },
-
     });
 });

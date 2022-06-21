@@ -26,17 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/default-side', 'views/record/panels/side', function (Dep) {
+define('views/record/panels/default-side', ['views/record/panels/side'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A default side panel.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/panels/side.Class
+     * @memberOf module:views/record/panels/default-side
+     */
+    return Dep.extend(/** @lends module:views/record/panels/default-side.Class */{
 
         data: function () {
             var data = Dep.prototype.data.call(this);
-            if (this.complexCreatedDisabled && this.complexModifiedDisabled  || (!this.hasComplexCreated && !this.hasComplexModified)) {
+
+            if (
+                this.complexCreatedDisabled &&
+                this.complexModifiedDisabled || (!this.hasComplexCreated && !this.hasComplexModified)
+            ) {
                 data.complexDateFieldsDisabled = true;
             }
+
             data.hasComplexCreated = this.hasComplexCreated;
             data.hasComplexModified = this.hasComplexModified;
+
             return data;
         },
 
@@ -44,13 +58,11 @@ define('views/record/panels/default-side', 'views/record/panels/side', function 
             this.fieldList = Espo.Utils.cloneDeep(this.fieldList);
 
             this.hasComplexCreated =
-                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdAt'])
-                &&
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdAt']) &&
                 !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdBy']);
 
             this.hasComplexModified =
-                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedAt'])
-                &&
+                !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedAt']) &&
                 !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedBy']);
 
             Dep.prototype.setup.call(this);
@@ -98,16 +110,23 @@ define('views/record/panels/default-side', 'views/record/panels/side', function 
             }
 
             if (!this.complexCreatedDisabled && this.hasComplexCreated) {
-                this.listenTo(this.model, 'change:createdById', function () {
-                    if (!this.model.get('createdById')) return;
+                this.listenTo(this.model, 'change:createdById', () => {
+                    if (!this.model.get('createdById')) {
+                        return;
+                    }
+
                     this.recordViewObject.showField('complexCreated');
-                }, this);
+                });
             }
+
             if (!this.complexModifiedDisabled && this.hasComplexModified) {
-                this.listenTo(this.model, 'change:modifiedById', function () {
-                    if (!this.model.get('modifiedById')) return;
+                this.listenTo(this.model, 'change:modifiedById', () => {
+                    if (!this.model.get('modifiedById')) {
+                        return;
+                    }
+
                     this.recordViewObject.showField('complexModified');
-                }, this);
+                });
             }
 
             if (this.getMetadata().get(['scopes', this.model.name ,'stream']) && !this.getUser().isPortal()) {
@@ -118,7 +137,9 @@ define('views/record/panels/default-side', 'views/record/panels/side', function 
                     view: 'views/fields/followers',
                     readOnly: true,
                 });
+
                 this.controlFollowersField();
+
                 this.listenTo(this.model, 'change:followersIds', this.controlFollowersField, this);
             }
         },
@@ -130,6 +151,5 @@ define('views/record/panels/default-side', 'views/record/panels/side', function 
                 this.recordViewObject.hideField('followers');
             }
         },
-
     });
 });

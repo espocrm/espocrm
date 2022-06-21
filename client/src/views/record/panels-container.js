@@ -26,11 +26,75 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels-container', 'view', function (Dep) {
+define('views/record/panels-container', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A detail record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/panels-container
+     */
+    return Dep.extend(/** @lends module:views/record/panels-container.Class# */{
 
+        /**
+         * @private
+         */
         panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
+
+        /**
+         * A panel.
+         *
+         * @typedef {Object} module:views/record/panels-container~panel
+         *
+         * @property {string} name A name.
+         * @property {boolean} [hidden] Hidden.
+         * @property {string} [label] A label.
+         * @property {'default'|'success'|'danger'|'warning'} [style] A style.
+         * @property {string} [titleHtml] A title HTML.
+         * @property {boolean} [notRefreshable] Not refreshable.
+         * @property {boolean} [isForm] If for a form.
+         * @property {module:views/record/panels-container~button[]} [buttonList] Buttons.
+         * @property {module:views/record/panels-container~action[]} [actionList] Dropdown actions.
+         * @property {string} [view] A view name.
+         * @property {Object.<string,*>} [Options] A view options.
+         * @property {boolean} [sticked] To stick to an upper panel.
+         */
+
+        /**
+         * A button.
+         *
+         * @typedef {Object} module:views/record/panels-container~button
+         *
+         * @property {string} action An action.
+         * @property {boolean} [hidden] Hidden.
+         * @property {string} [label] A label. Translatable.
+         * @property {string} [html] A HTML.
+         * @property {string} [title] A title (on hover). Translatable.
+         * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+         */
+
+        /**
+         * An action.
+         *
+         * @typedef {Object} module:views/record/panels-container~action
+         *
+         * @property {string} [action] An action.
+         * @property {string} [link] A link URL.
+         * @property {boolean} [hidden] Hidden.
+         * @property {string} [label] A label. Translatable.
+         * @property {string} [html] A HTML.
+         * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+         */
+
+        /**
+         * A panel list.
+         *
+         * @protected
+         * @type {module:views/record/panels-container~panel[]}
+         */
+        panelList: null,
 
         data: function () {
             return {
@@ -64,15 +128,21 @@ define('views/record/panels-container', 'view', function (Dep) {
             'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
         },
 
+        /**
+         * Set read-only.
+         */
         setReadOnly: function () {
             this.readOnly = true;
         },
 
+        /**
+         * Set not read-only.
+         */
         setNotReadOnly: function (onlyNotSetAsReadOnly) {
             this.readOnly = false;
 
             if (onlyNotSetAsReadOnly) {
-                this.panelList.forEach((item) => {
+                this.panelList.forEach(item => {
                     this.applyAccessToActions(item.buttonList);
                     this.applyAccessToActions(item.actionList);
 
@@ -87,12 +157,16 @@ define('views/record/panels-container', 'view', function (Dep) {
             }
         },
 
+        /**
+         * @private
+         * @param {Object[]} actionList
+         */
         applyAccessToActions: function (actionList) {
             if (!actionList) {
                 return;
             }
 
-            actionList.forEach((item) => {
+            actionList.forEach(item => {
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
                     item.hidden = true;
 
@@ -114,8 +188,13 @@ define('views/record/panels-container', 'view', function (Dep) {
             });
         },
 
+        /**
+         * Set up panel views.
+         *
+         * @protected
+         */
         setupPanelViews: function () {
-            this.panelList.forEach((p) => {
+            this.panelList.forEach(p => {
                 var name = p.name;
 
                 var options = {
@@ -169,12 +248,17 @@ define('views/record/panels-container', 'view', function (Dep) {
             });
         },
 
+        /**
+         * Set up panels.
+         *
+         * @protected
+         */
         setupPanels: function () {},
 
         getFieldViews: function (withHidden) {
             var fields = {};
 
-            this.panelList.forEach((p) => {
+            this.panelList.forEach(p => {
                 var panelView = this.getView(p.name);
 
                 if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
@@ -210,7 +294,8 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             if (softLockedType) {
                 this.recordHelper
-                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
+                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked',
+                        false);
             }
 
             for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
@@ -473,6 +558,5 @@ define('views/record/panels-container', 'view', function (Dep) {
                 callback.call(this);
             });
         },
-
     });
 });

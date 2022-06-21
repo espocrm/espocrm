@@ -26,25 +26,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/relationship',
-    ['views/record/panels/bottom', 'search-manager'], function (Dep, SearchManager) {
+define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager'],
+function (Dep, SearchManager) {
 
-    return Dep.extend({
+    /**
+     * A relationship panel.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/panels/bottom.Class
+     * @memberOf module:views/record/panels/relationship
+     */
+    return Dep.extend(/** @lends module:views/record/panels/relationship.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'record/panels/relationship',
 
+        /**
+         * A row-actions view.
+         *
+         * @protected
+         */
         rowActionsView: 'views/record/row-actions/relationship',
 
+        /**
+         * An API URL.
+         *
+         * @protected
+         */
         url: null,
 
+        /**
+         * A scope.
+         */
         scope: null,
 
+        /**
+         * Read-only.
+         */
         readOnly: false,
 
+        /**
+         * Fetch a collection on a model 'after:relate' event.
+         *
+         * @protected
+         */
         fetchOnModelAfterRelate: false,
 
+        /**
+         * @protected
+         */
         noCreateScopeList: ['User', 'Team', 'Role', 'Portal'],
 
+        /**
+         * @private
+         */
         recordsPerPage: null,
 
         init: function () {
@@ -247,8 +285,18 @@ define('views/record/panels/relationship',
             this.setupLast();
         },
 
+        /**
+         * Set up lastly.
+         *
+         * @protected
+         */
         setupLast: function () {},
 
+        /**
+         * Set up title.
+         *
+         * @protected
+         */
         setupTitle: function () {
             this.title = this.title || this.translate(this.link, 'links', this.model.name);
 
@@ -270,6 +318,11 @@ define('views/record/panels/relationship',
             }
         },
 
+        /**
+         * Set up sorting.
+         *
+         * @protected
+         */
         setupSorting: function () {
             var orderBy = this.defs.orderBy || this.defs.sortBy || this.orderBy;
             var order = this.defs.orderDirection || this.orderDirection || this.order;
@@ -291,10 +344,25 @@ define('views/record/panels/relationship',
             this.defaultOrder = order;
         },
 
+        /**
+         * Set up a list layout.
+         *
+         * @protected
+         */
         setupListLayout: function () {},
 
+        /**
+         * Set up actions.
+         *
+         * @protected
+         */
         setupActions: function () {},
 
+        /**
+         * Set up filter actions.
+         *
+         * @protected
+         */
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {
                 this.actionList.push(false);
@@ -323,16 +391,28 @@ define('views/record/panels/relationship',
             }
         },
 
+        /**
+         * Translate a filter.
+         *
+         * @param {string} name A name.
+         * @return {string}
+         */
         translateFilter: function (name) {
             return this.translate(name, 'presetFilters', this.scope);
         },
 
+        /**
+         * @private
+         */
         getStoredFilter: function () {
             var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
 
             return this.getStorage().get('state', key) || null;
         },
 
+        /**
+         * @private
+         */
         storeFilter: function (filter) {
             var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
 
@@ -343,6 +423,11 @@ define('views/record/panels/relationship',
             }
         },
 
+        /**
+         * Set a filter.
+         *
+         * @param {string} filter A filter.
+         */
         setFilter: function (filter) {
             this.filter = filter;
             this.collection.data.primaryFilter = null;
@@ -352,6 +437,11 @@ define('views/record/panels/relationship',
             }
         },
 
+        /**
+         * A `select-filter` action.
+         *
+         * @protected
+         */
         actionSelectFilter: function (data) {
             var filter = data.name;
             var filterInternal = filter;
@@ -400,10 +490,20 @@ define('views/record/panels/relationship',
             }
         },
 
+        /**
+         * A `refresh` action.
+         *
+         * @protected
+         */
         actionRefresh: function () {
             this.collection.fetch();
         },
 
+        /**
+         * A `view-related-list` action.
+         *
+         * @protected
+         */
         actionViewRelatedList: function (data) {
             var viewName =
                 this.getMetadata().get(
@@ -471,14 +571,33 @@ define('views/record/panels/relationship',
             });
         },
 
+        /**
+         * Is create available.
+         *
+         * @protected
+         * @param {string} scope A scope (entity type).
+         * @return {boolean};
+         */
         isCreateAvailable: function (scope) {
-            return this.defs.create;
+            return !!this.defs.create;
         },
 
+        /**
+         * Is select available.
+         *
+         * @protected
+         * @param {string} scope A scope (entity type).
+         * @return {boolean};
+         */
         isSelectAvailable: function (scope) {
-            return this.defs.select;
+            return !!this.defs.select;
         },
 
+        /**
+         * A `view-related` action.
+         *
+         * @protected
+         */
         actionViewRelated: function (data) {
             var id = data.id;
             var scope = this.collection.get(id).name;
@@ -505,6 +624,11 @@ define('views/record/panels/relationship',
             });
         },
 
+        /**
+         * An `edit-related` action.
+         *
+         * @protected
+         */
         actionEditRelated: function (data) {
             var id = data.id;
             var scope = this.collection.get(id).name;
@@ -530,6 +654,11 @@ define('views/record/panels/relationship',
             });
         },
 
+        /**
+         * An `unlink-related` action.
+         *
+         * @protected
+         */
         actionUnlinkRelated: function (data) {
             var id = data.id;
 
@@ -553,6 +682,11 @@ define('views/record/panels/relationship',
             });
         },
 
+        /**
+         * A `remove-related` action.
+         *
+         * @protected
+         */
         actionRemoveRelated: function (data) {
             var id = data.id;
 
@@ -577,6 +711,11 @@ define('views/record/panels/relationship',
             });
         },
 
+        /**
+         * An `unlink-all-related` action.
+         *
+         * @protected
+         */
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));

@@ -26,18 +26,86 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/side', 'view', function (Dep) {
+define('views/record/panels/side', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A side panel.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/panels/side
+     */
+    return Dep.extend(/** module:views/record/panels/side.Class# */{
 
         template: 'record/panels/side',
 
+        /**
+         * A field defs.
+         *
+         * @typedef module:views/record/panels/side~field
+         *
+         * @property {string} name
+         * @property {string} [labelText] A translated label text.
+         * @property {string} [view] A view name.
+         * @property {boolean} [isAdditional]
+         * @property {boolean} [readOnly]
+         * @property {Object.<string,*>} [options] Options.
+         */
+
+        /**
+         * A field list.
+         *
+         * @protected
+         * @type {module:views/record/panels/side~field[]}
+         */
         fieldList: null,
+
+        /**
+         * A mode.
+         *
+         * @protected
+         * @type {'list'|'detail'|'edit'}
+         */
+        mode: 'detail',
+
+        /**
+         * @protected
+         * @type {module:views/record/panels-container~action[]}
+         */
+        actionList: null,
+
+        /**
+         * @protected
+         * @type {module:views/record/panels-container~button[]}
+         */
+        buttonList: null,
+
+        /**
+         * Read-only.
+         *
+         * @protected
+         */
+        readOnly: false,
+
+        /**
+         * Disable inline edit.
+         *
+         * @protected
+         */
+        inlineEditDisabled: false,
+
+        /**
+         * Disable.
+         *
+         * @protected
+         */
+        disabled: false,
 
         data: function () {
             return {
                 fieldList: this.getFieldList(),
-                hiddenFields: this.recordHelper.getHiddenFields()
+                hiddenFields: this.recordHelper.getHiddenFields(),
             };
         },
 
@@ -55,18 +123,6 @@ define('views/record/panels/side', 'view', function (Dep) {
                 }
             }
         },
-
-        mode: 'detail',
-
-        actionList: null,
-
-        buttonList: null,
-
-        readOnly: false,
-
-        inlineEditDisabled: false,
-
-        disabled: false,
 
         init: function () {
             this.panelName = this.options.panelName;
@@ -94,7 +150,7 @@ define('views/record/panels/side', 'view', function (Dep) {
         setup: function () {
             this.setupFields();
 
-            this.fieldList = this.fieldList.map((d) => {
+            this.fieldList = this.fieldList.map(d => {
                 var item = d;
 
                 if (typeof item !== 'object') {
@@ -138,9 +194,24 @@ define('views/record/panels/side', 'view', function (Dep) {
             }
         },
 
-        setupFields: function () {
-        },
+        /**
+         * Set up fields.
+         *
+         * @protected
+         */
+        setupFields: function () {},
 
+        /**
+         * Create a field view.
+         *
+         * @protected
+         * @param {string} field A field name.
+         * @param {string|null} [viewName] A view name/path.
+         * @param {Object<string,*>} [params] Field params.
+         * @param {'detail'|'edit'|'list'|null} [mode='edit'] A mode.
+         * @param {boolean} [readOnly] Read-only.
+         * @param {Object<string,*>} [options] View options.
+         */
         createField: function (field, viewName, params, mode, readOnly, options) {
             var type = this.model.getFieldType(field) || 'base';
 
@@ -221,8 +292,11 @@ define('views/record/panels/side', 'view', function (Dep) {
             this.createView(viewKey, viewName, o);
         },
 
+        /**
+         * @private
+         */
         createFields: function () {
-            this.getFieldList().forEach((item) => {
+            this.getFieldList().forEach(item => {
                 var view = null;
                 var field;
                 var readOnly = null;
@@ -249,14 +323,22 @@ define('views/record/panels/side', 'view', function (Dep) {
             });
         },
 
+        /**
+         * @deprecated Use `getFieldViews`.
+         */
         getFields: function () {
             return this.getFieldViews();
         },
 
+        /**
+         * Get field views.
+         *
+         * @return {Object.<string,module:views/fields/base.Class>}
+         */
         getFieldViews: function () {
             var fields = {};
 
-            this.getFieldList().forEach((item) => {
+            this.getFieldList().forEach(item => {
                 if (this.hasView(item.viewKey)) {
                     fields[item.name] = this.getView(item.viewKey);
                 }
@@ -265,11 +347,16 @@ define('views/record/panels/side', 'view', function (Dep) {
             return fields;
         },
 
+        /**
+         * Get a field list.
+         *
+         * @return {module:views/record/panels/side~field[]}
+         */
         getFieldList: function () {
-            return this.fieldList.map((item) => {
+            return this.fieldList.map(item => {
                 if (typeof item !== 'object') {
                     return {
-                        name: item
+                        name: item,
                     };
                 }
 
@@ -277,14 +364,23 @@ define('views/record/panels/side', 'view', function (Dep) {
             });
         },
 
+        /**
+         * @return {module:views/record/panels-container~action[]}
+         */
         getActionList: function () {
             return this.actionList || [];
         },
 
+        /**
+         * @return {module:views/record/panels-container~button[]}
+         */
         getButtonList: function () {
             return this.buttonList || [];
         },
 
+        /**
+         * A `refresh` action.
+         */
         actionRefresh: function () {
             this.model.fetch();
         },

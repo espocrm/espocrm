@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail-side', 'views/record/panels-container', function (Dep) {
+define('views/record/detail-side', ['views/record/panels-container'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A detail-side record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/panels-container.Class
+     * @memberOf module:views/record/detail-side
+     */
+    return Dep.extend(/** @lends module:views/record/detail-side.Class# */{
 
         template: 'record/side',
 
@@ -40,8 +48,19 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
         defaultPanel: true,
 
+        /**
+         * A panel list.
+         *
+         * @protected
+         * @type {module:views/record/panels-container~panel[]}
+         */
         panelList: [],
 
+        /**
+         * A default panel.
+         *
+         * @type {module:views/record/panels-container~panel}
+         */
         defaultPanelDefs: {
             name: 'default',
             label: false,
@@ -54,8 +73,8 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
                     },
                     {
                         name: 'teams'
-                    }
-                ]
+                    },
+                ],
             }
         },
 
@@ -74,8 +93,10 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
             this.recordViewObject = this.options.recordViewObject;
         },
 
-        setupPanels: function () {
-        },
+        /**
+         * @inheritDoc
+         */
+        setupPanels: function () {},
 
         setup: function () {
             this.type = this.mode;
@@ -171,6 +192,11 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
             );
         },
 
+        /**
+         * Set up a default panel.
+         *
+         * @protected
+         */
         setupDefaultPanel: function () {
             var met = false;
 
@@ -251,6 +277,5 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
 
             this.panelList.unshift(defaultPanelDefs);
         },
-
     });
 });

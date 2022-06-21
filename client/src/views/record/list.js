@@ -40,6 +40,17 @@ function (Dep, MassActionHelper, ExportHelper) {
     return Dep.extend(/** @lends module:views/record/list.Class# */{
 
         /**
+         * A row action.
+         *
+         * @typedef {Object} module:views/record/list~rowAction
+         *
+         * @property {string} action An action.
+         * @property {string} [label] A label.
+         * @property {string} [link] A link.
+         * @property {Object.<string,string|number|boolean>} [data] Data attributes.
+         */
+
+        /**
          * @inheritDoc
          */
         template: 'record/list',
@@ -186,7 +197,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         massActionsDisabled: false,
 
         /**
-         * Can be overridden by an option parameter.
+         * Disable a portal layout usage. Can be overridden by an option parameter.
          *
          * @protected
          */
@@ -304,7 +315,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
         /**
          * A list layout. Can be overridden by an option parameter.
-         * If empty, then will be loaded from the backend (using the `layoutName` value).
+         * If null, then will be loaded from the backend (using the `layoutName` value).
          *
          * @protected
          * @type {Object[]|null}

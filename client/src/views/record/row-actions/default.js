@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/default', 'view', function (Dep) {
+define('views/record/row-actions/default', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A detail-side record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf views/record/row-actions/default
+     */
+    return Dep.extend(/** @lends views/record/row-actions/default.Class# */{
 
         template: 'record/row-actions/default',
 
@@ -60,6 +68,11 @@ define('views/record/row-actions/default', 'view', function (Dep) {
             });
         },
 
+        /**
+         * Get an action list.
+         *
+         * @return {module:views/record/list~rowAction[]}
+         */
         getActionList: function () {
             var list = [{
                 action: 'quickView',
@@ -101,6 +114,5 @@ define('views/record/row-actions/default', 'view', function (Dep) {
                 scope: this.model.name,
             };
         },
-
     });
 });

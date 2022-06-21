@@ -28,7 +28,15 @@
 
 define('views/record/kanban', ['views/record/list'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A kanban record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/list.Class
+     * @memberOf module:views/record/kanban
+     */
+    return Dep.extend(/** @lends module:views/record/kanban.Class# */{
 
         template: 'record/kanban',
 
@@ -1132,6 +1140,5 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.sortWasCentered = true;
             }
         },
-
     });
 });

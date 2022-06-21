@@ -29,99 +29,298 @@
 define('views/record/detail', ['views/record/base', 'view-record-helper'],
 function (Dep, ViewRecordHelper) {
 
-    return Dep.extend({
+    /**
+     * A detail record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/base.Class
+     * @memberOf module:views/record/detail
+     */
+    return Dep.extend(/** @lends module:views/record/detail.Class# */{
 
+        /**
+         * @inheritDoc
+         */
         template: 'record/detail',
 
+        /**
+         * @inheritDoc
+         */
         type: 'detail',
 
+        /**
+         * Not used.
+         *
+         * @deprecated
+         * @protected
+         */
         name: 'detail',
 
+        /**
+         * A layout name. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {string}
+         */
         layoutName: 'detail',
 
-        fieldsMode: 'detail',
-
-        mode: 'detail',
-
-        gridLayout: null,
-
+        /**
+         * A layout. If null, then will be loaded from the backend (using the `layoutName` value).
+         * Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {Object[]|null}
+         */
         detailLayout: null,
 
+        /**
+         * A fields mode.
+         *
+         * @protected
+         * @type {'detail'|'edit'|'list'}
+         */
+        fieldsMode: 'detail',
+
+        /**
+         * A current mode. Only for reading.
+         *
+         * @protected
+         * @type {'detail'|'edit'}
+         */
+        mode: 'detail',
+
+        /**
+         * @private
+         */
+        gridLayout: null,
+
+        /**
+         * Disable buttons. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {boolean}
+         */
         buttonsDisabled: false,
 
-        scope: null,
-
+        /**
+         * Is record new. Only for reading.
+         *
+         * @protected
+         */
         isNew: false,
 
+        /**
+         * A button. Handled by an `action{Name}` method.
+         *
+         * @typedef module:views/record/detail~button
+         *
+         * @property {string} name A name.
+         * @property {string} [label] A label.
+         * @property {string} [html] An HTML.
+         * @property {'default'|'danger'|'success'|'warning'} [style] A style.
+         * @property {boolean} [hidden] Hidden.
+         */
+
+        /**
+         * A dropdown item. Handled by an `action{Name}` method.
+         *
+         * @typedef module:views/record/detail~dropdownItem
+         *
+         * @property {string} name A name.
+         * @property {string} [label] A label.
+         * @property {string} [html] An HTML.
+         * @property {boolean} [hidden] Hidden.
+         */
+
+        /**
+         * A button list.
+         *
+         * @protected
+         * @type {module:views/record/detail~button[]}
+         */
         buttonList: [
             {
                 name: 'edit',
                 label: 'Edit',
-            }
+            },
         ],
 
+        /**
+         * A dropdown item list.
+         *
+         * @protected
+         * @type {module:views/record/detail~dropdownItem[]}
+         */
         dropdownItemList: [
             {
                 name: 'delete',
-                label: 'Remove'
-            }
+                label: 'Remove',
+            },
         ],
 
+        /**
+         * A button list for edit mode.
+         *
+         * @protected
+         * @type {module:views/record/detail~button[]}
+         */
         buttonEditList: [
             {
                 name: 'save',
                 label: 'Save',
                 style: 'primary',
-                edit: true
+                edit: true,
             },
             {
                 name: 'cancelEdit',
                 label: 'Cancel',
-                edit: true
-            }
+                edit: true,
+            },
         ],
 
+        /**
+         * A dropdown item list for edit mode.
+         *
+         * @protected
+         * @type {module:views/record/detail~dropdownItem[]}
+         */
         dropdownEditItemList: [],
 
+        /**
+         * An DOM element ID. Only for reading.
+         *
+         * @private
+         * @type {string}
+         */
         id: null,
 
+        /**
+         * A return-URL. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {string|null}
+         */
         returnUrl: null,
 
+        /**
+         * A return dispatch params. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {Object|null}
+         */
         returnDispatchParams: null,
 
+        /**
+         * A middle view name.
+         *
+         * @protected
+         */
         middleView: 'views/record/detail-middle',
 
+        /**
+         * A side view name.
+         *
+         * @protected
+         */
         sideView: 'views/record/detail-side',
 
+        /**
+         * A bottom view name.
+         *
+         * @protected
+         */
         bottomView: 'views/record/detail-bottom',
 
+        /**
+         * Disable a side view. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         sideDisabled: false,
 
+        /**
+         * Disable a bottom view. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         bottomDisabled: false,
 
+        /**
+         * Disable edit mode. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         editModeDisabled: false,
 
+        /**
+         * Disable navigate (prev, next) buttons. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         navigateButtonsDisabled: false,
 
+        /**
+         * Read-only. Can be overridden by an option parameter.
+         */
         readOnly: false,
 
+        /**
+         * Middle view expanded to full width (no side view).
+         * Can be overridden by an option parameter.
+         *
+         * @protected
+         */
         isWide: false,
 
-        dependencyDefs: {},
-
+        /**
+         * Enable a duplicate action.
+         *
+         * @protected
+         */
         duplicateAction: true,
 
+        /**
+         * Enable a self-assign action.
+         *
+         * @protected
+         */
         selfAssignAction: false,
 
-        inlineEditDisabled: false,
-
+        /**
+         * Enable a print-pdf action.
+         *
+         * @protected
+         */
         printPdfAction: true,
 
-        portalLayoutDisabled: false,
-
+        /**
+         * Enable a convert-currency action.
+         *
+         * @protected
+         */
         convertCurrencyAction: true,
 
+        /**
+         * Enable a save-and-continue-editing action.
+         *
+         * @protected
+         */
         saveAndContinueEditingAction: true,
+
+        /**
+         * Disable the inline-edit. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        inlineEditDisabled: false,
+
+        /**
+         * Disable a portal layout usage. Can be overridden by an option parameter.
+         *
+         * @protected
+         */
+        portalLayoutDisabled: false,
 
         /**
          * A panel soft-locked type.
@@ -141,19 +340,42 @@ function (Dep, ViewRecordHelper) {
             'dynamicLogic',
         ],
 
+        /**
+         * Dynamic logic. Can be overridden by an option parameter.
+         *
+         * @protected
+         * @type {Object}
+         */
+        dynamicLogicDefs: {},
+
+        /**
+         * Disable confirm leave-out processing.
+         *
+         * @protected
+         */
         confirmLeaveDisabled: false,
 
+        /**
+         * @protected
+         */
         setupHandlerType: 'record/detail',
 
+        /**
+         * @inheritDoc
+         */
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
             },
+            /** @this module:views/record/detail.Class */
             'click [data-action="showMoreDetailPanels"]': function () {
                 this.showMoreDetailPanels();
             },
         },
 
+        /**
+         * An `edit` action.
+         */
         actionEdit: function () {
             if (!this.editModeDisabled) {
                 this.setEditMode();
@@ -180,6 +402,11 @@ function (Dep, ViewRecordHelper) {
             this.delete();
         },
 
+        /**
+         * A `save` action.
+         *
+         * @param {{options?: module:views/record/base~saveOptions}} [data] Data.
+         */
         actionSave: function (data) {
             data = data || {};
 
@@ -205,6 +432,9 @@ function (Dep, ViewRecordHelper) {
             $(window).scrollTop(0);
         },
 
+        /**
+         * A `save-and-continue-editing` action.
+         */
         actionSaveAndContinueEditing: function (data) {
             data = data || {};
 
@@ -212,6 +442,9 @@ function (Dep, ViewRecordHelper) {
                 .catch(() => {});
         },
 
+        /**
+         * A `self-assign` action.
+         */
         actionSelfAssign: function () {
             var attributes = {
                 assignedUserId: this.getUser().id,
@@ -235,14 +468,17 @@ function (Dep, ViewRecordHelper) {
                 });
         },
 
+        /**
+         * A `convert-currency` action.
+         */
         actionConvertCurrency: function () {
             this.createView('modalConvertCurrency', 'views/modals/convert-currency', {
                 entityType: this.entityType,
                 model: this.model,
-            }, (view) => {
+            }, view => {
                 view.render();
 
-                this.listenToOnce(view, 'after:update', (attributes) => {
+                this.listenToOnce(view, 'after:update', attributes => {
                     var isChanged = false;
 
                     for (var a in attributes) {
@@ -268,17 +504,29 @@ function (Dep, ViewRecordHelper) {
             });
         },
 
+        /**
+         * Compose attribute values for a self-assignment.
+         *
+         * @protected
+         * @return {Object.<string,*>|null}
+         */
         getSelfAssignAttributes: function () {
+            return null;
         },
 
+        /**
+         * Set up action items.
+         *
+         * @protected
+         */
         setupActionItems: function () {
             if (this.model.isNew()) {
                 this.isNew = true;
 
-                this.removeButton('delete');
+                this.removeActionItem('delete');
             }
             else if (this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled'])) {
-                this.removeButton('delete');
+                this.removeActionItem('delete');
             }
 
             if (this.duplicateAction) {
@@ -453,14 +701,26 @@ function (Dep, ViewRecordHelper) {
             }
         },
 
+        /**
+         * Disable action items.
+         */
         disableActionItems: function () {
             this.disableButtons();
         },
 
+        /**
+         * Enable action items.
+         */
         enableActionItems: function () {
             this.enableButtons();
         },
 
+        /**
+         * Hide a button or dropdown action item.
+         *
+         * @protected
+         * @param {string} name A name.
+         */
         hideActionItem: function (name) {
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
@@ -514,6 +774,12 @@ function (Dep, ViewRecordHelper) {
             }
         },
 
+        /**
+         * Show a button or dropdown action item.
+         *
+         * @protected
+         * @param {string} name A name.
+         */
         showActionItem: function (name) {
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
@@ -1110,7 +1376,6 @@ function (Dep, ViewRecordHelper) {
             this.scope = this.options.scope || this.entityType;
 
             this.layoutName = this.options.layoutName || this.layoutName;
-
             this.detailLayout = this.options.detailLayout || this.detailLayout;
 
             this.type = this.options.type || this.type;
@@ -1171,6 +1436,9 @@ function (Dep, ViewRecordHelper) {
                 throw new Error('Model has not been injected into record view.');
             }
 
+            /**
+             * @inheritDoc
+             */
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             this._initInlineEditSave();
@@ -1751,7 +2019,7 @@ function (Dep, ViewRecordHelper) {
                 this.notify('Saved', 'success');
             }
 
-            this.enableButtons();
+            this.enableActionItems();
 
             this.setIsNotChanged();
 
@@ -1767,11 +2035,11 @@ function (Dep, ViewRecordHelper) {
         },
 
         beforeBeforeSave: function () {
-            this.disableButtons();
+            this.disableActionItems();
         },
 
         afterSaveError: function () {
-            this.enableButtons();
+            this.enableActionItems();
         },
 
         afterNotModified: function () {
@@ -1779,14 +2047,14 @@ function (Dep, ViewRecordHelper) {
 
             Espo.Ui.warning(msg, 'warning');
 
-            this.enableButtons();
+            this.enableActionItems();
             this.setIsNotChanged();
         },
 
         afterNotValid: function () {
             this.notify('Not valid', 'error');
 
-            this.enableButtons();
+            this.enableActionItems();
         },
 
         errorHandlerDuplicate: function (duplicates) {
@@ -2089,6 +2357,9 @@ function (Dep, ViewRecordHelper) {
             this.buttonEditList[method](o);
         },
 
+        /**
+         * @deprecated Use `enableActionItems`.
+         */
         enableButtons: function () {
             this.$el.find(".button-container .actions-btn-group .action")
                 .removeAttr('disabled')
@@ -2099,6 +2370,9 @@ function (Dep, ViewRecordHelper) {
                 .removeClass('disabled');
         },
 
+        /**
+         * @deprecated Use `disableActionItems`.
+         */
         disableButtons: function () {
             this.$el.find(".button-container .actions-btn-group .action")
                 .attr('disabled', 'disabled')
@@ -2109,6 +2383,20 @@ function (Dep, ViewRecordHelper) {
                 .addClass('disabled');
         },
 
+        /**
+         * Remove a button or dropdown item.
+         *
+         * @param {string} name A name.
+         */
+        removeActionItem: function (name) {
+            this.removeButton(name);
+        },
+
+        /**
+         * @deprecated Use `removeActionItem`.
+         *
+         * @param {string} name A name.
+         */
         removeButton: function (name) {
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
@@ -2131,6 +2419,13 @@ function (Dep, ViewRecordHelper) {
             }
         },
 
+        /**
+         * Convert a detail layout to an internal layout.
+         *
+         * @protected
+         * @param {Object[]} simplifiedLayout A detail layout.
+         * @return {Object[]}
+         */
         convertDetailLayout: function (simplifiedLayout) {
             var layout = [];
 
@@ -2353,6 +2648,10 @@ function (Dep, ViewRecordHelper) {
             return layout;
         },
 
+        /**
+         * @private
+         * @param {function(Object[]): void}callback
+         */
         getGridLayout: function (callback) {
             if (this.gridLayout !== null) {
                 callback(this.gridLayout);
@@ -2372,9 +2671,9 @@ function (Dep, ViewRecordHelper) {
                 return;
             }
 
-            this._helper.layoutManager.get(this.model.name, this.layoutName, (simpleLayout) => {
+            this.getHelper().layoutManager.get(this.model.name, this.layoutName, (simpleLayout) => {
                 if (typeof this.modifyDetailLayout === 'function') {
-                    var simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
+                    simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
 
                     this.modifyDetailLayout(simpleLayout);
                 }
@@ -2388,6 +2687,11 @@ function (Dep, ViewRecordHelper) {
             });
         },
 
+        /**
+         * Create a side view.
+         *
+         * @protected
+         */
         createSideView: function () {
             var el = this.options.el || '#' + (this.id);
 
@@ -2403,6 +2707,11 @@ function (Dep, ViewRecordHelper) {
             });
         },
 
+        /**
+         * Create a middle view.
+         *
+         * @protected
+         */
         createMiddleView: function (callback) {
             var el = this.options.el || '#' + (this.id);
 
@@ -2425,6 +2734,11 @@ function (Dep, ViewRecordHelper) {
             });
         },
 
+        /**
+         * Create a bottom view.
+         *
+         * @protected
+         */
         createBottomView: function () {
             var el = this.options.el || '#' + (this.id);
 
@@ -2441,6 +2755,12 @@ function (Dep, ViewRecordHelper) {
             });
         },
 
+        /**
+         * Create views.
+         *
+         * @protected
+         * @param {function(module:views/record/detail-middle): void} callback
+         */
         build: function (callback) {
             if (!this.sideDisabled && this.sideView) {
                 this.createSideView();
@@ -2455,6 +2775,11 @@ function (Dep, ViewRecordHelper) {
             }
         },
 
+        /**
+         * Called after create.
+         *
+         * @return {boolean} True if redirecting is processed.
+         */
         exitAfterCreate: function () {
             if (!this.returnAfterCreate && this.model.id) {
                 var url = '#' + this.scope + '/view/' + this.model.id;
@@ -2469,6 +2794,8 @@ function (Dep, ViewRecordHelper) {
 
                 return true;
             }
+
+            return false;
         },
 
         /**
@@ -2490,6 +2817,7 @@ function (Dep, ViewRecordHelper) {
             }
 
             var url;
+            var options;
 
             if (this.returnUrl) {
                 url = this.returnUrl;
@@ -2512,7 +2840,7 @@ function (Dep, ViewRecordHelper) {
                     if (!this.returnDispatchParams) {
                         this.getRouter().navigate(url, {trigger: false});
 
-                        var options = {
+                        options = {
                             id: this.model.id,
                             model: this.model,
                         };
@@ -2532,7 +2860,7 @@ function (Dep, ViewRecordHelper) {
             if (this.returnDispatchParams) {
                 var controller = this.returnDispatchParams.controller;
                 var action = this.returnDispatchParams.action;
-                var options = this.returnDispatchParams.options || {};
+                options = this.returnDispatchParams.options || {};
 
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(controller, action, options);
@@ -2547,7 +2875,6 @@ function (Dep, ViewRecordHelper) {
             var topic = 'recordUpdate.' + this.entityType + '.' + this.model.id;
 
             this.recordUpdateWebSocketTopic = topic;
-
             this.isSubscribedToWebSocked = true;
 
             this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
@@ -2576,9 +2903,11 @@ function (Dep, ViewRecordHelper) {
                         this.updatedAttributes = Espo.Utils.cloneDeep(m.attributes);
                     }
                 });
-            } else {
-                this.model.fetch({highlight: true});
+
+                return;
             }
+
+            this.model.fetch({highlight: true});
         },
 
         blockUpdateWebSocket: function (toUnblock) {
@@ -2595,10 +2924,13 @@ function (Dep, ViewRecordHelper) {
             this.updateWebSocketIsBlocked = false;
         },
 
+        /**
+         * Show more detail panels.
+         */
         showMoreDetailPanels: function () {
             this.hidePanel('showMoreDelimiter');
 
-            this.underShowMoreDetailPanelList.forEach((item) => {
+            this.underShowMoreDetailPanelList.forEach(item => {
                 this.showPanel(item);
             });
         },

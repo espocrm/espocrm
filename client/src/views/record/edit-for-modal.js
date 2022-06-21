@@ -28,7 +28,15 @@
 
 define('views/record/edit-for-modal', ['views/record/edit'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * An edit-record view to used for custom forms.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/edit.Class
+     * @memberOf module:views/record/edit-for-modal
+     */
+    return Dep.extend(/** @lends module:views/record/edit-for-modal.Class# */{
 
         bottomView: null,
 

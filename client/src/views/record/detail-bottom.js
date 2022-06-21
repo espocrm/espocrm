@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail-bottom', 'views/record/panels-container', function (Dep) {
+define('views/record/detail-bottom', ['views/record/panels-container'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A detail-bottom record view.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/record/panels-container.Class
+     * @memberOf module:views/record/detail-bottom
+     */
+    return Dep.extend(/** @lends module:views/record/detail-bottom.Class# */{
 
         template: 'record/bottom',
 
@@ -42,6 +50,9 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
         portalLayoutDisabled: false,
 
+        /**
+         * @inheritDoc
+         */
         setupPanels: function () {
             var scope = this.scope;
 
@@ -62,6 +73,9 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             }
         },
 
+        /**
+         * Set up a stream panel.
+         */
         setupStreamPanel: function () {
             var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
 
@@ -119,7 +133,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             this.wait(true);
 
             Promise.all([
-                new Promise((resolve) => {
+                new Promise(resolve => {
                     this.getHelper().layoutManager.get(
                         this.scope,
                         'bottomPanels' + Espo.Utils.upperCaseFirst(this.type),
@@ -133,7 +147,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             ]).then(() => {
                 var panelNameList = [];
 
-                this.panelList = this.panelList.filter((p) => {
+                this.panelList = this.panelList.filter(p => {
                     panelNameList.push(p.name);
 
                     if (p.aclScope) {
@@ -187,19 +201,23 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                 });
 
                 this.alterPanels();
-
                 this.setupPanelsFinal();
-
                 this.setupPanelViews();
 
                 this.wait(false);
             });
         },
 
+        /**
+         * Set read-only.
+         */
         setReadOnly: function () {
             this.readOnly = true;
         },
 
+        /**
+         * @private
+         */
         addRelationshipPanel: function (name, item) {
             var scope = this.scope;
             var scopesDefs = this.getMetadata().get('scopes') || {};
@@ -220,7 +238,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             if (typeof p.order === 'undefined') p.order = 5;
 
-            var name = p.name;
+            name = p.name;
 
             var links = (this.model.defs || {}).links || {};
             if (!(name in links)) {
@@ -261,6 +279,5 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             this.panelList.push(p);
         },
-
     });
 });
