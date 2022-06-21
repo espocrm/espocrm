@@ -29,7 +29,7 @@
 const fs = require('fs');
 
 /**
-* Buils a PO file for a specific language or all languages.
+* Builds a PO file for a specific language or all languages.
 */
 class PO
 {
