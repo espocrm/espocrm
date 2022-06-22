@@ -26,9 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-(function (Espo, _, $) {
+(function (_, $) {
 
     let root = this;
+
+    if (!root.Espo) {
+        root.Espo = {};
+    }
 
     /**
      * A callback with resolved dependencies passed as parameters.
@@ -171,10 +175,11 @@
 
         /**
          * Define a module.
+         *
          * @param {string} subject A module name to be defined.
          * @param {string[]} dependency A dependency list.
-         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies passed as parameters.
-         *   Should return a value to define the module.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies
+         *   passed as parameters. Should return a value to define the module.
          */
         define: function (subject, dependency, callback) {
             if (subject) {
@@ -717,4 +722,4 @@
         Espo.loader.define(subject, dependency, callback);
     };
 
-}).call(this, Espo, _, $);
+}).call(this, _, $);
