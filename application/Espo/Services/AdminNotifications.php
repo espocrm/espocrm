@@ -53,6 +53,7 @@ class AdminNotifications implements
 
     /**
      * Job for checking a new version of EspoCRM.
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function jobCheckNewVersion(): void
     {
@@ -96,6 +97,7 @@ class AdminNotifications implements
 
     /**
      * Job for checking a new version of installed extensions.
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function jobCheckNewExtensionVersion(): void
     {

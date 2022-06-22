@@ -106,14 +106,15 @@ class Admin
 
 
     /**
-     * @todo Use Request.
-     *
      * @param array<string,mixed> $params
      * @param string $data
      * @return array{
      *   id: string,
      *   version: string,
      * }
+     * @throws Forbidden
+     * @todo Use Request.
+     *
      */
     public function postActionUploadUpgradePackage($params, $data): array
     {
@@ -134,6 +135,9 @@ class Admin
         ];
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function postActionRunUpgrade(Request $request): bool
     {
         $data = $request->getParsedBody();

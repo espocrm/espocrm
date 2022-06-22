@@ -931,6 +931,7 @@ class Activities implements
      * }
      * @throws NotFound
      * @throws Error
+     * @throws Forbidden
      */
     public function getActivities(string $scope, string $id, array $params = []): array
     {
@@ -1582,6 +1583,7 @@ class Activities implements
      * @param string[] $userIdList
      * @param ?string[] $scopeList
      * @return array<string,mixed>[]
+     * @throws Exception
      */
     public function getEventsForUsers(array $userIdList, string $from, string $to, ?array $scopeList = null): array
     {
@@ -1624,6 +1626,7 @@ class Activities implements
      * @param string[] $teamIdList
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
+     * @throws Forbidden
      */
     public function getEventsForTeams(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {
@@ -1634,6 +1637,7 @@ class Activities implements
      * @param string[] $teamIdList
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
+     * @throws Forbidden
      */
     public function getTeamsEventList(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {
@@ -1708,6 +1712,7 @@ class Activities implements
      * @param ?string[] $scopeList
      * @param ?array<int,array<string,mixed>> $ignoreEventList
      * @return stdClass[]
+     * @throws NotFound
      */
     public function getBusyRangeList(
         string $userId,
@@ -1825,6 +1830,7 @@ class Activities implements
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
      * @throws NotFound
+     * @throws Forbidden
      */
     public function getEventList(
         string $userId,
@@ -1929,6 +1935,7 @@ class Activities implements
 
     /**
      * @return array<int,array<string,mixed>>
+     * @throws Exception
      */
     public function getPopupNotifications(string $userId): array
     {
@@ -2012,6 +2019,7 @@ class Activities implements
      *   total: int,
      *   list: stdClass[],
      * }
+     * @throws Forbidden
      */
     public function getUpcomingActivities(
         string $userId,

@@ -30,8 +30,10 @@
 namespace Espo\Modules\Crm\Controllers;
 
 use Espo\Core\Exceptions\{
+    Error,
     Forbidden,
     BadRequest,
+    NotFound,
 };
 
 use Espo\Core\{
@@ -71,6 +73,9 @@ class Activities
 
     /**
      * @return array<int,array<string,mixed>>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws \Exception
      */
     public function getActionListCalendarEvents(Request $request): array
     {
@@ -119,6 +124,10 @@ class Activities
         return $this->service->getEventList($userId, $from, $to, $scopeList);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionGetTimeline(Request $request): stdClass
     {
         if (!$this->acl->check('Calendar')) {
@@ -159,6 +168,9 @@ class Activities
         return $this->service->getUsersTimeline($userIdList, $from, $to, $scopeList);
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function getActionListUpcoming(Request $request): stdClass
     {
         $userId = $request->getQueryParam('userId');
@@ -197,6 +209,9 @@ class Activities
         return $this->service->getPopupNotifications($userId);
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionRemovePopupNotification(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -212,6 +227,12 @@ class Activities
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getActionList(Request $request): stdClass
     {
         $params = $request->getRouteParams();

@@ -58,6 +58,7 @@ class ApplicationUser
 
     /**
      * Setup the system user as a current user. The system user is used when no user is logged in.
+     * @throws Error
      */
     public function setupSystemUser(): void
     {

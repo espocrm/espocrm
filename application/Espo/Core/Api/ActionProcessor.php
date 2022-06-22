@@ -135,6 +135,7 @@ class ActionProcessor
 
     /**
      * @param mixed $result
+     * @throws \JsonException
      */
     private function handleResult(Response $response, $result): void
     {

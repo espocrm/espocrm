@@ -118,6 +118,7 @@ class ActionManager
     /**
      * @param mixed $data
      * @return mixed
+     * @throws Error
      */
     public function run($data)
     {
@@ -129,6 +130,7 @@ class ActionManager
     /**
      * @param string $actionName
      * @return \Espo\Core\Upgrades\Actions\Base
+     * @throws Error
      */
     public function getActionClass($actionName)
     {
@@ -137,6 +139,7 @@ class ActionManager
 
     /**
      * @return array<string,mixed>
+     * @throws Error
      */
     public function getManifest()
     {
@@ -146,6 +149,7 @@ class ActionManager
     /**
      * @param ?string $actionName
      * @return \Espo\Core\Upgrades\Actions\Base
+     * @throws Error
      */
     protected function getObject($actionName = null)
     {
