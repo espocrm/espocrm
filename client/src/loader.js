@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-var Espo = Espo || {classMap: {}};
-
 (function (Espo, _, $) {
 
     let root = this;
