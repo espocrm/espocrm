@@ -33,6 +33,7 @@ class ClientFactory
 {
     /**
      * @param array<string,mixed> $options
+     * @throws \Laminas\Ldap\Exception\LdapException
      */
     public function create(array $options): Client
     {

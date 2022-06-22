@@ -92,6 +92,7 @@ class ClientManager
      *   expiresAt?: ?string,
      *   refreshToken?: ?string,
      * } $data
+     * @throws Error
      */
     public function storeAccessToken(string $hash, array $data): void
     {
@@ -292,6 +293,7 @@ class ClientManager
 
     /**
      * @param object $client
+     * @throws Error
      */
     protected function getClientRecord($client): Entity
     {
@@ -306,6 +308,7 @@ class ClientManager
 
     /**
      * @param object $client
+     * @throws Error
      */
     public function isClientLocked($client): bool
     {
@@ -376,6 +379,7 @@ class ClientManager
 
     /**
      * @param \Espo\Core\ExternalAccount\Clients\IClient $client
+     * @throws Error
      */
     public function reFetchClient(object $client): void
     {

@@ -108,6 +108,7 @@ class ClientManager
 
     /**
      * @param array<string,mixed> $vars
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {
