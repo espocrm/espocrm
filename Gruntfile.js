@@ -32,13 +32,15 @@
 const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
+const bundleConfig = require("./frontend/bundle-config.json");
 
 module.exports = grunt => {
 
     const pkg = grunt.file.readJSON('package.json');
     const bundleConfig = require('./frontend/bundle-config.json');
 
-    let jsFilesToBundle = getBundleLibList().concat(bundleConfig.jsFiles);
+    let jsFilesToBundle = getBundleLibList()
+        .concat('build/tmp/espo-bundle.js');
     let jsFilesToCopy = getCopyLibDataList();
 
     let libFilesToMinify = jsFilesToCopy
@@ -117,6 +119,7 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
                     '!build/tmp/client/custom/modules/dummy.txt',
+                    'build/tmp/espo-bundle.js',
                 ]
             }
         },
@@ -246,7 +249,14 @@ module.exports = grunt => {
                 ],
             },
         },
+    });
 
+    grunt.registerTask('espo-bundle', () => {
+        const Bundler = require('./js/bundler');
+
+        let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
+
+        fs.writeFileSync('build/tmp/espo-bundle.js', contents, 'utf8');
     });
 
     grunt.registerTask('chmod-folders', () => {
@@ -423,6 +433,7 @@ module.exports = grunt => {
     grunt.registerTask('internal', [
         'less',
         'cssmin',
+        'espo-bundle',
         'uglify:bundle',
         'copy:frontendLib',
         'uglify:lib',
