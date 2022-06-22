@@ -22,7 +22,7 @@
         "defaults": {
             "displayRecords": 10,
             "autorefreshInterval": 0.5,
-            "skipOwn": true
+            "skipOwn": false
         },
         "layout": [
             {
