@@ -65,8 +65,10 @@ class ActionFactory
 
     /**
      * @param array<string,object> $with
-     * @deprecated
+     * @throws NotFound
+     * @throws Forbidden
      * @todo Remove.
+     * @deprecated
      */
     public function createWith(string $action, ?string $entityType, array $with): Action
     {

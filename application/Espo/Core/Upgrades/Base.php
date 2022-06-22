@@ -89,6 +89,7 @@ abstract class Base
 
     /**
      * @return array<string,mixed>
+     * @throws Error
      */
     public function getManifest()
     {
@@ -98,6 +99,7 @@ abstract class Base
     /**
      * @param string $processId
      * @return array<string,mixed>
+     * @throws Error
      */
     public function getManifestById($processId)
     {
@@ -110,6 +112,7 @@ abstract class Base
     /**
      * @param string $data
      * @return string
+     * @throws Error
      */
     public function upload($data)
     {
@@ -121,6 +124,7 @@ abstract class Base
     /**
      * @param array<string,mixed> $data
      * @return mixed
+     * @throws Error
      */
     public function install($data)
     {
@@ -132,6 +136,7 @@ abstract class Base
     /**
      * @param array<string,mixed> $data
      * @return mixed
+     * @throws Error
      */
     public function uninstall($data)
     {
@@ -143,6 +148,7 @@ abstract class Base
     /**
      * @param array<string,mixed> $data
      * @return mixed
+     * @throws Error
      */
     public function delete($data)
     {
@@ -155,6 +161,7 @@ abstract class Base
      * @param string $stepName
      * @param array<string,mixed> $params
      * @return bool
+     * @throws Error
      */
     public function runInstallStep($stepName, array $params = [])
     {

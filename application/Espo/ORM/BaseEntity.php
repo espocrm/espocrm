@@ -502,6 +502,7 @@ class BaseEntity implements Entity
     /**
      * @param mixed $value
      * @return mixed
+     * @throws \JsonException
      */
     protected function prepareAttributeValue(string $attribute, $value)
     {
@@ -566,6 +567,7 @@ class BaseEntity implements Entity
 
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     private function prepareObjectAttributeValue($value): ?stdClass
     {

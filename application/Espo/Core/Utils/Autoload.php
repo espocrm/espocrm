@@ -139,6 +139,7 @@ class Autoload
 
     /**
      * @return array<string,mixed>
+     * @throws \JsonException
      */
     private function loadDataFromFile(string $filePath): array
     {

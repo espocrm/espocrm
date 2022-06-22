@@ -105,7 +105,8 @@ abstract class Base
     protected $serviceFactory;
 
     /**
-     * @internal Most of dependencies are for backward compatibility.
+     * @throws Forbidden
+     * @internal Most dependencies are for backward compatibility.
      */
     public function __construct(
         Container $container,

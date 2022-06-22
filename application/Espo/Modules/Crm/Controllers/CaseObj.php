@@ -41,6 +41,8 @@ class CaseObj extends \Espo\Core\Controllers\Record
 
     /**
      * @return \stdClass[]
+     * @throws BadRequest
+     * @throws Forbidden
      */
     public function getActionEmailAddressList(Request $request): array
     {

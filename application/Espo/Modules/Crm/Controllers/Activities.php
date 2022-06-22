@@ -201,6 +201,7 @@ class Activities
 
     /**
      * @return array<int,array<string,mixed>>
+     * @throws \Exception
      */
     public function getActionPopupNotifications(): array
     {

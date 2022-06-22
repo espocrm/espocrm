@@ -269,6 +269,7 @@ class Auth
 
     /**
      * @return array{?string,?string}
+     * @throws BadRequest
      */
     protected function obtainUsernamePasswordFromRequest(Request $request): array
     {

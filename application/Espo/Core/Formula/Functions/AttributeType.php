@@ -49,6 +49,7 @@ class AttributeType extends Base
 
     /**
      * @return mixed
+     * @throws Error
      */
     public function process(\stdClass $item)
     {
@@ -62,6 +63,7 @@ class AttributeType extends Base
     /**
      * @param string $attribute
      * @return mixed
+     * @throws Error
      */
     protected function getAttributeValue($attribute)
     {

@@ -88,6 +88,7 @@ class CaseObj extends Record
 
     /**
      * @return stdClass[]
+     * @throws \Espo\Core\Exceptions\ForbiddenSilent
      */
     public function getEmailAddressList(string $id): array
     {

@@ -168,6 +168,7 @@ class Admin
 
     /**
      * @return array<int,array{id:string,type:string,message:string}>
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function actionAdminNotificationList(): array
     {

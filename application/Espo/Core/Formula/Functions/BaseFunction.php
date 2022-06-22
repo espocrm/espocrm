@@ -98,6 +98,7 @@ abstract class BaseFunction
      *
      * @param Evaluatable $item Argument or ArgumentList.
      * @return mixed A result of evaluation. An array if an argument list was passed.
+     * @throws Error
      */
     protected function evaluate(Evaluatable $item)
     {
@@ -108,6 +109,7 @@ abstract class BaseFunction
      * Throws TooFewArguments exception.
      *
      * @return never
+     * @throws TooFewArguments
      */
     protected function throwTooFewArguments(?int $number = null)
     {
@@ -124,6 +126,7 @@ abstract class BaseFunction
      * Throw BadArgumentType exception.
      *
      * @return never
+     * @throws BadArgumentType
      */
     protected function throwBadArgumentType(?int $index = null, ?string $type = null)
     {
@@ -144,6 +147,7 @@ abstract class BaseFunction
      * Throw BadArgumentValue exception.
      *
      * @return never
+     * @throws BadArgumentValue
      */
     protected function throwBadArgumentValue(?int $index = null, ?string $msg = null)
     {
@@ -164,6 +168,7 @@ abstract class BaseFunction
      * Throw Error exception.
      *
      * @return never
+     * @throws Error
      */
     protected function throwError(?string $msg = null)
 

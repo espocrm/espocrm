@@ -132,6 +132,7 @@ abstract class Base implements Injectable
     /**
      * @param mixed $item
      * @return mixed
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     protected function evaluate($item)
     {

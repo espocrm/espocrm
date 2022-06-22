@@ -991,6 +991,7 @@ class Activities implements
      * }
      * @throws NotFound
      * @throws Error
+     * @throws Forbidden
      */
     public function getHistory(string $scope, string $id, array $params = []): array
     {
@@ -1713,6 +1714,7 @@ class Activities implements
      * @param ?array<int,array<string,mixed>> $ignoreEventList
      * @return stdClass[]
      * @throws NotFound
+     * @throws Forbidden
      */
     public function getBusyRangeList(
         string $userId,
@@ -1900,6 +1902,7 @@ class Activities implements
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
      * @throws NotFound
+     * @throws Forbidden
      */
     public function getEvents(
         string $userId,
@@ -2020,6 +2023,7 @@ class Activities implements
      *   list: stdClass[],
      * }
      * @throws Forbidden
+     * @throws NotFound
      */
     public function getUpcomingActivities(
         string $userId,

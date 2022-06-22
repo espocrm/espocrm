@@ -311,6 +311,7 @@ abstract class Base
 
     /**
      * @return string
+     * @throws Error
      */
     protected function getProcessId()
     {
@@ -408,6 +409,7 @@ abstract class Base
      * @param string $currentVersion
      * @param string $errorMessage
      * @return bool
+     * @throws Error
      */
     public function checkVersions($versionList, $currentVersion, $errorMessage = '')
     {
@@ -448,6 +450,7 @@ abstract class Base
 
     /**
      * @return bool
+     * @throws Error
      */
     protected function checkPackageType()
     {
@@ -498,6 +501,7 @@ abstract class Base
      * Run a script by a type.
      * @param string $type Ex. "before", "after".
      * @return void
+     * @throws Error
      */
     protected function runScript($type)
     {
@@ -553,6 +557,7 @@ abstract class Base
      * @param string $name
      * @param bool $isPackage
      * @return string
+     * @throws Error
      */
     protected function getPath($name = 'packagePath', $isPackage = false)
     {
@@ -640,6 +645,7 @@ abstract class Base
      * @param string $type
      * @param bool $withEmptyDirs
      * @return bool
+     * @throws Error
      */
     protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
     {
@@ -744,6 +750,7 @@ abstract class Base
      * @param string[] $fileList
      * @param bool $copyOnlyFiles
      * @return bool
+     * @throws Error
      */
     protected function copy(
         $sourcePath,
@@ -874,6 +881,7 @@ abstract class Base
 
     /**
      * @return array<string,mixed>
+     * @throws Error
      */
     public function getManifest()
     {
@@ -952,6 +960,7 @@ abstract class Base
      *
      * @param ?string $packagePath
      * @return void
+     * @throws Error
      */
     protected function unzipArchive($packagePath = null)
     {
@@ -1026,6 +1035,7 @@ abstract class Base
      * @param string $actionName
      * @param string|array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     protected function executeAction($actionName, $data)
     {
@@ -1069,6 +1079,7 @@ abstract class Base
 
     /**
      * @return void
+     * @throws Error
      */
     protected function clearCache()
     {
@@ -1080,6 +1091,7 @@ abstract class Base
 
     /**
      * @return void
+     * @throws Error
      */
     protected function checkIsWritable()
     {
@@ -1101,6 +1113,7 @@ abstract class Base
 
     /**
      * @return bool
+     * @throws Error
      */
     protected function backupExistingFiles()
     {
@@ -1248,6 +1261,7 @@ abstract class Base
     /**
      * @param bool $isParentProcess
      * @return ?string
+     * @throws Error
      */
     protected function getTemporaryConfigParamName($isParentProcess = false)
     {

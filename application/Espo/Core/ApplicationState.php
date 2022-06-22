@@ -55,6 +55,7 @@ class ApplicationState
 
     /**
      * Get a portal ID (if an application is portal).
+     * @throws Error
      */
     public function getPortalId(): string
     {
@@ -67,6 +68,7 @@ class ApplicationState
 
     /**
      * Get a portal entity (if an application is portal).
+     * @throws Error
      */
     public function getPortal(): PortalEntity
     {
@@ -88,6 +90,7 @@ class ApplicationState
 
     /**
      * Get a current logged user. If no auth is applied, then the system user will be returned.
+     * @throws Error
      */
     public function getUser(): UserEntity
     {
@@ -101,6 +104,7 @@ class ApplicationState
 
     /**
      * Get an ID of a current logged user. If no auth is applied, then the system user will be returned.
+     * @throws Error
      */
     public function getUserId(): string
     {
@@ -109,6 +113,7 @@ class ApplicationState
 
     /**
      * Whether a user is logged.
+     * @throws Error
      */
     public function isLogged(): bool
     {
@@ -125,6 +130,7 @@ class ApplicationState
 
     /**
      * Whether logged as an admin.
+     * @throws Error
      */
     public function isAdmin(): bool
     {
@@ -138,6 +144,7 @@ class ApplicationState
 
     /**
      * Whether logged as an API user.
+     * @throws Error
      */
     public function isApi(): bool
     {
