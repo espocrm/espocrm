@@ -31,11 +31,12 @@ namespace Espo\Core\Job;
 
 use Espo\Core\{
     Exceptions\Error,
+    Utils\Config,
     Utils\Log,
     ORM\EntityManager,
     ServiceFactory,
     Utils\System,
-    Utils\DateTime as DateTimeUtil,
+    Utils\DateTime as DateTimeUtil
 };
 
 use Espo\Core\Job\Job\Data;
@@ -47,28 +48,32 @@ use Throwable;
 
 class JobRunner
 {
-    private $jobFactory;
+    private JobFactory $jobFactory;
 
-    private $scheduleUtil;
+    private ScheduleUtil $scheduleUtil;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    private $serviceFactory;
+    private ServiceFactory $serviceFactory;
 
-    private $log;
+    private Log $log;
+
+    private Config $config;
 
     public function __construct(
         JobFactory $jobFactory,
         ScheduleUtil $scheduleUtil,
         EntityManager $entityManager,
         ServiceFactory $serviceFactory,
-        Log $log
+        Log $log,
+        Config $config
     ) {
         $this->jobFactory = $jobFactory;
         $this->scheduleUtil = $scheduleUtil;
         $this->entityManager = $entityManager;
         $this->serviceFactory = $serviceFactory;
         $this->log = $log;
+        $this->config = $config;
     }
 
     /**
@@ -147,10 +152,16 @@ class JobRunner
         catch (Throwable $e) {
             $isSuccess = false;
 
-            $this->log->error(
-                "JobManager: Failed job running, job '{$jobEntity->id}'. " .
-                $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . "."
-            );
+            $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;
+
+            $msg = "JobManager: Failed job running, job '{$jobId}'. " .
+                $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . ".";
+
+            if ($this->config->get('logger.printTrace')) {
+                $msg .= " :: " . $e->getTraceAsString();
+            }
+
+            $this->log->error($msg);
 
             if ($throwException) {
                 $exception = $e;
@@ -256,7 +267,11 @@ class JobRunner
             throw new Error("No method '{$methodName}' in service '{$serviceName}'.");
         }
 
-        $service->$methodName($jobEntity->getData(), $jobEntity->getTargetId(), $jobEntity->getTargetType());
+        $service->$methodName(
+            $jobEntity->getData(),
+            $jobEntity->getTargetId(),
+            $jobEntity->getTargetType()
+        );
     }
 
     private function setJobRunning(JobEntity $jobEntity): void
