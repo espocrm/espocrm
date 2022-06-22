@@ -29,8 +29,6 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Utils\ClassFinder,
     InjectableFactory,
@@ -46,6 +44,8 @@ use Espo\ORM\{
     EntityFactory as EntityFactoryInterface,
     Value\ValueAccessorFactory,
 };
+
+use RuntimeException;
 
 class EntityFactory implements EntityFactoryInterface
 {
@@ -78,7 +78,7 @@ class EntityFactory implements EntityFactoryInterface
     public function setEntityManager(EntityManager $entityManager): void
     {
         if ($this->entityManager) {
-            throw new Error("EntityManager can be set only once.");
+            throw new RuntimeException("EntityManager can be set only once.");
         }
 
         $this->entityManager = $entityManager;
@@ -87,7 +87,7 @@ class EntityFactory implements EntityFactoryInterface
     public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void
     {
         if ($this->valueAccessorFactory) {
-            throw new Error("ValueAccessorFactory can be set only once.");
+            throw new RuntimeException("ValueAccessorFactory can be set only once.");
         }
 
         $this->valueAccessorFactory = $valueAccessorFactory;
@@ -102,13 +102,13 @@ class EntityFactory implements EntityFactoryInterface
         }
 
         if (!$this->entityManager) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $defs = $this->entityManager->getMetadata()->get($entityType);
 
         if (is_null($defs)) {
-            throw new Error("Entity '{$entityType}' is not defined in metadata.");
+            throw new RuntimeException("Entity '{$entityType}' is not defined in metadata.");
         }
 
         $bindingContainer = $this->getBindingContainer($className, $entityType, $defs);
@@ -122,11 +122,10 @@ class EntityFactory implements EntityFactoryInterface
     private function getBindingContainer(string $className, string $entityType, array $defs): BindingContainer
     {
         if (!$this->entityManager || !$this->valueAccessorFactory) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $data = new BindingData();
-
         $binder = new Binder($data);
 
         $binder

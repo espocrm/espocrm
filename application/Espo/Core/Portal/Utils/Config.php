@@ -30,10 +30,10 @@
 namespace Espo\Core\Portal\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Config as BaseConfig,
 };
 
+use RuntimeException;
 use stdClass;
 
 class Config extends BaseConfig
@@ -104,7 +104,7 @@ class Config extends BaseConfig
     public function setPortalParameters(array $data = []): void
     {
         if ($this->portalParamsSet) {
-            throw new Error("Can't set portal params second time.");
+            throw new RuntimeException("Can't set portal params second time.");
         }
 
         $this->portalParamsSet = true;

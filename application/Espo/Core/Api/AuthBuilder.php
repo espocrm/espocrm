@@ -30,10 +30,11 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\{
-    Exceptions\Error,
     Authentication\Authentication,
     Utils\Log,
 };
+
+use RuntimeException;
 
 /**
  * Builds Auth instance.
@@ -77,7 +78,7 @@ class AuthBuilder
     public function build(): Auth
     {
         if (!$this->authentication) {
-            throw new Error("Authentication is not set.");
+            throw new RuntimeException("Authentication is not set.");
         }
 
         return new Auth($this->log, $this->authentication, $this->authRequired, $this->isEntryPoint);

@@ -31,8 +31,6 @@ namespace Espo\Core\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Di,
     Utils\DateTime as DateTimeUtil,
@@ -40,6 +38,7 @@ use Espo\Core\{
 
 use DateTime;
 use DateTimeZone;
+use RuntimeException;
 
 /**
  * @extends Database<\Espo\Core\ORM\Entity>
@@ -143,7 +142,7 @@ class Event extends Database implements
         );
 
         if ($dt === false) {
-            throw new Error("Could not parse date-time `{$string}`.");
+            throw new RuntimeException("Could not parse date-time `{$string}`.");
         }
 
         $utcTz = new DateTimeZone('UTC');
