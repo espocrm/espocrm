@@ -27,55 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Config;
+namespace Espo\Core\Utils\File\Exceptions;
 
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\File\Manager as FileManager;
-
-use RuntimeException;
-
-class MissingDefaultParamsSaver
+class PermissionError extends FileError
 {
-    private Config $config;
-
-    private ConfigWriter $configWriter;
-
-    private FileManager $fileManager;
-
-    private string $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
-
-    public function __construct(Config $config, ConfigWriter $configWriter, FileManager $fileManager)
-    {
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-        $this->fileManager = $fileManager;
-    }
-
-    public function process(): void
-    {
-        $data = $this->fileManager->getPhpSafeContents($this->defaultConfigPath);
-
-        if (!is_array($data)) {
-            throw new RuntimeException();
-        }
-
-        /** @var array<string,mixed> $data */
-
-        $newData = [];
-
-        foreach ($data as $param => $value) {
-            if ($this->config->has($param)) {
-                continue;
-            }
-
-            $newData[$param] = $value;
-        }
-
-        if (!count($newData)) {
-            return;
-        }
-
-        $this->configWriter->setMultiple($newData);
-        $this->configWriter->save();
-    }
 }

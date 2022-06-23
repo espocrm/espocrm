@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config\ConfigFileManager;
 
 use stdClass;
-use E_USER_DEPRECATED;
+use RuntimeException;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Access to the application config parameters.
@@ -257,7 +258,7 @@ class Config
         $configPath = $this->getConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
-            throw new Error("Config file '{$configPath}' is not found.");
+            throw new RuntimeException("Config file '{$configPath}' is not found.");
         }
 
         $data = include($configPath);
@@ -279,7 +280,7 @@ class Config
         }
 
         if (!is_array($data)) {
-            throw new Error('Invalid config data while saving.');
+            throw new RuntimeException('Invalid config data while saving.');
         }
 
         $data['microtime'] = $microtime = microtime(true);

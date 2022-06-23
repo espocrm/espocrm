@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Utils\Config;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Config,
@@ -90,14 +88,13 @@ class ConfigFileManager
 
     /**
      * @return array<string,mixed>
-     * @throws Error
      */
     public function getPhpContents(string $path): array
     {
         $data = $this->fileManager->getPhpContents($path);
 
         if (!is_array($data)) {
-            throw new Error("Bad data stored in '{$path}.");
+            throw new RuntimeException("Bad data stored in '{$path}.");
         }
 
         /** @var array<string,mixed> */

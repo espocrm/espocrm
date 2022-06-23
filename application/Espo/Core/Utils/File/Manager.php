@@ -30,10 +30,12 @@
 namespace Espo\Core\Utils\File;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Util,
     Utils\Json,
 };
+
+use Espo\Core\Utils\File\Exceptions\FileError;
+use Espo\Core\Utils\File\Exceptions\PermissionError;
 
 use stdClass;
 use Throwable;
@@ -88,6 +90,7 @@ class Manager
 
     /**
      * Get a list of directories in a specified directory.
+     *
      * @return string[]
      */
     public function getDirList(string $path): array
@@ -220,7 +223,7 @@ class Manager
      * Get file contents.
      *
      * @param string $path
-     * @throws Error If the file could not be read.
+     * @throws FileError If the file could not be read.
      */
     public function getContents($path): string
     {
@@ -241,13 +244,13 @@ class Manager
         }
 
         if (!file_exists($path)) {
-            throw new Error("File '{$path}' does not exist.");
+            throw new FileError("File '{$path}' does not exist.");
         }
 
         $contents = file_get_contents($path);
 
         if ($contents === false) {
-            throw new Error("Could not open file '{$path}'.");
+            throw new FileError("Could not open file '{$path}'.");
         }
 
         return $contents;
@@ -257,15 +260,16 @@ class Manager
      * Get data from a PHP file.
      *
      * @return mixed
+     * @throws FileError
      */
     public function getPhpContents(string $path)
     {
         if (!file_exists($path)) {
-            throw new Error("File '$path' does not exist.");
+            throw new FileError("File '$path' does not exist.");
         }
 
         if (strtolower(substr($path, -4)) !== '.php') {
-            throw new Error("File '$path' is not PHP.");
+            throw new FileError("File '$path' is not PHP.");
         }
 
         return include($path);
@@ -276,16 +280,16 @@ class Manager
      * If a file is not yet written, it will wait until it's ready.
      *
      * @return array<mixed,mixed>|stdClass
-     * @throws Error
+     * @throws FileError
      */
     public function getPhpSafeContents(string $path)
     {
         if (!file_exists($path)) {
-            throw new Error("Can't get contents from non-existing file '{$path}'.");
+            throw new FileError("Can't get contents from non-existing file '{$path}'.");
         }
 
         if (!strtolower(substr($path, -4)) == '.php') {
-            throw new Error("Only PHP file are allowed for getting contents.");
+            throw new FileError("Only PHP file are allowed for getting contents.");
         }
 
         $counter = 0;
@@ -302,18 +306,19 @@ class Manager
             $counter ++;
         }
 
-        throw new Error("Bad data stored in file '{$path}'.");
+        throw new FileError("Bad data stored in file '{$path}'.");
     }
 
     /**
      * Write contents to a file.
      *
      * @param mixed $data
+     * @throws PermissionError
      */
     public function putContents(string $path, $data, int $flags = 0, bool $useRenaming = false): bool
     {
         if ($this->checkCreateFile($path) === false) {
-            throw new Error('Permission denied for '. $path);
+            throw new PermissionError('Permission denied for '. $path);
         }
 
         $result = false;
@@ -458,14 +463,12 @@ class Manager
         }
 
         if (!is_array($currentData)) {
-            throw new Error("Neither array nor object in '{$path}'.");
+            throw new FileError("Neither array nor object in '{$path}'.");
         }
 
         $mergedData = Util::merge($currentData, $data);
 
-        $jsonOptions = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
-
-        $stringData = Json::encode($mergedData, $jsonOptions);
+        $stringData = Json::encode($mergedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         return (bool) $this->putContents($path, $stringData);
     }
@@ -581,6 +584,8 @@ class Manager
      *   Example:
      *   $sourcePath = 'data/uploads/extensions/file.json',
      *   $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'.
+     *
+     * @throws PermissionError
      */
     public function copy(
         string $sourcePath,
@@ -620,7 +625,7 @@ class Manager
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
 
-            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
+            throw new PermissionError("Permission denied for <br>". implode(", <br>", $betterPermissionList));
         }
 
         $res = true;
@@ -640,7 +645,6 @@ class Manager
                 $res &= copy($sourceFile, $destFile);
 
                 $this->getPermissionUtils()->setDefaultPermissions($destFile);
-
                 $this->opcacheInvalidate($destFile);
             }
         }
@@ -650,6 +654,8 @@ class Manager
 
     /**
      * Checks whether a new file can be created. It will also create all needed directories.
+     *
+     * @throws PermissionError
      */
     public function checkCreateFile(string $filePath): bool
     {
@@ -679,7 +685,7 @@ class Manager
                 $dirPermissionOriginal;
 
             if (!$this->mkdir($pathParts['dirname'], $dirPermission)) {
-                throw new Error(
+                throw new PermissionError(
                     'Permission denied: unable to create a folder on the server ' . $pathParts['dirname']
                 );
             }
@@ -691,9 +697,9 @@ class Manager
             return false;
         }
 
-        $setPrermissionsResult = $this->getPermissionUtils()->setDefaultPermissions($filePath);
+        $setPermissionsResult = $this->getPermissionUtils()->setDefaultPermissions($filePath);
 
-        if (!$setPrermissionsResult) {
+        if (!$setPermissionsResult) {
             $this->unlink($filePath);
 
             /**
@@ -845,7 +851,7 @@ class Manager
         if (!empty($permissionDeniedList)) {
             $betterPermissionList = $this->getPermissionUtils()->arrangePermissionList($permissionDeniedList);
 
-            throw new Error("Permission denied for <br>". implode(", <br>", $betterPermissionList));
+            throw new PermissionError("Permission denied for <br>". implode(", <br>", $betterPermissionList));
         }
 
         $result = true;
@@ -901,13 +907,15 @@ class Manager
 
     /**
      * Get a file size in bytes.
+     *
+     * @throws FileError
      */
     public function getSize(string $path): int
     {
         $size = filesize($path);
 
         if ($size === false) {
-            throw new Error("Could not get file size for `{$path}`.");
+            throw new FileError("Could not get file size for `{$path}`.");
         }
 
         return $size;

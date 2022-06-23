@@ -30,9 +30,9 @@
 namespace Espo\Core\Utils\Config;
 
 use Espo\Core\Utils\Config;
-use Espo\Core\Exceptions\Error;
 
 use Exception;
+use RuntimeException;
 
 /**
  * Writes into the config.
@@ -117,8 +117,6 @@ class ConfigWriter
 
     /**
      * Save config changes to the file.
-     *
-     * @throws Error
      */
     public function save(): void
     {
@@ -132,7 +130,7 @@ class ConfigWriter
         $internalConfigPath = $this->config->getInternalConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
-            throw new Error("Config file '{$configPath}' not found.");
+            throw new RuntimeException("Config file '{$configPath}' not found.");
         }
 
         $data = $this->fileManager->getPhpContents($configPath);
@@ -141,11 +139,11 @@ class ConfigWriter
             $this->fileManager->getPhpContents($internalConfigPath) : [];
 
         if (!is_array($data)) {
-            throw new Error("Could not read config.");
+            throw new RuntimeException("Could not read config.");
         }
 
         if (!is_array($dataInternal)) {
-            throw new Error("Could not read config-internal.");
+            throw new RuntimeException("Could not read config-internal.");
         }
 
         $toSaveInternal = false;
@@ -189,7 +187,6 @@ class ConfigWriter
 
     /**
      * @param array<string,mixed> $data
-     * @throws Error
      */
     private function saveData(string $path, array &$data, string $timeParam): void
     {
@@ -199,7 +196,7 @@ class ConfigWriter
             $this->fileManager->putPhpContents($path, $data);
         }
         catch (Exception $e) {
-            throw new Error("Could not save config.");
+            throw new RuntimeException("Could not save config.");
         }
 
         $reloadedData = $this->fileManager->getPhpContents($path);
@@ -215,7 +212,7 @@ class ConfigWriter
             $this->fileManager->putPhpContentsNoRenaming($path, $data);
         }
         catch (Exception $e) {
-            throw new Error("Could not save config.");
+            throw new RuntimeException("Could not save config.");
         }
     }
 

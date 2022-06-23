@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Exceptions\Error;
+use RuntimeException;
 
 class ZipArchive
 {
@@ -54,7 +54,7 @@ class ZipArchive
     public function unzip($file, $destinationPath)
     {
         if (!class_exists('\ZipArchive')) {
-            throw new Error("Class ZipArchive does not installed. Cannot unzip the file.");
+            throw new RuntimeException("php-zip extension is not installed. Cannot unzip the file.");
         }
 
         $zip = new \ZipArchive;

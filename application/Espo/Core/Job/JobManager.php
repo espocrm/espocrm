@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
@@ -39,6 +37,7 @@ use Espo\Core\{
 
 use Espo\Entities\Job as JobEntity;
 
+use RuntimeException;
 use Throwable;
 
 /**
@@ -194,7 +193,7 @@ class JobManager
             try {
                 $data = $this->fileManager->getPhpContents($this->lastRunTimeFile);
             }
-            catch (Error $e) {
+            catch (RuntimeException $e) {
                 $data = null;
             }
 

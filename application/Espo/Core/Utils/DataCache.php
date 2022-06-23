@@ -29,12 +29,10 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\File\Manager as FileManager,
-};
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use InvalidArgumentException;
+use RuntimeException;
 use stdClass;
 
 class DataCache
@@ -62,7 +60,6 @@ class DataCache
      * Get a stored value.
      *
      * @return array<mixed,mixed>|stdClass
-     * @throws Error If is not cached or bad data stored.
      */
     public function get(string $key)
     {
@@ -89,10 +86,9 @@ class DataCache
         $result = $this->fileManager->putPhpContents($cacheFile, $data, true, true);
 
         if ($result === false) {
-            throw new Error("Could not store '{$key}'.");
+            throw new RuntimeException("Could not store '{$key}'.");
         }
     }
-
 
     /**
      * @param mixed $data

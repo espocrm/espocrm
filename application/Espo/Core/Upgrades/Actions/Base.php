@@ -645,7 +645,6 @@ abstract class Base
      * @param string $type
      * @param bool $withEmptyDirs
      * @return bool
-     * @throws Error
      */
     protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
     {
