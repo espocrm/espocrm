@@ -39,6 +39,7 @@ abstract class Base extends BaseFunction
     /**
      * @return bool
      * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(ArgumentList $args)
     {

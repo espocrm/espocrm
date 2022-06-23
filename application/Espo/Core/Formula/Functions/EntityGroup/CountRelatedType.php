@@ -51,6 +51,8 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
     /**
      * @return int
+     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws Error
      */
     public function process(stdClass $item)
     {

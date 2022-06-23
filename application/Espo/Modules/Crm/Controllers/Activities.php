@@ -170,6 +170,7 @@ class Activities
 
     /**
      * @throws Forbidden
+     * @throws NotFound
      */
     public function getActionListUpcoming(Request $request): stdClass
     {

@@ -112,6 +112,7 @@ class DataManager
      * Rebuild the system with metadata, database and cache clearing.
      *
      * @param ?string[] $entityList
+     * @throws Error
      */
     public function rebuild(?array $entityList = null): void
     {
@@ -132,6 +133,8 @@ class DataManager
 
     /**
      * Clear a cache.
+     *
+     * @throws Error
      */
     public function clearCache(): void
     {
@@ -139,7 +142,7 @@ class DataManager
 
         $result = $this->fileManager->removeInDir($this->cachePath);
 
-        if ($result != true) {
+        if (!$result) {
             throw new Error("Error while clearing cache");
         }
 
@@ -150,6 +153,7 @@ class DataManager
      * Rebuild database.
      *
      * @param ?string[] $entityList
+     * @throws Error
      */
     public function rebuildDatabase(?array $entityList = null): void
     {
@@ -167,7 +171,7 @@ class DataManager
             );
         }
 
-        if ($result != true) {
+        if (!$result) {
             throw new Error("Error while rebuilding database. See log file for details.");
         }
 
@@ -190,12 +194,13 @@ class DataManager
         }
 
         $this->configWriter->updateCacheTimestamp();
-
         $this->configWriter->save();
     }
 
     /**
      * Rebuild metadata.
+     *
+     * @throws Error
      */
     public function rebuildMetadata(): void
     {

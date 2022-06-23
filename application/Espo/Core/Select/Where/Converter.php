@@ -91,6 +91,7 @@ class Converter
 
     /**
      * @return array<mixed,mixed>
+     * @throws Error
      */
     private function itemToList(Item $item): array
     {
@@ -111,6 +112,7 @@ class Converter
 
     /**
      * @return ?array<mixed,mixed>
+     * @throws Error
      */
     private function processItem(QueryBuilder $queryBuilder, Item $item): ?array
     {
@@ -140,6 +142,7 @@ class Converter
     /**
      * @param mixed $value
      * @return array<mixed,mixed>
+     * @throws Error
      */
     private function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
@@ -205,6 +208,7 @@ class Converter
     /**
      * @param mixed $value
      * @return array<mixed,mixed>
+     * @throws Error
      */
     private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
     {

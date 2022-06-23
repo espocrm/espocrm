@@ -143,6 +143,7 @@ abstract class Base implements Injectable
 
     /**
      * @return mixed[]
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     protected function fetchArguments(stdClass $item): array
     {

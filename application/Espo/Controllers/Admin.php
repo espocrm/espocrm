@@ -113,6 +113,7 @@ class Admin
      *   version: string,
      * }
      * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
      * @todo Use Request.
      *
      */
@@ -137,6 +138,7 @@ class Admin
 
     /**
      * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function postActionRunUpgrade(Request $request): bool
     {

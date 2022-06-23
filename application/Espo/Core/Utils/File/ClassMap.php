@@ -156,7 +156,6 @@ class ClassMap
      * @param string[] $fileList
      * @param ?string[] $allowedMethods
      * @param array<string,class-string> $data
-     * @throws \ReflectionException
      */
     private function fillHashFromFileList(
         array $fileList,

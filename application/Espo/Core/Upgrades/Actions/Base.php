@@ -349,9 +349,10 @@ abstract class Base
     }
 
     /**
-     * Check if version of upgrade/extension is acceptable to current version of EspoCRM
+     * Check if version of upgrade/extension is acceptable to current version of EspoCRM.
      *
      * @return bool
+     * @throws Error
      */
     protected function isAcceptable()
     {
@@ -359,7 +360,7 @@ abstract class Base
 
         $res = $this->checkPackageType();
 
-        //check php version
+        // check php version
         if (isset($manifest['php'])) {
             $res &= $this->checkVersions(
                 $manifest['php'], System::getPhpVersion(),
@@ -387,7 +388,7 @@ abstract class Base
             }
         }
 
-        //check acceptableVersions
+        // check acceptableVersions
         if (isset($manifest['acceptableVersions'])) {
             $res &= $this->checkVersions(
                 $manifest['acceptableVersions'],
@@ -396,7 +397,7 @@ abstract class Base
             );
         }
 
-        //check dependencies
+        // check dependencies
         if (!empty($manifest['dependencies'])) {
             $res &= $this->checkDependencies($manifest['dependencies']);
         }
@@ -476,6 +477,7 @@ abstract class Base
 
     /**
      * @return string
+     * @throws Error
      */
     protected function getPackageType()
     {
@@ -572,6 +574,7 @@ abstract class Base
     /**
      * @param bool $isPackage
      * @return string
+     * @throws Error
      */
     protected function getPackagePath($isPackage = false)
     {
@@ -581,6 +584,7 @@ abstract class Base
     /**
      * @param string $type
      * @return string[]
+     * @throws Error
      */
     protected function getDeleteList($type = 'delete')
     {
@@ -673,6 +677,7 @@ abstract class Base
 
     /**
      * @return string[]
+     * @throws Error
      */
     protected function getRestoreFileList()
     {
@@ -774,6 +779,7 @@ abstract class Base
      * @param ?string $type
      * @param string $dest
      * @return bool
+     * @throws Error
      */
     protected function copyFiles($type = null, $dest = '')
     {
@@ -783,6 +789,7 @@ abstract class Base
             switch ($type) {
                 case 'vendor':
                     $dest = $this->vendorDirName;
+
                     break;
             }
 
@@ -942,6 +949,7 @@ abstract class Base
      * @param string $name
      * @param mixed $default
      * @return mixed
+     * @throws Error
      */
     protected function getManifestParam($name, $default = null)
     {
@@ -1160,6 +1168,7 @@ abstract class Base
 
     /**
      * @return void
+     * @throws Error
      */
     protected function enableMaintenanceMode()
     {
@@ -1216,6 +1225,7 @@ abstract class Base
     /**
      * @param bool $force
      * @return void
+     * @throws Error
      */
     protected function disableMaintenanceMode($force = false)
     {

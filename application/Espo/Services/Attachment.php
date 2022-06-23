@@ -231,6 +231,7 @@ class Attachment extends Record
 
     /**
      * @param AttachmentEntity $entity
+     * @throws Forbidden
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {

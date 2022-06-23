@@ -65,6 +65,7 @@ class Applier
 
     /**
      * @param string[] $boolFilterNameList
+     * @throws Error
      */
     public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
     {
@@ -89,6 +90,9 @@ class Applier
         );
     }
 
+    /**
+     * @throws Error
+     */
     private function applyBoolFilter(
         QueryBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,

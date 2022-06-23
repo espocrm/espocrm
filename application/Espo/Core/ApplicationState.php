@@ -33,12 +33,14 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\Portal as PortalEntity;
 use Espo\Entities\User as UserEntity;
 
+use LogicException;
+
 /**
  * Provides information about an application, current user, portal.
  */
 class ApplicationState
 {
-    private $container;
+    private Container $container;
 
     public function __construct(Container $container)
     {
@@ -55,12 +57,11 @@ class ApplicationState
 
     /**
      * Get a portal ID (if an application is portal).
-     * @throws Error
      */
     public function getPortalId(): string
     {
         if (!$this->isPortal()) {
-            throw new Error("Can't get portal ID for non-portal application.");
+            throw new LogicException("Can't get portal ID for non-portal application.");
         }
 
         return $this->getPortal()->getId();
@@ -68,12 +69,11 @@ class ApplicationState
 
     /**
      * Get a portal entity (if an application is portal).
-     * @throws Error
      */
     public function getPortal(): PortalEntity
     {
         if (!$this->isPortal()) {
-            throw new Error("Can't get portal for non-portal application.");
+            throw new LogicException("Can't get portal for non-portal application.");
         }
 
         /** @var PortalEntity */
@@ -90,12 +90,11 @@ class ApplicationState
 
     /**
      * Get a current logged user. If no auth is applied, then the system user will be returned.
-     * @throws Error
      */
     public function getUser(): UserEntity
     {
         if (!$this->hasUser()) {
-            throw new Error("User is not yet available.");
+            throw new LogicException("User is not yet available.");
         }
 
         /** @var UserEntity */
@@ -104,7 +103,6 @@ class ApplicationState
 
     /**
      * Get an ID of a current logged user. If no auth is applied, then the system user will be returned.
-     * @throws Error
      */
     public function getUserId(): string
     {
@@ -113,7 +111,6 @@ class ApplicationState
 
     /**
      * Whether a user is logged.
-     * @throws Error
      */
     public function isLogged(): bool
     {
@@ -130,7 +127,6 @@ class ApplicationState
 
     /**
      * Whether logged as an admin.
-     * @throws Error
      */
     public function isAdmin(): bool
     {
@@ -144,7 +140,6 @@ class ApplicationState
 
     /**
      * Whether logged as an API user.
-     * @throws Error
      */
     public function isApi(): bool
     {

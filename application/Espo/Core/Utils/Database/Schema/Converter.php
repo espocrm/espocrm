@@ -161,6 +161,7 @@ class Converter
      *
      * @param array<string,mixed> $ormMeta
      * @param string[]|string|null $entityList
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function process(array $ormMeta, $entityList = null): DbalSchema
     {
@@ -320,6 +321,7 @@ class Converter
      *
      * @param string $entityName
      * @param array<string,mixed> $relationParams
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     protected function prepareManyMany(string $entityName, $relationParams): Table
     {
@@ -436,6 +438,7 @@ class Converter
 
     /**
      * @param array<string,array<string,mixed>> $indexes
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     protected function addIndexes(Table $table, array $indexes): void
     {
@@ -569,7 +572,7 @@ class Converter
             $this->loadData($this->pathProvider->getCustom() . $this->tablesPath)
         );
 
-        // Get custom tables from metdata 'additionalTables'.
+        // Get custom tables from metadata 'additionalTables'.
         foreach ($ormMeta as $entityParams) {
             if (isset($entityParams['additionalTables']) && is_array($entityParams['additionalTables'])) {
                 /** @var array<string,mixed> */

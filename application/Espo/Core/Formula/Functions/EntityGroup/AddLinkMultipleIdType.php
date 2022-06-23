@@ -36,6 +36,7 @@ class AddLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
     /**
      * @return void
      * @throws Error
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(\stdClass $item)
     {
