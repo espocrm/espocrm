@@ -30,7 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Utils\Json;
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 
 use Psr\Http\Message\{
     ServerRequestInterface as Psr7Request,
@@ -184,6 +184,9 @@ class RequestWrapper implements ApiRequest
         return $contents;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function getParsedBody(): stdClass
     {
         if ($this->parsedBody === null) {
@@ -191,12 +194,15 @@ class RequestWrapper implements ApiRequest
         }
 
         if ($this->parsedBody === null) {
-            throw new Error();
+            throw new BadRequest();
         }
 
         return Util::cloneObject($this->parsedBody);
     }
 
+    /**
+     * @throws BadRequest
+     */
     private function initParsedBody(): void
     {
         $contents = $this->getBodyContents();
@@ -211,7 +217,7 @@ class RequestWrapper implements ApiRequest
             }
 
             if (!$parsedBody instanceof stdClass) {
-                throw new Error("Body is not a JSON object.");
+                throw new BadRequest("Body is not a JSON object.");
             }
 
             $this->parsedBody = $parsedBody;
