@@ -46,8 +46,6 @@ class ActionRenderer
 
     /**
      * @param ?array<string,mixed> $data
-     * @throws \JsonException
-     * @throws \JsonException
      */
     public function render(string $controller, string $action, ?array $data = null): string
     {

@@ -108,7 +108,6 @@ class ClientManager
 
     /**
      * @param array<string,mixed> $vars
-     * @throws \Espo\Core\Exceptions\Error
      */
     public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {
@@ -121,7 +120,6 @@ class ClientManager
         }
 
         $cacheTimestamp = $this->getCacheTimestamp();
-
         $jsFileList = $this->getJsFileList();
 
         if ($this->config->get('isDeveloperMode')) {
@@ -134,7 +132,6 @@ class ClientManager
         }
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
-
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
 
         $scriptsHtml = '';
