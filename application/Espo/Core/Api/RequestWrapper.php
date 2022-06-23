@@ -202,13 +202,19 @@ class RequestWrapper implements ApiRequest
         $contents = $this->getBodyContents();
 
         if ($this->getContentType() === 'application/json' && $contents) {
-            $this->parsedBody = Json::decode($contents);
+            $parsedBody = Json::decode($contents);
 
-            if (is_array($this->parsedBody)) {
-                $this->parsedBody = (object) [
-                    'list' => $this->parsedBody,
+            if (is_array($parsedBody)) {
+                $parsedBody = (object) [
+                    'list' => $parsedBody,
                 ];
             }
+
+            if (!$parsedBody instanceof stdClass) {
+                throw new Error("Body is not a JSON object.");
+            }
+
+            $this->parsedBody = $parsedBody;
 
             return;
         }
