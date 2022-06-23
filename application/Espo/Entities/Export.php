@@ -35,7 +35,7 @@ use Espo\Core\Field\Link;
 
 use Espo\Tools\Export\Params;
 
-use Espo\Core\Exceptions\Error;
+use RuntimeException;
 
 class Export extends Entity
 {
@@ -54,7 +54,7 @@ class Export extends Entity
         $raw = $this->get('params');
 
         if (!is_string($raw)) {
-            throw new Error("No 'params'.");
+            throw new RuntimeException("No 'params'.");
         }
 
         /** @var Params $params */
@@ -68,7 +68,7 @@ class Export extends Entity
         $value = $this->get('status');
 
         if (!is_string($value)) {
-            throw new Error("No 'status'.");
+            throw new RuntimeException("No 'status'.");
         }
 
         return $value;
@@ -90,7 +90,7 @@ class Export extends Entity
         $value = $this->getValueObject('createdAt');
 
         if (!$value instanceof DateTime) {
-            throw new Error("No 'createdAt'.");
+            throw new RuntimeException("No 'createdAt'.");
         }
 
         return $value;
@@ -101,7 +101,7 @@ class Export extends Entity
         $value = $this->getValueObject('createdBy');
 
         if (!$value instanceof Link) {
-            throw new Error("No 'createdBy'.");
+            throw new RuntimeException("No 'createdBy'.");
         }
 
         return $value;

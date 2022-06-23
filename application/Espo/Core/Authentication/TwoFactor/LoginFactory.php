@@ -31,7 +31,8 @@ namespace Espo\Core\Authentication\TwoFactor;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Exceptions\Error;
+
+use LogicException;
 
 class LoginFactory
 {
@@ -51,7 +52,7 @@ class LoginFactory
         $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'loginClassName']);
 
         if (!$className) {
-            throw new Error("No login-class class for '{$method}'.");
+            throw new LogicException("No login-class class for '{$method}'.");
         }
 
         return $this->injectableFactory->create($className);

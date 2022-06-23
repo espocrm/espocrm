@@ -49,6 +49,9 @@ class AccountFactory
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @throws Error
+     */
     public function create(string $id): Account
     {
         $entity = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);

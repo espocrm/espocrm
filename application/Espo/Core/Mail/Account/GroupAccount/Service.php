@@ -112,6 +112,7 @@ class Service
 
     /**
      * @param string $id Account ID.
+     * @throws Error
      */
     public function storeSentMessage(string $id, Message $message): void
     {

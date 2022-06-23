@@ -36,7 +36,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\Params;
 
-use Espo\Core\Exceptions\Error;
+use RuntimeException;
 
 use stdClass;
 
@@ -57,7 +57,7 @@ class MassAction extends Entity
         $raw = $this->get('params');
 
         if (!is_string($raw)) {
-            throw new Error("No 'params'.");
+            throw new RuntimeException("No 'params'.");
         }
 
         /** @var Params $params */
@@ -71,7 +71,7 @@ class MassAction extends Entity
         $raw = $this->get('data');
 
         if (!$raw instanceof stdClass) {
-            throw new Error("No 'data'.");
+            throw new RuntimeException("No 'data'.");
         }
 
         return Data::fromRaw($raw);
@@ -82,7 +82,7 @@ class MassAction extends Entity
         $value = $this->get('entityType');
 
         if (!is_string($value)) {
-            throw new Error("No 'entityType'.");
+            throw new RuntimeException("No 'entityType'.");
         }
 
         return $value;
@@ -93,7 +93,7 @@ class MassAction extends Entity
         $value = $this->get('action');
 
         if (!is_string($value)) {
-            throw new Error("No 'action'.");
+            throw new RuntimeException("No 'action'.");
         }
 
         return $value;
@@ -104,7 +104,7 @@ class MassAction extends Entity
         $value = $this->get('status');
 
         if (!is_string($value)) {
-            throw new Error("No 'status'.");
+            throw new RuntimeException("No 'status'.");
         }
 
         return $value;
@@ -120,7 +120,7 @@ class MassAction extends Entity
         $value = $this->getValueObject('createdAt');
 
         if (!$value instanceof DateTime) {
-            throw new Error("No 'createdAt'.");
+            throw new RuntimeException("No 'createdAt'.");
         }
 
         return $value;
@@ -131,7 +131,7 @@ class MassAction extends Entity
         $value = $this->getValueObject('createdBy');
 
         if (!$value instanceof Link) {
-            throw new Error("No 'createdBy'.");
+            throw new RuntimeException("No 'createdBy'.");
         }
 
         return $value;

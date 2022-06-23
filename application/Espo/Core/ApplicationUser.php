@@ -29,10 +29,6 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\{
-    Error,
-};
-
 use Espo\Entities\{
     User,
 };
@@ -40,6 +36,8 @@ use Espo\Entities\{
 use Espo\Core\{
     ORM\EntityManagerProxy,
 };
+
+use RuntimeException;
 
 /**
  * Setting a current user for the application.
@@ -57,15 +55,14 @@ class ApplicationUser
     }
 
     /**
-     * Setup the system user as a current user. The system user is used when no user is logged in.
-     * @throws Error
+     * Set up the system user as a current user. The system user is used when no user is logged in.
      */
     public function setupSystemUser(): void
     {
         $user = $this->entityManagerProxy->getEntity('User', 'system');
 
         if (!$user) {
-            throw new Error("System user is not found.");
+            throw new RuntimeException("System user is not found.");
         }
 
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);

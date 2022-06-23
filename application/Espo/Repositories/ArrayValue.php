@@ -32,10 +32,10 @@ namespace Espo\Repositories;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Repositories\Database,
-};
+use Espo\Core\Repositories\Database;
+
+use RuntimeException;
+use LogicException;
 
 /**
  * @extends Database<\Espo\Entities\ArrayValue>
@@ -47,7 +47,7 @@ class ArrayValue extends Database
     public function storeEntityAttribute(CoreEntity $entity, string $attribute, bool $populateMode = false): void
     {
         if ($entity->getAttributeType($attribute) !== Entity::JSON_ARRAY) {
-            throw new Error("ArrayValue: Can't store non array attribute.");
+            throw new LogicException("ArrayValue: Can't store non array attribute.");
         }
 
         if ($entity->getAttributeType('notStorable')) {
@@ -69,7 +69,7 @@ class ArrayValue extends Database
         }
 
         if (!is_array($valueList)) {
-            throw new Error("ArrayValue: Bad value passed to JSON_ARRAY attribute {$attribute}.");
+            throw new RuntimeException("ArrayValue: Bad value passed to JSON_ARRAY attribute {$attribute}.");
         }
 
         $valueList = array_unique($valueList);
@@ -133,7 +133,7 @@ class ArrayValue extends Database
     public function deleteEntityAttribute(CoreEntity $entity, string $attribute): void
     {
         if (!$entity->hasId()) {
-            throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");
+            throw new LogicException("ArrayValue: Can't delete {$attribute} w/o id given.");
         }
 
         $this->entityManager->getTransactionManager()->start();

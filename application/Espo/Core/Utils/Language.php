@@ -30,16 +30,14 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
-    Utils\Util,
     Utils\File\Manager as FileManager,
-    Utils\Config,
-    Utils\DataCache,
     Utils\Resource\Reader as ResourceReader,
     Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
 use Espo\Entities\Preferences;
+
+use RuntimeException;
 
 class Language
 {
@@ -230,14 +228,13 @@ class Language
      * @param string|string[]|null $key
      * @param mixed $returns
      * @return mixed
-     * @throws Error
      */
     public function get($key = null, $returns = null)
     {
         $data = $this->getData();
 
         if (!isset($data)) {
-            throw new Error('Language: current language '.$this->currentLanguage.' not found');
+            throw new RuntimeException('Language: current language '.$this->currentLanguage.' not found');
         }
 
         return Util::getValueByKey($data, $key, $returns);

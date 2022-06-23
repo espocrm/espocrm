@@ -83,7 +83,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSaltException()
     {
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException(\RuntimeException::class);
 
         $this->reflection->invokeMethod('getSalt');
     }

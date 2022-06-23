@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Record;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory as Factory;
 use Espo\Core\Utils\Metadata;
 
@@ -113,7 +112,7 @@ class ServiceFactory
     public function createInternal(string $entityType): Service
     {
         if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
-            throw new Error("Can't create record service '{$entityType}', there's no such entity type.");
+            throw new RuntimeException("Can't create record service '{$entityType}', there's no such entity type.");
         }
 
         if (!$this->serviceFactory->checkExists($entityType)) {

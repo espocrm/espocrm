@@ -29,7 +29,7 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Exceptions\Error;
+use InvalidArgumentException;
 
 use Espo\Core\ORM\Entity;
 
@@ -44,7 +44,7 @@ class PhoneNumber extends Entity
     protected function _setName($value)
     {
         if (empty($value)) {
-            throw new Error("Phone number can't be empty");
+            throw new InvalidArgumentException("Phone number can't be empty");
         }
 
         $this->setInContainer('name', $value);

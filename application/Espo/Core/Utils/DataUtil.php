@@ -29,9 +29,8 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
-
 use InvalidArgumentException;
+use LogicException;
 
 class DataUtil
 {
@@ -39,8 +38,6 @@ class DataUtil
      * @param array<mixed,mixed> $data
      * @param array<int,string|string[]>|string $unsetList
      * @return array<mixed,mixed>
-     * @throws InvalidArgumentException
-     * @throws Error
      */
     public static function unsetByKey(&$data, $unsetList, bool $removeEmptyItems = false)
     {
@@ -63,7 +60,7 @@ class DataUtil
                 $arr = explode('.', $unsetItem);
             }
             else {
-                throw new Error('Bad unset parameter');
+                throw new LogicException('Bad unset parameter');
             }
 
             $pointer = &$data;

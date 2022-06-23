@@ -33,7 +33,8 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Binding\Factory;
-use Espo\Core\Exceptions\Error;
+
+use RuntimeException;
 
 class SenderFactory implements Factory
 {
@@ -60,7 +61,7 @@ class SenderFactory implements Factory
         $className = $this->metadata->get(['app', 'webSocket', 'messagers', $messager, 'senderClassName']);
 
         if (!$className) {
-            throw new Error("No sender for messager '{$messager}'.");
+            throw new RuntimeException("No sender for messager '{$messager}'.");
         }
 
         return $this->injectableFactory->create($className);

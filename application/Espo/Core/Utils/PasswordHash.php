@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use RuntimeException;
 
 class PasswordHash
 {
@@ -69,7 +69,7 @@ class PasswordHash
         $salt = $this->config->get('passwordSalt');
 
         if (!isset($salt)) {
-            throw new Error('Option "passwordSalt" does not exist in config.php');
+            throw new RuntimeException('Option "passwordSalt" does not exist in config.php');
         }
 
         return $this->normalizeSalt($salt);

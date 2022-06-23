@@ -92,6 +92,9 @@ class Fetcher
         $this->afterFetchHook = $afterFetchHook;
     }
 
+    /**
+     * @throws Error
+     */
     public function fetch(Account $account): void
     {
         if (!$account->isAvailableForFetching()) {
@@ -236,6 +239,7 @@ class Fetcher
 
     /**
      * @return int[]
+     * @throws Error
      */
     private function getIdList(
         Account $account,

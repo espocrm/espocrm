@@ -29,9 +29,9 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\ORM\Entity;
+
+use InvalidArgumentException;
 
 class EmailAddress extends Entity
 {
@@ -44,7 +44,7 @@ class EmailAddress extends Entity
     protected function _setName($value)
     {
         if (empty($value)) {
-            throw new Error("Not valid email address '{$value}'");
+            throw new InvalidArgumentException("Not valid email address '{$value}'");
         }
 
         $this->setInContainer('name', $value);

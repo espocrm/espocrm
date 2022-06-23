@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\AuthenticationFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -116,7 +116,7 @@ class RequestProcessor
 
     /**
      * @throws \Espo\Core\Exceptions\NotFound
-     * @throws Error
+     * @throws BadRequest
      */
     private function proceed(Request $request, Response $response): void
     {
@@ -134,7 +134,7 @@ class RequestProcessor
             $actionName = $crudList[$httpMethod] ?? null;
 
             if (!$actionName) {
-                throw new Error("No action for method {$httpMethod}.");
+                throw new BadRequest("No action for method {$httpMethod}.");
             }
         }
 

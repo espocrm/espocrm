@@ -29,7 +29,7 @@
 
 namespace Espo\Core\EntryPoint;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Application\Runner\Params as RunnerParams;
 use Espo\Core\EntryPoint\EntryPointManager;
 use Espo\Core\ApplicationUser;
@@ -87,6 +87,10 @@ class Starter
         $this->errorOutput = $errorOutput;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     public function start(?string $entryPoint = null, bool $final = false): void
     {
         $requestWrapped = new RequestWrapper(
@@ -95,7 +99,7 @@ class Starter
         );
 
         if ($requestWrapped->getMethod() !== 'GET') {
-            throw new Error("Only GET requests allowed for entry points.");
+            throw new BadRequest("Only GET requests allowed for entry points.");
         }
 
         if ($entryPoint === null) {
@@ -103,7 +107,7 @@ class Starter
         }
 
         if (!$entryPoint) {
-            throw new Error("No 'entryPoint' param.");
+            throw new BadRequest("No 'entryPoint' param.");
         }
 
         $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
@@ -154,6 +158,9 @@ class Starter
         }
     }
 
+    /**
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     private function processRequestInternal(
         string $entryPoint,
         RequestWrapper $request,

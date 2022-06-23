@@ -58,6 +58,9 @@ class Account implements AccountInterface
 
     private const PORTION_LIMIT = 10;
 
+    /**
+     * @throws Error
+     */
     public function __construct(EmailAccount $entity, EntityManager $entityManager, Config $config)
     {
         $this->entity = $entity;

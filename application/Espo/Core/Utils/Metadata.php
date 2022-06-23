@@ -30,16 +30,15 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\File\Manager as FileManager,
-    Utils\Module,
     Utils\Metadata\Helper,
-    Utils\DataCache,
     Utils\Resource\Reader as ResourceReader,
     Utils\Resource\Reader\Params as ResourceReaderParams,
 };
 
 use stdClass;
+use LogicException;
+use RuntimeException;
 
 /**
  * Application metadata.
@@ -159,9 +158,7 @@ class Metadata
     */
     public function get($key = null, $default = null)
     {
-        $result = Util::getValueByKey($this->getData(), $key, $default);
-
-        return $result;
+        return Util::getValueByKey($this->getData(), $key, $default);
     }
 
     /**
@@ -575,7 +572,7 @@ class Metadata
                     $rowResult = $this->fileManager->unsetJsonContents($filePath, $unsetData);
 
                     if (!$rowResult) {
-                        throw new Error(
+                        throw new LogicException(
                             "Metadata items {$key1}.{$key2} can be deleted for custom code only."
                         );
                     }
@@ -586,7 +583,7 @@ class Metadata
         }
 
         if (!$result) {
-            throw new Error("Error while saving metadata. See log file for details.");
+            throw new RuntimeException("Error while saving metadata. See log file for details.");
         }
 
         $this->clearChanges();

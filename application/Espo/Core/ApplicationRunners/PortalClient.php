@@ -29,11 +29,10 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     Application\RunnerParameterized,
     Application\Runner\Params,
+    Exceptions\BadRequest,
     Exceptions\NotFound,
     Utils\ClientManager,
     Utils\Config,
@@ -42,8 +41,7 @@ use Espo\Core\{
     Portal\Utils\Url,
     Api\ErrorOutput,
     Api\RequestWrapper,
-    Api\ResponseWrapper,
-};
+    Api\ResponseWrapper};
 
 use Slim\{
     ResponseEmitter,
@@ -89,7 +87,7 @@ class PortalClient implements RunnerParameterized
         $responseWrapped = new ResponseWrapper(new Response());
 
         if ($requestWrapped->getMethod() !== 'GET') {
-            throw new Error("Only GET request is allowed.");
+            throw new BadRequest("Only GET request is allowed.");
         }
 
         try {

@@ -430,6 +430,7 @@ class Sender
      * @param ?array<string,mixed> $params @deprecated
      * @param ?Message $message @deprecated
      * @param iterable<\Espo\Entities\Attachment> $attachmentList @deprecated
+     * @throws Error
      */
     public function send(
         Email $email,
@@ -686,7 +687,7 @@ class Sender
 
                 $email->set('messageId', '<' . $messageId . '>');
 
-                if ($email->id) {
+                if ($email->hasId()) {
                     $this->entityManager->saveEntity($email, ['silent' => true]);
                 }
             }
@@ -712,14 +713,16 @@ class Sender
             $this->useGlobal();
 
             $this->handleException($e);
-
-            return;
         }
 
         $this->resetParams();
         $this->useGlobal();
     }
 
+    /**
+     * @throws Error
+     * @return never
+     */
     private function handleException(Exception $e): void
     {
         if ($e instanceof ProtocolRuntimeException) {
