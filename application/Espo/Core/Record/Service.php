@@ -35,7 +35,6 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 
 use Espo\Core\Exceptions\{
-    Error,
     BadRequest,
     NotFound,
     Forbidden,
@@ -59,7 +58,6 @@ use Espo\Core\{
     Acl\Table as AclTable,
     Select\SearchParams,
     Select\SelectBuilderFactory,
-    Record\Crud,
     Record\Collection as RecordCollection,
     Record\HookManager as RecordHookManager,
     Record\Select\ApplierClassNameListProvider,
@@ -75,6 +73,8 @@ use Espo\Core\Di;
 
 use stdClass;
 use ArrayAccess;
+use InvalidArgumentException;
+use LogicException;
 
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
@@ -284,19 +284,19 @@ class Service implements Crud,
     /**
      * Read a record by ID. Access control check is performed.
      *
+     * @param non-empty-string $id
      * @return TEntity
-     * @throws Error
      * @throws NotFoundSilent If not found.
      * @throws ForbiddenSilent If no read access.
      */
     public function read(string $id, ReadParams $params): Entity
     {
-        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+        if ($id === '') {
+            throw new InvalidArgumentException();
         }
 
-        if (empty($id)) {
-            throw new Error("No ID passed.");
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
+            throw new ForbiddenSilent();
         }
 
         $entity = $this->getEntity($id);
@@ -306,7 +306,6 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeRead($entity, $params);
-
         $this->processActionHistoryRecord('read', $entity);
 
         return $entity;
@@ -950,13 +949,17 @@ class Service implements Crud,
     /**
      * Find linked records.
      *
+     * @param non-empty-string $link
      * @return RecordCollection<\Espo\ORM\Entity>
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
-     * @throws Error
      */
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
+        if ($link === '') {
+            throw new InvalidArgumentException();
+        }
+
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No access.");
         }
@@ -969,10 +972,6 @@ class Service implements Crud,
 
         if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
-        }
-
-        if (!$link) {
-            throw new Error("Empty link.");
         }
 
         $this->processForbiddenLinkReadCheck($link);
@@ -1076,7 +1075,6 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
      */
     public function link(string $id, string $link, string $foreignId): void
     {
@@ -1097,7 +1095,7 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new Error("Only core entities are supported");
+            throw new LogicException("Only core entities are supported");
         }
 
         if ($this->noEditAccessRequiredForLink) {
@@ -1120,7 +1118,7 @@ class Service implements Crud,
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
-            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
+            throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
         $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
@@ -1150,8 +1148,7 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
-     */
+      */
     public function unlink(string $id, string $link, string $foreignId): void
     {
         if (!$this->acl->check($this->entityType)) {
@@ -1171,7 +1168,7 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new Error("Only core entities are supported");
+            throw new LogicException("Only core entities are supported");
         }
 
         if ($this->noEditAccessRequiredForLink) {
@@ -1194,7 +1191,7 @@ class Service implements Crud,
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
-            throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
+            throw new LogicException("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
         $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
@@ -1362,13 +1359,13 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new Error("Only core entities are supported");
+            throw new LogicException("Only core entities are supported");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
-            throw new Error();
+            throw new LogicException("Link '{$link}' has no 'entity'.");
         }
 
         $accessActionRequired = AclTable::ACTION_EDIT;

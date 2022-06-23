@@ -121,6 +121,10 @@ class ExternalAccount extends RecordBase
         /** @var string */
         $id = $request->getRouteParam('id');
 
+        if ($id === '') {
+            throw new BadRequest();
+        }
+
         return $this->getRecordService()
             ->read($id, ReadParams::create())
             ->getValueMap();
