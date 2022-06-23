@@ -37,6 +37,7 @@ use Espo\Core\ApplicationUser;
 
 use Exception;
 use Throwable;
+use LogicException;
 
 /**
  * Processes requests. Handles authentication. Obtains a controller name, action, body from a request.
@@ -113,6 +114,10 @@ class RequestProcessor
         ob_clean();
     }
 
+    /**
+     * @throws \Espo\Core\Exceptions\NotFound
+     * @throws Error
+     */
     private function proceed(Request $request, Response $response): void
     {
         $this->beforeProceed($response);
@@ -143,7 +148,7 @@ class RequestProcessor
         $controllerName = $request->getRouteParam('controller');
 
         if (!$controllerName) {
-            throw new Error("Route doesn't have specified controller.");
+            throw new LogicException("Route doesn't have specified controller.");
         }
 
         return ucfirst($controllerName);

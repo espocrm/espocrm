@@ -29,11 +29,9 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\ClassFinder,
-    InjectableFactory,
-};
+use Espo\Core\Utils\ClassFinder;
+
+use RuntimeException;
 
 /**
  * Creates services. Services are intended for a business logic. Do not confuse with container services.
@@ -79,7 +77,7 @@ class ServiceFactory
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new Error("Service '{$name}' was not found.");
+            throw new RuntimeException("Service '{$name}' was not found.");
         }
 
         $obj = $this->injectableFactory->createWith($className, $with);

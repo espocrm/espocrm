@@ -29,7 +29,6 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
@@ -40,6 +39,7 @@ use ReflectionParameter;
 use ReflectionFunction;
 use ReflectionNamedType;
 use Throwable;
+use RuntimeException;
 use Closure;
 
 /**
@@ -112,7 +112,7 @@ class InjectableFactory
     ): object {
 
         if (!class_exists($className)) {
-            throw new Error("InjectableFactory: Class '{$className}' does not exist.");
+            throw new RuntimeException("InjectableFactory: Class '{$className}' does not exist.");
         }
 
         $class = new ReflectionClass($className);
@@ -200,7 +200,7 @@ class InjectableFactory
                 // This trick allows to log syntax errors.
                 class_exists($badClassName);
 
-                throw new Error("InjectableFactory: " . $e->getMessage());
+                throw new RuntimeException("InjectableFactory: " . $e->getMessage());
             }
         }
 
@@ -236,14 +236,14 @@ class InjectableFactory
         }
 
         if (!$class) {
-            throw new Error(
+            throw new RuntimeException(
                 "InjectableFactory: Could not resolve the dependency '{$name}' for a callback."
             );
         }
 
         $className = $class->getName();
 
-        throw new Error(
+        throw new RuntimeException(
             "InjectableFactory: Could not create '{$className}', the dependency '{$name}' is not resolved."
         );
     }
@@ -305,7 +305,7 @@ class InjectableFactory
             return $factory->create();
         }
 
-        throw new Error("InjectableFactory: Bad binding.");
+        throw new RuntimeException("InjectableFactory: Bad binding.");
     }
 
     /**
