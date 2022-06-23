@@ -126,6 +126,7 @@ class Htmlizer
      * @param ?string $cacheId @deprecated To be skipped..
      * @param ?array<string,mixed> $additionalData Data will be passed to the template.
      * @param bool $skipLinks Do not process related records.
+     * @throws Error
      */
     public function render(
         ?Entity $entity,
@@ -148,7 +149,14 @@ class Htmlizer
             throw new Error("Template compile error.");
         }
 
+        /**
+         * @var \Closure|false $renderer
+         */
         $renderer = LightnCandy::prepare($code);
+
+        if ($renderer === false) {
+            throw new Error("Template compile error.");
+        }
 
         if ($additionalData === null) {
             $additionalData = [];
@@ -178,7 +186,6 @@ class Htmlizer
         $data['__log'] = $this->log;
         $data['__entityType'] = $entity ? $entity->getEntityType() : null;
 
-        /** @phpstan-ignore-next-line */
         $html = $renderer($data);
 
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
