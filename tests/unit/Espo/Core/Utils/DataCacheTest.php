@@ -32,9 +32,9 @@ namespace tests\unit\Espo\Core\Utils;
 use Espo\Core\{
     Utils\DataCache,
     Utils\File\Manager as FileManager,
-    Exceptions\Error,
 };
 
+use RuntimeException;
 use InvalidArgumentException;
 
 class DataCacheTest extends \PHPUnit\Framework\TestCase
@@ -89,7 +89,7 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
 
     public function testStoreError()
     {
-        $this->expectException(Error::class);
+        $this->expectException(RuntimeException::class);
 
         $data = [
             'test' => 1,
