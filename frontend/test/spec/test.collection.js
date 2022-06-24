@@ -29,8 +29,8 @@
 describe('collection', function () {
 	var collection;
 
-	beforeEach(function (done) {
-		require(['collection'], function (Collection) {
+	beforeEach((done) => {
+		require(['collection'], (Collection) => {
 			collection = new Collection();
 			collection.maxSize = 5;
 
@@ -40,7 +40,7 @@ describe('collection', function () {
 		});
 	});
 
-	populate = function () {
+	let populate = () => {
 		collection.add([
 			{name: '1'},
 			{name: '2'},
@@ -49,15 +49,15 @@ describe('collection', function () {
 			{name: '5'},
 		]);
 		collection.total = 15;
-	},
+	};
 
-	it ('#sort should set order params', function () {
+	it ('#sort should set order params', () => {
 		collection.sort('test', true);
 		expect(collection.orderBy).toBe('test');
 		expect(collection.order).toBe('desc');
 	});
 
-	it ('#nextPage and #previousPage should change offset to the next and previous pages', function () {
+	it ('#nextPage and #previousPage should change offset to the next and previous pages', () => {
 		collection.total = 16;
 
 		collection.nextPage();
@@ -71,7 +71,7 @@ describe('collection', function () {
 		expect(collection.offset).toBe(0);
 	});
 
-	it ('#firstPage and #lastPage should change offset appropriate way', function () {
+	it ('#firstPage and #lastPage should change offset appropriate way', () => {
 		collection.total = 16;
 
 		collection.firstPage();

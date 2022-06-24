@@ -91,5 +91,4 @@ describe('date-time', function () {
 		dateTime.timeZone = 'Europe/Kiev';
 		expect(dateTime.toDisplay('2013-10-05 14:45')).toBe('05.10.2013 17:45');
 	});
-
 });

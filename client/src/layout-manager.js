@@ -63,6 +63,11 @@ define('layout-manager', [], function () {
          * @type {Object}
          */
         this.data = {};
+
+        /**
+         * @private
+         */
+        this.ajax = Espo.Ajax;
     };
 
     _.extend(LayoutManager.prototype, /** @lends module:layout-manager.Class# */{
@@ -154,7 +159,7 @@ define('layout-manager', [], function () {
                 }
             }
 
-            Espo.Ajax
+            this.ajax
                 .getRequest(this.getUrl(scope, type))
                 .then(
                     layout => {

@@ -29,10 +29,12 @@
 describe('layout-manager', function () {
 	var layoutManager;
 
-	beforeEach(function (done) {
-		require('layout-manager', function (LayoutManager) {
+	beforeEach((done) => {
+		require('layout-manager', (LayoutManager) => {
 			layoutManager = new LayoutManager();
-			spyOn(layoutManager, 'ajax').and.callFake(function (options) {});
+			spyOn(layoutManager.ajax, 'getRequest')
+                .and
+                .callFake((options) => Promise.resolve());
 
 			done();
 		});
@@ -40,6 +42,7 @@ describe('layout-manager', function () {
 
 	it("should call ajax to fetch new layout", function () {
 		layoutManager.get('some', 'list');
-		expect(layoutManager.ajax.calls.mostRecent().args[0].url).toBe('some/layout/list');
+
+		expect(layoutManager.ajax.getRequest.calls.mostRecent().args[0]).toBe('some/layout/list');
 	});
 });

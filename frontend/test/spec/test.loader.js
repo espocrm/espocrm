@@ -24,13 +24,14 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+
  ************************************************************************/
 
-describe('loader', function () {
+describe('loader', () => {
 
-	it("should convert name to path", function () {
-		expect(Espo.loader._nameToPath('views/record/edit')).toBe('../../client/src/views/record/edit.js');
-		expect(Espo.loader._nameToPath('views/home/dashlet-header')).toBe('../../client/src/views/home/dashlet-header.js');
+	it("should convert name to path", () => {
+		expect(Espo.loader._nameToPath('views/record/edit')).toBe('client/src/views/record/edit.js');
+		expect(Espo.loader._nameToPath('views/home/dashlet-header')).toBe('client/src/views/home/dashlet-header.js');
 	});
-
 });
+

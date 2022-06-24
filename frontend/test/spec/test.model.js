@@ -74,5 +74,4 @@ describe('model', function () {
 		model.populateDefaults();
 		expect(model.get('phone')).toBe('007');
 	});
-
 });

@@ -47,5 +47,4 @@ describe('metadata', function () {
 		expect(metadata.get('recordDefs.Lead.some')).toBe(metadata.data.recordDefs.Lead.some);
 		expect(metadata.get('recordDefs.Contact')).toBe(null);
 	});
-
 });

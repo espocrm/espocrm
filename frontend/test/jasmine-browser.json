@@ -1,0 +1,13 @@
+{
+  "srcDir": ".",
+  "srcFiles": [
+    "client/lib/espo.min.js",
+    "client/src/collection.js"
+  ],
+  "specDir": "frontend/test/spec",
+  "specFiles": [
+    "**/test.*.js"
+  ],
+  "helpers": [],
+  "browser": "chrome"
+}

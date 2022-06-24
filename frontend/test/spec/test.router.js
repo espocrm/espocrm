@@ -54,5 +54,4 @@ describe('router', function () {
 		var options = router._parseOptionsParams("p=1&t=");
 		expect(options.t).toBe('');
 	});
-
 });

@@ -205,6 +205,4 @@ describe('field-manager', function () {
 		var fields = fieldManager.getActualAttributeList('varchar', 'name');
 		expect(fields[0]).toBe('name');
 	});
-
-
 });
