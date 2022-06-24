@@ -34,6 +34,7 @@ class IsAttributeNotChangedType extends IsAttributeChangedType
     /**
      * @param string $attribute
      * @return bool
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function check($attribute)
     {

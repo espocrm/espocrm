@@ -302,6 +302,9 @@ class Upgrade implements Command
         return $upgradeId;
     }
 
+    /**
+     * @throws Error
+     */
     private function runUpgradeProcess(string $upgradeId, ?stdClass $params = null): void
     {
         $params = $params ?? (object) [];
@@ -324,6 +327,7 @@ class Upgrade implements Command
 
     /**
      * @param string[] $stepList
+     * @throws Error
      */
     private function runStepsInSingleProcess(string $upgradeId, array $stepList): void
     {
@@ -350,6 +354,7 @@ class Upgrade implements Command
 
     /**
      * @param string[] $stepList
+     * @throws Error
      */
     private function runSteps(string $upgradeId, array $stepList): void
     {

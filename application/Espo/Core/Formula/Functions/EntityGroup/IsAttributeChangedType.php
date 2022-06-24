@@ -35,6 +35,8 @@ class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
 {
     /**
      * @return bool
+     * @throws Error
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(\stdClass $item)
     {
@@ -50,6 +52,7 @@ class IsAttributeChangedType extends \Espo\Core\Formula\Functions\Base
     /**
      * @param string $attribute
      * @return bool
+     * @throws Error
      */
     protected function check($attribute)
     {

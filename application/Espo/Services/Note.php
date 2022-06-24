@@ -94,6 +94,7 @@ class Note extends Record
     /**
      * @param NoteEntity $entity
      * @param stdClass $data
+     * @throws Forbidden
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {

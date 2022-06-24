@@ -82,7 +82,7 @@ class Pdf
 
     private $builder;
 
-    private $serviceContanier;
+    private $serviceContainer;
 
     private $dataLoaderManager;
 
@@ -93,7 +93,7 @@ class Pdf
         Language $defaultLanguage,
         SelectBuilderFactory $selectBuilderFactory,
         Builder $builder,
-        ServiceContainer $serviceContanier,
+        ServiceContainer $serviceContainer,
         DataLoaderManager $dataLoaderManager
     ) {
         $this->config = $config;
@@ -102,12 +102,13 @@ class Pdf
         $this->defaultLanguage = $defaultLanguage;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->builder = $builder;
-        $this->serviceContanier = $serviceContanier;
+        $this->serviceContainer = $serviceContainer;
         $this->dataLoaderManager = $dataLoaderManager;
     }
 
     /**
      * @param iterable<Entity> $entityList
+     * @throws Error
      */
     public function generateMailMerge(
         string $entityType,
@@ -127,7 +128,7 @@ class Pdf
 
         $idDataMap = IdDataMap::create();
 
-        $service = $this->serviceContanier->get($entityType);
+        $service = $this->serviceContainer->get($entityType);
 
         foreach ($entityList as $entity) {
             $service->loadAdditionalFields($entity);
@@ -185,7 +186,7 @@ class Pdf
         bool $checkAcl = false
     ): string {
 
-        $service = $this->serviceContanier->get($entityType);
+        $service = $this->serviceContainer->get($entityType);
 
         $maxCount = $this->config->get('massPrintPdfMaxCount');
 
@@ -309,6 +310,8 @@ class Pdf
 
     /**
      * Generate PDF. ACL check is processed if `$params` is null.
+     *
+     * @throws Error
      */
     public function generate(Entity $entity, Template $template, ?Params $params = null, ?Data $data = null): string
     {
@@ -324,8 +327,9 @@ class Pdf
     }
 
     /**
-     * @deprecated
      * @param ?array<string,mixed> $additionalData
+     * @throws Error
+     * @deprecated
      */
     public function buildFromTemplate(
         Entity $entity,
@@ -338,8 +342,10 @@ class Pdf
     }
 
     /**
-     * @deprecated
      * @param ?array<string,mixed> $additionalData
+     * @throws Error
+     * @throws Forbidden
+     * @deprecated
      */
     private function buildFromTemplateInternal(
         Entity $entity,
@@ -352,7 +358,7 @@ class Pdf
 
         $entityType = $entity->getEntityType();
 
-        $service = $this->serviceContanier->get($entityType);
+        $service = $this->serviceContainer->get($entityType);
 
         $service->loadAdditionalFields($entity);
 

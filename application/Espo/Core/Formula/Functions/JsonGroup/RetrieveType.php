@@ -38,6 +38,8 @@ class RetrieveType extends BaseFunction
 {
     /**
      * @return mixed
+     * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(ArgumentList $args)
     {

@@ -31,6 +31,9 @@ namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Json;
 
@@ -40,6 +43,10 @@ class Record extends RecordBase
 {
     /**
      * List related records.
+     *
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
      */
     public function getActionListLinked(Request $request): stdClass
     {
@@ -66,6 +73,10 @@ class Record extends RecordBase
 
     /**
      * Relate records.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
      */
     public function postActionCreateLink(Request $request): bool
     {
@@ -108,7 +119,11 @@ class Record extends RecordBase
     }
 
     /**
-     * Unrelate records.
+     * Un-relate records.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
      */
     public function deleteActionRemoveLink(Request $request): bool
     {
@@ -146,6 +161,10 @@ class Record extends RecordBase
 
     /**
      * Follow a record.
+     *
+     * @throws BadRequest
+     * @throws NotFoundSilent
+     * @throws Forbidden
      */
     public function putActionFollow(Request $request): bool
     {
@@ -162,6 +181,9 @@ class Record extends RecordBase
 
     /**
      * Unfollow a record.
+     *
+     * @throws NotFoundSilent
+     * @throws BadRequest
      */
     public function deleteActionUnfollow(Request $request): bool
     {
@@ -176,6 +198,9 @@ class Record extends RecordBase
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     private function fetchMassLinkSearchParamsFromRequest(Request $request): SearchParams
     {
         $data = $request->getParsedBody();

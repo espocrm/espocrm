@@ -165,6 +165,10 @@ class Email extends Record implements
         return SmtpParams::fromArray($smtpParams);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function sendEntity(EmailEntity $entity, ?User $user = null): void
     {
 
@@ -420,6 +424,9 @@ class Email extends Record implements
         }
     }
 
+    /**
+     * @throws Error
+     */
     public function validateEmailAddresses(EmailEntity $entity): void
     {
         $from = $entity->get('from');
@@ -449,13 +456,18 @@ class Email extends Record implements
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws \Espo\Core\Exceptions\ForbiddenSilent
+     */
     public function create(stdClass $data, CreateParams $params): Entity
     {
         /** @var EmailEntity */
         $entity = parent::create($data, $params);
 
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
-            $this->sendEntity($entity, $this->getUser());
+            $this->sendEntity($entity, $this->user);
         }
 
         return $entity;
@@ -472,12 +484,16 @@ class Email extends Record implements
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         /** @var EmailEntity $entity */
 
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
-            $this->sendEntity($entity, $this->getUser());
+            $this->sendEntity($entity, $this->user);
         }
 
         $this->loadAdditionalFields($entity);
@@ -586,7 +602,7 @@ class Email extends Record implements
 
     public function markAllAsRead(?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -619,7 +635,7 @@ class Email extends Record implements
 
     public function markAsRead(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -640,7 +656,7 @@ class Email extends Record implements
 
     public function markAsNotRead(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -659,7 +675,7 @@ class Email extends Record implements
 
     public function markAsImportant(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -678,7 +694,7 @@ class Email extends Record implements
 
     public function markAsNotImportant(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -697,7 +713,7 @@ class Email extends Record implements
 
     public function moveToTrash(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -718,7 +734,7 @@ class Email extends Record implements
 
     public function retrieveFromTrash(string $id, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
@@ -755,7 +771,7 @@ class Email extends Record implements
 
     public function moveToFolder(string $id, ?string $folderId, ?string $userId = null): bool
     {
-        $userId = $userId ?? $this->getUser()->getId();
+        $userId = $userId ?? $this->user->getId();
 
         if ($folderId === 'inbox') {
             $folderId = null;
@@ -810,6 +826,11 @@ class Email extends Record implements
         return $fromAddress;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getCopiedAttachments(
         string $id,
         ?string $parentType = null,
@@ -889,6 +910,7 @@ class Email extends Record implements
     /**
      * @param array<string,mixed> $data
      * @throws Forbidden
+     * @throws Error
      */
     public function sendTestEmail(array $data): bool
     {
@@ -904,7 +926,7 @@ class Email extends Record implements
         $fromAddress = $data['fromAddress'] ?? null;
 
         if ($userId) {
-            if ($userId !== $this->getUser()->getId() && !$this->getUser()->isAdmin()) {
+            if ($userId !== $this->user->getId() && !$this->user->isAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -968,7 +990,7 @@ class Email extends Record implements
 
         $skipFilter = false;
 
-        if ($this->getUser()->isAdmin()) {
+        if ($this->user->isAdmin()) {
             $skipFilter = true;
         }
 
@@ -1024,7 +1046,7 @@ class Email extends Record implements
             ->from('Email')
             ->withAccessControlFilter();
 
-        $draftsSelecBuilder = clone $selectBuilder;
+        $draftsSelectBuilder = clone $selectBuilder;
 
         $selectBuilder->withWhere(
             WhereItem::fromRaw([
@@ -1038,7 +1060,7 @@ class Email extends Record implements
         $emailFolderList = $this->entityManager
             ->getRDBRepository('EmailFolder')
             ->where([
-                'assignedUserId' => $this->getUser()->getId(),
+                'assignedUserId' => $this->user->getId(),
             ])
             ->find();
 
@@ -1050,7 +1072,7 @@ class Email extends Record implements
             $itemSelectBuilder = clone $selectBuilder;
 
             if ($folderId === 'drafts') {
-                $itemSelectBuilder = clone $draftsSelecBuilder;
+                $itemSelectBuilder = clone $draftsSelectBuilder;
             }
 
             $itemSelectBuilder->withWhere(

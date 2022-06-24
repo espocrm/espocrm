@@ -36,6 +36,9 @@ class SplitType extends BaseFunction
 {
     /**
      * @return string[]
+     * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
+     * @throws \Espo\Core\Formula\Exceptions\BadArgumentType
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(ArgumentList $args)
     {

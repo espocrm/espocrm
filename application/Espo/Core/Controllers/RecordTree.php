@@ -47,6 +47,11 @@ class RecordTree extends Record
 
     /**
      * Get a category tree.
+     *
+     * @throws BadRequest
+     * @throws Error
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\NotFound
      */
     public function getActionListTree(Request $request): stdClass
     {

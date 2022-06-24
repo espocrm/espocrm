@@ -72,6 +72,7 @@ class Evaluator
 
     /**
      * @return mixed
+     * @throws Exceptions\Error
      */
     public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null)
     {

@@ -74,6 +74,7 @@ class Processor
      * Evaluates an argument or argument list.
      *
      * @return mixed A result of evaluation. An array if an argument list was passed.
+     * @throws Error
      */
     public function process(Evaluatable $item)
     {
@@ -101,6 +102,7 @@ class Processor
 
     /**
      * @return mixed[]
+     * @throws Error
      */
     private function processList(ArgumentList $args): array
     {

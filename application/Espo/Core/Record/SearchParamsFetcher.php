@@ -54,6 +54,10 @@ class SearchParamsFetcher
         $this->textMetadataProvider = $textMetadataProvider;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function fetch(Request $request): SearchParams
     {
         return SearchParams::fromRaw(
@@ -63,6 +67,8 @@ class SearchParamsFetcher
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function fetchRaw(Request $request): array
     {
@@ -77,6 +83,7 @@ class SearchParamsFetcher
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
      */
     private function fetchRawJsonSearchParams(Request $request): array
     {
@@ -166,6 +173,8 @@ class SearchParamsFetcher
 
     /**
      * @param array<string,mixed> $params
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function handleRawParams(array &$params, Request $request): void
     {
@@ -207,6 +216,7 @@ class SearchParamsFetcher
 
     /**
      * @param array<string,mixed> $params
+     * @throws Forbidden
      */
     private function handleMaxSize(array &$params): void
     {

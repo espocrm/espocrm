@@ -539,6 +539,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @throws \Espo\Core\Exceptions\Conflict
      */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
@@ -580,6 +581,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @throws \Espo\Core\Exceptions\Conflict
      */
     protected function processDuplicateCheck(Entity $entity, stdClass $data): void
     {
@@ -662,9 +664,10 @@ class Service implements Crud,
     /**
      * Create a record.
      *
-     * @throws ForbiddenSilent If no create access.
-     *
      * @return TEntity
+     * @throws BadRequest
+     * @throws Forbidden If no create access.
+     * @throws \Espo\Core\Exceptions\Conflict
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -685,7 +688,6 @@ class Service implements Crud,
         }
 
         $this->processValidation($entity, $data);
-
         $this->processAssignmentCheck($entity);
 
         if (!$params->skipDuplicateCheck()) {
@@ -710,11 +712,11 @@ class Service implements Crud,
     /**
      * Update a record.
      *
-     * @throws BadRequest
-     * @throws NotFound If record not found.
-     * @throws Forbidden If no access.
-     *
      * @return TEntity
+     * @throws NotFound If record not found.
+     * @throws Forbidden If no access
+     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws BadRequest
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
@@ -748,7 +750,6 @@ class Service implements Crud,
         $entity->set($data);
 
         $this->processValidation($entity, $data);
-
         $this->processAssignmentCheck($entity);
 
         $checkForDuplicates =
@@ -760,15 +761,12 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeUpdate($entity, $params);
-
         $this->beforeUpdateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity);
 
         $this->afterUpdateEntity($entity, $data);
-
         $this->prepareEntityForOutput($entity);
-
         $this->processActionHistoryRecord('update', $entity);
 
         return $entity;
@@ -802,13 +800,9 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeDelete($entity, $params);
-
         $this->beforeDeleteEntity($entity);
-
         $this->getRepository()->remove($entity);
-
         $this->afterDeleteEntity($entity);
-
         $this->processActionHistoryRecord('delete', $entity);
     }
 
@@ -904,7 +898,9 @@ class Service implements Crud,
             ->withDeleted()
             ->build();
 
-        return $this->getRepository()->clone($query)->findOne();
+        return $this->getRepository()
+            ->clone($query)
+            ->findOne();
     }
 
     /**
@@ -1215,6 +1211,11 @@ class Service implements Crud,
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     public function linkFollowers(string $id, string $foreignId): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
@@ -1280,6 +1281,11 @@ class Service implements Crud,
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     public function unlinkFollowers(string $id, string $foreignId): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
@@ -1330,6 +1336,11 @@ class Service implements Crud,
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
@@ -1418,6 +1429,9 @@ class Service implements Crud,
         return false;
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function processForbiddenLinkReadCheck(string $link): void
     {
         $forbiddenLinkList = $this->acl
@@ -1440,6 +1454,9 @@ class Service implements Crud,
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function processForbiddenLinkEditCheck(string $link): void
     {
         $forbiddenLinkList = $this->acl
@@ -1580,6 +1597,7 @@ class Service implements Crud,
 
     /**
      * Prepare an entity for output. Clears not allowed attributes.
+     *
      * @param TEntity $entity
      * @return void
      */
@@ -1632,6 +1650,12 @@ class Service implements Crud,
         return $this->injectableFactory->create(EntityDuplicator::class);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws ForbiddenSilent
+     * @throws NotFound
+     */
     public function getDuplicateAttributes(string $id): stdClass
     {
         if (!$id) {

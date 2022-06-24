@@ -55,7 +55,6 @@ class ServiceContainer
 
     /**
      * @return Service<\Espo\ORM\Entity>
-     * @throws Error
      */
     public function get(string $entityType): Service
     {

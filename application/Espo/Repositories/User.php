@@ -45,8 +45,11 @@ use Espo\Entities\UserData;
 class User extends Database
 {
     /**
+     * @param \Espo\Entities\User $entity
      * @param array<string,mixed> $options
      * @return void
+     * @throws Conflict
+     * @throws Error
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -121,7 +124,7 @@ class User extends Database
                     ->select(['id'])
                     ->where([
                         'userName' => $userName,
-                        'id!=' => $entity->id,
+                        'id!=' => $entity->getId(),
                     ])
                     ->findOne();
 

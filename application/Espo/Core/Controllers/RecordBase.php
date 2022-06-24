@@ -32,6 +32,9 @@ namespace Espo\Core\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Record\CreateParamsFetcher;
@@ -163,6 +166,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * Read a record.
+     *
+     * @throws NotFoundSilent
+     * @throws ForbiddenSilent
+     * @throws BadRequest
      */
     public function getActionRead(Request $request, Response $response): stdClass
     {
@@ -185,6 +192,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * Create a record.
+     *
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws BadRequest
      */
     public function postActionCreate(Request $request, Response $response): stdClass
     {
@@ -201,6 +212,12 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         return $entity->getValueMap();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Conflict
+     */
     public function patchActionUpdate(Request $request, Response $response): stdClass
     {
         return $this->putActionUpdate($request, $response);
@@ -208,6 +225,11 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * Update a record.
+     *
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Conflict
      */
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
@@ -232,6 +254,8 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * List records.
+     *
+     * @throws Forbidden
      */
     public function getActionList(Request $request, Response $response): stdClass
     {
@@ -253,6 +277,10 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
 
     /**
      * Delete a record.
+     *
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
      */
     public function deleteActionDelete(Request $request, Response $response): bool
     {
@@ -278,6 +306,12 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         return $this->searchParamsFetcher->fetch($request);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws ForbiddenSilent
+     */
     public function postActionGetDuplicateAttributes(Request $request): stdClass
     {
         $id = $request->getParsedBody()->id ?? null;
@@ -289,6 +323,11 @@ class RecordBase extends Base implements Di\EntityManagerAware, Di\InjectableFac
         return $this->getRecordService()->getDuplicateAttributes($id);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionRestoreDeleted(Request $request): bool
     {
         if (!$this->user->isAdmin()) {

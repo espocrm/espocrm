@@ -90,6 +90,7 @@ abstract class BaseFunction
      * Evaluates a function.
      *
      * @return mixed A result of the function.
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public abstract function process(ArgumentList $args);
 

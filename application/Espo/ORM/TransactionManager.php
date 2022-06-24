@@ -32,6 +32,7 @@ namespace Espo\ORM;
 use Espo\ORM\QueryComposer\QueryComposer;
 
 use PDO;
+use PDOException;
 use RuntimeException;
 use Throwable;
 use Closure;
@@ -83,6 +84,9 @@ class TransactionManager
         catch (Throwable $e) {
             $this->rollback();
 
+            /**
+             * @var PDOException $e
+             */
             throw $e;
         }
 

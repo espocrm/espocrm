@@ -35,6 +35,8 @@ class SetAttributeType extends Base
 {
     /**
      * @return mixed
+     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws Error
      */
     public function process(\stdClass $item)
     {

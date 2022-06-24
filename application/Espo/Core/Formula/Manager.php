@@ -56,6 +56,7 @@ class Manager
      * Executes a script and returns its result.
      *
      * @return mixed
+     * @throws Exceptions\Error
      */
     public function run(string $script, ?Entity $entity = null, ?stdClass $variables = null)
     {

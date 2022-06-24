@@ -77,6 +77,7 @@ class Integration
 
     /**
      * @return void
+     * @throws Forbidden
      */
     protected function processAccessCheck()
     {
@@ -85,6 +86,10 @@ class Integration
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function read(string $id): Entity
     {
         $this->processAccessCheck();
@@ -98,6 +103,10 @@ class Integration
         return $entity;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function update(string $id, stdClass $data): Entity
     {
         $this->processAccessCheck();

@@ -47,6 +47,8 @@ class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
     /**
      * @return bool
+     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws Error
      */
     public function process(\stdClass $item)
     {

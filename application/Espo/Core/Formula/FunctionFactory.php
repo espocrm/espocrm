@@ -67,6 +67,7 @@ class FunctionFactory
 
     /**
      * @return \Espo\Core\Formula\Functions\BaseFunction|\Espo\Core\Formula\Functions\Base
+     * @throws UnknownFunction
      */
     public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): object
     {

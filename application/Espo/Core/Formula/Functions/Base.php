@@ -126,6 +126,7 @@ abstract class Base implements Injectable
 
     /**
      * @return mixed
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public abstract function process(stdClass $item);
 

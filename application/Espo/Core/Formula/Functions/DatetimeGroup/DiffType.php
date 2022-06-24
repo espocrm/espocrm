@@ -52,6 +52,8 @@ class DiffType extends BaseFunction
 
     /**
      * @return ?int
+     * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(ArgumentList $args)
     {

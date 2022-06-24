@@ -101,6 +101,8 @@ class EmailTemplate extends Record implements
     /**
      * @param array<string,mixed> $params
      * @return array<string,mixed>
+     * @throws \Espo\Core\Exceptions\ForbiddenSilent
+     * @throws NotFound
      */
     public function parse(string $id, array $params = [], bool $copyAttachments = false): array
     {

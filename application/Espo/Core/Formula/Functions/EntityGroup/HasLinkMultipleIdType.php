@@ -35,6 +35,8 @@ class HasLinkMultipleIdType extends \Espo\Core\Formula\Functions\Base
 {
     /**
      * @return bool
+     * @throws Error
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(\stdClass $item)
     {

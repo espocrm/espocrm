@@ -108,6 +108,8 @@ class Layout
 
     /**
      * @return array<int,mixed>|stdClass|null
+     * @throws NotFound
+     * @throws Error
      */
     public function getOriginal(string $scope, string $name, ?string $setId = null)
     {
@@ -145,6 +147,7 @@ class Layout
      * @return mixed
      * @throws Forbidden
      * @throws NotFound
+     * @throws Error
      */
     public function getForFrontend(string $scope, string $name)
     {
@@ -257,6 +260,9 @@ class Layout
         return $data;
     }
 
+    /**
+     * @throws NotFound
+     */
     protected function getRecordFromSet(
         string $scope,
         string $name,
@@ -298,6 +304,8 @@ class Layout
     /**
      * @param mixed $data
      * @return mixed
+     * @throws NotFound
+     * @throws Error
      */
     public function update(string $scope, string $name, ?string $setId, $data)
     {
@@ -325,7 +333,6 @@ class Layout
         $layoutManager = $this->layoutManager;
 
         $layoutManager->set($data, $scope, $name);
-
         $layoutManager->save();
 
         $this->dataManager->updateCacheTimestamp();
@@ -335,6 +342,8 @@ class Layout
 
     /**
      * @return array<int,mixed>|stdClass|null
+     * @throws NotFound
+     * @throws Error
      */
     public function resetToDefault(string $scope, string $name, ?string $setId = null)
     {
@@ -362,6 +371,10 @@ class Layout
         return $this->getOriginal($scope, $name);
     }
 
+    /**
+     * @throws Error
+     * @throws NotFound
+     */
     protected function getOriginalBottomPanelsDetail(string $scope, ?string $setId = null): stdClass
     {
         $relationships = $this->getOriginal($scope, 'relationships') ?? [];
@@ -398,6 +411,10 @@ class Layout
         return $result;
     }
 
+    /**
+     * @throws NotFound
+     * @throws Error
+     */
     protected function getForFrontendBottomPanelsDetail(string $scope): stdClass
     {
         return $this->getOriginalBottomPanelsDetail($scope);

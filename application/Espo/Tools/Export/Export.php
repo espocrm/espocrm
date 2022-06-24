@@ -38,7 +38,6 @@ use Espo\ORM\BaseEntity;
 use Espo\Entities\User;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Json,
     Select\SelectBuilderFactory,
     Acl,
@@ -58,6 +57,7 @@ use Espo\{
 };
 
 use RuntimeException;
+use LogicException;
 
 class Export
 {
@@ -138,7 +138,7 @@ class Export
     public function run(): Result
     {
         if (!$this->params) {
-            throw new Error("No params set.");
+            throw new LogicException("No params set.");
         }
 
         $params = $this->params;

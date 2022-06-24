@@ -260,9 +260,10 @@ class Record extends RecordService implements
     }
 
     /**
-     * @deprecated
      * @param array<string,mixed> $params
      * @param Collection<TEntity> $collection
+     * @throws ForbiddenSilent
+     * @deprecated
      */
     public function exportCollection(array $params, Collection $collection): string
     {

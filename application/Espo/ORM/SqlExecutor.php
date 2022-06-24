@@ -73,6 +73,9 @@ class SqlExecutor
             $counter--;
 
             if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
+                /**
+                 * @var PDOException $e
+                 */
                 throw $e;
             }
 

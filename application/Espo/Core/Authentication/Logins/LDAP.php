@@ -408,6 +408,8 @@ class LDAP implements Login
 
     /**
      * Find LDAP user DN by his username.
+     *
+     * @throws \Laminas\Ldap\Exception\LdapException
      */
     private function findLdapUserDnByUsername(string $username): ?string
     {

@@ -33,6 +33,7 @@ class IsNewType extends \Espo\Core\Formula\Functions\Base
 {
     /**
      * @return bool
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function process(\stdClass $item)
     {

@@ -45,6 +45,8 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
     /**
      * @return float
+     * @throws Error
+     * @throws \Espo\Core\Formula\Exceptions\Error
      */
     public function process(stdClass $item)
     {

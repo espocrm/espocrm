@@ -160,7 +160,6 @@ class Application
 
     /**
      * Setup the system user. The system user is used when no user is logged in.
-     * @throws Exceptions\Error
      */
     public function setupSystemUser(): void
     {
