@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "processedCount": "Verwerkt Aantal"
+  },
+  "options": {
+    "status": {
+      "Pending": "In behandeling",
+      "Running": "Actief",
+      "Success": "Succesvol",
+      "Failed": "Mislukt"
+    }
+  },
+  "messages": {
+    "infoText": "De massa-actie wordt in idle verwerkt door cron. Het kan enige tijd duren voordat het klaar is. Het sluiten van dit modale dialoogvenster heeft geen invloed op het uitvoeringsproces."
+  }
+}

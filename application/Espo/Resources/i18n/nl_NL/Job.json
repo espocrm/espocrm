@@ -4,7 +4,7 @@
     "attempts": "Pogingen over",
     "failedAttempts": "Mislukte pogingen",
     "scheduledJob": "Geplande Opdracht",
-    "method": "Method",
+    "method": "Method (verouderd)",
     "scheduledJobJob": "Naam geplande taak",
     "executedAt": "Uitgevoerd bij",
     "startedAt": "Begonnen bij",
@@ -12,7 +12,10 @@
     "targetId": "Doel-ID",
     "number": "Nummer",
     "queue": "Wachtrij",
-    "job": "Baan"
+    "job": "Baan",
+    "group": "Groep",
+    "className": "Class Naam",
+    "targetGroup": "Doelgroep"
   },
   "options": {
     "status": {

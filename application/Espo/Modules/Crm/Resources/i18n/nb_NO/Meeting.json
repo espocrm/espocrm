@@ -11,7 +11,8 @@
     "leads": "Ledetråder",
     "reminders": "Påminnelser",
     "account": "Konto",
-    "acceptanceStatus": "Akseptstatus"
+    "acceptanceStatus": "Akseptstatus",
+    "dateEndDate": "Sluttdato (hele dagen)"
   },
   "options": {
     "status": {

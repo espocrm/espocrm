@@ -26,12 +26,13 @@
     "receiveAssignmentEmailNotifications": "Epostvarsel når du blir tildelt noe",
     "receiveMentionEmailNotifications": "Epostvarsel når du nevnes i poster",
     "receiveStreamEmailNotifications": "Epostvarsel om post- og statusoppdateringer",
-    "dashboardLayout": "Dashbordutforming",
+    "dashboardLayout": "Kontrollpanel Utforming",
     "emailReplyForceHtml": "Send epost med HTML-formatering",
     "autoFollowEntityTypeList": "Følg automatisk",
     "emailReplyToAllByDefault": "Epostsvar sendes til alle som forvalg",
     "doNotFillAssignedUserIfNotRequired": "Ikke fyll ut 'tildelt bruker' hvis det ikke er påkrevd",
-    "followEntityOnStreamPost": "Følg enhet automatisk etter posting i strøm."
+    "followEntityOnStreamPost": "Følg enhet automatisk etter posting i strøm.",
+    "tabColorsDisabled": "Deaktiver fane farger"
   },
   "options": {
     "weekStart": {

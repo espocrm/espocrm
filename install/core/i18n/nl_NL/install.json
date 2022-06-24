@@ -11,7 +11,7 @@
     "Step5 page title": "SMTP instellingen voor uitgaande E-mails",
     "Errors page title": "Fouten",
     "Finish page title": "Installatie is voltooid",
-    "Congratulation! Welcome to EspoCRM": "Gefeliciteerd EspoCRM is succesvol geïnstalleerd.",
+    "Congratulation! Welcome to EspoCRM": "Gefeliciteerd! EspoCRM is succesvol geïnstalleerd.",
     "More Information": "Voor meer informatie, bezoek onze {BLOG}, volg ons op {TWITTER}.<br><br> Vragen of verzoeken kunt u vermelden op het {FORUM}.",
     "share": "Tevreden over EspoCRM, deel dit dan met je vrienden. Informeer ze over ons product.",
     "Installation Guide": "Installatiegids",
@@ -101,9 +101,9 @@
     "mysqlSettingError": "EspoCRM vraagde MySQL instelling \"{NAME}\" in te stellen op {VALUE}",
     "requiredMariadbVersion": "Uw MariaDB-versie wordt niet ondersteund door EspoCRM, update ten minste naar MariaDB {minVersion}",
     "Ajax failed": "Er is een onverwachte fout opgetreden",
-    "Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in op \"{*}\" of voer dit commando gewoon uit in de terminal <pre><b><b>{C}</b></pre> Bediening is niet toegestaan? Probeer deze: {CSU}",
-    "permissionInstruction": "<br>Voer dit commando uit in Terminal:<pre><b>\"{C}\"</b></pre>\"",
-    "operationNotPermitted": "Operatie is niet toegestaan? Probeer deze eens: <br><br><br>{CSU}"
+    "Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in op \"{*}\" of voer dit commando gewoon uit in de terminal <pre><b>{C}</b></pre> Bediening is niet toegestaan? Probeer deze: {CSU}",
+    "permissionInstruction": "<br>Voer dit commando uit in Terminal:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Operatie is niet toegestaan? Probeer deze eens: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "PHP versie",
@@ -114,5 +114,20 @@
     "writable": "Schrijfbaar",
     "readable": "Leesbaar",
     "requiredMariadbVersion": "MariaDB-versie"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "nginx": "<h3>API Fout: EspoCRM API is niet beschikbaar.</h3>",
+      "default": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3><br> Mogelijke problemen: uitgeschakeld Rewrite Module. Controleer en activeer de Rewrite Module in uw server (b.v. mod_rewrite in Apache) en .htaccess ondersteuning."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Schakel \"mod_rewrite\" in.</h4>Om <i>mod_rewrite</i> in te schakelen, voert u deze commando's uit in een terminal:<br><br><pre>{APACHE1}</pre><hr><h4>2. Als de vorige stap niet heeft geholpen, probeer dan .htaccess ondersteuning in te schakelen.</h4> Toevoegen/bewerken van de server configuratie instellingen <code>{APACHE2_PATH1}</code> of <code>{APACHE2_PATH2}</code> (or <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Voer daarna dit commando uit in een terminal:<br><br><pre>{APACHE3}</pre><hr><h4>3. Als de vorige stap niet heeft geholpen, probeer dan het RewriteBase pad toe te voegen.</h4>Open een bestand <code>{API_PATH}.htaccess</code> en vervang de volgende regel:<br><br><pre>{APACHE4}</pre>To<br><br><pre>{APACHE5}</pre><hr>Voor meer informatie, zie de richtlijn <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server configuratie voor EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Zoek het httpd.conf bestand.</h4>Meestal is het te vinden in een map genaamd \"conf\", \"config\" of iets in die trant.<br><br><h4>2. Bewerk het httpd.conf bestand.</h4>In het httpd.conf bestand, verwijder het commentaar van de regel <code>{WINDOWS_APACHE1}</code> (verwijder het pond \"#\" teken van voor de regel).<br><br><h4>3. Controleer andere parameters. </h4>Controleer ook of de lijn <code>ClearModuleList</code> is ongecommentarieerd en zorg ervoor dat de regel <code>AddModule mod_rewrite.c</code> is niet uitgecommentarieerd."
+      },
+      "nginx": {
+        "linux": "<br> Voeg deze code toe aan uw Nginx server config bestand <code>{NGINX_PATH}</code> in de \"server\" sectie:<br><br><pre>{NGINX}</pre> <br> Voor meer informatie, zie de richtlijn <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuratie voor EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

@@ -43,7 +43,13 @@
     "personStringData": "Persoonlijke Stringgegevens",
     "fromEmailAddress": "Van adres (link)",
     "replyToName": "Antwoord Aan naam",
-    "replyToAddress": "Antwoord Aan adres"
+    "replyToAddress": "Antwoord Aan adres",
+    "icsContents": "ICS-inhoud",
+    "icsEventData": "ICS-gebeurtenisgegevens",
+    "icsEventUid": "ICS-gebeurtenis UID",
+    "createdEvent": "Gecreëerd evenement",
+    "event": "Evenement",
+    "icsEventDateStart": "ICS-gebeurtenis Startdatum"
   },
   "links": {
     "replied": "Beantwoord",
@@ -97,7 +103,8 @@
     "Folders": "Mappen",
     "View Users": "Gebruikers bekijken",
     "No Subject": "Geen onderwerp",
-    "Insert Field": "Veld invoegen"
+    "Insert Field": "Veld invoegen",
+    "Event": "Evenement"
   },
   "messages": {
     "testEmailSent": "Test e-mail is verzonden",

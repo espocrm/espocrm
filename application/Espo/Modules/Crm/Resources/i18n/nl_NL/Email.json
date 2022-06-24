@@ -6,5 +6,8 @@
     "Create Case": "Creëer Ticket",
     "Add to Contact": "Toevoegen aan contact",
     "Add to Lead": "Toevoegen aan lead"
+  },
+  "fields": {
+    "tasks": "Taken"
   }
 }

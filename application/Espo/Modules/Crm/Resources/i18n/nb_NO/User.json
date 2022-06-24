@@ -1,5 +1,10 @@
 {
   "links": {
     "targetLists": "Målgrupper"
+  },
+  "fields": {
+    "acceptanceStatus": "Akseptstatus",
+    "acceptanceStatusMeetings": "Akseptstatus(Møter)",
+    "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)"
   }
 }

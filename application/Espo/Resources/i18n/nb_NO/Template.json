@@ -9,12 +9,22 @@
     "rightMargin": "Høyremarg",
     "bottomMargin": "Bunnmarg",
     "printFooter": "Skriv ut footer",
-    "footerPosition": "Footer-posisjon"
+    "footerPosition": "Footer-posisjon",
+    "variables": "Tiljengelige Stedfortredere",
+    "headerPosition": "Overskrift Posisjon"
   },
   "labels": {
     "Create Template": "Opprett mal"
   },
   "tooltips": {
     "footer": "Bruk {pageNumber} for å skrive ut sidenummer"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portrett"
+    },
+    "placeholders": {
+      "now": "Nå (dato-tid)"
+    }
   }
 }

@@ -1,1 +1,30 @@
-{}
+{
+  "fields": {
+    "name": "Navn",
+    "campaign": "Kampanje",
+    "isActive": "Er Aktiv",
+    "targetList": "Målgruppe",
+    "optInConfirmationEmailTemplate": "Påmelding bekreftelse E-post mal",
+    "leadSource": "Ledetrådkilde",
+    "apiKey": "API-nøkkel",
+    "targetTeam": "Målgruppe",
+    "exampleRequestMethod": "Metode",
+    "duplicateCheck": "Sjekk Duplikat",
+    "smtpAccount": "SMTP konto",
+    "inboundEmail": "Epostkonto for gruppe"
+  },
+  "links": {
+    "targetList": "Målgruppe",
+    "campaign": "Kampanje",
+    "optInConfirmationEmailTemplate": "Påmelding bekreftelse E-post mal",
+    "targetTeam": "Målgruppe",
+    "logRecords": "Logg",
+    "inboundEmail": "Epostkonto for gruppe"
+  },
+  "labels": {
+    "Generate New API Key": "Generer ny API-Nøkkel"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown er støttet."
+  }
+}

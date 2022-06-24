@@ -41,7 +41,7 @@
     "Time Format": "Tidsformat",
     "Currency": "Valuta",
     "Preview": "Forhåndsvisning",
-    "Next": "Nest",
+    "Next": "Neste",
     "Step 1": "Steg 1",
     "Step 2": "Steg 2",
     "Double Quote": "Dobbelt anførselstegn",
@@ -49,7 +49,8 @@
     "Imported": "Importert",
     "Duplicates": "Duplikater",
     "Skip searching for duplicates": "Dropp å søke etter duplikater",
-    "Timezone": "Tidssone"
+    "Timezone": "Tidssone",
+    "Remove Import Log": "Fjern importerings log"
   },
   "messages": {
     "utf8": "Bør være UTF-8-kodet",
@@ -67,7 +68,14 @@
     "status": {
       "Failed": "Feilet",
       "In Process": "Behandles",
-      "Complete": "Komplett"
+      "Complete": "Komplett",
+      "Pending": "Venter"
+    },
+    "personNameFormat": {
+      "f l": "Fornavn Etternavn",
+      "l f": "Etternavn Fornavn",
+      "f m l": "Fornavn Melomnavn Etternavn",
+      "l f m": "Etternavn Fornavn Mellomnavn"
     }
   }
 }

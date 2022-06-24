@@ -51,7 +51,7 @@
     "inboundEmailMaxPortionSize": "Maks antall eposter som kan hentes inn fra tidligere dato for gruppekonto",
     "authTokenLifetime": "Levetiden for autentiseringstoken (timer)",
     "authTokenMaxIdleTime": "Lengst tillate inaktivitet fra autentiseringstoken (timer)",
-    "dashboardLayout": "Dashbordoppsett (forvalg)",
+    "dashboardLayout": "Kontrollpanel (standard)",
     "siteUrl": "Nettsidens URL",
     "addressPreview": "Forhåndsvisning av adresse",
     "addressFormat": "Adresseformat",
@@ -79,15 +79,22 @@
     "massEmailDisableMandatoryOptOutLink": "Deaktiver påbudt avmeldingslenke",
     "activitiesEntityList": "Enhetsliste for aktiviteter",
     "historyEntityList": "Enhetsliste for historie",
+    "currencyFormat": "Valuta Format",
+    "currencyDecimalPlaces": "Valuta Desimal plassering",
     "followCreatedEntities": "Følg nyopprettede enheter",
     "massEmailMaxPerHourCount": "Maks antall eposter sendt pr time",
-    "maxEmailAccountCount": "Maks antall epostkonti pr bruker"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Søndag",
-      "1": "Mandag"
-    }
+    "maxEmailAccountCount": "Maks antall epostkontoer pr bruker",
+    "streamEmailNotificationsTypeList": "Hva skal det varsles om",
+    "authTokenPreventConcurrent": "Kun 1 autentiseringsnøkkel per bruker",
+    "tabColorsDisabled": "Deaktiver fane farger",
+    "emailAddressIsOptedOutByDefault": "Marker nye E-post addresser som avmeldt",
+    "ldapPortalUserPortals": "Forvalgt Portal for Portalbrukere",
+    "ldapPortalUserRoles": "Forvalgte Roller for en Portalbruker",
+    "passwordStrengthLetterCount": "Antall Bokastaver som kreves i passordet.",
+    "passwordStrengthNumberCount": "Antall Tall som kreves i passordet.",
+    "passwordStrengthBothCases": "Passordet må inneholde store og små bokstaver",
+    "auth2FA": "Aktiver 2 faktor-autentisering",
+    "personNameFormat": "Format for personnavn"
   },
   "tooltips": {
     "recordsPerPage": "Antall oppføringer som vises i listevisning fra starten.",
@@ -118,7 +125,14 @@
     "ldapUserTeams": "Grupper for opprettet bruker. Gå til brukerens profil for å se mer.",
     "ldapUserDefaultTeam": "Forvalgt gruppe for opprettet bruker. Gå til brukerens profil for å se mer.",
     "b2cMode": "EspoCRM er tilpasset B2B som forvalg. Du kan bytte til B2C.",
-    "outboundEmailIsShared": "Tillat brukere å sende eposter via denne SMTP-tjeneren."
+    "currencyDecimalPlaces": "Antal decimal tall. Ved tomt felt vil alle ikke-tomme decimalplasser vises.",
+    "outboundEmailIsShared": "Tillat brukere å sende eposter via denne SMTP-tjeneren.",
+    "ldapPortalUserPortals": "Forvalgt Portal for ny Portalbruker",
+    "ldapPortalUserRoles": "Forvalgte Roller for en ny Portalbruker",
+    "maintenanceMode": "Kun administratorer vil ha tilgang til systemet.",
+    "currencyList": "Hvilke valuta til være tiljengelig i systemet.",
+    "useCache": "Ikke anbefalt å deaktivere, med mindre det er for utvikling årsaker.",
+    "passwordRecoveryForInternalUsersDisabled": "Kun portalbrukere vil kunne gjennoprette passordet."
   },
   "labels": {
     "Locale": "Språk og nasjonalitet",
@@ -128,11 +142,26 @@
     "Currency Settings": "Valutainnstillinger",
     "Currency Rates": "Valutapriser",
     "Mass Email": "Masseutsendt epost",
-    "Test Connection": "Test oppkobling",
+    "Test Connection": "Test tilkobling",
     "Connecting": "Kobler til…",
-    "Activities": "Aktiviteter"
+    "Activities": "Aktiviteter",
+    "Search": "Søk",
+    "Misc": "Diverse",
+    "Passwords": "Passord"
   },
   "messages": {
     "ldapTestConnection": "Tilkoblingen er etablert."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Poster",
+      "EmailReceived": "Mottatte E-poster"
+    },
+    "personNameFormat": {
+      "firstLast": "Fornavn Etternavn",
+      "lastFirst": "Etternavn Fornavn",
+      "firstMiddleLast": "Fornavn Melomnavn Etternavn",
+      "lastFirstMiddle": "Etternavn Fornavn Mellomnavn"
+    }
   }
 }

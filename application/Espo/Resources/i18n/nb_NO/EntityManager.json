@@ -4,7 +4,8 @@
     "Relationships": "Relasjoner",
     "Schedule": "Planlegg",
     "Log": "Logg",
-    "Formula": "Formel"
+    "Formula": "Formel",
+    "Layouts": "Oppsett"
   },
   "fields": {
     "name": "Navn",
@@ -24,10 +25,12 @@
     "linkMultipleFieldForeign": "Kobling av flere fremmede felt",
     "disabled": "Deaktivert",
     "textFilterFields": "Tekstfilterfelt",
-    "audited": "Revidert",
+    "audited": "Gjennomgått",
     "auditedForeign": "Revidert av utenforstående",
     "statusField": "Statusfelt",
-    "beforeSaveCustomScript": "Før egendefinert lagrings-script"
+    "beforeSaveCustomScript": "Før egendefinert lagrings-script",
+    "iconClass": "Ikon",
+    "parentEntityTypeList": "Foreldre typer"
   },
   "options": {
     "type": {
@@ -42,7 +45,9 @@
       "oneToMany": "En-til-mange",
       "manyToOne": "Mange-til-en",
       "parentToChildren": "Forelder-til-barn",
-      "childrenToParent": "Barn-til-forelder"
+      "childrenToParent": "Barn-til-forelder",
+      "oneToOneRight": "En-til-En Høyre",
+      "oneToOneLeft": "En-til-En Venstre"
     },
     "sortDirection": {
       "asc": "Økende",

@@ -4,10 +4,10 @@
     "emailAddress": "Epost",
     "accountRole": "Tittel",
     "account": "Konto",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "phoneNumber": "Telefon",
     "accountType": "Kontotype",
-    "doNotCall": "Ikke ring!",
+    "doNotCall": "Ikke forstyrr!",
     "address": "Adresse",
     "opportunityRole": "Mulighetsrolle",
     "description": "Beskrivelse",
@@ -15,7 +15,12 @@
     "targetLists": "Målgrupper",
     "targetList": "Målgruppe",
     "portalUser": "Portalbruker",
-    "originalLead": "Original ledetråd"
+    "originalLead": "Original ledetråd",
+    "acceptanceStatus": "Akseptstatus",
+    "acceptanceStatusMeetings": "Akseptstatus(Møter)",
+    "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)",
+    "title": "Konto Tittel",
+    "hasPortalUser": "Har Portal Bruker"
   },
   "links": {
     "opportunities": "Muligheter",
@@ -24,11 +29,12 @@
     "campaignLogRecords": "Kampanjelogg",
     "campaign": "Kampanje",
     "account": "Konto (primær)",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "casesPrimary": "Saker (primær)",
     "portalUser": "Portalbruker",
     "originalLead": "Original ledetråd",
-    "documents": "Dokumenter"
+    "documents": "Dokumenter",
+    "tasksPrimary": "Gjøremål (utvidet)"
   },
   "labels": {
     "Create Contact": "Opprett kontakt"
@@ -41,6 +47,7 @@
   },
   "presetFilters": {
     "portalUsers": "Portalbrukere",
-    "notPortalUsers": "Ikke portalbrukere"
+    "notPortalUsers": "Ikke portalbrukere",
+    "accountActive": "Aktive"
   }
 }

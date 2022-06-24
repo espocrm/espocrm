@@ -1,1 +1,9 @@
-{}
+{
+  "fields": {
+    "number": "Nummer",
+    "target": "Mål"
+  },
+  "links": {
+    "target": "Mål"
+  }
+}

@@ -3,5 +3,17 @@
     "fieldList": "Lijst met velden",
     "exportAllFields": "Exporteer alle velden",
     "format": "Formaat"
+  },
+  "options": {
+    "status": {
+      "Pending": "In behandeling",
+      "Running": "Actief",
+      "Success": "Succesvol",
+      "Failed": "Mislukt"
+    }
+  },
+  "messages": {
+    "exportProcessed": "Export is verwerkt. Download het [file]({url}).",
+    "infoText": "De export wordt in idle door cron verwerkt. Het kan enige tijd duren voordat het klaar is. Het sluiten van dit modale dialoogvenster heeft geen invloed op het uitvoeringsproces."
   }
 }

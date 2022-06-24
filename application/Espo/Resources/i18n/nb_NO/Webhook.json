@@ -1,1 +1,13 @@
-{}
+{
+  "fields": {
+    "event": "Handling",
+    "isActive": "Er Aktiv",
+    "user": "API-Bruker",
+    "entityType": "Enhetstype",
+    "field": "Felt",
+    "secretKey": "Hemmelig Nøkkel"
+  },
+  "links": {
+    "user": "Bruker"
+  }
+}

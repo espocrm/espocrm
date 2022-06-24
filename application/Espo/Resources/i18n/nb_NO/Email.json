@@ -27,16 +27,28 @@
     "isReplied": "Er besvart",
     "isNotReplied": "Er ikke besvart",
     "folder": "Mappe",
-    "inboundEmails": "Gruppekonti",
-    "emailAccounts": "Personlige konti",
+    "inboundEmails": "Gruppekontoer",
+    "emailAccounts": "Personlige kontoer",
     "hasAttachment": "Har vedlegg",
-    "sentBy": "Sent av (bruker)"
+    "sentBy": "Sent av (bruker)",
+    "assignedUsers": "Tildelt brukerne",
+    "folderId": "Mappe ID",
+    "fromName": "Fra-navn",
+    "toEmailAddresses": "Til E-post addresser",
+    "replyToEmailAddresses": "Svar-til E-post adresse",
+    "replyToName": "Svar-til navn",
+    "replyToAddress": "Svar-til adresse"
   },
   "links": {
     "replied": "Svart",
     "replies": "Svar",
-    "inboundEmails": "Gruppekonti",
-    "emailAccounts": "Personlige konti"
+    "inboundEmails": "Gruppekontoer",
+    "emailAccounts": "Personlige kontoer",
+    "assignedUsers": "Tildelt brukerne",
+    "sentBy": "Sent av (bruker)",
+    "attachments": "Vedlegg",
+    "toEmailAddresses": "Til E-post addresser",
+    "replyToEmailAddresses": "Svar-til E-post adresse"
   },
   "options": {
     "status": {
@@ -57,8 +69,8 @@
     "Forward": "Videresend",
     "Original message": "Original melding",
     "Forwarded message": "Videresendt melding",
-    "Email Accounts": "Personlige epostkonti",
-    "Inbound Emails": "Epostkonti for grupper",
+    "Email Accounts": "Personlige epostkontoer",
+    "Inbound Emails": "Epostkontoer for grupper",
     "Email Templates": "Epostmaler",
     "Send Test Email": "Send test-epost",
     "Email Address": "Epostadresse",
@@ -76,7 +88,6 @@
     "Folders": "Mapper"
   },
   "messages": {
-    "noSmtpSetup": "Ingen SMTP-oppsett. {link}.",
     "testEmailSent": "Test-epost har blitt sendt",
     "emailSent": "Epost er sendt",
     "savedAsDraft": "Lagret som utkast"

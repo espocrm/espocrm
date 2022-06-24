@@ -8,7 +8,7 @@
     "users": "Brukere",
     "notes": "Notater",
     "roles": "Roller",
-    "inboundEmails": "Epostkonti for grupper"
+    "inboundEmails": "Epostkontoer for grupper"
   },
   "tooltips": {
     "roles": "Roller for tilgangskontroll. Brukere i denne gruppen får tilgangsnivå tilsvarende de valgte rollene.",

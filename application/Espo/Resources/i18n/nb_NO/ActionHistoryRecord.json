@@ -1,1 +1,29 @@
-{}
+{
+  "fields": {
+    "user": "Bruker",
+    "action": "Handling",
+    "createdAt": "Dato",
+    "target": "Mål",
+    "targetType": "Måltype",
+    "authToken": "Autentisering Nøkkel",
+    "ipAddress": "IP-adresse",
+    "authLogRecord": "Autentisering Log Historie"
+  },
+  "links": {
+    "authToken": "Autentisering Nøkkel",
+    "user": "Bruker",
+    "target": "Mål",
+    "authLogRecord": "Autentisering Log Historie"
+  },
+  "presetFilters": {
+    "onlyMy": "Kun Min"
+  },
+  "options": {
+    "action": {
+      "read": "Les",
+      "update": "Oppdater",
+      "delete": "Slett",
+      "create": "Opprett"
+    }
+  }
+}

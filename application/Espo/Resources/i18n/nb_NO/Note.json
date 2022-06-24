@@ -4,7 +4,10 @@
     "targetType": "Mål",
     "teams": "Grupper",
     "users": "Brukere",
-    "portals": "Portaler"
+    "portals": "Portaler",
+    "isGlobal": "Er global",
+    "related": "Relatert",
+    "number": "Nummer"
   },
   "filters": {
     "all": "Alle",
@@ -22,5 +25,8 @@
       "all": "til alle interne brukere",
       "portals": "til portalbrukere"
     }
+  },
+  "links": {
+    "related": "Relatert"
   }
 }

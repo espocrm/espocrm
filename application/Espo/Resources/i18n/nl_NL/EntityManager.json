@@ -31,7 +31,9 @@
     "fullTextSearch": "Zoek volledige tekst",
     "countDisabled": "De recordtelling uitschakelen",
     "parentEntityTypeList": "Bovenliggende entiteit type",
-    "foreignLinkEntityTypeList": "Externe links"
+    "foreignLinkEntityTypeList": "Externe links",
+    "entity": "Entiteit",
+    "optimisticConcurrencyControl": "Optimistische gelijktijdigheidscontrole"
   },
   "options": {
     "type": {
@@ -72,6 +74,7 @@
     "linkMultipleField": "Link Multiple field biedt een handige manier om relaties te bewerken. Gebruik het niet als u een groot aantal gerelateerde records kunt hebben.",
     "entityType": "Basis plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
     "fullTextSearch": "Reconstrueren is vereist.",
-    "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is."
+    "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is.",
+    "optimisticConcurrencyControl": "Voorkomt schrijfconflicten."
   }
 }

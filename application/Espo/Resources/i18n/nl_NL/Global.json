@@ -46,7 +46,8 @@
     "ApiUser": "API gebruiker",
     "DashboardTemplate": "Dashboard sjabloon",
     "Currency": "Valuta",
-    "LayoutSet": "Lay-out set"
+    "LayoutSet": "Lay-out set",
+    "Mass Action": "Massa-actie"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -233,7 +234,13 @@
     "View on Map": "Bekijk op de kaart",
     "Proceed": "Ga verder",
     "Attached": "Bijgevoegd",
-    "Preview": "Voorbeeld"
+    "Preview": "Voorbeeld",
+    "Up": "Omhoog",
+    "Save & Continue Editing": "Opslaan en verder bewerken",
+    "Save & New": "Opslaan & Nieuw",
+    "Field": "Veld",
+    "Resolution": "Resolutie",
+    "Resolve Conflict": "Conflict oplossen"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -297,7 +304,9 @@
     "fieldExceedsMaxCount": "Aantal overschrijdt max. toegestaan {maxCount}",
     "notUpdated": "Niet bijgewerkt",
     "maintenanceMode": "De applicatie staat momenteel in onderhoudsmodus. Alleen beheerders hebben toegang.\n\nDe onderhoudsmodus kan worden uitgeschakeld via Beheer → Instellingen.",
-    "fieldInvalid": "{field} is ongeldig"
+    "fieldInvalid": "{field} is ongeldig",
+    "resolveSaveConflict": "Het record is gewijzigd. U moet het conflict oplossen voordat u het record kunt opslaan.",
+    "massActionProcessed": "De massa-actie is verwerkt."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -371,7 +380,7 @@
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} is aan jou toegewezen",
-    "emailReceived": "E-mail ontvangen van",
+    "emailReceived": "E-mail ontvangen van {from}",
     "entityRemoved": "{user} verwijderde {entityType} {entity}"
   },
   "streamMessages": {
@@ -389,7 +398,7 @@
     "postTargetAll": "{user} geplaatst op allemaal",
     "mentionInPost": "{user} vermeldde {mentioned} in {entityType} {entity}",
     "mentionYouInPost": "{user} heeft je vermeld in {entityType} {entity}",
-    "mentionInPostTarget": "{user} vermeldde {vermeld} in de post",
+    "mentionInPostTarget": "{user} meldde {mentioned} in de post",
     "mentionYouInPostTarget": "{user} heeft u in de post vermeld naar {target}",
     "mentionYouInPostTargetAll": "{user} heeft je in bericht voor iedereen vermeld",
     "mentionYouInPostTargetNoTarget": "{user} heeft je in de post vermeld",
@@ -407,7 +416,7 @@
     "createRelated": "{user} creëerde {relatedEntityType} {relatedEntity} gekoppeld aan {entityType} {entity}",
     "relate": "{user} gekoppeld {relatedEntityType} {relatedEntity} met {entityType} {entity}",
     "relateThis": "{user} linkt {relatedEntityType} {relatedEntity} aan dit {entityType}",
-    "emailReceivedFromThis": "E-mail ontvangen van",
+    "emailReceivedFromThis": "E-mail ontvangen van {from}",
     "emailReceivedInitialFromThis": "E-mail ontvangen van {from}, {entityType} gecreëerd",
     "emailReceivedThis": "E-mail is ontvangen",
     "emailReceivedInitialThis": "E-mail ontvangen, creëerde deze {entityType}",
@@ -492,69 +501,6 @@
       "Mrs.": "Mevr.",
       "Ms.": "Mej."
     },
-    "language": {
-      "az_AZ": "Azerbeidzjaans",
-      "be_BY": "Wit-Russisch",
-      "bg_BG": "Bulgaars",
-      "bn_IN": "Bengaals",
-      "bs_BA": "Bosnisch",
-      "ca_ES": "Catalaans",
-      "cs_CZ": "Tsjechisch",
-      "cy_GB": "Wales",
-      "da_DK": "Deens",
-      "de_DE": "Duits",
-      "el_GR": "Grieks",
-      "en_GB": "Engels (UK)",
-      "en_US": "Engels (VS)",
-      "es_ES": "Spaans (Spanje)",
-      "et_EE": "Estlands",
-      "eu_ES": "Baskisch",
-      "fa_IR": "Perzisch",
-      "fi_FI": "Fins",
-      "fr_CA": "Frans (Canada)",
-      "fr_FR": "Frans (Frankrijk)",
-      "ga_IE": "Iers",
-      "gl_ES": "Galicisch",
-      "he_IL": "Hebreeuws",
-      "hi_IN": "Hindies",
-      "hr_HR": "Kroatisch",
-      "hu_HU": "Hongaars",
-      "hy_AM": "Armeens",
-      "id_ID": "Indonesisch",
-      "is_IS": "IJslands",
-      "it_IT": "Italiaans",
-      "ja_JP": "Japans",
-      "ka_GE": "Georgisch",
-      "ko_KR": "Koreaans",
-      "ku_TR": "Koerdisch",
-      "lt_LT": "Litouws",
-      "lv_LV": "Lets",
-      "mk_MK": "Macedonisch",
-      "ml_IN": "Maleisisch",
-      "ms_MY": "Maleis",
-      "nn_NO": "Noors Nynorsk",
-      "ne_NP": "Nepalees",
-      "nl_NL": "Nederlands",
-      "pl_PL": "Pools",
-      "ps_AF": "Pasjtoe",
-      "pt_BR": "Portugees (Brazilië)",
-      "pt_PT": "Portugees (Portugal)",
-      "ro_RO": "Roemeens",
-      "ru_RU": "Russisch",
-      "sk_SK": "Slowaaks",
-      "sl_SI": "Sloveens",
-      "sq_AL": "Albanees",
-      "sr_RS": "Servisch",
-      "sv_SE": "Zweeds",
-      "th_TH": "Thais",
-      "tr_TR": "Turks",
-      "uk_UA": "OekraГЇens",
-      "vi_VN": "Vietnamees",
-      "zh_CN": "Vereenvoudigd Chinees (China)",
-      "zh_HK": "Traditioneel Chinees (Hong Kong)",
-      "zh_TW": "Traditioneel Chinees (Taiwan)",
-      "es_MX": "Spaans (Mexico)"
-    },
     "dateSearchRanges": {
       "on": "Op",
       "notOn": "Niet op",
@@ -629,6 +575,11 @@
       "Mobile": "Mobiel",
       "Office": "Kantoor",
       "Other": "Overig"
+    },
+    "saveConflictResolution": {
+      "current": "Huidige",
+      "actual": "Werkelijk",
+      "original": "Origineel"
     }
   },
   "sets": {
@@ -739,5 +690,13 @@
   },
   "listViewModes": {
     "list": "Lijst"
+  },
+  "themes": {
+    "DarkVertical": "Donker",
+    "Dark": "Donker Horizontaal",
+    "Espo": "Espo Horizontaal",
+    "EspoRtl": "RTL Espo Horizontaal",
+    "Sakura": "Sakura Horizontaal",
+    "Violet": "Violet Horizontaal"
   }
 }

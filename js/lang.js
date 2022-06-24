@@ -37,8 +37,13 @@ const os = require('os');
 class Lang
 {
     constructor (language, poPath, espoPath, onlyModuleName) {
+        this.baseLanguage = 'en_US';
         this.language = language;
         this.poPath = poPath;
+
+        this.ignoreList = [
+            'Global.options.language',
+        ];
 
         this.espoPath = espoPath;
 
@@ -47,11 +52,10 @@ class Lang
         }
 
         this.moduleList = ['Crm'];
+
         if (onlyModuleName) {
             this.moduleList = [onlyModuleName];
         }
-
-        this.baseLanguage = 'en_US';
 
         var dirNames = this.dirNames = {};
 
@@ -149,7 +153,8 @@ class Lang
 
                 var list = fs.readdirSync(path);
 
-                list.forEach((fileName) => {
+                list.forEach(fileName => {
+
                     var filePath = path + fileName;
                     var resFilePath = resPath + '/' + fileName;
 
@@ -169,6 +174,13 @@ class Lang
                         var isMet = true;
                         var c = fileObject;
                         var path = item.path.slice(0);
+
+                        if (
+                            this.baseLanguage !== this.language &&
+                            ~this.ignoreList.indexOf(fileKey + '.' + path.join('.'))
+                        ) {
+                            return;
+                        }
 
                         for (var i in item.path) {
                             var key = item.path[i];
@@ -196,6 +208,7 @@ class Lang
                                     if (c[k] === item.stringOriginal) {
                                         var p = path.slice(0);
                                         p.push(k);
+
                                         pathList.push(p);
                                         isMet = true;
                                     }
@@ -231,7 +244,8 @@ class Lang
                             return;
                         }
 
-                        pathList.forEach(path =>{
+                        pathList.forEach(path => {
+
                             var c = targetFileObject;
 
                             path.forEach((pathKey, i) => {
@@ -254,7 +268,7 @@ class Lang
                     fs.writeFileSync(resFilePath, contents);
                 });
             });
-        })
+        });
     }
 }
 

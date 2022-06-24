@@ -12,10 +12,13 @@
     "account": "Konto",
     "dateCompleted": "Gjennomført",
     "attachments": "Vedlegg",
-    "reminders": "Påminnelser"
+    "reminders": "Påminnelser",
+    "contact": "Kontakt"
   },
   "links": {
-    "attachments": "Vedlegg"
+    "attachments": "Vedlegg",
+    "account": "Konto",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {
@@ -34,7 +37,8 @@
   },
   "labels": {
     "Create Task": "Opprett oppgave",
-    "Complete": "Gjennomført"
+    "Complete": "Gjennomført",
+    "overdue": "På overtid"
   },
   "presetFilters": {
     "actual": "Aktuell",

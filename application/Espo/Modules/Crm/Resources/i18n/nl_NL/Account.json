@@ -27,7 +27,8 @@
     "campaignLogRecords": "Campagne log",
     "campaign": "Campagne",
     "portalUsers": "Portaalgebruikers",
-    "originalLead": "Oorspronkelijke lead"
+    "originalLead": "Oorspronkelijke lead",
+    "contactsPrimary": "Contacten (primair)"
   },
   "options": {
     "type": {

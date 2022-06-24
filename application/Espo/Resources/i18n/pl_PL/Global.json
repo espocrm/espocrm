@@ -338,7 +338,7 @@
     "assignedUserName": "Przypisana nazwa użytkownika",
     "teams": "Zespoły",
     "createdAt": "Utworzony",
-    "modifiedAt": "Zmodyfikowany do",
+    "modifiedAt": "Zmodyfikowany",
     "createdBy": "Utworzony przez",
     "modifiedBy": "Zmodyfikowany przez",
     "description": "Opis",
@@ -495,11 +495,6 @@
       "Mr.": "Pan.",
       "Mrs.": "Pani.",
       "Ms.": "Pani"
-    },
-    "language": {
-      "fa_IR": "Perski",
-      "pl_PL": "Polski",
-      "es_MX": "Hiszpański (Meksyk)"
     },
     "dateSearchRanges": {
       "on": "Włączony",

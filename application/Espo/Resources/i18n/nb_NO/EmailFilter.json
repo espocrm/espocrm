@@ -16,14 +16,13 @@
     "from": "Eposter sendt fra den angitte adressen. Kan stå tom. Du kan bruke jokertegn * (stjerne).",
     "to": "Eposter sendt til den angitte adressen. Kan stå tom. Du kan bruke jokertegn * (stjerne).",
     "name": "Gi filteret et beskrivende navn.",
-    "subject": "Bruk jokertegnet * (stjerne):\n\ntekst* – starter med 'tekst',\n*tekst* – inneholder 'tekst',\n*tekst – slutter med 'tekst'.",
     "bodyContains": "Epostens brødtekst inneholder en eller flere av de spesifiserte ordene eller frasene.",
     "isGlobal": "Bruker dette filteret for alle eposter som kommer inn til applikasjonen."
   },
   "options": {
     "action": {
       "Skip": "Ignorer",
-      "Move to Folder": "Putt i mappe"
+      "Move to Folder": "Legg til i mappe"
     }
   }
 }

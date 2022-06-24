@@ -1,5 +1,18 @@
 {
   "insertFromSourceLabels": {
     "Document": "Sett inn dokument"
+  },
+  "fields": {
+    "role": "Rolle",
+    "related": "Relatert",
+    "file": "Fil",
+    "field": "Felt"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Vedlegg",
+      "Export File": "Eksporter Fil",
+      "Mail Merge": "E-post Sammenfletting"
+    }
   }
 }

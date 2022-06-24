@@ -17,18 +17,25 @@
     "revenue": "Omsetning",
     "revenueConverted": "Omsetning (konvertert)",
     "budget": "Budsjett",
-    "budgetConverted": "Budsjett (konvertert)"
+    "budgetConverted": "Budsjett (konvertert)",
+    "contactsTemplate": "Kontakter Mal",
+    "leadsTemplate": "Ledetråd Mal",
+    "usersTemplate": "Brukere mal",
+    "optedInCount": "Påmeldt"
   },
   "links": {
     "targetLists": "Målgrupper",
     "excludingTargetLists": "Ekskluderte målgrupper",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "contacts": "Kontakter",
     "leads": "Ledetråder",
     "opportunities": "Muligheter",
     "campaignLogRecords": "Logg",
     "massEmails": "Masseutsendte eposter",
-    "trackingUrls": "Sporingslenker"
+    "trackingUrls": "Sporingslenker",
+    "contactsTemplate": "Kontakter Mal",
+    "leadsTemplate": "Ledetråd Mal",
+    "usersTemplate": "Brukere mal"
   },
   "options": {
     "type": {
@@ -39,7 +46,7 @@
       "Mail": "Post"
     },
     "status": {
-      "Planning": "Planlagt",
+      "Planning": "Planlegger",
       "Active": "Aktiv",
       "Inactive": "Inaktiv",
       "Complete": "Ferdig"
@@ -55,7 +62,8 @@
     "Email Templates": "Epostmaler",
     "Unsubscribe again": "Avmeld igjen",
     "Subscribe again": "Påmeld igjen",
-    "Create Target List": "Opprett målgruppe"
+    "Create Target List": "Opprett målgruppe",
+    "Mail Merge": "E-post Sammenfletting"
   },
   "presetFilters": {
     "active": "Aktiv"
