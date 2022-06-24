@@ -68,6 +68,7 @@ class LayoutManager
      * Set layout data.
      *
      * @param mixed $data
+     * @throws Error
      */
     public function set($data, string $scope, string $name): void
     {

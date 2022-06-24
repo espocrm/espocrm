@@ -1225,6 +1225,7 @@ class EntityManager
      *   foreignLinkEntityTypeList?: string[],
      * } $params
      * @throws BadRequest
+     * @throws Error
      */
     public function updateLink(array $params): void
     {
@@ -1542,11 +1543,11 @@ class EntityManager
 
     /**
      * @param array<string,string> $data
+     * @throws Error
      */
     public function setFormulaData(string $scope, array $data): void
     {
         $this->metadata->set('formula', $scope, $data);
-
         $this->metadata->save();
 
         $this->dataManager->clearCache();

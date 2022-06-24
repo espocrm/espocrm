@@ -184,6 +184,7 @@ class Tcpdf extends TcpdfOriginal
      * @param string $name
      * @param string $dest
      * @return string
+     * @throws \Exception
      */
     public function Output($name = 'doc.pdf', $dest = 'I')
     {

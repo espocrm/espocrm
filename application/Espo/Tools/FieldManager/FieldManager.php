@@ -114,6 +114,7 @@ class FieldManager
 
     /**
      * @return array<string,mixed>
+     * @throws Error
      */
     public function read(string $scope, string $name): array
     {

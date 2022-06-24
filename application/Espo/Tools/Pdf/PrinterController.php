@@ -73,6 +73,7 @@ class PrinterController
 
     /**
      * @param Collection<Entity> $collection
+     * @throws Error
      */
     public function printCollection(Collection $collection, ?Params $params, ?IdDataMap $IdDataMap = null): Contents
     {
@@ -82,6 +83,9 @@ class PrinterController
         return $this->createCollectionPrinter()->print($this->template, $collection, $params, $IdDataMap);
     }
 
+    /**
+     * @throws Error
+     */
     private function createEntityPrinter(): EntityPrinter
     {
         /** @var ?class-string<EntityPrinter> */
@@ -95,6 +99,9 @@ class PrinterController
         return $this->injectableFactory->create($className);
     }
 
+    /**
+     * @throws Error
+     */
     private function createCollectionPrinter(): CollectionPrinter
     {
         /** @var ?class-string<CollectionPrinter> */

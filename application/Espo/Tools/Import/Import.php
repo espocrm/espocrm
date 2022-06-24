@@ -188,6 +188,9 @@ class Import
         return $this;
     }
 
+    /**
+     * @throws Error
+     */
     private function validate(): void
     {
         if (!$this->entityType) {
@@ -201,6 +204,7 @@ class Import
 
     /**
      * Run import.
+     * @throws Error
      */
     public function run(): Result
     {

@@ -125,6 +125,10 @@ class Xlsx implements Processor
         $this->addressFormatterFactory = $addressFormatterFactory;
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function process(Params $params, Data $data): StreamInterface
     {
         $entityType = $params->getEntityType();
@@ -368,6 +372,7 @@ class Xlsx implements Processor
      * @param string[] $fieldList
      * @param string[] $azRange
      * @param array<string,string> $typesCache
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     private function processRow(
         string $entityType,

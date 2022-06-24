@@ -72,6 +72,7 @@ class Service
      * @param string[] $attributeList
      * @param string $attachmentId
      * @throws Forbidden
+     * @throws Error
      */
     public function import(
         string $entityType,
@@ -107,6 +108,10 @@ class Service
         return $result;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function importContentsWithParamsId(string $contents, string $importParamsId): Result
     {
         if (!$contents) {

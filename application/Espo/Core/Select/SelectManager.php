@@ -323,7 +323,7 @@ class SelectManager
     /**
      * Convert 'where' parameters from the frontend format to the format needed by ORM.
      *
-     * @return Where clause for ORM.
+     * @return array Where clause for ORM.
      */
     public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []) : array
     {

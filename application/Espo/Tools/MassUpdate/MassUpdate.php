@@ -60,6 +60,7 @@ class MassUpdate
     /**
      * @param ?User $user Under what user to perform mass-update. If not specified, the system user will be used.
      *   Access control is applied for the user.
+     * @throws \Espo\Core\Exceptions\NotFound
      */
     public function process(Params $params, Data $data, ?User $user = null): Result
     {
