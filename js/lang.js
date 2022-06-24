@@ -25,7 +25,7 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-﻿
+
 const fs = require('fs');
 const nodePath = require('path');
 const PO = require('pofile');
@@ -41,7 +41,8 @@ class Lang
         this.poPath = poPath;
 
         this.espoPath = espoPath;
-        if (this.espoPath.substr(-1) != '/') {
+
+        if (this.espoPath.slice(-1) !== '/') {
             this.espoPath += '/';
         }
 
@@ -54,17 +55,17 @@ class Lang
 
         var dirNames = this.dirNames = {};
 
-        var resDirNames = this.resDirNames = {};
-
         var coreDir = this.espoPath + 'application/Espo/Resources/i18n/' + this.baseLanguage + '/';
         var dirs = [coreDir];
         dirNames[coreDir] = 'application/Espo/Resources/i18n/' + this.language + '/';
 
         var installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
+
         dirs.push(installDir);
         dirNames[installDir] = 'install/core/i18n/' + this.language + '/';
 
         var templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
+
         dirs.push(templatesDir);
         dirNames[templatesDir] = 'application/Espo/Core/Templates/i18n/' + this.language + '/';
 
@@ -72,11 +73,14 @@ class Lang
             dirs = [];
         }
 
-        this.moduleList.forEach(function (moduleName) {
-            var dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.baseLanguage + '/';
+        this.moduleList.forEach(moduleName => {
+            var dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' +
+                this.baseLanguage + '/';
             dirs.push(dir);
-            dirNames[dir] = 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/';
-        }, this);
+
+            dirNames[dir] = 'application/Espo/Modules/' + moduleName +
+                '/Resources/i18n/' + this.language + '/';
+        });
 
         this.dirs = dirs;
 
@@ -93,11 +97,16 @@ class Lang
         const isWin = this.isWin;
         const language = this.language;
 
-        PO.load(this.poPath, function (err, po) {
-            if (err) throw new Error("Could not parse " + this.poPath + ".");
+        PO.load(this.poPath, (err, po) => {
+            if (err) {
+                throw new Error("Could not parse " + this.poPath + ".");
+            }
 
-            po.items.forEach(function (item) {
-                if (!item.msgctxt) return;
+            po.items.forEach(item => {
+                if (!item.msgctxt) {
+                    return;
+                }
+
                 var key = item.msgctxt + '__' + item.msgid;
                 var file = item.msgctxt.split('.')[0];
                 var path = item.msgctxt.split('.').slice(1);
@@ -107,27 +116,31 @@ class Lang
                     stringTranslated: item.msgstr[0],
                     context: item.msgctxt,
                     file: file,
-                    path: path
+                    path: path,
                 };
+
                 translationData[file] = translationData[file] || [];
                 translationData[file].push(o);
             });
 
-            dirs.forEach(function (path) {
+            dirs.forEach(path =>{
                 var resDirPath = this.dirNames[path];
                 var resPath = this.espoPath + 'build/' + language + '/' + resDirPath;
 
                 if (!fs.existsSync(resPath)) {
                     var d = '';
-                    resPath.split('/').forEach(function (f) {
+
+                    resPath.split('/').forEach(f =>{
                         if (!f) {
                             return;
                         }
+
                         if (isWin) {
                             d = nodePath.join(d, f);
                         } else {
                             d += '/' + f;
                         }
+
                         if (!fs.existsSync(d)) {
                             fs.mkdirSync(d);
                         }
@@ -135,8 +148,8 @@ class Lang
                 }
 
                 var list = fs.readdirSync(path);
-                list.forEach(function (fileName) {
 
+                list.forEach((fileName) => {
                     var filePath = path + fileName;
                     var resFilePath = resPath + '/' + fileName;
 
@@ -147,9 +160,11 @@ class Lang
                     var fileObject = JSON.parse(contents);
                     var targetFileObject = {};
 
-                    if (!(fileKey in translationData)) return;
+                    if (!(fileKey in translationData)) {
+                        return;
+                    }
 
-                    translationData[fileKey].forEach(function (item) {
+                    translationData[fileKey].forEach(item => {
                         var isArray = false;
                         var isMet = true;
                         var c = fileObject;
@@ -157,10 +172,13 @@ class Lang
 
                         for (var i in item.path) {
                             var key = item.path[i];
+
                             if (key in c) {
                                 c = c[key];
+
                                 if (Array.isArray(c)) {
                                     isArray = true;
+
                                     break;
                                 }
                             } else {
@@ -172,7 +190,8 @@ class Lang
 
                         if (isMet) {
                             if (!isArray) {
-                                var isMet = false;
+                                isMet = false;
+
                                 for (var k in c) {
                                     if (c[k] === item.stringOriginal) {
                                         var p = path.slice(0);
@@ -186,51 +205,56 @@ class Lang
                             }
                         }
 
-                        if (!isMet) return;
+                        if (!isMet) {
+                            return;
+                        }
 
                         var targetValue = item.stringTranslated;
+
                         if (targetValue === '') {
                             return;
-                        } else {
+                        }
+                        else {
                             if (item.stringOriginal === item.stringTranslated) {
                                 return;
                             }
                         }
+
                         if (isArray) {
                             try {
-                                var targetValue = JSON.parse('[' + targetValue  + ']');
+                                targetValue = JSON.parse('[' + targetValue  + ']');
                             } catch (e) {
                                 targetValue = null;
                             }
                         }
-                        if (targetValue == null) return;
+                        if (targetValue == null) {
+                            return;
+                        }
 
-                        pathList.forEach(function (path) {
+                        pathList.forEach(path =>{
                             var c = targetFileObject;
-                            path.forEach(function (pathKey, i) {
+
+                            path.forEach((pathKey, i) => {
                                 if (i < path.length - 1) {
                                     c[pathKey] = c[pathKey] || {};
                                     c = c[pathKey];
                                 } else {
                                     c[pathKey] = targetValue;
                                 }
-                            }, this);
-                        }, this);
-                    }, this);
+                            });
+                        });
+                    });
 
-                    var contents = JSON.stringify(targetFileObject, null, '  ');
+                    contents = JSON.stringify(targetFileObject, null, '  ');
 
                     if (fs.existsSync(resFilePath)) {
                         fs.unlinkSync(resFilePath);
                     }
+
                     fs.writeFileSync(resFilePath, contents);
-
-                    return;
-                }, this);
-
-            }, this);
-
-        }.bind(this))
+                });
+            });
+        })
     }
 }
 
