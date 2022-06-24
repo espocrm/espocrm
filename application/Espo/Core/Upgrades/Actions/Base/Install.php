@@ -39,6 +39,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
      *
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function run($data)
     {
@@ -109,6 +110,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepInit(array $data)
     {
@@ -132,6 +134,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepCopyBefore(array $data)
     {
@@ -149,6 +152,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepBeforeInstallScript(array $data)
     {
@@ -166,6 +170,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepCopy(array $data)
     {
@@ -197,6 +202,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepRebuild(array $data)
     {
@@ -216,6 +222,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepCopyAfter(array $data)
     {
@@ -234,6 +241,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepAfterInstallScript(array $data)
     {
@@ -252,6 +260,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepFinalize(array $data)
     {
@@ -279,6 +288,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param array<string,mixed> $data
      * @return void
+     * @throws Error
      */
     public function stepRevert(array $data)
     {
@@ -293,6 +303,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return bool
+     * @throws Error
      */
     protected function restoreFiles()
     {
@@ -327,6 +338,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
      * @param bool $deletePackage
      * @param bool $systemRebuild
      * @return void
+     * @throws Error
      */
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {

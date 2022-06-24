@@ -78,6 +78,8 @@ class JobRunner
 
     /**
      * Run a job entity. Does not throw exceptions.
+     *
+     * @throws Throwable
      */
     public function run(JobEntity $jobEntity): void
     {
@@ -97,6 +99,9 @@ class JobRunner
     /**
      * Run a job by ID. A job must have status 'Ready'.
      * Used when running jobs in parallel processes.
+     *
+     * @throws Error
+     * @throws Throwable
      */
     public function runById(string $id): void
     {
@@ -120,6 +125,9 @@ class JobRunner
         $this->run($jobEntity);
     }
 
+    /**
+     * @throws Throwable
+     */
     private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
@@ -193,6 +201,9 @@ class JobRunner
         }
     }
 
+    /**
+     * @throws Error
+     */
     private function runJobNamed(JobEntity $jobEntity): void
     {
         $jobName = $jobEntity->getJob();
@@ -243,6 +254,9 @@ class JobRunner
         $job->run($data);
     }
 
+    /**
+     * @throws Error
+     */
     private function runService(JobEntity $jobEntity): void
     {
         $serviceName = $jobEntity->getServiceName();

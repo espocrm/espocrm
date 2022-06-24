@@ -63,6 +63,7 @@ class Service
 
     /**
      * @param string $id Account ID.
+     * @throws Error
      */
     public function fetch(string $id): void
     {
@@ -73,6 +74,7 @@ class Service
 
     /**
      * @return string[]
+     * @throws Error
      */
     public function getFolderList(Params $params): array
     {
@@ -92,6 +94,9 @@ class Service
         return $storage->getFolderNames();
     }
 
+    /**
+     * @throws Error
+     */
     public function testConnection(Params $params): void
     {
         if ($params->getId()) {

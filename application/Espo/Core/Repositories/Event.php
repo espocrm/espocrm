@@ -39,6 +39,7 @@ use Espo\Core\{
 use DateTime;
 use DateTimeZone;
 use RuntimeException;
+use Exception;
 
 /**
  * @extends Database<\Espo\Core\ORM\Entity>
@@ -88,14 +89,18 @@ class Event extends Database implements
             $dateEndDate = $entity->get('dateEndDate');
 
             if (!empty($dateEndDate)) {
-                $dt = new DateTime(
-                    $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00')
-                );
+                try {
+                    $dt = new DateTime(
+                        $this->convertDateTimeToDefaultTimezone($dateEndDate . ' 00:00:00')
+                    );
+                } catch (Exception $e) {
+                    throw new RuntimeException("Bad date-time.");
+                }
 
                 $dt->modify('+1 day');
 
                 $dateEnd = $dt->format('Y-m-d H:i:s');
-                 $entity->set('dateEnd', $dateEnd);
+                $entity->set('dateEnd', $dateEnd);
             }
             else {
                 $entity->set('dateEndDate', null);

@@ -87,6 +87,7 @@ class DefaultFilter implements Filter
     }
 
     /**
+     * @throws Error
      * @todo AttributeFilterFactory.
      */
     private function applyAttribute(

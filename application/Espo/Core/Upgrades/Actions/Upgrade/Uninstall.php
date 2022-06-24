@@ -36,6 +36,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
     /**
      * @param array<string,mixed> $data
      * @return never
+     * @throws Error
      */
     public function run($data)
     {

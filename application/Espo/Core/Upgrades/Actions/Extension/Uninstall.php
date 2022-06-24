@@ -44,6 +44,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
      * Get entity of this extension.
      *
      * @return \Espo\Entities\Extension
+     * @throws Error
      */
     protected function getExtensionEntity()
     {
@@ -61,6 +62,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 
     /**
      * @return void
+     * @throws Error
      */
     protected function afterRunAction()
     {
@@ -83,6 +85,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 
     /**
      * @return string[]
+     * @throws Error
      */
     protected function getRestoreFileList()
     {

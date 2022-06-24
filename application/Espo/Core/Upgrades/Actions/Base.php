@@ -532,6 +532,7 @@ abstract class Base
     /**
      * @param string $type
      * @return ?string
+     * @throws Error
      */
     protected function getScriptPath($type)
     {
@@ -610,6 +611,7 @@ abstract class Base
      * Get a list of files defined in manifest.
      *
      * @return string[]
+     * @throws Error
      */
     protected function getDeleteFileList()
     {
@@ -649,6 +651,7 @@ abstract class Base
      * @param string $type
      * @param bool $withEmptyDirs
      * @return bool
+     * @throws Error
      */
     protected function deleteFiles($type = 'delete', $withEmptyDirs = false)
     {
@@ -663,6 +666,7 @@ abstract class Base
 
     /**
      * @return string[]
+     * @throws Error
      */
     protected function getCopyFileList()
     {
@@ -717,6 +721,7 @@ abstract class Base
      * @param string $dirPath
      * @param bool $skipVendorFileList
      * @return string[]
+     * @throws Error
      */
     protected function getFileList($dirPath, $skipVendorFileList = false)
     {
@@ -804,6 +809,7 @@ abstract class Base
      *
      * @param string $type
      * @return string|null
+     * @throws Error
      */
     protected function getCopyFilesPath($type = null)
     {
@@ -846,6 +852,7 @@ abstract class Base
     /**
      * @param string $type
      * @return string[]
+     * @throws Error
      */
     protected function getVendorFileList($type = 'copy')
     {
@@ -988,6 +995,7 @@ abstract class Base
      * Delete temporary package files.
      *
      * @return bool
+     * @throws Error
      */
     protected function deletePackageFiles()
     {
@@ -1002,6 +1010,7 @@ abstract class Base
      * Delete temporary package archive.
      *
      * @return bool
+     * @throws Error
      */
     protected function deletePackageArchive()
     {

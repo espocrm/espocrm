@@ -37,6 +37,7 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base\Upload
      *
      * @param array<string,string[]|string> $dependencyList
      * @return bool
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function checkDependencies($dependencyList)
     {

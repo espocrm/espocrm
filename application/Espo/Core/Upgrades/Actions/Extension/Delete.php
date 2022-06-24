@@ -41,6 +41,7 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
      * Get entity of this extension.
      *
      * @return \Espo\Entities\Extension
+     * @throws Error
      */
     protected function getExtensionEntity()
     {
@@ -57,6 +58,7 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base\Delete
 
     /**
      * @return void
+     * @throws Error
      */
     protected function afterRunAction()
     {

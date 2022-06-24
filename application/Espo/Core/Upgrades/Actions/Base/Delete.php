@@ -70,6 +70,7 @@ class Delete extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return bool
+     * @throws Error
      */
     protected function deletePackage()
     {

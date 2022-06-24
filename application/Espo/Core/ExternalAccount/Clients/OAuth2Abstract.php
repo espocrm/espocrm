@@ -178,6 +178,7 @@ abstract class OAuth2Abstract implements IClient
      *   refreshToken?: ?string
      * } $data
      * @return void
+     * @throws Error
      */
     protected function afterTokenRefreshed(array $data): void
     {
@@ -232,6 +233,7 @@ abstract class OAuth2Abstract implements IClient
      *   expiresAt: ?string,
      *   refreshToken: ?string,
      * }
+     * @throws Exception
      */
     public function getAccessTokenFromAuthorizationCode(string $code)
     {
@@ -304,6 +306,7 @@ abstract class OAuth2Abstract implements IClient
 
     /**
      * @return void
+     * @throws Error
      */
     public function handleAccessTokenActuality()
     {

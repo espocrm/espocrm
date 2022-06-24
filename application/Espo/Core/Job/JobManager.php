@@ -168,6 +168,9 @@ class JobManager
 
     /**
      * Run a specific job by ID. A job status should be set to 'Ready'.
+     *
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws Throwable
      */
     public function runJobById(string $id): void
     {

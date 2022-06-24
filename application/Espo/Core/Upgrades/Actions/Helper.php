@@ -69,6 +69,7 @@ class Helper
      *
      * @param array<string,string[]|string> $dependencyList
      * @return bool
+     * @throws Error
      */
     public function checkDependencies($dependencyList)
     {

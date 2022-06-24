@@ -44,6 +44,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
     /**
      * @return void
+     * @throws Error
      */
     protected function beforeRunAction()
     {
@@ -59,6 +60,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
     /**
      * @return void
+     * @throws Error
      */
     protected function afterRunAction()
     {
@@ -73,6 +75,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Copy Existing files to backup directory.
      *
      * @return bool
+     * @throws Error
      */
     protected function backupExistingFiles()
     {
@@ -107,6 +110,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Get extension ID. It's an ID of existing entity (if available) or Installation ID.
      *
      * @return string
+     * @throws Error
      */
     protected function getExtensionId()
     {
@@ -137,6 +141,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Find Extension entity.
      *
      * @return ?\Espo\Entities\Extension
+     * @throws Error
      */
     protected function findExtension()
     {
@@ -157,6 +162,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Create a record of Extension Entity.
      *
      * @return void
+     * @throws Error
      */
     protected function storeExtension()
     {
@@ -204,6 +210,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Compare version between installed and a new extensions.
      *
      * @return void
+     * @throws Error
      */
     protected function compareVersion()
     {
@@ -222,6 +229,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * If extension already installed, uninstall an old version.
      *
      * @return void
+     * @throws Error
      */
     protected function uninstallExtension()
     {
@@ -243,6 +251,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Delete extension package.
      *
      * @return void
+     * @throws Error
      */
     protected function deleteExtension()
     {
@@ -261,6 +270,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * @param array<string,string[]|string> $dependencyList
      * @return bool
+     * @throws Error
      */
     protected function checkDependencies($dependencyList)
     {

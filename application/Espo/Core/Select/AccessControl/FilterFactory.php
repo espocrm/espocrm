@@ -60,6 +60,9 @@ class FilterFactory
         $this->aclManager = $aclManager;
     }
 
+    /**
+     * @throws Error
+     */
     public function create(string $entityType, User $user, string $name): Filter
     {
         $className = $this->getClassName($entityType, $name);
@@ -89,6 +92,9 @@ class FilterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
+    /**
+     * @throws Error
+     */
     public function has(string $entityType, string $name): bool
     {
         return (bool) $this->getClassName($entityType, $name);
@@ -96,6 +102,7 @@ class FilterFactory
 
     /**
      * @return class-string<Filter>
+     * @throws Error
      */
     private function getClassName(string $entityType, string $name): ?string
     {

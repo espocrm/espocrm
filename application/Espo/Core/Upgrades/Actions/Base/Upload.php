@@ -38,6 +38,7 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
      *
      * @param string $data
      * @return string ID of upgrade/extension process.
+     * @throws Error
      */
     public function run($data)
     {

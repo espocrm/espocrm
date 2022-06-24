@@ -183,6 +183,7 @@ class Factory
 
     /**
      * @return class-string<object>
+     * @throws Error
      */
     private function getDefaultClassName(string $type): string
     {

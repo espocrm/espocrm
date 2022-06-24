@@ -111,6 +111,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return int
+     * @throws Error
      */
     protected function restoreFiles()
     {
@@ -148,6 +149,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
      * @param ?string $type
      * @param string $dest
      * @return bool
+     * @throws Error
      */
     protected function copyFiles($type = null, $dest = '')
     {
@@ -163,8 +165,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     /**
      * Get backup path.
      *
-     * @param bool $isPackage     *
+     * @param bool $isPackage
      * @return string
+     * @throws Error
      */
     protected function getPackagePath($isPackage = false)
     {
@@ -177,6 +180,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return bool
+     * @throws Error
      */
     protected function deletePackageFiles()
     {
@@ -191,6 +195,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
      * @param bool $deletePackage
      * @param bool $systemRebuild
      * @return void
+     * @throws Error
      */
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
@@ -201,6 +206,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return string[]
+     * @throws Error
      */
     protected function getCopyFileList()
     {
@@ -216,6 +222,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
     /**
      * @return string[]
+     * @throws Error
      */
     protected function getRestoreFileList()
     {
@@ -236,6 +243,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     /**
      * @param string $type
      * @return string[]
+     * @throws Error
      */
     protected function getDeleteList($type = 'delete')
     {

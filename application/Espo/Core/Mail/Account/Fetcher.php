@@ -120,6 +120,7 @@ class Fetcher
 
     /**
      * @param Collection<EmailFilter> $filterList
+     * @throws Error
      */
     private function fetchFolder(
         Account $account,

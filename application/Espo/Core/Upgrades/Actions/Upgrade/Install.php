@@ -34,6 +34,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * @param array<string,mixed> $data
      * @return mixed
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function stepBeforeUpgradeScript(array $data)
     {
@@ -44,6 +46,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * @param array<string,mixed> $data
      * @return mixed
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function stepAfterUpgradeScript(array $data)
     {
@@ -53,6 +57,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
     /**
      * @return void
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function finalize()
     {
@@ -69,6 +75,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * Delete temporary package files.
      *
      * @return bool
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\Error
      */
     protected function deletePackageFiles()
     {

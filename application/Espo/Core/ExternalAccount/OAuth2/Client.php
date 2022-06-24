@@ -30,6 +30,8 @@
 namespace Espo\Core\ExternalAccount\OAuth2;
 
 use Exception;
+use RuntimeException;
+use LogicException;
 
 class Client
 {
@@ -111,7 +113,7 @@ class Client
     public function __construct()
     {
         if (!extension_loaded('curl')) {
-            throw new Exception('CURL extension not found.');
+            throw new RuntimeException('CURL extension not found.');
         }
     }
 
@@ -410,7 +412,7 @@ class Client
                 break;
 
             default:
-                throw new Exception("Bad auth type.");
+                throw new LogicException("Bad auth type.");
         }
 
         return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders);

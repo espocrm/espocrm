@@ -81,6 +81,7 @@ class FilterFactory
 
     /**
      * @return ?class-string<Filter>
+     * @throws Error
      */
     protected function getClassName(string $entityType, string $name): ?string
     {
