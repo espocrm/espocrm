@@ -1,5 +1,6 @@
 {
   "fields": {
-    "fieldList": "Feltliste"
+    "fieldList": "Feltliste",
+    "exportAllFields": "Eksporter alle felt"
   }
 }

@@ -6,20 +6,23 @@
     "amount": "Beløp",
     "probability": "Sansynlighet, %",
     "leadSource": "Ledetrådkilde",
-    "doNotCall": "Ikke ring!",
+    "doNotCall": "Ikke forstyrr!",
     "closeDate": "Avslutningsdato",
     "contacts": "Kontakter",
     "description": "Beskrivelse",
     "amountConverted": "Beløp",
     "amountWeightedConverted": "Vektet beløp",
     "campaign": "Kampanje",
-    "originalLead": "Original ledetråd"
+    "originalLead": "Original ledetråd",
+    "contactRole": "Kontaktrolle",
+    "contact": "Kontakt (primær)"
   },
   "links": {
     "contacts": "Kontakter",
     "documents": "Dokumenter",
     "campaign": "Kampanje",
-    "originalLead": "Original ledetråd"
+    "originalLead": "Original ledetråd",
+    "contact": "Kontakt (primær)"
   },
   "options": {
     "stage": {

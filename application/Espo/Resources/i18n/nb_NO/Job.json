@@ -6,7 +6,11 @@
     "serviceName": "Tjeneste",
     "methodName": "Metode",
     "scheduledJob": "Planlagte oppgaver",
-    "method": "Metode"
+    "method": "Metode (Ikke i bruk)",
+    "targetType": "Måltype",
+    "number": "Nummer",
+    "queue": "Kø",
+    "job": "Oppgave"
   },
   "options": {
     "status": {

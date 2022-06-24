@@ -22,7 +22,8 @@
     "optOutLink": "een afmeldlink",
     "today": "Datum van vandaag",
     "now": "Huidige datum en tijd",
-    "currentYear": "Huidig jaar"
+    "currentYear": "Huidig jaar",
+    "optOutUrl": "URL voor een afmeldlink"
   },
   "messages": {
     "infoText": "Beschikbare plaatshouders:\n\n{optOutUrl} &#8211; URL voor een afmeldlink;\n\n{optOutLink} &#8211; een afmeldlink."

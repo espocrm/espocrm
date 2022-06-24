@@ -3,6 +3,17 @@
     "user": "Bruker",
     "ipAddress": "IP-adresse",
     "lastAccess": "Forrige pålogging",
-    "createdAt": "Påloggingsdato"
+    "createdAt": "Påloggingsdato",
+    "isActive": "Er Aktiv"
+  },
+  "links": {
+    "actionHistoryRecords": "Behandlingshistorikk"
+  },
+  "presetFilters": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
+  },
+  "labels": {
+    "Set Inactive": "Set Inaktiv"
   }
 }

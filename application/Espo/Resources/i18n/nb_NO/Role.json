@@ -4,7 +4,9 @@
     "roles": "Roller",
     "assignmentPermission": "Tildelingsrettigheter",
     "userPermission": "Brukerrettigheter",
-    "portalPermission": "Portalrettigheter"
+    "portalPermission": "Portalrettigheter",
+    "exportPermission": "Eksporter Tillatelser",
+    "massUpdatePermission": "Endre utvalgte Tillatelse"
   },
   "links": {
     "users": "Brukere",

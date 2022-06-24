@@ -127,7 +127,10 @@
     "busyRangesEntityList": "Lijst van vrije/bezette entiteiten",
     "passwordRecoveryForInternalUsersDisabled": "Wachtwoordherstel voor interne gebruikers uitschakelen",
     "passwordRecoveryNoExposure": "Voorkom blootstelling van e-mail adres op wachtwoord herstel formulier",
-    "auth2FAForced": "Voorkom blootstelling van e-mail adres op wachtwoord herstel formulier"
+    "auth2FAForced": "Voorkom blootstelling van e-mail adres op wachtwoord herstel formulier",
+    "smsProvider": "SMS-aanbieder",
+    "outboundSmsFromNumber": "SMS van nummer",
+    "recordsPerPageSelect": "Records per pagina (Selecteer)"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -199,7 +202,8 @@
     "emailNotificationsDelay": "Een bericht kan binnen de opgegeven termijn worden bewerkt voordat de kennisgeving wordt verzonden.",
     "outboundEmailFromAddress": "Het e-mailadres van het systeem.",
     "smtpServer": "Indien leeg, dan wordt de e-mailaccount van de groep met het corresponderende e-mailadres gebruikt.",
-    "busyRangesEntityList": "Waarmee rekening wordt gehouden bij het tonen van bezette tijden in planner en tijdlijn."
+    "busyRangesEntityList": "Waarmee rekening wordt gehouden bij het tonen van bezette tijden in planner en tijdlijn.",
+    "recordsPerPageSelect": "Aantal records dat aanvankelijk wordt weergegeven bij het selecteren van records."
   },
   "labels": {
     "System": "Systeem",
@@ -239,6 +243,9 @@
       "lastFirst": "Achternaam Voornaam",
       "firstMiddleLast": "Voornaam tussenvoegsel Achternaam",
       "lastFirstMiddle": "Achternaam Voornaam Tussenvoegsel"
+    },
+    "auth2FAMethodList": {
+      "Email": "E-mail"
     }
   }
 }

@@ -1,1 +1,22 @@
-{}
+{
+  "fields": {
+    "username": "Brukernavn",
+    "ipAddress": "IP-adresse",
+    "user": "Bruker",
+    "authToken": "Autentisering Nøkkel Opprettet",
+    "authenticationMethod": "Autentiseringsmetode"
+  },
+  "links": {
+    "authToken": "Autentisering Nøkkel Opprettet",
+    "user": "Bruker",
+    "actionHistoryRecords": "Behandlingshistorikk"
+  },
+  "presetFilters": {
+    "accepted": "Akseptert"
+  },
+  "options": {
+    "denialReason": {
+      "IS_PORTAL_USER": "Portalbruker"
+    }
+  }
+}

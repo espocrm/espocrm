@@ -12,7 +12,7 @@
     "website": "Nettside",
     "phoneNumber": "Telefon",
     "accountName": "Kontonavn",
-    "doNotCall": "Ikke ring!",
+    "doNotCall": "Ikke forstyrr!",
     "address": "Adresse",
     "source": "Kilde",
     "opportunityAmount": "Beløp for mulighet",
@@ -24,7 +24,10 @@
     "campaign": "Kampanje",
     "targetLists": "Målgrupper",
     "targetList": "Målgruppe",
-    "industry": "Industri"
+    "industry": "Industri",
+    "acceptanceStatus": "Akseptstatus",
+    "acceptanceStatusMeetings": "Akseptstatus(Møter)",
+    "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)"
   },
   "links": {
     "targetLists": "Målgrupper",

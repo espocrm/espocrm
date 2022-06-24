@@ -17,7 +17,9 @@
     "fontFace": "Lettertype",
     "pageWidth": "Paginabreedte (mm)",
     "pageHeight": "Pagina Hoogte (mm)",
-    "headerPosition": "Koptekst Positie"
+    "headerPosition": "Koptekst Positie",
+    "printHeader": "Kop afdrukken",
+    "title": "Titel"
   },
   "labels": {
     "Create Template": "Creëer Sjabloon"

@@ -16,14 +16,22 @@
     "passwordConfirm": "Bekreft passord",
     "newPassword": "Nytt passord",
     "newPasswordConfirm": "Bekreft nytt passord",
-    "isActive": "Er aktiv",
+    "isActive": "Er Aktiv",
     "isPortalUser": "Er portalbruker",
     "contact": "Kontakt",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "account": "Konto (Primær)",
     "sendAccessInfo": "Send tilgangsinformasjonen på epost til brukeren",
     "gender": "Kjønn",
-    "position": "Posisjon i gruppen"
+    "position": "Posisjon i gruppen",
+    "ipAddress": "IP-adresse",
+    "passwordPreview": "Forhåndsvis passord",
+    "apiKey": "API-nøkkel",
+    "secretKey": "Hemmelig Nøkkel",
+    "authMethod": "Autentiseringsmetode",
+    "yourPassword": "Ditt gjeldende passord",
+    "dashboardTemplate": "Kontrollpanel mal",
+    "auth2FAEnable": "Aktiver 2 faktor-autentisering"
   },
   "links": {
     "teams": "Grupper",
@@ -32,9 +40,11 @@
     "portals": "Portaler",
     "portalRoles": "Portalroller",
     "contact": "Kontakt",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "account": "Konto (Primær)",
-    "tasks": "Oppgaver"
+    "tasks": "Oppgaver",
+    "defaultTeam": "Forvalgt gruppe",
+    "dashboardTemplate": "Kontrollpanel mal"
   },
   "labels": {
     "Create User": "Opprett bruker",
@@ -46,10 +56,13 @@
     "Forgot Password?": "Glemt passordet?",
     "Password Change Request": "Spør om å få bytte passord",
     "Email Address": "Epostadresse",
-    "External Accounts": "Eksterne konti",
-    "Email Accounts": "Epostkonti",
+    "External Accounts": "Eksterne kontoer",
+    "Email Accounts": "Epostkontoer",
     "Create Portal User": "Opprett portalbruker",
-    "Proceed w/o Contact": "Fortsett uten kontakt"
+    "Proceed w/o Contact": "Fortsett uten kontakt",
+    "Generate New API Key": "Generer ny API-Nøkkel",
+    "Code": "Kode",
+    "Security": "Sikkerhet"
   },
   "tooltips": {
     "defaultTeam": "Alle oppføringer som opprettes av denne brukeren vil bli relatert til denne gruppen som forvalg.",
@@ -63,7 +76,7 @@
   },
   "messages": {
     "passwordWillBeSent": "Passordet vil sendes til brukerens epostadresse.",
-    "passwordChanged": "Passordet har blitt forandret",
+    "passwordChanged": "Passordet er endret.",
     "userCantBeEmpty": "Brukernavn-feltet må fylles ut",
     "wrongUsernamePasword": "Feil brukernavn og / eller passord",
     "emailAddressCantBeEmpty": "Epostadresse-feltet må fylles ut",
@@ -71,7 +84,10 @@
     "forbidden": "Ikke tillat, prøv igjen senere",
     "uniqueLinkHasBeenSent": "Den unike lenken er sendt til den angitte epostadressen.",
     "passwordChangedByRequest": "Passordet er endret.",
-    "userNameExists": "Brukernavn"
+    "userNameExists": "Brukernavn",
+    "setupSmtpBefore": "Du må sette opp [SMTP settings]({url}) for at systemet skal kunne sende ut passord via E-post.",
+    "wrongCode": "Feil kode",
+    "auth2FARequired": "Du må sette opp 2 faktor autentisering. Bruk en autentikator på din mobil (for eks. Google Authenticatio)."
   },
   "boolFilters": {
     "onlyMyTeam": "Bare min gruppe"
@@ -86,6 +102,12 @@
       "Male": "Mann",
       "Female": "Kvinne",
       "Neutral": "Nøytral"
+    },
+    "type": {
+      "system": "system"
+    },
+    "authMethod": {
+      "ApiKey": "API-nøkkel"
     }
   }
 }

@@ -1,1 +1,7 @@
-{}
+{
+  "syntaxItems": {
+    "code": "kode",
+    "deletedText": "slettet tekst",
+    "link": "lenke"
+  }
+}

@@ -19,8 +19,8 @@
       "ProcessWebhookQueue": "Wachtrij proces Webhook"
     },
     "cronSetup": {
-      "linux": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
-      "mac": "Opgelet; Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+      "linux": "Opgelet: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
+      "mac": "Opgelet: Voeg deze regel toe aan uw crontab bestand tbv de geplande Espo opdrachten:",
       "windows": "Opgelet: Maak een batch bestand met de volgende commando's om de geplande opdrachten voor Espo onder Windows te gebruiken:",
       "default": "Opgelet: Voeg deze regel toe aan de Cron Job (geplande opdracht):"
     },
@@ -30,6 +30,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Crontab notatie. Bepaalt de frequentie van de job runs.\n\n`*/5 * * *` - elke 5 minuten\n\n`0 */2 * *` - elke 2 uur\n\n`30 1 * *` - eenmaal per dag om 01:30\n\n`0 0 1 * *` - op de eerste dag van de maand"
+    "scheduling": "Crontab notatie. Bepaalt de frequentie van de job runs.\n\n`*/5 * * *` - elke 5 minuten\n\n`0 */2 * * *` - elke 2 uur\n\n`30 1 * * *` - eenmaal per dag om 01:30\n\n`0 0 1 * * ` - op de eerste dag van de maand"
   }
 }

@@ -16,7 +16,8 @@
   },
   "links": {
     "attachments": "Bijlagen",
-    "account": "Relatie"
+    "account": "Relatie",
+    "email": "E-mail"
   },
   "options": {
     "status": {
@@ -43,5 +44,8 @@
     "todays": "Vandaag",
     "overdue": "Verstreken",
     "deferred": "Uitgestelde"
+  },
+  "nameOptions": {
+    "replyToEmail": "E-mail beantwoorden"
   }
 }

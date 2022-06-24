@@ -12,7 +12,8 @@
     "inboundEmail": "Epostkonto",
     "targetLists": "Målgrupper",
     "excludingTargetLists": "Ekskluderte målgrupper",
-    "optOutEntirely": "Fullstendig avmelding"
+    "optOutEntirely": "Fullstendig avmelding",
+    "smtpAccount": "SMTP konto"
   },
   "links": {
     "targetLists": "Målgrupper",

@@ -28,7 +28,7 @@
   "options": {
     "status": {
       "In Review": "Venter på godkjenning",
-      "Draft": "Utkas",
+      "Draft": "Utkast",
       "Archived": "Arkivert",
       "Published": "Publisert"
     },

@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Typ **@gebruikersnaam** om de gebruiker in de post te vermelden.",
-    "infoSyntax": "Beschikbare markering syntaxis"
+    "infoSyntax": "Beschikbare markering syntaxis",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Kon de gebruiker '{userName}' niet toevoegen aan de volgers. De gebruiker heeft geen 'stream' toegang tot het record."
   },
   "syntaxItems": {
     "multilineCode": "meerregelige code",

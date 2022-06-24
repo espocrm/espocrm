@@ -20,14 +20,14 @@
     "Portals": "Portaler",
     "Portal Roles": "Portalroller",
     "Outbound Emails": "Utgående epost",
-    "Group Email Accounts": "Felles epostkonti",
-    "Personal Email Accounts": "Personlige epostkonti",
+    "Group Email Accounts": "Epostkontoer for grupper",
+    "Personal Email Accounts": "Personlige epostkontoer",
     "Inbound Emails": "Inngående epost",
     "Email Templates": "Epostmaler",
     "Import": "Importer",
     "Layout Manager": "Oppsettsadministrator",
     "User Interface": "Brukergrensesnitt",
-    "Auth Tokens": "Tilgangsoversikt",
+    "Auth Tokens": "Autentisering Nøkkler",
     "Authentication": "Autentisering",
     "Currency": "Valuta",
     "Integrations": "Integrasjoner",
@@ -52,7 +52,20 @@
     "Reset to Default": "Nullstill til forvalg",
     "Email Filters": "Epostfilter",
     "Portal Users": "Portalbrukere",
-    "Permissions": "Tillatelser"
+    "Action History": "Behandlingshistorikk",
+    "Auth Log": "Autentisering Log",
+    "Attachments": "Vedlegg",
+    "API Users": "API-Brukere",
+    "System Requirements": "Systemkrav",
+    "PHP Settings": "PHP innstillinger",
+    "Database Settings": "Databaseinnstillinger",
+    "Permissions": "Tillatelser",
+    "Success": "Suksess",
+    "Fail": "Feil",
+    "is recommended": "er anbefalt",
+    "extension is missing": "utvidelse mangler",
+    "Dashboard Templates": "Kontrollpanel maler",
+    "Phone Numbers": "Telefonnummer"
   },
   "layouts": {
     "list": "Liste",
@@ -60,12 +73,14 @@
     "listSmall": "Liste (liten)",
     "detailSmall": "Detalj (liten)",
     "filters": "Søkefiltre",
-    "massUpdate": "Endre utvalg",
+    "massUpdate": "Endre utvalgte",
     "relationships": "Relasjonspanel",
     "sidePanelsDetail": "Sidepanel (detaljer)",
     "sidePanelsEdit": "Sidepanel (rediger)",
     "sidePanelsDetailSmall": "Sidepanel (små detaljer)",
-    "sidePanelsEditSmall": "Sidepanel (redigering, liten)"
+    "sidePanelsEditSmall": "Sidepanel (redigering, liten)",
+    "detailPortal": "Detalj (Portal)",
+    "detailSmallPortal": "Detalj (liten, Portal)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -96,7 +111,9 @@
     "map": "Kart",
     "currencyConverted": "Valuta (konvertert)",
     "int": "Int",
-    "number": "Nummer"
+    "number": "Nummer (Automatisk økning)",
+    "datetime": "Dato-Tid",
+    "datetimeOptional": "Dato/Dato-Tid"
   },
   "fields": {
     "name": "Navn",
@@ -135,7 +152,8 @@
     "dynamicLogicOptions": "Betingede valg",
     "probabilityMap": "Stadiesannsynlighet (%)",
     "readOnly": "Skrivebeskyttet",
-    "noEmptyString": "Ingen tom streng"
+    "noEmptyString": "Tomme strenger er ikke tillat",
+    "onlyDefaultCurrency": "Eneste standard valuta"
   },
   "messages": {
     "selectEntityType": "Velg enhetstype i venstre meny.",
@@ -146,7 +164,11 @@
     "installExtension": "Utvidelsen <em>{name} {version}</em> er klar for installasjon.",
     "upgradeBackup": "Det er anbefalt å ta backup av EspoCRMs filer og data før oppgradering.",
     "thousandSeparatorEqualsDecimalMark": "Skillet for tusentall kan ikke være et desimaltegn",
-    "userHasNoEmailAddress": "Brukeren har ikke epostadresse"
+    "userHasNoEmailAddress": "Brukeren har ikke epostadresse",
+    "upgradeVersion": "EspoCRM vil bli oppdatert til version **{version}**. Vennligst vent. Dette kan ta en stund.",
+    "upgradeDone": "EspoCRM har blitt oppgradert til **{version}**.",
+    "formulaFunctions": "Fler funksjoner finner du i [documentation]({documentationUrl}).",
+    "rebuildRequired": "Du må kjøre gjenoppbygning via CLI."
   },
   "descriptions": {
     "settings": "Grunnleggende systeminnstillinger",
@@ -160,8 +182,8 @@
     "portals": "Administrer portaler.",
     "portalRoles": "Roller for portal.",
     "outboundEmails": "Innstillinger for utgående epost (SMTP).",
-    "groupEmailAccounts": "Epostkonti for grupper (IMAP). Import og epost-til-sak.",
-    "personalEmailAccounts": "Enkeltbrukeres epostkonti.",
+    "groupEmailAccounts": "Epostkontoer for grupper (IMAP). Import og epost-til-sak.",
+    "personalEmailAccounts": "Enkeltbrukeres epostkontoer.",
     "emailTemplates": "Maler for utgående epost.",
     "import": "Importer data fra CSV-fil.",
     "layoutManager": "Tilpass oppsett (rediger, søk og endre mange lister og detaljer samtidig).",
@@ -182,13 +204,30 @@
       "x-small": "Bitteliten",
       "small": "Liten",
       "medium": "Mellomstor",
-      "large": "Stor"
+      "large": "Stor",
+      "": "Forvalg"
     }
   },
   "systemRequirements": {
+    "requiredPhpVersion": "PHP-Versjon",
     "requiredMysqlVersion": "MySQL versjon",
     "host": "Tjenernavn",
     "dbname": "Databasenavn",
-    "user": "Brukernavn"
+    "user": "Brukernavn",
+    "writable": "Skrivetillatelse",
+    "readable": "Lesbar",
+    "requiredMariadbVersion": "MariaDB Versjon"
+  },
+  "templates": {
+    "accessInfo": "Tilgang Informasjon",
+    "accessInfoPortal": "Tilgang Informasjon for Portaler",
+    "mention": "Nevnt",
+    "passwordChangeLink": "Passordbytte lenke"
+  },
+  "strings": {
+    "rebuildRequired": "Gjenoppbygging er påkrevd"
+  },
+  "keywords": {
+    "templateManager": "varsler"
   }
 }

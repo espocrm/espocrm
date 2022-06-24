@@ -2,7 +2,9 @@
   "labels": {
     "Create Lead": "Opprett ledetråd",
     "Create Contact": "Opprett kontakt",
-    "Create Task": "Opprett gjøremål",
-    "Create Case": "Opprett sak"
+    "Create Task": "Opprett oppgave",
+    "Create Case": "Opprett sak",
+    "Add to Contact": "Legg til Kontakt",
+    "Add to Lead": "Legg til Ledetråd"
   }
 }

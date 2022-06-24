@@ -9,14 +9,14 @@
     "publishDate": "Publiseringsdato",
     "expirationDate": "Utløpsdato",
     "description": "Beskrivelse",
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "folder": "Mappe"
   },
   "links": {
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "opportunities": "Muligheter",
     "folder": "Mappe",
-    "leads": "Ledetråd",
+    "leads": "Ledetråder",
     "contacts": "Kontakter"
   },
   "options": {

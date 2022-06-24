@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Check Syntax": "Syntaxis controleren",
+    "Run": "Start"
+  },
+  "fields": {
+    "target": "Doel",
+    "targetType": "Doel type",
+    "output": "Uitgang",
+    "error": "Fout"
+  },
+  "messages": {
+    "runSuccess": "Succesvol uitgevoerd.",
+    "runError": "Fout.",
+    "checkSyntaxSuccess": "Syntaxis is correct.",
+    "checkSyntaxError": "Syntaxisfout.",
+    "emptyScript": "Script is leeg."
+  },
+  "tooltips": {
+    "output": "Druk de waarden af met de functie `output#printLine`."
+  }
+}

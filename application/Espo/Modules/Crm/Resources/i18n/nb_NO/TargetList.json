@@ -10,7 +10,7 @@
     "excludingActionList": "Eksludert"
   },
   "links": {
-    "accounts": "Konti",
+    "accounts": "Kontoer",
     "contacts": "Kontakter",
     "leads": "Ledetråder",
     "campaigns": "Kampanjer",
@@ -22,6 +22,9 @@
       "Web": "Nettside",
       "Television": "Fjernsyn",
       "Newsletter": "Nyhetsbrev"
+    },
+    "targetStatus": {
+      "Opted Out": "Avmeldt"
     }
   },
   "labels": {

@@ -12,7 +12,7 @@
     "type": "Typ",
     "label": "Etykieta",
     "linkType": "Typ linku",
-    "entityForeign": "Jednostka obca",
+    "entityForeign": "Encja obca",
     "linkForeign": "Link obcy",
     "labelForeign": "Etykieta obca",
     "sortBy": "Domyślna kolejność (pole)",

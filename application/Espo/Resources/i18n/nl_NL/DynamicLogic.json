@@ -18,7 +18,10 @@
       "contains": "Bevat",
       "has": "Bevat",
       "notContains": "Bevat niet",
-      "notHas": "Bevat niet"
+      "notHas": "Bevat niet",
+      "startsWith": "Begint met",
+      "endsWith": "Eindigt met",
+      "matches": "Overeenkomsten (reg exp)"
     }
   },
   "labels": {

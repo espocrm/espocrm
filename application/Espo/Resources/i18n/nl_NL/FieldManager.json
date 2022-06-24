@@ -72,7 +72,8 @@
     "readOnly": "Veldwaarde kan niet door de gebruiker worden opgegeven. Maar kan worden berekend door formule.",
     "maxFileSize": "Indien leeg of 0 dan geen limiet.",
     "fileAccept": "Welke bestandstypen te accepteren. Het is mogelijk om aangepaste items toe te voegen.",
-    "barcodeLastChar": "Voor EAN-13 type."
+    "barcodeLastChar": "Voor EAN-13 type.",
+    "conversionDisabled": "De valutaconversie actie zal niet worden toegepast op dit veld."
   },
   "fieldParts": {
     "address": {
@@ -123,6 +124,7 @@
     "phone": "Een reeks telefoonnummers met hun parameters: Type, Niet-aangemeld, Ongeldig, Primair.",
     "foreign": "Een veld van een verwante record. Alleen-lezen.",
     "link": "Een record gerelateerd via Behoort-tot (meer-tot-één of één-op-één) relatie.",
-    "linkParent": "Een record gerelateerd door Behoort-Toe-Ouder relatie. Kan van verschillende soorten entiteiten zijn."
+    "linkParent": "Een record gerelateerd door Behoort-Toe-Ouder relatie. Kan van verschillende soorten entiteiten zijn.",
+    "linkMultiple": "Een reeks records die via een Has-Many (veel-op-veel of één-op-veel) relatie met elkaar zijn verbonden. Niet alle relaties hebben hun link-multiple velden. Alleen die waar de parameter(s) Link-Multiple is ingeschakeld."
   }
 }

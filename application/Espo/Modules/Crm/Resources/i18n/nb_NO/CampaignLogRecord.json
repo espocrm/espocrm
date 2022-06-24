@@ -8,12 +8,14 @@
     "application": "Applikasjon",
     "queueItem": "Køgjenstand",
     "stringData": "Datastreng",
-    "stringAdditionalData": "Tilleggsdatastreng"
+    "stringAdditionalData": "Tilleggsdatastreng",
+    "isTest": "Er test"
   },
   "links": {
     "queueItem": "Køgjenstand",
     "parent": "Forelder",
-    "object": "Objekt"
+    "object": "Objekt",
+    "campaign": "Kampanje"
   },
   "options": {
     "action": {
@@ -22,7 +24,8 @@
       "Opted Out": "Avmeldt",
       "Bounced": "Avslått",
       "Clicked": "Klikket på",
-      "Lead Created": "Ledetråd opprettet"
+      "Lead Created": "Ledetråd opprettet",
+      "Opted In": "Påmeldt"
     }
   },
   "labels": {
@@ -34,6 +37,7 @@
     "optedOut": "Avmeldt",
     "bounced": "Avslått",
     "clicked": "Klikket på",
-    "leadCreated": "Ledetråd opprettet"
+    "leadCreated": "Ledetråd opprettet",
+    "optedIn": "Påmeldt"
   }
 }

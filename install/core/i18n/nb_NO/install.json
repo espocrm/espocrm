@@ -23,7 +23,7 @@
     "Go to EspoCRM": "Gå til EspoCRM",
     "Re-check": "Sjekk på nytt",
     "Version": "Versjon",
-    "Test settings": "Sjekk forbindelsen",
+    "Test settings": "Test tilkobling",
     "Database Settings Description": "Oppgi tilkoblingsinformasjonen til MySQL-databasen (tjenernavn, brukernavn og passord). Du kan spesifisere tjenerens port slik: localhost:3306.",
     "Install": "Installér",
     "Configuration Instructions": "Konfigurasjonsinstruks",
@@ -32,7 +32,15 @@
     "dbHostName": "Tjenernavn",
     "dbName": "Databasenavn",
     "dbUserName": "Databasebrukernavn",
-    "Permission Requirements": "Tillatelser"
+    "SetupConfirmation page title": "Systemkrav",
+    "PHP Configuration": "PHP innstillinger",
+    "MySQL Configuration": "Databaseinnstillinger",
+    "Permission Requirements": "Tillatelser",
+    "Success": "Suksess",
+    "Fail": "Feil",
+    "is recommended": "er anbefalt",
+    "extension is missing": "utvidelse mangler",
+    "headerTitle": "EspoCRM Installasjon"
   },
   "fields": {
     "Choose your language": "Velg språk",
@@ -90,29 +98,17 @@
     "Thousand Separator and Decimal Mark equal": "Tusentallsdeler og desimaltegn kan ikke være det samme",
     "extension": "{0} utvidelser mangler",
     "option": "Anbefalt verdi er {0}",
-    "mysqlSettingError": "EspoCRM krever at MySQL-innstillingen \"{NAME}\" endres til {VALUE}"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Finn httpd.conf file (du finner den vanligvis i en mappe kalt conf, config eller lignende)<br>\n2. I httpd.conf-filen må du avkommentere linjen <code>{WINDOWS_APACHE1}</code> (ved å fjerne '#'-symbolet i starten av linjen)<br>\n3. Sjekk også at linjen ClearModuleList og AddModule mod_rewrite.c er avkommentert.\n</pre> ",
-        "linux": "<br><br>1. Aktiver \"mod_rewrite\". For å gjøre det, kjør disse kommandoene:<pre>{APACHE1}</pre><br>2. Aktiver støtte for .htaccess. Legg til / rediger tjenerens konfigurasjon (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Kjør følgende kommando etterpå:<pre>{APACHE3}</pre><br>3. Forsøk å legg til RewriteBase-banen, åpne filen {API_PATH}.htaccess og erstatt følgende linje:<pre>{APACHE4}</pre>til<pre>{APACHE5}</pre><br> For mer informasjon kan du gå til veiledningen <a href=\"{APACHE_LINK}\" target=\"_blank\">Konfigurasjon av Apache-tjener for EspoCRM</a>.<br><br>"
-      },
-      "nginx": {
-        "linux": "<br> Legg følgende kode inn i nginx-tjenerens block-konfigureringsfilen <code>{NGINX_PATH}</code>, i \"server\"-seksjonen:<pre>{NGINX}</pre> <br> For mer informasjon kan du besøke <a href=\"{NGINX_LINK}\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> "
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3>Begynn øverst på listen og sjekk om problemet er løst før du prøver neste løsning.",
-      "nginx": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3>",
-      "microsoft-iis": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3><br> Mulig problem: \"URL Rewrite\" er kanskje ikke aktivert, vennligst sjekk og aktiver \"URL Rewrite\"-modulen på IIS-tjeneren.",
-      "default": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3><br> Mulig problem: Rewrite modulen er kanskje ikke aktivert. Sjekk serveren din for å finne det ut (f.eks mod_rewrite på Apache) og at .htaccess støttes."
-    }
+    "mysqlSettingError": "EspoCRM krever at MySQL-innstillingen \"{NAME}\" endres til {VALUE}",
+    "requiredMariadbVersion": "Din MariaDB-versjon er ikke støttet av EspoCRM. Vennligst oppgrader til {minVersion} eller nyere."
   },
   "systemRequirements": {
+    "requiredPhpVersion": "PHP-Versjon",
     "requiredMysqlVersion": "MySQL versjon",
     "host": "Tjenernavn",
     "dbname": "Databasenavn",
-    "user": "Brukernavn"
+    "user": "Brukernavn",
+    "writable": "Skrivetillatelse",
+    "readable": "Lesbar",
+    "requiredMariadbVersion": "MariaDB Versjon"
   }
 }

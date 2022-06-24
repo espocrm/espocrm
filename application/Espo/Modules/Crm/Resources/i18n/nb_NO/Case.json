@@ -7,7 +7,9 @@
     "contacts": "Kontakter",
     "priority": "Prioritet",
     "description": "Beskrivelse",
-    "lead": "Ledetråd"
+    "lead": "Ledetråd",
+    "attachments": "Vedlegg",
+    "inboundEmail": "Epostkonto for gruppe"
   },
   "links": {
     "account": "Konto",
@@ -18,16 +20,18 @@
     "tasks": "Gjøremål",
     "emails": "Eposter",
     "articles": "Kunnskapsbaseartikler",
-    "lead": "Ledetråd"
+    "lead": "Ledetråd",
+    "attachments": "Vedlegg",
+    "inboundEmail": "Epostkonto for gruppe"
   },
   "options": {
     "status": {
       "New": "Ny",
-      "Assigned": "Tilegnet",
+      "Assigned": "Tildelt",
       "Pending": "Venter",
       "Closed": "Lukket",
       "Rejected": "Avslått",
-      "Duplicate": "Duplikat"
+      "Duplicate": "Dupliser"
     },
     "priority": {
       "Low": "Lav",

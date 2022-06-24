@@ -8,7 +8,14 @@
     "isDoubleHeight": "Dobbel høyde",
     "mode": "Visning",
     "enabledScopeList": "Hva som skal vises",
-    "users": "Brukere"
+    "users": "Brukere",
+    "entityType": "Enhetstype",
+    "primaryFilter": "Hovedfilter",
+    "boolFilterList": "Andre Filtre",
+    "sortBy": "Rekkefølge (Felt)",
+    "sortDirection": "Rekkefølge (Retning)",
+    "expandedLayout": "Oppsett",
+    "dateFilter": "Dato Filter"
   },
   "options": {
     "mode": {

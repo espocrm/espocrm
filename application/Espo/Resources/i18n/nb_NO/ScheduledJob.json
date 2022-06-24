@@ -13,8 +13,8 @@
   "options": {
     "job": {
       "Cleanup": "Opprydning",
-      "CheckInboundEmails": "Sjekk gruppenes epostkonti",
-      "CheckEmailAccounts": "Sjekk personlige epostkonti",
+      "CheckInboundEmails": "Sjekk gruppenes epostkontoer",
+      "CheckEmailAccounts": "Sjekk personlige epostkontoer",
       "SendEmailReminders": "Send epostpåminnelser",
       "AuthTokenControl": "Kontroll av autentiseringstoken",
       "SendEmailNotifications": "Send epostvarsler"
@@ -29,8 +29,5 @@
       "Active": "Aktiv",
       "Inactive": "Inaktiv"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab-notasjon. Definerer hvor hyppig oppgavene kjøres.\n\n*/5 * * * * – hvert 5. minutt\n\n0 */2 * * * – hver andre time\n\n30 1 * * * – klokken 01:30 en gang om dagen\n\n0 0 1 * * – første dagen i hver måned"
   }
 }

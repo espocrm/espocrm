@@ -13,7 +13,8 @@
     "campaign": "Kampanje",
     "targetLists": "Målgrupper",
     "targetList": "Målgruppe",
-    "originalLead": "Original ledetråd"
+    "originalLead": "Original ledetråd",
+    "contactIsInactive": "Inaktiv"
   },
   "links": {
     "contacts": "Kontakter",

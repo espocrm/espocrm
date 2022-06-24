@@ -20,5 +20,8 @@
       "warning": "Varsel",
       "primary": "Primær"
     }
+  },
+  "labels": {
+    "Layout": "Oppsett"
   }
 }

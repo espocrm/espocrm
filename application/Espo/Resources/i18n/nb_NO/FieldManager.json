@@ -1,6 +1,8 @@
 {
   "labels": {
-    "Dynamic Logic": "Dynamisk logikk"
+    "Dynamic Logic": "Dynamisk logikk",
+    "Name": "Navn",
+    "Label": "Merkelapp"
   },
   "options": {
     "dateTimeDefault": {
@@ -57,6 +59,9 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 måneder",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 måneder",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 år"
+    },
+    "barcodeType": {
+      "QRcode": "QR kode"
     }
   },
   "tooltips": {
@@ -70,6 +75,26 @@
     "maxLength": "Maksimal lengde på tekst.",
     "before": "Datoverdien må være tidligere en datoverdien spesifisert i feltet.",
     "after": "Datoverdien må være senere enn datoverdien spesifisert i feltet.",
-    "readOnly": "Feltets verdi kan ikke endres av brukeren, kan kun vise resultat fra formel."
+    "readOnly": "Feltets verdi kan ikke endres av brukeren, kan kun vise resultat fra formel.",
+    "fileAccept": "Hvilke filtyper skal aksepteres. Det er mulig å legge til egne typer."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Gatenavn",
+      "city": "By",
+      "state": "Fylke",
+      "country": "Land",
+      "postalCode": "Postkode",
+      "map": "Kart"
+    },
+    "personName": {
+      "salutation": "Titulering"
+    },
+    "datetimeOptional": {
+      "date": "Dato"
+    }
+  },
+  "fieldInfo": {
+    "date": "Dato uten Tid"
   }
 }

@@ -8,7 +8,8 @@
     "groupEmailAccountPermission": "Groep e-mailaccount rechten",
     "exportPermission": "Exporteer rechten",
     "dataPrivacyPermission": "Data privacy rechten",
-    "massUpdatePermission": "Rechten voor massale update"
+    "massUpdatePermission": "Rechten voor massale update",
+    "followerManagementPermission": "Volgersbeheer Toestemming"
   },
   "links": {
     "users": "Gebruikers",
@@ -21,7 +22,8 @@
     "groupEmailAccountPermission": "Definieert een toegang tot groeps E-mail accounts, een mogelijkheid om e-mails te verzenden vanuit groep SMTP.",
     "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
     "exportPermission": "Bepaalt of gebruikers de mogelijkheid hebben om records te exporteren.",
-    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken."
+    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken.",
+    "followerManagementPermission": "Maakt het mogelijk om volgers van specifieke records te beheren."
   },
   "labels": {
     "Access": "Toegang",

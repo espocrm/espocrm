@@ -10,14 +10,17 @@
     "sentFolder": "Sendt-mappe",
     "storeSentEmails": "Lagre sendte eposter",
     "keepFetchedEmailsUnread": "Vis hentede eposter som ulest",
-    "emailFolder": "Legg i mappe",
+    "emailFolder": "Legg til i mappe",
     "useSmtp": "Bruk SMTP",
     "smtpHost": "SMTP-tjener",
     "smtpPort": "SMTP-tjener",
     "smtpAuth": "SMTP-autentisering",
     "smtpSecurity": "SMTP-sikkerhet",
     "smtpUsername": "SMTP-brukernavn",
-    "smtpPassword": "SMTP-passord"
+    "smtpPassword": "SMTP-passord",
+    "useImap": "Hent E-post",
+    "smtpAuthMechanism": "SMTP-Autentisering Metode",
+    "security": "Sikkerhet"
   },
   "links": {
     "filters": "Filtre",
@@ -27,10 +30,14 @@
     "status": {
       "Active": "Aktive",
       "Inactive": "Inaktive"
+    },
+    "smtpAuthMechanism": {
+      "plain": "Klartekst",
+      "login": "Logg inn"
     }
   },
   "labels": {
-    "Create EmailAccount": "Ny epostkonto",
+    "Create EmailAccount": "Opprett epostkonto",
     "IMAP": "IMAP-innstillinger",
     "Main": "Hovedinnstillinger",
     "Test Connection": "Test tilkobling",
@@ -42,6 +49,7 @@
   },
   "tooltips": {
     "monitoredFolders": "Du kan legge til en 'Sendt'-mappe for å synkroniskere eposter sendt fra eksterne klienter.",
-    "storeSentEmails": "Sendte eposter vil lagres på IMAP-tjeneren. Epostadressefeltet må matche adressen epostene vil sendes fra."
+    "storeSentEmails": "Sendte eposter vil lagres på IMAP-tjeneren. Epostadressefeltet må matche adressen epostene vil sendes fra.",
+    "useSmtp": "Muligheten for å sende E-post"
   }
 }

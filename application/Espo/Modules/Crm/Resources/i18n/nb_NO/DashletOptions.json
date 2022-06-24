@@ -1,1 +1,6 @@
-{}
+{
+  "fields": {
+    "futureDays": "Neste X dager",
+    "team": "Gruppe"
+  }
+}

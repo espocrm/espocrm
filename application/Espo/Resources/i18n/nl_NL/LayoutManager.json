@@ -8,7 +8,8 @@
     "sticked": "Vastgezet",
     "isLarge": "Groot lettertype",
     "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is",
-    "hidden": "Verborgen"
+    "hidden": "Verborgen",
+    "dynamicLogicStyled": "Voorwaarden voor toegepaste stijl"
   },
   "options": {
     "align": {
@@ -29,6 +30,14 @@
   },
   "tooltips": {
     "link": "Als deze optie is aangevinkt, wordt een veldwaarde weergegeven als een link naar het detailaanzicht van het gegevensrecord. Meestal wordt het gebruikt voor *Naam* velden.",
-    "hiddenPanel": "Je moet op 'toon meer' klikken om het paneel te zien."
+    "hiddenPanel": "Je moet op 'toon meer' klikken om het paneel te zien.",
+    "sticked": "Het paneel wordt vastgeplakt aan het paneel erboven. Geen ruimte tussen de panelen.",
+    "panelStyle": "Een kleur van het paneel.",
+    "dynamicLogicVisible": "Indien ingesteld, wordt het paneel verborgen tenzij aan de voorwaarde is voldaan.",
+    "dynamicLogicStyled": "Een kleur zal worden toegepast indien aan een specifieke voorwaarde is voldaan . De kleur wordt bepaald door de *Stijl* parameter."
+  },
+  "messages": {
+    "cantBeEmpty": "Lay-out kan niet leeg zijn.",
+    "fieldsIncompatible": "Velden kunnen niet samen op de lay-out staan: {fields}."
   }
 }
