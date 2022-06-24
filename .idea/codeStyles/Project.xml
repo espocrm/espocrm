@@ -3,5 +3,9 @@
     <PHPCodeStyleSettings>
       <option name="GROUP_USE_WRAP" value="2" />
     </PHPCodeStyleSettings>
+    <codeStyleSettings language="PHP">
+      <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <option name="ALIGN_MULTILINE_FOR" value="false" />
+    </codeStyleSettings>
   </code_scheme>
 </component>
