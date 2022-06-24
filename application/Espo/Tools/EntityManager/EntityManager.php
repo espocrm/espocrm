@@ -1405,7 +1405,7 @@ class EntityManager
         $this->language->save();
 
         if ($isCustom) {
-            if ($this->baseLanguage->getLanguage() !== $this->baseLanguage->getLanguage()) {
+            if ($this->language->getLanguage() !== $this->baseLanguage->getLanguage()) {
 
                 if ($label) {
                     $this->baseLanguage->set($entity, 'fields', $link, $label);
