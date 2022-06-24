@@ -124,7 +124,6 @@ class Authentication
      *
      * Warning: This method can change the state of the object (by setting the `portal` prop.).
      *
-     * @throws Forbidden
      * @throws ServiceUnavailable
      */
     public function login(AuthenticationData $data, Request $request, Response $response): Result

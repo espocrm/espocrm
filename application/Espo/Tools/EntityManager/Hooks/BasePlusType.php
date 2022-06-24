@@ -38,7 +38,6 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
 
     /**
      * @param array<string,mixed> $params
-     * @throws \Espo\Core\Exceptions\Error
      */
     public function afterCreate(string $name, $params): void
     {

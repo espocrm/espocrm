@@ -36,9 +36,10 @@ use Espo\Core\{
     Authentication\Login\Data,
     Authentication\Result,
     Authentication\Helper\UserFinder,
-    Exceptions\Error,
     Authentication\Result\FailReason,
 };
+
+use RuntimeException;
 
 class Hmac implements Login
 {
@@ -71,7 +72,7 @@ class Hmac implements Login
         $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->getId());
 
         if (!$secretKey) {
-            throw new Error("No secret key for API user '" . $user->getId() . "'.");
+            throw new RuntimeException("No secret key for API user '" . $user->getId() . "'.");
         }
 
         $string = $request->getMethod() . ' ' . $request->getResourcePath();

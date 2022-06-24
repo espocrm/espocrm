@@ -54,9 +54,6 @@ class TemplateFileManager
         $this->fileReader = $fileReader;
     }
 
-    /**
-     * @throws Error
-     */
     public function getTemplate(
         string $type,
         string $name,

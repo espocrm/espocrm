@@ -164,7 +164,6 @@ abstract class Base
     }
 
     /**
-     * @throws Forbidden
      * @return void;
      * @deprecated
      */

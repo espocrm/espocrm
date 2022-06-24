@@ -77,7 +77,7 @@ class Service
      * Perform a mass action.
      *
      * @throws Forbidden
-     * @throws BadRequest
+     * @throws NotFound
      */
     public function process(
         string $entityType,
@@ -116,6 +116,10 @@ class Service
         );
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getStatusData(string $id): stdClass
     {
         /** @var MassActionEntity|null $entity */
@@ -135,6 +139,10 @@ class Service
         ];
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function subscribeToNotificationOnSuccess(string $id): void
     {
         /** @var MassActionEntity|null $entity */

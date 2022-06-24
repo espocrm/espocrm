@@ -425,7 +425,6 @@ class App
     }
 
     /**
-     * @throws \Espo\Core\Exceptions\Error
      * @todo Remove in 7.2. Move to another place. CLI command.
      */
     public function jobPopulateArrayValues(): void
