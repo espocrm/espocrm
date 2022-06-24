@@ -121,6 +121,8 @@ class Opportunity extends \Espo\Core\Controllers\Record
 
     /**
      * @return stdClass[]
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function getActionEmailAddressList(Request $request): array
     {

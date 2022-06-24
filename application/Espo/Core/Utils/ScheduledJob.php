@@ -39,6 +39,8 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use Exception;
+use RuntimeException;
 use DateTime;
 
 class ScheduledJob
@@ -151,8 +153,13 @@ class ScheduledJob
      */
     public function isCronConfigured(): bool
     {
-        $r1From = new DateTime('-' . $this->checkingCronPeriod);
-        $r1To = new DateTime('+' . $this->checkingCronPeriod);
+        try {
+            $r1From = new DateTime('-' . $this->checkingCronPeriod);
+            $r1To = new DateTime('+' . $this->checkingCronPeriod);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException();
+        }
 
         $r2From = new DateTime('-1 hour');
         $r2To = new DateTime();

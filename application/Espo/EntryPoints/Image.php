@@ -240,6 +240,7 @@ class Image implements EntryPoint
     /**
      * @return \GdImage
      * @phpstan-ignore-next-line
+     * @throws Error
      */
     protected function createThumbImage(string $filePath, string $fileType, string $size)
     {

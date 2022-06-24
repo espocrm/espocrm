@@ -1628,6 +1628,7 @@ class Activities implements
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
      * @throws Forbidden
+     * @throws NotFound
      */
     public function getEventsForTeams(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {
@@ -1639,6 +1640,7 @@ class Activities implements
      * @param ?string[] $scopeList
      * @return array<int,array<string,mixed>>
      * @throws Forbidden
+     * @throws NotFound
      */
     public function getTeamsEventList(array $teamIdList, string $from, string $to, ?array $scopeList = null): array
     {

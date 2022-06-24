@@ -57,6 +57,10 @@ class Opportunity extends Record
         'accountName',
     ];
 
+    /**
+     * @throws Forbidden
+     * @throws \Exception
+     */
     public function reportSalesPipeline(
         string $dateFilter,
         ?string $dateFrom = null,
@@ -160,6 +164,10 @@ class Opportunity extends Record
         ];
     }
 
+    /**
+     * @throws Forbidden
+     * @throws \Exception
+     */
     public function reportByLeadSource(
         string $dateFilter,
         ?string $dateFrom = null,
@@ -227,6 +235,10 @@ class Opportunity extends Record
         return (object) $result;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws \Exception
+     */
     public function reportByStage(
         string $dateFilter,
         ?string $dateFrom = null,
@@ -307,6 +319,10 @@ class Opportunity extends Record
         return (object) $result;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws \Exception
+     */
     public function reportSalesByMonth(
         string $dateFilter,
         ?string $dateFrom = null,
@@ -447,9 +463,9 @@ class Opportunity extends Record
     }
 
     /**
-     *
      * @param string $dateFilter
      * @return array{string,string}
+     * @throws \Exception
      */
     protected function getDateRangeByFilter(string $dateFilter): array
     {
@@ -578,6 +594,7 @@ class Opportunity extends Record
 
     /**
      * @return stdClass[]
+     * @throws \Espo\Core\Exceptions\Forbidden
      */
     public function getEmailAddressList(string $id): array
     {

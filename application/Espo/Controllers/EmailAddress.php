@@ -45,6 +45,8 @@ class EmailAddress extends RecordBase
 
     /**
      * @return array<int,array<string,mixed>>
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function actionSearchInAddressBook(Request $request): array
     {

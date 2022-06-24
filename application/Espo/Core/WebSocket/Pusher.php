@@ -35,6 +35,7 @@ use Ratchet\Wamp\WampServerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 use Exception;
+use RuntimeException;
 
 class Pusher implements WampServerInterface
 {
@@ -97,7 +98,7 @@ class Pusher implements WampServerInterface
                 $this->log("Error: No php-executable-path.");
             }
 
-            throw new Exception("No php-executable-path.");
+            throw new RuntimeException("No php-executable-path.");
         }
 
         $this->phpExecutablePath = $phpExecutablePath;

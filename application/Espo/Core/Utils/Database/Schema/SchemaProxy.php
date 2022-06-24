@@ -51,6 +51,7 @@ class SchemaProxy
 
     /**
      * @param ?string[] $entityList
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function rebuild(?array $entityList = null): bool
     {

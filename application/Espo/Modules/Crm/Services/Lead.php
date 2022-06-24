@@ -233,6 +233,8 @@ class Lead extends Record implements
 
     /**
      * @param stdClass|null $additionalData
+     * @throws Forbidden
+     * @throws ConflictSilent
      */
     public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {

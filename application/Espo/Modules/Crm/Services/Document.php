@@ -43,6 +43,8 @@ class Document extends Record
 {
     /**
      * @return \Espo\ORM\Collection<Attachment>
+     * @throws NotFound
+     * @throws \Espo\Core\Exceptions\Forbidden
      */
     public function getAttachmentList(string $id)
     {

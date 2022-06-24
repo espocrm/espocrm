@@ -135,6 +135,9 @@ class FieldManager
     /**
      * @param array<string,mixed> $fieldDefs
      * @return bool
+     * @throws BadRequest
+     * @throws Conflict
+     * @throws Error
      */
     public function create(string $scope, string $name, array $fieldDefs)
     {

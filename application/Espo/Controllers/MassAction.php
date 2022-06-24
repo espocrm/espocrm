@@ -119,6 +119,7 @@ class MassAction
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
      */
     private function prepareMassActionParams(stdClass $data): array
     {
@@ -149,6 +150,9 @@ class MassAction
         throw new BadRequest("Bad search params for mass action.");
     }
 
+    /**
+     * @throws Error
+     */
     private function convertResult(ServiceResult $serviceResult): stdClass
     {
         if (!$serviceResult->hasResult()) {

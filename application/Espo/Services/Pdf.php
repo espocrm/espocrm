@@ -312,6 +312,7 @@ class Pdf
      * Generate PDF. ACL check is processed if `$params` is null.
      *
      * @throws Error
+     * @throws Forbidden
      */
     public function generate(Entity $entity, Template $template, ?Params $params = null, ?Data $data = null): string
     {
@@ -329,6 +330,7 @@ class Pdf
     /**
      * @param ?array<string,mixed> $additionalData
      * @throws Error
+     * @throws Forbidden
      * @deprecated
      */
     public function buildFromTemplate(

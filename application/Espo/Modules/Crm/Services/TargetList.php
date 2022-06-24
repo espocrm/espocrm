@@ -311,6 +311,7 @@ class TargetList extends Record implements
 
     /**
      * @return RecordCollection<Entity>
+     * @throws Error
      */
     protected function findLinkedOptedOut(string $id, SearchParams $searchParams): RecordCollection
     {
@@ -370,6 +371,10 @@ class TargetList extends Record implements
         return new RecordCollection($collection, $totalCount);
     }
 
+    /**
+     * @throws NotFound
+     * @throws Error
+     */
     public function optOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->entityManager->getEntity('TargetList', $id);
@@ -406,6 +411,10 @@ class TargetList extends Record implements
         $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
     }
 
+    /**
+     * @throws NotFound
+     * @throws Error
+     */
     public function cancelOptOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->entityManager->getEntity('TargetList', $id);

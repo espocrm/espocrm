@@ -99,6 +99,7 @@ class LeadCapture extends Record
 
     /**
      * @return stdClass[]
+     * @throws Forbidden
      */
     public function getActionSmtpAccountDataList(): array
     {

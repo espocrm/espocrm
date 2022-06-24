@@ -44,6 +44,7 @@ class InboundEmail extends Record
 
     /**
      * @return string[]
+     * @throws \Espo\Core\Exceptions\Error
      */
     public function postActionGetFolders(Request $request): array
     {

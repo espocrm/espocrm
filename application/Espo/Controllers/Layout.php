@@ -29,10 +29,12 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Services\Layout as Service;
 use Espo\Entities\User;
 
@@ -50,6 +52,10 @@ class Layout
 
     /**
      * @return mixed
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     * @throws BadRequest
      */
     public function getActionRead(Request $request)
     {
@@ -67,6 +73,10 @@ class Layout
 
     /**
      * @return mixed
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Error
      */
     public function putActionUpdate(Request $request)
     {
@@ -95,6 +105,10 @@ class Layout
 
     /**
      * @return mixed
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Error
      */
     public function postActionResetToDefault(Request $request)
     {
@@ -113,6 +127,10 @@ class Layout
 
     /**
      * @return mixed
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
      */
     public function getActionGetOriginal(Request $request)
     {

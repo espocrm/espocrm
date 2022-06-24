@@ -87,6 +87,9 @@ class Helper
         $this->config = $config;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function getDbalConnection(): DbalConnection
     {
         if (!isset($this->dbalConnection)) {
@@ -118,6 +121,7 @@ class Helper
     /**
      * @param array<string,mixed> $params
      * @throws RuntimeException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function createDbalConnection(array $params = []): DbalConnection
     {

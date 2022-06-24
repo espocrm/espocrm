@@ -183,6 +183,7 @@ class Schema
      * Rebuild database schema.
      *
      * @param ?string[] $entityList
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function rebuild(?array $entityList = null): bool
     {
@@ -259,6 +260,7 @@ class Schema
      * Get SQL queries to get from one to another schema.
      *
      * @return string[] Array of SQL queries.
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function getDiffSql(DBALSchema $fromSchema, DBALSchema $toSchema)
     {

@@ -29,6 +29,8 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Account\PersonalAccount\Service;
 use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
@@ -44,6 +46,8 @@ class EmailAccount extends Record
 
     /**
      * @return string[]
+     * @throws Forbidden
+     * @throws Error
      */
     public function postActionGetFolders(Request $request): array
     {
@@ -63,6 +67,10 @@ class EmailAccount extends Record
         return $this->getEmailAccountService()->getFolderList($params);
     }
 
+    /**
+     * @throws Error
+     * @throws Forbidden
+     */
     public function postActionTestConnection(Request $request): bool
     {
         $data = $request->getParsedBody();

@@ -39,6 +39,7 @@ class FulltextIndex extends BaseRebuildActions
 {
     /**
      * @return void
+     * @throws \Doctrine\DBAL\Exception
      */
     public function beforeRebuild()
     {

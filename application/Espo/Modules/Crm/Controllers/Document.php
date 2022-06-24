@@ -39,6 +39,9 @@ class Document extends \Espo\Core\Controllers\Record
 {
     /**
      * @return \stdClass[]
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\NotFound
      */
     public function postActionGetAttachmentList(Request $request): array
     {

@@ -49,6 +49,7 @@ class Metadata extends Base
 
     /**
      * @return mixed
+     * @throws Forbidden
      */
     public function getActionGet(Request $request)
     {

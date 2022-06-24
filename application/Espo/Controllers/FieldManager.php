@@ -35,12 +35,12 @@ use Espo\{
 };
 
 use Espo\Core\{
+    Exceptions\Conflict,
     Exceptions\Error,
     Exceptions\Forbidden,
     Exceptions\BadRequest,
     Api\Request,
-    DataManager,
-};
+    DataManager};
 
 class FieldManager
 {
@@ -50,6 +50,9 @@ class FieldManager
 
     private $fieldManagerTool;
 
+    /**
+     * @throws Forbidden
+     */
     public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManagerTool)
     {
         $this->user = $user;
@@ -59,6 +62,9 @@ class FieldManager
         $this->checkControllerAccess();
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function checkControllerAccess(): void
     {
         if (!$this->user->isAdmin()) {
@@ -68,6 +74,8 @@ class FieldManager
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
+     * @throws Error
      */
     public function getActionRead(Request $request): array
     {
@@ -83,6 +91,9 @@ class FieldManager
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
+     * @throws Conflict
+     * @throws Error
      */
     public function postActionCreate(Request $request): array
     {
@@ -113,6 +124,8 @@ class FieldManager
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
+     * @throws Error
      */
     public function patchActionUpdate(Request $request): array
     {
@@ -121,6 +134,8 @@ class FieldManager
 
     /**
      * @return array<string,mixed>
+     * @throws BadRequest
+     * @throws Error
      */
     public function putActionUpdate(Request $request): array
     {
@@ -146,6 +161,10 @@ class FieldManager
         return $fieldManagerTool->read($scope, $name);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function deleteActionDelete(Request $request): bool
     {
         $scope = $request->getRouteParam('scope');
@@ -162,6 +181,10 @@ class FieldManager
         return $result;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -173,7 +196,6 @@ class FieldManager
         $this->fieldManagerTool->resetToDefault($data->scope, $data->name);
 
         $this->dataManager->clearCache();
-
         $this->dataManager->rebuildMetadata();
 
         return true;

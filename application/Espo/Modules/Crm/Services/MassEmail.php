@@ -132,6 +132,7 @@ class MassEmail extends Record
 
     /**
      * @param iterable<Entity> $targetList
+     * @throws Error
      */
     protected function createTestQueue(MassEmailEntity $massEmail, iterable $targetList): void
     {
@@ -140,6 +141,9 @@ class MassEmail extends Record
         $queue->create($massEmail, true, $targetList);
     }
 
+    /**
+     * @throws Error
+     */
     protected function processTestSending(MassEmailEntity $massEmail): void
     {
         $processor = $this->injectableFactory->create(Processor::class);

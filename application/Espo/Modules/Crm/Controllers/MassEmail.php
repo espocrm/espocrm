@@ -57,6 +57,7 @@ class MassEmail extends \Espo\Core\Controllers\Record
 
     /**
      * @return stdClass[]
+     * @throws Forbidden
      */
     public function getActionSmtpAccountDataList(): array
     {

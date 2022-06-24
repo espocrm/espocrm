@@ -459,7 +459,9 @@ class Email extends Record implements
     /**
      * @throws BadRequest
      * @throws Error
-     * @throws \Espo\Core\Exceptions\ForbiddenSilent
+     * @throws \Espo\Core\Exceptions\Forbidden
+     * @throws \Espo\Core\Exceptions\Conflict
+     * @throws \Espo\Core\Exceptions\BadRequest
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
