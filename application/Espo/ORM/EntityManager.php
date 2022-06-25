@@ -39,6 +39,7 @@ use Espo\ORM\Mapper\MapperFactory;
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Repository\Util as RepositoryUtil;
 
 use Espo\ORM\Locker\Locker;
 use Espo\ORM\Locker\BaseLocker;
@@ -419,6 +420,21 @@ class EntityManager
         }
 
         return $repository;
+    }
+
+    /**
+     * Get an RDB repository by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return RDBRepository<T>
+     */
+    public function getRDBRepositoryByClass(string $className): RDBRepository
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var RDBRepository<T> */
+        return $this->getRDBRepository($entityType);
     }
 
     /**
