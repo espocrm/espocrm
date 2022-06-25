@@ -127,6 +127,8 @@ class RDBRepository implements Repository
      * Get an entity. If ID is NULL, a new entity is returned.
      *
      * @return ?TEntity
+     *
+     * @deprecated Use `getById` and `getNew`.
      */
     public function get(?string $id = null): ?Entity
     {

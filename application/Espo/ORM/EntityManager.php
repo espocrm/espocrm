@@ -61,47 +61,43 @@ use stdClass;
  */
 class EntityManager
 {
-    private $entityFactory;
+    private EntityFactory $entityFactory;
 
-    private $collectionFactory;
+    private CollectionFactory $collectionFactory;
 
-    private $repositoryFactory;
+    private RepositoryFactory $repositoryFactory;
 
-    /** @var EventDispatcher */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
-    private $mapperFactory = null;
+    private ?MapperFactory $mapperFactory = null;
 
-    private $functionConverterFactory = null;
+    private ?FunctionConverterFactory $functionConverterFactory = null;
 
-    /** @var array<string, Mapper> */
-    private $mappers = [];
+    private Metadata $metadata;
 
-    private $metadata;
+    private DatabaseParams $databaseParams;
+
+    private QueryComposer $queryComposer;
+
+    private QueryExecutor $queryExecutor;
+
+    private QueryBuilder $queryBuilder;
+
+    private SqlExecutor $sqlExecutor;
+
+    private TransactionManager $transactionManager;
+
+    private Locker $locker;
+
+    private PDOProvider $pdoProvider;
+
+    private const RDB_MAPPER_NAME = 'RDB';
 
     /** @var array<string, Repository<Entity>> */
     private $repositoryHash = [];
 
-    /** @var DatabaseParams */
-    private $databaseParams;
-
-    /** @var QueryComposer */
-    private $queryComposer;
-
-    private $queryExecutor;
-
-    private $queryBuilder;
-
-    private $sqlExecutor;
-
-    private $transactionManager;
-
-    /** @var Locker */
-    private $locker;
-
-    private $pdoProvider;
-
-    private const RDB_MAPPER_NAME = 'RDB';
+    /** @var array<string, Mapper> */
+    private $mappers = [];
 
     /**
      * @param AttributeExtractorFactory<object> $attributeExtractorFactory
@@ -401,9 +397,7 @@ class EntityManager
             $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
 
-        $repository = $this->repositoryHash[$entityType];
-
-        return $repository;
+        return $this->repositoryHash[$entityType];
     }
 
     /**
@@ -435,6 +429,21 @@ class EntityManager
 
         /** @var RDBRepository<T> */
         return $this->getRDBRepository($entityType);
+    }
+
+    /**
+     * Get a repository by an entity class name.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className An entity class name.
+     * @return Repository<T>
+     */
+    public function getRepositoryByClass(string $className): Repository
+    {
+        $entityType = RepositoryUtil::getEntityTypeByClass($className);
+
+        /** @var Repository<T> */
+        return $this->getRepository($entityType);
     }
 
     /**
