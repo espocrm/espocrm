@@ -485,7 +485,7 @@ define('views/fields/base', ['view'], function (Dep) {
          * @returns {Promise}
          */
         setDetailMode: function () {
-            return this.setMode(this.MODE_DETAIL);
+            return this.setMode(this.MODE_DETAIL) || Promise.resolve();
         },
 
         /**
@@ -494,7 +494,7 @@ define('views/fields/base', ['view'], function (Dep) {
          * @returns {Promise}
          */
         setEditMode: function () {
-            return this.setMode(this.MODE_EDIT);
+            return this.setMode(this.MODE_EDIT) || Promise.resolve();
         },
 
         /**
