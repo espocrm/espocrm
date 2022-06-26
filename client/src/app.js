@@ -59,7 +59,8 @@ define(
     'ajax',
     'number',
     'page-title',
-    'broadcast-channel'
+    'broadcast-channel',
+    'exceptions'
 ],
 function (
     /** Espo */Espo,
@@ -92,7 +93,8 @@ function (
     Ajax,
     /** typeof module:number.Class */NumberUtil,
     /** typeof module:page-title.Class */PageTitle,
-    /** typeof module:broadcast-channel.Class */BroadcastChannel
+    /** typeof module:broadcast-channel.Class */BroadcastChannel,
+    Exceptions
 ) {
     /**
      * A main application class.

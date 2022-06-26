@@ -26,34 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.Exceptions = Espo.Exceptions || {};
-
 /**
- * An access denied exception.
- *
- * @param {string} message A message.
- * @class
+ * @module exceptions
  */
-Espo.Exceptions.AccessDenied = function (message) {
-    this.message = message;
+define('exceptions', [], function () {
+    Espo.Exceptions = Espo.Exceptions || {};
 
-    Error.apply(this, arguments);
-};
+    /**
+     * An access denied exception.
+     *
+     * @param {string} message A message.
+     * @class
+     */
+    Espo.Exceptions.AccessDenied = function (message) {
+        this.message = message;
 
-Espo.Exceptions.AccessDenied.prototype = new Error();
-Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';
+        Error.apply(this, arguments);
+    };
 
-/**
- * A not found exception.
- *
- * @param {string} message A message.
- * @class
- */
-Espo.Exceptions.NotFound = function (message) {
-    this.message = message;
+    Espo.Exceptions.AccessDenied.prototype = new Error();
+    Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';
 
-    Error.apply(this, arguments);
-};
+    /**
+     * A not found exception.
+     *
+     * @param {string} message A message.
+     * @class
+     */
+    Espo.Exceptions.NotFound = function (message) {
+        this.message = message;
 
-Espo.Exceptions.NotFound.prototype = new Error();
-Espo.Exceptions.NotFound.prototype.name = 'NotFound';
+        Error.apply(this, arguments);
+    };
+
+    Espo.Exceptions.NotFound.prototype = new Error();
+    Espo.Exceptions.NotFound.prototype.name = 'NotFound';
+
+    return Espo.Exceptions;
+});
