@@ -1,4 +1,3 @@
-const libs = require("../frontend/libs.json");
 /************************************************************************
  * This file is part of EspoCRM.
  *
