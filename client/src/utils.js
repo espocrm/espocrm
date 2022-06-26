@@ -212,7 +212,7 @@ define('utils', [], function () {
          *
          * @param {module:utils~AccessDefs[]} dataList List of definitions.
          * @param {module:acl-manager.Class} acl An ACL manager.
-         * @param {module:modles/user.Class} user A user.
+         * @param {module:models/user.Class} user A user.
          * @param {module:model.Class|null} [entity] A model.
          * @param {boolean} [allowAllForAdmin=false] Allow all for an admin.
          * @returns {boolean}
