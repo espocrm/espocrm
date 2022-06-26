@@ -53,9 +53,33 @@ define('views/main', ['view'], function (Dep) {
         name: null,
 
         /**
+         * A top-right menu item (button or dropdown action).
+         * Handled by a class method `action{Action}`.
+         *
+         * @typedef {Object} module:views/main~MenuItem
+         *
+         * @property {string} name A name.
+         * @property {string} [action] An action.
+         * @property {string} [link] A link.
+         * @property {string} [label] A translatable label.
+         * @property {'default'|'danger'|'success'|'warning'} [style] A style.
+         * @property {boolean} [hidden]
+         * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
+         * @property {string} [title] A title.
+         * @property {string} [iconHtml] An icon HTML.
+         * @property {string} [html] An HTML.
+         */
+
+        /**
          * Top-right menu definitions.
          *
-         * @type {Object} menu
+         * @type {{
+         *     buttons: module:views/main~MenuItem[],
+         *     dropdown: module:views/main~MenuItem[],
+         *     actions: module:views/main~MenuItem[],
+         * }} menu
+         * @protected
+         * @internal
          */
         menu: null,
 
@@ -130,7 +154,11 @@ define('views/main', ['view'], function (Dep) {
 
         /**
          * @internal
-         * @returns {Object}
+         * @returns {{
+         *     buttons: module:views/main~MenuItem[],
+         *     dropdown: module:views/main~MenuItem[],
+         *     actions: module:views/main~MenuItem[],
+         * }}
          */
         getMenu: function () {
             if (this.menuDisabled) {
@@ -140,8 +168,8 @@ define('views/main', ['view'], function (Dep) {
             var menu = {};
 
             if (this.menu) {
-                ['buttons', 'actions', 'dropdown'].forEach((type) => {
-                    (this.menu[type] || []).forEach((item) => {
+                ['buttons', 'actions', 'dropdown'].forEach(type => {
+                    (this.menu[type] || []).forEach(item => {
                         item = Espo.Utils.clone(item);
 
                         menu[type] = menu[type] || [];
@@ -249,7 +277,7 @@ define('views/main', ['view'], function (Dep) {
          * Add a menu item.
          *
          * @param {'buttons'|'dropdown'|'actions'} type A type.
-         * @param {Object} item Item definitions.
+         * @param {module:views/main~MenuItem} item Item definitions.
          * @param {boolean} [toBeginning=false] To beginning.
          * @param {boolean} [doNotReRender=false] Skip re-render.
          */
@@ -418,7 +446,7 @@ define('views/main', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         showHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+            ['actions', 'dropdown', 'buttons'].forEach(t => {
                 (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
 
@@ -447,7 +475,7 @@ define('views/main', ['view'], function (Dep) {
         hasMenuVisibleDropdownItems: function () {
             var hasItems = false;
 
-            (this.menu.dropdown || []).forEach((item) => {
+            (this.menu.dropdown || []).forEach(item => {
                 if (!item.hidden) {
                     hasItems = true;
                 }
