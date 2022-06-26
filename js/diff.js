@@ -260,6 +260,7 @@ class Diff
 
             fileList.push('client/lib/espo.min.js');
             fileList.push('client/lib/espo.min.js.map');
+            fileList.push('client/lib/bundled/espo.js');
 
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);

@@ -40,7 +40,9 @@ module.exports = grunt => {
     const bundleConfig = require('./frontend/bundle-config.json');
     const libs = require('./frontend/libs.json');
 
-    let bundleJsFileList = buildUtils.getBundleLibList(libs).concat('build/tmp/espo-bundle.js');
+    const bundledDir = 'client/lib/bundled';
+
+    let bundleJsFileList = buildUtils.getBundleLibList(libs).concat(bundledDir + '/espo.js');
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
     let minifyLibFileList = copyJsFileList
@@ -116,7 +118,6 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
                     '!build/tmp/client/custom/modules/dummy.txt',
-                    'build/tmp/espo-bundle.js',
                 ]
             },
         },
@@ -253,15 +254,17 @@ module.exports = grunt => {
 
         let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
 
-        fs.writeFileSync('build/tmp/espo-bundle.js', contents, 'utf8');
+        if (!fs.existsSync(bundledDir)){
+            fs.mkdirSync(bundledDir);
+        }
+
+        fs.writeFileSync(bundledDir + '/espo.js', contents, 'utf8');
     });
 
     grunt.registerTask('chmod-folders', () => {
         cp.execSync(
             "find . -type d -exec chmod 755 {} +",
-            {
-                cwd: 'build/EspoCRM-' + pkg.version,
-            }
+            {cwd: 'build/EspoCRM-' + pkg.version}
         );
     });
 
