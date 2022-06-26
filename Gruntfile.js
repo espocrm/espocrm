@@ -32,18 +32,18 @@
 const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
-const bundleConfig = require("./frontend/bundle-config.json");
+const buildUtils = require('./js/build-utils');
 
 module.exports = grunt => {
 
     const pkg = grunt.file.readJSON('package.json');
     const bundleConfig = require('./frontend/bundle-config.json');
+    const libs = require('./frontend/libs.json');
 
-    let jsFilesToBundle = getBundleLibList()
-        .concat('build/tmp/espo-bundle.js');
-    let jsFilesToCopy = getCopyLibDataList();
+    let bundleJsFileList = buildUtils.getBundleLibList(libs).concat('build/tmp/espo-bundle.js');
+    let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
-    let libFilesToMinify = jsFilesToCopy
+    let minifyLibFileList = copyJsFileList
         .filter(item => item.minify)
         .reduce((map, item) => (
             map[item.dest] = item.dest,
@@ -55,15 +55,14 @@ module.exports = grunt => {
     let themeList = [];
 
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(file => {
-        themeList.push(file.substr(0, file.length - 5));
+        themeList.push(file.substring(0, file.length - 5));
     });
 
     let cssminFilesData = {};
-
     let lessData = {};
 
     themeList.forEach(theme => {
-        let name = camelCaseToHyphen(theme);
+        let name = buildUtils.camelCaseToHyphen(theme);
 
         let files = {};
 
@@ -73,14 +72,12 @@ module.exports = grunt => {
         cssminFilesData['client/css/espo/'+name+'.css'] = 'client/css/espo/'+name+'.css';
         cssminFilesData['client/css/espo/'+name+'-iframe.css'] = 'client/css/espo/'+name+'-iframe.css';
 
-        let o = {
+        lessData[theme] = {
             options: {
                 yuicompress: true,
             },
             files: files,
         };
-
-        lessData[theme] = o;
     });
 
     grunt.initConfig({
@@ -121,7 +118,7 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules/dummy.txt',
                     'build/tmp/espo-bundle.js',
                 ]
-            }
+            },
         },
 
         less: lessData,
@@ -145,11 +142,11 @@ module.exports = grunt => {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 },
                 files: {
-                    'client/lib/espo.min.js': jsFilesToBundle,
+                    'client/lib/espo.min.js': bundleJsFileList,
                 },
             },
             lib: {
-                files: libFilesToMinify,
+                files: minifyLibFileList,
             },
         },
 
@@ -175,7 +172,7 @@ module.exports = grunt => {
                 dest: 'build/tmp/client',
             },
             frontendLib: {
-                files: jsFilesToCopy,
+                files: copyJsFileList,
             },
             backend: {
                 expand: true,
@@ -498,77 +495,3 @@ module.exports = grunt => {
         'offline',
     ]);
 };
-
-function getBundleLibList() {
-    const libs = require('./frontend/libs.json');
-
-    let list = [];
-
-    libs.forEach(item => {
-        if (!item.bundle) {
-            return;
-        }
-
-        if (item.files) {
-            item.files.forEach(item  => {
-                list.push(item.src);
-            });
-
-            return;
-        }
-
-        if (!item.src) {
-            throw new Error("No lib src.");
-        }
-
-        list.push(item.src);
-    });
-
-    return list;
-}
-
-function getCopyLibDataList() {
-    const libs = require('./frontend/libs.json');
-
-    let list = [];
-
-    libs.forEach(item => {
-        if (item.bundle) {
-            return;
-        }
-
-        let minify = item.minify;
-
-        if (item.files) {
-            item.files.forEach(item => {
-                list.push({
-                    src: item.src,
-                    dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
-                    minify: minify,
-                });
-            });
-
-            return;
-        }
-
-        if (!item.src) {
-            throw new Error("No lib src.");
-        }
-
-        list.push({
-            src: item.src,
-            dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
-            minify: minify,
-        });
-    });
-
-    return list;
-}
-
-function camelCaseToHyphen(string){
-    if (string === null) {
-        return string;
-    }
-
-    return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-}
