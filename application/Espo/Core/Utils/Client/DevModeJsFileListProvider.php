@@ -64,13 +64,16 @@ class DevModeJsFileListProvider
             if ($files !== null) {
                 $list = array_merge(
                     $list,
-                    $this->getLibFileListFromItems($files)
+                    array_map(
+                        fn($item) => self::prepareBundleLibFilePath($item),
+                        $this->getLibFileListFromItems($files)
+                    )
                 );
 
                 continue;
             }
 
-            $list[] = $item->src;
+            $list[] = self::prepareBundleLibFilePath($item->src);
         }
 
         return $list;
@@ -89,5 +92,12 @@ class DevModeJsFileListProvider
         }
 
         return $list;
+    }
+
+    private function prepareBundleLibFilePath(string $path): string
+    {
+        $arr = explode('/', $path);
+
+        return 'client/lib/bundled/' . array_slice($arr, -1)[0];
     }
 }

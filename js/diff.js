@@ -511,6 +511,7 @@ class Diff
         }
 
         let libOldDataList = [];
+        let bundledOldDataList = [];
 
         if (~this._getVersionAllFileList(versionFrom).indexOf('frontend/libs.json')) {
             libOldDataList = JSON
@@ -519,13 +520,23 @@ class Diff
                 )
                 .filter(item => !item.bundle);
 
+            bundledOldDataList = JSON
+                .parse(
+                    cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
+                )
+                .filter(item => item.bundle);
         }
 
         let libNewDataList = require(this.espoPath + '/frontend/libs.json')
             .filter(item => !item.bundle);
 
+        let bundledNewDataList = require(this.espoPath + '/frontend/libs.json')
+            .filter(item => item.bundle);
+
         let resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
+
+        let resolveBundledItemDest = item => 'client/lib/bundled/' + item.src.split('/').pop();
 
         let resolveItemName = item => {
             if (item.name) {
@@ -548,17 +559,25 @@ class Diff
         let changedLibList = [];
         let currentLibList = [];
 
-        let toMinifyOldMap = {};
+        let changedBundledList = [];
+        let currentBundledList = [];
 
+        let toMinifyOldMap = {};
         let libOldDataMap = {};
+        let bundledOldDataMap = {};
 
         libOldDataList.forEach(item => {
             let name = resolveItemName(item);
 
             toMinifyOldMap[name] = item.minify || false;
-
             libOldDataMap[name] = item;
         });
+
+        bundledOldDataList.forEach(item => {
+            let name = resolveItemName(item);
+
+            bundledOldDataMap[name] = item;
+        })
 
         libNewDataList.forEach(item => {
             let name = resolveItemName(item);
@@ -651,6 +670,72 @@ class Diff
             if (minify) {
                 data.filesToDelete.push(resolveItemDest(item) + '.map');
             }
+        });
+
+        bundledNewDataList.forEach(item => {
+            let name = resolveItemName(item);
+
+            if (!depsNew[name]) {
+                throw new Error("Not installed lib '" + name + "' `frontend/libs.json`.");
+            }
+
+            currentBundledList.push(name);
+
+            let isAdded = !(name in depsOld);
+
+            let versionNew = depsNew[name].version || null;
+            let versionOld = (depsOld[name] || {}).version || null;
+
+            let isDefsChanged = libOldDataMap[name] ?
+                JSON.stringify(item) !== JSON.stringify(libOldDataMap[name]) :
+                false;
+
+            if (
+                !isAdded &&
+                versionNew === versionOld &&
+                !isDefsChanged
+            ) {
+                return;
+            }
+
+            changedBundledList.push(name);
+
+            if (item.files) {
+                item.files.forEach(item =>
+                    data.filesToCopy.push(resolveBundledItemDest(item))
+                );
+
+                return;
+            }
+
+            data.filesToCopy.push(resolveBundledItemDest(item));
+        });
+
+        bundledOldDataList.forEach(item => {
+            let name = resolveItemName(item);
+
+            let toRemove = false;
+
+            if (
+                ~changedBundledList.indexOf(name) ||
+                !~currentBundledList.indexOf(name)
+            ) {
+                toRemove = true;
+            }
+
+            if (!toRemove) {
+                return;
+            }
+
+            if (item.files) {
+                item.files.forEach(item =>
+                    data.filesToDelete.push(resolveBundledItemDest(item))
+                );
+
+                return;
+            }
+
+            data.filesToDelete.push(resolveBundledItemDest(item));
         });
 
         return data;
@@ -827,13 +912,11 @@ function deleteDirRecursively(path) {
 
     if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
         fs.unlinkSync(path);
-
-        return;
     }
 }
 
 function execute(command, callback) {
     exec(command, (error, stdout, stderr) => callback(stdout));
-};
+}
 
 module.exports = Diff;

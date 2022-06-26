@@ -52,6 +52,11 @@ let BuildUtils = {
         return list;
     },
 
+    getPreparedBundleLibList: function (libs) {
+        return BuildUtils.getBundleLibList(libs)
+            .map(file => 'client/lib/bundled/' + file.split('/').slice(-1));
+    },
+
     getCopyLibDataList: function (libs) {
         let list = [];
 
