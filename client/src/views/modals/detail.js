@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/detail', 'views/modal', function (Dep) {
+define('views/modals/detail', ['views/modal'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A quick view modal.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:views/modals/detail
+     * @extends module:views/modal.Class
+     */
+    return Dep.extend(/** @lends module:views/modals/detail.Class# */{
 
         cssName: 'detail-modal',
 
@@ -72,8 +80,10 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                 this.removeDisabled = this.options.removeDisabled;
             }
 
-            this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) || this.editDisabled;
-            this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) || this.removeDisabled;
+            this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) ||
+                this.editDisabled;
+            this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) ||
+                this.removeDisabled;
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
 
@@ -88,13 +98,13 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
-                    label: 'Full Form'
+                    label: 'Full Form',
                 });
             }
 
             this.buttonList.push({
                 name: 'cancel',
-                label: 'Close'
+                label: 'Close',
             });
 
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
@@ -105,8 +115,9 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                     pullLeft: true,
                     className: 'btn-icon',
                     style: 'text',
-                    disabled: true
+                    disabled: true,
                 });
+
                 this.buttonList.push({
                     name: 'next',
                     html: '<span class="fas fa-chevron-right"></span>',
@@ -114,10 +125,12 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                     pullLeft: true,
                     className: 'btn-icon',
                     style: 'text',
-                    disabled: true
+                    disabled: true,
                 });
+
                 this.indexOfRecord = this.model.collection.indexOf(this.model);
-            } else {
+            }
+            else {
                 this.navigateButtonsDisabled = true;
             }
 
@@ -125,41 +138,42 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
             this.sourceModel = this.model;
 
-            this.getModelFactory().create(this.scope).then(function (model) {
+            this.getModelFactory().create(this.scope).then(model => {
                 if (!this.sourceModel) {
                     this.model = model;
                     this.model.id = this.id;
 
                     this.setupAfterModelCreated();
 
-                    this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
+                    this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
+                    this.listenToOnce(this.model, 'sync', () => this.createRecordView());
 
-                    this.listenToOnce(this.model, 'sync', function () {
-                        this.createRecordView();
-                    }, this);
                     this.model.fetch();
-                } else {
-                    this.model = this.sourceModel.clone();
-                    this.model.collection = this.sourceModel.collection;
 
-                    this.setupAfterModelCreated();
-
-                    this.listenTo(this.model, 'change', function () {
-                        this.sourceModel.set(this.model.getClonedAttributes());
-                    }, this);
-
-                    this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
-
-                    this.once('after:render', function () {
-                        this.model.fetch();
-                    }, this);
-                    this.createRecordView();
+                    return;
                 }
-            }.bind(this));
 
-            this.listenToOnce(this.getRouter(), 'routed', function () {
+                this.model = this.sourceModel.clone();
+                this.model.collection = this.sourceModel.collection;
+
+                this.setupAfterModelCreated();
+
+                this.listenTo(this.model, 'change', () => {
+                    this.sourceModel.set(this.model.getClonedAttributes());
+                });
+
+                this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
+
+                this.once('after:render', () => {
+                    this.model.fetch();
+                });
+
+                this.createRecordView();
+            });
+
+            this.listenToOnce(this.getRouter(), 'routed', () => {
                 this.remove();
-            }, this);
+            });
 
             if (this.duplicateAction && this.getAcl().checkScope(this.scope, 'create')) {
                 this.addDropdownItem({
@@ -169,8 +183,7 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             }
         },
 
-        setupAfterModelCreated: function () {
-        },
+        setupAfterModelCreated: function () {},
 
         setupRecordButtons: function () {
             if (!this.removeDisabled) {
@@ -210,7 +223,7 @@ define('views/modals/detail', 'views/modal', function (Dep) {
         addRemoveButton: function () {
             this.addDropdownItem({
                 name: 'remove',
-                label: 'Remove'
+                label: 'Remove',
             });
         },
 
@@ -232,42 +245,51 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             this.headerHtml += this.getLanguage().translate(scope, 'scopeNames');
 
             if (model.get('name')) {
-                this.headerHtml += ' <span class="chevron-right"></span> ' + Handlebars.Utils.escapeExpression(model.get('name'));
+                this.headerHtml += ' <span class="chevron-right"></span> ' +
+                    Handlebars.Utils.escapeExpression(model.get('name'));
             }
+
             if (!this.fullFormDisabled) {
-                this.headerHtml = '<a href="#' + scope + '/view/' + this.id+'" class="action font-size-flexible" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
+                this.headerHtml = '<a href="#' + scope + '/view/' +
+                    this.id+'" class="action font-size-flexible" '+
+                    'title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
             }
 
             this.headerHtml = iconHtml + this.headerHtml;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);
+
                 if (editAccess) {
                     this.showButton('edit');
                 } else {
                     this.hideButton('edit');
+
                     if (editAccess === null) {
-                        this.listenToOnce(model, 'sync', function() {
+                        this.listenToOnce(model, 'sync', () => {
                             if (this.getAcl().check(model, 'edit')) {
                                 this.showButton('edit');
                             }
-                        }, this);
+                        });
                     }
                 }
             }
 
             if (!this.removeDisabled) {
                 var removeAccess = this.getAcl().check(model, 'delete', true);
+
                 if (removeAccess) {
                     this.showButton('remove');
-                } else {
+                }
+                else {
                     this.hideButton('remove');
+
                     if (removeAccess === null) {
-                        this.listenToOnce(model, 'sync', function() {
+                        this.listenToOnce(model, 'sync', () => {
                             if (this.getAcl().check(model, 'delete')) {
                                 this.showButton('remove');
                             }
-                        }, this);
+                        });
                     }
                 }
             }
@@ -278,6 +300,7 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailSmall']) ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
                 'views/record/detail-small';
+
             var options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',
@@ -287,17 +310,18 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                 inlineEditDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
-                exit: function () {}
+                exit: function () {},
             };
+
             this.createView('record', viewName, options, callback);
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 this.$el.children(0).scrollTop(0);
-            }.bind(this), 50);
+            }, 50);
 
             if (!this.navigateButtonsDisabled) {
                 this.controlNavigationButtons();
@@ -306,7 +330,10 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
         controlNavigationButtons: function () {
             var recordView = this.getView('record');
-            if (!recordView) return;
+
+            if (!recordView) {
+                return;
+            }
 
             var indexOfRecord = this.indexOfRecord;
 
@@ -319,7 +346,8 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
             if (indexOfRecord < this.model.collection.total - 1) {
                 nextButtonEnabled = true;
-            } else {
+            }
+            else {
                 if (this.model.collection.total === -1) {
                     nextButtonEnabled = true;
                 } else if (this.model.collection.total === -2) {
@@ -343,7 +371,9 @@ define('views/modals/detail', 'views/modal', function (Dep) {
         },
 
         switchToModelByIndex: function (indexOfRecord) {
-            if (!this.model.collection) return;
+            if (!this.model.collection) {
+                return;
+            }
 
             var previousModel = this.model;
 
@@ -361,36 +391,46 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             this.model = this.sourceModel.clone();
             this.model.collection = this.sourceModel.collection;
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 this.sourceModel.set(this.model.getClonedAttributes());
-            }, this);
+            });
 
-            this.listenTo(this.model, 'sync', this.controlRecordButtonsVisibility, this);
+            this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 this.model.fetch();
-            }, this);
+            });
 
-            this.createRecordView(function () {
+            this.createRecordView(() => {
                 this.reRender();
-            }.bind(this));
+            });
 
             this.controlNavigationButtons();
-
             this.trigger('switch-model', this.model, previousModel);
         },
 
         actionPrevious: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord > 0)) return;
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (!(this.indexOfRecord > 0)) {
+                return;
+            }
 
             var indexOfRecord = this.indexOfRecord - 1;
             this.switchToModelByIndex(indexOfRecord);
         },
 
         actionNext: function () {
-            if (!this.model.collection) return;
-            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) return;
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) {
+                return;
+            }
+
             if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
                 return;
             }
@@ -398,19 +438,25 @@ define('views/modals/detail', 'views/modal', function (Dep) {
             var collection = this.model.collection;
 
             var indexOfRecord = this.indexOfRecord + 1;
+
             if (indexOfRecord <= collection.length - 1) {
                 this.switchToModelByIndex(indexOfRecord);
-            } else {
-                var initialCount = collection.length;
 
-                collection.fetch({
+                return;
+            }
+
+            var initialCount = collection.length;
+
+            collection
+                .fetch({
                     more: true,
                     remove: false,
-                }).then(function () {
+                })
+                .then(() => {
                     var model = collection.at(indexOfRecord);
+
                     this.switchToModelByIndex(indexOfRecord);
-                }.bind(this));
-            }
+                });
         },
 
         actionEdit: function () {
@@ -420,62 +466,67 @@ define('views/modals/detail', 'views/modal', function (Dep) {
                     model: this.model,
                     returnUrl: this.getRouter().getCurrentUrl(),
                 };
+
                 if (this.options.rootUrl) {
                     options.rootUrl = this.options.rootUrl;
                 }
+
                 this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'edit', options);
+
                 return;
             }
 
-            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) || 'views/modals/edit';
+            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+                'views/modals/edit';
+
             this.createView('quickEdit', viewName, {
                 scope: this.scope,
                 entityType: this.model.entityType,
                 id: this.id,
                 fullFormDisabled: this.fullFormDisabled
-            }, function (view) {
-                view.once('after:render', function () {
+            }, (view) => {
+                view.once('after:render', () => {
                     Espo.Ui.notify(false);
                     this.dialog.hide();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'remove', function () {
+                this.listenToOnce(view, 'remove', () => {
                     this.dialog.show();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'leave', function () {
+                this.listenToOnce(view, 'leave', () => {
                     this.remove();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'after:save', function (model) {
+                this.listenToOnce(view, 'after:save', (model) => {
                     this.model.set(model.getClonedAttributes());
 
                     this.trigger('after:save', model);
-
                     this.controlRecordButtonsVisibility();
-                }, this);
+                });
 
                 view.render();
-            }, this);
+            });
         },
 
         actionRemove: function () {
             var model = this.getView('record').model;
 
-            this.confirm(this.translate('removeRecordConfirmation', 'messages'), function () {
+            this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
                 var $buttons = this.dialog.$el.find('.modal-footer button');
+
                 $buttons.addClass('disabled').attr('disabled', 'disabled');
-                model.destroy({
-                    success: function () {
+
+                model.destroy()
+                    .then(() => {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
-                    }.bind(this),
-                    error: function () {
+                    })
+                    .catch(() => {
                         $buttons.removeClass('disabled').removeAttr('disabled');
-                    }
-                });
-            }, this);
+                    });
+            });
         },
 
         actionFullForm: function () {
@@ -488,22 +539,24 @@ define('views/modals/detail', 'views/modal', function (Dep) {
 
             var attributes = this.getView('record').fetch();
             var model = this.getView('record').model;
+
             attributes = _.extend(attributes, model.getClonedAttributes());
 
             var options = {
                 attributes: attributes,
                 returnUrl: Backbone.history.fragment,
                 model: this.sourceModel || this.model,
-                id: this.id
+                id: this.id,
             };
+
             if (this.options.rootUrl) {
                 options.rootUrl = this.options.rootUrl;
             }
 
-            setTimeout(function () {
+            setTimeout(() => {
                 router.dispatch(scope, 'view', options);
                 router.navigate(url, {trigger: false});
-            }.bind(this), 10);
+            }, 10);
 
             this.trigger('leave');
             this.dialog.close();

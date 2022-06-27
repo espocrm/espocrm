@@ -28,7 +28,15 @@
 
 define('views/modals/select-records', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
 
-    return Dep.extend({
+    /**
+     * A select-records modal.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:views/modals/select-records
+     * @extends module:views/modal.Class
+     */
+    return Dep.extend(/** @lends module:views/modals/select-records.Class# */{
 
         cssName: 'select-modal',
 

@@ -26,9 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/edit', 'views/modal', function (Dep) {
+define('views/modals/edit', ['views/modal'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A quick edit modal.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:views/modals/edit
+     * @extends module:views/modal.Class
+     */
+    return Dep.extend(/** @lends module:views/modals/edit.Class# */{
 
         cssName: 'edit-modal',
 
@@ -210,15 +218,19 @@ define('views/modals/edit', 'views/modal', function (Dep) {
             var url;
             var router = this.getRouter();
 
+            var attributes;
+            var model;
+            var options;
+
             if (!this.id) {
                 url = '#' + this.scope + '/create';
 
-                var attributes = this.getView('edit').fetch();
-                var model = this.getView('edit').model;
+                attributes = this.getView('edit').fetch();
+                model = this.getView('edit').model;
 
                 attributes = _.extend(attributes, model.getClonedAttributes());
 
-                var options = {
+                options = {
                     attributes: attributes,
                     relate: this.options.relate,
                     returnUrl: this.options.returnUrl || Backbone.history.fragment,
@@ -237,12 +249,12 @@ define('views/modals/edit', 'views/modal', function (Dep) {
             else {
                 url = '#' + this.scope + '/edit/' + this.id;
 
-                var attributes = this.getView('edit').fetch();
-                var model = this.getView('edit').model;
+                attributes = this.getView('edit').fetch();
+                model = this.getView('edit').model;
 
                 attributes = _.extend(attributes, model.getClonedAttributes());
 
-                var options = {
+                options = {
                     attributes: attributes,
                     returnUrl: this.options.returnUrl || Backbone.history.fragment,
                     returnDispatchParams: this.options.returnDispatchParams || null,
@@ -261,7 +273,6 @@ define('views/modals/edit', 'views/modal', function (Dep) {
             }
 
             this.trigger('leave');
-
             this.dialog.close();
         },
     });

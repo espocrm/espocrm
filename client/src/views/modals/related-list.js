@@ -28,7 +28,15 @@
 
 define('views/modals/related-list', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
 
-    return Dep.extend({
+    /**
+     * A related-list modal.
+     *
+     * @class
+     * @name Class
+     * @memberOf module:views/modals/related-list
+     * @extends module:views/modal.Class
+     */
+    return Dep.extend(/** @lends module:views/modals/related-list.Class# */{
 
         template: 'modals/related-list',
 

@@ -37,6 +37,17 @@ define('router', [], function () {
      */
 
     /**
+     * After dispatch.
+     *
+     * @event module:router#routed
+     * @param {{
+     *   controller: string,
+     *   action:string,
+     *   options: Object.<string,*>,
+     * }} data A route data.
+     */
+
+    /**
      * A router.
      *
      * @class
@@ -522,12 +533,13 @@ define('router', [], function () {
          * @param {string} action An action.
          * @param {Object} options Options.
          * @returns {undefined}
+         * @fires module:router#routed
          */
         dispatch: function (controller, action, options) {
             let o = {
                 controller: controller,
                 action: action,
-                options: options
+                options: options,
             };
 
             this._last = o;

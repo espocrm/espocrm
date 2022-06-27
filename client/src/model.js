@@ -562,7 +562,7 @@ define('model', [], function () {
         /**
          * Fetch values from the backend.
          *
-         * @param {Object} options Options.
+         * @param {Object} [options] Options.
          * @returns {Promise<Object>}
          *
          * @fires module:model.Class#sync
