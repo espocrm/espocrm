@@ -247,7 +247,7 @@ define('utils', [], function () {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inTeam = false;
 
-                        user.getLinkMultipleIdList('teams').forEach(function (teamId) {
+                        user.getLinkMultipleIdList('teams').forEach(teamId => {
                             if (~item.teamIdList.indexOf(teamId)) {
                                 inTeam = true;
                             }
@@ -263,7 +263,7 @@ define('utils', [], function () {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inPortal = false;
 
-                        user.getLinkMultipleIdList('portals').forEach(function (portalId) {
+                        user.getLinkMultipleIdList('portals').forEach(portalId => {
                             if (~item.portalIdList.indexOf(portalId)) {
                                 inPortal = true;
                             }
