@@ -871,7 +871,6 @@ class RDBRepository implements Repository
      * Set to return STH collection. Recommended fetching large number of records.
      *
      * @return RDBSelectBuilder<TEntity>
-     * @return RDBSelectBuilder<TEntity>
      */
     public function sth(): RDBSelectBuilder
     {
