@@ -73,9 +73,7 @@ class RDBRepository implements Repository
         $this->entityType = $entityType;
         $this->entityFactory = $entityFactory;
         $this->entityManager = $entityManager;
-
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
-
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
 
@@ -229,11 +227,8 @@ class RDBRepository implements Repository
     public function remove(Entity $entity, array $options = []): void
     {
         $this->processCheckEntity($entity);
-
         $this->beforeRemove($entity, $options);
-
         $this->getMapper()->delete($entity);
-
         $this->afterRemove($entity, $options);
     }
 
@@ -887,7 +882,6 @@ class RDBRepository implements Repository
      *
      * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function where($clause = [], $value = null): RDBSelectBuilder
@@ -905,7 +899,6 @@ class RDBRepository implements Repository
      *
      * @param WhereItem|array<scalar,mixed>|string $clause A key or where clause.
      * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function having($clause = [], $value = null): RDBSelectBuilder
@@ -958,7 +951,6 @@ class RDBRepository implements Repository
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function select($select = [], ?string $alias = null): RDBSelectBuilder
