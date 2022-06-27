@@ -111,7 +111,7 @@ define('views/main', ['view'], function (Dep) {
              * @private
              * @type {string[]}
              */
-            this.headerActionItemTypeList = ['buttons', 'actions', 'dropdown'];
+            this.headerActionItemTypeList = ['buttons', 'dropdown', 'actions'];
 
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
@@ -161,9 +161,9 @@ define('views/main', ['view'], function (Dep) {
         /**
          * @internal
          * @returns {{
-         *     buttons: module:views/main~MenuItem[],
-         *     dropdown: module:views/main~MenuItem[],
-         *     actions: module:views/main~MenuItem[],
+         *     buttons?: module:views/main~MenuItem[],
+         *     dropdown?: module:views/main~MenuItem[],
+         *     actions?: module:views/main~MenuItem[],
          * }}
          */
         getMenu: function () {
@@ -341,7 +341,7 @@ define('views/main', ['view'], function (Dep) {
             var index = -1;
             var type = false;
 
-            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+            this.headerActionItemTypeList.forEach(t => {
                 (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
 
@@ -426,7 +426,7 @@ define('views/main', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         hideHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach((t) => {
+            this.headerActionItemTypeList.forEach(t => {
                 (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
 
@@ -452,7 +452,7 @@ define('views/main', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         showHeaderActionItem: function (name) {
-            ['actions', 'dropdown', 'buttons'].forEach(t => {
+            this.headerActionItemTypeList.forEach(t => {
                 (this.menu[t] || []).forEach((item, i) => {
                     item = item || {};
 
