@@ -113,7 +113,6 @@ define('views/modal', ['view'], function (Dep) {
         /**
          * A scope name. Used when translating button labels.
          *
-         * @protected
          * @type {string|null}
          */
         scope: null,

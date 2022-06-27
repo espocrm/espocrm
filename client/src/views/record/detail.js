@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/detail', ['views/record/base', 'view-record-helper'],
-function (Dep, ViewRecordHelper) {
+define('views/record/detail', ['views/record/base', 'view-record-helper', 'helpers/action-item-setup'],
+function (Dep, ViewRecordHelper, ActionItemSetup) {
 
     /**
      * A detail record view.
@@ -624,73 +624,22 @@ function (Dep, ViewRecordHelper) {
             }
 
             if (this.type === 'detail') {
-                this.additionalActionsDefs = {};
+                /** @var {module:helpers/action-item-setup.Class} */
+                let actionItemSetup = new ActionItemSetup(
+                    this.getMetadata(),
+                    this.getHelper(),
+                    this.getAcl(),
+                    this.getLanguage()
+                );
 
-                var additionalActionList = [];
-
-                var actionDefsList = (
-                        this.getMetadata().get(['clientDefs', this.scope, this.type + 'ActionList']) || []
-                    ).concat(
-                        this.getMetadata().get(['clientDefs', 'Global', this.type + 'ActionList']) || []
-                    );
-
-                actionDefsList.forEach(item => {
-                    if (typeof item === 'string') {
-                        item = {
-                            name: item,
-                        };
-                    }
-
-                    item = Espo.Utils.clone(item);
-                    var name = item.name;
-
-                    if (!item.label) {
-                        item.html = this.translate(name, 'actions', this.scope);
-                    }
-
-                    this.addDropdownItem(item);
-
-                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
-                        return;
-                    }
-
-                    additionalActionList.push(item);
-
-                    var viewObject = this;
-                    var data = item.data || {};
-                    var handler = item.handler || data.handler;
-
-                    if (item.initFunction && handler) {
-                        this.wait(
-                            new Promise(resolve => {
-                                require(handler, Handler => {
-                                    var handler = new Handler(viewObject);
-
-                                    handler[item.initFunction].call(handler);
-
-                                    resolve();
-                                });
-                            })
-                        );
-                    }
-
-                    if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
-                        item.hidden = true;
-                    }
-                });
-
-                if (additionalActionList.length) {
-                    this.listenTo(this.model, 'sync', () => {
-                        additionalActionList.forEach((item) => {
-                            if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
-                                this.showActionItem(item.name);
-                            }
-                            else {
-                                this.hideActionItem(item.name);
-                            }
-                        });
-                    });
-                }
+                actionItemSetup.setup(
+                    this,
+                    this.type,
+                    promise => this.wait(promise),
+                    item => this.addDropdownItem(item),
+                    name => this.showActionItem(name),
+                    name => this.hideActionItem(name)
+                );
 
                 if (this.saveAndContinueEditingAction) {
                     this.dropdownEditItemList.push({
@@ -718,7 +667,6 @@ function (Dep, ViewRecordHelper) {
         /**
          * Hide a button or dropdown action item.
          *
-         * @protected
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
@@ -777,7 +725,6 @@ function (Dep, ViewRecordHelper) {
         /**
          * Show a button or dropdown action item.
          *
-         * @protected
          * @param {string} name A name.
          */
         showActionItem: function (name) {

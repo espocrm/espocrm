@@ -37,6 +37,11 @@
         "client/src/web-socket-manager.js",
         "client/src/number.js",
 
+        "client/src/helpers/file-upload.js",
+        "client/src/helpers/mass-action.js",
+        "client/src/helpers/export.js",
+        "client/src/helpers/action-item-setup.js",
+
         "client/src/app.js"
     ]
 }
