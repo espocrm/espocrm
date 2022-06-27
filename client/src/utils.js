@@ -41,10 +41,12 @@ define('utils', [], function () {
          *
          * @param {module:view.Class} viewObject A view.
          * @param {Event} e An event.
+         * @param {string} [action] An action. If not specified, will be fetched from a target element.
+         * @param {string} [handler] A handler name.
          */
-        handleAction: function (viewObject, e) {
+        handleAction: function (viewObject, e, action, handler) {
             let $target = $(e.currentTarget);
-            let action = $target.data('action');
+            action = action || $target.data('action');
             let fired = false;
 
             if (!action) {
@@ -53,6 +55,7 @@ define('utils', [], function () {
 
             let data = $target.data();
             let method = 'action' + Espo.Utils.upperCaseFirst(action);
+            handler = handler || data.handler;
 
             if (typeof viewObject[method] === 'function') {
                 viewObject[method].call(viewObject, data, e);
@@ -62,13 +65,13 @@ define('utils', [], function () {
 
                 fired = true;
             }
-            else if (data.handler) {
+            else if (handler) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 fired = true;
 
-                require(data.handler, function (Handler) {
+                require(handler, function (Handler) {
                     let handler = new Handler(viewObject);
 
                     handler[method].call(handler, data, e);

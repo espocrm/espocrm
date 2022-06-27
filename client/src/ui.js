@@ -346,8 +346,8 @@ define('ui', [], function () {
         this.buttonList.forEach(o => {
             if (typeof o.onClick === 'function') {
                 $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]')
-                    .on('click', () => {
-                        o.onClick(this);
+                    .on('click', (e) => {
+                        o.onClick(this, e);
                     });
             }
         });
@@ -355,8 +355,8 @@ define('ui', [], function () {
         this.dropdownItemList.forEach(o => {
             if (typeof o.onClick === 'function') {
                 $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]')
-                    .on('click', () => {
-                        o.onClick(this);
+                    .on('click', (e) => {
+                        o.onClick(this, e);
                     });
             }
         });
@@ -436,7 +436,8 @@ define('ui', [], function () {
                 this.dropdownItemList.forEach(o => {
                     rightPart +=
                         '<li class="'+(o.hidden ? ' hidden' : '')+'">' +
-                        '<a href="javascript:" data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
+                        '<a href="javascript:" ' +
+                        'data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
                 });
 
                 rightPart += '</ul>';

@@ -131,6 +131,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} [label] A label.
          * @property {string} [html] An HTML.
          * @property {boolean} [hidden] Hidden.
+         * @property {Object.<string,string>} [data] Data attributes.
          */
 
         /**

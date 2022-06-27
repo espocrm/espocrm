@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/detail', ['views/modal'], function (Dep) {
+define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], function (Dep, ActionItemSetup) {
 
     /**
      * A quick view modal.
@@ -145,7 +145,12 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
 
                     this.setupAfterModelCreated();
 
-                    this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
+                    this.listenTo(this.model, 'sync', () => {
+                        this.controlRecordButtonsVisibility();
+
+                        this.trigger('model-sync');
+                    });
+
                     this.listenToOnce(this.model, 'sync', () => this.createRecordView());
 
                     this.model.fetch();
@@ -162,12 +167,17 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
                     this.sourceModel.set(this.model.getClonedAttributes());
                 });
 
-                this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
+                this.listenTo(this.model, 'sync', () => {
+                    this.controlRecordButtonsVisibility();
+
+                    this.trigger('model-sync');
+                });
 
                 this.once('after:render', () => {
                     this.model.fetch();
                 });
 
+                this.setupActionItems();
                 this.createRecordView();
             });
 
@@ -183,8 +193,37 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
             }
         },
 
+        /**
+         * @private
+         */
+        setupActionItems: function () {
+            /** @var {module:helpers/action-item-setup.Class} */
+            let actionItemSetup = new ActionItemSetup(
+                this.getMetadata(),
+                this.getHelper(),
+                this.getAcl(),
+                this.getLanguage()
+            );
+
+            actionItemSetup.setup(
+                this,
+                'modalDetail',
+                promise => this.wait(promise),
+                item => this.addDropdownItem(item),
+                name => this.showActionItem(name),
+                name => this.hideActionItem(name),
+                {listenToViewModelSync: true}
+            );
+        },
+
+        /**
+         * @protected
+         */
         setupAfterModelCreated: function () {},
 
+        /**
+         * @protected
+         */
         setupRecordButtons: function () {
             if (!this.removeDisabled) {
                 this.addRemoveButton();
@@ -375,7 +414,7 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
                 return;
             }
 
-            var previousModel = this.model;
+            let previousModel = this.model;
 
             this.sourceModel = this.model.collection.at(indexOfRecord);
 
@@ -391,18 +430,24 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
             this.model = this.sourceModel.clone();
             this.model.collection = this.sourceModel.collection;
 
+            this.stopListening(previousModel, 'change');
+            this.stopListening(previousModel, 'sync');
+
             this.listenTo(this.model, 'change', () => {
                 this.sourceModel.set(this.model.getClonedAttributes());
             });
 
-            this.listenTo(this.model, 'sync', () => this.controlRecordButtonsVisibility());
+            this.listenTo(this.model, 'sync', () => {
+                this.controlRecordButtonsVisibility();
 
-            this.once('after:render', () => {
-                this.model.fetch();
+                this.trigger('model-sync');
             });
 
             this.createRecordView(() => {
-                this.reRender();
+                this.reRender()
+                    .then(() => {
+                        this.model.fetch();
+                    })
             });
 
             this.controlNavigationButtons();
@@ -504,6 +549,8 @@ define('views/modals/detail', ['views/modal'], function (Dep) {
 
                     this.trigger('after:save', model);
                     this.controlRecordButtonsVisibility();
+
+                    this.trigger('model-sync');
                 });
 
                 view.render();

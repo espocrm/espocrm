@@ -348,8 +348,6 @@ define('views/modal', ['view'], function (Dep) {
                     return;
                 }
 
-                var text = o.text;
-
                 if (!o.text) {
                     if ('label' in o) {
                         o.text = this.translate(o.label, 'labels', this.scope);
@@ -358,9 +356,11 @@ define('views/modal', ['view'], function (Dep) {
                     }
                 }
 
-                o.onClick = o.onClick || (
-                    this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}
-                ).bind(this);
+                o.onClick = o.onClick || ((d, e) => {
+                    let handler = o.handler || (o.data || {}).handler;
+
+                    Espo.Utils.handleAction(this, e, o.name, handler);
+                });
 
                 buttonListExt.push(o);
             });
@@ -388,8 +388,6 @@ define('views/modal', ['view'], function (Dep) {
                     return;
                 }
 
-                var text = o.text;
-
                 if (!o.text) {
                     if ('label' in o) {
                         o.text = this.translate(o.label, 'labels', this.scope)
@@ -398,9 +396,11 @@ define('views/modal', ['view'], function (Dep) {
                     }
                 }
 
-                o.onClick = o.onClick || (
-                    this['action' + Espo.Utils.upperCaseFirst(o.name)] || function () {}
-                ).bind(this);
+                o.onClick = o.onClick || ((d, e) => {
+                    let handler = o.handler || (o.data || {}).handler;
+
+                    Espo.Utils.handleAction(this, e, o.name, handler);
+                });
 
                 dropdownItemListExt.push(o);
             });
