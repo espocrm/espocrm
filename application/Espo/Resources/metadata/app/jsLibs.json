@@ -11,7 +11,6 @@
     },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
-        "devPath": "client/lib/original/espo-funnel-chart.js",
         "exportsTo": "window",
         "exportsAs": "EspoFunnel"
     },
@@ -39,7 +38,6 @@
     },
     "Cropper": {
         "path": "client/lib/cropper.js",
-        "devPath": "client/lib/original/cropper.js",
         "exportsTo": "$.fn",
         "exportsAs": "cropper"
     },
@@ -49,7 +47,6 @@
     },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
-        "devPath": "client/lib/original/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
         "exportsAs": "colorpicker"
     },
@@ -67,31 +64,26 @@
     },
     "qrcode": {
         "path": "client/lib/qrcode.js",
-        "devPath": "client/lib/original/qrcode.js",
         "exportsTo": "window",
         "exportsAs": "QRCode"
     },
     "ace": {
         "path": "client/lib/ace.js",
-        "devPath": "client/lib/original/ace.js",
         "exportsTo": "window",
         "exportsAs": "ace"
     },
     "ace-mode-javascript": {
         "path": "client/lib/ace-mode-javascript.js",
-        "devPath": "client/lib/original/ace-mode-javascript.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/mode/javascript"
     },
     "ace-ext-language_tools": {
         "path": "client/lib/ace-ext-language_tools.js",
-        "devPath": "client/lib/original/ace-ext-language_tools.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/ext/language_tools"
     },
     "ace-theme-tomorrow_night": {
         "path": "client/lib/ace-theme-tomorrow_night.js",
-        "devPath": "client/lib/original/ace-theme-tomorrow_night.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/theme/tomorrow_night"
     }
