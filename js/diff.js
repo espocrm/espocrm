@@ -31,6 +31,7 @@ const sys = require('util');
 const cp = require('child_process');
 const archiver = require('archiver');
 const process = require('process');
+const buildUtils = require('./build-utils');
 
 const exec = cp.exec;
 const execSync = cp.execSync;
@@ -260,7 +261,7 @@ class Diff
 
             fileList.push('client/lib/espo.min.js');
             fileList.push('client/lib/espo.min.js.map');
-            fileList.push('client/lib/bundled/espo.js');
+            fileList.push('client/lib/original/espo.js');
 
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);
@@ -536,7 +537,7 @@ class Diff
         let resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
 
-        let resolveBundledItemDest = item => 'client/lib/bundled/' + item.src.split('/').pop();
+        let resolveBundledItemDest = item => 'client/lib/original/' + item.src.split('/').pop();
 
         let resolveItemName = item => {
             if (item.name) {
@@ -618,9 +619,13 @@ class Diff
                 );
 
                 if (minify) {
-                    item.files.forEach(item =>
-                        data.filesToCopy.push(resolveItemDest(item) + '.map')
-                    );
+                    item.files.forEach(item => {
+                        data.filesToCopy.push(resolveItemDest(item) + '.map');
+                        data.filesToCopy.push(
+                            buildUtils.destToOriginalDest(resolveItemDest(item))
+                        );
+                    });
+
                 }
 
                 return;
@@ -630,6 +635,9 @@ class Diff
 
             if (minify) {
                 data.filesToCopy.push(resolveItemDest(item) + '.map');
+                data.filesToCopy.push(
+                    buildUtils.destToOriginalDest(resolveItemDest(item))
+                );
             }
         });
 
@@ -657,9 +665,12 @@ class Diff
                 );
 
                 if (minify) {
-                    item.files.forEach(item =>
-                        data.filesToDelete.push(resolveItemDest(item) + '.map')
-                    );
+                    item.files.forEach(item => {
+                        data.filesToDelete.push(resolveItemDest(item) + '.map');
+                        data.filesToDelete.push(
+                            buildUtils.destToOriginalDest(resolveItemDest(item))
+                        );
+                    });
                 }
 
                 return;
@@ -669,6 +680,9 @@ class Diff
 
             if (minify) {
                 data.filesToDelete.push(resolveItemDest(item) + '.map');
+                data.filesToDelete.push(
+                    buildUtils.destToOriginalDest(resolveItemDest(item))
+                );
             }
         });
 

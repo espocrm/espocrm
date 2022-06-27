@@ -53,24 +53,59 @@ let BuildUtils = {
 
     getPreparedBundleLibList: function (libs) {
         return BuildUtils.getBundleLibList(libs)
-            .map(file => 'client/lib/bundled/' + file.split('/').slice(-1));
+            .map(file => 'client/lib/original/' + file.split('/').slice(-1));
     },
 
+    destToOriginalDest: function (dest) {
+        let path = dest.split('/');
+
+        return path.slice(0, -1)
+            .concat('original')
+            .concat(path.slice(-1))
+            .join('/');
+    },
+
+    /**
+     * @param {Object[]} libs
+     * @return {{
+     *   src: string,
+     *   dest: string,
+     *   originalDest: string|null,
+     *   minify: boolean
+     *   }[]}
+     */
     getCopyLibDataList: function (libs) {
         let list = [];
+
+        /**
+         * @param {Object} item
+         * @return {string}
+         */
+        let getItemDest = item => item.dest || 'client/lib/' + item.src.split('/').pop();
+
+        /**
+         * @param {Object} item
+         * @return {string}
+         */
+        let getItemOriginalDest = item => {
+            return BuildUtils.destToOriginalDest(
+                getItemDest(item)
+            );
+        };
 
         libs.forEach(item => {
             if (item.bundle) {
                 return;
             }
 
-            let minify = item.minify;
+            let minify = !!item.minify;
 
             if (item.files) {
                 item.files.forEach(item => {
                     list.push({
                         src: item.src,
-                        dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
+                        dest: getItemDest(item),
+                        originalDest: minify ? getItemOriginalDest(item) : null,
                         minify: minify,
                     });
                 });
@@ -84,7 +119,8 @@ let BuildUtils = {
 
             list.push({
                 src: item.src,
-                dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
+                dest: getItemDest(item),
+                originalDest: minify ? getItemOriginalDest(item) : null,
                 minify: minify,
             });
         });

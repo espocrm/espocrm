@@ -32,25 +32,27 @@ const buildUtils = require('../build-utils');
 const libs = require('./../../frontend/libs.json');
 
 const libDir = './client/lib';
-const bundledDir = './client/lib/bundled';
+const originalLibDir = './client/lib/original';
+const libCrmDir = './client/modules/crm/lib';
+const originalLibCrmDir = './client/modules/crm/lib/original';
 
-if (!fs.existsSync(libDir)) {
-    fs.mkdirSync(libDir);
-}
+[libDir, originalLibDir, libCrmDir, originalLibCrmDir]
+    .filter(path => !fs.existsSync(path))
+    .forEach(path => fs.mkdirSync(path))
 
-if (!fs.existsSync(bundledDir)) {
-    fs.mkdirSync(bundledDir);
-}
-
-fs.readdirSync(bundledDir)
+fs.readdirSync(originalLibDir)
     .filter(file => file !== 'espo.js')
-    .forEach(file => fs.unlinkSync(bundledDir + '/' + file));
+    .forEach(file => fs.unlinkSync(originalLibDir + '/' + file));
 
 /** @var {string[]} */
 const libSrcList = buildUtils.getBundleLibList(libs);
 
 libSrcList.forEach(src => {
-    let dest = bundledDir + '/' + src.split('/').slice(-1);
+    let dest = originalLibDir + '/' + src.split('/').slice(-1);
 
     fs.copyFileSync(src, dest);
 });
+
+buildUtils.getCopyLibDataList(libs)
+    .filter(item => item.minify)
+    .forEach(item => fs.copyFileSync(item.src, item.originalDest))

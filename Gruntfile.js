@@ -40,17 +40,18 @@ module.exports = grunt => {
     const bundleConfig = require('./frontend/bundle-config.json');
     const libs = require('./frontend/libs.json');
 
-    const bundledDir = 'client/lib/bundled';
+    const originalLibDir = 'client/lib/original';
 
-    let bundleJsFileList = buildUtils.getPreparedBundleLibList(libs).concat(bundledDir + '/espo.js');
+    let bundleJsFileList = buildUtils.getPreparedBundleLibList(libs).concat(originalLibDir + '/espo.js');
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
     let minifyLibFileList = copyJsFileList
         .filter(item => item.minify)
-        .reduce((map, item) => (
-            map[item.dest] = item.dest,
-            map
-        ), {});
+        .reduce((map, item) => {
+            map[item.dest] = item.originalDest;
+
+            return map;
+        }, {});
 
     let currentPath = path.dirname(fs.realpathSync(__filename));
 
@@ -254,16 +255,16 @@ module.exports = grunt => {
 
         let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
 
-        if (!fs.existsSync(bundledDir)) {
-            fs.mkdirSync(bundledDir);
+        if (!fs.existsSync(originalLibDir)) {
+            fs.mkdirSync(originalLibDir);
         }
 
-        fs.writeFileSync(bundledDir + '/espo.js', contents, 'utf8');
+        fs.writeFileSync(originalLibDir + '/espo.js', contents, 'utf8');
     });
 
-    grunt.registerTask('prepare-bundled-libs', () => {
+    grunt.registerTask('prepare-lib-original', () => {
         // Even though `npm ci` runs the same script, 'clean:start' deletes files.
-        cp.execSync("node js/scripts/prepare-bundled");
+        cp.execSync("node js/scripts/prepare-lib-original");
     });
 
     grunt.registerTask('chmod-folders', () => {
@@ -439,7 +440,7 @@ module.exports = grunt => {
         'less',
         'cssmin',
         'espo-bundle',
-        'prepare-bundled-libs',
+        'prepare-lib-original',
         'uglify:bundle',
         'copy:frontendLib',
         'uglify:lib',

@@ -98,6 +98,6 @@ class DevModeJsFileListProvider
     {
         $arr = explode('/', $path);
 
-        return 'client/lib/bundled/' . array_slice($arr, -1)[0];
+        return 'client/lib/original/' . array_slice($arr, -1)[0];
     }
 }

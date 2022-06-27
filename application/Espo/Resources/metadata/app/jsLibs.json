@@ -1,7 +1,7 @@
 {
     "Flotr": {
         "path": "client/lib/flotr2.js",
-        "devPath": "node_modules/flotr2/flotr2.js",
+        "devPath": "client/lib/original/flotr2.js",
         "exportsTo": "window",
         "exportsAs": "Flotr"
     },
@@ -11,13 +11,13 @@
     },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
-        "devPath": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js",
+        "devPath": "client/lib/original/espo-funnel-chart.js",
         "exportsTo": "window",
         "exportsAs": "EspoFunnel"
     },
     "Summernote": {
         "path": "client/lib/summernote.js",
-        "devPath": "node_modules/summernote/dist/summernote.js",
+        "devPath": "client/lib/original/summernote.js",
         "exportsTo": "$.fn",
         "exportsAs": "summernote"
     },
@@ -27,19 +27,19 @@
     },
     "Selectize": {
         "path": "client/lib/selectize.js",
-        "devPath": "node_modules/selectize/dist/js/standalone/selectize.js",
+        "devPath": "client/lib/original/selectize.js",
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
-        "devPath": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "devPath": "client/lib/original/cronstrue-i18n.js",
         "exportsTo": "window",
         "exportsAs": "cronstrue"
     },
     "Cropper": {
         "path": "client/lib/cropper.js",
-        "devPath": "node_modules/cropper/dist/cropper.js",
+        "devPath": "client/lib/original/cropper.js",
         "exportsTo": "$.fn",
         "exportsAs": "cropper"
     },
@@ -49,49 +49,49 @@
     },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
-        "devPath": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+        "devPath": "client/lib/original/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
         "exportsAs": "colorpicker"
     },
     "exif": {
         "path": "client/lib/exif.js",
-        "devPath": "node_modules/exif-js/exif.js",
+        "devPath": "client/lib/original/exif.js",
         "exportsTo": "window",
         "exportsAs": "EXIF"
     },
     "JsBarcode": {
         "path": "client/lib/JsBarcode.all.js",
-        "devPath": "node_modules/jsbarcode/dist/JsBarcode.all.js",
+        "devPath": "client/lib/original/JsBarcode.all.js",
         "exportsTo": "window",
         "exportsAs": "JsBarcode"
     },
     "qrcode": {
         "path": "client/lib/qrcode.js",
-        "devPath": "node_modules/qrcodejs/qrcode.js",
+        "devPath": "client/lib/original/qrcode.js",
         "exportsTo": "window",
         "exportsAs": "QRCode"
     },
     "ace": {
         "path": "client/lib/ace.js",
-        "devPath": "node_modules/ace-builds/src-noconflict/ace.js",
+        "devPath": "client/lib/original/ace.js",
         "exportsTo": "window",
         "exportsAs": "ace"
     },
     "ace-mode-javascript": {
         "path": "client/lib/ace-mode-javascript.js",
-        "devPath": "node_modules/ace-builds/src-noconflict/mode-javascript.js",
+        "devPath": "client/lib/original/ace-mode-javascript.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/mode/javascript"
     },
     "ace-ext-language_tools": {
         "path": "client/lib/ace-ext-language_tools.js",
-        "devPath": "node_modules/ace-builds/src-noconflict/ext-language_tools.js",
+        "devPath": "client/lib/original/ace-ext-language_tools.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/ext/language_tools"
     },
     "ace-theme-tomorrow_night": {
         "path": "client/lib/ace-theme-tomorrow_night.js",
-        "devPath": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
+        "devPath": "client/lib/original/ace-theme-tomorrow_night.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/theme/tomorrow_night"
     }
