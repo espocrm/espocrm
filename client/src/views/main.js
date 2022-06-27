@@ -107,6 +107,12 @@ define('views/main', ['view'], function (Dep) {
                         this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {};
             }
 
+            /**
+             * @private
+             * @type {string[]}
+             */
+            this.headerActionItemTypeList = ['buttons', 'actions', 'dropdown'];
+
             this.menu = Espo.Utils.cloneDeep(this.menu);
 
             var globalMenu = {};
@@ -119,19 +125,19 @@ define('views/main', ['view'], function (Dep) {
                 );
             }
 
-            ['buttons', 'actions', 'dropdown'].forEach((type) => {
+            this.headerActionItemTypeList.forEach(type => {
                 this.menu[type] = this.menu[type] || [];
                 this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
 
-                var itemList = this.menu[type];
+                let itemList = this.menu[type];
 
-                itemList.forEach((item) => {
-                    var viewObject = this;
+                itemList.forEach(item => {
+                    let viewObject = this;
 
                     if (item.initFunction && item.data.handler) {
                         this.wait(new Promise(resolve => {
                             require(item.data.handler, Handler => {
-                                var handler = new Handler(viewObject);
+                                let handler = new Handler(viewObject);
 
                                 handler[item.initFunction].call(handler);
 
@@ -168,7 +174,7 @@ define('views/main', ['view'], function (Dep) {
             var menu = {};
 
             if (this.menu) {
-                ['buttons', 'actions', 'dropdown'].forEach(type => {
+                this.headerActionItemTypeList.forEach(type => {
                     (this.menu[type] || []).forEach(item => {
                         item = Espo.Utils.clone(item);
 
