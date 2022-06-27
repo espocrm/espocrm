@@ -976,7 +976,6 @@ class RDBRepository implements Repository
      * * `groupBy([$expr1, $expr2, ...])`
      *
      * @param Expression|Expression[]|string|string[] $groupBy
-     *
      * @return RDBSelectBuilder<TEntity>
      */
     public function group($groupBy): RDBSelectBuilder
