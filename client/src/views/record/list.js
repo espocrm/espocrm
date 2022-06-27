@@ -1825,7 +1825,8 @@ function (Dep, MassActionHelper, ExportHelper) {
             if (
                 this.getAcl().get('massUpdatePermission') !== 'yes' ||
                 this.editDisabled ||
-                this.massUpdateDisabled
+                this.massUpdateDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massUpdateDisabled'])
             ) {
                 this.removeMassAction('massUpdate');
             }
@@ -1833,7 +1834,8 @@ function (Dep, MassActionHelper, ExportHelper) {
             if (
                 !this.massFollowDisabled &&
                 this.getMetadata().get(['scopes', this.entityType, 'stream']) &&
-                this.getAcl().check(this.entityType, 'stream')
+                this.getAcl().check(this.entityType, 'stream') ||
+                this.getMetadata().get(['clientDefs', this.scope, 'massFollowDisabled'])
             ) {
                 this.addMassAction('follow');
                 this.addMassAction('unfollow', true);
