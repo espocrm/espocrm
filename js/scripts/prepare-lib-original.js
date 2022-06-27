@@ -47,12 +47,31 @@ fs.readdirSync(originalLibDir)
 /** @var {string[]} */
 const libSrcList = buildUtils.getBundleLibList(libs);
 
+let stripSourceMappingUrl = path => {
+    /** @var {string} */
+    let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
+
+    let re = /\/\/\# sourceMappingURL.*/dg;
+
+    if (!originalContents.match(re)) {
+        return;
+    }
+
+    let contents = originalContents.replaceAll(re, '');
+
+    fs.writeFileSync(path, contents, {encoding: 'utf-8'});
+}
+
 libSrcList.forEach(src => {
     let dest = originalLibDir + '/' + src.split('/').slice(-1);
 
     fs.copyFileSync(src, dest);
+    stripSourceMappingUrl(dest);
 });
 
 buildUtils.getCopyLibDataList(libs)
     .filter(item => item.minify)
-    .forEach(item => fs.copyFileSync(item.src, item.originalDest))
+    .forEach(item => {
+        fs.copyFileSync(item.src, item.originalDest);
+        stripSourceMappingUrl(item.originalDest);
+    });
