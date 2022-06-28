@@ -34,20 +34,24 @@ use Espo\Core\{
     Select\SelectBuilderFactory,
     ORM\EntityManager,
 };
+use Espo\Tools\App\AppParam;
 
 /**
  * Returns a list of entity types for which a PDF template exists.
  */
-class TemplateEntityTypeList
+class TemplateEntityTypeList implements AppParam
 {
-    private $acl;
+    private Acl $acl;
 
-    private $selectBuilderFactory;
+    private SelectBuilderFactory $selectBuilderFactory;
 
-    private $entityManager;
+    private EntityManager $entityManager;
 
-    public function __construct(Acl $acl, SelectBuilderFactory $selectBuilderFactory, EntityManager $entityManager)
-    {
+    public function __construct(
+        Acl $acl,
+        SelectBuilderFactory $selectBuilderFactory,
+        EntityManager $entityManager
+    ) {
         $this->acl = $acl;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->entityManager = $entityManager;

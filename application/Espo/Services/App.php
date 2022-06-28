@@ -57,6 +57,7 @@ use Espo\ORM\{
     Entity,
 };
 
+use Espo\Tools\App\AppParam;
 use stdClass;
 use Throwable;
 
@@ -164,7 +165,7 @@ class App
         ];
 
         foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
-            /** @var ?class-string<object> */
+            /** @var ?class-string<AppParam> */
             $className = $item['className'] ?? null;
 
             if (!$className) {
@@ -172,16 +173,13 @@ class App
             }
 
             try {
+                /** @var AppParam */
                 $obj = $this->injectableFactory->create($className);
-
-                if (!method_exists($obj, 'get')) {
-                    continue;
-                }
 
                 $itemParams = $obj->get();
             }
             catch (Throwable $e) {
-                $this->log->error("appParam {$paramKey}: " . $e->getMessage());
+                $this->log->error("AppParam {$paramKey}: " . $e->getMessage());
 
                 continue;
             }
