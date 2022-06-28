@@ -1,9 +1,9 @@
 {
     "jsFiles": [
         "client/src/namespace.js",
-        "client/src/exceptions.js",
         "client/src/loader.js",
         "client/src/loader-init-libs.js",
+        "client/src/exceptions.js",
         "client/src/utils.js",
 
         "client/src/acl.js",
