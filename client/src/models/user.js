@@ -37,7 +37,7 @@ define('models/user', ['model'], function (Dep) {
      *
      * @memberOf module:models/user
      */
-    return Dep.extend({/** @lends module:models/user.Class# */
+    return Dep.extend(/** @lends module:models/user.Class# */{
 
         /**
          * @inheritDoc
