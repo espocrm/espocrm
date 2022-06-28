@@ -72,6 +72,8 @@ class Importer
 
     private LinkMultipleSaver $linkMultipleSaver;
 
+    private const SUBJECT_MAX_LENGTH = 255;
+
     public function __construct(
         EntityManager $entityManager,
         Config $config,
@@ -120,6 +122,10 @@ class Importer
 
         if ($subject !== '0' && empty($subject)) {
             $subject = '(No Subject)';
+        }
+
+        if (strlen($subject) > self::SUBJECT_MAX_LENGTH) {
+            $subject = substr($subject, 0, self::SUBJECT_MAX_LENGTH);
         }
 
         $email->set('isHtml', false);
