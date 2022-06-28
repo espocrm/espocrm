@@ -44,6 +44,9 @@ fs.readdirSync(originalLibDir)
     .filter(file => file !== 'espo.js')
     .forEach(file => fs.unlinkSync(originalLibDir + '/' + file));
 
+fs.readdirSync(originalLibCrmDir)
+    .forEach(file => fs.unlinkSync(originalLibCrmDir + '/' + file));
+
 /** @var {string[]} */
 const libSrcList = buildUtils.getBundleLibList(libs);
 
@@ -51,7 +54,7 @@ let stripSourceMappingUrl = path => {
     /** @var {string} */
     let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
 
-    let re = /\/\/\# sourceMappingURL.*/dg;
+    let re = /\/\/# sourceMappingURL.*/g;
 
     if (!originalContents.match(re)) {
         return;
