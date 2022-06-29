@@ -30,7 +30,6 @@
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
-    Exceptions\Error,
     Select\AccessControl\Applier as AccessControlFilterApplier,
     Select\SelectManager,
     Select\AccessControl\FilterFactory as AccessControlFilterFactory,
@@ -134,7 +133,7 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
             ->willReturn($hasFilter);
 
         if (!$hasFilter) {
-            $this->expectException(Error::class);
+            $this->expectException(\RuntimeException::class);
 
             return;
         }
