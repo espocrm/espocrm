@@ -2,5 +2,5 @@
     "accessControlFilterClassNameMap": {
         "mandatory": "Espo\\Classes\\Select\\Webhook\\AccessControlFilters\\Mandatory"
     },
-    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\BypassFilterResolver"
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Bypass"
 }

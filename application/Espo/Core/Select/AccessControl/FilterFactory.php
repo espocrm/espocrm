@@ -45,6 +45,8 @@ use Espo\{
     Entities\User,
 };
 
+use RuntimeException;
+
 class FilterFactory
 {
     private $injectableFactory;
@@ -60,15 +62,12 @@ class FilterFactory
         $this->aclManager = $aclManager;
     }
 
-    /**
-     * @throws Error
-     */
     public function create(string $entityType, User $user, string $name): Filter
     {
         $className = $this->getClassName($entityType, $name);
 
         if (!$className) {
-            throw new Error("Access control filter '{$name}' for '{$entityType}' does not exist.");
+            throw new RuntimeException("Access control filter '{$name}' for '{$entityType}' does not exist.");
         }
 
         $bindingData = new BindingData();
@@ -92,9 +91,6 @@ class FilterFactory
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    /**
-     * @throws Error
-     */
     public function has(string $entityType, string $name): bool
     {
         return (bool) $this->getClassName($entityType, $name);
@@ -102,12 +98,11 @@ class FilterFactory
 
     /**
      * @return class-string<Filter>
-     * @throws Error
      */
     private function getClassName(string $entityType, string $name): ?string
     {
         if (!$name) {
-            throw new Error("Empty access control filter name.");
+            throw new RuntimeException("Empty access control filter name.");
         }
 
         /** @var ?class-string<Filter> */

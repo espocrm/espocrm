@@ -27,16 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\AccessControl\Filters;
+namespace Espo\Core\Select\AccessControl\FilterResolvers;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\AccessControl\Filter,
-};
+use Espo\Core\Select\AccessControl\FilterResolver;
 
-class All implements Filter
+class Bypass implements FilterResolver
 {
-    public function apply(QueryBuilder $queryBuilder): void
+    public function resolve(): ?string
     {
+        return null;
     }
 }

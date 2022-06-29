@@ -32,7 +32,6 @@ namespace Espo\Core\Select\AccessControl;
 use Espo\Core\Select\OrmSelectBuilder;
 
 use Espo\Core\{
-    Exceptions\Error,
     Select\SelectManager,
     Select\AccessControl\FilterFactory as AccessControlFilterFactory,
     Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory,
@@ -42,6 +41,8 @@ use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
     Entities\User,
 };
+
+use RuntimeException;
 
 class Applier
 {
@@ -111,7 +112,7 @@ class Applier
             return;
         }
 
-        throw new Error("No access filter '{$filterName}' for '{$this->entityType}'.");
+        throw new RuntimeException("No access filter '{$filterName}' for '{$this->entityType}'.");
     }
 
     private function applyMandatoryFilter(QueryBuilder $queryBuilder): void

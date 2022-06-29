@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-class BypassFilterResolver implements FilterResolver
-{
-    public function resolve(): ?string
-    {
-        return null;
-    }
-}
+/**
+ * @deprecated Use `\Espo\Core\Select\AccessControl\FilterResolvers\Bypass` instead.
+ * @todo Remove in v8.0.
+ */
+class BypassFilterResolver extends \Espo\Core\Select\AccessControl\FilterResolvers\Bypass {}
