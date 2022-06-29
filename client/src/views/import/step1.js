@@ -461,7 +461,7 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 $row = $('<tr>');
 
                 row.forEach((value) => {
-                    $cell = $('<td>').html(value);
+                    $cell = $('<td>').html(this.getHelper().sanitizeHtml(value));
                     $row.append($cell);
                 });
 
