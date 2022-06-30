@@ -767,7 +767,7 @@ class Stream
                 'createdById!=' => $user->getId(),
                 'usersMiddle.userId' => $user->getId(),
                 'parentId' => null,
-                'type' => 'Post',
+                'type' => NoteEntity::TYPE_POST,
                 'isGlobal' => false,
             ])
             ->build();
@@ -783,7 +783,7 @@ class Stream
                     ->where([
                         'parentId' => null,
                         'portalsMiddle.portalId' => $portalIdList,
-                        'type' => 'Post',
+                        'type' => NoteEntity::TYPE_POST,
                         'isGlobal' => false,
                     ])
                     ->build();
@@ -797,7 +797,7 @@ class Stream
                 ->where([
                     'parentId' => null,
                     'teamsMiddle.teamId' => $teamIdList,
-                    'type' => 'Post',
+                    'type' => NoteEntity::TYPE_POST,
                     'isGlobal' => false,
                 ])
                 ->build();
@@ -821,7 +821,7 @@ class Stream
             ->where([
                 'createdById' => $user->getId(),
                 'parentId' => null,
-                'type' => 'Post',
+                'type' => NoteEntity::TYPE_POST,
                 'isGlobal' => false,
             ])
             ->build();
@@ -835,7 +835,7 @@ class Stream
                 ->leftJoin('createdBy')
                 ->where([
                     'parentId' => null,
-                    'type' => 'Post',
+                    'type' => NoteEntity::TYPE_POST,
                     'isGlobal' => true,
                 ])
                 ->build();
