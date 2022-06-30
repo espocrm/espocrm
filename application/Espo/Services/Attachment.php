@@ -283,6 +283,9 @@ class Attachment extends Record
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkAttachmentType(AttachmentEntity $attachment): void
     {
         $field = $attachment->getTargetField();
@@ -301,6 +304,42 @@ class Attachment extends Record
             $this->checkAttachmentTypeImage($attachment);
 
             return;
+        }
+
+        $name = $attachment->getName() ?? '';
+
+        $extension = strtolower(
+            array_slice(explode('.', $name), -1)[0] ?? ''
+        );
+
+        /** @var string[] */
+        $accept = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'accept']) ?? [];
+
+        if ($accept === []) {
+            return;
+        }
+
+        $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
+            $attachment->getType();
+
+        $found = false;
+
+        foreach ($accept as $token) {
+            if (strtolower($token) === '.' . $extension) {
+                $found = true;
+
+                break;
+            }
+
+            if ($mimeType && MimeType::matchMimeTypeToAcceptToken($mimeType, $token)) {
+                $found = true;
+
+                break;
+            }
+        }
+
+        if (!$found) {
+            throw new ForbiddenSilent("Not allowed file type.");
         }
     }
 

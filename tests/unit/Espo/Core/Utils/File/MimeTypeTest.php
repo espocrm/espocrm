@@ -41,7 +41,7 @@ class MimeTypeTest extends \PHPUnit\Framework\TestCase
         $this->metadata = $this->createMock(Metadata::class);
     }
 
-    public function testGetMimeTypeByExtension1(): void
+    public function testGetMimeTypeByExtension(): void
     {
         $this->metadata
             ->expects($this->any())
@@ -53,5 +53,13 @@ class MimeTypeTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('text/csv', $util->getMimeTypeByExtension('csv'));
         $this->assertEquals('text/csv', $util->getMimeTypeByExtension('CSV'));
+    }
+
+    public function testMatchMimeTypeToAcceptToken(): void
+    {
+        $this->assertTrue(MimeType::matchMimeTypeToAcceptToken('text/csv', 'text/csv'));
+        $this->assertFalse(MimeType::matchMimeTypeToAcceptToken('text/csv', 'text/plain'));
+        $this->assertTrue(MimeType::matchMimeTypeToAcceptToken('video/mpeg', 'video/*'));
+        $this->assertFalse(MimeType::matchMimeTypeToAcceptToken('video/mpeg', 'image/*'));
     }
 }

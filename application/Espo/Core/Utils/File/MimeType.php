@@ -54,4 +54,17 @@ class MimeType
 
         return $typeList[0] ?? null;
     }
+
+    public static function matchMimeTypeToAcceptToken(string $mimeType, string $token): bool
+    {
+        if ($mimeType === $token) {
+            return true;
+        }
+
+        if (in_array($token, ['audio/*', 'video/*', 'image/*'])) {
+            return strpos($mimeType, substr($token, 0, -2)) === 0;
+        }
+
+        return false;
+    }
 }
