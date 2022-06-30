@@ -503,7 +503,7 @@ class Authentication
         );
 
         if ($createSecret) {
-            $this->setSecretInCookie($authToken->getSecret(), $response);
+            $this->setSecretInCookie($authToken->getSecret(), $response, $request);
         }
 
         if (
@@ -611,7 +611,7 @@ class Authentication
         $this->entityManager->saveEntity($authLogRecord);
     }
 
-    private function setSecretInCookie(?string $secret, Response $response): void
+    private function setSecretInCookie(?string $secret, Response $response, ?Request $request = null): void
     {
         $time = $secret ? strtotime('+1000 days') : 1;
 
@@ -624,7 +624,34 @@ class Authentication
             '; HttpOnly' .
             '; SameSite=Lax';
 
+        if ($request && self::isSecureRequest($request)) {
+            $headerValue .= "; Secure";
+        }
+
         $response->addHeader('Set-Cookie', $headerValue);
+    }
+
+    private static function isSecureRequest(Request $request): bool
+    {
+        $https = $request->getServerParam('HTTPS');
+
+        if ($https === 'on') {
+            return true;
+        }
+
+        $scheme = $request->getServerParam('REQUEST_SCHEME');
+
+        if ($scheme === 'https') {
+            return true;
+        }
+
+        $forwardedProto = $request->getServerParam('HTTP_X_FORWARDED_PROTO');
+
+        if ($forwardedProto === 'https') {
+            return true;
+        }
+
+        return false;
     }
 
     private function processFail(Result $result, AuthenticationData $data, Request $request): Result

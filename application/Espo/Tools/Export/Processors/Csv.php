@@ -111,7 +111,7 @@ class Csv implements Processor
                 $item = Json::encode($item);
             }
 
-            $preparedRow[] = $item;
+            $preparedRow[] = $this->sanitizeCell($item);
         }
 
         return $preparedRow;
@@ -139,5 +139,26 @@ class Csv implements Processor
                 }
             }
         }
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private function sanitizeCell($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        if ($value === '') {
+            return $value;
+        }
+
+        if (in_array($value[0], ['+', '-', '@', '='])) {
+            return "'" . $value;
+        }
+
+        return $value;
     }
 }
