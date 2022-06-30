@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Utils\File\MimeType;
 use Espo\ORM\Entity;
 
@@ -64,16 +65,16 @@ class Attachment extends Record
      * @var string[]
      */
     protected $attachmentFieldTypeList = [
-        'file',
-        'image',
-        'attachmentMultiple',
+        self::FIELD_TYPE_FILE,
+        self::FIELD_TYPE_IMAGE,
+        self::FIELD_TYPE_ATTACHMENT_MULTIPLE,
     ];
 
     /**
      * @var string[]
      */
     protected $inlineAttachmentFieldTypeList = [
-        'wysiwyg',
+        self::FIELD_TYPE_WYSIWYG,
     ];
 
     /**
@@ -82,6 +83,19 @@ class Attachment extends Record
     protected $adminOnlyHavingInlineAttachmentsEntityTypeList = [
         'TemplateManager',
     ];
+
+    /**
+     * @var string[]
+     */
+    protected $allowedRoleList = [
+        AttachmentEntity::ROLE_ATTACHMENT,
+        AttachmentEntity::ROLE_INLINE_ATTACHMENT,
+    ];
+
+    private const FIELD_TYPE_FILE = 'file';
+    private const FIELD_TYPE_IMAGE = 'image';
+    private const FIELD_TYPE_ATTACHMENT_MULTIPLE = 'attachmentMultiple';
+    private const FIELD_TYPE_WYSIWYG = 'wysiwyg';
 
     /**
      * @param string $fileData
@@ -194,13 +208,7 @@ class Attachment extends Record
             throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
         }
 
-        if (
-            !$role ||
-            !in_array($role, [
-                AttachmentEntity::ROLE_ATTACHMENT,
-                AttachmentEntity::ROLE_INLINE_ATTACHMENT,
-            ])
-        ) {
+        if (!in_array($role, $this->allowedRoleList)) {
             throw new BadRequest("Not supported attachment 'role'.");
         }
 
@@ -250,7 +258,6 @@ class Attachment extends Record
         }
 
         $role = $entity->getRole();
-
         $size = $entity->getSize();
 
         if ($role === AttachmentEntity::ROLE_ATTACHMENT) {
@@ -260,6 +267,8 @@ class Attachment extends Record
                 throw new Forbidden("Attachment size exceeds `attachmentUploadMaxSize`.");
             }
         }
+
+        $this->checkAttachmentType($entity);
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
@@ -271,6 +280,46 @@ class Attachment extends Record
             !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
         ) {
             $entity->clear('storage');
+        }
+    }
+
+    private function checkAttachmentType(AttachmentEntity $attachment): void
+    {
+        $field = $attachment->getTargetField();
+        $entityType = $attachment->getParentType() ?? $attachment->getRelatedType();
+
+        if (!$field || !$entityType) {
+            return;
+        }
+
+        $fieldType = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+
+        if (
+            $fieldType === self::FIELD_TYPE_IMAGE ||
+            $attachment->getRole() === AttachmentEntity::ROLE_INLINE_ATTACHMENT
+        ) {
+            $this->checkAttachmentTypeImage($attachment);
+
+            return;
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkAttachmentTypeImage(AttachmentEntity $attachment): void
+    {
+        $name = $attachment->getName() ?? '';
+
+        $extension = array_slice(explode('.', $name), -1)[0] ?? '';
+
+        $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
+
+        /** @var string[] */
+        $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
+
+        if (!in_array($mimeType, $imageTypeList)) {
+            throw new ForbiddenSilent("Not allowed file type.");
         }
     }
 

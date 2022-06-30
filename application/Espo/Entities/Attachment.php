@@ -92,6 +92,16 @@ class Attachment extends Entity
         return $this->getValueObject('related');
     }
 
+    public function getParentType(): ?string
+    {
+        return $this->get('parentType');
+    }
+
+    public function getRelatedType(): ?string
+    {
+        return $this->get('relatedType');
+    }
+
     public function isBeingUploaded(): bool
     {
         return (bool) $this->get('isBeingUploaded');
