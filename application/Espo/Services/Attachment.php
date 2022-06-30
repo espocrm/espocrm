@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Utils\File\MimeType;
 use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\BadRequest;
@@ -520,19 +521,10 @@ class Attachment extends Record
         }
 
         if (!$type) {
-            $extTypeMap = [
-                'png' => 'image/png',
-                'jpg' => 'image/jpeg',
-                'jpeg' => 'image/jpeg',
-                'gif' => 'image/gif',
-                'webp' => 'image/webp',
-            ];
-
+            /** @var string */
             $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
 
-            if (isset($extTypeMap[$extension])) {
-                $type = $extTypeMap[$extension];
-            }
+            $type = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
         }
 
         curl_close($ch);
@@ -676,5 +668,10 @@ class Attachment extends Record
     {
         /** @var AttachmentRepository */
         return $this->getRepository();
+    }
+
+    private function getMimeTypeUtil(): MimeType
+    {
+        return $this->injectableFactory->create(MimeType::class);
     }
 }
