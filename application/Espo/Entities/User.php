@@ -56,19 +56,21 @@ class User extends Person
 
     public const LINK_PORTAL_ROLES = 'portalRoles';
 
+    public const TYPE_PORTAL = 'portal';
+
+    public const TYPE_ADMIN = 'admin';
+
+    public const TYPE_SYSTEM = 'system';
+
+    public const TYPE_REGULAR = 'regular';
+
+    public const TYPE_API = 'api';
+
+    public const TYPE_SUPER_ADMIN = 'super-admin';
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->get('type') === 'admin' || $this->isSystem() || $this->isSuperAdmin();
-    }
-
-    public function isPortal(): bool
-    {
-        return $this->get('type') === 'portal';
     }
 
     /**
@@ -79,24 +81,60 @@ class User extends Person
         return $this->isPortal();
     }
 
+    public function getType(): ?string
+    {
+        return $this->get('type');
+    }
+
+    /**
+     * Is regular user.
+     */
     public function isRegular(): bool
     {
-        return $this->get('type') === 'regular' || ($this->has('type') && !$this->get('type'));
+        return $this->getType() === self::TYPE_REGULAR ||
+            ($this->has('type') && !$this->getType());
     }
 
+    /**
+     * Is admin, super-admin or system user.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->getType() === self::TYPE_ADMIN ||
+            $this->isSystem() ||
+            $this->isSuperAdmin();
+    }
+
+    /**
+     * Is portal user.
+     */
+    public function isPortal(): bool
+    {
+        return $this->getType() === self::TYPE_PORTAL;
+    }
+
+    /**
+     * Is API user.
+     */
     public function isApi(): bool
     {
-        return $this->get('type') === 'api';
+        return $this->getType() === self::TYPE_API;
     }
 
+    /**
+     * Is system user.
+     */
     public function isSystem(): bool
     {
-        return $this->get('type') === 'system';
+        return $this->getType() === self::TYPE_SYSTEM;
     }
 
+    /**
+     * Is super-admin user.
+     */
     public function isSuperAdmin(): bool
     {
-        return $this->get('type') === 'super-admin';
+        return $this->getType() === self::TYPE_SUPER_ADMIN;
     }
 
     public function getRoles(): LinkMultiple
