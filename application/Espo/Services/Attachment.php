@@ -83,16 +83,6 @@ class Attachment extends Record
     ];
 
     /**
-     * @var string[]
-     */
-    protected $imageTypeList = [
-        'image/png',
-        'image/jpeg',
-        'image/gif',
-        'image/webp',
-    ];
-
-    /**
      * @param string $fileData
      * @throws Forbidden
      */
@@ -349,9 +339,11 @@ class Attachment extends Record
 
         if (isset($data->parentType)) {
             $relatedEntityType = $data->parentType;
-        } else if (isset($data->relatedType)) {
+        }
+        else if (isset($data->relatedType)) {
             $relatedEntityType = $data->relatedType;
-        } else {
+        }
+        else {
             throw new BadRequest();
         }
 
@@ -549,7 +541,10 @@ class Attachment extends Record
             return null;
         }
 
-        if (!in_array($type, $this->imageTypeList)) {
+        /** @var string[] */
+        $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
+
+        if (!in_array($type, $imageTypeList)) {
             return null;
         }
 
