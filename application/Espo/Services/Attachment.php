@@ -40,13 +40,12 @@ use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment as AttachmentEntity;
 
 use Espo\Core\FileStorage\Storages\EspoUploadDir;
+use Espo\Core\Acl\Table;
 
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Tools\Attachment\Jobs\MoveToStorage;
-
-use Espo\Core\Acl\Table;
 
 use stdClass;
 
@@ -63,12 +62,18 @@ class Attachment extends Record
     /**
      * @var string[]
      */
-    protected $attachmentFieldTypeList = ['file', 'image', 'attachmentMultiple'];
+    protected $attachmentFieldTypeList = [
+        'file',
+        'image',
+        'attachmentMultiple',
+    ];
 
     /**
      * @var string[]
      */
-    protected $inlineAttachmentFieldTypeList = ['wysiwyg'];
+    protected $inlineAttachmentFieldTypeList = [
+        'wysiwyg',
+    ];
 
     /**
      * @var string[]
@@ -93,7 +98,7 @@ class Attachment extends Record
      */
     public function upload($fileData): Entity
     {
-        if (!$this->getAcl()->checkScope('Attachment', 'create')) {
+        if (!$this->acl->checkScope('Attachment', Table::ACTION_CREATE)) {
             throw new Forbidden();
         }
 
@@ -244,7 +249,7 @@ class Attachment extends Record
 
         if (
             $storage &&
-            !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+            !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
         ) {
             $entity->clear('storage');
         }
@@ -272,7 +277,7 @@ class Attachment extends Record
 
         if (
             $storage &&
-            !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+            !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
         ) {
             $entity->clear('storage');
         }
@@ -282,41 +287,46 @@ class Attachment extends Record
      * @throws Forbidden
      * @throws Error
      */
-    protected function checkAttachmentField(string $relatedEntityType, string $field, string $role = 'Attachment'): void
-    {
+    protected function checkAttachmentField(
+        string $relatedEntityType,
+        string $field,
+        string $role = AttachmentEntity::ROLE_ATTACHMENT
+    ): void {
+
         if (
-            $this->getUser()->isAdmin() &&
-            $role === 'Inline Attachment' &&
+            $this->user->isAdmin() &&
+            $role === AttachmentEntity::ROLE_INLINE_ATTACHMENT &&
             in_array($relatedEntityType, $this->adminOnlyHavingInlineAttachmentsEntityTypeList)
         ) {
             return;
         }
 
-        $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
+        $fieldType = $this->metadata->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
 
         if (!$fieldType) {
             throw new Error("Field '{$field}' does not exist.");
         }
 
-        $attachmentFieldTypeListParam = lcfirst(str_replace(' ', '', $role)) . 'FieldTypeList';
+        $fieldTypeList = $role === AttachmentEntity::ROLE_INLINE_ATTACHMENT ?
+            $this->inlineAttachmentFieldTypeList :
+            $this->attachmentFieldTypeList;
 
-        if (!in_array($fieldType, $this->$attachmentFieldTypeListParam)) {
+        if (!in_array($fieldType, $fieldTypeList)) {
             throw new Error("Field type '{$fieldType}' is not allowed for {$role}.");
         }
 
-        if ($this->getUser()->isAdmin() && $relatedEntityType === 'Settings') {
+        if ($this->user->isAdmin() && $relatedEntityType === 'Settings') {
             return;
         }
 
         if (
-            !$this->getAcl()->checkScope($relatedEntityType, 'create')
-            &&
-            !$this->getAcl()->checkScope($relatedEntityType, 'edit')
+            !$this->acl->checkScope($relatedEntityType, Table::ACTION_CREATE) &&
+            !$this->acl->checkScope($relatedEntityType, Table::ACTION_EDIT)
         ) {
             throw new Forbidden("No access to " . $relatedEntityType . ".");
         }
 
-        if (in_array($field, $this->getAcl()->getScopeForbiddenFieldList($relatedEntityType, 'edit'))) {
+        if (in_array($field, $this->acl->getScopeForbiddenFieldList($relatedEntityType, Table::ACTION_EDIT))) {
             throw new Forbidden("No access to field '" . $field . "'.");
         }
     }
@@ -420,7 +430,7 @@ class Attachment extends Record
 
         $size = mb_strlen($contents, '8bit');
 
-        $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
+        $maxSize = $this->metadata->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
 
         if (!$maxSize) {
             $maxSize = $this->config->get('attachmentUploadMaxSize');
@@ -562,14 +572,12 @@ class Attachment extends Record
             throw new NotFound();
         }
 
-        $data = (object) [
+        return (object) [
             'name' => $attachment->get('name'),
             'type' => $attachment->get('type'),
             'stream' => $this->getAttachmentRepository()->getStream($attachment),
             'size' => $this->getAttachmentRepository()->getSize($attachment),
         ];
-
-        return $data;
     }
 
     /**
