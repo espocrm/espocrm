@@ -58,6 +58,7 @@ use Espo\Core\{
     Utils\Metadata,
     Acl,
     AclManager,
+    Acl\Table,
     Acl\Exceptions\NotImplemented as AclNotImplemented,
     Utils\FieldUtil,
     Record\Collection as RecordCollection,
@@ -352,7 +353,7 @@ class Stream
                 return false;
             }
 
-            if (!$aclManager->check($user, $entity, 'stream')) {
+            if (!$aclManager->check($user, $entity, Table::ACTION_STREAM)) {
                 return false;
             }
         }
@@ -541,7 +542,7 @@ class Stream
 
             $aclManager = $this->getUserAclManager($user);
 
-            if ($aclManager && $aclManager->check($user, 'Email', 'read')) {
+            if ($aclManager && $aclManager->check($user, 'Email', Table::ACTION_READ)) {
                 $orGroup[] = [
                     'relatedId!=' => null,
                     'relatedType' => 'Email',
@@ -1029,7 +1030,7 @@ class Stream
             throw new NotFound();
         }
 
-        if (!$this->acl->checkEntity($entity, Acl\Table::ACTION_STREAM)) {
+        if (!$this->acl->checkEntity($entity, Table::ACTION_STREAM)) {
             throw new Forbidden();
         }
 
@@ -1092,7 +1093,7 @@ class Stream
                 ],
             ];
 
-            if ($this->acl->check('Email', 'read')) {
+            if ($this->acl->check('Email', Table::ACTION_READ)) {
                 $builder->leftJoin(
                     'noteUser',
                     'noteUser',
@@ -2122,7 +2123,8 @@ class Stream
             }
 
             if (
-                !$aclManager || $aclManager->getLevel($user, $scope, 'read') !== 'all'
+                !$aclManager ||
+                $aclManager->getLevel($user, $scope, Table::ACTION_READ) !== Table::LEVEL_ALL
             ) {
                 $list[] = $scope;
             }
@@ -2154,8 +2156,8 @@ class Stream
             try {
                 $hasAccess =
                     $aclManager &&
-                    $aclManager->checkScope($user, $scope, 'read') &&
-                    $aclManager->checkScope($user, $scope, 'stream');
+                    $aclManager->checkScope($user, $scope, Table::ACTION_READ) &&
+                    $aclManager->checkScope($user, $scope, Table::ACTION_STREAM);
             }
             catch (AclNotImplemented $e) {
                 $hasAccess = false;
