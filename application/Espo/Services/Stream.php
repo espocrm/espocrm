@@ -1225,8 +1225,6 @@ class Stream
         $builder->where($where);
 
         if (!empty($params['after'])) {
-            $where['createdAt>'] = $params['after'];
-
             $builder->where([
                 'createdAt>' => $params['after'],
             ]);
