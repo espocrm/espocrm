@@ -9,7 +9,20 @@
         "file": {
             "type": "file",
             "required": true,
-            "view": "crm:views/document/fields/file"
+            "view": "crm:views/document/fields/file",
+            "accept": [
+                ".pdf",
+                ".odt",
+                ".ods",
+                ".odp",
+                ".docx",
+                ".xlsx",
+                ".pptx",
+                ".rtf",
+                ".csv",
+                ".md",
+                ".txt"
+            ]
         },
         "status": {
             "type": "enum",
