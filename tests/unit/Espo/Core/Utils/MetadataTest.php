@@ -149,7 +149,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->object->clearChanges();
 
         $this->assertEquals(array(), $this->reflection->getProperty('changedData'));
-        $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.maxLength'));
+        $this->assertEquals(255, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
     }
 
     public function testDelete()
