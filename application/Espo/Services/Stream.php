@@ -68,6 +68,7 @@ use Espo\Core\{
 
 use stdClass;
 use DateTime;
+use LogicException;
 
 class Stream
 {
@@ -260,7 +261,7 @@ class Stream
         if (!$skipAclCheck) {
             foreach ($userIdList as $i => $userId) {
                 $user = $this->entityManager
-                    ->getRDBRepository('User')
+                    ->getRDBRepository(User::ENTITY_TYPE)
                     ->select(['id', 'type', 'isActive'])
                     ->where([
                         'id' => $userId,
@@ -333,7 +334,7 @@ class Stream
 
         if (!$skipAclCheck) {
             $user = $this->entityManager
-                ->getRDBRepository('User')
+                ->getRDBRepository(User::ENTITY_TYPE)
                 ->select(['id', 'type', 'isActive'])
                 ->where([
                     'id' => $userId,
@@ -432,7 +433,7 @@ class Stream
         }
         else {
             /** @var ?User $user */
-            $user = $this->entityManager->getEntity('User', $userId);
+            $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
             if (!$user) {
                 throw new NotFound();
@@ -478,7 +479,7 @@ class Stream
 
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
-                ->from('Note')
+                ->from(NoteEntity::ENTITY_TYPE)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->withSearchParams($searchParams)
@@ -495,7 +496,7 @@ class Stream
             $baseBuilder->clone($additionalQuery);
         }
         else {
-            $baseBuilder->from('Note');
+            $baseBuilder->from(NoteEntity::ENTITY_TYPE);
         }
 
         $baseBuilder
@@ -858,7 +859,7 @@ class Stream
             ->compose($unionQuery);
 
         $sthCollection = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->findBySql($sql);
 
         $collection = $this->entityManager
@@ -907,12 +908,15 @@ class Stream
         if (!empty($params['filter'])) {
             switch ($params['filter']) {
                 case 'posts':
-                    $whereClause[]['type'] = 'Post';
+                    $whereClause[]['type'] = NoteEntity::TYPE_POST;
 
                     break;
 
                   case 'updates':
-                    $whereClause[]['type'] = ['Update', 'Status'];
+                    $whereClause[]['type'] = [
+                        NoteEntity::TYPE_UPDATE,
+                        NoteEntity::TYPE_STATUS,
+                    ];
 
                     break;
             }
@@ -937,7 +941,10 @@ class Stream
 
             if (in_array('Email', $ignoreScopeList)) {
                 $whereClause[] = [
-                    'type!=' => ['EmailReceived', 'EmailSent'],
+                    'type!=' => [
+                        NoteEntity::TYPE_EMAIL_RECEIVED,
+                        NoteEntity::TYPE_EMAIL_SENT,
+                    ],
                 ];
             }
         }
@@ -947,30 +954,44 @@ class Stream
 
     private function loadNoteAdditionalFields(NoteEntity $e): void
     {
-        if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
+        if (
+            $e->getType() == NoteEntity::TYPE_POST ||
+            $e->getType() == NoteEntity::TYPE_EMAIL_RECEIVED
+        ) {
             $e->loadAttachments();
         }
 
-        if ($e->get('parentId') && $e->get('parentType')) {
+        if ($e->getParentId() && $e->getParentType()) {
             $e->loadParentNameField('parent');
         }
 
-        if ($e->get('relatedId') && $e->get('relatedType')) {
+        if ($e->getRelatedId() && $e->getRelatedType()) {
             $e->loadParentNameField('related');
         }
 
-        if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
-            $targetType = $e->get('targetType');
+        if (
+            $e->getType() == NoteEntity::TYPE_POST &&
+            $e->getParentId() === null &&
+            !$e->get('isGlobal')
+        ) {
+            $targetType = $e->getTargetType();
 
-            if (!$targetType || $targetType === 'users' || $targetType === 'self') {
+            if (
+                !$targetType ||
+                $targetType === NoteEntity::TARGET_USERS ||
+                $targetType === NoteEntity::TARGET_SELF
+            ) {
                 $e->loadLinkMultipleField('users');
             }
 
-            if ($targetType !== 'users' && $targetType !== 'self') {
-                if (!$targetType || $targetType === 'teams') {
+            if (
+                $targetType !== NoteEntity::TARGET_USERS &&
+                $targetType !== NoteEntity::TARGET_SELF
+            ) {
+                if (!$targetType || $targetType === NoteEntity::TARGET_TEAMS) {
                     $e->loadLinkMultipleField('teams');
                 }
-                else if ($targetType === 'portals') {
+                else if ($targetType === NoteEntity::TARGET_PORTALS) {
                     $e->loadLinkMultipleField('portals');
                 }
             }
@@ -991,7 +1012,7 @@ class Stream
      */
     public function find(string $scope, ?string $id, array $params): stdClass
     {
-        if ($scope === 'User') {
+        if ($scope === User::ENTITY_TYPE) {
             if (empty($id)) {
                 $id = $this->user->getId();
             }
@@ -1008,7 +1029,7 @@ class Stream
             throw new NotFound();
         }
 
-        if (!$this->acl->checkEntity($entity, 'stream')) {
+        if (!$this->acl->checkEntity($entity, Acl\Table::ACTION_STREAM)) {
             throw new Forbidden();
         }
 
@@ -1021,7 +1042,7 @@ class Stream
 
             $additionalQuery = $this->selectBuilderFactory
                 ->create()
-                ->from('Note')
+                ->from(NoteEntity::ENTITY_TYPE)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->withSearchParams($searchParams)
@@ -1036,7 +1057,7 @@ class Stream
             $builder->clone($additionalQuery);
         }
         else {
-            $builder->from('Note');
+            $builder->from(NoteEntity::ENTITY_TYPE);
         }
 
         $where = [
@@ -1160,12 +1181,15 @@ class Stream
         if (!empty($params['filter'])) {
             switch ($params['filter']) {
                 case 'posts':
-                    $where['type'] = 'Post';
+                    $where['type'] = NoteEntity::TYPE_POST;
 
                     break;
 
                   case 'updates':
-                    $where['type'] = ['Update', 'Status'];
+                    $where['type'] = [
+                        NoteEntity::TYPE_ASSIGN,
+                        NoteEntity::TYPE_STATUS,
+                    ];
 
                     break;
             }
@@ -1190,7 +1214,10 @@ class Stream
 
             if (in_array('Email', $ignoreScopeList)) {
                 $where[] = [
-                    'type!=' => ['EmailReceived', 'EmailSent']
+                    'type!=' => [
+                        NoteEntity::TYPE_EMAIL_RECEIVED,
+                        NoteEntity::TYPE_EMAIL_SENT,
+                    ]
                 ];
             }
         }
@@ -1213,23 +1240,26 @@ class Stream
 
         /** @var iterable<NoteEntity> */
         $collection = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->clone($builder->build())
             ->find();
 
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
+            if (
+                $e->getType() === NoteEntity::TYPE_POST ||
+                $e->getType() === NoteEntity::TYPE_EMAIL_RECEIVED
+            ) {
                 $e->loadAttachments();
             }
 
             if (
-                $e->get('parentId') && $e->get('parentType') &&
-                ($e->get('parentId') !== $id || $e->get('parentType') !== $scope)
+                $e->getParentId() && $e->getParentType() &&
+                ($e->getParentId() !== $id || $e->getParentType() !== $scope)
             ) {
                 $e->loadParentNameField('parent');
             }
 
-            if ($e->get('relatedId') && $e->get('relatedType')) {
+            if ($e->getRelatedId() && $e->getRelatedType()) {
                 $e->loadParentNameField('related');
             }
 
@@ -1237,7 +1267,7 @@ class Stream
         }
 
         $count = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->clone($countBuilder->build())
             ->count();
 
@@ -1250,7 +1280,7 @@ class Stream
     private function loadAssignedUserName(Entity $entity): void
     {
         $user = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['name'])
             ->where([
                 'id' =>  $entity->get('assignedUserId'),
@@ -1338,26 +1368,27 @@ class Stream
 
         if (
             $this->entityManager
-                ->getRDBRepository('Note')
+                ->getRDBRepository(NoteEntity::ENTITY_TYPE)
                 ->where([
-                    'type' => 'EmailReceived',
+                    'type' => NoteEntity::TYPE_EMAIL_RECEIVED,
                     'parentId' => $entity->getId(),
                     'parentType' => $entityType,
                     'relatedId' => $email->getId(),
-                    'relatedType' => 'Email',
+                    'relatedType' => Email::ENTITY_TYPE,
                 ])
                 ->findOne()
         ) {
             return;
         }
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'EmailReceived');
+        $note->set('type', NoteEntity::TYPE_EMAIL_RECEIVED);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
         $note->set('relatedId', $email->getId());
-        $note->set('relatedType', 'Email');
+        $note->set('relatedType', Email::ENTITY_TYPE);
 
         $this->processNoteTeamsUsers($note, $email);
 
@@ -1403,13 +1434,14 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'EmailSent');
+        $note->set('type', NoteEntity::TYPE_EMAIL_SENT);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
         $note->set('relatedId', $email->getId());
-        $note->set('relatedType', 'Email');
+        $note->set('relatedType', Email::ENTITY_TYPE);
 
         $this->processNoteTeamsUsers($note, $email);
 
@@ -1437,7 +1469,7 @@ class Stream
 
         $person = null;
 
-        if ($user->getId() != 'system') {
+        if (!$user->isSystem()) {
             $person = $user;
         }
         else {
@@ -1466,9 +1498,10 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'Create');
+        $note->set('type', NoteEntity::TYPE_CREATE);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entityType);
 
@@ -1553,11 +1586,12 @@ class Stream
         array $options = []
     ): void {
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $entityType = $entity->getEntityType();
 
-        $note->set('type', 'CreateRelated');
+        $note->set('type', NoteEntity::TYPE_CREATE_RELATED);
         $note->set('parentId', $parentId);
         $note->set('parentType', $parentType);
         $note->set([
@@ -1589,10 +1623,10 @@ class Stream
         $entityType = $entity->getEntityType();
 
         $existing = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->select(['id'])
             ->where([
-                'type' => 'Relate',
+                'type' => NoteEntity::TYPE_RELATE,
                 'parentId' => $parentId,
                 'parentType' => $parentType,
                 'relatedId' => $entity->getId(),
@@ -1604,10 +1638,11 @@ class Stream
             return;
         }
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set([
-            'type' => 'Relate',
+            'type' => NoteEntity::TYPE_RELATE,
             'parentId' => $parentId,
             'parentType' => $parentType,
             'relatedType' => $entityType,
@@ -1630,9 +1665,10 @@ class Stream
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'Assign');
+        $note->set('type', NoteEntity::TYPE_ASSIGN);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -1677,9 +1713,10 @@ class Stream
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'Status');
+        $note->set('type', NoteEntity::TYPE_STATUS);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -1827,9 +1864,10 @@ class Stream
             return;
         }
 
-        $note = $this->entityManager->getNewEntity('Note');
+        /** @var NoteEntity */
+        $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
-        $note->set('type', 'Update');
+        $note->set('type', NoteEntity::TYPE_UPDATE);
         $note->set('parentId', $entity->getId());
         $note->set('parentType', $entity->getEntityType());
 
@@ -1856,7 +1894,7 @@ class Stream
     public function getEntityFolowerIdList(Entity $entity): array
     {
         $userList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id'])
             ->join('Subscription', 'subscription', [
                 'subscription.userId=:' => 'user.id',
@@ -1882,7 +1920,7 @@ class Stream
     {
         $builder = $this->selectBuilderFactory
             ->create()
-            ->from('User')
+            ->from(User::ENTITY_TYPE)
             ->withSearchParams($searchParams)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
@@ -1906,16 +1944,16 @@ class Stream
 
         /** @var \Espo\ORM\Collection<User> */
         $collection = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->find();
 
         $total = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
             ->count();
 
-        $userService = $this->recordServiceContainer->get('User');
+        $userService = $this->recordServiceContainer->get(User::ENTITY_TYPE);
 
         foreach ($collection as $e) {
             $userService->prepareEntityForOutput($e);
@@ -1938,7 +1976,7 @@ class Stream
         }
 
         $userList = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'name'])
             ->join(
                 'Subscription',
@@ -1989,7 +2027,7 @@ class Stream
         $scopes = $this->metadata->get('scopes', []);
 
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') {
+            if ($scope === User::ENTITY_TYPE) {
                 continue;
             }
 
@@ -2025,7 +2063,7 @@ class Stream
         $scopes = $this->metadata->get('scopes', []);
 
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') {
+            if ($scope === User::ENTITY_TYPE) {
                 continue;
             }
 
@@ -2073,7 +2111,7 @@ class Stream
         $scopes = $this->metadata->get('scopes', []);
 
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') {
+            if ($scope === User::ENTITY_TYPE) {
                 continue;
             }
 
@@ -2140,7 +2178,7 @@ class Stream
     {
         if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
             /** @var Collection<User> */
-            return $this->entityManager->getCollectionFactory()->create('User', []);
+            return $this->entityManager->getCollectionFactory()->create(User::ENTITY_TYPE, []);
         }
 
         $builder = $this->entityManager
@@ -2155,7 +2193,7 @@ class Stream
 
         if ($isInternal) {
             $builder
-                ->join('User', 'user', ['user.id:' => 'userId'])
+                ->join(User::ENTITY_TYPE, 'user', ['user.id:' => 'userId'])
                 ->where([
                     'user.type!=' => 'portal',
                 ]);
@@ -2165,7 +2203,7 @@ class Stream
 
         /** @var Collection<User> */
         return $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'isActive' => true,
                 'id=s' => $subQuery->getRaw(),
@@ -2222,7 +2260,7 @@ class Stream
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
 
-        /* @var $defs \Espo\ORM\Defs\EntityDefs */
+        /* @var \Espo\ORM\Defs\EntityDefs */
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $userIdList = [];
@@ -2230,7 +2268,7 @@ class Stream
 
         if ($ownerUserField) {
             if (!$defs->hasField($ownerUserField)) {
-                throw new Error("Non-existing read-owner user field.");
+                throw new LogicException("Non-existing read-owner user field.");
             }
 
             $fieldDefs = $defs->getField($ownerUserField);
@@ -2242,7 +2280,7 @@ class Stream
                 $ownerUserIdAttribute = $ownerUserField . 'Id';
             }
             else {
-                throw new Error("Bad read-owner user field type.");
+                throw new LogicException("Bad read-owner user field type.");
             }
 
             if ($entity->isAttributeChanged($ownerUserIdAttribute)) {
@@ -2278,7 +2316,7 @@ class Stream
         $limit = $this->config->get('noteAclLimit', self::NOTE_ACL_LIMIT);
 
         $noteList = $this->entityManager
-            ->getRDBRepository('Note')
+            ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->where([
                 'OR' => [
                     [
@@ -2307,12 +2345,6 @@ class Stream
             ->order('number', 'DESC')
             ->limit(0, $limit)
             ->find();
-
-        $noteOptions = [];
-
-        if (!empty($forceProcessNoteNotifications)) {
-            $noteOptions['forceProcessNotifications'] = true;
-        }
 
         $notificationPeriod = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_NOTIFICATION_PERIOD);
         $aclPeriod = '-' . $this->config->get('noteAclPeriod', self::NOTE_ACL_PERIOD);

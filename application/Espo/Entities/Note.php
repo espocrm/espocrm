@@ -58,6 +58,16 @@ class Note extends Entity
 
     public const TYPE_CREATE = 'Create';
 
+    public const TYPE_CREATE_RELATED = 'CreateRelated';
+
+    public const TYPE_RELATE = 'Relate';
+
+    public const TYPE_ASSIGN = 'Assign';
+
+    public const TYPE_EMAIL_RECEIVED = 'EmailReceived';
+
+    public const TYPE_EMAIL_SENT = 'EmailSent';
+
     private bool $aclIsProcessed = false;
 
     public function isPost(): bool
