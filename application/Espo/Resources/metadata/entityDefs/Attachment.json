@@ -4,7 +4,8 @@
             "type": "varchar",
             "required": true,
             "trim": true,
-            "view": "views/attachment/fields/name"
+            "view": "views/attachment/fields/name",
+            "maxLength": 255
         },
         "type": {
             "type": "varchar",
