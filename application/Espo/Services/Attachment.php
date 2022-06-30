@@ -136,6 +136,11 @@ class Attachment extends Record
         unset($data->isBeingUploaded);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function filterCreateInput(stdClass $data): void
     {
         parent::filterCreateInput($data);
@@ -273,6 +278,10 @@ class Attachment extends Record
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     protected function checkAttachmentField(string $relatedEntityType, string $field, string $role = 'Attachment'): void
     {
         if (
@@ -312,6 +321,12 @@ class Attachment extends Record
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function getCopiedAttachment(stdClass $data): AttachmentEntity
     {
         if (empty($data->id)) {
@@ -361,6 +376,11 @@ class Attachment extends Record
         return $copied;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function getAttachmentFromImageUrl(stdClass $data): AttachmentEntity
     {
         $attachment = $this->getAttachmentRepository()->getNew();
@@ -529,6 +549,10 @@ class Attachment extends Record
         ];
     }
 
+    /**
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function getFileData(string $id): stdClass
     {
        /** @var AttachmentEntity|null */
@@ -548,6 +572,12 @@ class Attachment extends Record
         return $data;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function uploadChunk(string $id, string $fileData): void
     {
         if (!$this->acl->checkScope(AttachmentEntity::ENTITY_TYPE, Table::ACTION_CREATE)) {
