@@ -150,6 +150,8 @@ class Stream
 
     private const NOTE_ACL_LIMIT = 50;
 
+    private const SYSTEM_USER_ID = 'system';
+
     /**
      * Not used currently.
      */
@@ -250,7 +252,7 @@ class Stream
         $userIdList = [];
 
         foreach ($sourceUserIdList as $id) {
-            if ($id == 'system') {
+            if ($id === self::SYSTEM_USER_ID) {
                 continue;
             }
 
@@ -325,7 +327,7 @@ class Stream
 
     public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false): bool
     {
-        if ($userId === 'system') {
+        if ($userId === self::SYSTEM_USER_ID) {
             return false;
         }
 
@@ -542,10 +544,10 @@ class Stream
 
             $aclManager = $this->getUserAclManager($user);
 
-            if ($aclManager && $aclManager->check($user, 'Email', Table::ACTION_READ)) {
+            if ($aclManager && $aclManager->check($user, Email::ENTITY_TYPE, Table::ACTION_READ)) {
                 $orGroup[] = [
                     'relatedId!=' => null,
-                    'relatedType' => 'Email',
+                    'relatedType' => Email::ENTITY_TYPE,
                     'noteUser.userId' => $user->getId(),
                 ];
 
@@ -554,7 +556,7 @@ class Stream
                     'noteUser', [
                         'noteUser.noteId=:' => 'id',
                         'noteUser.deleted' => false,
-                        'note.relatedType' => 'Email',
+                        'note.relatedType' => Email::ENTITY_TYPE,
                     ]
                 );
             }
@@ -940,7 +942,7 @@ class Stream
                 ]
             ];
 
-            if (in_array('Email', $ignoreScopeList)) {
+            if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
                 $whereClause[] = [
                     'type!=' => [
                         NoteEntity::TYPE_EMAIL_RECEIVED,
@@ -1093,20 +1095,20 @@ class Stream
                 ],
             ];
 
-            if ($this->acl->check('Email', Table::ACTION_READ)) {
+            if ($this->acl->check(Email::ENTITY_TYPE, Table::ACTION_READ)) {
                 $builder->leftJoin(
                     'noteUser',
                     'noteUser',
                     [
                         'noteUser.noteId=:' => 'id',
                         'noteUser.deleted' => false,
-                        'note.relatedType' => 'Email',
+                        'note.relatedType' => Email::ENTITY_TYPE,
                     ]
                 );
 
                 $orGroup[] = [
                     'relatedId!=' => null,
-                    'relatedType' => 'Email',
+                    'relatedType' => Email::ENTITY_TYPE,
                     'noteUser.userId' => $this->user->getId(),
                 ];
             }
@@ -1213,7 +1215,7 @@ class Stream
                 ]
             ];
 
-            if (in_array('Email', $ignoreScopeList)) {
+            if (in_array(Email::ENTITY_TYPE, $ignoreScopeList)) {
                 $where[] = [
                     'type!=' => [
                         NoteEntity::TYPE_EMAIL_RECEIVED,
@@ -2195,7 +2197,7 @@ class Stream
             $builder
                 ->join(User::ENTITY_TYPE, 'user', ['user.id:' => 'userId'])
                 ->where([
-                    'user.type!=' => 'portal',
+                    'user.type!=' => User::TYPE_PORTAL,
                 ]);
         }
 
