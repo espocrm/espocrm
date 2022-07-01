@@ -306,7 +306,7 @@ class Attachment extends Record
             return;
         }
 
-        $extension = self::getFileExtension($attachment) ?? null;
+        $extension = self::getFileExtension($attachment) ?? '';
 
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
             $attachment->getType();
@@ -344,7 +344,7 @@ class Attachment extends Record
      */
     private function checkAttachmentTypeImage(AttachmentEntity $attachment): void
     {
-        $extension = self::getFileExtension($attachment) ?? null;
+        $extension = self::getFileExtension($attachment) ?? '';
 
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
 
@@ -388,7 +388,7 @@ class Attachment extends Record
             return;
         }
 
-        $extension = self::getFileExtension($attachment) ?? null;
+        $extension = self::getFileExtension($attachment) ?? '';
 
         $mimeTypeList = $this->getMimeTypeUtil()->getMimeTypeListByExtension($extension);
 
