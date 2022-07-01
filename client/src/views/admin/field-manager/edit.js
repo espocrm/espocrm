@@ -138,7 +138,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasTooltipText = !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
                     'customizationTooltipTextDisabled']);
 
-                new Promise((resolve) => {
+                new Promise(resolve => {
                     if (this.isNew) {
                         resolve();
 
@@ -146,16 +146,18 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     }
 
                     this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
-                        .then((data) => {
+                        .then(data => {
                             this.defs = data;
 
                             resolve();
                         });
                 })
                 .then(() => {
+                    let promiseList = [];
+
                     this.paramList = [];
 
-                    var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
+                    var paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
 
                     if (!this.isNew) {
                         var fieldManagerAdditionalParamList =
@@ -170,7 +172,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
-                    paramList.forEach((o) => {
+                    paramList.forEach(o => {
                         var item = o.name;
 
                         if (item === 'required') {
@@ -202,14 +204,14 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     if (this.hasPersonalData) {
                         this.paramList.push({
                             name: 'isPersonalData',
-                            type: 'bool'
+                            type: 'bool',
                         });
                     }
 
                     if (this.hasInlineEditDisabled) {
                         this.paramList.push({
                             name: 'inlineEditDisabled',
-                            type: 'bool'
+                            type: 'bool',
                         });
                     }
 
@@ -218,7 +220,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             name: 'tooltipText',
                             type: 'text',
                             rowsMin: 1,
-                            trim: true
+                            trim: true,
                         });
                     }
 
@@ -232,40 +234,36 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         this.model.populateDefaults();
                     }
 
-                    this.createFieldView('varchar', 'name', !this.isNew, {
-                        trim: true
-                    });
+                    promiseList.push(
+                        this.createFieldView('varchar', 'name', !this.isNew, {trim: true})
+                    );
 
-                    this.createFieldView('varchar', 'label', null, {
-                        trim: true
-                    });
+                    promiseList.push(
+                        this.createFieldView('varchar', 'label', null, {trim: true})
+                    );
 
                     if (this.hasPersonalData) {
-                        this.createFieldView('bool', 'isPersonalData', null, {});
-                    }
-
-                    if (this.hasInlineEditDisabled) {
-                        this.createFieldView('bool', 'inlineEditDisabled', null, {});
-                    }
-
-                    if (this.hasTooltipText) {
-                        this.createFieldView('text', 'tooltipText', null, {});
+                        promiseList.push(
+                            this.createFieldView('bool', 'isPersonalData', null, {})
+                        );
                     }
 
                     this.hasDynamicLogicPanel = false;
 
-                    this.setupDynamicLogicFields(hasRequired);
+                    promiseList.push(
+                        this.setupDynamicLogicFields(hasRequired)
+                    );
 
                     this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                    this.paramList.forEach((o) => {
+                    this.paramList.forEach(o => {
                         if (o.hidden) {
                             return;
                         }
 
                         var options = {};
 
-                        if (o.tooltip ||  ~this.paramWithTooltipList.indexOf(o.name)) {
+                        if (o.tooltip || ~this.paramWithTooltipList.indexOf(o.name)) {
                             options.tooltip = true;
 
                             var tooltip = o.name;
@@ -277,10 +275,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             options.tooltipText = this.translate(tooltip, 'tooltips', 'FieldManager');
                         }
 
-                        this.createFieldView(o.type, o.name, null, o, options);
+                        promiseList.push(
+                            this.createFieldView(o.type, o.name, null, o, options)
+                        );
                     });
 
-                    callback();
+                    Promise.all(promiseList).then(() => callback());
                 });
             });
 
@@ -298,11 +298,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             this.field = this.options.field;
             this.type = this.options.type;
 
-            this.isNew = false;
-
-            if (!this.field) {
-                this.isNew = true;
-            }
+            this.isNew = !this.field;
 
             this.wait(true);
 
@@ -320,8 +316,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.getMetadata()
                     .get(['entityDefs', this.scope, 'fields', this.field, 'layoutDetailDisabled'])
             ) {
-                return;
+                return Promise.resolve();
             }
+
+            let promiseList = [];
 
             var dynamicLogicVisibleDisabled = this.getMetadata()
                 .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled']);
@@ -335,10 +333,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     isVisible
                 );
 
-                this.createFieldView(null, 'dynamicLogicVisible', null, {
-                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                    scope: this.scope
-                });
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicVisible', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                        scope: this.scope
+                    })
+                );
 
                 this.hasDynamicLogicPanel = true;
             }
@@ -354,10 +354,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.model.set('dynamicLogicRequired', dynamicLogicRequired);
 
-                this.createFieldView(null, 'dynamicLogicRequired', null, {
-                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                    scope: this.scope,
-                });
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicRequired', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                        scope: this.scope,
+                    })
+                );
 
                 this.hasDynamicLogicPanel = true;
             }
@@ -371,10 +373,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.model.set('dynamicLogicReadOnly', dynamicLogicReadOnly);
 
-                this.createFieldView(null, 'dynamicLogicReadOnly', null, {
-                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                    scope: this.scope,
-                });
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicReadOnly', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                        scope: this.scope,
+                    })
+                );
 
                 this.hasDynamicLogicPanel = true;
             }
@@ -385,17 +389,18 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             var dynamicLogicOptionsDisabled = this.getMetadata()
                 .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled']);
 
-
             if (typeDynamicLogicOptions && !dynamicLogicOptionsDisabled) {
                 var dynamicLogicOptions =  this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]);
 
                 this.model.set('dynamicLogicOptions', dynamicLogicOptions);
 
-                this.createFieldView(null, 'dynamicLogicOptions', null, {
-                    view: 'views/admin/field-manager/fields/dynamic-logic-options',
-                    scope: this.scope,
-                });
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicOptions', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-options',
+                        scope: this.scope,
+                    })
+                );
 
                 this.hasDynamicLogicPanel = true;
             }
@@ -409,13 +414,17 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.model.set('dynamicLogicInvalid', dynamicLogicInvalid);
 
-                this.createFieldView(null, 'dynamicLogicInvalid', null, {
-                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                    scope: this.scope,
-                });
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicInvalid', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                        scope: this.scope,
+                    })
+                );
 
                 this.hasDynamicLogicPanel = true;
             }
+
+            return Promise.all(promiseList);
         },
 
         afterRender: function () {
@@ -520,9 +529,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             _.extend(o, options || {});
 
-            this.createView(name, viewName, o, callback);
+            let promise = this.createView(name, viewName, o, callback);
 
             this.fieldList.push(name);
+
+            return promise;
         },
 
         disableButtons: function () {
