@@ -24,7 +24,12 @@
                             data-action="backToLogin"
                             tabindex="4"
                         >{{translate 'Back to login form' scope='User'}}</a>
-                        <button type="submit" class="btn btn-primary" id="btn-send" tabindex="2">{{translate 'Submit'}}</button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-s-wide"
+                            id="btn-send"
+                            tabindex="2"
+                        >{{translate 'Submit'}}</button>
                     </div>
                 </form>
             </div>

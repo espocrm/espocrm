@@ -43,7 +43,7 @@
                         >{{translate 'Forgot Password?' scope='User'}}</a>{{/if}}
                         <button
                             type="submit"
-                            class="btn btn-primary"
+                            class="btn btn-primary btn-s-wide"
                             id="btn-login"
                             tabindex="3"
                         >{{translate 'Login' scope='User'}}</button>
