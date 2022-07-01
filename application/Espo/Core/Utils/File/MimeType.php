@@ -46,7 +46,7 @@ class MimeType
 
         /** @var string[]|null */
         $typeList = $this->metadata
-                ->get(['app', 'file', 'extensionMimeTypeMap', $extensionLowerCase]) ?? [];
+                ->get(['app', 'file', 'extensionMimeTypeMap', $extensionLowerCase]);
 
         if ($typeList === null) {
             return null;
