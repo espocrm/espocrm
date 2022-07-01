@@ -59,7 +59,7 @@ define('helpers/file-upload', [], function () {
          * @param {File} file A file.
          * @param {module:model.Class} attachment An attachment model.
          * @param {module:helpers/file-upload~Options} [options] Options.
-         * @returns {Promise<unknown>}
+         * @returns {Promise}
          */
         upload(file, attachment, options) {
             options = options || {};
