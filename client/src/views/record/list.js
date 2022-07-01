@@ -147,7 +147,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         /**
          * A button. Handled by a class method `action{Name}`.
          *
-         * @typedef {Object} module:record/list~button
+         * @typedef {Object} module:views/record/list~button
          *
          * @property {string} name A name.
          * @property {string} label A label. To be translated in a current scope.
@@ -159,14 +159,14 @@ function (Dep, MassActionHelper, ExportHelper) {
          * A button list.
          *
          * @protected
-         * @type {module:record/list~button[]}
+         * @type {module:views/record/list~button[]}
          */
         buttonList: [],
 
         /**
          * A dropdown item. Handled by a class method `action{Name}`.
          *
-         * @typedef {Object} module:record/list~dropdownItem
+         * @typedef {Object} module:views/record/list~dropdownItem
          *
          * @property {string} name A name.
          * @property {string} [label] A label. To be translated in a current scope.
@@ -178,7 +178,7 @@ function (Dep, MassActionHelper, ExportHelper) {
          * A dropdown item list. Can be overridden by an option parameter.
          *
          * @protected
-         * @type {module:record/list~dropdownItem[]}
+         * @type {module:views/record/list~dropdownItem[]}
          */
         dropdownItemList: [],
 
