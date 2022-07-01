@@ -31,7 +31,21 @@
             "image/*",
             "audio/*",
             "video/*",
-            ".pdf"
+            ".zip",
+            ".pdf",
+            ".odt",
+            ".ods",
+            ".odp",
+            ".docx",
+            ".xlsx",
+            ".pptx",
+            ".doc",
+            ".xls",
+            ".ppt",
+            ".rtf",
+            ".csv",
+            ".md",
+            ".txt"
          ],
          "tooltip": "fileAccept"
       }

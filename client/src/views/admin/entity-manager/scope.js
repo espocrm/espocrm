@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/scope', 'view', function (Dep) {
+define('views/admin/entity-manager/scope', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,11 +37,15 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
         data: function () {
             return {
                 scope: this.scope,
+                isEditable: this.isEditable,
                 isRemovable: this.isRemovable,
                 isCustomizable: this.isCustomizable,
                 type: this.type,
                 hasLayouts: this.hasLayouts,
                 label: this.label,
+                hasFormula: this.hasFormula,
+                hasFields: this.hasFields,
+                hasRelationships: this.hasRelationships,
             };
         },
 
@@ -61,7 +65,8 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
         },
 
         setupScopeData: function () {
-            var scopeData = this.getMetadata().get(['scopes', this.scope]);
+            let scopeData = this.getMetadata().get(['scopes', this.scope]);
+            let entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
 
             if (!scopeData) {
                 throw new Espo.Exceptions.NotFound();
@@ -75,7 +80,32 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
 
             this.isCustomizable = !!scopeData.customizable;
             this.type = scopeData.type;
+            this.isEditable = true;
             this.hasLayouts = scopeData.layouts;
+            this.hasFormula = this.isCustomizable;
+            this.hasFields = this.isCustomizable;
+            this.hasRelationships = this.isCustomizable;
+
+
+            if ('edit' in entityManagerData) {
+                this.isEditable = entityManagerData.edit;
+            }
+
+            if ('layouts' in entityManagerData) {
+                this.hasLayouts = entityManagerData.layouts;
+            }
+
+            if ('formula' in entityManagerData) {
+                this.hasFormula = entityManagerData.formula;
+            }
+
+            if ('fields' in entityManagerData) {
+                this.hasFields = entityManagerData.fields;
+            }
+
+            if ('relationships' in entityManagerData) {
+                this.hasRelationships = entityManagerData.relationships;
+            }
 
             this.label = this.getLanguage().translate(this.scope, 'scopeNames');
         },

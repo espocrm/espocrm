@@ -1,1 +1,15 @@
-{"entity":true,"layouts":false,"tab":false,"acl":false,"customizable":false}
+{
+    "entity": true,
+    "layouts": false,
+    "tab": false,
+    "acl": false,
+    "customizable": true,
+    "entityManager": {
+        "edit": false,
+        "fields": true,
+        "relationships": false,
+        "formula": false,
+        "layouts": false,
+        "addField": false
+    }
+}

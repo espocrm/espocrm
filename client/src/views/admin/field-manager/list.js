@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/list', 'view', function (Dep) {
+define('views/admin/field-manager/list', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,6 +37,7 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
                 scope: this.scope,
                 fieldDefsArray: this.fieldDefsArray,
                 typeList: this.typeList,
+                hasAddField: this.hasAddField,
             };
         },
 
@@ -53,6 +54,14 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
 
         setup: function () {
             this.scope = this.options.scope;
+
+            this.hasAddField = true;
+
+            let entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
+
+            if ('addField' in entityManagerData) {
+                this.hasAddField = entityManagerData.addField;
+            }
 
             this.wait(
                 this.buildFieldDefs()
@@ -71,17 +80,14 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
                 this.fieldDefsArray = [];
 
                 this.fieldList.forEach(field => {
-                    var defs = this.fields[field];
-
-                    if (defs.customizationDisabled) {
-                        return;
-                    }
+                    let defs = this.fields[field];
 
                     this.fieldDefsArray.push({
                         name: field,
                         isCustom: defs.isCustom || false,
                         type: defs.type,
                         label: this.translate(field, 'fields', this.scope),
+                        isEditable: !defs.customizationDisabled,
                     });
                 });
             });

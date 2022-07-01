@@ -131,7 +131,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     this.hasPersonalData = true;
                 }
 
-                this.hasInlineEditDisabled = this.type !== 'foreign';
+                this.hasInlineEditDisabled = this.type !== 'foreign' &&
+                    !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
+                        'customizationInlineEditDisabledDisabled']);
+
+                this.hasTooltipText = !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
+                    'customizationTooltipTextDisabled']);
 
                 new Promise((resolve) => {
                     if (this.isNew) {
@@ -176,7 +181,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                         var isDisabled =
                             this.getMetadata()
-                                .get('entityDefs.' + this.scope + '.fields.' + this.field + '.' + disableParamName);
+                                .get(['entityDefs', this.scope, 'fields', this.field, disableParamName]);
 
                         if (isDisabled) {
                             return;
@@ -208,6 +213,15 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
+                    if (this.hasTooltipText) {
+                        this.paramList.push({
+                            name: 'tooltipText',
+                            type: 'text',
+                            rowsMin: 1,
+                            trim: true
+                        });
+                    }
+
                     this.paramList.forEach((o) => {
                         this.model.defs.fields[o.name] = o;
                     });
@@ -234,10 +248,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         this.createFieldView('bool', 'inlineEditDisabled', null, {});
                     }
 
-                    this.createFieldView('text', 'tooltipText', null, {
-                        trim: true,
-                        rowsMin: 1,
-                    });
+                    if (this.hasTooltipText) {
+                        this.createFieldView('text', 'tooltipText', null, {});
+                    }
 
                     this.hasDynamicLogicPanel = false;
 
@@ -311,7 +324,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             }
 
             var dynamicLogicVisibleDisabled = this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled']);
+                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled']);
 
             if (!dynamicLogicVisibleDisabled) {
                 var isVisible = this.getMetadata()

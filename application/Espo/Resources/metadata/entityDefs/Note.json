@@ -3,11 +3,13 @@
         "post": {
             "type": "text",
             "rows": 100000,
-            "view": "views/note/fields/post"
+            "view": "views/note/fields/post",
+            "customizationDisabled": true
         },
         "data": {
             "type": "jsonObject",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "type": {
             "type": "varchar",
@@ -23,72 +25,100 @@
                 "Relate",
                 "EmailReceived",
                 "EmailSent"
-            ]
+            ],
+            "customizationDisabled": true
         },
         "targetType": {
-            "type": "varchar"
+            "type": "varchar",
+            "options": [
+                "self",
+                "all",
+                "teams",
+                "users",
+                "portals"
+            ],
+            "customizationDisabled": true
         },
         "parent": {
             "type": "linkParent",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "related": {
             "type": "linkParent",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "attachments": {
             "type": "attachmentMultiple",
-            "view": "views/stream/fields/attachment-multiple"
+            "view": "views/stream/fields/attachment-multiple",
+            "customizationRequiredDisabled": true,
+            "customizationPreviewSizeDisabled": true,
+            "customizationInlineEditDisabledDisabled": true,
+            "customizationTooltipTextDisabled": true,
+            "dynamicLogicDisabled": true
         },
         "number": {
             "type": "autoincrement",
             "index": true,
             "dbType": "bigint",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "teams": {
             "type": "linkMultiple",
-            "noLoad": true
+            "noLoad": true,
+            "customizationDisabled": true
         },
         "portals": {
             "type": "linkMultiple",
-            "noLoad": true
+            "noLoad": true,
+            "customizationDisabled": true
         },
         "users": {
             "type": "linkMultiple",
-            "noLoad": true
+            "noLoad": true,
+            "customizationDisabled": true
         },
         "isGlobal": {
-            "type": "bool"
+            "type": "bool",
+            "customizationDisabled": true
         },
         "createdByGender": {
             "type": "foreign",
             "link": "createdBy",
-            "field": "gender"
+            "field": "gender",
+            "customizationDisabled": true
         },
         "notifiedUserIdList": {
             "type": "jsonArray",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "isInternal": {
-            "type": "bool"
+            "type": "bool",
+            "customizationDisabled": true
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         }
     },
     "links": {
