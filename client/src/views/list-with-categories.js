@@ -58,6 +58,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         hasNavigationPanel: false,
 
+        currentCatetgoryId: null,
+
         data: function () {
             var data = {};
 
@@ -166,7 +168,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
             return false;
         },
-
 
         hasNavigationPanelStoredValue: function () {
             return this.getStorage().has('state', 'categories-navigation-panel-' + this.scope);
@@ -562,34 +563,37 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
         },
 
         getCreateAttributes: function () {
+            let data;
+
             if (this.isCategoryMultiple()) {
                 if (this.currentCategoryId) {
                     var names = {};
 
                     names[this.currentCategoryId] = this.getCurrentCategoryName();
 
-                    var data = {};
+                    data = {};
 
                     var idsAttribute = this.categoryField + 'Ids';
                     var namesAttribute = this.categoryField + 'Names';
 
-                    data[idsAttribute] = [this.currentCategoryId],
+                    data[idsAttribute] = [this.currentCategoryId];
                     data[namesAttribute] = names;
 
                     return data;
                 }
+
+                return null;
             }
-            else {
-                var idAttribute = this.categoryField + 'Id';
-                var nameAttribute = this.categoryField + 'Name';
 
-                var data = {};
+            var idAttribute = this.categoryField + 'Id';
+            var nameAttribute = this.categoryField + 'Name';
 
-                data[idAttribute] = this.currentCategoryId;
-                data[nameAttribute] = this.getCurrentCategoryName();
+            data = {};
 
-                return data;
-            }
+            data[idAttribute] = this.currentCategoryId;
+            data[nameAttribute] = this.getCurrentCategoryName();
+
+            return data;
         },
 
         getCurrentCategoryName: function () {
