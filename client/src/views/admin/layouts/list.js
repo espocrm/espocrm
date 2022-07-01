@@ -30,19 +30,39 @@ define('views/admin/layouts/list', 'views/admin/layouts/rows', function (Dep) {
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'width', 'link', 'notSortable', 'align', 'view', 'customLabel', 'widthPx'],
+        dataAttributeList: [
+            'name',
+            'width',
+            'widthPx',
+            'link',
+            'notSortable',
+            'noLabel',
+            'align',
+            'view',
+            'customLabel'
+        ],
 
         dataAttributesDefs: {
             link: {
                 type: 'bool',
-                tooltip: true,
+                tooltip: true
             },
             width: {
                 type: 'float',
                 min: 0,
-                max: 100
+                max: 100,
+                tooltip: true
             },
-            notSortable: {type: 'bool'},
+            widthPx: {
+                type: 'int',
+                min: 0,
+                max: 512,
+                tooltip: true
+            },
+            notSortable: {
+                type: 'bool',
+                tooltip: true
+            },
             align: {
                 type: 'enum',
                 options: ["left", "right"]
@@ -51,12 +71,12 @@ define('views/admin/layouts/list', 'views/admin/layouts/rows', function (Dep) {
                 type: 'varchar',
                 readOnly: true
             },
+            noLabel: {
+                type: 'bool',
+                tooltip: true
+            },
             customLabel: {
                 type: 'varchar',
-                readOnly: true
-            },
-            widthPx: {
-                type: 'int',
                 readOnly: true
             },
             name: {

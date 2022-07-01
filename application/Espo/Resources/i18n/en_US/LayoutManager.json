@@ -1,6 +1,7 @@
 {
     "fields": {
         "width": "Width (%)",
+        "widthPx": "Width (px)",
         "link": "Link",
         "notSortable": "Not Sortable",
         "align": "Align",
@@ -9,6 +10,7 @@
         "sticked": "Sticked",
         "isLarge": "Large font size",
         "hidden": "Hidden",
+        "noLabel": "No Label",
         "dynamicLogicVisible": "Conditions making panel visible",
         "dynamicLogicStyled": "Conditions making style applied"
     },
@@ -35,6 +37,10 @@
         "fieldsIncompatible": "Fields can't be on the layout together: {fields}."
     },
     "tooltips": {
+        "noLabel": "Don't display a column label in the header.",
+        "notSortable": "Disables the ability to sort by the column.",
+        "width": "A column width in percentage. It's recommended to have one column with the not-set width, usually it's the *Name* field.",
+        "widthPx": "A column width in pixels. Takes effect only if the (%) value is not set. Makes the column width fixed.",
         "sticked": "The panel will be sticked to the panel above. No gap between panels.",
         "hiddenPanel": "Need to click 'show more' to see the panel.",
         "panelStyle": "A color of the panel.",

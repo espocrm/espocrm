@@ -2180,6 +2180,10 @@ function (Dep, MassActionHelper, ExportHelper) {
                     item.label = this.translate(itemName, 'fields', this.collection.entityType);
                 }
 
+                if (this.listLayout[i].noLabel) {
+                    item.label = null;
+                }
+
                 if (item.isSortable) {
                     item.isSorted = this.collection.orderBy === itemName;
 
