@@ -238,9 +238,9 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             if (this.mode === 'edit') {
                 this.$attachment = this.$el.find('div.attachment');
 
-                var name = this.model.get(this.nameName);
-                var type = this.model.get(this.typeName) || this.defaultType;
-                var id = this.model.get(this.idName);
+                let name = this.model.get(this.nameName);
+                let type = this.model.get(this.typeName) || this.defaultType;
+                let id = this.model.get(this.idName);
 
                 if (id) {
                     this.addAttachmentBox(name, type, id);
@@ -250,28 +250,32 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 this.$el.off('dragover');
                 this.$el.off('dragleave');
 
-                this.$el.on('drop', (e) => {
+                this.$el.on('drop', e => {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    var e = e.originalEvent;
+                    event = e.originalEvent;
 
-                    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-                        this.uploadFile(e.dataTransfer.files[0]);
+                    if (
+                        event.dataTransfer &&
+                        event.dataTransfer.files &&
+                        event.dataTransfer.files.length
+                    ) {
+                        this.uploadFile(event.dataTransfer.files[0]);
                     }
                 });
 
-                this.$el.on('dragover', (e) => {
+                this.$el.on('dragover', e => {
                     e.preventDefault();
                 });
 
-                this.$el.on('dragleave', (e) =>{
+                this.$el.on('dragleave', e =>{
                     e.preventDefault();
                 });
             }
 
             if (this.mode === 'search') {
-                var type = this.$el.find('select.search-type').val();
+                let type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
             }
@@ -289,7 +293,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         },
 
         handleResize: function () {
-            var width = this.$el.width();
+            let width = this.$el.width();
 
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },

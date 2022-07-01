@@ -577,15 +577,16 @@ function (Dep, FileUpload) {
             if (this.mode === 'edit') {
                 this.$attachments = this.$el.find('div.attachments');
 
-                var ids = this.model.get(this.idsName) || [];
+                let ids = this.model.get(this.idsName) || [];
 
-                var hameHash = this.model.get(this.nameHashName);
-                var typeHash = this.model.get(this.typeHashName) || {};
+                let hameHash = this.model.get(this.nameHashName);
+                let typeHash = this.model.get(this.typeHashName) || {};
 
-                ids.forEach((id) => {
+                ids.forEach(id => {
                     if (hameHash) {
-                        var name = hameHash[id];
-                        var type = typeHash[id] || null;
+                        let name = hameHash[id];
+                        let type = typeHash[id] || null;
+
                         this.addAttachmentBox(name, type, id);
                     }
                 });
@@ -594,29 +595,32 @@ function (Dep, FileUpload) {
                 this.$el.off('dragover');
                 this.$el.off('dragleave');
 
-                this.$el.on('drop', (e) => {
+                this.$el.on('drop', e => {
                     e.preventDefault();
-
                     e.stopPropagation();
 
-                    var e = e.originalEvent;
+                    event = e.originalEvent;
 
-                    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-                        this.uploadFiles(e.dataTransfer.files);
+                    if (
+                        event.dataTransfer &&
+                        event.dataTransfer.files &&
+                        event.dataTransfer.files.length
+                    ) {
+                        this.uploadFiles(event.dataTransfer.files);
                     }
                 });
 
-                this.$el.get(0).addEventListener('dragover', (e) => {
+                this.$el.get(0).addEventListener('dragover', e => {
                     e.preventDefault();
                 });
 
-                this.$el.get(0).addEventListener('dragleave', (e) => {
+                this.$el.get(0).addEventListener('dragleave', e => {
                     e.preventDefault();
                 });
             }
 
             if (this.mode === 'search') {
-                var type = this.$el.find('select.search-type').val();
+                let type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
             }
