@@ -576,7 +576,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                             this.isUploading = false;
                         })
                         .catch(() => {
-                            if (mediator.isCenceled) {
+                            if (mediator.isCanceled) {
                                 return;
                             }
 
