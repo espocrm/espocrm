@@ -339,7 +339,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         controlListVisibility: function () {
             if (this.isExpanded) {
-                this.$listContainer.removeClass('hidden');
+                this.showListContainer();
 
                 return;
             }
@@ -350,10 +350,10 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 this.nestedCategoriesCollection.models.length &&
                 !this.hasTextFilter()
             ) {
-                this.$listContainer.addClass('hidden');
+                this.hideListContainer();
             }
             else {
-                this.$listContainer.removeClass('hidden');
+                this.showListContainer();
             }
         },
 
@@ -664,11 +664,19 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
         },
 
         hideListViewWhileNestedCategoriesLoaded: function () {
-            this.$listContainer.addClass('hidden');
+            this.hideListContainer();
 
             this.nestedCategoriesCollection.once('sync', () => {
-                this.$listContainer.removeClass('hidden');
+                this.showListContainer();
             });
+        },
+
+        hideListContainer: function () {
+            this.$listContainer.addClass('hidden');
+        },
+
+        showListContainer: function () {
+            this.$listContainer.removeClass('hidden');
         },
 
         actionToggleNavigationPanel: function () {
