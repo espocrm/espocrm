@@ -392,7 +392,7 @@ define('router', [], function () {
          * Navigate.
          *
          * @param {string} fragment An URL fragment.
-         * @param {Object} options Options: trigger, replace.
+         * @param {Object} [options] Options: trigger, replace.
          */
         navigate: function (fragment, options) {
             this.history.push(fragment);
@@ -403,7 +403,7 @@ define('router', [], function () {
         /**
          * Navigate back.
          *
-         * @param {Object} options Options: trigger, replace.
+         * @param {Object} [options] Options: trigger, replace.
          */
         navigateBack: function (options) {
             let url;
@@ -531,8 +531,7 @@ define('router', [], function () {
          *
          * @param {string} controller A controller.
          * @param {string} action An action.
-         * @param {Object} options Options.
-         * @returns {undefined}
+         * @param {Object} [options] Options.
          * @fires module:router#routed
          */
         dispatch: function (controller, action, options) {
