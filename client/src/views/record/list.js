@@ -36,6 +36,8 @@ function (Dep, MassActionHelper, ExportHelper) {
      * @name Class
      * @extends module:view.Class
      * @memberOf module:views/record/list
+     *
+     * @todo Document all options.
      */
     return Dep.extend(/** @lends module:views/record/list.Class# */{
 
@@ -413,6 +415,13 @@ function (Dep, MassActionHelper, ExportHelper) {
         exportDisabled: false,
 
         /**
+         * Disable a no-data label (when no result).
+         *
+         * @protected
+         */
+        noDataDisabled: false,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -787,6 +796,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
                 moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
                 checkboxColumnWidth: this.checkboxColumnWidth,
+                noDataDisabled: this.noDataDisabled,
             };
         },
 
@@ -794,15 +804,13 @@ function (Dep, MassActionHelper, ExportHelper) {
          * @inheritDoc
          */
         init: function () {
-            this.listLayout = this.options.listLayout || this.listLayout;
-
             this.type = this.options.type || this.type;
-
+            this.listLayout = this.options.listLayout || this.listLayout;
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
             this.layoutScope = this.options.layoutScope || this.layoutScope;
             this.layoutAclDisabled = this.options.layoutAclDisabled || this.layoutAclDisabled;
-
             this.headerDisabled = this.options.headerDisabled || this.headerDisabled;
+            this.noDataDisabled = this.options.noDataDisabled || this.noDataDisabled;
 
             if (!this.headerDisabled) {
                 this.header = _.isUndefined(this.options.header) ? this.header : this.options.header;

@@ -192,5 +192,7 @@
 {{/if}}
 
 {{else}}
+    {{#unless noDataDisabled}}
     <div class="no-data">{{translate 'No Data'}}</div>
+    {{/unless}}
 {{/if}}
