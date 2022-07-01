@@ -35,7 +35,7 @@ define('exceptions', [], function () {
     /**
      * An access denied exception.
      *
-     * @param {string} message A message.
+     * @param {string} [message] A message.
      * @class
      */
     Espo.Exceptions.AccessDenied = function (message) {
@@ -50,7 +50,7 @@ define('exceptions', [], function () {
     /**
      * A not found exception.
      *
-     * @param {string} message A message.
+     * @param {string} [message] A message.
      * @class
      */
     Espo.Exceptions.NotFound = function (message) {
