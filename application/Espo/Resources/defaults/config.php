@@ -143,7 +143,7 @@ return [
     'inboundEmailMaxPortionSize' => 50,
     'emailAddressLookupEntityTypeList' => ['User', 'Contact', 'Lead', 'Account'],
     'authTokenLifetime' => 0,
-    'authTokenMaxIdleTime' => 120,
+    'authTokenMaxIdleTime' => 48,
     'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',
     'addressFormat' => 1,
     'displayListViewRecordCount' => true,
