@@ -52,7 +52,8 @@
     "suggest": {
         "ext-bcmath": "*",
         "ext-zmq": "*",
-        "ext-ldap": "*"
+        "ext-ldap": "*",
+        "ext-fileinfo": "*"
     },
     "autoload": {
         "psr-4": {

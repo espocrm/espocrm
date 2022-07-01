@@ -52,6 +52,11 @@ class Attachment extends RecordBase
         return parent::getActionList($request, $response);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
+     */
     public function postActionGetAttachmentFromImageUrl(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -69,6 +74,12 @@ class Attachment extends RecordBase
             ->getValueMap();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     public function postActionGetCopiedAttachment(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -86,6 +97,11 @@ class Attachment extends RecordBase
             ->getValueMap();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     public function getActionFile(Request $request, Response $response): void
     {
         $id = $request->getRouteParam('id');
@@ -103,6 +119,12 @@ class Attachment extends RecordBase
             ->setBody($fileData->stream);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     public function postActionChunk(Request $request, Response $response): void
     {
         $id = $request->getRouteParam('id');

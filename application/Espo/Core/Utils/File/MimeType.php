@@ -40,17 +40,21 @@ class MimeType
         $this->metadata = $metadata;
     }
 
-    public function getMimeTypeByExtension(string $extension): ?string
+    /**
+     * @return string[]
+     */
+    public function getMimeTypeListByExtension(string $extension): array
     {
         $extensionLowerCase = strtolower($extension);
 
-        /** @var string[]|null */
-        $typeList = $this->metadata
-                ->get(['app', 'file', 'extensionMimeTypeMap', $extensionLowerCase]);
+        /** @var string[] */
+        return $this->metadata
+            ->get(['app', 'file', 'extensionMimeTypeMap', $extensionLowerCase]) ?? [];
+    }
 
-        if ($typeList === null) {
-            return null;
-        }
+    public function getMimeTypeByExtension(string $extension): ?string
+    {
+        $typeList = $this->getMimeTypeListByExtension($extension);
 
         return $typeList[0] ?? null;
     }

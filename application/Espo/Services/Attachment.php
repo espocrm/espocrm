@@ -98,23 +98,23 @@ class Attachment extends Record
     private const FIELD_TYPE_WYSIWYG = 'wysiwyg';
 
     /**
-     * @param string $fileData
      * @throws Forbidden
+     * @todo Check where is it used. Maybe needs to be removed.
      */
-    public function upload($fileData): Entity
+    public function upload(string $fileData): Entity
     {
         if (!$this->acl->checkScope('Attachment', Table::ACTION_CREATE)) {
             throw new Forbidden();
         }
 
+        $contents = '';
+
         $arr = explode(',', $fileData);
 
         if (count($arr) > 1) {
             list($prefix, $contents) = $arr;
+
             $contents = base64_decode($contents);
-        }
-        else {
-            $contents = '';
         }
 
         $attachment = $this->entityManager->getNewEntity('Attachment');
@@ -306,11 +306,10 @@ class Attachment extends Record
             return;
         }
 
-        $name = $attachment->getName() ?? '';
+        $extension = self::getFileExtension($attachment) ?? null;
 
-        $extension = strtolower(
-            array_slice(explode('.', $name), -1)[0] ?? ''
-        );
+        $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
+            $attachment->getType();
 
         /** @var string[] */
         $accept = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'accept']) ?? [];
@@ -318,9 +317,6 @@ class Attachment extends Record
         if ($accept === []) {
             return;
         }
-
-        $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
-            $attachment->getType();
 
         $found = false;
 
@@ -348,9 +344,7 @@ class Attachment extends Record
      */
     private function checkAttachmentTypeImage(AttachmentEntity $attachment): void
     {
-        $name = $attachment->getName() ?? '';
-
-        $extension = array_slice(explode('.', $name), -1)[0] ?? '';
+        $extension = self::getFileExtension($attachment) ?? null;
 
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
 
@@ -359,6 +353,49 @@ class Attachment extends Record
 
         if (!in_array($mimeType, $imageTypeList)) {
             throw new ForbiddenSilent("Not allowed file type.");
+        }
+
+        $setMimeType = $attachment->getType();
+
+        if (strtolower($setMimeType ?? '') !== $mimeType) {
+            throw new ForbiddenSilent("Passed type does not correspond to extension.");
+        }
+
+        $this->checkDetectedMimeType($attachment);
+    }
+
+    private static function getFileExtension(AttachmentEntity $attachment): ?string
+    {
+        $name = $attachment->getName() ?? '';
+
+        return array_slice(explode('.', $name), -1)[0] ?? null;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkDetectedMimeType(AttachmentEntity $attachment): void
+    {
+        // ext-fileinfo required, otherwise bypass.
+        if (!class_exists('\finfo') || !defined('FILEINFO_MIME_TYPE')) {
+            return;
+        }
+
+        /** @var string|null */
+        $contents = $attachment->get('contents');
+
+        if (!$contents) {
+            return;
+        }
+
+        $extension = self::getFileExtension($attachment) ?? null;
+
+        $mimeTypeList = $this->getMimeTypeUtil()->getMimeTypeListByExtension($extension);
+
+        $detectedMimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($contents);
+
+        if (!in_array($detectedMimeType, $mimeTypeList)) {
+            throw new ForbiddenSilent("Detected mime type does not correspond to extension.");
         }
     }
 
