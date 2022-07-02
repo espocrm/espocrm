@@ -1,65 +1,65 @@
 {
-   "actualFields":[
-      "street",
-      "city",
-      "state",
-      "country",
-      "postalCode"
-   ],
-   "fields": {
-      "street": {
-          "type": "text",
-          "maxLength": 255,
-          "dbType": "varchar"
-      },
-      "city": {
-         "type":"varchar",
-         "trim": true,
-         "maxLength": 255,
-         "view": "views/fields/address-city",
-         "customizationOptionsDisabled": true
-      },
-      "state": {
-         "type":"varchar",
-         "trim": true,
-         "maxLength": 255,
-         "view": "views/fields/address-state",
-         "customizationOptionsDisabled": true
-      },
-      "country": {
-         "type":"varchar",
-         "trim": true,
-         "maxLength": 255,
-         "view": "views/fields/address-country",
-         "customizationOptionsDisabled": true
-      },
-      "postalCode": {
-         "type":"varchar",
-         "maxLength": 40,
-         "trim": true
-      },
-      "map": {
-         "type": "map",
-         "notStorable": true,
-         "readOnly": true,
-         "layoutListDisabled": true,
-         "provider": "Google",
-         "height": 300,
-         "exportDisabled": true,
-         "importDisabled": true
-      }
-   },
-   "params": [
-      {
-         "name": "viewMap",
-         "type": "bool"
-      }
-   ],
-   "notMergeable":true,
-   "notCreatable": false,
-   "filter": true,
-   "skipOrmDefs": true,
-   "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Field\\Address\\AddressFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\Address\\AddressAttributeExtractor"
+    "actualFields": [
+        "street",
+        "city",
+        "state",
+        "country",
+        "postalCode"
+    ],
+    "fields": {
+        "street": {
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
+        },
+        "city": {
+            "type":"varchar",
+            "trim": true,
+            "maxLength": 255,
+            "view": "views/fields/address-city",
+            "customizationOptionsDisabled": true
+        },
+        "state": {
+            "type":"varchar",
+            "trim": true,
+            "maxLength": 255,
+            "view": "views/fields/address-state",
+            "customizationOptionsDisabled": true
+        },
+        "country": {
+            "type":"varchar",
+            "trim": true,
+            "maxLength": 255,
+            "view": "views/fields/address-country",
+            "customizationOptionsDisabled": true
+        },
+        "postalCode": {
+            "type":"varchar",
+            "maxLength": 40,
+            "trim": true
+        },
+        "map": {
+            "type": "map",
+            "notStorable": true,
+            "readOnly": true,
+            "layoutListDisabled": true,
+            "provider": "Google",
+            "height": 300,
+            "exportDisabled": true,
+            "importDisabled": true
+        }
+    },
+    "params": [
+        {
+            "name": "viewMap",
+            "type": "bool"
+        }
+    ],
+    "notMergeable": true,
+    "notCreatable": false,
+    "filter": true,
+    "skipOrmDefs": true,
+    "personalData": true,
+    "valueFactoryClassName": "Espo\\Core\\Field\\Address\\AddressFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\Address\\AddressAttributeExtractor"
 }

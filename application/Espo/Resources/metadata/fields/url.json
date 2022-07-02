@@ -1,34 +1,34 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"varchar"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
-         "name": "strip",
-         "type": "bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "type":"varchar"
-   },
-   "personalData": true
+    "params":[
+        {
+             "name": "required",
+             "type": "bool",
+             "default": false
+        },
+        {
+             "name": "default",
+             "type": "varchar"
+        },
+        {
+             "name": "maxLength",
+             "type": "int"
+        },
+        {
+             "name": "strip",
+             "type": "bool"
+        },
+        {
+             "name": "audited",
+             "type": "bool"
+        },
+        {
+             "name": "readOnly",
+             "type": "bool"
+        }
+    ],
+    "filter": true,
+    "fieldDefs": {
+        "type": "varchar"
+    },
+    "personalData": true
 }

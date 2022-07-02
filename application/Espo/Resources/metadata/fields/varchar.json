@@ -1,48 +1,48 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"varchar",
-         "trim": true
-      },
-      {
-         "name":"maxLength",
-         "type":"int",
-         "default": 150,
-         "min": 1,
-         "max": 65535
-      },
-      {
-         "name":"trim",
-         "type":"bool",
-         "default": true
-      },
-      {
-         "name": "options",
-         "type": "multiEnum"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "validationList": [
-      "required",
-      "maxLength"
-   ],
-   "filter": true,
-   "personalData": true,
-   "textFilter": true,
-   "textFilterForeign": true,
-   "dynamicLogicOptions": true,
-   "fullTextSearch": true
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "varchar",
+            "trim": true
+        },
+        {
+            "name": "maxLength",
+            "type": "int",
+            "default": 150,
+            "min": 1,
+            "max": 65535
+        },
+        {
+            "name": "options",
+            "type": "multiEnum"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "trim",
+            "type": "bool",
+            "default": true
+        }
+    ],
+    "validationList": [
+        "required",
+        "maxLength"
+    ],
+    "filter": true,
+    "personalData": true,
+    "textFilter": true,
+    "textFilterForeign": true,
+    "dynamicLogicOptions": true,
+    "fullTextSearch": true
 }
