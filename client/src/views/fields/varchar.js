@@ -52,12 +52,28 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         ],
 
         /**
+         * @inheritDoc
+         */
+        validations: [
+            'required',
+            'pattern',
+        ],
+
+        /**
          * Use an autocomplete requesting data from the backend.
          *
          * @protected
          * @type {boolean}
          */
         useAutocompleteUrl: false,
+
+        /**
+         * No spell-check.
+         *
+         * @protected
+         * @type {boolean}
+         */
+        noSpellCheck: false,
 
         setup: function () {
             this.setupOptions();
@@ -165,6 +181,8 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                 }
             }
 
+            data.noSpellCheck = this.noSpellCheck;
+
             return data;
         },
 
@@ -258,6 +276,58 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                     this.trigger('change');
                 });
             }
+        },
+
+        validatePattern: function () {
+            let pattern = this.params.pattern;
+
+            return this.fieldValidatePattern(this.name, pattern);
+        },
+
+        /**
+         * Used by other field views.
+         *
+         * @param {string} name
+         * @param {string} [pattern]
+         */
+        fieldValidatePattern: function (name, pattern) {
+            pattern = pattern || this.model.getFieldParam(name, 'pattern');
+            /** @var {string|null} value */
+            let value = this.model.get(name);
+
+            if (!pattern) {
+                return false;
+            }
+
+            if (value === '' || value === null) {
+                return false;
+            }
+
+            let messageKey = 'fieldNotMatchingPattern';
+
+            if (pattern[0] === '$') {
+                let patternName = pattern;
+                let foundPattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
+
+                if (foundPattern) {
+                    messageKey += patternName;
+                    pattern = foundPattern;
+                }
+            }
+
+            let regExp = new RegExp('^' + pattern + '$');
+
+            if (regExp.test(value)) {
+                return false;
+            }
+
+            let msg = this.translate(messageKey, 'messages')
+                .replace('{field}', this.translate(name, 'fields', this.entityType))
+                .replace('{pattern}', pattern);
+
+            this.showValidationMessage(msg, '[data-name="' + name + '"]');
+
+            return true;
         },
 
         fetch: function () {
