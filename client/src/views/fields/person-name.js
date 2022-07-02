@@ -28,7 +28,13 @@
 
 define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/fields/varchar.Class
+     * @memberOf module:views/fields/person-name
+     */
+    return Dep.extend(/** @lends module:views/fields/person-name.Class# */{
 
         type: 'personName',
 
@@ -41,6 +47,14 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
         editTemplateLastFirstMiddle: 'fields/person-name/edit-last-first-middle',
 
         editTemplateFirstMiddleLast: 'fields/person-name/edit-first-middle-last',
+
+        /**
+         * @inheritDoc
+         */
+        validations: [
+            'required',
+            'pattern',
+        ],
 
         data: function () {
             var data = Dep.prototype.data.call(this);
@@ -270,6 +284,16 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
             return result;
         },
 
+        validatePattern: function () {
+            let result = false;
+
+            result = this.fieldValidatePattern(this.firstField) || result;
+            result = this.fieldValidatePattern(this.lastField) || result;
+            result = this.fieldValidatePattern(this.middleField) || result;
+
+            return result;
+        },
+
         hasRequiredMarker: function () {
             if (this.isRequired()) {
                 return true;
@@ -281,7 +305,7 @@ define('views/fields/person-name', ['views/fields/varchar'], function (Dep) {
                    this.model.getFieldParam(this.lastField, 'required');
         },
 
-        fetch: function (form) {
+        fetch: function () {
             var data = {};
 
             data[this.salutationField] = this.$salutation.val() || null;

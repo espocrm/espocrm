@@ -91,7 +91,8 @@
         "title": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "position": {
             "type": "varchar",

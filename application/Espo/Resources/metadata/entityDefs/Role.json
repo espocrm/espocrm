@@ -4,7 +4,8 @@
             "maxLength": 150,
             "required": true,
             "type": "varchar",
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "assignmentPermission": {
             "type": "enum",

@@ -306,11 +306,11 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
             let messageKey = 'fieldNotMatchingPattern';
 
             if (pattern[0] === '$') {
-                let patternName = pattern;
+                let patternName = pattern.slice(1);
                 let foundPattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
 
                 if (foundPattern) {
-                    messageKey += patternName;
+                    messageKey += '$' + patternName;
                     pattern = foundPattern;
                 }
             }

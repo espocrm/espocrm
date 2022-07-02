@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "maxLength": 100,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "logo": {
             "type": "image"

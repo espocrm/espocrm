@@ -213,7 +213,8 @@
         "onlyDefaultCurrency": "Only default currency",
         "displayRawText": "Display raw text (no markdown)",
         "conversionDisabled": "Disable Conversion",
-        "decimalPlaces": "Decimal Places"
+        "decimalPlaces": "Decimal Places",
+        "pattern": "Pattern"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

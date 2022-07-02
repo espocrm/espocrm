@@ -17,26 +17,30 @@
             "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-city",
-            "customizationOptionsDisabled": true
+            "customizationOptionsDisabled": true,
+            "pattern": "$noBadCharacters"
         },
         "state": {
             "type":"varchar",
             "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-state",
-            "customizationOptionsDisabled": true
+            "customizationOptionsDisabled": true,
+            "pattern": "$noBadCharacters"
         },
         "country": {
             "type":"varchar",
             "trim": true,
             "maxLength": 255,
             "view": "views/fields/address-country",
-            "customizationOptionsDisabled": true
+            "customizationOptionsDisabled": true,
+            "pattern": "$noBadCharacters"
         },
         "postalCode": {
             "type":"varchar",
             "maxLength": 40,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "map": {
             "type": "map",

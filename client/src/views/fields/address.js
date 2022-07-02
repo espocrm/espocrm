@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/address', ['views/fields/base'], function (Dep) {
+define('views/fields/address', ['views/fields/base', 'views/fields/varchar'], function (Dep, Varchar) {
 
     /**
      * An address field.
@@ -55,6 +55,14 @@ define('views/fields/address', ['views/fields/base'], function (Dep) {
         editTemplate4: 'fields/address/edit-4',
 
         searchTemplate: 'fields/address/search',
+
+        /**
+         * @inheritDoc
+         */
+        validations: [
+            'required',
+            'pattern',
+        ],
 
         /**
          * @inheritDoc
@@ -604,6 +612,23 @@ define('views/fields/address', ['views/fields/base'], function (Dep) {
                 this.model.getFieldParam(this.stateField, 'required') ||
                 this.model.getFieldParam(this.cityField, 'required') ||
                 this.model.getFieldParam(this.countryField, 'required');
+        },
+
+        validatePattern: function () {
+            let fieldList = [
+                this.postalCodeField,
+                this.stateField,
+                this.cityField,
+                this.countryField,
+            ];
+
+            let result = false;
+
+            for (let field of fieldList) {
+                result = Varchar.prototype.fieldValidatePattern.call(this, field) || result;
+            }
+
+            return result;
         },
 
         fetch: function () {

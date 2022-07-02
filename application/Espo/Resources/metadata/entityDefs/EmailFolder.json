@@ -4,7 +4,8 @@
             "type": "varchar",
             "required": true,
             "maxLength": 64,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "order": {
             "type": "int"

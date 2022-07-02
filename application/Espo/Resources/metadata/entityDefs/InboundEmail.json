@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "emailAddress": {
             "type": "varchar",

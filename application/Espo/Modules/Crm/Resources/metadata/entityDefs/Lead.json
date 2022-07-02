@@ -27,7 +27,8 @@
         },
         "title": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "pattern": "$noBadCharacters"
         },
         "status": {
             "type": "enum",
@@ -137,7 +138,8 @@
             "view": "views/fields/user"
         },
         "accountName": {
-            "type": "varchar"
+            "type": "varchar",
+            "pattern": "$noBadCharacters"
         },
         "assignedUser": {
             "type": "link",

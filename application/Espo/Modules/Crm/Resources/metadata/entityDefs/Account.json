@@ -4,7 +4,8 @@
             "type": "varchar",
             "maxLength": 249,
             "required": true,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "website": {
             "type": "url",
@@ -86,7 +87,8 @@
         "sicCode": {
             "type": "varchar",
             "maxLength": 40,
-            "trim": true
+            "trim": true,
+            "pattern": "$noBadCharacters"
         },
         "contactRole": {
             "type": "varchar",
