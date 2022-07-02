@@ -237,6 +237,14 @@ define('views/fields/base', ['view'], function (Dep) {
         initialSearchIsNotIdle: false,
 
         /**
+         * An entity type.
+         *
+         * @private
+         * @type {string|null}
+         */
+        entityType: null,
+
+        /**
          * Is the field required.
          *
          * @returns {boolean}
@@ -612,6 +620,8 @@ define('views/fields/base', ['view'], function (Dep) {
             this.validateCallback = this.options.validateCallback;
 
             this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
+
+            this.entityType = this.model.entityType;
 
             this.recordHelper = this.options.recordHelper;
 
