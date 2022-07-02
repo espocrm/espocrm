@@ -285,12 +285,12 @@ class Note extends Record
                 throw new BadRequest("No portal IDs.");
             }
 
-            if ($this->acl->get('portal') !== AclTable::LEVEL_YES) {
+            if ($this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
                 throw new Forbidden('Not permitted to post to portal users.');
             }
         }
 
-        if ($targetType === NoteEntity::TARGET_USERS && $this->acl->get('portal') !== AclTable::LEVEL_YES) {
+        if ($targetType === NoteEntity::TARGET_USERS && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
             if ($hasPortalTargetUser) {
                 throw new Forbidden('Not permitted to post to portal users.');
             }
