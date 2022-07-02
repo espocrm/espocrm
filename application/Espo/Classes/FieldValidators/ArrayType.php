@@ -29,12 +29,25 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Metadata;
+
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 use stdClass;
 
 class ArrayType
 {
+    private Metadata $metadata;
+
+    private Defs $defs;
+
+    public function __construct(Metadata $metadata, Defs $defs)
+    {
+        $this->metadata = $metadata;
+        $this->defs = $defs;
+    }
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
@@ -50,6 +63,66 @@ class ArrayType
 
         if (count($list) > $validationValue) {
             return false;
+        }
+
+        return true;
+    }
+
+    public function checkArrayOfString(Entity $entity, string $field): bool
+    {
+        /** @var ?mixed[] */
+        $list = $entity->get($field);
+
+        if ($list === null) {
+            return true;
+        }
+
+        foreach ($list as $item) {
+            if (!is_string($item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function checkValid(Entity $entity, string $field): bool
+    {
+        if (!$entity->has($field)) {
+            return true;
+        }
+
+        /** @var ?string[] */
+        $value = $entity->get($field);
+
+        if ($value === null || $value === []) {
+            return true;
+        }
+
+        $fieldDefs = $this->defs
+            ->getEntity($entity->getEntityType())
+            ->getField($field);
+
+        /** @var ?string */
+        $path = $fieldDefs->getParam('optionsPath');
+
+        /** @var ?string[] */
+        $optionList = $path ?
+            $this->metadata->get($path) :
+            $fieldDefs->getParam('options');
+
+        if ($optionList === null) {
+            return true;
+        }
+
+        if ($fieldDefs->getParam('allowCustomOptions')) {
+            return true;
+        }
+
+        foreach ($value as $item) {
+            if (!in_array($item, $optionList)) {
+                return false;
+            }
         }
 
         return true;

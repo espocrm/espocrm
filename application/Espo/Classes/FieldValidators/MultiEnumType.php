@@ -29,7 +29,4 @@
 
 namespace Espo\Classes\FieldValidators;
 
-class MultiEnumType extends ArrayType
-{
-
-}
+class MultiEnumType extends ArrayType {}

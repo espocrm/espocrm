@@ -57,11 +57,15 @@
     ],
     "validationList": [
         "array",
+        "arrayOfString",
+        "valid",
         "required",
         "maxCount"
     ],
     "mandatoryValidationList": [
-        "array"
+        "array",
+        "arrayOfString",
+        "valid"
     ],
     "filter": true,
     "notCreatable": false,
