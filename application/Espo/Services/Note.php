@@ -169,6 +169,7 @@ class Note extends Record
     /**
      * @param NoteEntity $entity
      * @param stdClass $data
+     * @throws Forbidden
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
@@ -176,6 +177,10 @@ class Note extends Record
 
         if ($entity->isPost()) {
             $this->handlePostText($entity);
+        }
+
+        if (!$entity->isPost() && !$this->user->isAdmin()) {
+            throw new ForbiddenSilent("Only 'Post' type allowed.");
         }
 
         $entity->clear('targetType');
