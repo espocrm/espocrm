@@ -30,7 +30,6 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Utils\Metadata;
-use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
@@ -54,11 +53,7 @@ class EnumType
 
     public function checkValid(Entity $entity, string $field): bool
     {
-        if (!$entity->isNew() && !$entity->has($field)) {
-            return true;
-        }
-
-        if ($entity->isNew() && $this->isNotSetAndHasDefault($entity, $field)) {
+        if (!$entity->has($field)) {
             return true;
         }
 
@@ -86,19 +81,6 @@ class EnumType
         $value = $entity->get($field);
 
         return in_array($value, $optionList);
-    }
-
-    private function isNotSetAndHasDefault(Entity $entity, string $field): bool
-    {
-        if ($entity->has($field)) {
-            return false;
-        }
-
-        if (!$entity instanceof CoreEntity) {
-            return false;
-        }
-
-        return $entity->getAttributeParam($field, 'default') !== null;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool
