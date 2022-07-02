@@ -99,8 +99,7 @@
         },
         "fontFace": {
             "type": "enum",
-            "view": "views/template/fields/font-face",
-            "default": ""
+            "view": "views/template/fields/font-face"
         },
         "title": {
             "type": "varchar"

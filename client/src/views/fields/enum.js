@@ -53,7 +53,10 @@ function (Dep, Selectize, _) {
 
         translatedOptions: null,
 
-        fetchEmptyValueAsNull: false,
+        /**
+         * @todo Remove? Always treat as true.
+         */
+        fetchEmptyValueAsNull: true,
 
         searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
 
@@ -98,6 +101,12 @@ function (Dep, Selectize, _) {
                 if (typeof this.model[methodName] === 'function') {
                     this.params.options = this.model[methodName].call(this.model);
                 }
+            }
+
+            if (this.params.optionsPath) {
+                this.params.options = Espo.Utils.clone(
+                    this.getMetadata().get(this.params.optionsPath) || []
+                );
             }
 
             this.styleMap = this.model.getFieldParam(this.name, 'style') || {};

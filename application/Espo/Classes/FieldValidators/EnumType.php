@@ -29,13 +29,76 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Metadata;
+use Espo\Core\ORM\Entity as CoreEntity;
+
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 class EnumType
 {
+    private Metadata $metadata;
+
+    private Defs $defs;
+
+    public function __construct(Metadata $metadata, Defs $defs)
+    {
+        $this->metadata = $metadata;
+        $this->defs = $defs;
+    }
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
+    }
+
+    public function checkValid(Entity $entity, string $field): bool
+    {
+        if (!$entity->isNew() && !$entity->has($field)) {
+            return true;
+        }
+
+        if ($entity->isNew() && $this->isNotSetAndHasDefault($entity, $field)) {
+            return true;
+        }
+
+        $fieldDefs = $this->defs
+            ->getEntity($entity->getEntityType())
+            ->getField($field);
+
+        /** @var ?string */
+        $path = $fieldDefs->getParam('optionsPath');
+
+        /** @var ?string[] */
+        $optionList = $path ?
+            $this->metadata->get($path) :
+            $fieldDefs->getParam('options');
+
+        if ($optionList === null) {
+            return true;
+        }
+
+        $optionList = array_map(
+            fn ($item) => $item === '' ? null : $item,
+            $optionList
+        );
+
+        $value = $entity->get($field);
+
+        return in_array($value, $optionList);
+    }
+
+    private function isNotSetAndHasDefault(Entity $entity, string $field): bool
+    {
+        if ($entity->has($field)) {
+            return false;
+        }
+
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
+
+        return $entity->getAttributeParam($field, 'default') !== null;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

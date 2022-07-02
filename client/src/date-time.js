@@ -432,15 +432,15 @@ define('date-time', [], function () {
             }
 
             preferences.on('change', model => {
-                if (model.has('dateFormat') && model.get('dateFormat') !== '') {
+                if (model.has('dateFormat') && model.get('dateFormat')) {
                     this.dateFormat = model.get('dateFormat');
                 }
 
-                if (model.has('timeFormat') && model.get('timeFormat') !== '') {
+                if (model.has('timeFormat') && model.get('timeFormat')) {
                     this.timeFormat = model.get('timeFormat');
                 }
 
-                if (model.has('timeZone') && model.get('timeZone') !== '') {
+                if (model.has('timeZone') && model.get('timeZone')) {
 
                     this.timeZone = model.get('timeZone');
                 }

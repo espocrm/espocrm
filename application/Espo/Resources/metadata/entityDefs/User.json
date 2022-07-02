@@ -72,14 +72,12 @@
         "firstName": {
             "type": "varchar",
             "maxLength": 100,
-            "default":"",
             "trim": true
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
             "required": true,
-            "default":"",
             "trim": true
         },
         "isActive": {
@@ -289,8 +287,7 @@
         },
         "gender": {
             "type": "enum",
-            "options": ["", "Male", "Female", "Neutral"],
-            "default": ""
+            "options": ["", "Male", "Female", "Neutral"]
         },
         "createdAt": {
             "type": "datetime",

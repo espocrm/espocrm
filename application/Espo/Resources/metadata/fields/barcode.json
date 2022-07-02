@@ -29,7 +29,6 @@
          "name": "lastChar",
          "type": "varchar",
          "maxLength": 1,
-         "default": "",
          "tooltip": "barcodeLastChar"
       },
       {

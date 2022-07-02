@@ -14,10 +14,8 @@
       {
          "name": "listPreviewSize",
          "type": "enum",
-         "default": "small",
          "options": ["", "small", "medium"],
-         "translation": "Admin.options.previewSize",
-         "default": ""
+         "translation": "Admin.options.previewSize"
       },
       {
          "name": "maxFileSize",

@@ -15,7 +15,6 @@
         "language": {
             "type": "enum",
             "view": "crm:views/knowledge-base-article/fields/language",
-            "default": "",
             "customizationOptionsDisabled": true
         },
         "type": {

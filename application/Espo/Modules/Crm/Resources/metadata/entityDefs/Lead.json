@@ -50,8 +50,17 @@
         },
         "source": {
             "type": "enum",
-            "options": ["", "Call", "Email", "Existing Customer", "Partner", "Public Relations", "Web Site", "Campaign", "Other"],
-            "default": ""
+            "options": [
+                "",
+                "Call",
+                "Email",
+                "Existing Customer",
+                "Partner",
+                "Public Relations",
+                "Web Site",
+                "Campaign",
+                "Other"
+            ]
         },
         "industry": {
             "type": "enum",

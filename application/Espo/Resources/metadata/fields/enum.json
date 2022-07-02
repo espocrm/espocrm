@@ -24,6 +24,11 @@
          "type":"varchar",
          "hidden": true
       },
+       {
+           "name": "optionsPath",
+           "type": "varchar",
+           "hidden": true
+       },
       {
          "name":"style",
          "type":"jsonObject",
@@ -42,9 +47,13 @@
          "type":"bool"
       }
    ],
-   "validationList": [
-      "required"
-   ],
+    "validationList": [
+        "required",
+        "valid"
+    ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
    "filter": true,
    "fieldDefs":{
       "type":"varchar"

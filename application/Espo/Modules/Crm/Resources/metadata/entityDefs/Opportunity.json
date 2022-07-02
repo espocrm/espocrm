@@ -199,8 +199,8 @@
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",
             "customizationOptionsDisabled": true,
-            "translation": "Lead.options.source",
-            "default": ""
+            "optionsPath": "entityDefs.Lead.fields.source.options",
+            "translation": "Lead.options.source"
         },
         "closeDate": {
             "type": "date",

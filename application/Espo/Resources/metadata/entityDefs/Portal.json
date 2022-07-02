@@ -48,27 +48,22 @@
         "theme": {
             "type": "enum",
             "view": "views/preferences/fields/theme",
-            "translation": "Global.themes",
-            "default": ""
+            "translation": "Global.themes"
         },
         "language": {
             "type": "enum",
-            "view": "views/preferences/fields/language",
-            "default": ""
+            "view": "views/preferences/fields/language"
         },
         "timeZone": {
             "type": "enum",
-            "detault": "",
             "view": "views/preferences/fields/time-zone"
         },
         "dateFormat": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/date-format"
         },
         "timeFormat": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/time-format"
         },
         "weekStart": {
@@ -79,7 +74,6 @@
         },
         "defaultCurrency": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/default-currency"
         },
         "dashboardLayout": {

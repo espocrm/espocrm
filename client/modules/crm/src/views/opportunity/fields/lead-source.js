@@ -26,19 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/opportunity/fields/lead-source', 'views/fields/enum', function (Dep) {
+define('crm:views/opportunity/fields/lead-source', ['views/fields/enum'], function (Dep) {
 
-    return Dep.extend({
-
-
-        setup: function () {
-            this.params.options = this.getMetadata().get('entityDefs.Lead.fields.source.options');
-            this.params.translation = 'Lead.options.source';
-
-            Dep.prototype.setup.call(this);
-
-        },
-
-    });
-
+    return Dep.extend({});
 });

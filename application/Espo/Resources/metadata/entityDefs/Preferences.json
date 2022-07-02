@@ -2,17 +2,14 @@
     "fields": {
         "timeZone": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/time-zone"
         },
         "dateFormat": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/date-format"
         },
         "timeFormat": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/time-format"
         },
         "weekStart": {
@@ -23,7 +20,6 @@
         },
         "defaultCurrency": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/default-currency"
         },
         "thousandSeparator": {
@@ -92,7 +88,6 @@
         },
         "language": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/language"
         },
         "exportDelimiter": {
@@ -149,7 +144,6 @@
         },
         "theme": {
             "type": "enum",
-            "default": "",
             "view": "views/preferences/fields/theme",
             "translation": "Global.themes"
         },
