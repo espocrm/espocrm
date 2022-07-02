@@ -48,6 +48,11 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "optionsPath",
+            "type": "varchar",
+            "hidden": true
         }
     ],
     "validationList": [

@@ -132,6 +132,12 @@ function (Dep, Selectize, _) {
                 this.selected = [];
             }
 
+            if (this.params.optionsPath) {
+                this.params.options = Espo.Utils.clone(
+                    this.getMetadata().get(this.params.optionsPath) || []
+                );
+            }
+
             this.styleMap = this.params.style || {};
 
             this.setupOptions();

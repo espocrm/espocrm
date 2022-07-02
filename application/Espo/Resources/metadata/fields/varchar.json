@@ -40,6 +40,11 @@
             "name": "trim",
             "type": "bool",
             "default": true
+        },
+        {
+            "name": "optionsPath",
+            "type": "varchar",
+            "hidden": true
         }
     ],
     "validationList": [
