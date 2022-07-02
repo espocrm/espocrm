@@ -1,12 +1,12 @@
 {
-   "notCreatable": true,
-   "notMergeable": true,
-   "notSortable": true,
-   "filter": false,
-   "validationList": [
-      "array"
-   ],
-   "mandatoryValidationList": [
-      "array"
-   ]
+    "notCreatable": true,
+    "notMergeable": true,
+    "notSortable": true,
+    "filter": false,
+    "validationList": [
+        "array"
+    ],
+    "mandatoryValidationList": [
+        "array"
+    ]
 }

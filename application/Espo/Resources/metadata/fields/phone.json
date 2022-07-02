@@ -1,55 +1,61 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"typeList",
-         "type":"array",
-         "default": ["Mobile", "Office", "Home", "Fax", "Other"],
-         "view": "views/admin/field-manager/fields/options"
-      },
-      {
-         "name":"defaultType",
-         "type":"varchar",
-         "default": "Mobile"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      }
-   ],
-   "actualFields":[
-      "isOptedOut",
-      ""
-   ],
-   "notActualFields":[
-      "data"
-   ],
-   "fields":{
-      "isOptedOut":{
-         "type": "bool",
-         "notStorable": true,
-         "layoutDetailDisabled": true,
-         "layoutDefaultSidePanelDisabled": true,
-         "mergeDisabled": true,
-         "customizationDefaultDisabled": true,
-         "customizationReadOnlyDisabled": true
-      }
-   },
-   "validationList": [
-      "required"
-   ],
-   "notCreatable": true,
-   "filter": true,
-   "fieldDefs":{
-      "notStorable":true
-   },
-   "translatedOptions": true,
-   "textFilter": true,
-   "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupAttributeExtractor"
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "typeList",
+            "type": "array",
+            "default": [
+                "Mobile",
+                "Office",
+                "Home",
+                "Fax",
+                "Other"
+            ],
+            "view": "views/admin/field-manager/fields/options"
+        },
+        {
+            "name": "defaultType",
+            "type": "varchar",
+            "default": "Mobile"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        }
+    ],
+    "actualFields": [
+        "isOptedOut",
+        ""
+    ],
+    "notActualFields": [
+        "data"
+    ],
+    "fields": {
+        "isOptedOut": {
+            "type": "bool",
+            "notStorable": true,
+            "layoutDetailDisabled": true,
+            "layoutDefaultSidePanelDisabled": true,
+            "mergeDisabled": true,
+            "customizationDefaultDisabled": true,
+            "customizationReadOnlyDisabled": true
+        }
+    },
+    "validationList": [
+        "required"
+    ],
+    "notCreatable": true,
+    "filter": true,
+    "fieldDefs": {
+        "notStorable": true
+    },
+    "translatedOptions": true,
+    "textFilter": true,
+    "personalData": true,
+    "valueFactoryClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupAttributeExtractor"
 }

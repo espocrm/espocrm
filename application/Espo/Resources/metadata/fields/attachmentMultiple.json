@@ -1,73 +1,82 @@
 {
-   "params":[
-      {
-         "name": "required",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name": "sourceList",
-         "type": "multiEnum",
-         "view": "views/admin/field-manager/fields/source-list"
-      },
-      {
-         "name": "maxFileSize",
-         "type": "float",
-         "tooltip": true,
-         "min": 0
-      },
-      {
-         "name": "previewSize",
-         "type": "enum",
-         "default": "medium",
-         "options": ["", "x-small", "small", "medium", "large"]
-      },
-      {
-         "name": "accept",
-         "type": "multiEnum",
-         "noEmptyString": true,
-         "allowCustomOptions": true,
-         "options": [
-            "image/*",
-            "audio/*",
-            "video/*",
-            ".zip",
-            ".pdf",
-            ".odt",
-            ".ods",
-            ".odp",
-            ".docx",
-            ".xlsx",
-            ".pptx",
-            ".doc",
-            ".xls",
-            ".ppt",
-            ".rtf",
-            ".csv",
-            ".md",
-            ".txt"
-         ],
-         "tooltip": "fileAccept"
-      }
-   ],
-   "actualFields":[
-      "ids"
-   ],
-   "notActualFields":[
-      "names",
-      "types"
-   ],
-   "linkDefs": {
-      "type": "hasChildren",
-      "entity": "Attachment",
-      "foreign": "parent",
-      "layoutRelationshipsDisabled": true,
-      "relationName": "attachments",
-      "disabled": true
-   },
-   "notSortable": true,
-   "filter": true,
-   "personalData": true,
-   "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple",
-   "massUpdateActionList": ["update", "add"]
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "sourceList",
+            "type": "multiEnum",
+            "view": "views/admin/field-manager/fields/source-list"
+        },
+        {
+            "name": "maxFileSize",
+            "type": "float",
+            "tooltip": true,
+            "min": 0
+        },
+        {
+            "name": "previewSize",
+            "type": "enum",
+            "default": "medium",
+            "options": [
+                "",
+                "x-small",
+                "small",
+                "medium",
+                "large"
+            ]
+        },
+        {
+            "name": "accept",
+            "type": "multiEnum",
+            "noEmptyString": true,
+            "allowCustomOptions": true,
+            "options": [
+                "image/*",
+                "audio/*",
+                "video/*",
+                ".zip",
+                ".pdf",
+                ".odt",
+                ".ods",
+                ".odp",
+                ".docx",
+                ".xlsx",
+                ".pptx",
+                ".doc",
+                ".xls",
+                ".ppt",
+                ".rtf",
+                ".csv",
+                ".md",
+                ".txt"
+            ],
+            "tooltip": "fileAccept"
+        }
+    ],
+    "actualFields": [
+        "ids"
+    ],
+    "notActualFields": [
+        "names",
+        "types"
+    ],
+    "linkDefs": {
+        "type": "hasChildren",
+        "entity": "Attachment",
+        "foreign": "parent",
+        "layoutRelationshipsDisabled": true,
+        "relationName": "attachments",
+        "disabled": true
+    },
+    "notSortable": true,
+    "filter": true,
+    "personalData": true,
+    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple",
+    "massUpdateActionList": [
+        "update",
+        "add"
+    ]
 }

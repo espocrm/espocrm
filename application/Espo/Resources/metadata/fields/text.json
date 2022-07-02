@@ -1,21 +1,21 @@
 {
-   "params":[
+    "params": [
         {
-            "name":"required",
-            "type":"bool",
-            "default":false
+            "name": "required",
+            "type": "bool",
+            "default": false
         },
         {
-            "name":"default",
-            "type":"text"
+            "name": "default",
+            "type": "text"
         },
         {
-            "name":"maxLength",
-            "type":"int"
+            "name": "maxLength",
+            "type": "int"
         },
         {
-            "name":"seeMoreDisabled",
-            "type":"bool",
+            "name": "seeMoreDisabled",
+            "type": "bool",
             "tooltip": true
         },
         {
@@ -38,11 +38,11 @@
         },
         {
             "name": "displayRawText",
-            "type":"bool"
+            "type": "bool"
         },
         {
-            "name":"readOnly",
-            "type":"bool"
+            "name": "readOnly",
+            "type": "bool"
         }
     ],
     "filter": true,

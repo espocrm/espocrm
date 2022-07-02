@@ -1,39 +1,39 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"entityList",
-         "type":"multiEnum",
-         "view": "views/admin/field-manager/fields/entity-list"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "actualFields":[
-      "id",
-      "type"
-   ],
-   "notActualFields":[
-      "name"
-   ],
-   "validationList": [
-      "required"
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "notStorable":true
-   },
-   "valueFactoryClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentAttributeExtractor"
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "entityList",
+            "type": "multiEnum",
+            "view": "views/admin/field-manager/fields/entity-list"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "actualFields": [
+        "id",
+        "type"
+    ],
+    "notActualFields": [
+        "name"
+    ],
+    "validationList": [
+        "required"
+    ],
+    "filter": true,
+    "notCreatable": true,
+    "fieldDefs": {
+        "notStorable": true
+    },
+    "valueFactoryClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\LinkParent\\LinkParentAttributeExtractor"
 }

@@ -1,72 +1,76 @@
 {
-   "params":[
-      {
-         "name": "required",
-         "type": "bool",
-         "default": false
-      },
-      {
-         "name":"options",
-         "type":"array",
-         "view": "views/admin/field-manager/fields/options-with-style"
-      },
-      {
-         "name":"isSorted",
-         "type":"bool"
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-      {
-         "name": "allowCustomOptions",
-         "type": "bool"
-      },
-      {
-         "name": "maxCount",
-         "type": "int",
-         "min": 1
-      },
-      {
-         "name":"style",
-         "type":"jsonObject",
-         "hidden": true
-      },
-      {
-         "name":"displayAsLabel",
-         "type":"bool"
-      },
-      {
-         "name": "displayAsList",
-         "type":"bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "validationList": [
-      "array",
-      "required",
-      "maxCount"
-   ],
-   "mandatoryValidationList": [
-      "array"
-   ],
-   "filter": true,
-   "notCreatable": false,
-   "notSortable": true,
-   "fieldDefs":{
-      "type":"jsonArray",
-      "storeArrayValues": true
-   },
-   "translatedOptions": true,
-   "dynamicLogicOptions": true,
-   "personalData": true,
-   "massUpdateActionList": ["update", "add", "remove"]
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "options",
+            "type": "array",
+            "view": "views/admin/field-manager/fields/options-with-style"
+        },
+        {
+            "name": "isSorted",
+            "type": "bool"
+        },
+        {
+            "name": "translation",
+            "type": "varchar",
+            "hidden": true
+        },
+        {
+            "name": "allowCustomOptions",
+            "type": "bool"
+        },
+        {
+            "name": "maxCount",
+            "type": "int",
+            "min": 1
+        },
+        {
+            "name": "style",
+            "type": "jsonObject",
+            "hidden": true
+        },
+        {
+            "name": "displayAsLabel",
+            "type": "bool"
+        },
+        {
+            "name": "displayAsList",
+            "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "validationList": [
+        "array",
+        "required",
+        "maxCount"
+    ],
+    "mandatoryValidationList": [
+        "array"
+    ],
+    "filter": true,
+    "notCreatable": false,
+    "notSortable": true,
+    "fieldDefs": {
+        "type": "jsonArray",
+        "storeArrayValues": true
+    },
+    "translatedOptions": true,
+    "dynamicLogicOptions": true,
+    "personalData": true,
+    "massUpdateActionList": [
+        "update",
+        "add",
+        "remove"
+    ]
 }

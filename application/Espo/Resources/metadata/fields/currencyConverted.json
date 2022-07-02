@@ -1,7 +1,6 @@
 {
-   "params":[
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "skipOrmDefs": true
+    "params": [],
+    "filter": true,
+    "notCreatable": true,
+    "skipOrmDefs": true
 }

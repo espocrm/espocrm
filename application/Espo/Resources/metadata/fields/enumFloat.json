@@ -1,25 +1,25 @@
 {
-   "params":[
-      {
-         "name":"options",
-         "type":"array"
-      },
-      {
-         "name":"default",
-         "type":"float"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "fieldDefs":{
-      "type":"float"
-   }
+    "params": [
+        {
+            "name": "options",
+            "type": "array"
+        },
+        {
+            "name": "default",
+            "type": "float"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "filter": true,
+    "notCreatable": true,
+    "fieldDefs": {
+        "type": "float"
+    }
 }

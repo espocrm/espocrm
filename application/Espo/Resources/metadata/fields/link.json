@@ -1,35 +1,35 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name":"default",
-         "type":"link",
-         "view": "views/admin/field-manager/fields/link/default"
-      }
-   ],
-   "actualFields":[
-      "id"
-   ],
-   "notActualFields":[
-      "name"
-   ],
-   "validationList": [
-      "required"
-   ],
-   "filter": true,
-   "notCreatable": true,
-   "valueFactoryClassName": "Espo\\Core\\Field\\Link\\LinkFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\Link\\LinkAttributeExtractor"
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "default",
+            "type": "link",
+            "view": "views/admin/field-manager/fields/link/default"
+        }
+    ],
+    "actualFields": [
+        "id"
+    ],
+    "notActualFields": [
+        "name"
+    ],
+    "validationList": [
+        "required"
+    ],
+    "filter": true,
+    "notCreatable": true,
+    "valueFactoryClassName": "Espo\\Core\\Field\\Link\\LinkFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\Link\\LinkAttributeExtractor"
 }

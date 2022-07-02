@@ -1,66 +1,66 @@
 {
-   "params":[
-      {
-         "name":"link",
-         "type":"varchar",
-         "view": "views/admin/field-manager/fields/foreign/link",
-         "required": true
-      },
-      {
-         "name":"field",
-         "type":"varchar",
-         "view": "views/admin/field-manager/fields/foreign/field",
-         "required": true
-      },
-      {
-         "name": "view",
-         "type":"varchar",
-         "hidden": true
-      }
-   ],
-   "fieldTypeList": [
-      "varchar",
-      "enum",
-      "enumInt",
-      "enumFloat",
-      "int",
-      "float",
-      "url",
-      "date",
-      "datetime",
-      "text",
-      "number",
-      "bool",
-      "email",
-      "phone",
-      "array",
-      "multiEnum",
-      "checklist",
-      "currencyConverted"
-   ],
-   "fieldTypeViewMap": {
-      "varchar": "views/fields/foreign-varchar",
-      "enum": "views/fields/foreign-enum",
-      "enumInt": "views/fields/foreign-int",
-      "enumFloat": "views/fields/foreign-float",
-      "int": "views/fields/foreign-int",
-      "float": "views/fields/foreign-float",
-      "url": "views/fields/foreign-url",
-      "date": "views/fields/foreign-date",
-      "datetime": "views/fields/foreign-datetime",
-      "text": "views/fields/foreign-text",
-      "number": "views/fields/foreign-varchar",
-      "bool": "views/fields/foreign-bool",
-      "email": "views/fields/foreign-email",
-      "phone": "views/fields/foreign-phone",
-      "array": "views/fields/foreign-array",
-      "checklist": "views/fields/foreign-checklist",
-      "multiEnum": "views/fields/foreign-multi-enum",
-      "currencyConverted": "views/fields/foreign-currency-converted"
-   },
-   "filter": true,
-   "notCreatable": false,
-   "fieldDefs": {
-      "readOnly": true
-   }
+    "params": [
+        {
+            "name": "link",
+            "type": "varchar",
+            "view": "views/admin/field-manager/fields/foreign/link",
+            "required": true
+        },
+        {
+            "name": "field",
+            "type": "varchar",
+            "view": "views/admin/field-manager/fields/foreign/field",
+            "required": true
+        },
+        {
+            "name": "view",
+            "type": "varchar",
+            "hidden": true
+        }
+    ],
+    "fieldTypeList": [
+        "varchar",
+        "enum",
+        "enumInt",
+        "enumFloat",
+        "int",
+        "float",
+        "url",
+        "date",
+        "datetime",
+        "text",
+        "number",
+        "bool",
+        "email",
+        "phone",
+        "array",
+        "multiEnum",
+        "checklist",
+        "currencyConverted"
+    ],
+    "fieldTypeViewMap": {
+        "varchar": "views/fields/foreign-varchar",
+        "enum": "views/fields/foreign-enum",
+        "enumInt": "views/fields/foreign-int",
+        "enumFloat": "views/fields/foreign-float",
+        "int": "views/fields/foreign-int",
+        "float": "views/fields/foreign-float",
+        "url": "views/fields/foreign-url",
+        "date": "views/fields/foreign-date",
+        "datetime": "views/fields/foreign-datetime",
+        "text": "views/fields/foreign-text",
+        "number": "views/fields/foreign-varchar",
+        "bool": "views/fields/foreign-bool",
+        "email": "views/fields/foreign-email",
+        "phone": "views/fields/foreign-phone",
+        "array": "views/fields/foreign-array",
+        "checklist": "views/fields/foreign-checklist",
+        "multiEnum": "views/fields/foreign-multi-enum",
+        "currencyConverted": "views/fields/foreign-currency-converted"
+    },
+    "filter": true,
+    "notCreatable": false,
+    "fieldDefs": {
+        "readOnly": true
+    }
 }

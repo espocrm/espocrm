@@ -1,14 +1,13 @@
 {
-   "params":[
-   ],
-   "notCreatable": false,
-   "filter": true,
-   "fieldDefs":{
-      "type":"int",
-      "autoincrement":true,
-      "unique":true
-   },
-   "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\AutoincrementType",
-   "textFilter": true,
-   "readOnly": true
+    "params": [],
+    "notCreatable": false,
+    "filter": true,
+    "fieldDefs": {
+        "type": "int",
+        "autoincrement": true,
+        "unique": true
+    },
+    "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\AutoincrementType",
+    "textFilter": true,
+    "readOnly": true
 }

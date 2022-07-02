@@ -1,76 +1,76 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "default",
-         "type": "float"
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      },
-      {
-         "name": "onlyDefaultCurrency",
-         "type": "bool",
-         "default": false
-      },
-      {
-        "name": "conversionDisabled",
-        "type": "bool",
-        "default": false,
-        "tooltip": true
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "actualFields":[
-      "currency",
-      ""
-   ],
-   "fields":{
-      "currency":{
-         "type": "enum",
-         "view": "views/fields/currency-list",
-         "layoutDetailDisabled": true,
-         "layoutListDisabled": true,
-         "layoutMassUpdateDisabled": true,
-         "layoutDefaultSidePanelDisabled": true,
-         "customizationRequiredDisabled": true,
-         "customizationOptionsDisabled": true,
-         "customizationIsSortedDisabled": true,
-         "customizationDisplayAsLabelDisabled": true,
-         "customizationAuditedDisabled": true,
-         "customizationReadOnlyDisabled": true,
-         "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
-         "maxLength": 6
-      },
-      "converted":{
-         "type":"currencyConverted",
-         "readOnly": true,
-         "importDisabled": true
-      }
-   },
-   "validationList": [
-      "required",
-      "min",
-      "max"
-   ],
-   "filter": true,
-   "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Field\\Currency\\CurrencyFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\Currency\\CurrencyAttributeExtractor"
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "float"
+        },
+        {
+            "name": "min",
+            "type": "float"
+        },
+        {
+            "name": "max",
+            "type": "float"
+        },
+        {
+            "name": "onlyDefaultCurrency",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "conversionDisabled",
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "actualFields": [
+        "currency",
+        ""
+    ],
+    "fields": {
+        "currency": {
+            "type": "enum",
+            "view": "views/fields/currency-list",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutDefaultSidePanelDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationOptionsDisabled": true,
+            "customizationIsSortedDisabled": true,
+            "customizationDisplayAsLabelDisabled": true,
+            "customizationAuditedDisabled": true,
+            "customizationReadOnlyDisabled": true,
+            "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
+            "maxLength": 6
+        },
+        "converted": {
+            "type": "currencyConverted",
+            "readOnly": true,
+            "importDisabled": true
+        }
+    },
+    "validationList": [
+        "required",
+        "min",
+        "max"
+    ],
+    "filter": true,
+    "personalData": true,
+    "valueFactoryClassName": "Espo\\Core\\Field\\Currency\\CurrencyFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\Currency\\CurrencyAttributeExtractor"
 }

@@ -1,40 +1,44 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "sortable",
-         "type": "bool",
-         "default": false,
-         "hidden": true
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      },
-      {
-         "name": "default",
-         "type": "linkMultiple",
-         "view": "views/admin/field-manager/fields/link-multiple/default"
-      }
-   ],
-   "actualFields":[
-      "ids"
-   ],
-   "notActualFields":[
-      "names"
-   ],
-   "validationList": [
-      "required"
-   ],
-   "notCreatable": true,
-   "notSortable": true,
-   "filter": true,
-   "valueFactoryClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleAttributeExtractor",
-   "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\LinkMultiple",
-   "massUpdateActionList": ["update", "add", "remove"]
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "sortable",
+            "type": "bool",
+            "default": false,
+            "hidden": true
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "default",
+            "type": "linkMultiple",
+            "view": "views/admin/field-manager/fields/link-multiple/default"
+        }
+    ],
+    "actualFields": [
+        "ids"
+    ],
+    "notActualFields": [
+        "names"
+    ],
+    "validationList": [
+        "required"
+    ],
+    "notCreatable": true,
+    "notSortable": true,
+    "filter": true,
+    "valueFactoryClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleFactory",
+    "attributeExtractorClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleAttributeExtractor",
+    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\LinkMultiple",
+    "massUpdateActionList": [
+        "update",
+        "add",
+        "remove"
+    ]
 }

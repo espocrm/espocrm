@@ -1,20 +1,20 @@
 {
-   "params":[
-      {
-         "name":"default",
-         "type":"bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "notNull": true
-   }
+    "params": [
+        {
+            "name": "default",
+            "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "filter": true,
+    "fieldDefs": {
+        "notNull": true
+    }
 }

@@ -1,19 +1,19 @@
 {
-   "actualFields": [
-      "from",
-      "to"
-   ],
-   "fields": {
-      "from": {
-         "type": "int"
-      },
-      "to": {
-         "type": "int"
-      }
-   },
-   "naming": "prefix",
-   "notMergeable": true,
-   "notCreatable": true,
-   "filter": false,
-   "skipOrmDefs": true
+    "actualFields": [
+        "from",
+        "to"
+    ],
+    "fields": {
+        "from": {
+            "type": "int"
+        },
+        "to": {
+            "type": "int"
+        }
+    },
+    "naming": "prefix",
+    "notMergeable": true,
+    "notCreatable": true,
+    "filter": false,
+    "skipOrmDefs": true
 }

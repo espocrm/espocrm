@@ -1,69 +1,69 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name": "sourceList",
-         "type": "multiEnum",
-         "view": "views/admin/field-manager/fields/source-list"
-      },
-      {
-         "name": "maxFileSize",
-         "type": "float",
-         "tooltip": true,
-         "min": 0
-      },
-      {
-         "name": "accept",
-         "type": "multiEnum",
-         "noEmptyString": true,
-         "allowCustomOptions": true,
-         "options": [
-            "image/*",
-            "audio/*",
-            "video/*",
-             ".zip",
-             ".pdf",
-             ".odt",
-             ".ods",
-             ".odp",
-             ".docx",
-             ".xlsx",
-             ".pptx",
-             ".doc",
-             ".xls",
-             ".ppt",
-             ".rtf",
-             ".csv",
-             ".md",
-             ".txt"
-         ],
-         "tooltip": "fileAccept"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      }
-   ],
-   "actualFields":[
-      "id"
-   ],
-   "notActualFields":[
-      "name"
-   ],
-   "validationList": [
-      "required"
-   ],
-   "filter": true,
-   "linkDefs": {
-      "type": "belongsTo",
-      "entity": "Attachment",
-      "skipOrmDefs": true,
-      "disabled": true
-   },
-   "personalData": true,
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "sourceList",
+            "type": "multiEnum",
+            "view": "views/admin/field-manager/fields/source-list"
+        },
+        {
+            "name": "maxFileSize",
+            "type": "float",
+            "tooltip": true,
+            "min": 0
+        },
+        {
+            "name": "accept",
+            "type": "multiEnum",
+            "noEmptyString": true,
+            "allowCustomOptions": true,
+            "options": [
+                "image/*",
+                "audio/*",
+                "video/*",
+                ".zip",
+                ".pdf",
+                ".odt",
+                ".ods",
+                ".odp",
+                ".docx",
+                ".xlsx",
+                ".pptx",
+                ".doc",
+                ".xls",
+                ".ppt",
+                ".rtf",
+                ".csv",
+                ".md",
+                ".txt"
+            ],
+            "tooltip": "fileAccept"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        }
+    ],
+    "actualFields": [
+        "id"
+    ],
+    "notActualFields": [
+        "name"
+    ],
+    "validationList": [
+        "required"
+    ],
+    "filter": true,
+    "linkDefs": {
+        "type": "belongsTo",
+        "entity": "Attachment",
+        "skipOrmDefs": true,
+        "disabled": true
+    },
+    "personalData": true,
     "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\File"
 }

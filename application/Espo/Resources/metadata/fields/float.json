@@ -1,42 +1,42 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"float"
-      },
-      {
-         "name":"min",
-         "type":"float"
-      },
-      {
-         "name":"max",
-         "type":"float"
-      },
-      {
-         "name": "decimalPlaces",
-         "type": "int"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "validationList": [
-      "required",
-      "min",
-      "max"
-   ],
-   "filter": true,
-   "fieldDefs":{
-      "notNull":false
-   }
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "float"
+        },
+        {
+            "name": "min",
+            "type": "float"
+        },
+        {
+            "name": "max",
+            "type": "float"
+        },
+        {
+            "name": "decimalPlaces",
+            "type": "int"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "validationList": [
+        "required",
+        "min",
+        "max"
+    ],
+    "filter": true,
+    "fieldDefs": {
+        "notNull": false
+    }
 }

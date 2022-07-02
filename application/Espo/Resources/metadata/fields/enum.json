@@ -1,52 +1,52 @@
 {
-   "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"options",
-         "type":"array",
-         "view": "views/admin/field-manager/fields/options-with-style"
-      },
-      {
-         "name":"default",
-         "type":"enum",
-         "view": "views/admin/field-manager/fields/options/default"
-      },
-      {
-         "name":"isSorted",
-         "type":"bool"
-      },
-      {
-         "name":"translation",
-         "type":"varchar",
-         "hidden": true
-      },
-       {
-           "name": "optionsPath",
-           "type": "varchar",
-           "hidden": true
-       },
-      {
-         "name":"style",
-         "type":"jsonObject",
-         "hidden": true
-      },
-      {
-         "name":"displayAsLabel",
-         "type":"bool"
-      },
-      {
-         "name":"audited",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "options",
+            "type": "array",
+            "view": "views/admin/field-manager/fields/options-with-style"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "view": "views/admin/field-manager/fields/options/default"
+        },
+        {
+            "name": "isSorted",
+            "type": "bool"
+        },
+        {
+            "name": "translation",
+            "type": "varchar",
+            "hidden": true
+        },
+        {
+            "name": "optionsPath",
+            "type": "varchar",
+            "hidden": true
+        },
+        {
+            "name": "style",
+            "type": "jsonObject",
+            "hidden": true
+        },
+        {
+            "name": "displayAsLabel",
+            "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
     "validationList": [
         "required",
         "valid"
@@ -54,11 +54,11 @@
     "mandatoryValidationList": [
         "valid"
     ],
-   "filter": true,
-   "fieldDefs":{
-      "type":"varchar"
-   },
-   "translatedOptions": true,
-   "dynamicLogicOptions": true,
-   "personalData": true
+    "filter": true,
+    "fieldDefs": {
+        "type": "varchar"
+    },
+    "translatedOptions": true,
+    "dynamicLogicOptions": true,
+    "personalData": true
 }
