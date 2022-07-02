@@ -36,7 +36,7 @@ use Espo\Repositories\User as UserRepository;
 
 use Espo\Core\{
     Acl\Table as AclTable,
-};
+    Exceptions\ForbiddenSilent};
 
 use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\User as UserEntity;
@@ -110,6 +110,10 @@ class Note extends Record
         }
 
         parent::beforeCreateEntity($entity, $data);
+
+        if (!$entity->isPost() && !$this->user->isAdmin()) {
+            throw new ForbiddenSilent("Only 'Post' type allowed.");
+        }
 
         if ($entity->isPost()) {
             $this->handlePostText($entity);
