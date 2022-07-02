@@ -31,7 +31,7 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-use StdClass;
+use stdClass;
 
 class ArrayType
 {
@@ -55,9 +55,9 @@ class ArrayType
         return true;
     }
 
-    public function rawCheckArray(StdClass $data, string $field): bool
+    public function rawCheckArray(stdClass $data, string $field): bool
     {
-        if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
+        if (isset($data->$field) && !is_array($data->$field)) {
             return false;
         }
 
