@@ -12,7 +12,7 @@
             "customizationDisabled": true
         },
         "type": {
-            "type": "varchar",
+            "type": "enum",
             "readOnly": true,
             "view": "views/fields/enum",
             "options": [
@@ -29,7 +29,7 @@
             "customizationDisabled": true
         },
         "targetType": {
-            "type": "varchar",
+            "type": "enum",
             "options": [
                 "self",
                 "all",
