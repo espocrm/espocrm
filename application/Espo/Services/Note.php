@@ -134,7 +134,7 @@ class Note extends Record
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
-                $entity->set('usersIds', [$this->user->id]);
+                $entity->set('usersIds', [$this->user->getId()]);
                 $entity->set('isForSelf', true);
 
                 break;
