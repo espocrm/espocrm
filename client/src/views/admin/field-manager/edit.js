@@ -242,12 +242,6 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         this.createFieldView('varchar', 'label', null, {trim: true})
                     );
 
-                    if (this.hasPersonalData) {
-                        promiseList.push(
-                            this.createFieldView('bool', 'isPersonalData', null, {})
-                        );
-                    }
-
                     this.hasDynamicLogicPanel = false;
 
                     promiseList.push(
