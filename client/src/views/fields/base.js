@@ -1291,7 +1291,8 @@ define('views/fields/base', ['view'], function (Dep) {
                 .popover({
                     placement: 'bottom',
                     container: 'body',
-                    content: message,
+                    content: this.getHelper().transformMarkdownText(message).toString(),
+                    html: true,
                     trigger: 'manual'
                 })
                 .popover('show');
