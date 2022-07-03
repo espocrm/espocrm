@@ -38,8 +38,6 @@ define('views/fields/colorpicker', ['views/fields/varchar', 'lib!Colorpicker'], 
 
         editTemplate: 'fields/colorpicker/edit',
 
-        forceTrim: true,
-
         setup: function () {
             Dep.prototype.setup.call(this);
         },

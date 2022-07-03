@@ -46,7 +46,7 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.params.trim = true;
+            //this.params.trim = true;
         },
 
         data: function () {

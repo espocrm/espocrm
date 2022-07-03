@@ -31,8 +31,6 @@ define('views/scheduled-job/fields/scheduling',
 
     return Dep.extend({
 
-        forceTrim: true,
-
         setup: function () {
             Dep.prototype.setup.call(this);
 

@@ -335,7 +335,9 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
             var value = this.$element.val();
 
-            if (this.params.trim || this.forceTrim) {
+            let trim = this.params.trim !== false;
+
+            if (trim) {
                 if (typeof value.trim === 'function') {
                     value = value.trim();
                 }
