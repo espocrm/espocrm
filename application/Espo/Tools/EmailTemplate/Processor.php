@@ -39,7 +39,7 @@ use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Entities\Person;
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Htmlizer\Htmlizer;
-use Espo\Core\Acl\GlobalRestricton;
+use Espo\Core\Acl\GlobalRestriction;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use Espo\Entities\EmailTemplate;
@@ -241,9 +241,9 @@ class Processor
                 $this->aclManager->getScopeRestrictedAttributeList(
                     $entity->getEntityType(),
                     [
-                        GlobalRestricton::TYPE_FORBIDDEN,
-                        GlobalRestricton::TYPE_INTERNAL,
-                        GlobalRestricton::TYPE_ONLY_ADMIN,
+                        GlobalRestriction::TYPE_FORBIDDEN,
+                        GlobalRestriction::TYPE_INTERNAL,
+                        GlobalRestriction::TYPE_ONLY_ADMIN,
                     ]
                 )
             );
@@ -314,9 +314,9 @@ class Processor
             $this->aclManager->getScopeRestrictedLinkList(
                 $entity->getEntityType(),
                 [
-                    GlobalRestricton::TYPE_FORBIDDEN,
-                    GlobalRestricton::TYPE_INTERNAL,
-                    GlobalRestricton::TYPE_ONLY_ADMIN,
+                    GlobalRestriction::TYPE_FORBIDDEN,
+                    GlobalRestriction::TYPE_INTERNAL,
+                    GlobalRestriction::TYPE_ONLY_ADMIN,
                 ]
             ) :
             [];

@@ -43,7 +43,7 @@ use stdClass;
  * Lists of restricted fields can be obtained from here. Restricted fields
  * are specified in metadata > entityAcl.
  */
-class GlobalRestricton
+class GlobalRestriction
 {
     public const TYPE_FORBIDDEN = 'forbidden';
 

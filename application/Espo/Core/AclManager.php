@@ -37,7 +37,7 @@ use Espo\ORM\EntityManager;
 
 use Espo\Core\{
     Acl,
-    Acl\GlobalRestricton,
+    Acl\GlobalRestriction,
     Acl\OwnerUserFieldProvider,
     Acl\Table\TableFactory,
     Acl\Table,
@@ -140,7 +140,7 @@ class AclManager
     private $mapFactory;
 
     /**
-     * @var GlobalRestricton
+     * @var GlobalRestriction
      */
     protected $globalRestricton;
 
@@ -159,7 +159,7 @@ class AclManager
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $tableFactory,
         MapFactory $mapFactory,
-        GlobalRestricton $globalRestricton,
+        GlobalRestriction $globalRestricton,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager
     ) {
@@ -492,22 +492,22 @@ class AclManager
     protected function getGlobalRestrictionTypeList(User $user, string $action = Table::ACTION_READ): array
     {
         $typeList = [
-            GlobalRestricton::TYPE_FORBIDDEN,
+            GlobalRestriction::TYPE_FORBIDDEN,
         ];
 
         if ($action === Table::ACTION_READ) {
-            $typeList[] = GlobalRestricton::TYPE_INTERNAL;
+            $typeList[] = GlobalRestriction::TYPE_INTERNAL;
         }
 
         if (!$user->isAdmin()) {
-            $typeList[] = GlobalRestricton::TYPE_ONLY_ADMIN;
+            $typeList[] = GlobalRestriction::TYPE_ONLY_ADMIN;
         }
 
         if ($action === Table::ACTION_EDIT) {
-            $typeList[] = GlobalRestricton::TYPE_READ_ONLY;
+            $typeList[] = GlobalRestriction::TYPE_READ_ONLY;
 
             if (!$user->isAdmin()) {
-                $typeList[] = GlobalRestricton::TYPE_NON_ADMIN_READ_ONLY;
+                $typeList[] = GlobalRestriction::TYPE_NON_ADMIN_READ_ONLY;
             }
         }
 

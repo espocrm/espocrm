@@ -48,7 +48,7 @@ use Espo\Core\{
     Portal\Acl\OwnershipContactChecker,
     Portal\Acl,
     Portal\Acl\Map\MapFactory,
-    Acl\GlobalRestricton,
+    Acl\GlobalRestriction,
     Acl\OwnerUserFieldProvider,
     Acl\Table as TableBase,
     Acl\Map\Map,
@@ -78,7 +78,7 @@ class AclManager extends InternalAclManager
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $portalTableFactory,
         MapFactory $portalMapFactory,
-        GlobalRestricton $globalRestricton,
+        GlobalRestriction $globalRestricton,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager,
         InternalAclManager $internalAclManager

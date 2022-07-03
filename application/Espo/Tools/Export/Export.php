@@ -42,7 +42,7 @@ use Espo\Core\{
     Select\SelectBuilderFactory,
     Acl,
     Acl\Table,
-    Acl\GlobalRestricton,
+    Acl\GlobalRestriction,
     Record\ServiceContainer,
     Utils\Metadata,
     FileStorage\Manager as FileStorageManager,
@@ -406,8 +406,8 @@ class Export
         $attributeListToSkip = $params->applyAccessControl() ?
             $this->acl->getScopeForbiddenAttributeList($entityType, Table::ACTION_READ) :
             $this->acl->getScopeRestrictedAttributeList($entityType, [
-                GlobalRestricton::TYPE_FORBIDDEN,
-                GlobalRestricton::TYPE_INTERNAL,
+                GlobalRestriction::TYPE_FORBIDDEN,
+                GlobalRestriction::TYPE_INTERNAL,
             ]);
 
         $attributeListToSkip[] = 'deleted';
