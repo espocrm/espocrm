@@ -637,9 +637,9 @@ define('views/fields/base', ['view'], function (Dep) {
                 }
             });
 
-            var additionaParamList = ['inlineEditDisabled'];
+            var additionalParamList = ['inlineEditDisabled'];
 
-            additionaParamList.forEach((item) => {
+            additionalParamList.forEach((item) => {
                 this.params[item] = this.model.getFieldParam(this.name, item) || null;
             });
 
