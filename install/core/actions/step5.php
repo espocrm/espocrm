@@ -31,7 +31,7 @@ $config = $installer->getConfig();
 
 $fields = array(
     'smtpServer' => array(
-        'default' => $config->get('smtpServer', ''),
+        'default' => $config->get('smtpServer'),
     ),
     'smtpPort' => array(
         'default' => $config->get('smtpPort', 25),
@@ -40,22 +40,22 @@ $fields = array(
         'default' => false,
     ),
     'smtpSecurity' => array(
-        'default' => $config->get('smtpSecurity', ''),
+        'default' => $config->get('smtpSecurity'),
     ),
     'smtpUsername' => array(
-        'default' => $config->get('smtpUsername', ''),
+        'default' => $config->get('smtpUsername'),
     ),
     'smtpPassword' => array(
-        'default' => $config->get('smtpPassword', ''),
+        'default' => $config->get('smtpPassword'),
     ),
     'outboundEmailFromName' => array(
-        'default' => $config->get('outboundEmailFromName', ''),
+        'default' => $config->get('outboundEmailFromName'),
     ),
     'outboundEmailFromAddress' => array(
-        'default' => $config->get('outboundEmailFromAddress', ''),
+        'default' => $config->get('outboundEmailFromAddress'),
     ),
     'outboundEmailIsShared' => array(
-        'default' => $config->get('outboundEmailIsShared', ''),
+        'default' => $config->get('outboundEmailIsShared', false),
     ),
 );
 

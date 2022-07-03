@@ -32,11 +32,11 @@ $metadata = $installer->getMetadata();
 
 $fields = [
     'dateFormat' => [
-        'default' => $config->get('dateFormat', ''),
+        'default' => $config->get('dateFormat'),
         'options' => $metadata->get(['app', 'dateTime', 'dateFormatList']) ?? [],
     ],
     'timeFormat' => [
-        'default'=> $config->get('timeFormat', ''),
+        'default'=> $config->get('timeFormat'),
         'options' => $metadata->get(['app', 'dateTime', 'timeFormatList']) ?? [],
     ],
     'timeZone' => [
