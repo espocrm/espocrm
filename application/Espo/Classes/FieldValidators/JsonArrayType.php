@@ -37,7 +37,7 @@ class JsonArrayType
 {
     public function rawCheckArray(StdClass $data, string $field): bool
     {
-        if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
+        if (isset($data->$field) && !is_array($data->$field)) {
             return false;
         }
 
