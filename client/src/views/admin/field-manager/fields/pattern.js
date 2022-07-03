@@ -39,7 +39,10 @@ define('views/admin/field-manager/fields/pattern', ['views/fields/varchar'], fun
         noSpellCheck: true,
 
         setupOptions: function () {
-            let patternList = Object.keys(this.getMetadata().get(['app', 'regExpPatterns']) || {})
+            let patterns = this.getMetadata().get(['app', 'regExpPatterns']) || {};
+
+            let patternList = Object.keys(patterns)
+                .filter(item => !patterns[item].isSystem)
                 .map(item => '$' + item);
 
             this.setOptionList(patternList);
