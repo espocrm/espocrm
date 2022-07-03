@@ -78,6 +78,8 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         setup: function () {
             this.setupOptions();
 
+            this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
+
             if (this.options.customOptionList) {
                 this.setOptionList(this.options.customOptionList);
             }

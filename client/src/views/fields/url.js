@@ -50,6 +50,8 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
             'maxLength',
         ],
 
+        noSpellCheck: true,
+
         DEFAULT_MAX_LENGTH: 255,
 
         setup: function () {

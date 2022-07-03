@@ -42,6 +42,12 @@
             "default": true
         },
         {
+            "name": "noSpellCheck",
+            "type": "bool",
+            "default": false,
+            "hidden": true
+        },
+        {
             "name": "optionsPath",
             "type": "varchar",
             "hidden": true

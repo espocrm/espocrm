@@ -86,7 +86,8 @@
             "type": "varchar",
             "maxLength": 40,
             "trim": true,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "noSpellCheck": true
         },
         "contactRole": {
             "type": "varchar",
