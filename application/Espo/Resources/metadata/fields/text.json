@@ -45,6 +45,11 @@
             "type": "bool"
         }
     ],
+    "validationList": [
+        "required",
+        "maxLength"
+    ],
+    "validatorClassName": "Espo\\Classes\\FieldValidators\\VarcharType",
     "filter": true,
     "personalData": true,
     "textFilter": true,
