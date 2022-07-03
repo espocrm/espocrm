@@ -4,7 +4,15 @@
             "type": "text",
             "rows": 100000,
             "view": "views/note/fields/post",
-            "customizationDisabled": true
+            "customizationDefaultDisabled": true,
+            "customizationRequiredDisabled": true,
+            "customizationInlineEditDisabledDisabled": true,
+            "customizationTooltipTextDisabled": true,
+            "customizationSeeMoreDisabledDisabled": true,
+            "customizationRowsDisabled": true,
+            "customizationDisplayRawTextDisabled": true,
+            "customizationReadOnlyDisabled": true,
+            "dynamicLogicDisabled": true
         },
         "data": {
             "type": "jsonObject",
