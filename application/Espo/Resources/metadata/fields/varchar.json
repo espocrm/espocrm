@@ -52,6 +52,9 @@
         "maxLength",
         "pattern"
     ],
+    "mandatoryValidationList": [
+        "maxLength"
+    ],
     "filter": true,
     "personalData": true,
     "textFilter": true,

@@ -36,6 +36,8 @@ class VarcharType
 {
     private Metadata $metadata;
 
+    private const DEFAULT_MAX_LENGTH = 255;
+
     public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
@@ -46,14 +48,18 @@ class VarcharType
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxLength(Entity $entity, string $field, int $validationValue): bool
+    public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
     {
-        if ($this->isNotEmpty($entity, $field)) {
-            $value = $entity->get($field);
+        if (!$this->isNotEmpty($entity, $field)) {
+            return true;
+        }
 
-            if (mb_strlen($value) > $validationValue) {
-                return false;
-            }
+        $value = $entity->get($field);
+
+        $maxLength = $validationValue ?? self::DEFAULT_MAX_LENGTH;
+
+        if (mb_strlen($value) > $maxLength) {
+            return false;
         }
 
         return true;

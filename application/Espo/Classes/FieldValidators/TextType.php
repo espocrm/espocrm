@@ -29,44 +29,35 @@
 
 namespace Espo\Classes\FieldValidators;
 
-use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
-class UrlType
+class TextType
 {
-    private Metadata $metadata;
-
-    private VarcharType $varcharType;
-
-    public function __construct(Metadata $metadata, VarcharType $varcharType)
-    {
-        $this->metadata = $metadata;
-        $this->varcharType = $varcharType;
-    }
-
     public function checkRequired(Entity $entity, string $field): bool
     {
-        return $this->varcharType->checkRequired($entity, $field);
+        return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
+    public function checkMaxLength(Entity $entity, string $field, int $validationValue): bool
     {
-        return $this->varcharType->checkMaxLength($entity, $field, $validationValue);
-    }
-
-    public function checkValid(Entity $entity, string $field): bool
-    {
-        $value = $entity->get($field);
-
-        if ($value === null) {
+        if (!$this->isNotEmpty($entity, $field)) {
             return true;
         }
 
-        /** @var string */
-        $pattern = $this->metadata->get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+        $value = $entity->get($field);
 
-        $preparedPattern = '/^' . $pattern . '$/';
+        if (mb_strlen($value) > $validationValue) {
+            return false;
+        }
 
-        return (bool) preg_match($preparedPattern, $value);
+        return true;
+    }
+
+    protected function isNotEmpty(Entity $entity, string $field): bool
+    {
+        return
+            $entity->has($field) &&
+            $entity->get($field) !== '' &&
+            $entity->get($field) !== null;
     }
 }

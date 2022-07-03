@@ -33,6 +33,7 @@
         "valid"
     ],
     "mandatoryValidationList": [
+        "maxLength",
         "valid"
     ],
     "filter": true,
