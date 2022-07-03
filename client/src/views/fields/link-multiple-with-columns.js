@@ -39,27 +39,40 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
     return Dep.extend(/** @lends module:views/fields/link-multiple-with-columns.Class# */{
 
         /**
+         * @const
+         */
+        COLUMN_TYPE_VARCHAR: 'varchar',
+
+        /**
+         * @const
+         */
+        COLUMN_TYPE_ENUM: 'enum',
+
+        /**
+         * @const
+         */
+        COLUMN_TYPE_BOOL: 'bool',
+
+        /**
          * @inheritDoc
          */
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            var columnsDefsInitial = this.columnsDefs || {};
+            let columnsDefsInitial = this.columnsDefs || {};
 
             this.columnsDefs = {};
-
             this.columnsName = this.name + 'Columns';
-
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
 
             this.listenTo(this.model, 'change:' + this.columnsName, () => {
                 this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
             });
 
-            var columns = this.getMetadata()
+            let columns = this.getMetadata()
                 .get(['entityDefs', this.model.name, 'fields', this.name, 'columns']) || {};
 
-            var columnList = Object.keys(columns);
+            let columnList = Object.keys(columns);
 
             this.columnList = this.columnList || columnList;
 
@@ -70,26 +83,25 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                     return;
                 }
                 if (column in columns) {
-                    var field = columns[column];
+                    let field = columns[column];
 
-                    var o = {};
+                    let o = {};
 
                     o.field = field;
                     o.scope = this.foreignScope;
 
                     if (
-                        !this.getMetadata().get(['entityDefs', this.foreignScope, 'fields', field, 'type'])
-                        &&
+                        !this.getMetadata().get(['entityDefs', this.foreignScope, 'fields', field, 'type']) &&
                         this.getMetadata().get(['entityDefs', this.model.name, 'fields', field, 'type'])
                     ) {
                         o.scope = this.model.name;
                     }
 
-                    var fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
+                    let fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
 
                     o.type = fieldDefs.type;
 
-                    if (o.type === 'enum' || o.type === 'varchar') {
+                    if (o.type === this.COLUMN_TYPE_ENUM || o.type === this.COLUMN_TYPE_VARCHAR) {
                         o.options = fieldDefs.options;
                     }
 
@@ -105,10 +117,10 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                 }
             });
 
-            if (this.mode === 'edit' || this.mode === 'detail') {
-                this.events['click a[data-action="toggleBoolColumn"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id');
-                    var column = $(e.currentTarget).data('column');
+            if (this.isEditMode() || this.isDetailMode()) {
+                this.events['click a[data-action="toggleBoolColumn"]'] = (e) => {
+                    let id = $(e.currentTarget).data('id');
+                    let column = $(e.currentTarget).data('column');
 
                     this.toggleBoolColumn(id, column);
                 };
@@ -139,66 +151,75 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * Get an item HTML for detail mode.
          *
          * @param {string} id An ID.
-         * @param {string} name An name.
+         * @param {string} [name] An name.
          * @return {string}
          */
         getDetailLinkHtml: function (id, name) {
             name = name || this.nameHash[id] || id;
 
-            var roleHtml = '';
+            id = Handlebars.Utils.escapeExpression(id);
+            name = Handlebars.Utils.escapeExpression(name);
 
-            this.columnList.forEach(column => {
-                var value = (this.columns[id] || {})[column] || '';
-                var type = this.columnsDefs[column].type;
+            let $el = $('<div>')
+                .append(
+                    $('<a>')
+                        .attr('href', this.foreignScope + '/view/' + id)
+                        .text(name)
+                );
 
-                if (value !== '' && value) {
-                    if (type === 'enum') {
-                        roleHtml += ' <span class="text-muted chevron-right"></span> ' +
-                            '<span class="text-muted small">' +
-                            this.getHelper()
-                                .escapeString(
-                                    this.getLanguage().translateOption(
-                                        value,
-                                    this.columnsDefs[column].field,
-                                    this.columnsDefs[column].scope)
-                                ) +
-                            '</span>';
-                    }
-                    else if (type === 'varchar') {
-                        roleHtml += ' <span class="text-muted chevron-right"></span> ' +
-                            '<span class="text-muted small">' +
-                            this.getHelper().escapeString(value) +
-                            '</span>';
-                    }
+            if (this.isDetailMode()) {
+                let iconHtml = this.getIconHtml(id);
+
+                if (iconHtml) {
+                    $el.prepend(iconHtml);
                 }
-            });
-
-            var iconHtml = '';
-
-            if (this.mode === 'detail') {
-                iconHtml = this.getIconHtml();
             }
 
-            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' +
-                this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
+            this.columnList.forEach(column => {
+                let value = (this.columns[id] || {})[column] || '';
+                let type = this.columnsDefs[column].type;
+                let field = this.columnsDefs[column].field;
+                let scope = this.columnsDefs[column].scope;
 
-            return lineHtml;
+                if (value === '' || !value) {
+                    return;
+                }
+
+                if (type !== this.COLUMN_TYPE_ENUM && type !== this.COLUMN_TYPE_VARCHAR) {
+                    return;
+                }
+
+                let translatedValue = type === this.COLUMN_TYPE_ENUM ?
+                    this.getLanguage().translateOption(value, field, scope) :
+                    value;
+
+                let text = this.getHelper().escapeString(translatedValue);
+
+                $el.append(
+                    $('<span>').text(' '),
+                    $('<span>').addClass('text-muted chevron-right'),
+                    $('<span>').text(' '),
+                    $('<span>').text(text).addClass('text-muted small')
+                );
+            });
+
+            return $el.get(0).outerHTML;
         },
 
         /**
          * @inheritDoc
          */
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
-                var names = [];
+            if (this.isDetailMode() || this.isListMode()) {
+                let itemList = [];
 
                 this.ids.forEach(id => {
-                    var lineHtml = this.getDetailLinkHtml(id);
-
-                    names.push(lineHtml);
+                    itemList.push(
+                        this.getDetailLinkHtml(id)
+                    );
                 });
 
-                return names.join('');
+                return itemList.join('');
             }
         },
 
@@ -274,169 +295,217 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
             Dep.prototype.afterAddLink.call(this, id);
         },
 
+        /**
+         * @param {string} column
+         * @param {string} id
+         * @param {*} value
+         * @return {JQuery}
+         */
         getJQSelect: function (column, id, value) {
-            var $column = $(
-                '<select class="role form-control input-sm pull-right" ' +
-                'data-id="'+id+'" data-column="'+column+'">'
-            );
+            id = Handlebars.Utils.escapeExpression(id);
+            value = Handlebars.Utils.escapeExpression(value);
 
-            this.columnsDefs[column].options.forEach(item =>{
-                var selectedHtml = (item == value) ? 'selected': '';
+            let field = this.columnsDefs[column].field;
+            let scope = this.columnsDefs[column].scope;
+            let options = this.columnsDefs[column].options || [];
 
-                option = '<option value="' + item + '" '+selectedHtml+'>' +
-                    this.getLanguage().translateOption(
-                        item,
-                    this.columnsDefs[column].field,
-                    this.columnsDefs[column].scope
-                    ) +
-                    '</option>';
+            let $select = $('<select>')
+                .addClass('role form-control input-sm pull-right')
+                .attr('data-id', id)
+                .attr('data-column', column);
 
-                $column.append(option);
-            });
+            options.forEach(itemValue => {
+                let text = this.getLanguage().translateOption(itemValue, field, scope);
 
-            return $column;
+                let $option = $('<option>')
+                    .val(itemValue)
+                    .text(text);
+
+                if (itemValue === (value || '')) {
+                    $option.attr('selected', 'selected');
+                }
+
+                $select.append($option);
+            })
+
+            return $select;
+        },
+
+        /**
+         * @param {string} column
+         * @param {string} id
+         * @param {*} value
+         * @return {JQuery}
+         */
+        getJQInput: function (column, id, value) {
+            id = Handlebars.Utils.escapeExpression(id);
+            value = Handlebars.Utils.escapeExpression(value);
+
+            let field = this.columnsDefs[column].field;
+            let scope = this.columnsDefs[column].scope;
+            let maxLength = this.columnsDefs[column].maxLength;
+
+            let label = this.translate(field, 'fields', scope);
+
+            let $input = $('<input>')
+                .addClass('role form-control input-sm pull-right')
+                .attr('data-column', column)
+                .attr('placeholder', label)
+                .attr('data-id', id)
+                .val(value || '');
+
+            if (maxLength) {
+                $input.attr('maxlength', maxLength);
+            }
+
+            return $input;
+        },
+
+        /**
+         * @param {string} column
+         * @param {string} id
+         * @param {*} value
+         * @return {JQuery}
+         */
+        getJQLi: function (column, id, value) {
+            id = Handlebars.Utils.escapeExpression(id);
+
+            let field = this.columnsDefs[column].field;
+            let scope = this.columnsDefs[column].scope;
+
+            let label = this.translate(field, 'fields', scope);
+
+            return $('<li>')
+                .append(
+                    $('<a>')
+                        .attr('href', 'javascript:')
+                        .attr('data-action', 'toggleBoolColumn')
+                        .attr('data-column', column)
+                        .attr('data-id', id)
+                        .append(
+                            $('<span>')
+                                .addClass('check-icon fas fa-check pull-right')
+                                .addClass(!value ? 'hidden' : '')
+                        )
+                        .append(
+                            $('<div>').text(label)
+                        )
+                );
         },
 
         /**
          * @inheritDoc
          */
         addLinkHtml: function (id, name) {
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            var $container = this.$el.find('.link-container');
+            id = Handlebars.Utils.escapeExpression(id);
+            name = Handlebars.Utils.escapeExpression(name);
 
-            var $el = $(
-                '<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">'
-            ).addClass('link-' + id);
+            let $container = this.$el.find('.link-container');
 
-            var nameHtml = '<div class="link-item-name">' +
-                this.getHelper().escapeString(name) + '&nbsp;' + '</div>';
+            let $el = $('<div>')
+                .addClass('form-inline clearfix')
+                .addClass('list-group-item link-with-role link-group-item-with-columns')
+                .addClass('link-' + id);
 
-            var removeHtml = '<a href="javascript:" class="pull-right" ' +
-                'data-id="' + id + '" data-action="clearLink">' +
-                '<span class="fas fa-times"></a>';
+            let $remove = $('<a>')
+                .attr('href', 'javascript:')
+                .attr('data-id', id)
+                .attr('data-action', 'clearLink')
+                .addClass('pull-right')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                );
 
-            var columnFormElementJQList = [];
-            var columnMenuItemJQList = [];
+            let $name = $('<div>').html(name + '&nbsp;');
+
+            let $columnList = [];
+            let $liList = [];
 
             this.columnList.forEach(column => {
-                var value = (this.columns[id] || {})[column];
-                var escapedValue = Handlebars.Utils.escapeExpression(value);
+                let value = (this.columns[id] || {})[column];
 
-                var type = this.columnsDefs[column].type;
-                var field = this.columnsDefs[column].field;
-                var scope = this.columnsDefs[column].scope;
+                let type = this.columnsDefs[column].type;
 
-                var $column;
-                var label;
-
-                if (type === 'enum') {
-                    $column = this.getJQSelect(column, id, escapedValue);
-                    columnFormElementJQList.push($column);
-
-                }
-                else if (type === 'varchar') {
-                    label = this.translate(field, 'fields', scope);
-
-                    $column = $(
-                        '<input class="role form-control input-sm pull-right" ' +
-                        'data-column="'+column+'" placeholder="'+label+'" data-id="'+id+'" ' +
-                        'value="' + (escapedValue || '') + '">'
+                if (type === this.COLUMN_TYPE_ENUM) {
+                    $columnList.push(
+                        this.getJQSelect(column, id, value)
                     );
 
-                    if ('maxLength' in this.columnsDefs[column]) {
-                        $column.attr('maxLength', this.columnsDefs[column].maxLength);
-                    }
-
-                    columnFormElementJQList.push($column);
+                    return;
                 }
-                else if (type === 'bool') {
-                    label = this.translate(field, 'fields', scope);
 
-                    var $menuItem = $('<li>')
-                        .append(
-                            $('<a href="javascript:" data-action="toggleBoolColumn">')
-                                .attr('data-column', column)
-                                .attr('data-id', id)
-                                .append(
-                                    $('<span class="check-icon fas fa-check fa-sm pull-right">')
-                                        .addClass(!value ? 'hidden' : '')
-                                )
-                                .append(
-                                    $('<div>').text(label)
-                                )
-                        );
+                if (type === this.COLUMN_TYPE_VARCHAR) {
+                    $columnList.push(
+                        this.getJQInput(column, id, value)
+                    );
 
-                    columnMenuItemJQList.push($menuItem);
+                    return;
+                }
+
+                if (type === this.COLUMN_TYPE_BOOL) {
+                    $liList.push(
+                        this.getJQLi(column, id, value)
+                    );
                 }
             });
 
             let $left = $('<div>');
+            let $right = $('<div>');
 
-            if (columnFormElementJQList.length === 1) {
-                $left.append(columnFormElementJQList[0]);
-            }
-            else {
-                columnFormElementJQList.forEach($input => {
-                    $left.append($input);
-                });
-            }
+            $columnList.forEach($item => $left.append($item));
 
-            if (columnMenuItemJQList.length) {
-                var $ul = $('<ul class="dropdown-menu">');
+            if ($liList.length) {
+                let $ul = $('<ul>').addClass('dropdown-menu');
 
-                columnMenuItemJQList.forEach($item => {
-                    $ul.append($item);
-                });
+                $liList.forEach($item => $ul.append($item));
 
                 $left.append(
-                    $('<div class="btn-group pull-right">')
+                    $('<div>')
+                        .addClass('btn-group pull-right')
                         .append(
-                            $('<button type="button" class="btn btn-link btn-sm dropdown-toggle" '+
-                                'data-toggle="dropdown">')
+                            $('<button>')
+                                .attr('type', 'button')
+                                .attr('data-toggle', 'dropdown')
+                                .addClass('btn btn-link btn-sm dropdown-toggle')
                                 .append(
-                                    '<span class="caret">'
+                                    $('<span>').addClass('caret')
                                 )
                         )
                         .append($ul)
                 );
             }
 
-            $left.append(nameHtml);
+            $left.append($name);
+            $right.append($remove);
+
             $el.append($left);
-
-            let $right = $('<div>');
-
-            $right.append(removeHtml);
             $el.append($right);
 
             $container.append($el);
 
-            if (this.mode === 'edit') {
-                columnFormElementJQList.forEach($column => {
-                    var fetch = ($target) => {
+            if (this.isEditMode()) {
+                $columnList.forEach($column => {
+                    let fetch = ($target) => {
                         if (!$target || !$target.length) {
                             return;
                         }
 
-                        var column = $target.data('column');
-
-                        var value = $target.val().toString().trim();
-
-                        var id = $target.data('id');
+                        let column = $target.data('column');
+                        let value = $target.val().toString().trim();
+                        let id = $target.data('id');
 
                         this.columns[id] = this.columns[id] || {};
-
                         this.columns[id][column] = value;
                     };
 
                     $column.on('change', e => {
-                        var $target = $(e.currentTarget);
+                        let $target = $(e.currentTarget);
 
                         fetch($target);
-
                         this.trigger('change');
                     });
 
@@ -457,7 +526,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
             this.columnList.forEach(column => {
                 var type = this.columnsDefs[column].type;
 
-                if (type === 'varchar') {
+                if (type === this.COLUMN_TYPE_VARCHAR) {
                     var options = this.columnsDefs[column].options;
 
                     if (options && options.length) {

@@ -26,16 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-with-columns', function (Dep) {
+define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-columns'], function (Dep) {
 
     return Dep.extend({
-
-        roleType: 'varchar',
 
         events: {
             'click [data-action="switchPrimary"]': function (e) {
                 let $target = $(e.currentTarget);
-                var id = $target.data('id');
+                let id = $target.data('id');
 
                 if (!$target.hasClass('active')) {
                     this.$el.find('button[data-action="switchPrimary"]')
@@ -72,14 +70,15 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             this.primaryId = this.model.get(this.primaryIdFieldName);
             this.primaryName = this.model.get(this.primaryNameFieldName);
 
-            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, function () {
+            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
                 this.primaryId = this.model.get(this.primaryIdFieldName);
                 this.primaryName = this.model.get(this.primaryNameFieldName);
-            }, this);
+            });
 
-            if (this.mode === 'edit' || this.mode === 'detail') {
-                this.events['click a[data-action="setPrimary"]'] = function (e) {
-                    var id = $(e.currentTarget).data('id');
+            if (this.isEditMode() || this.isDetailMode()) {
+                this.events['click a[data-action="setPrimary"]'] = (e) => {
+                    let id = $(e.currentTarget).data('id');
+
                     this.setPrimaryId(id);
                     this.reRender();
                 }
@@ -88,6 +87,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
 
         setPrimaryId: function (id) {
             this.primaryId = id;
+
             if (id) {
                 this.primaryName = this.nameHash[id];
             } else {
@@ -101,36 +101,43 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             if (this.primaryId) {
                 this.addLinkHtml(this.primaryId, this.primaryName);
             }
-            this.ids.forEach(function (id) {
-                if (id != this.primaryId) {
+
+            this.ids.forEach(id => {
+                if (id !== this.primaryId) {
                     this.addLinkHtml(id, this.nameHash[id]);
                 }
-            }, this);
+            });
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var names = [];
+            if (this.isDetailMode() || this.isListMode()) {
+                let names = [];
+
                 if (this.primaryId) {
                     names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
                 }
-                this.ids.forEach(function (id) {
-                    if (id != this.primaryId) {
+
+                this.ids.forEach(id => {
+                    if (id !== this.primaryId) {
                         names.push(this.getDetailLinkHtml(id));
                     }
-                }, this);
+                });
 
                 return names.join('');
             }
         },
 
         getDetailLinkHtml: function (id, name) {
-            var html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+            let html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+
             if (this.getColumnValue(id, 'isInactive')) {
-                var $el = $(html);
+                let $el = $(html);
+
                 $el.find('a').css('text-decoration', 'line-through');
+
                 return $el.prop('outerHTML');
             }
+
             return html;
         },
 
@@ -141,6 +148,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
                 this.primaryId = id;
                 this.primaryName = this.nameHash[id];
             }
+
             this.controlPrimaryAppearance();
         },
 
@@ -150,17 +158,21 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
             if (this.ids.length === 0) {
                 this.primaryId = null;
                 this.primaryName = null;
+
                 return;
             }
+
             if (id === this.primaryId) {
                 this.primaryId = this.ids[0];
                 this.primaryName = this.nameHash[this.primaryId];
             }
+
             this.controlPrimaryAppearance();
         },
 
         controlPrimaryAppearance: function () {
             this.$el.find('li.set-primary-list-item').removeClass('hidden');
+
             if (this.primaryId) {
                 this.$el.find('li.set-primary-list-item[data-id="'+this.primaryId+'"]').addClass('hidden');
             }
@@ -169,28 +181,30 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         addLinkHtml: function (id, name) {
             name = name || id;
 
-            if (this.mode == 'search') {
+            if (this.isSearchMode()) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            var $el = Dep.prototype.addLinkHtml.call(this, id, name);
+            let $el = Dep.prototype.addLinkHtml.call(this, id, name);
 
-            var isPrimary = (id == this.primaryId);
+            let isPrimary = id === this.primaryId;
 
-            var $a = $(
-                '<a href="javascript:" data-action="setPrimary" data-id="' + id+ '"</a>' +
-                this.translate('Set Primary', 'labels', 'Account') +
-                '</a>'
-            );
+            let $a = $('<a>')
+                .attr('href', 'javascript:')
+                .attr('data-action', 'setPrimary')
+                .attr('data-id', id)
+                .text(this.translate('Set Primary', 'labels', 'Account'));
 
-            var $li = $('<li class="set-primary-list-item" data-id="'+id+'">').append($a);
+            let $li = $('<li>')
+                .addClass('set-primary-list-item')
+                .attr('data-id', id)
+                .append($a);
 
             if (isPrimary || this.ids.length === 1) {
                 $li.addClass('hidden');
             }
 
             $el.find('ul.dropdown-menu').append($li);
-
 
             if (this.getColumnValue(id, 'isInactive')) {
                 $el.find('div.link-item-name').css('text-decoration', 'line-through');
@@ -202,7 +216,7 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;

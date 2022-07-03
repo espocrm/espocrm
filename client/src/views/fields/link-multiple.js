@@ -331,7 +331,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 });
 
                 this.events['click a[data-action="clearLink"]'] = (e) => {
-                    var id = $(e.currentTarget).attr('data-id');
+                    let id = $(e.currentTarget).attr('data-id');
 
                     this.deleteLink(id);
                 };
@@ -395,10 +395,10 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @return {string}
          */
         getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?&maxSize=' + this.getAutocompleteMaxCount();
+            let url = this.foreignScope + '?&maxSize=' + this.getAutocompleteMaxCount();
 
             if (!this.forceSelectAllAttributes) {
-                var select = ['id', 'name'];
+                let select = ['id', 'name'];
 
                 if (this.mandatorySelectAttributeList) {
 
@@ -408,13 +408,13 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 url += '&select=' + select.join(',')
             }
 
-            var boolList = this.getSelectBoolFilterList();
+            let boolList = this.getSelectBoolFilterList();
 
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
 
-            var primary = this.getSelectPrimaryFilterName();
+            let primary = this.getSelectPrimaryFilterName();
 
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
@@ -542,7 +542,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
 
             this.deleteLinkHtml(id);
 
-            var index = this.ids.indexOf(id);
+            let index = this.ids.indexOf(id);
 
             if (index > -1) {
                 this.ids.splice(index, 1);
@@ -598,10 +598,12 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
         },
 
         /**
+         * Add an item for edit mode.
+         *
          * @protected
          * @param {string} id An ID.
          * @param {string} name A name.
-         * @return {JQuery}
+         * @return {JQuery|null}
          */
         addLinkHtml: function (id, name) {
             name = name || id;
@@ -609,9 +611,9 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             id = Handlebars.Utils.escapeExpression(id);
             name = Handlebars.Utils.escapeExpression(name);
 
-            var $container = this.$el.find('.link-container');
+            let $container = this.$el.find('.link-container');
 
-            var $el = $('<div />')
+            let $el = $('<div />')
                 .addClass('link-' + id)
                 .addClass('list-group-item')
                 .attr('data-id', id);
@@ -649,7 +651,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @return {string}
          */
         getDetailLinkHtml: function (id) {
-            var name = this.nameHash[id] || id;
+            let name = this.nameHash[id] || id;
 
             id = Handlebars.Utils.escapeExpression(id);
             name = Handlebars.Utils.escapeExpression(name);
@@ -658,14 +660,18 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
 
-            var iconHtml = '';
+            let iconHtml = this.isDetailMode() ?
+                this.getIconHtml(id) : '';
 
-            if (this.isDetailMode()) {
-                iconHtml = this.getIconHtml(id);
+            let $a = $('<a>')
+                .attr('href', '#' + this.foreignScope + '/view/' + id)
+                .text(name);
+
+            if (iconHtml) {
+                $a.prepend(iconHtml)
             }
 
-            return '<a href="#' + this.foreignScope + '/view/' + id + '">' +
-                iconHtml + name + '</a>';
+            return $a.get(0).outerHTML;
         },
 
         /**
@@ -676,22 +682,21 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 return null;
             }
 
-            var names = [];
+            let itemList = [];
 
-            this.ids.forEach((id) => {
-                names.push(this.getDetailLinkHtml(id));
+            this.ids.forEach(id => {
+                itemList.push(this.getDetailLinkHtml(id));
             });
 
-            if (!names.length) {
+            if (!itemList.length) {
                 return null;
             }
 
-            return names
-                .map(
-                    name => $('<div />')
-                        .addClass('link-multiple-item')
-                        .html(name)
-                        .wrap('<div />').parent().html()
+            return itemList
+                .map(item => $('<div>')
+                    .addClass('link-multiple-item')
+                    .html(item)
+                    .wrap('<div />').parent().html()
                 )
                 .join('');
         },
@@ -700,25 +705,29 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @inheritDoc
          */
         validateRequired: function () {
-            if (this.isRequired()) {
-                var idList = this.model.get(this.idsName) || [];
-
-                if (idList.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg);
-
-                    return true;
-                }
+            if (!this.isRequired()) {
+                return false;
             }
+
+            let idList = this.model.get(this.idsName) || [];
+
+            if (idList.length === 0) {
+                let msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+
+            return false;
         },
 
         /**
          * @inheritDoc
          */
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.idsName] = this.ids;
             data[this.nameHashName] = this.nameHash;
@@ -733,7 +742,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             this.ids = [];
 
             this.$el.find('.link-container').children().each((i, li) => {
-                var id = $(li).attr('data-id');
+                let id = $(li).attr('data-id');
 
                 if (!id) {
                     return;
@@ -747,8 +756,8 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @inheritDoc
          */
         fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
-            var idList = this.ids || [];
+            let type = this.$el.find('select.search-type').val();
+            let idList = this.ids || [];
 
             if (~['anyOf', 'allOf', 'noneOf'].indexOf(type) && !idList.length) {
                 return {
@@ -760,7 +769,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 };
             }
 
-            var data;
+            let data;
 
             if (type === 'anyOf') {
                 data = {

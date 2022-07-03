@@ -28,15 +28,46 @@
 
 define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * A link-multiple field with a relation column.
+     *
+     * @class
+     * @name Class
+     * @extends module:views/fields/link-multiple.Class
+     * @extends module:views/fields/link-multiple.Class
+     * @memberOf module:views/fields/link-multiple-with-role
+     */
+    return Dep.extend(/** @lends module:views/fields/link-multiple-with-role.Class# */{
 
+        /**
+         * A role field type.
+         */
         roleType: 'enum',
 
+        /**
+         * A relation column name.
+         */
         columnName: 'role',
 
+        /**
+         * The role field is defined in a foreign entity.
+         */
         roleFieldIsForeign: true,
 
+        /**
+         * A value to fetch for an empty role.
+         */
         emptyRoleValue: null,
+
+        /**
+         * @const
+         */
+        ROLE_TYPE_ENUM: 'enum',
+
+        /**
+         * @const
+         */
+        ROLE_TYPE_VARCHAR: 'varchar',
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -44,25 +75,21 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             this.columnsName = this.name + 'Columns';
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
 
-            this.listenTo(this.model, 'change:' + this.columnsName, function () {
+            this.listenTo(this.model, 'change:' + this.columnsName, () => {
                 this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
-            }, this);
+            });
 
             this.roleField = this.getMetadata()
-                .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.columns.' + this.columnName);
+                .get(['entityDefs', this.model.name, 'fields', this.name, 'columns', this.columnName]);
 
             this.displayRoleAsLabel = this.getMetadata()
                 .get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'displayAsLabel']);
 
-            if (this.roleFieldIsForeign) {
-                this.roleFieldScope = this.foreignScope;
-            } else {
-                this.roleFieldScope = this.model.name;
-            }
+            this.roleFieldScope = this.roleFieldIsForeign ? this.foreignScope : this.model.name;
 
-            if (this.roleType === 'enum' && !this.forceRoles) {
+            if (this.roleType === this.ROLE_TYPE_ENUM && !this.forceRoles) {
                 this.roleList = this.getMetadata()
-                    .get('entityDefs.' + this.roleFieldScope + '.fields.' + this.roleField + '.options');
+                    .get(['entityDefs', this.roleFieldScope, 'fields', this.roleField, 'options']);
 
                 if (!this.roleList) {
                     this.roleList = [];
@@ -72,7 +99,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
         },
 
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
 
             list.push(this.name + 'Columns');
 
@@ -81,6 +108,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
 
         getDetailLinkHtml: function (id, name) {
             name = name || this.nameHash[id] || id;
+
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
@@ -88,20 +116,36 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             id = Handlebars.Utils.escapeExpression(id);
             name = Handlebars.Utils.escapeExpression(name);
 
-            var role = (this.columns[id] || {})[this.columnName] || '';
-            var roleHtml = '';
+            let role = (this.columns[id] || {})[this.columnName] || '';
 
             if (this.emptyRoleValue && role === this.emptyRoleValue) {
                 role = '';
             }
-            if (role != '') {
-                var style = this.getMetadata()
+
+            let $el = $('<div>')
+                .append(
+                    $('<a>')
+                        .attr('href', this.foreignScope + '/view/' + id)
+                        .text(name)
+                );
+
+            if (this.isDetailMode()) {
+                let iconHtml = this.getIconHtml(id);
+
+                if (iconHtml) {
+                    $el.prepend(iconHtml);
+                }
+            }
+
+            if (role) {
+                let style = this.getMetadata()
                     .get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style', role]);
 
-                var className = 'text';
+                let className = 'text';
 
                 if (this.displayRoleAsLabel && style && style !== 'default') {
                     className = 'label label-sm label';
+
                     if (style === 'muted') {
                         style = 'default';
                     }
@@ -109,35 +153,34 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                     style = style || 'muted';
                 }
 
-                roleHtml = '<span class="text-muted chevron-right"></span> ' +
-                '<span class="'+className+'-'+style+' small">' +
-                this.getHelper().escapeString(
-                    this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope)
-                ) +
-                '</span>';
+                className = className + '-' + style;
+
+                let translatedRole = this.roleType === this.ROLE_TYPE_ENUM ?
+                    this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) :
+                    role;
+
+                let text = this.getHelper().escapeString(translatedRole);
+
+                $el.append(
+                    $('<span>').text(' '),
+                    $('<span>').addClass('text-muted chevron-right'),
+                    $('<span>').text(' '),
+                    $('<span>').text(text).addClass('small').addClass(className)
+                );
             }
-            var iconHtml = '';
 
-            if (this.mode === 'detail') {
-                iconHtml = this.getIconHtml(id);
-            }
-
-            var lineHtml = '<div>' + iconHtml +
-                '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
-
-            return lineHtml;
+            return $el.get(0).outerHTML;
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.isDetailMode() || this.isListMode()) {
+                let names = [];
 
-                var names = [];
-
-                this.ids.forEach(function (id) {
-                    var lineHtml = this.getDetailLinkHtml(id);
-
-                    names.push(lineHtml);
-                }, this);
+                this.ids.forEach(id => {
+                    names.push(
+                        this.getDetailLinkHtml(id)
+                    );
+                });
 
                 return names.join('');
             }
@@ -149,7 +192,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
 
             this.deleteLinkHtml(id);
 
-            var index = this.ids.indexOf(id);
+            let index = this.ids.indexOf(id);
 
             if (index > -1) {
                 this.ids.splice(index, 1);
@@ -159,7 +202,6 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             delete this.columns[id];
 
             this.afterDeleteLink(id);
-
             this.trigger('change');
         },
 
@@ -182,115 +224,130 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             Dep.prototype.afterRender.call(this);
         },
 
+        /**
+         * Build a role select element.
+         *
+         * @param {string} id
+         * @param {string|null} roleValue
+         * @return {JQuery}
+         */
         getJQSelect: function (id, roleValue) {
             id = Handlebars.Utils.escapeExpression(id);
 
-            var $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
-            this.roleList.forEach(function (role) {
-                var selectedHtml = (role == roleValue) ? 'selected': '';
+            let $role = $('<select>')
+                .addClass('role form-control input-sm pull-right')
+                .attr('data-id', id);
 
-                option = '<option value="'+role+'" '+selectedHtml+'>' +
-                    this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) + '</option>';
+            this.roleList.forEach(role => {
+                let text = this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope);
 
-                $role.append(option);
-            }, this);
+                let $option = $('<option>')
+                    .val(role)
+                    .text(text);
+
+                if (role === (roleValue || '')) {
+                    $option.attr('selected', 'selected');
+                }
+
+                $role.append($option);
+            });
 
             return $role;
         },
 
+        /**
+         * @inheritDoc
+         */
         addLinkHtml: function (id, name) {
             name = name || id;
 
-            if (this.mode === 'search' || this.skipRoles) {
+            if (this.isSearchMode() || this.skipRoles) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
+            let roleValue = (this.columns[id] || {})[this.columnName];
+
             id = Handlebars.Utils.escapeExpression(id);
             name = Handlebars.Utils.escapeExpression(name);
-
-            var $container = this.$el.find('.link-container');
-
-            var $el = $(
-                '<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">'
-            )
-            .addClass('link-' + id);
-
-            var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
-
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink">' +
-                '<span class="fas fa-times"></a>';
-
-            var $role;
-
-            var roleValue = (this.columns[id] || {})[this.columnName];
-
             roleValue = Handlebars.Utils.escapeExpression(roleValue);
 
-            if (this.roleType == 'enum') {
+            let $container = this.$el.find('.link-container');
+
+            let $el = $('<div>')
+                .addClass('form-inline clearfix')
+                .addClass('list-group-item link-with-role link-group-item-with-columns')
+                .addClass('link-' + id);
+
+            let $remove = $('<a>')
+                .attr('href', 'javascript:')
+                .attr('data-id', id)
+                .attr('data-action', 'clearLink')
+                .addClass('pull-right')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                );
+
+            let $left = $('<div>').addClass('pull-left');
+            let $right = $('<div>').append($remove);
+
+            let $name = $('<div>').html(name + '&nbsp;');
+
+            let $role;
+
+            if (this.roleType === this.ROLE_TYPE_ENUM) {
                 $role = this.getJQSelect(id, roleValue);
             }
             else {
-                var label = this.translate(this.roleField, 'fields', this.roleFieldScope);
-                $role = $(
-                    '<input class="role form-control input-sm pull-right" maxlength="50" ' +
-                    'placeholder="'+label+'" data-id="'+id+'" value="' + (roleValue || '') + '">'
-                );
-            }
+                let label = this.translate(this.roleField, 'fields', this.roleFieldScope);
 
-            let $left = $('<div class="pull-left">');
+                $role = $('<input>')
+                    .addClass('role form-control input-sm pull-right')
+                    .attr('maxlength', 50) // @todo Get from metadata.
+                    .attr('placeholder', label)
+                    .attr('data-id', id)
+                    .val((roleValue || ''));
+            }
 
             if ($role) {
                 $left.append($role);
             }
 
-            $left.append(nameHtml);
+            $left.append($name);
 
-            $el.append($left);
-
-            let $right = $('<div>');
-
-            $right.append(removeHtml);
-
-            $el.append($right);
+            $el.append($left).append($right);
 
             $container.append($el);
 
-            if (this.mode === 'edit') {
-                if ($role) {
-                    var fetch = function ($target) {
-                        if (!$target || !$target.length) {
-                            return;
-                        }
+            if (this.isEditMode() && $role) {
+                let fetch = ($target) => {
+                    if (!$target || !$target.length) {
+                        return;
+                    }
 
-                        if ($target.val() === null) {
-                            return;
-                        }
+                    if ($target.val() === null) {
+                        return;
+                    }
 
-                        var value = $target.val().toString().trim();
+                    let value = $target.val().toString().trim();
+                    let id = $target.data('id');
 
-                        var id = $target.data('id');
+                    this.columns[id] = this.columns[id] || {};
+                    this.columns[id][this.columnName] = value;
+                };
 
-                        this.columns[id] = this.columns[id] || {};
+                $role.on('change', e => {
+                    fetch($(e.currentTarget));
+                    this.trigger('change');
+                });
 
-                        this.columns[id][this.columnName] = value;
-                    }.bind(this);
-
-                    $role.on('change', function (e) {
-                        var $target = $(e.currentTarget);
-
-                        fetch($target);
-
-                        this.trigger('change');
-                    }.bind(this));
-
-                    fetch($role);
-                }
+                fetch($role);
             }
+
             return $el;
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             if (!this.skipRoles) {
                 data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
@@ -298,6 +355,5 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
 
             return data;
         },
-
     });
 });
