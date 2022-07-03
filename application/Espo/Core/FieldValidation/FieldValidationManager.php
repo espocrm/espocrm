@@ -141,14 +141,22 @@ class FieldValidationManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     private function processField(Entity $entity, string $field, FieldValidationParams $params, stdClass $data): void
     {
         $entityType = $entity->getEntityType();
 
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
-        $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
-        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+        $validationList =
+            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validationList']) ??
+            $this->metadata->get(['fields', $fieldType, 'validationList']) ?? [];
+
+        $mandatoryValidationList =
+            $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
+            $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
 
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);

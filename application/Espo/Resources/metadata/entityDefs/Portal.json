@@ -35,7 +35,11 @@
         },
         "tabList": {
             "type": "array",
-            "view": "views/portal/fields/tab-list"
+            "view": "views/portal/fields/tab-list",
+            "validationList": [
+                "array",
+                "required"
+            ]
         },
         "quickCreateList": {
             "type": "array",

@@ -153,7 +153,11 @@
         },
         "tabList": {
             "type": "array",
-            "view": "views/preferences/fields/tab-list"
+            "view": "views/preferences/fields/tab-list",
+            "validationList": [
+                "array",
+                "required"
+            ]
         },
         "emailReplyToAllByDefault": {
             "type": "bool",
