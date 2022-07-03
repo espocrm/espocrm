@@ -28,7 +28,11 @@
         "names"
     ],
     "validationList": [
-        "required"
+        "required",
+        "pattern"
+    ],
+    "mandatoryValidationList": [
+        "pattern"
     ],
     "notCreatable": true,
     "notSortable": true,

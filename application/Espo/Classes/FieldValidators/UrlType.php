@@ -32,64 +32,41 @@ namespace Espo\Classes\FieldValidators;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
-class LinkParentType
+class UrlType
 {
     private Metadata $metadata;
 
-    public function __construct(Metadata $metadata)
+    private VarcharType $varcharType;
+
+    public function __construct(Metadata $metadata, VarcharType $varcharType)
     {
         $this->metadata = $metadata;
+        $this->varcharType = $varcharType;
     }
 
     public function checkRequired(Entity $entity, string $field): bool
     {
-        $idAttribute = $field . 'Id';
-        $typeAttribute = $field . 'Type';
-
-        if (
-            !$entity->has($idAttribute) ||
-            $entity->get($idAttribute) === '' ||
-            $entity->get($idAttribute) === null
-        ) {
-            return false;
-        }
-
-        if (!$entity->get($typeAttribute)) {
-            return false;
-        }
-
-        return true;
+        return $this->varcharType->checkRequired($entity, $field);
     }
 
-    public function checkPattern(Entity $entity, string $field): bool
+    public function checkMaxLength(Entity $entity, string $field, int $validationValue): bool
     {
-        /** @var ?string */
-        $idValue = $entity->get($field . 'Id');
-
-        if ($idValue === null) {
-            return true;
-        }
-
-        $pattern = $this->metadata->get(['app', 'regExpPatterns', 'id', 'pattern']);
-
-        if (!$pattern) {
-            return true;
-        }
-
-        $preparedPattern = '/^' . $pattern . '$/';
-
-        return (bool) preg_match($preparedPattern, $idValue);
+        return $this->varcharType->checkMaxLength($entity, $field, $validationValue);
     }
 
     public function checkValid(Entity $entity, string $field): bool
     {
-        /** @var ?string */
-        $typeValue = $entity->get($field . 'Type');
+        $value = $entity->get($field);
 
-        if ($typeValue === null) {
+        if ($value === null) {
             return true;
         }
 
-        return (bool) $this->metadata->get(['entityDefs', $typeValue]);
+        /** @var string */
+        $pattern = $this->metadata->get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+
+        $preparedPattern = '/^' . $pattern . '$/';
+
+        return (bool) preg_match($preparedPattern, $value);
     }
 }

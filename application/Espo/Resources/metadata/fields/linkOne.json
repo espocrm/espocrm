@@ -20,6 +20,14 @@
     "notActualFields": [
         "name"
     ],
+    "validationList": [
+        "required",
+        "pattern"
+    ],
+    "mandatoryValidationList": [
+        "pattern"
+    ],
+    "validatorClassName": "Espo\\Classes\\FieldValidators\\LinkType",
     "filter": true,
     "notCreatable": true
 }

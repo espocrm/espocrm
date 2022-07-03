@@ -38,6 +38,11 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
 
         defaultProtocol: 'https:',
 
+        validations: [
+            'required',
+            'valid',
+        ],
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -90,6 +95,30 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
             }
 
             return url;
+        },
+
+        validateValid: function () {
+            let value = this.model.get(this.name);
+
+            if (!value) {
+                return false;
+            }
+
+            /** @var {string} */
+            let pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+
+            let regExp = new RegExp('^' + pattern + '$');
+
+            if (regExp.test(value)) {
+                return false;
+            }
+
+            let msg = this.translate('fieldInvalid', 'messages')
+                .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+
+            this.showValidationMessage(msg, '[data-name="' + name + '"]');
+
+            return true;
         },
 
         fetch: function () {

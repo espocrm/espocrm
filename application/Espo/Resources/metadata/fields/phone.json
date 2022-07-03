@@ -29,11 +29,10 @@
     ],
     "actualFields": [
         "isOptedOut",
-        ""
-    ],
-    "notActualFields": [
+        "",
         "data"
     ],
+    "notActualFields": [],
     "fields": {
         "isOptedOut": {
             "type": "bool",
@@ -46,7 +45,11 @@
         }
     },
     "validationList": [
-        "required"
+        "required",
+        "valid"
+    ],
+    "mandatoryValidationList": [
+        "valid"
     ],
     "notCreatable": true,
     "filter": true,

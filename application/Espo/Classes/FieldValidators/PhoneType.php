@@ -29,10 +29,24 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
+
+use stdClass;
 
 class PhoneType
 {
+    private Metadata $metadata;
+
+    private Defs $defs;
+
+    public function __construct(Metadata $metadata, Defs $defs)
+    {
+        $this->metadata = $metadata;
+        $this->defs = $defs;
+    }
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
@@ -52,6 +66,99 @@ class PhoneType
         }
 
         return false;
+    }
+
+    public function checkValid(Entity $entity, string $field): bool
+    {
+        if ($this->isNotEmpty($entity, $field)) {
+            $number = $entity->get($field);
+
+            if (!$this->isValidNumber($number)) {
+                return false;
+            }
+        }
+
+        $dataList = $entity->get($field . 'Data');
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        foreach ($dataList as $item) {
+            if (!$item instanceof stdClass) {
+                return false;
+            }
+
+            $number = $item->phoneNumber ?? null;
+            $type = $item->type ?? null;
+
+            if (!$number) {
+                return false;
+            }
+
+            if (!$this->isValidNumber($number)) {
+                return false;
+            }
+
+            if (!$this->isValidType($entity->getEntityType(), $field, $type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    private function isValidType(string $entityType, string $field, $type): bool
+    {
+        if ($type === null) {
+            // Will be stored with a default type.
+            return true;
+        }
+
+        if (!is_string($type)) {
+            return false;
+        }
+
+        /** @var ?string[] */
+        $typeList = $this->defs
+            ->getEntity($entityType)
+            ->getField($field)
+            ->getParam('typeList');
+
+
+
+        if ($typeList === null) {
+            return true;
+        }
+
+        return in_array($type, $typeList);
+    }
+
+    /**
+     * @param mixed $number
+     */
+    private function isValidNumber($number): bool
+    {
+        if (!is_string($number)) {
+            return false;
+        }
+
+        if ($number === '') {
+            return false;
+        }
+
+        $pattern = $this->metadata->get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']);
+
+        if (!$pattern) {
+            return true;
+        }
+
+        $preparedPattern = '/^' . $pattern . '$/';
+
+        return (bool) preg_match($preparedPattern, $number);
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

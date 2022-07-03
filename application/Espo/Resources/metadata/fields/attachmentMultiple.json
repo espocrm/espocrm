@@ -74,6 +74,14 @@
     "notSortable": true,
     "filter": true,
     "personalData": true,
+    "validationList": [
+        "required",
+        "pattern"
+    ],
+    "mandatoryValidationList": [
+        "pattern"
+    ],
+    "validatorClassName": "Espo\\Classes\\FieldValidators\\LinkMultipleType",
     "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\AttachmentMultiple",
     "massUpdateActionList": [
         "update",

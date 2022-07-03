@@ -31,6 +31,8 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
+use stdClass;
+
 class EmailType
 {
     public function checkRequired(Entity $entity, string $field): bool
@@ -71,6 +73,10 @@ class EmailType
         }
 
         foreach ($dataList as $item) {
+            if (!$item instanceof stdClass) {
+                return false;
+            }
+
             if (empty($item->emailAddress)) {
                 continue;
             }

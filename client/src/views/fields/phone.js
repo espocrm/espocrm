@@ -54,21 +54,36 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         validatePhoneData: function () {
-            var data = this.model.get(this.dataFieldName);
+            let data = this.model.get(this.dataFieldName);
 
             if (!data || !data.length) {
                 return;
             }
 
-            var numberList = [];
-            var notValid = false;
+            /** @var {string} */
+            let pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
+            let regExp = new RegExp(pattern);
+
+            let numberList = [];
+            let notValid = false;
 
             data.forEach((row, i) => {
-                var number = row.phoneNumber;
-                var numberClean = String(number).replace(/[\s\+]/g, '');
+                let number = row.phoneNumber;
+
+                if (!regExp.test(number)) {
+                    notValid = true;
+
+                    let msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
+                        .replace('{field}', this.getLabelText());
+
+                    this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
+                        .toString() + ') input');
+                }
+
+                let numberClean = String(number).replace(/[\s\+]/g, '');
 
                 if (~numberList.indexOf(numberClean)) {
-                    var msg = this.translate('fieldValueDuplicate', 'messages')
+                    let msg = this.translate('fieldValueDuplicate', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)

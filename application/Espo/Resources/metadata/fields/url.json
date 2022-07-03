@@ -15,7 +15,8 @@
         },
         {
             "name": "strip",
-            "type": "bool"
+            "type": "bool",
+            "tooltip": "urlStrip"
         },
         {
             "name": "audited",
@@ -25,6 +26,14 @@
             "name": "readOnly",
             "type": "bool"
         }
+    ],
+    "validationList": [
+        "required",
+        "maxLength",
+        "valid"
+    ],
+    "mandatoryValidationList": [
+        "valid"
     ],
     "filter": true,
     "fieldDefs": {

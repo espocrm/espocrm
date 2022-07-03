@@ -1,5 +1,32 @@
 {
     "noBadCharacters": {
         "pattern": "[^<>=]+"
+    },
+    "latinLetters": {
+        "pattern": "[A-Za-z]+"
+    },
+    "latinLettersDigits": {
+        "pattern": "[A-Za-z0-9]+"
+    },
+    "latinLettersDigitsWhitespace": {
+        "pattern": "[A-Za-z0-9 ]+"
+    },
+    "latinLettersWhitespace": {
+        "pattern": "[A-Za-z ]+"
+    },
+    "digits": {
+        "pattern": "[0-9]+"
+    },
+    "id": {
+        "pattern": "[A-Za-z0-9_=\\-\\.]+",
+        "isSystem": true
+    },
+    "phoneNumberLoose": {
+        "pattern": "[0-9A-Za-z_@:#\\+\\(\\)\\-\\. ]+",
+        "isSystem": true
+    },
+    "uriOptionalProtocol": {
+        "pattern": "((a-zA-Z0-9)\\:\\/\\/)?[a-zA-Z0-9\\.\\/\\?\\:@\\-_=#]+\\.([a-zA-Z0-9\\&\\.\\/\\?\\:@\\-_=#])*",
+        "isSystem": true
     }
 }

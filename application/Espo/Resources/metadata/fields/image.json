@@ -44,7 +44,11 @@
         "name"
     ],
     "validationList": [
-        "required"
+        "required",
+        "pattern"
+    ],
+    "mandatoryValidationList": [
+        "pattern"
     ],
     "filter": true,
     "linkDefs": {

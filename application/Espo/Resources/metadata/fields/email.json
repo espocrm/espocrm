@@ -12,11 +12,10 @@
     ],
     "actualFields": [
         "isOptedOut",
-        ""
-    ],
-    "notActualFields": [
+        "",
         "data"
     ],
+    "notActualFields": [],
     "fields": {
         "isOptedOut": {
             "type": "bool",

@@ -27,7 +27,13 @@
         "name"
     ],
     "validationList": [
-        "required"
+        "required",
+        "pattern",
+        "valid"
+    ],
+    "mandatoryValidationList": [
+        "pattern",
+        "valid"
     ],
     "filter": true,
     "notCreatable": true,

@@ -73,6 +73,7 @@
         }
     },
     "tooltips": {
+        "urlStrip": "Strip a protocol and a trailing slash.",
         "audited": "Updates will be logged in stream.",
         "required": "Field will be mandatory. Can't be left empty.",
         "default": "Value will be set by default upon creating.",

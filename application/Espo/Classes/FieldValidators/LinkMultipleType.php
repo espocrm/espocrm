@@ -29,11 +29,19 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
 class LinkMultipleType
 {
+    private Metadata $metadata;
+
+    public function __construct(Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
     public function checkRequired(Entity $entity, string $field): bool
     {
         if (!$entity instanceof CoreEntity) {
@@ -44,5 +52,35 @@ class LinkMultipleType
         $idList = $entity->getLinkMultipleIdList($field);
 
         return count($idList) > 0;
+    }
+
+    public function checkPattern(Entity $entity, string $field): bool
+    {
+        /** @var ?mixed[] */
+        $idList = $entity->get($field . 'Ids');
+
+        if ($idList === null || $idList === []) {
+            return true;
+        }
+
+        $pattern = $this->metadata->get(['app', 'regExpPatterns', 'id', 'pattern']);
+
+        if (!$pattern) {
+            return true;
+        }
+
+        $preparedPattern = '/^' . $pattern . '$/';
+
+        foreach ($idList as $id) {
+            if (!is_string($id)) {
+                return false;
+            }
+
+            if (!preg_match($preparedPattern, $id)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
