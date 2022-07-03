@@ -420,7 +420,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                     $('<span>').addClass('fas fa-times')
                 );
 
-            let $name = $('<div>').html(name + '&nbsp;');
+            let $name = $('<div>').text(name).append('&nbsp;')
 
             let $columnList = [];
             let $liList = [];

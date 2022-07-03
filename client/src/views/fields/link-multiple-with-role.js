@@ -290,7 +290,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             let $left = $('<div>').addClass('pull-left');
             let $right = $('<div>').append($remove);
 
-            let $name = $('<div>').html(name + '&nbsp;');
+            let $name = $('<div>').text(name).append('&nbsp;')
 
             let $role;
 

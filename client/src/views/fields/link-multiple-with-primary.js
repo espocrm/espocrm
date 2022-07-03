@@ -114,24 +114,26 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
-                var names = [];
+            if (this.isDetailMode() || this.isListMode()) {
+                let itemList = [];
 
                 if (this.primaryId) {
-                    names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
+                    itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
                 }
 
                 if (!this.ids.length) {
                     return;
                 }
 
-                this.ids.forEach((id) => {
+                this.ids.forEach(id => {
                     if (id !== this.primaryId) {
-                        names.push(this.getDetailLinkHtml(id));
+                        itemList.push(this.getDetailLinkHtml(id));
                     }
                 });
 
-                return '<div>' + names.join('</div><div>') + '</div>';
+                return itemList
+                    .map(item => $('<div>').append(item).get(0).outerHTML)
+                    .join('');
             }
         },
 
@@ -159,42 +161,49 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            var $container = this.$el.find('.link-container');
+            let $container = this.$el.find('.link-container');
 
-            var $el = $(
-                    '<div class="form-inline list-group-item link-with-role clearfix link-group-item-with-primary">'
-                )
+            let $el = $('<div>')
+                .addClass('form-inline clearfix ')
+                .addClass('list-group-item link-with-role link-group-item-with-primary')
                 .addClass('link-' + id)
                 .attr('data-id', id);
 
-            var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
+            let $name = $('<div>').text(name).append('&nbsp;');
 
-            var removeHtml = '<a href="javascript:" class="pull-right" ' +
-                'data-id="' + id + '" data-action="clearLink">' +
-                '<span class="fas fa-times"></a>';
+            let $remove = $('<a>')
+                .attr('href', 'javascript:')
+                .attr('data-id', id)
+                .attr('data-action', 'clearLink')
+                .addClass('pull-right')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                );
 
             let $left = $('<div>');
-            $left.append(nameHtml);
-            $el.append($left);
-
             let $right = $('<div>');
-            $right.append(removeHtml);
+
+            $left.append($name);
+            $right.append($remove);
+
+            $el.append($left);
             $el.append($right);
 
-            var isPrimary = (id === this.primaryId);
+            let isPrimary = (id === this.primaryId);
 
-            var iconHtml = '<span class="fas fa-star fa-sm ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
+            let $star = $('<span>')
+                .addClass('fas fa-star fa-sm')
+                .addClass(!isPrimary ? 'text-muted' : '')
 
-            var title = this.translate('Primary');
+            let $button = $('<button>')
+                .attr('type', 'button')
+                .addClass('btn btn-link btn-sm pull-right hidden')
+                .attr('title', this.translate('Primary'))
+                .attr('data-action', 'switchPrimary')
+                .attr('data-id', id)
+                .html($star);
 
-            var $primary = $(
-                '<button type="button" class="btn btn-link btn-sm pull-right hidden" ' +
-                'title="'+title+'" data-action="switchPrimary" data-id="'+id+'">'+iconHtml+'</button>'
-            );
-
-            $primary.insertBefore(
-                $el.children().first().children().first()
-            );
+            $button.insertBefore($el.children().first().children().first());
 
             $container.append($el);
 
