@@ -46,10 +46,12 @@
     },
     "validationList": [
         "required",
-        "valid"
+        "valid",
+        "maxLength"
     ],
     "mandatoryValidationList": [
-        "valid"
+        "valid",
+        "maxLength"
     ],
     "notCreatable": true,
     "filter": true,

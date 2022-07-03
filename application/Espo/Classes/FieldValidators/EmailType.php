@@ -29,12 +29,21 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
 use stdClass;
 
 class EmailType
 {
+    private Metadata $metadata;
+
+    private const DEFAULT_MAX_LENGTH = 255;
+
+    public function __construct(Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+    }
     public function checkRequired(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
@@ -84,6 +93,36 @@ class EmailType
             $address = $item->emailAddress;
 
             if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function checkMaxLength(Entity $entity, string $field): bool
+    {
+        /** @var ?string */
+        $value = $entity->get($field);
+
+        /** @var int */
+        $maxLength = $this->metadata->get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) ??
+            self::DEFAULT_MAX_LENGTH;
+
+        if ($value && mb_strlen($value) > $maxLength) {
+            return false;
+        }
+
+        $dataList = $entity->get($field . 'Data');
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        foreach ($dataList as $item) {
+            $value = $item->emailAddress;
+
+            if ($value && mb_strlen($value) > $maxLength) {
                 return false;
             }
         }

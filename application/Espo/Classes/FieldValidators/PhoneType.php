@@ -41,6 +41,8 @@ class PhoneType
 
     private Defs $defs;
 
+    private const DEFAULT_MAX_LENGTH = 36;
+
     public function __construct(Metadata $metadata, Defs $defs)
     {
         $this->metadata = $metadata;
@@ -101,6 +103,36 @@ class PhoneType
             }
 
             if (!$this->isValidType($entity->getEntityType(), $field, $type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function checkMaxLength(Entity $entity, string $field): bool
+    {
+        /** @var ?string */
+        $value = $entity->get($field);
+
+        /** @var int */
+        $maxLength = $this->metadata->get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']) ??
+            self::DEFAULT_MAX_LENGTH;
+
+        if ($value && mb_strlen($value) > $maxLength) {
+            return false;
+        }
+
+        $dataList = $entity->get($field . 'Data');
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        foreach ($dataList as $item) {
+            $value = $item->phoneNumber;
+
+            if ($value && mb_strlen($value) > $maxLength) {
                 return false;
             }
         }

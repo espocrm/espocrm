@@ -2,7 +2,8 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "maxLength": 255
         },
         "lower": {
             "type": "varchar",

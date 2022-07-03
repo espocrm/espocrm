@@ -29,10 +29,12 @@
     },
     "validationList": [
         "required",
-        "emailAddress"
+        "emailAddress",
+        "maxLength"
     ],
     "mandatoryValidationList": [
-        "emailAddress"
+        "emailAddress",
+        "maxLength"
     ],
     "notCreatable": true,
     "filter": true,
