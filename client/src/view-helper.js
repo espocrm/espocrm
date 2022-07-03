@@ -389,6 +389,10 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     }
                 }
 
+                if (name === null) {
+                    name = '';
+                }
+
                 return translationHash[name] || name;
             });
 

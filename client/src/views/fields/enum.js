@@ -79,11 +79,14 @@ function (Dep, Selectize, _) {
                 }
             }
 
+            let translationKey = value || '';
+
             if (
-                typeof value !== 'undefined' && value !== null &&  value !== ''
+                typeof value !== 'undefined' && value !== null && value !== ''
                 ||
-                value === '' && (
-                    value in (this.translatedOptions || {}) && (this.translatedOptions || {})[value] !== ''
+                translationKey === '' && (
+                    translationKey in (this.translatedOptions || {}) &&
+                    (this.translatedOptions || {})[translationKey] !== ''
                 )
             ) {
                 data.isNotEmpty = true;
