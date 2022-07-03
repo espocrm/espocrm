@@ -113,6 +113,11 @@ class Settings
         return $data;
     }
 
+    /**
+     * @throws \Espo\Core\Exceptions\BadRequest
+     * @throws Forbidden
+     * @throws \Espo\Core\Exceptions\Error
+     */
     public function setConfigData(stdClass $data): void
     {
         $user = $this->applicationState->getUser();
@@ -291,6 +296,9 @@ class Settings
         }
     }
 
+    /**
+     * @throws \Espo\Core\Exceptions\BadRequest
+     */
     private function processValidation(Entity $entity, stdClass $data): void
     {
         $this->fieldValidationManager->process($entity, $data);
