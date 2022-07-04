@@ -795,6 +795,7 @@ class Diff
         let composerNewContents = cp.execSync("cat " + currentPath + "/composer.json").toString();
 
         composerNewContents = composerNewContents.replace(/(\r\n)/g, '\n');
+        composerLockNewContents = composerLockNewContents.replace(/(\r\n)/g, '\n');
 
         if (
             composerLockNewContents === composerLockOldContents &&
