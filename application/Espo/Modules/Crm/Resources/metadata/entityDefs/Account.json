@@ -93,7 +93,14 @@
             "type": "varchar",
             "notStorable": true,
             "disabled": true,
-            "maxLength": 100
+            "maxLength": 100,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutSearchDisabled": true,
+            "fieldManagerParamList": [
+                "pattern"
+            ]
         },
         "contactIsInactive": {
             "type": "bool",

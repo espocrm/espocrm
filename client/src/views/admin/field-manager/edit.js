@@ -117,9 +117,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.readOnlyControl();
             });
 
-            var hasRequired = false;
+            let hasRequired = false;
 
-            this.getModelFactory().create(this.scope, (model) => {
+            this.getModelFactory().create(this.scope, model => {
                 if (!this.isNew) {
                     this.type = model.getFieldType(this.field);
                 }
@@ -154,13 +154,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 })
                 .then(() => {
                     let promiseList = [];
-
                     this.paramList = [];
-
-                    var paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
+                    let paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
 
                     if (!this.isNew) {
-                        var fieldManagerAdditionalParamList =
+                        let fieldManagerAdditionalParamList =
                             this.getMetadata()
                                 .get([
                                     'entityDefs', this.scope, 'fields',
@@ -172,16 +170,24 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
+                    /** @var {string[]|null} */
+                    let fieldManagerParamList = this.getMetadata()
+                        .get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerParamList']);
+
                     paramList.forEach(o => {
-                        var item = o.name;
+                        let item = o.name;
+
+                        if (fieldManagerParamList && fieldManagerParamList.indexOf(item) === -1) {
+                            return;
+                        }
 
                         if (item === 'required') {
                             hasRequired = true;
                         }
 
-                        var disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                        let disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
 
-                        var isDisabled =
+                        let isDisabled =
                             this.getMetadata()
                                 .get(['entityDefs', this.scope, 'fields', this.field, disableParamName]);
 
@@ -189,9 +195,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             return;
                         }
 
-                        var viewParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'View';
+                        let viewParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'View';
 
-                        var view = this.getMetadata()
+                        let view = this.getMetadata()
                             .get(['entityDefs', this.scope, 'fields', this.field, viewParamName]);
 
                         if (view) {
@@ -224,7 +230,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
-                    this.paramList.forEach((o) => {
+                    if (fieldManagerParamList) {
+                        this.paramList = this.paramList
+                            .filter(item => fieldManagerParamList.indexOf(item.name) !== -1);
+                    }
+
+                    this.paramList.forEach(o => {
                         this.model.defs.fields[o.name] = o;
                     });
 
