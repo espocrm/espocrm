@@ -58,17 +58,22 @@ function (Dep, Selectize, _) {
          */
         fetchEmptyValueAsNull: true,
 
-        searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: [
+            'anyOf',
+            'noneOf',
+            'isEmpty',
+            'isNotEmpty',
+        ],
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.translatedOptions = this.translatedOptions;
 
-            var value = this.model.get(this.name);
+            let value = this.model.get(this.name);
 
-            if (this.isReadMode() && this.styleMap && (value || value === '')) {
-                data.style = this.styleMap[value] || 'default';
+            if (this.isReadMode() && this.styleMap) {
+                data.style = this.styleMap[value || ''] || 'default';
             }
 
             if (this.isReadMode()) {
@@ -99,7 +104,7 @@ function (Dep, Selectize, _) {
 
         setup: function () {
             if (!this.params.options) {
-                var methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
+                let methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
 
                 if (typeof this.model[methodName] === 'function') {
                     this.params.options = this.model[methodName].call(this.model);
@@ -154,13 +159,12 @@ function (Dep, Selectize, _) {
                 return;
             }
 
-            var translationObj;
+            let translationObj;
 
-            var data = this.getLanguage().data;
-            var arr = this.params.translation.split('.');
-            var pointer = this.getLanguage().data;
+            let arr = this.params.translation.split('.');
+            let pointer = this.getLanguage().data;
 
-            arr.forEach((key) => {
+            arr.forEach(key => {
                 if (key in pointer) {
                     pointer = pointer[key];
                     translationObj = pointer;
@@ -169,19 +173,19 @@ function (Dep, Selectize, _) {
 
             this.translatedOptions = null;
 
-            var translatedOptions = {};
+            let translatedOptions = {};
 
             if (!this.params.options) {
                 return;
             }
 
-            this.params.options.forEach((item) => {
+            this.params.options.forEach(item => {
                 if (typeof translationObj === 'object' && item in translationObj) {
                     translatedOptions[item] = translationObj[item];
                 }
                 else if (
-                    typeof translationObj === 'array' &&
-                    typeof item === 'integer' &&
+                    Array.isArray(translationObj) &&
+                    typeof item === 'number' &&
                     typeof translationObj[item] !== 'undefined'
                 ) {
                     translatedOptions[item.toString()] = translationObj[item];
@@ -191,7 +195,7 @@ function (Dep, Selectize, _) {
                 }
             });
 
-            var value = this.model.get(this.name);
+            let value = this.model.get(this.name);
 
             if ((value || value === '') && !(value in translatedOptions)) {
                 if (typeof translationObj === 'object' && value in translationObj) {
@@ -277,21 +281,21 @@ function (Dep, Selectize, _) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'search') {
-                var $element = this.$element = this.$el.find('.main-element');
+            if (this.isSearchMode()) {
+                this.$element = this.$el.find('.main-element');
 
-                var type = this.$el.find('select.search-type').val();
+                let type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
 
-                var valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+                let valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
 
                 this.$element.val(valueList.join(':,:'));
 
-                var data = [];
+                let data = [];
 
-                (this.params.options || []).forEach((value) => {
-                    var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                (this.params.options || []).forEach(value => {
+                    let label = this.getLanguage().translateOption(value, this.name, this.scope);
 
                     if (this.translatedOptions) {
                         if (value in this.translatedOptions) {
@@ -318,7 +322,8 @@ function (Dep, Selectize, _) {
                     searchField: ['label'],
                     plugins: ['remove_button'],
                     score: function (search) {
-                        var score = this.getScoreFunction(search);
+                        // Method of selectize.
+                        let score = this.getScoreFunction(search);
 
                         search = search.toLowerCase();
 
@@ -347,7 +352,7 @@ function (Dep, Selectize, _) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (!this.model.get(this.name)) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
@@ -358,13 +363,13 @@ function (Dep, Selectize, _) {
         },
 
         fetch: function () {
-            var value = this.$element.val();
+            let value = this.$element.val();
 
             if (this.fetchEmptyValueAsNull && !value) {
                 value = null;
             }
 
-            var data = {};
+            let data = {};
 
             data[this.name] = value;
 
@@ -376,9 +381,9 @@ function (Dep, Selectize, _) {
         },
 
         fetchSearch: function () {
-            var type = this.fetchSearchType();
+            let type = this.fetchSearchType();
 
-            var list = this.$element.val().split(':,:');
+            let list = this.$element.val().split(':,:');
 
             if (list.length === 1 && list[0] === '') {
                 list = [];
@@ -394,7 +399,7 @@ function (Dep, Selectize, _) {
                         type: 'any',
                         data: {
                             type: 'anyOf',
-                            valueList: list
+                            valueList: list,
                         },
                     };
                 }
@@ -404,7 +409,7 @@ function (Dep, Selectize, _) {
                     value: list,
                     data: {
                         type: 'anyOf',
-                        valueList: list
+                        valueList: list,
                     },
                 };
             }
@@ -415,7 +420,7 @@ function (Dep, Selectize, _) {
                         type: 'any',
                         data: {
                             type: 'noneOf',
-                            valueList: list
+                            valueList: list,
                         },
                     };
                 }
@@ -425,17 +430,17 @@ function (Dep, Selectize, _) {
                     value: [
                         {
                             type: 'isNull',
-                            attribute: this.name
+                            attribute: this.name,
                         },
                         {
                             type: 'notIn',
                             value: list,
-                            attribute: this.name
-                        }
+                            attribute: this.name,
+                        },
                     ],
                     data: {
                         type: 'noneOf',
-                        valueList: list
+                        valueList: list,
                     },
                 };
             }
@@ -446,16 +451,16 @@ function (Dep, Selectize, _) {
                     value: [
                         {
                             type: 'isNull',
-                            attribute: this.name
+                            attribute: this.name,
                         },
                         {
                             type: 'equals',
                             value: '',
-                            attribute: this.name
+                            attribute: this.name,
                         }
                     ],
                     data: {
-                        type: 'isEmpty'
+                        type: 'isEmpty',
                     },
                 };
             }
@@ -466,16 +471,16 @@ function (Dep, Selectize, _) {
                     value: [
                         {
                             type: 'isNotNull',
-                            attribute: this.name
+                            attribute: this.name,
                         },
                         {
                             type: 'notEquals',
                             value: '',
-                            attribute: this.name
-                        }
+                            attribute: this.name,
+                        },
                     ],
                     data: {
-                        type: 'isNotEmpty'
+                        type: 'isNotEmpty',
                     },
                 };
             }
