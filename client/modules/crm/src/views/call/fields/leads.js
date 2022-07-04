@@ -26,17 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/call/fields/leads', 'crm:views/meeting/fields/attendees', function (Dep) {
+define('crm:views/call/fields/leads', ['crm:views/meeting/fields/attendees', 'crm:views/call/fields/contacts'],
+function (Dep, Contacts) {
 
     return Dep.extend({
 
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
+
             list.push('phoneNumbersMap');
+
             return list;
         },
 
         getDetailLinkHtml: function (id, name) {
+            return Contacts.prototype.getDetailLinkHtml.call(this, id, name);
+        },
+
+        getDetailLinkHtml1: function (id, name) {
             var html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
 
             var key = this.foreignScope + '_' + id;
@@ -56,8 +63,6 @@ Espo.define('crm:views/call/fields/leads', 'crm:views/meeting/fields/attendees',
             }
 
             return html;
-        }
-
+        },
     });
-
 });
