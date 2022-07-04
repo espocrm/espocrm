@@ -26,38 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/call/fields/contacts', 'crm:views/meeting/fields/contacts', function (Dep) {
+define('crm:views/call/fields/contacts', ['crm:views/meeting/fields/contacts'], function (Dep) {
 
     return Dep.extend({
 
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
+
             list.push('phoneNumbersMap');
+
             return list;
         },
 
         getDetailLinkHtml: function (id, name) {
-            var html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+            let html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
 
-            var key = this.foreignScope + '_' + id;
-            var number = null;
-            var phoneNumbersMap = this.model.get('phoneNumbersMap') || {};
-            if (key in phoneNumbersMap) {
-                number = phoneNumbersMap[key];
-                var innerHtml = $(html).html();
+            let key = this.foreignScope + '_' + id;
+            let phoneNumbersMap = this.model.get('phoneNumbersMap') || {};
 
-                innerHtml += (
-                    ' <span class="text-muted chevron-right"></span> ' +
-                    '<a href="tel:' + number + '" class="small" data-phone-number="' + number + '" data-action="dial">' +
-                    number + '</a>'
-                );
-
-                html = '<div>' + innerHtml + '</div>';
+            if (!(key in phoneNumbersMap)) {
+                return html;
             }
 
-            return html;
-        }
+            let number = phoneNumbersMap[key];
 
+            let $item = $(html);
+
+            $item
+                .append(
+                    ' ',
+                    $('<span>').addClass('text-muted chevron-right'),
+                    ' ',
+                    $('<a>')
+                        .attr('href', 'tel:' + number)
+                        .attr('data-phone-number', number)
+                        .attr('data-action', 'dial')
+                        .addClass('small')
+                        .text(number)
+                )
+
+            return $('<div>')
+                .append($item)
+                .get(0).outerHTML;
+        },
     });
-
 });
