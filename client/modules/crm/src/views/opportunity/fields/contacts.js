@@ -36,27 +36,14 @@ define(
         events: {
             'click [data-action="switchPrimary"]': function (e) {
                 let $target = $(e.currentTarget);
+                let id = $target.data('id');
 
-                var id = $target.data('id');
-
-                if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]')
-                        .removeClass('active')
-                        .children()
-                        .addClass('text-muted');
-
-                    $target
-                        .addClass('active')
-                        .children()
-                        .removeClass('text-muted');
-
-                    this.setPrimaryId(id);
-                }
+                LinkMultipleWithPrimary.prototype.switchPrimary.call(this, id);
             }
         },
 
          getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
 
             list.push(this.primaryIdFieldName);
             list.push(this.primaryNameFieldName);
@@ -75,14 +62,15 @@ define(
             this.primaryId = this.model.get(this.primaryIdFieldName);
             this.primaryName = this.model.get(this.primaryNameFieldName);
 
-            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, function () {
+            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
                 this.primaryId = this.model.get(this.primaryIdFieldName);
                 this.primaryName = this.model.get(this.primaryNameFieldName);
-            }.bind(this));
+            });
         },
 
         setPrimaryId: function (id) {
             this.primaryId = id;
+
             if (id) {
                 this.primaryName = this.nameHash[id];
             } else {
@@ -96,47 +84,60 @@ define(
             if (this.primaryId) {
                 this.addLinkHtml(this.primaryId, this.primaryName);
             }
-            this.ids.forEach(function (id) {
-                if (id != this.primaryId) {
+
+            this.ids.forEach(id => {
+                if (id !== this.primaryId) {
                     this.addLinkHtml(id, this.nameHash[id]);
                 }
-            }, this);
+            });
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var names = [];
+            if (this.isDetailMode() || this.isListMode()) {
+                let itemList = [];
+
                 if (this.primaryId) {
-                    names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
+                    itemList.push(
+                        this.getDetailLinkHtml(this.primaryId, this.primaryName)
+                    );
                 }
+
                 if (!this.ids.length) {
                     return;
                 }
-                this.ids.forEach(function (id) {
-                    if (id != this.primaryId) {
-                        names.push(this.getDetailLinkHtml(id));
+
+                this.ids.forEach(id =>{
+                    if (id !== this.primaryId) {
+                        itemList.push(
+                            this.getDetailLinkHtml(id)
+                        );
                     }
-                }, this);
-                return '<div>' + names.join('</div><div>') + '</div>';
+                });
+
+                return itemList
+                    .map(item => $('<div>').append(item).get(0).outerHTML)
+                    .join('');
             }
         },
 
         deleteLink: function (id) {
-            if (id == this.primaryId) {
+            if (id === this.primaryId) {
                 this.setPrimaryId(null);
             }
+
             Dep.prototype.deleteLink.call(this, id);
         },
 
         deleteLinkHtml: function (id) {
             Dep.prototype.deleteLinkHtml.call(this, id);
+
             this.managePrimaryButton();
         },
 
         addLinkHtml: function (id, name) {
             name = name || id;
 
-            if (this.mode == 'search') {
+            if (this.isSearchMode()) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
@@ -144,16 +145,23 @@ define(
                 return LinkMultipleWithPrimary.prototype.addLinkHtml.call(this, id, name);
             }
 
-            var $el = Dep.prototype.addLinkHtml.call(this, id, name);
+            let $el = Dep.prototype.addLinkHtml.call(this, id, name);
 
-            var isPrimary = (id == this.primaryId);
-            var iconHtml = '<span class="fas fa-star fa-sm ' + (!isPrimary ? 'text-muted' : '') + '"></span>';
-            var title = this.translate('Primary');
+            let isPrimary = (id === this.primaryId);
 
-            var $primary = $('<button type="button" class="btn btn-link btn-sm pull-right hidden" ' +
-                'title="'+title+'" data-action="switchPrimary" data-id="' + id + '">' + iconHtml + '</button>');
+            let $star = $('<span>')
+                .addClass('fas fa-star fa-sm')
+                .addClass(!isPrimary ? 'text-muted' : '')
 
-            $primary.insertAfter($el.children().first().children().first());
+            let $button = $('<button>')
+                .attr('type', 'button')
+                .addClass('btn btn-link btn-sm pull-right hidden')
+                .attr('title', this.translate('Primary'))
+                .attr('data-action', 'switchPrimary')
+                .attr('data-id', id)
+                .append($star);
+
+            $button.insertAfter($el.children().first().children().first());
 
             this.managePrimaryButton();
 
@@ -161,7 +169,7 @@ define(
         },
 
         managePrimaryButton: function () {
-            var $primary = this.$el.find('button[data-action="switchPrimary"]');
+            let $primary = this.$el.find('button[data-action="switchPrimary"]');
 
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
@@ -169,8 +177,9 @@ define(
                 $primary.addClass('hidden');
             }
 
-            if ($primary.filter('.active').length == 0) {
-                var $first = $primary.first();
+            if ($primary.filter('.active').length === 0) {
+                let $first = $primary.first();
+
                 if ($first.length) {
                     $first.addClass('active').children().removeClass('text-muted');
                     this.setPrimaryId($first.data('id'));
@@ -179,7 +188,7 @@ define(
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;
@@ -189,7 +198,7 @@ define(
 
         getSelectFilters: function () {
             if (this.model.get('accountId')) {
-                var nameHash = {};
+                let nameHash = {};
 
                 nameHash[this.model.get('accountId')] = this.model.get('accountName');
 
@@ -200,7 +209,7 @@ define(
                         data: {
                             type: 'anyOf',
                             nameHash: nameHash,
-                        }
+                        },
                     }
                 };
             }

@@ -43,20 +43,25 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         events: {
             'click [data-action="switchPrimary"]': function (e) {
                 let $target = $(e.currentTarget);
+                let id = $target.data('id');
 
-                var id = $target.data('id');
-
-                if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]')
-                        .removeClass('active')
-                        .children()
-                        .addClass('text-muted');
-
-                    $target.addClass('active').children().removeClass('text-muted');
-
-                    this.setPrimaryId(id);
-                }
+                this.switchPrimary(id);
             },
+        },
+
+        switchPrimary: function (id) {
+            let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
+
+            if (!$switch.hasClass('active')) {
+                this.$el.find('button[data-action="switchPrimary"]')
+                    .removeClass('active')
+                    .children()
+                    .addClass('text-muted');
+
+                $switch.addClass('active').children().removeClass('text-muted');
+
+                this.setPrimaryId(id);
+            }
         },
 
         /**
@@ -152,12 +157,11 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
 
         addLinkHtml: function (id, name) {
+            // Do not use the `html` method to avoid XSS.
+
             name = name || id;
 
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
-
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
@@ -201,7 +205,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
                 .attr('title', this.translate('Primary'))
                 .attr('data-action', 'switchPrimary')
                 .attr('data-id', id)
-                .html($star);
+                .append($star);
 
             $button.insertBefore($el.children().first().children().first());
 
@@ -217,7 +221,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
 
         managePrimaryButton: function () {
-            var $primary = this.$el.find('button[data-action="switchPrimary"]');
+            let $primary = this.$el.find('button[data-action="switchPrimary"]');
 
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
@@ -227,7 +231,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             }
 
             if ($primary.filter('.active').length === 0) {
-                var $first = $primary.first();
+                let $first = $primary.first();
 
                 if ($first.length) {
                     $first.addClass('active').children().removeClass('text-muted');
@@ -238,7 +242,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;

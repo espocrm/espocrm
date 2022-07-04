@@ -140,7 +140,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @inheritDoc
          */
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
 
             list.push(this.name + 'Columns');
 
@@ -155,15 +155,14 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @return {string}
          */
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id] || id;
+            // Do not use the `html` method to avoid XSS.
 
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
+            name = name || this.nameHash[id] || id;
 
             let $el = $('<div>')
                 .append(
                     $('<a>')
-                        .attr('href', this.foreignScope + '/view/' + id)
+                        .attr('href', '#' + this.foreignScope + '/view/' + id)
                         .text(name)
                 );
 
@@ -189,11 +188,9 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                     return;
                 }
 
-                let translatedValue = type === this.COLUMN_TYPE_ENUM ?
+                let text = type === this.COLUMN_TYPE_ENUM ?
                     this.getLanguage().translateOption(value, field, scope) :
                     value;
-
-                let text = this.getHelper().escapeString(translatedValue);
 
                 $el.append(
                     $('<span>').text(' '),
@@ -232,7 +229,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
 
             this.deleteLinkHtml(id);
 
-            var index = this.ids.indexOf(id);
+            let index = this.ids.indexOf(id);
 
             if (index > -1) {
                 this.ids.splice(index, 1);
@@ -302,8 +299,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @return {JQuery}
          */
         getJQSelect: function (column, id, value) {
-            id = Handlebars.Utils.escapeExpression(id);
-            value = Handlebars.Utils.escapeExpression(value);
+            // Do not use the `html` method to avoid XSS.
 
             let field = this.columnsDefs[column].field;
             let scope = this.columnsDefs[column].scope;
@@ -338,21 +334,20 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @return {JQuery}
          */
         getJQInput: function (column, id, value) {
-            id = Handlebars.Utils.escapeExpression(id);
-            value = Handlebars.Utils.escapeExpression(value);
+            // Do not use the `html` method to avoid XSS.
 
             let field = this.columnsDefs[column].field;
             let scope = this.columnsDefs[column].scope;
             let maxLength = this.columnsDefs[column].maxLength;
 
-            let label = this.translate(field, 'fields', scope);
+            let text = this.translate(field, 'fields', scope);
 
             let $input = $('<input>')
                 .addClass('role form-control input-sm pull-right')
                 .attr('data-column', column)
-                .attr('placeholder', label)
+                .attr('placeholder', text)
                 .attr('data-id', id)
-                .val(value || '');
+                .attr('value', value || '');
 
             if (maxLength) {
                 $input.attr('maxlength', maxLength);
@@ -368,12 +363,12 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @return {JQuery}
          */
         getJQLi: function (column, id, value) {
-            id = Handlebars.Utils.escapeExpression(id);
+            // Do not use the `html` method to avoid XSS.
 
             let field = this.columnsDefs[column].field;
             let scope = this.columnsDefs[column].scope;
 
-            let label = this.translate(field, 'fields', scope);
+            let text = this.translate(field, 'fields', scope);
 
             return $('<li>')
                 .append(
@@ -388,7 +383,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                                 .addClass(!value ? 'hidden' : '')
                         )
                         .append(
-                            $('<div>').text(label)
+                            $('<div>').text(text)
                         )
                 );
         },
@@ -401,8 +396,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
+            // Do not use the `html` method to avoid XSS.
 
             let $container = this.$el.find('.link-container');
 
@@ -524,13 +518,13 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
             }
 
             this.columnList.forEach(column => {
-                var type = this.columnsDefs[column].type;
+                let type = this.columnsDefs[column].type;
 
                 if (type === this.COLUMN_TYPE_VARCHAR) {
-                    var options = this.columnsDefs[column].options;
+                    let options = this.columnsDefs[column].options;
 
                     if (options && options.length) {
-                        var $element = this.$el.find('[data-column="'+column+'"][data-id="'+id+'"]');
+                        let $element = this.$el.find('[data-column="'+column+'"][data-id="'+id+'"]');
 
                         if (!$element.length) {
                             return;
@@ -597,7 +591,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
          * @inheritDoc
          */
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
 

@@ -107,14 +107,13 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
         },
 
         getDetailLinkHtml: function (id, name) {
+            // Do not use the `html` method to avoid XSS.
+
             name = name || this.nameHash[id] || id;
 
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
-
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
 
             let role = (this.columns[id] || {})[this.columnName] || '';
 
@@ -125,7 +124,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             let $el = $('<div>')
                 .append(
                     $('<a>')
-                        .attr('href', this.foreignScope + '/view/' + id)
+                        .attr('href', '#' + this.foreignScope + '/view/' + id)
                         .text(name)
                 );
 
@@ -155,11 +154,9 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
 
                 className = className + '-' + style;
 
-                let translatedRole = this.roleType === this.ROLE_TYPE_ENUM ?
+                let text = this.roleType === this.ROLE_TYPE_ENUM ?
                     this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) :
                     role;
-
-                let text = this.getHelper().escapeString(translatedRole);
 
                 $el.append(
                     $('<span>').text(' '),
@@ -232,7 +229,7 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
          * @return {JQuery}
          */
         getJQSelect: function (id, roleValue) {
-            id = Handlebars.Utils.escapeExpression(id);
+            // Do not use the `html` method to avoid XSS.
 
             let $role = $('<select>')
                 .addClass('role form-control input-sm pull-right')
@@ -259,17 +256,15 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
          * @inheritDoc
          */
         addLinkHtml: function (id, name) {
+            // Do not use the `html` method to avoid XSS.
+
             name = name || id;
 
             if (this.isSearchMode() || this.skipRoles) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            let roleValue = (this.columns[id] || {})[this.columnName];
-
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
-            roleValue = Handlebars.Utils.escapeExpression(roleValue);
+            let role = (this.columns[id] || {})[this.columnName];
 
             let $container = this.$el.find('.link-container');
 
@@ -295,17 +290,17 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
             let $role;
 
             if (this.roleType === this.ROLE_TYPE_ENUM) {
-                $role = this.getJQSelect(id, roleValue);
+                $role = this.getJQSelect(id, role);
             }
             else {
-                let label = this.translate(this.roleField, 'fields', this.roleFieldScope);
+                let text = this.translate(this.roleField, 'fields', this.roleFieldScope);
 
                 $role = $('<input>')
                     .addClass('role form-control input-sm pull-right')
-                    .attr('maxlength', 50) // @todo Get from metadata.
-                    .attr('placeholder', label)
+                    .attr('maxlength', 50) // @todo Get the value from metadata.
+                    .attr('placeholder', text)
                     .attr('data-id', id)
-                    .val((roleValue || ''));
+                    .attr('value', role || '');
             }
 
             if ($role) {

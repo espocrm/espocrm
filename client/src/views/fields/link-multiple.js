@@ -81,7 +81,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
 
         /**
          * @protected
-         * @type {Object.<string.name>|null}
+         * @type {Object.<string,string>|null}
          */
         nameHash: null,
 
@@ -193,7 +193,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @inheritDoc
          */
         data: function () {
-            var ids = this.model.get(this.idsName);
+            let ids = this.model.get(this.idsName);
 
             return _.extend({
                 idValues: this.model.get(this.idsName),
@@ -274,8 +274,8 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             }
 
             if (this.isSearchMode()) {
-                var nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
-                var idList = this.getSearchParamsData().idList || this.searchParams.value || [];
+                let nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
+                let idList = this.getSearchParamsData().idList || this.searchParams.value || [];
 
                 this.nameHash = Espo.Utils.clone(nameHash);
                 this.ids = Espo.Utils.clone(idList);
@@ -296,7 +296,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 this.addActionHandler('selectLink', () => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata()
+                    let viewName = this.getMetadata()
                             .get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
                         this.selectRecordsView;
 
@@ -367,7 +367,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
         setupSearch: function () {
             this.events = _.extend({
                 'change select.search-type': (e) => {
-                    var type = $(e.currentTarget).val();
+                    let type = $(e.currentTarget).val();
 
                     this.handleSearchType(type);
                 },
@@ -430,7 +430,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             if (this.isEditMode() || this.isSearchMode()) {
                 this.$element = this.$el.find('input.main-element');
 
-                var $element = this.$element;
+                let $element = this.$element;
 
                 if (!this.autocompleteDisabled) {
                     this.$element.on('blur', () => {
@@ -457,7 +457,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                         transformResult: response => {
                             response = JSON.parse(response);
 
-                            var list = [];
+                            let list = [];
 
                             response.list.forEach((item) => {
                                 list.push({
@@ -508,7 +508,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 }
 
                 if (this.isSearchMode()) {
-                    var type = this.$el.find('select.search-type').val();
+                    let type = this.$el.find('select.search-type').val();
 
                     this.handleSearchType(type);
 
@@ -606,28 +606,27 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @return {JQuery|null}
          */
         addLinkHtml: function (id, name) {
-            name = name || id;
+            // Do not use the `html` method to avoid XSS.
 
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
+            name = name || id;
 
             let $container = this.$el.find('.link-container');
 
-            let $el = $('<div />')
+            let $el = $('<div>')
                 .addClass('link-' + id)
                 .addClass('list-group-item')
                 .attr('data-id', id);
 
-            $el.html(name + '&nbsp');
+            $el.text(name).append('&nbsp;');
 
             $el.prepend(
-                $('<a />')
+                $('<a>')
                     .addClass('pull-right')
                     .attr('href', 'javascript:')
                     .attr('data-id', id)
                     .attr('data-action', 'clearLink')
                     .append(
-                        $('<span />').addClass('fas fa-times')
+                        $('<span>').addClass('fas fa-times')
                     )
             );
 
@@ -651,10 +650,9 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
          * @return {string}
          */
         getDetailLinkHtml: function (id) {
-            let name = this.nameHash[id] || id;
+            // Do not use the `html` method to avoid XSS.
 
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
+            let name = this.nameHash[id] || id;
 
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');

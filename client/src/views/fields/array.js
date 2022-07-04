@@ -85,9 +85,9 @@ function (Dep, Selectize, _) {
          * @inheritDoc
          */
         data: function () {
-            var itemHtmlList = [];
+            let itemHtmlList = [];
 
-            (this.selected || []).forEach((value) => {
+            (this.selected || []).forEach(value => {
                 itemHtmlList.push(this.getItemHtml(value));
             });
 
@@ -108,7 +108,7 @@ function (Dep, Selectize, _) {
          */
         events: {
             'click [data-action="removeValue"]': function (e) {
-                var value = $(e.currentTarget).attr('data-value').toString();
+                let value = $(e.currentTarget).attr('data-value').toString();
 
                 this.removeValue(value);
             },
@@ -182,7 +182,7 @@ function (Dep, Selectize, _) {
         },
 
         handleSearchType: function (type) {
-            var $inputContainer = this.$el.find('div.input-container');
+            let $inputContainer = this.$el.find('div.input-container');
 
             if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 $inputContainer.removeClass('hidden');
@@ -192,14 +192,14 @@ function (Dep, Selectize, _) {
         },
 
         setupTranslation: function () {
-            var t = {};
+            let t = {};
 
             if (this.params.translation) {
-                var arr = this.params.translation.split('.');
+                let arr = this.params.translation.split('.');
 
-                var pointer = this.getLanguage().data;
+                let pointer = this.getLanguage().data;
 
-                arr.forEach((key) => {
+                arr.forEach(key => {
                     if (key in pointer) {
                         pointer = pointer[key];
 
@@ -213,7 +213,7 @@ function (Dep, Selectize, _) {
 
             this.translatedOptions = null;
 
-            var translatedOptions = {};
+            let translatedOptions = {};
 
             if (this.params.options) {
                 this.params.options.forEach((o) => {
@@ -241,8 +241,8 @@ function (Dep, Selectize, _) {
 
             let isChanged = !_(previousOptions).isEqual(optionList);
 
-            if (this.mode === 'edit' && !silent && isChanged) {
-                var selectedOptionList = [];
+            if (this.isEditMode() && !silent && isChanged) {
+                let selectedOptionList = [];
 
                 this.selected.forEach(option => {
                     if (~optionList.indexOf(option)) {
@@ -274,7 +274,7 @@ function (Dep, Selectize, _) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -282,7 +282,7 @@ function (Dep, Selectize, _) {
         },
 
         controlAddItemButton: function () {
-            var $select = this.$select;
+            let $select = this.$select;
 
             if (!$select) {
                 return;
@@ -292,7 +292,7 @@ function (Dep, Selectize, _) {
                 return;
             }
 
-            var value = $select.val().toString();
+            let value = $select.val().toString();
 
             if (!value && this.params.noEmptyString) {
                 this.$addButton.addClass('disabled').attr('disabled', 'disabled');
@@ -303,16 +303,16 @@ function (Dep, Selectize, _) {
         },
 
         afterRender: function () {
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$list = this.$el.find('.list-group');
 
-                var $select = this.$select = this.$el.find('.select');
+                let $select = this.$select = this.$el.find('.select');
 
                 if (this.allowCustomOptions) {
                     this.$addButton = this.$el.find('button[data-action="addItem"]');
 
                     this.$addButton.on('click', () => {
-                        var value = this.$select.val().toString();
+                        let value = this.$select.val().toString();
 
                         this.addValue(value);
 
@@ -327,7 +327,7 @@ function (Dep, Selectize, _) {
 
                     $select.on('keypress', (e) => {
                         if (e.keyCode === 13) {
-                            var value = $select.val().toString();
+                            let value = $select.val().toString();
 
                             if (this.noEmptyString) {
                                 if (value === '') {
@@ -336,9 +336,7 @@ function (Dep, Selectize, _) {
                             }
 
                             this.addValue(value);
-
                             $select.val('');
-
                             this.controlAddItemButton();
                         }
                     });
@@ -354,7 +352,7 @@ function (Dep, Selectize, _) {
                 });
             }
 
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 this.renderSearch();
             }
         },
@@ -362,14 +360,14 @@ function (Dep, Selectize, _) {
         renderSearch: function () {
             this.$element = this.$el.find('.main-element');
 
-            var valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
+            let valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
 
             this.$element.val(valueList.join(this.itemDelimiter));
 
-            var data = [];
+            let data = [];
 
             (this.params.options || []).forEach((value) => {
-                var label = this.getLanguage().translateOption(value, this.name, this.scope);
+                let label = this.getLanguage().translateOption(value, this.name, this.scope);
 
                 if (this.translatedOptions) {
                     if (value in this.translatedOptions) {
@@ -379,7 +377,7 @@ function (Dep, Selectize, _) {
 
                 if (label === '') {
                     return;
-                };
+                }
 
                 data.push({
                     value: value,
@@ -387,7 +385,7 @@ function (Dep, Selectize, _) {
                 });
             });
 
-            var selectizeOptions = {
+            let selectizeOptions = {
                 options: data,
                 delimiter: this.itemDelimiter,
                 labelField: 'label',
@@ -399,7 +397,8 @@ function (Dep, Selectize, _) {
 
             if (!this.matchAnyWord) {
                 selectizeOptions.score = function (search) {
-                    var score = this.getScoreFunction(search);
+                    // Method of selectize.
+                    let score = this.getScoreFunction(search);
 
                     search = search.toLowerCase();
 
@@ -434,7 +433,7 @@ function (Dep, Selectize, _) {
 
             this.$el.find('.selectize-dropdown-content').addClass('small');
 
-            var type = this.$el.find('select.search-type').val();
+            let type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
 
@@ -448,10 +447,10 @@ function (Dep, Selectize, _) {
         },
 
         fetchFromDom: function () {
-            var selected = [];
+            let selected = [];
 
             this.$el.find('.list-group .list-group-item').each((i, el) => {
-                var value = $(el).attr('data-value').toString();
+                let value = $(el).attr('data-value').toString();
 
                 selected.push(value);
             });
@@ -460,37 +459,46 @@ function (Dep, Selectize, _) {
         },
 
         getValueForDisplay: function () {
-            var list = this.selected.map(item => {
-                var label = null;
+            // Do not use the `html` method to avoid XSS.
+
+            /** @var {string[]} */
+            let list = this.selected.map(item => {
+                let label = null;
 
                 if (this.translatedOptions !== null) {
                     if (item in this.translatedOptions) {
                         label = this.translatedOptions[item];
-
-                        label = this.escapeValue(label);
                     }
                 }
 
                 if (label === null) {
-                    label = this.escapeValue(item);
+                    label = item;
                 }
 
                 if (label === '') {
                     label = this.translate('None');
                 }
 
-                var style = this.styleMap[item] || 'default';
+                let style = this.styleMap[item] || 'default';
 
                 if (this.params.displayAsLabel) {
-                    label = '<span class="label label-md label-'+style+'">' + label + '</span>';
-                }
-                else {
-                    if (style && style !== 'default') {
-                        label = '<span class="text-'+style+'">' + label + '</span>';
-                    }
+                    return $('<span>')
+                        .addClass('label label-md label-' + style)
+                        .text(label)
+                        .get(0).outerHTML;
+
                 }
 
-                return label;
+                if (style && style !== 'default') {
+                    return $('<span>')
+                        .addClass('text-' + style)
+                        .text(label)
+                        .get(0).outerHTML;
+                }
+
+                return $('<span>')
+                    .text(label)
+                    .get(0).outerHTML;
             });
 
             if (this.displayAsList) {
@@ -498,26 +506,34 @@ function (Dep, Selectize, _) {
                     return '';
                 }
 
-                var itemClassName = 'multi-enum-item-container';
+                let itemClassName = 'multi-enum-item-container';
 
                 if (this.displayAsLabel) {
                     itemClassName += ' multi-enum-item-label-container';
                 }
 
-                return '<div class="'+itemClassName+'">' +
-                    list.join('</div><div class="'+itemClassName+'">') + '</div>';
+                return list
+                    .map(item =>
+                        $('<div>')
+                            .addClass(itemClassName)
+                            .html(item)
+                            .get(0).outerHTML
+                    )
+                    .join('');
             }
-            else if (this.displayAsLabel) {
+
+            if (this.displayAsLabel) {
                 return list.join(' ');
             }
-            else {
-                return list.join(', ');
-            }
+
+            return list.join(', ');
         },
 
         getItemHtml: function (value) {
+            // Do not use the `html` method to avoid XSS.
+
             if (this.translatedOptions !== null) {
-                for (var item in this.translatedOptions) {
+                for (let item in this.translatedOptions) {
                     if (this.translatedOptions[item] === value) {
                         value = item;
 
@@ -528,25 +544,28 @@ function (Dep, Selectize, _) {
 
             value = value.toString();
 
-            var valueSanitized = this.escapeValue(value);
+            let text = this.translatedOptions && value in this.translatedOptions ?
+                this.translatedOptions[value].toString() :
+                value;
 
-            var label = valueSanitized;
-
-            if (this.translatedOptions) {
-                if ((value in this.translatedOptions)) {
-                    label = this.translatedOptions[value];
-                    label = label.toString();
-                    label = this.escapeValue(label);
-                }
-            }
-            var html =
-                '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' +
-                label +
-                '&nbsp;<a href="javascript:" class="pull-right" ' +
-                'data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
-                '</div>';
-
-            return html;
+            return $('<div>')
+                .addClass('list-group-item')
+                .attr('data-value', value)
+                .css('cursor', 'default')
+                .text(text)
+                .append('&nbsp;')
+                .append(
+                    $('<a>')
+                        .attr('href', 'javascript:')
+                        .addClass('pull-right')
+                        .attr('data-value', value)
+                        .attr('data-action', 'removeValue')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        )
+                )
+                .get(0)
+                .outerHTML;
         },
 
         escapeValue: function (value) {
@@ -555,32 +574,29 @@ function (Dep, Selectize, _) {
 
         addValue: function (value) {
             if (this.selected.indexOf(value) === -1) {
-                var html = this.getItemHtml(value);
+                let html = this.getItemHtml(value);
 
                 this.$list.append(html);
-
                 this.selected.push(value);
-
                 this.trigger('change');
             }
         },
 
         removeValue: function (value) {
-            var valueInternal = value.replace(/"/g, '\\"');
+            let valueInternal = value.replace(/"/g, '\\"');
 
             this.$list.children('[data-value="' + valueInternal + '"]').remove();
 
-            var index = this.selected.indexOf(value);
+            let index = this.selected.indexOf(value);
 
             this.selected.splice(index, 1);
-
             this.trigger('change');
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            var list = Espo.Utils.clone(this.selected || []);
+            let list = Espo.Utils.clone(this.selected || []);
 
             if (this.params.isSorted && this.translatedOptions) {
                 list = list.sort((v1, v2) => {
@@ -595,10 +611,12 @@ function (Dep, Selectize, _) {
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val() || 'anyOf';
+            let type = this.$el.find('select.search-type').val() || 'anyOf';
+
+            let valueList;
 
             if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
-                var valueList = this.$element.val().split(this.itemDelimiter);
+                valueList = this.$element.val().split(this.itemDelimiter);
 
                 if (valueList.length === 1 && valueList[0] === '') {
                     valueList = [];
@@ -638,41 +656,41 @@ function (Dep, Selectize, _) {
             }
 
             if (type === 'anyOf') {
-                var data = {
+                let data = {
                     type: 'arrayAnyOf',
                     value: valueList,
                     data: {
                         type: 'anyOf',
-                        valueList: valueList
-                    }
+                        valueList: valueList,
+                    },
                 };
+
                 if (!valueList.length) {
                     data.value = null;
                 }
+
                 return data;
             }
 
             if (type === 'noneOf') {
-                var data = {
+                return {
                     type: 'arrayNoneOf',
                     value: valueList,
                     data: {
                         type: 'noneOf',
-                        valueList: valueList
-                    }
+                        valueList: valueList,
+                    },
                 };
-
-                return data;
             }
 
             if (type === 'allOf') {
-                var data = {
+                let data = {
                     type: 'arrayAllOf',
                     value: valueList,
                     data: {
                         type: 'allOf',
-                        valueList: valueList
-                    }
+                        valueList: valueList,
+                    },
                 };
 
                 if (!valueList.length) {
@@ -683,34 +701,30 @@ function (Dep, Selectize, _) {
             }
 
             if (type === 'isEmpty') {
-                var data = {
+                return {
                     type: 'arrayIsEmpty',
                     data: {
-                        type: 'isEmpty'
-                    }
+                        type: 'isEmpty',
+                    },
                 };
-
-                return data;
             }
 
             if (type === 'isNotEmpty') {
-                var data = {
+                return {
                     type: 'arrayIsNotEmpty',
                     data: {
-                        type: 'isNotEmpty'
-                    }
+                        type: 'isNotEmpty',
+                    },
                 };
-
-                return data;
             }
         },
 
         validateRequired: function () {
             if (this.isRequired()) {
-                var value = this.model.get(this.name);
+                let value = this.model.get(this.name);
 
                 if (!value || value.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '.array-control-container');
@@ -718,14 +732,16 @@ function (Dep, Selectize, _) {
                     return true;
                 }
             }
+
+            return false;
         },
 
         validateMaxCount: function () {
             if (this.params.maxCount) {
-                var itemList = this.model.get(this.name) || [];
+                let itemList = this.model.get(this.name) || [];
 
                 if (itemList.length > this.params.maxCount) {
-                    var msg =
+                    let msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());
@@ -735,6 +751,8 @@ function (Dep, Selectize, _) {
                     return true;
                 }
             }
+
+            return false;
         },
 
         getSearchType: function () {
@@ -742,9 +760,9 @@ function (Dep, Selectize, _) {
         },
 
         getAddItemModalOptions: function () {
-            var options = [];
+            let options = [];
 
-            this.params.options.forEach((item) => {
+            this.params.options.forEach(item => {
                 if (!~this.selected.indexOf(item)) {
                     options.push(item);
                 }
@@ -757,20 +775,16 @@ function (Dep, Selectize, _) {
         },
 
         actionAddItem: function () {
-            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), (view) => {
+            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), view => {
                 view.render();
 
-                view.once('add', (item) => {
+                view.once('add', item => {
                     this.addValue(item);
-
                     view.close();
                 });
 
-                view.once('add-mass', (items) => {
-                    items.forEach((item) => {
-                        this.addValue(item);
-                    });
-
+                view.once('add-mass', items => {
+                    items.forEach(item => this.addValue(item));
                     view.close();
                 });
             });

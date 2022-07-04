@@ -48,7 +48,7 @@ define('views/fields/link-multiple-with-status', ['views/fields/link-multiple'],
         },
 
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
 
             list.push(this.name + 'Columns');
 
