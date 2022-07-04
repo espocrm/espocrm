@@ -223,6 +223,7 @@
                 "role": "contactRole",
                 "isInactive": "contactIsInactive"
             },
+            "additionalAttributeList": ["columns"],
             "orderBy": "name",
             "detailLayoutIncompatibleFieldList": ["account"]
         },

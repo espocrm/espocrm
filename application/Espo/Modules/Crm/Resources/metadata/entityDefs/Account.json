@@ -94,6 +94,7 @@
             "notStorable": true,
             "disabled": true,
             "maxLength": 100,
+            "pattern": "$noBadCharacters",
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,

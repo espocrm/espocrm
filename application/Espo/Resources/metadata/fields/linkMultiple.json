@@ -29,10 +29,12 @@
     ],
     "validationList": [
         "required",
-        "pattern"
+        "pattern",
+        "columnsValid"
     ],
     "mandatoryValidationList": [
-        "pattern"
+        "pattern",
+        "columnsValid"
     ],
     "notCreatable": true,
     "notSortable": true,
