@@ -106,12 +106,17 @@ class ArrayType
         /** @var ?string */
         $path = $fieldDefs->getParam('optionsPath');
 
-        /** @var ?string[] */
+        /** @var string[]|null|false */
         $optionList = $path ?
             $this->metadata->get($path) :
             $fieldDefs->getParam('options');
 
         if ($optionList === null) {
+            return true;
+        }
+
+        // For bc.
+        if ($optionList === false) {
             return true;
         }
 

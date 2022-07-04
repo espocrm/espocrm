@@ -154,15 +154,18 @@ class PhoneType
             return false;
         }
 
-        /** @var ?string[] */
+        /** @var string[]|null|false */
         $typeList = $this->defs
             ->getEntity($entityType)
             ->getField($field)
             ->getParam('typeList');
 
-
-
         if ($typeList === null) {
+            return true;
+        }
+
+        // For bc.
+        if ($typeList === false) {
             return true;
         }
 
