@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/link-multiple/default', 'views/fields/link-multiple', function (Dep) {
+define('views/admin/field-manager/fields/link-multiple/default', ['views/fields/link-multiple'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,13 +46,16 @@ define('views/admin/field-manager/fields/link-multiple/default', 'views/fields/l
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.foreignScope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
+
+            this.foreignScope = this.getMetadata()
+                .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
         },
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
 
             var defaultAttributes = {};
+
             defaultAttributes[this.options.field + 'Ids'] = data[this.idsName];
             defaultAttributes[this.options.field + 'Names'] = data[this.nameHashName];
 
@@ -74,6 +77,5 @@ define('views/admin/field-manager/fields/link-multiple/default', 'views/fields/l
             this.ids = idValues;
             this.nameHash = nameHash;
         },
-
     });
 });
