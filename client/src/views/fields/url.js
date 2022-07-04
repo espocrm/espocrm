@@ -79,7 +79,9 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
                         return;
                     }
 
-                    this.$element.val(decodeURI(parsedValue));
+                    let decoded = parsedValue ? decodeURI(parsedValue) : '';
+
+                    this.$element.val(decoded);
                 });
             }
         },
@@ -87,7 +89,7 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
         getValueForDisplay: function () {
             let value = this.model.get(this.name);
 
-            return decodeURI(value);
+            return value ? decodeURI(value) : null;
         },
 
         /**
@@ -163,7 +165,7 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
 
             let value = this.model.get(this.name);
 
-            if (!value && !value.length) {
+            if (!value || !value.length) {
                 return false;
             }
 
