@@ -61,6 +61,11 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
 
             let columnsDefsInitial = this.columnsDefs || {};
 
+            this.validations.push('columnPattern');
+
+            /**
+             * @type {Object.<string,*>}
+             */
             this.columnsDefs = {};
             this.columnsName = this.name + 'Columns';
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
@@ -72,9 +77,8 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
             let columns = this.getMetadata()
                 .get(['entityDefs', this.model.name, 'fields', this.name, 'columns']) || {};
 
-            let columnList = Object.keys(columns);
-
-            this.columnList = this.columnList || columnList;
+            /** @type {string[]} */
+            this.columnList = this.columnList || Object.keys(columns);
 
             this.columnList.forEach(column => {
                 if (column in columnsDefsInitial) {
@@ -82,6 +86,7 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
 
                     return;
                 }
+
                 if (column in columns) {
                     let field = columns[column];
 
@@ -111,6 +116,10 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
 
                     if ('maxLength' in fieldDefs) {
                         o.maxLength = fieldDefs.maxLength;
+                    }
+
+                    if ('pattern' in fieldDefs) {
+                        o.pattern = fieldDefs.pattern;
                     }
 
                     this.columnsDefs[column] = o;
@@ -588,6 +597,62 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
 
                 this._autocompleteElementList = [];
             }
+        },
+
+        validateColumnPattern: function () {
+            let result = false;
+
+            let columnList = this.columnList
+                .filter(column => this.columnsDefs[column].type === this.COLUMN_TYPE_VARCHAR)
+                .filter(column => this.columnsDefs[column].pattern);
+
+            for (let column of columnList) {
+                for (let id of this.ids) {
+                    let value = this.getColumnValue(id, column);
+
+                    if (!value) {
+                        continue;
+                    }
+
+                    if (this.validateColumnPatternValue(id, column, value)) {
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
+        },
+
+        validateColumnPatternValue: function (id, column, value) {
+            let pattern = this.columnsDefs[column].pattern;
+            let field = this.columnsDefs[column].field;
+            let scope = this.columnsDefs[column].scope;
+
+            let messageKey = 'fieldNotMatchingPattern';
+
+            if (pattern[0] === '$') {
+                let patternName = pattern.slice(1);
+                let foundPattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
+
+                if (foundPattern) {
+                    messageKey += '$' + patternName;
+                    pattern = foundPattern;
+                }
+            }
+
+            let regExp = new RegExp('^' + pattern + '$');
+
+            if (regExp.test(value)) {
+                return false;
+            }
+
+            let msg = this.translate(messageKey, 'messages')
+                .replace('{field}', this.translate(field, 'fields', scope))
+                .replace('{pattern}', pattern);
+
+            this.showValidationMessage(msg, '[data-column="' + column + '"][data-id="' + id + '"]');
+
+            return true;
         },
 
         /**

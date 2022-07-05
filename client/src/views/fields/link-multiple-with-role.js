@@ -31,6 +31,8 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
     /**
      * A link-multiple field with a relation column.
      *
+     * @deprecated Use `link-multiple-with-columns`.
+     *
      * @class
      * @name Class
      * @extends module:views/fields/link-multiple.Class
