@@ -781,17 +781,18 @@ class LeadCapture
 
     protected function isTargetOptedIn(Entity $target, string $targetListId): bool
     {
-        $isAlreadyOptedIn = $this->entityManager
-            ->getRDBRepository($target->getEntityType())
-            ->isRelated($target, 'targetLists', $targetListId);
-
-        if (!$isAlreadyOptedIn) {
-            return false;
-        }
-
         $targetList = $this->entityManager->getEntityById(TargetList::ENTITY_TYPE, $targetListId);
 
         if (!$targetList) {
+            return false;
+        }
+
+        $isAlreadyOptedIn = $this->entityManager
+            ->getRDBRepository($target->getEntityType())
+            ->getRelation($target, 'targetLists')
+            ->isRelated($targetList);
+
+        if (!$isAlreadyOptedIn) {
             return false;
         }
 
