@@ -47,8 +47,16 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         searchTemplate: 'fields/varchar/search',
 
         searchTypeList: [
-            'startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains',
-            'notEquals', 'notLike', 'isEmpty', 'isNotEmpty',
+            'startsWith',
+            'contains',
+            'equals',
+            'endsWith',
+            'like',
+            'notContains',
+            'notEquals',
+            'notLike',
+            'isEmpty',
+            'isNotEmpty',
         ],
 
         /**
@@ -88,8 +96,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         /**
          * Set up options.
          */
-        setupOptions: function () {
-        },
+        setupOptions: function () {},
 
         /**
          * Set options.
@@ -103,7 +110,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
             this.params.options = Espo.Utils.clone(optionList);
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -118,7 +125,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -165,7 +172,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         },
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             if (
                 this.model.get(this.name) !== null &&
@@ -177,7 +184,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
 
             data.valueIsSet = this.model.has(this.name);
 
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 if (typeof this.searchParams.value === 'string') {
                     this.searchData.value = this.searchParams.value;
                 }
@@ -191,17 +198,19 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         handleSearchType: function (type) {
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
                 this.$el.find('input.main-element').addClass('hidden');
+
+                return;
             }
-            else {
-                this.$el.find('input.main-element').removeClass('hidden');
-            }
+
+            this.$el.find('input.main-element').removeClass('hidden');
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'search') {
-                var type = this.$el.find('select.search-type').val();
+            if (this.isSearchMode()) {
+                let type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
             }
 
@@ -226,11 +235,7 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                     },
                     lookupFilter: (suggestion, query, queryLowerCase) => {
                         if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                            if (suggestion.value.length === queryLowerCase.length) {
-                                return false;
-                            }
-
-                            return true;
+                            return suggestion.value.length !== queryLowerCase.length;
                         }
 
                         return false;
@@ -249,7 +254,6 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                 }
 
                 this.$element.autocomplete(autocompleteOptions);
-
                 this.$element.attr('autocomplete', 'espo-' + this.name);
 
                 this.$element.on('focus', () => {
@@ -260,16 +264,11 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                     this.$element.autocomplete('onValueChange');
                 });
 
-                this.once('render', () => {
-                    this.$element.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    this.$element.autocomplete('dispose');
-                });
+                this.once('render', () => this.$element.autocomplete('dispose'));
+                this.once('remove', () => this.$element.autocomplete('dispose'));
             }
 
-            if (this.mode === 'search') {
+            if (this.isSearchMode()) {
                 this.$el.find('select.search-type').on('change', () => {
                     this.trigger('change');
                 });
@@ -333,9 +332,9 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
-            var value = this.$element.val();
+            let value = this.$element.val();
 
             let trim = this.params.trim !== false;
 
@@ -351,13 +350,11 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
         },
 
         fetchSearch: function () {
-            var type = this.fetchSearchType() || 'startsWith';
-
-            var data;
+            let type = this.fetchSearchType() || 'startsWith';
 
             if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
                 if (type === 'isEmpty') {
-                    data = {
+                    return {
                         type: 'or',
                         value: [
                             {
@@ -367,56 +364,48 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                             {
                                 type: 'equals',
                                 field: this.name,
-                                value: ''
+                                value: '',
                             }
                         ],
                         data: {
-                            type: type
-                        }
-                    };
-                }
-                else {
-                    data = {
-                        type: 'and',
-                        value: [
-                            {
-                                type: 'notEquals',
-                                field: this.name,
-                                value: ''
-                            },
-                            {
-                                type: 'isNotNull',
-                                field: this.name,
-                                value: null
-                            }
-                        ],
-                        data: {
-                            type: type
-                        }
-                    }
-                }
-
-                return data;
-            }
-            else {
-                var value = this.$element.val().toString().trim();
-
-                value = value.trim();
-
-                if (value) {
-                    data = {
-                        value: value,
-                        type: type,
-                        data: {
-                            type: type
+                            type: type,
                         },
                     };
-
-                    return data;
                 }
+
+                return {
+                    type: 'and',
+                    value: [
+                        {
+                            type: 'notEquals',
+                            field: this.name,
+                            value: '',
+                        },
+                        {
+                            type: 'isNotNull',
+                            field: this.name,
+                            value: null,
+                        }
+                    ],
+                    data: {
+                        type: type,
+                    },
+                };
             }
 
-            return false;
+            let value = this.$element.val().toString().trim();
+
+            if (!value) {
+                return null;
+            }
+
+            return {
+                value: value,
+                type: type,
+                data: {
+                    type: type,
+                },
+            };
         },
 
         getSearchType: function () {
