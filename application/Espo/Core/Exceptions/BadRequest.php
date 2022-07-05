@@ -49,9 +49,9 @@ class BadRequest extends Exception implements HasBody
         parent::__construct($message, $code, $previous);
     }
 
-    public static function createWithBody(string $message, string $body): self
+    public static function createWithBody(string $reason, string $body): self
     {
-        $exception = new static($message);
+        $exception = new static($reason);
 
         $exception->body = $body;
 
