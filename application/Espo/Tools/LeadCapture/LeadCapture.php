@@ -41,6 +41,8 @@ use Espo\Core\{
     Exceptions\Error,
     Exceptions\NotFound,
     Exceptions\BadRequest,
+    FieldValidation\FieldValidationManager,
+    FieldValidation\FieldValidationParams,
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\Language,
@@ -49,8 +51,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\DateTime as DateTimeUtil,
     Utils\Log,
-    Job\QueueName,
-};
+    Job\QueueName};
 
 use Espo\{
     Entities\Email,
@@ -70,26 +71,18 @@ use DateTime;
 class LeadCapture
 {
     protected EntityManager $entityManager;
-
     protected FieldUtil $fieldUtil;
-
     protected Language $defaultLanguage;
-
     protected HookManager $hookManager;
-
     protected EmailSender $emailSender;
-
     protected Config $config;
-
     protected DateTimeUtil $dateTime;
-
     protected Log $log;
 
     private CampaignService $campaignService;
-
     private EmailTemplateService $emailTemplateService;
-
     private InboundEmailService $inboundEmailService;
+    private FieldValidationManager $fieldValidationManager;
 
     public function __construct(
         EntityManager $entityManager,
@@ -102,7 +95,8 @@ class LeadCapture
         Log $log,
         CampaignService $campaignService,
         EmailTemplateService $emailTemplateService,
-        InboundEmailService $inboundEmailService
+        InboundEmailService $inboundEmailService,
+        FieldValidationManager $fieldValidationManager
     ) {
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
@@ -115,6 +109,7 @@ class LeadCapture
         $this->campaignService = $campaignService;
         $this->emailTemplateService = $emailTemplateService;
         $this->inboundEmailService = $inboundEmailService;
+        $this->fieldValidationManager = $fieldValidationManager;
     }
 
     /**
@@ -724,7 +719,7 @@ class LeadCapture
         }
 
         if ($isEmpty) {
-            throw new BadRequest('No appropriate data in payload.');
+            throw new BadRequest('noRequiredFields');
         }
 
         if ($leadCapture->getLeadSource()) {
@@ -734,6 +729,11 @@ class LeadCapture
         if ($leadCapture->getCampaignId()) {
             $lead->set('campaignId', $leadCapture->getCampaignId());
         }
+
+        // Skipping the 'required' validation.
+        $validationParams = FieldValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
+
+        $this->fieldValidationManager->process($lead, $data, $validationParams);
 
         return $lead;
     }
