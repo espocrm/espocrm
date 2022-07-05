@@ -120,6 +120,8 @@ class LeadCapture
     /**
      * Capture a lead. A main entry method.
      *
+     * @param string $apiKey An API key.
+     * @param stdClass $data A payload.
      * @throws BadRequest
      * @throws Error
      * @throws NotFound
@@ -433,6 +435,7 @@ class LeadCapture
      * @throws Error
      * @throws NotFound
      *
+     * @param string $id A unique ID.
      * @return array{
      *   status: 'success'|'expired',
      *   message: ?string,
@@ -505,6 +508,7 @@ class LeadCapture
     /**
      * Send opt-in confirmation email.
      *
+     * @param string $id A unique ID.
      * @throws Error
      */
     public function sendOptInConfirmation(string $id): void
@@ -700,7 +704,7 @@ class LeadCapture
                 continue;
             }
 
-            $attributeList = $this->fieldUtil->getActualAttributeList('Lead', $field);
+            $attributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);
 
             if (empty($attributeList)) {
                 continue;
