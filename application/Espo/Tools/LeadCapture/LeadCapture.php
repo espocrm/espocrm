@@ -581,7 +581,7 @@ class LeadCapture
             throw new Error("Lead Capture: Could not find lead.");
         }
 
-        $emailAddress = $lead->getEmailAddressGroup()->getPrimaryAddress();
+        $emailAddress = $lead->getEmailAddress();
 
         if (!$emailAddress) {
             throw new Error("Lead Capture: No lead email address.");
@@ -749,8 +749,8 @@ class LeadCapture
         $duplicate = null;
         $contact = null;
 
-        $emailAddress = $lead->getEmailAddressGroup()->getPrimaryAddress();
-        $phoneNumber = $lead->getPhoneNumberGroup()->getPrimaryNumber();
+        $emailAddress = $lead->getEmailAddress();
+        $phoneNumber = $lead->getPhoneNumber();
 
         if ($emailAddress || $phoneNumber) {
             $groupOr = [];
