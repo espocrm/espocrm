@@ -504,6 +504,10 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
                         let value = $target.val().toString().trim();
                         let id = $target.data('id');
 
+                        if (value === '') {
+                            value = null;
+                        }
+
                         this.columns[id] = this.columns[id] || {};
                         this.columns[id][column] = value;
                     };

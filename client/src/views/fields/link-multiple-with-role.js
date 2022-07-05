@@ -331,6 +331,10 @@ define('views/fields/link-multiple-with-role', ['views/fields/link-multiple'], f
                     let value = $target.val().toString().trim();
                     let id = $target.data('id');
 
+                    if (value === '') {
+                        value = null;
+                    }
+
                     this.columns[id] = this.columns[id] || {};
                     this.columns[id][this.columnName] = value;
                 };
