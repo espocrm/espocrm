@@ -2,6 +2,9 @@
     "noBadCharacters": {
         "pattern": "[^<>=]+"
     },
+    "noSpecialCharacters": {
+        "pattern": "[^`~!@#$%^&*()_+={}\\[\\]|\\\\:;“’<,>.?๐฿]+"
+    },
     "latinLetters": {
         "pattern": "[A-Za-z]+"
     },
