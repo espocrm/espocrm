@@ -33,9 +33,9 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     Exceptions\BadRequest,
+    Exceptions\Error\Body,
     Utils\Metadata,
-    Utils\FieldUtil,
-};
+    Utils\FieldUtil};
 
 use stdClass;
 
@@ -172,7 +172,15 @@ class FieldValidationManager
             $result = $this->check($entity, $field, $type, $data);
 
             if (!$result) {
-                throw new BadRequest("Not valid data. Field: {$field}, validation type: {$type}.");
+                throw BadRequest::createWithBody(
+                    'validationFailure',
+                    Body::create()
+                        ->withMessageTranslation('validationFailure', null, [
+                            'field' => $field,
+                            'type' => $type,
+                        ])
+                        ->encode()
+                );
             }
         }
     }

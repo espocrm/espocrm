@@ -343,7 +343,8 @@
         "maintenanceMode": "The application currently is in maintenance mode. Only admin users have access.\n\nMaintenance mode can be disabled at Administration → Settings.",
         "resolveSaveConflict": "The record has been modified. You need to resolve the conflict before you can save the record.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
-        "massActionProcessed": "Mass action has been processed."
+        "massActionProcessed": "Mass action has been processed.",
+        "validationFailure": "Backend validation failure.\n\nField: `{field}`\nValidation: `{type}`"
     },
     "boolFilters": {
         "onlyMy": "Only My",
