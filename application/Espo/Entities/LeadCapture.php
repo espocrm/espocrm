@@ -33,6 +33,9 @@ class LeadCapture extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'LeadCapture';
 
+    /**
+     * @deprecated As of v7.2.
+     */
     public function isToSubscribeContactIfExists(): bool
     {
         return $this->get('subscribeToTargetList') && $this->get('subscribeContactToTargetList');
@@ -66,6 +69,11 @@ class LeadCapture extends \Espo\Core\ORM\Entity
         return (bool) $this->get('createLeadBeforeOptInConfirmation');
     }
 
+    public function optInConfirmation(): bool
+    {
+        return (bool) $this->get('optInConfirmation');
+    }
+
     public function getOptInConfirmationLifetime(): ?int
     {
         return $this->get('optInConfirmationLifetime');
@@ -76,6 +84,11 @@ class LeadCapture extends \Espo\Core\ORM\Entity
         return (bool) $this->get('subscribeToTargetList');
     }
 
+    public function subscribeContactToTargetList(): bool
+    {
+        return (bool) $this->get('subscribeContactToTargetList');
+    }
+
     public function getApiKey(): ?string
     {
         return $this->get('apiKey');
@@ -84,6 +97,11 @@ class LeadCapture extends \Espo\Core\ORM\Entity
     public function getName(): ?string
     {
         return $this->get('name');
+    }
+
+    public function getTargetTeamId(): ?string
+    {
+        return $this->get('targetTeamId');
     }
 
     public function getTargetListId(): ?string

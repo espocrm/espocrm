@@ -118,7 +118,7 @@ class LeadCapture
     }
 
     /**
-     * A main entry method.
+     * Capture a lead. A main entry method.
      *
      * @throws BadRequest
      * @throws Error
@@ -139,7 +139,7 @@ class LeadCapture
             throw new NotFound('Api key is not valid.');
         }
 
-        if (!$leadCapture->get('optInConfirmation')) {
+        if (!$leadCapture->optInConfirmation()) {
             $this->proceed($leadCapture, $data);
 
             return;
@@ -300,7 +300,7 @@ class LeadCapture
         if ($leadCapture->subscribeToTargetList() && $targetListId) {
             $isAlreadyOptedIn = false;
 
-            if ($contact && $leadCapture->isToSubscribeContactIfExists()) {
+            if ($contact && $leadCapture->subscribeContactToTargetList()) {
                 $isAlreadyOptedIn = $this->isTargetOptedIn($contact, $targetListId);
 
                 $isContactOptedIn = $isAlreadyOptedIn;
@@ -323,7 +323,7 @@ class LeadCapture
                         $this->hookManager->process(TargetList::ENTITY_TYPE, 'afterOptIn', $targetList, [], [
                            'link' => 'contacts',
                            'targetId' => $contact->getId(),
-                           'targetType' => 'Contact',
+                           'targetType' => Contact::ENTITY_TYPE,
                            'leadCaptureId' => $leadCapture->getId(),
                         ]);
                     }
@@ -335,7 +335,7 @@ class LeadCapture
                     $toRelateLead = true;
                 }
                 else {
-                    $isAlreadyOptedIn = $this->isTargetOptedIn($targetLead, $leadCapture->get('targetListId'));
+                    $isAlreadyOptedIn = $this->isTargetOptedIn($targetLead, $targetListId);
 
                     if (!$isAlreadyOptedIn) {
                         $toRelateLead = true;
@@ -346,24 +346,26 @@ class LeadCapture
 
         if (
             $contact &&
-            (!$isContactOptedIn || !$leadCapture->get('subscribeToTargetList')) &&
-            $leadCapture->get('subscribeContactToTargetList')
+            (!$isContactOptedIn || !$leadCapture->subscribeToTargetList()) &&
+            $leadCapture->subscribeContactToTargetList()
         ) {
-            $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
+            $this->hookManager->process(LeadCaptureEntity::ENTITY_TYPE, 'afterLeadCapture', $leadCapture, [], [
                'targetId' => $contact->getId(),
-               'targetType' => 'Contact',
+               'targetType' => Contact::ENTITY_TYPE,
             ]);
 
-            $this->hookManager->process('Contact', 'afterLeadCapture', $contact, [], [
+            $this->hookManager->process(Contact::ENTITY_TYPE, 'afterLeadCapture', $contact, [], [
                'leadCaptureId' => $leadCapture->getId(),
             ]);
         }
 
         $isNew = !$duplicate && !$contact;
 
-        if (!$contact || !$leadCapture->get('subscribeContactToTargetList')) {
-            if ($leadCapture->get('targetTeamId')) {
-                $lead->addLinkMultipleId('teams', $leadCapture->get('targetTeamId'));
+        if (!$contact || !$leadCapture->subscribeContactToTargetList()) {
+            $targetTeamId = $leadCapture->getTargetTeamId();
+
+            if ($targetTeamId) {
+                $lead->addLinkMultipleId('teams', $targetTeamId);
             }
 
             $this->entityManager->saveEntity($lead);
@@ -373,38 +375,49 @@ class LeadCapture
             }
         }
 
-        if ($toRelateLead && $targetLead->hasId()) {
+        if ($toRelateLead && $targetLead->hasId() && $targetListId) {
             $this->entityManager
-                ->getRDBRepository('Lead')
-                ->relate($targetLead, 'targetLists', $leadCapture->get('targetListId'), [
-                    'optedOut' => false,
-                ]);
+                ->getRDBRepository(Lead::ENTITY_TYPE)
+                ->getRelation($targetLead, 'targetLists')
+                ->relateById($targetListId, ['optedOut' => false]);
 
             if ($campaign) {
                 $this->campaignService->logOptedIn($campaign->getId(), null, $targetLead);
             }
 
-            $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
+            $targetList = $this->entityManager->getEntityById(TargetList::ENTITY_TYPE, $targetListId);
 
             if ($targetList) {
-                $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
+                $this->hookManager->process(TargetList::ENTITY_TYPE, 'afterOptIn', $targetList, [], [
                    'link' => 'leads',
                    'targetId' => $targetLead->getId(),
-                   'targetType' => 'Lead',
+                   'targetType' => Lead::ENTITY_TYPE,
                    'leadCaptureId' => $leadCapture->getId(),
                 ]);
             }
         }
 
-        if ($toRelateLead  || !$leadCapture->get('subscribeToTargetList')) {
-            $this->hookManager->process('LeadCapture', 'afterLeadCapture', $leadCapture, [], [
-               'targetId' => $targetLead->getId(),
-               'targetType' => 'Lead',
-            ]);
+        if ($toRelateLead  || !$leadCapture->subscribeToTargetList()) {
+            $this->hookManager->process(
+                LeadCaptureEntity::ENTITY_TYPE,
+                'afterLeadCapture',
+                $leadCapture,
+                [],
+                [
+                   'targetId' => $targetLead->getId(),
+                   'targetType' => Lead::ENTITY_TYPE,
+                ]
+            );
 
-            $this->hookManager->process('Lead', 'afterLeadCapture', $targetLead, [], [
-               'leadCaptureId' => $leadCapture->getId(),
-            ]);
+            $this->hookManager->process(
+                Lead::ENTITY_TYPE,
+                'afterLeadCapture',
+                $targetLead,
+                [],
+                [
+                   'leadCaptureId' => $leadCapture->getId(),
+                ]
+            );
         }
 
         if (!$isLogged) {
@@ -413,6 +426,8 @@ class LeadCapture
     }
 
     /**
+     * Confirm opt-in.
+     *
      * @throws BadRequest
      * @throws Error
      * @throws NotFound
@@ -487,11 +502,13 @@ class LeadCapture
     }
 
     /**
+     * Send opt-in confirmation email.
+     *
      * @throws Error
      */
     public function sendOptInConfirmation(string $id): void
     {
-        /** @var ?UniqueId $uniqueId */
+        /** @var ?UniqueId */
         $uniqueId = $this->entityManager
             ->getRDBRepository(UniqueId::ENTITY_TYPE)
             ->where([
@@ -748,7 +765,7 @@ class LeadCapture
                     ->findOne();
             }
 
-            if ($leadCapture->isToSubscribeContactIfExists()) {
+            if ($leadCapture->subscribeToTargetList() && $leadCapture->subscribeContactToTargetList()) {
                 $contact = $this->entityManager
                     ->getRDBRepository(Contact::ENTITY_TYPE)
                     ->where(['OR' => $groupOr])
@@ -772,7 +789,7 @@ class LeadCapture
             return false;
         }
 
-        $targetList = $this->entityManager->getEntity('TargetList', $targetListId);
+        $targetList = $this->entityManager->getEntityById(TargetList::ENTITY_TYPE, $targetListId);
 
         if (!$targetList) {
             return false;
