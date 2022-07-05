@@ -209,6 +209,7 @@ class LeadCapture
 
         $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
+        /** @var UniqueId */
         $uniqueId = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
 
         $uniqueId->set([
@@ -227,7 +228,7 @@ class LeadCapture
             'serviceName' => 'LeadCapture',
             'methodName' => 'jobOptInConfirmation',
             'data' => (object) [
-                'id' => $uniqueId->get('name'),
+                'id' => $uniqueId->getIdValue(),
             ],
             'queue' => QueueName::E0,
         ]);
@@ -609,7 +610,7 @@ class LeadCapture
         $body = str_replace('{optInUrl}', $url, $body);
         $body = str_replace('{optInLink}', $linkHtml, $body);
 
-        $createdAt = $uniqueId->get('createdAt');
+        $createdAt = $uniqueId->getCreatedAt()->getString();
 
         if ($createdAt) {
             $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('dateFormat'));
@@ -633,7 +634,7 @@ class LeadCapture
 
         $smtpParams = null;
 
-        $inboundEmailId = $leadCapture->get('inboundEmailId');
+        $inboundEmailId = $leadCapture->getInboundEmailId();
 
         if ($inboundEmailId) {
             /** @var ?InboundEmail */

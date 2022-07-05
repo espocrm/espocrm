@@ -30,7 +30,9 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
+
 use stdClass;
+use LogicException;
 
 class UniqueId extends \Espo\Core\ORM\Entity
 {
@@ -50,5 +52,17 @@ class UniqueId extends \Espo\Core\ORM\Entity
     public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        /** @var ?DateTime */
+        $value = $this->getValueObject('createdAt');
+
+        if (!$value) {
+            throw new LogicException();
+        }
+
+        return $value;
     }
 }

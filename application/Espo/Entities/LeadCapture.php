@@ -114,6 +114,11 @@ class LeadCapture extends \Espo\Core\ORM\Entity
         return $this->get('campaignId');
     }
 
+    public function getInboundEmailId(): ?string
+    {
+        return $this->get('inboundEmailId');
+    }
+
     public function getLeadSource(): ?string
     {
         return $this->get('leadSource');
