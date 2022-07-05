@@ -41,14 +41,12 @@ class FieldValidationParams
      */
     private $typeSkipFieldListData = [];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
-     * A field list that will be skipped in validation.
+     * A field list that will be skipped when validating.
      *
-     * @return string[]
+     * @return string[] A field list.
      */
     public function getSkipFieldList(): array
     {
@@ -58,7 +56,8 @@ class FieldValidationParams
     /**
      * A field list that will be skipped in validation for a specific validation type.
      *
-     * @return string[]
+     * @param string $type A validation type.
+     * @return string[] A field list.
      */
     public function getTypeSkipFieldList(string $type): array
     {
@@ -66,14 +65,13 @@ class FieldValidationParams
     }
 
     /**
-     * Clone with a specified field list that will be skipped in validation.
+     * Clone with a specified field list that will be skipped when validating.
      *
-     * @param string[] $list
+     * @param string[] $list A field list.
      */
     public function withSkipFieldList(array $list): self
     {
         $obj = clone $this;
-
         $obj->skipFieldList = $list;
 
         return $obj;
@@ -82,12 +80,12 @@ class FieldValidationParams
     /**
      * Clone with a specified field list that will be skipped in validation for a specific validation type.
      *
-     * @param string[] $list
+     * @param string $type A validation type.
+     * @param string[] $list A field list.
      */
     public function withTypeSkipFieldList(string $type, array $list): self
     {
         $obj = clone $this;
-
         $obj->typeSkipFieldListData[$type] = $list;
 
         return $obj;
