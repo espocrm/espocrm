@@ -97,6 +97,22 @@ class Person extends Entity
         $this->setInContainer('name', $name);
     }
 
+    /**
+     * Get a primary email address.
+     */
+    public function getEmailAddress(): ?string
+    {
+        return $this->get('emailAddress');
+    }
+
+    /**
+     * Get a primary phone number.
+     */
+    public function getPhoneNumber(): ?string
+    {
+        return $this->get('phoneNumber');
+    }
+
     public function getEmailAddressGroup(): EmailAddressGroup
     {
         /** @var EmailAddressGroup */
