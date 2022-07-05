@@ -252,8 +252,8 @@ class LeadCapture extends Record
             $key = 'inboundEmail:' . $inboundEmail->getId();
 
             $item->key = $key;
-            $item->emailAddress = $inboundEmail->get('emailAddress');
-            $item->fromName = $inboundEmail->get('fromName');
+            $item->emailAddress = $inboundEmail->getEmailAddress();
+            $item->fromName = $inboundEmail->getFromName();
 
             $dataList[] = $item;
         }

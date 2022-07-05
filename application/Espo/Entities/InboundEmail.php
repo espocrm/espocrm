@@ -56,6 +56,11 @@ class InboundEmail extends Entity
         return $this->get('status') === 'Active';
     }
 
+    public function getFromName(): ?string
+    {
+        return $this->get('fromName');
+    }
+
     public function getEmailAddress(): ?string
     {
         return $this->get('emailAddress');
