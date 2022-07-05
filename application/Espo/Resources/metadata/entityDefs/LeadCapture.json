@@ -97,6 +97,11 @@
             "readOnly": true,
             "seeMoreDisabled": true
         },
+        "exampleRequestHeaders": {
+            "type": "array",
+            "notStorable": true,
+            "readOnly": true
+        },
         "inboundEmail": {
             "type": "link"
         },

@@ -26,16 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/lead-capture/record/panels/request', 'views/record/panels/side', function (Dep) {
+define('views/lead-capture/record/panels/request', ['views/record/panels/side'], function (Dep) {
 
     return Dep.extend({
 
         fieldList: [
             'exampleRequestUrl',
             'exampleRequestMethod',
+            'exampleRequestHeaders',
             'exampleRequestPayload'
-        ]
-
+        ],
     });
-
 });

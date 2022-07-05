@@ -17,6 +17,7 @@
         "exampleRequestMethod": "Method",
         "exampleRequestUrl": "URL",
         "exampleRequestPayload": "Payload",
+        "exampleRequestHeaders": "Headers",
         "createLeadBeforeOptInConfirmation": "Create Lead before confirmation",
         "skipOptInConfirmationIfSubscribed": "Skip confirmation if lead is already in target list",
         "smtpAccount": "SMTP Account",

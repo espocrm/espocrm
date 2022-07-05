@@ -68,6 +68,10 @@ class LeadCapture extends Record
 
         $entity->set('exampleRequestMethod', 'POST');
 
+        $entity->set('exampleRequestHeaders', [
+            'Content-Type: application/json',
+        ]);
+
         $apiKey = $entity->getApiKey();
 
         if (!$apiKey) {
