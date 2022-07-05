@@ -130,7 +130,7 @@
         "folderId": {
             "type": "varchar",
             "notStorable": true,
-            "default": false,
+            "default": null,
             "textFilterDisabled": true
         },
         "isUsers": {
