@@ -8,7 +8,8 @@
         {
             "name": "options",
             "type": "array",
-            "view": "views/admin/field-manager/fields/options"
+            "view": "views/admin/field-manager/fields/options",
+            "tooltip": "optionsArray"
         },
         {
             "name": "translation",
@@ -27,12 +28,14 @@
         },
         {
             "name": "displayAsList",
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         {
             "name": "maxCount",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "tooltip": true
         },
         {
             "name": "audited",

@@ -8,7 +8,8 @@
         {
             "name": "options",
             "type": "array",
-            "view": "views/admin/field-manager/fields/options-with-style"
+            "view": "views/admin/field-manager/fields/options-with-style",
+            "tooltip": true
         },
         {
             "name": "isSorted",
@@ -26,7 +27,8 @@
         {
             "name": "maxCount",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "tooltip": true
         },
         {
             "name": "style",
@@ -39,7 +41,8 @@
         },
         {
             "name": "displayAsList",
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         {
             "name": "audited",

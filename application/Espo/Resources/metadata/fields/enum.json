@@ -8,7 +8,8 @@
         {
             "name": "options",
             "type": "array",
-            "view": "views/admin/field-manager/fields/options-with-style"
+            "view": "views/admin/field-manager/fields/options-with-style",
+            "tooltip": true
         },
         {
             "name": "default",

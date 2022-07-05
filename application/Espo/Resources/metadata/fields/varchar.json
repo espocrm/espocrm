@@ -19,7 +19,8 @@
         },
         {
             "name": "options",
-            "type": "multiEnum"
+            "type": "multiEnum",
+            "tooltip": "optionsVarchar"
         },
         {
             "name": "pattern",

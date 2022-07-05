@@ -10,7 +10,8 @@
             "type": "array",
             "view": "views/admin/field-manager/fields/options",
             "noEmptyString": true,
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         {
             "name": "isSorted",
@@ -24,7 +25,8 @@
         {
             "name": "maxCount",
             "type": "int",
-            "min": 1
+            "min": 1,
+            "tooltip": true
         },
         {
             "name": "audited",
