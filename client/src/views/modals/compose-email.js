@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
+define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
 
     return Dep.extend({
 
