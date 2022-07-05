@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\DateTime;
 use stdClass;
 
 class UniqueId extends \Espo\Core\ORM\Entity
@@ -38,6 +39,12 @@ class UniqueId extends \Espo\Core\ORM\Entity
     public function getIdValue(): ?string
     {
         return $this->get('name');
+    }
+
+    public function getTerminateAt(): ?DateTime
+    {
+        /** @var ?DateTime */
+        return $this->getValueObject('terminateAt');
     }
 
     public function getData(): stdClass

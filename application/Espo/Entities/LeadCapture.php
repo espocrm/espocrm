@@ -37,4 +37,72 @@ class LeadCapture extends \Espo\Core\ORM\Entity
     {
         return $this->get('subscribeToTargetList') && $this->get('subscribeContactToTargetList');
     }
+
+    /**
+     * @return string[]
+     */
+    public function getFieldList(): array
+    {
+        return $this->get('fieldList') ?? [];
+    }
+
+    public function getOptInConfirmationSuccessMessage(): ?string
+    {
+        return $this->get('optInConfirmationSuccessMessage');
+    }
+
+    public function duplicateCheck(): bool
+    {
+        return (bool) $this->get('duplicateCheck');
+    }
+
+    public function skipOptInConfirmationIfSubscribed(): bool
+    {
+        return (bool) $this->get('skipOptInConfirmationIfSubscribed');
+    }
+
+    public function createLeadBeforeOptInConfirmation(): bool
+    {
+        return (bool) $this->get('createLeadBeforeOptInConfirmation');
+    }
+
+    public function getOptInConfirmationLifetime(): ?int
+    {
+        return $this->get('optInConfirmationLifetime');
+    }
+
+    public function subscribeToTargetList(): bool
+    {
+        return (bool) $this->get('subscribeToTargetList');
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->get('apiKey');
+    }
+
+    public function getName(): ?string
+    {
+        return $this->get('name');
+    }
+
+    public function getTargetListId(): ?string
+    {
+        return $this->get('targetListId');
+    }
+
+    public function getCampaignId(): ?string
+    {
+        return $this->get('campaignId');
+    }
+
+    public function getLeadSource(): ?string
+    {
+        return $this->get('leadSource');
+    }
+
+    public function getOptInConfirmationEmailTemplateId(): ?string
+    {
+        return $this->get('optInConfirmationEmailTemplateId');
+    }
 }

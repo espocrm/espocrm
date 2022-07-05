@@ -53,9 +53,15 @@ use Espo\Core\{
 };
 
 use Espo\{
+    Entities\Email,
+    Entities\EmailTemplate,
+    Entities\InboundEmail,
+    Entities\Job,
+    Entities\LeadCaptureLogRecord,
+    Modules\Crm\Entities\Campaign,
+    Modules\Crm\Entities\TargetList,
     ORM\Entity,
     Entities\LeadCapture as LeadCaptureEntity,
-    Modules\Crm\Entities\Lead as LeadEntity,
 };
 
 use stdClass;
@@ -111,8 +117,16 @@ class LeadCapture
         $this->inboundEmailService = $inboundEmailService;
     }
 
+    /**
+     * A main entry method.
+     *
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFound
+     */
     public function capture(string $apiKey, stdClass $data): void
     {
+        /** @var ?LeadCaptureEntity */
         $leadCapture = $this->entityManager
             ->getRDBRepository(LeadCaptureEntity::ENTITY_TYPE)
             ->where([
@@ -135,7 +149,7 @@ class LeadCapture
             throw new Error('LeadCapture: No emailAddress passed in the payload.');
         }
 
-        if (!$leadCapture->get('optInConfirmationEmailTemplateId')) {
+        if (!$leadCapture->getOptInConfirmationEmailTemplateId()) {
             throw new Error('LeadCapture: No optInConfirmationEmailTemplate specified.');
         }
 
@@ -162,8 +176,10 @@ class LeadCapture
 
             $isLogged = true;
 
-            if ($leadCapture->get('skipOptInConfirmationIfSubscribed') && $leadCapture->get('targetListId')) {
-                $isAlreadyOptedIn = $this->isTargetOptedIn($target, $leadCapture->get('targetListId'));
+            $targetListId = $leadCapture->getTargetListId();
+
+            if ($leadCapture->skipOptInConfirmationIfSubscribed() && $targetListId) {
+                $isAlreadyOptedIn = $this->isTargetOptedIn($target, $targetListId);
 
                 if ($isAlreadyOptedIn) {
                     $this->log->debug("LeadCapture: Already opted in. Skipped.");
@@ -173,17 +189,15 @@ class LeadCapture
             }
         }
 
-        if ($leadCapture->get('createLeadBeforeOptInConfirmation')) {
-            if (!$hasDuplicate) {
-                $this->entityManager->saveEntity($lead);
+        if ($leadCapture->createLeadBeforeOptInConfirmation() && !$hasDuplicate) {
+            $this->entityManager->saveEntity($lead);
 
-                $this->log($leadCapture, $target, $data, true);
+            $this->log($leadCapture, $target, $data, true);
 
-                $isLogged = true;
-            }
+            $isLogged = true;
         }
 
-        $lifetime = $leadCapture->get('optInConfirmationLifetime');
+        $lifetime = $leadCapture->getOptInConfirmationLifetime();
 
         if (!$lifetime) {
             $lifetime = 100;
@@ -193,9 +207,9 @@ class LeadCapture
 
         $dt->modify('+' . $lifetime . ' hours');
 
-        $terminateAt = $dt->format('Y-m-d H:i:s');
+        $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
-        $uniqueId = $this->entityManager->getNewEntity('UniqueId');
+        $uniqueId = $this->entityManager->getNewEntity(UniqueId::ENTITY_TYPE);
 
         $uniqueId->set([
             'terminateAt' => $terminateAt,
@@ -209,9 +223,7 @@ class LeadCapture
 
         $this->entityManager->saveEntity($uniqueId);
 
-        $job = $this->entityManager->getNewEntity('Job');
-
-        $job->set([
+        $this->entityManager->createEntity(Job::ENTITY_TYPE, [
             'serviceName' => 'LeadCapture',
             'methodName' => 'jobOptInConfirmation',
             'data' => (object) [
@@ -219,10 +231,13 @@ class LeadCapture
             ],
             'queue' => QueueName::E0,
         ]);
-
-        $this->entityManager->saveEntity($job);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws NotFound
+     * @throws Error
+     */
     protected function proceed(
         LeadCaptureEntity $leadCapture,
         stdClass $data,
@@ -231,7 +246,8 @@ class LeadCapture
     ): void {
 
         if ($leadId) {
-            $lead = $this->entityManager->getEntityById('Lead', $leadId);
+            /** @var ?Lead */
+            $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
 
             if (!$lead) {
                 throw new NotFound("Lead '{$leadId}' not found.");
@@ -244,10 +260,10 @@ class LeadCapture
         $campaign = null;
 
         /** @var ?string */
-        $campaignId = $leadCapture->get('campaignId');
+        $campaignId = $leadCapture->getCampaignId();
 
         if ($campaignId) {
-            $campaign = $this->entityManager->getEntityById('Campaign', $campaignId);
+            $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
         }
 
         $toRelateLead = false;
@@ -279,20 +295,21 @@ class LeadCapture
 
         $isContactOptedIn = false;
 
-        if ($leadCapture->get('subscribeToTargetList') && $leadCapture->get('targetListId')) {
+        $targetListId = $leadCapture->getTargetListId();
+
+        if ($leadCapture->subscribeToTargetList() && $targetListId) {
             $isAlreadyOptedIn = false;
 
-            if ($contact && $leadCapture->get('subscribeContactToTargetList')) {
-                $isAlreadyOptedIn = $this->isTargetOptedIn($contact, $leadCapture->get('targetListId'));
+            if ($contact && $leadCapture->isToSubscribeContactIfExists()) {
+                $isAlreadyOptedIn = $this->isTargetOptedIn($contact, $targetListId);
 
                 $isContactOptedIn = $isAlreadyOptedIn;
 
                 if (!$isAlreadyOptedIn) {
                     $this->entityManager
-                        ->getRDBRepository('Contact')
-                        ->relate($contact, 'targetLists', $leadCapture->get('targetListId'), [
-                            'optedOut' => false,
-                        ]);
+                        ->getRDBRepository(Contact::ENTITY_TYPE)
+                        ->getRelation($contact, 'targetLists')
+                        ->relateById($targetListId, ['optedOut' => false]);
 
                     $isAlreadyOptedIn = true;
 
@@ -300,10 +317,10 @@ class LeadCapture
                         $this->campaignService->logOptedIn($campaign->getId(), null, $contact);
                     }
 
-                    $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
+                    $targetList = $this->entityManager->getEntityById(TargetList::ENTITY_TYPE, $targetListId);
 
                     if ($targetList) {
-                        $this->hookManager->process('TargetList', 'afterOptIn', $targetList, [], [
+                        $this->hookManager->process(TargetList::ENTITY_TYPE, 'afterOptIn', $targetList, [], [
                            'link' => 'contacts',
                            'targetId' => $contact->getId(),
                            'targetType' => 'Contact',
@@ -395,14 +412,24 @@ class LeadCapture
         }
     }
 
-    public function confirmOptIn(string $id): stdClass
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws NotFound
+     *
+     * @return array{
+     *   status: 'success'|'expired',
+     *   message: ?string,
+     *   leadCaptureName?: ?string,
+     *   leadCaptureId?: string,
+     * }
+     */
+    public function confirmOptIn(string $id): array
     {
-        /** @var UniqueId|null $uniqueId */
+        /** @var ?UniqueId */
         $uniqueId = $this->entityManager
-            ->getRDBRepository('UniqueId')
-            ->where([
-                'name' => $id
-            ])
+            ->getRDBRepository(UniqueId::ENTITY_TYPE)
+            ->where(['name' => $id])
             ->findOne();
 
         if (!$uniqueId) {
@@ -424,17 +451,18 @@ class LeadCapture
         $leadId = $uniqueIdData->leadId ?? null;
         $isLogged = $uniqueIdData->isLogged ?? false;
 
-        $terminateAt = $uniqueId->get('terminateAt');
+        $terminateAt = $uniqueId->getTerminateAt();
 
-        if (is_string($terminateAt) && time() > strtotime($terminateAt)) {
-            return (object) [
+        if ($terminateAt && time() > strtotime($terminateAt->getString())) {
+            return [
                 'status' => 'expired',
                 'message' => $this->defaultLanguage
                     ->translateLabel('optInConfirmationExpired', 'messages', 'LeadCapture'),
             ];
         }
 
-        $leadCapture = $this->entityManager->getEntity('LeadCapture', $leadCaptureId);
+        /** @var ?LeadCaptureEntity */
+        $leadCapture = $this->entityManager->getEntityById(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
             throw new Error("LeadCapture Confirm: LeadCapture not found.");
@@ -450,19 +478,22 @@ class LeadCapture
             $this->entityManager->saveEntity($uniqueId);
         }
 
-        return (object) [
+        return [
             'status' => 'success',
-            'message' => $leadCapture->get('optInConfirmationSuccessMessage'),
-            'leadCaptureName' => $leadCapture->get('name'),
+            'message' => $leadCapture->getOptInConfirmationSuccessMessage(),
+            'leadCaptureName' => $leadCapture->getName(),
             'leadCaptureId' => $leadCapture->getId(),
         ];
     }
 
+    /**
+     * @throws Error
+     */
     public function sendOptInConfirmation(string $id): void
     {
         /** @var ?UniqueId $uniqueId */
         $uniqueId = $this->entityManager
-            ->getRDBRepository('UniqueId')
+            ->getRDBRepository(UniqueId::ENTITY_TYPE)
             ->where([
                 'name' => $id,
             ])
@@ -486,35 +517,39 @@ class LeadCapture
         $leadCaptureId = $uniqueIdData->leadCaptureId;
         $leadId = $uniqueIdData->leadId ?? null;
 
-        $terminateAt = $uniqueId->get('terminateAt');
+        $terminateAt = $uniqueId->getTerminateAt();
 
-        if (is_string($terminateAt) && time() > strtotime($terminateAt)) {
-            throw new Error("LeadCapture: Opt-in cofrmation expired.");
+        if ($terminateAt && time() > strtotime($terminateAt->getString())) {
+            throw new Error("LeadCapture: Opt-in confirmation expired.");
         }
 
-        $leadCapture = $this->entityManager->getEntity('LeadCapture', $leadCaptureId);
+        /** @var ?LeadCaptureEntity */
+        $leadCapture = $this->entityManager->getEntity(LeadCaptureEntity::ENTITY_TYPE, $leadCaptureId);
 
         if (!$leadCapture) {
             throw new Error("LeadCapture: LeadCapture not found.");
         }
 
-        $optInConfirmationEmailTemplateId = $leadCapture->get('optInConfirmationEmailTemplateId');
+        $optInConfirmationEmailTemplateId = $leadCapture->getOptInConfirmationEmailTemplateId();
 
         if (!$optInConfirmationEmailTemplateId) {
             throw new Error("LeadCapture: No optInConfirmationEmailTemplateId.");
         }
 
-        $emailTemplate = $this->entityManager->getEntity('EmailTemplate', $optInConfirmationEmailTemplateId);
+        /** @var ?EmailTemplate */
+        $emailTemplate = $this->entityManager
+            ->getEntityById(EmailTemplate::ENTITY_TYPE, $optInConfirmationEmailTemplateId);
 
         if (!$emailTemplate) {
             throw new Error("LeadCapture: EmailTemplate not found.");
         }
 
         if ($leadId) {
-            $lead = $this->entityManager->getEntityById('Lead', $leadId);
+            /** @var ?Lead */
+            $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
         }
         else {
-            $lead = $this->entityManager->getNewEntity('Lead');
+            $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
 
             $lead->set($data);
         }
@@ -529,10 +564,10 @@ class LeadCapture
             throw new Error("Lead Capture: Could not find lead.");
         }
 
-        $emailAddress = $lead->get('emailAddress');
+        $emailAddress = $lead->getEmailAddressGroup()->getPrimaryAddress();
 
         if (!$emailAddress) {
-            throw new Error();
+            throw new Error("Lead Capture: No lead email address.");
         }
 
         $subject = $emailData['subject'];
@@ -547,7 +582,7 @@ class LeadCapture
             }
         }
 
-        $url = $this->config->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->get('name');
+        $url = $this->config->getSiteUrl() . '/?entryPoint=confirmOptIn&id=' . $uniqueId->getIdValue();
 
         $linkHtml =
             '<a href='.$url.'>' .
@@ -569,7 +604,8 @@ class LeadCapture
             $body = str_replace('{optInDateTime}', $dateTimeString, $body);
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
             'to' => $emailAddress,
@@ -583,16 +619,14 @@ class LeadCapture
         $inboundEmailId = $leadCapture->get('inboundEmailId');
 
         if ($inboundEmailId) {
-            $inboundEmail = $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
+            /** @var ?InboundEmail */
+            $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
 
             if (!$inboundEmail) {
                 throw new Error("Lead Capture: Group Email Account {$inboundEmailId} is not available.");
             }
 
-            if (
-                $inboundEmail->get('status') !== 'Active' ||
-                !$inboundEmail->get('useSmtp')
-            ) {
+            if (!$inboundEmail->isAvailableForSending()) {
                 throw new Error("Lead Capture:  Group Email Account {$inboundEmailId} can't be used for Lead Capture.");
             }
 
@@ -612,13 +646,18 @@ class LeadCapture
         $sender->send($email);
     }
 
-    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): LeadEntity
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
+    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): Lead
     {
-        $lead = $this->entityManager->getNewEntity('Lead');
+        /** @var Lead */
+        $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
 
-        $fieldList = $leadCapture->get('fieldList');
+        $fieldList = $leadCapture->getFieldList();
 
-        if (empty($fieldList)) {
+        if ($fieldList === []) {
             throw new Error('No field list specified.');
         }
 
@@ -666,12 +705,12 @@ class LeadCapture
             throw new BadRequest('No appropriate data in payload.');
         }
 
-        if ($leadCapture->get('leadSource')) {
-            $lead->set('source', $leadCapture->get('leadSource'));
+        if ($leadCapture->getLeadSource()) {
+            $lead->set('source', $leadCapture->getLeadSource());
         }
 
-        if ($leadCapture->get('campaignId')) {
-            $lead->set('campaignId', $leadCapture->get('campaignId'));
+        if ($leadCapture->getCampaignId()) {
+            $lead->set('campaignId', $leadCapture->getCampaignId());
         }
 
         return $lead;
@@ -679,36 +718,39 @@ class LeadCapture
 
     /**
      * @return array{
-     *   contact: ?\Espo\Modules\Crm\Entities\Contact,
-     *   lead: ?LeadEntity,
+     *   contact: ?Contact,
+     *   lead: ?Lead,
      * }
      */
-    protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, LeadEntity $lead): array
+    protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, Lead $lead): array
     {
         $duplicate = null;
         $contact = null;
 
-        if ($lead->get('emailAddress') || $lead->get('phoneNumber')) {
+        $emailAddress = $lead->getEmailAddressGroup()->getPrimaryAddress();
+        $phoneNumber = $lead->getPhoneNumberGroup()->getPrimaryNumber();
+
+        if ($emailAddress || $phoneNumber) {
             $groupOr = [];
 
-            if ($lead->get('emailAddress')) {
-                $groupOr['emailAddress'] = $lead->get('emailAddress');
+            if ($emailAddress) {
+                $groupOr['emailAddress'] = $emailAddress;
             }
 
-            if ($lead->get('phoneNumber')) {
-                $groupOr['phoneNumber'] = $lead->get('phoneNumber');
+            if ($phoneNumber) {
+                $groupOr['phoneNumber'] = $phoneNumber;
             }
 
-            if ($lead->isNew() && $leadCapture->get('duplicateCheck')) {
+            if ($lead->isNew() && $leadCapture->duplicateCheck()) {
                 $duplicate = $this->entityManager
-                    ->getRDBRepository('Lead')
+                    ->getRDBRepository(Lead::ENTITY_TYPE)
                     ->where(['OR' => $groupOr])
                     ->findOne();
             }
 
             if ($leadCapture->isToSubscribeContactIfExists()) {
                 $contact = $this->entityManager
-                    ->getRDBRepository('Contact')
+                    ->getRDBRepository(Contact::ENTITY_TYPE)
                     ->where(['OR' => $groupOr])
                     ->findOne();
             }
@@ -738,11 +780,11 @@ class LeadCapture
 
         $link = null;
 
-        if ($target->getEntityType() === 'Contact') {
+        if ($target->getEntityType() === Contact::ENTITY_TYPE) {
             $link = 'contacts';
         }
 
-        if ($target->getEntityType() === 'Lead') {
+        if ($target->getEntityType() === Lead::ENTITY_TYPE) {
             $link = 'leads';
         }
 
@@ -751,7 +793,7 @@ class LeadCapture
         }
 
         $targetFound = $this->entityManager
-            ->getRDBRepository('TargetList')
+            ->getRDBRepository(TargetList::ENTITY_TYPE)
             ->getRelation($targetList, $link)
             ->where([
                 'id' => $target->getId(),
@@ -767,7 +809,7 @@ class LeadCapture
 
     protected function log(LeadCaptureEntity $leadCapture, Entity $target, stdClass $data, bool $isNew = true): void
     {
-        $logRecord = $this->entityManager->getNewEntity('LeadCaptureLogRecord');
+        $logRecord = $this->entityManager->getNewEntity(LeadCaptureLogRecord::ENTITY_TYPE);
 
         $logRecord->set([
             'targetId' => $target->hasId() ? $target->getId() : null,

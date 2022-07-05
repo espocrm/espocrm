@@ -43,7 +43,17 @@ class EmailAccount extends Entity
 
     public function isAvailableForFetching(): bool
     {
-        return $this->get('status') === 'Active' && $this->get('useImap');
+        return $this->isActive() && $this->get('useImap');
+    }
+
+    public function isAvailableForSending(): bool
+    {
+        return $this->isActive() && $this->get('useSmtp');
+    }
+
+    public function isActive(): bool
+    {
+        return $this->get('status') === 'Active';
     }
 
     public function getEmailAddress(): ?string

@@ -55,6 +55,11 @@ class ConfirmOptIn implements EntryPoint
         $this->service = $service;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
     public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');
@@ -65,21 +70,17 @@ class ConfirmOptIn implements EntryPoint
 
         $data = $this->service->confirmOptIn($id);
 
-        if ($data->status === 'success') {
+        $action = 'optInConfirmationExpired';
+
+        if ($data['status'] === 'success') {
             $action = 'optInConfirmationSuccess';
-        }
-        else if ($data->status === 'expired') {
-            $action = 'optInConfirmationExpired';
-        }
-        else {
-            throw new Error();
         }
 
         $runScript = "
-            Espo.require('controllers/lead-capture-opt-in-confirmation', function (Controller) {
+            require('controllers/lead-capture-opt-in-confirmation', Controller => {
                 var controller = new Controller(app.baseController.params, app.getControllerInjection());
                 controller.masterView = app.masterView;
-                controller.doAction('".$action."', ".json_encode($data).");
+                controller.doAction('{$action}', " . json_encode($data) . ");
             });
         ";
 
