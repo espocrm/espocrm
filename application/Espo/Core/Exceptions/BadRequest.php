@@ -29,10 +29,37 @@
 
 namespace Espo\Core\Exceptions;
 
-class BadRequest extends \Exception
+use Throwable;
+use Exception;
+
+class BadRequest extends Exception implements HasBody
 {
     /**
      * @var int
      */
     protected $code = 400;
+
+    /**
+     * @var ?string
+     */
+    private $body = null;
+
+    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
+    public static function createWithBody(string $message, string $body): self
+    {
+        $exception = new static($message);
+
+        $exception->body = $body;
+
+        return $exception;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
 }
