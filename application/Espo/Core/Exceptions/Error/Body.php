@@ -48,6 +48,8 @@ class Body
     }
 
     /**
+     * A translatable message to display in frontend. Labels should be in the `messages` category.
+     *
      * @param ?array<string,string> $data
      */
     public function withMessageTranslation(string $label, ?string $scope = null, ?array $data = null): self
