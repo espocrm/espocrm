@@ -44,11 +44,12 @@ define('views/modals/password-change-request', 'views/modal', function (Dep) {
                 {
                     name: 'submit',
                     label: 'Submit',
-                    style: 'danger'
+                    style: 'danger',
                 },
                 {
                     name: 'cancel',
-                    label: 'Close'
+                    label: 'Close',
+                    pullLeft: true,
                 }
             ];
 
