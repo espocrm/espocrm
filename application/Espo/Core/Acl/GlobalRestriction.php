@@ -44,46 +44,57 @@ use stdClass;
  */
 class GlobalRestriction
 {
+    /** Totally forbidden. */
     public const TYPE_FORBIDDEN = 'forbidden';
 
+    /** Reading forbidden, writing allowed. */
     public const TYPE_INTERNAL = 'internal';
 
+    /** Forbidden for non-admin users. */
     public const TYPE_ONLY_ADMIN = 'onlyAdmin';
 
+    /** Read-only for all users. */
     public const TYPE_READ_ONLY = 'readOnly';
 
+    /** Read-only for non-admin users. */
     public const TYPE_NON_ADMIN_READ_ONLY = 'nonAdminReadOnly';
 
     /**
-     * @var string[]
+     * @var array<int,self::TYPE_*>
      */
-    protected $fieldTypeList = [
-        'forbidden', // totally forbidden
-        'internal', // reading forbidden, writing allowed
-        'onlyAdmin', // forbidden for non admin users
-        'readOnly', // read-only for all users
-        'nonAdminReadOnly' // read-only for non-admin users
+    private $fieldTypeList = [
+        self::TYPE_FORBIDDEN,
+        self::TYPE_INTERNAL,
+        self::TYPE_ONLY_ADMIN,
+        self::TYPE_READ_ONLY,
+        self::TYPE_NON_ADMIN_READ_ONLY,
     ];
 
     /**
-     * @var string[]
+     * @var array<int,self::TYPE_*>
      */
-    protected $linkTypeList = [
-        'forbidden', // totally forbidden
-        'internal', // reading forbidden, writing allowed
-        'onlyAdmin', // forbidden for non admin users
-        'readOnly', // read-only for all users
-        'nonAdminReadOnly' // read-only for non-admin users
+    private $linkTypeList = [
+        self::TYPE_FORBIDDEN,
+        self::TYPE_INTERNAL,
+        self::TYPE_ONLY_ADMIN,
+        self::TYPE_READ_ONLY,
+        self::TYPE_NON_ADMIN_READ_ONLY,
+    ];
+
+    /**
+     * Types that should also be taken from entityDefs.
+     * @var array<int,self::TYPE_*>
+     */
+    private array $entityDefsTypeList = [
+        self::TYPE_READ_ONLY,
     ];
 
     private ?stdClass $data = null;
 
-    protected string $cacheKey = 'entityAcl';
+    private string $cacheKey = 'entityAcl';
 
     private Metadata $metadata;
-
     private DataCache $dataCache;
-
     private FieldUtil $fieldUtil;
 
     public function __construct(
@@ -116,25 +127,25 @@ class GlobalRestriction
         }
     }
 
-    protected function storeCacheFile(): void
+    private function storeCacheFile(): void
     {
         assert($this->data !== null);
 
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 
-    protected function buildData(): void
+    private function buildData(): void
     {
         /** @var string[] */
-        $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
+        $scopeList = array_keys($this->metadata->get(['entityDefs']) ?? []);
 
         $data = (object) [];
 
         foreach ($scopeList as $scope) {
             /** @var string[] */
-            $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields'], []));
+            $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
             /** @var string[] */
-            $linkList = array_keys($this->metadata->get(['entityDefs', $scope, 'links'], []));
+            $linkList = array_keys($this->metadata->get(['entityDefs', $scope, 'links']) ?? []);
 
             $isNotEmpty = false;
 
@@ -149,16 +160,24 @@ class GlobalRestriction
                 $resultAttributeList = [];
 
                 foreach ($fieldList as $field) {
-                    if ($this->metadata->get(['entityAcl', $scope, 'fields', $field, $type])) {
-                        $isNotEmpty = true;
+                    $value = $this->metadata->get(['entityAcl', $scope, 'fields', $field, $type]);
 
-                        $resultFieldList[] = $field;
+                    if (!$value && in_array($type, $this->entityDefsTypeList)) {
+                        $value = $this->metadata->get(['entityDefs', $scope, 'fields', $field, $type]);
+                    }
 
-                        $fieldAttributeList = $this->fieldUtil->getAttributeList($scope, $field);
+                    if (!$value) {
+                        continue;
+                    }
 
-                        foreach ($fieldAttributeList as $attribute) {
-                            $resultAttributeList[] = $attribute;
-                        }
+                    $isNotEmpty = true;
+
+                    $resultFieldList[] = $field;
+
+                    $fieldAttributeList = $this->fieldUtil->getAttributeList($scope, $field);
+
+                    foreach ($fieldAttributeList as $attribute) {
+                        $resultAttributeList[] = $attribute;
                     }
                 }
 
@@ -188,6 +207,7 @@ class GlobalRestriction
     }
 
     /**
+     * @param self::TYPE_* $type
      * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, string $type): array
@@ -210,6 +230,7 @@ class GlobalRestriction
     }
 
     /**
+     * @param self::TYPE_* $type
      * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, string $type): array
@@ -232,6 +253,7 @@ class GlobalRestriction
     }
 
     /**
+     * @param self::TYPE_* $type
      * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, string $type): array

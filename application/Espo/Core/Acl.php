@@ -30,9 +30,9 @@
 namespace Espo\Core;
 
 use Espo\Core\{
+    Acl\GlobalRestriction,
     Acl\Table,
-    Acl\Exceptions\NotImplemented,
-};
+    Acl\Exceptions\NotImplemented};
 
 use Espo\ORM\Entity;
 use Espo\Entities\User;
@@ -283,7 +283,7 @@ class Acl
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
@@ -294,7 +294,7 @@ class Acl
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
@@ -305,7 +305,7 @@ class Acl
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array

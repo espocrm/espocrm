@@ -487,7 +487,7 @@ class AclManager
     }
 
     /**
-     * @return string[]
+     * @return array<int,GlobalRestriction::TYPE_*>
      */
     protected function getGlobalRestrictionTypeList(User $user, string $action = Table::ACTION_READ): array
     {
@@ -658,7 +658,7 @@ class AclManager
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
@@ -684,7 +684,7 @@ class AclManager
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
@@ -710,7 +710,7 @@ class AclManager
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param string|string[] $type
+     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
@@ -735,7 +735,7 @@ class AclManager
 
     /**
      * Get an entity field that stores an owner-user (or multiple users).
-     * Must be link or linkMultiple field. NULL means no owner.
+     * Must be a link or linkMultiple field. NULL means no owner.
      */
     public function getReadOwnerUserField(string $entityType): ?string
     {
