@@ -8,7 +8,7 @@
         <input type="input" class="form-control phone-number no-margin-shifting" value="{{phoneNumber}}" autocomplete="espo-{{../name}}" maxlength={{../itemMaxLength}}>
         <span class="input-group-btn">
             <button class="btn btn-default btn-icon phone-property{{#if primary}} active{{/if}} hidden" type="button" tabindex="-1" data-action="switchPhoneProperty" data-property-type="primary" data-toggle="tooltip" data-placement="top" title="{{translate 'Primary' scope='PhoneNumber'}}">
-                <span class="fa fa-star fa-sm{{#unless primary}} text-muted{{/unless}}"></span>
+                <span class="fas fa-star fa-sm{{#unless primary}} text-muted{{/unless}}"></span>
             </button>
             <button class="btn btn-default btn-icon phone-property{{#if optOut}} active{{/if}}" type="button" tabindex="-1" data-action="switchPhoneProperty" data-property-type="optOut" data-toggle="tooltip" data-placement="top" title="{{translate 'Opted Out' scope='EmailAddress'}}">
                 <span class="fa fa-ban{{#unless optOut}} text-muted{{/unless}}"></span>
