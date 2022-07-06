@@ -33,7 +33,6 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\DataCache,
     Utils\FieldUtil,
-    Utils\Log,
     Utils\Config,
 };
 
@@ -87,19 +86,15 @@ class GlobalRestriction
 
     private FieldUtil $fieldUtil;
 
-    private Log $log;
-
     public function __construct(
         Metadata $metadata,
         DataCache $dataCache,
         FieldUtil $fieldUtil,
-        Log $log,
         Config $config
     ) {
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
         $this->fieldUtil = $fieldUtil;
-        $this->log = $log;
 
         $useCache = $config->get('useCache');
 
