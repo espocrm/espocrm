@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/varchar', ['views/fields/base'], function (Dep) {
+define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'], function (Dep, RegExpPattern) {
 
     /**
      * A varchar field.
@@ -300,33 +300,16 @@ define('views/fields/varchar', ['views/fields/base'], function (Dep) {
                 return false;
             }
 
-            if (value === '' || value === null) {
+            /** @type module:helpers/reg-exp-pattern.Class */
+            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+
+            let result = helper.validate(pattern, value, name, this.entityType);
+
+            if (!result) {
                 return false;
             }
 
-            let messageKey = 'fieldNotMatchingPattern';
-
-            if (pattern[0] === '$') {
-                let patternName = pattern.slice(1);
-                let foundPattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
-
-                if (foundPattern) {
-                    messageKey += '$' + patternName;
-                    pattern = foundPattern;
-                }
-            }
-
-            let regExp = new RegExp('^' + pattern + '$');
-
-            if (regExp.test(value)) {
-                return false;
-            }
-
-            let msg = this.translate(messageKey, 'messages')
-                .replace('{field}', this.translate(name, 'fields', this.entityType))
-                .replace('{pattern}', pattern);
-
-            this.showValidationMessage(msg, '[data-name="' + name + '"]');
+            this.showValidationMessage(result.message, '[data-name="' + name + '"]');
 
             return true;
         },

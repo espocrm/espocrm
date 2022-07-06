@@ -42,6 +42,8 @@ class ArrayType
 
     private Defs $defs;
 
+    private const DEFAULT_MAX_LENGTH = 100;
+
     public function __construct(Metadata $metadata, Defs $defs)
     {
         $this->metadata = $metadata;
@@ -103,24 +105,13 @@ class ArrayType
             ->getEntity($entity->getEntityType())
             ->getField($field);
 
-        /** @var ?string */
-        $path = $fieldDefs->getParam('optionsPath');
+        if ($fieldDefs->getParam('allowCustomOptions')) {
+            return true;
+        }
 
-        /** @var string[]|null|false */
-        $optionList = $path ?
-            $this->metadata->get($path) :
-            $fieldDefs->getParam('options');
+        $optionList = $this->getOptionList($entity->getEntityType(), $field);
 
         if ($optionList === null) {
-            return true;
-        }
-
-        // For bc.
-        if ($optionList === false) {
-            return true;
-        }
-
-        if ($fieldDefs->getParam('allowCustomOptions')) {
             return true;
         }
 
@@ -131,6 +122,35 @@ class ArrayType
         }
 
         return true;
+    }
+
+    /**
+     * @return ?string[]
+     */
+    private function getOptionList(string $entityType, string $field): ?array
+    {
+        $fieldDefs = $this->defs
+            ->getEntity($entityType)
+            ->getField($field);
+
+        /** @var ?string */
+        $path = $fieldDefs->getParam('optionsPath');
+
+        /** @var string[]|null|false */
+        $optionList = $path ?
+            $this->metadata->get($path) :
+            $fieldDefs->getParam('options');
+
+        if ($optionList === null) {
+            return null;
+        }
+
+        // For bc.
+        if ($optionList === false) {
+            return null;
+        }
+
+        return $optionList;
     }
 
     public function rawCheckArray(stdClass $data, string $field): bool
@@ -159,5 +179,74 @@ class ArrayType
         }
 
         return false;
+    }
+
+    public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
+    {
+        $maxLength = $validationValue ?? self::DEFAULT_MAX_LENGTH;
+
+        /** @var string[] */
+        $value = $entity->get($field) ?? [];
+
+        foreach ($value as $item) {
+            if (mb_strlen($item) > $maxLength) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function checkPattern(Entity $entity, string $field, ?string $validationValue): bool
+    {
+        if (!$validationValue) {
+            return true;
+        }
+
+        $pattern = $validationValue;
+
+        if ($validationValue[0] === '$') {
+            $patternName = substr($validationValue, 1);
+
+            $pattern = $this->metadata->get(['app', 'regExpPatterns', $patternName, 'pattern']) ??
+                $pattern;
+        }
+
+        $preparedPattern = '/^' . $pattern . '$/';
+
+        /** @var string[] */
+        $value = $entity->get($field) ?? [];
+
+        foreach ($value as $item) {
+            if ($item === '') {
+                continue;
+            }
+
+            if (!preg_match($preparedPattern, $item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function checkNoEmptyString(Entity $entity, string $field, ?bool $validationValue): bool
+    {
+        if (!$validationValue) {
+            return true;
+        }
+
+        /** @var string[] */
+        $value = $entity->get($field) ?? [];
+
+        $optionList = $this->getOptionList($entity->getEntityType(), $field) ?? [];
+
+        foreach ($value as $item) {
+            if ($item === '' && !in_array($item, $optionList)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

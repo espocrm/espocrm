@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], function (Dep, Selectize) {
+define('views/fields/multi-enum', ['views/fields/array', 'helpers/reg-exp-pattern', 'lib!Selectize'],
+function (Dep, RegExpPattern, Selectize) {
 
     /**
      * A multi-enum field.
@@ -90,19 +91,19 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         loadRestoreOnBackspavePlugin: function () {
             Selectize.define('restore_on_backspace_espo', function (options) {
-                var self = this;
-
                 Selectize.restoreOnBackspacePluginLoaded = true;
 
-                options.text = options.text || function(option) {
+                options.text = options.text || function (option) {
                     return option[this.settings.labelField];
                 };
 
-                this.onKeyDown = (function() {
-                    var original = self.onKeyDown;
+                let self = this;
 
-                    return function(e) {
-                        var index, option;
+                this.onKeyDown = (function() {
+                    let original = self.onKeyDown;
+
+                    return function (e) {
+                        let index, option;
 
                         if (
                             e.keyCode === 8 &&
@@ -183,7 +184,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 this.$element.val(valueList.join(this.itemDelimiter));
 
-                (this.params.options || []).forEach((value) => {
+                (this.params.options || []).forEach(value => {
                     var originalValue = value;
 
                     if (value === '') {
@@ -202,7 +203,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     pluginList.push('restore_on_backspace_espo');
                 }
 
-                var selectizeOptions = {
+                let selectizeOptions = {
                     options: data,
                     delimiter: this.itemDelimiter,
                     labelField: 'label',
@@ -234,13 +235,25 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                     selectizeOptions.create = (input) => {
                         if (input.length > this.MAX_ITEM_LENGTH) {
-                            Espo.Ui.error(
-                                this.translate('arrayItemMaxLength', 'messages')
-                                .replace('{max}', this.MAX_ITEM_LENGTH.toString()),
-                                true
-                            );
+                            let message = this.translate('arrayItemMaxLength', 'messages')
+                                .replace('{max}', this.MAX_ITEM_LENGTH.toString())
+
+                            this.showValidationMessage(message, '.selectize-control')
 
                             return null;
+                        }
+
+                        if (this.params.pattern) {
+                            /** @type module:helpers/reg-exp-pattern.Class */
+                            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+
+                            let result = helper.validate(this.params.pattern, input, this.name, this.entityType);
+
+                            if (result) {
+                                this.showValidationMessage(result.message, '.selectize-control')
+
+                                return null;
+                            }
                         }
 
                         return {
@@ -270,13 +283,13 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         },
 
         fetch: function () {
-            var list = this.$element.val().split(this.itemDelimiter);
+            let list = this.$element.val().split(this.itemDelimiter);
 
             if (list.length === 1 && list[0] === '') {
                 list = [];
             }
 
-            for (var i in list) {
+            for (let i in list) {
                 if (list[i] === '__emptystring__') {
                     list[i] = '';
                 }
@@ -289,7 +302,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                 });
             }
 
-            var data = {};
+            let data = {};
 
             data[this.name] = list;
 
@@ -298,10 +311,10 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         validateRequired: function () {
             if (this.isRequired()) {
-                var value = this.model.get(this.name);
+                let value = this.model.get(this.name);
 
                 if (!value || value.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, '.selectize-control');
@@ -313,10 +326,10 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
         validateMaxCount: function () {
             if (this.params.maxCount) {
-                var itemList = this.model.get(this.name) || [];
+                let itemList = this.model.get(this.name) || [];
 
                 if (itemList.length > this.params.maxCount) {
-                    var msg =
+                    let msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());

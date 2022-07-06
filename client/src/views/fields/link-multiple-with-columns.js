@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple'], function (Dep) {
+define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple', 'helpers/reg-exp-pattern'],
+function (Dep, RegExpPattern) {
 
     /**
      * A link-multiple field with relation column(s).
@@ -632,29 +633,16 @@ define('views/fields/link-multiple-with-columns', ['views/fields/link-multiple']
             let field = this.columnsDefs[column].field;
             let scope = this.columnsDefs[column].scope;
 
-            let messageKey = 'fieldNotMatchingPattern';
+            /** @type module:helpers/reg-exp-pattern.Class */
+            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
 
-            if (pattern[0] === '$') {
-                let patternName = pattern.slice(1);
-                let foundPattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
+            let result = helper.validate(pattern, value, field, scope);
 
-                if (foundPattern) {
-                    messageKey += '$' + patternName;
-                    pattern = foundPattern;
-                }
-            }
-
-            let regExp = new RegExp('^' + pattern + '$');
-
-            if (regExp.test(value)) {
+            if (!result) {
                 return false;
             }
 
-            let msg = this.translate(messageKey, 'messages')
-                .replace('{field}', this.translate(field, 'fields', scope))
-                .replace('{pattern}', pattern);
-
-            this.showValidationMessage(msg, '[data-column="' + column + '"][data-id="' + id + '"]');
+            this.showValidationMessage(result.message, '[data-column="' + column + '"][data-id="' + id + '"]');
 
             return true;
         },

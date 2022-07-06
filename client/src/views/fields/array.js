@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'lib!underscore'],
-function (Dep, Selectize, _) {
+define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'helpers/reg-exp-pattern', 'lib!underscore'],
+function (Dep, Selectize, RegExpPattern, _) {
 
     /**
      * An array field.
@@ -314,32 +314,18 @@ function (Dep, Selectize, _) {
                     this.$addButton = this.$el.find('button[data-action="addItem"]');
 
                     this.$addButton.on('click', () => {
-                        let value = this.$select.val().toString();
+                        let value = $select.val().toString();
 
-                        this.addValue(value);
-
-                        $select.val('');
-
-                        this.controlAddItemButton();
+                        this.addValueFromUi(value);
                     });
 
-                    $select.on('input', () => {
-                        this.controlAddItemButton();
-                    });
+                    $select.on('input', () => this.controlAddItemButton());
 
                     $select.on('keypress', (e) => {
                         if (e.keyCode === 13) {
                             let value = $select.val().toString();
 
-                            if (this.noEmptyString) {
-                                if (value === '') {
-                                    return;
-                                }
-                            }
-
-                            this.addValue(value);
-                            $select.val('');
-                            this.controlAddItemButton();
+                            this.addValueFromUi(value);
                         }
                     });
 
@@ -357,6 +343,31 @@ function (Dep, Selectize, _) {
             if (this.isSearchMode()) {
                 this.renderSearch();
             }
+        },
+
+        addValueFromUi: function (value) {
+            if (this.noEmptyString && value === '') {
+                return;
+            }
+
+            if (this.params.pattern) {
+                /** @type module:helpers/reg-exp-pattern.Class */
+                let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+
+                let result = helper.validate(this.params.pattern, value, this.name, this.entityType);
+
+                if (result) {
+                    setTimeout(() => this.showValidationMessage(result.message, 'input.select'), 10);
+
+                    return;
+                }
+            }
+
+            this.addValue(value);
+
+            this.$select.val('');
+
+            this.controlAddItemButton();
         },
 
         renderSearch: function () {

@@ -24,7 +24,7 @@
         {
             "name": "noEmptyString",
             "type": "bool",
-            "default": false
+            "default": true
         },
         {
             "name": "displayAsList",
@@ -36,6 +36,12 @@
             "type": "int",
             "min": 1,
             "tooltip": true
+        },
+        {
+            "name": "pattern",
+            "type": "varchar",
+            "tooltip": true,
+            "view": "views/admin/field-manager/fields/pattern"
         },
         {
             "name": "audited",
@@ -56,12 +62,16 @@
         "arrayOfString",
         "valid",
         "required",
-        "maxCount"
+        "maxCount",
+        "maxLength",
+        "pattern",
+        "noEmptyString"
     ],
     "mandatoryValidationList": [
         "array",
         "arrayOfString",
-        "valid"
+        "valid",
+        "maxLength"
     ],
     "filter": true,
     "notCreatable": false,

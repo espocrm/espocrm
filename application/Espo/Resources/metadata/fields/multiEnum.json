@@ -45,6 +45,12 @@
             "tooltip": true
         },
         {
+            "name": "pattern",
+            "type": "varchar",
+            "tooltip": true,
+            "view": "views/admin/field-manager/fields/pattern"
+        },
+        {
             "name": "audited",
             "type": "bool"
         },
@@ -63,12 +69,17 @@
         "arrayOfString",
         "valid",
         "required",
-        "maxCount"
+        "maxCount",
+        "maxLength",
+        "pattern",
+        "noEmptyString"
     ],
     "mandatoryValidationList": [
         "array",
         "arrayOfString",
-        "valid"
+        "valid",
+        "maxLength",
+        "noEmptyString"
     ],
     "filter": true,
     "notCreatable": false,
