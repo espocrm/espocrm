@@ -37,7 +37,7 @@
                         {{#if showForgotPassword}}
                         <a
                             href="javascript:"
-                            class="btn btn-link pull-right"
+                            class="btn btn-link btn-text btn-text-hoverable btn-sm pull-right margin-top-sm"
                             data-action="passwordChangeRequest"
                             tabindex="4"
                         >{{translate 'Forgot Password?' scope='User'}}</a>{{/if}}
