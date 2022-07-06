@@ -294,7 +294,7 @@ function (Dep, Selectize, RegExpPattern, _) {
                 return;
             }
 
-            let value = $select.val().toString();
+            let value = $select.val().toString().trim();
 
             if (!value && this.params.noEmptyString) {
                 this.$addButton.addClass('disabled').attr('disabled', 'disabled');
@@ -345,7 +345,12 @@ function (Dep, Selectize, RegExpPattern, _) {
             }
         },
 
+        /**
+         * @param {string} value
+         */
         addValueFromUi: function (value) {
+            value = value.trim();
+
             if (this.noEmptyString && value === '') {
                 return;
             }
