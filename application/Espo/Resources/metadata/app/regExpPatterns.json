@@ -3,7 +3,7 @@
         "pattern": "[^<>=]+"
     },
     "noSpecialCharacters": {
-        "pattern": "[^`~!@#$%^&*()_+={}\\[\\]|\\\\:;“’<,>.?๐฿]+"
+        "pattern": "[^`~!@#$%^&*()_+={}\\[\\]|\\\\:;\"'<,>.?]+"
     },
     "latinLetters": {
         "pattern": "[A-Za-z]+"
