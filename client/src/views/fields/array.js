@@ -55,6 +55,8 @@ function (Dep, Selectize, _) {
 
         validations: ['required', 'maxCount'],
 
+        MAX_ITEM_LENGTH: 100,
+
         /**
          * An add-item model view.
          *
@@ -98,7 +100,7 @@ function (Dep, Selectize, _) {
                 itemHtmlList: itemHtmlList,
                 isEmpty: (this.selected || []).length === 0,
                 valueIsSet: this.model.has(this.name),
-                maxItemLength: this.maxItemLength,
+                maxItemLength: this.maxItemLength || this.MAX_ITEM_LENGTH,
                 allowCustomOptions: this.allowCustomOptions,
             }, Dep.prototype.data.call(this));
         },
