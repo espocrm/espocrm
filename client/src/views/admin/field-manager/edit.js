@@ -277,6 +277,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
+                    if (fieldManagerParamList) {
+                        this.paramList = this.paramList
+                            .filter(item => fieldManagerParamList.indexOf(item.name) !== -1);
+                    }
+
                     if (this.hasAnyGlobalRestriction) {
                         this.paramList.push({
                             name: 'globalRestrictions',
@@ -286,11 +291,6 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             translation: 'FieldManager.options.globalRestrictions',
                             options: this.globalRestrictionTypeList,
                         });
-                    }
-
-                    if (fieldManagerParamList) {
-                        this.paramList = this.paramList
-                            .filter(item => fieldManagerParamList.indexOf(item.name) !== -1);
                     }
 
                     this.paramList.forEach(o => {

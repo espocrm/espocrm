@@ -5,7 +5,12 @@
             "maxLength": 50,
             "required": true,
             "view": "views/user/fields/user-name",
-            "tooltip": true
+            "tooltip": true,
+            "fieldManagerParamList": [
+                "maxLength",
+                "tooltipText",
+                "inlineEditDisabled"
+            ]
         },
         "name": {
             "type": "personName",
@@ -22,20 +27,27 @@
             "index": true,
             "inlineEditDisabled": true,
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "password": {
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true
+            "disabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "passwordConfirm": {
             "type": "password",
             "maxLength": 150,
             "internal": true,
             "disabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "fieldManagerParamList": []
         },
         "authMethod": {
             "type": "enum",
@@ -44,7 +56,10 @@
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "apiKey": {
             "type": "varchar",
@@ -53,7 +68,10 @@
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "secretKey": {
             "type": "varchar",
@@ -63,7 +81,10 @@
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "salutationName": {
             "type": "enum",
@@ -84,13 +105,15 @@
             "type": "bool",
             "layoutDetailDisabled": true,
             "tooltip": true,
-            "default": true
+            "default": true,
+            "customizationAuditedDisabled": true
         },
         "title": {
             "type": "varchar",
             "maxLength": 100,
             "trim": true,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "customizationAuditedDisabled": true
         },
         "position": {
             "type": "varchar",
@@ -152,7 +175,10 @@
             "exportDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         },
         "emailAddress": {
             "type": "email",
@@ -167,27 +193,32 @@
         "token": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "authTokenId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "authLogRecordId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "ipAddress": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "defaultTeam": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "tooltip": true
+            "tooltip": true,
+            "customizationAuditedDisabled": true
         },
         "acceptanceStatus": {
             "type": "varchar",
@@ -220,7 +251,8 @@
         "teamRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "fieldManagerParamList": []
         },
         "teams": {
             "type": "linkMultiple",
@@ -252,12 +284,20 @@
         "contact": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "view": "views/user/fields/contact"
+            "view": "views/user/fields/contact",
+            "fieldManagerParamList": [
+                "inlineEditDisabled",
+                "tooltipText"
+            ]
         },
         "accounts": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "fieldManagerParamList": [
+                "inlineEditDisabled",
+                "tooltipText"
+            ]
         },
         "account": {
             "type": "link",
@@ -278,7 +318,8 @@
             "type": "image",
             "view": "views/user/fields/avatar",
             "layoutDetailDisabled": true,
-            "previewSize": "small"
+            "previewSize": "small",
+            "customizationAuditedDisabled": true
         },
         "sendAccessInfo": {
             "type": "bool",
@@ -305,7 +346,8 @@
         "dashboardTemplate": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutListDisabled": true
+            "layoutListDisabled": true,
+            "customizationAuditedDisabled": true
         },
         "auth2FA": {
             "type": "foreign",
@@ -316,7 +358,8 @@
         },
         "userData": {
             "type": "linkOne",
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "lastAccess": {
             "type": "datetime",
