@@ -317,15 +317,7 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
         fetch: function () {
             let data = {};
 
-            let value = this.$element.val();
-
-            let trim = this.params.trim !== false;
-
-            if (trim) {
-                if (typeof value.trim === 'function') {
-                    value = value.trim();
-                }
-            }
+            let value = this.$element.val().trim();
 
             data[this.name] = value || null;
 

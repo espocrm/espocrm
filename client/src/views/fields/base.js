@@ -1405,7 +1405,7 @@ define('views/fields/base', ['view'], function (Dep) {
         fetch: function () {
             let data = {};
 
-            data[this.name] = this.$element.val();
+            data[this.name] = this.$element.val().trim();
 
             return data;
         },

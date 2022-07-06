@@ -38,11 +38,6 @@
             "type": "bool"
         },
         {
-            "name": "trim",
-            "type": "bool",
-            "default": true
-        },
-        {
             "name": "noSpellCheck",
             "type": "bool",
             "default": false,
