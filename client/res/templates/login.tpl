@@ -33,7 +33,7 @@
                             autocomplete="current-password"
                         >
                     </div>
-                    <div>
+                    <div class="margin-top-2x">
                         {{#if showForgotPassword}}
                         <a
                             href="javascript:"
