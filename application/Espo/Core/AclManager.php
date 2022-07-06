@@ -596,7 +596,7 @@ class AclManager
      */
     public function checkUserPermission(User $user, $target, string $permissionType = 'user'): bool
     {
-        $permission = $this->get($user, $permissionType);
+        $permission = $this->getPermissionLevel($user, $permissionType);
 
         if (is_object($target)) {
             $userId = $target->getId();
@@ -622,7 +622,7 @@ class AclManager
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             /** @var \Espo\Repositories\User $userRepository */
-            $userRepository = $this->entityManager->getRepository('User');
+            $userRepository = $this->entityManager->getRepository(User::ENTITY_TYPE);
 
             if (!$userRepository->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                 return false;
