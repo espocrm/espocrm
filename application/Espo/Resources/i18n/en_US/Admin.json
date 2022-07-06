@@ -214,7 +214,8 @@
         "displayRawText": "Display raw text (no markdown)",
         "conversionDisabled": "Disable Conversion",
         "decimalPlaces": "Decimal Places",
-        "pattern": "Pattern"
+        "pattern": "Pattern",
+        "globalRestrictions": "Global Restrictions"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

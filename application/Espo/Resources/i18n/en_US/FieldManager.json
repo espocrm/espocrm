@@ -70,6 +70,13 @@
             "UPCE": "UPC (E)",
             "pharmacode": "Pharmacode",
             "QRcode": "QR code"
+        },
+        "globalRestrictions": {
+            "forbidden": "Forbidden",
+            "internal": "Internal",
+            "onlyAdmin": "Admin-only",
+            "readOnly": "Read-only",
+            "nonAdminReadOnly": "Non-admin read-only"
         }
     },
     "tooltips": {
