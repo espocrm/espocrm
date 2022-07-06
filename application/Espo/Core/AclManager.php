@@ -142,7 +142,7 @@ class AclManager
     /**
      * @var GlobalRestriction
      */
-    protected $globalRestricton;
+    protected $globalRestriction;
 
     /**
      * @var OwnerUserFieldProvider
@@ -159,7 +159,7 @@ class AclManager
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $tableFactory,
         MapFactory $mapFactory,
-        GlobalRestriction $globalRestricton,
+        GlobalRestriction $globalRestriction,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager
     ) {
@@ -167,7 +167,7 @@ class AclManager
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
         $this->tableFactory = $tableFactory;
         $this->mapFactory = $mapFactory;
-        $this->globalRestricton = $globalRestricton;
+        $this->globalRestriction = $globalRestriction;
         $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->entityManager = $entityManager;
     }
@@ -671,14 +671,14 @@ class AclManager
             foreach ($typeList as $type) {
                 $list = array_merge(
                     $list,
-                    $this->globalRestricton->getScopeRestrictedFieldList($scope, $type)
+                    $this->globalRestriction->getScopeRestrictedFieldList($scope, $type)
                 );
             }
 
             return array_unique($list);
         }
 
-        return $this->globalRestricton->getScopeRestrictedFieldList($scope, $type);
+        return $this->globalRestriction->getScopeRestrictedFieldList($scope, $type);
     }
 
     /**
@@ -697,14 +697,14 @@ class AclManager
             foreach ($typeList as $type) {
                 $list = array_merge(
                     $list,
-                    $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type)
+                    $this->globalRestriction->getScopeRestrictedAttributeList($scope, $type)
                 );
             }
 
             return array_unique($list);
         }
 
-        return $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type);
+        return $this->globalRestriction->getScopeRestrictedAttributeList($scope, $type);
     }
 
     /**
@@ -723,14 +723,14 @@ class AclManager
             foreach ($typeList as $type) {
                 $list = array_merge(
                     $list,
-                    $this->globalRestricton->getScopeRestrictedLinkList($scope, $type)
+                    $this->globalRestriction->getScopeRestrictedLinkList($scope, $type)
                 );
             }
 
             return array_unique($list);
         }
 
-        return $this->globalRestricton->getScopeRestrictedLinkList($scope, $type);
+        return $this->globalRestriction->getScopeRestrictedLinkList($scope, $type);
     }
 
     /**

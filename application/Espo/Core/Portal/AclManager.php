@@ -78,7 +78,7 @@ class AclManager extends InternalAclManager
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $portalTableFactory,
         MapFactory $portalMapFactory,
-        GlobalRestriction $globalRestricton,
+        GlobalRestriction $globalRestriction,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager,
         InternalAclManager $internalAclManager
@@ -87,7 +87,7 @@ class AclManager extends InternalAclManager
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
         $this->portalTableFactory = $portalTableFactory;
         $this->portalMapFactory = $portalMapFactory;
-        $this->globalRestricton = $globalRestricton;
+        $this->globalRestriction = $globalRestriction;
         $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->entityManager = $entityManager;
         $this->internalAclManager = $internalAclManager;
