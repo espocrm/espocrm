@@ -4,7 +4,8 @@
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "disabled": true,
+            "fieldManagerParamList": []
         }
     },
     "links": {

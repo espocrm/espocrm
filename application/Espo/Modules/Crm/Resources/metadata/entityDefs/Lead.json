@@ -158,7 +158,8 @@
             "type": "varchar",
             "notStorable": true,
             "exportDisabled": true,
-            "disabled": true
+            "disabled": true,
+            "fieldManagerParamList": []
         },
         "acceptanceStatusMeetings": {
             "type": "enum",
@@ -169,7 +170,8 @@
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "meetings",
-            "column": "status"
+            "column": "status",
+            "fieldManagerParamList": []
         },
         "acceptanceStatusCalls": {
             "type": "enum",
@@ -180,7 +182,8 @@
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "calls",
-            "column": "status"
+            "column": "status",
+            "fieldManagerParamList": []
         },
         "teams": {
             "type": "linkMultiple",
