@@ -48,21 +48,18 @@ use Laminas\{
     Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException,
 };
 
-use Espo\Entities\{
-    Email,
-    InboundEmail,
-};
+use Espo\Entities\Email;
+use Espo\Entities\InboundEmail;
 
-use Espo\{
-    Services\InboundEmail as InboundEmailService,
-};
+use Espo\Services\InboundEmail as InboundEmailService;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Config,
-    ORM\EntityManager,
-    Utils\Log,
-};
+use Espo\ORM\EntityManager;
+
+use Espo\Core\Exceptions\Error;
+
+use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
 use Exception;
 use InvalidArgumentException;
@@ -705,8 +702,8 @@ class Sender
 
             $this->transport->send($message);
 
-            $email->set('status', 'Sent');
-            $email->set('dateSent', date("Y-m-d H:i:s"));
+            $email->set('status', Email::STATUS_SENT);
+            $email->set('dateSent', DateTime::createNow()->getString());
         }
         catch (Exception $e) {
             $this->resetParams();
