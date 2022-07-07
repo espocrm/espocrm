@@ -263,7 +263,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
-                    if (this.hasInlineEditDisabled) {
+                    if (
+                        this.hasInlineEditDisabled &&
+                        !this.globalRestriction.readOnly
+                    ) {
                         this.paramList.push({
                             name: 'inlineEditDisabled',
                             type: 'bool',
@@ -283,6 +286,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         this.paramList = this.paramList
                             .filter(item => fieldManagerParamList.indexOf(item.name) !== -1);
                     }
+
+                    this.paramList = this.paramList
+                        .filter(item => {
+                            return !(this.globalRestriction.readOnly && item.name === 'required');
+                        });
 
                     let customizationDisabled = this.getMetadata()
                         .get(['entityDefs', this.scope, 'fields', this.field, 'customizationDisabled']);

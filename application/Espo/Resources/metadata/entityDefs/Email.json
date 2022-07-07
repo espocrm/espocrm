@@ -18,46 +18,54 @@
             "readOnly": true,
             "notStorable": true,
             "textFilterDisabled": true,
-            "layoutFiltersDisabled": true
+            "layoutFiltersDisabled": true,
+            "customizationDisabled": true
         },
         "fromAddress": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
             "textFilterDisabled": true,
-            "layoutFiltersDisabled": true
+            "layoutFiltersDisabled": true,
+            "customizationDisabled": true
         },
         "fromString": {
-            "type": "varchar"
+            "type": "varchar",
+            "customizationDisabled": true
         },
         "replyToString": {
-            "type": "varchar"
+            "type": "varchar",
+            "customizationDisabled": true
         },
         "replyToName": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
             "textFilterDisabled": true,
-            "layoutFiltersDisabled": true
+            "layoutFiltersDisabled": true,
+            "customizationDisabled": true
         },
         "replyToAddress": {
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
             "textFilterDisabled": true,
-            "layoutFiltersDisabled": true
+            "layoutFiltersDisabled": true,
+            "customizationDisabled": true
         },
         "addressNameMap": {
             "type": "jsonObject",
             "disabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "from": {
             "type": "varchar",
             "notStorable": true,
             "required": true,
             "view": "views/email/fields/from-address-varchar",
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "to": {
             "type": "varchar",
@@ -65,37 +73,43 @@
             "required": true,
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
-            "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses"
+            "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses",
+            "customizationDisabled": true
         },
         "cc": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
+            "customizationDisabled": true,
             "textFilterDisabled": true
         },
         "bcc": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
+            "customizationDisabled": true,
             "textFilterDisabled": true
         },
         "replyTo": {
             "type": "varchar",
             "notStorable": true,
             "view": "views/email/fields/email-address-varchar",
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "personStringData": {
             "type": "varchar",
             "notStorable": true,
             "disabled": true,
-            "view": "views/email/fields/person-string-data"
+            "view": "views/email/fields/person-string-data",
+            "customizationDisabled": true
         },
         "isRead": {
             "type": "bool",
             "notStorable": true,
             "default": true,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "isNotRead": {
             "type": "bool",
@@ -103,11 +117,13 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "isReplied": {
             "type": "bool",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "isNotReplied": {
             "type": "bool",
@@ -115,99 +131,121 @@
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "isImportant": {
             "type": "bool",
             "notStorable": true,
-            "default": false
+            "default": false,
+            "customizationDisabled": true
         },
         "inTrash": {
             "type": "bool",
             "notStorable": true,
-            "default": false
+            "default": false,
+            "customizationDisabled": true
         },
         "folderId": {
             "type": "varchar",
             "notStorable": true,
             "default": null,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "isUsers": {
             "type": "bool",
             "notStorable": true,
-            "default": false
+            "default": false,
+            "customizationDisabled": true
         },
         "folder": {
             "type": "link",
             "notStorable": true,
             "readOnly": true,
-            "entity": "EmailFolder"
+            "entity": "EmailFolder",
+            "customizationDisabled": true
         },
         "nameHash": {
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "typeHash": {
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "idHash": {
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "messageId": {
             "type": "varchar",
             "maxLength": 255,
             "readOnly": true,
             "index": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "messageIdInternal": {
             "type": "varchar",
             "maxLength": 300,
             "readOnly": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "emailAddress": {
             "type": "base",
             "notStorable": true,
-            "view": "views/email/fields/email-address"
+            "view": "views/email/fields/email-address",
+            "customizationDisabled": true
         },
         "fromEmailAddress": {
             "type": "link",
             "view": "views/email/fields/from-email-address",
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "customizationDisabled": true
         },
         "toEmailAddresses": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "customizationDisabled": true
         },
         "ccEmailAddresses": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "customizationDisabled": true
         },
         "replyToEmailAddresses": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "customizationDisabled": true
         },
         "bodyPlain": {
             "type": "text",
             "seeMoreDisabled": true,
-            "clientReadOnly": true
+            "clientReadOnly": true,
+            "customizationDisabled": true
         },
         "body": {
             "type": "wysiwyg",
             "view": "views/email/fields/body",
             "attachmentField": "attachments",
-            "useIframe": true
+            "useIframe": true,
+            "customizationDisabled": true
         },
         "isHtml": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "fieldManagerParamList": [
+                "default",
+                "tooltipText"
+            ]
         },
         "status": {
             "type": "enum",
@@ -218,7 +256,8 @@
                 "Draft": "warning",
                 "Failed": "danger",
                 "Sending": "warning"
-            }
+            },
+            "customizationDisabled": true
         },
         "attachments": {
             "type": "attachmentMultiple",
@@ -226,40 +265,58 @@
         },
         "hasAttachment": {
             "type": "bool",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "parent": {
-            "type": "linkParent"
+            "type": "linkParent",
+            "fieldManagerParamList": [
+                "required",
+                "entityList",
+                "audited",
+                "tooltipText"
+            ]
         },
         "dateSent": {
-            "type": "datetime"
+            "type": "datetime",
+            "customizationDisabled": true
         },
         "deliveryDate": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user"
+            "view": "views/fields/user",
+            "customizationDisabled": true
         },
         "sentBy": {
             "type": "link",
             "readOnly": true,
-            "noLoad": true
+            "noLoad": true,
+            "customizationDisabled": true
         },
         "modifiedBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user"
+            "view": "views/fields/user",
+            "customizationDisabled": true
         },
         "assignedUser": {
             "type": "link",
@@ -270,29 +327,34 @@
             "type": "link",
             "noJoin": true,
             "readOnly": true,
-            "view": "views/email/fields/replied"
+            "view": "views/email/fields/replied",
+            "customizationDisabled": true
         },
         "replies": {
             "type": "linkMultiple",
             "readOnly": true,
             "orderBy": "dateSent",
-            "view": "views/email/fields/replies"
+            "view": "views/email/fields/replies",
+            "customizationDisabled": true
         },
         "isSystem": {
             "type": "bool",
             "default": false,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "isJustSent": {
             "type": "bool",
             "default": false,
             "disabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "customizationDisabled": true
         },
         "isBeingImported": {
             "type": "bool",
             "disabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "customizationDisabled": true
         },
         "teams": {
             "type": "linkMultiple",
@@ -308,27 +370,37 @@
             "columns": {
                 "inTrash": "inTrash",
                 "folderId": "folderId"
-            }
+            },
+            "customizationDisabled": true
         },
         "assignedUsers": {
             "type": "linkMultiple",
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "inboundEmails": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "noLoad": true
+            "noLoad": true,
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "default"
+            ]
         },
         "emailAccounts": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "noLoad": true
+            "noLoad": true,
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "default"
+            ]
         },
         "icsContents": {
             "type": "text",
@@ -336,34 +408,42 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "dbType": "text"
+            "dbType": "text",
+            "customizationDisabled": true
         },
         "icsEventData": {
             "type": "jsonObject",
             "readOnly": true,
             "directAccessDisabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "customizationDisabled": true
         },
         "icsEventUid": {
             "type": "varchar",
             "maxLength": 255,
-            "index": true
+            "index": true,
+            "customizationDisabled": true
         },
         "icsEventDateStart": {
             "type": "datetimeOptional",
             "readOnly": true,
-            "notStorable": true
+            "notStorable": true,
+            "customizationDisabled": true
         },
         "createEvent": {
             "type": "base",
             "disabled": true,
             "notStorable": true,
-            "view": "views/email/fields/create-event"
+            "view": "views/email/fields/create-event",
+            "customizationDisabled": true
         },
         "createdEvent": {
             "type": "linkParent",
             "readOnly": true,
-            "view": "views/email/fields/created-event"
+            "view": "views/email/fields/created-event",
+            "fieldManagerParamList": [
+                "tooltipText"
+            ]
         }
     },
     "links": {

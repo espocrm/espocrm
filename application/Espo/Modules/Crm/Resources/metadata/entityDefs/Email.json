@@ -2,7 +2,8 @@
     "fields": {
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationDisabled": true
         },
         "parent": {
             "entityList": ["Account", "Lead", "Contact", "Opportunity", "Case"]
@@ -13,7 +14,8 @@
             "columns": {
                 "status": "status"
             },
-            "view": "views/fields/link-multiple-with-status"
+            "view": "views/fields/link-multiple-with-status",
+            "customizationDefaultDisabled": true
         }
     },
     "links": {
