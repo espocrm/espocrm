@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/index', 'view', function (Dep) {
+define('views/admin/layouts/index', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -69,28 +69,28 @@ define('views/admin/layouts/index', 'view', function (Dep) {
             'click #layouts-menu a.layout-link': function (e) {
                 e.preventDefault();
 
-                var scope = $(e.currentTarget).data('scope');
-                var type = $(e.currentTarget).data('type');
+                let scope = $(e.currentTarget).data('scope');
+                let type = $(e.currentTarget).data('type');
+
                 if (this.getView('content')) {
-                    if (this.scope == scope && this.type == type) {
+                    if (this.scope === scope && this.type === type) {
                         return;
                     }
                 }
 
-                this.getRouter().checkConfirmLeaveOut(function () {
+                this.getRouter().checkConfirmLeaveOut(() => {
                     $("#layouts-menu a.layout-link").removeClass('disabled');
                     $(e.target).addClass('disabled');
 
                     this.openLayout(scope, type);
-                }.bind(this));
+                });
             },
             'click a.accordion-toggle': function (e) {
                 e.preventDefault();
 
-                var $target = $(e.currentTarget);
-                var scope = $target.data('scope');
-
-                var $collapse = $('.collapse[data-scope="'+scope+'"]');
+                let $target = $(e.currentTarget);
+                let scope = $target.data('scope');
+                let $collapse = $('.collapse[data-scope="'+scope+'"]');
 
                 if ($collapse.hasClass('in')) {
                     $collapse.collapse('hide');
@@ -101,15 +101,19 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         },
 
         getLayoutScopeDataList: function () {
-            var dataList = [];
-            this.scopeList.forEach(function (scope) {
-                var item = {};
+            let dataList = [];
+
+            this.scopeList.forEach(scope =>{
+                let item = {};
+
+                let typeList = Espo.Utils.clone(this.typeList);
+
                 item.scope = scope;
-
-                var typeList = Espo.Utils.clone(this.typeList);
-
                 item.url = this.baseUrl + '/scope=' + scope;
-                if (this.em) item.url += '&em=true';
+
+                if (this.em) {
+                    item.url += '&em=true';
+                }
 
                 if (
                     this.getMetadata().get(['clientDefs', scope, 'bottomPanels', 'edit'])
@@ -118,8 +122,7 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                 }
 
                 if (
-                    !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled'])
-                    &&
+                    !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelDisabled']) &&
                     !this.getMetadata().get(['clientDefs', scope, 'defaultSidePanelFieldList'])
                 ) {
                     typeList.push('defaultSidePanel');
@@ -129,31 +132,37 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                     typeList.push('kanban');
                 }
 
-                var additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
-                for (var aItem in additionalLayouts) {
+                let additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
+
+                for (let aItem in additionalLayouts) {
                     typeList.push(aItem);
                 }
 
-                var typeList = typeList.filter(function (name) {
-                    return !this.getMetadata().get(['clientDefs', scope, 'layout' + Espo.Utils.upperCaseFirst(name) + 'Disabled'])
-                }, this);
+                typeList = typeList.filter(name => {
+                    return !this.getMetadata()
+                        .get(['clientDefs', scope, 'layout' + Espo.Utils.upperCaseFirst(name) + 'Disabled'])
+                });
 
-                var typeDataList = [];
-                typeList.forEach(function (type) {
-                    var url = this.baseUrl + '/scope=' + scope + '&type=' + type;
-                    if (this.em) url += '&em=true';
+                let typeDataList = [];
+
+                typeList.forEach(type => {
+                    let url = this.baseUrl + '/scope=' + scope + '&type=' + type;
+
+                    if (this.em) {
+                        url += '&em=true';
+                    }
+
                     typeDataList.push({
                         type: type,
                         url: url,
                     });
-                }, this);
+                });
 
                 item.typeList = typeList;
-
                 item.typeDataList = typeDataList;
 
                 dataList.push(item);
-            }, this);
+            });
 
             return dataList;
         },
@@ -166,25 +175,30 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             this.scopeList = [];
 
-            var scopeFullList = this.getMetadata().getScopeList().sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+            let scopeFullList = this.getMetadata().getScopeList().sort((v1, v2) => {
+                return this.translate(v1, 'scopeNamesPlural')
+                    .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+            });
 
-            scopeFullList.forEach(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.entity') &&
-                    this.getMetadata().get('scopes.' + scope + '.layouts')) {
+            scopeFullList.forEach(scope => {
+                if (
+                    this.getMetadata().get('scopes.' + scope + '.entity') &&
+                    this.getMetadata().get('scopes.' + scope + '.layouts')
+                ) {
                     this.scopeList.push(scope);
                 }
-            }, this);
+            });
 
             if (this.em && this.scope) {
                 this.scopeList = [this.scope];
             }
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 $("#layouts-menu a[data-scope='" + this.options.scope + "'][data-type='" + this.options.type + "']")
                     .addClass('disabled');
+
                 this.renderLayoutHeader();
+
                 if (!this.options.scope || !this.options.type) {
                     this.renderDefaultPage();
                 }
@@ -192,7 +206,6 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                     this.openLayout(this.options.scope, this.options.type);
                 }
             });
-
         },
 
         openLayout: function (scope, type) {
@@ -203,23 +216,24 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
-            var typeReal = this.getMetadata().get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
+            let typeReal = this.getMetadata()
+                .get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
             this.createView('content', 'views/admin/layouts/' + Espo.Utils.camelCaseToHyphen(typeReal), {
                 el: '#layout-content',
                 scope: scope,
                 type: type,
                 setId: this.setId,
-            }, function (view) {
+            }, (view) => {
                 this.renderLayoutHeader();
                 view.render();
                 this.notify(false);
                 $(window).scrollTop(0);
-            }.bind(this));
+            });
         },
 
         navigate: function (scope, type) {
-            var url = '#Admin/layouts/scope=' + scope + '&type=' + type;
+            let url = '#Admin/layouts/scope=' + scope + '&type=' + type;
 
             if (this.em) {
                 url += '&em=true';
@@ -234,12 +248,15 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         },
 
         renderLayoutHeader: function () {
+            let $header = $("#layout-header");
+
             if (!this.scope) {
-                $("#layout-header").html('');
+                $header.html('');
+
                 return;
             }
 
-            var html = '';
+            let html = '';
 
             if (!this.em) {
                 html += this.getLanguage().translate(this.scope, 'scopeNamesPlural') +
@@ -248,7 +265,7 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             html += this.getLanguage().translate(this.type, 'layouts', 'Admin');
 
-            $("#layout-header").show().html(html);
+            $header.show().html(html);
         },
 
         updatePageTitle: function () {
@@ -256,12 +273,13 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         },
 
         getHeaderHtml: function () {
-            var separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+            let separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
-            var html = "<a href=\"#Admin\">"+this.translate('Administration')+"</a> " + separatorHtml + ' ';
+            let html = "<a href=\"#Admin\">" + this.translate('Administration') + "</a> " + separatorHtml + ' ';
 
             if (this.em) {
-                html += "<a href=\"#Admin/entityManager\">" + this.translate('Entity Manager', 'labels', 'Admin') + "</a>";
+                html += "<a href=\"#Admin/entityManager\">" +
+                    this.translate('Entity Manager', 'labels', 'Admin') + "</a>";
 
                 if (this.scope) {
                     html += ' ' + separatorHtml + ' ' +
@@ -275,6 +293,5 @@ define('views/admin/layouts/index', 'view', function (Dep) {
 
             return html;
         },
-
     });
 });
