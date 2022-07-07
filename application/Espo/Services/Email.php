@@ -33,20 +33,28 @@ use Laminas\Mail\Message;
 
 use Espo\Services\EmailAccount as EmailAccountService;
 use Espo\Services\InboundEmail as InboundEmailService;
-use Espo\Entities\Preferences;
-use Espo\Entities\Attachment;
-use Espo\Entities\UserData;
+
 use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Core\Utils\Json;
 
 use Espo\{
+    Modules\Crm\Entities\CaseObj,
     ORM\Entity,
     Entities\User,
     Entities\Email as EmailEntity,
 };
 
+use Espo\Entities\EmailFolder;
+use Espo\Entities\InboundEmail;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\Notification;
+use Espo\Entities\Preferences;
+use Espo\Entities\Attachment;
+use Espo\Entities\UserData;
+
 use Espo\Core\{
+    Acl\Table,
     Exceptions\Error,
     Exceptions\ErrorSilent,
     Exceptions\Forbidden,
@@ -56,8 +64,7 @@ use Espo\Core\{
     Select\Where\Item as WhereItem,
     Mail\Sender,
     Mail\SmtpParams,
-    Record\CreateParams,
-};
+    Record\CreateParams};
 
 use Exception;
 use Throwable;
@@ -111,22 +118,26 @@ class Email extends Record implements
         'hasAttachment',
     ];
 
+    private const FOLDER_INBOX = 'inbox';
+    private const FOLDER_DRAFTS = 'drafts';
+
     public function getUserSmtpParams(string $userId): ?SmtpParams
     {
-        $user = $this->entityManager->getEntity('User', $userId);
+        /** @var ?User */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             return null;
         }
 
-        $fromAddress = $user->get('emailAddress');
+        $fromAddress = $user->getEmailAddress();
 
         if ($fromAddress) {
             $fromAddress = strtolower($fromAddress);
         }
 
-        /** @var Preferences|null $preferences */
-        $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
+        /** @var ?Preferences $preferences */
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $user->getId());
 
         if (!$preferences) {
             return null;
@@ -134,10 +145,8 @@ class Email extends Record implements
 
         $smtpParams = $preferences->getSmtpParams();
 
-        if ($smtpParams) {
-            if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-            }
+        if ($smtpParams && array_key_exists('password', $smtpParams)) {
+            $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
         }
 
         if (!$smtpParams && $fromAddress) {
@@ -145,7 +154,7 @@ class Email extends Record implements
 
             $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
 
-            if ($emailAccount && $emailAccount->get('useSmtp')) {
+            if ($emailAccount && $emailAccount->isAvailableForSending()) {
                 $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
             }
         }
@@ -154,7 +163,7 @@ class Email extends Record implements
             return null;
         }
 
-        $smtpParams['fromName'] = $user->get('name');
+        $smtpParams['fromName'] = $user->getName();
 
         if ($fromAddress) {
             $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
@@ -171,7 +180,6 @@ class Email extends Record implements
      */
     public function sendEntity(EmailEntity $entity, ?User $user = null): void
     {
-
         if (!$this->fieldValidationManager->check($entity, 'to', 'required')) {
             $entity->set('status', EmailEntity::STATUS_DRAFT);
 
@@ -186,7 +194,7 @@ class Email extends Record implements
 
         if ($user) {
             $emailAddressCollection = $this->entityManager
-                ->getRDBRepository('User')
+                ->getRDBRepository(User::ENTITY_TYPE)
                 ->getRelation($user, 'emailAddresses')
                 ->find();
 
@@ -208,19 +216,17 @@ class Email extends Record implements
         $smtpParams = null;
 
         if ($user && in_array($fromAddress, $userAddressList)) {
-            $primaryUserAddress = strtolower($user->get('emailAddress'));
+            $primaryUserAddress = strtolower($user->getEmailAddress() ?? '');
 
             if ($primaryUserAddress === $fromAddress) {
-                /** @var Preferences|null $preferences */
-                $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
+                /** @var ?Preferences $preferences */
+                $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $user->getId());
 
                 if ($preferences) {
                     $smtpParams = $preferences->getSmtpParams();
 
-                    if ($smtpParams) {
-                        if (array_key_exists('password', $smtpParams)) {
-                            $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
-                        }
+                    if ($smtpParams && array_key_exists('password', $smtpParams)) {
+                        $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
                     }
                 }
             }
@@ -230,22 +236,20 @@ class Email extends Record implements
             $emailAccount = $emailAccountService->findAccountForUser($user, $originalFromAddress);
 
             if (!$smtpParams) {
-                if ($emailAccount && $emailAccount->get('useSmtp')) {
+                if ($emailAccount && $emailAccount->isAvailableForSending()) {
                     $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
                 }
             }
 
             if ($smtpParams) {
-                $smtpParams['fromName'] = $user->get('name');
+                $smtpParams['fromName'] = $user->getName();
             }
         }
 
-        if ($user) {
-            if ($smtpParams) {
-                $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
+        if ($user && $smtpParams) {
+            $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
 
-                $emailSender->withSmtpParams($smtpParams);
-            }
+            $emailSender->withSmtpParams($smtpParams);
         }
 
         if (!$smtpParams) {
@@ -265,7 +269,10 @@ class Email extends Record implements
             }
         }
 
-        if (!$smtpParams && $fromAddress === strtolower($this->config->get('outboundEmailFromAddress'))) {
+        if (
+            !$smtpParams &&
+            $fromAddress === strtolower($this->config->get('outboundEmailFromAddress'))
+        ) {
             if (!$this->config->get('outboundEmailIsShared')) {
                 throw new Error("Email sending: Can not use system SMTP. System SMTP is not shared.");
             }
@@ -279,33 +286,37 @@ class Email extends Record implements
             throw new Error("Email sending: No SMTP params found for {$fromAddress}.");
         }
 
-        if (!$smtpParams) {
-            if ($user && in_array($fromAddress, $userAddressList)) {
-                $emailSender->withParams([
-                    'fromName' => $user->get('name')
-                ]);
-            }
+        if (
+            !$smtpParams &&
+            $user &&
+            in_array($fromAddress, $userAddressList)
+        ) {
+            $emailSender->withParams(['fromName' => $user->getName()]);
         }
 
         $params = [];
 
         $parent = null;
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
 
-        if ($entity->get('parentType') && $entity->get('parentId')) {
-            $parent = $this->entityManager
-                ->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        if ($parentType && $parentId) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
+        }
 
-            if ($parent) {
-                if ($entity->get('parentType') == 'Case') {
-                    if ($parent->get('inboundEmailId')) {
-                        $inboundEmail = $this->entityManager
-                            ->getEntity('InboundEmail', $parent->get('inboundEmailId'));
+        if (
+            $parent &&
+            $parent->getEntityType() == CaseObj::ENTITY_TYPE &&
+            $parent->get('inboundEmailId')
+        ) {
+            /** @var string */
+            $inboundEmailId = $parent->get('inboundEmailId');
 
-                        if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
-                            $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
-                        }
-                    }
-                }
+            /** @var ?InboundEmail */
+            $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
+
+            if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
+                $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
             }
         }
 
@@ -618,15 +629,16 @@ class Email extends Record implements
 
         $this->entityManager->getQueryExecutor()->execute($update);
 
-        $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('Notification')
+        $update = $this->entityManager->getQueryBuilder()
+            ->update()
+            ->in(Notification::ENTITY_TYPE)
             ->set(['read' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
-                'relatedType' => 'Email',
+                'relatedType' => EmailEntity::ENTITY_TYPE,
                 'read' => false,
-                'type' => 'EmailReceived',
+                'type' => Notification::TYPE_EMAIL_RECEIVED,
             ])
             ->build();
 
@@ -756,15 +768,15 @@ class Email extends Record implements
     public function markNotificationAsRead(string $id, string $userId): void
     {
         $update = $this->entityManager->getQueryBuilder()->update()
-            ->in('Notification')
+            ->in(Notification::ENTITY_TYPE)
             ->set(['read' => true])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,
-                'relatedType' => 'Email',
+                'relatedType' => EmailEntity::ENTITY_TYPE,
                 'relatedId' => $id,
                 'read' => false,
-                'type' => 'EmailReceived',
+                'type' => Notification::TYPE_EMAIL_RECEIVED,
             ])
             ->build();
 
@@ -775,7 +787,7 @@ class Email extends Record implements
     {
         $userId = $userId ?? $this->user->getId();
 
-        if ($folderId === 'inbox') {
+        if ($folderId === self::FOLDER_INBOX) {
             $folderId = null;
         }
 
@@ -854,7 +866,7 @@ class Email extends Record implements
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->checkEntity($email, 'read')) {
+        if (!$this->acl->checkEntity($email, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
@@ -863,19 +875,20 @@ class Email extends Record implements
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
-            /** @var Attachment|null $source */
-            $source = $this->entityManager->getEntity('Attachment', $attachmentId);
+            /** @var ?Attachment */
+            $source = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
 
             if ($source) {
-                $attachment = $this->entityManager->getNewEntity('Attachment');
+                /** @var Attachment */
+                $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
-                $attachment->set('role', 'Attachment');
-                $attachment->set('type', $source->get('type'));
-                $attachment->set('size', $source->get('size'));
+                $attachment->set('role', Attachment::ROLE_ATTACHMENT);
+                $attachment->set('type', $source->getType());
+                $attachment->set('size', $source->getSize());
                 $attachment->set('global', $source->get('global'));
-                $attachment->set('name', $source->get('name'));
+                $attachment->set('name', $source->getName());
                 $attachment->set('sourceId', $source->getSourceId());
-                $attachment->set('storage', $source->get('storage'));
+                $attachment->set('storage', $source->getStorage());
 
                 if ($field) {
                     $attachment->set('field', $field);
@@ -898,7 +911,7 @@ class Email extends Record implements
 
                     $ids[] = $attachment->getId();
 
-                    $names->{$attachment->getId()} = $attachment->get('name');
+                    $names->{$attachment->getId()} = $attachment->getName();
                 }
             }
         }
@@ -927,13 +940,16 @@ class Email extends Record implements
         $userId = $data['userId'] ?? null;
         $fromAddress = $data['fromAddress'] ?? null;
 
-        if ($userId) {
-            if ($userId !== $this->user->getId() && !$this->user->isAdmin()) {
-                throw new Forbidden();
-            }
+        if (
+            $userId &&
+            $userId !== $this->user->getId() &&
+            !$this->user->isAdmin()
+        ) {
+            throw new Forbidden();
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var EmailEntity */
+        $email = $this->entityManager->getNewEntity(EmailEntity::ENTITY_TYPE);
 
         $email->set([
             'subject' => 'EspoCRM: Test Email',
@@ -945,7 +961,8 @@ class Email extends Record implements
         $id = $data['id'] ?? null;
 
         if ($type === 'emailAccount' && $id) {
-            $emailAccount = $this->entityManager->getEntity('EmailAccount', $id);
+            /** @var ?EmailAccount */
+            $emailAccount = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);
 
             if ($emailAccount && $emailAccount->get('smtpHandler')) {
                 $this->getEmailAccountService()->applySmtpHandler($emailAccount, $smtpParams);
@@ -953,17 +970,16 @@ class Email extends Record implements
         }
 
         if ($type === 'inboundEmail' && $id) {
-            $inboundEmail = $this->entityManager->getEntity('InboundEmail', $id);
+            /** @var ?InboundEmail */
+            $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
 
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
                 $this->getInboundEmailService()->applySmtpHandler($inboundEmail, $smtpParams);
             }
         }
 
-        if ($userId) {
-            if ($fromAddress) {
-                $this->applySmtpHandler($userId, $fromAddress, $smtpParams);
-            }
+        if ($userId && $fromAddress) {
+            $this->applySmtpHandler($userId, $fromAddress, $smtpParams);
         }
 
         $emailSender = $this->emailSender;
@@ -976,9 +992,7 @@ class Email extends Record implements
         catch (Exception $e) {
             $this->log->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
-            $errorData = [
-                'message' => $e->getMessage(),
-            ];
+            $errorData = ['message' => $e->getMessage()];
 
             throw ErrorSilent::createWithBody('sendingFail', Json::encode($errorData));
         }
@@ -1019,7 +1033,7 @@ class Email extends Record implements
             $entity->isAttributeChanged('status') &&
             $entity->getFetched('status') === EmailEntity::STATUS_ARCHIVED
         ) {
-            $entity->set('status', 'Archived');
+            $entity->set('status', EmailEntity::STATUS_ARCHIVED);
         }
 
         if (!$skipFilter) {
@@ -1032,7 +1046,7 @@ class Email extends Record implements
             }
         }
 
-        if ($entity->get('status') == EmailEntity::STATUS_SENDING) {
+        if ($entity->getStatus() == EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
             $entity->set('messageId', '<' . $messageId . '>');
@@ -1045,7 +1059,7 @@ class Email extends Record implements
 
         $selectBuilder = $this->selectBuilderFactory
             ->create()
-            ->from('Email')
+            ->from(EmailEntity::ENTITY_TYPE)
             ->withAccessControlFilter();
 
         $draftsSelectBuilder = clone $selectBuilder;
@@ -1057,10 +1071,10 @@ class Email extends Record implements
             ])
         );
 
-        $folderIdList = ['inbox', 'drafts'];
+        $folderIdList = [self::FOLDER_INBOX, self::FOLDER_DRAFTS];
 
         $emailFolderList = $this->entityManager
-            ->getRDBRepository('EmailFolder')
+            ->getRDBRepository(EmailFolder::ENTITY_TYPE)
             ->where([
                 'assignedUserId' => $this->user->getId(),
             ])
@@ -1073,7 +1087,7 @@ class Email extends Record implements
         foreach ($folderIdList as $folderId) {
             $itemSelectBuilder = clone $selectBuilder;
 
-            if ($folderId === 'drafts') {
+            if ($folderId === self::FOLDER_DRAFTS) {
                 $itemSelectBuilder = clone $draftsSelectBuilder;
             }
 
@@ -1086,7 +1100,7 @@ class Email extends Record implements
             );
 
             $data[$folderId] = $this->entityManager
-                ->getRDBRepository('Email')
+                ->getRDBRepository(EmailEntity::ENTITY_TYPE)
                 ->clone($itemSelectBuilder->build())
                 ->count();
         }
@@ -1102,7 +1116,7 @@ class Email extends Record implements
 
         /** @var EmailEntity|null $replied */
         $replied = $this->entityManager
-            ->getRDBRepository('Email')
+            ->getRDBRepository(EmailEntity::ENTITY_TYPE)
             ->select(['messageId'])
             ->where([
                 'id' => $email->get('repliedId')
