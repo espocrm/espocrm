@@ -799,8 +799,6 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
             let additionalClassName = closeButton ? ' alert-closable' : '';
 
-            console.log(sanitizedMessage);
-
             let $el = $('<div>')
                 .addClass('alert alert-' + type + additionalClassName + ' fade in')
                 .attr('id', 'notification')
