@@ -31,13 +31,14 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\ForbiddenSilent;
 
 use Espo\Repositories\User as UserRepository;
 
-use Espo\Core\{
-    Acl\Table as AclTable,
-    Exceptions\ForbiddenSilent};
 
+use Espo\Core\Acl\Table as AclTable;
+
+use Espo\Entities\Preferences;
 use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\User as UserEntity;
 
@@ -61,10 +62,14 @@ class Note extends Record
 
     protected function processFollowAfterCreate(NoteEntity $entity): void
     {
-        $parentType = $entity->get('parentType');
-        $parentId = $entity->get('parentId');
+        $parentType = $entity->getParentType();
+        $parentId = $entity->getParentId();
 
-        if ($entity->get('type') !== NoteEntity::TYPE_POST || !$parentType || !$parentId) {
+        if (
+            $entity->getType() !== NoteEntity::TYPE_POST ||
+            !$parentType ||
+            !$parentId
+        ) {
             return;
         }
 
@@ -72,7 +77,7 @@ class Note extends Record
             return;
         }
 
-        $preferences = $this->entityManager->getEntity('Preferences', $this->user->getId());
+        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $this->user->getId());
 
         if (!$preferences) {
             return;
@@ -82,7 +87,7 @@ class Note extends Record
             return;
         }
 
-        $parent = $this->entityManager->getEntity($parentType, $parentId);
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
         if (!$parent || $this->user->isSystem() || $this->user->isApi()) {
             return;
@@ -190,15 +195,15 @@ class Note extends Record
         $entity->clear('isGlobal');
     }
 
-    protected function handlePostText(Entity $entity): void
+    protected function handlePostText(NoteEntity $entity): void
     {
-        $post = $entity->get('post');
+        $post = $entity->getPost();
 
         if (empty($post)) {
             return;
         }
 
-        $siteUrl = $this->getConfig()->getSiteUrl();
+        $siteUrl = $this->config->getSiteUrl();
 
         $regexp = '/' . preg_quote($siteUrl, '/') .
             '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)/';
@@ -208,6 +213,10 @@ class Note extends Record
         $entity->set('post', $post);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     protected function processAssignmentCheck(Entity $entity): void
     {
         /** @var NoteEntity $entity */
@@ -258,7 +267,7 @@ class Note extends Record
             }
         }
 
-        $assignmentPermission = $this->acl->get('assignment');
+        $assignmentPermission = $this->acl->getPermissionLevel('assignment');
 
         if ($assignmentPermission === AclTable::LEVEL_NO) {
             if (
@@ -299,7 +308,10 @@ class Note extends Record
             }
         }
 
-        if ($targetType === NoteEntity::TARGET_USERS && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
+        if (
+            $targetType === NoteEntity::TARGET_USERS &&
+            $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES
+        ) {
             if ($hasPortalTargetUser) {
                 throw new Forbidden('Not permitted to post to portal users.');
             }
