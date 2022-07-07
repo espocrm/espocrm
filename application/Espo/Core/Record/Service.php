@@ -614,7 +614,7 @@ class Service implements Crud,
 
                 if (in_array('assignedUser', $forbiddenFieldList)) {
                     $entity->set('assignedUserId', $this->user->getId());
-                    $entity->set('assignedUserName', $this->user->get('name'));
+                    $entity->set('assignedUserName', $this->user->getName());
                 }
             }
 
