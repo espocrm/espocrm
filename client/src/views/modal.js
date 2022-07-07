@@ -64,6 +64,7 @@ define('views/modal', ['view'], function (Dep) {
          * @property {boolean} [disabled=false] Disabled.
          * @property {function():void} [onClick] Called on click. If not defined, then
          * the `action<Name>` class method will be called.
+         * @property {string} [className] An additional class name.
          */
 
         /**

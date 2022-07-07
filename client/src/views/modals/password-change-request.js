@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/password-change-request', 'views/modal', function (Dep) {
+define('views/modals/password-change-request', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -45,11 +45,13 @@ define('views/modals/password-change-request', 'views/modal', function (Dep) {
                     name: 'submit',
                     label: 'Submit',
                     style: 'danger',
+                    className: 'btn-s-wide',
                 },
                 {
                     name: 'cancel',
                     label: 'Close',
                     pullLeft: true,
+                    className: 'btn-s-wide',
                 }
             ];
 
