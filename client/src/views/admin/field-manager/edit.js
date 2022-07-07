@@ -59,7 +59,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
          *     onlyAdmin?: boolean,
          *     readOnly?: boolean,
          *     nonAdminReadOnly?: boolean,
-         * }|null}
+         * }|{}}
          */
         globalRestriction: null,
 
@@ -120,6 +120,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             };
 
             this.entityTypeIsCustom = !!this.getMetadata().get(['scopes', this.scope, 'isCustom']);
+
+            this.globalRestriction = {};
 
             if (!this.isNew) {
                 this.model.id = this.field;
@@ -280,6 +282,16 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     if (fieldManagerParamList) {
                         this.paramList = this.paramList
                             .filter(item => fieldManagerParamList.indexOf(item.name) !== -1);
+                    }
+
+                    let customizationDisabled = this.getMetadata()
+                        .get(['entityDefs', this.scope, 'fields', this.field, 'customizationDisabled']);
+
+                    if (
+                        customizationDisabled ||
+                        this.globalRestriction.forbidden
+                    ) {
+                        this.paramList = [];
                     }
 
                     if (this.hasAnyGlobalRestriction) {
