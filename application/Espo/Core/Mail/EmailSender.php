@@ -198,7 +198,7 @@ class EmailSender
     /**
      * Send an email.
      *
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Exceptions\SendingError
      */
     public function send(Email $email): void
     {
