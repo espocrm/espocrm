@@ -447,13 +447,13 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 this.model.id = data.id;
             }
 
-            var msg = this.translate('sendingFailed', 'strings', 'Email');
+            let msg = this.translate('sendingFailed', 'strings', 'Email');
 
             if (data.message) {
                 msg += ': ' + data.message;
             }
 
-            Espo.Ui.error(msg);
+            Espo.Ui.error(msg, true);
             console.error(msg);
         },
 
