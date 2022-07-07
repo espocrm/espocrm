@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
 
@@ -54,8 +55,6 @@ use Espo\Entities\InboundEmail;
 use Espo\Services\InboundEmail as InboundEmailService;
 
 use Espo\ORM\EntityManager;
-
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\Config;
@@ -427,7 +426,7 @@ class Sender
      * @param ?array<string,mixed> $params @deprecated
      * @param ?Message $message @deprecated
      * @param iterable<\Espo\Entities\Attachment> $attachmentList @deprecated
-     * @throws Error
+     * @throws SendingError
      */
     public function send(
         Email $email,
@@ -461,7 +460,7 @@ class Sender
         }
         else {
             if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
-                throw new Error('outboundEmailFromAddress is not specified in config.');
+                throw new SendingError('outboundEmailFromAddress is not specified in config.');
             }
 
             $fromAddress = $params['fromAddress'] ?? $config->get('outboundEmailFromAddress');
@@ -717,8 +716,8 @@ class Sender
     }
 
     /**
-     * @throws Error
      * @return never
+     * @throws SendingError
      */
     private function handleException(Exception $e): void
     {
@@ -735,10 +734,10 @@ class Sender
 
             $this->log->error("Email sending error: " . $e->getMessage());
 
-            throw new Error($message, 500);
+            throw new SendingError($message);
         }
 
-        throw new Error($e->getMessage(), 500);
+        throw new SendingError($e->getMessage());
     }
 
     static public function generateMessageId(Email $email): string

@@ -61,6 +61,7 @@ use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
     Di,
+    Mail\Exceptions\SendingError,
     Select\Where\Item as WhereItem,
     Mail\Sender,
     Mail\SmtpParams,
@@ -172,6 +173,7 @@ class Email extends Record implements
 
     /**
      * @throws BadRequest
+     * @throws SendingError
      * @throws Error
      */
     public function sendEntity(EmailEntity $entity, ?User $user = null): void
