@@ -1012,6 +1012,20 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             this.trigger('before:save');
             model.trigger('before:save');
 
+            let onError = (xhr, reject) => {
+                this.handleSaveError(xhr, options);
+                this.afterSaveError();
+
+                this.setModelAttributes(beforeSaveAttributes);
+
+                this.lastSaveCancelReason = 'error';
+
+                this.trigger('error:save');
+                this.trigger('cancel:save', {reason: 'error'});
+
+                reject('error');
+            };
+
             return new Promise((resolve, reject) => {
                 model
                     .save(
@@ -1019,14 +1033,15 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                         {
                             patch: !model.isNew(),
                             headers: headers,
-                        }
+                            // Catch use a promise-catch, as it's called
+                            // after the default ajaxError callback.
+                            error: (m, xhr) => onError(xhr, reject),
+                        },
                     )
                     .then(() => {
                         this.trigger('save', initialAttributes);
 
                         this.afterSave();
-
-                        var isNew = this.isNew;
 
                         if (this.isNew) {
                             this.isNew = false;
@@ -1036,20 +1051,6 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                         model.trigger('after:save');
 
                         resolve();
-                    })
-                    .catch(xhr => {
-                        this.handleSaveError(xhr, options);
-
-                        this.afterSaveError();
-
-                        this.setModelAttributes(beforeSaveAttributes);
-
-                        this.lastSaveCancelReason = 'error';
-
-                        this.trigger('error:save');
-                        this.trigger('cancel:save', {reason: 'error'});
-
-                        reject('error');
                     });
             });
         },
@@ -1105,7 +1106,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
             if (handlerName) {
                 require(handlerName, (Handler) => {
-                    var handler = new Handler(this);
+                    let handler = new Handler(this);
 
                     handler.process(response.data, options);
                 });
