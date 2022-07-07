@@ -29,7 +29,8 @@
 /**
  * @module ui
  */
-define('ui', [], function () {
+define('ui', ['lib!marked', 'lib!dompurify'],
+function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
     /**
      * Dialog parameters.
@@ -778,13 +779,15 @@ define('ui', [], function () {
          * @param {boolean} [closeButton] A close button.
          */
         notify: function (message, type, timeout, closeButton) {
-            $('#nofitication').remove();
+            $('#notification').remove();
 
             if (!message) {
                 return;
             }
 
-            message = message.replace(/\n|\r\n|\r/g, '<br/>');
+            let parsedMessage = marked.parse(message);
+
+            let sanitizedMessage = DOMPurify.sanitize(parsedMessage).toString();
 
             type = type || 'warning';
             closeButton = closeButton || false;
@@ -796,24 +799,35 @@ define('ui', [], function () {
 
             let additionalClassName = closeButton ? ' alert-closable' : '';
 
-            let $el = $(
-                    '<div class="alert alert-' + type + '' + additionalClassName + ' fade in" id="nofitication" />'
-                )
+            console.log(sanitizedMessage);
+
+            let $el = $('<div>')
+                .addClass('alert alert-' + type + additionalClassName + ' fade in')
+                .attr('id', 'notification')
                 .css({
-                    position: 'fixed',
-                    top: '0px',
+                    'position': 'fixed',
+                    'top': '0',
                     'z-index': 2000,
                 })
-                .html('<div class="message">' + message + '</div>');
-
-            if (closeButton) {
-                let $close = $(
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                .append(
+                    $('<div>')
+                        .addClass('message')
+                        .html(sanitizedMessage)
                 );
 
-                let $btnContainer = $('<div class="close-container">').append($close);
+            if (closeButton) {
+                let $close = $('<button>')
+                    .attr('type', 'button')
+                    .attr('data-dismiss', 'modal')
+                    .attr('aria-hidden', 'true')
+                    .addClass('close')
+                    .html('&times;');
 
-                $el.append($btnContainer);
+                $el.append(
+                    $('<div>')
+                        .addClass('close-container')
+                        .append($close)
+                );
 
                 $close.on('click', () => $el.alert('close'));
             }
@@ -822,12 +836,11 @@ define('ui', [], function () {
                 setTimeout(() => $el.alert('close'), timeout);
             }
 
+            let width = ($(window).width() - $el.width()) / 2 + $(window).scrollLeft();
+
             $el
                 .appendTo('body')
-                .css(
-                    'left',
-                    ($(window).width() - $el.width()) / 2 + $(window).scrollLeft() + "px"
-                );
+                .css('left',width  + 'px');
         },
 
         /**
