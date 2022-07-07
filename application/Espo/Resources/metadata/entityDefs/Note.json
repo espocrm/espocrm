@@ -34,7 +34,8 @@
                 "EmailReceived",
                 "EmailSent"
             ],
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "default": "Post"
         },
         "targetType": {
             "type": "enum",
@@ -49,7 +50,6 @@
         },
         "parent": {
             "type": "linkParent",
-            "readOnly": true,
             "customizationDisabled": true
         },
         "related": {
