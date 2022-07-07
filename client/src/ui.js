@@ -68,6 +68,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {boolean} [hidden=false] Hidden.
      * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
      * @property {function():void} [onClick] An on-click callback.
+     * @property {string} [className] An additional class name.
+     * @property {string} [title] A title.
      */
 
     /**
@@ -93,9 +95,15 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.body = '';
         /** @private */
         this.width = null;
-        /** @private */
+        /**
+         * @private
+         * @type {module:ui.Dialog~Button[]}
+         */
         this.buttonList = [];
-        /** @private */
+        /**
+         * @private
+         * @type {module:ui.Dialog~Button[]}
+         */
         this.dropdownItemList = [];
         /** @private */
         this.removeOnClose = true;
@@ -141,7 +149,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.onCloseIsCalled = false;
 
         if (this.buttons && this.buttons.length) {
-            /** @private */
+            /**
+             * @private
+             * @type {module:ui.Dialog~Button[]}
+             */
             this.buttonList = this.buttons;
         }
 
@@ -152,81 +163,42 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             this.backdrop = 'static';
         }
 
-        let contentsHtml = '';
+        let $header = this.getHeader();
+        let $footer = this.getFooter();
 
-        if (this.header) {
-            let headerClassName = '';
+        let $body = $('<div>')
+            .addClass('modal-body body')
+            .html(this.body);
 
-            if (this.options.fixedHeaderHeight) {
-                headerClassName = ' fixed-height';
-            }
+        let $content = $('<div>').addClass('modal-content');
 
-            let $header = $('<header />').addClass('modal-header ' + headerClassName);
-
-            $header.append(
-                $('<h4 />')
-                    .addClass('modal-title')
-                    .append(
-                        $('<span />')
-                            .addClass('modal-title-text')
-                            .html(this.header)
-                    )
-            );
-
-            if (this.collapseButton) {
-                $header.prepend(
-                    $('<a />')
-                        .addClass('collapse-button')
-                        .attr('href', 'javascript:')
-                        .attr('data-action', 'collapseModal')
-                        .append(
-                            $('<span />')
-                                .addClass('fas fa-minus')
-                        )
-                );
-            }
-
-            if (this.closeButton) {
-                $header.prepend(
-                    $('<a />')
-                        .addClass('close')
-                        .attr('data-dismiss', 'modal')
-                        .attr('href', 'javascript:')
-                        .append(
-                            $('<span />')
-                                .attr('aria-hidden', 'true')
-                                .html('&times;')
-                        )
-                );
-            }
-
-            contentsHtml += $header.wrap('<div />').parent().html();
+        if ($header) {
+            $content.append($header);
         }
 
-        let bodyHtml = '<div class="modal-body body">' + this.body + '</div>';
-
-        let footerHtml = this.getFooterHtml();
-
-        if (footerHtml !== '') {
-            footerHtml = '<footer class="modal-footer">' + footerHtml + '</footer>';
+        if ($footer && this.options.footerAtTheTop) {
+            $content.append($footer);
         }
 
-        if (this.options.footerAtTheTop) {
-            contentsHtml += footerHtml + bodyHtml;
-        }
-        else {
-            contentsHtml += bodyHtml + footerHtml;
+        $content.append($body);
+
+        if ($footer && !this.options.footerAtTheTop) {
+            $content.append($footer);
         }
 
-        contentsHtml = '<div class="modal-dialog"><div class="modal-content">' + contentsHtml + '</div></div>';
+        let $dialog = $('<div>')
+            .addClass('modal-dialog')
+            .append($content);
 
-        $('<div />')
+        let $container = $(this.container);
+
+        $('<div>')
             .attr('id', this.id)
             .attr('class', this.className + ' modal')
             .attr('role', 'dialog')
             .attr('tabindex', '-1')
-            .html(contentsHtml)
-            .appendTo($(this.container));
+            .append($dialog)
+            .appendTo($container);
 
         /**
          * An element.
@@ -255,7 +227,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             });
         }
 
-        var modalContentEl = this.$el.find('.modal-content');
+        let modalContentEl = this.$el.find('.modal-content');
 
         if (this.width) {
             modalContentEl.css('width', this.width);
@@ -331,11 +303,11 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             }
         });
 
-        let $body = $(document.body);
+        let $documentBody = $(document.body);
 
         this.$el.on('hidden.bs.modal', e => {
             if ($('.modal:visible').length > 0) {
-                $body.addClass('modal-open');
+                $documentBody.addClass('modal-open');
             }
         });
     };
@@ -365,94 +337,168 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
     /**
      * @private
+     * @return {JQuery|null}
      */
-    Dialog.prototype.getFooterHtml = function () {
-        let footer = '';
-
-        if (this.buttonList.length || this.dropdownItemList.length) {
-            let rightPart = '';
-
-            this.buttonList.forEach(o => {
-                if (o.pullLeft) {
-                    return;
-                }
-
-                let className = ' btn-xs-wide';
-
-                if (o.className) {
-                    className = ' ' + o.className;
-                }
-
-                rightPart +=
-                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') +
-                    (o.hidden ? ' hidden' : '') + className+'" ' +
-                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
-                    (o.html || o.text) + '</button> ';
-            });
-
-            let leftPart = '';
-
-            this.buttonList.forEach(o => {
-                if (!o.pullLeft) {
-                    return;
-                }
-
-                let className = ' btn-xs-wide';
-
-                if (o.className) {
-                    className = ' ' + o.className;
-                }
-
-                leftPart +=
-                    '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') +
-                    (o.hidden ? ' hidden' : '') + className+'" ' +
-                    'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
-                    (o.html || o.text) + '</button> ';
-            });
-
-            if (leftPart !== '') {
-                leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
-
-                footer += leftPart;
-            }
-
-            if (this.dropdownItemList.length) {
-                let visibleCount = 0;
-
-                this.dropdownItemList.forEach(function (o) {
-                    if (!o.hidden) {
-                        visibleCount++;
-                    }
-                });
-
-                rightPart += '<div class="btn-group'+ ((visibleCount === 0) ? ' hidden' : '') +'">';
-                rightPart += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
-                rightPart += '<span class="fas fa-ellipsis-h"></span>';
-                rightPart += '</button>';
-
-                rightPart += '<ul class="dropdown-menu pull-right">';
-
-                this.dropdownItemList.forEach(o => {
-                    rightPart +=
-                        '<li class="'+(o.hidden ? ' hidden' : '')+'">' +
-                        '<a href="javascript:" ' +
-                        'data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
-                });
-
-                rightPart += '</ul>';
-                rightPart += '</div>';
-            }
-
-            if (rightPart !== '') {
-                rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
-                footer += rightPart;
-            }
+    Dialog.prototype.getHeader = function () {
+        if (!this.header) {
+            return null;
         }
 
-        return footer;
-    };
+        let $header = $('<header />')
+            .addClass('modal-header')
+            .addClass(this.options.fixedHeaderHeight ? 'fixed-height' : '')
+            .append(
+                $('<h4 />')
+                    .addClass('modal-title')
+                    .append(
+                        $('<span />')
+                            .addClass('modal-title-text')
+                            .html(this.header)
+                    )
+            );
+
+
+        if (this.collapseButton) {
+            $header.prepend(
+                $('<a />')
+                    .addClass('collapse-button')
+                    .attr('href', 'javascript:')
+                    .attr('data-action', 'collapseModal')
+                    .append(
+                        $('<span />')
+                            .addClass('fas fa-minus')
+                    )
+            );
+        }
+
+        if (this.closeButton) {
+            $header.prepend(
+                $('<a />')
+                    .addClass('close')
+                    .attr('data-dismiss', 'modal')
+                    .attr('href', 'javascript:')
+                    .append(
+                        $('<span />')
+                            .attr('aria-hidden', 'true')
+                            .html('&times;')
+                    )
+            );
+        }
+
+        return $header;
+    }
+
+    /**
+     * @private
+     * @return {JQuery|null}
+     */
+    Dialog.prototype.getFooter = function () {
+        if (!this.buttonList.length && !this.dropdownItemList.length) {
+            return null;
+        }
+
+        let $footer = $('<footer>').addClass('modal-footer');
+
+        let $main = $('<div>')
+            .addClass('btn-group')
+            .addClass('main-btn-group');
+
+        let $additional = $('<div>')
+            .addClass('btn-group')
+            .addClass('additional-btn-group');
+
+        this.buttonList.forEach(/** module:ui.Dialog~Button */o => {
+            let style = o.style || 'default';
+
+            let $button =
+                $('<button>')
+                    .attr('type', 'button')
+                    .attr('data-name', o.name)
+                    .addClass('btn')
+                    .addClass('btn-' + style)
+                    .addClass(o.className || 'btn-xs-wide')
+
+            if (o.disabled) {
+                $button.attr('disabled', 'disabled');
+                $button.addClass('disabled');
+            }
+
+            if (o.hidden) {
+                $button.addClass('hidden');
+            }
+
+            if (o.title) {
+                $button.attr('title', o.title);
+            }
+
+            if (o.text) {
+                $button.text(o.text);
+            }
+
+            if (o.html) {
+                $button.html(o.html);
+            }
+
+            if (o.pullLeft) {
+                $additional.append($button);
+
+                return;
+            }
+
+            $main.append($button);
+        });
+
+        let allDdItemsHidden = this.dropdownItemList.filter(o => !o.hidden).length === 0;
+
+        let $dropdown = $('<div>')
+            .addClass('btn-group')
+            .addClass(allDdItemsHidden ? 'hidden' : '')
+            .append(
+                $('<button>')
+                    .attr('type', 'button')
+                    .addClass('btn btn-default dropdown-toggle')
+                    .attr('data-toggle', 'dropdown')
+                    .append(
+                        $('<span>').addClass('fas fa-ellipsis-h')
+                    )
+            );
+
+        let $ul = $('<ul>').addClass('dropdown-menu pull-right');
+
+        $dropdown.append($ul);
+
+        this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
+            let $a = $('<a>')
+                .attr('href', 'javascript')
+                .attr('data-name', o.name);
+
+            if (o.text) {
+                $a.text(o.text);
+            }
+
+            if (o.html) {
+                $a.html(o.html);
+            }
+
+            let $li = $('<li>')
+                .addClass(o.hidden ? ' hidden' : '')
+                .append($a)
+
+            $ul.append($li);
+        });
+
+        if ($ul.children().length) {
+            $main.append($dropdown);
+        }
+
+        if ($additional.children().length) {
+            $footer.append($additional);
+        }
+
+        $footer.append($main);
+
+        return $footer;
+    }
 
     /**
      * Show.
@@ -473,10 +519,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             }
         });
 
-        let $modalConainer = $('.modal-container');
+        let $modalContainer = $('.modal-container');
 
-        $modalConainer.each((i, el) => {
-            if (i < $modalConainer.length - 1) {
+        $modalContainer.each((i, el) => {
+            if (i < $modalContainer.length - 1) {
                 $(el).addClass('overlaid');
             }
         });
@@ -609,7 +655,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
          * Show a confirmation dialog.
          *
          * @param {string} message A message.
-         * @param {Espo.Ui~ConfirmOptions} o Options.
+         * @param {Espo.Ui~ConfirmOptions|{}} o Options.
          * @param {function} [callback] Deprecated. Use a promise.
          * @param {Object} [context] Deprecated.
          * @returns {Promise} Resolves if confirmed.
@@ -617,10 +663,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         confirm: function (message, o, callback, context) {
             o = o || {};
 
-            var confirmText = o.confirmText;
-            var cancelText = o.cancelText;
-            var confirmStyle = o.confirmStyle || 'danger';
-            var backdrop = o.backdrop;
+            let confirmText = o.confirmText;
+            let cancelText = o.cancelText;
+            let confirmStyle = o.confirmStyle || 'danger';
+            let backdrop = o.backdrop;
 
             if (typeof backdrop === 'undefined') {
                 backdrop = false;
@@ -727,27 +773,32 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 html: true,
                 content: o.content || o.text,
                 trigger: o.trigger || 'manual',
-            }).on('shown.bs.popover', function () {
-                if (view) {
+            }).on('shown.bs.popover', () => {
+                if (!view) {
+                    return;
+                }
+
+                let $body = $('body')
+
+                $body.off('click.popover-' + view.cid);
+
+                $body.on('click.popover-' + view.cid, e => {
+                    if ($(e.target).closest('.popover-content').get(0)) {
+                        return;
+                    }
+
+                    if ($.contains($el.get(0), e.target)) {
+                        return;
+                    }
+
+                    if ($el.get(0) === e.target) {
+                        return;
+                    }
+
                     $('body').off('click.popover-' + view.cid);
 
-                    $('body').on('click.popover-' + view.cid, function (e) {
-                        if ($(e.target).closest('.popover-content').get(0)) {
-                            return;
-                        }
-
-                        if ($.contains($el.get(0), e.target)) {
-                            return;
-                        }
-                        if ($el.get(0) === e.target) {
-                            return;
-                        }
-
-                        $('body').off('click.popover-' + view.cid);
-
-                        $el.popover('hide');
-                    });
-                }
+                    $el.popover('hide');
+                });
             });
 
             if (!o.noToggleInit) {
@@ -757,12 +808,12 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             }
 
             if (view) {
-                view.on('remove', function () {
+                view.on('remove', () => {
                     $el.popover('destroy');
                     $('body').off('click.popover-' + view.cid);
                 });
 
-                view.on('render', function () {
+                view.on('render', () => {
                     $el.popover('destroy');
                     $('body').off('click.popover-' + view.cid);
                 });
