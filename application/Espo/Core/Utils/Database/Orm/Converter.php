@@ -710,7 +710,19 @@ class Converter
         $fullTextSearchColumnList = [];
 
         foreach ($fieldList as $field) {
-            $defs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
+            $realField = $field;
+            $realEntityType = $entityType;
+
+            if (strpos($field, '.') !== false) {
+                list($relation, $realField) = explode('.', $field, 2);
+                $realEntityType = $this->getMetadata()->get(['entityDefs', $entityType, 'links', $relation, 'entity']);
+
+                if (!$realEntityType) {
+                    continue;
+                }
+            }
+
+            $defs = $this->getMetadata()->get(['entityDefs', $realEntityType, 'fields', $realField], []);
 
             if (empty($defs['type'])) {
                 continue;

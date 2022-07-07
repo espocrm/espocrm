@@ -1244,7 +1244,16 @@ abstract class BaseQueryComposer implements QueryComposer
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         foreach ($columnList as $i => $column) {
-            $columnList[$i] = $fromAlias . '.' . $this->sanitize($this->toDb($column));
+            $alias = $fromAlias;
+
+            if (strpos($column, '.') > 0) {
+                list($alias, $attribute) = explode('.', $column, 2);
+
+                $alias = $this->sanitize($alias);
+                $column = $attribute;
+            }
+
+            $columnList[$i] = $alias . '.' . $this->sanitize($this->toDb($column));
         }
 
         if (!Util::isArgumentString($query)) {

@@ -77,15 +77,21 @@ class DefaultDataComposer implements DataComposer
         $fieldList = [];
 
         foreach ($this->getTextFilterFieldList() as $field) {
+            $fieldToCheck = $field;
+            $entityTypeToCheck = $this->entityType;
+
             if (strpos($field, '.') !== false) {
+                list($relationName, $fieldToCheck) = explode('.', $field);
+
+                $entityTypeToCheck = $this->metadataProvider->getRelationEntityType($this->entityType, $relationName);
+            }
+            
+
+            if ($this->metadataProvider->isFieldNotStorable($entityTypeToCheck, $fieldToCheck)) {
                 continue;
             }
 
-            if ($this->metadataProvider->isFieldNotStorable($this->entityType, $field)) {
-                continue;
-            }
-
-            if (!$this->metadataProvider->isFullTextSearchSupportedForField($this->entityType, $field)) {
+            if (!$this->metadataProvider->isFullTextSearchSupportedForField($entityTypeToCheck, $fieldToCheck)) {
                 continue;
             }
 

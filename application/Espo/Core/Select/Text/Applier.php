@@ -106,7 +106,7 @@ class Applier
             array_filter(
                 $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
                 function ($field) use ($fullTextSearchFieldList) {
-                    return !in_array($field, $fullTextSearchFieldList);
+                    return in_array($field, $fullTextSearchFieldList);
                 }
             );
 
