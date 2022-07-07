@@ -1047,7 +1047,7 @@ function (
                     if (this.auth !== null) {
                         xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
                         xhr.setRequestHeader('Espo-Authorization', this.auth);
-                        xhr.setRequestHeader('Espo-Authorization-By-Token', true);
+                        xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
                     }
 
                 },
