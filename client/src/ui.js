@@ -645,7 +645,7 @@ define('ui', [], function () {
                 let dialog = new Dialog({
                     backdrop: backdrop,
                     header: false,
-                    className: 'dialog-confirm',
+                    className: 'dialog-confirm btn-s-wide',
                     body: '<span class="confirm-message">' + message + '</a>',
                     buttonList: [
                         {
@@ -672,6 +672,7 @@ define('ui', [], function () {
                         {
                             text: cancelText,
                             name: 'cancel',
+                            className: 'btn-s-wide',
                             onClick: () => {
                                 isResolved = true;
 
