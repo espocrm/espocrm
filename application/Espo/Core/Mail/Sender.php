@@ -726,14 +726,14 @@ class Sender
     private function handleException(Exception $e): void
     {
         if ($e instanceof ProtocolRuntimeException) {
-            $message = "Email sending error.";
+            $message = "Unknown error.";
 
             if (
                 stripos($e->getMessage(), 'password') !== false ||
                 stripos($e->getMessage(), 'credentials') !== false ||
                 stripos($e->getMessage(), '5.7.8') !== false
             ) {
-                $message .= ' Invalid credentials.';
+                $message = 'Invalid credentials.';
             }
 
             $this->log->error("Email sending error: " . $e->getMessage());
