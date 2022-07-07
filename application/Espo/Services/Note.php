@@ -187,6 +187,8 @@ class Note extends Record
             throw new ForbiddenSilent("Only 'Post' type allowed.");
         }
 
+        $entity->clear('parentId');
+        $entity->clear('parentType');
         $entity->clear('targetType');
         $entity->clear('usersIds');
         $entity->clear('teamsIds');
