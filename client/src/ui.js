@@ -785,7 +785,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 return;
             }
 
-            let parsedMessage = marked.parse(message);
+            let parsedMessage = message.indexOf('\n') !== -1 ?
+                marked.parse(message) :
+                marked.parseInline(message);
 
             let sanitizedMessage = DOMPurify.sanitize(parsedMessage).toString();
 
@@ -805,6 +807,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 .css({
                     'position': 'fixed',
                     'top': '0',
+                    'left': '50%',
+                    'transform': 'translate(-50%, 0)',
                     'z-index': 2000,
                 })
                 .append(
@@ -834,11 +838,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 setTimeout(() => $el.alert('close'), timeout);
             }
 
-            let width = ($(window).width() - $el.width()) / 2 + $(window).scrollLeft();
-
-            $el
-                .appendTo('body')
-                .css('left',width  + 'px');
+            $el.appendTo('body')
         },
 
         /**
