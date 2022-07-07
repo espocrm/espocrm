@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 
 use Espo\Repositories\User as UserRepository;
 
-
 use Espo\Core\Acl\Table as AclTable;
 
 use Espo\Entities\Preferences;
