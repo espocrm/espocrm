@@ -88,14 +88,10 @@ class Email extends Record implements
     /**
      * @var string[]
      */
-    protected $allowedForUpdateAttributeList = [
-        'parentType',
-        'parentId',
-        'parentName',
-        'teamsIds',
-        'teamsNames',
-        'assignedUserId',
-        'assignedUserName',
+    protected $allowedForUpdateFieldList = [
+        'parent',
+        'teams',
+        'assignedUser',
     ];
 
     protected $mandatorySelectAttributeList = [
@@ -1037,19 +1033,39 @@ class Email extends Record implements
         }
 
         if (!$skipFilter) {
-            foreach ($entity->getAttributeList() as $attribute) {
-                if (in_array($attribute, $this->allowedForUpdateAttributeList)) {
-                    continue;
-                }
-
-                $entity->clear($attribute);
-            }
+            $this->clearEntityForUpdate($entity);
         }
 
         if ($entity->getStatus() == EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
             $entity->set('messageId', '<' . $messageId . '>');
+        }
+    }
+
+    private function clearEntityForUpdate(EmailEntity $email): void
+    {
+        $fieldDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity(EmailEntity::ENTITY_TYPE)
+            ->getFieldList();
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            $field = $fieldDefs->getName();
+
+            if ($fieldDefs->getParam('isCustom')) {
+                continue;
+            }
+
+            if (in_array($field, $this->allowedForUpdateFieldList)) {
+                continue;
+            }
+
+            $attributeList = $this->fieldUtil->getAttributeList(EmailEntity::ENTITY_TYPE, $field);
+
+            foreach ($attributeList as $attribute) {
+                $email->clear($attribute);
+            }
         }
     }
 

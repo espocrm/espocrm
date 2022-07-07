@@ -21,13 +21,6 @@
     },
     "quickCreateModalType":"compose",
     "defaultSidePanelView": "views/email/record/panels/default-side",
-    "defaultSidePanelFieldList": [
-        "teams",
-        "status",
-        "replied",
-        "replies",
-        "tasks"
-    ],
     "sidePanels": {
         "detail": [
             {
@@ -154,5 +147,13 @@
     "boolFilterList":[
 
     ],
-    "iconClass":"fas fa-envelope"
+    "iconClass":"fas fa-envelope",
+    "layoutBottomPanelsDetailDisabled": true,
+    "layoutDetailDisabled": true,
+    "layoutDetailSmallDisabled": true,
+    "layoutSidePanelsDetailSmallDisabled": true,
+    "layoutSidePanelsEditSmallDisabled": true,
+    "layoutMassUpdateDisabled": true
+
+
 }

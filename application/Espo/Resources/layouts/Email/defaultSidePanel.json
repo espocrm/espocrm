@@ -1,0 +1,17 @@
+[
+    {
+        "name": "teams"
+    },
+    {
+        "name": "status"
+    },
+    {
+        "name": "replied"
+    },
+    {
+        "name": "replies"
+    },
+    {
+        "name": "tasks"
+    }
+]
