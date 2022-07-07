@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/panels/default-side', 'views/record/panels/default-side', function (Dep) {
+define('views/email/record/panels/default-side', ['views/record/panels/default-side'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,6 +53,5 @@ define('views/email/record/panels/default-side', 'views/record/panels/default-si
 
             this.recordViewObject.hideField('hasAttachment');
         },
-
     });
 });
