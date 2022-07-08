@@ -334,7 +334,10 @@
             "readOnly": true,
             "orderBy": "dateSent",
             "view": "views/email/fields/replies",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "columns": {
+                "status": "status"
+            }
         },
         "isSystem": {
             "type": "bool",
