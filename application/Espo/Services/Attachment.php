@@ -342,7 +342,7 @@ class Attachment extends Record
     /**
      * @throws Forbidden
      */
-    private function checkAttachmentTypeImage(AttachmentEntity $attachment): void
+    private function checkAttachmentTypeImage(AttachmentEntity $attachment, ?string $filePath = null): void
     {
         $extension = self::getFileExtension($attachment) ?? '';
 
@@ -361,7 +361,7 @@ class Attachment extends Record
             throw new ForbiddenSilent("Passed type does not correspond to extension.");
         }
 
-        $this->checkDetectedMimeType($attachment);
+        $this->checkDetectedMimeType($attachment, $filePath);
     }
 
     private static function getFileExtension(AttachmentEntity $attachment): ?string
@@ -374,17 +374,17 @@ class Attachment extends Record
     /**
      * @throws Forbidden
      */
-    private function checkDetectedMimeType(AttachmentEntity $attachment): void
+    private function checkDetectedMimeType(AttachmentEntity $attachment, ?string $filePath = null): void
     {
         // ext-fileinfo required, otherwise bypass.
         if (!class_exists('\finfo') || !defined('FILEINFO_MIME_TYPE')) {
             return;
         }
 
-        /** @var string|null */
+        /** @var ?string */
         $contents = $attachment->get('contents');
 
-        if (!$contents) {
+        if (!$contents && !$filePath) {
             return;
         }
 
@@ -392,7 +392,11 @@ class Attachment extends Record
 
         $mimeTypeList = $this->getMimeTypeUtil()->getMimeTypeListByExtension($extension);
 
-        $detectedMimeType = (new \finfo(FILEINFO_MIME_TYPE))->buffer($contents);
+        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        $detectedMimeType = $filePath ?
+            $fileInfo->file($filePath) :
+            $fileInfo->buffer($contents);
 
         if (!in_array($detectedMimeType, $mimeTypeList)) {
             throw new ForbiddenSilent("Detected mime type does not correspond to extension.");
@@ -745,17 +749,30 @@ class Attachment extends Record
 
         $this->fileManager->appendContents($filePath, $contents);
 
-        if ($actualFileSize + $chunkSize === $attachment->getSize()) {
-            $attachment->set('isBeingUploaded', false);
-
-            $this->entityManager->saveEntity($attachment);
-
-            $this->createJobMoveToStorage($attachment);
-        }
-
         if ($actualFileSize + $chunkSize > $attachment->getSize()) {
             throw new Error("File size mismatch.");
         }
+
+        $isLastChunk = $actualFileSize + $chunkSize === $attachment->getSize();
+
+        if (!$isLastChunk) {
+            return;
+        }
+
+        try {
+            $this->checkAttachmentTypeImage($attachment, $filePath);
+        }
+        catch (Forbidden $e) {
+            $this->entityManager->removeEntity($attachment);
+
+            throw new ForbiddenSilent($e->getMessage());
+        }
+
+        $attachment->set('isBeingUploaded', false);
+
+        $this->entityManager->saveEntity($attachment);
+
+        $this->createJobMoveToStorage($attachment);
     }
 
     private function getUploadMaxSize(AttachmentEntity $attachment): int
