@@ -605,12 +605,6 @@ define('views/fields/base', ['view'], function (Dep) {
          * @inheritDoc
          */
         init: function () {
-            if (this.events) {
-                this.events = _.clone(this.events);
-            } else {
-                this.events = {};
-            }
-
             this.validations = Espo.Utils.clone(this.validations);
 
             this.defs = this.options.defs || {};
