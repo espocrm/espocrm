@@ -28,19 +28,27 @@
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": []
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": []
         }
     },
     "links": {

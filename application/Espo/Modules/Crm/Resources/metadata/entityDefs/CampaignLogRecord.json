@@ -30,11 +30,15 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": []
         },
         "campaign": {
             "type": "link"
