@@ -192,7 +192,7 @@ class Applier
 
             foreach ($expressions as $expression) {
                 $orderExpression = Expr::round(
-                    Expr::divide($expressions, $this->fullTextOrderRelevanceDivider)
+                    Expr::divide($expression, $this->fullTextOrderRelevanceDivider)
                 );
 
                 array_push($order, OrderExpr::create($orderExpression)->withDesc());
