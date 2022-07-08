@@ -930,6 +930,11 @@ define('views/record/search', ['view'], function (Dep) {
 
                     this.showApplyFiltersButton();
                 });
+
+                this.listenTo(view, 'search', () => {
+                    this.search();
+                    this.hideApplyFiltersButton();
+                });
             });
         },
 

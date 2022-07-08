@@ -9,7 +9,7 @@
 
     <div class="input-group add-team">
         <input
-            class="main-element form-control input-sm"
+            class="main-element form-control input-sm search-input"
             type="text"
             value=""
             autocomplete="espo-{{name}}"

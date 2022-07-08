@@ -674,6 +674,12 @@ define('views/fields/base', ['view'], function (Dep) {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.searchData = {};
                 this.setupSearch();
+
+                this.events['keydown input.search-input'] = e => {
+                    if ('keyCode' in e && e.keyCode === 13) {
+                        this.trigger('search');
+                    }
+                };
             }
 
             this.on('highlight', () => {

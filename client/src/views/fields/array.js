@@ -176,11 +176,15 @@ function (Dep, Selectize, RegExpPattern, _) {
         },
 
         setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': (e) => {
-                    this.handleSearchType($(e.currentTarget).val());
+            this.events['change select.search-type'] = e => {
+                this.handleSearchType($(e.currentTarget).val());
+            };
+
+            this.events['keydown .selectize-input input'] = e => {
+                if ('keyCode' in e && e.keyCode === 13) {
+                    //this.trigger('search');
                 }
-            }, this.events || {});
+            };
         },
 
         handleSearchType: function (type) {
@@ -411,6 +415,7 @@ function (Dep, Selectize, RegExpPattern, _) {
                 highlight: false,
                 searchField: ['label'],
                 plugins: ['remove_button'],
+                selectOnTab: false,
             };
 
             if (!this.matchAnyWord) {

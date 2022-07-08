@@ -321,6 +321,7 @@ function (Dep, Selectize, _) {
                     highlight: false,
                     searchField: ['label'],
                     plugins: ['remove_button'],
+                    selectOnTab: false,
                     score: function (search) {
                         // Method of selectize.
                         let score = this.getScoreFunction(search);
