@@ -49,7 +49,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     name: 'reply',
                     label: 'Reply',
                     action: this.getPreferences().get('emailReplyToAllByDefault') ? 'replyToAll' : 'reply',
-                    style: 'danger'
+                    style: 'danger',
                 }, true);
 
                 this.addMenuItem('dropdown', false);

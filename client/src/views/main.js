@@ -283,7 +283,7 @@ define('views/main', ['view'], function (Dep) {
          * Add a menu item.
          *
          * @param {'buttons'|'dropdown'|'actions'} type A type.
-         * @param {module:views/main~MenuItem} item Item definitions.
+         * @param {module:views/main~MenuItem|false} item Item definitions.
          * @param {boolean} [toBeginning=false] To beginning.
          * @param {boolean} [doNotReRender=false] Skip re-render.
          */
