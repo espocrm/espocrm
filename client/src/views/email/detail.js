@@ -50,6 +50,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     label: 'Reply',
                     action: this.getPreferences().get('emailReplyToAllByDefault') ? 'replyToAll' : 'reply',
                     style: 'danger',
+                    className: 'btn-s-wide',
                 }, true);
 
                 this.addMenuItem('dropdown', false);

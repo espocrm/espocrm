@@ -39,7 +39,8 @@
                     "label":"Compose",
                     "action":"composeEmail",
                     "style":"danger",
-                    "acl":"create"
+                    "acl":"create",
+                    "className": "btn-s-wide"
                 }
             ],
             "dropdown":[

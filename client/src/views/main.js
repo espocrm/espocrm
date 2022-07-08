@@ -62,12 +62,13 @@ define('views/main', ['view'], function (Dep) {
          * @property {string} [action] An action.
          * @property {string} [link] A link.
          * @property {string} [label] A translatable label.
-         * @property {'default'|'danger'|'success'|'warning'} [style] A style.
+         * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
          * @property {boolean} [hidden]
          * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
          * @property {string} [title] A title.
          * @property {string} [iconHtml] An icon HTML.
          * @property {string} [html] An HTML.
+         * @property {string} [className] An additional class name. Only for buttons.
          */
 
         /**
