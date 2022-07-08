@@ -30,12 +30,16 @@
 namespace Espo\Core\Select\Text\FullTextSearch;
 
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroup;
 
 use InvalidArgumentException;
 
 class Data
 {
-    private Expression $expression;
+    /**
+     * @var Expression[]
+     */
+    private array $expressions;
 
     /**
      * @var string[]
@@ -53,13 +57,14 @@ class Data
     private string $mode;
 
     /**
+     * @param Expression[] $expressions
      * @param string[] $fieldList
      * @param string[] $columnList
      * @param Mode::* $mode
      */
-    public function __construct(Expression $expression, array $fieldList, array $columnList, string $mode)
+    public function __construct(array $expressions, array $fieldList, array $columnList, string $mode)
     {
-        $this->expression = $expression;
+        $this->expressions = $expressions;
         $this->fieldList = $fieldList;
         $this->columnList = $columnList;
         $this->mode = $mode;
@@ -69,9 +74,17 @@ class Data
         }
     }
 
-    public function getExpression(): Expression
+    /**
+     * @return Expression[]
+     */
+    public function getExpressions(): array
     {
-        return $this->expression;
+        return $this->expressions;
+    }
+
+    public function getOrGroup(): OrGroup
+    {
+        return OrGroup::create(...$this->expressions);
     }
 
     /**

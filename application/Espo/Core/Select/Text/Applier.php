@@ -40,7 +40,8 @@ use Espo\Core\Select\Text\FilterFactory;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Part\Expression as Expr;
-use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
@@ -96,17 +97,21 @@ class Applier
 
         $fullTextSearchData = $this->composeFullTextSearchData($filter);
 
-        $fullTextWhere = $fullTextSearchData ?
+        $fullTextOrGroup = $fullTextSearchData ?
             $this->processFullTextSearch($queryBuilder, $fullTextSearchData) :
             null;
 
         $fullTextSearchFieldList = $fullTextSearchData ? $fullTextSearchData->getFieldList() : [];
 
+        foreach ($fullTextSearchFieldList as $field) {
+            $this->processRelatedFullTextFields($queryBuilder, $field);
+        }
+
         $fieldList = $forceFullTextSearch ? [] :
             array_filter(
                 $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? ['name'],
                 function ($field) use ($fullTextSearchFieldList) {
-                    return in_array($field, $fullTextSearchFieldList);
+                    return !in_array($field, $fullTextSearchFieldList);
                 }
             );
 
@@ -121,11 +126,25 @@ class Applier
         $filterData = FilterData::create($filter, $fieldList)
             ->withSkipWildcards($skipWildcards)
             ->withForceFullTextSearch($forceFullTextSearch)
-            ->withFullTextSearchWhereItem($fullTextWhere);
+            ->withFullTextSearchOrGroup($fullTextOrGroup
+        );
 
         $this->filterFactory
             ->create($this->entityType, $this->user)
             ->apply($queryBuilder, $filterData);
+    }
+
+    private function processRelatedFullTextFields(QueryBuilder $queryBuilder, string $field): void
+    {
+        if (strpos($field, '.') !== false) {
+            $link = explode('.', $field)[0];
+            
+            if ($this->metadataProvider->getRelationType($this->entityType, $link) === Entity::HAS_MANY) {
+                $queryBuilder->distinct();
+            }
+
+            $queryBuilder->leftJoin($link);
+        }
     }
 
     private function composeFullTextSearchData(string $filter): ?FullTextSearchData
@@ -137,9 +156,9 @@ class Applier
         return $composer->compose($filter, $params);
     }
 
-    private function processFullTextSearch(QueryBuilder $queryBuilder, FullTextSearchData $data): WhereItem
+    private function processFullTextSearch(QueryBuilder $queryBuilder, FullTextSearchData $data): OrGroup
     {
-        $expression = $data->getExpression();
+        $expressions = $data->getExpressions();
 
         $fullTextOrderType = self::DEFAULT_FT_ORDER;
 
@@ -160,18 +179,27 @@ class Applier
         $hasOrderBy = !empty($previousOrderBy);
 
         if (!$hasOrderBy || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
-            $queryBuilder->order([
-                OrderExpr::create($expression)->withDesc()
-            ]);
+            $order = [];
+
+            foreach ($expressions as $expression) {
+                array_push($order, OrderExpr::create($expression)->withDesc());
+            }
+
+            $queryBuilder->order($order);
         }
         else if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
-            $orderExpression =
-                Expr::round(
-                    Expr::divide($expression, $this->fullTextOrderRelevanceDivider)
+            $order = [];
+
+            foreach ($expressions as $expression) {
+                $orderExpression = Expr::round(
+                    Expr::divide($expressions, $this->fullTextOrderRelevanceDivider)
                 );
 
+                array_push($order, OrderExpr::create($orderExpression)->withDesc());
+            }
+
             $newOrderBy = array_merge(
-                [OrderExpr::create($orderExpression)->withDesc()],
+                $order,
                 $previousOrderBy
             );
 
@@ -179,12 +207,16 @@ class Applier
         }
 
         if ($this->fullTextRelevanceThreshold) {
-            return Expr::greaterOrEqual(
-                $expression,
-                $this->fullTextRelevanceThreshold
-            );
+            $treshold = $this->fullTextRelevanceThreshold;
+
+            return OrGroup::create(...array_map(
+                function ($expression) use ($treshold) {
+                    return Expr::greaterOrEqual($expression, $treshold );
+                },
+                $expressions
+            ));
         }
 
-        return $expression;
+        return $data->getOrGroup();
     }
 }

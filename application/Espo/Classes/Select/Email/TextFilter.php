@@ -63,7 +63,7 @@ class TextFilter implements Filter
     public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $filter = $data->getFilter();
-        $ftWhereItem = $data->getFullTextSearchWhereItem();
+        $ftOrGroup = $data->getFullTextSearchOrGroup();
 
         if (
             mb_strlen($filter) < $this->config->getMinLengthForContentSearch() ||
@@ -79,8 +79,8 @@ class TextFilter implements Filter
 
         $orGroupBuilder = OrGroup::createBuilder();
 
-        if ($ftWhereItem) {
-            $orGroupBuilder->add($ftWhereItem);
+        if ($ftOrGroup) {
+            $orGroupBuilder->merge($ftOrGroup);
         }
 
         if (!$emailAddressId) {

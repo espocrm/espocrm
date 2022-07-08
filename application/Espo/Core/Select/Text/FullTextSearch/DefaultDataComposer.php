@@ -35,6 +35,7 @@ use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params;
 
 use Espo\ORM\Query\Part\Expression\Util as ExpressionUtil;
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Where\OrGroup;
 
 class DefaultDataComposer implements DataComposer
 {
@@ -84,8 +85,11 @@ class DefaultDataComposer implements DataComposer
                 list($relationName, $fieldToCheck) = explode('.', $field);
 
                 $entityTypeToCheck = $this->metadataProvider->getRelationEntityType($this->entityType, $relationName);
+
+                if (!$entityTypeToCheck) {
+                    continue;
+                }
             }
-            
 
             if ($this->metadataProvider->isFieldNotStorable($entityTypeToCheck, $fieldToCheck)) {
                 continue;
@@ -119,22 +123,27 @@ class DefaultDataComposer implements DataComposer
             $preparedFilter = str_replace('@', '*', $preparedFilter);
         }
 
-        $argumentList = array_merge(
-            array_map(
-                function ($item) {
-                    return Expression::column($item);
-                },
-                $columnList
-            ),
-            [$preparedFilter]
-        );
+        $groupedColumnList = $this->groupColumnList($columnList);
+        $expressions = [];
 
-        $function = $this->functionMap[$mode];
-
-        $expression = ExpressionUtil::composeFunction($function, ...$argumentList);
+        foreach ($groupedColumnList as $columnList) {
+            $argumentList = array_merge(
+                array_map(
+                    function ($item) {
+                        return Expression::column($item);
+                    },
+                    $columnList
+                ),
+                [$preparedFilter]
+            );
+    
+            $function = $this->functionMap[$mode];
+    
+            $expressions[] = ExpressionUtil::composeFunction($function, ...$argumentList);
+        }
 
         return new Data(
-            $expression,
+            $expressions,
             $fieldList,
             $columnList,
             $mode
@@ -179,6 +188,26 @@ class DefaultDataComposer implements DataComposer
         }
 
         return $filter;
+    }
+
+    private function groupColumnList(array $columnList) : array {
+        $groupedColumnList = [];
+
+        foreach ($columnList as $column) {
+            $linkName = '';
+
+            if (strpos($column, '.') !== false) {
+                $linkName = explode('.', $column)[0];
+            }
+
+            if (!array_key_exists($linkName, $groupedColumnList)) {
+                $groupedColumnList[$linkName] = [];
+            }
+
+            $groupedColumnList[$linkName][] = $column;
+        }
+
+        return $groupedColumnList;
     }
 
     /**

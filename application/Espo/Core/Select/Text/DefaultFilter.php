@@ -69,9 +69,9 @@ class DefaultFilter implements Filter
             $this->applyAttribute($queryBuilder, $orGroupBuilder, $attribute, $data);
         }
 
-        if ($data->getFullTextSearchWhereItem()) {
-            $orGroupBuilder->add(
-                $data->getFullTextSearchWhereItem()
+        if ($data->getFullTextSearchOrGroup()) {
+            $orGroupBuilder->merge(
+                $data->getFullTextSearchOrGroup()
             );
         }
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select\Text\Filter;
 
-use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Where\OrGroup;
 
 class Data
 {
@@ -42,9 +42,9 @@ class Data
 
     private bool $skipWildcards = false;
 
-    private ?WhereItem $fullTextSearchWhereItem = null;
-
     private bool $forceFullTextSearch = false;
+
+    private ?OrGroup $fullTextSearchOrGroup = null;
 
     /**
      * @param string[] $attributeList
@@ -98,10 +98,10 @@ class Data
         return $obj;
     }
 
-    public function withFullTextSearchWhereItem(?WhereItem $fullTextSearchWhereItem): self
+    public function withFullTextSearchOrGroup(?OrGroup $fullTextSearchOrGroup): self
     {
         $obj = clone $this;
-        $obj->fullTextSearchWhereItem = $fullTextSearchWhereItem;
+        $obj->fullTextSearchOrGroup = $fullTextSearchOrGroup;
 
         return $obj;
     }
@@ -129,8 +129,8 @@ class Data
         return $this->forceFullTextSearch;
     }
 
-    public function getFullTextSearchWhereItem(): ?WhereItem
+    public function getFullTextSearchOrGroup(): ?OrGroup
     {
-        return $this->fullTextSearchWhereItem;
+        return $this->fullTextSearchOrGroup;
     }
 }

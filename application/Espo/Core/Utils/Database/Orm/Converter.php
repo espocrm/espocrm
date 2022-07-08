@@ -707,6 +707,7 @@ class Converter
         $fieldList = $this->getMetadata()
             ->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
 
+        $fullTextSearchData = [];
         $fullTextSearchColumnList = [];
 
         foreach ($fieldList as $field) {
@@ -739,35 +740,53 @@ class Converter
             }
 
             $partList = $this->getMetadata()->get(['fields', $fieldType, 'fullTextSearchColumnList']);
+            $fields = [];
+            $realFields = [];
 
             if ($partList) {
                 if ($this->getMetadata()->get(['fields', $fieldType, 'naming']) === 'prefix') {
                     foreach ($partList as $part) {
-                        $fullTextSearchColumnList[] = $part . ucfirst($field);
+                        $fields[] = $part . ucfirst($field);
+                        $realFields = $part . ucfirst($realField);
                     }
                 }
                 else {
                     foreach ($partList as $part) {
-                        $fullTextSearchColumnList[] = $field . ucfirst($part);
+                        $fields[] = $field . ucfirst($part);
+                        $realFields[] = $realField . ucfirst($part);
                     }
                 }
             }
             else {
-                $fullTextSearchColumnList[] = $field;
+                $fields[] = $field;
+                $realFields[] = $realField;
             }
+
+            if (!array_key_exists($realEntityType, $fullTextSearchData)) {
+                $fullTextSearchData[$realEntityType] = [];
+            }
+
+            array_push($fullTextSearchData[$realEntityType], ...$realFields);
+            array_push($fullTextSearchColumnList, ...$fields);
         }
 
         if (!empty($fullTextSearchColumnList)) {
             $ormMetadata[$entityType]['fullTextSearchColumnList'] = $fullTextSearchColumnList;
 
-            if (!array_key_exists('indexes', $ormMetadata[$entityType])) {
-                $ormMetadata[$entityType]['indexes'] = [];
-            }
+            foreach ($fullTextSearchData as $realEntityType => $columnList) {
+                if (!array_key_exists($realEntityType, $ormMetadata)) {
+                    $ormMetadata[$realEntityType] = [];
+                }
 
-            $ormMetadata[$entityType]['indexes']['system_fullTextSearch'] = [
-                'columns' => $fullTextSearchColumnList,
-                'flags' => ['fulltext']
-            ];
+                if (!array_key_exists('indexes', $ormMetadata[$realEntityType])) {
+                    $ormMetadata[$realEntityType]['indexes'] = [];
+                }
+    
+                $ormMetadata[$realEntityType]['indexes']['system_fullTextSearch'] = [
+                    'columns' => $columnList,
+                    'flags' => ['fulltext']
+                ];
+            }
         }
     }
 
