@@ -326,7 +326,6 @@
         "replied": {
             "type": "link",
             "noJoin": true,
-            "readOnly": true,
             "view": "views/email/fields/replied",
             "customizationDisabled": true
         },

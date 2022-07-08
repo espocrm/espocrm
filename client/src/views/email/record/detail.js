@@ -181,6 +181,8 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 });
             }
 
+            this.setFieldReadOnly('replied');
+
             if (this.model.get('status') === 'Draft') {
                 this.setFieldReadOnly('dateSent');
             }
