@@ -61,7 +61,7 @@
             > ul > li > a {
                 padding-top: 9px;
                 padding-bottom: 9px;
-                height: 37px;
+                height: 38px;
 
                 > span.full-label {
                     padding-left: 30px;
@@ -225,7 +225,7 @@ html, body {
 }
 
 body > footer {
-    margin-top: -28px;
+    margin-top: -24px;
 }
 
 body > .content {
@@ -235,9 +235,14 @@ body > .content {
 }
 
 body > footer {
+    margin-top: -28px;
     clear: both;
     position: relative;
     height: 26px;
+
+    p {
+        padding: 6px @panel-padding 4px;
+    }
 }
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {

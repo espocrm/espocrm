@@ -40,7 +40,6 @@
         }
 
         #navbar .navbar {
-
             .navbar-body {
                 padding-left: 0;
                 padding-right: 0;
@@ -104,7 +103,7 @@
 
             a.side-menu-button {
                 width: @navbar-minimized-width;
-                padding-top: 8px;
+                padding-top: 9px;
                 padding-bottom: 9px;
                 text-align: center;
                 display: none;
@@ -112,6 +111,7 @@
                     width: 16px;
                     text-align: center;
                 }
+                height: @navbar-logo-height;
             }
 
             .side-menu-backdrop {
@@ -166,7 +166,6 @@
             .navbar-right {
                 position: fixed;
                 bottom: 20px;
-                position: fixed;
                 top: 0;
                 left: 0;
                 height: @tob-bar-height;
@@ -231,10 +230,11 @@
                 }
 
                 li > a {
-                    padding-top: 8px;
+                    padding-top: 9px;
                     padding-bottom: 9px;
                     padding-left: @navbar-tab-left-padding;
                     padding-right: @navbar-tab-right-padding;
+                    height: @navbar-logo-height;
                 }
 
                 li.tab > a {
@@ -332,7 +332,6 @@ body {
             > li a > span.full-label {
                 position: static;
                 padding-left: @navbar-tab-text-left-padding;
-                position: static;
             }
 
             > li a > span.short-label {
@@ -522,11 +521,12 @@ body {
         clear: both;
         position: relative;
         height: 26px;
-        margin-top: -28px;
-    }
-
-    body > footer {
+        margin-top: -26px;
         margin-left: @navbar-width;
+
+        p {
+            padding: 4px @panel-padding;
+        }
     }
 
     input.global-search-input {

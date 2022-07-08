@@ -329,9 +329,11 @@ define('views/site/navbar', 'view', function (Dep) {
 
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
+
             if (!companyLogoId) {
                 return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.png');
             }
+
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
@@ -685,7 +687,7 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         getStaticItemsHeight: function () {
-            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 96;
+            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 97;
         },
 
         adjustBodyMinHeight: function () {
