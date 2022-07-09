@@ -69,7 +69,7 @@ table.table {
     }
 
     > .panel:first-child {
-        border-top-width: 0;
+        border-top-width: var(--panel-border-width);
     }
 
     > .panel.hidden + .panel {
@@ -78,6 +78,13 @@ table.table {
 
     .panel + .panel.panels-show-more-delimiter {
         border-top-width: 0;
+    }
+}
+
+.record .bottom,
+.record .side {
+    .panel.sticked {
+        //border-top-width: 0;
     }
 }
 

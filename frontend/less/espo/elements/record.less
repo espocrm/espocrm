@@ -39,12 +39,12 @@
 }
 
 .record .middle > .panel:first-child {
-    border-top-width: @panel-border-width;
+    border-top-width: var(--panel-border-width);
 }
 
 .record .middle {
     > .panel.hidden + .panel {
-        border-top-width: @panel-border-width;
+        border-top-width: var(--panel-border-width);
     }
 
     margin-bottom: @line-height-computed;
@@ -71,17 +71,17 @@
 .record .side {
     > .panel.sticked:first-child {
         margin-top: 0;
-        border-top-width: @panel-border-width;
+        border-top-width: var(--panel-border-width);
     }
 
     .panel.hidden + .panel.sticked {
         margin-top: 0;
-        border-top-width: @panel-border-width;
+        border-top-width: var(--panel-border-width);
     }
 }
 
 .record .bottom {
     .panel.hidden + .panel.sticked {
-        border-top-width: @panel-border-width;
+        border-top-width: var(--panel-border-width);
     }
 }
