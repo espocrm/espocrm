@@ -57,13 +57,18 @@ class Data
     private string $mode;
 
     /**
-     * @param Expression[] $expressions
+     * @param Expression[]|Expression $expressions
      * @param string[] $fieldList
      * @param string[] $columnList
      * @param Mode::* $mode
      */
-    public function __construct(array $expressions, array $fieldList, array $columnList, string $mode)
+    public function __construct($expressions, array $fieldList, array $columnList, string $mode)
     {
+        // @todo Remove in v8.0
+        if (!is_array($expressions)) {
+            $expressions = [$expressions];
+        }
+
         $this->expressions = $expressions;
         $this->fieldList = $fieldList;
         $this->columnList = $columnList;
@@ -72,6 +77,14 @@ class Data
         if (!in_array($mode, [Mode::NATURAL_LANGUAGE, Mode::BOOLEAN])) {
             throw new InvalidArgumentException("Bad mode.");
         }
+    }
+
+    /**
+     * @deprecated Will be removed in v8.0. Use getExpressions() instead.
+     * @return Expression
+     */
+    public function getExpression() : Expression {
+        return $this->expressions[0];
     }
 
     /**
