@@ -498,7 +498,7 @@ body {
         }
     }
 
-    body > .content {
+    body.has-navbar > .content {
         padding-left: @navbar-width + @container-padding;
         max-width: @container-max-width + @navbar-width;
     }
@@ -532,10 +532,6 @@ body {
     input.global-search-input {
         height: @tob-bar-height !important;
         margin-top: 0 !important;
-    }
-
-    #login {
-        margin-left: -@navbar-width;
     }
 }
 

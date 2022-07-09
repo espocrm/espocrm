@@ -396,6 +396,8 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
                 $(window).off('scroll.navbar-tab-group');
+
+                this.$body.removeClass('has-navbar');
             });
         },
 
@@ -788,6 +790,8 @@ define('views/site/navbar', ['view'], function (Dep) {
             this.$body = $('body');
             this.$tabs = this.$el.find('ul.tabs');
             this.$more = this.$tabs.find('li.more > ul');
+
+            this.$body.addClass('has-navbar');
 
             var $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
