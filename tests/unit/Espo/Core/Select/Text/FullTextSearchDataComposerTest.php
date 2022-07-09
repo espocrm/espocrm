@@ -127,7 +127,7 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             'MATCH_BOOLEAN:(field1A, field1B, field2, \'test filter\')',
-            $data->getExpression()->getValue()
+            $data->getExpressions()[0]->getValue()
         );
     }
 
