@@ -3,6 +3,25 @@
 @import "elements/panel.less";
 @import "elements/record.less";
 
+.list-container > .list,
+.panel,
+.dashlet-container,
+#main > .calendar-container .calendar,
+#main > .calendar-container .timeline,
+.well,
+.admin-content .table.table-bordered,
+.admin-content iframe,
+.list-kanban > div > table > thead,
+.list-group-panel,
+.popup-notification {
+    box-shadow: var(--default-box-shadow);
+}
+
+.dropdown-menu,
+.autocomplete-suggestions {
+    box-shadow: var(--dropdown-box-shadow);
+}
+
 .collapsing {
     -webkit-transition: height .1s ease;
     -o-transition: height .1s ease;
@@ -650,7 +669,7 @@ table.table > thead th {
 }
 
 .btn.active {
-    .box-shadow(none);
+    box-shadow: none;
 }
 
 #login.panel .panel-heading {
@@ -1713,7 +1732,6 @@ body .note-editor .panel-heading {
     color: var(--dropdown-link-color);
     cursor: default;
     overflow: auto;
-    .box-shadow(0 6px 12px rgba(0,0,0,.175));
 
     .autocomplete-suggestion.autocomplete-selected {
         background-color: var(--dropdown-link-hover-bg) !important;
@@ -3078,7 +3096,7 @@ a.link-gray {
 
 .btn-group.open .dropdown-toggle {
     &.btn-text {
-       .box-shadow(none);
+        box-shadow: none;
     }
 }
 
