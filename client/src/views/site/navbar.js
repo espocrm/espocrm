@@ -54,12 +54,12 @@ define('views/site/navbar', ['view'], function (Dep) {
                     this.xsCollapse();
                 }
             },
-            'click a.nav-link': function (e) {
+            'click a.nav-link': function () {
                 if (this.isSideMenuOpened) {
                     this.closeSideMenu();
                 }
             },
-            'click a.navbar-brand.nav-link': function (e) {
+            'click a.navbar-brand.nav-link': function () {
                 this.xsCollapse();
             },
             'click a[data-action="quick-create"]': function (e) {
@@ -141,7 +141,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 !isVertical &&
                 !$target.parent().hasClass('more-dropdown-menu')
             ) {
-                var maxHeight = windowHeight - rectItem.bottom;
+                let maxHeight = windowHeight - rectItem.bottom;
 
                 this.handleGroupMenuScrolling($menu, $target, maxHeight);
 
@@ -150,12 +150,9 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             var itemCount = $menu.children().length;
 
-            if (isVertical) {
-                var tabHeight = this.$tabs.find('> .tab').height();
-            }
-            else {
-                var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
-            }
+            let tabHeight = isVertical ?
+                this.$tabs.find('> .tab').height() :
+                this.$tabs.find('.tab-group > ul > li:visible').height();
 
             var menuHeight = tabHeight * itemCount;
 
@@ -169,11 +166,9 @@ define('views/site/navbar', ['view'], function (Dep) {
                 }
             }
 
-            $menu.css({
-                top: top + 'px',
-            });
+            $menu.css({top: top + 'px'});
 
-            var maxHeight = windowHeight - top;
+            let maxHeight = windowHeight - top;
 
             this.handleGroupMenuScrolling($menu, $target, maxHeight);
         },
@@ -445,7 +440,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 return this.getAcl().check(scope);
             }
             if (defs.tabAclPermission) {
-                var level = this.getAcl().get(defs.tabAclPermission);
+                var level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
 
                 return level && level !== 'no';
             }
@@ -543,7 +538,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             var $navbar = $('#navbar .navbar');
 
             if (window.innerWidth >= smallScreenWidth) {
-                $tabs.children('li').each((i, li) => {
+                $tabs.children('li').each(() => {
                     hideOneTab();
                 });
 
@@ -1011,7 +1006,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             label = label || '';
 
-            var shortLabel = label.substr(0, 2);
+            var shortLabel = label.substring(0, 2);
 
             if (!params.colorsDisabled && !isGroup) {
                 color = this.getMetadata().get(['clientDefs', tab, 'color']);
