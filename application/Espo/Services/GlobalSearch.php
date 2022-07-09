@@ -213,11 +213,20 @@ class GlobalSearch implements
         if ($fullTextSearchData) {
             $hasFullTextSearch = true;
 
-            $expression = $fullTextSearchData->getExpression();
+            $expressions = $fullTextSearchData->getExpressions();
+            
+            if (count($expressions) > 1) {
+                $relevance = 'GREATEST:' . implode(',', array_map(function ($exp) {
+                    return $exp->getValue();
+                }, $expressions));
+            }
+            else {
+                $relevance = $expressions[0];
+            }
 
             $queryBuilder
-                ->select($expression, 'relevance')
-                ->order($expression, Order::DESC);
+                ->select($relevance, 'relevance')
+                ->order($relevance, Order::DESC);
         }
         else {
             $queryBuilder->select(Expr::value(1.1), 'relevance');

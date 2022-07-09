@@ -130,6 +130,7 @@ class Functions
         'TIMESTAMPDIFF_MINUTE',
         'TIMESTAMPDIFF_SECOND',
         'POSITION_IN_LIST',
+        'GREATEST'
     ];
 
     public const COMPARISON_FUNCTION_LIST = [
