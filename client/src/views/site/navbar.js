@@ -286,19 +286,20 @@ define('views/site/navbar', ['view'], function (Dep) {
 
         openSideMenu: function () {
             this.isSideMenuOpened = true;
+
             this.$body.addClass('side-menu-opened');
 
-            this.$sideMenuBackdrop = $('<div>').addClass('side-menu-backdrop');
-            this.$sideMenuBackdrop.click(function () {
-                this.closeSideMenu();
-            }.bind(this));
-            this.$sideMenuBackdrop.appendTo(this.$body);
+            this.$sideMenuBackdrop =
+                $('<div>')
+                    .addClass('side-menu-backdrop')
+                    .click(() => this.closeSideMenu())
+                    .appendTo(this.$body);
 
-            this.$sideMenuBackdrop2 = $('<div>').addClass('side-menu-backdrop');
-            this.$sideMenuBackdrop2.click(function () {
-                this.closeSideMenu();
-            }.bind(this));
-            this.$sideMenuBackdrop2.appendTo(this.$navbarRightContainer);
+            this.$sideMenuBackdrop2 =
+                $('<div>')
+                    .addClass('side-menu-backdrop')
+                    .click(() => this.closeSideMenu())
+                    .appendTo(this.$navbarRightContainer);
         },
 
         closeSideMenu: function () {
@@ -310,16 +311,22 @@ define('views/site/navbar', ['view'], function (Dep) {
 
         switchMinimizer: function () {
             var $body = this.$body;
+
             if (this.isMinimized()) {
                 if (this.isSideMenuOpened) {
                     this.closeSideMenu();
                 }
+
                 $body.removeClass('minimized');
+
                 this.getStorage().set('state', 'siteLayoutState', 'expanded');
-            } else {
+            }
+            else {
                 $body.addClass('minimized');
+
                 this.getStorage().set('state', 'siteLayoutState', 'collapsed');
             }
+
             if (window.Event) {
                 try {
                     window.dispatchEvent(new Event('resize'));
@@ -476,9 +483,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             var $more = this.$more;
             var $moreDropdown = this.$moreDropdown;
 
-            $window.on('resize.navbar', function() {
-                updateWidth();
-            });
+            $window.on('resize.navbar', () => updateWidth());
 
             $window.on('scroll.navbar', () => {
                 if (!this.isMoreDropdownShown) {
@@ -588,6 +593,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                     if (i >= tabCount) {
                         setTimeout(() => updateWidth(), 100);
+
                         break;
                     }
                 }
@@ -604,15 +610,16 @@ define('views/site/navbar', ['view'], function (Dep) {
                 if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
                     setTimeout(() => processUpdateWidth(true), 200);
-                }
-                else {
-                    if (!isRecursive) {
-                        updateWidth();
-                        setTimeout(() => processUpdateWidth(true), 10);
-                    }
 
-                    setTimeout(() => processUpdateWidth(true), 1000);
+                    return;
                 }
+
+                if (!isRecursive) {
+                    updateWidth();
+                    setTimeout(() => processUpdateWidth(true), 10);
+                }
+
+                setTimeout(() => processUpdateWidth(true), 1000);
             };
 
             if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
@@ -662,11 +669,12 @@ define('views/site/navbar', ['view'], function (Dep) {
                 if (windowWidth < smallScreenWidth) {
                     $tabs.css('height', 'auto');
                     $more.css('max-height', '');
+
+                    return;
                 }
-                else {
-                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-                    $more.css('max-height', windowHeight + 'px');
-                }
+
+                $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
+                $more.css('max-height', windowHeight + 'px');
             };
 
             $(window).on('resize.navbar', () => {
@@ -812,9 +820,9 @@ define('views/site/navbar', ['view'], function (Dep) {
             }
 
             if (layoutMinimized) {
-                var $body = $('body');
-                $body.addClass('minimized');
+                this.$body.addClass('minimized');
             }
+
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
@@ -835,7 +843,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             }
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
-                var process = () => {
+                let process = () => {
                     if (this.$navbar.height() < $(window).height() / 2) {
                         setTimeout(() => process(), 50);
 
@@ -854,7 +862,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 process();
             }
             else {
-                var process = () => {
+                let process = () => {
                     if (this.$el.width() < $(window).width() / 2) {
                         setTimeout(() => process(), 50);
 
@@ -901,11 +909,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                         return this.filterTabItem(item);
                     });
 
-                    if (!item.itemList.length) {
-                        return false;
-                    }
-
-                    return true;
+                    return !!item.itemList.length;
                 }
 
                 return this.filterTabItem(item);
@@ -1075,13 +1079,12 @@ define('views/site/navbar', ['view'], function (Dep) {
             });
 
             if (!this.getConfig().get('actionHistoryDisabled')) {
-                list.push({
-                    divider: true
-                });
+                list.push({divider: true});
+
                 list.push({
                     action: 'showLastViewed',
                     link: '#LastViewed',
-                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
+                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural'),
                 });
             }
 
@@ -1096,7 +1099,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 {
                     action: 'logout',
                     label: this.getLanguage().translate('Log Out')
-                }
+                },
             ]);
 
             return list;
