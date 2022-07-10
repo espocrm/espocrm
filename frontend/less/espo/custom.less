@@ -297,6 +297,19 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
     overflow-x: auto;
 }
 
+.list {
+    .cell {
+        .action {
+            &.text-muted.fas,
+            &.text-muted.far {
+                &:hover {
+                    color: var(--text-gray-color);
+                }
+            }
+        }
+    }
+}
+
 div.list-kanban > div > table {
     width: 100%;
     table-layout: fixed;
