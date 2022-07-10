@@ -19,6 +19,7 @@
         placeholder="{{translate 'Search'}}"
         data-name="quick-search"
         class="form-control"
+        spellcheck="false"
     >
 </div>
 <table class="table table-hover scopes-table">

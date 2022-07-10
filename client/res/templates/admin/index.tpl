@@ -4,8 +4,14 @@
     <div class="row">
         <div class="col-md-7">
             <div class="admin-search-container">
-                <input type="text" maxlength="64" placeholder="{{translate 'Search'}}"
-                    data-name="quick-search" class="form-control">
+                <input
+                    type="text"
+                    maxlength="64"
+                    placeholder="{{translate 'Search'}}"
+                    data-name="quick-search"
+                    class="form-control"
+                    spellcheck="false"
+                >
             </div>
             <div class="admin-tables-container">
                 {{#each panelDataList}}

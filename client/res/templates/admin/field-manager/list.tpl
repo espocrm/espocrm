@@ -17,6 +17,7 @@
         placeholder="{{translate 'Search'}}"
         data-name="quick-search"
         class="form-control"
+        spellcheck="false"
     >
 </div>
 

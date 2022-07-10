@@ -10,7 +10,10 @@
                     <div class="field">
                         <select data-name="language" class="form-control">
                             {{#each languageList}}
-                            <option value="{{this}}"{{#ifEqual this ../language}} selected{{/ifEqual}}>{{translateOption this field='language'}}</option>
+                            <option
+                                value="{{this}}"
+                                {{#ifEqual this ../language}} selected{{/ifEqual}}
+                            >{{translateOption this field='language'}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -22,7 +25,11 @@
                 <ul class="list-unstyled" style="overflow-x: hidden;">
                 {{#each scopeList}}
                     <li>
-                        <button class="btn btn-link" data-name="{{./this}}" data-action="selectScope">{{translate this category='scopeNames'}}</button>
+                        <button
+                            class="btn btn-link"
+                            data-name="{{./this}}"
+                            data-action="selectScope"
+                        >{{translate this category='scopeNames'}}</button>
                     </li>
                 {{/each}}
                 </ul>

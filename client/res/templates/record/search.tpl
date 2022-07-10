@@ -14,7 +14,6 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
-
                     <li>
                         <a
                             class="preset"
@@ -72,6 +71,7 @@
                 value="{{textFilter}}"
                 tabindex="0"
                 autocomplete="espo-text-search"
+                spellcheck="false"
             >
             {{/unless}}
             <div class="input-group-btn">
