@@ -102,8 +102,9 @@
 }
 
 .panel {
-    > .panel-heading {
+    margin-bottom: var(--vertical-gap);
 
+    > .panel-heading {
         .btn {
             background-color: @panel-default-bg;
             border-color: @panel-default-bg;
@@ -303,7 +304,7 @@ body {
 }
 
 .panel.sticked {
-    margin-top: ~"calc(-1 * @{line-height-computed} - var(--panel-border-width))";
+    margin-top: ~"calc(-1 * var(--vertical-gap) - var(--panel-border-width))";
     border-top-width: max(var(--panel-border-width), 1px);
 
     > .panel-heading {

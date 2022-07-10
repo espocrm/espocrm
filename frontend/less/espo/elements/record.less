@@ -21,11 +21,6 @@
     .record .record-grid {
         grid-column-gap: @padding-base-horizontal;
     }
-
-    .record-grid-wide {
-        //margin-left: -@panel-padding;
-        //margin-right: -@panel-padding;
-    }
 }
 
 @media screen and (max-width: (@screen-md-min - 1px)) {
@@ -40,7 +35,7 @@
 
 
 .record .middle {
-    margin-bottom: @line-height-computed;
+    margin-bottom: var(--vertical-gap);
 
     > .panel:first-child {
         border-top-width: var(--panel-border-width);
