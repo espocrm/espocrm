@@ -32,6 +32,7 @@ define('views/modal', ['view'], function (Dep) {
      * A base modal view. Can be extended or used directly.
      *
      * Options:
+     * - `headerElement`
      * - `headerHtml`
      * - `headerText`
      * - `$header`
@@ -88,12 +89,28 @@ define('views/modal', ['view'], function (Dep) {
         header: false,
 
         /**
-         * A header HTML.
+         * A header HTML. Beware of XSS.
          *
          * @protected
          * @type {string}
          */
         headerHtml: null,
+
+        /**
+         * A header JQuery instance.
+         *
+         * @protected
+         * @type {JQuery}
+         */
+        $header: null,
+
+        /**
+         * A header element.
+         *
+         * @protected
+         * @type {Element}
+         */
+        headerElement: null,
 
         /**
          * A dialog instance.
@@ -228,6 +245,7 @@ define('views/modal', ['view'], function (Dep) {
             this.header = this.options.header || this.header;
             this.headerHtml = this.options.headerHtml || this.headerHtml;
             this.$header = this.options.$header || this.$header;
+            this.headerElement = this.options.headerElement || this.headerElement;
 
             if (this.options.headerText) {
                 this.headerHtml = Handlebars.Utils.escapeExpression(this.options.headerText);
@@ -270,6 +288,10 @@ define('views/modal', ['view'], function (Dep) {
 
                 if (this.$header && this.$header.length) {
                     headerHtml = this.$header.get(0).outerHTML;
+                }
+
+                if (this.headerElement) {
+                    headerHtml = this.headerElement.outerHTML;
                 }
 
                 this.dialog = new Espo.Ui.Dialog({

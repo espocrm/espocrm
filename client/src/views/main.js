@@ -190,7 +190,9 @@ define('views/main', ['view'], function (Dep) {
                         }
 
                         if (item.accessDataList) {
-                            if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                            if (!Espo.Utils
+                                .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+                            ) {
                                 return;
                             }
                         }
@@ -223,19 +225,38 @@ define('views/main', ['view'], function (Dep) {
 
         /**
          * Build a header HTML. To be called from the #getHeader method.
+         * Beware of XSS.
          *
-         * @param {string[]} arr A breadcrumb path. Like: Account > Name > edit.
+         * @param {(string|Element|JQuery)[]} itemList A breadcrumb path. Like: Account > Name > edit.
          * @returns {string} HTML
          */
-        buildHeaderHtml: function (arr) {
-            var a = [];
-
-            arr.forEach(item => {
-                a.push('<div class="breadcrumb-item">' + item + '</div>');
+        buildHeaderHtml: function (itemList) {
+            let $itemList = itemList.map(item => {
+                return $('<div>')
+                    .addClass('breadcrumb-item')
+                    .append(item);
             });
 
-            return '<div class="header-breadcrumbs">' +
-                a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
+            let $div = $('<div>')
+                .addClass('header-breadcrumbs');
+
+            $itemList.forEach(($item, i) => {
+                $div.append($item);
+
+                if (i === $itemList.length - 1) {
+                    return;
+                }
+
+                $div.append(
+                    $('<div>')
+                        .addClass('breadcrumb-separator')
+                        .append(
+                            $('<span>').addClass('chevron-right')
+                        )
+                )
+            });
+
+            return $div.get(0).outerHTML;
         },
 
 

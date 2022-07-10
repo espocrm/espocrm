@@ -26,11 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/address-map/view', 'views/main', function (Dep) {
+define('views/address-map/view', ['views/main'], function (Dep) {
 
     return Dep.extend({
 
-        templateContent: '<div class="header page-header">{{{header}}}</div><div class="map-container">{{{map}}}</div>',
+        templateContent: `
+            <div class="header page-header">{{{header}}}</div>
+            <div class="map-container">{{{map}}}</div>
+        `,
 
         setup: function () {
             var field = this.options.field;
@@ -52,43 +55,67 @@ define('views/address-map/view', 'views/main', function (Dep) {
         afterRender: function () {
         	var field = this.options.field;
 
-            var viewName = this.model.getFieldParam(field + 'Map', 'view') || this.getFieldManager().getViewName('map');
+            var viewName = this.model.getFieldParam(field + 'Map', 'view') ||
+                this.getFieldManager().getViewName('map');
 
             this.createView('map', viewName, {
                 model: this.model,
                 name: field + 'Map',
                 el: this.getSelector() + ' .map-container',
                 height: this.getHelper().calculateContentContainerHeight(this.$el.find('.map-container')),
-            }, function (view) {
+            }, (view) => {
             	view.render();
             });
         },
 
         getHeader: function () {
-            var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+            let name = this.model.get('name');
 
             if (name === '') {
                 name = this.model.id;
             }
 
-            name = '<span class="font-size-flexible title">' + name + '</span>';
+            let recordUrl = '#' + this.model.entityType + '/view/' + this.model.id
+            let scopeLabel = this.getLanguage().translate(this.model.entityType, 'scopeNamesPlural');
+            let fieldLabel = this.translate(this.options.field, 'fields', this.model.entityType);
+            let rootUrl = this.options.rootUrl ||
+                this.options.params.rootUrl ||
+                '#' + this.model.entityType;
+
+            let $name = $('<a>')
+                .attr('href', recordUrl)
+                .append(
+                    $('<span>')
+                    .addClass('font-size-flexible title')
+                    .text(name)
+                );
 
             if (this.model.get('deleted')) {
-                name = '<span style="text-decoration: line-through;">' + name + '</span>';
+                $name.css('text-decoration', 'line-through');
             }
 
-            var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.model.entityType;
+            let $root = $('<span>')
+                .append(
+                    $('<a>')
+                        .attr('href', rootUrl)
+                        .addClass('action')
+                        .attr('data-action', 'navigateToRoot')
+                        .text(scopeLabel)
+                );
 
-            var headerIconHtml = this.getHeaderIconHtml();
+            let headerIconHtml = this.getHeaderIconHtml();
+
+            if (headerIconHtml) {
+                $root.prepend(headerIconHtml);
+            }
+
+            let $field = $('<span>').text(fieldLabel)
 
             return this.buildHeaderHtml([
-                headerIconHtml +
-                    '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
-                    this.getLanguage().translate(this.model.entityType, 'scopeNamesPlural') + '</a>',
-                name,
-                this.translate(this.options.field, 'fields', this.model.entityType)
+                $root,
+                $name,
+                $field,
             ]);
         },
-
     });
 });

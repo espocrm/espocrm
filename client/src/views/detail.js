@@ -260,34 +260,46 @@ define('views/detail', ['views/main'], function (Dep) {
          * @inheritDoc
          */
         getHeader: function () {
-            var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+            let name = this.model.get('name');
 
             if (name === '') {
                 name = this.model.id;
             }
 
-            name = '<span class="font-size-flexible title">' + name + '</span>';
+            let $name =
+                $('<span>')
+                    .addClass('font-size-flexible title')
+                    .text(name)
 
             if (this.model.get('deleted')) {
-                name = '<span style="text-decoration: line-through;">' + name + '</span>';
+                $name.css('text-decoration', 'line-through');
             }
 
-            var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            let headerIconHtml = this.getHeaderIconHtml();
+            let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-            var headerIconHtml = this.getHeaderIconHtml();
-
-            var rootHtml = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            let $root = $('<span>').text(scopeLabel);
 
             if (!this.rootLinkDisabled) {
-                rootHtml =
-                    '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
-                    rootHtml +
-                    '</a>';
+                $root = $('<span>')
+                    .append(
+                        $('<a>')
+                            .attr('href', rootUrl)
+                            .addClass('action')
+                            .attr('data-action', 'navigateToRoot')
+                            .text(scopeLabel)
+                    );
+
+            }
+
+            if (headerIconHtml) {
+                $root.prepend(headerIconHtml);
             }
 
             return this.buildHeaderHtml([
-                headerIconHtml + rootHtml,
-                name,
+                $root,
+                $name,
             ]);
         },
 
@@ -485,8 +497,10 @@ define('views/detail', ['views/main'], function (Dep) {
 
             var massRelateEnabled = data.massSelect;
 
+            let filters;
+
             if (link in this.selectRelatedFilters) {
-                var filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
+                filters = Espo.Utils.cloneDeep(this.selectRelatedFilters[link]) || {};
 
                 for (var filterName in filters) {
                     if (typeof filters[filterName] === 'function') {
@@ -514,7 +528,7 @@ define('views/detail', ['views/main'], function (Dep) {
                         ~['belongsTo', 'belongsToParent'].indexOf(foreignLinkType) &&
                         foreignLinkFieldType
                     ) {
-                        var filters = {};
+                        filters = {};
 
                         if (foreignLinkFieldType === 'link' || foreignLinkFieldType === 'linkParent') {
                             filters[foreignLink] = {
@@ -541,7 +555,8 @@ define('views/detail', ['views/main'], function (Dep) {
                 dataBoolFilterList = data.boolFilterList.split(',');
             }
 
-            var boolFilterList = dataBoolFilterList || Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
+            var boolFilterList = dataBoolFilterList ||
+                Espo.Utils.cloneDeep(this.selectBoolFilterLists[link] || []);
 
             if (typeof boolFilterList === 'function') {
                 boolFilterList = boolFilterList.call(this);
@@ -615,8 +630,7 @@ define('views/detail', ['views/main'], function (Dep) {
         actionDuplicate: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            this
-                .ajaxPostRequest(this.scope + '/action/getDuplicateAttributes', {
+            Espo.Ajax.postRequest(this.scope + '/action/getDuplicateAttributes', {
                     id: this.model.id
                 })
                 .then((attributes) => {
