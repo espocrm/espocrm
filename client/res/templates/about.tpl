@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h3>EspoCRM - Open Source CRM application</h3>
+    <h3>EspoCRM – Open Source CRM application</h3>
 </div>
 
 <div class="row">
@@ -9,7 +9,8 @@
                 <h5>Version {{version}}</h5>
                 <p>
                     Copyright &copy; 2014-2022 EspoCRM: Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko.
-                    <br>
+                </p>
+                <p>
                     Website: <a href="https://www.espocrm.com" target="_BLANK">www.espocrm.com</a>.
                 </p>
                 <p>
