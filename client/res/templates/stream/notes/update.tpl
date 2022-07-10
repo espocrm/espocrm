@@ -20,7 +20,7 @@
             {{#each fieldsArr}}
             <li>
                 <span>{{translate field category='fields' scope=../parentType}}</span>
-                &nbsp;<span class="text-muted">&#8211;</span>&nbsp;
+                &nbsp;<span class="text-muted">:</span>&nbsp;
                 <span class="inline-block-child-div">{{{var was ../this}}}</span>
                 &nbsp;<span class="text-muted small fas fa-arrow-right"></span>&nbsp;
                 <span class="inline-block-child-div">{{{var became ../this}}}</span>
