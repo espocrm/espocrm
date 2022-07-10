@@ -250,7 +250,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals(0, $actual);
+        $this->assertSame(0, $actual);
     }
 
     public function testArrayIndexOf3(): void
@@ -259,7 +259,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals(null, $actual);
+        $this->assertSame(null, $actual);
     }
 
     public function testArrayIndexOf4(): void
@@ -268,7 +268,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals(null, $actual);
+        $this->assertSame(null, $actual);
     }
 
     public function testArrayIndexOf5(): void
@@ -277,7 +277,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals(null, $actual);
+        $this->assertSame(null, $actual);
     }
 
     public function testArrayUnique1(): void
@@ -286,7 +286,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals(['0', '1'], $actual);
+        $this->assertSame(['0', '1'], $actual);
     }
 
     public function testArrayRemoveAt1(): void
