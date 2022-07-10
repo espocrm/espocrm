@@ -286,28 +286,31 @@ body {
 
 .panel {
     border-width: var(--panel-border-width);
-}
 
-.panel-heading > .btn-group > .btn {
-    border-radius: 0 !important;
-}
+    .panel-heading {
+        > .btn-group > .btn {
+            border-radius: 0 !important;
+        }
 
-h4.panel-title span.fas.color-icon {
-    font-size: 50%;
-    left: 0;
-    position: relative;
-    margin-right: 2px;
-    top: -2px;
+        h4.panel-title span.fas.color-icon {
+            font-size: 50%;
+            position: relative;
+            left: 0;
+            top: -2px;
+            margin-right: 2px;
+        }
+    }
 }
 
 .panel.sticked {
-    margin-top: -1 * @line-height-computed;
-    border-top-width: 0;
+    margin-top: ~"calc(-1 * @{line-height-computed} - var(--panel-border-width))";
+    border-top-width: max(var(--panel-border-width), 1px);
+
     > .panel-heading {
         .btn-group {
             top: -6px;
             .btn {
-                border-top-width: 0;
+                //border-top-width: 0;
             }
         }
     }

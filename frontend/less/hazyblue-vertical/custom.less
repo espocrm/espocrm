@@ -63,31 +63,6 @@ table.table {
     background-color: @table-bg;
 }
 
-.record .middle {
-    > .panel {
-        border-top-width: 1px;
-    }
-
-    > .panel:first-child {
-        border-top-width: var(--panel-border-width);
-    }
-
-    > .panel.hidden + .panel {
-        border-top-width: 1px;
-    }
-
-    .panel + .panel.panels-show-more-delimiter {
-        border-top-width: 0;
-    }
-}
-
-.record .bottom,
-.record .side {
-    .panel.sticked {
-        //border-top-width: 0;
-    }
-}
-
 table.table-admin-panel {
     border: 0;
 
@@ -122,10 +97,6 @@ body > #content > #main > .admin-content {
     .modal-dialog > .modal-content {
         box-shadow: 0 0 15px rgba(0,0,0,0.35);
     }
-}
-
-.panel.sticked {
-    border-top-width: 1px;
 }
 
 .list-container .list-buttons-container {
