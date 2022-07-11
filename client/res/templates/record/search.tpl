@@ -63,7 +63,6 @@
                     {{/each}}
                 </ul>
             </div>
-            {{#unless textFilterDisabled}}
             <input
                 type="text"
                 class="form-control text-filter"
@@ -72,8 +71,8 @@
                 tabindex="0"
                 autocomplete="espo-text-search"
                 spellcheck="false"
+                {{#if textFilterDisabled}}disabled="disabled"{{/if}}
             >
-            {{/unless}}
             <div class="input-group-btn">
                 <button
                     type="button"

@@ -97,7 +97,8 @@ define('views/record/search', ['view'], function (Dep) {
 
             this.searchManager = this.options.searchManager;
 
-            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled;
+            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'textFilterDisabled']);
 
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;

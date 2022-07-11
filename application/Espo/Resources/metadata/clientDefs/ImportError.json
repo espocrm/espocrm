@@ -3,5 +3,6 @@
     "acl": "acl/foreign",
     "searchPanelDisabled": true,
     "createDisabled": true,
-    "editDisabled": true
+    "editDisabled": true,
+    "textFilterDisabled": true
 }
