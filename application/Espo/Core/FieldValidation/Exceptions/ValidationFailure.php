@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error\Body;
 
 use LogicException;
 
-class ValidationError extends BadRequest
+class ValidationFailure extends BadRequest
 {
     private string $entityType;
     private string $field;
@@ -54,9 +54,9 @@ class ValidationError extends BadRequest
     public static function create(string $entityType, string $field, string $type): self
     {
         $exception = self::createWithBody(
-            'validationError',
+            'validationFailure',
             Body::create()
-                ->withMessageTranslation('validationError', null, [
+                ->withMessageTranslation('validationFailure', null, [
                     'field' => $field,
                     'type' => $type,
                 ])

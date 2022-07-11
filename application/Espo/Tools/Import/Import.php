@@ -41,7 +41,7 @@ use Espo\Core\{
     Acl\Table,
     Exceptions\Error,
     Exceptions\Forbidden,
-    FieldValidation\Exceptions\ValidationError,
+    FieldValidation\Exceptions\ValidationFailure,
     FieldValidation\FieldValidationManager,
     Utils\Json,
     AclManager,
@@ -1187,7 +1187,7 @@ class Import
         $error->set('rowIndex', $index);
         $error->set('row', $row);
 
-        if ($exception instanceof ValidationError) {
+        if ($exception instanceof ValidationFailure) {
             $error->set('type', ImportError::TYPE_VALIDATION);
             $error->set('validationField', $exception->getField());
             $error->set('validationType', $exception->getType());
