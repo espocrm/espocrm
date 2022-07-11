@@ -54,9 +54,9 @@ class ValidationError extends BadRequest
     public static function create(string $entityType, string $field, string $type): self
     {
         $exception = self::createWithBody(
-            'validationFailure',
+            'validationError',
             Body::create()
-                ->withMessageTranslation('validationFailure', null, [
+                ->withMessageTranslation('validationError', null, [
                     'field' => $field,
                     'type' => $type,
                 ])
