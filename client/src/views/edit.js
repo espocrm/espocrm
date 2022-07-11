@@ -171,7 +171,7 @@ define('views/edit', ['views/main'], function (Dep) {
             else {
                 var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
-                if (name === '') {
+                if (!name) {
                     name = this.model.id;
                 }
 

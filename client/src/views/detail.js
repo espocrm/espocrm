@@ -262,7 +262,7 @@ define('views/detail', ['views/main'], function (Dep) {
         getHeader: function () {
             let name = this.model.get('name');
 
-            if (name === '') {
+            if (!name) {
                 name = this.model.id;
             }
 

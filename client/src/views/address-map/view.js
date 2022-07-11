@@ -71,7 +71,7 @@ define('views/address-map/view', ['views/main'], function (Dep) {
         getHeader: function () {
             let name = this.model.get('name');
 
-            if (name === '') {
+            if (!name) {
                 name = this.model.id;
             }
 
