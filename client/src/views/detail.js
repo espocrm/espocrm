@@ -260,16 +260,12 @@ define('views/detail', ['views/main'], function (Dep) {
          * @inheritDoc
          */
         getHeader: function () {
-            let name = this.model.get('name');
-
-            if (!name) {
-                name = this.model.id;
-            }
+            let name = this.model.get('name') || this.model.id;
 
             let $name =
                 $('<span>')
                     .addClass('font-size-flexible title')
-                    .text(name)
+                    .text(name);
 
             if (this.model.get('deleted')) {
                 $name.css('text-decoration', 'line-through');
@@ -290,7 +286,6 @@ define('views/detail', ['views/main'], function (Dep) {
                             .attr('data-action', 'navigateToRoot')
                             .text(scopeLabel)
                     );
-
             }
 
             if (headerIconHtml) {

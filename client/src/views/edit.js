@@ -149,43 +149,49 @@ define('views/edit', ['views/main'], function (Dep) {
          * @inheritDoc
          */
         getHeader: function () {
-            var headerIconHtml = this.getHeaderIconHtml();
+            let headerIconHtml = this.getHeaderIconHtml();
+            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
-            var arr = [];
+            let $root = $('<span>').text(scopeLabel);
 
-            if (this.options.noHeaderLinks || this.rootLinkDisabled) {
-                arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+            if (!this.options.noHeaderLinks && !this.rootLinkDisabled) {
+                $root =
+                    $('<span>')
+                        .append(
+                            $('<a>')
+                                .attr('href', rootUrl)
+                                .addClass('action')
+                                .attr('data-action', 'navigateToRoot')
+                                .text(scopeLabel)
+                        );
             }
-            else {
-                var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-                arr.push(
-                    headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
-                    this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>'
-                );
+            if (headerIconHtml) {
+                $root.prepend(headerIconHtml);
             }
 
             if (this.model.isNew()) {
-                arr.push(this.getLanguage().translate('create'));
-            }
-            else {
-                var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
+                let $create = $('<span>').text(this.getLanguage().translate('create'));
 
-                if (!name) {
-                    name = this.model.id;
-                }
-
-                if (this.options.noHeaderLinks) {
-                    arr.push(name);
-                }
-                else {
-                    arr.push(
-                        '<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>'
-                    );
-                }
+                return this.buildHeaderHtml([$root, $create]);
             }
 
-            return this.buildHeaderHtml(arr);
+            let name = this.model.get('name') || this.model.id;
+
+            let $name = $('<span>').text(name);
+
+            if (!this.options.noHeaderLinks) {
+                let url = '#' + this.scope + '/view/' + this.model.id;
+
+                $name =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action')
+                        .append($name);
+            }
+
+            return this.buildHeaderHtml([$root, $name]);
         },
 
         /**

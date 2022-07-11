@@ -574,17 +574,26 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          */
         getHeader: function () {
             if (this.options.params && this.options.params.fromAdmin) {
-                return this.buildHeaderHtml([
-                    '<a href="#Admin">' + this.translate('Administration', 'labels', 'Admin') + '</a>',
-                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-                ]);
+                let $root = $('<a>')
+                    .attr('href', '#Admin')
+                    .text(this.translate('Administration', 'labels', 'Admin'));
+
+                let $scope = $('<span>')
+                    .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+
+                return this.buildHeaderHtml([$root, $scope]);
             }
 
-            var headerIconHtml = this.getHeaderIconHtml();
+            let $root = $('<span>')
+                .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
-            return this.buildHeaderHtml([
-                headerIconHtml + this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-            ]);
+            let headerIconHtml = this.getHeaderIconHtml();
+
+            if (headerIconHtml) {
+                $root.prepend(headerIconHtml);
+            }
+
+            return this.buildHeaderHtml([$root]);
         },
 
         /**

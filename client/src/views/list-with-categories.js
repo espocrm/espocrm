@@ -624,41 +624,43 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 return Dep.prototype.getHeader.call(this);
             }
 
-            var path = this.nestedCategoriesCollection.path;
+            let path = this.nestedCategoriesCollection.path;
 
             if (!path || path.length === 0) {
                 return Dep.prototype.getHeader.call(this);
             }
 
-            var rootUrl = '#' + this.scope;
+            let rootUrl = '#' + this.scope;
 
-            var list = [
-                '<a href="' + rootUrl + '" class="action">' +
-                    this.translate(this.scope, 'scopeNamesPlural') + '</a>',
-            ];
+            let $root = $('<a>')
+                .attr('href', rootUrl)
+                .addClass('action')
+                .text(this.translate(this.scope, 'scopeNamesPlural'));
 
-            var currentName = this.nestedCategoriesCollection.categoryData.name;
+            let list = [$root];
 
-            var upperId = this.nestedCategoriesCollection.categoryData.upperId;
-            var upperName = this.nestedCategoriesCollection.categoryData.upperName;
+            let currentName = this.nestedCategoriesCollection.categoryData.name;
+
+            let upperId = this.nestedCategoriesCollection.categoryData.upperId;
+            let upperName = this.nestedCategoriesCollection.categoryData.upperName;
 
             if (path.length > 2) {
-                list.push(
-                    '...'
-                );
+                list.push('...');
             }
 
             if (upperId) {
-                var url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
+                let url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
 
-                list.push(
-                    '<a href="' + url +'">' + this.escapeString(upperName) + '</a>'
-                );
+                let $folder = $('<a>')
+                    .attr('href', url)
+                    .text(upperName);
+
+                list.push($folder);
             }
 
-            list.push(
-                this.escapeString(currentName)
-            );
+            let $last = $('<span>').text(currentName);
+
+            list.push($last);
 
             return this.buildHeaderHtml(list);
         },
