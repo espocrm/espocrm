@@ -30,6 +30,7 @@
 namespace Espo\Repositories;
 
 use Espo\Entities\Import as ImportEntity;
+use Espo\Entities\ImportEntity as ImportEntityEntity;
 
 use Espo\ORM\{
     Entity,
@@ -37,7 +38,12 @@ use Espo\ORM\{
     Collection,
 };
 
+use Espo\Entities\Attachment as AttachmentEntity;
+
 use Espo\Core\Repositories\Database;
+use Espo\Entities\ImportError;
+
+use LogicException;
 
 /**
  * @extends Database<\Espo\Entities\Import>
@@ -49,7 +55,11 @@ class Import extends Database
      */
     public function findResultRecords(ImportEntity $entity, string $relationName, Query $query): Collection
     {
-        $entityType = $entity->get('entityType');
+        $entityType = $entity->getTargetEntityType();
+
+        if (!$entityType) {
+            throw new LogicException();
+        }
 
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
@@ -61,7 +71,11 @@ class Import extends Database
 
     protected function addImportEntityJoin(ImportEntity $entity, string $link, Query $query): Query
     {
-        $entityType = $entity->get('entityType');
+        $entityType = $entity->getTargetEntityType();
+
+        if (!$entityType) {
+            throw new LogicException();
+        }
 
         $param = null;
 
@@ -104,7 +118,11 @@ class Import extends Database
 
     public function countResultRecords(ImportEntity $entity, string $relationName, ?Query $query = null): int
     {
-        $entityType = $entity->get('entityType');
+        $entityType = $entity->getTargetEntityType();
+
+        if (!$entityType) {
+            throw new LogicException();
+        }
 
         $query = $query ??
             $this->entityManager
@@ -121,26 +139,42 @@ class Import extends Database
             ->count();
     }
 
+    /**
+     * @param ImportEntity $entity
+     */
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        if ($entity->get('fileId')) {
-            $attachment = $this->entityManager->getEntity('Attachment', $entity->get('fileId'));
+        $fileId = $entity->getFileId();
+
+        if ($fileId) {
+            $attachment = $this->entityManager->getEntityById(AttachmentEntity::ENTITY_TYPE, $fileId);
 
             if ($attachment) {
                 $this->entityManager->removeEntity($attachment);
             }
         }
 
-        $delete = $this->entityManager
+        $delete1 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from('ImportEntity')
+            ->from(ImportEntityEntity::ENTITY_TYPE)
             ->where([
                 'importId' => $entity->getId(),
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete1);
+
+        $delete2 = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
+            ->from(ImportError::ENTITY_TYPE)
+            ->where([
+                'importId' => $entity->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($delete2);
 
         parent::afterRemove($entity, $options);
     }

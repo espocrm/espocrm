@@ -27,39 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
+namespace Espo\Core\Select\AccessControl\FilterResolvers;
 
-use Throwable;
-use Exception;
+use Espo\Core\Acl;
+use Espo\Core\Select\AccessControl\FilterResolver;
+use Espo\Entities\User;
 
-class BadRequest extends Exception implements HasBody
+class BooleanOwn implements FilterResolver
 {
-    /**
-     * @var int
-     */
-    protected $code = 400;
+    private string $entityType;
+    private Acl $acl;
+    private User $user;
 
-    /**
-     * @var ?string
-     */
-    protected $body = null;
-
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    public function __construct(string $entityType, Acl $acl, User $user)
     {
-        parent::__construct($message, $code, $previous);
+        $this->entityType = $entityType;
+        $this->acl = $acl;
+        $this->user = $user;
     }
 
-    public static function createWithBody(string $reason, string $body): self
+    public function resolve(): ?string
     {
-        $exception = new static($reason);
+        if (!$this->acl->checkScope($this->entityType)) {
+            return 'no';
+        }
 
-        $exception->body = $body;
+        if ($this->user->isAdmin()) {
+            return 'all';
+        }
 
-        return $exception;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
+        return 'onlyOwn';
     }
 }

@@ -1,0 +1,6 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyMy": "Espo\\Core\\Select\\AccessControl\\Filters\\ForeignOnlyOwn"
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\BooleanOwn"
+}

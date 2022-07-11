@@ -1,0 +1,18 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "rowIndex"}, false
+            ],
+            [
+                {"name": "type"}, false
+            ],
+            [
+                {"name": "validationField"}, {"name": "validationType"}
+            ],
+            [
+                {"name": "row"}
+            ]
+        ]
+    }
+]

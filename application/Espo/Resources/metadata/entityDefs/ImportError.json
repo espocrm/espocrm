@@ -1,0 +1,49 @@
+{
+    "fields": {
+        "import": {
+            "type": "link",
+            "readOnly": true
+        },
+        "rowIndex": {
+            "type": "int",
+            "readOnly": true
+        },
+        "type": {
+            "type": "enum",
+            "options": [
+                "",
+                "Validation",
+                "Access",
+                "Not-Found"
+            ],
+            "readOnly": true
+        },
+        "validationField": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "validationType": {
+            "type": "varchar",
+            "readOnly": true
+        },
+        "row": {
+            "type": "array",
+            "readOnly": true,
+            "displayAsList": true,
+            "doNotStoreArrayValues": true
+        }
+    },
+    "links": {
+        "import": {
+            "type": "belongsTo",
+            "entity": "Import",
+            "foreign": "errors",
+            "foreignName": "id"
+        }
+    },
+    "indexes": {
+        "importRowNumber": {
+            "columns": ["importId", "rowIndex"]
+        }
+    }
+}

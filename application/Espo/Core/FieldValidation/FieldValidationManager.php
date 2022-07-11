@@ -32,8 +32,8 @@ namespace Espo\Core\FieldValidation;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Exceptions\BadRequest,
     Exceptions\Error\Body,
+    FieldValidation\Exceptions\ValidationError,
     Utils\Metadata,
     Utils\FieldUtil};
 
@@ -69,7 +69,7 @@ class FieldValidationManager
      * @param ?stdClass $data Raw request payload data.
      * @param ?FieldValidationParams $params Validation additional parameters.
      *
-     * @throws BadRequest If data is not valid.
+     * @throws ValidationError If data is not valid.
      */
     public function process(Entity $entity, ?stdClass $data = null, ?FieldValidationParams $params = null): void
     {
@@ -142,7 +142,7 @@ class FieldValidationManager
     }
 
     /**
-     * @throws BadRequest
+     * @throws ValidationError
      */
     private function processField(Entity $entity, string $field, FieldValidationParams $params, stdClass $data): void
     {
@@ -172,15 +172,7 @@ class FieldValidationManager
             $result = $this->check($entity, $field, $type, $data);
 
             if (!$result) {
-                throw BadRequest::createWithBody(
-                    'validationFailure',
-                    Body::create()
-                        ->withMessageTranslation('validationFailure', null, [
-                            'field' => $field,
-                            'type' => $type,
-                        ])
-                        ->encode()
-                );
+                throw ValidationError::create($entityType, $field, $type);
             }
         }
     }

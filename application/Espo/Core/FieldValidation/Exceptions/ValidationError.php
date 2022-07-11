@@ -27,39 +27,73 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
+namespace Espo\Core\FieldValidation\Exceptions;
 
-use Throwable;
-use Exception;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error\Body;
 
-class BadRequest extends Exception implements HasBody
+use LogicException;
+
+class ValidationError extends BadRequest
 {
-    /**
-     * @var int
-     */
-    protected $code = 400;
-
-    /**
-     * @var ?string
-     */
-    protected $body = null;
-
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
+    private string $entityType;
+    private string $field;
+    private string $type;
 
     public static function createWithBody(string $reason, string $body): self
     {
-        $exception = new static($reason);
+        $exception = parent::createWithBody($reason, $body);
 
-        $exception->body = $body;
+        if (!$exception instanceof self) {
+            throw new LogicException();
+        }
 
         return $exception;
     }
 
-    public function getBody(): ?string
+    public static function create(string $entityType, string $field, string $type): self
     {
-        return $this->body;
+        $exception = self::createWithBody(
+            'validationFailure',
+            Body::create()
+                ->withMessageTranslation('validationFailure', null, [
+                    'field' => $field,
+                    'type' => $type,
+                ])
+                ->encode()
+        );
+
+        $exception->entityType = $entityType;
+        $exception->field = $field;
+        $exception->type = $type;
+
+        return $exception;
+    }
+
+    public function getEntityType(): string
+    {
+        if (!$this->entityType) {
+            throw new LogicException();
+        }
+
+        return $this->entityType;
+    }
+
+    public function getField(): string
+    {
+        if (!$this->field) {
+            throw new LogicException();
+        }
+
+        return $this->field;
+    }
+
+    public function getType(): string
+    {
+        if (!$this->type) {
+            throw new LogicException();
+        }
+
+        return $this->type;
     }
 }

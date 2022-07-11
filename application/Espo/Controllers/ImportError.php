@@ -27,39 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
+namespace Espo\Controllers;
 
-use Throwable;
-use Exception;
+use Espo\Core\Controllers\Record;
 
-class BadRequest extends Exception implements HasBody
+class ImportError extends Record
 {
-    /**
-     * @var int
-     */
-    protected $code = 400;
-
-    /**
-     * @var ?string
-     */
-    protected $body = null;
-
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
-
-    public static function createWithBody(string $reason, string $body): self
-    {
-        $exception = new static($reason);
-
-        $exception->body = $body;
-
-        return $exception;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
 }

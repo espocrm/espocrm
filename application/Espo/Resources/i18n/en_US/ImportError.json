@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "type": "Type",
+        "validationType": "Validation Type",
+        "validationField": "Validation Field",
+        "import": "Import",
+        "rowIndex": "Row Index",
+        "row": "Row"
+    },
+    "options": {
+        "type": {
+            "Validation": "Validation",
+            "Access": "Access",
+            "Not-Found": "Not-Found"
+        }
+    }
+}

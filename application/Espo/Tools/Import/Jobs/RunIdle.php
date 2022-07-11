@@ -52,6 +52,10 @@ class RunIdle implements Job
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @throws \Espo\Core\Exceptions\Forbidden
+     * @throws Error
+     */
     public function run(Data $data): void
     {
         $raw = $data->getRaw();
@@ -64,13 +68,14 @@ class RunIdle implements Job
 
         $params = ImportParams::fromRaw($raw->params);
 
-        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+        /** @var ?User */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new Error("Import: User not found.");
         }
 
-        if (!$user->get('isActive')) {
+        if (!$user->isActive()) {
             throw new Error("Import: User is not active.");
         }
 

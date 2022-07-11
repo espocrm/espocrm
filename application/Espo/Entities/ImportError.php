@@ -27,39 +27,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
+namespace Espo\Entities;
 
-use Throwable;
-use Exception;
+use Espo\Core\Field\Link;
+use Espo\Core\ORM\Entity;
 
-class BadRequest extends Exception implements HasBody
+use LogicException;
+
+class ImportError extends Entity
 {
-    /**
-     * @var int
-     */
-    protected $code = 400;
+    public const ENTITY_TYPE = 'ImportError';
+
+    public const TYPE_VALIDATION = 'Validation';
+    public const TYPE_ACCESS = 'Access';
+    public const TYPE_NOT_FOUND = 'Not-Found';
 
     /**
-     * @var ?string
+     * @return self::TYPE_*|null
      */
-    protected $body = null;
-
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    public function getType(): ?string
     {
-        parent::__construct($message, $code, $previous);
+        return $this->get('type');
     }
 
-    public static function createWithBody(string $reason, string $body): self
+    public function getRowIndex(): int
     {
-        $exception = new static($reason);
-
-        $exception->body = $body;
-
-        return $exception;
+        return $this->get('rowIndex');
     }
 
-    public function getBody(): ?string
+    public function getValidationField(): ?string
     {
-        return $this->body;
+        return $this->get('validationField');
+    }
+
+    public function getValidationType(): ?string
+    {
+        return $this->get('validationType');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRow(): array
+    {
+        /** @var ?string[] */
+        $value = $this->get('row');
+
+        if ($value === null) {
+            throw new LogicException();
+        }
+
+        return $value;
+    }
+
+    public function getImportLink(): Link
+    {
+        /** @var ?Link */
+        $link = $this->getValueObject('import');
+
+        if ($link === null) {
+            throw new LogicException();
+        }
+
+        return $link;
     }
 }

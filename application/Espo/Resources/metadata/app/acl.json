@@ -53,7 +53,8 @@
                 "read": "own"
             },
             "Role": false,
-            "PortalRole": false
+            "PortalRole": false,
+            "ImportError": "Import"
         },
         "fieldLevel": {
         },

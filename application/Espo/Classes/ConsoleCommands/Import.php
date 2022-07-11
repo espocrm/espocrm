@@ -83,14 +83,21 @@ class Import implements Command
                 $resultId = $result->getId();
                 $countCreated = $result->getCountCreated();
                 $countUpdated = $result->getCountUpdated();
+                $countError = $result->getCountError();
+                $countDuplicate = $result->getCountDuplicate();
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occurred: ". $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;
             }
 
-            $io->writeLine("Finished. Import ID: {$resultId}. Created: {$countCreated}. Updated: {$countUpdated}.");
+            $io->writeLine("Finished.");
+            $io->writeLine("  Import ID: {$resultId}");
+            $io->writeLine("  Created: {$countCreated}");
+            $io->writeLine("  Updated: {$countUpdated}");
+            $io->writeLine("  Duplicates: {$countDuplicate}");
+            $io->writeLine("  Errors: {$countError}");
 
             return;
         }
@@ -102,7 +109,7 @@ class Import implements Command
                 $this->service->revert($id);
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occurred: " . $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;
             }
@@ -119,15 +126,21 @@ class Import implements Command
                 $result = $this->service->importById($id, true, $forceResume);
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occurred: " . $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage());
 
                 return;
             }
 
             $countCreated = $result->getCountCreated();
             $countUpdated = $result->getCountUpdated();
+            $countError = $result->getCountError();
+            $countDuplicate = $result->getCountDuplicate();
 
-            $io->writeLine("Finished. Created: {$countCreated}. Updated: {$countUpdated}.");
+            $io->writeLine("Finished.");
+            $io->writeLine("  Created: {$countCreated}");
+            $io->writeLine("  Updated: {$countUpdated}");
+            $io->writeLine("  Duplicates: {$countDuplicate}");
+            $io->writeLine("  Errors: {$countError}");
 
             return;
         }

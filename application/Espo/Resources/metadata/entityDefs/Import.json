@@ -60,6 +60,12 @@
         "createdBy": {
             "type": "belongsTo",
             "entity": "User"
+        },
+        "errors": {
+            "type": "hasMany",
+            "entity": "ImportError",
+            "foreign": "import",
+            "readOnly": true
         }
     },
     "collection": {

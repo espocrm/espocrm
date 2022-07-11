@@ -39,6 +39,11 @@
 	    ]
     },
     "searchPanelDisabled": true,
+    "relationshipPanels": {
+        "errors": {
+            "unlinkDisabled": true
+        }
+    },
     "iconClass": "fas fa-file-import",
     "dateFormatList": [
         "YYYY-MM-DD",

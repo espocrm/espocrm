@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,39 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
-
-use Throwable;
-use Exception;
-
-class BadRequest extends Exception implements HasBody
-{
-    /**
-     * @var int
-     */
-    protected $code = 400;
+define('acl/foreign', ['acl'], function (Dep) {
 
     /**
-     * @var ?string
+     * To be used for entities for which access is determined by access to a foreign record.
      */
-    protected $body = null;
+    return Dep.extend({
 
-    final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
+        checkIsOwner: function (model) {
+            return true;
+        },
 
-    public static function createWithBody(string $reason, string $body): self
-    {
-        $exception = new static($reason);
-
-        $exception->body = $body;
-
-        return $exception;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
-}
+        checkInTeam: function (model) {
+            return true;
+        },
+    });
+});

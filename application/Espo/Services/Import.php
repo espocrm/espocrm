@@ -33,13 +33,13 @@ use Espo\Repositories\Import as Repository;
 use Espo\Entities\Import as ImportEntity;
 
 use Espo\Core\{
+    Acl\Table,
     Exceptions\Forbidden,
+    Exceptions\NotFoundSilent,
     Record\Collection as RecordCollection,
     Select\SearchParams,
     FieldProcessing\ListLoadProcessor,
 };
-
-use Espo\Services\Record;
 
 /**
  * @extends Record<\Espo\Entities\Import>
@@ -52,16 +52,20 @@ class Import extends Record
             return parent::findLinked($id, $link, $searchParams);
         }
 
-        /** @var ImportEntity $entity */
-        $entity = $this->getImportRepository()->get($id);
+        /** @var ?ImportEntity $entity */
+        $entity = $this->getImportRepository()->getById($id);
+
+        if (!$entity) {
+            throw new NotFoundSilent();
+        }
 
         $foreignEntityType = $entity->get('entityType');
 
-        if (!$this->acl->check($entity, 'read')) {
+        if (!$this->acl->check($entity, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 
-        if (!$this->acl->check($foreignEntityType, 'read')) {
+        if (!$this->acl->check($foreignEntityType, Table::ACTION_READ)) {
             throw new Forbidden();
         }
 

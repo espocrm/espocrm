@@ -76,6 +76,9 @@
         "updated": "Updated Records",
         "status": "Status"
     },
+    "links": {
+        "errors": "Errors"
+    },
     "options": {
         "status": {
             "Failed": "Failed",

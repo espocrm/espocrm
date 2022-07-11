@@ -100,6 +100,9 @@ function (Dep, SearchManager) {
 
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
+            let linkReadOnly = this.getMetadata()
+                .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
+
             var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!('create' in this.defs)) {
@@ -111,6 +114,11 @@ function (Dep, SearchManager) {
 
             if (!('view' in this.defs)) {
                 this.defs.view = true;
+            }
+
+            if (linkReadOnly) {
+                this.defs.create = false;
+                this.defs.select = false;
             }
 
             this.filterList = this.defs.filterList || this.filterList || null;
