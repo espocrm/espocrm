@@ -113,6 +113,14 @@ define('views/modal', ['view'], function (Dep) {
         headerElement: null,
 
         /**
+         * A header text.
+         *
+         * @protected
+         * @type {string}
+         */
+        headerText: null,
+
+        /**
          * A dialog instance.
          *
          * @protected
@@ -246,10 +254,7 @@ define('views/modal', ['view'], function (Dep) {
             this.headerHtml = this.options.headerHtml || this.headerHtml;
             this.$header = this.options.$header || this.$header;
             this.headerElement = this.options.headerElement || this.headerElement;
-
-            if (this.options.headerText) {
-                this.headerHtml = Handlebars.Utils.escapeExpression(this.options.headerText);
-            }
+            this.headerText = this.options.headerText || this.headerText;
 
             this.backdrop = this.options.backdrop || this.backdrop;
 
@@ -292,6 +297,10 @@ define('views/modal', ['view'], function (Dep) {
 
                 if (this.headerElement) {
                     headerHtml = this.headerElement.outerHTML;
+                }
+
+                if (this.headerText) {
+                    headerHtml = Handlebars.Utils.escapeExpression(this.headerText);
                 }
 
                 this.dialog = new Espo.Ui.Dialog({
