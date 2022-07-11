@@ -1478,6 +1478,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     .get(['clientDefs', this.scope, 'editDisabled']) || false;
             }
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
+                this.duplicateAction = false;
+            }
+
             this.readOnlyLocked = this.readOnly;
 
             this.inlineEditDisabled = this.inlineEditDisabled ||
