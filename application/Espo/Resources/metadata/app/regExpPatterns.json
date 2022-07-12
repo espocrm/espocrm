@@ -2,7 +2,7 @@
     "noBadCharacters": {
         "pattern": "[^<>=]+"
     },
-    "noSpecialCharacters": {
+    "noAsciiSpecialCharacters": {
         "pattern": "[^`~!@#$%^&*()_+={}\\[\\]|\\\\:;\"'<,>.?]+"
     },
     "latinLetters": {
