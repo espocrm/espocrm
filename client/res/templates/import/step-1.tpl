@@ -13,7 +13,7 @@
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'File (CSV)' scope='Import'}}</label>
                         <div>
-                            <input type="file" id="import-file">
+                            <input type="file" id="import-file" accept=".csv">
                         </div>
                         <div class="text-muted small">{{translate 'utf8' category='messages' scope='Import'}}</div>
                     </div>
