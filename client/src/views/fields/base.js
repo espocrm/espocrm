@@ -89,6 +89,24 @@ define('views/fields/base', ['view'], function (Dep) {
         searchTemplate: 'fields/base/search',
 
         /**
+         * @protected
+         * @type {string|null}
+         */
+        listTemplateContent: null,
+
+        /**
+         * @protected
+         * @type {string|null}
+         */
+        detailTemplateContent: null,
+
+        /**
+         * @protected
+         * @type {string|null}
+         */
+        editTemplateContent: null,
+
+        /**
          * A validation list. There should be a `validate{Name}` method for each item.
          *
          * @type {string[]}
@@ -530,7 +548,7 @@ define('views/fields/base', ['view'], function (Dep) {
             if (!this._template) {
                 this._templateCompiled = null;
 
-                if (contentProperty in this) {
+                if (contentProperty in this && this[contentProperty] !== null) {
                     this.compiledTemplatesCache = this.compiledTemplatesCache || {};
 
                     this._templateCompiled =
