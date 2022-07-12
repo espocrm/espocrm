@@ -37,7 +37,11 @@
         }
     ],
     "validationList": [
-        "required"
+        "required",
+        "maxLength"
+    ],
+    "mandatoryValidationList": [
+        "maxLength"
     ],
     "filter": true,
     "textFilter": true,
