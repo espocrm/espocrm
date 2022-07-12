@@ -85,6 +85,11 @@ function (Dep, SearchManager) {
          */
         recordsPerPage: null,
 
+        /**
+         * @protected
+         */
+        viewModalView: null,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -376,7 +381,7 @@ function (Dep, SearchManager) {
                 this.actionList.push(false);
 
                 this.filterList.slice(0).forEach((item) => {
-                    var selected = false;
+                    let selected;
 
                     if (item === 'all') {
                         selected = !this.filter;
@@ -385,12 +390,22 @@ function (Dep, SearchManager) {
                         selected = item === this.filter;
                     }
 
-                    var label = this.translateFilter(item);
+                    let label = this.translateFilter(item);
+
+                    let $item =
+                        $('<div>')
+                            .append(
+                                $('<span>')
+                                    .addClass('check-icon fas fa-check pull-right')
+                                    .addClass(!selected ? 'hidden' : '')
+                            )
+                            .append(
+                                $('<div>').text(label)
+                            );
 
                     this.actionList.push({
                         action: 'selectFilter',
-                        html: '<span class="check-icon fas fa-check pull-right' +
-                            (!selected ? ' hidden' : '') + '"></span>' + '<div>' + label + '</div>',
+                        html: $item.get(0).innerHTML,
                         data: {
                             name: item,
                         },
