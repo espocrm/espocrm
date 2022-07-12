@@ -692,12 +692,13 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 let dialog = new Dialog({
                     backdrop: backdrop,
                     header: false,
-                    className: 'dialog-confirm btn-s-wide',
+                    className: 'dialog-confirm',
                     body: '<span class="confirm-message">' + message + '</a>',
                     buttonList: [
                         {
                             text: ' ' + confirmText + ' ',
                             name: 'confirm',
+                            className: 'btn-s-wide',
                             onClick: () => {
                                 isResolved = true;
 
