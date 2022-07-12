@@ -3,7 +3,7 @@
         {{#if hasAddField}}
         <button
             type="button"
-            class="btn btn-default"
+            class="btn btn-default btn-wide"
             data-action="addField"
         ><span class="fas fa-plus"></span> {{translate 'Add Field' scope='Admin'}}</button>
         {{/if}}

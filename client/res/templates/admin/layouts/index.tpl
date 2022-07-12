@@ -6,14 +6,22 @@
         {{#each layoutScopeDataList}}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-scope="{{scope}}" href="{{url}}">{{translate scope category='scopeNamesPlural'}}</a>
+                    <a
+                        class="accordion-toggle"
+                        data-scope="{{scope}}" href="{{url}}"
+                    >{{translate scope category='scopeNamesPlural'}}</a>
                 </div>
                 <div class="panel-collapse collapse{{#ifEqual scope ../scope}} in{{/ifEqual}}" data-scope="{{scope}}">
                     <div class="panel-body">
                         <ul class="list-unstyled" style="overflow-x: hidden;";>
                         {{#each typeDataList}}
                             <li>
-                                <a class="layout-link btn btn-link" data-type="{{type}}" data-scope="{{../scope}}" href="{{url}}">{{translate type scope='Admin' category='layouts'}}</a>
+                                <a
+                                    class="layout-link btn btn-link"
+                                    data-type="{{type}}"
+                                    data-scope="{{../scope}}"
+                                    href="{{url}}"
+                                >{{translate type scope='Admin' category='layouts'}}</a>
                             </li>
                         {{/each}}
                         </ul>

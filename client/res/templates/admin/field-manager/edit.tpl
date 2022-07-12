@@ -1,7 +1,7 @@
 <div class="button-container">
     <div class="btn-group">
-    <button class="btn btn-primary" data-action="save">{{translate 'Save'}}</button>
-    <button class="btn btn-default" data-action="close">{{translate 'Close'}}</button>
+    <button class="btn btn-primary btn-xs-wide" data-action="save">{{translate 'Save'}}</button>
+    <button class="btn btn-default btn-xs-wide" data-action="close">{{translate 'Close'}}</button>
     {{#if hasResetToDefault}}
     <button
         class="btn btn-default"
