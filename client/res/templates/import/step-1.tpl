@@ -46,7 +46,10 @@
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <div class="pull-right">
-                            <button class="btn btn-link hidden" data-action="saveAsDefault">{{translate 'saveAsDefault' category='strings' scope='Import'}}</button>
+                            <button
+                                class="btn btn-link hidden"
+                                data-action="saveAsDefault"
+                            >{{translate 'saveAsDefault' category='strings' scope='Import'}}</button>
                         </div>
                     </div>
                 </div>
@@ -145,7 +148,10 @@
 
     <div style="padding-bottom: 10px;" class="clearfix">
         {{#if entityList.length}}
-        <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next' scope='Import'}}</button>
+        <button
+            class="btn btn-primary btn-s-wide pull-right hidden"
+            data-action="next"
+        >{{translate 'Next' scope='Import'}}</button>
         {{/if}}
     </div>
 
