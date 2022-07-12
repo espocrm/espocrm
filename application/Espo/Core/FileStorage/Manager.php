@@ -35,7 +35,7 @@ use Psr\Http\Message\StreamInterface;
 
 use RuntimeException;
 
-use function GuzzleHttp\Psr7\stream_for;
+use GuzzleHttp\Psr7\Utils;
 
 /**
  * An access point for file storing and fetching. Files are represented as Attachment entities.
@@ -119,7 +119,7 @@ class Manager
     {
         $implementation = $this->getImplementation($attachment);
 
-        $stream = stream_for($contents);
+        $stream = Utils::streamFor($contents);
 
         $implementation->putStream(self::wrapAttachmentEntity($attachment), $stream);
     }

@@ -113,6 +113,8 @@ class AwsS3 implements Storage
             throw new RuntimeException("Could not open temp.");
         }
 
+        $stream->rewind();
+
         fwrite($resource, $stream->getContents());
         rewind($resource);
 

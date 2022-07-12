@@ -99,6 +99,9 @@ class EspoUploadDir implements Storage, Local
     {
         $filePath = $this->getFilePath($attachment);
 
+        $stream->rewind();
+
+        // @todo Use a resource to write a file (add a method to the file manager).
         $contents = $stream->getContents();
 
         $result = $this->fileManager->putContents($filePath, $contents);
