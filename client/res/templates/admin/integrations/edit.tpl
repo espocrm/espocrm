@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <div class="panel">
+        <div class="panel panel-default">
             <div class="panel-body panel-body-form">
                 <div class="cell form-group" data-name="enabled">
                     <label
