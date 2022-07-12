@@ -30,6 +30,7 @@
 namespace Espo\Classes\Jobs;
 
 use Espo\Core\Record\ServiceContainer;
+use Espo\Entities\Attachment;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Core\ORM\Entity as CoreEntity;
 
@@ -312,11 +313,15 @@ class Cleanup implements JobDataLess
         $datetime->modify($period);
 
         $collection = $this->entityManager
-            ->getRDBRepository('Attachment')
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
             ->where([
                 'OR' => [
                     [
-                        'role' => ['Export File', 'Mail Merge', 'Mass Pdf']
+                        'role' => [
+                            Attachment::ROLE_EXPORT_FILE,
+                            'Mail Merge',
+                            'Mass Pdf',
+                        ]
                     ]
                 ],
                 'createdAt<' => $datetime->format('Y-m-d H:i:s'),

@@ -37,6 +37,8 @@ use Espo\ORM\BaseEntity;
 
 use Espo\Entities\User;
 
+use Espo\Entities\Attachment;
+
 use Espo\Core\{
     Utils\Json,
     Select\SelectBuilderFactory,
@@ -224,13 +226,12 @@ class Export
 
         fclose($dataResource);
 
-        $attachment = $this->entityManager->getNewEntity('Attachment');
+        $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getNew();
 
         $attachment->set('name', $fileName);
-        $attachment->set('role', 'Export File');
+        $attachment->set('role', Attachment::ROLE_EXPORT_FILE);
         $attachment->set('type', $mimeType);
         $attachment->set('size', $stream->getSize());
-
 
         $this->entityManager->saveEntity($attachment, [
             'createdById' => $this->user->getId(),

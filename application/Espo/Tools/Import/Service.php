@@ -141,6 +141,11 @@ class Service
         return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): Result
     {
         /** @var ?ImportEntity $import */
@@ -188,6 +193,10 @@ class Service
             ->run();
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function revert(string $id): void
     {
         $import = $this->entityManager->getEntity('Import', $id);
@@ -284,6 +293,10 @@ class Service
         return $attachment->getId();
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function removeDuplicates(string $id): void
     {
         $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
@@ -340,6 +353,9 @@ class Service
         }
     }
 
+    /**
+     * @throws NotFound
+     */
     public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId): void
     {
         $entity = $this->entityManager
