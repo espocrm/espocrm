@@ -32,13 +32,12 @@ namespace Espo\Core\FieldValidation\Exceptions;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error\Body;
 
+use Espo\Core\FieldValidation\Failure;
 use LogicException;
 
-class ValidationFailure extends BadRequest
+class ValidationError extends BadRequest
 {
-    private string $entityType;
-    private string $field;
-    private string $type;
+    private ?Failure $failure = null;
 
     public static function createWithBody(string $reason, string $body): self
     {
@@ -51,49 +50,29 @@ class ValidationFailure extends BadRequest
         return $exception;
     }
 
-    public static function create(string $entityType, string $field, string $type): self
+    public static function create(Failure $failure): self
     {
         $exception = self::createWithBody(
             'validationFailure',
             Body::create()
                 ->withMessageTranslation('validationFailure', null, [
-                    'field' => $field,
-                    'type' => $type,
+                    'field' => $failure->getField(),
+                    'type' => $failure->getType(),
                 ])
                 ->encode()
         );
 
-        $exception->entityType = $entityType;
-        $exception->field = $field;
-        $exception->type = $type;
+        $exception->failure = $failure;
 
         return $exception;
     }
 
-    public function getEntityType(): string
+    public function getFailure(): Failure
     {
-        if (!$this->entityType) {
+        if (!$this->failure) {
             throw new LogicException();
         }
 
-        return $this->entityType;
-    }
-
-    public function getField(): string
-    {
-        if (!$this->field) {
-            throw new LogicException();
-        }
-
-        return $this->field;
-    }
-
-    public function getType(): string
-    {
-        if (!$this->type) {
-            throw new LogicException();
-        }
-
-        return $this->type;
+        return $this->failure;
     }
 }

@@ -6,7 +6,13 @@
         },
         "rowIndex": {
             "type": "int",
-            "readOnly": true
+            "readOnly": true,
+            "tooltip": true
+        },
+        "index": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": true
         },
         "type": {
             "type": "enum",
@@ -18,13 +24,10 @@
             ],
             "readOnly": true
         },
-        "validationField": {
-            "type": "varchar",
-            "readOnly": true
-        },
-        "validationType": {
-            "type": "varchar",
-            "readOnly": true
+        "validationFailures": {
+            "type": "jsonArray",
+            "readOnly": true,
+            "view": "views/import-error/fields/validation-failures"
         },
         "row": {
             "type": "array",
@@ -41,8 +44,14 @@
             "foreignName": "id"
         }
     },
+    "collection": {
+        "orderBy": "rowIndex"
+    },
     "indexes": {
-        "importRowNumber": {
+        "rowIndex": {
+            "columns": ["rowIndex"]
+        },
+        "importRowIndex": {
             "columns": ["importId", "rowIndex"]
         }
     }

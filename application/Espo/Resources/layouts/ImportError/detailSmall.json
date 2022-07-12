@@ -2,13 +2,13 @@
     {
         "rows": [
             [
-                {"name": "rowIndex"}, false
+                {"name": "rowIndex"}, {"name": "index"}
             ],
             [
                 {"name": "type"}, false
             ],
             [
-                {"name": "validationField"}, {"name": "validationType"}
+                {"name": "validationFailures"}
             ],
             [
                 {"name": "row"}

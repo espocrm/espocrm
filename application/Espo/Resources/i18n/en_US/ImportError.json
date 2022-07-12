@@ -1,10 +1,10 @@
 {
     "fields": {
         "type": "Type",
-        "validationType": "Validation Type",
-        "validationField": "Validation Field",
+        "validationFailures": "Validation Failures",
         "import": "Import",
         "rowIndex": "Row Index",
+        "index": "Error Row Index",
         "row": "Row"
     },
     "options": {
@@ -13,5 +13,9 @@
             "Access": "Access",
             "Not-Found": "Not-Found"
         }
+    },
+    "tooltips": {
+        "rowIndex": "A row number in the original CSV.",
+        "index": "A row number in the error CSV."
     }
 }

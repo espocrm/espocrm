@@ -32,11 +32,12 @@ namespace Espo\Core\FieldValidation;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    FieldValidation\Exceptions\ValidationFailure,
+    FieldValidation\Exceptions\ValidationError,
     Utils\Metadata,
     Utils\FieldUtil,
 };
 
+use LogicException;
 use stdClass;
 
 /**
@@ -44,15 +45,11 @@ use stdClass;
  */
 class FieldValidationManager
 {
-    /**
-     * @var array<string,?object>
-     */
+    /** @var array<string,?object> */
     private $checkerCache = [];
 
     private Metadata $metadata;
-
     private FieldUtil $fieldUtil;
-
     private ValidatorFactory $factory;
 
     public function __construct(Metadata $metadata, FieldUtil $fieldUtil, ValidatorFactory $factory)
@@ -69,10 +66,42 @@ class FieldValidationManager
      * @param ?stdClass $data Raw request payload data.
      * @param ?FieldValidationParams $params Validation additional parameters.
      *
-     * @throws ValidationFailure If data is not valid.
+     * @throws ValidationError On the first invalid check.
      */
     public function process(Entity $entity, ?stdClass $data = null, ?FieldValidationParams $params = null): void
     {
+        $this->processInternal($entity, $data, $params, true);
+    }
+
+    /**
+     * Process validation w/o exception throwing.
+     *
+     * @param Entity $entity An entity.
+     * @param ?stdClass $data Raw request payload data.
+     * @param ?FieldValidationParams $params Validation additional parameters.
+     * @return Failure[] A list of validation failures.
+     */
+    public function processAll(Entity $entity, ?stdClass $data = null, ?FieldValidationParams $params = null): array
+    {
+        try {
+            return $this->processInternal($entity, $data, $params, false);
+        }
+        catch (ValidationError $e) {
+            throw new LogicException();
+        }
+    }
+
+    /**
+     * @return Failure[]
+     * @throws ValidationError On the first invalid check.
+     */
+    private function processInternal(
+        Entity $entity,
+        ?stdClass $data,
+        ?FieldValidationParams $params,
+        bool $throw
+    ): array {
+
         $dataIsSet = $data !== null;
 
         if (!$data) {
@@ -87,6 +116,8 @@ class FieldValidationManager
 
         $skipFieldList = $params->getSkipFieldList();
 
+        $failureList = [];
+
         foreach ($fieldList as $field) {
             if (in_array($field, $skipFieldList)) {
                 continue;
@@ -100,8 +131,12 @@ class FieldValidationManager
                 continue;
             }
 
-            $this->processField($entity, $field, $params, $data);
+            $itemFailureList = $this->processField($entity, $field, $params, $data, $throw);
+
+            $failureList = array_merge($failureList, $itemFailureList);
         }
+
+        return $failureList;
     }
 
     /**
@@ -142,10 +177,17 @@ class FieldValidationManager
     }
 
     /**
-     * @throws ValidationFailure
+     * @return Failure[]
+     *@throws ValidationError
      */
-    private function processField(Entity $entity, string $field, FieldValidationParams $params, stdClass $data): void
-    {
+    private function processField(
+        Entity $entity,
+        string $field,
+        FieldValidationParams $params,
+        stdClass $data,
+        bool $throw
+    ): array {
+
         $entityType = $entity->getEntityType();
 
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
@@ -157,6 +199,8 @@ class FieldValidationManager
         $mandatoryValidationList =
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
             $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
+
+        $failureList = [];
 
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
@@ -171,10 +215,20 @@ class FieldValidationManager
 
             $result = $this->check($entity, $field, $type, $data);
 
-            if (!$result) {
-                throw ValidationFailure::create($entityType, $field, $type);
+            if ($result) {
+                continue;
+            }
+
+            $failure = new Failure($entityType, $field, $type);
+
+            $failureList[] = $failure;
+
+            if ($throw) {
+                throw ValidationError::create($failure);
             }
         }
+
+        return $failureList;
     }
 
     /**

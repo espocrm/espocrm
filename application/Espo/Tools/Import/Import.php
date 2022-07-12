@@ -35,13 +35,15 @@ use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
 use Espo\Tools\Import\Jobs\RunIdle;
 
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
+
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\{
     Acl\Table,
     Exceptions\Error,
     Exceptions\Forbidden,
-    FieldValidation\Exceptions\ValidationFailure,
+    FieldValidation\Failure,
     FieldValidation\FieldValidationManager,
     Utils\Json,
     AclManager,
@@ -344,6 +346,8 @@ class Import
 
             $contentsPrepared = str_replace(["\r\n", "\r"], "\n", $contents);
 
+            $errorIndex = $params->headerRow() ? 1 : 0;
+
             while ($row = $this->readCsvString($contentsPrepared, $delimiter, $enclosure)) {
                 $i++;
 
@@ -359,7 +363,7 @@ class Import
                     continue;
                 }
 
-                $rowResult = $this->importRow($attributeList, $row, $i, $import);
+                $rowResult = $this->importRow($attributeList, $row, $i, $import, $errorIndex);
 
                 if (!$rowResult) {
                     continue;
@@ -440,8 +444,16 @@ class Import
      *   'isUpdated'?: boolean,
      * }|null
      */
-    private function importRow(array $attributeList, array $row, int $index, ImportEntity $import): ?array
-    {
+    private function importRow(
+        array $attributeList,
+        array $row,
+        int $index,
+        ImportEntity $import,
+        int &$errorIndex
+    ): ?array {
+
+        assert(is_string($this->entityType));
+
         $params = $this->params;
 
         $action = $params->getAction() ?? self::DEFAULT_ACTION;
@@ -467,8 +479,6 @@ class Import
             }
         }
 
-        assert(is_string($this->entityType));
-
         $recordService = $this->recordServiceContainer->get($this->entityType);
 
         if (
@@ -492,8 +502,9 @@ class Import
                 $this->createError(
                     ImportError::TYPE_ACCESS,
                     $index,
-                    $attributeList,
-                    $import
+                    $row,
+                    $import,
+                    $errorIndex
                 );
 
                 return ['isError' => true];
@@ -503,8 +514,9 @@ class Import
                 $this->createError(
                     ImportError::TYPE_NOT_FOUND,
                     $index,
-                    $attributeList,
-                    $import
+                    $row,
+                    $import,
+                    $errorIndex
                 );
 
                 return ['isError' => true];
@@ -522,7 +534,7 @@ class Import
             $entity = $this->entityManager->getNewEntity($this->entityType);
         }
 
-        if (!$entity instanceof Entity) {
+        if (!$entity instanceof CoreEntity) {
             throw new Error("Import: Only `Espo\Core\ORM\Entity` supported.");
         }
 
@@ -586,24 +598,38 @@ class Import
             }
         }
 
-        $result = [];
-
-        if ($isNew) {
-            $isDuplicate = false;
-
-            if (!$params->skipDuplicateChecking()) {
-                $isDuplicate = $recordService->checkIsDuplicate($entity);
-            }
-        }
-
-        if ($entity->hasId()) {
-            $this->entityManager
-                ->getRDBRepository($entity->getEntityType())
-                ->deleteFromDb($entity->getId(), true);
-        }
-
         try {
-            $this->fieldValidationManager->process($entity);
+            $failureList = $this->fieldValidationManager->processAll($entity);
+
+            if ($failureList !== []) {
+                $this->createError(
+                    ImportError::TYPE_VALIDATION,
+                    $index,
+                    $row,
+                    $import,
+                    $errorIndex,
+                    $failureList
+                );
+
+                return ['isError' => true];
+            }
+
+            $result = [];
+
+            if ($isNew) {
+                $isDuplicate = false;
+
+                if (!$params->skipDuplicateChecking()) {
+                    $isDuplicate = $recordService->checkIsDuplicate($entity);
+                }
+            }
+
+            if ($entity->hasId()) {
+                $this->entityManager
+                    ->getRDBRepository($entity->getEntityType())
+                    ->deleteFromDb($entity->getId(), true);
+            }
+
 
             $this->entityManager->saveEntity($entity, [
                 'noStream' => true,
@@ -627,7 +653,13 @@ class Import
         catch (Exception $e) {
             $this->log->error("Import: " . $e->getMessage());
 
-            $this->processRowException($e, $index, $import, $row);
+            $this->createError(
+                null,
+                $index,
+                $row,
+                $import,
+                $errorIndex
+            );
 
             return ['isError' => true];
         }
@@ -635,7 +667,7 @@ class Import
         return $result;
     }
 
-    private function processForeignName(Entity $entity, string $attribute): void
+    private function processForeignName(CoreEntity $entity, string $attribute): void
     {
         $relation = $entity->getAttributeParam($attribute, 'relation');
 
@@ -710,7 +742,7 @@ class Import
     /**
      * @param mixed $value
      */
-    private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap): void
+    private function processRowItem(CoreEntity $entity, string $attribute, $value, stdClass $valueMap): void
     {
         assert(is_string($this->entityType));
 
@@ -772,7 +804,9 @@ class Import
 
                     if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
                         $personNameData['firstName'] = $this->prepareAttributeValue(
-                            $entity, $firstNameAttribute, $personNameData['firstName']
+                            $entity,
+                            $firstNameAttribute,
+                            $personNameData['firstName']
                         );
 
                         $entity->set($firstNameAttribute, $personNameData['firstName']);
@@ -780,7 +814,9 @@ class Import
 
                     if (!$entity->get($lastNameAttribute)) {
                         $personNameData['lastName'] = $this->prepareAttributeValue(
-                            $entity, $lastNameAttribute, $personNameData['lastName']
+                            $entity,
+                            $lastNameAttribute,
+                            $personNameData['lastName']
                         );
 
                         $entity->set($lastNameAttribute, $personNameData['lastName']);
@@ -788,7 +824,9 @@ class Import
 
                     if (!$entity->get($middleNameAttribute) && isset($personNameData['middleName'])) {
                         $personNameData['middleName'] = $this->prepareAttributeValue(
-                            $entity, $middleNameAttribute, $personNameData['middleName']
+                            $entity,
+                            $middleNameAttribute,
+                            $personNameData['middleName']
                         );
 
                         $entity->set($middleNameAttribute, $personNameData['middleName']);
@@ -880,8 +918,6 @@ class Import
             $emailAddressData[] = $o;
 
             $entity->set('emailAddressData', $emailAddressData);
-
-            return;
         }
     }
 
@@ -889,7 +925,7 @@ class Import
      * @param mixed $value
      * @return mixed
      */
-    private function parseValue(Entity $entity, string $attribute, $value)
+    private function parseValue(CoreEntity $entity, string $attribute, $value)
     {
         $params = $this->params;
 
@@ -983,7 +1019,7 @@ class Import
      * @param mixed $value
      * @return mixed
      */
-    private function prepareAttributeValue(Entity $entity, string $attribute, $value)
+    private function prepareAttributeValue(CoreEntity $entity, string $attribute, $value)
     {
         if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
             $maxLength = $entity->getAttributeParam($attribute, 'len');
@@ -1177,36 +1213,41 @@ class Import
     }
 
     /**
+     * @param ImportError::TYPE_*|null $type
      * @param string[] $row
+     * @param Failure[] $failureList
      */
-    private function processRowException(Exception $exception, int $index, ImportEntity $import, array $row): void
-    {
-        $error = $this->entityManager->getNewEntity(ImportError::ENTITY_TYPE);
+    private function createError(
+        ?string $type,
+        int $index,
+        array $row,
+        ImportEntity $import,
+        int &$errorIndex,
+        ?array $failureList = null
+    ): void {
+        $validationFailures = null;
 
-        $error->set('importId', $import->getId());
-        $error->set('rowIndex', $index);
-        $error->set('row', $row);
+        if ($type === ImportError::TYPE_VALIDATION && $failureList !== null) {
+            $validationFailures = [];
 
-        if ($exception instanceof ValidationFailure) {
-            $error->set('type', ImportError::TYPE_VALIDATION);
-            $error->set('validationField', $exception->getField());
-            $error->set('validationType', $exception->getType());
+            foreach ($failureList as $failure) {
+                $validationFailures[] = (object) [
+                    'entityType' => $failure->getEntityType(),
+                    'field' => $failure->getField(),
+                    'type' => $failure->getType(),
+                ];
+            }
         }
 
-        $this->entityManager->saveEntity($error);
-    }
-
-    /**
-     * @param ImportError::TYPE_*|null $type
-     * @param string[] $attributeList
-     */
-    private function createError(?string $type, int $index, array $attributeList, ImportEntity $import): void
-    {
         $this->entityManager->createEntity(ImportError::ENTITY_TYPE, [
             'type' => $type,
             'rowIndex' => $index,
-            'row' => $attributeList,
+            'index' => $errorIndex,
+            'row' => $row,
             'importId' => $import->getId(),
+            'validationFailures' => $validationFailures,
         ]);
+
+        $errorIndex++;
     }
 }
