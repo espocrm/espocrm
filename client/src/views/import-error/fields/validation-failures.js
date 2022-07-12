@@ -49,7 +49,7 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
                     {{#each value}}
                     <tr>
                         <td>{{translate field category='fields' scope=entityType}}</td>
-                        <td>{{type}}</td>
+                        <td>{{translate type category='fieldValidations'}}</td>
                     </tr>
                     {{/each}}
                 </tbody>

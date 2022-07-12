@@ -814,5 +814,19 @@
         "VioletVertical": "Violet",
         "Hazyblue": "Hazyblue Horizontal",
         "HazyblueVertical": "Hazyblue"
+    },
+    "fieldValidations": {
+        "required": "Required",
+        "maxCount": "Max Count",
+        "maxLength": "Max Length",
+        "pattern": "Pattern Matching",
+        "emailAddress": "Valid Email Address",
+        "phoneNumber": "Valid Phone Number",
+        "array": "Array",
+        "arrayOfString": "Array of Strings",
+        "valid": "Valid",
+        "noEmptyString": "No Empty String",
+        "max": "Max Value",
+        "min": "Min Value"
     }
 }
