@@ -5,7 +5,7 @@
                 {"name": "import"}, false
             ],
             [
-                {"name": "rowIndex"}, {"name": "index"}
+                {"name": "rowIndex"}, {"name": "exportRowIndex"}
             ],
             [
                 {"name": "type"}, false

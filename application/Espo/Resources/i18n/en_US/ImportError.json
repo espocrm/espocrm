@@ -4,7 +4,7 @@
         "validationFailures": "Validation Failures",
         "import": "Import",
         "rowIndex": "Row Index",
-        "index": "Error Row Index",
+        "exportRowIndex": "Export Row Index",
         "row": "Row"
     },
     "options": {
@@ -16,6 +16,6 @@
     },
     "tooltips": {
         "rowIndex": "A row number in the original CSV.",
-        "index": "A row number in the error CSV."
+        "exportRowIndex": "A row number in the export CSV."
     }
 }

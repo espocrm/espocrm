@@ -9,7 +9,7 @@
             "readOnly": true,
             "tooltip": true
         },
-        "index": {
+        "exportRowIndex": {
             "type": "int",
             "readOnly": true,
             "tooltip": true

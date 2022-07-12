@@ -1242,7 +1242,7 @@ class Import
         $this->entityManager->createEntity(ImportError::ENTITY_TYPE, [
             'type' => $type,
             'rowIndex' => $index,
-            'index' => $errorIndex,
+            'exportRowIndex' => $errorIndex,
             'row' => $row,
             'importId' => $import->getId(),
             'validationFailures' => $validationFailures,

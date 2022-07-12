@@ -442,8 +442,8 @@ class Service
             ->getRDBRepositoryByClass(ImportEntity::class)
             ->getRelation($import, 'errors')
             ->sth()
-            ->select(['index'])
-            ->order('index')
+            ->select(['exportRowIndex', 'rowIndex'])
+            ->order('rowIndex')
             ->find();
 
         if ($import->getParams()->headerRow()) {
@@ -460,7 +460,7 @@ class Service
         }
 
         foreach ($errorList as $error) {
-            $file->seek($error->getIndex());
+            $file->seek($error->getRowIndex());
 
             /** @var string|false */
             $line = $file->current();

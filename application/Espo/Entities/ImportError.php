@@ -50,9 +50,9 @@ class ImportError extends Entity
         return $this->get('type');
     }
 
-    public function getIndex(): int
+    public function getExportRowIndex(): int
     {
-        return $this->get('index');
+        return $this->get('exportRowIndex');
     }
 
     public function getRowIndex(): int
