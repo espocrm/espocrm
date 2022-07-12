@@ -37,6 +37,7 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
     return Dep.extend(/** @lends module:views/import-error/fields/validation-failures.Class# */{
 
         detailTemplateContent: `
+            {{#if value}}
             <table class="table">
                 <thead>
                     <tr>
@@ -53,6 +54,9 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
                     {{/each}}
                 </tbody>
             </table>
+            {{else}}
+            <span class="none-value">{{translate 'None'}}</span>
+            {{/if}}
         `,
     });
 });
