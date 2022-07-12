@@ -55,9 +55,11 @@
         "New Import": "New Import",
         "Import Results": "Import Results",
         "Run Manually": "Run Manually",
-        "Silent Mode": "Silent Mode"
+        "Silent Mode": "Silent Mode",
+        "Export": "Export"
     },
     "messages": {
+        "noErrors": "No errors.",
         "utf8": "Should be UTF-8 encoded",
         "duplicatesRemoved": "Duplicates removed",
         "inIdle": "Execute in idle (for big data; via cron)",

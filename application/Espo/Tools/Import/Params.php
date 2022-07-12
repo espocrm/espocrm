@@ -342,7 +342,7 @@ class Params
 
         $raw = (object) $params;
 
-        $obj = self::create()
+        return self::create()
             ->withAction($raw->action ?? null)
             ->withCurrency($raw->currency ?? null)
             ->withDateFormat($raw->dateFormat ?? null)
@@ -360,8 +360,6 @@ class Params
             ->withTimeFormat($raw->timeFormat ?? false)
             ->withTimezone($raw->timezone ?? null)
             ->withUpdateBy($raw->updateBy ?? []);
-
-        return $obj;
     }
 
     /**

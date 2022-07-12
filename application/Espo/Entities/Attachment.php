@@ -136,6 +136,20 @@ class Attachment extends Entity
         return $this;
     }
 
+    public function setRole(?string $type): self
+    {
+        $this->set('role', $type);
+
+        return $this;
+    }
+
+    public function setSize(?int $size): self
+    {
+        $this->set('size', $size);
+
+        return $this;
+    }
+
     public function setContents(?string $contents): self
     {
         $this->set('contents', $contents);

@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,53 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
-
-use Espo\Tools\Import\Params;
-
-use stdClass;
-
-class Import extends \Espo\Core\ORM\Entity
-{
-    public const ENTITY_TYPE = 'Import';
-
-    public const STATUS_STANDBY = 'Standby';
-
-    public const STATUS_IN_PROCESS = 'In Process';
-
-    public const STATUS_FAILED = 'Failed';
-
-    public const STATUS_PENDING = 'Pending';
-
-    public const STATUS_COMPLETE = 'Complete';
-
-    public function getStatus(): ?string
-    {
-        return $this->get('status');
-    }
-
-    public function getParams(): Params
-    {
-        $raw = $this->get('params');
-
-        return Params::fromRaw($raw);
-    }
-
-    public function getFileId(): ?string
-    {
-        return $this->get('fileId');
-    }
-
-    public function getTargetEntityType(): ?string
-    {
-        return $this->get('entityType');
-    }
+define('handlers/import', ['action-handler'], function (Dep) {
 
     /**
-     * @return ?string[]
+     * @extends module:action-handler
      */
-    public function getTargetAttributeList(): ?array
-    {
-        return $this->get('attributeList');
+    class Class extends Dep {
+
+        actionErrorExport() {
+            Espo.Ajax
+                .postRequest('Import/action/exportErrors', {
+                    id: this.view.model.id
+                })
+                .then(data => {
+                    if (!data.attachmentId) {
+                        let message = this.view.translate('noErrors', 'messages', 'Import');
+
+                        Espo.Ui.warning(message);
+
+                        return;
+                    }
+
+                    window.location = this.view.getBasePath() +'?entryPoint=download&id=' + data.attachmentId;
+                });
+        }
     }
-}
+
+    return Class;
+});

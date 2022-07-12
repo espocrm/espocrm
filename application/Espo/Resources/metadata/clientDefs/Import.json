@@ -41,7 +41,17 @@
     "searchPanelDisabled": true,
     "relationshipPanels": {
         "errors": {
-            "unlinkDisabled": true
+            "unlinkDisabled": true,
+            "actionList": [
+                {
+                    "name": "export",
+                    "action": "errorExport",
+                    "label": "Export",
+                    "data": {
+                        "handler": "handlers/import"
+                    }
+                }
+            ]
         }
     },
     "iconClass": "fas fa-file-import",
