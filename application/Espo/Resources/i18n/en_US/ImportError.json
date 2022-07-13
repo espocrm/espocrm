@@ -5,6 +5,8 @@
         "import": "Import",
         "rowIndex": "Row Index",
         "exportRowIndex": "Export Row Index",
+        "lineNumber": "Line Number",
+        "exportLineNumber": "Export Line Number",
         "row": "Row"
     },
     "options": {
@@ -15,7 +17,7 @@
         }
     },
     "tooltips": {
-        "rowIndex": "A row number in the original CSV.",
-        "exportRowIndex": "A row number in the export CSV."
+        "lineNumber": "A line number in the original CSV.",
+        "exportLineNumber": "A line number in the export CSV."
     }
 }

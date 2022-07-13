@@ -2,7 +2,7 @@
     {
         "rows": [
             [
-                {"name": "rowIndex"}, {"name": "exportRowIndex"}
+                {"name": "lineNumber"}, {"name": "exportLineNumber"}
             ],
             [
                 {"name": "type"}, false

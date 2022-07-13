@@ -1,4 +1,4 @@
 [
-    {"name": "rowIndex", "width": 45},
+    {"name": "lineNumber", "width": 45},
     {"name": "type"}
 ]
