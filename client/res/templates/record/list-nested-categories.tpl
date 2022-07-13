@@ -49,7 +49,7 @@
         <div class="category-item">
             <a
                 href="{{upperLink}}"
-                class="action folder-icon"
+                class="action folder-icon btn-text"
                 data-action="openCategory"
                 data-id="{{categoryData.upperId}}"
                 title="{{translate 'Up'}}"
