@@ -48,5 +48,15 @@ define('views/fields/link-category-tree', ['views/fields/link'], function (Dep) 
 
             return data;
         },
+
+        getUrl: function () {
+            let id = this.model.get(this.idName);
+
+            if (!id) {
+                return null;
+            }
+
+            return '#' + this.entityType + '/list/categoryId=' + id;
+        },
     });
 });

@@ -34,6 +34,10 @@ define('views/fields/link-multiple-category-tree', ['views/fields/link-multiple'
 
         autocompleteDisabled: false,
 
+        getUrl: function (id) {
+            return '#' + this.entityType + '/list/categoryId=' + id;
+        },
+
         fetchSearch: function () {
             var data = Dep.prototype.fetchSearch.call(this);
 

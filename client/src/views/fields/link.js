@@ -198,11 +198,26 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                 nameValue: nameValue,
                 foreignScope: this.foreignScope,
                 valueIsSet: this.model.has(this.idName),
-                iconHtml: iconHtml
+                iconHtml: iconHtml,
+                url: this.getUrl(),
             }, Dep.prototype.data.call(this));
         },
 
         getEmptyAutocompleteResult: null,
+
+        /**
+         * @protected
+         * @return {?string}
+         */
+        getUrl: function () {
+            let id = this.model.get(this.idName);
+
+            if (!id) {
+                return null;
+            }
+
+            return '#' + this.foreignScope + '/view/' + id;
+        },
 
         /**
          * Get advanced filters (field filters) to be applied when select a record.
