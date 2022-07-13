@@ -260,12 +260,9 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
         },
 
         actionOpenCategory: function (data) {
-            this.hideListViewWhileNestedCategoriesLoaded();
-
             this.openCategory(data.id || null, data.name);
 
             this.selectCurrentCategory();
-
             this.navigateToCurrentCategory();
         },
 
@@ -315,6 +312,9 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             if (this.nestedCategoriesCollection) {
                 this.nestedCategoriesCollection.abortLastFetch();
 
+                this.hideListContainer();
+                this.$nestedCategoriesContainer.addClass('hidden');
+
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
                 Promise
@@ -322,15 +322,16 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                         this.nestedCategoriesCollection
                             .fetch()
                             .then(() => {
-                                this.controlNestedCategoriesVisibility();
                                 this.updateHeader();
                             }),
-
                         this.collection.fetch({openCategory: true})
                     ])
                     .then(() => {
                         Espo.Ui.notify(false);
 
+                        console.log(this.$listContainer.hasClass('hidden'));
+
+                        this.controlNestedCategoriesVisibility();
                         this.controlListVisibility();
                     });
 
@@ -339,7 +340,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
             this.collection
                 .fetch()
-                    .then(() => {
+                .then(() => {
                     Espo.Ui.notify(false);
                 });
         },
@@ -420,8 +421,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 this.applyCategoryToNestedCategoriesCollection();
 
                 collection.fetch().then(() => {
-                    this.controlListVisibility();
                     this.controlNestedCategoriesVisibility();
+                    this.controlListVisibility();
 
                     this.updateHeader();
 
@@ -669,14 +670,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         updateHeader: function () {
             this.getView('header').reRender();
-        },
-
-        hideListViewWhileNestedCategoriesLoaded: function () {
-            this.hideListContainer();
-
-            this.nestedCategoriesCollection.once('sync', () => {
-                this.showListContainer();
-            });
         },
 
         hideListContainer: function () {
