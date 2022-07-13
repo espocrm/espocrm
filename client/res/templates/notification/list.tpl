@@ -5,8 +5,17 @@
         </div>
         <div class="col-sm-5">
             <div class="pull-right btn-group">
-                <button class="btn btn-default" data-action="markAllNotificationsRead" title="{{translate 'Mark all read'}}">{{translate 'Mark all read'}}</button>
-                <button class="btn btn-default" data-action="refresh" title="{{translate 'checkForNewNotifications' category='messages'}}">&nbsp;&nbsp;<span class="fas fa-sync"></span>&nbsp;&nbsp;</button>
+                <button
+                    class="btn btn-default btn-text"
+                    data-action="markAllNotificationsRead"
+                    title="{{translate 'Mark all read'}}"
+                >{{translate 'Mark all read'}}</button>
+                <button
+                    class="btn btn-text btn-xs-wide btn-icon"
+                    data-action="refresh"
+                    title="{{translate 'checkForNewNotifications'
+                    category='messages'}}"
+                ><span class="fas fa-sync"></span>&nbsp;</button>
             </div>
         </div>
     </div>
