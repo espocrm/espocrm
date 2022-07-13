@@ -44,6 +44,11 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
         }
     ],
     "validationList": [

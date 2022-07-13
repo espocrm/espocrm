@@ -29,6 +29,11 @@
         {
             "name": "useIframe",
             "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
         }
     ],
     "filter": true,

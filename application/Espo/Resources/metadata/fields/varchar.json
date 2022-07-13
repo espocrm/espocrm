@@ -31,7 +31,8 @@
         },
         {
             "name": "audited",
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         {
             "name": "readOnly",
