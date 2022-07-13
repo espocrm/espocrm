@@ -431,7 +431,7 @@ define('collection', [], function () {
         /**
          * Set an order.
          *
-         * @param {string} orderBy
+         * @param {string|null} orderBy
          * @param {boolean|'asc'|'desc'|null} [order]
          * @param {boolean} [setDefault]
          */
