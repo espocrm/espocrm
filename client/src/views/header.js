@@ -28,7 +28,13 @@
 
 define('views/header', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/header
+     * @extends module:view.Class
+     */
+    return Dep.extend(/** @lends module:views/header.Class# */{
 
         template: 'header',
 
