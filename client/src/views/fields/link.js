@@ -187,7 +187,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
 
             var iconHtml = null;
 
-            if (this.mode === 'detail') {
+            if (this.isDetailMode()) {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
 
@@ -772,31 +772,27 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
             }
 
             if (type === 'isEmpty') {
-                var data = {
+                return {
                     type: 'isNull',
                     attribute: this.idName,
                     data: {
-                        type: type
+                        type: type,
                     }
                 };
-
-                return data;
             }
 
             if (type === 'isNotEmpty') {
-                var data = {
+                return {
                     type: 'isNotNull',
                     attribute: this.idName,
                     data: {
                         type: type,
                     },
                 };
-
-                return data;
             }
 
             if (type === 'isOneOf') {
-                var data = {
+                return {
                     type: 'in',
                     attribute: this.idName,
                     value: this.searchData.oneOfIdList,
@@ -806,12 +802,10 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash,
                     },
                 };
-
-                return data;
             }
 
             if (type === 'isNotOneOf') {
-                var data = {
+                return {
                     type: 'or',
                     value: [
                         {
@@ -830,12 +824,10 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash,
                     }
                 };
-
-                return data;
             }
 
             if (type === 'isNotOneOfAndIsNotEmpty') {
-                var data = {
+                return {
                     type: 'notIn',
                     attribute: this.idName,
                     value: this.searchData.oneOfIdList,
@@ -845,8 +837,6 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash,
                     },
                 };
-
-                return data;
             }
 
             if (type === 'isNot') {
@@ -854,9 +844,9 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                     return false;
                 }
 
-                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+                let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
-                var data = {
+                return {
                     type: 'or',
                     value: [
                         {
@@ -875,8 +865,6 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         nameValue: nameValue,
                     }
                 };
-
-                return data;
             }
 
             if (type === 'isNotAndIsNotEmpty') {
@@ -884,9 +872,9 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                     return false;
                 }
 
-                var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+                let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
-                var data = {
+                return {
                     type: 'notEquals',
                     attribute: this.idName,
                     value: value,
@@ -896,17 +884,15 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                         nameValue: nameValue,
                     },
                 };
-
-                return data;
             }
 
             if (!value) {
                 return false;
             }
 
-            var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+            let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
-            var data = {
+            return {
                 type: 'equals',
                 attribute: this.idName,
                 value: value,
@@ -916,8 +902,6 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                     nameValue: nameValue,
                 }
             };
-
-            return data;
         },
 
         /**
