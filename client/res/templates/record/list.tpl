@@ -13,9 +13,9 @@
         {{#if massActionList}}
         <button
             type="button"
-            class="btn btn-default dropdown-toggle actions-button hidden"
+            class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
             data-toggle="dropdown"
-        >{{translate 'Actions'}}<span class="caret"></span></button>
+        >{{translate 'Actions'}} <span class="caret"></span></button>
         {{/if}}
         {{#if buttonList.length}}
         {{#each buttonList}}
@@ -75,9 +75,11 @@
 
     <div class="sticked-bar hidden">
         <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle actions-button hidden" data-toggle="dropdown">
-            {{translate 'Actions'}}
-            <span class="caret"></span>
+            <button
+                type="button"
+                class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
+                data-toggle="dropdown"
+            >{{translate 'Actions'}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu actions-menu">
                 {{#each massActionList}}
