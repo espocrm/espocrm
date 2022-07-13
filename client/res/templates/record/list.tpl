@@ -141,12 +141,15 @@
                 <th
                     {{#if width}}width="{{width}}"{{/if}}
                     {{#if align}}style="text-align: {{align}};"{{/if}}
+                    {{#if className}}class="{{className}}"{{/if}}
+                    {{#if name}}data-name="{{name}}"{{/if}}
                 >
                     {{#if this.isSortable}}
                         <a
                             href="javascript:"
                             class="sort"
                             data-name="{{this.name}}"
+                            title="{{translate 'Sort'}}"
                         >{{label}}</a>
                         {{#if this.isSorted}}
                             {{#unless this.isDesc}}
@@ -156,7 +159,11 @@
                             {{/unless}}
                         {{/if}}
                     {{else}}
+                        {{#if html}}
+                        {{{html}}}
+                        {{else}}
                         {{label}}
+                        {{/if}}
                     {{/if}}
                 </th>
                 {{/each}}

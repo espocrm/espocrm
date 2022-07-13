@@ -546,35 +546,58 @@ function (Dep, MassActionHelper, ExportHelper) {
                 } else {
                     this.massAction(action);
                 }
-            }
+            },
+            /**
+             * @this module:views/record/list.Class
+             */
+            'click a.reset-custom-order': function () {
+                this.resetCustomOrder();
+
+            },
+        },
+
+        resetCustomOrder: function () {
+            this.collection.resetOrderToDefault();
+            this.collection.trigger('order-changed');
+
+            this.collection
+                .fetch()
+                .then(() => {
+                    this.trigger('sort', {
+                        orderBy: this.collection.orderBy,
+                        order: this.collection.order,
+                    });
+                })
         },
 
         /**
+         * @param {string} orderBy
          * @protected
          */
         toggleSort: function (orderBy) {
-            var asc = true;
+            let asc = true;
+
             if (orderBy === this.collection.orderBy && this.collection.order === 'asc') {
                 asc = false;
             }
 
-            var order = asc ? 'asc' : 'desc';
+            let order = asc ? 'asc' : 'desc';
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
 
-            this.collection.once('sync', () => {
-                this.notify(false);
-
-                this.trigger('sort', {orderBy: orderBy, order: order});
-            });
-
-            var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
+            let maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
 
             while (this.collection.length > maxSizeLimit) {
                 this.collection.pop();
             }
 
-            this.collection.sort(orderBy, order);
+            this.collection
+                .sort(orderBy, order)
+                .then(() => {
+                    Espo.Ui.notify(false);
+
+                    this.trigger('sort', {orderBy: orderBy, order: order});
+                })
 
             this.collection.trigger('order-changed');
 
@@ -2203,9 +2226,29 @@ function (Dep, MassActionHelper, ExportHelper) {
                 defs.push(item);
             }
 
-            if (this.rowActionsView && !this.rowActionsDisabled) {
+            let isCustomSorted =
+                this.collection.orderBy !== this.collection.defaultOrderBy ||
+                this.collection.order !== this.collection.defaultOrder;
+
+            if (this.rowActionsView && !this.rowActionsDisabled || isCustomSorted) {
+                let html = null;
+
+                if (isCustomSorted) {
+                    html =
+                        $('<a>')
+                            .attr('href', 'javascript:')
+                            .addClass('reset-custom-order')
+                            .attr('title', this.translate('Reset'))
+                            .append(
+                                $('<span>').addClass('fas fa-times fa-sm')
+                            )
+                            .get(0).outerHTML
+                }
+
                 defs.push({
-                    width: this.rowActionsColumnWidth
+                    width: this.rowActionsColumnWidth,
+                    html: html,
+                    className: 'action-cell',
                 });
             }
 

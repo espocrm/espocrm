@@ -102,6 +102,7 @@
         "Webhook": "Webhooks"
     },
     "labels": {
+        "Sort": "Sort",
         "Misc": "Misc",
         "Merge": "Merge",
         "None": "None",

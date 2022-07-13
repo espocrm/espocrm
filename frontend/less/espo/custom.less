@@ -1466,8 +1466,31 @@ table th.cell-nowrap {
     white-space: normal;
 }
 
-.list > table td.cell[data-name="buttons"] {
+.list > table td.cell[data-name="buttons"],
+.list > table th.action-cell {
     overflow: visible;
+}
+
+.list > table th.action-cell {
+    a {
+        position: relative;
+        right: 9px;
+        padding: 4px 3px;
+
+        &:hover {
+            color: var(--btn-text-color);
+        }
+    }
+}
+
+#main > .list-container > .list > table th.action-cell {
+    a {
+        right: 8px;
+
+        @media screen and (max-width: (@screen-sm-min - 1px)) {
+            right: 3px;
+        }
+    }
 }
 
 td.cell[data-name="buttons"] > .btn-group {
