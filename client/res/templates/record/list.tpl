@@ -127,7 +127,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="javascript:" data-action="selectAllResult">{{translate 'Select All Results'}}</a>
+                                <a
+                                    href="javascript:"
+                                    data-action="selectAllResult"
+                                >{{translate 'Select All Results'}}</a>
                             </li>
                         </ul>
                     </div>
@@ -136,8 +139,8 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th
-                    {{#if width}} width="{{width}}"{{/if}}{{#if align}}
-                    style="text-align: {{align}};"{{/if}}
+                    {{#if width}}width="{{width}}"{{/if}}
+                    {{#if align}}style="text-align: {{align}};"{{/if}}
                 >
                     {{#if this.isSortable}}
                         <a
@@ -146,9 +149,10 @@
                             data-name="{{this.name}}"
                         >{{label}}</a>
                         {{#if this.isSorted}}
-                            {{#unless this.isDesc}}<span class="fas fa-chevron-down fa-sm"></span>
+                            {{#unless this.isDesc}}
+                            <span class="fas fa-chevron-down fa-sm"></span>
                             {{else}}
-                                <span class="fas fa-chevron-up fa-sm"></span>
+                            <span class="fas fa-chevron-up fa-sm"></span>
                             {{/unless}}
                         {{/if}}
                     {{else}}
