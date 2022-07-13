@@ -294,13 +294,19 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 .list {
-    .cell {
-        .action {
-            &.text-muted.fas,
-            &.text-muted.far {
-                &:hover {
-                    color: var(--text-gray-color);
-                }
+    .text-muted {
+        .fas.action,
+        .far.action {
+            &:hover {
+                color: var(--text-gray-color);
+            }
+        }
+    }
+    .action {
+        &.text-muted.fas,
+        &.text-muted.far {
+            &:hover {
+                color: var(--text-gray-color);
             }
         }
     }
