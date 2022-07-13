@@ -478,7 +478,7 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         selectPreset: function (presetName, forceClearAdvancedFilters) {
-            let wasPreset = !(this.primary == this.presetName);
+            let wasPreset = !(this.primary === this.presetName);
 
             this.presetName = presetName;
 
@@ -634,40 +634,42 @@ define('views/record/search', ['view'], function (Dep) {
             this.$filtersLabel.html(this.currentFilterLabelList.join(', '));
         },
 
-        controlResetButtonVisibility: function () {
+        /**
+         * @private
+         * @return {boolean}
+         */
+        toShowResetButton: function () {
+            if (this.textFilter) {
+                return true;
+            }
+
             let presetName = this.presetName || null;
             let primary = this.primary;
 
-            let $resetButton = this.$resetButton;
-
-            let toShow = false;
-
-            if (this.textFilter) {
-                toShow = true;
-            } else {
-                if (presetName && presetName != primary) {
-
-                } else {
-                    if (Object.keys(this.advanced).length) {
-                        toShow = true;
-                    }
+            if (!presetName || presetName === primary) {
+                if (Object.keys(this.advanced).length) {
+                    return true;
                 }
             }
 
-            if (!toShow) {
-                if (
-                    this.collection.orderBy !== this.collection.defaultOrderBy ||
-                    this.collection.order !== this.collection.defaultOrder
-                ) {
-                    toShow = true;
-                }
+            if (
+                this.collection.orderBy !== this.collection.defaultOrderBy ||
+                this.collection.order !== this.collection.defaultOrder
+            ) {
+                return true;
             }
 
-            if (toShow) {
-                $resetButton.css('visibility', 'visible');
-            } else {
-                $resetButton.css('visibility', 'hidden');
+            return false;
+        },
+
+        controlResetButtonVisibility: function () {
+            if (this.toShowResetButton()) {
+                this.$resetButton.css('visibility', 'visible');
+
+                return;
             }
+
+            this.$resetButton.css('visibility', 'hidden');
         },
 
         managePresetFilters: function () {
@@ -683,15 +685,15 @@ define('views/record/search', ['view'], function (Dep) {
                 presetName = primary;
             }
 
-            if (presetName && presetName != primary) {
+            if (presetName && presetName !== primary) {
                 this.$advancedFiltersPanel.addClass('hidden');
 
                 let label = null;
                 let style = 'default';
                 let id = null;
 
-                this.presetFilterList.forEach((item) => {
-                    if (item.name == presetName) {
+                this.presetFilterList.forEach(item => {
+                    if (item.name === presetName) {
                         label = item.label || false;
                         style = item.style || 'default';
                         id = item.id;
@@ -813,7 +815,7 @@ define('views/record/search', ['view'], function (Dep) {
             let data = {};
 
             this.getPresetFilterList().forEach(item => {
-                if (item.name == this.presetName) {
+                if (item.name === this.presetName) {
                     data = Espo.Utils.clone(item.data || {});
                 }
             });
@@ -825,7 +827,7 @@ define('views/record/search', ['view'], function (Dep) {
             let primaryFilterName = null;
 
             this.getPresetFilterList().forEach(item => {
-                if (item.name == this.presetName) {
+                if (item.name === this.presetName) {
                     if (!('data' in item)) {
                         primaryFilterName = item.name;
                     }
@@ -842,7 +844,7 @@ define('views/record/search', ['view'], function (Dep) {
             let style = null;
 
             this.getPresetFilterList().forEach(item => {
-                if (item.name == this.primary) {
+                if (item.name === this.primary) {
                     style = item.style || 'default';
                 }
             });
