@@ -4,14 +4,15 @@
     </div>
 </div>
 <div class="row post-control{{#if interactiveMode}} hidden{{/if}}">
-
     <div class="col-sm-6 form-group">
         <div>
-                {{#if interactiveMode}}
-                <button type="button" class="btn btn-primary post pull-left">{{translate 'Post'}}</button>
-                {{/if}}
-                <div class="field" style="display: inline-block;" data-name="attachments">{{{attachmentsField}}}</div>
-
+            {{#if interactiveMode}}
+            <button
+                type="button"
+                class="btn btn-primary btn-xs-wide post pull-left"
+            >{{translate 'Post'}}</button>
+            {{/if}}
+            <div class="field" style="display: inline-block;" data-name="attachments">{{{attachmentsField}}}</div>
         </div>
     </div>
     <div class="col-sm-6">
