@@ -189,12 +189,21 @@ class GlobalRestriction
                 $resultLinkList = [];
 
                 foreach ($linkList as $link) {
-                    if ($this->metadata->get(['entityAcl', $scope, 'links', $link, $type])) {
-                        $isNotEmpty = true;
+                    $value = $this->metadata->get(['entityAcl', $scope, 'links', $link, $type]);
 
-                        $resultLinkList[] = $link;
+                    if (!$value && in_array($type, $this->entityDefsTypeList)) {
+                        $value = $this->metadata->get(['entityDefs', $scope, 'links', $link, $type]);
                     }
+
+                    if (!$value) {
+                        continue;
+                    }
+
+                    $isNotEmpty = true;
+
+                    $resultLinkList[] = $link;
                 }
+
                 $scopeData->links->$type = $resultLinkList;
             }
 
