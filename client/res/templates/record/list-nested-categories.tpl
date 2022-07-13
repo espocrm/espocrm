@@ -48,7 +48,7 @@
         {{#if currentId}}
         <div class="category-item">
             <a
-                href="javascript: "
+                href="{{upperLink}}"
                 class="action folder-icon"
                 data-action="openCategory"
                 data-id="{{categoryData.upperId}}"
@@ -63,7 +63,7 @@
         <div class="category-cell">
             <div class="category-item" data-id="{{id}}">
                 <a
-                    href="#{{../scope}}/view/{{id}}"
+                    href="{{link}}"
                     class="action link-gray"
                     data-action="openCategory"
                     data-id="{{id}}"

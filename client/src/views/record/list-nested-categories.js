@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-nested-categories', 'view', function (Dep) {
+define('views/record/list-nested-categories', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -67,6 +67,12 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
             data.showEditLink = this.options.showEditLink;
             data.hasNavigationPanel = this.options.hasNavigationPanel;
 
+            let categoryData = this.collection.categoryData || {};
+
+            data.upperLink = categoryData.upperId ?
+                '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
+                '#' + this.subjectEntityType;
+
             return data;
         },
 
@@ -74,12 +80,14 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
             var list = [];
 
             this.collection.forEach(model => {
-                var o = {
+                let o = {
                     id: model.id,
                     name: model.get('name'),
                     recordCount: model.get('recordCount'),
-                    isEmpty: model.get('isEmpty')
+                    isEmpty: model.get('isEmpty'),
+                    link: '#' + this.subjectEntityType + '/list/categoryId=' + model.id,
                 };
+
                 list.push(o);
             });
 
@@ -90,6 +98,8 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
             this.listenTo(this.collection, 'sync', () => {
                 this.reRender();
             });
+
+            this.subjectEntityType = this.options.subjectEntityType;
         },
 
         actionShowMore: function () {
@@ -100,6 +110,5 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
                 more: true,
             });
         },
-
     });
 });

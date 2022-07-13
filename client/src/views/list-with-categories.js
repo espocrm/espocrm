@@ -440,6 +440,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                     isExpanded: this.isExpanded,
                     hasExpandedToggler: this.hasExpandedToggler,
                     hasNavigationPanel: this.hasNavigationPanel,
+                    subjectEntityType: this.collection.entityType,
                 }, view => {
                     view.render();
                 });
