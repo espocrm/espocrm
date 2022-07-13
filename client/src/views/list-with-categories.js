@@ -28,7 +28,13 @@
 
 define('views/list-with-categories', ['views/list'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/list.Class
+     * @memberOf module:views/list-with-categories
+     */
+    return Dep.extend(/** @lends module:views/list-with-categories.Class# */{
 
         template: 'list-with-categories',
 
@@ -234,6 +240,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             this.getRouter().navigate('#' + this.scope);
             this.updateLastUrl();
 
+            this.nestedCategoriesCollection = null;
+
             this.reRender();
 
             this.$listContainer.empty();
@@ -328,8 +336,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                     ])
                     .then(() => {
                         Espo.Ui.notify(false);
-
-                        console.log(this.$listContainer.hasClass('hidden'));
 
                         this.controlNestedCategoriesVisibility();
                         this.controlListVisibility();
@@ -639,7 +645,9 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             let $root = $('<a>')
                 .attr('href', rootUrl)
                 .addClass('action')
-                .text(this.translate(this.scope, 'scopeNamesPlural'));
+                .text(this.translate(this.scope, 'scopeNamesPlural'))
+                .addClass('action')
+                .attr('data-action', 'openCategory');
 
             let list = [$root];
 
@@ -657,7 +665,11 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
                 let $folder = $('<a>')
                     .attr('href', url)
-                    .text(upperName);
+                    .text(upperName)
+                    .addClass('action')
+                    .attr('data-action', 'openCategory')
+                    .attr('data-id', upperId)
+                    .attr('data-name', upperName);
 
                 list.push($folder);
             }
