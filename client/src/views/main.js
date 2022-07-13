@@ -524,5 +524,13 @@ define('views/main', ['view'], function (Dep) {
                 $d.addClass('hidden');
             }
         },
+
+        /**
+         * @protected
+         * @return {module:views/header.Class}
+         */
+        getHeaderView: function () {
+            return this.getView('header');
+        },
     });
 });
