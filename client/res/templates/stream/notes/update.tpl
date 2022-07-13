@@ -18,17 +18,32 @@
 
     <div class="hidden details stream-details-container">
         <ul>
-            {{#each fieldsArr}}
-            <li>
-                <span>{{translate field category='fields' scope=../parentType}}</span>
-                {{#unless noValues}}
-                &nbsp;<span class="text-muted">:</span>&nbsp;
-                <span class="inline-block-child-div">{{{var was ../this}}}</span>
-                &nbsp;<span class="text-muted small fas fa-arrow-right"></span>&nbsp;
-                <span class="inline-block-child-div">{{{var became ../this}}}</span>
-                {{/unless}}
-            </li>
-            {{/each}}
+            <table class="table audited-summary-table">
+                <tbody>
+                {{#each fieldsArr}}
+                    <tr>
+                        <td style="width: 30%">
+                            <span class="text-muted">{{translate field category='fields' scope=../parentType}}</span>
+                        </td>
+                        <td style="width: 30%">
+                            {{#unless noValues}}
+                                {{{var was ../this}}}
+                            {{/unless}}
+                        </td>
+                        <td style="width: 10%; text-align: center;">
+                            {{#unless noValues}}
+                                <span class="text-muted small fas fa-arrow-right"></span>
+                            {{/unless}}
+                        </td>
+                        <td style="width: 30%">
+                            {{#unless noValues}}
+                                {{{var became ../this}}}
+                            {{/unless}}
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
         </ul>
     </div>
 
