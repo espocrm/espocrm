@@ -34,10 +34,15 @@ use Espo\Core\{
     Api\ResponseWrapper,
     Application,
     Container,
+    DataManager,
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\Metadata,
 };
 
 use Espo\Entities\User;
 
+use Espo\ORM\EntityManager;
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
@@ -118,6 +123,31 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected function getContainer(): Container
     {
         return $this->getApplication()->getContainer();
+    }
+
+    protected function getFileManager(): FileManager
+    {
+        return $this->getApplication()->getContainer()->get('fileManager');
+    }
+
+    protected function getDataManager(): DataManager
+    {
+        return $this->getApplication()->getContainer()->get('dataManager');
+    }
+
+    protected function getMetadata(): Metadata
+    {
+        return $this->getApplication()->getContainer()->get('metadata');
+    }
+
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->getApplication()->getContainer()->get('entityManager');
+    }
+
+    protected function getConfig(): Config
+    {
+        return $this->getApplication()->getContainer()->get('config');
     }
 
     protected function normalizePath($path)
