@@ -244,6 +244,12 @@ define('views/modal', ['view'], function (Dep) {
         },
 
         /**
+         * @protected
+         * @type {boolean|null}
+         */
+        footerAtTheTop: null,
+
+        /**
          * @inheritDoc
          */
         init: function () {
@@ -303,6 +309,9 @@ define('views/modal', ['view'], function (Dep) {
                     headerHtml = Handlebars.Utils.escapeExpression(this.headerText);
                 }
 
+                let footerAtTheTop = (this.footerAtTheTop !== null) ? this.footerAtTheTop :
+                    this.getThemeManager().getParam('modalFooterAtTheTop');
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: headerHtml,
@@ -316,7 +325,7 @@ define('views/modal', ['view'], function (Dep) {
                     draggable: this.isDraggable,
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
-                    footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
+                    footerAtTheTop: footerAtTheTop,
                     fullHeight: !this.noFullHeight && this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,
