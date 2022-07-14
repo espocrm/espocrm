@@ -40,6 +40,8 @@ class EnumType
 
     private Defs $defs;
 
+    private const DEFAULT_MAX_LENGTH = 255;
+
     public function __construct(Metadata $metadata, Defs $defs)
     {
         $this->metadata = $metadata;
@@ -92,6 +94,23 @@ class EnumType
         }
 
         return in_array($value, $optionList);
+    }
+
+    public function checkMaxLength(Entity $entity, string $field, ?int $validationValue): bool
+    {
+        if (!$this->isNotEmpty($entity, $field)) {
+            return true;
+        }
+
+        $value = $entity->get($field);
+
+        $maxLength = $validationValue ?? self::DEFAULT_MAX_LENGTH;
+
+        if (mb_strlen($value) > $maxLength) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool
