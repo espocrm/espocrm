@@ -32,6 +32,8 @@ namespace Espo\Core\Utils\Resource\Reader;
 class Params
 {
     private bool $noCustom = false;
+    /** @var array<int,string[]> */
+    private array $forceAppendPathList = [];
 
     public static function create(): self
     {
@@ -46,8 +48,27 @@ class Params
         return $obj;
     }
 
+    /**
+     * @param array<int,string[]> $forceAppendPathList
+     */
+    public function withForceAppendPathList(array $forceAppendPathList): self
+    {
+        $obj = clone $this;
+        $obj->forceAppendPathList = $forceAppendPathList;
+
+        return $obj;
+    }
+
     public function noCustom(): bool
     {
         return $this->noCustom;
+    }
+
+    /**
+     * @return array<int,string[]>
+     */
+    public function getForceAppendPathList(): array
+    {
+        return $this->forceAppendPathList;
     }
 }

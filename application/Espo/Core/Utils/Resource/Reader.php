@@ -41,7 +41,6 @@ use stdClass;
 class Reader
 {
     private Unifier $unifier;
-
     private UnifierObj $unifierObj;
 
     public function __construct(Unifier $unifier, UnifierObj $unifierObj)
@@ -56,7 +55,7 @@ class Reader
     public function read(string $path, Params $params): stdClass
     {
         /** @var stdClass */
-        return $this->unifierObj->unify($path, $params->noCustom());
+        return $this->unifierObj->unify($path, $params->noCustom(), $params->getForceAppendPathList());
     }
 
     /**
@@ -67,6 +66,6 @@ class Reader
     public function readAsArray(string $path, Params $params): array
     {
         /** @var array<string,mixed> */
-        return $this->unifier->unify($path, $params->noCustom());
+        return $this->unifier->unify($path, $params->noCustom(), $params->getForceAppendPathList());
     }
 }

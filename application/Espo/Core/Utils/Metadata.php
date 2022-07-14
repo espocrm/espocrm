@@ -52,8 +52,6 @@ class Metadata
 
     private ?stdClass $objData = null;
 
-    private bool $useCache;
-
     private string $cacheKey = 'metadata';
 
     private string $objCacheKey = 'objMetadata';
@@ -70,15 +68,28 @@ class Metadata
      */
     private $changedData = [];
 
+    /**
+     * @var array<int,string[]>
+     */
+    private $forceAppendPathList = [
+        ['app', 'rebuild', 'actionClassNameList'],
+        ['app', 'fieldProcessing', 'readLoaderClassNameList'],
+        ['app', 'fieldProcessing', 'listLoaderClassNameList'],
+        ['app', 'fieldProcessing', 'saverClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'readLoaderClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'listLoaderClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'saverClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'selectApplierClassNameList'],
+    ];
+
+    private const ANY_KEY = '__ANY__';
+
     private Helper $metadataHelper;
-
     private Module $module;
-
     private FileManager $fileManager;
-
     private DataCache $dataCache;
-
     private ResourceReader $resourceReader;
+    private bool $useCache;
 
     public function __construct(
         FileManager $fileManager,
@@ -198,7 +209,10 @@ class Metadata
             return;
         }
 
-        $this->objData = $this->resourceReader->read('metadata', ResourceReaderParams::create());
+        $readerParams = ResourceReaderParams::create()
+            ->withForceAppendPathList($this->forceAppendPathList);
+
+        $this->objData = $this->resourceReader->read('metadata', $readerParams);
 
         $this->objData = $this->addAdditionalFieldsObj($this->objData);
 
@@ -260,7 +274,7 @@ class Metadata
                 break;
             }
 
-            if ($item === '__ANY__') {
+            if ($item === self::ANY_KEY) {
                 foreach (get_object_vars($p) as &$v) {
                     $this->removeDataByPath(
                         array_slice($row, $i + 1),
@@ -576,8 +590,6 @@ class Metadata
                             "Metadata items {$key1}.{$key2} can be deleted for custom code only."
                         );
                     }
-
-                    $result &= $rowResult;
                 }
             }
         }

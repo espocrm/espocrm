@@ -39,18 +39,22 @@ use Espo\Core\{
 };
 
 use JsonException;
+use LogicException;
+use stdClass;
 
 class Unifier
 {
-    private FileManager $fileManager;
-
-    private Module $module;
-
-    private PathProvider $pathProvider;
-
     protected bool $useObjects = false;
 
     private string $unsetFileName = 'unset.json';
+
+    private const APPEND_VALUE = '__APPEND__';
+
+    private const ANY_KEY = '__ANY__';
+
+    private FileManager $fileManager;
+    private Module $module;
+    private PathProvider $pathProvider;
 
     public function __construct(FileManager $fileManager, Module $module, PathProvider $pathProvider)
     {
@@ -62,12 +66,13 @@ class Unifier
     /**
      * Merge data of resource files.
      *
+     * @param array<int,string[]> $forceAppendPathList
      * @return array<string,mixed>|\stdClass
      */
-    public function unify(string $path, bool $noCustom = false)
+    public function unify(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
         if ($this->useObjects) {
-            return $this->unifyObject($path, $noCustom);
+            return $this->unifyObject($path, $noCustom, $forceAppendPathList);
         }
 
         return $this->unifyArray($path, $noCustom);
@@ -105,9 +110,10 @@ class Unifier
     }
 
     /**
+     * @param array<int,string[]> $forceAppendPathList
      * @return \stdClass
      */
-    private function unifyObject(string $path, bool $noCustom = false)
+    private function unifyObject(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
         /** @var \stdClass */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
@@ -116,10 +122,12 @@ class Unifier
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
             /** @var \stdClass */
-            $data = DataUtil::merge(
-                $data,
-                $this->unifySingle($filePath, true)
-            );
+            $itemData = $this->unifySingle($filePath, true);
+
+            $this->prepareItemDataObject($itemData, $forceAppendPathList);
+
+            /** @var \stdClass */
+            $data = DataUtil::merge($data, $itemData);
         }
 
         if ($noCustom) {
@@ -129,10 +137,12 @@ class Unifier
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
         /** @var \stdClass */
-        return DataUtil::merge(
-            $data,
-            $this->unifySingle($customFilePath, true)
-        );
+        $itemData = $this->unifySingle($customFilePath, true);
+
+        $this->prepareItemDataObject($itemData, $forceAppendPathList);
+
+        /** @var \stdClass */
+        return DataUtil::merge($data, $itemData);
     }
 
     /**
@@ -153,12 +163,12 @@ class Unifier
 
         $fileList = $this->fileManager->getFileList($dirPath, $recursively, '\.json$');
 
-        $dirName = $this->fileManager->getDirName($dirPath, false);
+        //$dirName = $this->fileManager->getDirName($dirPath, false);
 
         foreach ($fileList as $dirName => $item) {
             if (is_array($item)) {
                 /** @var string $dirName */
-                // Only a first level of a sub-directory.
+                // Only a first level of a subdirectory.
                 $itemValue = $this->unifySingle(
                     Util::concatPath($dirPath, $dirName),
                     false
@@ -249,5 +259,72 @@ class Unifier
     private function getModuleList(): array
     {
         return $this->module->getOrderedList();
+    }
+
+    /**
+     * @param array<int,string[]> $forceAppendPathList
+     */
+    private function prepareItemDataObject(stdClass $data, array $forceAppendPathList): void
+    {
+        foreach ($forceAppendPathList as $path) {
+            $this->addAppendToData($data, $path);
+            echo "\n";
+        }
+    }
+
+    /**
+     * @param string[] $path
+     */
+    private function addAppendToData(stdClass $data, array $path): void
+    {
+        if (count($path) === 0) {
+            return;
+        }
+
+        $nextPath = array_slice($path, 1);
+
+        $key = $path[0];
+
+        if ($key === self::ANY_KEY) {
+            foreach (array_keys(get_object_vars($data)) as $itemKey) {
+                $this->addAppendToDataItem($data, $itemKey, $nextPath);
+            }
+
+            return;
+        }
+
+        $this->addAppendToDataItem($data, $key, $nextPath);
+    }
+
+    /**
+     * @param string[] $path
+     */
+    private function addAppendToDataItem(stdClass $data, string $key, array $path): void
+    {
+        $item = $data->$key ?? null;
+
+        if (count($path) === 0) {
+            if ($item === null) {
+                $item = [];
+            }
+
+            if (!is_array($item)) {
+                throw new LogicException("Expected array in metadata, but non-array is set.");
+            }
+
+            if (($item[0] ?? null) === self::APPEND_VALUE) {
+                return;
+            }
+
+            $data->$key = array_merge([self::APPEND_VALUE], $item);
+
+            return;
+        }
+
+        if (!$item instanceof stdClass) {
+            return;
+        }
+
+        $this->addAppendToData($item, $path);
     }
 }
