@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/change-password', 'views/modal', function (Dep) {
+define('views/modals/change-password', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,19 +41,19 @@ define('views/modals/change-password', 'views/modal', function (Dep) {
                 {
                     name: 'change',
                     label: 'Change',
-                    style: 'danger'
+                    style: 'danger',
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
-                }
+                    label: 'Cancel',
+                },
             ];
 
             this.headerHtml = this.translate('Change Password', 'labels', 'User');
 
             this.wait(true);
 
-            this.getModelFactory().create('User', function (user) {
+            this.getModelFactory().create('User', user => {
                 this.model = user;
 
                 this.createView('currentPassword', 'views/fields/password', {
@@ -79,6 +79,7 @@ define('views/modals/change-password', 'views/modal', function (Dep) {
                         }
                     }
                 });
+
                 this.createView('passwordConfirm', 'views/fields/password', {
                     model: user,
                     mode: 'edit',
@@ -92,8 +93,7 @@ define('views/modals/change-password', 'views/modal', function (Dep) {
                 });
 
                 this.wait(false);
-            }, this);
-
+            });
         },
 
 
@@ -102,9 +102,10 @@ define('views/modals/change-password', 'views/modal', function (Dep) {
             this.getView('password').fetchToModel();
             this.getView('passwordConfirm').fetchToModel();
 
-            var notValid = this.getView('currentPassword').validate() ||
-                           this.getView('password').validate() ||
-                           this.getView('passwordConfirm').validate();
+            var notValid =
+                this.getView('currentPassword').validate() ||
+                this.getView('password').validate() ||
+                this.getView('passwordConfirm').validate();
 
             if (notValid) {
                 return;
@@ -112,23 +113,20 @@ define('views/modals/change-password', 'views/modal', function (Dep) {
 
             this.$el.find('button[data-name="change"]').addClass('disabled');
 
-            $.ajax({
-                url: 'User/action/changeOwnPassword',
-                type: 'POST',
-                data: JSON.stringify({
+            Espo.Ajax
+                .postRequest('User/action/changeOwnPassword', {
                     currentPassword: this.model.get('currentPassword'),
-                    password: this.model.get('password')
-                }),
-                error: function () {
-                    this.$el.find('button[data-name="change"]').removeClass('disabled');
-                }.bind(this)
-            }).done(function () {
-                Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));
-                this.trigger('changed');
-                this.close();
-            }.bind(this));
-        },
+                    password: this.model.get('password'),
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('passwordChanged', 'messages', 'User'));
 
+                    this.trigger('changed');
+                    this.close();
+                })
+                .catch(() => {
+                    this.$el.find('button[data-name="change"]').removeClass('disabled');
+                });
+        },
     });
 });
-
