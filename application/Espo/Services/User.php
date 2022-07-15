@@ -158,6 +158,13 @@ class User extends Record implements
             throw new Forbidden("Change password: Password is weak.");
         }
 
+        $validLength = $this->fieldValidationManager
+            ->check($user, 'password', 'maxLength', (object) ['password' => $password]);
+
+        if (!$validLength) {
+            throw new Forbidden("Password exceeds max length.");
+        }
+
         $user->set('password', $this->hashPassword($password));
 
         $this->getEntityManager()->saveEntity($user);
