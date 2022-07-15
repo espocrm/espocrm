@@ -54,7 +54,7 @@ define('views/stream/record/list', 'views/record/list-expanded', function (Dep) 
                 let lengthBeforeFetch = options.lengthBeforeFetch || 0;
 
                 if (lengthBeforeFetch === 0) {
-                    this.reRender();
+                    this.buildRows(() => this.reRender());
 
                     return;
                 }
