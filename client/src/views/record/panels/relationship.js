@@ -491,7 +491,7 @@ function (Dep, SearchManager) {
             var listView = this.getView('list');
 
             if (listView && listView.$el) {
-                var height = listView.$el.height();
+                var height = listView.$el.parent().get(0).clientHeight;
 
                 listView.$el.empty();
 
