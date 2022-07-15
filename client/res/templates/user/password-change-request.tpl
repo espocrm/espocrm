@@ -33,7 +33,11 @@
                     </div>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-danger" id="btn-submit">{{translate 'Submit'}}</button>
+                    <button
+                        type="button"
+                        class="btn btn-danger btn-s-wide"
+                        id="btn-submit"
+                    >{{translate 'Submit'}}</button>
                 </div>
                 {{else}}
                 <p class="complex-text">{{complexText notFoundMessage}}</p>
