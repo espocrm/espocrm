@@ -131,6 +131,12 @@ let BuildUtils = {
     camelCaseToHyphen: function (string) {
         return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     },
+    hyphenToCamelCase: function (string) {
+        return string.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+    },
+    capitalize: function(string) {
+        return string[0].toUpperCase() + string.slice(1);
+    }
 }
 
 module.exports = BuildUtils;

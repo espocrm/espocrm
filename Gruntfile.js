@@ -83,6 +83,8 @@ module.exports = grunt => {
         };
     });
 
+    grunt.lessData = lessData;
+
     grunt.initConfig({
         pkg: pkg,
 
@@ -248,6 +250,53 @@ module.exports = grunt => {
                 ],
             },
         },
+
+        watch: {
+            options: { spawn: false },
+            themes: {
+                files: ['frontend/**/*.less'],
+                tasks: ['less', 'cssmin']
+            },
+            frontendBundle: {
+                files: bundleConfig.jsFiles.concat(['frontend/bundle-config.json']),
+                tasks: ['espo-bundle', 'uglify:bundle']
+            },
+            frontendLibs: {
+                files: ['frontend/libs.json'],
+                tasks: ['prepare-lib-original', 'uglify:lib']
+            }
+        },
+    });
+
+    grunt.event.on('watch', function(action, filepath, target) {
+        if(target == 'themes') {
+            let theme = /frontend\/less\/(\w+)/.exec(filepath)[1];            
+            let name = buildUtils.capitalize(buildUtils.hyphenToCamelCase(theme));
+
+            let lessConfig = {};
+            lessConfig[name] = grunt.lessData[name];
+            
+            cssminConfig = {};
+            cssminConfig['client/css/espo/'+theme+'.css'] = 'client/css/espo/'+theme+'.css';
+            cssminConfig['client/css/espo/'+theme+'-iframe.css'] = 'client/css/espo/'+theme+'-iframe.css'
+
+            grunt.config('less', lessConfig);
+            grunt.config('cssmin.themes.files', cssminConfig);
+            grunt.config('copy.frontend.src', [
+                'css/espo/'+theme+'.css',
+                'css/espo/'+theme+'-iframe.css'
+            ]);
+        } else if (target == 'frontendBundle') {
+            grunt.config('copy.frontend.src', [
+                'client/lib/espo.min.js',
+                'client/lib/espo.min.js.map',
+                'client/lib/original/espo.js'
+            ]);
+        } else if (target == 'composer') {
+            grunt.config('copy.backend.src', ['vendor/**']);
+        } else if (target == 'backend') {
+            grunt.config('copy.backend.src', filepath);
+        }
     });
 
     grunt.registerTask('espo-bundle', () => {
@@ -435,6 +484,7 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('internal', [
         'less',
@@ -495,8 +545,8 @@ module.exports = grunt => {
     ]);
 
     grunt.registerTask('dev', [
-        'composer-install-dev',
-        'less',
+        'internal',
+        'watch'
     ]);
 
     grunt.registerTask('test', [
