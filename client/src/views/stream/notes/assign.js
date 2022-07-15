@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
+define('views/stream/notes/assign', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,32 +34,31 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
 
         messageName: 'assign',
 
-        data: function () {
-            return _.extend({
-            }, Dep.prototype.data.call(this));
-        },
-
         init: function () {
             if (this.getUser().isAdmin()) {
                 this.isRemovable = true;
             }
+
             Dep.prototype.init.call(this);
         },
 
         setup: function () {
-            var data = this.model.get('data');
+            let data = this.model.get('data');
 
             this.assignedUserId = data.assignedUserId || null;
             this.assignedUserName = data.assignedUserName || null;
 
-            this.messageData['assignee'] = '<a href="#User/view/' + this.getHelper().escapeString(data.assignedUserId) + '">' + this.getHelper().escapeString(data.assignedUserName) + '</a>';
+            this.messageData['assignee'] = $('<a>')
+                .attr('href', '#User/view/' + data.assignedUserId)
+                .text(data.assignedUserName)
+                .get(0).outerHTML;
 
             if (this.isUserStream) {
                 if (this.assignedUserId) {
-                    if (this.assignedUserId == this.model.get('createdById')) {
+                    if (this.assignedUserId === this.model.get('createdById')) {
                         this.messageName += 'Self';
                     } else {
-                        if (this.assignedUserId == this.getUser().id) {
+                        if (this.assignedUserId === this.getUser().id) {
                             this.messageName += 'You';
                         }
                     }
@@ -68,7 +67,7 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
                 }
             } else {
                 if (this.assignedUserId) {
-                    if (this.assignedUserId == this.model.get('createdById')) {
+                    if (this.assignedUserId === this.model.get('createdById')) {
                         this.messageName += 'Self';
                     }
                 } else {
@@ -78,7 +77,5 @@ Espo.define('views/stream/notes/assign', 'views/stream/note', function (Dep) {
 
             this.createMessage();
         },
-
     });
 });
-

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/create-related', 'views/stream/note', function (Dep) {
+define('views/stream/notes/create-related', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,7 @@ Espo.define('views/stream/notes/create-related', 'views/stream/note', function (
         data: function () {
             return _.extend({
                 relatedTypeString: this.translateEntityType(this.entityType),
-                iconHtml: this.getIconHtml(this.entityType, this.entityId)
+                iconHtml: this.getIconHtml(this.entityType, this.entityId),
             }, Dep.prototype.data.call(this));
         },
 
@@ -45,21 +45,26 @@ Espo.define('views/stream/notes/create-related', 'views/stream/note', function (
             if (this.getUser().isAdmin()) {
                 this.isRemovable = true;
             }
+
             Dep.prototype.init.call(this);
         },
 
         setup: function () {
-            var data = this.model.get('data') || {};
+            let data = this.model.get('data') || {};
 
             this.entityType = this.model.get('relatedType') || data.entityType || null;
             this.entityId = this.model.get('relatedId') || data.entityId || null;
             this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
-            this.messageData['relatedEntity'] = '<a href="#' + this.getHelper().escapeString(this.entityType) + '/view/' + this.getHelper().escapeString(this.entityId) + '">' + this.getHelper().escapeString(this.entityName) +'</a>';
+
+            this.messageData['relatedEntity'] = $('<a>')
+                .attr('href', '#' + this.entityType + '/view/' + this.entityId)
+                .text(this.entityName)
+                .get(0).outerHTML;
 
             this.createMessage();
-        }
+        },
     });
 });
 

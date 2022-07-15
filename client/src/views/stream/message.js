@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/message', 'view', function (Dep) {
+define('views/stream/message', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -47,11 +47,12 @@ Espo.define('views/stream/message', 'view', function (Dep) {
                 }
             }
 
-            this._template = template;
+            this.templateContent = template;
         },
 
         createField: function (key, name, type, params) {
             type = type || this.model.getFieldType(name) || 'base';
+
             this.createView(key, this.getFieldManager().getViewName(type), {
                 model: this.model,
                 defs: {
@@ -59,10 +60,9 @@ Espo.define('views/stream/message', 'view', function (Dep) {
                     params: params || {}
                 },
                 mode: 'detail',
-                readOnly: true
+                readOnly: true,
             });
-        }
-
+        },
     });
 });
 

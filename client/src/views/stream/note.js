@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/note', 'view', function (Dep) {
+define('views/stream/note', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -62,8 +62,8 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             if (!this.isUserStream) {
                 if (this.parentModel) {
                     if (
-                        this.parentModel.name != this.model.get('parentType') ||
-                        this.parentModel.id != this.model.get('parentId')
+                        this.parentModel.name !== this.model.get('parentType') ||
+                        this.parentModel.id !== this.model.get('parentId')
                     ) {
                         this.isThis = false;
                     }
@@ -115,25 +115,29 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             if (~['de_DE', 'nl_NL'].indexOf(language)) {
                 string = Espo.Utils.upperCaseFirst(string);
             }
+
             return string;
         },
 
         createField: function (name, type, params, view, options) {
             type = type || this.model.getFieldType(name) || 'base';
-            var o = {
+
+            let o = {
                 model: this.model,
                 defs: {
                     name: name,
                     params: params || {}
                 },
                 el: this.options.el + ' .cell-' + name,
-                mode: 'list'
+                mode: 'list',
             };
+
             if (options) {
                 for (var i in options) {
                     o[i] = options[i];
                 }
             }
+
             this.createView(name, view || this.getFieldManager().getViewName(type), o);
         },
 
@@ -147,23 +151,25 @@ Espo.define('views/stream/note', 'view', function (Dep) {
 
         createMessage: function () {
             if (!this.messageTemplate) {
-                var isTranslated = false;
-
-                var parentType = this.model.get('parentType');
+                let isTranslated = false;
+                let parentType = this.model.get('parentType') || null;
 
                 if (this.isMale()) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', parentType || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', parentType) || '';
+
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
                     }
                 } else if (this.isFemale()) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', parentType || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessagesFemale', parentType) || '';
+
                     if (this.messageTemplate !== this.messageName) {
                         isTranslated = true;
                     }
                 }
+
                 if (!isTranslated) {
-                    this.messageTemplate = this.translate(this.messageName, 'streamMessages', parentType || null) || '';
+                    this.messageTemplate = this.translate(this.messageName, 'streamMessages', parentType) || '';
                 }
             }
 
@@ -171,24 +177,40 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
                 model: this.model,
-                messageData: this.messageData
+                messageData: this.messageData,
             });
         },
 
         getAvatarHtml: function () {
-            var id = this.model.get('createdById');
+            let id = this.model.get('createdById');
+
             if (this.isSystemAvatar) {
                 id = 'system';
             }
+
             return this.getHelper().getAvatarHtml(id, 'small', 20);
         },
 
         getIconHtml: function (scope, id) {
-            if (this.isThis && scope === this.parentModel.name) return;
-            var iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
-            if (!iconClass) return;
-            return '<span class="'+iconClass+' action text-muted icon" style="cursor: pointer;" title="'+this.translate('View')+'" data-action="quickView" data-id="'+id+'" data-scope="'+scope+'"></span>';
-        }
+            if (this.isThis && scope === this.parentModel.name) {
+                return;
+            }
 
+            let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+
+            if (!iconClass) {
+                return;
+            }
+
+            return $('<span>')
+                .addClass(iconClass)
+                .addClass('action text-muted icon')
+                .css('cursor', 'pointer')
+                .attr('title', this.translate('View'))
+                .attr('data-action', 'quickView')
+                .attr('data-id', id)
+                .attr('data-scope', scope)
+                .get(0).outerHTML;
+        },
     });
 });

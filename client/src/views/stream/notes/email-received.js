@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/email-received', 'views/stream/note', function (Dep) {
+define('views/stream/notes/email-received', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,21 +53,33 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
             this.emailName = data.emailName;
 
             if (
-                this.parentModel
-                &&
-                (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
+                this.parentModel &&
+                (
+                    this.model.get('parentType') === this.parentModel.name &&
+                    this.model.get('parentId') === this.parentModel.id
+                )
             ) {
                 if (this.model.get('post')) {
                     this.createField('post', null, null, 'views/stream/fields/post');
                     this.hasPost = true;
                 }
+
                 if ((this.model.get('attachmentsIds') || []).length) {
-                    this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+                    this.createField(
+                        'attachments',
+                        'attachmentMultiple',
+                        {},
+                        'views/stream/fields/attachment-multiple'
+                    );
+
                     this.hasAttachments = true;
                 }
             }
 
-            this.messageData['email'] = '<a href="#Email/view/' + this.getHelper().escapeString(data.emailId) + '">' + this.getHelper().escapeString(data.emailName) + '</a>';
+            this.messageData['email'] = $('<a>')
+                .attr('href', '#Email/view/' + data.emailId)
+                .text(data.emailName)
+                .get(0).outerHTML;
 
             this.messageName = 'emailReceived';
 
@@ -77,10 +89,17 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
 
             if (data.personEntityId) {
                 this.messageName += 'From';
-                this.messageData['from'] = '<a href="#'+this.getHelper().escapeString(data.personEntityType)+'/view/' + this.getHelper().escapeString(data.personEntityId) + '">' + this.getHelper().escapeString(data.personEntityName) + '</a>';
+
+                this.messageData['from'] = $('<a>')
+                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                    .text(data.personEntityName)
+                    .get(0).outerHTML;
             }
 
-            if (this.model.get('parentType') === data.personEntityType && this.model.get('parentId') == data.personEntityId) {
+            if (
+                this.model.get('parentType') === data.personEntityType &&
+                this.model.get('parentId') === data.personEntityId
+            ) {
                 this.isThis = true;
             }
 
@@ -90,7 +109,6 @@ Espo.define('views/stream/notes/email-received', 'views/stream/note', function (
 
             this.createMessage();
         },
-
     });
 });
 

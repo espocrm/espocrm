@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep) {
+define('views/stream/notes/email-sent', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,26 +51,34 @@ Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep)
             this.emailName = data.emailName;
 
             if (
-                this.parentModel
-                &&
-                (this.model.get('parentType') == this.parentModel.name && this.model.get('parentId') == this.parentModel.id)
+                this.parentModel &&
+                (
+                    this.model.get('parentType') === this.parentModel.name &&
+                    this.model.get('parentId') === this.parentModel.id
+                )
             ) {
                 if (this.model.get('post')) {
                     this.createField('post', null, null, 'views/stream/fields/post');
                     this.hasPost = true;
                 }
+
                 if ((this.model.get('attachmentsIds') || []).length) {
                     this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
                     this.hasAttachments = true;
                 }
             }
 
-            this.messageData['email'] = '<a href="#Email/view/' + this.getHelper().escapeString(data.emailId) + '">' + this.getHelper().escapeString(data.emailName) + '</a>';
+            this.messageData['email'] = $('<a>')
+                .attr('href', '#Email/view/' + data.emailId)
+                .text(data.emailName)
+                .get(0).outerHTML;
 
             this.messageName = 'emailSent';
 
-            this.messageData['by'] = '<a href="#'+this.getHelper().escapeString(data.personEntityType)+'/view/' + this.getHelper().escapeString(data.personEntityId) + '">' + this.getHelper().escapeString(data.personEntityName) + '</a>';
-
+            this.messageData['by'] = $('<a>')
+                .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                .text(data.personEntityName)
+                .get(0).outerHTML;
 
             if (this.isThis) {
                 this.messageName += 'This';
@@ -78,6 +86,5 @@ Espo.define('views/stream/notes/email-sent', 'views/stream/note', function (Dep)
 
             this.createMessage();
         },
-
     });
 });

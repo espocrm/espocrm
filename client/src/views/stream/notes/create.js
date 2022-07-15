@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
+define('views/stream/notes/create', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -47,16 +47,20 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
 
         setup: function () {
             if (this.model.get('data')) {
-                var data = this.model.get('data');
+                let data = this.model.get('data');
 
                 this.assignedUserId = data.assignedUserId || null;
                 this.assignedUserName = data.assignedUserName || null;
 
-                this.messageData['assignee'] = '<a href="#User/view/' + this.assignedUserId + '">' + this.getHelper().escapeString(this.assignedUserName) + '</a>';
+                this.messageData['assignee'] = $('<a>')
+                    .attr('href', '#User/view/' + this.assignedUserId)
+                    .text(this.assignedUserName)
+                    .get(0).outerHTML;
 
-                var isYou = false;
+                let isYou = false;
+
                 if (this.isUserStream) {
-                    if (this.assignedUserId == this.getUser().id) {
+                    if (this.assignedUserId === this.getUser().id) {
                         isYou = true;
                     }
                 }
@@ -67,11 +71,11 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
                     if (this.isThis) {
                         this.messageName += 'This';
 
-                        if (this.assignedUserId == this.model.get('createdById')) {
+                        if (this.assignedUserId === this.model.get('createdById')) {
                             this.messageName += 'Self';
                         }
                     } else {
-                        if (this.assignedUserId == this.model.get('createdById')) {
+                        if (this.assignedUserId === this.model.get('createdById')) {
                             this.messageName += 'Self';
                         } else {
                             if (isYou) {
@@ -82,10 +86,12 @@ Espo.define('views/stream/notes/create', 'views/stream/note', function (Dep) {
                 }
 
                 if (data.statusField) {
-                    var statusField = this.statusField = data.statusField;
-                    var statusValue = data.statusValue;
+                    let statusField = this.statusField = data.statusField;
+                    let statusValue = data.statusValue;
+
                     this.statusStyle = data.statusStyle || 'default';
-                    this.statusText = this.getLanguage().translateOption(statusValue, statusField, this.model.get('parentType'));
+                    this.statusText = this.getLanguage()
+                        .translateOption(statusValue, statusField, this.model.get('parentType'));
                 }
             }
 
