@@ -214,6 +214,32 @@ class User extends Person
         return $this->get('userName');
     }
 
+    public function getAuthMethod(): ?string
+    {
+        return $this->get('authMethod');
+    }
+
+    public function getContactId(): ?string
+    {
+        return $this->get('contactId');
+    }
+
+    public function getContact(): ?Link
+    {
+        /** @var ?Link */
+        $value = $this->getValueObject('contact');
+
+        return $value;
+    }
+
+    public function getAccounts(): LinkMultiple
+    {
+        /** @var LinkMultiple */
+        $value = $this->getValueObject('accounts');
+
+        return $value;
+    }
+
     /**
      * @return ?string
      */
