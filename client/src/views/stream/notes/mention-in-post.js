@@ -120,7 +120,6 @@ define('views/stream/notes/mention-in-post', ['views/stream/note'], function (De
 
                 if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
                     this.messageName = 'mentionYouInPostTargetNoTarget';
-
                     this.createMessage();
 
                     return;

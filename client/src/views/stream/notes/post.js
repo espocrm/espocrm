@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
+define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,16 +39,18 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
         isRemovable: true,
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
+
             data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
             data.showPost = !!this.model.get('post');
             data.isInternal = this.isInternal;
+
             return data;
         },
 
         setup: function () {
-
             this.createField('post', null, null, 'views/stream/fields/post');
+
             this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
                 previewSize: this.options.isNotification ? 'small' : 'medium'
             });
@@ -57,97 +59,154 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
 
             if (!this.model.get('post') && this.model.get('parentId')) {
                 this.messageName = 'attach';
+
                 if (this.isThis) {
                     this.messageName += 'This';
                 }
             }
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 if (this.model.hasChanged('post') || this.model.hasChanged('attachmentsIds')) {
                     this.reRender();
                 }
-            }, this);
+            });
 
-            if (!this.model.get('parentId')) {
-                if (this.model.get('isGlobal')) {
-                    this.messageName = 'postTargetAll';
-                } else {
-                    if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
-                        var teamIdList = this.model.get('teamsIds');
-                        var teamNameHash = this.model.get('teamsNames') || {};
-                        this.messageName = 'postTargetTeam';
-                        if (teamIdList.length > 1) {
-                            this.messageName = 'postTargetTeams';
-                        }
+            if (this.model.get('parentId')) {
+                this.createMessage();
 
-                        var targetHtml = '';
-                        var teamHtmlList = [];
-                        teamIdList.forEach(function (teamId) {
-                            var teamName = teamNameHash[teamId];
-                            if (teamName) {
-                                teamHtmlList.push('<a href="#Team/view/' + this.getHelper().escapeString(teamId) + '">' + this.getHelper().escapeString(teamName) + '</a>');
-                            }
-                        }, this);
+                return;
+            }
 
-                        this.messageData['target'] = teamHtmlList.join(', ');
-                    } else if (this.model.has('portalsIds') && this.model.get('portalsIds').length) {
-                        var portalIdList = this.model.get('portalsIds');
-                        var portalNameHash = this.model.get('portalsNames') || {};
-                        this.messageName = 'postTargetPortal';
-                        if (portalIdList.length > 1) {
-                            this.messageName = 'postTargetPortals';
-                        }
+            if (this.model.get('isGlobal')) {
+                this.messageName = 'postTargetAll';
+                this.createMessage();
 
-                        var targetHtml = '';
-                        var portalHtmlList = [];
-                        portalIdList.forEach(function (portalId) {
-                            var portalName = portalNameHash[portalId];
-                            if (portalName) {
-                                portalHtmlList.push('<a href="#Portal/view/' + this.getHelper().escapeString(portalId) + '">' + this.getHelper().escapeString(portalName) + '</a>');
-                            }
-                        }, this);
+                return;
+            }
 
-                        this.messageData['target'] = portalHtmlList.join(', ');
-                    } else if (this.model.has('usersIds') && this.model.get('usersIds').length) {
-                        var userIdList = this.model.get('usersIds');
-                        var userNameHash = this.model.get('usersNames') || {};
+            if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
+                let teamIdList = this.model.get('teamsIds');
+                let teamNameHash = this.model.get('teamsNames') || {};
+                this.messageName = 'postTargetTeam';
 
-                        this.messageName = 'postTarget';
+                if (teamIdList.length > 1) {
+                    this.messageName = 'postTargetTeams';
+                }
 
-                        if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
-                            this.messageName = 'postTargetSelf';
+                let teamHtmlList = [];
+
+                teamIdList.forEach(teamId => {
+                    let teamName = teamNameHash[teamId];
+
+                    if (!teamName) {
+                        return;
+                    }
+
+                    teamHtmlList.push(
+                        $('<a>')
+                            .attr('href', '#Team/view/' + teamId)
+                            .text(teamName)
+                            .get(0).outerHTML
+                    );
+                });
+
+                this.messageData['target'] = teamHtmlList.join(', ');
+
+                this.createMessage();
+
+                return;
+            }
+
+            if (this.model.has('portalsIds') && this.model.get('portalsIds').length) {
+                let portalIdList = this.model.get('portalsIds');
+                let portalNameHash = this.model.get('portalsNames') || {};
+
+                this.messageName = 'postTargetPortal';
+
+                if (portalIdList.length > 1) {
+                    this.messageName = 'postTargetPortals';
+                }
+
+                let portalHtmlList = [];
+
+                portalIdList.forEach(portalId =>{
+                    let portalName = portalNameHash[portalId];
+
+                    if (!portalName) {
+                        return;
+                    }
+
+                    portalHtmlList.push(
+                        $('<a>')
+                            .attr('href', '#Portal/view/' + portalId)
+                            .text(portalName)
+                            .get(0).outerHTML
+                    )
+                });
+
+                this.messageData['target'] = portalHtmlList.join(', ');
+
+                this.createMessage();
+
+                return;
+            }
+
+            if (!this.model.has('usersIds') || !this.model.get('usersIds').length) {
+                this.createMessage();
+            }
+
+            let userIdList = this.model.get('usersIds');
+            let userNameHash = this.model.get('usersNames') || {};
+
+            this.messageName = 'postTarget';
+
+            if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
+                this.messageName = 'postTargetSelf';
+                this.createMessage();
+
+                return;
+            }
+
+            let userHtmlList = [];
+
+            userIdList.forEach(userId => {
+                if (userId === this.getUser().id) {
+                    this.messageName = 'postTargetYou';
+
+                    if (userIdList.length > 1) {
+                        if (userId === this.model.get('createdById')) {
+                            this.messageName = 'postTargetSelfAndOthers';
                         } else {
-                            var userHtml = '';
-                            var userHtmlList = [];
-                            userIdList.forEach(function (userId) {
-                                if (userId === this.getUser().id) {
-                                    this.messageName = 'postTargetYou';
-                                    if (userIdList.length > 1) {
-                                        if (userId === this.model.get('createdById')) {
-                                            this.messageName = 'postTargetSelfAndOthers';
-                                        } else {
-                                            this.messageName = 'postTargetYouAndOthers';
-                                        }
-                                    }
-                                } else {
-                                    if (userId === this.model.get('createdById')) {
-                                        this.messageName = 'postTargetSelfAndOthers';
-                                    } else {
-                                        var userName = userNameHash[userId];
-                                        if (userName) {
-                                            userHtmlList.push('<a href="#User/view/' + this.getHelper().escapeString(userId) + '">' + this.getHelper().escapeString(userName) + '</a>');
-                                        }
-                                    }
-                                }
-                            }, this);
-                            this.messageData['target'] = userHtmlList.join(', ');
+                            this.messageName = 'postTargetYouAndOthers';
                         }
                     }
+
+                    return;
                 }
-            }
+
+                if (userId === this.model.get('createdById')) {
+                    this.messageName = 'postTargetSelfAndOthers';
+
+                    return;
+                }
+
+                let userName = userNameHash[userId];
+
+                if (!userName) {
+                    return;
+                }
+
+                userHtmlList.push(
+                    $('<a>')
+                        .attr('href', '#User/view/' + userId)
+                        .text(userName)
+                        .get(0).outerHTML
+                );
+            });
+
+            this.messageData['target'] = userHtmlList.join(', ');
 
             this.createMessage();
         },
     });
 });
-
