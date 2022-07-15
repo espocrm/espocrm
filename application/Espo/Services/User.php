@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Entities\PasswordChangeRequest;
@@ -313,7 +314,7 @@ class User extends Record implements
         }
 
         if (!$this->user->isAdmin()) {
-            if (!$this->acl->checkScope('Team')) {
+            if (!$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
                 unset($data->defaultTeamId);
             }
         }
