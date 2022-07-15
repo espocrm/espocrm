@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Importer\DuplicateFinder;
 use Espo\Entities\Email;
 use Espo\Entities\Job;
 use Espo\Modules\Crm\Entities\Account;
@@ -69,21 +70,23 @@ class Importer
     private FiltersMatcher $filtersMatcher;
     private ParserFactory $parserFactory;
     private LinkMultipleSaver $linkMultipleSaver;
+    private DuplicateFinder $duplicateFinder;
 
     public function __construct(
         EntityManager $entityManager,
         Config $config,
         AssignmentNotificatorFactory $notificatorFactory,
         ParserFactory $parserFactory,
-        LinkMultipleSaver $linkMultipleSaver
+        LinkMultipleSaver $linkMultipleSaver,
+        DuplicateFinder $duplicateFinder
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->parserFactory = $parserFactory;
         $this->linkMultipleSaver = $linkMultipleSaver;
+        $this->duplicateFinder = $duplicateFinder;
 
         $this->notificator = $notificatorFactory->create(Email::ENTITY_TYPE);
-
         $this->filtersMatcher = new FiltersMatcher();
     }
 
@@ -639,20 +642,7 @@ class Importer
 
     private function findDuplicate(Email $email): ?Email
     {
-        if (!$email->getMessageId()) {
-            return null;
-        }
-
-        /** @var Email $duplicate */
-        $duplicate = $this->entityManager
-            ->getRDBRepository(Email::ENTITY_TYPE)
-            ->select(['id', 'status'])
-            ->where([
-                'messageId' => $email->getMessageId(),
-            ])
-            ->findOne();
-
-        return $duplicate;
+        return $this->duplicateFinder->find($email);
     }
 
     /**
