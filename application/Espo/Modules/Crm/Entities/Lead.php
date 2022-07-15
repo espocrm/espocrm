@@ -33,6 +33,13 @@ class Lead extends \Espo\Core\Entities\Person
 {
     public const ENTITY_TYPE = 'Lead';
 
+    public const STATUS_CONVERTED = 'Converted';
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
     /**
      * @return ?string
      */

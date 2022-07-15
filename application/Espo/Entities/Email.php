@@ -515,6 +515,16 @@ class Email extends Entity
         return $this->get('messageId');
     }
 
+    public function getParentType(): ?string
+    {
+        return $this->get('parentType');
+    }
+
+    public function getParentId(): ?string
+    {
+        return $this->get('parentId');
+    }
+
     public function getParent(): ?LinkParent
     {
         /** @var ?LinkParent */
