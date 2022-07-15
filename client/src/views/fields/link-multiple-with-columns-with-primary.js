@@ -26,17 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple'], function (Dep) {
+define(
+    'views/fields/link-multiple-with-columns-with-primary',
+    ['views/fields/link-multiple-with-columns', 'views/fields/link-multiple-with-primary'],
+    function (Dep, LinkMultipleWithPrimary) {
 
     /**
-     * A link-multiple field with a primary.
+     * A link-multiple field with columns and a primary.
      *
      * @class
      * @name Class
-     * @extends module:views/fields/link-multiple.Class
-     * @memberOf module:views/fields/link-multiple-with-primary
+     * @extends module:link-multiple-with-columns.Class
+     * @memberOf module:link-multiple-with-columns-with-primary
      */
-    return Dep.extend(/** @lends module:views/fields/link-multiple-with-primary.Class# */{
+    return Dep.extend(/** @lends module:link-multiple-with-columns-with-primary.Class# */{
 
         /**
          * @protected
@@ -49,30 +52,12 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
                 let $target = $(e.currentTarget);
                 let id = $target.data('id');
 
-                this.switchPrimary(id);
-            },
-        },
-
-        switchPrimary: function (id) {
-            let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
-
-            if (!$switch.hasClass('active')) {
-                this.$el.find('button[data-action="switchPrimary"]')
-                    .removeClass('active')
-                    .children()
-                    .addClass('text-muted');
-
-                $switch.addClass('active').children().removeClass('text-muted');
-
-                this.setPrimaryId(id);
+                LinkMultipleWithPrimary.prototype.switchPrimary.call(this, id);
             }
         },
 
-        /**
-         * @inheritDoc
-         */
         getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+            let list = Dep.prototype.getAttributeList.call(this);
 
             list.push(this.primaryIdAttribute);
             list.push(this.primaryNameAttribute);
@@ -81,8 +66,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
 
         setup: function () {
-            this.primaryLink = this.options.primaryLink || this.primaryLink ||
-                this.model.getFieldParam(this.name, 'primaryLink');
+            this.primaryLink = this.primaryLink || this.model.getFieldParam(this.name, 'primaryLink');
 
             this.primaryIdAttribute = this.primaryLink + 'Id';
             this.primaryNameAttribute = this.primaryLink + 'Name';
@@ -98,56 +82,49 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             });
         },
 
-        /**
-         * @protected
-         * @param {string} id An ID.
-         */
         setPrimaryId: function (id) {
             this.primaryId = id;
 
             if (id) {
                 this.primaryName = this.nameHash[id];
-            }
-            else {
+            } else {
                 this.primaryName = null;
             }
 
             this.trigger('change');
         },
 
-        /**
-         * @protected
-         */
         renderLinks: function () {
             if (this.primaryId) {
                 this.addLinkHtml(this.primaryId, this.primaryName);
             }
 
-            this.ids.forEach((id) => {
+            this.ids.forEach(id => {
                 if (id !== this.primaryId) {
                     this.addLinkHtml(id, this.nameHash[id]);
                 }
             });
         },
 
-        /**
-         * @inheritDoc
-         */
         getValueForDisplay: function () {
             if (this.isDetailMode() || this.isListMode()) {
                 let itemList = [];
 
                 if (this.primaryId) {
-                    itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
+                    itemList.push(
+                        this.getDetailLinkHtml(this.primaryId, this.primaryName)
+                    );
                 }
 
                 if (!this.ids.length) {
                     return;
                 }
 
-                this.ids.forEach(id => {
+                this.ids.forEach(id =>{
                     if (id !== this.primaryId) {
-                        itemList.push(this.getDetailLinkHtml(id));
+                        itemList.push(
+                            this.getDetailLinkHtml(id)
+                        );
                     }
                 });
 
@@ -157,9 +134,6 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             }
         },
 
-        /**
-         * @inheritDoc
-         */
         deleteLink: function (id) {
             if (id === this.primaryId) {
                 this.setPrimaryId(null);
@@ -168,54 +142,24 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             Dep.prototype.deleteLink.call(this, id);
         },
 
-        /**
-         * @inheritDoc
-         */
         deleteLinkHtml: function (id) {
             Dep.prototype.deleteLinkHtml.call(this, id);
 
             this.managePrimaryButton();
         },
 
-        /**
-         * @inheritDoc
-         */
         addLinkHtml: function (id, name) {
-            // Do not use the `html` method to avoid XSS.
-
             name = name || id;
 
             if (this.isSearchMode()) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
-            let $container = this.$el.find('.link-container');
+            if (this.skipRoles) {
+                return LinkMultipleWithPrimary.prototype.addLinkHtml.call(this, id, name);
+            }
 
-            let $el = $('<div>')
-                .addClass('form-inline clearfix ')
-                .addClass('list-group-item link-with-role link-group-item-with-primary')
-                .addClass('link-' + id)
-                .attr('data-id', id);
-
-            let $name = $('<div>').text(name).append('&nbsp;');
-
-            let $remove = $('<a>')
-                .attr('href', 'javascript:')
-                .attr('data-id', id)
-                .attr('data-action', 'clearLink')
-                .addClass('pull-right')
-                .append(
-                    $('<span>').addClass('fas fa-times')
-                );
-
-            let $left = $('<div>');
-            let $right = $('<div>');
-
-            $left.append($name);
-            $right.append($remove);
-
-            $el.append($left);
-            $el.append($right);
+            let $el = Dep.prototype.addLinkHtml.call(this, id, name);
 
             let isPrimary = (id === this.primaryId);
 
@@ -231,29 +175,19 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
                 .attr('data-id', id)
                 .append($star);
 
-            $button.insertBefore($el.children().first().children().first());
-
-            $container.append($el);
+            $button.insertAfter($el.children().first().children().first());
 
             this.managePrimaryButton();
 
             return $el;
         },
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
-        /**
-         * @protected
-         */
         managePrimaryButton: function () {
             let $primary = this.$el.find('button[data-action="switchPrimary"]');
 
             if ($primary.length > 1) {
                 $primary.removeClass('hidden');
-            }
-            else {
+            } else {
                 $primary.addClass('hidden');
             }
 
@@ -262,7 +196,6 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
 
                 if ($first.length) {
                     $first.addClass('active').children().removeClass('text-muted');
-
                     this.setPrimaryId($first.data('id'));
                 }
             }
@@ -278,5 +211,3 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         },
     });
 });
-
-
