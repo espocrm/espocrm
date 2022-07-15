@@ -50,9 +50,9 @@ define('views/notification/items/entity-removed', ['views/notification/items/bas
 
             this.messageData['entity'] =
                 $('<a>')
-                .attr('href', '#' + data.entityType + '/view/' + data.entityId)
-                .text(data.entityName)
-                .get(0).outerHTML;
+                    .attr('href', '#' + data.entityType + '/view/' + data.entityId)
+                    .text(data.entityName)
+                    .get(0).outerHTML;
 
             this.createMessage();
         },

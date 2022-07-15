@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/panel', 'view', function (Dep) {
+define('views/notification/panel', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,12 +34,9 @@ define('views/notification/panel', 'view', function (Dep) {
 
         events: {
             'click [data-action="markAllNotificationsRead"]': function () {
-                $.ajax({
-                    url: 'Notification/action/markAllRead',
-                    type: 'POST'
-                }).done(function (count) {
-                    this.trigger('all-read');
-                }.bind(this));
+                Espo.Ajax
+                    .postRequest('Notification/action/markAllRead')
+                    .then(() => this.trigger('all-read'));
             },
             'click [data-action="openNotifications"]': function (e) {
                 this.getRouter().navigate('#Notification', {trigger: true});
@@ -52,31 +49,38 @@ define('views/notification/panel', 'view', function (Dep) {
 
         setup: function () {
             this.wait(true);
-            this.getCollectionFactory().create('Notification', function (collection) {
+
+            this.getCollectionFactory().create('Notification', (collection) => {
                 this.collection = collection;
                 collection.maxSize = this.getConfig().get('notificationsMaxSize') || 5;
+
                 this.wait(false);
 
-                this.listenTo(this.collection, 'sync', function () {
+                this.listenTo(this.collection, 'sync', () => {
                     this.trigger('collection-fetched');
-                }, this);
-            }, this);
+                });
+            });
 
             this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
             this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 $(window).off('resize.notifications-height');
+
                 if (this.overflowWasHidden) {
                     $('body').css('overflow', 'unset');
+
                     this.overflowWasHidden = false;
                 }
-            }, this);
+            });
         },
 
         afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', function () {
-                var viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) || 'views/notification/record/list';
+            this.listenToOnce(this.collection, 'sync', () => {
+                var viewName = this.getMetadata()
+                    .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+                    'views/notification/record/list';
+
                 this.createView('list', viewName, {
                     el: this.options.el + ' .list-container',
                     collection: this.collection,
@@ -88,7 +92,7 @@ define('views/notification/panel', 'view', function (Dep) {
                                     name: 'data',
                                     view: 'views/notification/fields/container',
                                     params: {
-                                        containerEl: this.options.el
+                                        containerEl: this.options.el,
                                     }
                                 }
                             ]
@@ -99,26 +103,27 @@ define('views/notification/panel', 'view', function (Dep) {
                             width: '10px'
                         }
                     }
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
-            }, this);
+            });
+
             this.collection.fetch();
 
-            var $window = $(window);
+            let $window = $(window);
             $window.off('resize.notifications-height');
             $window.on('resize.notifications-height', this.processSizing.bind(this));
             this.processSizing();
         },
 
         processSizing: function () {
-            var $window = $(window);
-            var windowHeight = $window.height();
-            var windowWidth = $window.width();
+            let $window = $(window);
+            let windowHeight = $window.height();
+            let windowWidth = $window.width();
 
-            var diffHeight = this.$el.find('.panel-heading').outerHeight();
+            let diffHeight = this.$el.find('.panel-heading').outerHeight();
 
-            var cssParams = {};
+            let cssParams = {};
 
             if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
                 cssParams.height = (windowHeight - diffHeight) + 'px';
@@ -127,19 +132,25 @@ define('views/notification/panel', 'view', function (Dep) {
                 $('body').css('overflow', 'hidden');
                 this.overflowWasHidden = true;
 
-            } else {
-                cssParams.height = 'unset';
-                cssParams.overflow = 'none';
+                this.$el.find('.panel-body').css(cssParams);
 
-                if (this.overflowWasHidden) {
-                    $('body').css('overflow', 'unset');
-                    this.overflowWasHidden = false;
-                }
+                return;
 
-                if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-                    var maxHeight = windowHeight - this.navbarPanelHeightSpace;
-                    cssParams.maxHeight = maxHeight + 'px';
-                }
+            }
+
+            cssParams.height = 'unset';
+            cssParams.overflow = 'none';
+
+            if (this.overflowWasHidden) {
+                $('body').css('overflow', 'unset');
+
+                this.overflowWasHidden = false;
+            }
+
+            if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+                let maxHeight = windowHeight - this.navbarPanelHeightSpace;
+
+                cssParams.maxHeight = maxHeight + 'px';
             }
 
             this.$el.find('.panel-body').css(cssParams);
@@ -148,6 +159,5 @@ define('views/notification/panel', 'view', function (Dep) {
         close: function () {
             this.trigger('close');
         },
-
     });
 });

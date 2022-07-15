@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/badge', 'view', function (Dep) {
+define('views/notification/badge', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -131,15 +131,29 @@ define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            var html = '' +
-                '<audio autoplay="autoplay">'+
-                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
-                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
-                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />' +
-                '</audio>';
+            let $audio =
+                $('<audio>')
+                    .attr('autoplay', 'autoplay')
+                    .append(
+                        $('<source>')
+                            .attr('src', this.soundPath + '.mp3')
+                            .attr('type', 'audio/mpeg')
+                    )
+                    .append(
+                        $('<source>')
+                            .attr('src', this.soundPath + '.ogg')
+                            .attr('type', 'audio/ogg')
+                    )
+                    .append(
+                        $('<embed>')
+                            .attr('src', this.soundPath + '.mp3')
+                            .attr('hidden', 'true')
+                            .attr('autostart', 'true')
+                            .attr('false', 'false')
+                    );
 
-            $(html).get(0).volume = 0.3;
-            $(html).get(0).play();
+            $audio.get(0).volume = 0.3;
+            $audio.get(0).play();
         },
 
         showNotRead: function (count) {
@@ -465,7 +479,7 @@ define('views/notification/badge', 'view', function (Dep) {
         closeNotifications: function () {
             let $container = $('#notifications-panel');
 
-            $('#notifications-panel').remove();
+            $container.remove();
 
             let $document = $(document);
 
@@ -474,9 +488,6 @@ define('views/notification/badge', 'view', function (Dep) {
             }
 
             $document.off('mouseup.notification');
-
-            $container.remove();
         },
-
     });
 });

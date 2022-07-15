@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/fields/container', 'views/fields/base', function (Dep) {
+define('views/notification/fields/container', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,10 +40,14 @@ Espo.define('views/notification/fields/container', 'views/fields/base', function
             switch (this.model.get('type')) {
                 case 'Note':
                     this.processNote(this.model.get('noteData'));
+
                     break;
+
                 case 'MentionInPost':
                     this.processMentionInPost(this.model.get('noteData'));
+
                     break;
+
                 default:
                     this.process();
             }
@@ -51,10 +55,17 @@ Espo.define('views/notification/fields/container', 'views/fields/base', function
 
         process: function () {
             var type = this.model.get('type');
-            if (!type) return;
+
+            if (!type) {
+                return;
+            }
+
             type = type.replace(/ /g, '');
 
-            var viewName = this.getMetadata().get('clientDefs.Notification.itemViews.' + type) || 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+            var viewName = this.getMetadata()
+                .get('clientDefs.Notification.itemViews.' + type) ||
+                'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+
             this.createView('notification', viewName, {
                 model: this.model,
                 el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
@@ -63,38 +74,46 @@ Espo.define('views/notification/fields/container', 'views/fields/base', function
 
         processNote: function (data) {
             this.wait(true);
-            this.getModelFactory().create('Note', function (model) {
+
+            this.getModelFactory().create('Note', model => {
                 model.set(data);
 
-                var viewName = this.getMetadata().get('clientDefs.Note.itemViews.' + data.type) || 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+                var viewName = this.getMetadata()
+                    .get('clientDefs.Note.itemViews.' + data.type) ||
+                    'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+
                 this.createView('notification', viewName, {
                     model: model,
                     isUserStream: true,
                     el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
-                    isNotification: true
+                    isNotification: true,
                 });
+
                 this.wait(false);
-            }, this);
+            });
         },
 
         processMentionInPost: function (data) {
             this.wait(true);
-            this.getModelFactory().create('Note', function (model) {
+
+            this.getModelFactory().create('Note', model => {
                 model.set(data);
+
                 var viewName = 'views/stream/notes/mention-in-post';
+
                 this.createView('notification', viewName, {
                     model: model,
                     userId: this.model.get('userId'),
                     isUserStream: true,
                     el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
-                    isNotification: true
+                    isNotification: true,
                 });
-                this.wait(false);
-            }, this);
-        },
 
+                this.wait(false);
+            });
+        },
     });
 });
 
