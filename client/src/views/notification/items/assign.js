@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/items/assign', 'views/notification/items/base', function (Dep) {
+define('views/notification/items/assign', ['views/notification/items/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,8 +39,14 @@ Espo.define('views/notification/items/assign', 'views/notification/items/base', 
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
-            this.messageData['entity'] = '<a href="#' + this.getHelper().escapeString(data.entityType) + '/view/' + this.getHelper().escapeString(data.entityId) + '">' + this.getHelper().escapeString(data.entityName) + '</a>';
+            this.messageData['entityType'] = Espo.Utils
+                .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+
+            this.messageData['entity'] =
+                $('<a>')
+                    .attr('href', '#' + data.entityType + '/view/' + data.entityId)
+                    .text(data.entityName)
+                    .get(0).outerHTML;
 
             this.createMessage();
         },

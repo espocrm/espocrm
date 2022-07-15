@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/items/email-received', 'views/notification/items/base', function (Dep) {
+define('views/notification/items/email-received', ['views/notification/items/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,15 +42,27 @@ Espo.define('views/notification/items/email-received', 'views/notification/items
         },
 
         setup: function () {
-            var data = this.model.get('data') || {};
+            let data = this.model.get('data') || {};
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = this.getHelper().escapeString(Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase()));
+            this.messageData['entityType'] = Espo.Utils
+                .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+
             if (data.personEntityId) {
-                this.messageData['from'] = '<a href="#' + this.getHelper().escapeString(data.personEntityType) + '/view/' + this.getHelper().escapeString(data.personEntityId) + '">' + this.getHelper().escapeString(data.personEntityName) + '</a>';
-            } else {
-                this.messageData['from'] = this.getHelper().escapeString(data.fromString || this.translate('empty address'));
+                this.messageData['from'] =
+                    $('<a>')
+                        .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                        .text(data.personEntityName)
+                        .get(0).outerHTML;
+            }
+            else {
+                let text = data.fromString || this.translate('empty address');
+
+                this.messageData['from'] =
+                    $('<span>')
+                        .text(text)
+                        .get(0).outerHTML;
             }
 
             this.emailId = data.emailId;

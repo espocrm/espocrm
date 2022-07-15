@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/items/base', 'view', function (Dep) {
+define('views/notification/items/base', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,7 +40,7 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
 
         data: function () {
             return {
-                avatar: this.getAvatarHtml()
+                avatar: this.getAvatarHtml(),
             };
         },
 
@@ -52,6 +52,7 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
 
         createField: function (name, type, params, view) {
             type = type || this.model.getFieldType(name) || 'base';
+
             this.createView(name, view || this.getFieldManager().getViewName(type), {
                 model: this.model,
                 defs: {
@@ -59,7 +60,7 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
                     params: params || {}
                 },
                 el: this.options.el + ' .cell-' + name,
-                mode: 'list'
+                mode: 'list',
             });
         },
 
@@ -74,17 +75,18 @@ Espo.define('views/notification/items/base', 'view', function (Dep) {
                 messageTemplate: this.messageTemplate,
                 el: this.options.el + ' .message',
                 model: this.model,
-                messageData: this.messageData
+                messageData: this.messageData,
             });
         },
 
         getAvatarHtml: function () {
             var id = this.userId;
+
             if (this.isSystemAvatar) {
                 id = 'system';
             }
-            return this.getHelper().getAvatarHtml(id, 'small', 20);
-        }
 
+            return this.getHelper().getAvatarHtml(id, 'small', 20);
+        },
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/items/entity-removed', 'views/notification/items/base', function (Dep) {
+define('views/notification/items/entity-removed', ['views/notification/items/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,14 +39,23 @@ Espo.define('views/notification/items/entity-removed', 'views/notification/items
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = this.getHelper().escapeString((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entityType'] = Espo.Utils
+                .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase())
 
-            this.messageData['user'] = '<a href="#User/view/' + this.getHelper().escapeString(data.userId) + '">' + this.getHelper().escapeString(data.userName) + '</a>';
-            this.messageData['entity'] = '<a href="#'+this.getHelper().escapeString(data.entityType)+'/view/' + this.getHelper().escapeString(data.entityId) + '">' + this.getHelper().escapeString(data.entityName) + '</a>';
+            this.messageData['user'] =
+                $('<a>')
+                    .attr('href', '#User/view/' + data.userId)
+                    .text(data.userName)
+                    .get(0).outerHTML;
+
+            this.messageData['entity'] =
+                $('<a>')
+                .attr('href', '#' + data.entityType + '/view/' + data.entityId)
+                .text(data.entityName)
+                .get(0).outerHTML;
 
             this.createMessage();
-        }
-
+        },
     });
 });
 
