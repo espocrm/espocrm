@@ -43,7 +43,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             'style',
             'dynamicLogicStyled',
             'hidden',
-            'isTabBreak',
+            'tabBreak',
             'tabLabel',
         ],
 
@@ -96,9 +96,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 type: 'bool',
                 tooltip: 'hiddenPanel',
             },
-            isTabBreak: {
+            tabBreak: {
                 type: 'bool',
-                tooltip: 'isTabBreak',
+                tooltip: 'tabBreak',
             },
             tabLabel: {
                 type: 'varchar',

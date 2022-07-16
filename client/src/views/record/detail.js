@@ -2422,9 +2422,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 let panel = {};
 
-                let isTabBreak = item.isTabBreak || p === 0;
+                let tabBreak = item.tabBreak || p === 0;
 
-                if (isTabBreak) {
+                if (tabBreak) {
                     tabNumber++;
                 }
 
@@ -2930,7 +2930,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             for (let item of this.detailLayout) {
-                if (item.isTabBreak) {
+                if (item.tabBreak) {
                     return true;
                 }
             }
@@ -2946,12 +2946,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             let currentTab = this.currentMiddleTab;
 
             return (this.detailLayout || [])
-                .filter((item, i) => i === 0 || item.isTabBreak)
+                .filter((item, i) => i === 0 || item.tabBreak)
                 .map((item, i) => {
                     let label = item.tabLabel;
 
                     if (!label) {
-                        label = (i + 1).toString();
+                        label = i === 0 ?
+                            this.translate('Overview') :
+                            (i + 1).toString();
                     }
                     else if (label[0] === '$') {
                         label = this.translate(label.substring(1), 'tabs', this.scope);

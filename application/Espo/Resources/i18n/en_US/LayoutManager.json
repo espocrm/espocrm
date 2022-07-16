@@ -14,7 +14,7 @@
         "dynamicLogicVisible": "Conditions making panel visible",
         "dynamicLogicStyled": "Conditions making style applied",
         "tabLabel": "Tab Label",
-        "isTabBreak": "Tab-Break"
+        "tabBreak": "Tab-Break"
     },
     "options": {
         "align": {
@@ -39,7 +39,7 @@
         "fieldsIncompatible": "Fields can't be on the layout together: {fields}."
     },
     "tooltips": {
-        "isTabBreak": "A separate tab for the panel and all following panels until the next tab-break.",
+        "tabBreak": "A separate tab for the panel and all following panels until the next tab-break.",
         "noLabel": "Don't display a column label in the header.",
         "notSortable": "Disables the ability to sort by the column.",
         "width": "A column width in percentage. It's recommended to have one column with the not-set width, usually it's the *Name* field.",
