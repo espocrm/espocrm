@@ -2463,7 +2463,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.dynamicLogic.addPanelStyledCondition(panel.name, item.dynamicLogicStyled);
                 }
 
-                if (item.hidden) {
+                if (item.hidden && tabNumber === 0) {
                     panel.hidden = true;
                     panel.name = panel.name || 'panel-' + p.toString();
 

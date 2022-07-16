@@ -170,7 +170,7 @@
 <%
 if (hasHiddenPanel) {
 %>
-<div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter">
+<div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter" data-tab="0">
     <a href="javascript:" data-action="showMoreDetailPanels" title="{{translate 'Show more'}}">
         <span class="fas fa-ellipsis-h fa-lg"></span>
     </a>
