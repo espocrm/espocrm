@@ -71,6 +71,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          *
          * @protected
          * @type {Object[]|null}
+         * @todo Define panelDefs type.
          */
         detailLayout: null,
 
@@ -248,6 +249,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         bottomDisabled: false,
 
         /**
+         * @protected
+         */
+        gridLayoutType: 'record',
+
+        /**
          * Disable edit mode. Can be overridden by an option parameter.
          *
          * @protected
@@ -362,6 +368,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         setupHandlerType: 'record/detail',
 
         /**
+         * @protected
+         */
+        currentMiddleTab: 0,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -371,6 +382,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             /** @this module:views/record/detail.Class */
             'click [data-action="showMoreDetailPanels"]': function () {
                 this.showMoreDetailPanels();
+            },
+            /** @this module:views/record/detail.Class */
+            'click .middle-tabs > button': function (e) {
+                let tab = $(e.currentTarget).attr('data-tab');
+
+                this.selectMiddleTab(tab);
             },
         },
 
@@ -1299,6 +1316,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
+            let hasMiddleTabs = this.hasMiddleTabs();
+            let middleTabDataList = hasMiddleTabs ? this.getMiddleTabDataList() : [];
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
@@ -1316,6 +1336,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 navigateButtonsEnabled: navigateButtonsEnabled,
                 previousButtonEnabled: previousButtonEnabled,
                 nextButtonEnabled: nextButtonEnabled,
+                hasMiddleTabs: hasMiddleTabs,
+                middleTabDataList: middleTabDataList,
             };
         },
 
@@ -2090,6 +2112,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             });
         },
 
+        /**
+         * Get the middle-view.
+         *
+         * @return {module:views/record/detail-middle.Class}
+         */
+        getMiddleView: function () {
+            return this.getView('middle');
+        },
+
         setReadOnly: function () {
             if (!this.readOnlyLocked) {
                 this.readOnly = true;
@@ -2379,24 +2410,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @return {Object[]}
          */
         convertDetailLayout: function (simplifiedLayout) {
-            var layout = [];
-
-            var el = this.options.el || '#' + (this.id);
+            let layout = [];
+            let el = this.options.el || '#' + (this.id);
 
             this.panelFieldListMap = {};
 
-            for (var p in simplifiedLayout) {
-                var panel = {};
+            let tabNumber = -1;
 
-                if ('customLabel' in simplifiedLayout[p]) {
-                    panel.label = simplifiedLayout[p].customLabel;
+            for (let p = 0; p < simplifiedLayout.length; p++) {
+                let item = simplifiedLayout[p];
+
+                let panel = {};
+
+                let isTabBreak = item.isTabBreak || p === 0;
+
+                if (isTabBreak) {
+                    tabNumber++;
+                }
+
+                if ('customLabel' in item) {
+                    panel.label = item.customLabel;
 
                     if (panel.label) {
                         panel.label = this.getLanguage()
                             .translate(panel.label, 'panelCustomLabels', this.entityType);
                     }
                 } else {
-                    panel.label = simplifiedLayout[p].label || null;
+                    panel.label = item.label || null;
 
                     if (panel.label) {
                         panel.label = this.getLanguage()
@@ -2404,36 +2444,26 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     }
                 }
 
-                panel.name = simplifiedLayout[p].name || null;
-                panel.style = simplifiedLayout[p].style || 'default';
+                panel.name = item.name || null;
+                panel.style = item.style || 'default';
                 panel.rows = [];
+                panel.tabNumber = tabNumber;
 
-                if (
-                    simplifiedLayout[p].dynamicLogicVisible ||
-                    simplifiedLayout[p].dynamicLogicStyled
-                ) {
+                if (item.dynamicLogicVisible || item.dynamicLogicStyled) {
                     if (!panel.name) {
                         panel.name = 'panel-' + p.toString();
                     }
                 }
 
-                if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.dynamicLogic) {
-                        this.dynamicLogic.addPanelVisibleCondition(
-                            panel.name, simplifiedLayout[p].dynamicLogicVisible
-                        );
-                    }
+                if (item.dynamicLogicVisible && this.dynamicLogic) {
+                    this.dynamicLogic.addPanelVisibleCondition(panel.name, item.dynamicLogicVisible);
                 }
 
-                if (simplifiedLayout[p].dynamicLogicStyled) {
-                    if (this.dynamicLogic) {
-                        this.dynamicLogic.addPanelStyledCondition(
-                            panel.name, simplifiedLayout[p].dynamicLogicStyled
-                        );
-                    }
+                if (simplifiedLayout[p].dynamicLogicStyled && this.dynamicLogic) {
+                    this.dynamicLogic.addPanelStyledCondition(panel.name, item.dynamicLogicStyled);
                 }
 
-                if (simplifiedLayout[p].hidden) {
+                if (item.hidden) {
                     panel.hidden = true;
                     panel.name = panel.name || 'panel-' + p.toString();
 
@@ -2443,9 +2473,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.underShowMoreDetailPanelList.push(panel.name);
                 }
 
-                var lType = 'rows';
+                let lType = 'rows';
 
-                if (simplifiedLayout[p].columns) {
+                if (item.columns) {
                     lType = 'columns';
 
                     panel.columns = [];
@@ -2455,11 +2485,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.panelFieldListMap[panel.name] = [];
                 }
 
-                for (var i in simplifiedLayout[p][lType]) {
-                    var row = [];
+                for (let i in item[lType]) {
+                    let row = [];
 
-                    for (var j in simplifiedLayout[p][lType][i]) {
-                        var cellDefs = simplifiedLayout[p][lType][i][j];
+                    for (let j in item[lType][i]) {
+                        var cellDefs = item[lType][i][j];
 
                         if (cellDefs === false) {
                             row.push(false);
@@ -2477,19 +2507,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             this.panelFieldListMap[panel.name].push(name);
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
+                        let type = cellDefs.type || this.model.getFieldType(name) || 'base';
 
-                        var viewName = cellDefs.view ||
+                        let viewName = cellDefs.view ||
                             this.model.getFieldParam(name, 'view') ||
                             this.getFieldManager().getViewName(type);
 
-                        var o = {
+                        let o = {
                             el: el + ' .middle .field[data-name="' + name + '"]',
                             defs: {
                                 name: name,
                                 params: cellDefs.params || {},
                             },
-                            mode: this.fieldsMode
+                            mode: this.fieldsMode,
                         };
 
                         if (this.readOnly) {
@@ -2509,10 +2539,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             o.inlineEditDisabled = true;
                         }
 
-                        var fullWidth = cellDefs.fullWidth || false;
+                        let fullWidth = cellDefs.fullWidth || false;
 
                         if (!fullWidth) {
-                            if (simplifiedLayout[p][lType][i].length === 1) {
+                            if (item[lType][i].length === 1) {
                                 fullWidth = true;
                             }
                         }
@@ -2556,7 +2586,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             }
                         }
 
-                        var cell = {
+                        let cell = {
                             name: name + 'Field',
                             view: viewName,
                             field: name,
@@ -2595,8 +2625,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     panel[lType].push(row);
                 }
+
                 layout.push(panel);
             }
+
             return layout;
         },
 
@@ -2611,28 +2643,29 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var gridLayoutType = this.gridLayoutType || 'record';
-
             if (this.detailLayout) {
                 this.gridLayout = {
-                    type: gridLayoutType,
+                    type: this.gridLayoutType,
                     layout: this.convertDetailLayout(this.detailLayout),
                 };
+
                 callback(this.gridLayout);
 
                 return;
             }
 
-            this.getHelper().layoutManager.get(this.model.name, this.layoutName, (simpleLayout) => {
+            this.getHelper().layoutManager.get(this.model.name, this.layoutName, detailLayout => {
                 if (typeof this.modifyDetailLayout === 'function') {
-                    simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
+                    detailLayout = Espo.Utils.cloneDeep(detailLayout);
 
-                    this.modifyDetailLayout(simpleLayout);
+                    this.modifyDetailLayout(detailLayout);
                 }
 
+                this.detailLayout = detailLayout;
+
                 this.gridLayout = {
-                    type: gridLayoutType,
-                    layout: this.convertDetailLayout(simpleLayout),
+                    type: this.gridLayoutType,
+                    layout: this.convertDetailLayout(this.detailLayout),
                 };
 
                 callback(this.gridLayout);
@@ -2885,6 +2918,115 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.underShowMoreDetailPanelList.forEach(item => {
                 this.showPanel(item);
             });
+        },
+
+        /**
+         * @protected
+         * @return {boolean}
+         */
+        hasMiddleTabs: function () {
+            if (!this.detailLayout) {
+                return false;
+            }
+
+            for (let item of this.detailLayout) {
+                if (item.isTabBreak) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        /**
+         * @protected
+         * @return {{label: string}[]}
+         */
+        getMiddleTabDataList: function () {
+            let currentTab = this.currentMiddleTab;
+
+            return (this.detailLayout || [])
+                .filter((item, i) => i === 0 || item.isTabBreak)
+                .map((item, i) => {
+                    let label = item.tabLabel;
+
+                    if (!label) {
+                        label = (i + 1).toString();
+                    }
+                    else if (label[0] === '$') {
+                        label = this.translate(label.substring(1), 'tabs', this.scope);
+                    }
+
+                    return {
+                        label: label,
+                        isActive: currentTab === i,
+                    };
+                });
+        },
+
+        /**
+         * Select a tab.
+         *
+         * @protected
+         * @param {Number} tab
+         */
+        selectMiddleTab: function (tab) {
+            this.currentMiddleTab = tab;
+
+            $('body > .popover').remove();
+
+            this.$el.find('.middle-tabs > button').removeClass('active');
+            this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
+
+            this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
+            this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+        },
+
+        /**
+         * @inheritDoc
+          */
+        onInvalid: function (invalidFieldList) {
+            if (!this.hasMiddleTabs()) {
+                return;
+            }
+
+            let tabList = [];
+
+            for (let field of invalidFieldList) {
+                let view = this.getMiddleView().getFieldView(field);
+
+                if (!view) {
+                    continue;
+                }
+
+                let tabString = view.$el
+                    .closest('.panel.tab-hidden')
+                    .attr('data-tab');
+
+                let tab = parseInt(tabString);
+
+                if (tabList.indexOf(tab) !== -1) {
+                    continue;
+                }
+
+                tabList.push(tab);
+            }
+
+            if (!tabList.length) {
+                return;
+            }
+
+            let $tabs = this.$el.find('.middle-tabs');
+
+            tabList.forEach(tab => {
+                let $tab = $tabs.find(`> [data-tab=${tab.toString()}]`);
+
+                $tab.addClass('invalid');
+
+                $tab.one('click', () => {
+                    $tab.removeClass('invalid');
+                });
+            })
         },
     });
 });

@@ -33,6 +33,30 @@
     }
 }
 
+.record {
+    .middle-tabs {
+        > button.btn {
+            border-bottom-width: 2px;
+            font-size: 15px;
+            height: 40px;
+
+            &.invalid {
+                color: var(--state-danger-text);
+                transition: color 100ms linear;
+            }
+        }
+    }
+
+    .panel.tab-hidden {
+        display: none;
+    }
+
+    .side.tabs-margin {
+        @media screen and (min-width: @screen-sm-min) {
+            margin-top: 40px;
+        }
+    }
+}
 
 .record .middle {
     margin-bottom: var(--vertical-gap);
@@ -78,6 +102,10 @@
 
     > .panel:last-child {
         border-bottom-width: var(--panel-border-width);
+    }
+
+    > .panel.tab-hidden + .panel {
+        border-top-width: var(--panel-border-width);
     }
 
     > .panel.hidden + .panel {

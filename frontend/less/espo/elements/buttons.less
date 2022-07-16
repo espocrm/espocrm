@@ -150,12 +150,14 @@
         background-color: transparent;
         .box-shadow(none);
     }
+
     &,
     &:hover,
     &:focus,
     &:active {
         border-color: transparent;
     }
+
     &:hover,
     &:focus {
         color: var(--btn-text-color);
@@ -166,6 +168,11 @@
             color: var(--btn-text-color);
         }
     }
+
+    &:focus-visible {
+        color: var(--text-gray-color);
+    }
+
     &.disabled,
     &[disabled],
     fieldset[disabled] & {
@@ -180,6 +187,7 @@
             color: @gray-light;
         }
     }
+
     &.active {
         border-bottom: 1px solid @gray-light;
     }

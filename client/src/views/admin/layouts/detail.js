@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) {
+define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,8 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             'style',
             'dynamicLogicStyled',
             'hidden',
+            'isTabBreak',
+            'tabLabel',
         ],
 
         dataAttributesDefs: {
@@ -93,6 +95,13 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             hidden: {
                 type: 'bool',
                 tooltip: 'hiddenPanel',
+            },
+            isTabBreak: {
+                type: 'bool',
+                tooltip: 'isTabBreak',
+            },
+            tabLabel: {
+                type: 'varchar',
             },
         },
 

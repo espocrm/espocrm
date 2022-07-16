@@ -1305,6 +1305,12 @@ define('views/fields/base', ['view'], function (Dep) {
                 $el = this.$element;
             }
 
+            let rect = $el.get(0).getBoundingClientRect();
+
+            if (rect.top === 0 && rect.bottom === 0 && rect.left === 0) {
+                return;
+            }
+
             $el
                 .popover({
                     placement: 'bottom',
