@@ -28,18 +28,47 @@
 
 define('views/stream/note', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @memberOf module:views/stream/note
+     * @extends module:view
+     */
+    return Dep.extend(/** @lends module:views/stream/note.Class# */{
 
+        /**
+         * @protected
+         * @type {string|null}
+         */
         messageName: null,
 
+        /**
+         * @protected
+         * @type {string|null}
+         */
         messageTemplate: null,
 
+        /**
+         * Data to pass to a message template.
+         *
+         * @protected
+         * @type {Object.<string,JQuery|Element|string>|null}
+         */
         messageData: null,
 
+        /**
+         * @protected
+         */
         isEditable: false,
 
+        /**
+         * @protected
+         */
         isRemovable: false,
 
+        /**
+         * @protected
+         */
         isSystemAvatar: false,
 
         data: function () {
