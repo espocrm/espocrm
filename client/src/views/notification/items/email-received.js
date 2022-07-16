@@ -50,26 +50,21 @@ define('views/notification/items/email-received', ['views/notification/items/bas
                 Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
 
             if (data.personEntityId) {
-                this.messageData['html:from'] =
+                this.messageData['from'] =
                     $('<a>')
                         .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                        .text(data.personEntityName)
-                        .get(0).outerHTML;
+                        .text(data.personEntityName);
             }
             else {
                 let text = data.fromString || this.translate('empty address');
 
-                this.messageData['html:from'] =
-                    $('<span>')
-                        .text(text)
-                        .get(0).outerHTML;
+                this.messageData['from'] = $('<span>').text(text);
             }
 
             this.emailId = data.emailId;
             this.emailName = data.emailName;
 
             this.createMessage();
-        }
-
+        },
     });
 });

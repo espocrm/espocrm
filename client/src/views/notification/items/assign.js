@@ -42,11 +42,10 @@ define('views/notification/items/assign', ['views/notification/items/base'], fun
             this.messageData['entityType'] = Espo.Utils
                 .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
 
-            this.messageData['html:entity'] =
+            this.messageData['entity'] =
                 $('<a>')
                     .attr('href', '#' + data.entityType + '/view/' + data.entityId)
-                    .text(data.entityName)
-                    .get(0).outerHTML;
+                    .text(data.entityName);
 
             this.createMessage();
         },

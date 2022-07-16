@@ -36,7 +36,7 @@ define('views/stream/message', ['view'], function (Dep) {
 
         setup: function () {
             let template = this.options.messageTemplate;
-            let data = this.options.messageData;
+            let data = this.options.messageData || {};
 
             this.dataForTemplate = {};
 
@@ -46,24 +46,39 @@ define('views/stream/message', ['view'], function (Dep) {
                 if (key.indexOf('html:') === 0) {
                     key = key.substring(5);
                     this.dataForTemplate[key] = value;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
 
-                    template = template.replace('{' + key + '}', '{{{' + key +'}}}');
+                    continue;
+                }
 
+                if (value instanceof jQuery) {
+                    this.dataForTemplate[key] = value.get(0).outerHTML;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    continue;
+                }
+
+                if (value instanceof Element) {
+                    this.dataForTemplate[key] = value.outerHTML;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    continue;
+                }
+
+                if (!value.indexOf) {
                     continue;
                 }
 
                 if (value.indexOf('field:') === 0) {
                     let field = value.substring(6);
                     this.createField(key, field);
-
-                    template = template.replace('{' + key + '}', '{{{' + key +'}}}');
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
 
                     continue;
                 }
 
                 this.dataForTemplate[key] = value;
-
-                template = template.replace('{' + key + '}', '{{' + key +'}}');
+                template = template.replace('{' + key + '}', '{{' + key + '}}');
             }
 
             this.templateContent = template;

@@ -52,10 +52,10 @@ define('views/stream/notes/create', ['views/stream/note'], function (Dep) {
                 this.assignedUserId = data.assignedUserId || null;
                 this.assignedUserName = data.assignedUserName || null;
 
-                this.messageData['html:assignee'] = $('<a>')
-                    .attr('href', '#User/view/' + this.assignedUserId)
-                    .text(this.assignedUserName)
-                    .get(0).outerHTML;
+                this.messageData['assignee'] =
+                    $('<a>')
+                        .attr('href', '#User/view/' + this.assignedUserId)
+                        .text(this.assignedUserName);
 
                 let isYou = false;
 

@@ -42,17 +42,15 @@ define('views/notification/items/entity-removed', ['views/notification/items/bas
             this.messageData['entityType'] =
                 Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase())
 
-            this.messageData['html:user'] =
+            this.messageData['user'] =
                 $('<a>')
                     .attr('href', '#User/view/' + data.userId)
-                    .text(data.userName)
-                    .get(0).outerHTML;
+                    .text(data.userName);
 
-            this.messageData['html:entity'] =
+            this.messageData['entity'] =
                 $('<a>')
                     .attr('href', '#' + data.entityType + '/view/' + data.entityId)
-                    .text(data.entityName)
-                    .get(0).outerHTML;
+                    .text(data.entityName);
 
             this.createMessage();
         },

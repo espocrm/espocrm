@@ -58,12 +58,10 @@ define('views/stream/notes/create-related', ['views/stream/note'], function (Dep
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
 
-            this.messageData['html:relatedEntity'] =
+            this.messageData['relatedEntity'] =
                 $('<a>')
                     .attr('href', '#' + this.entityType + '/view/' + this.entityId)
-                    .text(this.entityName)
-                    .get(0).outerHTML;
-
+                    .text(this.entityName);
 
             this.createMessage();
         },

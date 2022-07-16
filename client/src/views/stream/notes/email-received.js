@@ -76,11 +76,10 @@ define('views/stream/notes/email-received', ['views/stream/note'], function (Dep
                 }
             }
 
-            this.messageData['html:email'] =
+            this.messageData['email'] =
                 $('<a>')
                     .attr('href', '#Email/view/' + data.emailId)
-                    .text(data.emailName)
-                    .get(0).outerHTML;
+                    .text(data.emailName);
 
             this.messageName = 'emailReceived';
 
@@ -91,11 +90,10 @@ define('views/stream/notes/email-received', ['views/stream/note'], function (Dep
             if (data.personEntityId) {
                 this.messageName += 'From';
 
-                this.messageData['html:from'] =
+                this.messageData['from'] =
                     $('<a>')
                         .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                        .text(data.personEntityName)
-                        .get(0).outerHTML;
+                        .text(data.personEntityName);
             }
 
             if (
