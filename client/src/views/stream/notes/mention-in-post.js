@@ -107,7 +107,7 @@ define('views/stream/notes/mention-in-post', ['views/stream/note'], function (De
                     );
                 });
 
-                this.messageData['target'] = teamHtmlList.join(', ');
+                this.messageData['html:target'] = teamHtmlList.join(', ');
 
                 this.createMessage();
 
@@ -142,7 +142,7 @@ define('views/stream/notes/mention-in-post', ['views/stream/note'], function (De
                     );
                 });
 
-                this.messageData['target'] = userHtmlList.join(', ');
+                this.messageData['html:target'] = userHtmlList.join(', ');
 
                 this.createMessage();
 

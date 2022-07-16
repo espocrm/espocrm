@@ -82,10 +82,12 @@ define('views/stream/note', ['view'], function (Dep) {
                 this.createField('parent');
             }
 
+            let translatedEntityType = this.translateEntityType(this.model.get('parentType'));
+
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
-                'entityType': this.getHelper().escapeString(this.translateEntityType(this.model.get('parentType'))),
+                'entityType': translatedEntityType,
             };
 
             if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {

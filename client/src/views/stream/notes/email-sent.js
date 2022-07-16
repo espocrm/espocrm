@@ -68,17 +68,19 @@ define('views/stream/notes/email-sent', ['views/stream/note'], function (Dep) {
                 }
             }
 
-            this.messageData['email'] = $('<a>')
-                .attr('href', '#Email/view/' + data.emailId)
-                .text(data.emailName)
-                .get(0).outerHTML;
+            this.messageData['html:email'] =
+                $('<a>')
+                    .attr('href', '#Email/view/' + data.emailId)
+                    .text(data.emailName)
+                    .get(0).outerHTML;
 
             this.messageName = 'emailSent';
 
-            this.messageData['by'] = $('<a>')
-                .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                .text(data.personEntityName)
-                .get(0).outerHTML;
+            this.messageData['html:by'] =
+                $('<a>')
+                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                    .text(data.personEntityName)
+                    .get(0).outerHTML;
 
             if (this.isThis) {
                 this.messageName += 'This';

@@ -47,4 +47,3 @@ define('views/notification/items/system', ['views/notification/items/base'], fun
         },
     });
 });
-

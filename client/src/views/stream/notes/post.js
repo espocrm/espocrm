@@ -110,7 +110,7 @@ define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
                     );
                 });
 
-                this.messageData['target'] = teamHtmlList.join(', ');
+                this.messageData['html:target'] = teamHtmlList.join(', ');
 
                 this.createMessage();
 
@@ -144,7 +144,7 @@ define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
                     )
                 });
 
-                this.messageData['target'] = portalHtmlList.join(', ');
+                this.messageData['html:target'] = portalHtmlList.join(', ');
 
                 this.createMessage();
 
@@ -204,7 +204,7 @@ define('views/stream/notes/post', ['views/stream/note'], function (Dep) {
                 );
             });
 
-            this.messageData['target'] = userHtmlList.join(', ');
+            this.messageData['html:target'] = userHtmlList.join(', ');
 
             this.createMessage();
         },

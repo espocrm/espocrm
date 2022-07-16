@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/notification/items/message',
-    ['views/notification/items/base', 'lib!marked', 'lib!dompurify'],
-    function (Dep, marked, DOMPurify) {
+define('views/notification/items/message',
+['views/notification/items/base', 'lib!marked', 'lib!dompurify'],
+function (Dep, marked, DOMPurify) {
 
     return Dep.extend({
 
@@ -54,16 +53,16 @@ define(
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = Espo.Utils
-                .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase())
+            this.messageData['entityType'] =
+                Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase())
 
-            this.messageData['user'] =
+            this.messageData['html:user'] =
                 $('<a>')
                     .attr('href', '#User/view/' + data.userId)
                     .text(data.userName)
                     .get(0).outerHTML;
 
-            this.messageData['entity'] =
+            this.messageData['html:entity'] =
                 $('<a>')
                     .attr('href', '#' + data.entityType + '/view/' + data.entityId)
                     .text(data.entityName)

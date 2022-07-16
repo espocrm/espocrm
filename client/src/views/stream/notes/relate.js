@@ -57,7 +57,7 @@ define('views/stream/notes/relate', ['views/stream/note'], function (Dep) {
 
             this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
 
-            this.messageData['relatedEntity'] =
+            this.messageData['html:relatedEntity'] =
                 $('<a>')
                     .attr('href', '#' + this.entityType + '/view/' + this.entityId)
                     .text(this.entityName)

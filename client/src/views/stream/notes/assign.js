@@ -48,7 +48,7 @@ define('views/stream/notes/assign', ['views/stream/note'], function (Dep) {
             this.assignedUserId = data.assignedUserId || null;
             this.assignedUserName = data.assignedUserName || null;
 
-            this.messageData['assignee'] = $('<a>')
+            this.messageData['html:assignee'] = $('<a>')
                 .attr('href', '#User/view/' + data.assignedUserId)
                 .text(data.assignedUserName)
                 .get(0).outerHTML;

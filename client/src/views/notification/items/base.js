@@ -80,7 +80,7 @@ define('views/notification/items/base', ['view'], function (Dep) {
         },
 
         getAvatarHtml: function () {
-            var id = this.userId;
+            let id = this.userId;
 
             if (this.isSystemAvatar) {
                 id = 'system';

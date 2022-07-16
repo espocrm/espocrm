@@ -30,21 +30,40 @@ define('views/stream/message', ['view'], function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            var template = this.options.messageTemplate;
-            var data = this.options.messageData;
+        data: function () {
+            return this.dataForTemplate;
+        },
 
-            for (var key in data) {
-                var value = data[key] || '';
+        setup: function () {
+            let template = this.options.messageTemplate;
+            let data = this.options.messageData;
+
+            this.dataForTemplate = {};
+
+            for (let key in data) {
+                let value = data[key] || '';
+
+                if (key.indexOf('html:') === 0) {
+                    key = key.substring(5);
+                    this.dataForTemplate[key] = value;
+
+                    template = template.replace('{' + key + '}', '{{{' + key +'}}}');
+
+                    continue;
+                }
 
                 if (value.indexOf('field:') === 0) {
-                    var field = value.substr(6);
+                    let field = value.substring(6);
                     this.createField(key, field);
 
-                    template = template.replace('{' + key +'}', '{{{' + key +'}}}');
-                } else {
-                    template = template.replace('{' + key +'}', value);
+                    template = template.replace('{' + key + '}', '{{{' + key +'}}}');
+
+                    continue;
                 }
+
+                this.dataForTemplate[key] = value;
+
+                template = template.replace('{' + key + '}', '{{' + key +'}}');
             }
 
             this.templateContent = template;
@@ -65,4 +84,3 @@ define('views/stream/message', ['view'], function (Dep) {
         },
     });
 });
-

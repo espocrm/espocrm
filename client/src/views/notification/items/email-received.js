@@ -46,11 +46,11 @@ define('views/notification/items/email-received', ['views/notification/items/bas
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = Espo.Utils
-                .upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entityType'] =
+                Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
 
             if (data.personEntityId) {
-                this.messageData['from'] =
+                this.messageData['html:from'] =
                     $('<a>')
                         .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
                         .text(data.personEntityName)
@@ -59,7 +59,7 @@ define('views/notification/items/email-received', ['views/notification/items/bas
             else {
                 let text = data.fromString || this.translate('empty address');
 
-                this.messageData['from'] =
+                this.messageData['html:from'] =
                     $('<span>')
                         .text(text)
                         .get(0).outerHTML;
