@@ -255,20 +255,30 @@ module.exports = grunt => {
             options: { spawn: false },
             themes: {
                 files: ['frontend/**/*.less'],
-                tasks: ['less', 'cssmin']
+                tasks: ['less', 'cssmin', 'copy:frontend']
             },
             frontendBundle: {
                 files: bundleConfig.jsFiles.concat(['frontend/bundle-config.json']),
-                tasks: ['espo-bundle', 'uglify:bundle']
+                tasks: ['espo-bundle', 'uglify:bundle', 'copy:frontend']
             },
             frontendLibs: {
                 files: ['frontend/libs.json'],
-                tasks: ['prepare-lib-original', 'uglify:lib']
+                tasks: ['prepare-lib-original', 'uglify:lib', 'copy:frontendLib']
+            },
+            composer: {
+                files: ['composer.lock'],
+                tasks: ['copy:backend']
+            },
+            backend: {
+                files: ['application/**', 'html/**', 'public/**', 'install/**', 'bin/**', '*.php', '.htaccess', 'web.config'],
+                tasks: ['copy:backend']
             }
         },
     });
 
     grunt.event.on('watch', function(action, filepath, target) {
+        let buildDir = 'build/EspoCRM-' + pkg.version;
+
         if(target == 'themes') {
             let theme = /frontend\/less\/(\w+)/.exec(filepath)[1];            
             let name = buildUtils.capitalize(buildUtils.hyphenToCamelCase(theme));
@@ -286,16 +296,22 @@ module.exports = grunt => {
                 'css/espo/'+theme+'.css',
                 'css/espo/'+theme+'-iframe.css'
             ]);
+            grunt.config('copy.frontend.dest', buildDir);
         } else if (target == 'frontendBundle') {
             grunt.config('copy.frontend.src', [
-                'client/lib/espo.min.js',
-                'client/lib/espo.min.js.map',
-                'client/lib/original/espo.js'
+                'lib/espo.min.js',
+                'lib/espo.min.js.map',
+                'lib/original/espo.js'
             ]);
+            grunt.config('copy.frontend.dest', buildDir + '/client');
+        } else if (target == 'frontendLibs') {
+            grunt.config('copy.frontendLib.dest', buildDir);
         } else if (target == 'composer') {
             grunt.config('copy.backend.src', ['vendor/**']);
+            grunt.config('copy.backend.dest', buildDir);
         } else if (target == 'backend') {
             grunt.config('copy.backend.src', filepath);
+            grunt.config('copy.backend.dest', buildDir);
         }
     });
 
@@ -545,7 +561,7 @@ module.exports = grunt => {
     ]);
 
     grunt.registerTask('dev', [
-        'internal',
+        'offline',
         'watch'
     ]);
 
