@@ -2744,7 +2744,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * Create views.
          *
          * @protected
-         * @param {function(module:views/record/detail-middle): void} callback
+         * @param {function(module:views/record/detail-middle): void} [callback]
          */
         build: function (callback) {
             if (!this.sideDisabled && this.sideView) {
