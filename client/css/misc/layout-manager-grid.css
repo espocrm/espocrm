@@ -68,7 +68,7 @@
         border: 1px solid var(--select-item-border);
         margin: 5px;
         padding: 5px;
-        height: 32px;
+        height: 34px;
     }
 
     #layout ul.cells > li.ui-state-hover {
