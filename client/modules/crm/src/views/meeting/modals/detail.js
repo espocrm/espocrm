@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) {
+define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,6 +42,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 html: buttonData.html,
                 hidden: this.hasAcceptanceStatusButton(),
                 style: buttonData.style,
+                className: 'btn-text',
                 pullLeft: true,
             }, 'cancel');
 

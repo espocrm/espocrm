@@ -1,5 +1,15 @@
 .btn {
-    border-radius: @button-radius;
+    border-radius: var(--border-radius);
+
+    &.radius-right {
+        border-top-right-radius: var(--border-radius) !important;
+        border-bottom-right-radius: var(--border-radius) !important;
+    }
+
+    &.radius-left {
+        border-top-left-radius: var(--border-radius) !important;
+        border-bottom-left-radius: var(--border-radius) !important;
+    }
 }
 
 .btn {
@@ -136,6 +146,58 @@
 .btn-text {
     color: var(--btn-text-color);
     border-radius: 0;
+
+    &.btn-default {
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: transparent;
+            color: var(--btn-text-color);
+            border-color: transparent;
+        }
+        &:focus-visible {
+            color: var(--text-gray-color);
+        }
+    }
+    &.btn-success {
+        color: var(--state-success-text);
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: transparent;
+            color: var(--state-success-text);
+            border-color: transparent;
+        }
+        &:focus-visible {
+            color: var(--text-gray-color);
+        }
+    }
+    &.btn-danger {
+        color: var(--state-danger-text);
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: transparent;
+            color: var(--state-danger-text);
+            border-color: transparent;
+        }
+        &:focus-visible {
+            color: var(--text-gray-color);
+        }
+    }
+    &.btn-warning {
+        color: var(--state-warning-text);
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: transparent;
+            color: var(--state-warning-text);
+            border-color: transparent;
+        }
+        &:focus-visible {
+            color: var(--text-gray-color);
+        }
+    }
 
     .far,
     .fas {

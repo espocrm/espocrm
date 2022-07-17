@@ -83,6 +83,8 @@
                 >
                     <span class="fa fa-search"></span>
                 </button>
+            </div>
+            <div class="input-group-btn">
                 <button
                     type="button"
                     class="btn btn-text btn-icon-wide dropdown-toggle add-filter-button"
