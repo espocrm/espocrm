@@ -373,6 +373,18 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         currentMiddleTab: 0,
 
         /**
+         * @protected
+         * @type {Object.<string,*>|null}
+         */
+        middlePanelDefs: null,
+
+        /**
+         * @protected
+         * @type {Object.<string,*>[]|null}
+         */
+        middlePanelDefsList: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -877,6 +889,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
+            if (this.middlePanelDefs[name]) {
+                this.controlMiddleTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
+            }
         },
 
         /**
@@ -947,6 +963,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
+
+            if (this.middlePanelDefs[name]) {
+                this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
+            }
         },
 
         afterRender: function () {
@@ -1406,9 +1427,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 throw new Error('Model has not been injected into record view.');
             }
 
-            /**
-             * @inheritDoc
-             */
+            /** @type {module:view-record-helper.Class} */
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             this._initInlineEditSave();
@@ -1427,6 +1446,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.indexOfRecord = collection.indexOf(this.model);
                 }
             }
+
+            /** @type {Object.<string,*>|null} */
+            this.middlePanelDefs = {};
+
+            /** @type {Object.<string,*>[]} */
+            this.middlePanelDefsList = [];
 
             if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
                 if (
@@ -2444,16 +2469,20 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     }
                 }
 
-                panel.name = item.name || null;
+                panel.name = item.name || 'panel-' + p.toString();
                 panel.style = item.style || 'default';
                 panel.rows = [];
                 panel.tabNumber = tabNumber;
 
-                if (item.dynamicLogicVisible || item.dynamicLogicStyled) {
-                    if (!panel.name) {
-                        panel.name = 'panel-' + p.toString();
-                    }
-                }
+                this.middlePanelDefs[panel.name] = {
+                    name: panel.name,
+                    style: panel.style,
+                    tabNumber: panel.tabNumber,
+                    tabBreak: tabBreak,
+                    tabLabel: item.tabLabel,
+                };
+
+                this.middlePanelDefsList.push(this.middlePanelDefs[panel.name]);
 
                 if (item.dynamicLogicVisible && this.dynamicLogic) {
                     this.dynamicLogic.addPanelVisibleCondition(panel.name, item.dynamicLogicVisible);
@@ -2465,7 +2494,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 if (item.hidden && tabNumber === 0) {
                     panel.hidden = true;
-                    panel.name = panel.name || 'panel-' + p.toString();
 
                     this.hidePanel(panel.name);
 
@@ -2922,18 +2950,46 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
         /**
          * @protected
+         * @return {Number}
+         */
+        getMiddleTabCount: function () {
+            if (!this.hasMiddleTabs()) {
+                return 0;
+            }
+
+            let count = 1;
+
+            (this.detailLayout || []).forEach(item => {
+                if (item.tabBreak) {
+                    count ++;
+                }
+            });
+
+            return count;
+        },
+
+        /**
+         * @protected
          * @return {boolean}
          */
         hasMiddleTabs: function () {
+            if (typeof this._hasMiddleTabs !== 'undefined') {
+                return this._hasMiddleTabs;
+            }
+
             if (!this.detailLayout) {
                 return false;
             }
 
             for (let item of this.detailLayout) {
                 if (item.tabBreak) {
+                    this._hasMiddleTabs = true;
+
                     return true;
                 }
             }
+
+            this._hasMiddleTabs = false;
 
             return false;
         },
@@ -2945,10 +3001,20 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         getMiddleTabDataList: function () {
             let currentTab = this.currentMiddleTab;
 
-            return (this.detailLayout || [])
+            let panelDataList = this.middlePanelDefsList;
+
+            return panelDataList
                 .filter((item, i) => i === 0 || item.tabBreak)
                 .map((item, i) => {
                     let label = item.tabLabel;
+
+                    let hidden = false;
+
+                    if (i > 0) {
+                        hidden = panelDataList
+                            .filter(panel => panel.tabNumber === i)
+                            .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+                    }
 
                     if (!label) {
                         label = i === 0 ?
@@ -2962,6 +3028,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     return {
                         label: label,
                         isActive: currentTab === i,
+                        hidden: hidden,
                     };
                 });
         },
@@ -3021,7 +3088,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             let $tabs = this.$el.find('.middle-tabs');
 
             tabList.forEach(tab => {
-                let $tab = $tabs.find(`> [data-tab=${tab.toString()}]`);
+                let $tab = $tabs.find(`> [data-tab="${tab.toString()}"]`);
 
                 $tab.addClass('invalid');
 
@@ -3030,5 +3097,54 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 });
             })
         },
+
+        /**
+         * @private
+         */
+        controlMiddleTabVisibilityShow: function (tab) {
+            if (!this.hasMiddleTabs() || tab === 0) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlMiddleTabVisibilityShow(tab));
+
+                return;
+            }
+
+            this.$el.find(`.middle-tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
+        },
+
+        /**
+         * @private
+         */
+        controlMiddleTabVisibilityHide: function (tab) {
+            if (!this.hasMiddleTabs() || tab === 0) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlMiddleTabVisibilityHide(tab));
+
+                return;
+            }
+
+            let panelList = this.middlePanelDefsList.filter(panel => panel.tabNumber === tab);
+
+            let allIsHidden = panelList
+                .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+
+            if (!allIsHidden) {
+                return;
+            }
+
+            let $tab = this.$el.find(`.middle-tabs > [data-tab="${tab.toString()}"]`);
+
+            $tab.addClass('hidden');
+
+            if (this.currentMiddleTab === tab) {
+                this.selectMiddleTab(0);
+            }
+        }
     });
 });

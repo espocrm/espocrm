@@ -94,7 +94,7 @@
             <div class="middle-tabs btn-group">
                 {{#each middleTabDataList}}
                 <button
-                    class="btn btn-text btn-wide{{#if isActive}} active{{/if}}"
+                    class="btn btn-text btn-wide{{#if isActive}} active{{/if}}{{#if hidden}} hidden{{/if}}"
                     data-tab="{{@key}}"
                 >{{label}}</button>
                 {{/each}}

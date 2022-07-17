@@ -566,6 +566,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 throw new Error('Model has not been injected into record view.');
             }
 
+            /** @type {module:view-record-helper.Class} */
             this.recordHelper = new ViewRecordHelper();
 
             this.once('remove', () => {
