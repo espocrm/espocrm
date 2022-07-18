@@ -9,7 +9,6 @@
     <div
         class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}"
         data-name="{{name}}"
-        data-name="{{name}}"
         data-style="{{#if style}}{{style}}{{/if}}"
     >
         <div class="panel-heading">
