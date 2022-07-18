@@ -399,7 +399,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'click .middle-tabs > button': function (e) {
                 let tab = $(e.currentTarget).attr('data-tab');
 
-                this.selectMiddleTab(tab);
+                this.selectMiddleTab(parseInt(tab));
             },
         },
 
@@ -3145,6 +3145,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (this.currentMiddleTab === tab) {
                 this.selectMiddleTab(0);
             }
-        }
+        },
     });
 });
