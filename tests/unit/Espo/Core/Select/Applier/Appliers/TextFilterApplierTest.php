@@ -242,8 +242,8 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
 
         $fullTextSearchData
             ->expects($this->any())
-            ->method('getExpression')
-            ->willReturn(Expr::create($expression));
+            ->method('getOrGroup')
+            ->willReturn(OrGroup::create(Expr::create($expression)));
 
         $fullTextSearchDataComposer
             ->expects($this->any())
