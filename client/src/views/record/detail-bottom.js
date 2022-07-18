@@ -54,16 +54,18 @@ define('views/record/detail-bottom', ['views/record/panels-container'], function
          * @inheritDoc
          */
         setupPanels: function () {
-            var scope = this.scope;
+            let scope = this.scope;
 
             this.panelList = Espo.Utils.clone(
-                this.getMetadata().get(['clientDefs', scope, 'bottomPanels', this.type]) || this.panelList || []
-            );
+                this.getMetadata()
+                    .get(['clientDefs', scope, 'bottomPanels', this.type]) || this.panelList || []);
 
-            this.panelList.forEach(function (item) {
+            this.panelList.forEach(item => {
                 if ('index' in item) {
-                    item.index = item.index;
-                } else if ('order' in item) {
+                    return;
+                }
+
+                if ('order' in item) {
                     item.index = item.order;
                 }
             });
