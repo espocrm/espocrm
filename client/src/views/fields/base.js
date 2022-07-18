@@ -1427,6 +1427,10 @@ define('views/fields/base', ['view'], function (Dep) {
          * @return {Object.<string,any>}
          */
         fetch: function () {
+            if (!this.$element.length) {
+                return {};
+            }
+
             let data = {};
 
             data[this.name] = this.$element.val().trim();
