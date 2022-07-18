@@ -8,17 +8,16 @@
                     class="btn btn-default dropdown-toggle filters-button"
                     title="{{translate 'Filter'}}"
                     data-toggle="dropdown"
-                    tabindex="-1"
+                    tabindex="0"
                 >
                     <span class="filters-label"></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu pull-left filter-menu">
-
                     <li>
                         <a
                             class="preset"
-                            tabindex="-1"
+                            tabindex="0"
                             href="javascript:"
                             data-name=""
                             data-action="selectPreset"
@@ -28,7 +27,7 @@
                     <li>
                         <a
                             class="preset"
-                            tabindex="-1"
+                            tabindex="0"
                             href="javascript:"
                             data-name="{{name}}"
                             data-action="selectPreset"
@@ -42,10 +41,10 @@
                     <li class="divider preset-control hidden"></li>
 
                     <li class="preset-control remove-preset hidden">
-                        <a tabindex="-1" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a>
+                        <a tabindex="0" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a>
                     </li>
                     <li class="preset-control save-preset hidden">
-                        <a tabindex="-1" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a>
+                        <a tabindex="0" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a>
                     </li>
                     {{#if boolFilterList.length}}
                         <li class="divider"></li>
@@ -64,30 +63,33 @@
                     {{/each}}
                 </ul>
             </div>
-            {{#unless textFilterDisabled}}
             <input
                 type="text"
                 class="form-control text-filter"
                 data-name="textFilter"
                 value="{{textFilter}}"
-                tabindex="1"
+                tabindex="0"
                 autocomplete="espo-text-search"
+                spellcheck="false"
+                {{#if textFilterDisabled}}disabled="disabled"{{/if}}
             >
-            {{/unless}}
             <div class="input-group-btn">
                 <button
                     type="button"
                     class="btn btn-default search btn-icon btn-icon-x-wide"
                     data-action="search"
+                    tabindex="0"
                     title="{{translate 'Search'}}"
                 >
                     <span class="fa fa-search"></span>
                 </button>
+            </div>
+            <div class="input-group-btn">
                 <button
                     type="button"
                     class="btn btn-text btn-icon-wide dropdown-toggle add-filter-button"
                     data-toggle="dropdown"
-                    tabindex="-1"
+                    tabindex="0"
                 >
                     <span class="fas fa-ellipsis-v"></span>
                 </button>
@@ -96,6 +98,7 @@
                     class="btn btn-text btn-icon-wide"
                     data-action="reset"
                     title="{{translate 'Reset'}}"
+                    tabindex="0"
                     style="visibility: hidden;"
                 >
                     <span class="fas fa-times"></span>
@@ -126,6 +129,7 @@
                 data-name="{{name}}"
                 data-action="switchViewMode"
                 class="btn btn-icon btn-icon btn-text{{#ifEqual name ../viewMode}} active{{/ifEqual}}"
+                tabindex="0"
                 title="{{title}}"
             ><span class="{{iconClass}}"></span></button>
             {{/each}}

@@ -33,11 +33,11 @@ define('views/attachment/modals/select-one', 'views/modal', function (Dep) {
         backdrop: true,
 
         templateContent:
-            '<div class="list-group no-side-margin">{{#each viewObject.options.dataList}}'+
-            '<div class="list-group-item">'+
+            '<ul class="list-group no-side-margin">{{#each viewObject.options.dataList}}'+
+            '<li class="list-group-item">'+
             '<a href="javascript:" class="action" data-action="select" data-id="{{id}}">{{name}}</a>'+
-            '</div>'+
-            '{{/each}}</div>',
+            '</li>'+
+            '{{/each}}</ul>',
 
         setup: function () {
             this.headerHtml = this.translate('Select');

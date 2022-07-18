@@ -31,9 +31,7 @@ namespace Espo\Tools\FieldManager;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\FieldUtil;
 use Espo\Core\InjectableFactory;
-
 use Espo\Core\Utils\Json;
 
 use Espo\Core\{
@@ -52,17 +50,9 @@ use stdClass;
 class FieldManager
 {
     private InjectableFactory $injectableFactory;
-
     private $metadata;
-
     private $language;
-
     private $baseLanguage;
-
-    private $defaultLanguage;
-
-    private $fieldUtil;
-
     private $metadataHelper;
 
     protected bool $isChanged = false;
@@ -98,16 +88,12 @@ class FieldManager
         InjectableFactory $injectableFactory,
         Metadata $metadata,
         Language $language,
-        Language $baseLanguage,
-        Language $defaultLanguage,
-        FieldUtil $fieldUtil
+        Language $baseLanguage
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->metadata = $metadata;
         $this->language = $language;
         $this->baseLanguage = $baseLanguage;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->fieldUtil = $fieldUtil;
 
         $this->metadataHelper = new MetadataHelper($this->metadata);
     }

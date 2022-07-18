@@ -35,6 +35,12 @@
     </div>
 
     <div style="padding-bottom: 10px;" class="clearfix">
-        <button class="btn btn-default pull-left" data-action="back">{{translate 'Back' scope='Import'}}</button>
-        <button class="btn btn-danger pull-right" data-action="next">{{translate 'Run Import' scope='Import'}}</button>
+        <button
+            class="btn btn-default btn-s-wide pull-left"
+            data-action="back"
+        >{{translate 'Back' scope='Import'}}</button>
+        <button
+            class="btn btn-danger btn-s-wide pull-right"
+            data-action="next"
+        >{{translate 'Run Import' scope='Import'}}</button>
     </div>

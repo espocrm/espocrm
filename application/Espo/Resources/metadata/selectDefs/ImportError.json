@@ -1,0 +1,14 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyMy": "Espo\\Core\\Select\\AccessControl\\Filters\\ForeignOnlyOwn"
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\BooleanOwn",
+    "selectAttributesDependencyMap": {
+        "lineNumber": ["rowIndex"],
+        "exportLineNumber": ["exportRowIndex"]
+    },
+    "orderItemConverterClassNameMap": {
+        "lineNumber": "Espo\\Classes\\Select\\ImportError\\OrderItemConverters\\LineNumber",
+        "exportLineNumber": "Espo\\Classes\\Select\\ImportError\\OrderItemConverters\\ExportLineNumber"
+    }
+}

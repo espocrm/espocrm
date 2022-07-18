@@ -55,7 +55,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 {
     function setUp(): void
     {
-        $GLOBALS['log'] = $this->createMock(Log::class);
+        //$GLOBALS['log'] = $this->createMock(Log::class);
 
         $entityManager = $this->entityManager = $this->createMock(EntityManager::class);
 
@@ -131,6 +131,9 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->willReturn(
                 $this->createMock(AssignmentNotificator::class)
             );
+
+
+        $this->duplicateFinder = $this->createMock(Importer\DuplicateFinder::class);
     }
 
     function testImport1()
@@ -151,7 +154,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $entityManager
             ->expects($this->any())
-            ->method('getEntity')
+            ->method('getNewEntity')
             ->with($this->equalTo('Email'))
             ->will($this->returnValue($email));
 
@@ -171,7 +174,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             $config,
             $this->assignmentNotificatorFactory,
             $this->parserFactory,
-            $this->linkMultipleSaver
+            $this->linkMultipleSaver,
+            $this->duplicateFinder
         );
 
         $message = new MessageWrapper(0, null, null, $contents);

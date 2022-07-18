@@ -29,6 +29,8 @@
 
 namespace Espo\Classes\FieldProcessing\Email;
 
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
@@ -120,11 +122,14 @@ class IcsDataLoader implements Loader
             return;
         }
 
+        if ($this->eventAlreadyExists($espoEvent)) {
+            return;
+        }
+
         /** @var EmailAddressRepository $emailAddressRepository */
         $emailAddressRepository = $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
 
         $attendeeEmailAddressList = $espoEvent->getAttendeeEmailAddressList();
-
         $organizerEmailAddress = $espoEvent->getOrganizerEmailAddress();
 
         if ($organizerEmailAddress) {
@@ -166,7 +171,6 @@ class IcsDataLoader implements Loader
         $this->loadCreatedEvent($entity, $espoEvent, $eventData);
 
         $entity->set('icsEventData', $eventData);
-
         $entity->set('icsEventDateStart', $espoEvent->getDateStart());
 
         if ($espoEvent->isAllDay()) {
@@ -207,5 +211,36 @@ class IcsDataLoader implements Loader
             'entityType' => $emailSameEvent->getEntityType(),
             'name' => $createdEvent->get('name'),
         ];
+    }
+
+    private function eventAlreadyExists(EspoEvent $espoEvent): bool
+    {
+        $id = $espoEvent->getUid();
+
+        if (!$id) {
+            return false;
+        }
+
+        $found1 = $this->entityManager
+            ->getRDBRepository(Meeting::ENTITY_TYPE)
+            ->select(['id'])
+            ->where(['id' => $id])
+            ->findOne();
+
+        if ($found1) {
+            return true;
+        }
+
+        $found2 = $this->entityManager
+            ->getRDBRepository(Call::ENTITY_TYPE)
+            ->select(['id'])
+            ->where(['id' => $id])
+            ->findOne();
+
+        if ($found2) {
+            return true;
+        }
+
+        return false;
     }
 }

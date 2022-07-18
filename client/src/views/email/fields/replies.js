@@ -26,16 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/replies', 'views/fields/link-multiple', function (Dep) {
+define('views/email/fields/replies', ['views/fields/link-multiple'], function (Dep) {
 
     return Dep.extend({
 
         getDetailLinkHtml: function (id) {
-            var html = Dep.prototype.getDetailLinkHtml.call(this, id);
+            let html = Dep.prototype.getDetailLinkHtml.call(this, id);
 
-            html = '<span class="fa fa-arrow-right fa-sm link-multiple-item-icon text-success"></span>' + html;
+            let columns = this.model.get(this.name + 'Columns') || {};
 
-            return html;
+            let status = (columns[id] || {})['status'];
+
+            return $('<div>')
+                .append(
+                    $('<span>')
+                        .addClass('fa fa-arrow-right fa-sm link-multiple-item-icon')
+                        .addClass(status === 'Draft' ? 'text-warning' : 'text-success')
+                )
+                .append(html)
+                .html();
         },
 
     });

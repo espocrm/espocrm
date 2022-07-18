@@ -29,14 +29,28 @@
         {
             "name": "useIframe",
             "type": "bool"
+        },
+        {
+            "name": "maxLength",
+            "type": "int"
+        },
+        {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
         }
     ],
     "filter": true,
     "fieldDefs": {
         "type": "text"
     },
+    "validationList": [
+        "required",
+        "maxLength"
+    ],
     "personalData": true,
     "textFilter": true,
     "fullTextSearch": true,
-    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\Wysiwyg"
+    "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\Wysiwyg",
+    "validatorClassName": "Espo\\Classes\\FieldValidators\\TextType"
 }

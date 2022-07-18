@@ -39,6 +39,21 @@
 	    ]
     },
     "searchPanelDisabled": true,
+    "relationshipPanels": {
+        "errors": {
+            "unlinkDisabled": true,
+            "actionList": [
+                {
+                    "name": "export",
+                    "action": "errorExport",
+                    "label": "Export",
+                    "data": {
+                        "handler": "handlers/import"
+                    }
+                }
+            ]
+        }
+    },
     "iconClass": "fas fa-file-import",
     "dateFormatList": [
         "YYYY-MM-DD",

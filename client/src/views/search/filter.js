@@ -26,9 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/search/filter', 'view', function (Dep) {
+define('views/search/filter', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/search/filter
+     */
+    return Dep.extend(/** @lends module:views/search/filter.Class# */{
 
         template: 'search/filter',
 
@@ -41,11 +47,12 @@ define('views/search/filter', 'view', function (Dep) {
         },
 
         setup: function () {
-            var name = this.name = this.options.name;
-            var type = this.model.getFieldType(name);
+            let name = this.name = this.options.name;
+            let type = this.model.getFieldType(name);
 
             if (type) {
-                var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+                let viewName = this.model.getFieldParam(name, 'view') ||
+                    this.getFieldManager().getViewName(type);
 
                 this.createView('field', viewName, {
                     mode: 'search',
@@ -55,16 +62,27 @@ define('views/search/filter', 'view', function (Dep) {
                         name: name,
                     },
                     searchParams: this.options.params,
-                }, function (view) {
-                    this.listenTo(view, 'change', function () {
+                }, (view) => {
+                    this.listenTo(view, 'change', () => {
                         this.trigger('change');
-                    }, this);
+                    });
+
+                    this.listenTo(view, 'search', () => {
+                        this.trigger('search');
+                    });
                 });
             }
         },
 
+        /**
+         * @return {module:views/fields/base.Class}
+         */
+        getFieldView: function () {
+            return this.getView('field');
+        },
+
         populateDefaults: function () {
-            var view = this.getView('field');
+            let view = this.getView('field');
 
             if (!view) {
                 return;

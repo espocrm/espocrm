@@ -59,6 +59,7 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
                     name: 'password',
                     params: {
                         required: true,
+                        maxLength: 255,
                     },
                 },
                 strengthParams: this.options.strengthParams,
@@ -72,6 +73,7 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
                     name: 'passwordConfirm',
                     params: {
                         required: true,
+                        maxLength: 255,
                     },
                 },
             });

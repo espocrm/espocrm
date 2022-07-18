@@ -41,7 +41,7 @@
                 <span class="fa fa-ban{{#unless optOut}} text-muted{{/unless}}"></span>
             </button>
             <button
-                class="btn btn-default btn-icon phone-property{{#if invalid}} active{{/if}}"
+                class="btn btn-default btn-icon radius-right phone-property{{#if invalid}} active{{/if}}"
                 type="button"
                 tabindex="-1"
                 data-action="switchPhoneProperty"

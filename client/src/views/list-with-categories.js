@@ -28,7 +28,13 @@
 
 define('views/list-with-categories', ['views/list'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:views/list.Class
+     * @memberOf module:views/list-with-categories
+     */
+    return Dep.extend(/** @lends module:views/list-with-categories.Class# */{
 
         template: 'list-with-categories',
 
@@ -189,6 +195,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         getIsExpandedStoredValue: function () {
             var value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+
             return value === 'true' || value === true ;
         },
 
@@ -233,6 +240,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             this.getRouter().navigate('#' + this.scope);
             this.updateLastUrl();
 
+            this.nestedCategoriesCollection = null;
+
             this.reRender();
 
             this.$listContainer.empty();
@@ -259,12 +268,9 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
         },
 
         actionOpenCategory: function (data) {
-            this.hideListViewWhileNestedCategoriesLoaded();
-
             this.openCategory(data.id || null, data.name);
 
             this.selectCurrentCategory();
-
             this.navigateToCurrentCategory();
         },
 
@@ -286,6 +292,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
         selectCurrentCategory: function () {
             var categoriesView = this.getView('categories');
+
             if (categoriesView) {
                 categoriesView.setSelected(this.currentCategoryId);
                 categoriesView.reRender();
@@ -306,7 +313,6 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             this.currentCategoryName = name || id;
 
             this.applyCategoryToNestedCategoriesCollection();
-
             this.applyCategoryToCollection();
 
             this.collection.abortLastFetch();
@@ -314,28 +320,35 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
             if (this.nestedCategoriesCollection) {
                 this.nestedCategoriesCollection.abortLastFetch();
 
+                this.hideListContainer();
+                this.$nestedCategoriesContainer.addClass('hidden');
+
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                Promise.all([
-                    this.nestedCategoriesCollection
-                        .fetch()
-                        .then(() => {
-                            this.controlNestedCategoriesVisibility();
-                            this.updateHeader();
-                        }),
+                Promise
+                    .all([
+                        this.nestedCategoriesCollection
+                            .fetch()
+                            .then(() => {
+                                this.updateHeader();
+                            }),
+                        this.collection.fetch({openCategory: true})
+                    ])
+                    .then(() => {
+                        Espo.Ui.notify(false);
 
-                    this.collection.fetch({openCategory: true})
-                ]).then(() => {
-                    Espo.Ui.notify(false);
+                        this.controlNestedCategoriesVisibility();
+                        this.controlListVisibility();
+                    });
 
-                    this.controlListVisibility();
-                });
+                return;
             }
-            else {
-                this.collection.fetch().then(() => {
+
+            this.collection
+                .fetch()
+                .then(() => {
                     Espo.Ui.notify(false);
                 });
-            }
         },
 
         controlListVisibility: function () {
@@ -352,10 +365,11 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 !this.hasTextFilter()
             ) {
                 this.hideListContainer();
+
+                return;
             }
-            else {
-                this.showListContainer();
-            }
+
+            this.showListContainer();
         },
 
         controlNestedCategoriesVisibility: function () {
@@ -403,9 +417,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 collection.setOrder(null, null);
 
                 collection.url = collection.name + '/action/listTree';
-
                 collection.maxDepth = 1;
-
                 collection.data.checkIfEmpty = true;
 
                 if (!this.getAcl().checkScope(this.scope, 'create')) {
@@ -415,8 +427,8 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 this.applyCategoryToNestedCategoriesCollection();
 
                 collection.fetch().then(() => {
-                    this.controlListVisibility();
                     this.controlNestedCategoriesVisibility();
+                    this.controlListVisibility();
 
                     this.updateHeader();
 
@@ -434,6 +446,7 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                     isExpanded: this.isExpanded,
                     hasExpandedToggler: this.hasExpandedToggler,
                     hasNavigationPanel: this.hasNavigationPanel,
+                    subjectEntityType: this.collection.entityType,
                 }, view => {
                     view.render();
                 });
@@ -492,12 +505,9 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
 
                         Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                        this.listenToOnce(this.collection, 'sync', () => {
-                            this.notify(false);
-                        });
-
-                        this.collection.fetch();
-
+                        this.collection
+                            .fetch()
+                            .then(() => Espo.Ui.notify(false));
                     });
                 });
 
@@ -624,55 +634,55 @@ define('views/list-with-categories', ['views/list'], function (Dep) {
                 return Dep.prototype.getHeader.call(this);
             }
 
-            var path = this.nestedCategoriesCollection.path;
+            let path = this.nestedCategoriesCollection.path;
 
             if (!path || path.length === 0) {
                 return Dep.prototype.getHeader.call(this);
             }
 
-            var rootUrl = '#' + this.scope;
+            let rootUrl = '#' + this.scope;
 
-            var list = [
-                '<a href="' + rootUrl + '" class="action">' +
-                    this.translate(this.scope, 'scopeNamesPlural') + '</a>',
-            ];
+            let $root = $('<a>')
+                .attr('href', rootUrl)
+                .addClass('action')
+                .text(this.translate(this.scope, 'scopeNamesPlural'))
+                .addClass('action')
+                .attr('data-action', 'openCategory');
 
-            var currentName = this.nestedCategoriesCollection.categoryData.name;
+            let list = [$root];
 
-            var upperId = this.nestedCategoriesCollection.categoryData.upperId;
-            var upperName = this.nestedCategoriesCollection.categoryData.upperName;
+            let currentName = this.nestedCategoriesCollection.categoryData.name;
+
+            let upperId = this.nestedCategoriesCollection.categoryData.upperId;
+            let upperName = this.nestedCategoriesCollection.categoryData.upperName;
 
             if (path.length > 2) {
-                list.push(
-                    '...'
-                );
+                list.push('...');
             }
 
             if (upperId) {
-                var url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
+                let url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
 
-                list.push(
-                    '<a href="' + url +'">' + this.escapeString(upperName) + '</a>'
-                );
+                let $folder = $('<a>')
+                    .attr('href', url)
+                    .text(upperName)
+                    .addClass('action')
+                    .attr('data-action', 'openCategory')
+                    .attr('data-id', upperId)
+                    .attr('data-name', upperName);
+
+                list.push($folder);
             }
 
-            list.push(
-                this.escapeString(currentName)
-            );
+            let $last = $('<span>').text(currentName);
+
+            list.push($last);
 
             return this.buildHeaderHtml(list);
         },
 
         updateHeader: function () {
             this.getView('header').reRender();
-        },
-
-        hideListViewWhileNestedCategoriesLoaded: function () {
-            this.hideListContainer();
-
-            this.nestedCategoriesCollection.once('sync', () => {
-                this.showListContainer();
-            });
         },
 
         hideListContainer: function () {

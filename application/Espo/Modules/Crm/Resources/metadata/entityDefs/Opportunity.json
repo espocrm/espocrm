@@ -152,6 +152,7 @@
                 "role": "opportunityRole"
             },
             "additionalAttributeList": ["columns"],
+            "primaryLink": "contact",
             "orderBy": "name",
             "detailLayoutIncompatibleFieldList": ["contact"]
         },
@@ -300,21 +301,29 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user"
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
         },
         "modifiedBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user"
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
         },
         "assignedUser": {
             "type": "link",

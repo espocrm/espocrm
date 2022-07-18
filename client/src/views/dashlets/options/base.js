@@ -26,7 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail', 'model', 'view-record-helper'], function (Dep, Detail, Model, ViewRecordHelper) {
+define('views/dashlets/options/base',
+['views/modal', 'views/record/detail', 'model', 'view-record-helper'],
+function (Dep, Detail, Model, ViewRecordHelper) {
 
     var self;
 
@@ -94,7 +96,6 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
 
             this.recordHelper = new ViewRecordHelper();
 
-            var self = this;
             var model = this.model = new Model();
             model.name = 'DashletOptions';
             model.defs = {
@@ -103,6 +104,9 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
             model.set(this.optionsData);
 
             model.dashletName = this.name;
+
+            this.middlePanelDefs = {};
+            this.middlePanelDefsList = [];
 
             this.setupBeforeFinal();
 
@@ -116,7 +120,7 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 el: this.options.el + ' .record',
                 layoutData: {
                     model: model,
-                }
+                },
             });
 
             this.header =

@@ -566,6 +566,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 throw new Error('Model has not been injected into record view.');
             }
 
+            /** @type {module:view-record-helper.Class} */
             this.recordHelper = new ViewRecordHelper();
 
             this.once('remove', () => {
@@ -781,14 +782,28 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @return {boolean} True if not valid.
          */
         validate: function () {
-            let notValid = false;
+            let invalidFieldList = [];
 
             this.getFieldList().forEach(field => {
-                notValid = this.validateField(field) || notValid;
+                let fieldIsInvalid = this.validateField(field);
+
+                if (fieldIsInvalid) {
+                    invalidFieldList.push(field)
+                }
             });
 
-            return notValid;
+            if (!!invalidFieldList.length) {
+                this.onInvalid(invalidFieldList);
+            }
+
+            return !!invalidFieldList.length;
         },
+
+        /**
+         * @protected
+         * @param {string[]} invalidFieldList Invalid fields.
+         */
+        onInvalid: function (invalidFieldList) {},
 
         /**
          * Validate a specific field.

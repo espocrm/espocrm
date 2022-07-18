@@ -1,4 +1,3 @@
-
 <div class="stream-head-container">
     <div class="pull-left">
         {{{avatar}}}

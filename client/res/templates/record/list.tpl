@@ -13,9 +13,9 @@
         {{#if massActionList}}
         <button
             type="button"
-            class="btn btn-default dropdown-toggle actions-button hidden"
+            class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
             data-toggle="dropdown"
-        >{{translate 'Actions'}}<span class="caret"></span></button>
+        >{{translate 'Actions'}} <span class="caret"></span></button>
         {{/if}}
         {{#if buttonList.length}}
         {{#each buttonList}}
@@ -75,9 +75,11 @@
 
     <div class="sticked-bar hidden">
         <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle actions-button hidden" data-toggle="dropdown">
-            {{translate 'Actions'}}
-            <span class="caret"></span>
+            <button
+                type="button"
+                class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
+                data-toggle="dropdown"
+            >{{translate 'Actions'}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu actions-menu">
                 {{#each massActionList}}
@@ -125,7 +127,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="javascript:" data-action="selectAllResult">{{translate 'Select All Results'}}</a>
+                                <a
+                                    href="javascript:"
+                                    data-action="selectAllResult"
+                                >{{translate 'Select All Results'}}</a>
                             </li>
                         </ul>
                     </div>
@@ -134,23 +139,31 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th
-                    {{#if width}} width="{{width}}"{{/if}}{{#if align}}
-                    style="text-align: {{align}};"{{/if}}
+                    {{#if width}}width="{{width}}"{{/if}}
+                    {{#if align}}style="text-align: {{align}};"{{/if}}
+                    {{#if className}}class="{{className}}"{{/if}}
+                    {{#if name}}data-name="{{name}}"{{/if}}
                 >
                     {{#if this.isSortable}}
                         <a
                             href="javascript:"
                             class="sort"
                             data-name="{{this.name}}"
+                            title="{{translate 'Sort'}}"
                         >{{label}}</a>
                         {{#if this.isSorted}}
-                            {{#unless this.isDesc}}<span class="fas fa-chevron-down fa-sm"></span>
+                            {{#unless this.isDesc}}
+                            <span class="fas fa-chevron-down fa-sm"></span>
                             {{else}}
-                                <span class="fas fa-chevron-up fa-sm"></span>
+                            <span class="fas fa-chevron-up fa-sm"></span>
                             {{/unless}}
                         {{/if}}
                     {{else}}
+                        {{#if html}}
+                        {{{html}}}
+                        {{else}}
                         {{label}}
+                        {{/if}}
                     {{/if}}
                 </th>
                 {{/each}}

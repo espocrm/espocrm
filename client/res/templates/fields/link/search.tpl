@@ -4,7 +4,7 @@
 <div class="primary">
 	<div class="input-group">
 	    <input
-            class="form-control input-sm"
+            class="form-control input-sm search-input"
             type="text"
             data-name="{{nameName}}"
             value="{{searchData.nameValue}}"

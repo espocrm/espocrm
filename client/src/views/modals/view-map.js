@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/view-map', 'views/modal', function (Dep) {
+define('views/modals/view-map', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,13 +46,19 @@ define('views/modals/view-map', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-            var field = this.options.field;
+            let field = this.options.field;
 
-            this.headerHtml = this.getHelper().sanitizeHtml(
-                this.translate(field, 'fields', this.model.entityType)
-            );
+            let url = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + field;
+            let fieldLabel = this.translate(field, 'fields', this.model.entityType);
 
-            var viewName = this.model.getFieldParam(field + 'Map', 'view') || this.getFieldManager().getViewName('map');
+            this.headerElement =
+                $('<a>')
+                    .attr('href', '#' + url)
+                    .text(fieldLabel)
+                    .get(0);
+
+            let viewName = this.model.getFieldParam(field + 'Map', 'view') ||
+                this.getFieldManager().getViewName('map');
 
             this.createView('map', viewName, {
                 model: this.model,
@@ -61,6 +67,5 @@ define('views/modals/view-map', 'views/modal', function (Dep) {
                 height: 'auto',
             });
         },
-
     });
 });

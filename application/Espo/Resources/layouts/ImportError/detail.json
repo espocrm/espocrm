@@ -1,0 +1,21 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "import"}, false
+            ],
+            [
+                {"name": "lineNumber"}, {"name": "exportLineNumber"}
+            ],
+            [
+                {"name": "type"}, false
+            ],
+            [
+                {"name": "validationFailures"}
+            ],
+            [
+                {"name": "row"}
+            ]
+        ]
+    }
+]

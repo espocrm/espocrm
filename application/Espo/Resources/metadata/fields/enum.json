@@ -50,10 +50,12 @@
     ],
     "validationList": [
         "required",
-        "valid"
+        "valid",
+        "maxLength"
     ],
     "mandatoryValidationList": [
-        "valid"
+        "valid",
+        "maxLength"
     ],
     "filter": true,
     "fieldDefs": {

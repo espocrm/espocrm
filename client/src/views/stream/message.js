@@ -26,32 +26,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/message', 'view', function (Dep) {
+define('views/stream/message', ['view'], function (Dep) {
 
     return Dep.extend({
 
-        setup: function () {
-            var template = this.options.messageTemplate;
-            var data = this.options.messageData;
+        data: function () {
+            return this.dataForTemplate;
+        },
 
-            for (var key in data) {
-                var value = data[key] || '';
+        setup: function () {
+            let template = this.options.messageTemplate;
+            let data = this.options.messageData || {};
+
+            this.dataForTemplate = {};
+
+            for (let key in data) {
+                let value = data[key] || '';
+
+                if (key.indexOf('html:') === 0) {
+                    key = key.substring(5);
+                    this.dataForTemplate[key] = value;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    continue;
+                }
+
+                if (value instanceof jQuery) {
+                    this.dataForTemplate[key] = value.get(0).outerHTML;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    continue;
+                }
+
+                if (value instanceof Element) {
+                    this.dataForTemplate[key] = value.outerHTML;
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
+
+                    continue;
+                }
+
+                if (!value.indexOf) {
+                    continue;
+                }
 
                 if (value.indexOf('field:') === 0) {
-                    var field = value.substr(6);
+                    let field = value.substring(6);
                     this.createField(key, field);
+                    template = template.replace('{' + key + '}', '{{{' + key + '}}}');
 
-                    template = template.replace('{' + key +'}', '{{{' + key +'}}}');
-                } else {
-                    template = template.replace('{' + key +'}', value);
+                    continue;
                 }
+
+                this.dataForTemplate[key] = value;
+                template = template.replace('{' + key + '}', '{{' + key + '}}');
             }
 
-            this._template = template;
+            this.templateContent = template;
         },
 
         createField: function (key, name, type, params) {
             type = type || this.model.getFieldType(name) || 'base';
+
             this.createView(key, this.getFieldManager().getViewName(type), {
                 model: this.model,
                 defs: {
@@ -59,10 +94,8 @@ Espo.define('views/stream/message', 'view', function (Dep) {
                     params: params || {}
                 },
                 mode: 'detail',
-                readOnly: true
+                readOnly: true,
             });
-        }
-
+        },
     });
 });
-

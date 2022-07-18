@@ -89,6 +89,24 @@ define('views/fields/base', ['view'], function (Dep) {
         searchTemplate: 'fields/base/search',
 
         /**
+         * @protected
+         * @type {string|null}
+         */
+        listTemplateContent: null,
+
+        /**
+         * @protected
+         * @type {string|null}
+         */
+        detailTemplateContent: null,
+
+        /**
+         * @protected
+         * @type {string|null}
+         */
+        editTemplateContent: null,
+
+        /**
          * A validation list. There should be a `validate{Name}` method for each item.
          *
          * @type {string[]}
@@ -530,7 +548,7 @@ define('views/fields/base', ['view'], function (Dep) {
             if (!this._template) {
                 this._templateCompiled = null;
 
-                if (contentProperty in this) {
+                if (contentProperty in this && this[contentProperty] !== null) {
                     this.compiledTemplatesCache = this.compiledTemplatesCache || {};
 
                     this._templateCompiled =
@@ -605,12 +623,6 @@ define('views/fields/base', ['view'], function (Dep) {
          * @inheritDoc
          */
         init: function () {
-            if (this.events) {
-                this.events = _.clone(this.events);
-            } else {
-                this.events = {};
-            }
-
             this.validations = Espo.Utils.clone(this.validations);
 
             this.defs = this.options.defs || {};
@@ -680,6 +692,12 @@ define('views/fields/base', ['view'], function (Dep) {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.searchData = {};
                 this.setupSearch();
+
+                this.events['keydown input.search-input'] = e => {
+                    if ('keyCode' in e && e.keyCode === 13) {
+                        this.trigger('search');
+                    }
+                };
             }
 
             this.on('highlight', () => {
@@ -1287,6 +1305,12 @@ define('views/fields/base', ['view'], function (Dep) {
                 $el = this.$element;
             }
 
+            let rect = $el.get(0).getBoundingClientRect();
+
+            if (rect.top === 0 && rect.bottom === 0 && rect.left === 0) {
+                return;
+            }
+
             $el
                 .popover({
                     placement: 'bottom',
@@ -1403,6 +1427,10 @@ define('views/fields/base', ['view'], function (Dep) {
          * @return {Object.<string,any>}
          */
         fetch: function () {
+            if (!this.$element.length) {
+                return {};
+            }
+
             let data = {};
 
             data[this.name] = this.$element.val().trim();

@@ -71,6 +71,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          *
          * @protected
          * @type {Object[]|null}
+         * @todo Define panelDefs type.
          */
         detailLayout: null,
 
@@ -248,6 +249,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         bottomDisabled: false,
 
         /**
+         * @protected
+         */
+        gridLayoutType: 'record',
+
+        /**
          * Disable edit mode. Can be overridden by an option parameter.
          *
          * @protected
@@ -362,6 +368,23 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         setupHandlerType: 'record/detail',
 
         /**
+         * @protected
+         */
+        currentMiddleTab: 0,
+
+        /**
+         * @protected
+         * @type {Object.<string,*>|null}
+         */
+        middlePanelDefs: null,
+
+        /**
+         * @protected
+         * @type {Object.<string,*>[]|null}
+         */
+        middlePanelDefsList: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -371,6 +394,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             /** @this module:views/record/detail.Class */
             'click [data-action="showMoreDetailPanels"]': function () {
                 this.showMoreDetailPanels();
+            },
+            /** @this module:views/record/detail.Class */
+            'click .middle-tabs > button': function (e) {
+                let tab = $(e.currentTarget).attr('data-tab');
+
+                this.selectMiddleTab(tab);
             },
         },
 
@@ -860,6 +889,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
+            if (this.middlePanelDefs[name]) {
+                this.controlMiddleTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
+            }
         },
 
         /**
@@ -930,6 +963,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
+
+            if (this.middlePanelDefs[name]) {
+                this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
+            }
         },
 
         afterRender: function () {
@@ -1299,6 +1337,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
+            let hasMiddleTabs = this.hasMiddleTabs();
+            let middleTabDataList = hasMiddleTabs ? this.getMiddleTabDataList() : [];
+
             return {
                 scope: this.scope,
                 entityType: this.entityType,
@@ -1316,6 +1357,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 navigateButtonsEnabled: navigateButtonsEnabled,
                 previousButtonEnabled: previousButtonEnabled,
                 nextButtonEnabled: nextButtonEnabled,
+                hasMiddleTabs: hasMiddleTabs,
+                middleTabDataList: middleTabDataList,
             };
         },
 
@@ -1384,9 +1427,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 throw new Error('Model has not been injected into record view.');
             }
 
-            /**
-             * @inheritDoc
-             */
+            /** @type {module:view-record-helper.Class} */
             this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
             this._initInlineEditSave();
@@ -1405,6 +1446,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.indexOfRecord = collection.indexOf(this.model);
                 }
             }
+
+            /** @type {Object.<string,*>|null} */
+            this.middlePanelDefs = {};
+
+            /** @type {Object.<string,*>[]} */
+            this.middlePanelDefsList = [];
 
             if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
                 if (
@@ -1476,6 +1523,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.readOnly && !this.isNew) {
                 this.readOnly = this.getMetadata()
                     .get(['clientDefs', this.scope, 'editDisabled']) || false;
+            }
+
+            if (this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])) {
+                this.duplicateAction = false;
             }
 
             this.readOnlyLocked = this.readOnly;
@@ -2086,6 +2137,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             });
         },
 
+        /**
+         * Get the middle-view.
+         *
+         * @return {module:views/record/detail-middle.Class}
+         */
+        getMiddleView: function () {
+            return this.getView('middle');
+        },
+
         setReadOnly: function () {
             if (!this.readOnlyLocked) {
                 this.readOnly = true;
@@ -2375,24 +2435,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @return {Object[]}
          */
         convertDetailLayout: function (simplifiedLayout) {
-            var layout = [];
-
-            var el = this.options.el || '#' + (this.id);
+            let layout = [];
+            let el = this.options.el || '#' + (this.id);
 
             this.panelFieldListMap = {};
 
-            for (var p in simplifiedLayout) {
-                var panel = {};
+            let tabNumber = -1;
 
-                if ('customLabel' in simplifiedLayout[p]) {
-                    panel.label = simplifiedLayout[p].customLabel;
+            for (let p = 0; p < simplifiedLayout.length; p++) {
+                let item = simplifiedLayout[p];
+
+                let panel = {};
+
+                let tabBreak = item.tabBreak || p === 0;
+
+                if (tabBreak) {
+                    tabNumber++;
+                }
+
+                if ('customLabel' in item) {
+                    panel.label = item.customLabel;
 
                     if (panel.label) {
                         panel.label = this.getLanguage()
                             .translate(panel.label, 'panelCustomLabels', this.entityType);
                     }
                 } else {
-                    panel.label = simplifiedLayout[p].label || null;
+                    panel.label = item.label || null;
 
                     if (panel.label) {
                         panel.label = this.getLanguage()
@@ -2400,38 +2469,31 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     }
                 }
 
-                panel.name = simplifiedLayout[p].name || null;
-                panel.style = simplifiedLayout[p].style || 'default';
+                panel.name = item.name || 'panel-' + p.toString();
+                panel.style = item.style || 'default';
                 panel.rows = [];
+                panel.tabNumber = tabNumber;
 
-                if (
-                    simplifiedLayout[p].dynamicLogicVisible ||
-                    simplifiedLayout[p].dynamicLogicStyled
-                ) {
-                    if (!panel.name) {
-                        panel.name = 'panel-' + p.toString();
-                    }
+                this.middlePanelDefs[panel.name] = {
+                    name: panel.name,
+                    style: panel.style,
+                    tabNumber: panel.tabNumber,
+                    tabBreak: tabBreak,
+                    tabLabel: item.tabLabel,
+                };
+
+                this.middlePanelDefsList.push(this.middlePanelDefs[panel.name]);
+
+                if (item.dynamicLogicVisible && this.dynamicLogic) {
+                    this.dynamicLogic.addPanelVisibleCondition(panel.name, item.dynamicLogicVisible);
                 }
 
-                if (simplifiedLayout[p].dynamicLogicVisible) {
-                    if (this.dynamicLogic) {
-                        this.dynamicLogic.addPanelVisibleCondition(
-                            panel.name, simplifiedLayout[p].dynamicLogicVisible
-                        );
-                    }
+                if (simplifiedLayout[p].dynamicLogicStyled && this.dynamicLogic) {
+                    this.dynamicLogic.addPanelStyledCondition(panel.name, item.dynamicLogicStyled);
                 }
 
-                if (simplifiedLayout[p].dynamicLogicStyled) {
-                    if (this.dynamicLogic) {
-                        this.dynamicLogic.addPanelStyledCondition(
-                            panel.name, simplifiedLayout[p].dynamicLogicStyled
-                        );
-                    }
-                }
-
-                if (simplifiedLayout[p].hidden) {
+                if (item.hidden && tabNumber === 0) {
                     panel.hidden = true;
-                    panel.name = panel.name || 'panel-' + p.toString();
 
                     this.hidePanel(panel.name);
 
@@ -2439,9 +2501,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.underShowMoreDetailPanelList.push(panel.name);
                 }
 
-                var lType = 'rows';
+                let lType = 'rows';
 
-                if (simplifiedLayout[p].columns) {
+                if (item.columns) {
                     lType = 'columns';
 
                     panel.columns = [];
@@ -2451,11 +2513,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.panelFieldListMap[panel.name] = [];
                 }
 
-                for (var i in simplifiedLayout[p][lType]) {
-                    var row = [];
+                for (let i in item[lType]) {
+                    let row = [];
 
-                    for (var j in simplifiedLayout[p][lType][i]) {
-                        var cellDefs = simplifiedLayout[p][lType][i][j];
+                    for (let j in item[lType][i]) {
+                        var cellDefs = item[lType][i][j];
 
                         if (cellDefs === false) {
                             row.push(false);
@@ -2473,19 +2535,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             this.panelFieldListMap[panel.name].push(name);
                         }
 
-                        var type = cellDefs.type || this.model.getFieldType(name) || 'base';
+                        let type = cellDefs.type || this.model.getFieldType(name) || 'base';
 
-                        var viewName = cellDefs.view ||
+                        let viewName = cellDefs.view ||
                             this.model.getFieldParam(name, 'view') ||
                             this.getFieldManager().getViewName(type);
 
-                        var o = {
+                        let o = {
                             el: el + ' .middle .field[data-name="' + name + '"]',
                             defs: {
                                 name: name,
                                 params: cellDefs.params || {},
                             },
-                            mode: this.fieldsMode
+                            mode: this.fieldsMode,
                         };
 
                         if (this.readOnly) {
@@ -2505,10 +2567,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             o.inlineEditDisabled = true;
                         }
 
-                        var fullWidth = cellDefs.fullWidth || false;
+                        let fullWidth = cellDefs.fullWidth || false;
 
                         if (!fullWidth) {
-                            if (simplifiedLayout[p][lType][i].length === 1) {
+                            if (item[lType][i].length === 1) {
                                 fullWidth = true;
                             }
                         }
@@ -2552,7 +2614,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             }
                         }
 
-                        var cell = {
+                        let cell = {
                             name: name + 'Field',
                             view: viewName,
                             field: name,
@@ -2591,8 +2653,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     panel[lType].push(row);
                 }
+
                 layout.push(panel);
             }
+
             return layout;
         },
 
@@ -2607,28 +2671,29 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            var gridLayoutType = this.gridLayoutType || 'record';
-
             if (this.detailLayout) {
                 this.gridLayout = {
-                    type: gridLayoutType,
+                    type: this.gridLayoutType,
                     layout: this.convertDetailLayout(this.detailLayout),
                 };
+
                 callback(this.gridLayout);
 
                 return;
             }
 
-            this.getHelper().layoutManager.get(this.model.name, this.layoutName, (simpleLayout) => {
+            this.getHelper().layoutManager.get(this.model.name, this.layoutName, detailLayout => {
                 if (typeof this.modifyDetailLayout === 'function') {
-                    simpleLayout = Espo.Utils.cloneDeep(simpleLayout);
+                    detailLayout = Espo.Utils.cloneDeep(detailLayout);
 
-                    this.modifyDetailLayout(simpleLayout);
+                    this.modifyDetailLayout(detailLayout);
                 }
 
+                this.detailLayout = detailLayout;
+
                 this.gridLayout = {
-                    type: gridLayoutType,
-                    layout: this.convertDetailLayout(simpleLayout),
+                    type: this.gridLayoutType,
+                    layout: this.convertDetailLayout(this.detailLayout),
                 };
 
                 callback(this.gridLayout);
@@ -2707,7 +2772,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * Create views.
          *
          * @protected
-         * @param {function(module:views/record/detail-middle): void} callback
+         * @param {function(module:views/record/detail-middle): void} [callback]
          */
         build: function (callback) {
             if (!this.sideDisabled && this.sideView) {
@@ -2882,5 +2947,204 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.showPanel(item);
             });
         },
+
+        /**
+         * @protected
+         * @return {Number}
+         */
+        getMiddleTabCount: function () {
+            if (!this.hasMiddleTabs()) {
+                return 0;
+            }
+
+            let count = 1;
+
+            (this.detailLayout || []).forEach(item => {
+                if (item.tabBreak) {
+                    count ++;
+                }
+            });
+
+            return count;
+        },
+
+        /**
+         * @protected
+         * @return {boolean}
+         */
+        hasMiddleTabs: function () {
+            if (typeof this._hasMiddleTabs !== 'undefined') {
+                return this._hasMiddleTabs;
+            }
+
+            if (!this.detailLayout) {
+                return false;
+            }
+
+            for (let item of this.detailLayout) {
+                if (item.tabBreak) {
+                    this._hasMiddleTabs = true;
+
+                    return true;
+                }
+            }
+
+            this._hasMiddleTabs = false;
+
+            return false;
+        },
+
+        /**
+         * @protected
+         * @return {{label: string}[]}
+         */
+        getMiddleTabDataList: function () {
+            let currentTab = this.currentMiddleTab;
+
+            let panelDataList = this.middlePanelDefsList;
+
+            return panelDataList
+                .filter((item, i) => i === 0 || item.tabBreak)
+                .map((item, i) => {
+                    let label = item.tabLabel;
+
+                    let hidden = false;
+
+                    if (i > 0) {
+                        hidden = panelDataList
+                            .filter(panel => panel.tabNumber === i)
+                            .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+                    }
+
+                    if (!label) {
+                        label = i === 0 ?
+                            this.translate('Overview') :
+                            (i + 1).toString();
+                    }
+                    else if (label[0] === '$') {
+                        label = this.translate(label.substring(1), 'tabs', this.scope);
+                    }
+
+                    return {
+                        label: label,
+                        isActive: currentTab === i,
+                        hidden: hidden,
+                    };
+                });
+        },
+
+        /**
+         * Select a tab.
+         *
+         * @protected
+         * @param {Number} tab
+         */
+        selectMiddleTab: function (tab) {
+            this.currentMiddleTab = tab;
+
+            $('body > .popover').remove();
+
+            this.$el.find('.middle-tabs > button').removeClass('active');
+            this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
+
+            this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
+            this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+        },
+
+        /**
+         * @inheritDoc
+          */
+        onInvalid: function (invalidFieldList) {
+            if (!this.hasMiddleTabs()) {
+                return;
+            }
+
+            let tabList = [];
+
+            for (let field of invalidFieldList) {
+                let view = this.getMiddleView().getFieldView(field);
+
+                if (!view) {
+                    continue;
+                }
+
+                let tabString = view.$el
+                    .closest('.panel.tab-hidden')
+                    .attr('data-tab');
+
+                let tab = parseInt(tabString);
+
+                if (tabList.indexOf(tab) !== -1) {
+                    continue;
+                }
+
+                tabList.push(tab);
+            }
+
+            if (!tabList.length) {
+                return;
+            }
+
+            let $tabs = this.$el.find('.middle-tabs');
+
+            tabList.forEach(tab => {
+                let $tab = $tabs.find(`> [data-tab="${tab.toString()}"]`);
+
+                $tab.addClass('invalid');
+
+                $tab.one('click', () => {
+                    $tab.removeClass('invalid');
+                });
+            })
+        },
+
+        /**
+         * @private
+         */
+        controlMiddleTabVisibilityShow: function (tab) {
+            if (!this.hasMiddleTabs() || tab === 0) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlMiddleTabVisibilityShow(tab));
+
+                return;
+            }
+
+            this.$el.find(`.middle-tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
+        },
+
+        /**
+         * @private
+         */
+        controlMiddleTabVisibilityHide: function (tab) {
+            if (!this.hasMiddleTabs() || tab === 0) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlMiddleTabVisibilityHide(tab));
+
+                return;
+            }
+
+            let panelList = this.middlePanelDefsList.filter(panel => panel.tabNumber === tab);
+
+            let allIsHidden = panelList
+                .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+
+            if (!allIsHidden) {
+                return;
+            }
+
+            let $tab = this.$el.find(`.middle-tabs > [data-tab="${tab.toString()}"]`);
+
+            $tab.addClass('hidden');
+
+            if (this.currentMiddleTab === tab) {
+                this.selectMiddleTab(0);
+            }
+        }
     });
 });

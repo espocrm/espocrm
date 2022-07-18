@@ -3,9 +3,10 @@
 <% _.each(layout, function (panel, columnNumber) { %>
     <% hasHiddenPanel = panel.hidden || hasHiddenPanel; %>
     <div
-        class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"
+        class="panel panel-<%= panel.style %><%= panel.tabNumber ? ' tab-hidden' : '' %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"
         <% if (panel.name) print('data-name="'+panel.name+'"') %>
         <% if (panel.style) print('data-style="'+panel.style+'"') %>
+        data-tab="<%= panel.tabNumber %>"
     >
         <% if (panel.label) { %>
         <div class="panel-heading"><h4 class="panel-title"><%= panel.label %></h4></div>
@@ -169,7 +170,7 @@
 <%
 if (hasHiddenPanel) {
 %>
-<div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter">
+<div class="panel panel-default panels-show-more-delimiter" data-name="showMoreDelimiter" data-tab="0">
     <a href="javascript:" data-action="showMoreDetailPanels" title="{{translate 'Show more'}}">
         <span class="fas fa-ellipsis-h fa-lg"></span>
     </a>

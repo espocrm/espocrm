@@ -1822,12 +1822,18 @@ class Stream
         $was = [];
         $became = [];
 
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
         foreach ($auditedFields as $field => $item) {
             $updated = false;
 
             foreach ($item['actualList'] as $attribute) {
                 if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
                     $updated = true;
+
+                    break;
                 }
             }
 
@@ -1836,6 +1842,15 @@ class Stream
             }
 
             $updatedFieldList[] = $field;
+
+            $fieldDefs = $entityDefs->hasField($field) ? $entityDefs->getField($field) : null;
+
+            if (
+                $fieldDefs &&
+                in_array($fieldDefs->getType(), ['text', 'wysiwyg'])
+            ) {
+                continue;
+            }
 
             foreach ($item['actualList'] as $attribute) {
                 $was[$attribute] = $entity->getFetched($attribute);
@@ -1875,8 +1890,8 @@ class Stream
         $note->set('data', [
             'fields' => $updatedFieldList,
             'attributes' => [
-                'was' => $was,
-                'became' => $became,
+                'was' => (object) $was,
+                'became' => (object) $became,
             ],
         ]);
 

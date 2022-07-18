@@ -257,7 +257,7 @@ define(
 
             var number = this.lastPanelNumber;
             var data = {
-                customLabel: this.translate('New panel', 'labels', 'LayoutManager'),
+                customLabel: null,//this.translate('New panel', 'labels', 'LayoutManager'),
                 rows: [[]],
                 number: number
             };

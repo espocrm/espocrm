@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
+define('views/stream/notes/update', ['views/stream/note'], function (Dep) {
 
     return Dep.extend({
 
@@ -57,6 +57,7 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
             if (this.getUser().isAdmin()) {
                 this.isRemovable = true;
             }
+
             Dep.prototype.init.call(this);
         },
 
@@ -67,11 +68,11 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
             this.createMessage();
 
-
             this.wait(true);
-            this.getModelFactory().create(this.model.get('parentType'), function (model) {
-                var modelWas = model;
-                var modelBecame = model.clone();
+
+            this.getModelFactory().create(this.model.get('parentType'), (model) => {
+                let modelWas = model;
+                let modelBecame = model.clone();
 
                 data.attributes = data.attributes || {};
 
@@ -80,9 +81,33 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
 
                 this.fieldsArr = [];
 
-                fields.forEach(function (field) {
-                    var type = model.getFieldType(field) || 'base';
-                    var viewName = this.getMetadata().get('entityDefs.' + model.name + '.fields.' + field + '.view') || this.getFieldManager().getViewName(type);
+                fields.forEach(field => {
+                    let type = model.getFieldType(field) || 'base';
+                    let viewName = this.getMetadata()
+                        .get(['entityDefs', model.name, 'fields', field, 'view']) ||
+                        this.getFieldManager().getViewName(type);
+
+                    let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.name, field);
+
+                    let hasValue = false;
+
+                    for (let attribute of attributeList) {
+                        if (attribute in data.attributes.was) {
+                            hasValue = true;
+
+                            break;
+                        }
+                    }
+
+                    if (!hasValue) {
+                        this.fieldsArr.push({
+                            field: field,
+                            noValues: true,
+                        });
+
+                        return;
+                    }
+
                     this.createView(field + 'Was', viewName, {
                         model: modelWas,
                         readOnly: true,
@@ -90,31 +115,29 @@ Espo.define('views/stream/notes/update', 'views/stream/note', function (Dep) {
                             name: field
                         },
                         mode: 'detail',
-                        inlineEditDisabled: true
+                        inlineEditDisabled: true,
                     });
+
                     this.createView(field + 'Became', viewName, {
                         model: modelBecame,
                         readOnly: true,
                         defs: {
-                            name: field
+                            name: field,
                         },
                         mode: 'detail',
-                        inlineEditDisabled: true
+                        inlineEditDisabled: true,
                     });
 
                     this.fieldsArr.push({
                         field: field,
                         was: field + 'Was',
-                        became: field + 'Became'
+                        became: field + 'Became',
                     });
-
-                }, this);
+                });
 
                 this.wait(false);
-
-            }, this);
+            });
         },
-
     });
 });
 

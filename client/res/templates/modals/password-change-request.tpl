@@ -9,9 +9,9 @@
             name="username"
             class="form-control"
             autocomplete="username"
-            autocorrect="off"
             autocapitalize="off"
-            spellcheck="off"
+            spellcheck="false"
+            maxlength="255"
         >
     </div>
 </div>
@@ -23,9 +23,9 @@
             name="emailAddress"
             class="form-control"
             autocomplete="espo-change-password-emailAddress"
-            autocorrect="off"
             autocapitalize="off"
-            spellcheck="off"
+            spellcheck="false"
+            maxlength="255"
         >
     </div>
 </div>

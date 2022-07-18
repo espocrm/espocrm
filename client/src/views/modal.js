@@ -32,6 +32,7 @@ define('views/modal', ['view'], function (Dep) {
      * A base modal view. Can be extended or used directly.
      *
      * Options:
+     * - `headerElement`
      * - `headerHtml`
      * - `headerText`
      * - `$header`
@@ -88,12 +89,36 @@ define('views/modal', ['view'], function (Dep) {
         header: false,
 
         /**
-         * A header HTML.
+         * A header HTML. Beware of XSS.
          *
          * @protected
          * @type {string}
          */
         headerHtml: null,
+
+        /**
+         * A header JQuery instance.
+         *
+         * @protected
+         * @type {JQuery}
+         */
+        $header: null,
+
+        /**
+         * A header element.
+         *
+         * @protected
+         * @type {Element}
+         */
+        headerElement: null,
+
+        /**
+         * A header text.
+         *
+         * @protected
+         * @type {string}
+         */
+        headerText: null,
 
         /**
          * A dialog instance.
@@ -219,6 +244,12 @@ define('views/modal', ['view'], function (Dep) {
         },
 
         /**
+         * @protected
+         * @type {boolean|null}
+         */
+        footerAtTheTop: null,
+
+        /**
          * @inheritDoc
          */
         init: function () {
@@ -228,10 +259,8 @@ define('views/modal', ['view'], function (Dep) {
             this.header = this.options.header || this.header;
             this.headerHtml = this.options.headerHtml || this.headerHtml;
             this.$header = this.options.$header || this.$header;
-
-            if (this.options.headerText) {
-                this.headerHtml = Handlebars.Utils.escapeExpression(this.options.headerText);
-            }
+            this.headerElement = this.options.headerElement || this.headerElement;
+            this.headerText = this.options.headerText || this.headerText;
 
             this.backdrop = this.options.backdrop || this.backdrop;
 
@@ -272,6 +301,17 @@ define('views/modal', ['view'], function (Dep) {
                     headerHtml = this.$header.get(0).outerHTML;
                 }
 
+                if (this.headerElement) {
+                    headerHtml = this.headerElement.outerHTML;
+                }
+
+                if (this.headerText) {
+                    headerHtml = Handlebars.Utils.escapeExpression(this.headerText);
+                }
+
+                let footerAtTheTop = (this.footerAtTheTop !== null) ? this.footerAtTheTop :
+                    this.getThemeManager().getParam('modalFooterAtTheTop');
+
                 this.dialog = new Espo.Ui.Dialog({
                     backdrop: this.backdrop,
                     header: headerHtml,
@@ -285,7 +325,7 @@ define('views/modal', ['view'], function (Dep) {
                     draggable: this.isDraggable,
                     className: this.className,
                     bodyDiffHeight: modalBodyDiffHeight,
-                    footerAtTheTop: this.getThemeManager().getParam('modalFooterAtTheTop'),
+                    footerAtTheTop: footerAtTheTop,
                     fullHeight: !this.noFullHeight && this.getThemeManager().getParam('modalFullHeight'),
                     screenWidthXs: this.getThemeManager().getParam('screenWidthXs'),
                     fixedHeaderHeight: this.fixedHeaderHeight,

@@ -110,15 +110,15 @@ class EmailAddressGroupFactory implements ValueFactory
         foreach ($dataList as $item) {
             $emailAddress = EmailAddress::create($item->emailAddress);
 
-            if ($item->optOut) {
+            if ($item->optOut ?? false) {
                 $emailAddress = $emailAddress->optedOut();
             }
 
-            if ($item->invalid) {
+            if ($item->invalid ?? false) {
                 $emailAddress = $emailAddress->invalid();
             }
 
-            if ($item->primary) {
+            if ($item->primary ?? false) {
                 $primaryEmailAddress = $emailAddress;
             }
 

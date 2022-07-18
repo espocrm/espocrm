@@ -338,11 +338,11 @@ class MailMimeParser implements Parser
             }
 
             if ($disposition == 'inline') {
-                $attachment->set('role', 'Inline Attachment');
+                $attachment->set('role', Attachment::ROLE_INLINE_ATTACHMENT);
             }
             else {
                 $disposition = 'attachment';
-                $attachment->set('role', 'Attachment');
+                $attachment->set('role', Attachment::ROLE_ATTACHMENT);
             }
 
             $attachment->set('contents', $content);

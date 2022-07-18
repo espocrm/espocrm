@@ -38,8 +38,8 @@ class Attachment extends Entity
     public const ENTITY_TYPE = 'Attachment';
 
     public const ROLE_ATTACHMENT = 'Attachment';
-
     public const ROLE_INLINE_ATTACHMENT = 'Inline Attachment';
+    public const ROLE_EXPORT_FILE = 'Export File';
 
     /**
      * Multiple attachment can refer to one file. Source ID is an original attachment.
@@ -48,8 +48,8 @@ class Attachment extends Entity
     {
         $sourceId = $this->get('sourceId');
 
-        if (!$sourceId) {
-            $sourceId = $this->id;
+        if (!$sourceId && $this->hasId()) {
+            $sourceId = $this->getId();
         }
 
         return $sourceId;
@@ -132,6 +132,20 @@ class Attachment extends Entity
     public function setType(?string $type): self
     {
         $this->set('type', $type);
+
+        return $this;
+    }
+
+    public function setRole(?string $type): self
+    {
+        $this->set('role', $type);
+
+        return $this;
+    }
+
+    public function setSize(?int $size): self
+    {
+        $this->set('size', $size);
 
         return $this;
     }

@@ -13,7 +13,7 @@
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'File (CSV)' scope='Import'}}</label>
                         <div>
-                            <input type="file" id="import-file">
+                            <input type="file" id="import-file" accept=".csv">
                         </div>
                         <div class="text-muted small">{{translate 'utf8' category='messages' scope='Import'}}</div>
                     </div>
@@ -46,7 +46,10 @@
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <div class="pull-right">
-                            <button class="btn btn-link hidden" data-action="saveAsDefault">{{translate 'saveAsDefault' category='strings' scope='Import'}}</button>
+                            <button
+                                class="btn btn-link hidden"
+                                data-action="saveAsDefault"
+                            >{{translate 'saveAsDefault' category='strings' scope='Import'}}</button>
                         </div>
                     </div>
                 </div>
@@ -145,7 +148,10 @@
 
     <div style="padding-bottom: 10px;" class="clearfix">
         {{#if entityList.length}}
-        <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next' scope='Import'}}</button>
+        <button
+            class="btn btn-primary btn-s-wide pull-right hidden"
+            data-action="next"
+        >{{translate 'Next' scope='Import'}}</button>
         {{/if}}
     </div>
 

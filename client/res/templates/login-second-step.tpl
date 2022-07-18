@@ -2,22 +2,23 @@
     <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
     <div id="login" class="panel panel-default">
         <div class="panel-body">
-            <div>
+            <di>
                 <p>{{message}}</p>
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group">
-                        <label for="field-code" max-length="7">{{translate 'Code' scope='User'}}</label>
+                        <label for="field-code" >{{translate 'Code' scope='User'}}</label>
                         <input
                             type="text"
                             data-name="field-code"
                             class="form-control"
                             autocapitalize="off"
-                            autocorrect="off"
+                            spellcheck="false"
                             tabindex="1"
                             autocomplete="new-password"
+                            maxlength="7"
                         >
                     </div>
-                    <div>
+                    <div class="margin-top-2x">
                         <a
                             href="javascript:"
                             class="btn btn-link pull-right"
@@ -32,7 +33,7 @@
                         >{{translate 'Submit'}}</button>
                     </div>
                 </form>
-            </div>
+            </di>
         </div>
     </div>
     </div>

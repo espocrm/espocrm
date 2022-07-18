@@ -3,6 +3,7 @@
 
 @panel-default-text-value: #b7b7b7;
 @panel-default-bg-value: transparent;
+@panel-border-width-value: 0px;
 
 @text-color-value: #dbdbdb;
 @text-white-color-value: @text-color-value;
@@ -57,8 +58,9 @@
 @modal-header-bg-value: @body-bg-value;
 @modal-footer-bg-value: @body-bg-value;
 @modal-content-bg-value: @body-bg-value;
+@modal-backdrop-opacity-value: 0.45;
 
-@modal-header-border-color-value: @default-heading-bg-color-value;
+@modal-header-border-color-value: @modal-content-bg-value;
 
 @input-bg-value: @body-bg-value;
 @input-color-value: @text-color-value;
@@ -72,6 +74,10 @@
 @btn-default-bg-value: #504c4c;
 @btn-default-border-value: @input-border-value;
 @btn-default-color-value: #d1d1d1;
+
+@btn-default-focus-border-value: darken(@btn-default-bg-value, 4%);
+@btn-default-active-bg-value: darken(@btn-default-bg-value, 8%);
+@btn-default-active-border-value: darken(@btn-default-bg-value, 9%);
 
 @btn-text-color-value: #b7b7b7;
 
@@ -109,3 +115,6 @@
 @collapsed-modal-bg-value: @dropdown-bg-value;
 
 @login-panel-heading-bg-value: @panel-bg-value;
+
+@default-box-shadow-value: none;
+@dropdown-box-shadow-value: none;

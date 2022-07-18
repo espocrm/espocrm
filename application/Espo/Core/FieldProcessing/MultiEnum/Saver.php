@@ -105,6 +105,13 @@ class Saver implements SaverInterface
                 continue;
             }
 
+            if (
+                $entityDefs->hasField($name) &&
+                $entityDefs->getField($name)->getParam('doNotStoreArrayValues')
+            ) {
+                continue;
+            }
+
             if ($defs->isNotStorable()) {
                 continue;
             }

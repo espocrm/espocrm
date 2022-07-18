@@ -1,0 +1,113 @@
+
+.autocomplete-suggestions {
+    border: 1px solid var(--dropdown-border);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-link-color);
+    cursor: default;
+    overflow: auto;
+
+    .autocomplete-suggestion.autocomplete-selected {
+        background-color: var(--dropdown-link-hover-bg) !important;
+        color: var(--dropdown-link-hover-color) !important;
+    }
+
+    strong {
+        font-weight: normal; color: @brand-primary;
+    }
+
+    .autocomplete-suggestion {
+        padding: 4px 5px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.dropdown-menu,
+.autocomplete-suggestions {
+    box-shadow: var(--dropdown-box-shadow);
+}
+
+ul.dropdown-menu > li.checkbox {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 4px 0 4px 20px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ul.dropdown-menu {
+    > li.divider + li.divider {
+        display: none;
+    }
+
+    > li > a {
+        padding-top: 4px;
+        padding-bottom: 4px;
+
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+        -moz-user-select: none;
+        user-select: none;
+        line-height: @line-height-computed;
+
+        &.active {
+            background-color: @gray-lighter;
+            text-decoration: none;
+            outline: 0;
+        }
+
+        > .check-icon + div {
+            padding-right: 20px;
+        }
+    }
+
+    > li.checkbox:last-child {
+        margin-bottom: 3px;
+    }
+}
+
+ul.dropdown-menu-with-icons {
+    > li {
+        a {
+            padding-left: 10px;
+        }
+
+        .fas, .far, .glyphicon, .empty-icon {
+            width: 16px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .item-text {
+            padding-left: 8px;
+            position: static;
+        }
+    }
+}
+
+.btn-group.open .dropdown-toggle {
+    &.btn-text {
+        box-shadow: none;
+    }
+}
+
+.btn.dropdown-toggle > span.fa-ellipsis-h {
+    top: 1px;
+    position: relative;
+}
+
+.btn.btn-sm.dropdown-toggle > span.fa-ellipsis-h {
+    top: 0;
+}
+
+.btn.dropdown-toggle > span.caret.wide {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+

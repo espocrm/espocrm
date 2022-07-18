@@ -11,7 +11,7 @@
 </div>
 
 <div class="button-container">
-    <button class="btn btn-default" data-action="createLink">
+    <button class="btn btn-default btn-wide" data-action="createLink">
         <span class="fas fa-plus"></span>
         {{translate 'Create Link' scope='Admin'}}
     </button>
@@ -26,6 +26,7 @@
         placeholder="{{translate 'Search'}}"
         data-name="quick-search"
         class="form-control"
+        spellcheck="false"
     >
 </div>
 {{/if}}

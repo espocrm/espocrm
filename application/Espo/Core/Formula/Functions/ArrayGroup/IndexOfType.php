@@ -54,7 +54,7 @@ class IndexOfType extends BaseFunction
         $result = array_search($needle, $array, true);
 
         if ($result === false || is_string($result)) {
-            return false;
+            return null;
         }
 
         return $result;

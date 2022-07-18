@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
+define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -100,7 +100,7 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
             var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
 
-            if (!~forbiddenEditFieldList.indexOf('dashboardLayout')) {
+            if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !this.model.isPortal()) {
                 this.addDropdownItem({
                     name: 'resetDashboard',
                     html: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')

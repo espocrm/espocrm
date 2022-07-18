@@ -110,19 +110,19 @@ class PhoneNumberGroupFactory implements ValueFactory
         foreach ($dataList as $item) {
             $phoneNumber = PhoneNumber::create($item->phoneNumber);
 
-            if ($item->type) {
+            if ($item->type ?? false) {
                 $phoneNumber = $phoneNumber->withType($item->type);
             }
 
-            if ($item->optOut) {
+            if ($item->optOut ?? false) {
                 $phoneNumber = $phoneNumber->optedOut();
             }
 
-            if ($item->invalid) {
+            if ($item->invalid ?? false) {
                 $phoneNumber = $phoneNumber->invalid();
             }
 
-            if ($item->primary) {
+            if ($item->primary ?? false) {
                 $primaryPhoneNumber = $phoneNumber;
             }
 

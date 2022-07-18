@@ -1,0 +1,71 @@
+{
+    "fields": {
+        "import": {
+            "type": "link",
+            "readOnly": true
+        },
+        "rowIndex": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": true
+        },
+        "exportRowIndex": {
+            "type": "int",
+            "readOnly": true
+        },
+        "lineNumber": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": true,
+            "notStorable": true,
+            "view": "views/import-error/fields/line-number"
+        },
+        "exportLineNumber": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": true,
+            "notStorable": true,
+            "view": "views/import-error/fields/line-number"
+        },
+        "type": {
+            "type": "enum",
+            "options": [
+                "",
+                "Validation",
+                "Access",
+                "Not-Found"
+            ],
+            "readOnly": true
+        },
+        "validationFailures": {
+            "type": "jsonArray",
+            "readOnly": true,
+            "view": "views/import-error/fields/validation-failures"
+        },
+        "row": {
+            "type": "array",
+            "readOnly": true,
+            "displayAsList": true,
+            "doNotStoreArrayValues": true
+        }
+    },
+    "links": {
+        "import": {
+            "type": "belongsTo",
+            "entity": "Import",
+            "foreign": "errors",
+            "foreignName": "id"
+        }
+    },
+    "collection": {
+        "orderBy": "rowIndex"
+    },
+    "indexes": {
+        "rowIndex": {
+            "columns": ["rowIndex"]
+        },
+        "importRowIndex": {
+            "columns": ["importId", "rowIndex"]
+        }
+    }
+}

@@ -62,12 +62,13 @@ define('views/main', ['view'], function (Dep) {
          * @property {string} [action] An action.
          * @property {string} [link] A link.
          * @property {string} [label] A translatable label.
-         * @property {'default'|'danger'|'success'|'warning'} [style] A style.
+         * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
          * @property {boolean} [hidden]
          * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
          * @property {string} [title] A title.
          * @property {string} [iconHtml] An icon HTML.
          * @property {string} [html] An HTML.
+         * @property {string} [className] An additional class name. Only for buttons.
          */
 
         /**
@@ -189,7 +190,9 @@ define('views/main', ['view'], function (Dep) {
                         }
 
                         if (item.accessDataList) {
-                            if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                            if (!Espo.Utils
+                                .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+                            ) {
                                 return;
                             }
                         }
@@ -222,19 +225,38 @@ define('views/main', ['view'], function (Dep) {
 
         /**
          * Build a header HTML. To be called from the #getHeader method.
+         * Beware of XSS.
          *
-         * @param {string[]} arr A breadcrumb path. Like: Account > Name > edit.
+         * @param {(string|Element|JQuery)[]} itemList A breadcrumb path. Like: Account > Name > edit.
          * @returns {string} HTML
          */
-        buildHeaderHtml: function (arr) {
-            var a = [];
-
-            arr.forEach(item => {
-                a.push('<div class="breadcrumb-item">' + item + '</div>');
+        buildHeaderHtml: function (itemList) {
+            let $itemList = itemList.map(item => {
+                return $('<div>')
+                    .addClass('breadcrumb-item')
+                    .append(item);
             });
 
-            return '<div class="header-breadcrumbs">' +
-                a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
+            let $div = $('<div>')
+                .addClass('header-breadcrumbs');
+
+            $itemList.forEach(($item, i) => {
+                $div.append($item);
+
+                if (i === $itemList.length - 1) {
+                    return;
+                }
+
+                $div.append(
+                    $('<div>')
+                        .addClass('breadcrumb-separator')
+                        .append(
+                            $('<span>').addClass('chevron-right')
+                        )
+                )
+            });
+
+            return $div.get(0).outerHTML;
         },
 
 
@@ -283,7 +305,7 @@ define('views/main', ['view'], function (Dep) {
          * Add a menu item.
          *
          * @param {'buttons'|'dropdown'|'actions'} type A type.
-         * @param {module:views/main~MenuItem} item Item definitions.
+         * @param {module:views/main~MenuItem|false} item Item definitions.
          * @param {boolean} [toBeginning=false] To beginning.
          * @param {boolean} [doNotReRender=false] Skip re-render.
          */
@@ -501,6 +523,14 @@ define('views/main', ['view'], function (Dep) {
             } else {
                 $d.addClass('hidden');
             }
+        },
+
+        /**
+         * @protected
+         * @return {module:views/header.Class}
+         */
+        getHeaderView: function () {
+            return this.getView('header');
         },
     });
 });

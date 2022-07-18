@@ -39,6 +39,10 @@ class Result
 
     private int $countUpdated = 0;
 
+    private int $countError = 0;
+
+    private int $countDuplicate = 0;
+
     private bool $manualMode = false;
 
     public function getId(): ?string
@@ -54,6 +58,16 @@ class Result
     public function getCountUpdated(): int
     {
         return $this->countUpdated;
+    }
+
+    public function getCountError(): int
+    {
+        return $this->countError;
+    }
+
+    public function getCountDuplicate(): int
+    {
+        return $this->countDuplicate;
     }
 
     public function isManualMode(): bool
@@ -86,6 +100,22 @@ class Result
     {
         $obj = clone $this;
         $obj->countUpdated = $value;
+
+        return $obj;
+    }
+
+    public function withCountError(int $value): self
+    {
+        $obj = clone $this;
+        $obj->countError = $value;
+
+        return $obj;
+    }
+
+    public function withCountDuplicate(int $value): self
+    {
+        $obj = clone $this;
+        $obj->countDuplicate = $value;
 
         return $obj;
     }

@@ -212,6 +212,7 @@ function (Dep, RegExpPattern, Selectize) {
                     searchField: ['label'],
                     plugins: pluginList,
                     copyClassesToDropdown: true,
+                    selectOnTab: false,
                 };
 
                 if (!this.matchAnyWord) {

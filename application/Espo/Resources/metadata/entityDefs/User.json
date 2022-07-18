@@ -335,16 +335,23 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "view": "views/fields/user"
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
         },
         "dashboardTemplate": {
             "type": "link",

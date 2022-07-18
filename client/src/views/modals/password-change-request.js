@@ -38,6 +38,8 @@ define('views/modals/password-change-request', ['views/modal'], function (Dep) {
 
         noFullHeight: true,
 
+        footerAtTheTop: false,
+
         setup: function () {
 
             this.buttonList = [

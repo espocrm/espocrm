@@ -662,7 +662,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 this.getIconHtml(id) : '';
 
             let $a = $('<a>')
-                .attr('href', '#' + this.foreignScope + '/view/' + id)
+                .attr('href', this.getUrl(id))
                 .text(name);
 
             if (iconHtml) {
@@ -670,6 +670,15 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
             }
 
             return $a.get(0).outerHTML;
+        },
+
+        /**
+         * @protected
+         * @param {string} id An ID.
+         * @return {string}
+         */
+        getUrl: function (id) {
+            return '#' + this.foreignScope + '/view/' + id;
         },
 
         /**

@@ -30,15 +30,18 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 class LinkParentType
 {
     private Metadata $metadata;
+    private Defs $defs;
 
-    public function __construct(Metadata $metadata)
+    public function __construct(Metadata $metadata, Defs $defs)
     {
         $this->metadata = $metadata;
+        $this->defs = $defs;
     }
 
     public function checkRequired(Entity $entity, string $field): bool
@@ -88,6 +91,16 @@ class LinkParentType
 
         if ($typeValue === null) {
             return true;
+        }
+
+        /** @var ?string[] */
+        $entityTypeList = $this->defs
+            ->getEntity($entity->getEntityType())
+            ->getField($field)
+            ->getParam('entityList');
+
+        if ($entityTypeList !== null) {
+            return in_array($typeValue, $entityTypeList);
         }
 
         return (bool) $this->metadata->get(['entityDefs', $typeValue]);

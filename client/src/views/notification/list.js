@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/list', 'view', function (Dep) {
+define('views/notification/list', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,13 +34,12 @@ define('views/notification/list', 'view', function (Dep) {
 
         events: {
             'click [data-action="markAllNotificationsRead"]': function () {
-                $.ajax({
-                    url: 'Notification/action/markAllRead',
-                    type: 'POST'
-                }).then((count) => {
-                    this.trigger('all-read');
-                    this.$el.find('.badge-circle-warning').remove();
-                });
+                Espo.Ajax
+                    .postRequest('Notification/action/markAllRead')
+                    .then(() => {
+                        this.trigger('all-read');
+                        this.$el.find('.badge-circle-warning').remove();
+                    });
             },
             'click [data-action="refresh"]': function () {
                 this.getView('list').showNewRecords();
@@ -48,50 +47,52 @@ define('views/notification/list', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.wait(true);
-
-            this.getCollectionFactory().create('Notification', (collection) => {
-                this.collection = collection;
-                collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
-
-                this.wait(false);
-            });
+            this.wait(
+                this.getCollectionFactory().create('Notification')
+                    .then(collection => {
+                        collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
+                        this.collection = collection;
+                    })
+            );
         },
 
         afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', () => {
-                var viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
-                        'views/notification/record/list';
+            let viewName = this.getMetadata()
+                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+                'views/notification/record/list';
 
-                this.createView('list', viewName, {
-                    el: this.options.el + ' .list-container',
-                    collection: this.collection,
-                    showCount: false,
-                    listLayout: {
-                        rows: [
-                            [
-                                {
-                                    name: 'data',
-                                    view: 'views/notification/fields/container',
-                                    params: {
-                                        containerEl: this.options.el
-                                    },
-                                }
-                            ]
+            let options = {
+                el: this.options.el + ' .list-container',
+                collection: this.collection,
+                showCount: false,
+                listLayout: {
+                    rows: [
+                        [
+                            {
+                                name: 'data',
+                                view: 'views/notification/fields/container',
+                                params: {
+                                    containerEl: this.options.el
+                                },
+                            },
                         ],
-                        right: {
-                            name: 'read',
-                            view: 'views/notification/fields/read-with-menu',
-                            width: '10px'
-                        }
-                    }
-                }, (view) => {
-                    view.render();
+                    ],
+                    right: {
+                        name: 'read',
+                        view: 'views/notification/fields/read-with-menu',
+                        width: '10px',
+                    },
+                },
+            };
+
+            this.collection
+                .fetch()
+                .then(() => this.createView('list', viewName, options))
+                .then(view => view.render())
+                .then(view => {
+                    view.$el.find('> .list > .list-group')
+                        .addClass('list-group-panel');
                 });
-            });
-
-            this.collection.fetch();
         },
-
     });
 });

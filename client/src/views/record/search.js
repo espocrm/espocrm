@@ -28,7 +28,13 @@
 
 define('views/record/search', ['view'], function (Dep) {
 
-    return Dep.extend({
+    /**
+     * @class
+     * @name Class
+     * @extends module:view.Class
+     * @memberOf module:views/record/search
+     */
+    return Dep.extend(/** @lends module:views/record/search.Class# */{
 
         template: 'record/search',
 
@@ -91,7 +97,8 @@ define('views/record/search', ['view'], function (Dep) {
 
             this.searchManager = this.options.searchManager;
 
-            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled;
+            this.textFilterDisabled = this.options.textFilterDisabled || this.textFilterDisabled ||
+                this.getMetadata().get(['clientDefs', this.scope, 'textFilterDisabled']);
 
             if ('disableSavePreset' in this.options) {
                 this.disableSavePreset = this.options.disableSavePreset;
@@ -104,10 +111,9 @@ define('views/record/search', ['view'], function (Dep) {
                 return this.fieldList != null && this.moreFieldList != null;
             });
 
-            this.boolFilterList = Espo.Utils.clone(
-                this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []
-            )
-                .filter((item) => {
+            this.boolFilterList = Espo.Utils
+                .clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || [])
+                .filter(item => {
                     if (typeof item === 'string') {
                         return true;
                     }
@@ -130,7 +136,7 @@ define('views/record/search', ['view'], function (Dep) {
 
                     return true;
                 })
-                .map((item) => {
+                .map(item => {
                     if (typeof item === 'string') {
                         return item;
                     }
@@ -140,9 +146,9 @@ define('views/record/search', ['view'], function (Dep) {
                     return item.name;
                 });
 
-            var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.entityType, 'filters', (list) => {
+            this._helper.layoutManager.get(this.entityType, 'filters', list => {
                 this.moreFieldList = [];
 
                 (list || []).forEach((field) => {
@@ -156,7 +162,7 @@ define('views/record/search', ['view'], function (Dep) {
                 this.tryReady();
             });
 
-            var filterList = this.options.filterList ||
+            let filterList = this.options.filterList ||
                 this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
             this.presetFilterList = Espo.Utils.clone(filterList).filter((item) => {
@@ -183,11 +189,12 @@ define('views/record/search', ['view'], function (Dep) {
                 return true;
             });
 
-            ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach((item) => {
-                this.presetFilterList.push(item);
-            });
+            ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
+                .forEach(item => {
+                    this.presetFilterList.push(item);
+                });
 
-            if (this.getMetadata().get('scopes.' + this.entityType + '.stream')) {
+            if (this.getMetadata().get(['scopes', this.entityType, 'stream'])) {
                 this.boolFilterList.push('followed');
             }
 
@@ -198,12 +205,12 @@ define('views/record/search', ['view'], function (Dep) {
             }
 
             if (this.presetName) {
-                var hasPresetListed = false;
+                let hasPresetListed = false;
 
-                for (var i in this.presetFilterList) {
-                    var item = this.presetFilterList[i] || {};
+                for (let i in this.presetFilterList) {
+                    let item = this.presetFilterList[i] || {};
 
-                    var name = (typeof item === 'string') ? item : item.name;
+                    let name = (typeof item === 'string') ? item : item.name;
 
                     if (name === this.presetName) {
                         hasPresetListed = true;
@@ -222,7 +229,6 @@ define('views/record/search', ['view'], function (Dep) {
             this.model.clear();
 
             this.createFilters();
-
             this.setupViewModeDataList();
 
             this.listenTo(this.collection, 'order-changed', () => {
@@ -237,10 +243,10 @@ define('views/record/search', ['view'], function (Dep) {
                 return [];
             }
 
-            var list = [];
+            let list = [];
 
-            this.viewModeList.forEach((item) => {
-                var o = {
+            this.viewModeList.forEach(item => {
+                let o = {
                     name: item,
                     title: this.translate(item, 'listViewModes'),
                     iconClass: this.viewModeIconClassMap[item]
@@ -288,8 +294,8 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         createFilters: function (callback) {
-            var i = 0;
-            var count = Object.keys(this.advanced || {}).length;
+            let i = 0;
+            let count = Object.keys(this.advanced || {}).length;
 
             if (count === 0) {
                 if (typeof callback === 'function') {
@@ -297,7 +303,7 @@ define('views/record/search', ['view'], function (Dep) {
                 }
             }
 
-            for (var field in this.advanced) {
+            for (let field in this.advanced) {
                 this.createFilter(field, this.advanced[field], () =>{
                     i++;
 
@@ -325,19 +331,17 @@ define('views/record/search', ['view'], function (Dep) {
 
             'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
                 this.search();
-
                 this.hideApplyFiltersButton();
             },
 
             'click button[data-action="search"]': function (e) {
                 this.search();
-
                 this.hideApplyFiltersButton();
             },
 
             'click a[data-action="addFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var name = $target.data('name');
+                let $target = $(e.currentTarget);
+                let name = $target.data('name');
 
                 $target.closest('li').addClass('hidden');
 
@@ -345,9 +349,9 @@ define('views/record/search', ['view'], function (Dep) {
             },
 
             'click .advanced-filters a.remove-filter': function (e) {
-                var $target = $(e.currentTarget);
+                let $target = $(e.currentTarget);
 
-                var name = $target.data('name');
+                let name = $target.data('name');
 
                 this.removeFilter(name);
             },
@@ -361,13 +365,13 @@ define('views/record/search', ['view'], function (Dep) {
             },
 
             'click a[data-action="selectPreset"]': function (e) {
-                var presetName = $(e.currentTarget).data('name') || null;
+                let presetName = $(e.currentTarget).data('name') || null;
 
                 this.selectPreset(presetName);
             },
 
-            'click .dropdown-menu a[data-action="savePreset"]': function (e) {
-                this.createView('savePreset', 'views/modals/save-filters', {}, (view) => {
+            'click .dropdown-menu a[data-action="savePreset"]': function () {
+                this.createView('savePreset', 'views/modals/save-filters', {}, view => {
                     view.render();
 
                     this.listenToOnce(view, 'save', (name) => {
@@ -384,8 +388,8 @@ define('views/record/search', ['view'], function (Dep) {
                 });
             },
 
-            'click .dropdown-menu a[data-action="removePreset"]': function (e) {
-                var id = this.presetName;
+            'click .dropdown-menu a[data-action="removePreset"]': function () {
+                let id = this.presetName;
 
                 this.confirm(this.translate('confirmation', 'messages'), () => {
                     this.removePreset(id);
@@ -400,20 +404,21 @@ define('views/record/search', ['view'], function (Dep) {
             },
 
             'click [data-action="switchViewMode"]': function (e) {
-                var mode = $(e.currentTarget).data('name');
+                let mode = $(e.currentTarget).data('name');
 
                 if (mode === this.viewMode) {
                     return;
                 }
 
                 this.setViewMode(mode, false, true);
-            }
+            },
         },
 
         removeFilter: function (name) {
             this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hidden');
 
-            var container = this.getView('filter-' + name).$el.closest('div.filter');
+            let container = this.getView('filter-' + name).$el.closest('div.filter');
+
             this.clearView('filter-' + name);
 
             container.remove();
@@ -423,10 +428,8 @@ define('views/record/search', ['view'], function (Dep) {
             this.presetName = this.primary;
 
             this.updateAddFilterButton();
-
             this.fetch();
             this.updateSearch();
-
             this.manageLabels();
             this.handleLeftDropdownVisibility();
             this.controlResetButtonVisibility();
@@ -475,15 +478,15 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         selectPreset: function (presetName, forceClearAdvancedFilters) {
-            var wasPreset = !(this.primary == this.presetName);
+            let wasPreset = !(this.primary === this.presetName);
 
             this.presetName = presetName;
 
-            var advanced = this.getPresetData();
+            let advanced = this.getPresetData();
 
             this.primary = this.getPrimaryFilterName();
 
-            var isPreset = !(this.primary === this.presetName);
+            let isPreset = !(this.primary === this.presetName);
 
             if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
                 this.removeFilters();
@@ -493,9 +496,9 @@ define('views/record/search', ['view'], function (Dep) {
             this.updateSearch();
             this.manageLabels();
 
-            this.createFilters(function () {
+            this.createFilters(() => {
                 this.render();
-            }.bind(this));
+            });
 
             this.updateCollection();
         },
@@ -503,7 +506,7 @@ define('views/record/search', ['view'], function (Dep) {
         removeFilters: function () {
             this.$advancedFiltersPanel.empty();
 
-            for (var name in this.advanced) {
+            for (let name in this.advanced) {
                 this.clearView('filter-' + name);
             }
         },
@@ -521,18 +524,18 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         savePreset: function (name) {
-            var id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
+            let id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
 
             this.fetch();
             this.updateSearch();
 
-            var presetFilters = this.getPreferences().get('presetFilters') || {};
+            let presetFilters = this.getPreferences().get('presetFilters') || {};
 
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
 
-            var data = {
+            let data = {
                 id: id,
                 name: id,
                 label: name,
@@ -549,26 +552,24 @@ define('views/record/search', ['view'], function (Dep) {
                 this.updateSearch()
             });
 
-            this.getPreferences().save({
-                'presetFilters': presetFilters
-            }, {patch: true});
+            this.getPreferences().save({'presetFilters': presetFilters}, {patch: true});
 
             this.presetName = id;
         },
 
         removePreset: function (id) {
-            var presetFilters = this.getPreferences().get('presetFilters') || {};
+            let presetFilters = this.getPreferences().get('presetFilters') || {};
 
             if (!(this.scope in presetFilters)) {
                 presetFilters[this.scope] = [];
             }
 
-            var list;
+            let list;
 
             list = presetFilters[this.scope];
 
             list.forEach((item, i) => {
-                if (item.id == id) {
+                if (item.id === id) {
                     list.splice(i, 1);
                 }
             });
@@ -576,11 +577,10 @@ define('views/record/search', ['view'], function (Dep) {
             list = this.presetFilterList;
 
             list.forEach((item, i) => {
-                if (item.id == id) {
+                if (item.id === id) {
                     list.splice(i, 1);
                 }
             });
-
 
             this.getPreferences().set('presetFilters', presetFilters);
             this.getPreferences().save({patch: true});
@@ -597,9 +597,9 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         updateAddFilterButton: function () {
-            var $ul = this.$el.find('ul.filter-list');
+            let $ul = this.$el.find('ul.filter-list');
 
-            if ($ul.children().not('.hidden').not('.dropdown-header').length == 0) {
+            if ($ul.children().not('.hidden').not('.dropdown-header').length === 0) {
                 this.$el.find('button.add-filter-button').addClass('disabled');
             }
             else {
@@ -634,65 +634,66 @@ define('views/record/search', ['view'], function (Dep) {
             this.$filtersLabel.html(this.currentFilterLabelList.join(', '));
         },
 
-        controlResetButtonVisibility: function () {
-            var presetName = this.presetName || null;
-            var primary = this.primary;
-
-            var $resetButton = this.$resetButton;
-
-            var toShow = false;
-
+        /**
+         * @private
+         * @return {boolean}
+         */
+        toShowResetButton: function () {
             if (this.textFilter) {
-                toShow = true;
-            } else {
-                if (presetName && presetName != primary) {
+                return true;
+            }
 
-                } else {
-                    if (Object.keys(this.advanced).length) {
-                        toShow = true;
-                    }
+            let presetName = this.presetName || null;
+            let primary = this.primary;
+
+            if (!presetName || presetName === primary) {
+                if (Object.keys(this.advanced).length) {
+                    return true;
                 }
             }
 
-            if (!toShow) {
-                if (
-                    this.collection.orderBy !== this.collection.defaultOrderBy ||
-                    this.collection.order !== this.collection.defaultOrder
-                ) {
-                    toShow = true;
-                }
+            if (
+                this.collection.orderBy !== this.collection.defaultOrderBy ||
+                this.collection.order !== this.collection.defaultOrder
+            ) {
+                return true;
             }
 
-            if (toShow) {
-                $resetButton.css('visibility', 'visible');
-            } else {
-                $resetButton.css('visibility', 'hidden');
+            return false;
+        },
+
+        controlResetButtonVisibility: function () {
+            if (this.toShowResetButton()) {
+                this.$resetButton.css('visibility', 'visible');
+
+                return;
             }
+
+            this.$resetButton.css('visibility', 'hidden');
         },
 
         managePresetFilters: function () {
-            var presetName = this.presetName || null;
-            var data = this.getPresetData();
-            var primary = this.primary;
+            let presetName = this.presetName || null;
+            let primary = this.primary;
 
             this.$el.find('ul.filter-menu a.preset span').remove();
 
-            var filterLabel = this.translate('all', 'presetFilters', this.entityType);
-            var filterStyle = 'default';
+            let filterLabel = this.translate('all', 'presetFilters', this.entityType);
+            let filterStyle = 'default';
 
             if (!presetName && primary) {
                 presetName = primary;
             }
 
-            if (presetName && presetName != primary) {
+            if (presetName && presetName !== primary) {
                 this.$advancedFiltersPanel.addClass('hidden');
 
-                var label = null;
-                var style = 'default';
-                var id = null;
+                let label = null;
+                let style = 'default';
+                let id = null;
 
-                this.presetFilterList.forEach((item) => {
-                    if (item.name == presetName) {
+                this.presetFilterList.forEach(item => {
+                    if (item.name === presetName) {
                         label = item.label || false;
                         style = item.style || 'default';
                         id = item.id;
@@ -708,8 +709,8 @@ define('views/record/search', ['view'], function (Dep) {
 	                this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
 	                this.$el.find('ul.dropdown-menu > li.preset-control.remove-preset').removeClass('hidden');
             	}
-
-            } else {
+            }
+            else {
                 this.$advancedFiltersPanel.removeClass('hidden');
 
                 if (Object.keys(this.advanced).length !== 0) {
@@ -721,8 +722,8 @@ define('views/record/search', ['view'], function (Dep) {
                 }
 
                 if (primary) {
-                    var label = this.translate(primary, 'presetFilters', this.entityType);
-                    var style = this.getPrimaryFilterStyle();
+                    let label = this.translate(primary, 'presetFilters', this.entityType);
+                    let style = this.getPrimaryFilterStyle();
 
                     filterLabel = label;
                     filterStyle = style;
@@ -750,7 +751,7 @@ define('views/record/search', ['view'], function (Dep) {
         manageBoolFilters: function () {
             (this.boolFilterList || []).forEach((item) => {
                 if (this.bool[item]) {
-                    var label = this.translate(item, 'boolFilters', this.entityType);
+                    let label = this.translate(item, 'boolFilters', this.entityType);
 
                     this.currentFilterLabelList.push(label);
                 }
@@ -771,9 +772,9 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getFilterDataList: function () {
-            var arr = [];
+            let arr = [];
 
-            for (var field in this.advanced) {
+            for (let field in this.advanced) {
                 arr.push({
                     key: 'filter-' + field,
                     name: field,
@@ -797,7 +798,7 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getPresetFilterList: function () {
-            var arr = [];
+            let arr = [];
 
             this.presetFilterList.forEach((item) => {
             	if (typeof item == 'string') {
@@ -811,13 +812,11 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getPresetData: function () {
-            var data = {};
+            let data = {};
 
-            this.getPresetFilterList().forEach((item) => {
-                if (item.name == this.presetName) {
+            this.getPresetFilterList().forEach(item => {
+                if (item.name === this.presetName) {
                     data = Espo.Utils.clone(item.data || {});
-
-                    return;
                 }
             });
 
@@ -825,10 +824,10 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getPrimaryFilterName: function () {
-            var primaryFilterName = null;
+            let primaryFilterName = null;
 
             this.getPresetFilterList().forEach(item => {
-                if (item.name == this.presetName) {
+                if (item.name === this.presetName) {
                     if (!('data' in item)) {
                         primaryFilterName = item.name;
                     }
@@ -842,10 +841,10 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getPrimaryFilterStyle: function () {
-            var style = null;
+            let style = null;
 
             this.getPresetFilterList().forEach(item => {
-                if (item.name == this.primary) {
+                if (item.name === this.primary) {
                     style = item.style || 'default';
                 }
             });
@@ -854,7 +853,7 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         loadSearchData: function () {
-            var searchData = this.searchManager.get();
+            let searchData = this.searchManager.get();
 
             this.textFilter = searchData.textFilter;
 
@@ -862,7 +861,7 @@ define('views/record/search', ['view'], function (Dep) {
                 this.presetName = searchData.presetName;
             }
 
-            var primaryIsSet = false;
+            let primaryIsSet = false;
 
             if ('primary' in searchData) {
                 this.primary = searchData.primary;
@@ -891,7 +890,7 @@ define('views/record/search', ['view'], function (Dep) {
         createFilter: function (name, params, callback, noRender) {
             params = params || {};
 
-            var rendered = false;
+            let rendered = false;
 
             if (this.isRendered()) {
                 rendered = true;
@@ -918,10 +917,10 @@ define('views/record/search', ['view'], function (Dep) {
                 }
 
                 this.listenTo(view, 'change', () => {
-                    var toShowApply = this.isSearchedWithAdvancedFilter;
+                    let toShowApply = this.isSearchedWithAdvancedFilter;
 
                     if (!toShowApply) {
-                        var data = view.getView('field').fetchSearch();
+                        let data = view.getView('field').fetchSearch();
 
                         if (data) {
                             toShowApply = true;
@@ -933,6 +932,11 @@ define('views/record/search', ['view'], function (Dep) {
                     }
 
                     this.showApplyFiltersButton();
+                });
+
+                this.listenTo(view, 'search', () => {
+                    this.search();
+                    this.hideApplyFiltersButton();
                 });
             });
         },
@@ -948,8 +952,8 @@ define('views/record/search', ['view'], function (Dep) {
                     .prop('checked');
             });
 
-            for (var field in this.advanced) {
-                var view = this.getView('filter-' + field).getView('field');
+            for (let field in this.advanced) {
+                let view = this.getView('filter-' + field).getView('field');
 
                 this.advanced[field] = view.fetchSearch();
 
@@ -968,12 +972,12 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         getAdvancedDefs: function () {
-            var defs = [];
+            let defs = [];
 
-            for (var i in this.moreFieldList) {
-                var field = this.moreFieldList[i];
+            for (let i in this.moreFieldList) {
+                let field = this.moreFieldList[i];
 
-                var o = {
+                let o = {
                     name: field,
                     checked: (field in this.advanced),
                 };
@@ -1010,6 +1014,5 @@ define('views/record/search', ['view'], function (Dep) {
 
             this.$applyFiltersContainer.addClass('hidden');
         },
-
     });
 });

@@ -102,8 +102,9 @@
 }
 
 .panel {
-    > .panel-heading {
+    margin-bottom: var(--vertical-gap);
 
+    > .panel-heading {
         .btn {
             background-color: @panel-default-bg;
             border-color: @panel-default-bg;
@@ -160,7 +161,6 @@ body {
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
-                    &,
                     &:focus {
                         background-color: @panel-default-bg;
                         border-color: @panel-default-bg;
@@ -285,29 +285,39 @@ body {
 }
 
 .panel {
-    border-width: @panel-border-width;
-}
+    border-width: var(--panel-border-width);
 
-.panel-heading > .btn-group > .btn {
-    border-radius: 0 !important;
-}
+    .panel-heading {
+        > .btn-group > .btn {
+            //border-radius: 0 !important;
+        }
 
-h4.panel-title span.fas.color-icon {
-    font-size: 50%;
-    left: 0px;
-    position: relative;
-    margin-right: 2px;
-    top: -2px;
+        h4.panel-title span.fas.color-icon {
+            font-size: 50%;
+            position: relative;
+            left: 0;
+            top: -2px;
+            margin-right: 2px;
+        }
+    }
 }
 
 .panel.sticked {
-    margin-top: -1 * @line-height-computed;
-    border-top-width: 0;
+    //margin-top: ~"calc(-1 * var(--vertical-gap) - var(--panel-border-width)))";
+    margin-top: ~"calc(-1 * var(--vertical-gap))";
+    border-top-width: max(var(--panel-border-width), 1px);
+}
+
+.panel {
     > .panel-heading {
-        .btn-group {
-            top: -6px;
-            .btn {
-                border-top-width: 0;
+        .btn:hover,
+        .btn:focus
+        {
+            color: var(--btn-text-color);
+            > .fa,
+            > .fas,
+            > .far {
+                color: var(--btn-text-color);
             }
         }
     }

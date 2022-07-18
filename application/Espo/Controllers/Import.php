@@ -144,6 +144,25 @@ class Import extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\NotFound
+     */
+    public function postActionExportErrors(Request $request): stdClass
+    {
+        $id = $request->getParsedBody()->id ?? null;
+
+        if (!$id) {
+            throw new BadRequest("No `id`.");
+        }
+
+        $attachmentId = $this->getImportService()->exportErrors($id);
+
+        return (object) [
+            'attachmentId' => $attachmentId,
+        ];
+    }
+
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();

@@ -17,9 +17,10 @@
                             id="field-userName"
                             class="form-control"
                             autocapitalize="off"
-                            autocorrect="off"
+                            spellcheck="false"
                             tabindex="1"
                             autocomplete="username"
+                            maxlength="255"
                         >
                     </div>
                     <div class="form-group">
@@ -31,6 +32,7 @@
                             class="form-control"
                             tabindex="2"
                             autocomplete="current-password"
+                            maxlength="255"
                         >
                     </div>
                     <div class="margin-top-2x">

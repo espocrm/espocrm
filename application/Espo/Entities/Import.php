@@ -29,6 +29,8 @@
 
 namespace Espo\Entities;
 
+use Espo\Tools\Import\Params;
+
 use stdClass;
 
 class Import extends \Espo\Core\ORM\Entity
@@ -50,9 +52,11 @@ class Import extends \Espo\Core\ORM\Entity
         return $this->get('status');
     }
 
-    public function getParams(): ?stdClass
+    public function getParams(): Params
     {
-        return $this->get('params');
+        $raw = $this->get('params');
+
+        return Params::fromRaw($raw);
     }
 
     public function getFileId(): ?string

@@ -38,14 +38,17 @@ use Espo\Core\Utils\Json;
 
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\UserData;
+use Espo\Entities\User as UserEntity;
 
 /**
  * @extends Database<\Espo\Entities\User>
  */
 class User extends Database
 {
+    private const AUTHENTICATION_METHOD_HMAC = 'Hmac';
+
     /**
-     * @param \Espo\Entities\User $entity
+     * @param UserEntity $entity
      * @param array<string,mixed> $options
      * @return void
      * @throws Conflict
@@ -53,16 +56,16 @@ class User extends Database
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->has('type') && !$entity->get('type')) {
-            $entity->set('type', 'regular');
+        if ($entity->has('type') && !$entity->getType()) {
+            $entity->set('type', UserEntity::TYPE_REGULAR);
         }
 
         if ($entity->isApi()) {
             if ($entity->isAttributeChanged('userName')) {
-                $entity->set('lastName', $entity->get('userName'));
+                $entity->set('lastName', $entity->getUserName());
             }
 
-            if ($entity->has('authMethod') && $entity->get('authMethod') !== 'Hmac') {
+            if ($entity->has('authMethod') && $entity->getAuthMethod() !== self::AUTHENTICATION_METHOD_HMAC) {
                 $entity->clear('secretKey');
             }
         } else {
@@ -90,7 +93,7 @@ class User extends Database
         }
 
         if ($entity->isNew()) {
-            $userName = $entity->get('userName');
+            $userName = $entity->getUserName();
 
             if (empty($userName)) {
                 throw new Error("Username can't be empty.");
@@ -112,7 +115,7 @@ class User extends Database
             }
         } else {
             if ($entity->isAttributeChanged('userName')) {
-                $userName = $entity->get('userName');
+                $userName = $entity->getUserName();
 
                 if (empty($userName)) {
                     throw new Error("Username can't be empty.");

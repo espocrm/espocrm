@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site/navbar', 'view', function (Dep) {
+define('views/site/navbar', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -54,12 +54,12 @@ define('views/site/navbar', 'view', function (Dep) {
                     this.xsCollapse();
                 }
             },
-            'click a.nav-link': function (e) {
+            'click a.nav-link': function () {
                 if (this.isSideMenuOpened) {
                     this.closeSideMenu();
                 }
             },
-            'click a.navbar-brand.nav-link': function (e) {
+            'click a.navbar-brand.nav-link': function () {
                 this.xsCollapse();
             },
             'click a[data-action="quick-create"]': function (e) {
@@ -141,7 +141,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 !isVertical &&
                 !$target.parent().hasClass('more-dropdown-menu')
             ) {
-                var maxHeight = windowHeight - rectItem.bottom;
+                let maxHeight = windowHeight - rectItem.bottom;
 
                 this.handleGroupMenuScrolling($menu, $target, maxHeight);
 
@@ -150,12 +150,9 @@ define('views/site/navbar', 'view', function (Dep) {
 
             var itemCount = $menu.children().length;
 
-            if (isVertical) {
-                var tabHeight = this.$tabs.find('> .tab').height();
-            }
-            else {
-                var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
-            }
+            let tabHeight = isVertical ?
+                this.$tabs.find('> .tab').height() :
+                this.$tabs.find('.tab-group > ul > li:visible').height();
 
             var menuHeight = tabHeight * itemCount;
 
@@ -169,11 +166,9 @@ define('views/site/navbar', 'view', function (Dep) {
                 }
             }
 
-            $menu.css({
-                top: top + 'px',
-            });
+            $menu.css({top: top + 'px'});
 
-            var maxHeight = windowHeight - top;
+            let maxHeight = windowHeight - top;
 
             this.handleGroupMenuScrolling($menu, $target, maxHeight);
         },
@@ -286,19 +281,20 @@ define('views/site/navbar', 'view', function (Dep) {
 
         openSideMenu: function () {
             this.isSideMenuOpened = true;
+
             this.$body.addClass('side-menu-opened');
 
-            this.$sideMenuBackdrop = $('<div>').addClass('side-menu-backdrop');
-            this.$sideMenuBackdrop.click(function () {
-                this.closeSideMenu();
-            }.bind(this));
-            this.$sideMenuBackdrop.appendTo(this.$body);
+            this.$sideMenuBackdrop =
+                $('<div>')
+                    .addClass('side-menu-backdrop')
+                    .click(() => this.closeSideMenu())
+                    .appendTo(this.$body);
 
-            this.$sideMenuBackdrop2 = $('<div>').addClass('side-menu-backdrop');
-            this.$sideMenuBackdrop2.click(function () {
-                this.closeSideMenu();
-            }.bind(this));
-            this.$sideMenuBackdrop2.appendTo(this.$navbarRightContainer);
+            this.$sideMenuBackdrop2 =
+                $('<div>')
+                    .addClass('side-menu-backdrop')
+                    .click(() => this.closeSideMenu())
+                    .appendTo(this.$navbarRightContainer);
         },
 
         closeSideMenu: function () {
@@ -310,16 +306,22 @@ define('views/site/navbar', 'view', function (Dep) {
 
         switchMinimizer: function () {
             var $body = this.$body;
+
             if (this.isMinimized()) {
                 if (this.isSideMenuOpened) {
                     this.closeSideMenu();
                 }
+
                 $body.removeClass('minimized');
+
                 this.getStorage().set('state', 'siteLayoutState', 'expanded');
-            } else {
+            }
+            else {
                 $body.addClass('minimized');
+
                 this.getStorage().set('state', 'siteLayoutState', 'collapsed');
             }
+
             if (window.Event) {
                 try {
                     window.dispatchEvent(new Event('resize'));
@@ -329,9 +331,11 @@ define('views/site/navbar', 'view', function (Dep) {
 
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
+
             if (!companyLogoId) {
                 return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.png');
             }
+
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
@@ -392,6 +396,8 @@ define('views/site/navbar', 'view', function (Dep) {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
                 $(window).off('scroll.navbar-tab-group');
+
+                this.$body.removeClass('has-navbar');
             });
         },
 
@@ -436,7 +442,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 return this.getAcl().check(scope);
             }
             if (defs.tabAclPermission) {
-                var level = this.getAcl().get(defs.tabAclPermission);
+                var level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
 
                 return level && level !== 'no';
             }
@@ -474,9 +480,7 @@ define('views/site/navbar', 'view', function (Dep) {
             var $more = this.$more;
             var $moreDropdown = this.$moreDropdown;
 
-            $window.on('resize.navbar', function() {
-                updateWidth();
-            });
+            $window.on('resize.navbar', () => updateWidth());
 
             $window.on('scroll.navbar', () => {
                 if (!this.isMoreDropdownShown) {
@@ -536,7 +540,7 @@ define('views/site/navbar', 'view', function (Dep) {
             var $navbar = $('#navbar .navbar');
 
             if (window.innerWidth >= smallScreenWidth) {
-                $tabs.children('li').each((i, li) => {
+                $tabs.children('li').each(() => {
                     hideOneTab();
                 });
 
@@ -586,6 +590,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
                     if (i >= tabCount) {
                         setTimeout(() => updateWidth(), 100);
+
                         break;
                     }
                 }
@@ -602,15 +607,16 @@ define('views/site/navbar', 'view', function (Dep) {
                 if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
                     setTimeout(() => processUpdateWidth(true), 200);
-                }
-                else {
-                    if (!isRecursive) {
-                        updateWidth();
-                        setTimeout(() => processUpdateWidth(true), 10);
-                    }
 
-                    setTimeout(() => processUpdateWidth(true), 1000);
+                    return;
                 }
+
+                if (!isRecursive) {
+                    updateWidth();
+                    setTimeout(() => processUpdateWidth(true), 10);
+                }
+
+                setTimeout(() => processUpdateWidth(true), 1000);
             };
 
             if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
@@ -660,11 +666,12 @@ define('views/site/navbar', 'view', function (Dep) {
                 if (windowWidth < smallScreenWidth) {
                     $tabs.css('height', 'auto');
                     $more.css('max-height', '');
+
+                    return;
                 }
-                else {
-                    $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
-                    $more.css('max-height', windowHeight + 'px');
-                }
+
+                $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
+                $more.css('max-height', windowHeight + 'px');
             };
 
             $(window).on('resize.navbar', () => {
@@ -685,7 +692,7 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         getStaticItemsHeight: function () {
-            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 96;
+            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 97;
         },
 
         adjustBodyMinHeight: function () {
@@ -784,6 +791,8 @@ define('views/site/navbar', 'view', function (Dep) {
             this.$tabs = this.$el.find('ul.tabs');
             this.$more = this.$tabs.find('li.more > ul');
 
+            this.$body.addClass('has-navbar');
+
             var $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
             $moreDd.on('shown.bs.dropdown', () => {
@@ -810,9 +819,9 @@ define('views/site/navbar', 'view', function (Dep) {
             }
 
             if (layoutMinimized) {
-                var $body = $('body');
-                $body.addClass('minimized');
+                this.$body.addClass('minimized');
             }
+
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
@@ -833,7 +842,7 @@ define('views/site/navbar', 'view', function (Dep) {
             }
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
-                var process = () => {
+                let process = () => {
                     if (this.$navbar.height() < $(window).height() / 2) {
                         setTimeout(() => process(), 50);
 
@@ -852,7 +861,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 process();
             }
             else {
-                var process = () => {
+                let process = () => {
                     if (this.$el.width() < $(window).width() / 2) {
                         setTimeout(() => process(), 50);
 
@@ -899,11 +908,7 @@ define('views/site/navbar', 'view', function (Dep) {
                         return this.filterTabItem(item);
                     });
 
-                    if (!item.itemList.length) {
-                        return false;
-                    }
-
-                    return true;
+                    return !!item.itemList.length;
                 }
 
                 return this.filterTabItem(item);
@@ -1005,7 +1010,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
             label = label || '';
 
-            var shortLabel = label.substr(0, 2);
+            var shortLabel = label.substring(0, 2);
 
             if (!params.colorsDisabled && !isGroup) {
                 color = this.getMetadata().get(['clientDefs', tab, 'color']);
@@ -1073,13 +1078,12 @@ define('views/site/navbar', 'view', function (Dep) {
             });
 
             if (!this.getConfig().get('actionHistoryDisabled')) {
-                list.push({
-                    divider: true
-                });
+                list.push({divider: true});
+
                 list.push({
                     action: 'showLastViewed',
                     link: '#LastViewed',
-                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural')
+                    label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural'),
                 });
             }
 
@@ -1094,7 +1098,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 {
                     action: 'logout',
                     label: this.getLanguage().translate('Log Out')
-                }
+                },
             ]);
 
             return list;

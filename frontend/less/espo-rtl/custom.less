@@ -14,8 +14,9 @@
 }
 
 .list .checkbox-dropdown {
-    margin-left: -10px;
+    margin-left: -0;
     margin-right: 0;
+    right: 16px;
 }
 
 .list-buttons-container > div {
@@ -160,6 +161,10 @@ ul.dropdown-menu > li.checkbox {
 
 td.cell[data-name="buttons"] > .btn-group {
     margin-right: -17px;
+}
+
+#main > .list-container > .list > table td.cell[data-name="buttons"] > .btn-group {
+    margin-right: -14px;
 }
 
 .list-expanded > .list-group > .list-group-item > .pull-right {
@@ -323,3 +328,22 @@ div.list-kanban > div > table {
     border-left: 0;
     padding: 5px 12px 5px 0;
 }
+
+ .list > table th.action-cell {
+     a {
+         left: 11px;
+         right: auto;
+     }
+ }
+
+ #main > .list-container > .list > table th.action-cell {
+     a {
+         left: 9px;
+         right: auto;
+
+         @media screen and (max-width: (@screen-sm-min - 1px)) {
+             right: auto;
+             left: 5px;
+         }
+     }
+ }

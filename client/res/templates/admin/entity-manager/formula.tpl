@@ -12,10 +12,10 @@
 
 <div class="button-container">
     <div class="btn-group actions-btn-group" role="group">
-        <button class="btn btn-danger action action" data-action="save">
+        <button class="btn btn-danger btn-xs-wide action"  data-action="save">
             {{translate 'Save'}}
         </button>
-        <button class="btn btn-default action action" data-action="close">
+        <button class="btn btn-default btn-xs-wide action" data-action="close">
             {{translate 'Close'}}
         </button>
     </div>

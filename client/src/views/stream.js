@@ -94,19 +94,21 @@ define('views/stream', ['view'], function (Dep) {
 
                 this.setFilter(this.filter);
 
-                this.listenToOnce(collection, 'sync', () => {
+                collection.fetch().then(() => {
                     this.createView('list', 'views/stream/record/list', {
                         el: this.options.el + ' .list-container',
                         collection: collection,
                         isUserStream: true,
-                    }, (view) => {
+                    }, view => {
                         view.notify(false);
 
-                        view.render();
+                        view.render()
+                            .then(view => {
+                                view.$el.find('> .list > .list-group')
+                                    .addClass('list-group-panel');
+                            });
                     });
                 });
-
-                collection.fetch();
             });
         },
 

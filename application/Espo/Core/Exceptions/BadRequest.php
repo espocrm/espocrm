@@ -42,7 +42,7 @@ class BadRequest extends Exception implements HasBody
     /**
      * @var ?string
      */
-    private $body = null;
+    protected $body = null;
 
     final public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {

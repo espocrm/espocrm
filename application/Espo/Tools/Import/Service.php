@@ -29,20 +29,27 @@
 
 namespace Espo\Tools\Import;
 
+use GuzzleHttp\Psr7\Utils as Psr7Utils;
+
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 
+use Espo\Entities\ImportError;
+use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\Attachment;
 
 use DateTime;
+use SplFileObject;
+use RuntimeException;
 
 class Service
 {
@@ -56,16 +63,20 @@ class Service
 
     private $acl;
 
+    private FileStorageManager $fileStorageManager;
+
     public function __construct(
         ImportFactory $factory,
         ServiceContainer $recordServiceContainer,
         EntityManager $entityManager,
-        Acl $acl
+        Acl $acl,
+        FileStorageManager $fileStorageManager
     ) {
         $this->factory = $factory;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->entityManager = $entityManager;
         $this->acl = $acl;
+        $this->fileStorageManager = $fileStorageManager;
     }
 
     /**
@@ -132,7 +143,7 @@ class Service
             throw new Error("No entity-type.");
         }
 
-        $params = Params::fromRaw($source->getParams())
+        $params = $source->getParams()
             ->withIdleMode(false)
             ->withManualMode(false);
 
@@ -141,6 +152,11 @@ class Service
         return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): Result
     {
         /** @var ?ImportEntity $import */
@@ -169,7 +185,7 @@ class Service
             throw new Error("No entity-type.");
         }
 
-        $params = Params::fromRaw($import->getParams())
+        $params = $import->getParams()
             ->withStartFromLastIndex($startFromLastIndex);
 
         $attachmentId = $import->getFileId();
@@ -188,6 +204,10 @@ class Service
             ->run();
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function revert(string $id): void
     {
         $import = $this->entityManager->getEntity('Import', $id);
@@ -284,6 +304,10 @@ class Service
         return $attachment->getId();
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function removeDuplicates(string $id): void
     {
         $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
@@ -340,6 +364,9 @@ class Service
         }
     }
 
+    /**
+     * @throws NotFound
+     */
     public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId): void
     {
         $entity = $this->entityManager
@@ -358,5 +385,108 @@ class Service
         $entity->set('isDuplicate', false);
 
         $this->entityManager->saveEntity($entity);
+    }
+
+    /**
+     * @param string $importId An import ID.
+     * @return ?string An attachment ID.
+     * @throws NotFound
+     */
+    public function exportErrors(string $importId): ?string
+    {
+        $import = $this->entityManager
+            ->getRepositoryByClass(ImportEntity::class)
+            ->getById($importId);
+
+        if (!$import) {
+            throw new NotFound();
+        }
+
+        $count = $this->entityManager
+            ->getRDBRepositoryByClass(ImportEntity::class)
+            ->getRelation($import, 'errors')
+            ->count();
+
+        if ($count === 0) {
+            return null;
+        }
+
+        $importAttachmentId = $import->getFileId();
+
+        if (!$importAttachmentId) {
+            throw new RuntimeException("No import file ID.");
+        }
+
+        $importAttachment = $this->entityManager
+            ->getRepositoryByClass(Attachment::class)
+            ->getById($importAttachmentId);
+
+        if (!$importAttachment) {
+            throw new RuntimeException("No import attachment.");
+        }
+
+        $filePath = $this->fileStorageManager->getLocalFilePath($importAttachment);
+
+        $file = new SplFileObject($filePath);
+
+        $resource = fopen('php://temp', 'w+');
+
+        if ($resource === false) {
+            throw new RuntimeException("Could not open temp.");
+        }
+
+        $stream = Psr7Utils::streamFor($resource);
+
+        /** @var Collection<ImportError> */
+        $errorList = $this->entityManager
+            ->getRDBRepositoryByClass(ImportEntity::class)
+            ->getRelation($import, 'errors')
+            ->sth()
+            ->select(['exportRowIndex', 'rowIndex'])
+            ->order('rowIndex')
+            ->find();
+
+        if ($import->getParams()->headerRow()) {
+            $file->seek(0);
+
+            /** @var string|false */
+            $line = $file->current();
+
+            if ($line === false) {
+                throw new RuntimeException();
+            }
+
+            $stream->write($line);
+        }
+
+        foreach ($errorList as $error) {
+            $file->seek($error->getRowIndex());
+
+            /** @var string|false */
+            $line = $file->current();
+
+            if ($line === false) {
+                throw new RuntimeException();
+            }
+
+            $stream->write($line);
+        }
+
+        $name = 'Errors_' . substr($importAttachment->getName() ?? '', 0, -4) . '.csv';
+
+        $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getNew();
+
+        $attachment->setRole(Attachment::ROLE_EXPORT_FILE);
+        $attachment->setType('text/csv');
+        $attachment->setName($name);
+        $attachment->setSize($stream->getSize());
+
+        $this->entityManager->saveEntity($attachment);
+
+        $this->fileStorageManager->putStream($attachment, $stream);
+
+        fclose($resource);
+
+        return $attachment->getId();
     }
 }

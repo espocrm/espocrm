@@ -16,6 +16,7 @@
         "InboundEmail": "Group Email Account",
         "Stream": "Stream",
         "Import": "Import",
+        "ImportError": "Import Error",
         "Template": "Template",
         "Job": "Job",
         "EmailFilter": "Email Filter",
@@ -74,6 +75,7 @@
         "PhoneNumber": "Phone Numbers",
         "Stream": "Stream",
         "Import": "Import",
+        "ImportError": "Import Errors",
         "Template": "Templates",
         "Job": "Jobs",
         "EmailFilter": "Email Filters",
@@ -100,6 +102,7 @@
         "Webhook": "Webhooks"
     },
     "labels": {
+        "Sort": "Sort",
         "Misc": "Misc",
         "Merge": "Merge",
         "None": "None",
@@ -280,7 +283,7 @@
         "fieldUrlExceedsMaxLength": "Encoded URL exceeds max length of {maxLength}",
         "fieldNotMatchingPattern": "{field} does not match the pattern `{pattern}`",
         "fieldNotMatchingPattern$noBadCharacters": "{field} contains not allowed characters",
-        "fieldNotMatchingPattern$noSpecialCharacters": "{field} should not contain special characters",
+        "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} should not contain ASCII special characters",
         "fieldNotMatchingPattern$latinLetters": "{field} can contain only latin letters",
         "fieldNotMatchingPattern$latinLettersDigits": "{field} can contain only latin letters and digits",
         "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} can contain only latin letters, digits and whitespace",
@@ -812,5 +815,19 @@
         "VioletVertical": "Violet",
         "Hazyblue": "Hazyblue Horizontal",
         "HazyblueVertical": "Hazyblue"
+    },
+    "fieldValidations": {
+        "required": "Required",
+        "maxCount": "Max Count",
+        "maxLength": "Max Length",
+        "pattern": "Pattern Matching",
+        "emailAddress": "Valid Email Address",
+        "phoneNumber": "Valid Phone Number",
+        "array": "Array",
+        "arrayOfString": "Array of Strings",
+        "valid": "Valid",
+        "noEmptyString": "No Empty String",
+        "max": "Max Value",
+        "min": "Min Value"
     }
 }

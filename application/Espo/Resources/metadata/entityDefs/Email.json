@@ -326,7 +326,6 @@
         "replied": {
             "type": "link",
             "noJoin": true,
-            "readOnly": true,
             "view": "views/email/fields/replied",
             "customizationDisabled": true
         },
@@ -335,7 +334,10 @@
             "readOnly": true,
             "orderBy": "dateSent",
             "view": "views/email/fields/replies",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "columns": {
+                "status": "status"
+            }
         },
         "isSystem": {
             "type": "bool",

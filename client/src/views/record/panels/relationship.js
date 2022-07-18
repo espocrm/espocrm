@@ -85,6 +85,11 @@ function (Dep, SearchManager) {
          */
         recordsPerPage: null,
 
+        /**
+         * @protected
+         */
+        viewModalView: null,
+
         init: function () {
             Dep.prototype.init.call(this);
         },
@@ -100,6 +105,9 @@ function (Dep, SearchManager) {
 
             this.scope = this.scope || this.model.defs.links[this.link].entity;
 
+            let linkReadOnly = this.getMetadata()
+                .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
+
             var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!('create' in this.defs)) {
@@ -111,6 +119,11 @@ function (Dep, SearchManager) {
 
             if (!('view' in this.defs)) {
                 this.defs.view = true;
+            }
+
+            if (linkReadOnly) {
+                this.defs.create = false;
+                this.defs.select = false;
             }
 
             this.filterList = this.defs.filterList || this.filterList || null;
@@ -368,7 +381,7 @@ function (Dep, SearchManager) {
                 this.actionList.push(false);
 
                 this.filterList.slice(0).forEach((item) => {
-                    var selected = false;
+                    let selected;
 
                     if (item === 'all') {
                         selected = !this.filter;
@@ -377,12 +390,22 @@ function (Dep, SearchManager) {
                         selected = item === this.filter;
                     }
 
-                    var label = this.translateFilter(item);
+                    let label = this.translateFilter(item);
+
+                    let $item =
+                        $('<div>')
+                            .append(
+                                $('<span>')
+                                    .addClass('check-icon fas fa-check pull-right')
+                                    .addClass(!selected ? 'hidden' : '')
+                            )
+                            .append(
+                                $('<div>').text(label)
+                            );
 
                     this.actionList.push({
                         action: 'selectFilter',
-                        html: '<span class="check-icon fas fa-check pull-right' +
-                            (!selected ? ' hidden' : '') + '"></span>' + '<div>' + label + '</div>',
+                        html: $item.get(0).innerHTML,
                         data: {
                             name: item,
                         },
@@ -468,7 +491,7 @@ function (Dep, SearchManager) {
             var listView = this.getView('list');
 
             if (listView && listView.$el) {
-                var height = listView.$el.height();
+                var height = listView.$el.parent().get(0).clientHeight;
 
                 listView.$el.empty();
 

@@ -29,11 +29,13 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Entities\PasswordChangeRequest;
 use Espo\Entities\Portal as PortalEntity;
 
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Repositories\Portal as PortalRepository;
 
 use Espo\Core\Mail\Sender;
@@ -75,6 +77,11 @@ class User extends Record implements
     use Di\FileManagerSetter;
     use Di\DataManagerSetter;
 
+    private const AUTHENTICATION_METHOD_ESPO = 'Espo';
+    private const AUTHENTICATION_METHOD_HMAC = 'Hmac';
+
+    private const ID_SYSTEM = 'system';
+
     /**
      * @var string[]
      */
@@ -94,16 +101,19 @@ class User extends Record implements
      */
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
+    /**
+     * @throws Forbidden
+     */
     public function getEntity(string $id): ?Entity
     {
-        if ($id == 'system') {
+        if ($id === self::ID_SYSTEM) {
             throw new Forbidden();
         }
 
         /** @var ?UserEntity $entity */
         $entity = parent::getEntity($id);
 
-        if ($entity && $entity->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {
+        if ($entity && $entity->isSuperAdmin() && !$this->user->isSuperAdmin()) {
             throw new Forbidden();
         }
 
@@ -114,6 +124,11 @@ class User extends Record implements
         return $entity;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     * @throws NotFound
+     */
     public function changePassword(
         string $userId,
         string $password,
@@ -122,18 +137,20 @@ class User extends Record implements
     ): void {
 
         /** @var ?UserEntity $user */
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();
         }
 
-        if ($user->isSuperAdmin() && !$this->getUser()->isSuperAdmin()) {
+        if ($user->isSuperAdmin() && !$this->user->isSuperAdmin()) {
             throw new Forbidden();
         }
 
-        if (!$user->isAdmin() && $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo') {
-            throw new Forbidden();
+        $authenticationMethod = $this->config->get('authenticationMethod', self::AUTHENTICATION_METHOD_ESPO);
+
+        if (!$user->isAdmin() && $authenticationMethod !== self::AUTHENTICATION_METHOD_ESPO) {
+            throw new Forbidden("Authentication method is not `Espo`.");
         }
 
         if (empty($password)) {
@@ -141,8 +158,8 @@ class User extends Record implements
         }
 
         if ($checkCurrentPassword) {
-            $u = $this->getEntityManager()
-                ->getRDBRepository('User')
+            $u = $this->entityManager
+                ->getRDBRepository(UserEntity::ENTITY_TYPE)
                 ->where([
                     'id' => $user->getId(),
                     'password' => $this->createPasswordHashUtil()->hash($currentPassword ?? ''),
@@ -155,17 +172,24 @@ class User extends Record implements
         }
 
         if (!$this->checkPasswordStrength($password)) {
-            throw new Forbidden("Change password: Password is weak.");
+            throw new Forbidden("Password is weak.");
+        }
+
+        $validLength = $this->fieldValidationManager
+            ->check($user, 'password', 'maxLength', (object) ['password' => $password]);
+
+        if (!$validLength) {
+            throw new Forbidden("Password exceeds max length.");
         }
 
         $user->set('password', $this->hashPassword($password));
 
-        $this->getEntityManager()->saveEntity($user);
+        $this->entityManager->saveEntity($user);
     }
 
     public function checkPasswordStrength(string $password): bool
     {
-        $minLength = $this->getConfig()->get('passwordStrengthLength');
+        $minLength = $this->config->get('passwordStrengthLength');
 
         if ($minLength) {
             if (mb_strlen($password) < $minLength) {
@@ -173,7 +197,7 @@ class User extends Record implements
             }
         }
 
-        $requiredLetterCount = $this->getConfig()->get('passwordStrengthLetterCount');
+        $requiredLetterCount = $this->config->get('passwordStrengthLetterCount');
 
         if ($requiredLetterCount) {
             $letterCount = 0;
@@ -189,7 +213,7 @@ class User extends Record implements
             }
         }
 
-        $requiredNumberCount = $this->getConfig()->get('passwordStrengthNumberCount');
+        $requiredNumberCount = $this->config->get('passwordStrengthNumberCount');
 
         if ($requiredNumberCount) {
             $numberCount = 0;
@@ -205,7 +229,7 @@ class User extends Record implements
             }
         }
 
-        $bothCases = $this->getConfig()->get('passwordStrengthBothCases');
+        $bothCases = $this->config->get('passwordStrengthBothCases');
 
         if ($bothCases) {
             $ucCount = 0;
@@ -267,10 +291,10 @@ class User extends Record implements
 
         $id = $data->id;
 
-        $p = $this->getEntityManager()->getEntity(PasswordChangeRequest::ENTITY_TYPE, $id);
+        $p = $this->entityManager->getEntity(PasswordChangeRequest::ENTITY_TYPE, $id);
 
         if ($p) {
-            $this->getEntityManager()->removeEntity($p);
+            $this->entityManager->removeEntity($p);
         }
     }
 
@@ -285,12 +309,12 @@ class User extends Record implements
     {
         parent::filterInput($data);
 
-        if (!$this->getUser()->isSuperAdmin()) {
+        if (!$this->user->isSuperAdmin()) {
             unset($data->isSuperAdmin);
         }
 
-        if (!$this->getUser()->isAdmin()) {
-            if (!$this->getAcl()->checkScope('Team')) {
+        if (!$this->user->isAdmin()) {
+            if (!$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
                 unset($data->defaultTeamId);
             }
         }
@@ -343,7 +367,7 @@ class User extends Record implements
 
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
-        if ($id == 'system') {
+        if ($id === self::ID_SYSTEM) {
             throw new Forbidden();
         }
 
@@ -359,7 +383,7 @@ class User extends Record implements
             $data->password = $this->hashPassword($data->password);
         }
 
-        if ($id == $this->getUser()->id) {
+        if ($id == $this->user->getId()) {
             unset($data->isActive);
             unset($data->isPortalUser);
             unset($data->type);
@@ -387,8 +411,8 @@ class User extends Record implements
         parent::prepareEntityForOutput($entity);
 
         if ($entity->isApi()) {
-            if ($this->getUser()->isAdmin()) {
-                if ($entity->get('authMethod') === 'Hmac') {
+            if ($this->user->isAdmin()) {
+                if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
                     $secretKey = $this->getSecretKeyForUserId($entity->getId());
                     $entity->set('secretKey', $secretKey);
                 }
@@ -406,6 +430,10 @@ class User extends Record implements
         return $apiKeyUtil->getSecretKeyForUserId($id);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function generateNewApiKeyForEntity(string $id): Entity
     {
         /** @var ?UserEntity $entity */
@@ -415,7 +443,7 @@ class User extends Record implements
             throw new NotFound();
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -427,13 +455,13 @@ class User extends Record implements
 
         $entity->set('apiKey', $apiKey);
 
-        if ($entity->get('authMethod') === 'Hmac') {
+        if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
             $secretKey = Util::generateSecretKey();
 
             $entity->set('secretKey', $secretKey);
         }
 
-        $this->getEntityManager()->saveEntity($entity);
+        $this->entityManager->saveEntity($entity);
 
         $this->prepareEntityForOutput($entity);
 
@@ -497,6 +525,12 @@ class User extends Record implements
         $this->createRecoveryService()->createAndSendRequestForExistingUser($user);
     }
 
+    /**
+     * @throws Error
+     * @throws \Espo\Core\Mail\Exceptions\SendingError
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function generateNewPasswordForUser(string $id, bool $allowNonAdmin = false): void
     {
         if (!$allowNonAdmin) {
@@ -524,7 +558,7 @@ class User extends Record implements
             throw new Forbidden();
         }
 
-        if (!$user->get('emailAddress')) {
+        if (!$user->getEmailAddress()) {
             throw new Forbidden(
                 "Generate new password: Can't process because user doesn't have email address."
             );
@@ -562,54 +596,59 @@ class User extends Record implements
 
     protected function getInternalUserCount(): int
     {
-        return $this->getEntityManager()
-            ->getRDBRepository('User')
+        return $this->entityManager
+            ->getRDBRepository(UserEntity::ENTITY_TYPE)
             ->where([
                 'isActive' => true,
-                'type' => ['admin', 'regular'],
-                'type!=' => 'system',
+                'type' => [
+                    UserEntity::TYPE_ADMIN,
+                    UserEntity::TYPE_REGULAR,
+                ],
             ])
             ->count();
     }
 
     protected function getPortalUserCount(): int
     {
-        return $this->getEntityManager()
-            ->getRDBRepository('User')
+        return $this->entityManager
+            ->getRDBRepository(UserEntity::ENTITY_TYPE)
             ->where([
                 'isActive' => true,
-                'type' => 'portal',
+                'type' => UserEntity::TYPE_PORTAL,
             ])
             ->count();
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         /** @var UserEntity $entity */
 
         if (
-            $this->getConfig()->get('userLimit') &&
-            !$this->getUser()->isSuperAdmin() &&
+            $this->config->get('userLimit') &&
+            !$this->user->isSuperAdmin() &&
             !$entity->isPortal() && !$entity->isApi()
         ) {
             $userCount = $this->getInternalUserCount();
 
-            if ($userCount >= $this->getConfig()->get('userLimit')) {
+            if ($userCount >= $this->config->get('userLimit')) {
                 throw new Forbidden(
-                    'User limit '.$this->getConfig()->get('userLimit').' is reached.'
+                    'User limit '.$this->config->get('userLimit').' is reached.'
                 );
             }
         }
         if (
-            $this->getConfig()->get('portalUserLimit') &&
-            !$this->getUser()->isSuperAdmin() &&
+            $this->config->get('portalUserLimit') &&
+            !$this->user->isSuperAdmin() &&
             $entity->isPortal()
         ) {
             $portalUserCount = $this->getPortalUserCount();
 
-            if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
+            if ($portalUserCount >= $this->config->get('portalUserLimit')) {
                 throw new Forbidden(
-                    'Portal user limit ' . $this->getConfig()->get('portalUserLimit').' is reached.'
+                    'Portal user limit ' . $this->config->get('portalUserLimit').' is reached.'
                 );
             }
         }
@@ -619,7 +658,7 @@ class User extends Record implements
 
             $entity->set('apiKey', $apiKey);
 
-            if ($entity->get('authMethod') === 'Hmac') {
+            if ($entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC) {
                 $secretKey = Util::generateSecretKey();
 
                 $entity->set('secretKey', $secretKey);
@@ -628,50 +667,68 @@ class User extends Record implements
 
         if (!$entity->isSuperAdmin()) {
             if (
-                $entity->get('type') &&
-                !in_array($entity->get('type'), $this->allowedUserTypeList)
+                $entity->getType() &&
+                !in_array($entity->getType(), $this->allowedUserTypeList)
             ) {
                 throw new Forbidden();
             }
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         /** @var UserEntity $entity */
 
-        if ($this->getConfig()->get('userLimit') && !$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('userLimit') && !$this->user->isSuperAdmin()) {
             if (
                 (
-                    $entity->get('isActive') && $entity->isAttributeChanged('isActive') &&
-                    !$entity->isPortal() && !$entity->isApi()
-                )
-                ||
+                    $entity->isActive() &&
+                    $entity->isAttributeChanged('isActive') &&
+                    !$entity->isPortal() &&
+                    !$entity->isApi()
+                ) ||
                 (
-                    !$entity->isPortal() && !$entity->isApi() && $entity->isAttributeChanged('type') &&
-                    ($entity->isRegular() || $entity->isAdmin()) &&
-                    ($entity->getFetched('type') == 'portal' || $entity->getFetched('type') == 'api')
+                    !$entity->isPortal() &&
+                    !$entity->isApi() &&
+                    $entity->isAttributeChanged('type') &&
+                    (
+                        $entity->isRegular() ||
+                        $entity->isAdmin()
+                    ) &&
+                    (
+                        $entity->getFetched('type') == UserEntity::TYPE_PORTAL ||
+                        $entity->getFetched('type') == UserEntity::TYPE_API
+                    )
                 )
             ) {
                 $userCount = $this->getInternalUserCount();
 
-                if ($userCount >= $this->getConfig()->get('userLimit')) {
-                    throw new Forbidden('User limit '.$this->getConfig()->get('userLimit').' is reached.');
+                if ($userCount >= $this->config->get('userLimit')) {
+                    throw new Forbidden('User limit '.$this->config->get('userLimit').' is reached.');
                 }
             }
         }
 
-        if ($this->getConfig()->get('portalUserLimit') && !$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('portalUserLimit') && !$this->user->isSuperAdmin()) {
             if (
-                ($entity->get('isActive') && $entity->isAttributeChanged('isActive') && $entity->isPortal())
-                ||
-                ($entity->isPortal() && $entity->isAttributeChanged('type'))
+                (
+                    $entity->isActive() &&
+                    $entity->isAttributeChanged('isActive') &&
+                    $entity->isPortal()
+                ) ||
+                (
+                    $entity->isPortal() &&
+                    $entity->isAttributeChanged('type')
+                )
             ) {
                 $portalUserCount = $this->getPortalUserCount();
 
-                if ($portalUserCount >= $this->getConfig()->get('portalUserLimit')) {
+                if ($portalUserCount >= $this->config->get('portalUserLimit')) {
                     throw new Forbidden(
-                        'Portal user limit '. $this->getConfig()->get('portalUserLimit').' is reached.'
+                        'Portal user limit '. $this->config->get('portalUserLimit').' is reached.'
                     );
                 }
             }
@@ -680,7 +737,7 @@ class User extends Record implements
         if ($entity->isApi()) {
             if (
                 $entity->isAttributeChanged('authMethod') &&
-                $entity->get('authMethod') === 'Hmac'
+                $entity->getAuthMethod() === self::AUTHENTICATION_METHOD_HMAC
             ) {
                 $secretKey = Util::generateSecretKey();
 
@@ -691,8 +748,8 @@ class User extends Record implements
         if (!$entity->isSuperAdmin()) {
             if (
                 $entity->isAttributeChanged('type') &&
-                $entity->get('type') &&
-                !in_array($entity->get('type'), $this->allowedUserTypeList)
+                $entity->getType() &&
+                !in_array($entity->getType(), $this->allowedUserTypeList)
             ) {
                 throw new Forbidden();
             }
@@ -723,8 +780,10 @@ class User extends Record implements
         $siteUrl = $this->config->getSiteUrl() . '/' . $urlSuffix;
 
         if ($user->isPortal()) {
-            $subjectTpl = $this->templateFileManager->getTemplate('accessInfoPortal', 'subject', 'User');
-            $bodyTpl = $this->templateFileManager->getTemplate('accessInfoPortal', 'body', 'User');
+            $subjectTpl = $this->templateFileManager
+                ->getTemplate('accessInfoPortal', 'subject', UserEntity::ENTITY_TYPE);
+            $bodyTpl = $this->templateFileManager
+                ->getTemplate('accessInfoPortal', 'body', UserEntity::ENTITY_TYPE);
 
             $urlList = [];
 
@@ -754,24 +813,28 @@ class User extends Record implements
             return [$subjectTpl, $bodyTpl, $data];
         }
 
-        $subjectTpl = $this->templateFileManager->getTemplate('accessInfo', 'subject', 'User');
-        $bodyTpl = $this->templateFileManager->getTemplate('accessInfo', 'body', 'User');
+        $subjectTpl = $this->templateFileManager->getTemplate('accessInfo', 'subject', UserEntity::ENTITY_TYPE);
+        $bodyTpl = $this->templateFileManager->getTemplate('accessInfo', 'body', UserEntity::ENTITY_TYPE);
 
         $data['siteUrl'] = $siteUrl;
 
         return [$subjectTpl, $bodyTpl, $data];
     }
 
+    /**
+     * @throws \Espo\Core\Mail\Exceptions\SendingError
+     * @throws Error
+     */
     protected function sendPassword(UserEntity $user, string $password): void
     {
-        $emailAddress = $user->get('emailAddress');
+        $emailAddress = $user->getEmailAddress();
 
         if (empty($emailAddress)) {
             return;
         }
 
         /** @var EmailEntity $email */
-        $email = $this->getEntityManager()->getEntity('Email');
+        $email = $this->entityManager->getNewEntity(EmailEntity::ENTITY_TYPE);
 
         if (!$this->isSmtpConfigured()) {
             return;
@@ -821,11 +884,11 @@ class User extends Record implements
 
     public function delete(string $id, DeleteParams $params): void
     {
-        if ($id == 'system') {
+        if ($id === self::ID_SYSTEM) {
             throw new Forbidden();
         }
 
-        if ($id == $this->getUser()->id) {
+        if ($id == $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -858,14 +921,15 @@ class User extends Record implements
         }
 
         if (
-            $entity->isPortal() && $entity->get('contactId') &&
+            $entity->isPortal() &&
+            $entity->getContactId() &&
             (
                 property_exists($data, 'firstName') ||
                 property_exists($data, 'lastName') ||
                 property_exists($data, 'salutationName')
             )
         ) {
-            $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
+            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $entity->getContactId());
 
             if ($contact) {
                 if (property_exists($data, 'firstName')) {
@@ -880,7 +944,7 @@ class User extends Record implements
                     $contact->set('salutationName', $data->salutationName);
                 }
 
-                $this->getEntityManager()->saveEntity($contact);
+                $this->entityManager->saveEntity($contact);
             }
         }
     }
@@ -901,6 +965,10 @@ class User extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
+    /**
+     * @throws Error
+     * @throws \Espo\Core\Mail\Exceptions\SendingError
+     */
     public function sendAccessInfoNew(UserEntity $user): void
     {
         $primaryAddress = $user->getEmailAddressGroup()->getPrimary();

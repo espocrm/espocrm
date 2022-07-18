@@ -38,6 +38,10 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
      */
     return Dep.extend(/** @lends module:views/fields/link-multiple-with-primary.Class# */{
 
+        /**
+         * @protected
+         * @type {?string}
+         */
         primaryLink: null,
 
         events: {
@@ -70,29 +74,34 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
 
-            list.push(this.primaryIdFieldName);
-            list.push(this.primaryNameFieldName);
+            list.push(this.primaryIdAttribute);
+            list.push(this.primaryNameAttribute);
 
             return list;
         },
 
         setup: function () {
-            this.primaryLink = this.options.primaryLink || this.primaryLink;
+            this.primaryLink = this.options.primaryLink || this.primaryLink ||
+                this.model.getFieldParam(this.name, 'primaryLink');
 
-            this.primaryIdFieldName = this.primaryLink + 'Id';
-            this.primaryNameFieldName = this.primaryLink + 'Name';
+            this.primaryIdAttribute = this.primaryLink + 'Id';
+            this.primaryNameAttribute = this.primaryLink + 'Name';
 
             Dep.prototype.setup.call(this);
 
-            this.primaryId = this.model.get(this.primaryIdFieldName);
-            this.primaryName = this.model.get(this.primaryNameFieldName);
+            this.primaryId = this.model.get(this.primaryIdAttribute);
+            this.primaryName = this.model.get(this.primaryNameAttribute);
 
-            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
-                this.primaryId = this.model.get(this.primaryIdFieldName);
-                this.primaryName = this.model.get(this.primaryNameFieldName);
+            this.listenTo(this.model, 'change:' + this.primaryIdAttribute, () => {
+                this.primaryId = this.model.get(this.primaryIdAttribute);
+                this.primaryName = this.model.get(this.primaryNameAttribute);
             });
         },
 
+        /**
+         * @protected
+         * @param {string} id An ID.
+         */
         setPrimaryId: function (id) {
             this.primaryId = id;
 
@@ -106,6 +115,9 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             this.trigger('change');
         },
 
+        /**
+         * @protected
+         */
         renderLinks: function () {
             if (this.primaryId) {
                 this.addLinkHtml(this.primaryId, this.primaryName);
@@ -118,6 +130,9 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             });
         },
 
+        /**
+         * @inheritDoc
+         */
         getValueForDisplay: function () {
             if (this.isDetailMode() || this.isListMode()) {
                 let itemList = [];
@@ -142,6 +157,9 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             }
         },
 
+        /**
+         * @inheritDoc
+         */
         deleteLink: function (id) {
             if (id === this.primaryId) {
                 this.setPrimaryId(null);
@@ -150,12 +168,18 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             Dep.prototype.deleteLink.call(this, id);
         },
 
+        /**
+         * @inheritDoc
+         */
         deleteLinkHtml: function (id) {
             Dep.prototype.deleteLinkHtml.call(this, id);
 
             this.managePrimaryButton();
         },
 
+        /**
+         * @inheritDoc
+         */
         addLinkHtml: function (id, name) {
             // Do not use the `html` method to avoid XSS.
 
@@ -220,6 +244,9 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
             Dep.prototype.afterRender.call(this);
         },
 
+        /**
+         * @protected
+         */
         managePrimaryButton: function () {
             let $primary = this.$el.find('button[data-action="switchPrimary"]');
 
@@ -244,8 +271,8 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
         fetch: function () {
             let data = Dep.prototype.fetch.call(this);
 
-            data[this.primaryIdFieldName] = this.primaryId;
-            data[this.primaryNameFieldName] = this.primaryName;
+            data[this.primaryIdAttribute] = this.primaryId;
+            data[this.primaryNameAttribute] = this.primaryName;
 
             return data;
         },

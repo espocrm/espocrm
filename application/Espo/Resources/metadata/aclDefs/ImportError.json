@@ -1,0 +1,4 @@
+{
+    "accessCheckerClassName": "Espo\\Core\\Acl\\AccessChecker\\AccessCheckers\\Foreign",
+    "link": "import"
+}

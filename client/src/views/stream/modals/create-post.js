@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/modals/create-post', 'views/modal', function (Dep) {
+define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
-        _template: '<div class="record">{{{record}}}</div>',
+        templateContent: '<div class="record">{{{record}}}</div>',
 
         setup: function () {
             this.headerHtml = this.translate('Create Post');
@@ -56,7 +56,7 @@ define('views/stream/modals/create-post', 'views/modal', function (Dep) {
                 this.createView('record', 'views/stream/record/edit', {
                     model: model,
                     el: this.options.el + ' .record',
-                }, (view) => {
+                }, view => {
                     this.listenTo(view, 'after:save', () => {
                         this.trigger('after:save');
                     });
@@ -72,6 +72,5 @@ define('views/stream/modals/create-post', 'views/modal', function (Dep) {
         actionPost: function () {
             this.getView('record').save();
         },
-
     });
 });

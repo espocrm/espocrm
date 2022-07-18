@@ -42,19 +42,27 @@
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "modifiedAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": [
+                "useNumericFormat"
+            ]
         },
         "createdBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": []
         },
         "modifiedBy": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "fieldManagerParamList": []
         },
         "assignedUser": {
             "type": "link",
