@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/admin/layouts/grid',
-    ['views/admin/layouts/base', 'res!client/css/misc/layout-manager-grid.css'],
-    function (Dep, styleCss) {
+define('views/admin/layouts/grid',
+['views/admin/layouts/base', 'res!client/css/misc/layout-manager-grid.css'],
+function (Dep, styleCss) {
 
     return Dep.extend({
 
@@ -46,7 +45,7 @@ define(
         panelDataAttributesDefs: {},
 
         data: function () {
-            var data = {
+            return {
                 scope: this.scope,
                 type: this.type,
                 buttonList: this.buttonList,
@@ -56,8 +55,6 @@ define(
                 columnCount: this.columnCount,
                 panelDataList: this.getPanelDataList(),
             };
-
-            return data;
         },
 
         emptyCellTemplate:
@@ -170,14 +167,15 @@ define(
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
             },
             'click #layout a[data-action="plusCell"]': function (e) {
-                var $li = $(e.currentTarget).closest('li');
-                var $ul = $li.find('ul');
+                let $li = $(e.currentTarget).closest('li');
+                let $ul = $li.find('ul');
 
-                var $empty = $($('#empty-cell-tpl').html());
+                let $empty = $($('#empty-cell-tpl').html());
 
                 $ul.append($empty);
 
-                var cellCount = $ul.children().length;
+                let cellCount = $ul.children().length;
+
                 $ul.attr('data-cell-count', cellCount.toString());
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
 
@@ -186,14 +184,14 @@ define(
                 this.makeDraggable();
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
-                var $header = $(e.target).closest('header');
-                var $label = $header.children('label');
-                var panelName = $label.text();
+                let $header = $(e.target).closest('header');
+                let $label = $header.children('label');
+                let panelName = $label.text();
 
-                var id = $header.closest('li').data('number').toString();
+                let id = $header.closest('li').data('number').toString();
 
-                var attributes = {
-                    panelName: panelName
+                let attributes = {
+                    panelName: panelName,
                 };
 
                 this.panelDataAttributeList.forEach((item) => {
@@ -236,7 +234,6 @@ define(
 
         normilizeDisabledItemList: function () {
             $('#layout ul.cells.disabled > li').each((i, el) => {
-
             });
         },
 
@@ -255,11 +252,12 @@ define(
         addPanel: function () {
             this.lastPanelNumber ++;
 
-            var number = this.lastPanelNumber;
-            var data = {
-                customLabel: null,//this.translate('New panel', 'labels', 'LayoutManager'),
+            let number = this.lastPanelNumber;
+
+            let data = {
+                customLabel: null,
                 rows: [[]],
-                number: number
+                number: number,
             };
 
             this.panels.push(data);
@@ -284,7 +282,6 @@ define(
                 var o = {};
 
                 o.viewKey = 'panel-' + item.number;
-
                 o.number = item.number;
 
                 panelDataList.push(o);
@@ -314,11 +311,8 @@ define(
 
             this.panels.forEach((panel, i) => {
                 panel.number = i;
-
                 this.lastPanelNumber ++;
-
                 this.createPanelView(panel, false, callback);
-
                 this.panelsData[i.toString()] = panel;
             });
         },
@@ -338,15 +332,15 @@ define(
             data.style = data.style || null;
 
             data.rows.forEach((row) => {
-                var rest = this.columnCount - row.length;
+                let rest = this.columnCount - row.length;
 
                 if (empty) {
-                    for (var i = 0; i < rest; i++) {
+                    for (let i = 0; i < rest; i++) {
                         row.push(false);
                     }
                 }
 
-                for (var i in row) {
+                for (let i in row) {
                     if (row[i] !== false) {
                         row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
 

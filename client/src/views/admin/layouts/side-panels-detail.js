@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', function (Dep) {
+define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], function (Dep) {
 
     return Dep.extend({
 
@@ -87,18 +87,19 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
 
             this.wait(true);
 
-            this.loadLayout(function () {
+            this.loadLayout(() => {
                 this.wait(false);
-            }.bind(this));
+            });
         },
 
         loadLayout: function (callback) {
-            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
+            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
                 this.readDataFromLayout(layout);
+
                 if (callback) {
                     callback();
                 }
-            }.bind(this));
+            });
         },
 
         readDataFromLayout: function (layout) {
@@ -109,8 +110,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             layout = Espo.Utils.cloneDeep(layout);
 
             if (
-                this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false
-                &&
+                this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false &&
                 !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
             ) {
                 panelListAll.push('default');
@@ -119,7 +119,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             }
 
             (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
-                .forEach(function (item) {
+                .forEach(item => {
                     if (!item.name) {
                         return;
                     }
@@ -130,14 +130,13 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                         labels[item.name] = item.label;
                     }
                     params[item.name] = item;
-                }, this);
+                });
 
             this.disabledFields = [];
 
             layout = layout || {};
 
             this.rowLayout = [];
-
 
             panelListAll.push('_delimiter_');
 
@@ -147,9 +146,9 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 };
             }
 
-            panelListAll.forEach(function (item, index) {
-                var disabled = false;
-                var itemData = layout[item] || {};
+            panelListAll.forEach((item, index) => {
+                let disabled = false;
+                let itemData = layout[item] || {};
 
                 if (itemData.disabled) {
                     disabled = true;
@@ -170,7 +169,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 }
 
                 if (disabled) {
-                    var o = {
+                    let o = {
                         name: item,
                         label: labelText,
                     };
@@ -178,77 +177,80 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                     if (o.name[0] === '_') {
                         o.notEditable = true;
 
-                        if (o.name == '_delimiter_') {
+                        if (o.name === '_delimiter_') {
                             o.label = '. . .';
                         }
                     }
+
                     this.disabledFields.push(o);
-                }
-                else {
-                    var o = {
-                        name: item,
-                        label: labelText,
-                    };
 
-                    if (o.name[0] === '_') {
-                        o.notEditable = true;
-                        if (o.name == '_delimiter_') {
-                            o.label = '. . .';
+                    return;
+                }
+
+                let o = {
+                    name: item,
+                    label: labelText,
+                };
+
+                if (o.name[0] === '_') {
+                    o.notEditable = true;
+                    if (o.name === '_delimiter_') {
+                        o.label = '. . .';
+                    }
+                }
+
+                if (o.name in params) {
+                    this.dataAttributeList.forEach(attribute => {
+                        if (attribute === 'name') {
+                            return;
                         }
-                    }
 
-                    if (o.name in params) {
-                        this.dataAttributeList.forEach(function (attribute) {
-                            if (attribute === 'name') {
-                                return;
-                            }
+                        var itemParams = params[o.name] || {};
 
-                            var itemParams = params[o.name] || {};
-
-                            if (attribute in itemParams) {
-                                o[attribute] = itemParams[attribute];
-                            }
-                        }, this);
-                    }
-
-                    for (var i in itemData) {
-                        o[i] = itemData[i];
-                    }
-
-                    o.index = ('index' in itemData) ? itemData.index : index;
-
-                    this.rowLayout.push(o);
-
-                    this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+                        if (attribute in itemParams) {
+                            o[attribute] = itemParams[attribute];
+                        }
+                    });
                 }
-            }, this);
 
-            this.rowLayout.sort(function (v1, v2) {
+                for (var i in itemData) {
+                    o[i] = itemData[i];
+                }
+
+                o.index = ('index' in itemData) ? itemData.index : index;
+
+                this.rowLayout.push(o);
+
+                this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+            });
+
+            this.rowLayout.sort((v1, v2) => {
                 return v1.index - v2.index;
             });
         },
 
         fetch: function () {
-            var layout = {};
-            $("#layout ul.disabled > li").each(function (i, el) {
+            let layout = {};
+
+            $("#layout ul.disabled > li").each((i, el) => {
                 var name = $(el).attr('data-name');
 
                 layout[name] = {
-                    disabled: true
+                    disabled: true,
                 };
-            }.bind(this));
+            });
 
-            $("#layout ul.enabled > li").each(function (i, el) {
-                var $el = $(el);
-                var o = {};
+            $("#layout ul.enabled > li").each((i, el) => {
+                let $el = $(el);
+                let o = {};
 
-                var name = $el.attr('data-name');
+                let name = $el.attr('data-name');
 
-                var attributes = this.itemsData[name] || {};
+                let attributes = this.itemsData[name] || {};
 
                 attributes.name = name;
 
-                this.dataAttributeList.forEach(function (attribute) {
+                this.dataAttributeList.forEach(attribute => {
                     if (attribute === 'name') {
                         return;
                     }
@@ -256,15 +258,14 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                     if (attribute in attributes) {
                         o[attribute] = attributes[attribute];
                     }
-                }, this);
+                });
 
                 o.index = i;
 
                 layout[name] = o;
-            }.bind(this))
+            })
 
             return layout;
         },
-
     });
 });

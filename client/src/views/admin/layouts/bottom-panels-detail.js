@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-panels-detail', function (Dep) {
+define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-panels-detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -56,7 +56,9 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 };
             }
 
-            (this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []).forEach(function (item) {
+            (this.getMetadata()
+                .get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []
+            ).forEach(item => {
                 if (!item.name) {
                     return;
                 }
@@ -72,13 +74,14 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 if ('order' in item) {
                     params[item.name].index = item.order;
                 }
-            }, this);
+            });
 
             this.links = {};
 
             if (this.hasRelationships) {
                 var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
-                Object.keys(linkDefs).forEach(function (link) {
+
+                Object.keys(linkDefs).forEach(link => {
                     if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) {
                         return;
                     }
@@ -95,27 +98,26 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                         name: link,
                         index: 5,
                     };
-                    this.dataAttributeList.forEach(function (attribute) {
+
+                    this.dataAttributeList.forEach(attribute => {
                         if (attribute in item) {
                             return;
                         }
 
-                        var value = this.getMetadata().get(
-                            ['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]
-                        );
+                        var value = this.getMetadata()
+                            .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
 
                         if (value === null) {
                             return;
                         }
 
                         item[attribute] = value;
-                    }, this);
+                    });
 
                     this.links[link] = true;
 
                     params[item.name] = item;
-
-                }, this);
+                });
             }
 
             this.disabledFields = [];
@@ -124,9 +126,9 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
 
             this.rowLayout = [];
 
-            panelListAll = panelListAll.sort(function (v1, v2) {
+            panelListAll = panelListAll.sort((v1, v2) => {
                 return params[v1].index - params[v2].index
-            }.bind(this));
+            });
 
             panelListAll.push('_delimiter_');
 
@@ -136,9 +138,10 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 };
             }
 
-            panelListAll.forEach(function (item, index) {
+            panelListAll.forEach((item, index) => {
                 var disabled = false;
                 var itemData = layout[item] || {};
+
                 if (itemData.disabled) {
                     disabled = true;
                 }
@@ -156,6 +159,7 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 }
 
                 var labelText;
+
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
                 } else {
@@ -163,7 +167,7 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 }
 
                 if (disabled) {
-                    var o = {
+                    let o = {
                         name: item,
                         label: labelText,
                     };
@@ -171,51 +175,55 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                     if (o.name[0] === '_') {
                         o.notEditable = true;
 
-                        if (o.name == '_delimiter_') {
+                        if (o.name === '_delimiter_') {
                             o.label = '. . .';
                         }
                     }
+
                     this.disabledFields.push(o);
-                } else {
-                    var o = {
-                        name: item,
-                        label: labelText,
-                    };
 
-                    if (o.name[0] === '_') {
-                        o.notEditable = true;
-                        if (o.name == '_delimiter_') {
-                            o.label = '. . .';
-                        }
-                    }
-
-                    if (o.name in params) {
-                        this.dataAttributeList.forEach(function (attribute) {
-                            if (attribute === 'name') {
-                                return;
-                            }
-
-                            var itemParams = params[o.name] || {};
-
-                            if (attribute in itemParams) {
-                                o[attribute] = itemParams[attribute];
-                            }
-                        }, this);
-                    }
-
-                    for (var i in itemData) {
-                        o[i] = itemData[i];
-                    }
-
-                    o.index = ('index' in itemData) ? itemData.index : index;
-
-                    this.rowLayout.push(o);
-
-                    this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+                    return;
                 }
-            }, this);
 
-            this.rowLayout.sort(function (v1, v2) {
+                var o = {
+                    name: item,
+                    label: labelText,
+                };
+
+                if (o.name[0] === '_') {
+                    o.notEditable = true;
+
+                    if (o.name === '_delimiter_') {
+                        o.label = '. . .';
+                    }
+                }
+
+                if (o.name in params) {
+                    this.dataAttributeList.forEach(attribute => {
+                        if (attribute === 'name') {
+                            return;
+                        }
+
+                        var itemParams = params[o.name] || {};
+
+                        if (attribute in itemParams) {
+                            o[attribute] = itemParams[attribute];
+                        }
+                    });
+                }
+
+                for (var i in itemData) {
+                    o[i] = itemData[i];
+                }
+
+                o.index = ('index' in itemData) ? itemData.index : index;
+
+                this.rowLayout.push(o);
+
+                this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+            });
+
+            this.rowLayout.sort((v1, v2) => {
                 return (v1.index || 0) - (v2.index || 0);
             });
         },

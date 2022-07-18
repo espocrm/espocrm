@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', function (Dep) {
+define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], function (Dep) {
 
     return Dep.extend({
 
@@ -65,28 +65,33 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
         },
 
         loadLayout: function (callback) {
-            this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), function (model) {
-                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
+            this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), (model) => {
+                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
                     this.readDataFromLayout(model, layout);
+
                     if (callback) {
                         callback();
                     }
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         readDataFromLayout: function (model, layout) {
             var allFields = [];
 
-            for (var field in model.defs.fields) {
-                if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
+            for (let field in model.defs.fields) {
+                if (
+                    this.checkFieldType(model.getFieldParam(field, 'type')) &&
+                    this.isFieldEnabled(model, field)
+                ) {
                     allFields.push(field);
                 }
             }
 
-            allFields.sort(function (v1, v2) {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
+            allFields.sort((v1, v2) => {
+                return this.translate(v1, 'fields', this.scope)
+                    .localeCompare(this.translate(v2, 'fields', this.scope));
+            });
 
             if (~allFields.indexOf('assignedUser')) {
                 allFields.unshift(':assignedUser');
@@ -100,8 +105,8 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
             var labelList = [];
             var duplicateLabelList = [];
 
-            for (var i = 0; i < layout.length; i++) {
-                var item = layout[i];
+            for (let i = 0; i < layout.length; i++) {
+                let item = layout[i];
 
                 if (typeof item !== 'object') {
                     item = {
@@ -109,11 +114,12 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
                     };
                 }
 
-                var realName = item.name;
+                let realName = item.name;
+
                 if (realName.indexOf(':') === 0)
                     realName = realName.substr(1);
 
-                var label = this.getLanguage().translate(realName, 'fields', this.scope);
+                let label = this.getLanguage().translate(realName, 'fields', this.scope);
 
                 if (realName !== item.name) {
                     label = label + ' *';
@@ -122,67 +128,79 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
                 if (~labelList.indexOf(label)) {
                     duplicateLabelList.push(label);
                 }
+
                 labelList.push(label);
+
                 this.enabledFields.push({
                     name: item.name,
                     label: label,
                 });
+
                 this.enabledFieldsList.push(item.name);
             }
 
-            for (var i = 0; i < allFields.length; i++) {
+            for (let i = 0; i < allFields.length; i++) {
                 if (!_.contains(this.enabledFieldsList, allFields[i])) {
-                    var label = this.getLanguage().translate(allFields[i], 'fields', this.scope);
+                    let label = this.getLanguage().translate(allFields[i], 'fields', this.scope);
+
                     if (~labelList.indexOf(label)) {
                         duplicateLabelList.push(label);
                     }
-                    labelList.push(label);
-                    var fieldName = allFields[i];
 
-                    var realName = fieldName;
+                    labelList.push(label);
+
+                    let fieldName = allFields[i];
+                    let realName = fieldName;
+
                     if (realName.indexOf(':') === 0)
                         realName = realName.substr(1);
 
-                    var label = this.getLanguage().translate(realName, 'fields', this.scope);
+                    label = this.getLanguage().translate(realName, 'fields', this.scope);
 
                     if (realName !== fieldName) {
                         label = label + ' *';
                     }
 
-                    var o = {
+                    let o = {
                         name: fieldName,
                         label: label,
                     };
-                    var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+
+                    let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+
                     if (fieldType) {
                         if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
                             o.notSortable = true;
                         }
                     }
+
                     this.disabledFields.push(o);
                 }
             }
 
-            this.enabledFields.forEach(function (item) {
+            this.enabledFields.forEach(item =>  {
                 if (~duplicateLabelList.indexOf(item.label)) {
                     item.label += ' (' + item.name + ')';
                 }
-            }, this);
-            this.disabledFields.forEach(function (item) {
+            });
+
+            this.disabledFields.forEach(item => {
                 if (~duplicateLabelList.indexOf(item.label)) {
                     item.label += ' (' + item.name + ')';
                 }
-            }, this);
+            });
 
             this.rowLayout = layout;
 
-            for (var i in this.rowLayout) {
+            for (let i in this.rowLayout) {
                 var label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
-                this.enabledFields.forEach(function (item) {
+
+                this.enabledFields.forEach(item => {
                     if (item.name === this.rowLayout[i].name) {
                         label = item.label;
                     }
-                }, this);
+                });
+
                 this.rowLayout[i].label = label;
 
                 this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
@@ -194,17 +212,29 @@ define('views/admin/layouts/default-side-panel', 'views/admin/layouts/rows', fun
         },
 
         isFieldEnabled: function (model, name) {
-            if (~['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'].indexOf(name)) return;
+            if (~['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'].indexOf(name)) {
+                return;
+            }
 
-            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
-            if (layoutList && !~layoutList.indexOf(this.type)) return;
+            let layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-            if (model.getFieldParam(name, 'disabled')) return;
-            if (model.getFieldParam(name, 'layoutDefaultSidePanelDisabled')) return;
-            if (model.getFieldParam(name, 'layoutDetailDisabled')) return;
+            if (layoutList && !~layoutList.indexOf(this.type)) {
+                return;
+            }
+
+            if (model.getFieldParam(name, 'disabled')) {
+                return;
+            }
+
+            if (model.getFieldParam(name, 'layoutDefaultSidePanelDisabled')) {
+                return;
+            }
+
+            if (model.getFieldParam(name, 'layoutDetailDisabled')) {
+                return;
+            }
 
             return true;
         },
-
     });
 });

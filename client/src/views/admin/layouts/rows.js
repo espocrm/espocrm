@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/admin/layouts/rows',
-    ['views/admin/layouts/base', 'res!client/css/misc/layout-manager-rows.css'],
-    function (Dep, styleCss) {
+define('views/admin/layouts/rows',
+['views/admin/layouts/base', 'res!client/css/misc/layout-manager-rows.css'],
+function (Dep, styleCss) {
 
     return Dep.extend({
 
@@ -65,9 +64,9 @@ define(
             this.itemsData = {};
             Dep.prototype.setup.call(this);
 
-            this.on('update-item', function (name, attributes) {
+            this.on('update-item', (name, attributes) => {
                 this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
-            }, this);
+            });
 
             this.$style = $('<style>').html(styleCss).appendTo($('body'));
         },
@@ -79,17 +78,16 @@ define(
         editRow: function (name) {
             var attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
             attributes.name = name;
+
             this.openEditDialog(attributes)
         },
 
         afterRender: function () {
-            var self = this;
             $('#layout ul.enabled, #layout ul.disabled').sortable({
                 connectWith: '#layout ul.connected',
-                update: function (e) {
-
+                update: e => {
                     if (!$(e.target).hasClass('disabled')) {
-                        self.setIsChanged();
+                        this.setIsChanged();
                     }
                 },
             });
@@ -97,7 +95,8 @@ define(
 
         fetch: function () {
             var layout = [];
-            $("#layout ul.enabled > li").each(function (i, el) {
+
+            $("#layout ul.enabled > li").each((i, el) => {
                 var o = {};
 
                 var name = $(el).data('name');
@@ -105,25 +104,28 @@ define(
                 var attributes = this.itemsData[name] || {};
                 attributes.name = name;
 
-                this.dataAttributeList.forEach(function (attribute) {
+                this.dataAttributeList.forEach(attribute => {
                     var value = attributes[attribute] || null;
+
                     if (value) {
                         o[attribute] = value;
                     }
-                }, this);
+                });
 
                 layout.push(o);
-            }.bind(this));
+            });
 
 
             return layout;
         },
 
         validate: function (layout) {
-            if (layout.length == 0) {
+            if (layout.length === 0) {
                 this.notify('Layout cannot be empty', 'error');
+
                 return false;
             }
+
             return true;
         }
     });
