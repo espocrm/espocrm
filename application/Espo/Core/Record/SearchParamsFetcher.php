@@ -228,6 +228,10 @@ class SearchParamsFetcher
             $params['maxSize'] = $limit;
         }
 
+        if ($value < 1) {
+            throw new Forbidden('Max size must be greater than 0.');
+        }
+
         if ($value > $limit) {
             throw new Forbidden(
                 "Max size should not exceed " . $limit . ". Use offset and limit."
