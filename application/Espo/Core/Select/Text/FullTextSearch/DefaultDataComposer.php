@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -136,9 +137,9 @@ class DefaultDataComposer implements DataComposer
                 ),
                 [$preparedFilter]
             );
-    
+
             $function = $this->functionMap[$mode];
-    
+
             $expressions[] = ExpressionUtil::composeFunction($function, ...$argumentList);
         }
 
@@ -190,7 +191,12 @@ class DefaultDataComposer implements DataComposer
         return $filter;
     }
 
-    private function groupColumnList(array $columnList) : array {
+    /**
+     * @param array<string> $columnList
+     * @return array<string, string[]>
+     */
+    private function groupColumnList(array $columnList): array
+    {
         $groupedColumnList = [];
 
         foreach ($columnList as $column) {
