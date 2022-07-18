@@ -87,11 +87,14 @@ function (Dep, styleCss) {
                 connectWith: '#layout ul.connected',
                 update: e => {
                     if (!$(e.target).hasClass('disabled')) {
+                        this.onDrop(e);
                         this.setIsChanged();
                     }
                 },
             });
         },
+
+        onDrop: function (e) {},
 
         fetch: function () {
             var layout = [];
@@ -114,7 +117,6 @@ function (Dep, styleCss) {
 
                 layout.push(o);
             });
-
 
             return layout;
         },

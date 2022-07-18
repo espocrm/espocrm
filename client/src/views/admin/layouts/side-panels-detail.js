@@ -232,7 +232,7 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
         fetch: function () {
             let layout = {};
 
-            $("#layout ul.disabled > li").each((i, el) => {
+            $('#layout ul.disabled > li').each((i, el) => {
                 var name = $(el).attr('data-name');
 
                 layout[name] = {
@@ -240,7 +240,7 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
                 };
             });
 
-            $("#layout ul.enabled > li").each((i, el) => {
+            $('#layout ul.enabled > li').each((i, el) => {
                 let $el = $(el);
                 let o = {};
 

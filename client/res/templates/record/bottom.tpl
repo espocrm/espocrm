@@ -6,10 +6,21 @@
             </a>
         </div>
     {{/if}}
+    {{#if isTabsBeginning}}
+    <div class="tabs btn-group">
+        {{#each ../tabDataList}}
+        <button
+            class="btn btn-text btn-wide{{#if isActive}} active{{/if}}{{#if hidden}} hidden{{/if}}"
+            data-tab="{{@key}}"
+        >{{label}}</button>
+        {{/each}}
+    </div>
+    {{/if}}
     <div
-        class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}"
+        class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}{{#if tabHidden}} tab-hidden{{/if}}"
         data-name="{{name}}"
         data-style="{{#if style}}{{style}}{{/if}}"
+        data-tab="{{tabNumber}}"
     >
         <div class="panel-heading">
             <div class="pull-right btn-group panel-actions-container">{{{var actionsViewKey ../this}}}</div>

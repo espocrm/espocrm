@@ -34,6 +34,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
         hasRelationships: true,
 
+        TAB_BREAK_KEY: '_tabBreak_{n}',
+
         readDataFromLayout: function (layout) {
             var panelListAll = [];
             var labels = {};
@@ -75,6 +77,23 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     params[item.name].index = item.order;
                 }
             });
+
+            for (let name in layout) {
+                let item = layout[name];
+
+                if (item.tabBreak) {
+                    panelListAll.push(name);
+
+                    labels[name] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+                    params[name] = {
+                        name: item.name,
+                        index: item.index,
+                        tabBreak: true,
+                        tabLabel: item.tabLabel || null,
+                    };
+                }
+            }
 
             this.links = {};
 
@@ -138,6 +157,10 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 };
             }
 
+            labels[this.TAB_BREAK_KEY] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+            panelListAll.push(this.TAB_BREAK_KEY);
+
             panelListAll.forEach((item, index) => {
                 var disabled = false;
                 var itemData = layout[item] || {};
@@ -158,6 +181,10 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     }
                 }
 
+                if (item === this.TAB_BREAK_KEY) {
+                    disabled = true;
+                }
+
                 var labelText;
 
                 if (labels[item]) {
@@ -173,9 +200,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     };
 
                     if (o.name[0] === '_') {
-                        o.notEditable = true;
-
                         if (o.name === '_delimiter_') {
+                            o.notEditable = true;
                             o.label = '. . .';
                         }
                     }
@@ -191,9 +217,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 };
 
                 if (o.name[0] === '_') {
-                    o.notEditable = true;
-
                     if (o.name === '_delimiter_') {
+                        o.notEditable = true;
                         o.label = '. . .';
                     }
                 }
@@ -228,18 +253,90 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             });
         },
 
+        onDrop: function () {
+            let tabBreakIndex = 0;
+
+            let $tabBreak = null;
+
+            this.$el.find('ul.enabled').children().each((i, li) => {
+                let $li = $(li);
+
+                let name = $li.attr('data-name');
+
+                if (this.isTabName(name)) {
+                    if (name === this.TAB_BREAK_KEY) {
+                        $tabBreak = $li.clone();
+
+                        $li.attr('data-name', this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex);
+                    }
+
+                    tabBreakIndex++;
+                }
+            });
+
+            if (!$tabBreak) {
+                this.$el.find('ul.disabled').children().each((i, li) => {
+                    let $li = $(li);
+
+                    let name = $li.attr('data-name');
+
+                    if (this.isTabName(name) && name !== this.TAB_BREAK_KEY) {
+                        $li.remove();
+                    }
+                });
+            }
+
+            if ($tabBreak) {
+                $tabBreak.appendTo(this.$el.find('ul.disabled'));
+            }
+        },
+
+        isTabName: function (name) {
+            return name.substring(0, this.TAB_BREAK_KEY.length - 3) === this.TAB_BREAK_KEY.slice(0, -3);
+        },
+
+        getEditAttributesModalViewOptions: function (attributes) {
+            let options = Dep.prototype.getEditAttributesModalViewOptions.call(this, attributes);
+
+            if (this.isTabName(attributes.name)) {
+                options.attributeList = [
+                    'tabLabel',
+                ];
+
+                options.attributeDefs = {
+                    tabLabel: {
+                        type: 'varchar',
+                    },
+                };
+            }
+
+            return options;
+        },
+
         fetch: function () {
-            var layout = Dep.prototype.fetch.call(this);
+            let layout = Dep.prototype.fetch.call(this);
 
-            var newLayout = {};
+            let newLayout = {};
 
-            for (var i in layout) {
-                if (layout[i].disabled && this.links[i]) {
+
+            for (let name in layout) {
+                if (layout[name].disabled && this.links[name]) {
                     continue;
                 }
 
-                newLayout[i] = layout[i];
+                newLayout[name] = layout[name];
+
+                if (this.isTabName(name) && this.itemsData[name]) {
+                    newLayout[name].tabBreak = true;
+                    newLayout[name].tabLabel = this.itemsData[name].tabLabel;
+                }
+                else {
+                   delete newLayout[name].tabBreak;
+                   delete newLayout[name].tabLabel;
+                }
             }
+
+            delete newLayout[this.TAB_BREAK_KEY];
 
             return newLayout;
         },
