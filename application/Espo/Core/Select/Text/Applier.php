@@ -126,8 +126,7 @@ class Applier
         $filterData = FilterData::create($filter, $fieldList)
             ->withSkipWildcards($skipWildcards)
             ->withForceFullTextSearch($forceFullTextSearch)
-            ->withFullTextSearchOrGroup($fullTextOrGroup
-        );
+            ->withFullTextSearchOrGroup($fullTextOrGroup);
 
         $this->filterFactory
             ->create($this->entityType, $this->user)
