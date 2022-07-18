@@ -747,7 +747,7 @@ class Converter
                 if ($this->getMetadata()->get(['fields', $fieldType, 'naming']) === 'prefix') {
                     foreach ($partList as $part) {
                         $fields[] = $part . ucfirst($field);
-                        $realFields = $part . ucfirst($realField);
+                        $realFields[] = $part . ucfirst($realField);
                     }
                 }
                 else {
