@@ -1,3 +1,7 @@
+.panel {
+    border-radius: var(--panel-border-radius);
+}
+
 .panel-body {
     padding: @panel-padding;
     .clearfix();
@@ -319,6 +323,26 @@ body {
             > .far {
                 color: var(--btn-text-color);
             }
+        }
+    }
+}
+
+.panel {
+    > .panel-heading {
+        border-top-left-radius: var(--panel-border-radius);
+        border-top-right-radius: var(--panel-border-radius);
+    }
+
+    > .panel-body > .list-container:last-child > .list {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+
+        > table,
+        > .list-group,
+        > .list-group > .list-group-item,
+        > .show-more > a {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
         }
     }
 }
