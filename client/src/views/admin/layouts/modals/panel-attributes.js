@@ -64,6 +64,7 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
                 attributeList: attributeList,
                 attributeDefs: attributeDefs,
                 model: model,
+                dynamicLogicDefs: this.options.dynamicLogicDefs,
             });
         },
 

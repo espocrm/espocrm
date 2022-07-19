@@ -52,6 +52,7 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
                     'danger',
                     'warning',
                 ],
+                default: 'default',
                 translation: 'LayoutManager.options.style',
                 tooltip: 'panelStyle',
             },
@@ -67,6 +68,32 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
             name: {
                 readOnly: true,
             },
+        },
+
+        dataAttributesDynamicLogicDefs: {
+            fields: {
+                dynamicLogicStyled: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'and',
+                                value: [
+                                    {
+                                        attribute: 'style',
+                                        type: 'notEquals',
+                                        value: 'default',
+                                    },
+                                    {
+                                        attribute: 'style',
+                                        type: 'isNotEmpty',
+                                    },
+                                ]
+                            }
+
+                        ]
+                    }
+                },
+            }
         },
 
         editable: true,

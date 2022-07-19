@@ -70,6 +70,8 @@ define('views/admin/layouts/base', 'view', function (Dep) {
 
         dataAttributesDefs: null,
 
+        dataAttributesDynamicLogicDefs: null,
+
         disableButtons: function () {
             this.$el.find('.button-container button').attr('disabled', true);
         },
@@ -174,6 +176,7 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 scope: this.scope,
                 attributeList: this.dataAttributeList,
                 attributeDefs: this.dataAttributesDefs,
+                dynamicLogicDefs: this.dataAttributesDynamicLogicDefs,
                 attributes: attributes,
                 languageCategory: this.languageCategory,
                 headerText: ' ',

@@ -39,7 +39,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             'noLabel',
             'align',
             'view',
-            'customLabel'
+            'customLabel',
         ],
 
         dataAttributesDefs: {
@@ -82,6 +82,21 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             name: {
                 type: 'varchar',
                 readOnly: true
+            }
+        },
+
+        dataAttributesDynamicLogicDefs: {
+            fields: {
+                widthPx: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                attribute: 'width',
+                                type: 'isEmpty',
+                            }
+                        ]
+                    }
+                },
             }
         },
 

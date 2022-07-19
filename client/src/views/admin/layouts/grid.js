@@ -44,6 +44,8 @@ function (Dep, styleCss) {
 
         panelDataAttributesDefs: {},
 
+        panelDynamicLogicDefs: null,
+
         data: function () {
             return {
                 scope: this.scope,
@@ -209,6 +211,7 @@ function (Dep, styleCss) {
                     attributeList: attributeList,
                     attributeDefs: attributeDefs,
                     attributes: attributes,
+                    dynamicLogicDefs: this.panelDynamicLogicDefs,
                 }, (view) => {
                     view.render();
 
@@ -262,7 +265,17 @@ function (Dep, styleCss) {
 
             this.panels.push(data);
 
-            this.panelsData[number.toString()] = {};
+            let attributes = {};
+
+            for (let attribute in this.panelDataAttributesDefs) {
+                let item = this.panelDataAttributesDefs[attribute];
+
+                if ('default' in item) {
+                    attributes[attribute] = item.default;
+                }
+            }
+
+            this.panelsData[number.toString()] = attributes;
 
             var $li = $('<li class="panel-layout"></li>');
 
