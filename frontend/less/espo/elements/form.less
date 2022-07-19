@@ -17,6 +17,16 @@
     border-radius: var(--border-radius);
 }
 
+.input-group > .input-group-btn:not(:first-child) > .btn:first-child {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group > .input-group-btn:last-child > .form-control:last-child {
+    border-top-right-radius: var(--border-radius) !important;
+    border-bottom-right-radius: var(--border-radius) !important;
+}
+
 .list-group:not(:empty) + div,
 .list-group:not(:empty) + div > div.input-group {
     > .form-control,
