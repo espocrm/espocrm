@@ -4,6 +4,7 @@
 @import "elements/record.less";
 @import "elements/dropdown.less";
 @import "elements/form.less";
+@import "elements/table.less";
 
 .list-container > .list,
 .panel,
@@ -36,27 +37,6 @@
 
 .preset > div{
     padding-right: 24px;
-}
-
-th {
-    font-weight: 600;
-}
-
-.table thead > tr > th {
-    border-bottom: 1px solid @table-border-color;
-    font-weight: normal;
-}
-
-.table tr > th {
-    font-weight: normal;
-}
-
-.table tr.accented {
-    background-color: @table-bg-accent;
-}
-
-.table td.accented {
-    background-color: @table-bg-accent;
 }
 
 .form-group.hidden-cell {
@@ -113,17 +93,11 @@ body .alert {
             }
         }
     }
-
-
 }
 
 label {
     margin-bottom: 3px;
     font-weight: 600;
-}
-
-.table {
-    margin-bottom: 10px;
 }
 
 .chevron-right {
@@ -639,14 +613,6 @@ div.list-kanban > div > table {
     }
 }
 
-table.table > thead th > a {
-    color: var(--text-muted-color);
-}
-
-table.table > thead th {
-    color: var(--text-muted-color);
-}
-
 .cell label,
 .filter label {
     color: var(--text-muted-color);
@@ -1026,26 +992,6 @@ input.global-search-input {
     margin-top: 3px;
 }
 
-table.table > tbody td > .list-row-buttons button {
-    position: relative;
-    margin-top: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
-
-.table.table-no-overflow {
-     > tbody > tr > td,
-     > tbody > tr > th,
-     > thead > tr > th {
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-}
-
-table.table-fixed {
-    table-layout: fixed;
-}
-
 .list-row-buttons span.caret {
     border-top-color: var(--text-muted-color);
 }
@@ -1212,17 +1158,6 @@ section {
     }
 }
 
-
-
-.table.less-padding > thead > tr > th,
-.table.less-padding > tbody >tr > th,
-.table.less-padding > tfoot >tr > th,
-.table.less-padding > thead >tr > td,
-.table.less-padding > tbody >tr > td,
-.table.less-padding > tfoot >tr > td {
-    padding: @table-cell-padding @table-cell-less-padding @table-cell-padding @table-cell-less-padding;
-}
-
 .panel > .panel-body > .list-container > .list > .list-group {
     > .list-group-item {
         border-width: 0;
@@ -1243,10 +1178,6 @@ section {
     > li.list-group-item:last-child {
         border-bottom-width: 1px;
     }
-}
-
-table.no-margin {
-    margin-bottom: 0;
 }
 
 .list-expanded > .show-more {
@@ -1367,9 +1298,7 @@ table.no-margin {
 }
 
 .list > table td,
-.list > table th,
-table td.cell-nowrap,
-table th.cell-nowrap {
+.list > table th {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1772,7 +1701,6 @@ label.attach-file-label {
     color: @white-color;
 }
 
-
 .danger.glyphicon {
     color: @brand-danger;
 }
@@ -2006,7 +1934,7 @@ stream-head-text-container .span {
 }
 
 .stream-details-container > ul {
-    padding-left: 0px;
+    padding-left: 0;
     list-style-type: none;
 
 
@@ -2996,8 +2924,6 @@ a.link-gray {
         }
     }
 }
-
-
 
 .selectize-control.as-list .item {
     display: block;

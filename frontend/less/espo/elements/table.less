@@ -1,0 +1,80 @@
+table.table,
+.list-container > .list,
+.calendar-container > .calendar,
+.calendar-container > .timeline {
+    background-color: var(--table-bg);
+}
+
+.table {
+    margin-bottom: 10px;
+}
+
+table.table > thead th > a {
+    color: var(--text-muted-color);
+}
+
+table.table > thead th {
+    color: var(--text-muted-color);
+}
+
+th {
+    font-weight: 600;
+}
+
+.table thead > tr > th {
+    border-bottom: 1px solid @table-border-color;
+    font-weight: normal;
+}
+
+.table tr > th {
+    font-weight: normal;
+}
+
+.table tr.accented {
+    background-color: @table-bg-accent;
+}
+
+.table td.accented {
+    background-color: @table-bg-accent;
+}
+
+
+table.table > tbody td > .list-row-buttons button {
+    position: relative;
+    margin-top: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.table.table-no-overflow {
+    > tbody > tr > td,
+    > tbody > tr > th,
+    > thead > tr > th {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+table.table-fixed {
+    table-layout: fixed;
+}
+
+.table.less-padding > thead > tr > th,
+.table.less-padding > tbody >tr > th,
+.table.less-padding > tfoot >tr > th,
+.table.less-padding > thead >tr > td,
+.table.less-padding > tbody >tr > td,
+.table.less-padding > tfoot >tr > td {
+    padding: @table-cell-padding @table-cell-less-padding @table-cell-padding @table-cell-less-padding;
+}
+
+table.no-margin {
+    margin-bottom: 0;
+}
+
+table td.cell-nowrap,
+table th.cell-nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
