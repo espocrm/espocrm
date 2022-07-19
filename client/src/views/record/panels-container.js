@@ -457,7 +457,6 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
             let tabBreakIndexList = [];
 
-
             let tabDataList = [];
 
             for (let name in layoutData) {
@@ -519,22 +518,23 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     item.tabNumber = -1;
                 }
 
-                if (item.tabNumber > this.currentTab) {
-                    item.tabHidden = true;
-                }
-
                 newList.push(item);
             });
 
-            newList.sort((v1, v2) => {
-                return v1.index - v2.index;
-            });
+            newList.sort((v1, v2) => v1.index - v2.index);
 
-            let firstTabIndex = newList.findIndex(item => item.tabNumber === 0);
+            let firstTabIndex = newList.findIndex(item => item.tabNumber !== -1);
 
             if (firstTabIndex !== -1) {
                 newList[firstTabIndex].isTabsBeginning = true;
                 this.hasTabs = true;
+                this.currentTab = newList[firstTabIndex].tabNumber;
+
+                this.panelList
+                    .filter(item => item.tabNumber !== -1 && item.tabNumber !== this.currentTab)
+                    .forEach(item => {
+                        item.tabHidden = true;
+                    })
             }
 
             this.panelList = newList;
