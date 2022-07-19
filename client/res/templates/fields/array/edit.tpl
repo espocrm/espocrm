@@ -1,8 +1,4 @@
-<div class="link-container list-group">
-{{#each itemHtmlList}}
-    {{{./this}}}
-{{/each}}
-</div>
+<div class="link-container list-group">{{#each itemHtmlList}}{{{./this}}}{{/each}}</div>
 <div class="array-control-container">
 {{#if hasOptions}}
 <button
