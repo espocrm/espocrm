@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/record/edit-attributes', 'views/record/base', function (Dep) {
+define('views/admin/layouts/record/edit-attributes', ['views/record/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,12 +41,12 @@ define('views/admin/layouts/record/edit-attributes', 'views/record/base', functi
         getAttributeDataList: function () {
             var list = [];
 
-            this.attributeList.forEach(function (item) {
+            this.attributeList.forEach(item => {
                 list.push({
                     name: item,
-                    viewKey: item + 'Field'
+                    viewKey: item + 'Field',
                 });
-            }, this);
+            });
 
             return list;
         },
@@ -57,15 +57,14 @@ define('views/admin/layouts/record/edit-attributes', 'views/record/base', functi
             this.attributeList = this.options.attributeList || [];
             this.attributeDefs = this.options.attributeDefs || {};
 
-            this.attributeList.forEach(function (field) {
+            this.attributeList.forEach(field => {
                 var params = this.attributeDefs[field] || {};
                 var type = params.type || 'base';
 
                 var viewName = params.view || this.getFieldManager().getViewName(type);
 
                 this.createField(field, viewName, params);
-            }, this);
+            });
         },
-
     });
 });
