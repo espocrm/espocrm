@@ -1,7 +1,8 @@
 .panel,
 .well {
     border-radius: var(--panel-border-radius);
-    border: var(--panel-border-width) solid var(--panel-border);
+    border-width: var(--panel-border-width);
+    border-color: var(--panel-border);
 }
 
 .panel-body {
@@ -24,8 +25,6 @@
         margin-top: 4px;
     }
 }
-
-.panel-group
 
 .panel > .panel-body.panel-body-form {
     padding-bottom: @panel-padding - @form-group-margin-bottom;
@@ -395,7 +394,6 @@ body {
 }
 
 .panel.sticked {
-    //margin-top: ~"calc(-1 * var(--vertical-gap) - var(--panel-border-width)))";
     margin-top: ~"calc(-1 * var(--vertical-gap))";
     border-top-width: max(var(--panel-border-width), 1px);
 }
