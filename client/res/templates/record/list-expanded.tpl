@@ -50,7 +50,8 @@
 
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+    {{#if showMoreActive}}
+    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a
             type="button"
             href="javascript:"
@@ -64,6 +65,7 @@
             <span>{{translate 'Show more'}}</span>
         </a>
     </div>
+    {{/if}}
     {{/if}}
     {{/unless}}
 </div>

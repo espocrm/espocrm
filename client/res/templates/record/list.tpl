@@ -180,7 +180,7 @@
     </table>
     {{#unless paginationEnabled}}
     {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hide{{/unless}}">
+    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a
             type="button"
             href="javascript:"

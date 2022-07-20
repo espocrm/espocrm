@@ -2642,12 +2642,15 @@ function (Dep, MassActionHelper, ExportHelper) {
                     collection.total > collection.length + collection.lengthCorrection ||
                     collection.total === -1
                 ) {
-                    var moreCount = collection.total - collection.length - collection.lengthCorrection;
-                    var moreCountString = this.getNumberUtil().formatInt(moreCount);
+                    let moreCount = collection.total - collection.length - collection.lengthCorrection;
+                    let moreCountString = this.getNumberUtil().formatInt(moreCount);
 
                     this.$el.find('.more-count').text(moreCountString);
 
                     $showMore.removeClass('hidden');
+                }
+                else {
+                    $showMore.remove();
                 }
 
                 $showMore.children('a').removeClass('disabled');
