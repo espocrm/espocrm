@@ -1,5 +1,6 @@
 .form-control {
     border-radius: var(--border-radius);
+    border: var(--input-border-width) solid var(--input-border);
 
     &.radius-right {
         border-top-right-radius: var(--border-radius) !important;
@@ -10,11 +11,21 @@
         border-top-left-radius: var(--border-radius) !important;
         border-bottom-left-radius: var(--border-radius) !important;
     }
+
+    box-shadow: var(--input-box-shadow);
 }
 
-.selectize-input,
-.selectize-input.dropdown-active {
+.selectize-input {
+    border: var(--input-border-width) solid var(--input-border);
     border-radius: var(--border-radius);
+    box-shadow: var(--input-box-shadow);
+
+    &.dropdown-active {
+        border-color: var(--input-border-focus-rgba);
+        border-radius: var(--border-radius);
+    }
+
+    .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
 }
 
 .input-group > .input-group-btn:not(:first-child) > .btn:first-child {

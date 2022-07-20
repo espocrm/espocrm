@@ -137,7 +137,8 @@
         margin: 0 0 0 -@container-padding;
     }
 
-    .dialog-confirm > .modal-dialog {
+    .dialog-confirm > .modal-dialog,
+    .dialog-centered > .modal-dialog {
         margin: 0 auto;
     }
 }
@@ -178,10 +179,10 @@
 }
 
 @media screen and (min-width: @screen-md-min) {
-    .modal-dialog,
-    .dialog-centered {
+    .modal-dialog {
         width: 900px;
     }
+
     .dialog-confirm > .modal-dialog,
     .dialog-centered > .modal-dialog {
         width: 550px;

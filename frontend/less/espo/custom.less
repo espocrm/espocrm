@@ -1528,9 +1528,14 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.note-editor {
-    border: 1px solid @input-border;
-    border-width: 1px;
+    border: var(--input-border-width) solid var(--input-border);
+    border-width: var(--input-border-width);
     border-radius: var(--border-radius);
+}
+
+.panel-default.note-editor > .panel-heading .btn-default {
+    background-color: @btn-default-bg !important;
+    border-color: @btn-default-border !important;
 }
 
 .note-editor .note-toolbar {
@@ -1539,7 +1544,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .note-editor .panel-heading {
-    padding: 0px 5px 2px 5px;
+    padding: 0 5px 2px 5px;
 }
 
 body .note-editor .panel-heading {
