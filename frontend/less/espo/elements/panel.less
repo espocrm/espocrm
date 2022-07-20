@@ -39,6 +39,7 @@
     .panel.no-side-margin {
         border-left: 0;
         border-right: 0;
+        border-radius: 0;
     }
 
     .record.no-side-margin,
@@ -46,15 +47,20 @@
         > .panel {
             border-left: 0;
             border-right: 0;
+            border-radius: 0;
         }
 
         .left > .middle > .panel,
         .left > .bottom > .panel {
             border-left: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
 
         .side > .panel {
             border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
     }
 
@@ -62,6 +68,8 @@
         .left > .middle > .panel,
         .left > .bottom > .panel {
             border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
     }
 }
@@ -157,6 +165,16 @@
 
 body {
     .panel-default {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-default-bg) 0,
+                var(--panel-default-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         border-color: var(--panel-default-border);
         > .panel-heading {
             color: var(--panel-default-text);
@@ -174,7 +192,18 @@ body {
             }
         }
     }
+
     .panel-warning {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-warning-bg) 0,
+                var(--panel-warning-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         border-color: var(--panel-warning-bg);
         > .panel-heading {
             color: var(--panel-warning-text);
@@ -200,6 +229,16 @@ body {
         }
     }
     .panel-danger {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-danger-bg) 0,
+                var(--panel-danger-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         > .panel-heading {
             color: var(--panel-danger-text);
             background-color: var(--panel-danger-bg);
@@ -224,6 +263,16 @@ body {
         }
     }
     .panel-info {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--state-info-bg) 0,
+                var(--state-info-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         border-color: var(--state-info-bg);
         > .panel-heading {
             color: var(--panel-info-text);
@@ -248,6 +297,16 @@ body {
         }
     }
     .panel-success {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-success-bg) 0,
+                var(--panel-success-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         border-color: var(--panel-success-bg);
         > .panel-heading {
             color: var(--panel-success-text);
@@ -272,6 +331,16 @@ body {
         }
     }
     .panel-primary {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-primary-bg) 0,
+                var(--panel-primary-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
         > .panel-heading {
             background-color: var(--panel-primary-bg);
             border-color: transparent;

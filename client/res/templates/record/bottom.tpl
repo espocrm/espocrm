@@ -17,7 +17,7 @@
     </div>
     {{/if}}
     <div
-        class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}}{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}{{#if tabHidden}} tab-hidden{{/if}}"
+        class="panel panel-{{#if style}}{{style}}{{else}}default{{/if}} panel-{{name}} headered{{#if hidden}} hidden{{/if}}{{#if sticked}} sticked{{/if}}{{#if tabHidden}} tab-hidden{{/if}}"
         data-name="{{name}}"
         data-style="{{#if style}}{{style}}{{/if}}"
         data-tab="{{tabNumber}}"

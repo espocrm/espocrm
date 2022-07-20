@@ -3,7 +3,7 @@
 <% _.each(layout, function (panel, columnNumber) { %>
     <% hasHiddenPanel = panel.hidden || hasHiddenPanel; %>
     <div
-        class="panel panel-<%= panel.style %><%= panel.tabNumber ? ' tab-hidden' : '' %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"
+        class="panel panel-<%= panel.style %><%= panel.label ? ' headered' : '' %><%= panel.tabNumber ? ' tab-hidden' : '' %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"
         <% if (panel.name) print('data-name="'+panel.name+'"') %>
         <% if (panel.style) print('data-style="'+panel.style+'"') %>
         data-tab="<%= panel.tabNumber %>"
