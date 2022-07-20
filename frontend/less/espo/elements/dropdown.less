@@ -1,6 +1,6 @@
 
 .autocomplete-suggestions {
-    border: 1px solid var(--dropdown-border);
+    border: var(--dropdown-border-width) solid var(--dropdown-border);
     background-color: var(--dropdown-bg);
     color: var(--dropdown-link-color);
     cursor: default;
@@ -23,13 +23,32 @@
     }
 }
 
+.popover,
 .dropdown-menu,
 .selectize-dropdown,
 .autocomplete-suggestions,
 .ui-timepicker-wrapper {
+    border: var(--dropdown-border-width) solid var(--dropdown-border);
     box-shadow: var(--dropdown-box-shadow);
     border-radius: var(--dropdown-border-radius);
     border-width: var(--dropdown-border-width);
+}
+
+.popover {
+    background-color: var(--dropdown-bg);
+
+    &.bottom > .arrow {
+        border-bottom-color: var(--dropdown-border);
+    }
+    &.top > .arrow {
+        border-top-color: var(--dropdown-border);
+    }
+    &.left > .arrow {
+        border-left-color: var(--dropdown-border);
+    }
+    &.right > .arrow {
+        border-right-color: var(--dropdown-border);
+    }
 }
 
 .ui-timepicker-wrapper {

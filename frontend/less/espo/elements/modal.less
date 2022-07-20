@@ -189,6 +189,29 @@
     }
 }
 
+.dialog-confirm,
+.dialog-centered {
+    > .modal-dialog > .modal-content {
+        border-radius: var(--panel-border-radius);
+
+        > .modal-header {
+            border-top-left-radius: var(--panel-border-radius);
+            border-top-right-radius: var(--panel-border-radius);
+        }
+
+        > .modal-footer {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
+        }
+
+        > .modal-body {
+            .panel.no-side-margin {
+                box-shadow: none;
+            }
+        }
+    }
+}
+
 .modal-body > .no-side-margin {
     margin-left: -@panel-padding;
     margin-right: -@panel-padding;

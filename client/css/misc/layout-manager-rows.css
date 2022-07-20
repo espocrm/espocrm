@@ -25,6 +25,7 @@
     #layout ul > li {
         background-color: var(--select-item-bg);
         color: var(--select-item-text-color);
+        border-radius: var(--border-radius);
     }
 
     #layout ul.enabled > li .right {
