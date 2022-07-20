@@ -1016,7 +1016,7 @@ input.global-search-input {
 #login.panel > .panel-heading {
     background-color: @login-panel-heading-bg;
     padding: 0;
-    margin: -2px;
+    margin: ~"calc(0px - var(--panel-border-width))";
 }
 
 .list-expanded .list-group > .list-group-item .list-row-buttons button {
@@ -1241,6 +1241,9 @@ section {
     .chart-container {
         overflow: hidden;
     }
+
+    border-bottom-left-radius: var(--panel-border-radius);
+    border-bottom-right-radius: var(--panel-border-radius);
 }
 
 .panel-body > .list-container > .list,
@@ -3022,8 +3025,8 @@ a.close:focus {
 }
 
 *::-webkit-scrollbar {
-    height: @scroll-width;
-    width: @scroll-width;
+    height: var(--scroll-width);
+    width: var(--scroll-width);
 }
 
 *::-webkit-scrollbar-track {
@@ -3032,8 +3035,8 @@ a.close:focus {
 
 *::-webkit-scrollbar-thumb {
     background-color: var(--scroll-thumb-bg);
-    border-radius: 0px;
-    border: @scroll-border-width solid var(--scroll-bg);
+    border-radius: 0;
+    border: var(--scroll-border-width) solid var(--scroll-bg);
 }
 
 .collapsed-modal-bar {
