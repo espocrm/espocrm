@@ -110,8 +110,8 @@
 
     > .panel-heading {
         .btn {
-            background-color: @panel-default-bg;
-            border-color: @panel-default-bg;
+            background-color: transparent;
+            border-color: transparent;
             color: @gray-soft;
         }
 
@@ -155,33 +155,34 @@
     right: -11px;
 }
 
-
 body {
     .panel-default {
-        border-color: @panel-default-border;
+        border-color: var(--panel-default-border);
         > .panel-heading {
-            background-color: @panel-default-bg;
-            border-color: @panel-default-bg;
+            color: var(--panel-default-text);
+            background-color: var(--panel-default-bg);
+            border-color: transparent;
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &:focus {
+                        color: var(--panel-default-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-default-text;
                     }
                 }
             }
         }
     }
     .panel-warning {
-        border-color: @panel-warning-bg;
+        border-color: var(--panel-warning-bg);
         > .panel-heading {
-            background-color: @panel-warning-bg;
-            border-color: @panel-warning-bg;
+            color: var(--panel-warning-text);
+            background-color: var(--panel-warning-bg);
+            border-color: transparent;
             .btn,
             .btn-warning {
-                color: @panel-warning-text;
+                color: var(--panel-warning-text);
                 background-color: transparent;
                 border-color: transparent;
             }
@@ -190,9 +191,9 @@ body {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
+                        color: var(--panel-warning-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-warning-text;
                     }
                 }
             }
@@ -200,66 +201,71 @@ body {
     }
     .panel-danger {
         > .panel-heading {
-            background-color: @panel-danger-bg;
+            color: var(--panel-danger-text);
+            background-color: var(--panel-danger-bg);
+            border-color: transparent;
             .btn,
             .btn-danger {
-                color: transparent;
+                color: var(--panel-danger-text);
                 background-color: transparent;
-                border-color: @panel-danger-bg;
+                border-color: transparent;
             }
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
+                        color: var(--panel-danger-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-danger-text;
                     }
                 }
             }
         }
     }
     .panel-info {
-        border-color: @state-info-bg;
+        border-color: var(--state-info-bg);
         > .panel-heading {
-            color: @panel-info-text;
-            background-color: @state-info-bg;
-            border-color: @state-info-bg;
+            color: var(--panel-info-text);
+            background-color: var(--state-info-bg);
+            border-color: transparent;
             .btn,
             .btn-info {
-                color: transparent;
+                color: var(--panel-info-text);
                 background-color: transparent;
-                border-color: @state-info-bg;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
+                        color: var(--panel-info-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-info-text;
                     }
                 }
             }
         }
     }
     .panel-success {
+        border-color: var(--panel-success-bg);
         > .panel-heading {
-            background-color: @panel-success-bg;
+            color: var(--panel-success-text);
+            background-color: var(--panel-success-bg);
+            border-color: transparent;
             .btn,
             .btn-success {
-                color: transparent;
+                color: var(--panel-success-text);
                 background-color: transparent;
-                border-color: @panel-success-bg;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
+                        color: var(--panel-success-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-success-text;
                     }
                 }
             }
@@ -267,20 +273,21 @@ body {
     }
     .panel-primary {
         > .panel-heading {
-            background-color: @panel-primary-bg;
+            background-color: var(--panel-primary-bg);
+            border-color: transparent;
             .btn,
             .btn-primary {
-                color: transparent;
+                color: var(--panel-primary-text);
                 background-color: transparent;
-                border-color: @panel-primary-bg;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
+                        color: var(--panel-primary-text);
                         background-color: transparent;
                         border-color: transparent;
-                        color: @panel-primary-text;
                     }
                 }
             }
@@ -292,10 +299,6 @@ body {
     border-width: var(--panel-border-width);
 
     .panel-heading {
-        > .btn-group > .btn {
-            //border-radius: 0 !important;
-        }
-
         h4.panel-title span.fas.color-icon {
             font-size: 50%;
             position: relative;
