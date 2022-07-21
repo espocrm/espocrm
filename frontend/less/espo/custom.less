@@ -529,9 +529,17 @@ div.list-kanban > div > table {
             .item-menu-container {
                 margin-top: -10px;
                 margin-right: -10px;
+
+                .dropdown-toggle:focus:focus-visible {
+                    outline: none;
+                }
             }
 
             margin-bottom: 0;
+
+            .field span {
+                cursor: default;
+            }
         }
 
         margin-bottom: @padding-base-horizontal;
