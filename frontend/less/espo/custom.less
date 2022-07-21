@@ -1850,6 +1850,9 @@ textarea.auto-height {
             overflow-y: auto;
             overflow-x: hidden;
         }
+
+        border-color: var(--dropdown-border);
+        border-width: var(--dropdown-border-width);
     }
 }
 
@@ -2436,6 +2439,11 @@ table.table td.cell .html-container {
     z-index: 1001;
     right: 0;
     left: auto;
+
+    > .panel {
+        border-color: var(--dropdown-border);
+        border-width: var(--dropdown-border-width);
+    }
 }
 
 .post-container {
