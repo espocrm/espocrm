@@ -27,6 +27,17 @@
     box-shadow: none;
 }
 
+a:focus-visible,
+button:focus-visible,
+button.btn:focus-visible,
+button.btn.active:focus-visible,
+.dropdown-toggle:focus:focus-visible,
+input[type=radio]:focus-visible,
+input[type=checkbox]:focus-visible {
+    outline: 1px solid var(--input-border-focus-rgba);
+    outline-offset: -1px;
+}
+
 .stick-sub.button-container {
     box-shadow: none;
 }
@@ -71,6 +82,8 @@ body .alert {
     min-height: 30px;
     max-width: 400px;
     height: auto;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 
     &.alert-closable {
         .message {
@@ -590,6 +603,7 @@ div.list-kanban > div > table {
     }
     div.list-kanban > div.kanban-head-container {
         background-color: @gray-light;
+        border-radius: var(--border-radius);
         > table {
             > thead {
                 tr.kanban-row {
@@ -610,6 +624,16 @@ div.list-kanban > div > table {
                             .kanban-group-label {
                                 max-width: ~"calc(100% - 30px)";
                             }
+                        }
+
+                        &:first-child {
+                            border-top-left-radius: var(--border-radius);
+                            border-bottom-left-radius: var(--border-radius);
+                        }
+
+                        &:last-child {
+                            border-top-right-radius: var(--border-radius);
+                            border-bottom-right-radius: var(--border-radius);
                         }
                     }
                 }
@@ -1593,8 +1617,8 @@ body .note-editor .panel-heading {
 
     .note-statusbar {
         background-color: var(--input-bg);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
         height: 8px;
     }
 

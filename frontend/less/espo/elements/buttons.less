@@ -88,23 +88,23 @@
 }
 
 .btn.btn-xs-wide {
-    min-width: 60px;
+    min-width: var(--btn-xs-wide-width);
 }
 
 .btn.btn-s-wide {
-    min-width: 80px;
+    min-width: var(--btn-s-wide-width);
 }
 
 .btn.btn-wide  {
-    min-width: 100px;
+    min-width: var(--btn--wide-width);
 }
 
 .btn.btn-x-wide  {
-    min-width: 150px;
+    min-width: var(--btn-x-wide-width);
 }
 
 .btn.btn-xx-wide  {
-    min-width: 200px;
+    min-width: var(--btn-xx-wide-width);
 }
 
 .btn.btn-icon-wide  {
@@ -167,9 +167,6 @@
             background-color: transparent;
             color: var(--state-success-text);
             border-color: transparent;
-        }
-        &:focus-visible {
-            color: var(--text-gray-color);
         }
     }
     &.btn-danger {

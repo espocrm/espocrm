@@ -95,8 +95,12 @@
 
 .modal-dialog > .modal-content {
     background-clip: border-box;
-    border-color: @default-border-color;
+    border-color: transparent;
     border-width: 0;
+
+    @media (min-width: @screen-sm-min) {
+        box-shadow: var(--modal-box-shadow);
+    }
 }
 
 .modal-footer {
