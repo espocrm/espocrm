@@ -608,19 +608,19 @@ function (Dep, MassActionHelper, ExportHelper) {
          * @protected
          */
         initStickedBar: function () {
-            var $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
-            var $middle = this.$el.find('> .list');
-            var $window = $(window);
-            var $scrollable = $window;
+            let $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
+            let $middle = this.$el.find('> .list');
+            let $window = $(window);
+            let $scrollable = $window;
 
             this.on('render', () => {
                 this.$stickedBar = null;
             });
 
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-            function getOffsetTop (element) {
-                var offsetTop = 0;
+            let getOffsetTop = (element) => {
+                let offsetTop = 0;
 
                 do {
                     if (element.classList.contains('modal-body')) {
@@ -630,12 +630,14 @@ function (Dep, MassActionHelper, ExportHelper) {
                     if (!isNaN(element.offsetTop)) {
                         offsetTop += element.offsetTop;
                     }
-                } while (element = element.offsetParent);
+
+                    element = element.offsetParent;
+                } while (element);
 
                 return offsetTop;
-            }
+            };
 
-            var top;
+            let top;
 
             if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
@@ -652,18 +654,11 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             top += this.$el.find('.list-buttons-container').height();
 
-
             $scrollable.off('scroll.list-' + this.cid);
-
-            $scrollable.on('scroll.list-' + this.cid, (e) => {
-                controlSticking();
-            });
+            $scrollable.on('scroll.list-' + this.cid, () => controlSticking());
 
             $window.off('resize.list-' + this.cid);
-
-            $window.on('resize.list-' + this.cid, (e) => {
-                controlSticking();
-            });
+            $window.on('resize.list-' + this.cid, () => controlSticking());
 
             this.on('check', () => {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) {
@@ -675,34 +670,33 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.once('remove', () => {
                 $scrollable.off('scroll.list-' + this.cid);
-
                 $window.off('resize.list-' + this.cid);
             });
 
-            var controlSticking = () => {
+            let controlSticking = () => {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) {
                     return;
                 }
 
-                var middleTop = getOffsetTop($middle.get(0));
+                let middleTop = getOffsetTop($middle.get(0));
 
-                var stickTop = middleTop - top;
+                let stickTop = middleTop - top;
+                let edge = middleTop + $middle.outerHeight(true);
+                let scrollTop = $scrollable.scrollTop();
 
-                var edge = middleTop + $middle.outerHeight(true);
-
-                var scrollTop = $scrollable.scrollTop();
-
-                if (scrollTop < edge) {
-                    if (scrollTop > stickTop) {
-                        $stickedBar.removeClass('hidden');
-                    }
-                    else {
-                        $stickedBar.addClass('hidden');
-                    }
-                }
-                else {
+                if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');
+
+                    return;
                 }
+
+                if (scrollTop > stickTop) {
+                    $stickedBar.removeClass('hidden');
+
+                    return;
+                }
+
+                $stickedBar.addClass('hidden');
             };
         },
 

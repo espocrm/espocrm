@@ -575,7 +575,6 @@ div.list-kanban > div > table {
     .kanban-head-container.sticked {
         position: fixed;
         top: 0;
-        margin-top: @tob-bar-height;
         z-index: 4;
         overflow: hidden;
     }
@@ -761,6 +760,10 @@ input.global-search-input {
 .sticky-head {
     background-color: @body-bg;
     z-index: 4;
+}
+
+.list-container .list-buttons-container {
+    margin-bottom: @padding-base-horizontal;
 }
 
 .list-buttons-container .sticked-bar {
@@ -1746,7 +1749,9 @@ label.attach-file-label {
 .stick-sub {
     position: fixed;
     top: 0;
-    margin: @navbar-height 0 0 -@container-padding;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: -@container-padding;
     z-index: 5;
 }
 

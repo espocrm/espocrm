@@ -1040,19 +1040,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         initStickableButtonsContainer: function () {
-           var $container = this.$el.find('.detail-button-container');
+            let $container = this.$el.find('.detail-button-container.record-buttons');
 
-            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
+            let stickTop = this.getThemeManager().getParam('recordTopButtonsStickTop') || 71;
+            let blockHeight = this.getThemeManager().getParam('recordTopButtonsBlockHeight') || 45;
 
-            var $block = $('<div>')
+            let $block = $('<div>')
                 .css('height', blockHeight + 'px')
                 .html('&nbsp;')
                 .hide()
                 .insertAfter($container);
 
-            var $middle = this.getView('middle').$el;
-            var $window = $(window);
+            let $middle = this.getView('middle').$el;
+            let $window = $(window);
 
             if (this.stickButtonsFormBottomSelector) {
                 var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
@@ -1062,11 +1062,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
             $window.off('scroll.detail-' + this.numId);
 
-            $window.on('scroll.detail-' + this.numId, (e) => {
+            $window.on('scroll.detail-' + this.numId, () => {
                 if ($(window.document).width() < screenWidthXs) {
                     $container.removeClass('stick-sub');
 
@@ -1076,51 +1076,51 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     return;
                 }
 
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
+                let edge = $middle.position().top + $middle.outerHeight(true);
+                let scrollTop = $window.scrollTop();
 
-                if (scrollTop < edge || this.stickButtonsContainerAllTheWay) {
-                    if (scrollTop > stickTop) {
-                        if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');
-                            $block.show();
+                if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
+                    $container.hide();
+                    $block.show();
 
-                            var $p = $('.popover');
+                    return;
+                }
 
-                            $p.each(function (i, el) {
-                                let $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeight) + 'px');
-                            });
-                        }
-                    }
-                    else {
-                        if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');
-                            $block.hide();
+                if (scrollTop > stickTop) {
+                    if (!$container.hasClass('stick-sub')) {
+                        $container.addClass('stick-sub');
+                        $block.show();
 
-                            var $p = $('.popover');
-
-                            $p.each(function (i, el) {
-                                let $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeight) + 'px');
-                            });
-                        }
+                        $('.popover').each((i, el) => {
+                            let $el = $(el);
+                            $el.css('top', ($el.position().top - blockHeight) + 'px');
+                        });
                     }
 
                     $container.show();
+
+                    return;
                 }
-                else {
-                    $container.hide();
-                    $block.show();
+
+                if ($container.hasClass('stick-sub')) {
+                    $container.removeClass('stick-sub');
+                    $block.hide();
+
+                    $('.popover').each((i, el) => {
+                        let $el = $(el);
+                        $el.css('top', ($el.position().top + blockHeight) + 'px');
+                    });
                 }
+
+                $container.show();
             });
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             if (this.hasView('side')) {
-                var view = this.getView('side');
+                let view = this.getView('side');
 
                 if ('fetch' in view) {
                     data = _.extend(data, view.fetch());
@@ -1128,12 +1128,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.hasView('bottom')) {
-                var view = this.getView('bottom');
+                let view = this.getView('bottom');
 
                 if ('fetch' in view) {
                     data = _.extend(data, view.fetch());
                 }
             }
+
             return data;
         },
 

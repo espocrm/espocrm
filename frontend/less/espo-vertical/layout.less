@@ -594,7 +594,6 @@ body.minimized .list-buttons-container .sticked-bar {
     }
 }
 
-
 @media screen and (min-width: (@container-max-width + @navbar-width)) {
     #content #main .nested-categories-container + .list-container > .list,
     #content #main > .list-container > .list {
@@ -647,4 +646,18 @@ body.minimized .list-buttons-container .sticked-bar {
         }
 
     }
+}
+
+.list-kanban {
+    .kanban-head-container.sticked {
+        margin-top: @tob-bar-height;
+    }
+}
+
+.stick-sub {
+    margin-top: @tob-bar-height;
+}
+
+.alert {
+    min-height: @tob-bar-height;
 }

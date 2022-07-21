@@ -4,7 +4,6 @@
     "stylesheetIframeFallback": "client/css/espo/hazyblue-iframe.css",
     "navbarIsVertical": true,
     "recordTopButtonsStickTop": 61,
-    "recordTopButtonsBlockHeight": 21,
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "modalFooterAtTheTop": true,
