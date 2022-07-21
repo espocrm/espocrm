@@ -269,6 +269,7 @@ class Installer
         return [
             'HazyblueVertical',
             'DarkVertical',
+            'SakuraVertical',
         ];
     }
 
