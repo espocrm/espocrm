@@ -385,6 +385,18 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         middlePanelDefsList: null,
 
         /**
+         * @protected
+         * @type {JQuery|null}
+         */
+        $middle: null,
+
+        /**
+         * @protected
+         * @type {JQuery|null}
+         */
+        $bottom: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -892,6 +904,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (this.middlePanelDefs[name]) {
                 this.controlMiddleTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
+
+                this.adjustMiddlePanels();
             }
         },
 
@@ -967,10 +981,20 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (this.middlePanelDefs[name]) {
                 this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
+
+                this.adjustMiddlePanels();
             }
         },
 
         afterRender: function () {
+            this.$middle = this.$el.find('.middle');
+
+            if (this.bottomView) {
+                this.$bottom = this.$el.find('.bottom');
+            }
+
+            this.adjustMiddlePanels();
+
             this.initStickableButtonsContainer();
             this.initFieldsControlBehaviour();
         },
@@ -3049,6 +3073,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
             this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+
+            this.adjustMiddlePanels();
         },
 
         /**
@@ -3145,6 +3171,61 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (this.currentMiddleTab === tab) {
                 this.selectMiddleTab(0);
             }
+        },
+
+        /**
+         * @private
+         */
+        adjustMiddlePanels: function () {
+            if (!this.isRendered() || !this.$middle.length) {
+                return;
+            }
+
+            let $panels = this.$middle.find('> .panel');
+            let $bottomPanels = this.$bottom ? this.$bottom.find('> .panel') : null;
+
+            $panels
+                .removeClass('first')
+                .removeClass('last')
+                .removeClass('in-middle');
+
+            let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`)
+
+            $visiblePanels.each((i, el) => {
+                let $el = $(el);
+
+                if (i === $visiblePanels.length - 1) {
+                    if ($bottomPanels && $bottomPanels.first().hasClass('sticked')) {
+                        if (i === 0) {
+                            $el.addClass('first');
+
+                            return;
+                        }
+
+                        $el.addClass('in-middle');
+
+                        return;
+                    }
+
+                    if (i === 0) {
+                        return;
+                    }
+
+                    $el.addClass('last');
+
+                    return;
+                }
+
+                if (i > 0 && i < $visiblePanels.length - 1) {
+                    $el.addClass('in-middle');
+
+                    return;
+                }
+
+                if (i === 0) {
+                    $el.addClass('first');
+                }
+            });
         },
     });
 });

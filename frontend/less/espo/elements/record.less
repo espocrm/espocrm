@@ -58,6 +58,30 @@
             margin-top: 40px;
         }
     }
+
+    .panel {
+        &.first {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        &.in-middle {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        &.last {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+
+    .bottom {
+        .panel.sticked:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
 }
 
 .record .middle {
@@ -116,12 +140,6 @@
 
     .panel + .panel.panels-show-more-delimiter {
         border-top-width: 0;
-    }
-}
-
-.record .tabs + .middle {
-    .panel {
-        //border-bottom-width: var(--panel-border-width);
     }
 }
 

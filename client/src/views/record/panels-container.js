@@ -154,6 +154,85 @@ define('views/record/panels-container', ['view'], function (Dep) {
             },
         },
 
+        afterRender: function () {
+            this.adjustPanels();
+        },
+
+        adjustPanels: function () {
+            if (!this.isRendered()) {
+                return;
+            }
+
+            let $panels = this.$el.find('> .panel');
+
+            $panels
+                .removeClass('first')
+                .removeClass('last')
+                .removeClass('in-middle');
+
+            let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`);
+
+            let groups = [];
+            let currentGroup = [];
+            let inTab = false;
+
+            $visiblePanels.each((i, el) => {
+                let $el = $(el);
+
+                let breakGroup = false;
+
+                if (
+                    !breakGroup &&
+                    this.hasTabs &&
+                    !inTab &&
+                    $el.attr('data-tab') !== '-1'
+                ) {
+                    inTab = true;
+                    breakGroup = true;
+                }
+
+                if (!breakGroup && !$el.hasClass('sticked')) {
+                    breakGroup = true;
+                }
+
+                if (breakGroup) {
+                    if (i !== 0) {
+                        groups.push(currentGroup);
+                    }
+
+                    currentGroup = [];
+                }
+
+                currentGroup.push($el);
+
+                if (i === $visiblePanels.length - 1) {
+                    groups.push(currentGroup);
+                }
+            });
+
+            groups.forEach(group => {
+                group.forEach(($el, i) => {
+                    if (i === group.length - 1) {
+                        if (i === 0) {
+                            return;
+                        }
+
+                        $el.addClass('last')
+
+                        return;
+                    }
+
+                    if (i === 0 && group.length) {
+                        $el.addClass('first')
+
+                        return;
+                    }
+
+                    $el.addClass('in-middle');
+                });
+            });
+        },
+
         /**
          * Set read-only.
          */
@@ -370,7 +449,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                         var fields = view.getFieldViews();
 
                         if (fields) {
-                            for (var i in fields) {
+                            for (let i in fields) {
                                 fields[i].reRender();
                             }
                         }
@@ -380,6 +459,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+
+                this.adjustPanels();
 
                 return;
             }
@@ -441,6 +522,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+
+                this.adjustPanels();
 
                 return;
             }
@@ -662,6 +745,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
             this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
             this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+
+            this.adjustPanels();
         },
 
         /**
