@@ -610,6 +610,7 @@ function (Dep, MassActionHelper, ExportHelper) {
         initStickedBar: function () {
             let $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
             let $middle = this.$el.find('> .list');
+
             let $window = $(window);
             let $scrollable = $window;
 
@@ -617,10 +618,17 @@ function (Dep, MassActionHelper, ExportHelper) {
                 this.$stickedBar = null;
             });
 
+            let isModal = !!this.$el.closest('.modal-body').length;
+
             let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let navbarHeight = this.getThemeManager().getParam('navbarHeight');
 
             let getOffsetTop = (element) => {
                 let offsetTop = 0;
+
+                let isSmallWindow = $(window.document).width() < screenWidthXs;
+
+                let withHeader = !isSmallWindow && !isModal;
 
                 do {
                     if (element.classList.contains('modal-body')) {
@@ -634,25 +642,19 @@ function (Dep, MassActionHelper, ExportHelper) {
                     element = element.offsetParent;
                 } while (element);
 
+                if (withHeader) {
+                    offsetTop -= navbarHeight;
+                }
+
                 return offsetTop;
             };
 
-            let top;
-
             if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
-
-                top = 0;
-            }
-            else {
-                top = getOffsetTop(this.getParentView().$el.get(0));
-
-                if ($(window.document).width() < screenWidthXs) {
-                    top = 0;
-                }
             }
 
-            top += this.$el.find('.list-buttons-container').height();
+            let middleTop = getOffsetTop($middle.get(0));
+            let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
 
             $scrollable.off('scroll.list-' + this.cid);
             $scrollable.on('scroll.list-' + this.cid, () => controlSticking());
@@ -678,11 +680,10 @@ function (Dep, MassActionHelper, ExportHelper) {
                     return;
                 }
 
-                let middleTop = getOffsetTop($middle.get(0));
-
-                let stickTop = middleTop - top;
-                let edge = middleTop + $middle.outerHeight(true);
                 let scrollTop = $scrollable.scrollTop();
+
+                let stickTop = buttonsTop;
+                let edge = middleTop + $middle.outerHeight(true);
 
                 if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');
