@@ -443,6 +443,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     $list.sortable('refreshPositions');
 
+                    $(ui.item)
+                        .find('.btn-group.open > .dropdown-toggle')
+                        .parent()
+                        .removeClass('open');
+
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                     this.$showMore.addClass('hidden');
 
