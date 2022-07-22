@@ -542,12 +542,15 @@ body {
     }
 }
 
-body .stick-sub.button-container {
-    width: calc(~"100% - "@navbar-width);
-}
 
-body.minimized .stick-sub.button-container {
-    width: calc(~"100% - "@navbar-minimized-width);
+@media (min-width: @screen-sm-min) {
+    body .stick-sub.button-container {
+        width: calc(~"100% - "@navbar-width);
+    }
+
+    body.minimized .stick-sub.button-container {
+        width: calc(~"100% - "@navbar-minimized-width);
+    }
 }
 
 body .list-buttons-container .sticked-bar {

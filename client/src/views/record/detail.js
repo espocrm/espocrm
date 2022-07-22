@@ -1055,8 +1055,35 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         initStickableButtonsContainer: function () {
             let $container = this.$el.find('.detail-button-container.record-buttons');
 
-            let stickTop = this.getThemeManager().getParam('recordTopButtonsStickTop') || 71;
-            let blockHeight = this.getThemeManager().getParam('recordTopButtonsBlockHeight') || 45;
+            if (!$container.length) {
+                return;
+            }
+
+            let navbarHeight = this.getThemeManager().getParam('navbarHeight');
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            let isSmallScreen = $(window.document).width() < screenWidthXs;
+
+            let getOffsetTop = (/** JQuery */$element) => {
+                let element = $element.get(0);
+
+                let value = -3;
+
+                while (element) {
+                    value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
+
+                    element = element.offsetParent;
+                }
+
+                if (isSmallScreen) {
+                    return value;
+                }
+
+                return value - navbarHeight;
+            };
+
+            let stickTop = getOffsetTop($container);
+            let blockHeight = $container.outerHeight();
 
             let $block = $('<div>')
                 .css('height', blockHeight + 'px')
@@ -1075,20 +1102,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
             $window.off('scroll.detail-' + this.numId);
 
             $window.on('scroll.detail-' + this.numId, () => {
-                if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
-
-                    $block.hide();
-                    $container.show();
-
-                    return;
-                }
-
                 let edge = $middle.position().top + $middle.outerHeight(true);
                 let scrollTop = $window.scrollTop();
 
