@@ -531,30 +531,23 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 return '';
             }
 
-            var t;
+            let t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
 
-            var cache = this.cache;
+            let basePath = this.basePath || '';
+            size = size || 'small';
+            width = width || 16;
 
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            }
-            else {
-                t = Date.now();
-            }
-
-            var basePath = this.basePath || '';
-            var size = size || 'small';
-
-            var width = (width || 16).toString();
-
-            var className = 'avatar';
+            let className = 'avatar';
 
             if (additionalClassName) {
                 className += ' ' + additionalClassName;
             }
 
-            return '<img class="'+className+'" width="'+width+'" src="'+basePath+
-                '?entryPoint=avatar&size='+size+'&id=' + id + '&t='+t+'">';
+            return $('<img>')
+                .attr('src', `${basePath}?entryPoint=avatar&size=${size}&id=${id}&t=${t}`)
+                .addClass(className)
+                .attr('width', width.toString())
+                .get(0).outerHTML;
         },
 
         /**
