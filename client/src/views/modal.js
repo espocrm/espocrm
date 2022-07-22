@@ -347,6 +347,8 @@ define('views/modal', ['view'], function (Dep) {
                 if (this.fixedHeaderHeight && this.flexibleHeaderFontSize) {
                     this.adjustHeaderFontSize();
                 }
+
+                this.adjustButtons();
             });
 
             this.once('remove', () => {
@@ -718,6 +720,8 @@ define('views/modal', ['view'], function (Dep) {
             }
 
             this.$el.find('footer button[data-name="'+name+'"]').addClass('hidden');
+
+            this.adjustButtons();
         },
 
         /**
@@ -750,8 +754,13 @@ define('views/modal', ['view'], function (Dep) {
             this.$el.find('footer li > a[data-name="'+name+'"]').parent().removeClass('hidden');
 
             if (!this.isDropdownItemListEmpty()) {
-                this.$el.find('footer .main-btn-group > .btn-group').removeClass('hidden');
+                let $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+
+                $dropdownGroup.removeClass('hidden');
+                $dropdownGroup.find('> button').removeClass('hidden');
             }
+
+            this.adjustButtons();
         },
 
         /**
@@ -767,6 +776,7 @@ define('views/modal', ['view'], function (Dep) {
 
                 d.hidden = true;
             });
+
             this.dropdownItemList.forEach(d => {
                 if (d.name !== name) {
                     return;
@@ -783,7 +793,10 @@ define('views/modal', ['view'], function (Dep) {
             this.$el.find('footer li > a[data-name="'+name+'"]').parent().addClass('hidden');
 
             if (this.isDropdownItemListEmpty()) {
-                this.$el.find('footer .main-btn-group > .btn-group').addClass('hidden');
+                let $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+
+                $dropdownGroup.addClass('hidden');
+                $dropdownGroup.find('> button').addClass('hidden');
             }
         },
 
@@ -917,6 +930,22 @@ define('views/modal', ['view'], function (Dep) {
          */
         beforeCollapse: function () {
             return new Promise(resolve => resolve());
+        },
+
+        /**
+         * @private
+         */
+        adjustButtons: function () {
+            let $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
         },
     });
 });

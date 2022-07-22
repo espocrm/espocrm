@@ -397,6 +397,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         $bottom: null,
 
         /**
+         * @private
+         * @type {JQuery|null}
+         */
+        $detailButtonContainer: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -761,6 +767,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (this.isDropdownEditItemListEmpty()) {
                     this.$dropdownEditItemListButton.addClass('hidden');
                 }
+
+                this.adjustButtons();
             }
         },
 
@@ -819,6 +827,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (!this.isDropdownEditItemListEmpty()) {
                     this.$dropdownItemListButton.removeClass('hidden');
                 }
+
+                this.adjustButtons();
             }
         },
 
@@ -993,7 +1003,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.$bottom = this.$el.find('.bottom');
             }
 
+            this.initElementReferences();
+
             this.adjustMiddlePanels();
+            this.adjustButtons();
 
             this.initStickableButtonsContainer();
             this.initFieldsControlBehaviour();
@@ -1572,11 +1585,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.setupBeforeFinal();
 
             this.on('after:render', () => {
-                this.$detailButtonContainer = this.$el.find('.detail-button-container');
-                this.$dropdownItemListButton = this.$detailButtonContainer
-                    .find('.dropdown-item-list-button');
-                this.$dropdownEditItemListButton = this.$detailButtonContainer
-                    .find('.dropdown-edit-item-list-button');
+                this.initElementReferences();
             });
 
             if (
@@ -3227,6 +3236,57 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     $el.addClass('first');
                 }
             });
+        },
+
+        /**
+         * @private
+         */
+        adjustButtons: function () {
+            let $buttons = this.$detailButtonContainer.filter('.record-buttons').find('button.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
+
+            this.adjustEditButtons();
+        },
+
+        /**
+         * @private
+         */
+        adjustEditButtons: function () {
+            let $buttons = this.$detailButtonContainer.filter('.edit-buttons').find('button.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
+        },
+
+        /**
+         * @private
+         */
+        initElementReferences() {
+            if (this.$detailButtonContainer && this.$detailButtonContainer.length) {
+                return;
+            }
+
+            this.$detailButtonContainer = this.$el.find('.detail-button-container');
+
+            this.$dropdownItemListButton = this.$detailButtonContainer
+                .find('.dropdown-item-list-button');
+
+            this.$dropdownEditItemListButton = this.$detailButtonContainer
+                .find('.dropdown-edit-item-list-button');
         },
     });
 });

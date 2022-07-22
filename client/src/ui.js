@@ -457,6 +457,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 $('<button>')
                     .attr('type', 'button')
                     .addClass('btn btn-default dropdown-toggle')
+                    .addClass(allDdItemsHidden ? 'hidden' : '')
                     .attr('data-toggle', 'dropdown')
                     .append(
                         $('<span>').addClass('fas fa-ellipsis-h')
