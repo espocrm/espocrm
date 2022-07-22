@@ -42,7 +42,6 @@ use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\Utils\Currency\DatabasePopulator as CurrencyDatabasePopulator;
 
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Config\Access;
@@ -59,8 +58,6 @@ class Settings
     private $config;
 
     private $configWriter;
-
-    private $fieldUtil;
 
     private $metadata;
 
@@ -82,7 +79,6 @@ class Settings
         ConfigWriter $configWriter,
         Metadata $metadata,
         Acl $acl,
-        FieldUtil $fieldUtil,
         EntityManager $entityManager,
         DataManager $dataManager,
         FieldValidationManager $fieldValidationManager,
@@ -94,7 +90,6 @@ class Settings
         $this->configWriter = $configWriter;
         $this->metadata = $metadata;
         $this->acl = $acl;
-        $this->fieldUtil = $fieldUtil;
         $this->entityManager = $entityManager;
         $this->dataManager = $dataManager;
         $this->fieldValidationManager = $fieldValidationManager;
