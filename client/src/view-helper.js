@@ -420,9 +420,9 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 let scope = options.hash.scope || false;
                 let category = options.hash.category || false;
                 let field = options.hash.field || false;
+                let styleMap = options.hash.styleMap || {};
 
                 if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
-
                     if (!~list.indexOf(value)) {
                         list = Espo.Utils.clone(list);
 
@@ -456,14 +456,20 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 };
 
                 for (let key in list) {
-                    let keyVal = list[key];
-                    let label = translate(list[key]);
+                    let value = list[key];
+                    let label = translate(value);
 
-                    keyVal = this.escapeString(keyVal);
-                    label = this.escapeString(label);
+                    let $option =
+                        $('<option>')
+                            .attr('value', value)
+                            .addClass(styleMap[value] ? 'text-' + styleMap[value]: '')
+                            .text(label);
 
-                    html += "<option value=\"" + keyVal + "\" " +
-                        (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
+                    if (checkOption(list[key])) {
+                        $option.attr('selected', 'selected')
+                    }
+
+                    html += $option.get(0).outerHTML;
                 }
 
                 return new Handlebars.SafeString(html);
