@@ -712,7 +712,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            for (var i in this.buttonList) {
+            for (let i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
                     this.buttonList[i].hidden = true;
 
@@ -720,7 +720,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownItemList) {
+            for (let i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = true;
 
@@ -728,7 +728,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownEditItemList) {
+            for (let i in this.dropdownEditItemList) {
                 if (this.dropdownEditItemList[i].name === name) {
                     this.dropdownEditItemList[i].hidden = true;
 
@@ -736,7 +736,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.buttonEditList) {
+            for (let i in this.buttonEditList) {
                 if (this.buttonEditList[i].name === name) {
                     this.buttonEditList[i].hidden = true;
 
@@ -770,7 +770,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            for (var i in this.buttonList) {
+            for (let i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
                     this.buttonList[i].hidden = false;
 
@@ -778,7 +778,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownItemList) {
+            for (let i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = false;
 
@@ -786,7 +786,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownEditItemList) {
+            for (let i in this.dropdownEditItemList) {
                 if (this.dropdownEditItemList[i].name === name) {
                     this.dropdownEditItemList[i].hidden = false;
 
@@ -794,7 +794,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.buttonEditList) {
+            for (let i in this.buttonEditList) {
                 if (this.buttonEditList[i].name === name) {
                     this.buttonEditList[i].hidden = false;
 
