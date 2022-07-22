@@ -342,8 +342,8 @@ div.list-kanban > div > table {
         background-color: @gray-light;
 
         position: relative;
-        padding: 0px;
-        margin: 0px;
+        padding: 0;
+        margin: 0;
 
         overflow: hidden;
 
@@ -558,6 +558,9 @@ div.list-kanban > div > table {
 .list-kanban {
     overflow: hidden;
 
+    // To prevent item shadows from being obscured.
+    padding-right: 3px;
+
     > .kanban-columns-container {
         margin-left: -@padding-base-horizontal;
         margin-right: -@padding-base-horizontal;
@@ -565,7 +568,6 @@ div.list-kanban > div > table {
             border-collapse: separate;
             border-spacing: @padding-base-horizontal 0;
         }
-
     }
 
     .kanban-head-paceholder {
@@ -887,7 +889,11 @@ input.global-search-input {
 
 .field {
     .list-group .list-group-item {
-        background-color: @panel-bg;
+        background-color: var(--panel-bg);
+    }
+
+    .list-group {
+        background-color: var(--default-border-color);
     }
 }
 
@@ -1466,7 +1472,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .panel.dashlet > .panel-heading > .btn-group {
-    margin-top: -7px;
+    margin-top: -6px;
     top: 0;
     right: -10px;
 }
@@ -1812,8 +1818,6 @@ label.attach-file-label {
     -webkit-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     transform: scaleX(-1);
-    -ms-filter: fliph;
-    filter: fliph;
 }
 
 .link-multiple-item {
@@ -1996,7 +2000,7 @@ stream-head-text-container .span {
 .stream-post-container,
 .stream-attachments-container,
 .stream-details-container,
-.stream-subject-container,
+.stream-subject-container
 {
     padding: 2px 0 2px 26px;
     margin-bottom: 2px;
@@ -2432,6 +2436,33 @@ table.table td.cell .html-container {
     .calendar-type-button-group {
         margin-left: 6px;
     }
+
+    .calendar {
+        border-radius: var(--panel-border-radius);
+
+        .fc-view-container {
+            .fc-view > table {
+                border-collapse: collapse;
+                border-style: hidden;
+            }
+        }
+    }
+
+    .timeline {
+        border: var(--panel-border-width);
+        border-radius: var(--panel-border-radius);
+    }
+}
+
+.dashlet-body {
+    .fc-agenda-view {
+        border-top: 1px solid var(--calendar-border);
+
+        table {
+            border-collapse: collapse;
+            border-style: hidden;
+        }
+    }
 }
 
 #notifications-panel {
@@ -2740,6 +2771,22 @@ table.table-admin-panel {
     background-color: @panel-bg;
 }
 
+
+.note-editor.panel > .panel-heading {
+    .btn {
+        border-bottom-width: 1px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+
+    .dropdown-menu .btn-group > .btn {
+        > i {
+            top: 1px;
+            position: relative;
+        }
+    }
+}
+
 .array-add-list-group > li {
     input[type="checkbox"] {
         margin-right: 10px;
@@ -2938,8 +2985,6 @@ a.field-info > span.fa-info-circle {
     -webkit-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     transform: scaleX(-1);
-    -ms-filter: fliph;
-    filter: fliph;
 
     &::before {
         content: "\f064";
