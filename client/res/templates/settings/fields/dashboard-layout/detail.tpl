@@ -1,4 +1,3 @@
-
 {{#if isEmpty}}
 <span class="none-value">{{translate 'None'}}</span>
 {{/if}}
@@ -7,7 +6,11 @@
     {{#ifNotEqual dashboardLayout.length 1}}
     <div class="btn-group pull-right dashboard-tabs">
         {{#each dashboardLayout}}
-            <button class="btn btn-default{{#ifEqual @index ../currentTab}} active{{/ifEqual}}" data-action="selectTab" data-tab="{{@index}}">{{name}}</button>
+        <button
+            class="btn btn-text{{#ifEqual @index ../currentTab}} active{{/ifEqual}}"
+            data-action="selectTab"
+            data-tab="{{@index}}"
+        >{{name}}</button>
         {{/each}}
     </div>
     {{/ifNotEqual}}

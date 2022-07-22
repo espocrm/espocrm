@@ -167,7 +167,10 @@ define('views/record/list-expanded', ['views/record/list'], function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<li data-id="'+id+'" class="list-group-item list-row"></li>';
+            return $('<li>')
+                .attr('data-id', id)
+                .addClass('list-group-item list-row')
+                .get(0).outerHTML;
         },
 
         prepareInternalLayout: function (internalLayout, model) {

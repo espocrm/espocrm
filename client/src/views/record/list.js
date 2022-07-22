@@ -2740,7 +2740,10 @@ function (Dep, MassActionHelper, ExportHelper) {
          * @return {string} HTML.
          */
         getRowContainerHtml: function (id) {
-            return '<tr data-id="'+id+'" class="list-row"></tr>';
+            return $('<tr>')
+                .attr('data-id', id)
+                .addClass('list-row')
+                .get(0).outerHTML;
         },
 
         actionQuickView: function (data) {

@@ -939,7 +939,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<div class="item" data-id="'+id+'">';
+            return $('<div>')
+                .attr('data-id', id)
+                .addClass('item')
+                .get(0).outerHTML;
         },
 
         actionMoveOver: function (data) {
