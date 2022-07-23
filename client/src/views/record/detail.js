@@ -1053,6 +1053,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         initStickableButtonsContainer: function () {
+            let $containers = this.$el.find('.detail-button-container');
             let $container = this.$el.find('.detail-button-container.record-buttons');
 
             if (!$container.length) {
@@ -1105,19 +1106,19 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             $window.off('scroll.detail-' + this.numId);
 
             $window.on('scroll.detail-' + this.numId, () => {
-                let edge = $middle.position().top + $middle.outerHeight(true);
+                let edge = $middle.position().top + $middle.outerHeight(false) - blockHeight;
                 let scrollTop = $window.scrollTop();
 
                 if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
-                    $container.hide();
+                    $containers.hide();
                     $block.show();
 
                     return;
                 }
 
                 if (scrollTop > stickTop) {
-                    if (!$container.hasClass('stick-sub')) {
-                        $container.addClass('stick-sub');
+                    if (!$containers.hasClass('stick-sub')) {
+                        $containers.addClass('stick-sub');
                         $block.show();
 
                         $('.popover').each((i, el) => {
@@ -1126,13 +1127,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         });
                     }
 
-                    $container.show();
+                    $containers.show();
 
                     return;
                 }
 
-                if ($container.hasClass('stick-sub')) {
-                    $container.removeClass('stick-sub');
+                if ($containers.hasClass('stick-sub')) {
+                    $containers.removeClass('stick-sub');
                     $block.hide();
 
                     $('.popover').each((i, el) => {
@@ -1141,7 +1142,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     });
                 }
 
-                $container.show();
+                $containers.show();
             });
         },
 
