@@ -36,13 +36,17 @@
 .record {
     .tabs {
         > button.btn {
-            border-bottom-width: 2px;
+            //border-bottom-width: 2px;
             font-size: 15px;
             height: 40px;
 
             &.invalid {
                 color: var(--state-danger-text);
                 transition: color 100ms linear;
+            }
+
+            &:after {
+                height: 2px;
             }
         }
 

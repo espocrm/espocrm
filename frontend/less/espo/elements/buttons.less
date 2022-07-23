@@ -143,6 +143,25 @@
     color: @gray-light;
 }
 
+.btn-group > .btn-text {
+    &.active {
+        border-bottom-color: transparent;
+
+        &:after {
+            position: absolute;
+            bottom: -2px;
+            right: calc(50%);
+            width: calc(100%);
+            content: "";
+            border-radius: var(--border-radius);
+            transform: translate(50%, -50%);
+            background-color: var(--gray-light);
+            height: 1px;
+            display: block;
+        }
+    }
+}
+
 .btn-text {
     color: var(--btn-text-color);
     border-radius: 0;
@@ -249,6 +268,7 @@
 
     &.active {
         border-bottom: 1px solid @gray-light;
+
     }
 
     &.btn-text-hoverable {
