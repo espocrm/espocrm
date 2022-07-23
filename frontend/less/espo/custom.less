@@ -1471,12 +1471,6 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     margin-left: 10px;
 }
 
-.panel.dashlet > .panel-heading > .btn-group {
-    margin-top: -6px;
-    top: 0;
-    right: -10px;
-}
-
 .panel.dashlet > .panel-heading > .panel-title {
     cursor: default;
 }
@@ -1485,7 +1479,6 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     padding-left: @padding-small-horizontal;
     padding-right: @padding-small-horizontal;
 }
-
 
 .dashlets {
     .panel.dashlet {
@@ -1531,7 +1524,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
         .dashlet {
             height: 100%;
             .dashlet-body {
-                height: ~"calc(100% - 29px)";
+                height: ~"calc(100% - var(--panel-heading-height))";
             }
         }
         .grid-stack-item-content {
@@ -2771,10 +2764,9 @@ table.table-admin-panel {
     background-color: @panel-bg;
 }
 
-
 .note-editor.panel > .panel-heading {
     .btn {
-        border-bottom-width: 1px;
+        //border-bottom-width: 1px;
         padding-top: 4px;
         padding-bottom: 4px;
     }
