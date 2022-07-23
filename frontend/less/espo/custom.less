@@ -1569,20 +1569,51 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     border: var(--input-border-width) solid var(--input-border);
     border-width: var(--input-border-width);
     border-radius: var(--border-radius);
-}
 
-.panel-default.note-editor > .panel-heading .btn-default {
-    background-color: @btn-default-bg !important;
-    border-color: @btn-default-border !important;
-}
+    .note-toolbar {
+        border-bottom: 0 !important;
+        background-color: transparent;
+    }
 
-.note-editor .note-toolbar {
-    border-bottom: 0 !important;
-    background-color: transparent;
-}
+    &.panel-default {
+        > .panel-heading .btn-default {
+            background-color: @btn-default-bg !important;
+            border-color: @btn-default-border !important;
+        }
+    }
 
-.note-editor .panel-heading {
-    padding: 0 5px 2px 5px;
+    .panel-heading {
+        padding: 5px 5px 5px 5px;
+        height: calc(30px + 10px);
+    }
+
+    .note-editable {
+        min-height: 39px;
+    }
+
+    &.note-frame {
+        .note-editing-area {
+            .note-editable {
+                background-color: var(--input-bg);
+                color: var(--input-color);
+
+                &[contenteditable="false"] {
+                    background-color: var(--text-color);
+                }
+            }
+        }
+
+        .note-statusbar {
+            background-color: var(--input-bg);
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            height: 8px;
+        }
+
+        output.note-status-output {
+            padding-top: 0;
+        }
+    }
 }
 
 body .note-editor .panel-heading {
@@ -1607,37 +1638,6 @@ body .note-editor .panel-heading {
                 }
             }
         }
-
-    }
-}
-
-.note-editor {
-    .note-editable {
-        min-height: 39px;
-    }
-}
-
-.note-editor.note-frame {
-    .note-editing-area {
-        .note-editable {
-            background-color: var(--input-bg);
-            color: var(--input-color);
-
-            &[contenteditable="false"] {
-                background-color: var(--text-color);
-            }
-        }
-    }
-
-    .note-statusbar {
-        background-color: var(--input-bg);
-        border-bottom-left-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
-        height: 8px;
-    }
-
-    output.note-status-output {
-        padding-top: 0;
     }
 }
 
