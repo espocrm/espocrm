@@ -1866,13 +1866,22 @@ textarea.auto-height {
     margin-right: 2px;
 }
 
-.header-breadcrumbs .fas.color-icon {
-    font-size: 44%;
-    left: 0px;
-    margin-right: 2px;
-    top: -4px;
-    position: relative;
+.header-breadcrumbs {
+    .fas.color-icon {
+        font-size: 44%;
+        left: 0;
+        margin-right: 2px;
+        top: -4px;
+        position: relative;
+    }
+
+    .breadcrumb-item:after,
+    .breadcrumb-separator:after {
+        content: "";
+        display: block;
+    }
 }
+
 
 span.fas.color-icon {
     font-size: 50%;
