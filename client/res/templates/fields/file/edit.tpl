@@ -1,5 +1,5 @@
 <div class="attachment-upload">
-    <div class="attachment-button{{#if id}} hidden{{/if}}">
+    <div class="attachment-button{{#if id}} hidden{{/if}} clearfix ">
         <div class="pull-left">
         <label class="attach-file-label" title="{{translate 'Attach File'}}">
             <span class="btn btn-default btn-icon"><span class="fas fa-paperclip"></span></span>
