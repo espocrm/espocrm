@@ -109,8 +109,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheet']) ||
-                'client/css/espo/espo.css';
+            let link = this.getParam('stylesheet') || 'client/css/espo/espo.css';
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -125,8 +124,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getIframeStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) ||
-                'client/css/espo/espo-iframe.css';
+            let link = this.getParam('stylesheetIframe') || 'client/css/espo/espo-iframe.css';
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -141,8 +139,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getIframeFallbackStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframeFallback']) ||
-                'client/css/espo/espo-iframe.css';
+            let link = this.getParam('stylesheetIframeFallback') || 'client/css/espo/espo-iframe.css'
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -158,8 +155,27 @@ define('theme-manager', [], function () {
          * @returns {*} Null if not set.
          */
         getParam: function (name) {
-            return this.metadata.get(['themes', this.getName(), name]) ||
-                this.defaultParams[name] || null;
+            let value = this.metadata.get(['themes', this.getName(), name]);
+
+            if (value !== null) {
+                return value;
+            }
+
+            value = this.metadata.get(['themes', this.getParentName(), name]);
+
+            if (value !== null) {
+                return value;
+            }
+
+            return this.defaultParams[name] || null;
+        },
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        getParentName: function () {
+            return this.metadata.get(['themes', this.getName(), 'parent']) || 'Espo';
         },
 
         /**
@@ -168,17 +184,17 @@ define('theme-manager', [], function () {
          * @returns {boolean}
          */
         isUserTheme: function () {
-            if (!this.config.get('userThemesDisabled')) {
-                let name = this.preferences.get('theme');
-
-                if (name && name !== '') {
-                    if (name !== this.config.get('theme')) {
-                        return true;
-                    }
-                }
+            if (this.config.get('userThemesDisabled')) {
+                return false;
             }
 
-            return false;
+            let name = this.preferences.get('theme');
+
+            if (!name || name === '') {
+                return false;
+            }
+
+            return name !== this.config.get('theme');
         },
     });
 
