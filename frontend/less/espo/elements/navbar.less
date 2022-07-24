@@ -92,8 +92,14 @@
 
 @media screen and (max-width: (@screen-sm-min - 1px)) {
     #navbar .navbar {
-
         min-height: @navbar-height-xsmall;
+        border-width: 0;
+
+        .navbar-nav > li > a {
+            padding-top: 9px;
+            padding-bottom: 9px;
+            height: @navbar-height-xsmall;
+        }
 
         .navbar-form.global-search-container {
             padding-left: 8px;
@@ -125,10 +131,10 @@
         }
 
         .navbar-brand {
-            height: @navbar-height-xsmall;
+            height: @navbar-height-xsmall !important;
 
             > img.logo {
-                height: @navbar-logo-height-xsmall;
+                height: @navbar-logo-height-xsmall !important;
             }
         }
 
