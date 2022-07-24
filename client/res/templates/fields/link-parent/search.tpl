@@ -20,13 +20,11 @@
                 type="button"
                 class="btn btn-sm btn-default btn-icon"
                 data-action="selectLink"
-                tabindex="-1"
                 title="{{translate 'Select'}}"><i class="fas fa-angle-up"></i></button>
             <button
                 type="button"
                 class="btn btn-sm btn-default btn-icon"
                 data-action="clearLink"
-                tabindex="-1"
             ><i class="fas fa-times"></i></button>
         </span>
     </div>

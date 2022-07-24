@@ -15,8 +15,17 @@
         spellcheck="false"
     >
     <span class="input-group-btn">
-        <button data-action="selectLink" class="btn btn-default btn-icon" type="button" tabindex="-1" title="{{translate 'Select'}}"><i class="fas fa-angle-up"></i></button>
-        <button data-action="clearLink" class="btn btn-default btn-icon" type="button" tabindex="-1"><i class="fas fa-times"></i></button>
+        <button
+            data-action="selectLink"
+            class="btn btn-default btn-icon"
+            type="button"
+            title="{{translate 'Select'}}"
+        ><i class="fas fa-angle-up"></i></button>
+        <button
+            data-action="clearLink"
+            class="btn btn-default btn-icon"
+            type="button"
+        ><i class="fas fa-times"></i></button>
     </span>
     {{else}}
     {{translate 'None'}}
