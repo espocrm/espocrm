@@ -1,6 +1,32 @@
 {
     "stylesheet": "client/css/espo/espo.css",
     "stylesheetIframe": "client/css/espo/espo-iframe.css",
+    "params": {
+        "navbar": {
+            "type": "enum",
+            "default": "top",
+            "options": [
+                "side",
+                "top"
+            ]
+        }
+    },
+    "mappedParams": {
+        "navbarHeight": {
+            "param": "navbar",
+            "valueMap": {
+                "side": 30,
+                "top": 43
+            }
+        },
+        "logo": {
+            "param": "navbar",
+            "valueMap": {
+                "side": "client/img/logo-39.png",
+                "top": "client/img/logo.png"
+            }
+        }
+    },
     "dashboardCellHeight": 155,
     "dashboardCellMargin": 19,
     "navbarHeight": 43,

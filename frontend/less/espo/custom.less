@@ -6,6 +6,10 @@
 @import "elements/form.less";
 @import "elements/table.less";
 
+html {
+    height: 100%;
+}
+
 .list-container > .list,
 .panel,
 .dashlet-container,
@@ -743,8 +747,10 @@ input.global-search-input {
 }
 
 .progress.pre-loading {
-    margin-top: -50px;
-    margin-bottom: 29px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 3px;
 }
 
 .edit form {

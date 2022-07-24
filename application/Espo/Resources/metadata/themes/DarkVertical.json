@@ -1,15 +1,7 @@
 {
-    "stylesheet": "client/css/espo/dark-vertical.css",
-    "stylesheetIframe": "client/css/espo/dark-vertical-iframe.css",
+    "stylesheet": "client/css/espo/dark.css",
+    "stylesheetIframe": "client/css/espo/dark-iframe.css",
     "stylesheetIframeFallback": "client/css/espo/hazyblue-iframe.css",
-    "navbarIsVertical": true,
-    "dashboardCellHeight": 155,
-    "dashboardCellMargin": 19,
-    "modalFooterAtTheTop": true,
-    "modalFullHeight": true,
-    "fontSize": 14,
-    "navbarHeight": 30,
-    "logo": "client/img/logo-39.png",
     "textColor": "#dedede",
     "chartGridColor": "#646060",
     "chartTickColor": "#575454",
@@ -21,5 +13,15 @@
         "Call": "#a1404a",
         "Task": "#5d8a55"
     },
-    "isDark": true
+    "isDark": true,
+    "params": {
+        "navbar": {
+            "type": "enum",
+            "default": "side",
+            "options": [
+                "side",
+                "top"
+            ]
+        }
+    }
 }

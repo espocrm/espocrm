@@ -40,8 +40,20 @@ define('theme-manager', [], function () {
      * @param {module:metadata.Class} metadata Metadata.
      */
     let ThemeManager = function (config, preferences, metadata) {
+        /**
+         * @private
+         * @type {module:models/settings.Class}
+         */
         this.config = config;
+        /**
+         * @private
+         * @type {module:models/preferences.Class}
+         */
         this.preferences = preferences;
+        /**
+         * @private
+         * @type {module:metadata.Class}
+         */
         this.metadata = metadata;
     };
 
@@ -155,6 +167,20 @@ define('theme-manager', [], function () {
          * @returns {*} Null if not set.
          */
         getParam: function (name) {
+            if (name !== 'params' && name !== 'mappedParams') {
+                let varValue = this.getVarParam(name);
+
+                if (varValue !== null) {
+                    return varValue;
+                }
+
+                let mappedValue = this.getMappedParam(name);
+
+                if (mappedValue !== null) {
+                    return mappedValue;
+                }
+            }
+
             let value = this.metadata.get(['themes', this.getName(), name]);
 
             if (value !== null) {
@@ -168,6 +194,63 @@ define('theme-manager', [], function () {
             }
 
             return this.defaultParams[name] || null;
+        },
+
+        /**
+         * @private
+         * @param {string} name
+         * @returns {*}
+         */
+        getVarParam: function (name) {
+            let params = this.getParam('params') || {};
+
+            if (!(name in params)) {
+                return null;
+            }
+
+            let values = null;
+
+            if (!this.config.get('userThemesDisabled') && this.preferences.get('theme')) {
+                values = this.preferences.get('themeParams');
+            }
+
+            if (!values) {
+                values = this.config.get('themeParams');
+            }
+
+            if (values && (name in values)) {
+                return values[name];
+            }
+
+            if ('default' in params[name]) {
+                return params[name].default;
+            }
+
+            return null;
+        },
+
+        /**
+         * @private
+         * @param {string} name
+         * @returns {*}
+         */
+        getMappedParam: function (name) {
+            let mappedParams = this.getParam('mappedParams') || {};
+
+            if (!(name in mappedParams)) {
+                return null;
+            }
+
+            let mapped = mappedParams[name].param;
+            let valueMap = mappedParams[name].valueMap;
+
+            if (mapped && valueMap) {
+                let key = this.getParam(mapped);
+
+                return valueMap[key];
+            }
+
+            return null;
         },
 
         /**
