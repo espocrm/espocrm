@@ -11,7 +11,7 @@
     }
 }
 
-.button-variant-espo(@color; @background; @border; @background-10; @background-17; @border-12; @border-25) {
+.button-variant-espo(@color; @background; @border; @hover-bg; @active-bg; @hover-border; @active-border) {
   color: @color;
   background-color: @background;
   border-color: @border;
@@ -19,27 +19,27 @@
   &:focus,
   &.focus {
     color: @color;
-    background-color: @background-10;
-        border-color: @border-25;
+    background-color: @hover-bg;
+    border-color: @border;
   }
   &:hover {
     color: @color;
-    background-color: @background-10;
-        border-color: @border-12;
+    background-color: @hover-bg;
+    border-color: @hover-border;
   }
   &:active,
   &.active,
   .open > .dropdown-toggle& {
     color: @color;
-    background-color: @background-10;
-        border-color: @border-12;
+    background-color: @hover-bg;
+    border-color: @hover-border;
 
     &:hover,
     &:focus,
     &.focus {
       color: @color;
-      background-color: @background-17;
-          border-color: @border-25;
+      background-color: @active-bg;
+      border-color: @active-border;
     }
   }
   &:active,
@@ -54,7 +54,7 @@
     &:focus,
     &.focus {
       background-color: @background;
-          border-color: @border;
+      border-color: @border;
     }
   }
 
