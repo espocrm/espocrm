@@ -318,5 +318,9 @@ body:not([data-navbar="side"]) {
 
     .stick-sub {
         margin-top: @navbar-height;
+
+        @media screen and (max-width: (@screen-sm-min - 1px)) {
+            margin-top: 0;
+        }
     }
 }

@@ -655,6 +655,10 @@ body[data-navbar="side"] {
 
     .stick-sub {
         margin-top: @tob-bar-height;
+
+        @media screen and (max-width: (@screen-sm-min - 1px)) {
+            margin-top: 0;
+        }
     }
 
     .alert {
