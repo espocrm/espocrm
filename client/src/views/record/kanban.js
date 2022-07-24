@@ -618,10 +618,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            var containerHeight = this.getHelper()
+            let height = this.getHelper()
                 .calculateContentContainerHeight(this.$el.find('.kanban-columns-container'));
-
-            var height = containerHeight;
 
             let containerEl = this.$container.get(0);
 
