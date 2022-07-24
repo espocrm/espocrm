@@ -10,7 +10,9 @@
     }
 
     .navbar-right {
-        margin-right: -2px !important;
+        @media screen and (max-width: (@screen-sm-min - 1px)) {
+            margin-right: -2px;
+        }
 
         > li > a {
             text-align: center;

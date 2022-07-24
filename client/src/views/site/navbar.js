@@ -548,7 +548,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $navbar.css('overflow', 'visible');
             }
 
-            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 565;
+            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
 
             var tabCount = this.tabList.length;
 
