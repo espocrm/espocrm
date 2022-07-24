@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading panel-heading-no-title">
     <div class="link-group">
         <a href="javascript:" class="close-link" data-action="closePanel"><span class="fas fa-times"></span></a>
     </div>

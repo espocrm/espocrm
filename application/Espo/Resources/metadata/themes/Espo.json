@@ -23,7 +23,7 @@
             "param": "navbar",
             "valueMap": {
                 "side": "client/img/logo-39.png",
-                "top": "client/img/logo.png"
+                "top": "client/img/logo-39.png"
             }
         }
     },
