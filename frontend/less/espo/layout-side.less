@@ -164,6 +164,12 @@ body[data-navbar="side"] {
                     float: right;
                 }
 
+                @supports selector(::-webkit-scrollbar) {
+                    .navbar-right-container > .navbar-right {
+                        width: calc(100vw - var(--scroll-width));
+                    }
+                }
+
                 .navbar-right {
                     display: flex;
                     flex-wrap: nowrap;
@@ -174,7 +180,7 @@ body[data-navbar="side"] {
                     top: 0;
                     left: 0;
                     height: @tob-bar-height;
-                    width: calc(100vw - 12px);
+                    width: calc(100vw - 18px);
                     background-color: var(--navbar-bg);
                     margin-left: @navbar-width;
                     padding-right: @navbar-width;
