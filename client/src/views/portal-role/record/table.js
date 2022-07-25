@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-role/record/table', 'views/role/record/table', function (Dep) {
+define('views/portal-role/record/table', ['views/role/record/table'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +42,13 @@ define('views/portal-role/record/table', 'views/role/record/table', function (De
             'record': ['all', 'own', 'no']
         },
 
-        levelList: ['all', 'account', 'contact', 'own', 'no'],
+        levelList: [
+            'all',
+            'account',
+            'contact',
+            'own',
+            'no',
+        ],
 
         type: 'aclPortal',
 
@@ -52,22 +58,31 @@ define('views/portal-role/record/table', 'views/role/record/table', function (De
             this.aclTypeMap = {};
             this.scopeList = [];
 
-            var scopeListAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+            var scopeListAll = Object.keys(this.getMetadata().get('scopes'))
+                .sort((v1, v2) => {
+                     return this.translate(v1, 'scopeNamesPlural')
+                         .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+                });
 
-            scopeListAll.forEach(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled') || this.getMetadata().get('scopes.' + scope + '.disabledPortal')) return;
+            scopeListAll.forEach(scope => {
+                if (
+                    this.getMetadata().get('scopes.' + scope + '.disabled') ||
+                    this.getMetadata().get('scopes.' + scope + '.disabledPortal')
+                ) {
+                    return;
+                }
+
                 var acl = this.getMetadata().get('scopes.' + scope + '.aclPortal');
+
                 if (acl) {
                     this.scopeList.push(scope);
                     this.aclTypeMap[scope] = acl;
+
                     if (acl === true) {
                         this.aclTypeMap[scope] = 'record';
                     }
                 }
-            }, this);
-        }
-
+            });
+        },
     });
 });

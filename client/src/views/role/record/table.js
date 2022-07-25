@@ -706,7 +706,11 @@ define('views/role/record/table', ['view'], function (Dep) {
             var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
             var $buttonContainer = $('.detail-button-container');
-            var $table = this.$el.find('table.'+type+'-level');
+            var $table = this.$el.find('table.' + type + '-level');
+
+            if (!$table.length) {
+                return;
+            }
 
             if (!$buttonContainer.length) {
                 return;
