@@ -623,10 +623,10 @@ function (Dep, MassActionHelper, ExportHelper) {
             let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
             let navbarHeight = this.getThemeManager().getParam('navbarHeight');
 
+            let isSmallWindow = $(window.document).width() < screenWidthXs;
+
             let getOffsetTop = (element) => {
                 let offsetTop = 0;
-
-                let isSmallWindow = $(window.document).width() < screenWidthXs;
 
                 let withHeader = !isSmallWindow && !isModal;
 
@@ -684,6 +684,10 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 let stickTop = buttonsTop;
                 let edge = middleTop + $middle.outerHeight(true);
+
+                if (isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
+                    return;
+                }
 
                 if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');

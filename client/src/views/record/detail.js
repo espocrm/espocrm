@@ -1116,6 +1116,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     return;
                 }
 
+                if (isSmallScreen && $('#navbar .navbar-body').hasClass('in')) {
+                    return;
+                }
+
                 if (scrollTop > stickTop) {
                     if (!$containers.hasClass('stick-sub')) {
                         $containers.addClass('stick-sub');
