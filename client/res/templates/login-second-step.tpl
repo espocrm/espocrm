@@ -38,4 +38,4 @@
     </div>
     </div>
 </div>
-<footer class="container">{{{footer}}}</footer>
+<footer>{{{footer}}}</footer>
