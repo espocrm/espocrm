@@ -663,6 +663,8 @@ define('views/site/navbar', ['view'], function (Dep) {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
 
+                this.$minimizer.removeClass('hidden');
+
                 if (windowWidth < smallScreenWidth) {
                     $tabs.css('height', 'auto');
                     $more.css('max-height', '');
@@ -679,10 +681,6 @@ define('views/site/navbar', ['view'], function (Dep) {
             });
 
             updateSizeForVertical();
-
-            this.$el
-                .find('.notifications-badge-container')
-                .insertAfter(this.$el.find('.quick-create-container'));
 
             this.adjustBodyMinHeight();
         },
@@ -794,6 +792,7 @@ define('views/site/navbar', ['view'], function (Dep) {
             this.$body = $('body');
             this.$tabs = this.$el.find('ul.tabs');
             this.$more = this.$tabs.find('li.more > ul');
+            this.$minimizer = this.$el.find('a.minimizer');
 
             this.$body.addClass('has-navbar');
 
