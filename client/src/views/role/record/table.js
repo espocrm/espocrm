@@ -722,10 +722,11 @@ define('views/role/record/table', ['view'], function (Dep) {
 
                 var topEdge = $table.position().top;
 
-                topEdge += $buttonContainer.height();
+                topEdge -= $buttonContainer.height();
                 topEdge += $table.find('tr > th').height();
+                topEdge -= this.getThemeManager().getParam('navbarHeight');
 
-                var bottomEdge = topEdge + $table.outerHeight(true);
+                var bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
                 var scrollTop = $window.scrollTop();
                 var width = $table.width();
 
