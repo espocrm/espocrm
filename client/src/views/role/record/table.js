@@ -526,10 +526,12 @@ define('views/role/record/table', ['view'], function (Dep) {
                     });
                 });
 
+                this.setSelectColors();
+            }
+
+            if (this.mode === 'edit' || this.mode === 'detail') {
                 this.initStickyHeader('scope');
                 this.initStickyHeader('field');
-
-                this.setSelectColors();
             }
         },
 
@@ -717,18 +719,18 @@ define('views/role/record/table', ['view'], function (Dep) {
                     return;
                 }
 
-                var stickTopPosition = $buttonContainer.get(0).getBoundingClientRect().top +
+                let stickTopPosition = $buttonContainer.get(0).getBoundingClientRect().top +
                     $buttonContainer.outerHeight();
 
-                var topEdge = $table.position().top;
+                let topEdge = $table.position().top;
 
                 topEdge -= $buttonContainer.height();
                 topEdge += $table.find('tr > th').height();
                 topEdge -= this.getThemeManager().getParam('navbarHeight');
 
-                var bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
-                var scrollTop = $window.scrollTop();
-                var width = $table.width();
+                let bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
+                let scrollTop = $window.scrollTop();
+                let width = $table.width();
 
                 if (scrollTop > topEdge && scrollTop < bottomEdge) {
                     $sticky.css({

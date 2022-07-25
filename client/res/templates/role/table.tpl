@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered-inside no-margin">
+            <table class="table table-bordered-inside no-margin scope-level">
                 <tr>
                     <th></th>
                     <th width="20%">{{translate 'Access' scope='Role'}}</th>
@@ -36,6 +36,18 @@
                 </tr>
                 {{/each}}
             </table>
+
+            <div class="sticky-header-scope hidden sticky-head">
+                <table class="table borderless no-margin">
+                    <tr>
+                        <th></th>
+                        <th width="20%">{{translate 'Access' scope='Role'}}</th>
+                        {{#each actionList}}
+                            <th width="11%">{{translate this scope='Role' category='actions'}}</th>
+                        {{/each}}
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -48,7 +60,7 @@
     </div>
     <div class="panel-body">
         <div class="no-margin">
-            <table class="table table-bordered-inside no-margin">
+            <table class="table table-bordered-inside no-margin field-level">
                 <tr>
                     <th></th>
                     <th width="20%"></th>
@@ -81,6 +93,19 @@
                     {{/each}}
                 {{/each}}
             </table>
+
+            <div class="sticky-header-field hidden sticky-head">
+                <table class="table borderless no-margin">
+                    <tr>
+                        <th></th>
+                        <th width="20%"></th>
+                        {{#each fieldActionList}}
+                            <th width="11%">{{translate this scope='Role' category='actions'}}</th>
+                        {{/each}}
+                        <th width="33%"></th>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
