@@ -347,7 +347,9 @@
         "resolveSaveConflict": "The record has been modified. You need to resolve the conflict before you can save the record.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records.",
         "massActionProcessed": "Mass action has been processed.",
-        "validationFailure": "Backend validation failure.\n\nField: `{field}`\nValidation: `{type}`"
+        "validationFailure": "Backend validation failure.\n\nField: `{field}`\nValidation: `{type}`",
+        "error404": "The url you requested can't be handled.",
+        "error403": "You don't have an access to this area."
     },
     "boolFilters": {
         "onlyMy": "Only My",
