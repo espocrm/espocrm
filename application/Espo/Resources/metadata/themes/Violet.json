@@ -1,7 +1,7 @@
 {
     "stylesheet": "client/css/espo/violet.css",
     "stylesheetIframe": "client/css/espo/violet-iframe.css",
-    "textColor": "#333",
+    "textColor": "#424242",
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",
     "chartSuccessColor": "#7BC169",
