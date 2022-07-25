@@ -114,6 +114,12 @@ define('views/notification/panel', ['view'], function (Dep) {
             $window.off('resize.notifications-height');
             $window.on('resize.notifications-height', this.processSizing.bind(this));
             this.processSizing();
+
+            $('#navbar li.notifications-badge-container').addClass('open');
+        },
+
+        onRemove: function () {
+            $('#navbar li.notifications-badge-container').removeClass('open');
         },
 
         processSizing: function () {
