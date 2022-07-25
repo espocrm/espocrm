@@ -582,6 +582,11 @@ body[data-navbar="side"] {
         }
 
         > .content {
+            margin-top: -42px;
+            padding-top: 42px;
+        }
+
+        > header + .content {
             margin-top: -95px;
             padding-top: 95px;
             margin-bottom: -20px;
@@ -590,10 +595,18 @@ body[data-navbar="side"] {
 
         > footer {
             margin-top: 19px;
+            height: unset;
 
             p {
                 padding: 2px @panel-padding 2px;
             }
+        }
+
+        height: 100%;
+
+        > .content {
+            height: auto;
+            min-height: 100%;
         }
     }
 

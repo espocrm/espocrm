@@ -23,6 +23,11 @@ body:not([data-navbar="side"]) {
         padding-top: 0;
 
         > .content {
+            margin-top: -42px;
+            padding-top: 42px;
+        }
+
+        > header + .content {
             margin-top: -95px;
             padding-top: 95px;
             margin-bottom: -20px;
@@ -31,9 +36,10 @@ body:not([data-navbar="side"]) {
 
         > footer {
             margin-top: 19px;
+            height: unset;
 
             p {
-                padding: 2px @panel-padding 0;
+                padding: 2px @panel-padding 2px;
             }
         }
     }
