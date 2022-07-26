@@ -707,17 +707,5 @@
   "listViewModes": {
     "list": "قائمة",
     "kanban": "كانبان"
-  },
-  "themes": {
-    "DarkVertical": "غامق",
-    "Dark": "أفقي داكن",
-    "Espo": "إسبو أفقي",
-    "EspoRtl": "RTL إسبو أفقي",
-    "Sakura": "ساكورا أفقي",
-    "EspoVertical": "ايسب",
-    "SakuraVertical": "ساكورا",
-    "Violet": "البنفسجي أفقي",
-    "VioletVertical": "البنفسجي",
-    "Hazyblue": "أزرق ضبابي أفقي"
   }
 }
