@@ -182,8 +182,6 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             layout.forEach((o, i) => {
                 if (o.id === id) {
                     layout.splice(i, 1);
-
-                    return;
                 }
             });
 
@@ -203,7 +201,6 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     view.close();
 
                     var dashboardLayout = [];
-
 
                     (data.dashboardTabList).forEach((name) => {
                         var layout = [];
@@ -371,37 +368,52 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             var actionsHtml = '';
             var actions2Html = '';
 
-            if (this.mode === 'edit') {
-                actionsHtml +=
-                    '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
-                        '<span class="fas fa-times"></span>'+
-                    '</a>';
+            if (this.isEditMode()) {
+                actionsHtml += $('<a>')
+                    .attr('href', 'javascript:')
+                    .addClass('pull-right')
+                    .attr('data-action', 'removeDashlet')
+                    .attr('data-id', id)
+                    .append(
+                        $('<span>').addClass('fas fa-times')
+                    )
+                    .get(0)
+                    .outerHTML;
 
-                actions2Html +=
-                    '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+
-                        this.translate('Edit') +
-                    '</a>';
+                actions2Html += $('<a>')
+                    .attr('href', 'javascript:')
+                    .addClass('pull-right')
+                    .attr('data-action', 'editDashlet')
+                    .attr('data-id', id)
+                    .attr('data-name', name)
+                    .text(this.translate('Edit'))
+                    .get(0)
+                    .outerHTML;
             }
 
-            var title = this.getOption(id, 'title');
-
-            if (title) {
-                title = this.getHelper().escapeString(title);
-            }
+            let title = this.getOption(id, 'title');
 
             if (!title) {
                 title = this.translate(name, 'dashlets');
             }
 
-            var headerHtml =
-                '<div class="panel-heading">' +
-                    actionsHtml + '<h4 class="panel-title">' + title  + '</h4>' +
-                '</div>';
+            let headerHtml = $('<div>')
+                .addClass('panel-heading')
+                .append(actionsHtml)
+                .append(
+                    $('<h4>').addClass('panel-title').text(title)
+                )
+                .get(0).outerHTML;
 
-            var $container = $(
-                '<div class="grid-stack-item-content panel panel-default">' + headerHtml +
-                '<div class="panel-body">'+actions2Html+'</div></div>'
-            );
+            let $container =
+                $('<div>')
+                    .addClass('grid-stack-item-content panel panel-default')
+                    .append(headerHtml)
+                    .append(
+                        $('<div>')
+                            .addClass('panel-body')
+                            .append(actions2Html)
+                    );
 
             $container.attr('data-id', id);
             $container.attr('data-name', name);
