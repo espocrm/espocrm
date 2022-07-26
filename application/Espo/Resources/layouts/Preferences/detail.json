@@ -1,16 +1,16 @@
 [
     {
-        "label": "Locale",
         "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
             [{"name": "defaultCurrency"}, {"name": "thousandSeparator"}],
             [false, {"name": "decimalMark"}],
             [{"name": "language"}, false]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Locale"
     },
     {
-        "label": "Misc",
         "rows": [
             [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}],
             [
@@ -51,10 +51,11 @@
                     "name": "followCreatedEntityTypeList"
                 }
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Misc"
     },
     {
-        "label": "User Interface",
         "rows": [
             [
                 {"name":"theme"},
@@ -71,19 +72,21 @@
             [
                 {"name":"dashboardLayout", "fullWidth": true}
             ]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:User Interface"
     },
     {
-        "label": "Notifications",
         "name": "notifications",
         "rows": [
             [{"name": "receiveAssignmentEmailNotifications"}, {"name": "receiveMentionEmailNotifications"}],
             [{"name": "receiveStreamEmailNotifications"}, false],
             [{"name": "assignmentNotificationsIgnoreEntityTypeList"}, {"name": "assignmentEmailNotificationsIgnoreEntityTypeList"}]
-        ]
+        ],
+        "tabBreak": true,
+        "tabLabel": "$label:Notifications"
     },
     {
-        "label": "SMTP",
         "name": "smtp",
         "rows": [
             [
@@ -95,6 +98,7 @@
             [{"name": "smtpAuth"}, {"name": "smtpSecurity"}],
             [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "views/preferences/fields/test-send"}],
             [{"name": "smtpPassword"}, false]
-        ]
+        ],
+        "tabLabel": "$label:SMTP"
     }
 ]

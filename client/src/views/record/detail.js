@@ -3076,6 +3076,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                             this.translate('Overview') :
                             (i + 1).toString();
                     }
+                    else if (label.substring(0, 7) === '$label:') {
+                        label = this.translate(label.substring(7), 'labels', this.scope);
+                    }
                     else if (label[0] === '$') {
                         label = this.translate(label.substring(1), 'tabs', this.scope);
                     }
