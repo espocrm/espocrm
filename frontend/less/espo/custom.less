@@ -1879,14 +1879,30 @@ textarea.auto-height {
                 display: none;
             }
         }
+
+        > .panel-heading {
+            background-color: var(--dropdown-bg);
+        }
+
+
         > .panel-body {
             max-height: @navbar-panel-body-max-height;
             overflow-y: auto;
             overflow-x: hidden;
+
+            background-color: var(--dropdown-bg);
+
+            ul > li.list-group-item {
+                background-color: var(--dropdown-bg);
+            }
         }
 
         border-color: var(--dropdown-border);
         border-width: var(--dropdown-border-width);
+
+        > .panel-body {
+            background-color: var(--dropdown-bg);
+        }
     }
 }
 
@@ -2513,6 +2529,18 @@ table.table td.cell .html-container {
     > .panel {
         border-color: var(--dropdown-border);
         border-width: var(--dropdown-border-width);
+
+        > .panel-heading {
+            background-color: var(--dropdown-bg);
+        }
+
+        > .panel-body {
+            background-color: var(--dropdown-bg);
+
+            ul > li.list-group-item {
+                background-color: var(--dropdown-bg);
+            }
+        }
     }
 }
 
