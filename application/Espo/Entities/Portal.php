@@ -43,6 +43,7 @@ class Portal extends \Espo\Core\ORM\Entity
         'dashboardLayout',
         'dashletsOptions',
         'theme',
+        'themeParams',
         'language',
         'timeZone',
         'dateFormat',

@@ -55,6 +55,7 @@ class Config extends BaseConfig
         'dashboardLayout',
         'dashletsOptions',
         'theme',
+        'themeParams',
         'language',
         'timeZone',
         'dateFormat',

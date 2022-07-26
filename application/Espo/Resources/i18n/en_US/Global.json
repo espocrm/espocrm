@@ -813,6 +813,10 @@
         "Violet": "Violet",
         "Hazyblue": "Hazyblue"
     },
+    "themeNavbars": {
+        "side": "Side Navbar",
+        "top": "Top Navbar"
+    },
     "fieldValidations": {
         "required": "Required",
         "maxCount": "Max Count",

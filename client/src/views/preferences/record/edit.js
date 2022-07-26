@@ -193,11 +193,11 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                 this.hideField('theme');
             }
 
-            this.on('save', (initialAttributes) => {
+            this.on('save', initialAttributes => {
                 if (
                     this.model.get('language') !== initialAttributes.language ||
-                    this.model.get('theme') !== initialAttributes.theme
-
+                    this.model.get('theme') !== initialAttributes.theme ||
+                    (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar
                 ) {
                     this.setConfirmLeaveOut(false);
 

@@ -38,8 +38,9 @@ define('theme-manager', [], function () {
      * @param {module:models/settings.Class} config A config.
      * @param {module:models/preferences.Class} preferences Preferences.
      * @param {module:metadata.Class} metadata Metadata.
+     * @param {?string} [name] A name. If not set, then will be obtained from config and preferences.
      */
-    let ThemeManager = function (config, preferences, metadata) {
+    let ThemeManager = function (config, preferences, metadata, name) {
         /**
          * @private
          * @type {module:models/settings.Class}
@@ -55,6 +56,12 @@ define('theme-manager', [], function () {
          * @type {module:metadata.Class}
          */
         this.metadata = metadata;
+
+        /**
+         * @private
+         * @type {?string}
+         */
+        this.name = name || null;
     };
 
     _.extend(ThemeManager.prototype, /** module:theme-manager.Class# */{
@@ -74,6 +81,10 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getName: function () {
+            if (this.name) {
+                return this.name;
+            }
+
             if (!this.config.get('userThemesDisabled')) {
                 let name = this.preferences.get('theme');
 

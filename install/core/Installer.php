@@ -268,8 +268,9 @@ class Installer
     {
         return [
             'Espo',
-            'Sakura',
             'Dark',
+            'Sakura',
+            'Violet',
             'Hazyblue',
         ];
     }

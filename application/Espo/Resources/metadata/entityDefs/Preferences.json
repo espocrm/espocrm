@@ -147,6 +147,9 @@
             "view": "views/preferences/fields/theme",
             "translation": "Global.themes"
         },
+        "themeParams": {
+            "type": "jsonObject"
+        },
         "useCustomTabList": {
             "type": "bool",
             "default": false

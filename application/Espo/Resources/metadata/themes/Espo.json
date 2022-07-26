@@ -4,7 +4,7 @@
     "params": {
         "navbar": {
             "type": "enum",
-            "default": "top",
+            "default": "side",
             "options": [
                 "side",
                 "top"
