@@ -30,12 +30,15 @@
 use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 
 class AfterUpgrade
 {
     public function run(Container $container): void
     {
         $this->updateEventMetadata($container->get('metadata'), $container->get('fileManager'));
+        $this->updateTheme($container->get('entityManager'), $container->get('config'));
     }
 
     private function updateEventMetadata(Metadata $metadata, FileManager $fileManager): void
@@ -71,6 +74,81 @@ class AfterUpgrade
 
         if ($toSave) {
             $metadata->save();
+        }
+    }
+
+    private function updateTheme(EntityManager $entityManager, Config $config): void
+    {
+        $themeList = [
+            'EspoVertical',
+            'HazyblueVertical',
+            'VioletVertical',
+            'SakuraVertical',
+            'DarkVertical',
+        ];
+
+        $theme = $config->get('theme');
+        $navbar = 'top';
+
+        if (in_array($theme, $themeList)) {
+            $theme = substr($theme, 0, -8);
+            $navbar = 'side';
+        }
+
+        $config->set('theme', $theme);
+        $config->set('themeParams', (object) ['navbar' => $navbar]);
+        $config->save();
+
+        $userList = $entityManager->getRDBRepository(\Espo\Entities\User::ENTITY_TYPE)
+            ->where([
+                'type' => ['regular', 'admin']
+            ])
+            ->find();
+
+        foreach ($userList as $user) {
+            $preferences = $entityManager->getEntityById(\Espo\Entities\Preferences::ENTITY_TYPE, $user->getId());
+
+            if (!$preferences) {
+                continue;
+            }
+
+            $theme = $preferences->get('theme');
+            $navbar = 'top';
+
+            if (!$theme) {
+                continue;
+            }
+
+            if (in_array($theme, $themeList)) {
+                $theme = substr($theme, 0, -8);
+                $navbar = 'side';
+            }
+
+            $preferences->set('theme', $theme);
+            $preferences->set('themeParams', (object) ['navbar' => $navbar]);
+
+            $entityManager->saveEntity($preferences);
+        }
+
+        $portalList = $entityManager->getRDBRepository(\Espo\Entities\Portal::ENTITY_TYPE)
+            ->where([
+                'theme!=' => null,
+            ])
+            ->find();
+
+        foreach ($portalList as $portal) {
+            $theme = $portal->get('theme');
+            $navbar = 'top';
+
+            if (in_array($theme, $themeList)) {
+                $theme = substr($theme, 0, -8);
+                $navbar = 'side';
+            }
+
+            $portal->set('theme', $theme);
+            $portal->set('themeParams', (object) ['navbar' => $navbar]);
+
+            $entityManager->saveEntity($portal);
         }
     }
 }
