@@ -26,13 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-panels-detail', function (Dep) {
+define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-panels-detail'], function (Dep) {
 
     return Dep.extend({
 
         hasStream: true,
 
         hasRelationships: true,
+
+        TAB_BREAK_KEY: '_tabBreak_{n}',
 
         readDataFromLayout: function (layout) {
             var panelListAll = [];
@@ -56,7 +58,9 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 };
             }
 
-            (this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []).forEach(function (item) {
+            (this.getMetadata()
+                .get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []
+            ).forEach(item => {
                 if (!item.name) {
                     return;
                 }
@@ -72,13 +76,31 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 if ('order' in item) {
                     params[item.name].index = item.order;
                 }
-            }, this);
+            });
+
+            for (let name in layout) {
+                let item = layout[name];
+
+                if (item.tabBreak) {
+                    panelListAll.push(name);
+
+                    labels[name] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+                    params[name] = {
+                        name: item.name,
+                        index: item.index,
+                        tabBreak: true,
+                        tabLabel: item.tabLabel || null,
+                    };
+                }
+            }
 
             this.links = {};
 
             if (this.hasRelationships) {
                 var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
-                Object.keys(linkDefs).forEach(function (link) {
+
+                Object.keys(linkDefs).forEach(link => {
                     if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) {
                         return;
                     }
@@ -95,27 +117,26 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                         name: link,
                         index: 5,
                     };
-                    this.dataAttributeList.forEach(function (attribute) {
+
+                    this.dataAttributeList.forEach(attribute => {
                         if (attribute in item) {
                             return;
                         }
 
-                        var value = this.getMetadata().get(
-                            ['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]
-                        );
+                        var value = this.getMetadata()
+                            .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
 
                         if (value === null) {
                             return;
                         }
 
                         item[attribute] = value;
-                    }, this);
+                    });
 
                     this.links[link] = true;
 
                     params[item.name] = item;
-
-                }, this);
+                });
             }
 
             this.disabledFields = [];
@@ -124,9 +145,9 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
 
             this.rowLayout = [];
 
-            panelListAll = panelListAll.sort(function (v1, v2) {
+            panelListAll = panelListAll.sort((v1, v2) => {
                 return params[v1].index - params[v2].index
-            }.bind(this));
+            });
 
             panelListAll.push('_delimiter_');
 
@@ -136,9 +157,14 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 };
             }
 
-            panelListAll.forEach(function (item, index) {
+            labels[this.TAB_BREAK_KEY] = '. . . ' + this.translate('tabBreak', 'fields', 'LayoutManager');
+
+            panelListAll.push(this.TAB_BREAK_KEY);
+
+            panelListAll.forEach((item, index) => {
                 var disabled = false;
                 var itemData = layout[item] || {};
+
                 if (itemData.disabled) {
                     disabled = true;
                 }
@@ -155,7 +181,12 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                     }
                 }
 
+                if (item === this.TAB_BREAK_KEY) {
+                    disabled = true;
+                }
+
                 var labelText;
+
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
                 } else {
@@ -163,75 +194,149 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 }
 
                 if (disabled) {
-                    var o = {
+                    let o = {
                         name: item,
                         label: labelText,
                     };
 
                     if (o.name[0] === '_') {
-                        o.notEditable = true;
-
-                        if (o.name == '_delimiter_') {
+                        if (o.name === '_delimiter_') {
+                            o.notEditable = true;
                             o.label = '. . .';
                         }
                     }
+
                     this.disabledFields.push(o);
-                } else {
-                    var o = {
-                        name: item,
-                        label: labelText,
-                    };
 
-                    if (o.name[0] === '_') {
-                        o.notEditable = true;
-                        if (o.name == '_delimiter_') {
-                            o.label = '. . .';
-                        }
-                    }
-
-                    if (o.name in params) {
-                        this.dataAttributeList.forEach(function (attribute) {
-                            if (attribute === 'name') {
-                                return;
-                            }
-
-                            var itemParams = params[o.name] || {};
-
-                            if (attribute in itemParams) {
-                                o[attribute] = itemParams[attribute];
-                            }
-                        }, this);
-                    }
-
-                    for (var i in itemData) {
-                        o[i] = itemData[i];
-                    }
-
-                    o.index = ('index' in itemData) ? itemData.index : index;
-
-                    this.rowLayout.push(o);
-
-                    this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+                    return;
                 }
-            }, this);
 
-            this.rowLayout.sort(function (v1, v2) {
+                var o = {
+                    name: item,
+                    label: labelText,
+                };
+
+                if (o.name[0] === '_') {
+                    if (o.name === '_delimiter_') {
+                        o.notEditable = true;
+                        o.label = '. . .';
+                    }
+                }
+
+                if (o.name in params) {
+                    this.dataAttributeList.forEach(attribute => {
+                        if (attribute === 'name') {
+                            return;
+                        }
+
+                        var itemParams = params[o.name] || {};
+
+                        if (attribute in itemParams) {
+                            o[attribute] = itemParams[attribute];
+                        }
+                    });
+                }
+
+                for (var i in itemData) {
+                    o[i] = itemData[i];
+                }
+
+                o.index = ('index' in itemData) ? itemData.index : index;
+
+                this.rowLayout.push(o);
+
+                this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+            });
+
+            this.rowLayout.sort((v1, v2) => {
                 return (v1.index || 0) - (v2.index || 0);
             });
         },
 
+        onDrop: function () {
+            let tabBreakIndex = 0;
+
+            let $tabBreak = null;
+
+            this.$el.find('ul.enabled').children().each((i, li) => {
+                let $li = $(li);
+
+                let name = $li.attr('data-name');
+
+                if (this.isTabName(name)) {
+                    if (name === this.TAB_BREAK_KEY) {
+                        $tabBreak = $li.clone();
+
+                        $li.attr('data-name', this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex);
+                    }
+
+                    tabBreakIndex++;
+                }
+            });
+
+            if (!$tabBreak) {
+                this.$el.find('ul.disabled').children().each((i, li) => {
+                    let $li = $(li);
+
+                    let name = $li.attr('data-name');
+
+                    if (this.isTabName(name) && name !== this.TAB_BREAK_KEY) {
+                        $li.remove();
+                    }
+                });
+            }
+
+            if ($tabBreak) {
+                $tabBreak.appendTo(this.$el.find('ul.disabled'));
+            }
+        },
+
+        isTabName: function (name) {
+            return name.substring(0, this.TAB_BREAK_KEY.length - 3) === this.TAB_BREAK_KEY.slice(0, -3);
+        },
+
+        getEditAttributesModalViewOptions: function (attributes) {
+            let options = Dep.prototype.getEditAttributesModalViewOptions.call(this, attributes);
+
+            if (this.isTabName(attributes.name)) {
+                options.attributeList = [
+                    'tabLabel',
+                ];
+
+                options.attributeDefs = {
+                    tabLabel: {
+                        type: 'varchar',
+                    },
+                };
+            }
+
+            return options;
+        },
+
         fetch: function () {
-            var layout = Dep.prototype.fetch.call(this);
+            let layout = Dep.prototype.fetch.call(this);
 
-            var newLayout = {};
+            let newLayout = {};
 
-            for (var i in layout) {
-                if (layout[i].disabled && this.links[i]) {
+
+            for (let name in layout) {
+                if (layout[name].disabled && this.links[name]) {
                     continue;
                 }
 
-                newLayout[i] = layout[i];
+                newLayout[name] = layout[name];
+
+                if (this.isTabName(name) && this.itemsData[name]) {
+                    newLayout[name].tabBreak = true;
+                    newLayout[name].tabLabel = this.itemsData[name].tabLabel;
+                }
+                else {
+                   delete newLayout[name].tabBreak;
+                   delete newLayout[name].tabLabel;
+                }
             }
+
+            delete newLayout[this.TAB_BREAK_KEY];
 
             return newLayout;
         },

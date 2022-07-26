@@ -385,6 +385,24 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         middlePanelDefsList: null,
 
         /**
+         * @protected
+         * @type {JQuery|null}
+         */
+        $middle: null,
+
+        /**
+         * @protected
+         * @type {JQuery|null}
+         */
+        $bottom: null,
+
+        /**
+         * @private
+         * @type {JQuery|null}
+         */
+        $detailButtonContainer: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -399,7 +417,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'click .middle-tabs > button': function (e) {
                 let tab = $(e.currentTarget).attr('data-tab');
 
-                this.selectMiddleTab(tab);
+                this.selectMiddleTab(parseInt(tab));
             },
         },
 
@@ -700,7 +718,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            for (var i in this.buttonList) {
+            for (let i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
                     this.buttonList[i].hidden = true;
 
@@ -708,7 +726,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownItemList) {
+            for (let i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = true;
 
@@ -716,7 +734,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownEditItemList) {
+            for (let i in this.dropdownEditItemList) {
                 if (this.dropdownEditItemList[i].name === name) {
                     this.dropdownEditItemList[i].hidden = true;
 
@@ -724,7 +742,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.buttonEditList) {
+            for (let i in this.buttonEditList) {
                 if (this.buttonEditList[i].name === name) {
                     this.buttonEditList[i].hidden = true;
 
@@ -749,6 +767,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (this.isDropdownEditItemListEmpty()) {
                     this.$dropdownEditItemListButton.addClass('hidden');
                 }
+
+                this.adjustButtons();
             }
         },
 
@@ -758,7 +778,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            for (var i in this.buttonList) {
+            for (let i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
                     this.buttonList[i].hidden = false;
 
@@ -766,7 +786,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownItemList) {
+            for (let i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = false;
 
@@ -774,7 +794,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownEditItemList) {
+            for (let i in this.dropdownEditItemList) {
                 if (this.dropdownEditItemList[i].name === name) {
                     this.dropdownEditItemList[i].hidden = false;
 
@@ -782,7 +802,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.buttonEditList) {
+            for (let i in this.buttonEditList) {
                 if (this.buttonEditList[i].name === name) {
                     this.buttonEditList[i].hidden = false;
 
@@ -807,6 +827,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (!this.isDropdownEditItemListEmpty()) {
                     this.$dropdownItemListButton.removeClass('hidden');
                 }
+
+                this.adjustButtons();
             }
         },
 
@@ -892,6 +914,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (this.middlePanelDefs[name]) {
                 this.controlMiddleTabVisibilityShow(this.middlePanelDefs[name].tabNumber);
+
+                this.adjustMiddlePanels();
             }
         },
 
@@ -967,10 +991,23 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (this.middlePanelDefs[name]) {
                 this.controlMiddleTabVisibilityHide(this.middlePanelDefs[name].tabNumber);
+
+                this.adjustMiddlePanels();
             }
         },
 
         afterRender: function () {
+            this.$middle = this.$el.find('.middle');
+
+            if (this.bottomView) {
+                this.$bottom = this.$el.find('.bottom');
+            }
+
+            this.initElementReferences();
+
+            this.adjustMiddlePanels();
+            this.adjustButtons();
+
             this.initStickableButtonsContainer();
             this.initFieldsControlBehaviour();
         },
@@ -1016,19 +1053,47 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         initStickableButtonsContainer: function () {
-           var $container = this.$el.find('.detail-button-container');
+            let $containers = this.$el.find('.detail-button-container');
+            let $container = this.$el.find('.detail-button-container.record-buttons');
 
-            var stickTop = this.getThemeManager().getParam('stickTop') || 62;
-            var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
+            if (!$container.length) {
+                return;
+            }
 
-            var $block = $('<div>')
+            let navbarHeight = this.getThemeManager().getParam('navbarHeight');
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+
+            let isSmallScreen = $(window.document).width() < screenWidthXs;
+
+            let getOffsetTop = (/** JQuery */$element) => {
+                let element = $element.get(0);
+
+                let value = -3;
+
+                while (element) {
+                    value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
+
+                    element = element.offsetParent;
+                }
+
+                if (isSmallScreen) {
+                    return value;
+                }
+
+                return value - navbarHeight;
+            };
+
+            let stickTop = getOffsetTop($container);
+            let blockHeight = $container.outerHeight();
+
+            let $block = $('<div>')
                 .css('height', blockHeight + 'px')
                 .html('&nbsp;')
                 .hide()
                 .insertAfter($container);
 
-            var $middle = this.getView('middle').$el;
-            var $window = $(window);
+            let $middle = this.getView('middle').$el;
+            let $window = $(window);
 
             if (this.stickButtonsFormBottomSelector) {
                 var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
@@ -1038,65 +1103,58 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
             $window.off('scroll.detail-' + this.numId);
 
-            $window.on('scroll.detail-' + this.numId, (e) => {
-                if ($(window.document).width() < screenWidthXs) {
-                    $container.removeClass('stick-sub');
+            $window.on('scroll.detail-' + this.numId, () => {
+                let edge = $middle.position().top + $middle.outerHeight(false) - blockHeight;
+                let scrollTop = $window.scrollTop();
 
-                    $block.hide();
-                    $container.show();
+                if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
+                    $containers.hide();
+                    $block.show();
 
                     return;
                 }
 
-                var edge = $middle.position().top + $middle.outerHeight(true);
-                var scrollTop = $window.scrollTop();
+                if (isSmallScreen && $('#navbar .navbar-body').hasClass('in')) {
+                    return;
+                }
 
-                if (scrollTop < edge || this.stickButtonsContainerAllTheWay) {
-                    if (scrollTop > stickTop) {
-                        if (!$container.hasClass('stick-sub')) {
-                            $container.addClass('stick-sub');
-                            $block.show();
+                if (scrollTop > stickTop) {
+                    if (!$containers.hasClass('stick-sub')) {
+                        $containers.addClass('stick-sub');
+                        $block.show();
 
-                            var $p = $('.popover');
-
-                            $p.each(function (i, el) {
-                                let $el = $(el);
-                                $el.css('top', ($el.position().top - blockHeight) + 'px');
-                            });
-                        }
-                    }
-                    else {
-                        if ($container.hasClass('stick-sub')) {
-                            $container.removeClass('stick-sub');
-                            $block.hide();
-
-                            var $p = $('.popover');
-
-                            $p.each(function (i, el) {
-                                let $el = $(el);
-                                $el.css('top', ($el.position().top + blockHeight) + 'px');
-                            });
-                        }
+                        $('.popover').each((i, el) => {
+                            let $el = $(el);
+                            $el.css('top', ($el.position().top - blockHeight) + 'px');
+                        });
                     }
 
-                    $container.show();
+                    $containers.show();
+
+                    return;
                 }
-                else {
-                    $container.hide();
-                    $block.show();
+
+                if ($containers.hasClass('stick-sub')) {
+                    $containers.removeClass('stick-sub');
+                    $block.hide();
+
+                    $('.popover').each((i, el) => {
+                        let $el = $(el);
+                        $el.css('top', ($el.position().top + blockHeight) + 'px');
+                    });
                 }
+
+                $containers.show();
             });
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
 
             if (this.hasView('side')) {
-                var view = this.getView('side');
+                let view = this.getView('side');
 
                 if ('fetch' in view) {
                     data = _.extend(data, view.fetch());
@@ -1104,12 +1162,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (this.hasView('bottom')) {
-                var view = this.getView('bottom');
+                let view = this.getView('bottom');
 
                 if ('fetch' in view) {
                     data = _.extend(data, view.fetch());
                 }
             }
+
             return data;
         },
 
@@ -1547,11 +1606,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.setupBeforeFinal();
 
             this.on('after:render', () => {
-                this.$detailButtonContainer = this.$el.find('.detail-button-container');
-                this.$dropdownItemListButton = this.$detailButtonContainer
-                    .find('.dropdown-item-list-button');
-                this.$dropdownEditItemListButton = this.$detailButtonContainer
-                    .find('.dropdown-edit-item-list-button');
+                this.initElementReferences();
             });
 
             if (
@@ -3049,6 +3104,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.$el.find('.middle > .panel[data-tab]').addClass('tab-hidden');
             this.$el.find(`.middle > .panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+
+            this.adjustMiddlePanels();
         },
 
         /**
@@ -3145,6 +3202,112 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (this.currentMiddleTab === tab) {
                 this.selectMiddleTab(0);
             }
-        }
+        },
+
+        /**
+         * @private
+         */
+        adjustMiddlePanels: function () {
+            if (!this.isRendered() || !this.$middle.length) {
+                return;
+            }
+
+            let $panels = this.$middle.find('> .panel');
+            let $bottomPanels = this.$bottom ? this.$bottom.find('> .panel') : null;
+
+            $panels
+                .removeClass('first')
+                .removeClass('last')
+                .removeClass('in-middle');
+
+            let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`)
+
+            $visiblePanels.each((i, el) => {
+                let $el = $(el);
+
+                if (i === $visiblePanels.length - 1) {
+                    if ($bottomPanels && $bottomPanels.first().hasClass('sticked')) {
+                        if (i === 0) {
+                            $el.addClass('first');
+
+                            return;
+                        }
+
+                        $el.addClass('in-middle');
+
+                        return;
+                    }
+
+                    if (i === 0) {
+                        return;
+                    }
+
+                    $el.addClass('last');
+
+                    return;
+                }
+
+                if (i > 0 && i < $visiblePanels.length - 1) {
+                    $el.addClass('in-middle');
+
+                    return;
+                }
+
+                if (i === 0) {
+                    $el.addClass('first');
+                }
+            });
+        },
+
+        /**
+         * @private
+         */
+        adjustButtons: function () {
+            let $buttons = this.$detailButtonContainer.filter('.record-buttons').find('button.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
+
+            this.adjustEditButtons();
+        },
+
+        /**
+         * @private
+         */
+        adjustEditButtons: function () {
+            let $buttons = this.$detailButtonContainer.filter('.edit-buttons').find('button.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
+        },
+
+        /**
+         * @private
+         */
+        initElementReferences() {
+            if (this.$detailButtonContainer && this.$detailButtonContainer.length) {
+                return;
+            }
+
+            this.$detailButtonContainer = this.$el.find('.detail-button-container');
+
+            this.$dropdownItemListButton = this.$detailButtonContainer
+                .find('.dropdown-item-list-button');
+
+            this.$dropdownEditItemListButton = this.$detailButtonContainer
+                .find('.dropdown-edit-item-list-button');
+        },
     });
 });

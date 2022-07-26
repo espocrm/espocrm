@@ -21,7 +21,6 @@
                 data-action="selectLink"
                 class="btn btn-default btn-icon btn-sm"
                 type="button"
-                tabindex="-1"
                 title="{{translate 'Select'}}"
             ><span class="fas fa-angle-up"></span></button>
         </span>

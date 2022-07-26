@@ -150,7 +150,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testDeleteWithLimit()
+    public function testDeleteWithLimit1()
     {
         $sql = $this->query->compose(Delete::fromRaw([
             'from' => 'Account',
@@ -166,6 +166,26 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE account.name = 'test' " .
             "ORDER BY account.name ASC " .
             "LIMIT 1";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testDeleteWithLimit0()
+    {
+        $sql = $this->query->compose(Delete::fromRaw([
+            'from' => 'Account',
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'orderBy' => 'name',
+            'limit' => 0,
+        ]));
+
+        $expectedSql =
+            "DELETE FROM `account` " .
+            "WHERE account.name = 'test' " .
+            "ORDER BY account.name ASC " .
+            "LIMIT 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -202,6 +222,28 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "DELETE FROM `account` " .
             "WHERE account.name = 'test' AND account.deleted = 1";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testUpdateQuery0()
+    {
+        $sql = $this->query->compose(Update::fromRaw([
+            'from' => 'Account',
+            'whereClause' => [
+                'name' => 'test',
+            ],
+            'set' => [
+                'deleted' => false,
+                'name' => 'hello',
+            ],
+            'limit' => 0,
+        ]));
+
+        $expectedSql =
+            "UPDATE `account` " .
+            "SET account.deleted = 0, account.name = 'hello' ".
+            "WHERE account.name = 'test' LIMIT 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -379,6 +421,40 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') ".
             "ON DUPLICATE KEY UPDATE `deleted` = 0, `name` = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectLimit1()
+    {
+        $select = $this->queryBuilder
+            ->select(['id'])
+            ->from('Account')
+            ->limit(1, 0)
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT account.id AS `id` FROM `account` " .
+            "WHERE account.deleted = 0 LIMIT 1, 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectLimit2()
+    {
+        $select = $this->queryBuilder
+            ->select(['id'])
+            ->from('Account')
+            ->limit(null, 0)
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT account.id AS `id` FROM `account` " .
+            "WHERE account.deleted = 0 LIMIT 0, 0";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -2297,7 +2373,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->all()
             ->query($q1)
             ->query($q2)
-            ->limit(0, 2)
+            ->limit(0, 0)
             ->order(1, 'DESC')
             ->build();
 
@@ -2308,7 +2384,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "UNION ALL ".
             "(SELECT 'test2' AS `value`) ".
             "ORDER BY 1 DESC ".
-            "LIMIT 0, 2";
+            "LIMIT 0, 0";
 
         $this->assertEquals($expectedSql, $sql);
     }

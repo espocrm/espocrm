@@ -1,7 +1,6 @@
 @body-bg-value: #f3f3f3;
 @white-color-value: #FFF;
 @panel-bg-value: @white-color-value;
-@modal-backdrop-bg-value: #a3b3c7;
 @navbar-inverse-bg-value: #546E7A;
 
 @state-info-bg-value: #dbd0f5;
@@ -14,21 +13,26 @@
 @brand-warning-value: #e4a133;
 
 @panel-default-border-value: #dcdcdc;
-@panel-default-bg-value: transparent;
+@panel-default-bg-value: @panel-bg-value;
 
 @panel-primary-bg-value: #849fab;
 @panel-success-bg-value: #cee0ba;
 @panel-danger-bg-value: #ebccd1;
 @panel-warning-bg-value: #efda97;
 
+@panel-heading-font-size-value: 16px;
+
 @btn-default-bg-value: #f7f7f7;
 @btn-default-border-value: #cccccc;
+@btn-default-hover-border-value: darken(@btn-default-bg-value, 12%);
 
 @input-border-focus-value: #99b4cc;
 
+@modal-backdrop-bg-value: fade(#a3b3c7, 50%);
 @modal-header-bg-value: @white-color-value;
-@modal-footer-bg-value: @white-color-value;
-@modal-content-bg-value: @white-color-value;
+@modal-footer-bg-value: @body-bg-value;
+@modal-content-bg-value: @body-bg-value;
+@modal-box-shadow-value: 0 0 15px rgba(0, 0, 0, 0.35);
 
 @table-bg-value: @white-color-value;
 
@@ -41,3 +45,7 @@
 
 @panel-border-width-value: 0px;
 @default-box-shadow-value: 2px 2px 4px rgba(0,0,0,0.09);
+
+@border-radius-value: 2px;
+@panel-border-radius-value: 1px;
+@dropdown-border-radius-value: 1px;

@@ -85,6 +85,12 @@ define('views/main', ['view'], function (Dep) {
         menu: null,
 
         /**
+         * @private
+         * @type {JQuery|null}
+         */
+        $headerActionsContainer: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -150,6 +156,12 @@ define('views/main', ['view'], function (Dep) {
             });
 
             this.updateLastUrl();
+
+            this.on('after:render-internal', () => {
+                this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
+            });
+
+            this.on('after:render', () => this.adjustButtons());
         },
 
         /**
@@ -393,7 +405,7 @@ define('views/main', ['view'], function (Dep) {
             }
 
             if (doNotReRender && this.isRendered()) {
-                this.$el.find('.header .header-buttons [data-name="'+name+'"]').remove();
+                this.$headerActionsContainer.find('[data-name="' + name + '"]').remove();
             }
         },
 
@@ -403,8 +415,8 @@ define('views/main', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         disableMenuItem: function (name) {
-            this.$el
-                .find('.header .header-buttons [data-name="'+name+'"]')
+            this.$headerActionsContainer
+                .find('[data-name="' + name + '"]')
                 .addClass('disabled')
                 .attr('disabled');
         },
@@ -415,8 +427,8 @@ define('views/main', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         enableMenuItem: function (name) {
-            this.$el
-                .find('.header .header-buttons [data-name="'+name+'"]')
+            this.$headerActionsContainer
+                .find('[data-name="' + name + '"]')
                 .removeClass('disabled')
                 .removeAttr('disabled');
         },
@@ -462,10 +474,11 @@ define('views/main', ['view'], function (Dep) {
                 return;
             }
 
-            this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().addClass('hidden');
-            this.$el.find('.page-header a.action[data-name="'+name+'"]').addClass('hidden');
+            this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().addClass('hidden');
+            this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').addClass('hidden');
 
             this.controlMenuDropdownVisibility();
+            this.adjustButtons();
         },
 
         /**
@@ -488,10 +501,11 @@ define('views/main', ['view'], function (Dep) {
                 return;
             }
 
-            this.$el.find('.page-header li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
-            this.$el.find('.page-header a.action[data-name="'+name+'"]').removeClass('hidden');
+            this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
+            this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
+            this.adjustButtons();
         },
 
         /**
@@ -516,13 +530,17 @@ define('views/main', ['view'], function (Dep) {
          * @private
          */
         controlMenuDropdownVisibility: function () {
-            var $d = this.$el.find('.page-header .dropdown-group');
+            let $group = this.$headerActionsContainer.find('.dropdown-group');
 
             if (this.hasMenuVisibleDropdownItems()) {
-                $d.removeClass('hidden');
-            } else {
-                $d.addClass('hidden');
+                $group.removeClass('hidden');
+                $group.find('> button').removeClass('hidden');
+
+                return;
             }
+
+            $group.addClass('hidden');
+            $group.find('> button').addClass('hidden');
         },
 
         /**
@@ -531,6 +549,22 @@ define('views/main', ['view'], function (Dep) {
          */
         getHeaderView: function () {
             return this.getView('header');
+        },
+
+        /**
+         * @private
+         */
+        adjustButtons: function () {
+            let $buttons = this.$headerActionsContainer.find('.btn');
+
+            $buttons
+                .removeClass('radius-left')
+                .removeClass('radius-right');
+
+            let $buttonsVisible = $buttons.filter(':not(.hidden)');
+
+            $buttonsVisible.first().addClass('radius-left');
+            $buttonsVisible.last().addClass('radius-right');
         },
     });
 });

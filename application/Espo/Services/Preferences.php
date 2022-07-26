@@ -39,8 +39,10 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
+    Exceptions\BadRequest,
     Exceptions\Forbidden,
     Exceptions\NotFound,
+    FieldValidation\FieldValidationManager,
     Utils\Crypt,
     Acl\Table,
     Acl,
@@ -51,30 +53,32 @@ use stdClass;
 
 class Preferences
 {
-    private $entityManager;
-
-    private $user;
-
-    private $crypt;
-
-    private $acl;
-
-    private $config;
+    private EntityManager $entityManager;
+    private User $user;
+    private Crypt $crypt;
+    private Acl $acl;
+    private Config $config;
+    private FieldValidationManager $fieldValidationManager;
 
     public function __construct(
         EntityManager $entityManager,
         User $user,
         Crypt $crypt,
         Acl $acl,
-        Config $config
+        Config $config,
+        FieldValidationManager $fieldValidationManager
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->crypt = $crypt;
         $this->acl = $acl;
         $this->config = $config;
+        $this->fieldValidationManager = $fieldValidationManager;
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function processAccessCheck(string $userId): void
     {
         if (!$this->user->isAdmin()) {
@@ -84,75 +88,91 @@ class Preferences
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function read(string $userId): PreferencesEntity
     {
         $this->processAccessCheck($userId);
 
         /** @var ?PreferencesEntity $entity */
-        $entity = $this->entityManager->getEntity('Preferences', $userId);
+        $entity = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$entity || !$user) {
             throw new NotFound();
         }
 
-        $entity->set('smtpEmailAddress', $user->get('emailAddress'));
-        $entity->set('name', $user->get('name'));
+        $entity->set('smtpEmailAddress', $user->getEmailAddress());
+        $entity->set('name', $user->getName());
         $entity->set('isPortalUser', $user->isPortal());
 
         $entity->clear('smtpPassword');
 
-        $fobiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList('Preferences', Table::ACTION_READ);
+        $forbiddenAttributeList = $this->acl
+            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_READ);
 
-        foreach ($fobiddenAttributeList as $attribute) {
+        foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
 
         return $entity;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws BadRequest
+     */
     public function update(string $userId, stdClass $data): PreferencesEntity
     {
         $this->processAccessCheck($userId);
 
-        if ($this->acl->getLevel('Preferences', Table::ACTION_EDIT) === Table::LEVEL_NO) {
+        if ($this->acl->getLevel(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
-        $fobiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList('Preferences', Table::ACTION_EDIT);
+        $forbiddenAttributeList = $this->acl
+            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT);
 
-        foreach ($fobiddenAttributeList as $attribute) {
+        foreach ($forbiddenAttributeList as $attribute) {
             unset($data->$attribute);
+        }
+
+        /** @var ?User */
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+
+        /** @var ?PreferencesEntity */
+        $entity = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
+
+        if (!$entity || !$user) {
+            throw new NotFound();
         }
 
         if (property_exists($data, 'smtpPassword')) {
             $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
         }
 
-        $user = $this->entityManager->getEntity('User', $userId);
-
-        /** @var ?PreferencesEntity */
-        $entity = $this->entityManager->getEntity('Preferences', $userId);
-
-        if (!$entity || !$user) {
-            throw new NotFound();
-        }
-
         $entity->set($data);
+
+        $this->fieldValidationManager->process($entity, $data);
 
         $this->entityManager->saveEntity($entity);
 
-        $entity->set('smtpEmailAddress', $user->get('emailAddress'));
-        $entity->set('name', $user->get('name'));
+        $entity->set('smtpEmailAddress', $user->getEmailAddress());
+        $entity->set('name', $user->getName());
 
         $entity->clear('smtpPassword');
 
         return $entity;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function resetToDefaults(string $userId): void
     {
         $this->processAccessCheck($userId);
@@ -164,18 +184,22 @@ class Preferences
         }
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function resetDashboard(string $userId): stdClass
     {
         $this->processAccessCheck($userId);
 
-        if ($this->acl->getLevel('Preferences', Table::ACTION_EDIT) === Table::LEVEL_NO) {
+        if ($this->acl->getLevel(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 
         /** @var ?User $user */
-        $user = $this->entityManager->getEntity('User', $userId);
+        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
+        $preferences = $this->entityManager->getEntityById(PreferencesEntity::ENTITY_TYPE, $userId);
 
         if (!$user) {
             throw new NotFound();
@@ -190,7 +214,7 @@ class Preferences
         }
 
         $forbiddenAttributeList = $this->acl
-            ->getScopeForbiddenAttributeList('Preferences', Table::ACTION_EDIT);
+            ->getScopeForbiddenAttributeList(PreferencesEntity::ENTITY_TYPE, Table::ACTION_EDIT);
 
         if (in_array('dashboardLayout', $forbiddenAttributeList)) {
             throw new Forbidden();

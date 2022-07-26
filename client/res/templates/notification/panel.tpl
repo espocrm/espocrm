@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading panel-heading-no-title">
         <div class="link-group">
             <a href="#Notification" data-action="openNotifications">{{translate 'View List'}}</a>
             <a href="javascript:" data-action="markAllNotificationsRead">{{translate 'Mark all read'}}</a>

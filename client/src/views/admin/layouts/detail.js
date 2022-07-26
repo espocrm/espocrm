@@ -42,9 +42,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             'dynamicLogicVisible',
             'style',
             'dynamicLogicStyled',
-            'hidden',
             'tabBreak',
             'tabLabel',
+            'hidden',
         ],
 
         dataAttributesDefs: {
@@ -80,6 +80,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     'danger',
                     'warning'
                 ],
+                default: 'default',
                 translation: 'LayoutManager.options.style',
                 tooltip: 'panelStyle',
             },
@@ -105,7 +106,38 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             },
         },
 
-        defaultPanelFieldList: ['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'],
+        defaultPanelFieldList: [
+            'modifiedAt',
+            'createdAt',
+            'modifiedBy',
+            'createdBy',
+        ],
+
+        panelDynamicLogicDefs: {
+            fields: {
+                tabLabel: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                attribute: 'tabBreak',
+                                type: 'isTrue',
+                            }
+                        ]
+                    }
+                },
+                dynamicLogicStyled: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                attribute: 'style',
+                                type: 'notEquals',
+                                value: 'default'
+                            }
+                        ]
+                    }
+                },
+            }
+        },
 
         setup: function () {
             Dep.prototype.setup.call(this);

@@ -76,7 +76,9 @@
 }
 
 .modal-backdrop.in {
-    opacity: var(--modal-backdrop-opacity);
+    background-color: var(--modal-backdrop-bg);
+    backdrop-filter: var(--modal-backdrop-filter);
+    opacity: 1;
 }
 
 .modal-footer {
@@ -95,8 +97,12 @@
 
 .modal-dialog > .modal-content {
     background-clip: border-box;
-    border-color: @default-border-color;
+    border-color: transparent;
     border-width: 0;
+
+    @media (min-width: @screen-sm-min) {
+        box-shadow: var(--modal-box-shadow);
+    }
 }
 
 .modal-footer {
@@ -137,7 +143,8 @@
         margin: 0 0 0 -@container-padding;
     }
 
-    .dialog-confirm > .modal-dialog {
+    .dialog-confirm > .modal-dialog,
+    .dialog-centered > .modal-dialog {
         margin: 0 auto;
     }
 }
@@ -178,13 +185,36 @@
 }
 
 @media screen and (min-width: @screen-md-min) {
-    .modal-dialog,
-    .dialog-centered {
+    .modal-dialog {
         width: 900px;
     }
+
     .dialog-confirm > .modal-dialog,
     .dialog-centered > .modal-dialog {
         width: 550px;
+    }
+}
+
+.dialog-confirm,
+.dialog-centered {
+    > .modal-dialog > .modal-content {
+        border-radius: var(--panel-border-radius);
+
+        > .modal-header {
+            border-top-left-radius: var(--panel-border-radius);
+            border-top-right-radius: var(--panel-border-radius);
+        }
+
+        > .modal-footer {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
+        }
+
+        > .modal-body {
+            .panel.no-side-margin {
+                box-shadow: none;
+            }
+        }
     }
 }
 
@@ -196,4 +226,8 @@
 .modal.in .modal.in {
     overflow: visible !important;
     overflow-y: visible !important;
+}
+
+.modal-body > .list-group {
+    background-color: var(--panel-bg);
 }

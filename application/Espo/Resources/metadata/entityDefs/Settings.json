@@ -513,6 +513,9 @@
             "view": "views/settings/fields/theme",
             "translation": "Global.themes"
         },
+        "themeParams": {
+            "type": "jsonObject"
+        },
         "attachmentUploadMaxSize": {
             "type": "float",
             "min": 0

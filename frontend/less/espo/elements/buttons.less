@@ -88,23 +88,23 @@
 }
 
 .btn.btn-xs-wide {
-    min-width: 60px;
+    min-width: var(--btn-xs-wide-width);
 }
 
 .btn.btn-s-wide {
-    min-width: 80px;
+    min-width: var(--btn-s-wide-width);
 }
 
 .btn.btn-wide  {
-    min-width: 100px;
+    min-width: var(--btn-wide-width);
 }
 
 .btn.btn-x-wide  {
-    min-width: 150px;
+    min-width: var(--btn-x-wide-width);
 }
 
 .btn.btn-xx-wide  {
-    min-width: 200px;
+    min-width: var(--btn-xx-wide-width);
 }
 
 .btn.btn-icon-wide  {
@@ -143,6 +143,25 @@
     color: @gray-light;
 }
 
+.btn-group > .btn-text {
+    &.active {
+        border-bottom-color: transparent;
+
+        &:after {
+            position: absolute;
+            bottom: -2px;
+            right: calc(50%);
+            width: calc(100%);
+            content: "";
+            border-radius: var(--border-radius);
+            transform: translate(50%, -50%);
+            background-color: var(--gray-light);
+            height: 1px;
+            display: block;
+        }
+    }
+}
+
 .btn-text {
     color: var(--btn-text-color);
     border-radius: 0;
@@ -167,9 +186,6 @@
             background-color: transparent;
             color: var(--state-success-text);
             border-color: transparent;
-        }
-        &:focus-visible {
-            color: var(--text-gray-color);
         }
     }
     &.btn-danger {
@@ -252,6 +268,7 @@
 
     &.active {
         border-bottom: 1px solid @gray-light;
+
     }
 
     &.btn-text-hoverable {

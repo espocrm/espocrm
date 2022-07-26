@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/edit', 'views/edit', function (Dep) {
+define('views/preferences/edit', ['views/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,16 +34,15 @@ define('views/preferences/edit', 'views/edit', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.userName = this.model.get('name');
         },
 
         getHeader: function () {
-            var html = '';
-            html += this.translate('Preferences');
-            html += ' <span class="chevron-right"></span> ';
-            html += this.getHelper().escapeString(this.userName);
-            return html;
+            return this.buildHeaderHtml([
+                $('<span>').text(this.translate('Preferences')),
+                $('<span>').text(this.userName),
+            ]);
         },
-
     });
 });

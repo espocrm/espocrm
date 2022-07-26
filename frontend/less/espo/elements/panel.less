@@ -1,10 +1,29 @@
+.panel,
+.well {
+    border-radius: var(--panel-border-radius);
+    border-width: var(--panel-border-width);
+    border-color: var(--panel-border);
+}
+
 .panel-body {
     padding: @panel-padding;
     .clearfix();
 }
 
-.panel-group .panel + .panel {
-    margin-top: 4px;
+.panel-group {
+    > .panel:first-child {
+        border-top-left-radius: var(--panel-border-radius);
+        border-top-right-radius: var(--panel-border-radius);
+    }
+
+    > .panel:last-child {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+    }
+
+    .panel + .panel {
+        margin-top: 4px;
+    }
 }
 
 .panel > .panel-body.panel-body-form {
@@ -35,6 +54,7 @@
     .panel.no-side-margin {
         border-left: 0;
         border-right: 0;
+        border-radius: 0;
     }
 
     .record.no-side-margin,
@@ -42,15 +62,20 @@
         > .panel {
             border-left: 0;
             border-right: 0;
+            border-radius: 0;
         }
 
         .left > .middle > .panel,
         .left > .bottom > .panel {
             border-left: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
 
         .side > .panel {
             border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
     }
 
@@ -58,6 +83,8 @@
         .left > .middle > .panel,
         .left > .bottom > .panel {
             border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
     }
 }
@@ -105,9 +132,32 @@
     margin-bottom: var(--vertical-gap);
 
     > .panel-heading {
+        min-height: var(--panel-heading-height);
+
+        &.panel-heading-no-title {
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        padding-top: 0;
+        padding-bottom: 0;
+
+        > .panel-title {
+            font-size: var(--panel-heading-font-size);
+            line-height: 1;
+            display: inline-block;
+            padding-top: ~"calc((var(--panel-heading-height) - var(--panel-heading-font-size)) / 2)";
+            padding-bottom: ~"calc((var(--panel-heading-height) - var(--panel-heading-font-size)) / 2)";
+        }
+
+        > .btn-group {
+            margin-top: ~"calc((var(--panel-heading-height) - 30px) / 2)";
+            right: -10px;
+        }
+
         .btn {
-            background-color: @panel-default-bg;
-            border-color: @panel-default-bg;
+            background-color: transparent;
+            border-color: transparent;
             color: @gray-soft;
         }
 
@@ -146,137 +196,202 @@
     }
 }
 
-.panel-heading > .btn-group {
-    top: -7px;
-    right: -11px;
-}
-
-
 body {
     .panel-default {
-        border-color: @panel-default-border;
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-default-bg) 0,
+                var(--panel-default-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--panel-default-border);
         > .panel-heading {
-            background-color: @panel-default-bg;
-            border-color: @panel-default-bg;
+            color: var(--panel-default-text);
+            background-color: var(--panel-default-bg);
+            border-color: transparent;
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &:focus {
-                        background-color: @panel-default-bg;
-                        border-color: @panel-default-bg;
-                        color: @panel-default-text;
+                        color: var(--panel-default-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
         }
     }
+
     .panel-warning {
-        border-color: @panel-warning-bg;
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-warning-bg) 0,
+                var(--panel-warning-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--panel-warning-bg);
         > .panel-heading {
-            background-color: @panel-warning-bg;
-            border-color: @panel-warning-bg;
+            color: var(--panel-warning-text);
+            background-color: var(--panel-warning-bg);
+            border-color: transparent;
             .btn,
             .btn-warning {
-                color: @panel-warning-text;
-                background-color: @panel-warning-bg;
-                border-color: @panel-warning-bg;
+                color: var(--panel-warning-text);
+                background-color: transparent;
+                border-color: transparent;
             }
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-warning-bg;
-                        border-color: @panel-warning-bg;
-                        color: @panel-warning-text;
+                        color: var(--panel-warning-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
         }
     }
     .panel-danger {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-danger-bg) 0,
+                var(--panel-danger-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--panel-danger-bg);
         > .panel-heading {
-            background-color: @panel-danger-bg;
+            color: var(--panel-danger-text);
+            background-color: var(--panel-danger-bg);
+            border-color: transparent;
             .btn,
             .btn-danger {
-                color: @panel-danger-text;
-                background-color: @panel-danger-bg;
-                border-color: @panel-danger-bg;
+                color: var(--panel-danger-text);
+                background-color: transparent;
+                border-color: transparent;
             }
             .btn-group,
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-danger-bg;
-                        border-color: @panel-danger-bg;
-                        color: @panel-danger-text;
+                        color: var(--panel-danger-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
         }
     }
     .panel-info {
-        border-color: @state-info-bg;
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--state-info-bg) 0,
+                var(--state-info-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--state-info-bg);
         > .panel-heading {
-            color: @panel-info-text;
-            background-color: @state-info-bg;
-            border-color: @state-info-bg;
+            color: var(--panel-info-text);
+            background-color: var(--state-info-bg);
+            border-color: transparent;
             .btn,
             .btn-info {
-                color: @panel-info-text;
-                background-color: @state-info-bg;
-                border-color: @state-info-bg;
+                color: var(--panel-info-text);
+                background-color: transparent;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @state-info-bg;
-                        border-color: @state-info-bg;
-                        color: @panel-info-text;
+                        color: var(--panel-info-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
         }
     }
     .panel-success {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-success-bg) 0,
+                var(--panel-success-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--panel-success-bg);
         > .panel-heading {
-            background-color: @panel-success-bg;
+            color: var(--panel-success-text);
+            background-color: var(--panel-success-bg);
+            border-color: transparent;
             .btn,
             .btn-success {
-                color: @panel-success-text;
-                background-color: @panel-success-bg;
-                border-color: @panel-success-bg;
+                color: var(--panel-success-text);
+                background-color: transparent;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-success-bg;
-                        border-color: @panel-success-bg;
-                        color: @panel-success-text;
+                        color: var(--panel-success-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
         }
     }
     .panel-primary {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                var(--panel-primary-bg) 0,
+                var(--panel-primary-bg) 29px,
+                var(--panel-bg) 29px,
+                var(--panel-bg) 100%
+            );
+        }
+
+        border-color: var(--panel-primary-bg);
         > .panel-heading {
-            background-color: @panel-primary-bg;
+            background-color: var(--panel-primary-bg);
+            border-color: transparent;
             .btn,
             .btn-primary {
-                color: @panel-primary-text;
-                background-color: @panel-primary-bg;
-                border-color: @panel-primary-bg;
+                color: var(--panel-primary-text);
+                background-color: transparent;
+                border-color: transparent;
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
                     &,
                     &:focus {
-                        background-color: @panel-primary-bg;
-                        border-color: @panel-primary-bg;
-                        color: @panel-primary-text;
+                        color: var(--panel-primary-text);
+                        background-color: transparent;
+                        border-color: transparent;
                     }
                 }
             }
@@ -288,10 +403,6 @@ body {
     border-width: var(--panel-border-width);
 
     .panel-heading {
-        > .btn-group > .btn {
-            //border-radius: 0 !important;
-        }
-
         h4.panel-title span.fas.color-icon {
             font-size: 50%;
             position: relative;
@@ -303,7 +414,6 @@ body {
 }
 
 .panel.sticked {
-    //margin-top: ~"calc(-1 * var(--vertical-gap) - var(--panel-border-width)))";
     margin-top: ~"calc(-1 * var(--vertical-gap))";
     border-top-width: max(var(--panel-border-width), 1px);
 }
@@ -319,6 +429,26 @@ body {
             > .far {
                 color: var(--btn-text-color);
             }
+        }
+    }
+}
+
+.panel {
+    > .panel-heading {
+        border-top-left-radius: var(--panel-border-radius);
+        border-top-right-radius: var(--panel-border-radius);
+    }
+
+    > .panel-body > .list-container:last-child > .list {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+
+        > table,
+        > .list-group,
+        > .list-group:last-child > .list-group-item:last-child,
+        > .show-more > a {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
         }
     }
 }

@@ -420,9 +420,9 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 let scope = options.hash.scope || false;
                 let category = options.hash.category || false;
                 let field = options.hash.field || false;
+                let styleMap = options.hash.styleMap || {};
 
                 if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
-
                     if (!~list.indexOf(value)) {
                         list = Espo.Utils.clone(list);
 
@@ -456,14 +456,20 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 };
 
                 for (let key in list) {
-                    let keyVal = list[key];
-                    let label = translate(list[key]);
+                    let value = list[key];
+                    let label = translate(value);
 
-                    keyVal = this.escapeString(keyVal);
-                    label = this.escapeString(label);
+                    let $option =
+                        $('<option>')
+                            .attr('value', value)
+                            .addClass(styleMap[value] ? 'text-' + styleMap[value]: '')
+                            .text(label);
 
-                    html += "<option value=\"" + keyVal + "\" " +
-                        (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
+                    if (checkOption(list[key])) {
+                        $option.attr('selected', 'selected')
+                    }
+
+                    html += $option.get(0).outerHTML;
                 }
 
                 return new Handlebars.SafeString(html);
@@ -525,30 +531,23 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 return '';
             }
 
-            var t;
+            let t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
 
-            var cache = this.cache;
+            let basePath = this.basePath || '';
+            size = size || 'small';
+            width = width || 16;
 
-            if (cache) {
-                t = cache.get('app', 'timestamp');
-            }
-            else {
-                t = Date.now();
-            }
-
-            var basePath = this.basePath || '';
-            var size = size || 'small';
-
-            var width = (width || 16).toString();
-
-            var className = 'avatar';
+            let className = 'avatar';
 
             if (additionalClassName) {
                 className += ' ' + additionalClassName;
             }
 
-            return '<img class="'+className+'" width="'+width+'" src="'+basePath+
-                '?entryPoint=avatar&size='+size+'&id=' + id + '&t='+t+'">';
+            return $('<img>')
+                .attr('src', `${basePath}?entryPoint=avatar&size=${size}&id=${id}&t=${t}`)
+                .addClass(className)
+                .attr('width', width.toString())
+                .get(0).outerHTML;
         },
 
         /**

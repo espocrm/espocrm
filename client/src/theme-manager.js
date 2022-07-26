@@ -38,11 +38,30 @@ define('theme-manager', [], function () {
      * @param {module:models/settings.Class} config A config.
      * @param {module:models/preferences.Class} preferences Preferences.
      * @param {module:metadata.Class} metadata Metadata.
+     * @param {?string} [name] A name. If not set, then will be obtained from config and preferences.
      */
-    let ThemeManager = function (config, preferences, metadata) {
+    let ThemeManager = function (config, preferences, metadata, name) {
+        /**
+         * @private
+         * @type {module:models/settings.Class}
+         */
         this.config = config;
+        /**
+         * @private
+         * @type {module:models/preferences.Class}
+         */
         this.preferences = preferences;
+        /**
+         * @private
+         * @type {module:metadata.Class}
+         */
         this.metadata = metadata;
+
+        /**
+         * @private
+         * @type {?string}
+         */
+        this.name = name || null;
     };
 
     _.extend(ThemeManager.prototype, /** module:theme-manager.Class# */{
@@ -62,6 +81,10 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getName: function () {
+            if (this.name) {
+                return this.name;
+            }
+
             if (!this.config.get('userThemesDisabled')) {
                 let name = this.preferences.get('theme');
 
@@ -109,8 +132,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheet']) ||
-                'client/css/espo/espo.css';
+            let link = this.getParam('stylesheet') || 'client/css/espo/espo.css';
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -125,8 +147,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getIframeStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) ||
-                'client/css/espo/espo-iframe.css';
+            let link = this.getParam('stylesheetIframe') || 'client/css/espo/espo-iframe.css';
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -141,8 +162,7 @@ define('theme-manager', [], function () {
          * @returns {string}
          */
         getIframeFallbackStylesheet: function () {
-            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframeFallback']) ||
-                'client/css/espo/espo-iframe.css';
+            let link = this.getParam('stylesheetIframeFallback') || 'client/css/espo/espo-iframe.css'
 
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
@@ -158,8 +178,98 @@ define('theme-manager', [], function () {
          * @returns {*} Null if not set.
          */
         getParam: function (name) {
-            return this.metadata.get(['themes', this.getName(), name]) ||
-                this.defaultParams[name] || null;
+            if (name !== 'params' && name !== 'mappedParams') {
+                let varValue = this.getVarParam(name);
+
+                if (varValue !== null) {
+                    return varValue;
+                }
+
+                let mappedValue = this.getMappedParam(name);
+
+                if (mappedValue !== null) {
+                    return mappedValue;
+                }
+            }
+
+            let value = this.metadata.get(['themes', this.getName(), name]);
+
+            if (value !== null) {
+                return value;
+            }
+
+            value = this.metadata.get(['themes', this.getParentName(), name]);
+
+            if (value !== null) {
+                return value;
+            }
+
+            return this.defaultParams[name] || null;
+        },
+
+        /**
+         * @private
+         * @param {string} name
+         * @returns {*}
+         */
+        getVarParam: function (name) {
+            let params = this.getParam('params') || {};
+
+            if (!(name in params)) {
+                return null;
+            }
+
+            let values = null;
+
+            if (!this.config.get('userThemesDisabled') && this.preferences.get('theme')) {
+                values = this.preferences.get('themeParams');
+            }
+
+            if (!values) {
+                values = this.config.get('themeParams');
+            }
+
+            if (values && (name in values)) {
+                return values[name];
+            }
+
+            if ('default' in params[name]) {
+                return params[name].default;
+            }
+
+            return null;
+        },
+
+        /**
+         * @private
+         * @param {string} name
+         * @returns {*}
+         */
+        getMappedParam: function (name) {
+            let mappedParams = this.getParam('mappedParams') || {};
+
+            if (!(name in mappedParams)) {
+                return null;
+            }
+
+            let mapped = mappedParams[name].param;
+            let valueMap = mappedParams[name].valueMap;
+
+            if (mapped && valueMap) {
+                let key = this.getParam(mapped);
+
+                return valueMap[key];
+            }
+
+            return null;
+        },
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        getParentName: function () {
+            return this.metadata.get(['themes', this.getName(), 'parent']) || 'Espo';
         },
 
         /**
@@ -168,17 +278,17 @@ define('theme-manager', [], function () {
          * @returns {boolean}
          */
         isUserTheme: function () {
-            if (!this.config.get('userThemesDisabled')) {
-                let name = this.preferences.get('theme');
-
-                if (name && name !== '') {
-                    if (name !== this.config.get('theme')) {
-                        return true;
-                    }
-                }
+            if (this.config.get('userThemesDisabled')) {
+                return false;
             }
 
-            return false;
+            let name = this.preferences.get('theme');
+
+            if (!name || name === '') {
+                return false;
+            }
+
+            return name !== this.config.get('theme');
         },
     });
 

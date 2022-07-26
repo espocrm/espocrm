@@ -1,6 +1,6 @@
 <div
   id="dashlet-{{id}}"
-  class="panel panel-default dashlet{{#if isDoubleHeight}} double-height{{/if}}"
+  class="panel panel-default headered dashlet{{#if isDoubleHeight}} double-height{{/if}}"
   data-name="{{name}}"
   data-id="{{id}}"
 >

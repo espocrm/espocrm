@@ -1,0 +1,78 @@
+body:not([data-navbar="side"]) {
+    #navbar .navbar {
+        ul.tabs {
+            > li.more {
+                > ul > li > a {
+                    > span.full-label {
+                        padding-left: 30px;
+                        padding-right: 30px;
+                        position: static;
+                    }
+
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        #navbar .navbar {
+            ul.tabs {
+                > li > a > span.short-label {
+                    float: right;
+                    right: -4px;
+                    left: 0;
+                    margin-left: 4px;
+                    margin-right: 0;
+                }
+
+                li.more > li > a {
+                    padding-right: 10px;
+                    padding-left: 0;
+                }
+            }
+
+            .navbar-right-container {
+                padding-right: 0;
+                padding-left: 18px;
+            }
+        }
+
+        .search-container .view-mode-switcher-buttons-group {
+            float: left !important;
+        }
+    }
+
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        #navbar .navbar {
+            ul.tabs {
+                > li a > span.full-label {
+                    padding-right: 30px;
+                    padding-left: 0;
+                }
+            }
+        }
+    }
+
+    div.list-kanban > div > table {
+        th.group-header {
+            > div {
+                padding-left: 0;
+                padding-right: @table-cell-padding;
+            }
+
+            > div:before,
+            > div:after {
+                content: none;
+            }
+        }
+    }
+
+    .kanban-row {
+        .item-menu-container.pull-right {
+            float: left !important;
+            left: -9px;
+            margin-left: -10px;
+            margin-right: 0;
+        }
+    }
+}

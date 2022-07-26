@@ -34,9 +34,8 @@
 }
 
 .record {
-    .middle-tabs {
+    .tabs {
         > button.btn {
-            border-bottom-width: 2px;
             font-size: 15px;
             height: 40px;
 
@@ -44,7 +43,13 @@
                 color: var(--state-danger-text);
                 transition: color 100ms linear;
             }
+
+            &:after {
+                height: 2px;
+            }
         }
+
+        margin-left: var(--panel-border-radius);
     }
 
     .panel.tab-hidden {
@@ -54,6 +59,30 @@
     .side.tabs-margin {
         @media screen and (min-width: @screen-sm-min) {
             margin-top: 40px;
+        }
+    }
+
+    .panel {
+        &.first {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        &.in-middle {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        &.last {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+
+    .bottom {
+        .panel.sticked:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
         }
     }
 }
@@ -117,12 +146,6 @@
     }
 }
 
-.record .middle-tabs + .middle {
-    .panel {
-        //border-bottom-width: var(--panel-border-width);
-    }
-}
-
 .record .side {
     > .panel.sticked:first-child {
         margin-top: 0;
@@ -138,6 +161,10 @@
 .record .bottom {
     .panel.hidden + .panel.sticked {
         border-top-width: var(--panel-border-width);
+    }
+
+    .btn-group + .panel.sticked {
+        margin-top: 0;
     }
 }
 

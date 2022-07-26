@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/user-interface', 'views/settings/record/edit', function (Dep) {
+define('views/admin/user-interface', ['views/settings/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,7 +41,10 @@ define('views/admin/user-interface', 'views/settings/record/edit', function (Dep
             this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
 
             this.on('save', (initialAttributes) => {
-                if (this.model.get('theme') !== initialAttributes.theme) {
+                if (
+                    this.model.get('theme') !== initialAttributes.theme ||
+                    (this.model.get('themeParams').navbar || {}) !== (initialAttributes.themeParams).navbar
+                ) {
                     this.setConfirmLeaveOut(false);
 
                     window.location.reload();

@@ -9,8 +9,7 @@
 
     <div class="navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
-            {{#each tabDefsList}}
-            {{#unless isInMore}}
+            {{#each tabDefsList1}}
             <li data-name="{{name}}" class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}">
                 <a
                     href="{{link}}"
@@ -74,9 +73,8 @@
                 </ul>
                 {{/if}}
             </li>
-            {{/unless}}
             {{/each}}
-            <li class="dropdown more">
+            <li class="dropdown more{{#unless tabDefsList2.length}} hidden{{/unless}}">
                 <a
                     id="nav-more-tabs-dropdown"
                     class="dropdown-toggle"
@@ -84,8 +82,7 @@
                     href="#"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
-                {{#each tabDefsList}}
-                {{#if isInMore}}
+                {{#each tabDefsList2}}
                     <li
                         data-name="{{name}}"
                         class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}"
@@ -150,7 +147,6 @@
                         </ul>
                         {{/if}}
                     </li>
-                {{/if}}
                 {{/each}}
                 </ul>
             </li>
@@ -160,26 +156,46 @@
             <li class="nav navbar-nav navbar-form global-search-container">
                 {{{globalSearch}}}
             </li>
-            <li class="dropdown notifications-badge-container">
-                {{{notificationsBadge}}}
-            </li>
             {{#if enableQuickCreate}}
             <li class="dropdown hidden-xs quick-create-container">
-                <a id="nav-quick-create-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Create'}}"><i class="fas fa-plus"></i></a>
+                <a
+                    id="nav-quick-create-dropdown"
+                    class="dropdown-toggle"
+                    data-toggle="dropdown"
+                    href="#"
+                    title="{{translate 'Create'}}"
+                ><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
                     <li class="dropdown-header">{{translate 'Create'}}</li>
                     {{#each quickCreateList}}
-                    <li><a href="#{{./this}}/create" data-name="{{./this}}" data-action="quick-create">{{translate this category='scopeNames'}}</a></li>
+                    <li><a
+                            href="#{{./this}}/create"
+                            data-name="{{./this}}"
+                            data-action="quick-create"
+                        >{{translate this category='scopeNames'}}</a></li>
                     {{/each}}
                 </ul>
             </li>
             {{/if}}
+            <li class="dropdown notifications-badge-container">
+                {{{notificationsBadge}}}
+            </li>
             <li class="dropdown menu-container">
-                <a id="nav-menu-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#" title="{{translate 'Menu'}}"><span class="fas fa-ellipsis-v"></span></a>
+                <a
+                    id="nav-menu-dropdown"
+                    class="dropdown-toggle"
+                    data-toggle="dropdown"
+                    href="#"
+                    title="{{translate 'Menu'}}"
+                ><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}
-                            <li><a href="{{#if link}}{{link}}{{else}}javascript:{{/if}}" class="nav-link{{#if action}} action{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                            <li><a
+                                    href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+                                    class="nav-link{{#if action}} action{{/if}}"{{#if action}}
+                                    data-action="{{action}}"{{/if}}
+                                >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}
@@ -188,7 +204,7 @@
             </li>
         </ul>
         </div>
-        <a class="minimizer" href="javascript:">
+        <a class="minimizer hidden" href="javascript:">
             <span class="fas fa-chevron-right right"></span>
             <span class="fas fa-chevron-left left"></span>
         </a>

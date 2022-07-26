@@ -608,19 +608,27 @@ function (Dep, MassActionHelper, ExportHelper) {
          * @protected
          */
         initStickedBar: function () {
-            var $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
-            var $middle = this.$el.find('> .list');
-            var $window = $(window);
-            var $scrollable = $window;
+            let $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
+            let $middle = this.$el.find('> .list');
+
+            let $window = $(window);
+            let $scrollable = $window;
 
             this.on('render', () => {
                 this.$stickedBar = null;
             });
 
-            var screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let isModal = !!this.$el.closest('.modal-body').length;
 
-            function getOffsetTop (element) {
-                var offsetTop = 0;
+            let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+            let navbarHeight = this.getThemeManager().getParam('navbarHeight');
+
+            let isSmallWindow = $(window.document).width() < screenWidthXs;
+
+            let getOffsetTop = (element) => {
+                let offsetTop = 0;
+
+                let withHeader = !isSmallWindow && !isModal;
 
                 do {
                     if (element.classList.contains('modal-body')) {
@@ -630,40 +638,29 @@ function (Dep, MassActionHelper, ExportHelper) {
                     if (!isNaN(element.offsetTop)) {
                         offsetTop += element.offsetTop;
                     }
-                } while (element = element.offsetParent);
+
+                    element = element.offsetParent;
+                } while (element);
+
+                if (withHeader) {
+                    offsetTop -= navbarHeight;
+                }
 
                 return offsetTop;
-            }
-
-            var top;
+            };
 
             if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
-
-                top = 0;
-            }
-            else {
-                top = getOffsetTop(this.getParentView().$el.get(0));
-
-                if ($(window.document).width() < screenWidthXs) {
-                    top = 0;
-                }
             }
 
-            top += this.$el.find('.list-buttons-container').height();
-
+            let middleTop = getOffsetTop($middle.get(0));
+            let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
 
             $scrollable.off('scroll.list-' + this.cid);
-
-            $scrollable.on('scroll.list-' + this.cid, (e) => {
-                controlSticking();
-            });
+            $scrollable.on('scroll.list-' + this.cid, () => controlSticking());
 
             $window.off('resize.list-' + this.cid);
-
-            $window.on('resize.list-' + this.cid, (e) => {
-                controlSticking();
-            });
+            $window.on('resize.list-' + this.cid, () => controlSticking());
 
             this.on('check', () => {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) {
@@ -675,34 +672,36 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.once('remove', () => {
                 $scrollable.off('scroll.list-' + this.cid);
-
                 $window.off('resize.list-' + this.cid);
             });
 
-            var controlSticking = () => {
+            let controlSticking = () => {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) {
                     return;
                 }
 
-                var middleTop = getOffsetTop($middle.get(0));
+                let scrollTop = $scrollable.scrollTop();
 
-                var stickTop = middleTop - top;
+                let stickTop = buttonsTop;
+                let edge = middleTop + $middle.outerHeight(true);
 
-                var edge = middleTop + $middle.outerHeight(true);
-
-                var scrollTop = $scrollable.scrollTop();
-
-                if (scrollTop < edge) {
-                    if (scrollTop > stickTop) {
-                        $stickedBar.removeClass('hidden');
-                    }
-                    else {
-                        $stickedBar.addClass('hidden');
-                    }
+                if (isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
+                    return;
                 }
-                else {
+
+                if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');
+
+                    return;
                 }
+
+                if (scrollTop > stickTop) {
+                    $stickedBar.removeClass('hidden');
+
+                    return;
+                }
+
+                $stickedBar.addClass('hidden');
             };
         },
 
@@ -2642,12 +2641,15 @@ function (Dep, MassActionHelper, ExportHelper) {
                     collection.total > collection.length + collection.lengthCorrection ||
                     collection.total === -1
                 ) {
-                    var moreCount = collection.total - collection.length - collection.lengthCorrection;
-                    var moreCountString = this.getNumberUtil().formatInt(moreCount);
+                    let moreCount = collection.total - collection.length - collection.lengthCorrection;
+                    let moreCountString = this.getNumberUtil().formatInt(moreCount);
 
                     this.$el.find('.more-count').text(moreCountString);
 
                     $showMore.removeClass('hidden');
+                }
+                else {
+                    $showMore.remove();
                 }
 
                 $showMore.children('a').removeClass('disabled');
@@ -2742,7 +2744,10 @@ function (Dep, MassActionHelper, ExportHelper) {
          * @return {string} HTML.
          */
         getRowContainerHtml: function (id) {
-            return '<tr data-id="'+id+'" class="list-row"></tr>';
+            return $('<tr>')
+                .attr('data-id', id)
+                .addClass('list-row')
+                .get(0).outerHTML;
         },
 
         actionQuickView: function (data) {

@@ -6,6 +6,7 @@
 
     #layout ul > li {
         background-color: var(--select-item-bg);
+        border-radius: var(--border-radius);
     }
 
     #layout ul.panels > li {
@@ -13,6 +14,7 @@
         margin-bottom: 20px;
         min-height: 80px;
         border: 1px solid var(--select-item-border);
+        border-radius: var(--border-radius);
         background-color: var(--panel-bg);
         list-style: none;
     }
@@ -25,6 +27,7 @@
         list-style: none;
         border: 1px solid var(--select-item-border);
         background-color: var(--panel-bg);
+        border-radius: var(--border-radius);
         margin: 8px 0;
         padding: 5px;
         height: 72px;

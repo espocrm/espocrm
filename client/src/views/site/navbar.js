@@ -36,7 +36,8 @@ define('views/site/navbar', ['view'], function (Dep) {
 
         data: function () {
             return {
-                tabDefsList: this.tabDefsList,
+                tabDefsList1: this.tabDefsList.filter(item => !item.isInMore),
+                tabDefsList2: this.tabDefsList.filter(item => item.isInMore),
                 title: this.options.title,
                 menuDataList: this.getMenuDataList(),
                 quickCreateList: this.quickCreateList,
@@ -135,10 +136,10 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             var windowHeight = window.innerHeight;
 
-            var isVertical = this.getThemeManager().getParam('navbarIsVertical');
+            var isSide = this.isSide();
 
             if (
-                !isVertical &&
+                !isSide &&
                 !$target.parent().hasClass('more-dropdown-menu')
             ) {
                 let maxHeight = windowHeight - rectItem.bottom;
@@ -150,7 +151,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             var itemCount = $menu.children().length;
 
-            let tabHeight = isVertical ?
+            let tabHeight = isSide ?
                 this.$tabs.find('> .tab').height() :
                 this.$tabs.find('.tab-group > ul > li:visible').height();
 
@@ -232,7 +233,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             this.adjustBodyMinHeight();
 
-            if (!this.getThemeManager().getParam('isVertical')) {
+            if (!this.isSide()) {
                 if (left + $menu.width() > window.innerWidth) {
                     $menu.css({
                         left: rectDropdown.left - $menu.width() - 2,
@@ -346,7 +347,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             tabList = Espo.Utils.cloneDeep(tabList || []);
 
-            if (this.getThemeManager().getParam('navbarIsVertical')) {
+            if (this.isSide()) {
                 tabList.unshift('Home');
             }
 
@@ -548,7 +549,7 @@ define('views/site/navbar', ['view'], function (Dep) {
                 $navbar.css('overflow', 'visible');
             }
 
-            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 565;
+            var navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
 
             var tabCount = this.tabList.length;
 
@@ -663,6 +664,8 @@ define('views/site/navbar', ['view'], function (Dep) {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
 
+                this.$minimizer.removeClass('hidden');
+
                 if (windowWidth < smallScreenWidth) {
                     $tabs.css('height', 'auto');
                     $more.css('max-height', '');
@@ -680,15 +683,15 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             updateSizeForVertical();
 
-            this.$el
-                .find('.notifications-badge-container')
-                .insertAfter(this.$el.find('.quick-create-container'));
-
             this.adjustBodyMinHeight();
         },
 
         getNavbarHeight: function () {
             return this.getThemeManager().getParam('navbarHeight') || 43;
+        },
+
+        isSide: function () {
+            return this.getThemeManager().getParam('navbar') === 'side';
         },
 
         getStaticItemsHeight: function () {
@@ -790,10 +793,11 @@ define('views/site/navbar', ['view'], function (Dep) {
             this.$body = $('body');
             this.$tabs = this.$el.find('ul.tabs');
             this.$more = this.$tabs.find('li.more > ul');
+            this.$minimizer = this.$el.find('a.minimizer');
 
             this.$body.addClass('has-navbar');
 
-            var $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
+            let $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
             $moreDd.on('shown.bs.dropdown', () => {
                 this.isMoreDropdownShown = true;
@@ -808,12 +812,14 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             this.selectTab(this.getRouter().getLast().controller);
 
-            var layoutState = this.getStorage().get('state', 'siteLayoutState');
+            let layoutState = this.getStorage().get('state', 'siteLayoutState');
+
             if (!layoutState) {
                 layoutState = $(window).width() > 1320 ? 'expanded' : 'collapsed';
             }
 
-            var layoutMinimized = false;
+            let layoutMinimized = false;
+
             if (layoutState === 'collapsed') {
                 layoutMinimized = true;
             }
@@ -825,23 +831,29 @@ define('views/site/navbar', ['view'], function (Dep) {
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
-            var handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
+            let handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 
             if (handlerClassName) {
                 require(handlerClassName, (Handler) => {
-                    var handler = new Handler(this);
+                    let handler = new Handler(this);
 
                     this.navbarAdjustmentHandler = handler;
 
                     handler.process();
                 });
+
+                return;
             }
 
             if (this.getThemeManager().getParam('skipDefaultNavbarAdjustment')) {
                 return;
             }
 
-            if (this.getThemeManager().getParam('navbarIsVertical')) {
+            this.adjustAfterRender();
+        },
+
+        adjustAfterRender: function () {
+            if (this.isSide()) {
                 let process = () => {
                     if (this.$navbar.height() < $(window).height() / 2) {
                         setTimeout(() => process(), 50);
@@ -859,26 +871,27 @@ define('views/site/navbar', ['view'], function (Dep) {
                 };
 
                 process();
+
+                return;
             }
-            else {
-                let process = () => {
-                    if (this.$el.width() < $(window).width() / 2) {
-                        setTimeout(() => process(), 50);
 
-                        return;
-                    }
+            let process = () => {
+                if (this.$el.width() < $(window).width() / 2) {
+                    setTimeout(() => process(), 50);
 
-                    if (this.getThemeManager().isUserTheme()) {
-                        setTimeout(() => this.adjustHorizontal(), 10);
+                    return;
+                }
 
-                        return;
-                    }
+                if (this.getThemeManager().isUserTheme()) {
+                    setTimeout(() => this.adjustHorizontal(), 10);
 
-                    this.adjustHorizontal();
-                };
+                    return;
+                }
 
-                process();
-            }
+                this.adjustHorizontal();
+            };
+
+            process();
         },
 
         selectTab: function (name) {

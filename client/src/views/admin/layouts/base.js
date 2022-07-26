@@ -70,6 +70,8 @@ define('views/admin/layouts/base', 'view', function (Dep) {
 
         dataAttributesDefs: null,
 
+        dataAttributesDynamicLogicDefs: null,
+
         disableButtons: function () {
             this.$el.find('.button-container button').attr('disabled', true);
         },
@@ -168,25 +170,33 @@ define('views/admin/layouts/base', 'view', function (Dep) {
             });
         },
 
-        openEditDialog: function (attributes) {
-            var name = attributes.name;
-
-            this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
+        getEditAttributesModalViewOptions: function (attributes) {
+            return {
                 name: attributes.name,
                 scope: this.scope,
                 attributeList: this.dataAttributeList,
                 attributeDefs: this.dataAttributesDefs,
+                dynamicLogicDefs: this.dataAttributesDynamicLogicDefs,
                 attributes: attributes,
                 languageCategory: this.languageCategory,
-            }, view => {
+                headerText: ' ',
+            };
+        },
+
+        openEditDialog: function (attributes) {
+            let name = attributes.name;
+
+            let viewOptions = this.getEditAttributesModalViewOptions(attributes);
+
+            this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', viewOptions, view => {
                 view.render();
 
                 this.listenToOnce(view, 'after:save', attributes => {
                     this.trigger('update-item', name, attributes);
 
-                    var $li = $("#layout ul > li[data-name='" + name + "']");
+                    let $li = $("#layout ul > li[data-name='" + name + "']");
 
-                    for (var key in attributes) {
+                    for (let key in attributes) {
                         $li.attr('data-' + key, attributes[key]);
                         $li.data(key, attributes[key]);
                         $li.find('.' + key + '-value').text(attributes[key]);

@@ -60,6 +60,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
          * @property {string} [view] A view name.
          * @property {Object.<string,*>} [Options] A view options.
          * @property {boolean} [sticked] To stick to an upper panel.
+         * @property {Number} [tabNumber]
          */
 
         /**
@@ -96,11 +97,30 @@ define('views/record/panels-container', ['view'], function (Dep) {
          */
         panelList: null,
 
+        /**
+         * @private
+         */
+        hasTabs: false,
+
+        /**
+         * @private
+         * @type {Object.<string,*>[]|null}
+         */
+        tabDataList: null,
+
+        /**
+         * @protected
+         */
+        currentTab: 0,
+
         data: function () {
+            let tabDataList = this.hasTabs ? this.getTabDataList() : [];
+
             return {
                 panelList: this.panelList,
                 scope: this.scope,
                 entityType: this.entityType,
+                tabDataList: tabDataList,
             };
         },
 
@@ -126,6 +146,91 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 }
             },
             'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
+            /** @this module:views/record/panels-container.Class */
+            'click .tabs > button': function (e) {
+                let tab = $(e.currentTarget).attr('data-tab');
+
+                this.selectTab(parseInt(tab));
+            },
+        },
+
+        afterRender: function () {
+            this.adjustPanels();
+        },
+
+        adjustPanels: function () {
+            if (!this.isRendered()) {
+                return;
+            }
+
+            let $panels = this.$el.find('> .panel');
+
+            $panels
+                .removeClass('first')
+                .removeClass('last')
+                .removeClass('in-middle');
+
+            let $visiblePanels = $panels.filter(`:not(.tab-hidden):not(.hidden)`);
+
+            let groups = [];
+            let currentGroup = [];
+            let inTab = false;
+
+            $visiblePanels.each((i, el) => {
+                let $el = $(el);
+
+                let breakGroup = false;
+
+                if (
+                    !breakGroup &&
+                    this.hasTabs &&
+                    !inTab &&
+                    $el.attr('data-tab') !== '-1'
+                ) {
+                    inTab = true;
+                    breakGroup = true;
+                }
+
+                if (!breakGroup && !$el.hasClass('sticked')) {
+                    breakGroup = true;
+                }
+
+                if (breakGroup) {
+                    if (i !== 0) {
+                        groups.push(currentGroup);
+                    }
+
+                    currentGroup = [];
+                }
+
+                currentGroup.push($el);
+
+                if (i === $visiblePanels.length - 1) {
+                    groups.push(currentGroup);
+                }
+            });
+
+            groups.forEach(group => {
+                group.forEach(($el, i) => {
+                    if (i === group.length - 1) {
+                        if (i === 0) {
+                            return;
+                        }
+
+                        $el.addClass('last')
+
+                        return;
+                    }
+
+                    if (i === 0 && group.length) {
+                        $el.addClass('first')
+
+                        return;
+                    }
+
+                    $el.addClass('in-middle');
+                });
+            });
         },
 
         /**
@@ -318,10 +423,12 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
             var isFound = false;
 
-            this.panelList.forEach((d) => {
+            this.panelList.forEach(d => {
                 if (d.name === name) {
                     d.hidden = false;
                     isFound = true;
+
+                    this.controlTabVisibilityShow(d.tabNumber);
                 }
             });
 
@@ -342,7 +449,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                         var fields = view.getFieldViews();
 
                         if (fields) {
-                            for (var i in fields) {
+                            for (let i in fields) {
                                 fields[i].reRender();
                             }
                         }
@@ -352,6 +459,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+
+                this.adjustPanels();
 
                 return;
             }
@@ -388,10 +497,12 @@ define('views/record/panels-container', ['view'], function (Dep) {
 
             var isFound = false;
 
-            this.panelList.forEach((d) => {
+            this.panelList.forEach(d => {
                 if (d.name === name) {
                     d.hidden = true;
                     isFound = true;
+
+                    this.controlTabVisibilityHide(d.tabNumber);
                 }
             });
 
@@ -412,6 +523,8 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     callback.call(this);
                 }
 
+                this.adjustPanels();
+
                 return;
             }
 
@@ -425,20 +538,41 @@ define('views/record/panels-container', ['view'], function (Dep) {
         alterPanels: function (layoutData) {
             layoutData = layoutData || this.layoutData || {};
 
-            for (var n in layoutData) {
-                if (n === '_delimiter_') {
+            let tabBreakIndexList = [];
+
+            let tabDataList = [];
+
+            for (let name in layoutData) {
+                let item = layoutData[name];
+
+                if (name === '_delimiter_') {
                     this.panelList.push({
-                        name: n,
+                        name: name,
                     });
+                }
+
+                if (item.tabBreak) {
+                    tabBreakIndexList.push(item.index);
+
+                    tabDataList.push({
+                        index: item.index,
+                        label: item.tabLabel,
+                    })
                 }
             }
 
-            var newList = [];
+            /**
+             * @private
+             * @type {Object.<string,*>[]}
+             */
+            this.tabDataList = tabDataList.sort((v1, v2) => v1.index - v2.index);
+
+            let newList = [];
 
             this.panelList.forEach((item, i) => {
                 item.index = ('index' in item) ? item.index : i;
 
-                var allowedInLayout = false;
+                let allowedInLayout = false;
 
                 if (item.name) {
                     var itemData = layoutData[item.name] || {};
@@ -451,7 +585,7 @@ define('views/record/panels-container', ['view'], function (Dep) {
                         allowedInLayout = true;
                     }
 
-                    for (var i in itemData) {
+                    for (let i in itemData) {
                         item[i] = itemData[i];
                     }
                 }
@@ -460,19 +594,38 @@ define('views/record/panels-container', ['view'], function (Dep) {
                     return;
                 }
 
+                item.tabNumber = tabBreakIndexList.length -
+                    tabBreakIndexList.slice().reverse().findIndex(index => item.index > index) - 1;
+
+                if (item.tabNumber === tabBreakIndexList.length) {
+                    item.tabNumber = -1;
+                }
+
                 newList.push(item);
             });
 
-            newList.sort((v1, v2) => {
-                return v1.index - v2.index;
-            });
+            newList.sort((v1, v2) => v1.index - v2.index);
+
+            let firstTabIndex = newList.findIndex(item => item.tabNumber !== -1);
+
+            if (firstTabIndex !== -1) {
+                newList[firstTabIndex].isTabsBeginning = true;
+                this.hasTabs = true;
+                this.currentTab = newList[firstTabIndex].tabNumber;
+
+                this.panelList
+                    .filter(item => item.tabNumber !== -1 && item.tabNumber !== this.currentTab)
+                    .forEach(item => {
+                        item.tabHidden = true;
+                    })
+            }
 
             this.panelList = newList;
 
             if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
                 var dynamicLogic = this.recordViewObject.dynamicLogic;
 
-                this.panelList.forEach((item) => {
+                this.panelList.forEach(item => {
                     if (item.dynamicLogicVisible) {
                         dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
 
@@ -557,6 +710,92 @@ define('views/record/panels-container', ['view'], function (Dep) {
             ]).then(() => {
                 callback.call(this);
             });
+        },
+
+        getTabDataList: function () {
+            return this.tabDataList.map((item, i) => {
+                let label = item.label;
+
+                if (!label) {
+                    label = (i + 1).toString();
+                }
+                else if (label[0] === '$') {
+                    label = this.translate(label.substring(1), 'tabs', this.scope);
+                }
+
+                let hidden = this.panelList
+                    .filter(panel => panel.tabNumber === i)
+                    .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+
+                return {
+                    label: label,
+                    isActive: i === this.currentTab,
+                    hidden: hidden,
+                };
+            });
+        },
+
+        selectTab: function (tab) {
+            this.currentTab = tab;
+
+            $('body > .popover').remove();
+
+            this.$el.find('.tabs > button').removeClass('active');
+            this.$el.find(`.tabs > button[data-tab="${tab}"]`).addClass('active');
+
+            this.$el.find('.panel[data-tab]:not([data-tab="-1"])').addClass('tab-hidden');
+            this.$el.find(`.panel[data-tab="${tab}"]`).removeClass('tab-hidden');
+
+            this.adjustPanels();
+        },
+
+        /**
+         * @private
+         */
+        controlTabVisibilityShow: function (tab) {
+            if (!this.hasTabs) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlTabVisibilityShow(tab));
+
+                return;
+            }
+
+            this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`).removeClass('hidden');
+        },
+
+        /**
+         * @private
+         */
+        controlTabVisibilityHide: function (tab) {
+            if (!this.hasTabs) {
+                return;
+            }
+
+            if (this.isBeingRendered()) {
+                this.once('after:render', () => this.controlTabVisibilityHide(tab));
+
+                return;
+            }
+
+            let panelList = this.panelList.filter(panel => panel.tabNumber === tab);
+
+            let allIsHidden = panelList
+                .findIndex(panel => !this.recordHelper.getPanelStateParam(panel.name, 'hidden')) === -1;
+
+            if (!allIsHidden) {
+                return;
+            }
+
+            let $tab = this.$el.find(`.tabs > [data-tab="${tab.toString()}"]`);
+
+            $tab.addClass('hidden');
+
+            if (this.currentTab === tab) {
+                this.selectTab(0);
+            }
         },
     });
 });

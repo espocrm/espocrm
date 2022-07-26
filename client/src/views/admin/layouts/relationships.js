@@ -29,7 +29,7 @@
 /**
  * @deprecated
  */
-define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function (Dep) {
+define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], function (Dep) {
 
     return Dep.extend({
 
@@ -80,29 +80,29 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
 
             this.wait(true);
 
-            this.loadLayout(function () {
+            this.loadLayout(() => {
                 this.wait(false);
-            }.bind(this));
+            });
         },
 
         loadLayout: function (callback) {
-            this.getModelFactory().create(this.scope, function (model) {
-                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layout) {
+            this.getModelFactory().create(this.scope, (model) => {
+                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
 
-                    var allFields = [];
+                    let allFields = [];
 
-                    for (var field in model.defs.links) {
-                        if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) != -1) {
+                    for (let field in model.defs.links) {
+                        if (['hasMany', 'hasChildren'].indexOf(model.defs.links[field].type) !== -1) {
                             if (this.isLinkEnabled(model, field)) {
                                 allFields.push(field);
                             }
                         }
                     }
 
-                    allFields.sort(function (v1, v2) {
+                    allFields.sort((v1, v2) => {
                         return this.translate(v1, 'links', this.scope)
                             .localeCompare(this.translate(v2, 'links', this.scope));
-                    }.bind(this));
+                    });
 
                     allFields.push('_delimiter_');
 
@@ -111,9 +111,9 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                     this.enabledFields = [];
                     this.disabledFields = [];
 
-                    for (var i in layout) {
-                        var item = layout[i];
-                        var o;
+                    for (let i in layout) {
+                        let item = layout[i];
+                        let o;
 
                         if (typeof item == 'string' || item instanceof String) {
                             o = {
@@ -131,11 +131,12 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                         if (o.name[0] === '_') {
                             o.notEditable = true;
 
-                            if (o.name == '_delimiter_') {
+                            if (o.name === '_delimiter_') {
                                 o.label = '. . .';
                             }
                         }
-                        this.dataAttributeList.forEach(function (attribute) {
+
+                        this.dataAttributeList.forEach(attribute => {
                             if (attribute === 'name') {
                                 return;
                             }
@@ -152,19 +153,19 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                             }
 
                             o[attribute] = value;
-                        }, this);
+                        });
 
                         this.enabledFields.push(o);
                         this.enabledFieldsList.push(o.name);
                     }
 
-                    for (var i in allFields) {
+                    for (let i in allFields) {
                         if (!_.contains(this.enabledFieldsList, allFields[i])) {
                             var name = allFields[i];
 
                             var label = this.getLanguage().translate(name, 'links', this.scope);
 
-                            var o = {
+                            let o = {
                                 name: name,
                                 label: label,
                             };
@@ -172,7 +173,7 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                             if (o.name[0] === '_') {
                                 o.notEditable = true;
 
-                                if (o.name == '_delimiter_') {
+                                if (o.name === '_delimiter_') {
                                     o.label = '. . .';
                                 }
                             }
@@ -183,12 +184,12 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
 
                     this.rowLayout = this.enabledFields;
 
-                    for (var i in this.rowLayout) {
-                        var o = this.rowLayout[i];
+                    for (let i in this.rowLayout) {
+                        let o = this.rowLayout[i];
 
                         o.label = this.getLanguage().translate(this.rowLayout[i].name, 'links', this.scope);
 
-                        if (o.name == '_delimiter_') {
+                        if (o.name === '_delimiter_') {
                             o.label = '. . .';
                         }
 
@@ -196,8 +197,8 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
                     }
 
                     callback();
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         validate: function () {
@@ -205,7 +206,8 @@ define('views/admin/layouts/relationships', 'views/admin/layouts/rows', function
         },
 
         isLinkEnabled: function (model, name) {
-            return !model.getLinkParam(name, 'disabled') && !model.getLinkParam(name, 'layoutRelationshipsDisabled');
+            return !model.getLinkParam(name, 'disabled') &&
+                !model.getLinkParam(name, 'layoutRelationshipsDisabled');
         },
     });
 });

@@ -468,7 +468,7 @@ class SelectBuilder
             $this->withDefaultOrder();
         }
 
-        if ($this->searchParams->getMaxSize() || $this->searchParams->getOffset()) {
+        if ($this->searchParams->getMaxSize() !== null || $this->searchParams->getOffset() !== null) {
             $this->createLimitApplier()
                 ->apply(
                     $this->queryBuilder,

@@ -76,7 +76,6 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .panel-body .no-side-margin {
-
     > table td:first-child,
     > table th:first-child {
         padding-right: @panel-padding;
@@ -88,6 +87,10 @@ ul.dropdown-menu > li.checkbox {
         padding-left: @panel-padding;
         padding-right: @table-cell-padding / 2;
     }
+}
+
+.panel > .panel-heading > .btn-group {
+    right: 0;
 }
 
 .modal-footer .btn {
@@ -345,5 +348,22 @@ div.list-kanban > div > table {
              right: auto;
              left: 5px;
          }
+     }
+ }
+
+ table.table-admin-panel tr > td:first-child > div > a {
+     padding-right: 28px;
+     padding-left: 10px;
+ }
+
+ .btn {
+     &.radius-right {
+         border-top-left-radius: var(--border-radius) !important;
+         border-bottom-left-radius: var(--border-radius) !important;
+     }
+
+     &.radius-left {
+         border-top-right-radius: var(--border-radius) !important;
+         border-bottom-right-radius: var(--border-radius) !important;
      }
  }

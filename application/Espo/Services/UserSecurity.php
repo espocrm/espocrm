@@ -105,9 +105,18 @@ class UserSecurity
         ];
     }
 
+    /**
+     * @throws BadRequest
+     * @throws \Espo\Core\Exceptions\Error
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function getTwoFactorUserSetupData(string $id, stdClass $data): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (
+            !$this->user->isAdmin() &&
+            $id !== $this->user->getId()
+        ) {
             throw new Forbidden();
         }
 
@@ -130,8 +139,12 @@ class UserSecurity
             throw new Forbidden('Passport required.');
         }
 
-        if (!$this->user->isAdmin() || $this->user->getId() === $id) {
+        if (!$this->user->isAdmin()) {
             $this->checkPassword($id, $password);
+        }
+
+        if ($this->user->isAdmin()) {
+            $this->checkPassword($this->user->getId(), $password);
         }
 
         $auth2FAMethod = $data->auth2FAMethod ?? null;
@@ -241,10 +254,13 @@ class UserSecurity
         return $returnData;
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkPassword(string $id, string $password): void
     {
         $user = $this->entityManager
-            ->getRDBRepository('User')
+            ->getRDBRepository(User::ENTITY_TYPE)
             ->where([
                 'id' => $id,
             ])

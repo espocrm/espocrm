@@ -282,4 +282,23 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($this->entityType, $query->getFrom());
     }
+
+    public function testBuildMaxSize0()
+    {
+
+        $searchParams = SearchParams::create()->withMaxSize(0);
+
+
+        $this->limitApplier
+            ->expects($this->once())
+            ->method('apply')
+            ->with($this->isInstanceOf(QueryBuilder::class), 0, 0);
+
+        $query = $this->selectBuilder
+            ->from($this->entityType)
+            ->withSearchParams($searchParams)
+            ->build();
+
+        $this->assertEquals($this->entityType, $query->getFrom());
+    }
 }

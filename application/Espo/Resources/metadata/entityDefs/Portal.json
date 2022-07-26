@@ -54,6 +54,9 @@
             "view": "views/preferences/fields/theme",
             "translation": "Global.themes"
         },
+        "themeParams": {
+            "type": "jsonObject"
+        },
         "language": {
             "type": "enum",
             "view": "views/preferences/fields/language"

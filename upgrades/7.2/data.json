@@ -1,4 +1,16 @@
 {
     "manifest": {
+        "delete": [
+            "client/css/espo/espo-vertical.css",
+            "client/css/espo/espo-vertical-iframe.css",
+            "client/css/espo/dark-vertical.css",
+            "client/css/espo/dark-vertical-iframe.css",
+            "client/css/espo/hazyblue-vertical.css",
+            "client/css/espo/hazyblue-vertical-iframe.css",
+            "client/css/espo/sakura-vertical.css",
+            "client/css/espo/sakura-vertical-iframe.css",
+            "client/css/espo/violet-vertical.css",
+            "client/css/espo/violet-vertical-iframe.css"
+        ]
     }
 }

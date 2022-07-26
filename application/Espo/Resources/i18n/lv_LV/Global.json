@@ -725,11 +725,7 @@
     "kanban": "\"Kanban\""
   },
   "themes": {
-    "DarkVertical": "Tumšs",
-    "Dark": "Tumši horizontāli",
-    "Sakura": "Sakura horizontālais",
-    "Violet": "Violeta horizontālā",
-    "VioletVertical": "Violeta",
-    "Hazyblue": "Hazyblue Horizontālā"
+    "Dark": "Tumši",
+    "Violet": "Violeta"
   }
 }

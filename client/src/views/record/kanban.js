@@ -443,6 +443,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     $list.sortable('refreshPositions');
 
+                    $(ui.item)
+                        .find('.btn-group.open > .dropdown-toggle')
+                        .parent()
+                        .removeClass('open');
+
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                     this.$showMore.addClass('hidden');
 
@@ -613,10 +618,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            var containerHeight = this.getHelper()
+            let height = this.getHelper()
                 .calculateContentContainerHeight(this.$el.find('.kanban-columns-container'));
-
-            var height = containerHeight;
 
             let containerEl = this.$container.get(0);
 
@@ -939,7 +942,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         getRowContainerHtml: function (id) {
-            return '<div class="item" data-id="'+id+'">';
+            return $('<div>')
+                .attr('data-id', id)
+                .addClass('item')
+                .get(0).outerHTML;
         },
 
         actionMoveOver: function (data) {

@@ -40,7 +40,11 @@
 
             {{#if items.dropdown}}
                 <div class="btn-group dropdown-group{{#unless hasVisibleDropdownItems}} hidden{{/unless}}" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle{{#unless hasVisibleDropdownItems}} hidden{{/unless}}"
+                    data-toggle="dropdown"
+                >
                     <span class="fas fa-ellipsis-h"></span>
                 </button>
                 <ul class="dropdown-menu pull-right">

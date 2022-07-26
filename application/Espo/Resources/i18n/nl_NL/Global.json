@@ -692,11 +692,6 @@
     "list": "Lijst"
   },
   "themes": {
-    "DarkVertical": "Donker",
-    "Dark": "Donker Horizontaal",
-    "Espo": "Espo Horizontaal",
-    "EspoRtl": "RTL Espo Horizontaal",
-    "Sakura": "Sakura Horizontaal",
-    "Violet": "Violet Horizontaal"
+    "Dark": "Donker"
   }
 }

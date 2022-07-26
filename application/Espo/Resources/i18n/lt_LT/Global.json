@@ -725,12 +725,7 @@
     "list": "Sąrašas"
   },
   "themes": {
-    "DarkVertical": "Tamsus",
-    "Dark": "Tamsus horizontalus",
-    "Espo": "\"Espo Horizontal",
-    "Sakura": "Sakura Horizontalusis",
-    "Violet": "Violetinė horizontali",
-    "VioletVertical": "Violetinė",
-    "Hazyblue": "Hazyblue Horizontalus"
+    "Dark": "Tamsus",
+    "Violet": "Violetinė"
   }
 }
