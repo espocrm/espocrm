@@ -43,7 +43,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 var tab = parseInt($(e.currentTarget).data('tab'));
                 this.selectTab(tab);
             },
-            'click a[data-action="removeDashlet"]': function (e) {
+            'click [data-action="removeDashlet"]': function (e) {
                 var id = $(e.currentTarget).data('id');
                 this.removeDashlet(id);
             },
@@ -369,16 +369,20 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             var actions2Html = '';
 
             if (this.isEditMode()) {
-                actionsHtml += $('<a>')
-                    .attr('href', 'javascript:')
-                    .addClass('pull-right')
-                    .attr('data-action', 'removeDashlet')
-                    .attr('data-id', id)
-                    .append(
-                        $('<span>').addClass('fas fa-times')
-                    )
-                    .get(0)
-                    .outerHTML;
+                actionsHtml +=
+                    $('<div>')
+                        .addClass('btn-group pull-right')
+                        .append(
+                            $('<button>')
+                                .addClass('btn btn-default')
+                                .attr('data-action', 'removeDashlet')
+                                .attr('data-id', id)
+                                .append(
+                                    $('<span>').addClass('fas fa-times')
+                                )
+                        )
+                        .get(0)
+                        .outerHTML;
 
                 actions2Html += $('<a>')
                     .attr('href', 'javascript:')
