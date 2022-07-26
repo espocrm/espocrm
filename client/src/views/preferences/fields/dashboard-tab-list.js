@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/dashboard-tab-list', 'views/fields/array', function (Dep) {
+define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,40 +34,71 @@ define('views/preferences/fields/dashboard-tab-list', 'views/fields/array', func
             Dep.prototype.setup.call(this);
 
             this.translatedOptions = {};
-            var list = this.model.get(this.name) || [];
-            list.forEach(function (value) {
+
+            let list = this.model.get(this.name) || [];
+
+            list.forEach(value => {
                 this.translatedOptions[value] = value;
-            }, this);
+            });
         },
+
         getItemHtml: function (value) {
             value = value.toString();
-            var valueSanitized = this.escapeValue(value);
-            var translatedValue = this.escapeValue(this.translatedOptions[value] || value);
 
-            var html = '' +
-            '<div class="list-group-item link-with-role form-inline" data-value="' + valueSanitized + '">' +
-                '<div class="pull-left" style="width: 92%; display: inline-block;">' +
-                    '<input data-name="translatedValue" data-value="' + valueSanitized + '" class="role form-control input-sm" value="'+translatedValue+'">' +
-                '</div>' +
-                '<div style="width: 8%; display: inline-block; vertical-align: top;">' +
-                    '<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
-                '</div><br style="clear: both;" />' +
-            '</div>';
+            let translatedValue = this.translatedOptions[value] || value;
 
-            return html;
+            return $('<div>')
+                .addClass('list-group-item link-with-role form-inline')
+                .attr('data-value', value)
+                .append(
+                    $('<div>')
+                        .addClass('pull-left')
+                        .css('width', '92%')
+                        .css('display', 'inline-block')
+                        .append(
+                            $('<input>')
+                                .attr('data-name', 'translatedValue')
+                                .attr('data-value', value)
+                                .addClass('role form-control input-sm')
+                                .attr('value', translatedValue)
+                        )
+                )
+                .append(
+                    $('<div>')
+                        .css('width', '8%')
+                        .css('display', 'inline-block')
+                        .css('vertical-align', 'top')
+                        .append(
+                            $('<a>')
+                                .attr('href', 'javascript:')
+                                .addClass('pull-right')
+                                .attr('data-value', value)
+                                .attr('data-action', 'removeValue')
+                                .append(
+                                    $('<span>').addClass('fas fa-times')
+                                )
+                        )
+                )
+                .append(
+                    $('<br>').css('clear', 'both')
+                )
+                .get(0).outerHTML;
         },
 
         fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+            let data = Dep.prototype.fetch.call(this);
+
             data.translatedOptions = {};
-            (data[this.name] || []).forEach(function (value) {
-                var valueInternal = value.replace(/"/g, '\\"');
-                data.translatedOptions[value] = this.$el.find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]').val() || value;
-            }, this);
+
+            (data[this.name] || []).forEach(value => {
+                let valueInternal = value.replace(/"/g, '\\"');
+
+                data.translatedOptions[value] = this.$el
+                    .find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]')
+                    .val() || value;
+            });
 
             return data;
-        }
-
+        },
     });
-
 });
