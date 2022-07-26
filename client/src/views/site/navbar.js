@@ -36,7 +36,8 @@ define('views/site/navbar', ['view'], function (Dep) {
 
         data: function () {
             return {
-                tabDefsList: this.tabDefsList,
+                tabDefsList1: this.tabDefsList.filter(item => !item.isInMore),
+                tabDefsList2: this.tabDefsList.filter(item => item.isInMore),
                 title: this.options.title,
                 menuDataList: this.getMenuDataList(),
                 quickCreateList: this.quickCreateList,

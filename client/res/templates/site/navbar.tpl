@@ -9,8 +9,7 @@
 
     <div class="navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
-            {{#each tabDefsList}}
-            {{#unless isInMore}}
+            {{#each tabDefsList1}}
             <li data-name="{{name}}" class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}">
                 <a
                     href="{{link}}"
@@ -74,9 +73,8 @@
                 </ul>
                 {{/if}}
             </li>
-            {{/unless}}
             {{/each}}
-            <li class="dropdown more">
+            <li class="dropdown more{{#unless tabDefsList2.length}} hidden{{/unless}}">
                 <a
                     id="nav-more-tabs-dropdown"
                     class="dropdown-toggle"
@@ -84,8 +82,7 @@
                     href="#"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
-                {{#each tabDefsList}}
-                {{#if isInMore}}
+                {{#each tabDefsList2}}
                     <li
                         data-name="{{name}}"
                         class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}"
@@ -150,7 +147,6 @@
                         </ul>
                         {{/if}}
                     </li>
-                {{/if}}
                 {{/each}}
                 </ul>
             </li>
