@@ -711,6 +711,10 @@ body[data-navbar="side"] {
 
     input.global-search-input {
         border: 1px solid var(--navbar-bg);
+
+        &:focus {
+            border-color: var(--navbar-bg);
+        }
     }
 
     @media screen and (min-width: @screen-sm-min) {
