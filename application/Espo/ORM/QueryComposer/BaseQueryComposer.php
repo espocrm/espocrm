@@ -3475,7 +3475,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $sql .= " ORDER BY {$order}";
         }
 
-        if ($limit) {
+        if ($limit !== null) {
             $sql = $this->limit($sql, null, $limit);
         }
 
@@ -3507,7 +3507,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $sql .= " ORDER BY {$order}";
         }
 
-        if ($limit) {
+        if ($limit !== null) {
             $sql = $this->limit($sql, null, $limit);
         }
 
