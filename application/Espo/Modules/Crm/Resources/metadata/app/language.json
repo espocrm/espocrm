@@ -1,8 +1,8 @@
 {
     "aclDependencies": {
         "Lead.options.source": {
-        	"scope": "Opportunity",
-        	"field": "leadSource"
+            "scope": "Opportunity",
+            "field": "leadSource"
         }
     }
 }
