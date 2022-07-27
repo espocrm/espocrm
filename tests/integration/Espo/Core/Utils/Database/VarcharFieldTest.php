@@ -107,7 +107,11 @@ class VarcharFieldTest extends Base
         $this->assertEquals('varchar', $column['DATA_TYPE']);
         $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
         $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8_unicode_ci', $column['COLLATION_NAME']);
+
+        $this->assertContains($column['COLLATION_NAME'], [
+            'utf8_unicode_ci',
+            'utf8mb3_unicode_ci'
+        ]);
     }
 
     public function testCollationForExistingColumn()
@@ -130,7 +134,11 @@ class VarcharFieldTest extends Base
 
         $this->assertEquals('varchar', $column['DATA_TYPE']);
         $this->assertEquals('150', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('utf8_unicode_ci', $column['COLLATION_NAME']);
+
+        $this->assertContains($column['COLLATION_NAME'], [
+            'utf8_unicode_ci',
+            'utf8mb3_unicode_ci'
+        ]);
     }
 
     public function testCollationForExistingColumn2()
@@ -152,7 +160,11 @@ class VarcharFieldTest extends Base
         $column = $this->getColumnInfo('Test', 'testVarchar');
 
         $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('utf8_unicode_ci', $column['COLLATION_NAME']);
+
+        $this->assertContains($column['COLLATION_NAME'], [
+            'utf8_unicode_ci',
+            'utf8mb3_unicode_ci'
+        ]);
     }
 
     public function testCollationForNewColumn()
