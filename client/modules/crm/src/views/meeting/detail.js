@@ -136,27 +136,30 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
         },
 
         actionSendInvitations: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.disableMenuItem('sendInvitations');
-                this.notify('Sending...');
+            this.confirm({
+                    message: this.translate('sendInvitationsConfirmation', 'messages', 'Meeting'),
+                })
+                .then(() => {
+                    this.disableMenuItem('sendInvitations');
+                    this.notify('Sending...');
 
-                Espo.Ajax
-                    .postRequest(this.model.entityType + '/action/sendInvitations', {
-                        id: this.model.id,
-                    })
-                    .then(result => {
-                        if (result) {
-                            this.notify('Sent', 'success');
-                        } else {
-                            Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
-                        }
+                    Espo.Ajax
+                        .postRequest(this.model.entityType + '/action/sendInvitations', {
+                            id: this.model.id,
+                        })
+                        .then(result => {
+                            if (result) {
+                                this.notify('Sent', 'success');
+                            } else {
+                                Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                            }
 
-                        this.enableMenuItem('sendInvitations');
-                    })
-                    .catch(() => {
-                        this.enableMenuItem('sendInvitations');
-                    });
-            });
+                            this.enableMenuItem('sendInvitations');
+                        })
+                        .catch(() => {
+                            this.enableMenuItem('sendInvitations');
+                        });
+                });
         },
 
         actionSetAcceptanceStatus: function () {
