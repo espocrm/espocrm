@@ -1226,8 +1226,13 @@ section {
     .folders-container + .list-container {
         .list {
             margin-right: -@container-padding;
+            border-top-left-radius: var(--panel-border-radius);
+            border-bottom-left-radius: var(--panel-border-radius);
 
             > table {
+                border-top-left-radius: var(--panel-border-radius);
+                border-bottom-left-radius: var(--panel-border-radius);
+
                 td:last-child, th:last-child {
                     padding-right: @container-padding;
                 }
@@ -1235,6 +1240,11 @@ section {
                 td.cell[data-name="buttons"] > .btn-group {
                     margin-right: -11px;
                 }
+            }
+
+            > .show-more > a {
+                border-bottom-left-radius: var(--panel-border-radius);
+                border-bottom-right-radius: var(--panel-border-radius);
             }
         }
     }
