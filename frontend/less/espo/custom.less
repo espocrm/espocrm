@@ -1884,6 +1884,9 @@ textarea.auto-height {
 
 #notifications-panel {
     > .panel {
+        overflow: hidden;
+        border-top-right-radius: 0;
+
         .panel-heading {
             .close-link {
                 display: none;
@@ -1893,7 +1896,6 @@ textarea.auto-height {
         > .panel-heading {
             background-color: var(--dropdown-bg);
         }
-
 
         > .panel-body {
             max-height: @navbar-panel-body-max-height;
@@ -2537,6 +2539,7 @@ table.table td.cell .html-container {
     left: auto;
 
     > .panel {
+        overflow: hidden;
         border-color: var(--dropdown-border);
         border-width: var(--dropdown-border-width);
 
