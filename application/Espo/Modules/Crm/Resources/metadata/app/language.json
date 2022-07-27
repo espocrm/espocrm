@@ -3,6 +3,9 @@
         "Lead.options.source": {
             "scope": "Opportunity",
             "field": "leadSource"
+        },
+        "Meeting": {
+            "scope": "Call"
         }
     }
 }
