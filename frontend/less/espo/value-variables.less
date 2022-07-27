@@ -77,6 +77,7 @@
 @link-hover-color-value: darken(@link-color-value, 15%);
 
 @panel-bg-value: #ffffff;
+// Should be in px units to work in CSS math functions.
 @panel-border-width-value: 0px;
 @panel-heading-height-value: 30px;
 @panel-heading-font-size-value: 16px;
@@ -98,16 +99,25 @@
 @panel-default-text-value: @gray-dark-value;
 @panel-default-border-value: @default-border-color-value;
 @panel-default-bg-value: @panel-bg-value;
+
 @panel-primary-bg-value: darken(@brand-primary-value, 12%);
-@panel-danger-bg-value: @state-danger-bg-value;
-@panel-warning-bg-value: #efda97;
-@panel-success-bg-value: @state-success-bg-value;
-@panel-info-bg-value: @state-info-bg-value;
-@panel-primary-border-value: darken(@brand-primary-value, 12%);
+@panel-primary-border-value: @panel-primary-bg-value;
 @panel-primary-text-value: @white-color-value;
+
+@panel-danger-bg-value: @state-danger-bg-value;
+@panel-danger-border-value: @panel-danger-bg-value;
 @panel-danger-text-value: @state-danger-text-value;
-@panel-success-text-value: @state-success-text-value;
+
+@panel-warning-bg-value: #efda97;
+@panel-warning-border-value: @panel-warning-bg-value;
 @panel-warning-text-value: @state-warning-text-value;
+
+@panel-success-bg-value: @state-success-bg-value;
+@panel-success-border-value: @panel-success-bg-value;
+@panel-success-text-value: @state-success-text-value;
+
+@panel-info-bg-value: @state-info-bg-value;
+@panel-info-border-value: @panel-info-bg-value;
 @panel-info-text-value: @state-info-text-value;
 
 @btn-default-color-value: #333;

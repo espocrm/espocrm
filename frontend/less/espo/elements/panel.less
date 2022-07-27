@@ -237,7 +237,7 @@ body {
             );
         }
 
-        border-color: var(--panel-warning-bg);
+        border-color: var(--panel-warning-border);
         > .panel-heading {
             color: var(--panel-warning-text);
             background-color: var(--panel-warning-bg);
@@ -272,7 +272,7 @@ body {
             );
         }
 
-        border-color: var(--panel-danger-bg);
+        border-color: var(--panel-danger-border);
         > .panel-heading {
             color: var(--panel-danger-text);
             background-color: var(--panel-danger-bg);
@@ -307,7 +307,7 @@ body {
             );
         }
 
-        border-color: var(--state-info-bg);
+        border-color: var(--state-info-border);
         > .panel-heading {
             color: var(--panel-info-text);
             background-color: var(--state-info-bg);
@@ -341,7 +341,7 @@ body {
             );
         }
 
-        border-color: var(--panel-success-bg);
+        border-color: var(--panel-success-border);
         > .panel-heading {
             color: var(--panel-success-text);
             background-color: var(--panel-success-bg);
@@ -375,7 +375,7 @@ body {
             );
         }
 
-        border-color: var(--panel-primary-bg);
+        border-color: var(--panel-primary-border);
         > .panel-heading {
             background-color: var(--panel-primary-bg);
             border-color: transparent;
@@ -415,7 +415,7 @@ body {
 
 .panel.sticked {
     margin-top: ~"calc(-1 * var(--vertical-gap))";
-    border-top-width: max(var(--panel-border-width), 1px);
+    border-top-width: ~"max(var(--panel-border-width), 1px)";
 }
 
 .panel {
