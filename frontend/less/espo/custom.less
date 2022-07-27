@@ -363,7 +363,7 @@ div.list-kanban > div > table {
         font-weight: normal;
 
         color: var(--text-white-color);
-        background-color: @gray-light;
+        background-color: var(--label-default-bg);
 
         position: relative;
         padding: 0;
@@ -397,8 +397,8 @@ div.list-kanban > div > table {
             display: inline-block;
             border-width: 18px;
             border-style: solid;
-            width: 0px;
-            height: 0px;
+            width: 0;
+            height: 0;
             position: absolute;
             margin-top: -4px;
         }
@@ -406,13 +406,13 @@ div.list-kanban > div > table {
         > div:after {
             left: ~"calc(100% - 10px)";
             border-color: transparent transparent transparent var(--body-bg);
-            background-color: @gray-light;
+            background-color: var(--label-default-bg);
         }
 
         > div:before {
             left: ~"calc(100% - 12px)";
             z-index: 2;
-            border-color: transparent transparent transparent @gray-light;
+            border-color: transparent transparent transparent var(--label-default-bg);
         }
     }
 
