@@ -144,7 +144,15 @@ span.ok {
 
 .main-header.panel-heading {
     background-color: var(--navbar-inverse-bg) !important;
-    padding: 0px 2px;
+    padding: 0 2px;
+}
+
+header.step-header {
+    padding: 10px 14px;
+}
+
+header.step-header h4 {
+    margin-top: 0;
 }
 
 .panel .modal-footer {

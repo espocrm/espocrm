@@ -1,10 +1,10 @@
 <div class="panel-heading main-header">
     <img src="../client/img/logo.png">
 </div>
-<header class="panel-heading">
+<header class="step-header">
     <div class="row">
         <div class="col-md-10">
-            <h4 class="panel-title">
+            <h4>
                 {$langs['labels']["{$action} page title"]}
             </h4>
         </div>
