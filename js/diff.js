@@ -408,7 +408,7 @@ class Diff
             if (
                 item.indexOf('tests/') === 0 ||
                 item.indexOf('upgrades/') === 0 ||
-                item.indexOf('frontend/less') === 0
+                item.indexOf('frontend/') === 0
             ) {
                 return false;
             }
