@@ -796,7 +796,7 @@ input.global-search-input {
 
 .list-buttons-container .sticked-bar {
     position: fixed;
-    background-color: @body-bg;
+    background-color: var(--navbar-bg);
     z-index: 1000;
     padding-top: 3px;
 }
@@ -1797,7 +1797,7 @@ label.attach-file-label {
 }
 
 .stick-sub.button-container {
-    background-color: @body-bg;
+    background-color: var(--navbar-bg);
     padding: 3px @container-padding 0 @container-padding;
     width: 100%;
 }
@@ -2723,6 +2723,13 @@ table.table-admin-panel {
 .admin-content {
     .notifications-panel-container > .panel {
         overflow: hidden;
+
+        .list-group-item:first-child {
+            border-top: 0;
+        }
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
     }
 
     .table-admin-panel,
