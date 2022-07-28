@@ -124,7 +124,11 @@ class VarcharFieldTest extends Base
         );
 
         $column = $this->getColumnInfo('Test', 'testVarchar');
-        $this->assertEquals('utf8_unicode_ci', $column['COLLATION_NAME']);
+
+        $this->assertContains($column['COLLATION_NAME'], [
+            'utf8_unicode_ci',
+            'utf8mb3_unicode_ci'
+        ]);
 
         $this->updateDefs('Test', 'testVarchar', [
             'maxLength' => 150,
@@ -151,7 +155,11 @@ class VarcharFieldTest extends Base
         );
 
         $column = $this->getColumnInfo('Test', 'testVarchar');
-        $this->assertEquals('utf8_unicode_ci', $column['COLLATION_NAME']);
+
+        $this->assertContains($column['COLLATION_NAME'], [
+            'utf8_unicode_ci',
+            'utf8mb3_unicode_ci'
+        ]);
 
         $this->updateDefs('Test', 'testVarchar', [
             'default' => 'test-default',
