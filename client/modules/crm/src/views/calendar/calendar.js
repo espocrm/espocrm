@@ -57,7 +57,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         titleFormat: {
             month: 'MMMM YYYY',
             week: 'MMMM YYYY',
-            day: 'dddd, MMMM D, YYYY'
+            day: 'dddd, MMMM D, YYYY',
         },
 
         data: function () {
@@ -119,12 +119,18 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             this.$container = this.options.$container;
 
-            this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
-            this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList;
-            this.canceledStatusList = this.getMetadata().get('app.calendar.canceledStatusList') || this.canceledStatusList;
-            this.completedStatusList = this.getMetadata().get('app.calendar.completedStatusList') || this.completedStatusList;
-            this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
-            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
+            this.colors = Espo.Utils
+                .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
+            this.modeList = this.getMetadata()
+                .get('clientDefs.Calendar.modeList') || this.modeList;
+            this.canceledStatusList = this.getMetadata()
+                .get('app.calendar.canceledStatusList') || this.canceledStatusList;
+            this.completedStatusList = this.getMetadata()
+                .get('app.calendar.completedStatusList') || this.completedStatusList;
+            this.scopeList = this.getConfig()
+                .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+            this.allDayScopeList = this.getMetadata()
+                .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
             this.colors = _.extend(
                 this.colors,
@@ -134,16 +140,19 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.scopeFilter = false;
 
             this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
+
             if (this.options.userId) {
                 this.isCustomViewAvailable = false;
             }
 
             var scopeList = [];
-            this.scopeList.forEach(function (scope) {
+
+            this.scopeList.forEach(scope => {
                 if (this.getAcl().check(scope)) {
                     scopeList.push(scope);
                 }
-            }, this);
+            });
+
             this.scopeList = scopeList;
 
             if (this.header) {
@@ -156,12 +165,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 this.enabledScopeList = [];
             }
 
-            this.enabledScopeList.forEach(function (item) {
+            this.enabledScopeList.forEach(item => {
                 var color = this.getMetadata().get(['clientDefs', item, 'color']);
+
                 if (color) {
                     this.colors[item] = color;
                 }
-            }, this);
+            });
 
             if (this.header) {
                 this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
@@ -189,13 +199,14 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 this.isCustomView = true;
 
                 var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-                calendarViewDataList.forEach(function (item) {
+
+                calendarViewDataList.forEach(item => {
                     if (item.id === this.viewId) {
                         this.viewMode = item.mode;
                         this.teamIdList = item.teamIdList;
                         this.viewName = item.name;
                     }
-                }, this);
+                });
             }
         },
 
@@ -209,6 +220,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     mode.indexOf('view-') !== 0 && previousMode.indexOf('view-') === 0
                 ) {
                     this.trigger('change:mode', mode, true);
+
                     return;
                 }
 
@@ -221,6 +233,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 } else {
                     this.$el.find('button[data-action="editCustomView"]').addClass('hidden');
                 }
+
                 this.$el.find('[data-action="mode"]').removeClass('active');
                 this.$el.find('[data-mode="' + mode + '"]').addClass('active');
 
@@ -234,11 +247,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     this.getView('modeButtons').reRender();
                 }
             }
+
             this.trigger('change:mode', mode);
         },
 
         toggleScopeFilter: function (name) {
             var index = this.enabledScopeList.indexOf(name);
+
             if (!~index) {
                 this.enabledScopeList.push(name);
             } else {
@@ -252,11 +267,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
         getStoredEnabledScopeList: function () {
             var key = 'calendarEnabledScopeList';
+
             return this.getStorage().get('state', key) || null;
         },
 
         storeEnabledScopeList: function (enabledScopeList) {
             var key = 'calendarEnabledScopeList';
+
             this.getStorage().set('state', key, enabledScopeList);
         },
 
@@ -264,6 +281,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             if (!this.header) {
                 return;
             }
+
             var view = this.$calendar.fullCalendar('getView');
             var today = moment();
 
@@ -292,11 +310,12 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             var title;
 
-            if (viewName == 'week') {
+            if (viewName === 'week') {
                 title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' – ');
             } else {
                 title = view.intervalStart.format(this.titleFormat[viewName]);
             }
+
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
@@ -324,14 +343,15 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 event.userIdList = o.userIdList;
                 event.userNameMap = o.userNameMap || {};
 
-                event.userIdList = event.userIdList.sort(function (v1, v2) {
+                event.userIdList = event.userIdList.sort((v1, v2) => {
                     return (event.userNameMap[v1] || '').localeCompare(event.userNameMap[v2] || '');
                 });
             }
 
-            this.eventAttributes.forEach(function (attr) {
+            this.eventAttributes.forEach(attr => {
                 event[attr] = o[attr];
             });
+
             if (o.dateStart) {
                 if (!o.dateStartDate) {
                     event.start = this.getDateTime().toMoment(o.dateStart);
@@ -339,6 +359,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     event.start = this.getDateTime().toMomentDate(o.dateStartDate);
                 }
             }
+
             if (o.dateEnd) {
                 if (!o.dateEndDate) {
                     event.end = this.getDateTime().toMoment(o.dateEnd);
@@ -346,8 +367,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     event.end = this.getDateTime().toMomentDate(o.dateEndDate);
                 }
             }
+
             if (event.end && event.start) {
                 event.duration = event.end.unix() - event.start.unix();
+
                 if (event.duration < 1800) {
                     event.end = event.start.clone().add(30, 'm');
                 }
@@ -356,9 +379,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             event.allDay = false;
 
             this.handleAllDay(event);
-
             this.fillColor(event);
-
             this.handleStatus(event);
 
             return event;
@@ -375,9 +396,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 color = this.getColorFromScopeName(event.scope);
             }
 
-            if (color && ~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
+            if (
+                color &&
+                ~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)
+            ) {
             	color = this.shadeColor(color, 0.4);
             }
+
             event.color = color;
         },
 
@@ -418,6 +443,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         handleAllDay: function (event, notInitial) {
             if (~this.allDayScopeList.indexOf(event.scope)) {
                 event.allDay = event.allDayCopy = true;
+
                 if (!notInitial) {
                     if (event.end) {
                         event.start = event.end;
@@ -426,32 +452,39 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                         }
                     }
                 }
+
                 return;
             }
 
             if (event.dateStartDate && event.dateEndDate) {
                 event.allDay = true;
                 event.allDayCopy = event.allDay;
+
                 if (!notInitial) {
                     event.end.add(1, 'days')
                 }
+
                 return;
             }
 
             if (!event.start || !event.end) {
                 event.allDay = true;
+
                 if (event.end) {
                     event.start = event.end;
                 }
             } else {
                 if (
-                    (event.start.format('d') != event.end.format('d') && (event.end.hours() != 0 || event.end.minutes() != 0))
-                    ||
+                    (
+                        event.start.format('d') !== event.end.format('d') &&
+                        (event.end.hours() !== 0 || event.end.minutes() !== 0)
+                    ) ||
                     (event.end.unix() - event.start.unix() >= 86400)
                 ) {
                     event.allDay = true;
+
                     if (!notInitial) {
-                        if (event.end.hours() != 0 || event.end.minutes() != 0) {
+                        if (event.end.hours() !== 0 || event.end.minutes() !== 0) {
                             event.end.add(1, 'days');
                         }
                     }
@@ -467,10 +500,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.now = moment.tz(this.getDateTime().getTimeZone());
 
             var events = [];
-            list.forEach(function (o) {
+
+            list.forEach(o => {
                 var event = this.convertToFcEvent(o);
+
                 events.push(event);
-            }.bind(this));
+            });
+
             return events;
         },
 
@@ -480,6 +516,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             var string = d.format(format);
 
             var m;
+
             if (timeZone) {
                 m = moment.tz(string, format, timeZone).utc();
             } else {
@@ -495,36 +532,6 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             }
 
             return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
-
-            var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth ||
-                this.getThemeManager().getParam('screenWidthXs');
-
-            var $window = $(window);
-
-            if (this.$container && this.$container.length) {
-                return this.$container.height();
-            }
-
-            var footerHeight = this.footerHeight = this.footerHeight || $('#footer').height() || 26;
-
-            var top = 0;
-
-            var calendarElement = this.$el.find('.calendar').get(0);
-
-            if (calendarElement) {
-                top = calendarElement.getBoundingClientRect().top;
-
-                if ($window.width() < smallScreenWidth) {
-                    var $navbarCollapse = $('#navbar .navbar-body');
-                    if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
-                        top -= $navbarCollapse.height();
-                    }
-                }
-            }
-
-            var spaceHeight = top + footerHeight;
-
-            return $window.height() - spaceHeight - 20;
         },
 
         adjustSize: function () {
@@ -549,6 +556,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             var timeFormat = this.getDateTime().timeFormat;
 
             var slotLabelFormat;
+
             if (~timeFormat.indexOf('a')) {
                 slotLabelFormat = 'h(:mm)a';
             } else if (~timeFormat.indexOf('A')) {
@@ -557,7 +565,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 slotLabelFormat = timeFormat;
             }
 
-            var options = {
+            let options = {
                 header: false,
                 slotLabelFormat: slotLabelFormat,
                 timeFormat: timeFormat,
@@ -574,10 +582,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 longPressDelay: 300,
-                windowResize: function () {
+                windowResize: () => {
                     this.adjustSize();
-                }.bind(this),
-                select: function (start, end) {
+                },
+                select: (start, end) => {
                     var dateStart = this.convertTime(start);
                     var dateEnd = this.convertTime(end);
 
@@ -585,18 +593,21 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
                     var dateEndDate = null;
                     var dateStartDate = null;
+
                     if (allDay) {
                         dateStartDate = start.format('YYYY-MM-DD');
                         dateEndDate = end.clone().add(-1, 'days').format('YYYY-MM-DD');
                     }
 
                     var attributes = {};
+
                     if (this.options.userId) {
                         attributes.assignedUserId = this.options.userId;
                         attributes.assignedUserName = this.options.userName || this.options.userId;
                     }
 
                     this.notify('Loading...');
+
                     this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
                         attributes: attributes,
                         enabledScopeList: this.enabledScopeList,
@@ -606,43 +617,49 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                         dateEndDate: dateEndDate,
                         dateStart: dateStart,
                         dateEnd: dateEnd
-                    }, function (view) {
+                    }, (view) => {
                         view.render();
                         view.notify(false);
-                        this.listenToOnce(view, 'after:save', function (model) {
+
+                        this.listenToOnce(view, 'after:save', (model) => {
                             this.addModel(model);
-                        }, this);
-                    }, this);
+                        });
+                    });
+
                     $calendar.fullCalendar('unselect');
-                }.bind(this),
-                eventClick: function (event) {
+                },
+                eventClick: (event) => {
                     this.notify('Loading...');
-                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) || 'views/modals/detail';
+
+                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) ||
+                        'views/modals/detail';
+
                     this.createView('quickView', viewName, {
                         scope: event.scope,
                         id: event.recordId,
                         removeDisabled: false
-                    }, function (view) {
+                    }, (view) => {
                         view.render();
                         view.notify(false);
 
-                        this.listenToOnce(view, 'after:destroy', function (model) {
+                        this.listenToOnce(view, 'after:destroy', model => {
                             this.removeModel(model);
-                        }, this);
+                        });
 
-                        this.listenToOnce(view, 'after:save', function (model) {
+                        this.listenToOnce(view, 'after:save', model => {
                             view.close();
-                            this.updateModel(model);
-                        }, this);
-                    }, this);
-                }.bind(this),
-                viewRender: function (view, el) {
-                    var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
 
+                            this.updateModel(model);
+                        });
+                    });
+                },
+                viewRender: (view, el) => {
+                    var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
                     var m = moment(this.$calendar.fullCalendar('getDate'));
+
                     this.trigger('view', m.format('YYYY-MM-DD'), this.mode);
-                }.bind(this),
-                events: function (from, to, timezone, callback) {
+                },
+                events: (from, to, timezone, callback) => {
                     var dateTimeFormat = this.getDateTime().internalDateTimeFormat;
 
                     var fromStr = from.format(dateTimeFormat);
@@ -655,38 +672,44 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     toStr = to.utc().format(dateTimeFormat);
 
                     this.fetchEvents(fromStr, toStr, callback);
-                }.bind(this),
-                eventDrop: function (event, delta, revertFunc) {
+                },
+                eventDrop: (event, delta, revertFunc) => {
                     if (event.start.hasTime()) {
                         if (event.allDayCopy) {
                             revertFunc();
+
                             return;
                         }
                     } else {
                         if (!event.allDayCopy) {
                             revertFunc();
+
                             return;
                         }
                     }
-                    var eventCloned = Espo.Utils.clone(event);
 
-                    var attributes = {};
+                    let attributes = {};
 
                     if (event.dateStart) {
                         event.dateStart = this.convertTime(this.getDateTime().toMoment(event.dateStart).add(delta));
                         attributes.dateStart = event.dateStart;
                     }
+
                     if (event.dateEnd) {
                         event.dateEnd = this.convertTime(this.getDateTime().toMoment(event.dateEnd).add(delta));
                         attributes.dateEnd = event.dateEnd;
                     }
+
                     if (event.dateStartDate) {
-                        var d = this.getDateTime().toMomentDate(event.dateStartDate).add(delta);
+                        let d = this.getDateTime().toMomentDate(event.dateStartDate).add(delta);
+
                         event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateStartDate = event.dateStartDate;
                     }
+
                     if (event.dateEndDate) {
-                        var d = this.getDateTime().toMomentDate(event.dateEndDate).add(delta);
+                        let d = this.getDateTime().toMomentDate(event.dateEndDate).add(delta);
+
                         event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
                         attributes.dateEndDate = event.dateEndDate;
                     }
@@ -700,42 +723,52 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     event.allDay = false;
 
                     this.handleAllDay(event, true);
-
                     this.fillColor(event);
 
                     this.notify('Saving...');
-                    this.getModelFactory().create(event.scope, function (model) {
-                        model.once('sync', function () {
-                            this.notify(false);
-                            this.$calendar.fullCalendar('updateEvent', event);
-                        }, this);
+
+                    this.getModelFactory().create(event.scope, (model) => {
                         model.id = event.recordId;
-                        model.save(attributes, {patch: true}).fail(function () {
-                            revertFunc();
-                        }.bind(this));
-                    }, this);
-                }.bind(this),
-                eventResize: function (event, delta, revertFunc) {
+
+                        model
+                            .save(attributes, {patch: true})
+                            .then(() => {
+                                Espo.Ui.notify(false);
+
+                                this.$calendar.fullCalendar('updateEvent', event);
+                            })
+                            .catch(() => {
+                                revertFunc();
+                            });
+                    });
+                },
+                eventResize: (event, delta, revertFunc) => {
                     var attributes = {
-                        dateEnd: this.convertTime(event.end)
+                        dateEnd: this.convertTime(event.end),
                     };
+
                     event.dateEnd = attributes.dateEnd;
                     event.duration = event.end.unix() - event.start.unix();
 
                     this.fillColor(event);
 
                     this.notify('Saving...');
-                    this.getModelFactory().create(event.scope, function (model) {
-                        model.once('sync', function () {
-                            this.notify(false);
-                            this.$calendar.fullCalendar('updateEvent', event);
-                        }.bind(this));
+
+                    this.getModelFactory().create(event.scope, (model) => {
                         model.id = event.recordId;
-                        model.save(attributes, {patch: true}).fail(function () {
-                            revertFunc();
-                        }.bind(this));
-                    }.bind(this));
-                }.bind(this),
+
+                        model
+                            .save(attributes, {patch: true})
+                            .then(() => {
+                                Espo.Ui.notify(false);
+
+                                this.$calendar.fullCalendar('updateEvent', event);
+                            })
+                            .catch(() => {
+                                revertFunc();
+                            });
+                    });
+                },
                 allDayText: '',
                 firstHour: 8,
                 weekNumberTitle: '',
@@ -745,26 +778,37 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     },
                     day: {
                         columnFormat: 'ddd DD',
-                    }
-                }
+                    },
+                },
             };
 
             if (this.teamIdList) {
-                options.eventRender = function (event, element, view) {
-                    var $el = $(element);
-                    var $content = $el.find('.fc-content');
+                options.eventRender = (event, element, view) => {
+                    let $el = $(element);
+                    let $content = $el.find('.fc-content');
 
-                    if (event.userIdList) {
-                        event.userIdList.forEach(function (userId) {
-                            var userName = this.getHelper().escapeString(event.userNameMap[userId] || '');
-                            var avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
-                            if (avatarHtml) avatarHtml += ' ';
-
-                            var $div = $('<div class="user">').html(avatarHtml + userName);
-                            $content.append($div);
-                        }, this);
+                    if (!event.userIdList) {
+                        return;
                     }
-                }.bind(this);
+
+                    event.userIdList.forEach(userId => {
+                        let userName = event.userNameMap[userId] || '';
+                        let avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
+
+                        if (avatarHtml) {
+                            avatarHtml += ' ';
+                        }
+
+                        let $div = $('<div>')
+                            .addClass('user')
+                            .append(avatarHtml)
+                            .append(
+                                $('<span>').text(userName)
+                            );
+
+                        $content.append($div);
+                    });
+                };
             }
 
             if (!this.options.height) {
@@ -779,17 +823,20 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 this.$el.find('button[data-action="today"]').addClass('active');
             }
 
-            setTimeout(function () {
+            setTimeout(() => {
                 $calendar.fullCalendar(options);
+
                 this.updateDate();
+
                 if (this.$container && this.$container.length) {
                     this.adjustSize();
                 }
-            }.bind(this), 150);
+            }, 150);
         },
 
         fetchEvents: function (from, to, callback) {
             var url = 'Activities?from=' + from + '&to=' + to;
+
             if (this.options.userId) {
                 url += '&userId=' + this.options.userId;
             }
@@ -800,34 +847,42 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 url += '&teamIdList=' + encodeURIComponent(this.teamIdList.join(','));
             }
 
-            Espo.Ajax.getRequest(url).then(
-                function (data) {
-                    var events = this.convertToFcEvents(data);
-                    callback(events);
-                    Espo.Ui.notify(false);
-                }.bind(this)
-            );
+            Espo.Ajax.getRequest(url).then(data => {
+                let events = this.convertToFcEvents(data);
+
+                callback(events);
+
+                Espo.Ui.notify(false);
+            });
         },
 
         addModel: function (model) {
-            var d = model.attributes;
+            let d = model.attributes;
+
             d.scope = model.name;
-            var event = this.convertToFcEvent(d);
+
+            let event = this.convertToFcEvent(d);
+
             this.$calendar.fullCalendar('renderEvent', event);
         },
 
         updateModel: function (model) {
-            var eventId = model.name + '-' + model.id;
+            let eventId = model.name + '-' + model.id;
 
-            var events = this.$calendar.fullCalendar('clientEvents', eventId);
-            if (!events.length) return;
+            let events = this.$calendar.fullCalendar('clientEvents', eventId);
 
-            var event = events[0];
+            if (!events.length) {
+                return;
+            }
 
-            var d = model.attributes;
+            let event = events[0];
+
+            let d = model.attributes;
             d.scope = model.name;
-            var data = this.convertToFcEvent(d);
-            for (var key in data) {
+
+            let data = this.convertToFcEvent(d);
+
+            for (let key in data) {
                 event[key] = data[key];
             }
 
@@ -853,22 +908,30 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         getColorFromScopeName: function (scope) {
-            var additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
+            let additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
 
-            if (!additionalColorList.length) return;
+            if (!additionalColorList.length) {
+                return;
+            }
 
-            var colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+            let colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
 
-            var scopeList = this.getConfig().get('calendarEntityList') || [];
+            let scopeList = this.getConfig().get('calendarEntityList') || [];
 
-            var index = 0;
-            var j = 0;
-            for (var i = 0; i < scopeList.length; i++) {
-                if (scopeList[i] in colors) continue;
+            let index = 0;
+            let j = 0;
+
+            for (let i = 0; i < scopeList.length; i++) {
+                if (scopeList[i] in colors) {
+                    continue;
+                }
+
                 if (scopeList[i] === scope) {
                     index = j;
+
                     break;
                 }
+
                 j++;
             }
 
@@ -877,6 +940,5 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             return this.colors[scope];
         },
-
     });
 });

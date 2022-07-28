@@ -77,10 +77,12 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         events: {
             'click button[data-action="today"]': function () {
                 this.timeline.moveTo(moment());
+
                 this.triggerView();
             },
             'click [data-action="mode"]': function (e) {
                 var mode = $(e.currentTarget).data('mode');
+
                 this.trigger('change:mode', mode);
             },
             'click [data-action="refresh"]': function (e) {
@@ -91,6 +93,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 var filterName = $target.data('name');
 
                 var $check = $target.find('.filter-check-icon');
+
                 if ($check.hasClass('hidden')) {
                     $check.removeClass('hidden');
                 } else {
@@ -108,14 +111,19 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 $target.parent().parent().find('.calendar-type-check-icon').addClass('hidden');
 
                 var $check = $target.find('.calendar-type-check-icon');
+
                 if ($check.hasClass('hidden')) {
                     $check.removeClass('hidden');
                 }
 
-                $target.closest('.calendar-type-button-group').find('.calendar-type-label').text(this.getCalendarTypeLabel(calendarType));
+                $target.closest('.calendar-type-button-group')
+                    .find('.calendar-type-label')
+                    .text(this.getCalendarTypeLabel(calendarType));
 
-                var $showSharedCalendarOptions = this.$el.find('> .button-container button[data-action="showSharedCalendarOptions"]');
-                if (calendarType == 'shared') {
+                var $showSharedCalendarOptions = this.$el
+                    .find('> .button-container button[data-action="showSharedCalendarOptions"]');
+
+                if (calendarType === 'shared') {
                     $showSharedCalendarOptions.removeClass('hidden');
                 } else {
                     $showSharedCalendarOptions.addClass('hidden');
@@ -138,31 +146,38 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             this.$container = this.options.$container;
 
-            this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
-            this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList || [];
-            this.canceledStatusList = this.getMetadata().get('app.calendar.canceledStatusList') || this.canceledStatusList || [];
-            this.completedStatusList = this.getMetadata().get('app.calendar.completedStatusList') || this.completedStatusList || [];
-            this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList) || [];
-            this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
+            this.colors = Espo.Utils
+                .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
+            this.modeList = this.getMetadata()
+                .get('clientDefs.Calendar.modeList') || this.modeList || [];
+            this.canceledStatusList = this.getMetadata()
+                .get('app.calendar.canceledStatusList') || this.canceledStatusList || [];
+            this.completedStatusList = this.getMetadata()
+                .get('app.calendar.completedStatusList') || this.completedStatusList || [];
+            this.scopeList = this.getConfig()
+                .get('calendarEntityList') || Espo.Utils.clone(this.scopeList) || [];
+            this.allDayScopeList = this.getMetadata()
+                .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
 
             this.colors = _.extend(
                 this.colors,
                 Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
             );
 
-            this.scopeFilter = false;
-
             this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
+
             if (this.options.userId) {
                 this.isCustomViewAvailable = false;
             }
 
             var scopeList = [];
-            this.scopeList.forEach(function (scope) {
+
+            this.scopeList.forEach(scope => {
                 if (this.getAcl().check(scope)) {
                     scopeList.push(scope);
                 }
-            }, this);
+            });
+
             this.scopeList = scopeList;
 
             if (this.header) {
@@ -175,12 +190,13 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 this.enabledScopeList = [];
             }
 
-             this.enabledScopeList.forEach(function (item) {
+             this.enabledScopeList.forEach(item => {
                 var color = this.getMetadata().get(['clientDefs', item, 'color']);
+
                 if (color) {
                     this.colors[item] = color;
                 }
-            }, this);
+            });
 
             if (this.options.calendarType) {
                 this.calendarType = this.options.calendarType;
@@ -216,34 +232,39 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         getModeDataList: function () {
             var list = [];
 
-            this.modeList.forEach(function (name, i) {
+            this.modeList.forEach(name => {
                 var o = {
                     mode: name,
                     label: this.translate(name, 'modes', 'Calendar'),
-                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2),
+                    labelShort: this.translate(name, 'modes', 'Calendar').substring(0, 2),
                 };
+
                 list.push(o);
-            }, this);
+            });
 
             if (this.isCustomViewAvailable) {
-                (this.getPreferences().get('calendarViewDataList') || []).forEach(function (item) {
-                    var item = Espo.Utils.clone(item);
+                (this.getPreferences().get('calendarViewDataList') || []).forEach((item) => {
+                    item = Espo.Utils.clone(item);
+
                     item.mode = 'view-' + item.id;
                     item.label = item.name;
-                    item.labelShort = (item.name || '').substr(0, 2);
+                    item.labelShort = (item.name || '').substring(0, 2);
+
                     list.push(item);
-                }, this);
+                });
             }
 
             var currentIndex = -1;
-            list.forEach(function (item, i) {
+
+            list.forEach((item, i) => {
                 if (item.mode === this.mode) {
                     currentIndex = i;
                 }
-            }, this);
+            });
 
             if (currentIndex >= this.visibleModeListCount) {
                 var tmp = list[this.visibleModeListCount - 1];
+
                 list[this.visibleModeListCount - 1] = list[currentIndex];
                 list[currentIndex] = tmp;
             }
@@ -255,10 +276,14 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var fullList =  this.getModeDataList();
 
             var list = [];
-            fullList.forEach(function (o, i) {
-                if (i >= this.visibleModeListCount) return;
+
+            fullList.forEach((o, i) => {
+                if (i >= this.visibleModeListCount) {
+                    return;
+                }
+
                 list.push(o);
-            }, this);
+            });
 
             return list;
         },
@@ -267,10 +292,14 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var fullList =  this.getModeDataList();
 
             var list = [];
-            fullList.forEach(function (o, i) {
-                if (i < this.visibleModeListCount) return;
+
+            fullList.forEach((o, i) => {
+                if (i < this.visibleModeListCount) {
+                    return;
+                }
+
                 list.push(o);
-            }, this);
+            });
 
             return list;
         },
@@ -283,7 +312,6 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 disabled: this.calendarType !== 'single',
                 label: this.getCalendarTypeLabel('single')
             };
-
 
             list.push(o);
 
@@ -304,6 +332,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         getCalendarTypeLabel: function (type) {
             var label;
+
             if (type === 'single') {
                 if (this.options.userId) {
                     label = this.options.userName || this.options.userId;
@@ -311,6 +340,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     label = this.getUser().get('name');
                 }
                 label = this.getHelper().escapeString(label);
+
                 return label;
             }
 
@@ -333,6 +363,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         toggleScopeFilter: function (name) {
             var index = this.enabledScopeList.indexOf(name);
+
             if (!~index) {
                 this.enabledScopeList.push(name);
             } else {
@@ -340,17 +371,18 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             }
 
             this.storeEnabledScopeList(this.enabledScopeList);
-
             this.runFetch();
         },
 
         getStoredEnabledScopeList: function () {
             var key = 'calendarEnabledScopeList';
+
             return this.getStorage().get('state', key) || null;
         },
 
         storeEnabledScopeList: function (enabledScopeList) {
             var key = 'calendarEnabledScopeList';
+
             this.getStorage().set('state', key, enabledScopeList);
         },
 
@@ -376,11 +408,12 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         convertEvent: function (o) {
-            var userId = o.userId || this.userList[0].id || this.getUser().id;
+            let userId = o.userId || this.userList[0].id || this.getUser().id;
 
-            var event;
+            let event;
+
             if (o.isBusyRange) {
-                var event = {
+                event = {
                     className: 'busy',
                     group: userId,
                     'date-start': o.dateStart,
@@ -404,9 +437,10 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 };
             }
 
-            this.eventAttributes.forEach(function (attr) {
+            this.eventAttributes.forEach(attr => {
                 event[attr] = o[attr];
             });
+
             if (o.dateStart) {
                 if (!o.dateStartDate) {
                     event.start = this.getDateTime().toMoment(o.dateStart);
@@ -414,6 +448,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     event.start = moment.tz(o.dateStartDate, this.getDateTime().getTimeZone());
                 }
             }
+
             if (o.dateEnd) {
                 if (!o.dateEndDate) {
                     event.end = this.getDateTime().toMoment(o.dateEnd);
@@ -432,6 +467,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             if (~this.allDayScopeList.indexOf(o.scope)) {
                 event.type = 'box';
+
                 if (event.end) {
                     if (o.dateEndDate) {
                         event.start = event.end.clone().add(1, 'days');
@@ -444,7 +480,6 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             }
 
             this.fillColor(event);
-
             this.handleStatus(event);
 
             return event;
@@ -509,14 +544,16 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         convertEventList: function (list) {
             var resultList = [];
 
-            list.forEach(function (item) {
+            list.forEach(item => {
                 var event = this.convertEvent(item);
+
                 if (!event) {
                     return;
                 }
 
                 resultList.push(event);
-            }, this);
+            });
+
             return resultList;
         },
 
@@ -526,6 +563,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var string = d.format(format);
 
             var m;
+
             if (timeZone) {
                 m = moment.tz(string, format, timeZone).utc();
             } else {
@@ -546,19 +584,21 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             this.initDates();
             this.initGroupsDataSet();
 
-            this.fetchEvents(this.start, this.end, function (eventList) {
+            this.fetchEvents(this.start, this.end, (eventList) => {
                 var itemsDataSet = new Vis.DataSet(eventList);
                 var timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
                     start: this.start.toDate(),
                     end: this.end.toDate(),
-                    moment: function (date) {
+                    moment: (date) => {
                         var m = moment(date);
+
                         if (date && date.noTimeZone) {
                             return m;
                         }
+
                         return m.tz(this.getDateTime().getTimeZone());
-                    }.bind(this),
+                    },
                     format: this.getFormatObject(),
                     zoomMax: 24 * 3600 *  1000 * this.maxRange,
                     zoomMin: 1000 * 60 * 15,
@@ -585,26 +625,39 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     },
                 });
 
-                timeline.on('click', function (e) {
-                    if (this.blockClick) return;
+                timeline.on('click', (e) => {
+                    if (this.blockClick) {
+                        return;
+                    }
+
                     if (e.item) {
                         var $item = this.$el.find('.timeline .vis-item[data-id="'+e.item+'"]');
                         var id = $item.attr('data-record-id');
                         var scope = $item.attr('data-scope');
+
                         if (id && scope) {
                             this.viewEvent(scope, id);
                         }
-                    } else if (e.what == 'background' && e.group && e.time) {
+
+                        return;
+
+                    }
+
+                    if (e.what === 'background' && e.group && e.time) {
                         var dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
+
                         this.createEvent(dateStart, e.group);
                     }
-                }.bind(this));
+                });
 
-                timeline.on('rangechanged', function (e) {
+                timeline.on('rangechanged', (e) =>{
                     e.skipClick = true;
 
                     this.blockClick = true;
-                    setTimeout(function () {this.blockClick = false}.bind(this), 100);
+
+                    setTimeout(() => {
+                        this.blockClick = false;
+                    }, 100);
 
                     this.start = moment(e.start);
                     this.end = moment(e.end);
@@ -612,31 +665,33 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     this.triggerView();
 
                     if (
-                        (this.start.unix() < this.fetchedStart.unix() + this.rangeMarginThreshold)
-                        ||
+                        (this.start.unix() < this.fetchedStart.unix() + this.rangeMarginThreshold) ||
                         (this.end.unix() > this.fetchedEnd.unix() - this.rangeMarginThreshold)
                     ) {
                         this.runFetch();
                     }
-                }.bind(this));
+                });
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     timeline.destroy();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         createEvent: function (dateStart, userId) {
             var attributes = {
                 dateStart: dateStart
             };
+
             if (userId) {
                 var userName;
-                this.userList.forEach(function (item) {
+
+                this.userList.forEach((item) => {
                     if (item.id === userId) {
                         userName = item.name;
                     }
-                }, this);
+                });
+
                 attributes.assignedUserId = userId;
                 attributes.assignedUserName = userName || userId;
             }
@@ -646,47 +701,52 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 attributes: attributes,
                 enabledScopeList: this.enabledScopeList,
                 scopeList: this.scopeList
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
+
+                this.listenToOnce(view, 'after:save', () => {
                     this.runFetch();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         viewEvent: function (scope, id) {
             this.notify('Loading...');
-            var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) || 'views/modals/detail';
+
+            var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
+                'views/modals/detail';
+
             this.createView('quickView', viewName, {
                 scope: scope,
                 id: id,
                 removeDisabled: false
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:destroy', function (model) {
+                this.listenToOnce(view, 'after:destroy', (model) => {
                     this.runFetch();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'after:save', function (model) {
+                this.listenToOnce(view, 'after:save', (model) => {
                     view.close();
                     this.runFetch();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         runFetch: function () {
-            this.fetchEvents(this.start, this.end, function (eventList) {
-                var itemsDataSet = new Vis.DataSet(eventList);
+            this.fetchEvents(this.start, this.end, (eventList) => {
+                let itemsDataSet = new Vis.DataSet(eventList);
+
                 this.timeline.setItems(itemsDataSet);
                 this.triggerView();
-            }.bind(this));
+            });
         },
 
         getFormatObject: function () {
-            var format = {
+            return {
                 minorLabels: {
                     millisecond: 'SSS',
                     second: 's',
@@ -695,7 +755,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     weekday: 'ddd D',
                     day: 'D',
                     month: 'MMM',
-                    year: 'YYYY'
+                    year: 'YYYY',
                 },
                 majorLabels: {
                     millisecond: this.getDateTime().getTimeFormat() + ' ss',
@@ -705,64 +765,72 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     weekday: 'MMMM YYYY',
                     day: 'MMMM YYYY',
                     month: 'YYYY',
-                    year: ''
+                    year: '',
                 }
             };
-            return format;
         },
 
         triggerView: function () {
             var m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
+
             this.trigger('view', m.format(this.getDateTime().internalDateFormat), this.mode);
         },
 
         initUserList: function () {
             if (this.options.userList) {
                 this.userList = Espo.Utils.clone(this.options.userList);
+
                 if (!this.userList.length) {
                     this.userList.push({
                         id: this.getUser().id,
                         name: this.getUser().get('name'),
                     });
                 }
-            } else {
-                this.userList = [];
 
-                if (this.calendarType === 'single') {
-                    if (this.options.userId) {
-                        this.userList.push({
-                            id: this.options.userId,
-                            name: this.options.userName || this.options.userId
-                        });
-                    } else {
-                        this.userList.push({
-                            id: this.getUser().id,
-                            name: this.getUser().get('name'),
-                        });
-                    }
+                return;
+            }
+
+            this.userList = [];
+
+            if (this.calendarType === 'single') {
+                if (this.options.userId) {
+                    this.userList.push({
+                        id: this.options.userId,
+                        name: this.options.userName || this.options.userId
+                    });
+
+                    return;
                 }
 
-                if (this.calendarType === 'shared') {
-                    this.getSharedCalenderUserList().forEach(function (item) {
-                        this.userList.push({
-                            id: item.id,
-                            name: item.name
-                        });
-                    }, this);
-                }
+                this.userList.push({
+                    id: this.getUser().id,
+                    name: this.getUser().get('name'),
+                });
+
+
+                return;
+            }
+
+            if (this.calendarType === 'shared') {
+                this.getSharedCalenderUserList().forEach(item => {
+                    this.userList.push({
+                        id: item.id,
+                        name: item.name,
+                    });
+                });
             }
         },
 
         orderUserList: function (list) {
             var userList = [];
 
-            list.forEach(function (id) {
-                this.userList.forEach(function (item) {
+            list.forEach(id => {
+                this.userList.forEach(item => {
                     if (id === item.id) {
                         userList.push(item);
                     }
                 });
-            }, this);
+            });
 
             this.userList = userList;
 
@@ -777,17 +845,22 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         addSharedCalenderUser: function (id, name, skipStore) {
             var isMet = false;
-            this.userList.forEach(function (item) {
+
+            this.userList.forEach(item => {
                 if (item.id === id) {
                     isMet = true;
                 }
             });
-            if (isMet) return;
+
+            if (isMet) {
+                return;
+            }
 
             this.userList.push({
                 id: id,
                 name: name
             });
+
             if (!skipStore) {
                 this.storeUserList();
             }
@@ -795,11 +868,13 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         removeSharedCalendarUser: function (id) {
             var index = -1;
-            this.userList.forEach(function (item, i) {
+
+            this.userList.forEach((item, i) => {
                 if (item.id === id) {
                     index = i;
                 }
             });
+
             if (~index) {
                 this.userList.splice(index, 1);
                 this.storeUserList();
@@ -812,11 +887,12 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             if (list && list.length) {
                 var isBad = false;
 
-                list.forEach(function (item) {
+                list.forEach(item => {
                     if (typeof item !== 'object' || !item.id || !item.name) {
                         isBad = true;
                     }
-                }, this);
+                });
+
                 if (!isBad) {
                     return list;
                 }
@@ -824,7 +900,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             return [{
                 id: this.getUser().id,
-                name: this.getUser().get('name')
+                name: this.getUser().get('name'),
             }];
         },
 
@@ -834,6 +910,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             } else {
                 this.start = moment.tz(this.getDateTime().getTimeZone());
             }
+
             this.end = this.start.clone();
             this.end.add(1, 'day');
 
@@ -843,42 +920,59 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         initGroupsDataSet: function () {
             var list = [];
-            this.userList.forEach(function (user, i) {
+
+            this.userList.forEach((user, i)  =>{
                 list.push({
                     id: user.id,
                     content: this.getGroupContent(user.id, user.name),
-                    order: i
+                    order: i,
                 });
-            }, this);
+            });
+
             this.groupsDataSet = new Vis.DataSet(list);
         },
 
         getGroupContent: function (id, name) {
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-            if (this.calendarType === 'single') {
-                return name;
-            }
-            var avatarHtml = this.getAvatarHtml(id);
-            if (avatarHtml) avatarHtml += ' ';
-            var html = avatarHtml + '<span data-id="'+id+'" class="group-title">' + name + '</span>';
 
-            return html;
+            if (this.calendarType === 'single') {
+                return $('<span>')
+                    .text(name)
+                    .get(0).outerHTML;
+            }
+
+            let avatarHtml = this.getAvatarHtml(id);
+
+            if (avatarHtml) {
+                avatarHtml += ' ';
+            }
+
+            return avatarHtml +
+                $('<span>')
+                    .attr('data-id', id)
+                    .addClass('group-title')
+                    .text(name)
+                    .get(0).outerHTML;
         },
 
         getAvatarHtml: function (id) {
             if (this.getConfig().get('avatarsDisabled')) {
                 return '';
             }
+
             var t;
             var cache = this.getCache();
+
             if (cache) {
                 t = cache.get('app', 'timestamp');
             } else {
                 t = Date.now();
             }
-            return '<img class="avatar avatar-link" width="14" src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
+
+            return $('<img>')
+                .addClass('avatar avatar-link')
+                .attr('width', '14')
+                .attr('src', this.getBasePath() + '?entryPoint=avatar&size=small&id=' + id + '&t=' + t)
+                .get(0).outerHTML;
         },
 
         initItemsDataSet: function () {
@@ -897,42 +991,48 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
             var url = 'Timeline?from=' + fromString + '&to=' + toString;
-            var userIdList = this.userList.map(function (user) {
-                return user.id
-            }, this);
 
+            var userIdList = this.userList.map(user => {
+                return user.id
+            });
 
             if (userIdList.length === 1) {
                 url += '&userId=' + userIdList[0];
             } else {
                 url += '&userIdList=' + encodeURIComponent(userIdList.join(','));
             }
+
             url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
 
-            this.ajaxGetRequest(url).then(function (data) {
+            this.ajaxGetRequest(url).then((data) => {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
+
                 var eventList = [];
 
-                for (var userId in data) {
+                for (let userId in data) {
                     var userEventList = data[userId].eventList;
-                    userEventList.forEach(function (item) {
+
+                    userEventList.forEach((item) => {
                         item.userId = userId;
                         eventList.push(item);
-                    }, this);
+                    });
 
                     var userBusyRangeList = data[userId].busyRangeList;
-                    userBusyRangeList.forEach(function (item) {
+
+                    userBusyRangeList.forEach(item =>{
                         item.userId = userId;
                         item.isBusyRange = true;
                         eventList.push(item);
-                    }, this);
+                    });
                 }
 
                 var convertedEventList = this.convertEventList(eventList);
+
                 callback(convertedEventList);
+
                 this.notify(false);
-            }.bind(this));
+            });
         },
 
         removeUser: function (id) {
@@ -959,31 +1059,38 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         actionAddUser: function () {
             var boolFilterList = [];
+
             if (this.getAcl().get('userPermission') === 'team') {
                 boolFilterList.push('onlyMyTeam');
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || 'views/modals/select-records';
+            var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                'views/modals/select-records';
 
             this.notify('Loading...');
+
             this.createView('dialog', viewName, {
                 scope: 'User',
                 createButton: false,
                 boolFilterList: boolFilterList,
                 multiple: true
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 this.notify(false);
-                this.listenToOnce(view, 'select', function (modelList) {
-                    modelList.forEach(function (model) {
+
+                this.listenToOnce(view, 'select', (modelList) => {
+                    modelList.forEach(model => {
                         this.addSharedCalenderUser(model.id, model.get('name'));
-                    }, this);
+                    });
+
                     this.storeUserList();
                     this.initGroupsDataSet();
+
                     this.timeline.setGroups(this.groupsDataSet);
+
                     this.runFetch();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         actionRefresh: function () {
@@ -993,20 +1100,27 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         getColorFromScopeName: function (scope) {
             var additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
 
-            if (!additionalColorList.length) return;
+            if (!additionalColorList.length) {
+                return;
+            }
 
             var colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
-
             var scopeList = this.getConfig().get('calendarEntityList') || [];
 
             var index = 0;
             var j = 0;
+
             for (var i = 0; i < scopeList.length; i++) {
-                if (scopeList[i] in colors) continue;
+                if (scopeList[i] in colors) {
+                    continue;
+                }
+
                 if (scopeList[i] === scope) {
                     index = j;
+
                     break;
                 }
+
                 j++;
             }
 
@@ -1015,6 +1129,5 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             return this.colors[scope];
         },
-
     });
 });
