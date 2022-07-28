@@ -1314,14 +1314,33 @@ section {
     border-width: 0;
 }
 
-.dashlet-body {
-    .calendar-container > .calendar {
-        margin-left: -1px;
-        margin-right: -1px;
-    }
+.dashlet-container {
+    .dashlet {
+        > .dashlet-body {
+            .calendar-container > .calendar {
+                margin-left: -1px;
+                margin-right: -1px;
+            }
 
-    .chart-container {
-        overflow: hidden;
+            .chart-container {
+                overflow: hidden;
+            }
+
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
+
+            .list-container > .list {
+                > .show-more > a.btn {
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+            }
+        }
+
+        // If hidden, the dropdown can be partially obscured.
+        //overflow: hidden;
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
     }
 
     border-bottom-left-radius: var(--panel-border-radius);
