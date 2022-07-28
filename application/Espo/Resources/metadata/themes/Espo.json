@@ -34,6 +34,7 @@
     "modalFullHeight": true,
     "fontSize": 14,
     "textColor": "#333",
+    "hoverColor": "#FF3F19",
     "chartGridColor": "#ddd",
     "chartSuccessColor": "#87C956",
     "chartTickColor": "#e8eced",

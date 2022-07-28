@@ -112,6 +112,7 @@ function (Dep) {
                 this.$container.get(0),
                 {
                     colors: colors,
+                    outlineColor: this.hoverColor,
                     callbacks: {
                         tooltipHtml: (i) => {
                             let value = this.chartData[i].value;
