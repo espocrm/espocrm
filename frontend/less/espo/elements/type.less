@@ -81,10 +81,6 @@ b, strong {
     font-weight: 600;
 }
 
-.text-primary {
-    color: var(--state-primary-text);
-}
-
 .text-soft {
     color: @gray-soft;
 }
@@ -191,4 +187,37 @@ blockquote {
     font-size: 75%;
     padding: @label-padding-small;
     top: -1px;
+}
+
+.text-primary {
+    .text-emphasis-variant-espo(var(--state-primary-text), var(--brand-primary-10));
+}
+.text-success {
+    .text-emphasis-variant-espo(var(--state-success-text), var(--state-success-text-10));
+}
+.text-info {
+    .text-emphasis-variant-espo(var(--state-info-text), var(--state-info-text-10));
+}
+.text-warning {
+    .text-emphasis-variant-espo(var(--state-warning-text); var(--state-warning-text-10));
+}
+.text-danger {
+    .text-emphasis-variant-espo(var(--state-danger-text); var(--state-danger-text-10));
+}
+
+.bg-primary {
+    color: var(--text-white-color);
+    .bg-variant-espo(var(--brand-primary), var(--brand-primary-5));
+}
+.bg-success {
+    .bg-variant-espo(var(--state-success-bg), var(--state-success-bg-5));
+}
+.bg-info {
+    .bg-variant-espo(var(--state-info-bg), var(--state-info-bg-5));
+}
+.bg-warning {
+    .bg-variant-espo(var(--state-warning-bg); var(--state-warning-bg-5));
+}
+.bg-danger {
+    .bg-variant-espo(var(--state-danger-bg); var(--state-danger-bg-5));
 }

@@ -102,43 +102,6 @@ mark,
 .text-muted {
   color: @text-muted;
 }
-.text-primary {
-  .text-emphasis-variant-espo(@brand-primary, @brand-primary-10);
-}
-.text-success {
-  .text-emphasis-variant-espo(@state-success-text, @state-success-text-10);
-}
-.text-info {
-  .text-emphasis-variant-espo(var(--state-info-text), var(--state-info-text-10));
-}
-.text-warning {
-  .text-emphasis-variant-espo(@state-warning-text; var(--state-warning-text-10));
-}
-.text-danger {
-  .text-emphasis-variant-espo(@state-danger-text; var(--state-danger-text-10));
-}
-
-// Contextual backgrounds
-// For now we'll leave these alongside the text classes until v4 when we can
-// safely shift things around (per SemVer rules).
-.bg-primary {
-  // Given the contrast here, this is the only class to have its color inverted
-  // automatically.
-  color: #fff;
-  .bg-variant-espo(@brand-primary, @brand-primary-10);
-}
-.bg-success {
-  .bg-variant-espo(@brand-primary, @state-success-bg-10);
-}
-.bg-info {
-  .bg-variant-espo(@state-info-bg, @state-info-bg-5);
-}
-.bg-warning {
-  .bg-variant-espo(@state-warning-bg; var(--state-warning-bg-5));
-}
-.bg-danger {
-  .bg-variant-espo(@state-danger-bg; var(--state-danger-bg-5));
-}
 
 
 // Page header

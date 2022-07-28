@@ -242,15 +242,15 @@
       &.active:hover,
       &.active.disabled,
       &.active.disabled:hover {
-        .button-variant-espo(
-          @btn-primary-color;
-          @btn-primary-bg;
-          @btn-primary-border;
-          @btn-primary-bg-10;
-          @btn-primary-bg-17;
-          @btn-primary-border-12;
-          @btn-primary-border-25
-        );
+          .button-variant-espo(
+              var(--btn-primary-color);
+              var(--btn-primary-bg);
+              var(--btn-primary-border);
+              var(--btn-primary-hover-bg);
+              var(--btn-primary-active-bg);
+              var(--btn-primary-hover-border);
+              var(--btn-primary-active-border)
+          );
         text-shadow: 0 -1px 0 rgba(0,0,0,.25);
       }
       &.old,
