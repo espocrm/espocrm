@@ -116,11 +116,19 @@
       }
     }
     &.today {
-      @today-bg: lighten(orange, 30%);
-      .button-variant(#000, @today-bg, darken(@today-bg, 20%));
+      @today-bg: var(--state-warning-bg);
+        .button-variant-espo(
+            var(--state-warning-text);
+            var(--state-warning-bg);
+            var(--state-warning-bg-5);
+            var(--state-warning-bg-5);
+            var(--state-warning-bg-5);
+            var(--state-warning-bg-5);
+            var(--state-warning-bg-5)
+        );
 
       &.focused {
-        background: darken(@today-bg, 10%);
+        background: var(--state-warning-bg-10);
       }
 
       &.disabled,
