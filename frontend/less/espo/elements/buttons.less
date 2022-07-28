@@ -164,25 +164,30 @@
 
 .btn-text {
     color: var(--btn-text-color);
-    border-radius: 0;
+    //border-radius: 0;
 
     &.btn-default {
+        background-color: transparent;
+        border-color: transparent;
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &:hover:active,
+        &:focus:active {
             background-color: transparent;
             color: var(--btn-text-color);
             border-color: transparent;
         }
-        &:focus-visible {
-            color: var(--text-gray-color);
-        }
     }
     &.btn-success {
         color: var(--state-success-text);
+        background-color: transparent;
+        border-color: transparent;
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &:hover:active,
+        &:focus:active {
             background-color: transparent;
             color: var(--state-success-text);
             border-color: transparent;
@@ -190,28 +195,44 @@
     }
     &.btn-danger {
         color: var(--state-danger-text);
+        background-color: transparent;
+        border-color: transparent;
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &:hover:active,
+        &:focus:active {
             background-color: transparent;
             color: var(--state-danger-text);
             border-color: transparent;
         }
-        &:focus-visible {
-            color: var(--text-gray-color);
-        }
     }
     &.btn-warning {
         color: var(--state-warning-text);
+        background-color: transparent;
+        border-color: transparent;
         &:active,
         &:focus,
-        &:hover {
+        &:hover,
+        &:hover:active,
+        &:focus:active {
             background-color: transparent;
             color: var(--state-warning-text);
             border-color: transparent;
         }
-        &:focus-visible {
-            color: var(--text-gray-color);
+    }
+    &.btn-info {
+        color: var(--state-info-text);
+        background-color: transparent;
+        border-color: transparent;
+        &:active,
+        &:focus,
+        &:hover,
+        &:hover:active,
+        &:focus:active {
+            background-color: transparent;
+            color: var(--state-info-text);
+            border-color: transparent;
         }
     }
 
