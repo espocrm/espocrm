@@ -461,9 +461,9 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 color = this.getColorFromScopeName(event.scope);
             }
 
-            if (color) {
+            /*if (color) {
                 color = this.shadeColor(color, 0.15);
-            }
+            }*/
 
             if (~this.completedStatusList.indexOf(event.status) || ~this.canceledStatusList.indexOf(event.status)) {
             	color = this.shadeColor(color, 0.4);
@@ -489,7 +489,9 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 percent *= -1;
             }
 
-            var f = parseInt(color.slice(1), 16),
+            let alpha = color.substring(7);
+
+            let f = parseInt(color.slice(1, 7), 16),
                 t = percent<0?0:255,
                 p = percent < 0 ?percent *- 1 : percent,
                 R = f >> 16,
@@ -498,9 +500,10 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
             return "#" + (
                 0x1000000 + (
-                    Math.round((t-R)*p)+R)*0x10000 +
-                    (Math.round((t-G)*p)+G)*0x100 +
-                    (Math.round((t-B)*p)+B)).toString(16).slice(1);
+                    Math.round((t - R) * p) + R) * 0x10000 +
+                    (Math.round((t - G) * p) + G) * 0x100 +
+                    (Math.round((t - B) * p) + B)
+                ).toString(16).slice(1) + alpha;
         },
 
         convertEventList: function (list) {
