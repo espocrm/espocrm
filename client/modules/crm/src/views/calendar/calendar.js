@@ -336,7 +336,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 dateStartDate: o.dateStartDate,
                 dateEndDate: o.dateEndDate,
                 status: o.status,
-                color: o.color,
+                originalColor: o.color,
             };
 
             if (this.teamIdList && o.userIdList) {
@@ -386,10 +386,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         fillColor: function (event) {
-            var color = this.colors[event.scope];
+            let color = this.colors[event.scope];
 
-            if (event.color) {
-                color = event.color;
+            if (event.originalColor) {
+                color = event.originalColor;
             }
 
             if (!color) {
