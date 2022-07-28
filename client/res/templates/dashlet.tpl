@@ -42,7 +42,6 @@
                 data-action="refresh"
                 class="action"
                 title="{{translate 'Refresh'}}"
-                style="cursor: pointer;"
             >{{#if title}}{{title}}{{else}}&nbsp;{{/if}}</span>
         </h4>
     </div>
