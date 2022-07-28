@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract/chart', function (Dep) {
+define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstract/chart'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,16 +43,19 @@ define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
             }
+
             return url;
         },
 
         prepareData: function (response) {
-            var d = [];
-            for (var label in response) {
+            let d = [];
+
+            for (let label in response) {
                 var value = response[label];
+
                 d.push({
                     stage: label,
-                    value: value
+                    value: value,
                 });
             }
 
@@ -62,28 +65,37 @@ define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract
 
             var data = [];
             var i = 0;
-            d.forEach(function (item) {
-                if (item.value) this.isEmpty = false;
+
+            d.forEach(item => {
+                if (item.value) {
+                    this.isEmpty = false;
+                }
+
                 var o = {
                     data: [[item.value, d.length - i]],
                     label: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
                 }
-                if (item.stagsuccessColore == 'Closed Won') {
+
+                /*if (item.stagsuccessColore === 'Closed Won') {
                     o.color = this.successColor;
-                }
+                }*/
+
                 data.push(o);
+
                 this.stageList.push(this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'));
                 i++;
-            }, this);
+            });
 
-            var max = 0;
+            let max = 0;
+
             if (d.length) {
-                d.forEach(function (item) {
+                d.forEach(item => {
                     if ( item.value && item.value > max) {
                         max = item.value;
                     }
-                }, this);
+                });
             }
+
             this.max = max;
 
             return data;
@@ -99,7 +111,6 @@ define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract
         },
 
         draw: function () {
-            var self = this;
             this.flotr.draw(this.$container.get(0), this.chartData, {
                 colors: this.colorList,
                 shadowSize: false,
@@ -109,35 +120,38 @@ define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5
+                    barWidth: 0.5,
                 },
                 grid: {
                     horizontalLines: false,
                     outline: 'sw',
                     color: this.gridColor,
-                    tickColor: this.tickColor
+                    tickColor: this.tickColor,
                 },
                 yaxis: {
                     min: 0,
                     showLabels: false,
-                    color: this.textColor
+                    color: this.textColor,
                 },
                 xaxis: {
                     min: 0,
                     color: this.textColor,
                     max: this.max + 0.08 * this.max,
-                    tickFormatter: function (value) {
-                        if (value == 0) {
+                    tickFormatter: value => {
+                        if (value === 0 || !value) {
                             return '';
                         }
-                        if (value % 1 == 0) {
-                            if (value > self.max + 0.05 * this.max) {
+
+                        if (value % 1 === 0) {
+                            if (value > this.max + 0.05 * this.max) {
                                 return '';
                             }
-                            return self.currencySymbol + self.formatNumber(Math.floor(value), false, true).toString();
+
+                            return this.currencySymbol + this.formatNumber(Math.floor(value), false, true).toString();
                         }
+
                         return '';
-                    }
+                    },
                 },
                 mouse: {
                     track: true,
@@ -145,24 +159,24 @@ define('crm:views/dashlets/opportunities-by-stage', 'crm:views/dashlets/abstract
                     position: 'w',
                     autoPositionHorizontal: true,
                     lineColor: this.hoverColor,
-                    trackFormatter: function (obj) {
-                        var label = (obj.series.label || self.translate('None'));
-                        var value = label  + '<br>' + self.currencySymbol + self.formatNumber(obj.x, true);
-                        return value;
-                    }
+                    trackFormatter: obj => {
+                        let label = this.getHelper().escapeString(obj.series.label || this.translate('None'));
+
+                        return label  + '<br>' + this.currencySymbol + this.formatNumber(obj.x, true);
+                    },
                 },
                 legend: {
                     show: true,
                     noColumns: this.getLegendColumnNumber(),
                     container: this.$el.find('.legend-container'),
                     labelBoxMargin: 0,
-                    labelFormatter: self.labelFormatter.bind(self),
+                    labelFormatter: this.labelFormatter.bind(this),
                     labelBoxBorderColor: 'transparent',
-                    backgroundOpacity: 0
-                }
+                    backgroundOpacity: 0,
+                },
             });
 
             this.adjustLegend();
-        }
+        },
     });
 });

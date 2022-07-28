@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart', function (Dep) {
+define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'], function (Dep) {
 
     return Dep.extend({
 
@@ -45,6 +45,7 @@ define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart',
             if (this.getDateFilter() === 'between') {
                 url += '&dateFrom=' + this.getOption('dateFrom') + '&dateTo=' + this.getOption('dateTo');
             }
+
             return url;
         },
 
@@ -60,36 +61,39 @@ define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart',
             var monthList = this.monthList = response.keyList;
 
             var dataMap = response.dataMap || {};
-
             var values = [];
 
-            monthList.forEach(function (month) {
+            monthList.forEach(month => {
                 values.push(dataMap[month]);
-            }, this);
+            });
 
             this.chartData = [];
 
             this.isEmpty = true;
 
             var mid = 0;
+
             if (values.length) {
-                mid = values.reduce(function(a, b) {return a + b}) / values.length;
+                mid = values.reduce((a, b) => a + b) / values.length;
             }
 
             var data = [];
-
             var max = 0;
 
-            values.forEach(function (value, i) {
-                if (value) this.isEmpty = false;
+            values.forEach((value, i) => {
+                if (value) {
+                    this.isEmpty = false;
+                }
+
                 if (value && value > max) {
                     max = value;
                 }
+
                 data.push({
                     data: [[i, value]],
-                    color: (value >= mid) ? this.successColor : this.colorBad
+                    color: (value >= mid) ? this.successColor : this.colorBad,
                 });
-            }, this);
+            });
 
             this.max = max;
 
@@ -105,13 +109,11 @@ define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart',
 
         getTickNumber: function () {
             var containerWidth = this.$container.width();
-            var tickNumber = Math.floor(containerWidth / this.columnWidth);
 
-            return tickNumber;
+            return Math.floor(containerWidth / this.columnWidth);
         },
 
         draw: function () {
-            var self = this;
             var tickNumber = this.getTickNumber();
 
             this.flotr.draw(this.$container.get(0), this.chartData, {
@@ -122,44 +124,49 @@ define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart',
                     shadowSize: 0,
                     lineWidth: 1,
                     fillOpacity: 1,
-                    barWidth: 0.5
+                    barWidth: 0.5,
                 },
                 grid: {
                     horizontalLines: true,
                     verticalLines: false,
                     outline: 'sw',
                     color: this.gridColor,
-                    tickColor: this.tickColor
+                    tickColor: this.tickColor,
                 },
                 yaxis: {
                     min: 0,
                     showLabels: true,
                     color: this.textColor,
                     max: this.max + 0.08 * this.max,
-                    tickFormatter: function (value) {
-                        if (value == 0) {
+                    tickFormatter: (value) => {
+                        if (value === 0 || !value) {
                             return '';
                         }
-                        if (value % 1 == 0) {
-                            return self.currencySymbol + self.formatNumber(Math.floor(value), false, true).toString();
+
+                        if (value % 1 === 0) {
+                            return this.currencySymbol + this.formatNumber(Math.floor(value), false, true).toString();
                         }
+
                         return '';
-                    }
+                    },
                 },
                 xaxis: {
                     min: 0,
                     color: this.textColor,
                     noTicks: tickNumber,
-                    tickFormatter: function (value) {
-                        if (value % 1 == 0) {
-                            var i = parseInt(value);
-                            if (i in self.monthList) {
-                                if (self.monthList.length - tickNumber > 5 && i === self.monthList.length - 1) {
+                    tickFormatter: (value) => {
+                        if (value % 1 === 0) {
+                            let i = parseInt(value);
+
+                            if (i in this.monthList) {
+                                if (this.monthList.length - tickNumber > 5 && i === this.monthList.length - 1) {
                                     return '';
                                 }
-                                return moment(self.monthList[i] + '-01').format('MMM YYYY');
+
+                                return moment(this.monthList[i] + '-01').format('MMM YYYY');
                             }
                         }
+
                         return '';
                     }
                 },
@@ -169,16 +176,18 @@ define('crm:views/dashlets/sales-by-month', 'crm:views/dashlets/abstract/chart',
                     lineColor: this.hoverColor,
                     position: 's',
                     autoPositionVertical: true,
-                    trackFormatter: function (obj) {
-                        var i = parseInt(obj.x);
-                        var value = '';
-                        if (i in self.monthList) {
-                            value += moment(self.monthList[i] + '-01').format('MMM YYYY') + '<br>';
+                    trackFormatter: obj => {
+                        let i = parseInt(obj.x);
+                        let value = '';
+
+                        if (i in this.monthList) {
+                            value += moment(this.monthList[i] + '-01').format('MMM YYYY') + '<br>';
                         }
-                        return value + self.currencySymbol + self.formatNumber(obj.y, true);
+
+                        return value + this.currencySymbol + this.formatNumber(obj.y, true);
                     }
-                }
+                },
             })
-        }
+        },
     });
 });

@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart', 'lib!espo-funnel-chart'], function (Dep) {
+define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart', 'lib!espo-funnel-chart'],
+function (Dep) {
 
     return Dep.extend({
 
@@ -51,6 +52,7 @@ define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart'
             if (this.getOption('teamId')) {
                 url += '&teamId=' + this.getOption('teamId');
             }
+
             return url;
         },
 
@@ -59,18 +61,21 @@ define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart'
         },
 
         prepareData: function (response) {
-            var list = [];
+            let list = [];
 
             this.isEmpty = true;
 
-            response.dataList.forEach(function (item) {
-                if (item.value) this.isEmpty = false;
+            response.dataList.forEach(item => {
+                if (item.value) {
+                    this.isEmpty = false;
+                }
+
                 list.push({
                     stageTranslated: this.getLanguage().translateOption(item.stage, 'stage', 'Opportunity'),
                     value: item.value,
                     stage: item.stage,
                 });
-            }, this);
+            });
 
             return list;
         },
@@ -83,74 +88,80 @@ define('crm:views/dashlets/sales-pipeline', ['crm:views/dashlets/abstract/chart'
         },
 
         draw: function () {
-            var self = this;
+            let colors = Espo.Utils.clone(this.colorList);
 
-            var colors = Espo.Utils.clone(this.colorList);
-
-            this.chartData.forEach(function (item, i) {
+            this.chartData.forEach((item, i) => {
                 if (i + 1 > colors.length) {
                     colors.push('#164');
                 }
-                if (this.chartData.length == i + 1 && item.stage === 'Closed Won') {
+
+                if (this.chartData.length === i + 1 && item.stage === 'Closed Won') {
                     colors[i] = this.successColor;
                 }
+
                 this.chartData[i].color = colors[i];
-            }, this);
+            });
 
             this.$container.empty();
 
-            var funnel = new EspoFunnel.Funnel(
+            let tooltipStyleString =
+                'opacity:0.7;background-color:#000;color:#fff;position:absolute;'+
+                'padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;'
+
+            new EspoFunnel.Funnel(
                 this.$container.get(0),
                 {
                     colors: colors,
                     callbacks: {
-                        tooltipHtml: function (i) {
-                            var value = self.chartData[i].value;
-                            return self.chartData[i].stageTranslated + '<br>' + self.currencySymbol + self.formatNumber(value, true)
+                        tooltipHtml: (i) => {
+                            let value = this.chartData[i].value;
+
+                            return this.chartData[i].stageTranslated +
+                                '<br>' + this.currencySymbol + this.formatNumber(value, true)
                         },
                     },
                     tooltipClassName: 'flotr-mouse-value',
-                    tootlipStyleString:
-                        'opacity:0.7;background-color:#000;color:#fff;position:absolute;'+
-                        'padding:2px 8px;-moz-border-radius:4px;border-radius:4px;white-space:nowrap;',
+                    tootlipStyleString: tooltipStyleString,
+                    tooltipStyleString: tooltipStyleString,
                 },
                 this.chartData
             );
 
             this.drawLegend();
-
             this.adjustLegend();
         },
 
         drawLegend: function () {
-            var number = this.getLegendColumnNumber();
+            let number = this.getLegendColumnNumber();
+            let $container = this.$el.find('.legend-container');
 
-            var $container = this.$el.find('.legend-container');
+            let html = '<table style="font-size: smaller; color:' + this.textColor + '">';
 
-            var html = '<table style="font-size: smaller; color:'+this.textColor+'">';
+            this.chartData.forEach((item, i) => {
+                if (i % number === 0) {
+                    if (i > 0) {
+                        html += '</tr>';
+                    }
 
-            this.chartData.forEach(function (item, i) {
-                if (i % number == 0) {
-                    if (i > 0) html += '</tr>';
                     html += '<tr>';
                 }
 
-                var box = '<div style="border:1px solid transparent;padding:1px">'+
-                    '<div style="width:13px;height:9px;border:1px solid '+item.color+'">'+
-                    '<div style="width:14px;height:10px;background-color:'+item.color+';"></div></div></div>';
+                let stageTranslated = this.getHelper().escapeString(item.stageTranslated);
 
-                html += '<td class="flotr-legend-color-box">'+box+'</td>';
+                let box = '<div style="border:1px solid transparent;padding:1px">'+
+                    '<div style="width:13px;height:9px;border:1px solid ' + item.color + '">'+
+                    '<div style="width:14px;height:10px;background-color:' + item.color + ';"></div></div></div>';
 
-                html += '<td class="flotr-legend-label"><span title="'+item.stageTranslated+'">'+
-                    item.stageTranslated+'</span></td>';
-            }, this);
+                html += '<td class="flotr-legend-color-box">' + box + '</td>';
+
+                html += '<td class="flotr-legend-label"><span title="' + stageTranslated + '">'+
+                    stageTranslated + '</span></td>';
+            });
 
             html += '</tr>';
-
             html += '</table>';
 
             $container.html(html);
         },
-
     });
 });
