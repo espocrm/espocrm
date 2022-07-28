@@ -95,15 +95,15 @@
     &.highlighted {
       @highlighted-bg: @state-info-bg;
       .button-variant-espo(
-        var(--state-info-text);
-        var(--state-info-bg);
-        var(--state-info-bg-5);
-        var(--state-info-bg-10);
-        var(--state-info-bg-17);
-        var(--state-info-bg-12);
-        var(--state-info-bg-25)
+          var(--btn-info-color);
+          var(--btn-info-bg);
+          var(--btn-info-border);
+          var(--btn-info-hover-bg);
+          var(--btn-info-active-bg);
+          var(--btn-info-hover-border);
+          var(--btn-info-active-border)
       );
-      border-radius: 0;
+      border-radius: var(--border-radius);
 
       &.focused {
         background: var(--state-info-bg-10);
@@ -153,20 +153,20 @@
       }
     }
     &.range.highlighted {
-      @range-highlighted-bg: var(--state-info-bg-mix);
+      @range-highlighted-bg: var(--btn-success-bg);
 
       .button-variant-espo(
-        var(--state-info-text);
-        var(--state-info-bg-mix);
-        var(--state-info-bg-mix-5);
-        var(--state-info-bg-mix-10);
-        var(--state-info-bg-mix-17);
-        var(--state-info-bg-mix-12);
-        var(--state-info-bg-mix-25)
+          var(--btn-success-color);
+          var(--btn-success-bg);
+          var(--btn-success-border);
+          var(--btn-success-hover-bg);
+          var(--btn-success-active-bg);
+          var(--btn-success-hover-border);
+          var(--btn-success-active-border)
       );
 
       &.focused {
-        background: var(--state-info-bg-mix-10);
+        background: var(--btn-success-active-bg);
       }
 
       &.disabled,
@@ -209,13 +209,13 @@
     &.active,
     &.active.highlighted {
         .button-variant-espo(
-          var(--brand-primary-text);
-          var(--brand-primary);
-          var(--brand-primary-5);
-          var(--brand-primary-10);
-          var(--brand-primary-17);
-          var(--brand-primary-12);
-          var(--brand-primary-25)
+            var(--btn-primary-color);
+            var(--btn-primary-bg);
+            var(--btn-primary-border);
+            var(--btn-primary-hover-bg);
+            var(--btn-primary-active-bg);
+            var(--btn-primary-hover-border);
+            var(--btn-primary-active-border)
         );
       text-shadow: 0 -1px 0 rgba(0,0,0,.25);
     }
