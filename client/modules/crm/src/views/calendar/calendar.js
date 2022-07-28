@@ -582,6 +582,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 snapDuration: this.slotDuration * 60 * 1000,
                 timezone: this.getDateTime().timeZone,
                 longPressDelay: 300,
+                eventColor: this.colors[''],
                 windowResize: () => {
                     this.adjustSize();
                 },
