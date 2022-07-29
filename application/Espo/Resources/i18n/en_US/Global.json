@@ -811,7 +811,8 @@
         "EspoRtl": "RTL",
         "Sakura": "Sakura",
         "Violet": "Violet",
-        "Hazyblue": "Hazyblue"
+        "Hazyblue": "Hazyblue",
+        "Glass": "Glass"
     },
     "themeNavbars": {
         "side": "Side Navbar",
