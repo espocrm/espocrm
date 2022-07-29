@@ -419,6 +419,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.selectMiddleTab(parseInt(tab));
             },
+            /** @this module:views/record/detail.Class */
+            'keydown': function (e) {
+                this.handleKeydownEvent(e);
+            },
         },
 
         /**
@@ -1207,7 +1211,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     );
                 }
 
-                this.mode = 'edit';
+                this.mode = this.MODE_EDIT;
 
                 this.trigger('after:set-edit-mode');
 
@@ -1246,7 +1250,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     }
                 }
 
-                this.mode = 'detail';
+                this.mode = this.MODE_DETAIL;
                 this.trigger('after:set-detail-mode');
 
                 Promise.all(promiseList).then(() => resolve());
@@ -3307,6 +3311,42 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.$dropdownEditItemListButton = this.$detailButtonContainer
                 .find('.dropdown-edit-item-list-button');
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleKeydownEvent: function (e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                    return;
+                }
+
+                if (this.mode === this.MODE_EDIT) {
+                    e.stopPropagation();
+
+                    this.actionSave();
+                }
+
+                return;
+            }
+
+            if (e.key === 'Escape') {
+                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                    return;
+                }
+
+                if (this.type === 'detail' && this.mode === this.MODE_EDIT) {
+                    e.stopPropagation();
+
+                    if (this.isChanged) {
+                        return;
+                    }
+
+                    this.actionCancelEdit();
+                }
+            }
         },
     });
 });

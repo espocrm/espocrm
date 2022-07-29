@@ -106,6 +106,16 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         recordHelper: null,
 
         /**
+         * @const
+         */
+        MODE_DETAIL: 'detail',
+
+        /**
+         * @const
+         */
+        MODE_EDIT: 'edit',
+
+        /**
          * Hide a field.
          *
          * @param {string} name A field name.

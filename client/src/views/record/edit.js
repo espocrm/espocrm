@@ -117,6 +117,8 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
          * @inheritDoc
          */
         actionSave: function (data) {
+            data = data || {};
+
             var isNew = this.isNew;
 
             this.save(data.options)
