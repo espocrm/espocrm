@@ -118,6 +118,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         /** @private */
         this.options = options;
 
+        this.activeElement = document.activeElement;
+
         let params = [
             'className',
             'backdrop',
@@ -612,6 +614,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         if (!this.onCloseIsCalled) {
             this.onClose();
             this.onCloseIsCalled = true;
+
+            if (this.activeElement) {
+                setTimeout(() => $(this.activeElement).focus(), 50);
+            }
         }
 
         this._close();
