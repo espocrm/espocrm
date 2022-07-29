@@ -289,7 +289,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                     $('<span>')
                         .addClass('chevron-right')
                         .get(0).outerHTML;
-                
+
                 this.headerHtml += ' ' +
                     $('<span>')
                         .text(model.get('name'))

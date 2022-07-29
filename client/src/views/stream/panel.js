@@ -61,6 +61,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             },
             'keypress textarea[data-name="post"]': function (e) {
                 if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                    e.stopPropagation();
+
                     this.post();
                 }
                 else if (e.keyCode === 9) {

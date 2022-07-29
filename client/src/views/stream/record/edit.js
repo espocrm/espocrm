@@ -119,15 +119,20 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
             this.seed = this.model.clone();
 
             if (this.options.interactiveMode) {
-                this.events['focus textarea[data-name="post"]'] = function (e) {
+                this.events['focus textarea[data-name="post"]'] = () => {
                     this.enablePostingMode();
                 };
 
-                this.events['keypress textarea[data-name="post"]'] = function (e) {
+                this.events['keypress textarea[data-name="post"]'] = (e) => {
                     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                        e.stopPropagation();
+
                         this.post();
+
+                        return;
                     }
-                    else if (e.keyCode === 9) {
+
+                    if (e.keyCode === 9) {
                         let $text = $(e.currentTarget);
 
                         if ($text.val() === '') {
@@ -135,7 +140,8 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                         }
                     }
                 };
-                this.events['click button.post'] = function (e) {
+
+                this.events['click button.post'] = () => {
                     this.post();
                 };
             }

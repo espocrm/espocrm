@@ -71,6 +71,22 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     label: 'Save',
                     style: 'primary',
                 });
+
+                this.events['keypress'] = (e) => {
+                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                        e.stopPropagation();
+
+                        this.actionSave();
+                    }
+                };
+
+                this.events['keydown'] = (e) => {
+                    if (e.keyCode === 27 && !this.getRecordView().isChanged) {
+                        e.stopPropagation();
+
+                        this.actionClose();
+                    }
+                }
             }
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
