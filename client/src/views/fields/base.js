@@ -1228,6 +1228,8 @@ define('views/fields/base', ['view'], function (Dep) {
         inlineEditClose: function (noReset) {
             this.trigger('inline-edit-off', {noReset: noReset});
 
+            this.$el.off('keydown.inline-edit');
+
             this._isInlineEditMode = false;
 
             if (!this.isEditMode()) {
@@ -1261,7 +1263,26 @@ define('views/fields/base', ['view'], function (Dep) {
 
             let promise = this.setEditMode()
                 .then(() => this.reRender(true))
-                .then(() => this.addInlineEditLinks());
+                .then(() => this.addInlineEditLinks())
+                .then(() => {
+                    this.$el.on('keydown.inline-edit', e => {
+                        if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                            e.stopPropagation();
+
+                            this.inlineEditSave();
+
+                            return;
+                        }
+
+                        if (e.keyCode === 27) {
+                            e.stopPropagation();
+
+                            this.inlineEditClose();
+                        }
+                    });
+
+                    setTimeout(() => this.$el.find('.form-control').first().focus(), 10);
+                });
 
             this.trigger('inline-edit-on');
 
