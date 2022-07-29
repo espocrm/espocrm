@@ -1233,7 +1233,7 @@ define('views/fields/base', ['view'], function (Dep) {
             this._isInlineEditMode = false;
 
             if (!this.isEditMode()) {
-                return;
+                return Promise.resolve();
             }
 
             let promise = this.setDetailMode()
