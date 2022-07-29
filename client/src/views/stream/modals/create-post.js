@@ -50,6 +50,12 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
                 }
             ];
 
+            this.events['keypress textarea[data-name="post"]'] = (e) => {
+                if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                    this.actionPost();
+                }
+            };
+
             this.wait(true);
 
             this.getModelFactory().create('Note', (model) => {
