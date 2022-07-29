@@ -170,3 +170,9 @@
 select[multiple].input-sm {
     height: 90px !important;
 }
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+    color: var(--input-color-disabled);
+}
