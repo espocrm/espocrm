@@ -1542,10 +1542,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.isNew = this.model.isNew();
 
-            if (_.isUndefined(this.events)) {
-                this.events = {};
-            }
-
             if (!this.editModeDisabled) {
                 if ('editModeDisabled' in this.options) {
                     this.editModeDisabled = this.options.editModeDisabled;
