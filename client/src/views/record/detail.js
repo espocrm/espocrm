@@ -3341,6 +3341,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     e.stopPropagation();
 
                     if (this.isChanged) {
+                        this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                            .then(() => this.actionCancelEdit());
+
                         return;
                     }
 

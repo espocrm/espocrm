@@ -81,8 +81,15 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 };
 
                 this.events['keydown'] = (e) => {
-                    if (e.keyCode === 27 && !this.getRecordView().isChanged) {
+                    if (e.key === 'Escape') {
                         e.stopPropagation();
+
+                        if (this.getRecordView().isChanged) {
+                            this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                                .then(() => this.actionClose());
+
+                            return;
+                        }
 
                         this.actionClose();
                     }
