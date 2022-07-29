@@ -279,22 +279,37 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             var scope = this.getScope();
 
             this.headerHtml = '';
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.headerHtml += this.getLanguage().translate(scope, 'scopeNames');
+            this.headerHtml += $('<span>')
+                .text(this.getLanguage().translate(scope, 'scopeNames'))
+                .get(0).outerHTML;
 
             if (model.get('name')) {
-                this.headerHtml += ' <span class="chevron-right"></span> ' +
-                    Handlebars.Utils.escapeExpression(model.get('name'));
+                this.headerHtml += ' ' +
+                    $('<span>')
+                        .addClass('chevron-right')
+                        .get(0).outerHTML;
+                
+                this.headerHtml += ' ' +
+                    $('<span>')
+                        .text(model.get('name'))
+                        .get(0).outerHTML;
             }
 
             if (!this.fullFormDisabled) {
-                this.headerHtml = '<a href="#' + scope + '/view/' +
-                    this.id+'" class="action font-size-flexible" '+
-                    'title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
+                let url = '#' + scope + '/view/' + this.id;
+
+                this.headerHtml =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action font-size-flexible')
+                        .attr('title', this.translate('Full Form'))
+                        .attr('data-action', 'fullForm')
+                        .append(this.headerHtml)
+                        .get(0).outerHTML;
             }
 
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
 
             if (!this.editDisabled) {
                 var editAccess = this.getAcl().check(model, 'edit', true);

@@ -96,30 +96,35 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             this.id = this.options.id;
 
             if (!this.id) {
-                this.headerHtml = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
+                this.headerHtml = $('<span>')
+                    .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
+                    .get(0).outerHTML;
             }
             else {
-                this.headerHtml = this.getLanguage().translate('Edit');
-                this.headerHtml += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
+                let text = this.getLanguage().translate('Edit') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNames');
+
+                this.headerHtml = $('<span>')
+                    .text(text)
+                    .get(0).outerHTML;
             }
 
             if (!this.fullFormDisabled) {
-                if (!this.id) {
-                    this.headerHtml =
-                        '<a href="#' + this.scope +
-                        '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' +
-                        this.headerHtml + '</a>';
-                }
-                else {
-                    this.headerHtml =
-                        '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="' +
-                        this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
-                }
+                let url = this.id ?
+                    '#' + this.scope + '/edit/' + this.id :
+                    '#' + this.scope + '/create';
+
+                this.headerHtml =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action')
+                        .attr('title', this.translate('Full Form'))
+                        .attr('data-action', 'fullForm')
+                        .append(this.headerHtml)
+                        .get(0).outerHTML;
             }
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
 
             this.sourceModel = this.model;
 
