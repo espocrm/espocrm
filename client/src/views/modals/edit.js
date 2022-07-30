@@ -129,36 +129,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
             this.id = this.options.id;
 
-            if (!this.id) {
-                this.headerHtml = $('<span>')
-                    .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
-                    .get(0).outerHTML;
-            }
-            else {
-                let text = this.getLanguage().translate('Edit') + ': ' +
-                    this.getLanguage().translate(this.scope, 'scopeNames');
-
-                this.headerHtml = $('<span>')
-                    .text(text)
-                    .get(0).outerHTML;
-            }
-
-            if (!this.fullFormDisabled) {
-                let url = this.id ?
-                    '#' + this.scope + '/edit/' + this.id :
-                    '#' + this.scope + '/create';
-
-                this.headerHtml =
-                    $('<a>')
-                        .attr('href', url)
-                        .addClass('action')
-                        .attr('title', this.translate('Full Form'))
-                        .attr('data-action', 'fullForm')
-                        .append(this.headerHtml)
-                        .get(0).outerHTML;
-            }
-
-            this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
+            this.headerHtml = this.composeHeaderHtml();
 
             this.sourceModel = this.model;
 
@@ -234,6 +205,47 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             return this.getView('edit');
         },
 
+        /**
+         * @protected
+         * @return {string}
+         */
+        composeHeaderHtml: function () {
+            let html;
+
+            if (!this.id) {
+                html = $('<span>')
+                    .text(this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope))
+                    .get(0).outerHTML;
+            }
+            else {
+                let text = this.getLanguage().translate('Edit') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNames');
+
+                html = $('<span>')
+                    .text(text)
+                    .get(0).outerHTML;
+            }
+
+            if (!this.fullFormDisabled) {
+                let url = this.id ?
+                    '#' + this.scope + '/edit/' + this.id :
+                    '#' + this.scope + '/create';
+
+                html =
+                    $('<a>')
+                        .attr('href', url)
+                        .addClass('action')
+                        .attr('title', this.translate('Full Form'))
+                        .attr('data-action', 'fullForm')
+                        .append(html)
+                        .get(0).outerHTML;
+            }
+
+            html = this.getHelper().getScopeColorIconHtml(this.scope) + html;
+
+            return html;
+        },
+
         actionSave: function (data) {
             data = data || {};
 
@@ -248,6 +260,12 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             editView
                 .save()
                 .then(() => {
+                    let wasNew = !this.id;
+
+                    if (wasNew) {
+                        this.id = model.id;
+                    }
+
                     this.trigger('after:save', model);
 
                     if (!data.bypassClose) {
@@ -255,6 +273,9 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
                         return;
                     }
+
+                    this.$el.find('.modal-header .modal-title-text')
+                        .html(this.composeHeaderHtml());
 
                     $buttons.removeClass('disabled').removeAttr('disabled');
                 })

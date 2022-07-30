@@ -3382,6 +3382,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                    return;
+                }
+
                 if (this.mode !== this.MODE_EDIT) {
                     return;
                 }
