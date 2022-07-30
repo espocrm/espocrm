@@ -1168,16 +1168,18 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @return {Object.<string,*>}
          */
         fetch: function () {
-            var data = {};
-            var fieldViews = this.getFieldViews();
+            let data = {};
+            let fieldViews = this.getFieldViews();
 
-            for (var i in fieldViews) {
-                var view = fieldViews[i];
+            for (let i in fieldViews) {
+                let view = fieldViews[i];
 
-                if (view.isEditMode()) {
-                    if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
-                        _.extend(data, view.fetch());
-                    }
+                if (!view.isEditMode()) {
+                    continue;
+                }
+
+                if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
+                    _.extend(data, view.fetch());
                 }
             }
 
