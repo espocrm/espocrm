@@ -559,10 +559,10 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                     this.remove();
                 });
 
-                this.listenTo(view, 'after:save', (model) => {
+                this.listenTo(view, 'after:save', (model, o) => {
                     this.model.set(model.getClonedAttributes());
 
-                    this.trigger('after:save', model);
+                    this.trigger('after:save', model, o);
                     this.controlRecordButtonsVisibility();
 
                     this.trigger('model-sync');

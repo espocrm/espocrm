@@ -725,12 +725,17 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 view.render();
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:destroy', (model) => {
+                this.listenToOnce(view, 'after:destroy', (m) => {
                     this.runFetch();
                 });
 
-                this.listenToOnce(view, 'after:save', (model) => {
-                    view.close();
+                this.listenTo(view, 'after:save', (m, o) => {
+                    o = o || {};
+
+                    if (!o.bypassClose) {
+                        view.close();
+                    }
+
                     this.runFetch();
                 });
             });

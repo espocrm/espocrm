@@ -656,8 +656,12 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                             this.removeModel(model);
                         });
 
-                        this.listenToOnce(view, 'after:save', model => {
-                            view.close();
+                        this.listenTo(view, 'after:save', (model, o) => {
+                            o = o || {};
+
+                            if (!o.bypassClose) {
+                                view.close();
+                            }
 
                             this.updateModel(model);
                         });
@@ -867,7 +871,7 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         addModel: function (model) {
-            let d = model.attributes;
+            let d = model.getClonedAttributes();
 
             d.scope = model.name;
 
@@ -887,7 +891,8 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             let event = events[0];
 
-            let d = model.attributes;
+            let d = model.getClonedAttributes();
+
             d.scope = model.name;
 
             let data = this.convertToFcEvent(d);

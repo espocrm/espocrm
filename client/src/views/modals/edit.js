@@ -266,7 +266,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                         this.id = model.id;
                     }
 
-                    this.trigger('after:save', model);
+                    this.trigger('after:save', model, {bypassClose: data.bypassClose});
 
                     if (!data.bypassClose) {
                         this.dialog.close();
