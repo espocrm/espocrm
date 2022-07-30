@@ -49,7 +49,7 @@ define('views/login', ['view'], function (Dep) {
             'keydown': function (e) {
                 if (e.key === 'Enter' && e.ctrlKey) {
                     e.preventDefault();
-                    
+
                     this.login();
                 }
             },
