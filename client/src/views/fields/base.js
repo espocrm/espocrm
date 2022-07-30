@@ -1223,6 +1223,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Exist inline-edit mode.
          *
+         * @param {boolean} [noReset]
          * @return {Promise}
          */
         inlineEditClose: function (noReset) {
