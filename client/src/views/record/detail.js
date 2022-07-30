@@ -403,6 +403,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         $detailButtonContainer: null,
 
         /**
+         * A Ctrl+Enter shortcut action.
+         *
+         * @protected
+         * @type {?string}
+         */
+        shortcutEnterAction: 'save',
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -618,7 +626,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            if (this.type === 'detail' && this.printPdfAction) {
+            if (this.type === this.TYPE_DETAIL && this.printPdfAction) {
                 var printPdfAction = true;
 
                 if (
@@ -636,7 +644,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            if (this.type === 'detail' && this.convertCurrencyAction) {
+            if (this.type === this.TYPE_DETAIL && this.convertCurrencyAction) {
                 if (
                     this.getAcl().check(this.entityType, 'edit') &&
                     !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled'])
@@ -657,7 +665,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             }
 
             if (
-                this.type === 'detail' &&
+                this.type === this.TYPE_DETAIL &&
                 this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
             ) {
                 if (this.getAcl().get('dataPrivacyPermission') === 'yes') {
@@ -3319,15 +3327,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          */
         handleKeydownEvent: function (e) {
             if (e.key === 'Enter' && e.ctrlKey) {
-                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                if (this.inlineEditModeIsOn || this.buttonsDisabled || !this.shortcutEnterAction) {
                     return;
                 }
 
-                if (this.mode === this.MODE_EDIT) {
-                    e.stopPropagation();
-
-                    this.actionSave();
+                if (this.mode !== this.MODE_EDIT) {
+                    return;
                 }
+
+                if (
+                    this.type === this.TYPE_DETAIL &&
+                    this.buttonEditList.findIndex(item => item.name === this.shortcutEnterAction) === -1
+                ) {
+                    return;
+                }
+
+                if (
+                    this.type === this.TYPE_EDIT &&
+                    this.buttonList.findIndex(item => item.name === this.shortcutEnterAction) === -1
+                ) {
+                    return;
+                }
+
+                e.stopPropagation();
+
+                let methodName = 'action' + Espo.Utils.upperCaseFirst(this.shortcutEnterAction);
+
+                this[methodName]();
 
                 return;
             }
@@ -3337,7 +3363,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     return;
                 }
 
-                if (this.type === 'detail' && this.mode === this.MODE_EDIT) {
+                if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
                     e.stopPropagation();
 
                     if (this.isChanged) {

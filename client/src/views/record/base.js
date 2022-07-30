@@ -116,6 +116,16 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         MODE_EDIT: 'edit',
 
         /**
+         * @const
+         */
+        TYPE_DETAIL: 'detail',
+
+        /**
+         * @const
+         */
+        TYPE_EDIT: 'edit',
+
+        /**
          * Hide a field.
          *
          * @param {string} name A field name.
@@ -255,7 +265,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                 if (view.readOnly) {
                     view.setNotReadOnly();
 
-                    if (this.mode === 'edit') {
+                    if (this.mode === this.MODE_EDIT) {
                         if (!view.readOnlyLocked && view.isDetailMode()) {
                             view.setEditMode()
                                 .then(() => view.reRender());
@@ -631,7 +641,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
                     return;
                 }
 
-                if (this.mode === 'edit') {
+                if (this.mode === this.MODE_EDIT) {
                     this.setIsChanged();
                 }
             });
