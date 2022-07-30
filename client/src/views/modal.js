@@ -253,7 +253,7 @@ define('views/modal', ['view'], function (Dep) {
          * A shortcut-key => action map.
          *
          * @protected
-         * @type {?Object.<string,string>}
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
          */
         shortcutKeys: null,
 
@@ -379,6 +379,12 @@ define('views/modal', ['view'], function (Dep) {
 
                     if (e.ctrlKey) {
                         key = 'ctrl+' + key;
+                    }
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
                     }
 
                     let actionName = this.shortcutKeys[key];

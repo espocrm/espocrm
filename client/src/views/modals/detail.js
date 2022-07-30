@@ -66,6 +66,29 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
 
         duplicateAction: false,
 
+        shortcutKeys: {
+            'e': function (e) {
+                if (this.editDisabled) {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'edit') === -1) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.actionEdit()
+                    .then(view => {
+                        view.$el
+                            .find('.form-control:not([disabled])')
+                            .first()
+                            .focus();
+                    });
+            },
+        },
+
         setup: function () {
             this.scope = this.scope || this.options.scope;
             this.id = this.options.id;
@@ -519,9 +542,12 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 });
         },
 
+        /**
+         * @return {Promise}
+         */
         actionEdit: function () {
             if (this.options.quickEditDisabled) {
-                var options = {
+                let options = {
                     id: this.id,
                     model: this.model,
                     returnUrl: this.getRouter().getCurrentUrl(),
@@ -534,41 +560,46 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.getRouter().navigate('#' + this.scope + '/edit/' + this.id, {trigger: false});
                 this.getRouter().dispatch(this.scope, 'edit', options);
 
-                return;
+                return Promise.reject();
             }
 
-            var viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+            let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
                 'views/modals/edit';
 
-            this.createView('quickEdit', viewName, {
-                scope: this.scope,
-                entityType: this.model.entityType,
-                id: this.id,
-                fullFormDisabled: this.fullFormDisabled
-            }, (view) => {
-                view.once('after:render', () => {
-                    Espo.Ui.notify(false);
-                    this.dialog.hide();
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            return new Promise(resolve => {
+                this.createView('quickEdit', viewName, {
+                    scope: this.scope,
+                    entityType: this.model.entityType,
+                    id: this.id,
+                    fullFormDisabled: this.fullFormDisabled
+                }, view => {
+                    this.listenToOnce(view, 'remove', () => {
+                        this.dialog.show();
+                    });
+
+                    this.listenToOnce(view, 'leave', () => {
+                        this.remove();
+                    });
+
+                    this.listenTo(view, 'after:save', (model, o) => {
+                        this.model.set(model.getClonedAttributes());
+
+                        this.trigger('after:save', model, o);
+                        this.controlRecordButtonsVisibility();
+
+                        this.trigger('model-sync');
+                    });
+
+                    view.render()
+                        .then(() => {
+                            Espo.Ui.notify(false);
+                            this.dialog.hide();
+
+                            resolve(view);
+                        });
                 });
-
-                this.listenToOnce(view, 'remove', () => {
-                    this.dialog.show();
-                });
-
-                this.listenToOnce(view, 'leave', () => {
-                    this.remove();
-                });
-
-                this.listenTo(view, 'after:save', (model, o) => {
-                    this.model.set(model.getClonedAttributes());
-
-                    this.trigger('after:save', model, o);
-                    this.controlRecordButtonsVisibility();
-
-                    this.trigger('model-sync');
-                });
-
-                view.render();
             });
         },
 
