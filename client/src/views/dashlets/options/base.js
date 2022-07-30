@@ -60,6 +60,10 @@ function (Dep, Detail, Model, ViewRecordHelper) {
             },
         ],
 
+        shortcutKeys: {
+            'ctrl+enter': 'save',
+        },
+
         getDetailLayout: function () {
             let layout = this.getMetadata().get(['dashlets', this.name, 'options', 'layout']);
 
@@ -91,7 +95,6 @@ function (Dep, Detail, Model, ViewRecordHelper) {
             Dep.prototype.init.call(this);
 
             this.fields = Espo.Utils.cloneDeep(this.options.fields);
-
             this.fieldList = Object.keys(this.fields);
             this.optionsData = this.options.optionsData;
         },

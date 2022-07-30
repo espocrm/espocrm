@@ -250,6 +250,14 @@ define('views/modal', ['view'], function (Dep) {
         footerAtTheTop: null,
 
         /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string>}
+         */
+        shortcutKeys: null,
+
+        /**
          * @inheritDoc
          */
         init: function () {
@@ -274,6 +282,10 @@ define('views/modal', ['view'], function (Dep) {
 
             // @todo Remove it as deprecated.
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
+
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
 
             this.on('render', () => {
                 if (this.dialog) {
@@ -358,6 +370,31 @@ define('views/modal', ['view'], function (Dep) {
 
                 $(containerSelector).remove();
             });
+        },
+
+        setupFinal: function () {
+            if (this.shortcutKeys) {
+                this.events['keydown.modal-base'] = e => {
+                    let key = e.key.toLowerCase();
+
+                    if (e.ctrlKey) {
+                        key = 'ctrl+' + key;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
         },
 
         /**

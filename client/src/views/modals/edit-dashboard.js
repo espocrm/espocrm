@@ -50,6 +50,10 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
             },
         },
 
+        shortcutKeys: {
+            'ctrl+enter': 'save',
+        },
+
         setup: function () {
             this.buttonList = [
                 {
