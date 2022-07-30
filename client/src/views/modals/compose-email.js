@@ -99,6 +99,31 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
                     this.wasModified = true;
                 }
             });
+
+            this.events['keydown'] = (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.stopPropagation();
+
+                    this.actionSend();
+
+                    return;
+                }
+
+                if (e.key === 'Escape') {
+                    e.stopPropagation();
+
+                    this.model.set(this.getRecordView().fetch());
+
+                    if (this.getRecordView().isChanged) {
+                        this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                            .then(() => this.actionClose());
+
+                        return;
+                    }
+
+                    this.actionClose();
+                }
+            }
         },
 
         createRecordView: function (model, callback) {

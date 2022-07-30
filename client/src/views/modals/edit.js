@@ -72,15 +72,15 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     style: 'primary',
                 });
 
-                this.events['keypress'] = (e) => {
-                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                this.events['keydown'] = (e) => {
+                    if (e.key === 'Enter' && e.ctrlKey) {
                         e.stopPropagation();
 
                         this.actionSave();
-                    }
-                };
 
-                this.events['keydown'] = (e) => {
+                        return;
+                    }
+
                     if (e.key === 'Escape') {
                         e.stopPropagation();
 
