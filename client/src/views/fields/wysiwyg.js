@@ -78,33 +78,39 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.setupToolbar();
 
             this.listenTo(this.model, 'change:isHtml', (model, value, o) => {
-                if (o.ui && this.mode === 'edit') {
-                    if (this.isRendered()) {
-                        if (!model.has('isHtml') || model.get('isHtml')) {
-                            var value = this.plainToHtml(this.model.get(this.name));
-
-                            if (
-                                this.lastHtmlValue &&
-                                this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)
-                            ) {
-                                value = this.lastHtmlValue;
-                            }
-
-                            this.model.set(this.name, value, {skipReRender: true});
-                            this.enableWysiwygMode();
-                        }
-                        else {
-                            this.lastHtmlValue = this.model.get(this.name);
-
-                            var value = this.htmlToPlain(this.model.get(this.name));
-
-                            this.disableWysiwygMode();
-
-                            this.model.set(this.name, value);
-                        }
+                if (o.ui && this.isEditMode()) {
+                    if (!this.isRendered()) {
+                        return;
                     }
+
+                    if (!model.has('isHtml') || model.get('isHtml')) {
+                        let value = this.plainToHtml(this.model.get(this.name));
+
+                        if (
+                            this.lastHtmlValue &&
+                            this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)
+                        ) {
+                            value = this.lastHtmlValue;
+                        }
+
+                        this.model.set(this.name, value, {skipReRender: true});
+                        this.enableWysiwygMode();
+
+                        return;
+                    }
+
+                    this.lastHtmlValue = this.model.get(this.name);
+
+                    let value = this.htmlToPlain(this.model.get(this.name));
+
+                    this.disableWysiwygMode();
+
+                    this.model.set(this.name, value);
+
+                    return;
                 }
-                if (this.mode === 'detail') {
+
+                if (this.isDetailMode()) {
                     if (this.isRendered()) {
                         this.reRender();
                     }
@@ -163,22 +169,19 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             if (!this.params.toolbar) {
                 if (this.params.attachmentField) {
-                    this.toolbar.push([
-                        'attachment',
-                        ['attachment']
-                    ]);
+                    this.toolbar.push(['attachment', ['attachment']]);
 
-                    var AttachmentButton = () => {
-                        var ui = $.summernote.ui;
+                    this.buttons['attachment'] = () => {
+                        let ui = $.summernote.ui;
 
-                        var button = ui.button({
+                        let button = ui.button({
                             contents: '<i class="fas fa-paperclip"></i>',
                             tooltip: this.translate('Attach File'),
                             click: () => {
                                 this.attachFile();
 
                                 this.listenToOnce(this.model, 'attachment-uploaded:attachments', () => {
-                                    if (this.mode === 'edit') {
+                                    if (this.isEditMode()) {
                                         Espo.Ui.success(this.translate('Attached'));
                                     }
                                 });
@@ -187,8 +190,6 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                         return button.render();
                     };
-
-                    this.buttons['attachment'] = AttachmentButton;
                 }
             }
         },
@@ -219,6 +220,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     value = this.sanitizeHtmlLight(value);
                 }
             }
+
             return value || '';
         },
 
@@ -240,7 +242,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$summernote = this.$el.find('.summernote');
                 this.$noteEditor = this.$el.find('> .note-editor');
             }
@@ -251,7 +253,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
             }
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.enableWysiwygMode();
                 }
@@ -260,7 +262,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 }
             }
 
-            if (this.mode === 'detail' || this.mode === 'list') {
+            if (this.isReadMode()) {
                 this.renderDetail();
             }
         },
@@ -435,20 +437,20 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.$element.addClass('hidden');
             this.$summernote.removeClass('hidden');
 
-            var contents = this.getValueForEdit();
+            let contents = this.getValueForEdit();
 
             this.$summernote.html(contents);
 
             this.$summernote.find('style').remove();
             this.$summernote.find('link[ref="stylesheet"]').remove();
 
-            var keyMap = Espo.Utils.cloneDeep($.summernote.options.keyMap);
+            let keyMap = Espo.Utils.cloneDeep($.summernote.options.keyMap);
             keyMap.pc['CTRL+K'] = 'espoLink.show';
             keyMap.mac['CMD+K'] = 'espoLink.show';
 
-            var toolbar = this.toolbar;
+            let toolbar = this.toolbar;
 
-            var options = {
+            let options = {
                 espoView: this,
                 lang: this.getConfig().get('language'),
                 keyMap: keyMap,
@@ -633,8 +635,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             var edgeTop, edgeTopAbsolute;
 
             if ($target.get(0) === window.document) {
-                var $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
-                var offset = $buttonContainer.offset();
+                let $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
+                let offset = $buttonContainer.offset();
 
                 if (offset) {
                     edgeTop = offset.top + $buttonContainer.height();
@@ -642,7 +644,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 }
             }
             else {
-                var offset = $target.offset();
+                let offset = $target.offset();
 
                 if (offset) {
                     edgeTop = offset.top;
@@ -650,10 +652,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 }
             }
 
-            var top = this.$el.offset().top;
-            var bottom = top + this.$el.height() - toolbarHeight;
+            let top = this.$el.offset().top;
+            let bottom = top + this.$el.height() - toolbarHeight;
 
-            var toStick = false;
+            let toStick = false;
+
             if (edgeTop > top && bottom > edgeTop) {
                 toStick = true;
             }
@@ -663,21 +666,27 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     top: edgeTopAbsolute + 'px',
                     width: toolbarWidth + 'px'
                 });
+
                 this.$toolbar.addClass('sticked');
+
                 this.$area.css({
                     marginTop: toolbarHeight + 'px',
                     backgroundColor: ''
                 });
-            } else {
-                this.$toolbar.css({
-                    top: '',
-                    width: ''
-                });
-                this.$toolbar.removeClass('sticked');
-                this.$area.css({
-                    marginTop: ''
-                });
+
+                return;
             }
+
+            this.$toolbar.css({
+                top: '',
+                width: '',
+            });
+
+            this.$toolbar.removeClass('sticked');
+
+            this.$area.css({
+                marginTop: ''
+            });
         },
 
         attachFile: function () {
