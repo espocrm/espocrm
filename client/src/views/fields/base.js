@@ -1107,25 +1107,31 @@ define('views/fields/base', ['view'], function (Dep) {
 
         /**
          * Invoke inline-edit saving.
+         *
+         * @param {{[bypassClose]: boolean}} options
          */
-        inlineEditSave: function () {
+        inlineEditSave: function (options) {
+            options = options || {}
+
             if (this.recordHelper) {
-                this.recordHelper.trigger('inline-edit-save', this.name);
+                this.recordHelper.trigger('inline-edit-save', this.name, options);
 
                 return;
             }
 
-            var data = this.fetch();
+            // Code below supposed not to be executed.
 
-            var model = this.model;
-            var prev = this.initialAttributes;
+            let data = this.fetch();
+
+            let model = this.model;
+            let prev = this.initialAttributes;
 
             model.set(data, {silent: true});
             data = model.attributes;
 
-            var attrs = false;
+            let attrs = false;
 
-            for (var attr in data) {
+            for (let attr in data) {
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
@@ -1135,8 +1141,6 @@ define('views/fields/base', ['view'], function (Dep) {
 
             if (!attrs) {
                 this.inlineEditClose();
-
-                return;
             }
 
             let isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
@@ -1166,10 +1170,12 @@ define('views/fields/base', ['view'], function (Dep) {
 
                     model.set(prev, {silent: true});
 
-                    this.render();
+                    this.reRender();
                 });
 
-            this.inlineEditClose(true);
+            if (!options.bypassClose) {
+                this.inlineEditClose(true);
+            }
         },
 
         /**
@@ -1279,6 +1285,15 @@ define('views/fields/base', ['view'], function (Dep) {
                             e.stopPropagation();
 
                             this.inlineEditClose();
+
+                            return;
+                        }
+
+                        if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            this.inlineEditSave({bypassClose: true});
                         }
                     });
 

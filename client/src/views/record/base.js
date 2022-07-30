@@ -939,6 +939,7 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
          * @property {Object.<string,string>} [headers] HTTP headers.
          * @property {boolean} [skipNotModifiedWarning] Don't show a not-modified warning.
          * @property {function():void} [afterValidate] A callback called after validate.
+         * @property {boolean} [bypassClose] Bypass closing. Only for inline-edit.
          */
 
         /**

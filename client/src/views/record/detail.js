@@ -1696,11 +1696,15 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         _initInlineEditSave: function () {
-            this.listenTo(this.recordHelper, 'inline-edit-save', field => {
-                this.inlineEditSave(field);
+            this.listenTo(this.recordHelper, 'inline-edit-save', (field, o) => {
+                this.inlineEditSave(field, o);
             });
         },
 
+        /**
+         * @param {string} field
+         * @param {module:views/record/base~saveOptions} [options]
+         */
         inlineEditSave: function (field, options) {
             let view = this.getFieldView(field);
 
@@ -1711,22 +1715,41 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             options = _.extend({
                 inline: true,
                 field: field,
-                afterValidate: () => view.inlineEditClose(true),
+                afterValidate: () => {
+                    if (options.bypassClose) {
+                        return;
+                    }
+
+                    view.inlineEditClose(true)
+                },
             }, options || {});
 
             this.save(options)
                 .then(() => {
                     view.trigger('after:inline-save');
                     view.trigger('after:save');
+
+
+                    if (options.bypassClose) {
+                        view.initialAttributes = this.model.getClonedAttributes();
+                    }
                 })
                 .catch(reason => {
                     if (reason === 'notModified') {
+                        if (options.bypassClose) {
+                            return;
+                        }
+
                         view.inlineEditClose(true);
 
                         return;
                     }
 
                     if (reason === 'error') {
+                        if (options.bypassClose) {
+                            return;
+                        }
+
                         view.inlineEdit();
                     }
                 });
