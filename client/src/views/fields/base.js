@@ -1266,7 +1266,7 @@ define('views/fields/base', ['view'], function (Dep) {
                 .then(() => this.addInlineEditLinks())
                 .then(() => {
                     this.$el.on('keydown.inline-edit', e => {
-                        if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                        if (e.key === 'Enter' && e.ctrlKey) {
                             e.stopPropagation();
 
                             this.inlineEditSave();
@@ -1274,7 +1274,7 @@ define('views/fields/base', ['view'], function (Dep) {
                             return;
                         }
 
-                        if (e.keyCode === 27) {
+                        if (e.key === 'Escape') {
                             e.stopPropagation();
 
                             this.inlineEditClose();
