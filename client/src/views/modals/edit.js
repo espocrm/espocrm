@@ -84,6 +84,8 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     if (e.key === 'Escape') {
                         e.stopPropagation();
 
+                        this.model.set(this.getRecordView().fetch());
+
                         if (this.getRecordView().isChanged) {
                             this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
                                 .then(() => this.actionClose());
