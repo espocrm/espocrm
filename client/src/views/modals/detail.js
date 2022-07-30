@@ -559,7 +559,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                     this.remove();
                 });
 
-                this.listenToOnce(view, 'after:save', (model) => {
+                this.listenTo(view, 'after:save', (model) => {
                     this.model.set(model.getClonedAttributes());
 
                     this.trigger('after:save', model);

@@ -622,8 +622,17 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                         view.render();
                         view.notify(false);
 
-                        this.listenToOnce(view, 'after:save', (model) => {
-                            this.addModel(model);
+                        let added = false;
+
+                        this.listenTo(view, 'after:save', (model) => {
+                            if (!added) {
+                                this.addModel(model);
+                                added = true;
+
+                                return;
+                            }
+
+                            this.updateModel(model);
                         });
                     });
 

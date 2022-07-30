@@ -705,7 +705,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 view.render();
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:save', () => {
+                this.listenTo(view, 'after:save', () => {
                     this.runFetch();
                 });
             });
