@@ -45,7 +45,14 @@ define('views/login', ['view'], function (Dep) {
             },
             'click a[data-action="passwordChangeRequest"]': function () {
                 this.showPasswordChangeRequest();
-            }
+            },
+            'keydown': function (e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    
+                    this.login();
+                }
+            },
         },
 
         data: function () {

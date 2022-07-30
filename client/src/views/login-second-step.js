@@ -46,6 +46,13 @@ define('views/login-second-step', ['view'], function (Dep) {
             'click [data-action="backToLogin"]': function () {
                 this.trigger('back');
             },
+            'keydown': function (e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+
+                    this.send();
+                }
+            },
         },
 
         data: function () {
