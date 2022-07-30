@@ -96,7 +96,7 @@ function (Dep, Detail, Model, ViewRecordHelper) {
             this.optionsData = this.options.optionsData;
         },
 
-        setup: function (dialog) {
+        setup: function () {
             this.id = 'dashlet-options';
 
             this.recordHelper = new ViewRecordHelper();
