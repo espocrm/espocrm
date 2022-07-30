@@ -123,6 +123,13 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
 
                     this.actionClose();
                 }
+
+                if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    this.actionSaveDraft();
+                }
             }
         },
 

@@ -81,6 +81,15 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                         return;
                     }
 
+                    if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        this.actionSaveAndContinueEditing();
+
+                        return;
+                    }
+
                     if (e.key === 'Escape') {
                         e.stopPropagation();
 
@@ -197,7 +206,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
                 'views/record/edit-small';
 
-            var options = {
+            let options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
                 type: 'editSmall',
@@ -210,38 +219,52 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
             this.handleRecordViewOptions(options);
 
-            this.createView('edit', viewName, options, callback);
+            this.createView('edit', viewName, options, callback)
+                .then(view => {
+                    this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
+                });
         },
 
         handleRecordViewOptions: function (options) {},
 
+        /**
+         * @return {module:views/record/edit.Class}
+         */
         getRecordView: function () {
             return this.getView('edit');
         },
 
-        actionSave: function () {
-            var editView = this.getView('edit');
+        actionSave: function (data) {
+            data = data || {};
 
-            var model = editView.model;
+            let editView = this.getRecordView();
 
-            editView.once('after:save', () => {
-                this.trigger('after:save', model);
-                this.dialog.close();
-            });
+            let model = editView.model;
 
-            editView.once('before:save', () => {
-                this.trigger('before:save', model);
-            });
-
-            var $buttons = this.dialog.$el.find('.modal-footer button');
+            let $buttons = this.dialog.$el.find('.modal-footer button');
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
-            editView.once('cancel:save', () => {
-                $buttons.removeClass('disabled').removeAttr('disabled');
-            });
+            editView
+                .save()
+                .then(() => {
+                    this.trigger('after:save', model);
 
-            editView.save();
+                    if (!data.bypassClose) {
+                        this.dialog.close();
+
+                        return;
+                    }
+
+                    $buttons.removeClass('disabled').removeAttr('disabled');
+                })
+                .catch(() => {
+                    $buttons.removeClass('disabled').removeAttr('disabled');
+                })
+        },
+
+        actionSaveAndContinueEditing: function () {
+            this.actionSave({bypassClose: true});
         },
 
         actionFullForm: function (dialog) {

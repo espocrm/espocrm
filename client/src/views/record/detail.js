@@ -3358,6 +3358,23 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
+            if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                if (this.mode !== this.MODE_EDIT) {
+                    return;
+                }
+
+                if (!this.saveAndContinueEditingAction) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSaveAndContinueEditing();
+
+                return;
+            }
+
             if (e.key === 'Escape') {
                 if (this.inlineEditModeIsOn || this.buttonsDisabled) {
                     return;
