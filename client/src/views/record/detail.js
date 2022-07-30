@@ -3366,6 +3366,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
                     e.stopPropagation();
 
+                    // Fetching a currently edited form element.
+                    this.model.set(this.fetch());
+
                     if (this.isChanged) {
                         this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
                             .then(() => this.actionCancelEdit());
