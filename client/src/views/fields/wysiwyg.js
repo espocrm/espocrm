@@ -445,8 +445,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.$summernote.find('link[ref="stylesheet"]').remove();
 
             let keyMap = Espo.Utils.cloneDeep($.summernote.options.keyMap);
+
             keyMap.pc['CTRL+K'] = 'espoLink.show';
             keyMap.mac['CMD+K'] = 'espoLink.show';
+
+            delete keyMap.pc['CTRL+ENTER'];
+            delete keyMap.mac['CMD+ENTER'];
 
             let toolbar = this.toolbar;
 
