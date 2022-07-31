@@ -91,6 +91,14 @@ define('views/main', ['view'], function (Dep) {
         $headerActionsContainer: null,
 
         /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: null,
+
+        /**
          * @inheritDoc
          */
         events: {
@@ -162,6 +170,37 @@ define('views/main', ['view'], function (Dep) {
             });
 
             this.on('after:render', () => this.adjustButtons());
+
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
+        },
+
+        setupFinal: function () {
+            if (this.shortcutKeys) {
+                this.events['keydown.main'] = e => {
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
         },
 
         /**

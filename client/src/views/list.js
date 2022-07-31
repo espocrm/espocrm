@@ -158,6 +158,15 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         /**
          * @inheritDoc
          */
+        shortcutKeys: {
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+        },
+
+        /**
+         * @inheritDoc
+         */
         setup: function () {
             this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
 
@@ -286,6 +295,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                     style: 'default',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
+                    title: 'Ctrl+Space',
                 });
 
                 return;
@@ -299,6 +309,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 style: 'default',
                 acl: 'create',
                 aclScope: this.entityType || this.scope,
+                title: 'Ctrl+Space',
             });
 
         },
@@ -466,6 +477,8 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             if (!this.hasView('list')) {
                 this.loadList();
             }
+
+            this.$el.focus();
         },
 
         /**
@@ -715,6 +728,35 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          */
         isActualForReuse: function () {
             return this.collection.isFetched;
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (!this.createButton) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
+            if (!this.getAcl().checkScope(this.scope, 'create')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (this.quickCreate) {
+                this.actionQuickCreate();
+
+                return;
+            }
+
+            this.actionCreate();
         },
     });
 });

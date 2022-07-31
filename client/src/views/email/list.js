@@ -208,5 +208,23 @@ define('views/email/list', 'views/list', function (Dep) {
             }
         },
 
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                return;
+            }
+
+            if (!this.getAcl().checkScope(this.scope, 'create')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionComposeEmail();
+        },
     });
 });

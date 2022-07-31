@@ -1494,8 +1494,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (this.shortcutKeys) {
                 this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
             }
-
-            Bull.View.prototype.init.call(this);
         },
 
         isDropdownItemListEmpty: function () {
@@ -1930,10 +1928,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     this[methodName]();
                 };
+            }
 
-                if (!this.options.focusForCreate) {
-                    this.once('after:render', () => this.focusOnFirstDiv());
-                }
+            if (!this.options.focusForCreate) {
+                this.once('after:render', () => this.focusOnFirstDiv());
             }
         },
 
