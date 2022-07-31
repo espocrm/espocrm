@@ -958,10 +958,12 @@ define('views/fields/base', ['view'], function (Dep) {
         initInlineEdit: function () {
             let $cell = this.getCellElement();
 
-            let $editLink = $(
-                '<a href="javascript:" class="pull-right inline-edit-link hidden">' +
-                '<span class="fas fa-pencil-alt fa-sm"></span></a>'
-            );
+            let $editLink = $('<a>')
+                .attr('href', 'javascript:')
+                .addClass('pull-right inline-edit-link hidden')
+                .append(
+                    $('<span>').addClass('fas fa-pencil-alt fa-sm')
+                );
 
             if ($cell.length === 0) {
                 this.listenToOnce(this, 'after:render', () => this.initInlineEdit());
@@ -971,9 +973,7 @@ define('views/fields/base', ['view'], function (Dep) {
 
             $cell.prepend($editLink);
 
-            $editLink.on('click', () => {
-                this.inlineEdit();
-            });
+            $editLink.on('click', () => this.inlineEdit());
 
             $cell
                 .on('mouseenter', (e) => {
@@ -994,6 +994,12 @@ define('views/fields/base', ['view'], function (Dep) {
                         $editLink.addClass('hidden');
                     }
                 });
+
+            this.on('after:render', () => {
+                if (!this.isDetailMode()) {
+                    $editLink.addClass('hidden');
+                }
+            });
         },
 
         /**
