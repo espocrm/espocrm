@@ -620,7 +620,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             this.onCloseIsCalled = true;
 
             if (this.activeElement) {
-                setTimeout(() => $(this.activeElement).focus(), 50);
+                setTimeout(() => {
+                    this.activeElement.focus({preventScroll: true});
+                }, 50);
             }
         }
 
