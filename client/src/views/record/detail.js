@@ -1909,6 +1909,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.events['keydown.record-detail'] = e => {
                     let key = e.code;
 
+                    if (e.altKey) {
+                        key = 'Alt+' + key;
+                    }
+
                     if (e.ctrlKey) {
                         key = 'Control+' + key;
                     }

@@ -377,6 +377,10 @@ define('views/modal', ['view'], function (Dep) {
                 this.events['keydown.modal-base'] = e => {
                     let key = e.code;
 
+                    if (e.altKey) {
+                        key = 'Alt+' + key;
+                    }
+
                     if (e.ctrlKey) {
                         key = 'Control+' + key;
                     }
