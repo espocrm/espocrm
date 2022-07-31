@@ -59,13 +59,16 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 }
 
             },
-            'keypress textarea[data-name="post"]': function (e) {
-                if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+            'keydown textarea[data-name="post"]': function (e) {
+                if (e.code === 'Enter' && e.ctrlKey) {
                     e.stopPropagation();
 
                     this.post();
+
+                    return;
                 }
-                else if (e.keyCode === 9) {
+
+                if (e.code === 'Tab') {
                     var $text = $(e.currentTarget);
 
                     if ($text.val() === '') {
@@ -73,7 +76,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     }
                 }
             },
-            'keyup textarea[data-name="post"]': function (e) {
+            'keyup textarea[data-name="post"]': function () {
                 this.controlPreviewButton();
                 this.controlPostButtonAvailability(this.$textarea.val());
             },

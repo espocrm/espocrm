@@ -67,8 +67,12 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
         duplicateAction: false,
 
         shortcutKeys: {
-            'KeyE': function (e) {
+            'Control+Space': function (e) {
                 if (this.editDisabled) {
+                    return;
+                }
+
+                if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                     return;
                 }
 

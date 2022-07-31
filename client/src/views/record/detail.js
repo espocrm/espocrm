@@ -423,8 +423,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'Control+KeyS': function (e) {
                 this.handleShortcutKeyCtrlS(e);
             },
-            'KeyE': function (e) {
-                this.handleShortcutKeyE(e);
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
             },
             'Escape': function (e) {
                 this.handleShortcutKeyEscape(e);
@@ -3467,12 +3467,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @param {JQueryKeyEventObject} e
          */
-        handleShortcutKeyE: function (e) {
+        handleShortcutKeyCtrlSpace: function (e) {
             if (this.inlineEditModeIsOn || this.buttonsDisabled) {
                 return;
             }
 
             if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                 return;
             }
 
