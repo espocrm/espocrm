@@ -158,6 +158,7 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
                 removeAttachmentsOnSelectTemplate: this.options.removeAttachmentsOnSelectTemplate,
                 signatureDisabled: this.options.signatureDisabled,
                 appendSignature: this.options.appendSignature,
+                focusForCreate: this.options.focusForCreate,
                 exit: () => {},
             };
 

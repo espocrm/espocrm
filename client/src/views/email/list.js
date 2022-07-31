@@ -88,17 +88,25 @@ define('views/email/list', 'views/list', function (Dep) {
             return data;
         },
 
-        actionComposeEmail: function () {
+        /**
+         * @param {Object.<string,*>} [data]
+         */
+        actionComposeEmail: function (data) {
+            data = data || {};
+
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+            let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                 'views/modals/compose-email';
 
-            this.createView('quickCreate', viewName, {
+            let options = {
                 attributes: {
-                    status: 'Draft'
-                }
-            }, (view) => {
+                    status: 'Draft',
+                },
+                focusForCreate: data.focusForCreate,
+            };
+
+            this.createView('quickCreate', viewName, options, (view) => {
                 view.render();
                 view.notify(false);
 
@@ -224,7 +232,7 @@ define('views/email/list', 'views/list', function (Dep) {
             e.preventDefault();
             e.stopPropagation();
 
-            this.actionComposeEmail();
+            this.actionComposeEmail({focusForCreate: true});
         },
     });
 });
