@@ -168,7 +168,15 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             }
 
             if (this.options.focusForCreate) {
-                this.once('after:render', () => this.focusForCreate());
+                this.once('after:render', () => {
+                    if (this.$el.closest('.modal').length) {
+                        setTimeout(() => this.focusForCreate(), 50);
+
+                        return;
+                    }
+
+                    this.focusForCreate();
+                });
             }
         },
 
