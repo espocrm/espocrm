@@ -457,6 +457,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.editModeDisabled) {
                 this.setEditMode();
 
+                this.focusOnFirstDiv();
                 $(window).scrollTop(0);
 
                 return;
