@@ -52,16 +52,18 @@ function (Dep, Detail, Model, ViewRecordHelper) {
             {
                 name: 'save',
                 label: 'Apply',
-                style: 'danger'
+                style: 'primary',
+                title: 'Ctrl+Enter',
             },
             {
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
+                title: 'Esc',
             },
         ],
 
         shortcutKeys: {
-            'ctrl+enter': 'save',
+            'Control+Enter': 'save',
         },
 
         getDetailLayout: function () {

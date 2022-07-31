@@ -37,9 +37,7 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
         template: 'modals/edit-dashboard',
 
         data: function () {
-            return {
-
-            };
+            return {};
         },
 
         events: {
@@ -51,7 +49,7 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
         },
 
         shortcutKeys: {
-            'ctrl+enter': 'save',
+            'Control+Enter': 'save',
         },
 
         setup: function () {
@@ -59,11 +57,13 @@ define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, M
                 {
                     name: 'save',
                     label: 'Save',
-                    style: 'primary'
+                    style: 'primary',
+                    title: 'Ctrl+Enter',
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
+                    title: 'Esc',
                 }
             ];
 
