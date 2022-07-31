@@ -417,13 +417,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
          */
         shortcutKeys: {
-            'ctrl+enter': function (e) {
+            'Control+Enter': function (e) {
                 this.handleShortcutKeyCtrlEnter(e);
             },
-            'ctrl+s': function (e) {
+            'Control+KeyS': function (e) {
                 this.handleShortcutKeyCtrlS(e);
             },
-            'escape': function (e) {
+            'KeyE': function (e) {
+                this.handleShortcutKeyE(e);
+            },
+            'Escape': function (e) {
                 this.handleShortcutKeyEscape(e);
             },
         },
@@ -496,6 +499,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.lastSaveCancelReason || this.lastSaveCancelReason === 'notModified') {
                 this.setDetailMode();
 
+                this.focusOnFirstDiv();
                 $(window).scrollTop(0);
             }
         },
@@ -503,7 +507,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         actionCancelEdit: function () {
             this.cancelEdit();
 
+            this.focusOnFirstDiv();
             $(window).scrollTop(0);
+        },
+
+        focusOnFirstDiv: function () {
+            this.$el.find('> div').focus();
         },
 
         /**
@@ -1891,10 +1900,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
                 // @todo Move to util (the same for the `views/modal`.).
                 this.events['keydown.record-detail'] = e => {
-                    let key = e.key.toLowerCase();
+                    let key = e.code;
 
                     if (e.ctrlKey) {
-                        key = 'ctrl+' + key;
+                        key = 'Control+' + key;
                     }
 
                     if (typeof this.shortcutKeys[key] === 'function') {
@@ -1916,6 +1925,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     this[methodName]();
                 };
+
+                this.once('after:render', () => this.focusOnFirstDiv());
             }
         },
 
@@ -3396,91 +3407,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @param {JQueryKeyEventObject} e
          */
-        handleKeydownEvent: function (e) {
-            if (!this.options.shortcutKeysEnabled) {
-                return;
-            }
-
-            /*if (e.key === 'Enter' && e.ctrlKey) {
-                if (this.inlineEditModeIsOn || this.buttonsDisabled || !this.shortcutEnterAction) {
-                    return;
-                }
-
-                if (this.mode !== this.MODE_EDIT) {
-                    return;
-                }
-
-                if (
-                    this.type === this.TYPE_DETAIL &&
-                    this.buttonEditList.findIndex(item => item.name === this.shortcutEnterAction) === -1
-                ) {
-                    return;
-                }
-
-                if (
-                    this.type === this.TYPE_EDIT &&
-                    this.buttonList.findIndex(item => item.name === this.shortcutEnterAction) === -1
-                ) {
-                    return;
-                }
-
-                e.stopPropagation();
-
-                let methodName = 'action' + Espo.Utils.upperCaseFirst(this.shortcutEnterAction);
-
-                this[methodName]();
-
-                return;
-            }*/
-
-            /*if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
-                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
-                    return;
-                }
-
-                if (this.mode !== this.MODE_EDIT) {
-                    return;
-                }
-
-                if (!this.saveAndContinueEditingAction) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.actionSaveAndContinueEditing();
-
-                return;
-            }*/
-
-            if (e.key === 'Escape') {
-                if (this.inlineEditModeIsOn || this.buttonsDisabled) {
-                    return;
-                }
-
-                if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
-                    e.stopPropagation();
-
-                    // Fetching a currently edited form element.
-                    this.model.set(this.fetch());
-
-                    if (this.isChanged) {
-                        this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                            .then(() => this.actionCancelEdit());
-
-                        return;
-                    }
-
-                    this.actionCancelEdit();
-                }
-            }
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
         handleShortcutKeyCtrlEnter: function (e) {
             let action = this.shortcutKeyCtrlEnterAction;
 
@@ -3494,14 +3420,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             if (
                 this.type === this.TYPE_DETAIL &&
-                this.buttonEditList.findIndex(item => item.name === action) === -1
+                this.buttonEditList.findIndex(item => item.name === action && !item.hidden) === -1
             ) {
                 return;
             }
 
             if (
                 this.type === this.TYPE_EDIT &&
-                this.buttonList.findIndex(item => item.name === action) === -1
+                this.buttonList.findIndex(item => item.name === action && !item.hidden) === -1
             ) {
                 return;
             }
@@ -3535,6 +3461,38 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             e.stopPropagation();
 
             this.actionSaveAndContinueEditing();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyE: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'edit' && !item.hidden) === -1) {
+                return;
+            }
+
+            $(e.currentTarget)
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionEdit();
+
+            if (!this.editModeDisabled) {
+                setTimeout(() => {
+                    this.$el.find('.middle-tabs > button.active, .form-control:not([disabled])')
+                        .first().focus();
+                }, 200);
+            }
         },
 
         /**

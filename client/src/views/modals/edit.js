@@ -58,6 +58,60 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
         bottomDisabled: false,
 
+        shortcutKeys: {
+            'Control+Enter': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSave();
+            },
+            'Control+KeyS': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSaveAndContinueEditing();
+            },
+            'Escape': function (e) {
+                if (this.saveDisabled) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                let focusedFieldView = this.getRecordView().getFocusedFieldView();
+
+                if (focusedFieldView) {
+                    this.model.set(focusedFieldView.fetch());
+                }
+
+                if (this.getRecordView().isChanged) {
+                    this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                        .then(() => this.actionClose());
+
+                    return;
+                }
+
+                this.actionClose();
+            },
+        },
+
         setup: function () {
             this.buttonList = [];
 
@@ -71,45 +125,6 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     label: 'Save',
                     style: 'primary',
                 });
-
-                this.events['keydown'] = (e) => {
-                    if (e.key === 'Enter' && e.ctrlKey) {
-                        e.stopPropagation();
-
-                        this.actionSave();
-
-                        return;
-                    }
-
-                    if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        this.actionSaveAndContinueEditing();
-
-                        return;
-                    }
-
-                    if (e.key === 'Escape') {
-                        e.stopPropagation();
-                        e.preventDefault();
-
-                        let focusedFieldView = this.getRecordView().getFocusedFieldView();
-
-                        if (focusedFieldView) {
-                            this.model.set(focusedFieldView.fetch());
-                        }
-
-                        if (this.getRecordView().isChanged) {
-                            this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                                .then(() => this.actionClose());
-
-                            return;
-                        }
-
-                        this.actionClose();
-                    }
-                }
             }
 
             this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;

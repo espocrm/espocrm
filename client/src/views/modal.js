@@ -375,10 +375,10 @@ define('views/modal', ['view'], function (Dep) {
         setupFinal: function () {
             if (this.shortcutKeys) {
                 this.events['keydown.modal-base'] = e => {
-                    let key = e.key.toLowerCase();
+                    let key = e.code;
 
                     if (e.ctrlKey) {
-                        key = 'ctrl+' + key;
+                        key = 'Control+' + key;
                     }
 
                     if (typeof this.shortcutKeys[key] === 'function') {
