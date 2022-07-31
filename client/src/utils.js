@@ -31,6 +31,8 @@
  */
 define('utils', [], function () {
 
+    const IS_MAC = /Mac/.test(navigator.userAgent);
+
     /**
      * Utility functions.
      */
@@ -575,6 +577,26 @@ define('utils', [], function () {
             }
 
             return options;
+        },
+
+        /**
+         * Key a key from a key-event.
+         *
+         * @param {JQueryKeyEventObject} e A key event.
+         * @return {string}
+         */
+        getKeyFromKeyEvent: function (e) {
+            let key = e.code;
+
+            if (e.altKey) {
+                key = 'Alt+' + key;
+            }
+
+            if (IS_MAC ? e.metaKey : e.ctrlKey) {
+                key = 'Control+' + key;
+            }
+
+            return key;
         },
     };
 

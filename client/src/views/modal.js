@@ -375,15 +375,7 @@ define('views/modal', ['view'], function (Dep) {
         setupFinal: function () {
             if (this.shortcutKeys) {
                 this.events['keydown.modal-base'] = e => {
-                    let key = e.code;
-
-                    if (e.altKey) {
-                        key = 'Alt+' + key;
-                    }
-
-                    if (e.ctrlKey) {
-                        key = 'Control+' + key;
-                    }
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
 
                     if (typeof this.shortcutKeys[key] === 'function') {
                         this.shortcutKeys[key].call(this, e);

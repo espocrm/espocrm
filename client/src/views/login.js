@@ -47,7 +47,7 @@ define('views/login', ['view'], function (Dep) {
                 this.showPasswordChangeRequest();
             },
             'keydown': function (e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     e.preventDefault();
 
                     this.login();

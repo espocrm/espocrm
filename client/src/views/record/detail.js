@@ -1905,17 +1905,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.build();
 
             if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
-                // @todo Move to util (the same for the `views/modal`.).
                 this.events['keydown.record-detail'] = e => {
-                    let key = e.code;
-
-                    if (e.altKey) {
-                        key = 'Alt+' + key;
-                    }
-
-                    if (e.ctrlKey) {
-                        key = 'Control+' + key;
-                    }
+                    let key = Espo.Utils.getKeyFromKeyEvent(e);
 
                     if (typeof this.shortcutKeys[key] === 'function') {
                         this.shortcutKeys[key].call(this, e);

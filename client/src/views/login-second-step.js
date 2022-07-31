@@ -47,7 +47,7 @@ define('views/login-second-step', ['view'], function (Dep) {
                 this.trigger('back');
             },
             'keydown': function (e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     e.preventDefault();
 
                     this.send();

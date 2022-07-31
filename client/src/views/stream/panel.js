@@ -60,8 +60,9 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             },
             'keydown textarea[data-name="post"]': function (e) {
-                if (e.code === 'Enter' && e.ctrlKey) {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     e.stopPropagation();
+                    e.preventDefault();
 
                     this.post();
 

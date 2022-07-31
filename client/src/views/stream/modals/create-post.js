@@ -32,6 +32,10 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
 
         templateContent: '<div class="record">{{{record}}}</div>',
 
+        shortcutKeys: {
+            'Control+Enter': 'post',
+        },
+
         setup: function () {
             this.headerHtml = this.translate('Create Post');
 
@@ -40,6 +44,7 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
                     name: 'post',
                     label: 'Post',
                     style: 'primary',
+                    title: 'Ctrl+Enter',
                 },
                 {
                     name: 'cancel',
@@ -47,14 +52,9 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
                     onClick: function (dialog) {
                         dialog.close();
                     },
+                    title: 'Esc',
                 }
             ];
-
-            this.events['keypress textarea[data-name="post"]'] = (e) => {
-                if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-                    this.actionPost();
-                }
-            };
 
             this.wait(true);
 

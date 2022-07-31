@@ -123,16 +123,17 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                     this.enablePostingMode();
                 };
 
-                this.events['keypress textarea[data-name="post"]'] = (e) => {
-                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+                this.events['keydown textarea[data-name="post"]'] = (e) => {
+                    if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                         e.stopPropagation();
+                        e.preventDefault();
 
                         this.post();
 
                         return;
                     }
 
-                    if (e.keyCode === 9) {
+                    if (e.code === 'Tab') {
                         let $text = $(e.currentTarget);
 
                         if ($text.val() === '') {
@@ -233,7 +234,7 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
         afterRender: function () {
             this.$postButton = this.$el.find('button.post');
 
-            var postView = this.getFieldView('post');
+            let postView = this.getFieldView('post');
 
             if (postView) {
                 this.stopListening(postView, 'add-files');
@@ -241,7 +242,7 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                 this.listenTo(postView, 'add-files', (files) => {
                     this.enablePostingMode();
 
-                    var attachmentsView = this.getFieldView('attachments');
+                    let attachmentsView = this.getFieldView('attachments');
 
                     if (!attachmentsView) {
                         return;
@@ -283,7 +284,6 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                 this.model.set('type', 'Post');
 
                 this.disablePostingMode();
-
                 this.enablePostButton();
 
                 this.getFieldView('post').$element.prop('rows', 1);
@@ -305,6 +305,5 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
 
             this.$postButton.removeClass('disable').removeAttr('disabled');
         },
-
     });
 });
