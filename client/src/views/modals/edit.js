@@ -207,6 +207,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
+                focusForCreate: this.options.focusForCreate,
                 exit: function () {},
             };
 

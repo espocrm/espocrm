@@ -641,17 +641,20 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         /**
          * Action `quickCreate`.
          *
+         * @param {Object.<string,*>} [data]
          * @returns {Promise<module:views/modals/edit.Class>}
          */
-        actionQuickCreate: function () {
-            var attributes = this.getCreateAttributes() || {};
+        actionQuickCreate: function (data) {
+            data = data || {};
+
+            let attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
                 'views/modals/edit';
 
-            var options = {
+            let options = {
                 scope: this.scope,
                 attributes: attributes,
             };
@@ -660,12 +663,14 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
 
-            var returnDispatchParams = {
+            if (data.focusForCreate) {
+                options.focusForCreate = true;
+            }
+
+            let returnDispatchParams = {
                 controller: this.scope,
                 action: null,
-                options: {
-                    isReturn: true,
-                },
+                options: {isReturn: true},
             };
 
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
@@ -687,27 +692,31 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
         /**
          * Action `create'.
+         *
+         * @param {Object.<string,*>} [data]
          */
-        actionCreate: function () {
-            var router = this.getRouter();
+        actionCreate: function (data) {
+            data = data || {};
 
-            var url = '#' + this.scope + '/create';
-            var attributes = this.getCreateAttributes() || {};
+            let router = this.getRouter();
 
-            var options = {
-                attributes: attributes
-            };
+            let url = '#' + this.scope + '/create';
+            let attributes = this.getCreateAttributes() || {};
+
+            let options = {attributes: attributes};
 
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
 
-            var returnDispatchParams = {
+            if (data.focusForCreate) {
+                options.focusForCreate = true;
+            }
+
+            let returnDispatchParams = {
                 controller: this.scope,
                 action: null,
-                options: {
-                    isReturn: true
-                }
+                options: {isReturn: true},
             };
 
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
@@ -751,12 +760,12 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             e.stopPropagation();
 
             if (this.quickCreate) {
-                this.actionQuickCreate();
+                this.actionQuickCreate({focusForCreate: true});
 
                 return;
             }
 
-            this.actionCreate();
+            this.actionCreate({focusForCreate: true});
         },
     });
 });
