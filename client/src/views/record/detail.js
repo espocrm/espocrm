@@ -425,6 +425,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'Control+Enter': function (e) {
                 this.handleShortcutKeyCtrlEnter(e);
             },
+            'Control+Alt+Enter': function (e) {
+                this.handleShortcutKeyCtrlAltEnter(e);
+            },
             'Control+KeyS': function (e) {
                 this.handleShortcutKeyCtrlS(e);
             },
@@ -1928,7 +1931,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this[methodName]();
                 };
 
-                this.once('after:render', () => this.focusOnFirstDiv());
+                if (!this.options.focusForCreate) {
+                    this.once('after:render', () => this.focusOnFirstDiv());
+                }
             }
         },
 
@@ -3494,11 +3499,28 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.actionEdit();
 
             if (!this.editModeDisabled) {
-                setTimeout(() => {
-                    this.$el.find('.middle-tabs > button.active, .form-control:not([disabled])')
-                        .first().focus();
-                }, 200);
+                setTimeout(() => this.focusForEdit(), 200);
             }
+        },
+
+        /**
+         * @protected
+         */
+        focusForEdit: function () {
+            this.$el
+                .find('.middle-tabs > button.active, .form-control:not([disabled])')
+                .first()
+                .focus();
+        },
+
+        /**
+         * @protected
+         */
+        focusForCreate: function () {
+            this.$el
+                .find('.form-control:not([disabled])')
+                .first()
+                .focus();
         },
 
         /**
@@ -3529,5 +3551,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.actionCancelEdit();
         },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlAltEnter: function (e) {},
     });
 });

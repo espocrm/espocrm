@@ -126,12 +126,18 @@ define('views/edit', ['views/main'], function (Dep) {
                 shortcutKeysEnabled: true,
             };
 
-            this.optionsToPass.forEach(function (option) {
+            this.optionsToPass.forEach(option => {
                 o[option] = this.options[option];
-            }, this);
+            });
 
-            if (this.options.params && this.options.params.rootUrl) {
-                o.rootUrl = this.options.params.rootUrl;
+            let params = this.options.params || {};
+
+            if (params.rootUrl) {
+                o.rootUrl = params.rootUrl;
+            }
+
+            if (params.focusForCreate) {
+                o.focusForCreate = true;
             }
 
             return this.createView('record', this.getRecordViewName(), o);

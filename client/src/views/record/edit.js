@@ -166,6 +166,10 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                     this.model.set(this.fetch(), {silent: true});
                 })
             }
+
+            if (this.options.focusForCreate) {
+                this.once('after:render', () => this.focusForCreate());
+            }
         },
 
         /**
@@ -193,6 +197,7 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 this.dropdownItemList.push({
                     name: 'saveAndNew',
                     label: 'Save & New',
+                    title: 'Ctrl+Alt+Enter',
                 });
             }
         },
@@ -203,19 +208,20 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
         actionSaveAndNew: function (data) {
             data = data || {};
 
-            var proceedCallback = function () {
+            var proceedCallback = () => {
                 Espo.Ui.success(this.translate('Created'));
 
                 this.getRouter().dispatch(this.scope, 'create', {
                     rootUrl: this.options.rootUrl,
+                    focusForCreate: !!data.focusForCreate,
                 });
 
                 this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
-            }.bind(this)
+            };
 
             this.save(data.options)
                 .then(proceedCallback)
-                .catch(function () {});
+                .catch(() => {});
 
             if (this.lastSaveCancelReason === 'notModified') {
                  proceedCallback();
@@ -231,7 +237,7 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'cancel') === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'cancel' && !item.hidden) === -1) {
                 return;
             }
 
@@ -252,6 +258,29 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             }
 
             this.actionCancel();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlAltEnter: function (e) {
+            if (this.buttonsDisabled) {
+                return;
+            }
+
+            if (!this.saveAndNewAction) {
+                return;
+            }
+
+            if (this.dropdownItemList.findIndex(item => item.name === 'saveAndNew' && !item.hidden) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionSaveAndNew({focusForCreate: true});
         },
     });
 });
