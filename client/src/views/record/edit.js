@@ -71,10 +71,12 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 name: 'save',
                 label: 'Save',
                 style: 'primary',
+                title: 'Ctrl+Enter',
             },
             {
                 name: 'cancel',
                 label: 'Cancel',
+                title: 'Esc',
             }
         ],
 
@@ -179,6 +181,7 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 this.dropdownItemList.push({
                     name: 'saveAndContinueEditing',
                     label: 'Save & Continue Editing',
+                    title: 'Ctrl+S',
                 });
             }
 
