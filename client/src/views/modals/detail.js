@@ -132,6 +132,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Close',
+                title: 'Esc',
             });
 
             if (this.model && this.model.collection && !this.navigateButtonsDisabled) {
@@ -279,6 +280,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             this.addButton({
                 name: 'edit',
                 label: 'Edit',
+                title: 'Ctrl+Space',
             }, true);
         },
 

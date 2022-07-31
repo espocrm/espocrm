@@ -63,7 +63,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {string} name A name.
      * @property {boolean} [pullLeft=false] To put the button to the other side.
      * @property {string} [html] HTML.
-     * @property {string} [text] A title.
+     * @property {string} [text] A text.
      * @property {boolean} [disabled=false] Disabled.
      * @property {boolean} [hidden=false] Hidden.
      * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
@@ -477,6 +477,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
             if (o.text) {
                 $a.text(o.text);
+            }
+
+            if (o.title) {
+                $a.attr('title', o.title);
             }
 
             if (o.html) {

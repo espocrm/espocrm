@@ -3,7 +3,15 @@
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group actions-btn-group" role="group">
             {{#each buttonList}}
-                {{button name scope=../entityType label=label style=style hidden=hidden html=html className='btn-xs-wide'}}
+                {{button name
+                    scope=../entityType
+                    label=label
+                    style=style
+                    hidden=hidden
+                    html=html
+                    title=title
+                    className='btn-xs-wide'
+                }}
             {{/each}}
             {{#if dropdownItemList}}
             <button
@@ -20,6 +28,7 @@
                     href="javascript:"
                     class="action"
                     data-action="{{name}}"
+                    {{#if title}}title="{{title}}"{{/if}}
                     {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
                 {{else}}
@@ -44,7 +53,12 @@
                 >
                     <span class="fas fa-chevron-left"></span>
                 </button>
-                <button type="button" class="btn btn-text btn-icon action {{#unless nextButtonEnabled}} disabled{{/unless}}" data-action="next" title="{{translate 'Next Entry'}}">
+                <button
+                    type="button"
+                    class="btn btn-text btn-icon action {{#unless nextButtonEnabled}} disabled{{/unless}}"
+                    data-action="next"
+                    title="{{translate 'Next Entry'}}"
+                >
                     <span class="fas fa-chevron-right"></span>
                 </button>
             </div>
@@ -54,7 +68,15 @@
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
         <div class="btn-group actions-btn-group" role="group">
         {{#each buttonEditList}}
-        {{button name scope=../entityType label=label style=style hidden=hidden html=html className='btn-xs-wide'}}
+        {{button name
+            scope=../entityType
+            label=label
+            style=style
+            hidden=hidden
+            html=html
+            title=title
+            className='btn-xs-wide'
+        }}
         {{/each}}
         {{#if dropdownEditItemList}}
         <button
@@ -72,6 +94,7 @@
                     href="javascript:"
                     class="action"
                     data-action="{{name}}"
+                    {{#if title}}title="{{title}}"{{/if}}
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a>
             </li>
             {{else}}

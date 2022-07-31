@@ -124,6 +124,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
                     name: 'save',
                     label: 'Save',
                     style: 'primary',
+                    title: 'Ctrl+Enter',
                 });
             }
 
@@ -141,6 +142,7 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             this.buttonList.push({
                 name: 'cancel',
                 label: 'Cancel',
+                title: 'Esc',
             });
 
             this.scope = this.scope || this.options.scope;

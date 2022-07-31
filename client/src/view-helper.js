@@ -339,17 +339,24 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     options.hash.text ||
                     this.language.translate(label, 'labels', scope);
 
-                let className = options.hash.className || '';
-
-                if (className) {
-                    className = ' ' + className;
+                if (!options.hash.html) {
+                    html = this.escapeString(html);
                 }
 
-                return new Handlebars.SafeString(
-                    '<button class="btn btn-' + style + ' action' + className +
-                    (options.hash.hidden ? ' hidden' : '') + '" data-action="' + name +
-                    '" type="button">'+html+'</button>'
-                );
+                let $button = $('<button>')
+                    .attr('type', 'button')
+                    .addClass('btn action')
+                    .addClass(options.hash.className || '')
+                    .addClass(options.hash.hidden ? 'hidden' : '')
+                    .attr('data-action', name)
+                    .addClass('btn-' + style)
+                    .html(html);
+
+                if (options.hash.title) {
+                    $button.attr('title', options.hash.title);
+                }
+
+                return new Handlebars.SafeString($button.get(0).outerHTML);
             });
 
             Handlebars.registerHelper('hyphen', (string) => {

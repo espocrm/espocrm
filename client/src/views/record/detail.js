@@ -121,6 +121,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} [html] An HTML.
          * @property {'default'|'danger'|'success'|'warning'} [style] A style.
          * @property {boolean} [hidden] Hidden.
+         * @property {string} [title] A title (not translatable).
          */
 
         /**
@@ -133,6 +134,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} [html] An HTML.
          * @property {boolean} [hidden] Hidden.
          * @property {Object.<string,string>} [data] Data attributes.
+         * @property {string} [title] A title (not translatable).
          */
 
         /**
@@ -145,6 +147,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             {
                 name: 'edit',
                 label: 'Edit',
+                title: 'Ctrl+Space',
             },
         ],
 
@@ -173,11 +176,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 label: 'Save',
                 style: 'primary',
                 edit: true,
+                title: 'Ctrl+Enter',
             },
             {
                 name: 'cancelEdit',
                 label: 'Cancel',
                 edit: true,
+                title: 'Esc',
             },
         ],
 
@@ -729,6 +734,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.dropdownEditItemList.push({
                         name: 'saveAndContinueEditing',
                         label: 'Save & Continue Editing',
+                        title: 'Ctrl+S',
                     });
                 }
             }
