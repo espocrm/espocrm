@@ -1,1 +1,1 @@
-<div class="record">{{{record}}}</div>
+<div class="record no-side-margin">{{{record}}}</div>
