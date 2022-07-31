@@ -276,8 +276,18 @@ define('views/fields/base', ['view'], function (Dep) {
          *
          * @returns {JQuery}
          */
-        getCellElement: function () {
+        get$cell: function () {
             return this.$el.parent();
+        },
+
+        /**
+         * Get a cell element. Available only after the view is  rendered.
+         *
+         * @deprecated Use `get$cell`.
+         * @returns {JQuery}
+         */
+        getCellElement: function () {
+            return this.get$cell();
         },
 
         /**
@@ -336,7 +346,7 @@ define('views/fields/base', ['view'], function (Dep) {
          */
         setNotRequired: function () {
             this.params.required = false;
-            this.getCellElement().removeClass('has-error');
+            this.get$cell().removeClass('has-error');
 
             if (this.isEditMode()) {
                 if (this.isRendered()) {
@@ -408,7 +418,7 @@ define('views/fields/base', ['view'], function (Dep) {
          */
         hide: function () {
             this.$el.addClass('hidden');
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
             $cell.children('label').addClass('hidden');
             $cell.addClass('hidden-cell');
@@ -420,7 +430,7 @@ define('views/fields/base', ['view'], function (Dep) {
         show: function () {
             this.$el.removeClass('hidden');
 
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
             $cell.children('label').removeClass('hidden');
             $cell.removeClass('hidden-cell');
@@ -701,7 +711,7 @@ define('views/fields/base', ['view'], function (Dep) {
             }
 
             this.on('highlight', () => {
-                var $cell = this.getCellElement();
+                var $cell = this.get$cell();
 
                 $cell.addClass('highlighted');
                 $cell.addClass('transition');
@@ -716,7 +726,7 @@ define('views/fields/base', ['view'], function (Dep) {
             });
 
             this.on('invalid', () => {
-                var $cell = this.getCellElement();
+                var $cell = this.get$cell();
 
                 $cell.addClass('has-error');
 
@@ -956,7 +966,7 @@ define('views/fields/base', ['view'], function (Dep) {
          * @internal
          */
         initInlineEdit: function () {
-            let $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
             let $editLink = $('<a>')
                 .attr('href', 'javascript:')
@@ -1114,7 +1124,7 @@ define('views/fields/base', ['view'], function (Dep) {
         /**
          * Invoke inline-edit saving.
          *
-         * @param {{[bypassClose]: boolean}} options
+         * @param {{[bypassClose]: boolean}} [options]
          */
         inlineEditSave: function (options) {
             options = options || {}
@@ -1188,7 +1198,7 @@ define('views/fields/base', ['view'], function (Dep) {
          * @private
          */
         removeInlineEditLinks: function () {
-            var $cell = this.getCellElement();
+            var $cell = this.get$cell();
 
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
@@ -1199,17 +1209,19 @@ define('views/fields/base', ['view'], function (Dep) {
          * @private
          */
         addInlineEditLinks: function () {
-            var $cell = this.getCellElement();
+            let $cell = this.get$cell();
 
-            var $saveLink = $(
-                '<a href="javascript:" class="pull-right inline-save-link">' +
-                this.translate('Update') + '</a>'
-            );
+            let $saveLink = $('<a>')
+                .attr('href', 'javascript:')
+                .addClass('pull-right inline-save-link')
+                .attr('title', 'Ctrl+Enter')
+                .text(this.translate('Update'));
 
-            var $cancelLink = $(
-                '<a href="javascript:" class="pull-right inline-cancel-link">' +
-                this.translate('Cancel') + '</a>'
-            );
+            let $cancelLink = $('<a>')
+                .attr('href', 'javascript:')
+                .addClass('pull-right inline-cancel-link')
+                .attr('title', 'Esc')
+                .text(this.translate('Cancel'));
 
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
@@ -1279,23 +1291,30 @@ define('views/fields/base', ['view'], function (Dep) {
                 .then(() => this.addInlineEditLinks())
                 .then(() => {
                     this.$el.on('keydown.inline-edit', e => {
-                        if (e.key === 'Enter' && e.ctrlKey) {
+                        if (e.code === 'Enter' && e.ctrlKey) {
                             e.stopPropagation();
 
                             this.inlineEditSave();
 
+                            setTimeout(() => {
+                                this.get$cell().focus();
+                            }, 100);
+
                             return;
                         }
 
-                        if (e.key === 'Escape') {
+                        if (e.code === 'Escape') {
                             e.stopPropagation();
 
-                            this.inlineEditClose();
+                            this.inlineEditClose()
+                                .then(() => {
+                                    this.get$cell().focus();
+                                });
 
                             return;
                         }
 
-                        if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+                        if ((e.code === 'KeyS') && e.ctrlKey) {
                             e.preventDefault();
                             e.stopPropagation();
 
