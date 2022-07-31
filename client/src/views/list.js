@@ -504,11 +504,12 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * @param {boolean} [fetch=false] To fetch after creation.
          */
         createListRecordView: function (fetch) {
-            var o = {
+            let o = {
                 collection: this.collection,
                 el: this.options.el + ' .list-container',
                 scope: this.scope,
                 skipBuildRows: true,
+                shortcutKeysEnabled: true,
             };
 
             this.optionsToPass.forEach(option => {

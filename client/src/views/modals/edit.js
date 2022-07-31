@@ -92,8 +92,13 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
                     if (e.key === 'Escape') {
                         e.stopPropagation();
+                        e.preventDefault();
 
-                        this.model.set(this.getRecordView().fetch());
+                        let focusedFieldView = this.getRecordView().getFocusedFieldView();
+
+                        if (focusedFieldView) {
+                            this.model.set(focusedFieldView.fetch());
+                        }
 
                         if (this.getRecordView().isChanged) {
                             this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))

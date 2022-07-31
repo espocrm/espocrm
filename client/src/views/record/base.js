@@ -1513,6 +1513,33 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
         },
 
         /**
+         * Get a currently focused field view.
+         *
+         * @return {?module:views/fields/base.Class}
+         */
+        getFocusedFieldView: function () {
+            let $active = $(window.document.activeElement);
+
+            if (!$active.length) {
+                return null;
+            }
+
+            let $field = $active.closest('.field');
+
+            if (!$field.length) {
+                return null;
+            }
+
+            let name = $field.attr('data-name');
+
+            if (!name) {
+                return null;
+            }
+
+            return this.getFieldView(name);
+        },
+
+        /**
          * Process exit.
          *
          * @param {string} [after] An exit parameter.

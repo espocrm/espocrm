@@ -174,10 +174,11 @@ define('views/detail', ['views/main'], function (Dep) {
          * Set up a record.
          */
         setupRecord: function () {
-            var o = {
+            let o = {
                 model: this.model,
                 el: '#main > .record',
                 scope: this.scope,
+                shortcutKeysEnabled: true,
             };
 
             this.optionsToPass.forEach((option) => {

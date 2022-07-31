@@ -408,7 +408,25 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @protected
          * @type {?string}
          */
-        shortcutEnterAction: 'save',
+        shortcutKeyCtrlEnterAction: 'save',
+
+        /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: {
+            'ctrl+enter': function (e) {
+                this.handleShortcutKeyCtrlEnter(e);
+            },
+            'ctrl+s': function (e) {
+                this.handleShortcutKeyCtrlS(e);
+            },
+            'escape': function (e) {
+                this.handleShortcutKeyEscape(e);
+            },
+        },
 
         /**
          * @inheritDoc
@@ -426,10 +444,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 let tab = $(e.currentTarget).attr('data-tab');
 
                 this.selectMiddleTab(parseInt(tab));
-            },
-            /** @this module:views/record/detail.Class */
-            'keydown': function (e) {
-                this.handleKeydownEvent(e);
             },
         },
 
@@ -1458,6 +1472,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             this.exit = this.options.exit || this.exit;
 
+            if (this.shortcutKeys) {
+                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+            }
+
             Bull.View.prototype.init.call(this);
         },
 
@@ -1869,6 +1887,36 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
         setupFinal: function () {
             this.build();
+
+            if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
+                // @todo Move to util (the same for the `views/modal`.).
+                this.events['keydown.record-detail'] = e => {
+                    let key = e.key.toLowerCase();
+
+                    if (e.ctrlKey) {
+                        key = 'ctrl+' + key;
+                    }
+
+                    if (typeof this.shortcutKeys[key] === 'function') {
+                        this.shortcutKeys[key].call(this, e);
+
+                        return;
+                    }
+
+                    let actionName = this.shortcutKeys[key];
+
+                    if (!actionName) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                    this[methodName]();
+                };
+            }
         },
 
         setIsChanged: function () {
@@ -3349,7 +3397,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {JQueryKeyEventObject} e
          */
         handleKeydownEvent: function (e) {
-            if (e.key === 'Enter' && e.ctrlKey) {
+            if (!this.options.shortcutKeysEnabled) {
+                return;
+            }
+
+            /*if (e.key === 'Enter' && e.ctrlKey) {
                 if (this.inlineEditModeIsOn || this.buttonsDisabled || !this.shortcutEnterAction) {
                     return;
                 }
@@ -3379,9 +3431,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this[methodName]();
 
                 return;
-            }
+            }*/
 
-            if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
+            /*if ((e.key === 's' || e.key === 'S') && e.ctrlKey) {
                 if (this.inlineEditModeIsOn || this.buttonsDisabled) {
                     return;
                 }
@@ -3400,7 +3452,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.actionSaveAndContinueEditing();
 
                 return;
-            }
+            }*/
 
             if (e.key === 'Escape') {
                 if (this.inlineEditModeIsOn || this.buttonsDisabled) {
@@ -3423,6 +3475,95 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.actionCancelEdit();
                 }
             }
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlEnter: function (e) {
+            let action = this.shortcutKeyCtrlEnterAction;
+
+            if (this.inlineEditModeIsOn || this.buttonsDisabled || !action) {
+                return;
+            }
+
+            if (this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            if (
+                this.type === this.TYPE_DETAIL &&
+                this.buttonEditList.findIndex(item => item.name === action) === -1
+            ) {
+                return;
+            }
+
+            if (
+                this.type === this.TYPE_EDIT &&
+                this.buttonList.findIndex(item => item.name === action) === -1
+            ) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            let methodName = 'action' + Espo.Utils.upperCaseFirst(action);
+
+            this[methodName]();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlS: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            if (!this.saveAndContinueEditingAction) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionSaveAndContinueEditing();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyEscape: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_EDIT) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Fetching a currently edited form element.
+            this.model.set(this.fetch());
+
+            if (this.isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionCancelEdit());
+
+                return;
+            }
+
+            this.actionCancelEdit();
         },
     });
 });

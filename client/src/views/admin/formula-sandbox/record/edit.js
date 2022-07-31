@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/formula-sandbox/record/edit', 'views/record/edit', function (Dep) {
+define('views/admin/formula-sandbox/record/edit', ['views/record/edit'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,6 +53,8 @@ define('views/admin/formula-sandbox/record/edit', 'views/record/edit', function 
         saveAndContinueEditingAction: false,
 
         saveAndNewAction: false,
+
+        shortcutKeyCtrlEnterAction: 'run',
 
         setup: function () {
             this.scope = 'Formula';
@@ -145,7 +147,6 @@ define('views/admin/formula-sandbox/record/edit', 'views/record/edit', function 
         },
 
         controlOutputField: function () {
-
             if (this.model.get('errorMessage')) {
                 this.showField('errorMessage');
             }

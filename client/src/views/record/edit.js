@@ -158,6 +158,12 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             }
 
             Dep.prototype.setupBeforeFinal.call(this);
+
+            if (this.model.isNew()) {
+                this.once('after:render', () => {
+                    this.model.set(this.fetch(), {silent: true});
+                })
+            }
         },
 
         /**
@@ -211,6 +217,38 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
             if (this.lastSaveCancelReason === 'notModified') {
                  proceedCallback();
             }
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyEscape: function (e) {
+            if (this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'cancel') === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            let focusedFieldView = this.getFocusedFieldView();
+
+            if (focusedFieldView) {
+                this.model.set(focusedFieldView.fetch());
+            }
+
+            if (this.isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionCancel());
+
+                return;
+            }
+
+            this.actionCancel();
         },
     });
 });

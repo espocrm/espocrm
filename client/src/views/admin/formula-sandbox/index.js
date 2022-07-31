@@ -153,6 +153,7 @@ define('views/admin/formula-sandbox/index', ['view', 'model'], function (Dep, Mo
                 model: this.model,
                 targetEntityType: this.targetEntityType,
                 confirmLeaveDisabled: true,
+                shortcutKeysEnabled: true,
             });
         },
 
