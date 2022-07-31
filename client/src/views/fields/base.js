@@ -263,6 +263,13 @@ define('views/fields/base', ['view'], function (Dep) {
         entityType: null,
 
         /**
+         * A last validation message;
+         *
+         * @type {?string}
+         */
+        lastValidationMessage: null,
+
+        /**
          * Is the field required.
          *
          * @returns {boolean}
@@ -1369,6 +1376,8 @@ define('views/fields/base', ['view'], function (Dep) {
 
             let rect = $el.get(0).getBoundingClientRect();
 
+            this.lastValidationMessage = message;
+
             if (rect.top === 0 && rect.bottom === 0 && rect.left === 0) {
                 return;
             }
@@ -1426,8 +1435,10 @@ define('views/fields/base', ['view'], function (Dep) {
          * @return {boolean} True if not valid.
          */
         validate: function () {
-            for (var i in this.validations) {
-                var method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
+            this.lastValidationMessage = null;
+
+            for (let i in this.validations) {
+                let method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
 
                 if (this[method].call(this)) {
                     this.trigger('invalid');

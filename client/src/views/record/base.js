@@ -851,6 +851,27 @@ function (Dep, ViewRecordHelper, DynamicLogic, _) {
             }
 
             if (notValid) {
+                if (fieldView.$el) {
+                    let rect = fieldView.$el.get(0).getBoundingClientRect();
+
+                    if (
+                        rect.top === 0 &&
+                        rect.bottom === 0 &&
+                        rect.left === 0 &&
+                        fieldView.$el.closest('.panel.hidden').length
+                    ) {
+                        setTimeout(() => {
+                            let msg = this.translate('Not valid') + ': ' +
+                                (
+                                    fieldView.lastValidationMessage ||
+                                    this.translate(field, 'fields', this.entityType)
+                                );
+
+                            Espo.Ui.error(msg, true);
+                        }, 10);
+                    }
+                }
+
                 return true;
             }
 
