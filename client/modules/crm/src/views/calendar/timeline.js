@@ -170,7 +170,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 this.isCustomViewAvailable = false;
             }
 
-            var scopeList = [];
+            let scopeList = [];
 
             this.scopeList.forEach(scope => {
                 if (this.getAcl().check(scope)) {
@@ -635,20 +635,19 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     }
 
                     if (e.item) {
-                        var $item = this.$el.find('.timeline .vis-item[data-id="'+e.item+'"]');
-                        var id = $item.attr('data-record-id');
-                        var scope = $item.attr('data-scope');
+                        let $item = this.$el.find('.timeline .vis-item[data-id="'+e.item+'"]');
+                        let id = $item.attr('data-record-id');
+                        let scope = $item.attr('data-scope');
 
                         if (id && scope) {
                             this.viewEvent(scope, id);
                         }
 
                         return;
-
                     }
 
                     if (e.what === 'background' && e.group && e.time) {
-                        var dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
+                        let dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
 
                         this.createEvent(dateStart, e.group);
                     }
@@ -683,9 +682,22 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         createEvent: function (dateStart, userId) {
-            var attributes = {
-                dateStart: dateStart
-            };
+            if (!dateStart) {
+                let time = (this.timeline.range.end - this.timeline.range.start) / 2 +
+                    this.timeline.range.start;
+
+                dateStart = moment(time)
+                    .utc()
+                    .format(this.getDateTime().internalDateTimeFormat);
+
+                if (this.date === this.getDateTime().getToday()) {
+                    dateStart = moment()
+                        .utc()
+                        .format(this.getDateTime().internalDateTimeFormat);
+                }
+            }
+
+            let attributes = {dateStart: dateStart};
 
             if (userId) {
                 var userName;
@@ -780,9 +792,13 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
         },
 
         triggerView: function () {
-            var m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
+            let m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
 
-            this.trigger('view', m.format(this.getDateTime().internalDateFormat), this.mode);
+            let date = m.format(this.getDateTime().internalDateFormat);
+
+            this.date = date;
+
+            this.trigger('view', date, this.mode);
         },
 
         initUserList: function () {

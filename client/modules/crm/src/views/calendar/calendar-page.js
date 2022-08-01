@@ -107,6 +107,9 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
             'Digit6': function (e) {
                 this.handleShortcutKeyDigit(e, 6);
             },
+            'Control+Space': function (e) {
+                this.handleShortcutKeyControlSpace(e);
+            },
         },
 
         setup: function () {
@@ -403,6 +406,20 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
             }
 
             this.getCalendarView().selectMode(mode);
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlSpace: function (e) {
+            if (!this.getCalendarView().createEvent) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().createEvent();
         },
     });
 });
