@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/array', ['views/fields/base', 'lib!Selectize', 'helpers/reg-exp-pattern', 'lib!underscore'],
-function (Dep, Selectize, RegExpPattern, _) {
+define('views/fields/array', ['views/fields/base', 'helpers/reg-exp-pattern', 'ui/multi-select'],
+function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
     /**
      * An array field.
@@ -386,7 +386,7 @@ function (Dep, Selectize, RegExpPattern, _) {
 
             this.$element.val(valueList.join(this.itemDelimiter));
 
-            let data = [];
+            let items = [];
 
             (this.params.options || []).forEach((value) => {
                 let label = this.getLanguage().translateOption(value, this.name, this.scope);
@@ -401,58 +401,27 @@ function (Dep, Selectize, RegExpPattern, _) {
                     return;
                 }
 
-                data.push({
+                items.push({
                     value: value,
                     label: label,
                 });
             });
 
-            let selectizeOptions = {
-                options: data,
+            /** @type {module:ui/multi-select~Options} */
+            let multiSelectOptions = {
+                items: items,
                 delimiter: this.itemDelimiter,
-                labelField: 'label',
-                valueField: 'value',
-                highlight: false,
-                searchField: ['label'],
-                plugins: ['remove_button'],
-                selectOnTab: false,
-            };
-
-            if (!this.matchAnyWord) {
-                selectizeOptions.score = function (search) {
-                    // Method of selectize.
-                    let score = this.getScoreFunction(search);
-
-                    search = search.toLowerCase();
-
-                    return function (item) {
-                        if (item.label.toLowerCase().indexOf(search) === 0) {
-                            return score(item);
-                        }
-
-                        return 0;
-                    };
-                };
-            }
-
-            if (this.allowCustomOptions) {
-                selectizeOptions.persist = false;
-
-                selectizeOptions.create = function (input) {
+                matchAnyWord: this.matchAnyWord,
+                allowCustomOptions: this.allowCustomOptions,
+                create: input => {
                     return {
                         value: input,
                         label: input,
                     };
-                };
+                },
+            };
 
-                selectizeOptions.render = {
-                    option_create: function (data, escape) {
-                        return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
-                    },
-                };
-            }
-
-            this.$element.selectize(selectizeOptions);
+            MultiSelect.init(this.$element, multiSelectOptions);
 
             this.$el.find('.selectize-dropdown-content').addClass('small');
 

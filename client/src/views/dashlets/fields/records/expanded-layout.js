@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base', function (Dep) {
+define('views/dashlets/fields/records/expanded-layout', ['views/fields/base', 'ui/multi-select'],
+function (Dep, /** module:ui/multi-select*/MultiSelect) {
 
     return Dep.extend({
 
@@ -44,33 +45,53 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
 
         getRowHtml: function (row, i) {
             row = row || [];
-            var list = [];
-            row.forEach(function (item) {
+
+            let list = [];
+
+            row.forEach(item => {
                 list.push(item.name);
             });
-            return '<div><input type="text" class="row-'+i.toString()+'" value="'+list.join(this.delimiter)+'"></div>';
+
+            return $('<div>')
+                .append(
+                    $('<input>')
+                        .attr('type', 'text')
+                        .addClass('row-' + i.toString())
+                        .attr('value', list.join(this.delimiter))
+                )
+                .get(0).outerHTML;
         },
 
         afterRender: function () {
             this.$container = this.$el.find('>.layout-container');
-            var rowList = (this.model.get(this.name) || {}).rows || [];
+
+            let rowList = (this.model.get(this.name) || {}).rows || [];
 
             rowList = Espo.Utils.cloneDeep(rowList);
 
             rowList.push([]);
 
-            var fieldDataList = this.getFieldDataList();
+            let fieldDataList = this.getFieldDataList();
 
-            rowList.forEach(function (row, i) {
-                var rowHtml = this.getRowHtml(row, i);
-
-                var $row = $(rowHtml);
+            rowList.forEach((row, i) => {
+                let rowHtml = this.getRowHtml(row, i);
+                let $row = $(rowHtml);
 
                 this.$container.append($row);
 
                 let $input = $row.find('input');
 
-                $input.selectize({
+                /** @type {module:ui/multi-select~Options} */
+                let multiSelectOptions = {
+                    items: fieldDataList,
+                    delimiter: this.delimiter,
+                    matchAnyWord: this.matchAnyWord,
+                    draggable: true,
+                };
+
+                MultiSelect.init($input, multiSelectOptions);
+
+                /*$input.selectize({
                     options: fieldDataList,
                     delimiter: this.delimiter,
                     labelField: 'label',
@@ -79,75 +100,95 @@ Espo.define('views/dashlets/fields/records/expanded-layout', 'views/fields/base'
                     searchField: ['label'],
                     plugins: ['remove_button', 'drag_drop'],
                     score: function (search) {
-                        var score = this.getScoreFunction(search);
+                        let score = this.getScoreFunction(search);
                         search = search.toLowerCase();
                         return function (item) {
                             if (item.label.toLowerCase().indexOf(search) === 0) {
                                 return score(item);
                             }
+
                             return 0;
                         };
                     }
-                });
+                });*/
 
-                $input.on('change', function () {
+                $input.on('change', () => {
                     this.trigger('change');
                     this.reRender();
-                }.bind(this));
-            }, this);
+                });
+            });
         },
 
         getFieldDataList: function () {
-            var scope = this.model.get('entityType') || this.getMetadata().get(['dashlets', this.model.dashletName, 'entityType']);
-            if (!scope) return [];
+            var scope = this.model.get('entityType') ||
+                this.getMetadata().get(['dashlets', this.model.dashletName, 'entityType']);
 
-            var fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+            if (!scope) {
+                return [];
+            }
 
-            var fieldList = Object.keys(fields).sort(function (v1, v2) {
-                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-            }.bind(this)).filter(function (item) {
-                if (fields[item].disabled || fields[item].listLayoutDisabled) return false;
-                return true;
-            }, this);
+            let fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
 
-            var dataList = [];
+            let fieldList = Object.keys(fields)
+                .sort((v1, v2) => {
+                     return this.translate(v1, 'fields', scope)
+                         .localeCompare(this.translate(v2, 'fields', scope));
+                })
+                .filter(item => {
+                    if (fields[item].disabled || fields[item].listLayoutDisabled) {
+                        return false;
+                    }
 
-            fieldList.forEach(function (item) {
+                    return true;
+                });
+
+            let dataList = [];
+
+            fieldList.forEach(item => {
                 dataList.push({
                     value: item,
-                    label: this.translate(item, 'fields', scope)
+                    label: this.translate(item, 'fields', scope),
                 });
-            }, this);
+            });
+
             return dataList;
         },
 
         fetch: function () {
             var value = {
-                rows: []
+                rows: [],
             };
-            this.$el.find('input').each(function (i, el) {
-                var row = [];
-                var list = ($(el).val() || '').split(this.delimiter);
-                if (list.length == 1 && list[0] == '') {
+
+            this.$el.find('input').each((i, el) => {
+                let row = [];
+                let list = ($(el).val() || '').split(this.delimiter);
+
+                if (list.length === 1 && list[0] === '') {
                     list = [];
                 }
-                if (list.length === 0) return;
-                list.forEach(function (item) {
-                    var o = {name: item};
+
+                if (list.length === 0) {
+                    return;
+                }
+
+                list.forEach(item => {
+                    let o = {name: item};
+
                     if (item === 'name') {
                         o.link = true;
                     }
-                    row.push(o);
-                }, this);
-                value.rows.push(row);
-            }.bind(this));
 
-            var data = {};
+                    row.push(o);
+                });
+
+                value.rows.push(row);
+            });
+
+            let data = {};
+
             data[this.name] = value;
 
             return data;
-        }
-
+        },
     });
-
 });
