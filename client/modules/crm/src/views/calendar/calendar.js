@@ -48,7 +48,14 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
         modeList: [],
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
+        fullCalendarModeList: [
+            'month',
+            'agendaWeek',
+            'agendaDay',
+            'basicWeek',
+            'basicDay',
+            'listWeek',
+        ],
 
         defaultMode: 'agendaWeek',
 
@@ -234,7 +241,6 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
                 this.$el.find('[data-action="mode"]').removeClass('active');
                 this.$el.find('[data-mode="' + mode + '"]').addClass('active');
-
 
                 this.$calendar.fullCalendar('changeView', this.viewMode);
 
@@ -589,61 +595,32 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     this.adjustSize();
                 },
                 select: (start, end) => {
-                    var dateStart = this.convertTime(start);
-                    var dateEnd = this.convertTime(end);
+                    let dateStart = this.convertTime(start);
+                    let dateEnd = this.convertTime(end);
+                    let allDay = !start.hasTime();
 
-                    var allDay = !start.hasTime();
-
-                    var dateEndDate = null;
-                    var dateStartDate = null;
+                    let dateEndDate = null;
+                    let dateStartDate = null;
 
                     if (allDay) {
                         dateStartDate = start.format('YYYY-MM-DD');
                         dateEndDate = end.clone().add(-1, 'days').format('YYYY-MM-DD');
                     }
 
-                    var attributes = {};
-
-                    if (this.options.userId) {
-                        attributes.assignedUserId = this.options.userId;
-                        attributes.assignedUserName = this.options.userName || this.options.userId;
-                    }
-
-                    this.notify('Loading...');
-
-                    this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                        attributes: attributes,
-                        enabledScopeList: this.enabledScopeList,
-                        scopeList: this.scopeList,
+                    this.createEvent({
+                        dateStart: dateStart,
+                        dateEnd: dateEnd,
                         allDay: allDay,
                         dateStartDate: dateStartDate,
                         dateEndDate: dateEndDate,
-                        dateStart: dateStart,
-                        dateEnd: dateEnd
-                    }, (view) => {
-                        view.render();
-                        view.notify(false);
-
-                        let added = false;
-
-                        this.listenTo(view, 'after:save', (model) => {
-                            if (!added) {
-                                this.addModel(model);
-                                added = true;
-
-                                return;
-                            }
-
-                            this.updateModel(model);
-                        });
-                    });
+                    })
 
                     $calendar.fullCalendar('unselect');
                 },
                 eventClick: (event) => {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) ||
+                    let viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) ||
                         'views/modals/detail';
 
                     this.createView('quickView', viewName, {
@@ -670,8 +647,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     });
                 },
                 viewRender: (view, el) => {
-                    var date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-                    var m = moment(this.$calendar.fullCalendar('getDate'));
+                    let date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
+                    let m = moment(this.$calendar.fullCalendar('getDate'));
+
+                    this.date = date;
 
                     this.trigger('view', m.format('YYYY-MM-DD'), this.mode);
                 },
@@ -848,6 +827,66 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                     this.adjustSize();
                 }
             }, 150);
+        },
+
+        /**
+         * @param {{
+         *   [allDay]: boolean,
+         *   [dateStart]: string,
+         *   [dateEnd]: string,
+         *   [dateStartDate]: ?string,
+         *   [dateEndDate]: ?string,
+         * }} [values]
+         */
+        createEvent: function (values) {
+            values = values || {};
+
+            if (
+                !values.dateStart &&
+                this.date !== this.getDateTime().getToday() &&
+                (this.mode === 'day' || this.mode === 'agendaDay')
+            ) {
+                values.allDay = true;
+                values.dateStartDate = this.date;
+                values.dateEndDate = this.date;
+            }
+
+            let attributes = {};
+
+            if (this.options.userId) {
+                attributes.assignedUserId = this.options.userId;
+                attributes.assignedUserName = this.options.userName || this.options.userId;
+            }
+
+            this.notify('Loading...');
+
+            this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+                attributes: attributes,
+                enabledScopeList: this.enabledScopeList,
+                scopeList: this.scopeList,
+                allDay: values.allDay,
+                dateStartDate: values.dateStartDate,
+                dateEndDate: values.dateEndDate,
+                dateStart: values.dateStart,
+                dateEnd: values.dateEnd,
+            }, view => {
+                view.render();
+
+                Espo.Ui.notify(false);
+
+                let added = false;
+
+                this.listenTo(view, 'after:save', model => {
+                    if (!added) {
+                        this.addModel(model);
+                        added = true;
+
+                        return;
+                    }
+
+                    this.updateModel(model);
+                });
+            });
         },
 
         fetchEvents: function (from, to, callback) {
