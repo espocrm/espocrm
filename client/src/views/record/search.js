@@ -112,13 +112,17 @@ define('views/record/search', ['view'], function (Dep) {
             });
 
             this.boolFilterList = Espo.Utils
-                .clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || [])
+                .clone(this.getMetadata().get(['clientDefs', this.scope, 'boolFilterList']) || [])
                 .filter(item => {
                     if (typeof item === 'string') {
                         return true;
                     }
 
                     item = item || {};
+
+                    if (item.aux) {
+                        return false;
+                    }
 
                     if (item.inPortalDisabled && this.getUser().isPortal()) {
                         return false;
@@ -171,6 +175,10 @@ define('views/record/search', ['view'], function (Dep) {
                 }
 
                 item = item || {};
+
+                if (item.aux) {
+                    return false;
+                }
 
                 if (item.inPortalDisabled && this.getUser().isPortal()) {
                     return false;
