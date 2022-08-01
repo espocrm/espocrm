@@ -65,17 +65,16 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     e.preventDefault();
 
                     this.post();
-
-                    return;
                 }
 
-                if (e.code === 'Tab') {
-                    var $text = $(e.currentTarget);
+                // Don't hide to be able to focus on the upload button.
+                /*if (e.code === 'Tab') {
+                    let $text = $(e.currentTarget);
 
                     if ($text.val() === '') {
                         this.disablePostingMode();
                     }
-                }
+                }*/
             },
             'keyup textarea[data-name="post"]': function () {
                 this.controlPreviewButton();

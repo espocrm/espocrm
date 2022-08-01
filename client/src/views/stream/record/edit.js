@@ -129,17 +129,16 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                         e.preventDefault();
 
                         this.post();
-
-                        return;
                     }
 
-                    if (e.code === 'Tab') {
+                    // Don't hide to be able to focus on the upload button.
+                    /*if (e.code === 'Tab') {
                         let $text = $(e.currentTarget);
 
                         if ($text.val() === '') {
                             this.disablePostingMode();
                         }
-                    }
+                    }*/
                 };
 
                 this.events['click button.post'] = () => {
