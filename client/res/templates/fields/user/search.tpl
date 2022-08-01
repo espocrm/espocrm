@@ -4,7 +4,7 @@
 <div class="primary">
 	<div class="input-group">
 	    <input
-            class="form-control input-sm search-input"
+            class="form-control input-sm"
             type="text"
             data-name="{{nameName}}"
             value="{{searchData.nameValue}}"
@@ -37,7 +37,7 @@
 
     <div class="input-group add-team">
         <input
-            class="form-control input-sm element-one-of search-input"
+            class="form-control input-sm element-one-of"
             type="text"
             value=""
             autocomplete="espo-{{name}}"
@@ -61,7 +61,7 @@
     </div>
     <div class="input-group add-team">
         <input
-            class="form-control input-sm element-teams search-input"
+            class="form-control input-sm element-teams"
             type="text"
             value=""
             autocomplete="espo-{{name}}"

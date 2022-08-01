@@ -3,7 +3,7 @@
 </select>
 <div class="input-group primary">
     <input
-        class="main-element form-control input-sm search-input"
+        class="main-element form-control input-sm"
         type="text"
         data-name="{{name}}"
         value="{{dateValue}}"
@@ -19,7 +19,7 @@
 </div>
 <div class="input-group{{#ifNotEqual searchType 'between'}} hidden{{/ifNotEqual}} additional">
     <input
-        class="main-element form-control input-sm additional search-input"
+        class="main-element form-control input-sm additional"
         type="text"
         value="{{dateValueTo}}"
         autocomplete="espo-{{name}}"
@@ -33,7 +33,7 @@
 </div>
 <div class="hidden additional-number">
     <input
-        class="main-element form-control input-sm number search-input"
+        class="main-element form-control input-sm number"
         type="number"
         value="{{number}}"
         placeholder ="{{translate 'Number'}}"

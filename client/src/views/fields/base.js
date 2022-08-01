@@ -710,8 +710,8 @@ define('views/fields/base', ['view'], function (Dep) {
                 this.searchData = {};
                 this.setupSearch();
 
-                this.events['keydown input.search-input'] = e => {
-                    if ('keyCode' in e && e.keyCode === 13) {
+                this.events['keydown.' + this.cid] = e => {
+                    if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                         this.trigger('search');
                     }
                 };

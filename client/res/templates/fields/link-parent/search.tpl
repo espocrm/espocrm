@@ -7,7 +7,7 @@
     </select>
     <div class="input-group">
         <input
-            class="form-control input-sm search-input"
+            class="form-control input-sm"
             type="text"
             data-name="{{nameName}}"
             value="{{searchData.nameValue}}"

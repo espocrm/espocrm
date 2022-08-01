@@ -317,8 +317,8 @@ define('views/record/search', ['view'], function (Dep) {
         },
 
         events: {
-            'keypress input[data-name="textFilter"]': function (e) {
-                if (e.keyCode === 13) {
+            'keydown input[data-name="textFilter"]': function (e) {
+                if (e.code === 'Enter') {
                     this.search();
 
                     this.hideApplyFiltersButton();

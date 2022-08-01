@@ -33,8 +33,8 @@ define('views/global-search/global-search', ['view'], function (Dep) {
         template: 'global-search/global-search',
 
         events: {
-            'keypress input.global-search-input': function (e) {
-                if (e.keyCode === 13) {
+            'keydown input.global-search-input': function (e) {
+                if (e.code === 'Enter') {
                     this.runSearch();
                 }
             },
