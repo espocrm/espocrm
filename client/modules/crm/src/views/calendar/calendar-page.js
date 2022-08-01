@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/calendar-page', 'view', function (Dep) {
+define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,7 +34,14 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
         el: '#main',
 
-        fullCalendarModeList: ['month', 'agendaWeek', 'agendaDay', 'basicWeek', 'basicDay', 'listWeek'],
+        fullCalendarModeList: [
+            'month',
+            'agendaWeek',
+            'agendaDay',
+            'basicWeek',
+            'basicDay',
+            'listWeek',
+        ],
 
         events: {
             'click [data-action="createCustomView"]': function () {
@@ -53,9 +60,9 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 this.mode = this.getStorage().get('state', 'calendarMode') || null;
 
                 if (this.mode && this.mode.indexOf('view-') === 0) {
-                    var viewId = this.mode.substr(5);
-                    var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-                    var isFound = false;
+                    let viewId = this.mode.substr(5);
+                    let calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+                    let isFound = false;
 
                     calendarViewDataList.forEach(item => {
                         if (item.id === viewId) {
@@ -84,7 +91,7 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         updateUrl: function (trigger) {
-            var url = '#Calendar/show';
+            let url = '#Calendar/show';
 
             if (this.mode || this.date) {
                 url += '/';
@@ -110,7 +117,8 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         setupCalendar: function () {
-            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) || 'crm:views/calendar/calendar';
+            let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
+                'crm:views/calendar/calendar';
 
             this.createView('calendar', viewName, {
                 date: this.date,
@@ -119,7 +127,7 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 mode: this.mode,
                 el: '#main > .calendar-container',
             }, view => {
-                var initial = true;
+                let initial = true;
 
                 this.listenTo(view, 'view', (date, mode) => {
                     this.date = date;
@@ -199,7 +207,7 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         editCustomView: function () {
-            var viewId = this.getView('calendar').viewId;
+            let viewId = this.getView('calendar').viewId;
 
             if (!viewId) {
                 return;
@@ -212,10 +220,9 @@ define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
                 this.listenToOnce(view, 'after:save', (data) => {
                     view.close();
-                    var calendarView = this.getView('calendar');
 
+                    let calendarView = this.getView('calendar');
                     calendarView.setupMode();
-
                     calendarView.reRender();
                 });
 
