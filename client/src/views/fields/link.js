@@ -598,9 +598,7 @@ define('views/fields/link', ['views/fields/base'], function (Dep) {
                                 return this.getHelper().escapeString(suggestion.name);
                             },
                             transformResult: response => {
-                                var response = JSON.parse(response);
-
-                                return this._transformAutocompleteResult(response);
+                                return this._transformAutocompleteResult(JSON.parse(response));
                             },
                             onSelect: s => {
                                 this.addLinkOneOf(s.id, s.name);
