@@ -100,7 +100,14 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 var name = $(e.currentTarget).data('name');
 
                 this.insertFromSource(name);
-            }
+            },
+            'keydown label.attach-file-label': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (key === 'Enter') {
+                    this.$el.find('input.file').get(0).click();
+                }
+            },
         },
 
         data: function () {

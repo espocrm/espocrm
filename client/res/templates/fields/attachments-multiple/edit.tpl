@@ -2,13 +2,14 @@
     <div class="clearfix attachment-control">
         {{#unless uploadFromFileSystemDisabled}}
         <div class="pull-left">
-            <label class="attach-file-label" title="{{translate 'Attach File'}}">
+            <label class="attach-file-label" title="{{translate 'Attach File'}}" tabindex="0">
                 <span class="btn btn-default btn-icon"><span class="fas fa-paperclip"></span></span>
                 <input
                     type="file"
                     class="file pull-right"
                     multiple
                     {{#if acceptAttribute}}accept="{{acceptAttribute}}"{{/if}}
+                    tabindex="-1"
                 >
             </label>
         </div>

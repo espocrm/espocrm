@@ -127,6 +127,13 @@ function (Dep, FileUpload) {
                     view.render();
                 });
             },
+            'keydown label.attach-file-label': function (e) {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (key === 'Enter') {
+                    this.$el.find('input.file').get(0).click();
+                }
+            },
         },
 
         data: function () {
