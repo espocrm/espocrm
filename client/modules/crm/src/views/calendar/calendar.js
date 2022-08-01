@@ -73,19 +73,16 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
         events: {
             'click button[data-action="prev"]': function () {
-                this.$calendar.fullCalendar('prev');
-                this.updateDate();
+                this.actionPrevious();
             },
             'click button[data-action="next"]': function () {
-                this.$calendar.fullCalendar('next');
-                this.updateDate();
+                this.actionNext();
             },
             'click button[data-action="today"]': function () {
-                this.$calendar.fullCalendar('today');
-                this.updateDate();
+                this.actionToday();
             },
             'click [data-action="mode"]': function (e) {
-                var mode = $(e.currentTarget).data('mode');
+                let mode = $(e.currentTarget).data('mode');
 
                 this.selectMode(mode);
             },
@@ -93,10 +90,11 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 this.actionRefresh();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var filterName = $target.data('name');
+                let $target = $(e.currentTarget);
+                let filterName = $target.data('name');
 
-                var $check = $target.find('.filter-check-icon');
+                let $check = $target.find('.filter-check-icon');
+
                 if ($check.hasClass('hidden')) {
                     $check.removeClass('hidden');
                 } else {
@@ -282,33 +280,37 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
                 return;
             }
 
-            var view = this.$calendar.fullCalendar('getView');
-            var today = moment();
-
-            if (view.intervalStart.unix() <= today.unix() && today.unix() < view.intervalEnd.unix()) {
+            if (this.isToday()) {
                 this.$el.find('button[data-action="today"]').addClass('active');
             } else {
                 this.$el.find('button[data-action="today"]').removeClass('active');
             }
 
-            var title = this.getTitle();
+            let title = this.getTitle();
 
             this.$el.find('.date-title h4 span').text(title);
         },
 
-        getTitle: function () {
-            var view = this.$calendar.fullCalendar('getView');
+        isToday: function () {
+            let view = this.$calendar.fullCalendar('getView');
+            let today = moment();
 
-            var map = {
+            return view.intervalStart.unix() <= today.unix() && today.unix() < view.intervalEnd.unix();
+        },
+
+        getTitle: function () {
+            let view = this.$calendar.fullCalendar('getView');
+
+            let map = {
                 'agendaWeek': 'week',
                 'agendaDay': 'day',
                 'basicWeek': 'week',
                 'basicDay': 'day',
             };
 
-            var viewName = map[view.name] || view.name
+            let viewName = map[view.name] || view.name
 
-            var title;
+            let title;
 
             if (viewName === 'week') {
                 title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' – ');
@@ -912,13 +914,13 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.$calendar.fullCalendar('refetchEvents');
         },
 
-        actionNext: function () {
-            this.$calendar.fullCalendar('next');
+        actionPrevious: function () {
+            this.$calendar.fullCalendar('prev');
             this.updateDate();
         },
 
-        actionPrevious: function () {
-            this.$calendar.fullCalendar('prev');
+        actionNext: function () {
+            this.$calendar.fullCalendar('next');
             this.updateDate();
         },
 
@@ -954,6 +956,17 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
             this.colors[scope] = additionalColorList[index];
 
             return this.colors[scope];
+        },
+
+        actionToday: function () {
+            if (this.isToday()) {
+                this.actionRefresh();
+
+                return;
+            }
+
+            this.$calendar.fullCalendar('today');
+            this.updateDate();
         },
     });
 });

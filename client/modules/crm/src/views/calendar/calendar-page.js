@@ -52,6 +52,45 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
             }
         },
 
+        /**
+         * A shortcut-key => action map.
+         *
+         * @protected
+         * @type {?Object.<string,function (JQueryKeyEventObject): void>}
+         */
+        shortcutKeys: {
+            'Home': function (e) {
+                this.handleShortcutKeyHome(e);
+            },
+            'Numpad7': function (e) {
+                this.handleShortcutKeyHome(e);
+            },
+            'Numpad4': function (e) {
+                this.handleShortcutKeyArrowLeft(e);
+            },
+            'Numpad6': function (e) {
+                this.handleShortcutKeyArrowRight(e);
+            },
+            'ArrowLeft': function (e) {
+                this.handleShortcutKeyArrowLeft(e);
+            },
+            'ArrowRight': function (e) {
+                this.handleShortcutKeyArrowRight(e);
+            },
+            'Minus': function (e) {
+                this.handleShortcutKeyMinus(e);
+            },
+            'Equal': function (e) {
+                this.handleShortcutKeyPlus(e);
+            },
+            'NumpadSubtract': function (e) {
+                this.handleShortcutKeyMinus(e);
+            },
+            'NumpadAdd': function (e) {
+                this.handleShortcutKeyPlus(e);
+            },
+        },
+
         setup: function () {
             this.mode = this.mode || this.options.mode || null;
             this.date = this.date || this.options.date || null;
@@ -80,6 +119,14 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
                 }
             }
 
+            this.events['keydown.main'] = e => {
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (typeof this.shortcutKeys[key] === 'function') {
+                    this.shortcutKeys[key].call(this, e);
+                }
+            }
+
             if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
                 this.setupCalendar();
             }
@@ -88,6 +135,10 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
                     this.setupTimeline();
                 }
             }
+        },
+
+        afterRender: function () {
+            this.$el.focus();
         },
 
         updateUrl: function (trigger) {
@@ -235,6 +286,72 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
                     this.updateUrl(true);
                 });
             });
-        }
+        },
+
+        /**
+         * @private
+         * @return {module:view.Class}
+         */
+        getCalendarView: function () {
+            return this.getView('calendar');
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyHome: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionToday();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyArrowLeft: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionPrevious();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyArrowRight: function (e) {
+            e.preventDefault();
+
+            this.getCalendarView().actionNext();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyMinus: function (e) {
+            if (!this.getCalendarView().actionZoomOut) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().actionZoomOut();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyPlus: function (e) {
+            if (!this.getCalendarView().actionZoomIn) {
+                return;
+            }
+
+            e.preventDefault();
+
+            this.getCalendarView().actionZoomIn();
+        },
     });
 });

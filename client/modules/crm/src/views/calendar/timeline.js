@@ -60,6 +60,8 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         calendarTypeList: ['single', 'shared'],
 
+        zoomPercentage: 1,
+
         data: function () {
             var calendarTypeDataList = this.getCalendarTypeDataList();
 
@@ -76,23 +78,21 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         events: {
             'click button[data-action="today"]': function () {
-                this.timeline.moveTo(moment());
-
-                this.triggerView();
+                this.actionToday();
             },
             'click [data-action="mode"]': function (e) {
-                var mode = $(e.currentTarget).data('mode');
+                let mode = $(e.currentTarget).data('mode');
 
-                this.trigger('change:mode', mode);
+                this.selectMode(mode)
             },
-            'click [data-action="refresh"]': function (e) {
+            'click [data-action="refresh"]': function () {
                 this.actionRefresh();
             },
             'click [data-action="toggleScopeFilter"]': function (e) {
-                var $target = $(e.currentTarget);
-                var filterName = $target.data('name');
+                let $target = $(e.currentTarget);
+                let filterName = $target.data('name');
 
-                var $check = $target.find('.filter-check-icon');
+                let $check = $target.find('.filter-check-icon');
 
                 if ($check.hasClass('hidden')) {
                     $check.removeClass('hidden');
@@ -105,12 +105,12 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 this.toggleScopeFilter(filterName);
             },
             'click [data-action="toggleCalendarType"]': function (e) {
-                var $target = $(e.currentTarget);
-                var calendarType = $target.data('name');
+                let $target = $(e.currentTarget);
+                let calendarType = $target.data('name');
 
                 $target.parent().parent().find('.calendar-type-check-icon').addClass('hidden');
 
-                var $check = $target.find('.calendar-type-check-icon');
+                let $check = $target.find('.calendar-type-check-icon');
 
                 if ($check.hasClass('hidden')) {
                     $check.removeClass('hidden');
@@ -120,7 +120,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     .find('.calendar-type-label')
                     .text(this.getCalendarTypeLabel(calendarType));
 
-                var $showSharedCalendarOptions = this.$el
+                let $showSharedCalendarOptions = this.$el
                     .find('> .button-container button[data-action="showSharedCalendarOptions"]');
 
                 if (calendarType === 'shared') {
@@ -227,6 +227,10 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                     mode: this.mode,
                 });
             }
+        },
+
+        selectMode: function (mode) {
+            this.trigger('change:mode', mode);
         },
 
         getModeDataList: function () {
@@ -1133,6 +1137,30 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             this.colors[scope] = additionalColorList[index];
 
             return this.colors[scope];
+        },
+
+        actionPrevious: function () {
+            this.timeline.moveTo(this.timeline.range.start);
+            this.triggerView();
+        },
+
+        actionNext: function () {
+            this.timeline.moveTo(this.timeline.range.end);
+            this.triggerView();
+        },
+
+        actionToday: function () {
+            this.timeline.moveTo(moment());
+            this.triggerView();
+        },
+
+        actionZoomOut: function () {
+            this.timeline.zoomOut(this.zoomPercentage);
+            this.triggerView();
+        },
+
+        actionZoomIn: function () {
+            this.timeline.zoomIn(this.zoomPercentage);
         },
     });
 });
