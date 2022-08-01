@@ -89,6 +89,24 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
             'NumpadAdd': function (e) {
                 this.handleShortcutKeyPlus(e);
             },
+            'Digit1': function (e) {
+                this.handleShortcutKeyDigit(e, 1);
+            },
+            'Digit2': function (e) {
+                this.handleShortcutKeyDigit(e, 2);
+            },
+            'Digit3': function (e) {
+                this.handleShortcutKeyDigit(e, 3);
+            },
+            'Digit4': function (e) {
+                this.handleShortcutKeyDigit(e, 4);
+            },
+            'Digit5': function (e) {
+                this.handleShortcutKeyDigit(e, 5);
+            },
+            'Digit6': function (e) {
+                this.handleShortcutKeyDigit(e, 6);
+            },
         },
 
         setup: function () {
@@ -200,12 +218,15 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
 
                     if (refresh) {
                         this.updateUrl(true);
+
                         return;
                     }
 
                     if (!~this.fullCalendarModeList.indexOf(mode)) {
                         this.updateUrl(true);
                     }
+
+                    this.$el.focus();
                 });
             });
         },
@@ -352,6 +373,36 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
             e.preventDefault();
 
             this.getCalendarView().actionZoomIn();
+        },
+
+        /**
+         * @private
+         * @param {JQueryKeyEventObject} e
+         * @param {Number} digit
+         */
+        handleShortcutKeyDigit: function (e, digit) {
+            let modeList = this.getCalendarView().hasView('modeButtons') ?
+                this.getCalendarView()
+                    .getView('modeButtons')
+                    .getModeDataList(true)
+                    .map(item => item.mode) :
+                this.getCalendarView().modeList;
+
+            let mode = modeList[digit - 1];
+
+            if (!mode) {
+                return;
+            }
+
+            e.preventDefault();
+
+            if (mode === this.mode) {
+                this.getCalendarView().actionRefresh();
+
+                return;
+            }
+
+            this.getCalendarView().selectMode(mode);
         },
     });
 });
