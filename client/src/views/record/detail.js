@@ -437,6 +437,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'Escape': function (e) {
                 this.handleShortcutKeyEscape(e);
             },
+            'Control+Backslash': function (e) {
+                this.handleShortcutKeyControlBackslash(e);
+            },
         },
 
         /**
@@ -3506,7 +3509,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          */
         focusForEdit: function () {
             this.$el
-                .find('.middle-tabs > button.active, .form-control:not([disabled])')
+                .find('.field:not(.hidden) .form-control:not([disabled])')
                 .first()
                 .focus();
         },
@@ -3555,5 +3558,40 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {JQueryKeyEventObject} e
          */
         handleShortcutKeyCtrlAltEnter: function (e) {},
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlBackslash: function (e) {
+            if (!this.hasMiddleTabs()) {
+                return;
+            }
+
+            let $buttons = this.$el.find('.middle-tabs > button:not(.hidden)');
+
+            let index = $buttons.toArray().findIndex(el => $(el).hasClass('active'));
+
+            index++;
+
+            if (index >= $buttons.length) {
+                index = 0;
+            }
+
+            let $tab = $($buttons.get(index));
+
+            let tab = parseInt($tab.attr('data-tab'));
+
+            this.selectMiddleTab(tab);
+
+            if (this.mode === this.MODE_EDIT) {
+                setTimeout(() => {
+                    this.$middle
+                        .find(`.panel[data-tab="${tab}"] .cell:not(.hidden)`)
+                        .first()
+                        .focus();
+                }, 50);
+            }
+        },
     });
 });
