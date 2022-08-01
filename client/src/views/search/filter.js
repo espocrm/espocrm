@@ -96,4 +96,3 @@ define('views/search/filter', ['view'], function (Dep) {
         },
     });
 });
-
