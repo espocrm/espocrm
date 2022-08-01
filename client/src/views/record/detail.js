@@ -3574,6 +3574,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             let $buttons = this.$el.find('.middle-tabs > button:not(.hidden)');
 
+            if ($buttons.length === 1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
             let index = $buttons.toArray().findIndex(el => $(el).hasClass('active'));
 
             index++;
