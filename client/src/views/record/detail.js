@@ -3564,7 +3564,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         handleShortcutKeyCtrlAltEnter: function (e) {},
 
         /**
-         * @protected
+         * @public
          * @param {JQueryKeyEventObject} e
          */
         handleShortcutKeyControlBackslash: function (e) {

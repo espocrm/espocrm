@@ -91,6 +91,9 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                             .focus();
                     });
             },
+            'Control+Backslash': function (e) {
+                this.getRecordView().handleShortcutKeyControlBackslash(e);
+            },
         },
 
         setup: function () {
@@ -384,7 +387,7 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'detailQuick']) ||
                 'views/record/detail-small';
 
-            var options = {
+            let options = {
                 model: model,
                 el: this.containerSelector + ' .record-container',
                 type: 'detailSmall',
@@ -397,6 +400,13 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             };
 
             this.createView('record', viewName, options, callback);
+        },
+
+        /**
+         * @return {module:views/record/detail.Class}
+         */
+        getRecordView: function () {
+            return this.getView('record');
         },
 
         afterRender: function () {

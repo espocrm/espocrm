@@ -110,6 +110,9 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
 
                 this.actionClose();
             },
+            'Control+Backslash': function (e) {
+                this.getRecordView().handleShortcutKeyControlBackslash(e);
+            },
         },
 
         setup: function () {
