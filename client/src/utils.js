@@ -588,6 +588,10 @@ define('utils', [], function () {
         getKeyFromKeyEvent: function (e) {
             let key = e.code;
 
+            if (e.shiftKey) {
+                key = 'Shift+' + key;
+            }
+
             if (e.altKey) {
                 key = 'Alt+' + key;
             }
