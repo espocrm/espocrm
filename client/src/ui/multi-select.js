@@ -65,9 +65,11 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
 
             if (options.restoreOnBackspace) {
                 MultiSelect.loadRestoreOnBackspacePlugin();
-
                 plugins.push('restore_on_backspace_espo')
             }
+
+            MultiSelect.loadBypassCtrlEnterPlugin();
+            plugins.push('bypass_ctrl_enter');
 
             let selectizeOptions = {
                 options: options.items,
@@ -111,7 +113,6 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                             )
                             .append('&hellip;')
                             .get(0).outerHTML;
-                        //return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     },
                 };
             }
@@ -150,14 +151,39 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
         /**
          * @private
          */
+        loadBypassCtrlEnterPlugin: function () {
+            if ('bypass_ctrl_enter' in Selectize.plugins) {
+                return;
+            }
+
+            const IS_MAC = /Mac/.test(navigator.userAgent);
+
+            Selectize.define('bypass_ctrl_enter', function (options) {
+                let self = this;
+
+                this.onKeyDown = (function() {
+                    let original = self.onKeyDown;
+
+                    return function (e) {
+                        if (e.code === 'Enter' && (IS_MAC ? e.metaKey : e.ctrlKey)) {
+                            return;
+                        }
+
+                        return original.apply(this, arguments);
+                    };
+                })();
+            });
+        },
+
+        /**
+         * @private
+         */
         loadRestoreOnBackspacePlugin: function () {
             if ('restore_on_backspace_espo' in Selectize.plugins) {
                 return;
             }
 
             Selectize.define('restore_on_backspace_espo', function (options) {
-                Selectize.restoreOnBackspacePluginLoaded = true;
-
                 options.text = options.text || function (option) {
                     return option[this.settings.labelField];
                 };
