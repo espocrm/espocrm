@@ -36,10 +36,15 @@ use Espo\ORM\EntityManager;
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 
+/**
+ * @implements Loader<\Espo\Core\ORM\Entity>
+ */
 class AcceptanceStatusLoader implements Loader
 {
     private EntityManager $entityManager;
     private User $user;
+
+    private const ATTR_ACCEPTANCE_STATUS = 'acceptanceStatus';
 
     public function __construct(EntityManager $entityManager, User $user)
     {
@@ -49,17 +54,15 @@ class AcceptanceStatusLoader implements Loader
 
     public function process(Entity $entity, Params $params): void
     {
-        $select = $params->getSelect();
-
-        if (count($select) === 0 || $select === null) {
+        if (!$params->hasInSelect(self::ATTR_ACCEPTANCE_STATUS)) {
             return;
         }
 
-        if ($entity->has('acceptanceStatus')) {
+        if ($entity->has(self::ATTR_ACCEPTANCE_STATUS)) {
             return;
         }
 
-        $attribute = 'acceptanceStatus';
+        $attribute = self::ATTR_ACCEPTANCE_STATUS;
 
         $user = $this->entityManager
             ->getRDBRepository($entity->getEntityType())
@@ -70,6 +73,12 @@ class AcceptanceStatusLoader implements Loader
             ->select([$attribute])
             ->findOne();
 
-        $entity->set('acceptanceStatus', $user->get($attribute));
+        $value = null;
+
+        if ($user) {
+            $value = $user->get($attribute);
+        }
+
+        $entity->set(self::ATTR_ACCEPTANCE_STATUS, $value);
     }
 }
