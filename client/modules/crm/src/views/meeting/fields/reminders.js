@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep) {
+define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,23 +38,23 @@ define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep)
 
         events: {
             'click [data-action="addReminder"]': function () {
-                var type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
-                var seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default');
+                let type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
+                let seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default');
 
-                var item = {
+                let item = {
                     type: type,
-                    seconds: seconds
+                    seconds: seconds,
                 };
 
                 this.reminderList.push(item);
 
                 this.addItemHtml(item);
-
                 this.trigger('change');
             },
             'click [data-action="removeReminder"]': function (e) {
-                var $reminder = $(e.currentTarget).closest('.reminder');
-                var index = $reminder.index();
+                let $reminder = $(e.currentTarget).closest('.reminder');
+                let index = $reminder.index();
+
                 $reminder.remove();
 
                 this.reminderList.splice(index, 1);
@@ -66,26 +66,26 @@ define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep)
         },
 
         setup: function () {
-            if (this.model.isNew() && !this.model.get(this.name) && this.model.name != 'Preferences') {
+            if (this.model.isNew() && !this.model.get(this.name) && this.model.name !== 'Preferences') {
                 this.reminderList = this.getPreferences().get('defaultReminders') || [];
             } else {
                 this.reminderList = this.model.get(this.name) || [];
             }
 
-            this.listenTo(this.model, 'change:' + this.name, function () {
+            this.listenTo(this.model, 'change:' + this.name, () => {
                 this.reminderList = this.model.get(this.name) || [];
-            }, this);
+            });
 
             this.typeList = this.getMetadata().get('entityDefs.Reminder.fields.type.options') || [];
             this.secondsList = this.getMetadata().get('entityDefs.Reminder.fields.seconds.options') || [];
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
+            if (this.isEditMode()) {
                 this.$container = this.$el.find('.reminders-container');
-                this.reminderList.forEach(function (item) {
+                this.reminderList.forEach(item => {
                     this.addItemHtml(item);
-                }, this);
+                });
             }
         },
 
@@ -100,37 +100,51 @@ define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep)
         },
 
         addItemHtml: function (item) {
-            var $item = $('<div>').addClass('input-group').addClass('reminder');
+            let $item = $('<div>').addClass('input-group').addClass('reminder');
 
-            var $type = $('<select>').attr('name', 'type').addClass('form-control');
-            this.typeList.forEach(function (type) {
-                var $o = $('<option>').attr('value', type).text(this.getLanguage().translateOption(type, 'reminderTypes'));
+            let $type = $('<select>')
+                .attr('name', 'type')
+                .addClass('form-control');
+
+            this.typeList.forEach(type => {
+                let $o = $('<option>')
+                    .attr('value', type)
+                    .text(this.getLanguage().translateOption(type, 'reminderTypes'));
+
                 $type.append($o);
-            }, this);
+            });
+
             $type.val(item.type);
 
-            $type.on('change', function () {
+            $type.on('change', () => {
                 this.updateType($type.val(), $type.closest('.reminder').index());
-            }.bind(this));
+            });
 
-            var $seconds = $('<select>').attr('name', 'seconds').addClass('form-control');
-            this.secondsList.forEach(function (seconds) {
-                var $o = $('<option>').attr('value', seconds).text(this.stringifySeconds(seconds));
+            let $seconds = $('<select>')
+                .attr('name', 'seconds')
+                .addClass('form-control');
+
+            this.secondsList.forEach(seconds => {
+                let $o = $('<option>')
+                    .attr('value', seconds)
+                    .text(this.stringifySeconds(seconds));
+
                 $seconds.append($o);
-            }, this);
+            });
+
             $seconds.val(item.seconds);
 
-            $seconds.on('change', function () {
+            $seconds.on('change', () => {
                 this.updateSeconds(parseInt($seconds.val()), $seconds.closest('.reminder').index());
-            }.bind(this));
+            });
 
-            var $remove = $('<button>').addClass('btn')
-                                       .addClass('btn-link')
-                                       .css('margin-left', '5px')
-                                       .attr('type', 'button')
-                                       .attr('tabindex', '-1')
-                                       .attr('data-action', 'removeReminder')
-                                       .html('<span class="fas fa-times"></span>');
+            let $remove = $('<button>')
+                .addClass('btn')
+               .addClass('btn-link')
+               .css('margin-left', '5px')
+               .attr('type', 'button')
+               .attr('data-action', 'removeReminder')
+               .html('<span class="fas fa-times"></span>');
 
             $item.append($('<div class="input-group-btn">').append($type))
                  .append($seconds)
@@ -143,23 +157,32 @@ define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep)
             if (!seconds) {
                 return this.translate('on time', 'labels', 'Meeting');
             }
-            var d = seconds;
-            var days = Math.floor(d / (86400));
-            d = d % (86400);
-            var hours = Math.floor(d / (3600));
-            d = d % (3600);
-            var minutes = Math.floor(d / (60));
 
-            var parts = [];
+            let d = seconds;
+            let days = Math.floor(d / (86400));
+
+            d = d % (86400);
+
+            let hours = Math.floor(d / (3600));
+
+            d = d % (3600);
+
+            let minutes = Math.floor(d / (60));
+
+            let parts = [];
+
             if (days) {
                 parts.push(days + '' + this.getLanguage().translate('d'));
             }
+
             if (hours) {
                 parts.push(hours + '' + this.getLanguage().translate('h'));
             }
+
             if (minutes) {
                 parts.push(minutes + '' + this.getLanguage().translate('m'));
             }
+
             return parts.join(' ') + ' ' + this.translate('before', 'labels', 'Meeting');
         },
 
@@ -168,27 +191,29 @@ define('crm:views/meeting/fields/reminders', 'views/fields/base', function (Dep)
         },
 
         getDetailItemHtml: function (item) {
-            var body = this.getLanguage().translateOption(item.type, 'reminderTypes') + ' ' + this.stringifySeconds(item.seconds);
+            let body = this.getLanguage().translateOption(item.type, 'reminderTypes') + ' ' +
+                this.stringifySeconds(item.seconds);
+
             return '<div>' + body +'</div>';
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
-                var html = '';
-                this.reminderList.forEach(function (item) {
+            if (this.isDetailMode() || this.isListMode()) {
+                let html = '';
+
+                this.reminderList.forEach(item => {
                     html += this.getDetailItemHtml(item);
-                }, this);
+                });
+
                 return html;
             }
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
+
             data[this.name] = Espo.Utils.cloneDeep(this.reminderList);
-            return data;
         },
 
-    
     });
-
 });
