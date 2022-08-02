@@ -56,6 +56,15 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
         className: 'dialog dialog-record',
 
+        /**
+         * @inheritDoc
+         */
+        shortcutKeys: {
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
+        },
+
         data: function () {
             return {
                 createButton: this.createButton,
@@ -171,9 +180,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
 
                 this.loadSearch();
-
                 this.wait(true);
-
                 this.loadList();
             });
         },
@@ -333,6 +340,27 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     }, 10);
                 });
             });
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
         },
     });
 });

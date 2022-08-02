@@ -162,6 +162,9 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             'Control+Space': function (e) {
                 this.handleShortcutKeyCtrlSpace(e);
             },
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
         },
 
         /**
@@ -766,6 +769,27 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             }
 
             this.actionCreate({focusForCreate: true});
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
         },
     });
 });
