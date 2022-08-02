@@ -751,9 +751,9 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 return;
             }
 
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+            /*if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
                 return;
-            }
+            }*/
 
             if (!this.getAcl().checkScope(this.scope, 'create')) {
                 return;
