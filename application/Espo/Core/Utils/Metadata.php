@@ -80,6 +80,12 @@ class Metadata
         ['recordDefs', self::ANY_KEY, 'listLoaderClassNameList'],
         ['recordDefs', self::ANY_KEY, 'saverClassNameList'],
         ['recordDefs', self::ANY_KEY, 'selectApplierClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeReadHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeCreateHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeUpdateHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeDeleteHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeLinkHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'beforeUnlinkHookClassNameList'],
     ];
 
     private const ANY_KEY = '__ANY__';
