@@ -60,6 +60,9 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
          * @inheritDoc
          */
         shortcutKeys: {
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
             'Control+Slash': function (e) {
                 this.handleShortcutKeyCtrlSlash(e);
             },
@@ -361,6 +364,21 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             e.stopPropagation();
 
             $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (!this.createButton) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.create();
         },
     });
 });

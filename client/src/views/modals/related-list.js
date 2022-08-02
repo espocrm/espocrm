@@ -54,6 +54,18 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
         mandatorySelectAttributeList: null,
 
+        /**
+         * @inheritDoc
+         */
+        shortcutKeys: {
+            'Control+Space': function (e) {
+                this.handleShortcutKeyCtrlSpace(e);
+            },
+            'Control+Slash': function (e) {
+                this.handleShortcutKeyCtrlSlash(e);
+            },
+        },
+
         events: {
             'click button[data-action="createRelated"]': function () {
                 this.actionCreateRelated();
@@ -474,6 +486,46 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 boolFilterList: this.defs.selectBoolFilterList,
                 massSelect: this.defs.massSelect,
             });
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSlash: function (e) {
+            if (!this.searchPanel) {
+                return;
+            }
+
+            let $search = this.$el.find('input.text-filter').first();
+
+            if (!$search.length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlSpace: function (e) {
+            if (this.createDisabled) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionCreateRelated();
         },
     });
 });
