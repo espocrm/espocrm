@@ -440,6 +440,12 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             'Control+Backslash': function (e) {
                 this.handleShortcutKeyControlBackslash(e);
             },
+            'Control+ArrowLeft': function (e) {
+                this.handleShortcutKeyControlArrowLeft(e);
+            },
+            'Control+ArrowRight': function (e) {
+                this.handleShortcutKeyControlArrowRight(e);
+            },
         },
 
         /**
@@ -3603,6 +3609,64 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         .focus();
                 }, 50);
             }
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowLeft: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.navigateButtonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            let $button = this.$el.find('button[data-action="previous"]');
+
+            if (!$button.length || $button.hasClass('disabled')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionPrevious();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowRight: function (e) {
+            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+                return;
+            }
+
+            if (this.navigateButtonsDisabled) {
+                return;
+            }
+
+            if (this.type !== this.TYPE_DETAIL || this.mode !== this.MODE_DETAIL) {
+                return;
+            }
+
+            let $button = this.$el.find('button[data-action="next"]');
+
+            if (!$button.length || $button.hasClass('disabled')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionNext();
         },
     });
 });

@@ -94,6 +94,12 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
             'Control+Backslash': function (e) {
                 this.getRecordView().handleShortcutKeyControlBackslash(e);
             },
+            'Control+ArrowLeft': function (e) {
+                this.handleShortcutKeyControlArrowLeft(e);
+            },
+            'Control+ArrowRight': function (e) {
+                this.handleShortcutKeyControlArrowRight(e);
+            },
         },
 
         setup: function () {
@@ -694,6 +700,44 @@ define('views/modals/detail', ['views/modal', 'helpers/action-item-setup'], func
 
                     this.getRouter().navigate(url, {trigger: false});
                 });
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowLeft: function (e) {
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'previous' && !item.disabled) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionPrevious();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyControlArrowRight: function (e) {
+            if (!this.model.collection) {
+                return;
+            }
+
+            if (this.buttonList.findIndex(item => item.name === 'next' && !item.disabled) === -1) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionNext();
         },
     });
 });
