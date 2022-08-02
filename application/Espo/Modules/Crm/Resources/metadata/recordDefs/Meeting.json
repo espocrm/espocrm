@@ -1,4 +1,7 @@
 {
+    "listLoaderClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Meeting\\AcceptanceStatusLoader"
+    ],
     "readLoaderClassNameList": [
         "Espo\\Core\\FieldProcessing\\Reminder\\Loader"
     ],
