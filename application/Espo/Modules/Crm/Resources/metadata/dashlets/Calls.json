@@ -59,6 +59,12 @@
                                 "type": "future",
                                 "field": "dateEnd",
                                 "dateTime": true
+                            },
+                            "3": {
+                                "type": "lastXDays",
+                                "field": "dateEnd",
+                                "value": 5,
+                                "dateTime": true
                             }
                         }
                     }
