@@ -2359,101 +2359,6 @@ table.table td.cell .html-container {
     }
 }
 
-#popup-notifications-container {
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    right: 0px;
-    bottom: 0px;
-    position: fixed;
-    height: auto;
-    z-index: 1000;
-
-    float: right;
-}
-
-.popup-notification {
-    width: 400px;
-    padding: @panel-padding;
-    background-color: @panel-bg;
-    border: 2px solid @main-gray;
-    margin-top: 10px;
-    margin-right: 5px;
-
-    &:last-child {
-        margin-bottom: 5px;
-    }
-    .cell {
-        margin-bottom: 5px;
-    }
-    .cell:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.popup-notification a.close{
-    margin-top: -8px;
-    margin-right: -3px;
-}
-
-.popup-notification-default {
-    border-color: @gray-light;
-}
-
-.popup-notification-danger {
-    border-color: @brand-danger;
-}
-
-.popup-notification-warning {
-    border-color: @brand-warning;
-}
-
-.popup-notification-primary {
-    border-color: @brand-primary;
-}
-
-.popup-notification-success {
-    border-color: @brand-success;
-}
-
-.popup-notification-info {
-    border-color: @brand-info;
-}
-
-.popup-notification h4 {
-    margin-top: 0px;
-}
-
-.popup-notification-default h4 {
-    color: @gray-light;
-}
-
-.popup-notification-danger h4 {
-    color: @brand-danger;
-}
-
-.popup-notification-warning h4 {
-    color: @brand-warning;
-}
-
-.popup-notification-primary h4 {
-    color: @brand-primary;
-}
-
-.popup-notification-success h4 {
-    color: @brand-success;
-}
-
-
-@media screen and (max-width: (@screen-sm-min - 1px)) {
-    #popup-notifications-container {
-        width: 100%;
-    }
-    .popup-notification {
-        width: auto;
-    }
-}
-
 .list-group-tree {
     border: 0;
 }
@@ -2491,6 +2396,7 @@ table.table td.cell .html-container {
 .list-group-side {
     border: 0;
 }
+
 .list-group-side > li {
     border: 0;
     padding: 5px 0 5px (@container-padding - 3px);
@@ -3302,4 +3208,6 @@ a.close:focus {
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";
+@import "elements/popup-notification.less";
 @import "elements/grid.less";
+
