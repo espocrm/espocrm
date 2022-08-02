@@ -62,7 +62,7 @@
                             },
                             "3": {
                                 "type": "lastXDays",
-                                "field": "dateEnd",
+                                "field": "dateStart",
                                 "value": 5,
                                 "dateTime": true
                             }
