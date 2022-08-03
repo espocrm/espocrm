@@ -71,7 +71,6 @@ define('crm:views/record/panels/activities',
             this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
 
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
-            this.actionList = Espo.Utils.cloneDeep(this.actionList);
 
             this.defs.create = true;
 

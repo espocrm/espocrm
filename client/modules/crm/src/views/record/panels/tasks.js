@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/panels/tasks', 'views/record/panels/relationship', function (Dep) {
+define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], function (Dep) {
 
     return Dep.extend({
 
@@ -51,7 +51,7 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
                 acl: 'create',
                 aclScope: 'Task',
                 html: '<span class="fas fa-plus"></span>',
-            }
+            },
         ],
 
         actionList: [
@@ -88,7 +88,7 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
 
             this.defs.create = true;
 
-            if (this.parentScope == 'Account') {
+            if (this.parentScope === 'Account') {
                 this.link = 'tasksPrimary';
             }
 
@@ -106,7 +106,7 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
 
             this.wait(true);
 
-            this.getCollectionFactory().create('Task', function (collection) {
+            this.getCollectionFactory().create('Task', (collection) => {
                 this.collection = collection;
                 collection.seeds = this.seeds;
                 collection.url = this.url;
@@ -115,14 +115,14 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
                 this.setFilter(this.filter);
-
                 this.wait(false);
-            }, this);
+            });
 
-            this.once('show', function () {
-                if (!this.isRendered() && !this.isBeingRendered())
-                this.collection.fetch();
-            }, this);
+            this.once('show', () => {
+                if (!this.isRendered() && !this.isBeingRendered()) {
+                    this.collection.fetch();
+                }
+            });
         },
 
         afterRender: function () {
@@ -134,21 +134,21 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
                 checkboxes: false,
                 collection: this.collection,
                 listLayout: this.listLayout,
-                skipBuildRows: true
-            }, function (view) {
-                view.getSelectAttributeList(function (selectAttributeList) {
+                skipBuildRows: true,
+            }, (view) => {
+                view.getSelectAttributeList(selectAttributeList => {
                     if (selectAttributeList) {
                         this.collection.data.select = selectAttributeList.join(',');
                     }
 
                     if (!this.disabled) {
                         this.collection.fetch();
-                    } else {
-                        this.once('show', function () {
-                            this.collection.fetch();
-                        }, this);
+
+                        return;
                     }
-                }.bind(this));
+
+                    this.once('show', () => this.collection.fetch());
+                });
             });
         },
 
@@ -157,17 +157,19 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
         },
 
         actionCreateTask: function (data) {
-            var self = this;
-            var link = this.link;
+            let link = this.link;
+
             if (this.parentScope === 'Account') {
                 link = 'tasks';
             }
-            var scope = 'Task';
-            var foreignLink = this.model.defs['links'][link].foreign;
+
+            let scope = 'Task';
+            let foreignLink = this.model.defs['links'][link].foreign;
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
             this.createView('quickCreate', viewName, {
                 scope: scope,
@@ -175,15 +177,15 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
                     model: this.model,
                     link: foreignLink,
                 }
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
-                this.listenToOnce(view, 'after:save', function () {
+
+                this.listenToOnce(view, 'after:save', () => {
                     this.collection.fetch();
                     this.model.trigger('after:relate');
-                }, this);
+                });
             });
-
         },
 
         actionRefresh: function () {
@@ -191,18 +193,17 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
         },
 
         actionComplete: function (data) {
-            var id = data.id;
+            let id = data.id;
+
             if (!id) {
                 return;
             }
-            var model = this.collection.get(id);
-            model.save({
-                status: 'Completed'
-            }, {
+
+            let model = this.collection.get(id);
+
+            model.save({status: 'Completed'}, {
                 patch: true,
-                success: function () {
-                    this.collection.fetch();
-                }.bind(this)
+                success: () => this.collection.fetch(),
             });
         },
 
@@ -211,7 +212,6 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
             data.viewOptions.massUnlinkDisabled = true;
 
             Dep.prototype.actionViewRelatedList.call(this, data);
-        }
-
+        },
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/panels/history', 'crm:views/record/panels/activities', function (Dep) {
+define('crm:views/record/panels/history', ['crm:views/record/panels/activities'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,18 +53,19 @@ define('crm:views/record/panels/history', 'crm:views/record/panels/activities', 
                     [
                         {name: 'status'},
                         {name: 'dateSent'},
-                        {name: 'hasAttachment', view: 'views/email/fields/has-attachment'}
+                        {name: 'hasAttachment', view: 'views/email/fields/has-attachment'},
                     ]
                 ]
             },
         },
 
         where: {
-            scope: false
+            scope: false,
         },
 
         setupActionList: function () {
             Dep.prototype.setupActionList.call(this);
+
             this.actionList.push({
                 action: 'archiveEmail',
                 label: 'Archive Email',
@@ -82,7 +83,7 @@ define('crm:views/record/panels/history', 'crm:views/record/panels/activities', 
                 to: this.getUser().get('emailAddress')
             };
 
-            if (this.model.name == 'Contact') {
+            if (this.model.name === 'Contact') {
                 if (this.getConfig().get('b2cMode')) {
                     attributes.parentType = 'Contact';
                     attributes.parentName = this.model.get('name');
@@ -94,8 +95,8 @@ define('crm:views/record/panels/history', 'crm:views/record/panels/activities', 
                         attributes.parentName = this.model.get('accountName');
                     }
                 }
-            } else if (this.model.name == 'Lead') {
-                attributes.parentType = 'Lead',
+            } else if (this.model.name === 'Lead') {
+                attributes.parentType = 'Lead';
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
             }
@@ -118,74 +119,86 @@ define('crm:views/record/panels/history', 'crm:views/record/panels/activities', 
                     }
                 }
             }
+
             callback.call(this, attributes);
         },
 
         actionArchiveEmail: function (data) {
-            var self = this;
-            var link = 'emails';
-            var scope = 'Email';
+            let self = this;
+            let link = 'emails';
+            let scope = 'Email';
 
-            var relate = null;
+            let relate = null;
+
             if ('emails' in this.model.defs['links']) {
                 relate = {
                     model: this.model,
-                    link: this.model.defs['links']['emails'].foreign
+                    link: this.model.defs['links']['emails'].foreign,
                 };
             }
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
-            this.getArchiveEmailAttributes(scope, data, function (attributes) {
+            this.getArchiveEmailAttributes(scope, data, (attributes) => {
                 this.createView('quickCreate', viewName, {
                     scope: scope,
                     relate: relate,
-                    attributes: attributes
-                }, function (view) {
+                    attributes: attributes,
+                }, (view) => {
                     view.render();
                     view.notify(false);
-                    this.listenToOnce(view, 'after:save', function () {
+
+                    this.listenToOnce(view, 'after:save', () => {
                         this.collection.fetch();
                         this.model.trigger('after:relate');
-                    }, this);
+                    });
                 });
             });
         },
 
         actionReply: function (data) {
-            var id = data.id;
+            let id = data.id;
+
             if (!id) {
                 return;
             }
 
-            Espo.require('EmailHelper', function (EmailHelper) {
-                var emailHelper = new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
+            Espo.require('EmailHelper', EmailHelper => {
+                let emailHelper =
+                    new EmailHelper(this.getLanguage(), this.getUser(), this.getDateTime(), this.getAcl());
 
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                this.getModelFactory().create('Email', function (model) {
-                    model.id = id;
-                    this.listenToOnce(model, 'sync', function () {
-                        var attributes = emailHelper.getReplyAttributes(model, data, this.getPreferences().get('emailReplyToAllByDefault'));
-                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') || 'views/modals/compose-email';
-                        this.createView('quickCreate', viewName, {
-                            attributes: attributes,
-                        }, function (view) {
-                            view.render();
+                this.getModelFactory().create('Email')
+                    .then(model => {
+                        model.id = id;
 
-                            this.listenToOnce(view, 'after:save', function () {
-                                this.collection.fetch();
-                                this.model.trigger('after:relate');
-                            }, this);
+                        model.fetch()
+                            .then(() => {
+                                let attributes = emailHelper
+                                    .getReplyAttributes(model, data,
+                                        this.getPreferences().get('emailReplyToAllByDefault'));
 
-                            view.notify(false);
-                        }.bind(this));
-                    }, this);
-                    model.fetch();
-                }, this);
-            }, this);
-        }
+                                let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                                    'views/modals/compose-email';
+
+                                return this.createView('quickCreate', viewName, {attributes: attributes});
+                            })
+                            .then(view => {
+                                view.render();
+
+                                this.listenToOnce(view, 'after:save', () => {
+                                    this.collection.fetch();
+                                    this.model.trigger('after:relate');
+                                });
+
+                                view.notify(false);
+                            });
+                    });
+            });
+        },
     });
 });
