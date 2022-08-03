@@ -268,7 +268,6 @@ class Unifier
     {
         foreach ($forceAppendPathList as $path) {
             $this->addAppendToData($data, $path);
-            echo "\n";
         }
     }
 
