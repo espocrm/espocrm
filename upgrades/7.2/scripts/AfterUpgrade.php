@@ -70,6 +70,16 @@ class AfterUpgrade
                     "dateEndDate" => ["dateStartDate"]
                 ]
             ]);
+
+            if ($metadata->get(['entityDefs', $entityType, 'fields', 'isAllDay'])) {
+                $metadata->set('entityDefs', $entityType, [
+                    'fields' => [
+                        'isAllDay' => [
+                            'readOnly' => false,
+                        ],
+                    ]
+                ]);
+            }
         }
 
         if ($toSave) {
