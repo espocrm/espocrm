@@ -204,23 +204,6 @@ class Importer
             }
         }
 
-        $duplicate = $this->findDuplicate($email);
-
-        if ($duplicate && $duplicate->get('status') !== Email::STATUS_BEING_IMPORTED) {
-            /** @var Email $duplicate */
-            $duplicate = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $duplicate->getId());
-
-            $this->processDuplicate(
-                $duplicate,
-                $assignedUserId,
-                $userIdList,
-                $folderData,
-                $teamIdList
-            );
-
-            return $duplicate;
-        }
-
         if ($parser->hasHeader($message, 'date')) {
             try {
                 /** @var string */
@@ -236,7 +219,25 @@ class Importer
             }
             catch (Exception $e) {}
         }
-        else {
+
+        $duplicate = $this->findDuplicate($email);
+
+        if ($duplicate && $duplicate->getStatus() !== Email::STATUS_BEING_IMPORTED) {
+            /** @var Email $duplicate */
+            $duplicate = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $duplicate->getId());
+
+            $this->processDuplicate(
+                $duplicate,
+                $assignedUserId,
+                $userIdList,
+                $folderData,
+                $teamIdList
+            );
+
+            return $duplicate;
+        }
+
+        if (!$email->getDateSent()) {
             $email->set('dateSent', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
         }
 
