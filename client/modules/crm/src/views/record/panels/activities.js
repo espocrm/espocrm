@@ -67,8 +67,18 @@ define('crm:views/record/panels/activities',
             ]
         },
 
+        buttonMaxCount: null,
+
+        BUTTON_MAX_COUNT: 3,
+
         setup: function () {
             this.scopeList = this.getConfig().get(this.name + 'EntityList') || [];
+
+            this.buttonMaxCount = this.getConfig().get('activitiesCreateButtonMaxCount');
+
+            if (typeof this.buttonMaxCount === 'undefined') {
+                this.buttonMaxCount = this.BUTTON_MAX_COUNT;
+            }
 
             this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
 
@@ -171,6 +181,18 @@ define('crm:views/record/panels/activities',
         },
 
         setupActionList: function () {
+            if (this.name === 'activities' && this.buttonMaxCount) {
+                this.buttonList.push({
+                    action: 'composeEmail',
+                    title: 'Compose Email',
+                    acl: 'create',
+                    aclScope: 'Email',
+                    html: $('<span>')
+                        .addClass(this.getMetadata().get(['clientDefs', 'Email', 'iconClass']))
+                        .get(0).outerHTML,
+                });
+            }
+
             this.scopeList.forEach(scope => {
                 if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) {
                     return;
@@ -180,9 +202,11 @@ define('crm:views/record/panels/activities',
                     return;
                 }
 
+                let label = (this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope;
+
                 let o = {
                     action: 'createActivity',
-                    html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
+                    html: this.translate(label, 'labels', scope),
                     data: {},
                     acl: 'create',
                     aclScope: scope,
@@ -223,6 +247,22 @@ define('crm:views/record/panels/activities',
 
                 this.createEntityTypeStatusMap[scope] = o.data.status;
                 this.actionList.push(o);
+
+                if (
+                    this.name === 'activities' &&
+                    this.buttonList.length < this.buttonMaxCount
+                ) {
+                    let ob = Espo.Utils.cloneDeep(o);
+
+                    let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+
+                    if (iconClass) {
+                        ob.title = label;
+                        ob.html = $('<span>').addClass(iconClass).get(0).outerHTML;
+
+                        this.buttonList.push(ob);
+                    }
+                }
             });
         },
 
