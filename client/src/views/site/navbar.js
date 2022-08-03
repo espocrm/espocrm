@@ -1135,10 +1135,14 @@ define('views/site/navbar', ['view'], function (Dep) {
         },
 
         actionShowLastViewed: function () {
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
             this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
                 view.render();
 
-                this.listenTo(view, 'close', () => {
+                Espo.Ui.notify(false);
+
+                this.listenToOnce(view, 'close', () => {
                     this.clearView('dialog');
                 });
             });
