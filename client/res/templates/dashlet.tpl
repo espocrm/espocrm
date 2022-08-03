@@ -9,13 +9,13 @@
             {{#each buttonList}}
             <button
               type="button"
-              class="btn btn-{{#if ../style}}{{../style}}{{else}}link{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
+              class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
               data-action="{{name}}"
               title="{{#if title}}{{translate title}}{{/if}}"
             >{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</button>
             {{/each}}
             <button
-              class="dropdown-toggle btn btn-link btn-sm menu-button"
+              class="dropdown-toggle btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm menu-button"
               data-toggle="dropdown"
             ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu dropdown-menu-with-icons" role="menu">
