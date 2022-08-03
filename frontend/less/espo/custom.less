@@ -1656,6 +1656,13 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     .note-toolbar {
         border-bottom: 0 !important;
         background-color: transparent;
+
+        > .btn-group {
+            margin-bottom: 5px;
+            .btn {
+                margin-bottom: 0;
+            }
+        }
     }
 
     &.panel-default {
@@ -1666,7 +1673,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     }
 
     .panel-heading {
-        padding: 5px 5px 5px 5px;
+        padding: 5px 5px 0 5px;
         min-height: calc(30px + 10px);
     }
 
