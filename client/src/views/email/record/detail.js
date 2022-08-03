@@ -26,13 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/detail', 'views/record/detail', function (Dep) {
+define('views/email/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         sideView: 'views/email/record/detail-side',
 
         duplicateAction: false,
+
+        shortcutKeyCtrlEnterAction: 'send',
 
         layoutNameConfigure: function () {
             if (!this.model.isNew()) {
@@ -73,12 +75,14 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 action: 'send',
                 label: 'Send',
                 style: 'primary',
+                title: 'Ctrl+Enter',
             }, true);
 
             this.addButtonEdit({
                 name: 'saveDraft',
                 action: 'save',
                 label: 'Save Draft',
+                title: 'Ctrl+S',
             }, true);
 
             this.addButton({
@@ -444,6 +448,25 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             });
         },
 
+        actionSend: function () {
+            this.send()
+                .then(() => {
+                    this.model.set('status', 'Sent');
+
+                    if (!this.isDetailMode()) {
+                        this.setDetailMode();
+                        this.setFieldReadOnly('dateSent');
+                        this.setFieldReadOnly('name');
+                        this.setFieldReadOnly('attachments');
+                        this.setFieldReadOnly('isHtml');
+                        this.setFieldReadOnly('from');
+                        this.setFieldReadOnly('to');
+                        this.setFieldReadOnly('cc');
+                        this.setFieldReadOnly('bcc');
+                    }
+                });
+        },
+
         errorHandlerSendingFail: function (data) {
             if (!this.model.id) {
                 this.model.id = data.id;
@@ -468,6 +491,5 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
             this.showField('tasks');
         },
-
     });
 });

@@ -30,9 +30,10 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
 
     return Dep.extend({
 
+        shortcutKeyCtrlEnterAction: 'send',
+
         init: function () {
             Dep.prototype.init.call(this);
-
             Detail.prototype.layoutNameConfigure.call(this);
         },
 
@@ -43,11 +44,13 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
                 name: 'send',
                 label: 'Send',
                 style: 'primary',
+                title: 'Ctrl+Enter',
             }, true);
 
             this.addButton({
                 name: 'saveDraft',
-                 label: 'Save Draft',
+                label: 'Save Draft',
+                title: 'Ctrl+S',
             }, true);
 
             this.controlSendButton();
