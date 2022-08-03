@@ -54,7 +54,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                         {name: 'status'},
                         {name: 'dateSent'},
                         {name: 'hasAttachment', view: 'views/email/fields/has-attachment'},
-                    ]
+                    ],
                 ]
             },
         },
@@ -70,17 +70,18 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                 action: 'archiveEmail',
                 label: 'Archive Email',
                 acl: 'create',
-                aclScope: 'Email'
+                aclScope: 'Email',
             });
         },
 
         getArchiveEmailAttributes: function (scope, data, callback) {
             data = data || {};
-            var attributes = {
+
+            let attributes = {
                 dateSent: this.getDateTime().getNow(15),
                 status: 'Archived',
                 from: this.model.get('emailAddress'),
-                to: this.getUser().get('emailAddress')
+                to: this.getUser().get('emailAddress'),
             };
 
             if (this.model.name === 'Contact') {
