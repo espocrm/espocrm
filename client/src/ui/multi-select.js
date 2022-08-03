@@ -103,7 +103,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                 selectizeOptions.persist = false;
                 selectizeOptions.create = options.create;
                 selectizeOptions.render = {
-                    option_create: (data, escape) => {
+                    option_create: data => {
                         return $('<div>')
                             .addClass('create')
                             .append(
@@ -197,7 +197,7 @@ define('ui/multi-select', ['lib!Selectize'], (Selectize) => {
                         let index, option;
 
                         if (
-                            e.keyCode === 8 &&
+                            e.code === 'Backspace' &&
                             this.$control_input.val() === '' &&
                             !this.$activeItems.length
                         ) {

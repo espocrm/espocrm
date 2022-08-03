@@ -179,12 +179,6 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
             this.events['change select.search-type'] = e => {
                 this.handleSearchType($(e.currentTarget).val());
             };
-
-            this.events['keydown .selectize-input input'] = e => {
-                if ('keyCode' in e && e.keyCode === 13) {
-                    //this.trigger('search');
-                }
-            };
         },
 
         handleSearchType: function (type) {
@@ -325,8 +319,8 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
 
                     $select.on('input', () => this.controlAddItemButton());
 
-                    $select.on('keypress', (e) => {
-                        if (e.keyCode === 13) {
+                    $select.on('keydown', e => {
+                        if (e.code === 'Enter' && !e.ctrlKey) {
                             let value = $select.val().toString();
 
                             this.addValueFromUi(value);

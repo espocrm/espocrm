@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/email/fields/email-address-varchar',
-    ['views/fields/base', 'views/email/fields/from-address-varchar', 'views/email/fields/email-address'],
-    function (Dep, From, EmailAddress) {
+define('views/email/fields/email-address-varchar',
+['views/fields/base', 'views/email/fields/from-address-varchar', 'views/email/fields/email-address'],
+function (Dep, From, EmailAddress) {
 
     return Dep.extend({
 
@@ -40,7 +39,7 @@ define(
         emailAddressRegExp: /[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/gi,
 
         data: function () {
-            var data = Dep.prototype.data.call(this);
+            let data = Dep.prototype.data.call(this);
 
             data.valueIsSet = this.model.has(this.name);
 
@@ -49,59 +48,73 @@ define(
 
         events: {
             'click a[data-action="clearAddress"]': function (e) {
-                var address = $(e.currentTarget).data('address').toString();
+                let address = $(e.currentTarget).data('address').toString();
 
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
-                if (this.mode === 'search') {
+                if (!this.isEditMode()) {
                     return;
                 }
 
-                if (e.keyCode === 188 || e.keyCode === 186 || e.keyCode === 13) {
-                    var $input = $(e.currentTarget);
-                    var address = $input.val().replace(',', '').replace(';', '').trim();
+                let key = Espo.Utils.getKeyFromKeyEvent(e);
 
-                    if (~address.indexOf('@')) {
-                        if (this.checkEmailAddressInString(address)) {
-                            this.addAddress(address, '');
-                            $input.val('');
-                        }
+                if (
+                    key === 'Comma' ||
+                    key === 'Semicolon' ||
+                    key === 'Enter'
+                ) {
+                    let $input = $(e.currentTarget);
+                    let address = $input.val().replace(',', '').replace(';', '').trim();
+
+                    if (address.indexOf('@') === -1) {
+                        return;
                     }
-                }
-            },
-            'change input': function (e) {
-                if (this.mode === 'search') {
-                    return;
-                }
 
-                var $input = $(e.currentTarget);
-                var address = $input.val().replace(',','').replace(';','').trim();
-
-                if (~address.indexOf('@')) {
                     if (this.checkEmailAddressInString(address)) {
                         this.addAddress(address, '');
-
                         $input.val('');
                     }
                 }
             },
+            'change input': function (e) {
+                if (!this.isEditMode()) {
+                    return;
+                }
+
+                let $input = $(e.currentTarget);
+                let address = $input.val().replace(',','').replace(';','').trim();
+
+                if (address.indexOf('@') === -1) {
+                    return;
+                }
+
+                if (this.checkEmailAddressInString(address)) {
+                    this.addAddress(address, '');
+
+                    $input.val('');
+                }
+            },
             'click [data-action="createContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.createPerson.call(this, 'Contact', address);
             },
             'click [data-action="createLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.createPerson.call(this, 'Lead', address);
             },
             'click [data-action="addToContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.addToPerson.call(this, 'Contact', address);
             },
             'click [data-action="addToLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
+                let address = $(e.currentTarget).data('address');
+
                 From.prototype.addToPerson.call(this, 'Lead', address);
-            }
+            },
         },
 
         getAutocompleteMaxCount: function () {
