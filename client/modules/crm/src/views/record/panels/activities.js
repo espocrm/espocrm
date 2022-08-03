@@ -80,22 +80,7 @@ define('crm:views/record/panels/activities',
 
             this.setupActionList();
             this.setupFinalActionList();
-
             this.setupSorting();
-
-            let actionList = [];
-
-            this.actionList.forEach(o => {
-                if (o.aclScope) {
-                    if (this.getMetadata().get(['scopes', o.aclScope, 'disabled'])) {
-                        return;
-                    }
-                }
-
-                actionList.push(o);
-            });
-
-            this.actionList = actionList;
 
             this.scopeList.forEach(item => {
                 if (!(item in this.listLayout)) {
@@ -197,7 +182,7 @@ define('crm:views/record/panels/activities',
 
                 let o = {
                     action: 'createActivity',
-                    html: this.translate((this.name === 'history' ?'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
+                    html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
                     data: {},
                     acl: 'create',
                     aclScope: scope,
@@ -347,7 +332,7 @@ define('crm:views/record/panels/activities',
                 status: data.status,
             };
 
-            if (this.model.name == 'User') {
+            if (this.model.name === 'User') {
                 if (this.model.isPortal()) {
                     attributes.usersIds = [this.model.id];
 
@@ -361,9 +346,9 @@ define('crm:views/record/panels/activities',
                 }
             }
             else {
-                if (this.model.name == 'Contact') {
+                if (this.model.name === 'Contact') {
                     if (this.model.get('accountId') && !this.getConfig().get('b2cMode')) {
-                        attributes.parentType = 'Account',
+                        attributes.parentType = 'Account';
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
                         if (
@@ -377,13 +362,13 @@ define('crm:views/record/panels/activities',
                         }
                     }
                 }
-                else if (this.model.name == 'Lead') {
-                    attributes.parentType = 'Lead',
+                else if (this.model.name === 'Lead') {
+                    attributes.parentType = 'Lead';
                     attributes.parentId = this.model.id;
                     attributes.parentName = this.model.get('name');
                 }
 
-                if (this.model.name != 'Account' && this.model.has('contactsIds')) {
+                if (this.model.name !== 'Account' && this.model.has('contactsIds')) {
                     attributes.contactsIds = this.model.get('contactsIds');
                     attributes.contactsNames = this.model.get('contactsNames');
                 }
@@ -632,6 +617,6 @@ define('crm:views/record/panels/activities',
             data.viewOptions.massUnlinkDisabled = true;
 
             Dep.prototype.actionViewRelatedList.call(this, data);
-        }
+        },
     });
 });
