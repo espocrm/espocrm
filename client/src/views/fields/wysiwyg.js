@@ -151,6 +151,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             'click .note-editable': function () {
                 this.fixPopovers();
             },
+            'focus .note-editable': function () {
+                this.$noteEditor.addClass('in-focus');
+            },
+            'blur .note-editable': function () {
+                this.$noteEditor.removeClass('in-focus');
+            },
         },
 
         setupToolbar: function () {
@@ -224,7 +230,6 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             return value || '';
         },
 
-
         sanitizeHtmlLight: function (value) {
            return this.getHelper().moderateSanitizeHtml(value);
         },
@@ -244,7 +249,6 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             if (this.isEditMode()) {
                 this.$summernote = this.$el.find('.summernote');
-                this.$noteEditor = this.$el.find('> .note-editor');
             }
 
             var language = this.getConfig().get('language');
@@ -260,6 +264,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 else {
                     this.$element.removeClass('hidden');
                 }
+
+                this.$noteEditor = this.$el.find('> .note-editor');
             }
 
             if (this.isReadMode()) {
