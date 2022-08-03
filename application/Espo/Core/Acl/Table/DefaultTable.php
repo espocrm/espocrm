@@ -248,6 +248,7 @@ class DefaultTable implements Table
             $fieldTable = (object) [];
 
             $this->applyHighest($aclTable, $fieldTable);
+            $this->applyDisabled($aclTable, $fieldTable);
             $this->applyAdminMandatory($aclTable, $fieldTable);
         }
 
@@ -526,10 +527,6 @@ class DefaultTable implements Table
 
     protected function applyDisabled(stdClass &$table, stdClass &$fieldTable): void
     {
-        if ($this->user->isAdmin()) {
-            return;
-        }
-
         foreach ($this->getScopeList() as $scope) {
             if ($this->metadata->get(['scopes', $scope, 'disabled'])) {
                 $table->$scope = false;

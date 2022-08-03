@@ -86,6 +86,10 @@ define('acl', [], function () {
             var isOwner = entityAccessData.isOwner;
 
             if (this.getUser().isAdmin()) {
+                if (data === false) {
+                    return false;
+                }
+
                 return true;
             }
 
