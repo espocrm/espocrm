@@ -197,6 +197,28 @@
 }
 
 body {
+    .panel-danger,
+    .panel-success,
+    .panel-primary,
+    .panel-warning,
+    .panel-info {
+        > .panel-heading {
+            .btn-group.open {
+                > .btn[aria-expanded="true"] {
+                    &,
+                    &:active,
+                    &:focus {
+                        > .fas,
+                        > .far {
+                            color: var(--btn-text-color);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
     .panel-default {
         &.headered {
             background: linear-gradient(
@@ -213,14 +235,30 @@ body {
             color: var(--panel-default-text);
             background-color: var(--panel-default-bg);
             border-color: transparent;
+            .btn,
+            .btn-default {
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-default-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
+                &:active:hover {
+                    background-color: transparent;
+                    border-color: transparent;
+                }
+            }
+
             .btn-group,
             .btn-group.open {
-                .dropdown-toggle.btn {
-                    &:focus {
-                        color: var(--panel-default-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
+                > .dropdown-toggle.btn {
+                    color: var(--panel-default-text);
+                    background-color: transparent;
+                    border-color: transparent;
                 }
             }
         }
@@ -244,9 +282,17 @@ body {
             border-color: transparent;
             .btn,
             .btn-warning {
-                color: var(--panel-warning-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-warning-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group,
             .btn-group.open {
@@ -279,9 +325,17 @@ body {
             border-color: transparent;
             .btn,
             .btn-danger {
-                color: var(--panel-danger-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-danger-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group,
             .btn-group.open {
@@ -314,9 +368,17 @@ body {
             border-color: transparent;
             .btn,
             .btn-info {
-                color: var(--panel-info-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-info-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
@@ -348,9 +410,17 @@ body {
             border-color: transparent;
             .btn,
             .btn-success {
-                color: var(--panel-success-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-success-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
@@ -381,9 +451,17 @@ body {
             border-color: transparent;
             .btn,
             .btn-primary {
-                color: var(--panel-primary-text);
-                background-color: transparent;
-                border-color: transparent;
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: var(--panel-primary-text);
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
             }
             .btn-group.open {
                 .dropdown-toggle.btn {
