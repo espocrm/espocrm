@@ -104,8 +104,7 @@ define('views/stream', ['view'], function (Dep) {
 
                         view.render()
                             .then(view => {
-                                view.$el.find('> .list > .list-group')
-                                    .addClass('list-group-panel');
+                                view.$el.find('> .list > .list-group');
                             });
                     });
                 });

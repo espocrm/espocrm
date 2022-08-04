@@ -2592,23 +2592,65 @@ table.table td.cell .html-container {
     }
 }
 
+.list-container-panel > div {
+    background-color: @panel-bg;
+    border-radius: var(--panel-border-radius);
+    border: var(--panel-border-width) solid var(--panel-default-border);
+
+    > .list-group {
+        > .list-group-item {
+            border-left-width: 0;
+            border-right-width: 0;
+            border-top-width: 0;
+
+            &:last-child {
+                border-bottom-width: 0;
+            }
+        }
+    }
+
+    > table:first-child,
+    > .list-group:first-child,
+    > .list-group:first-child > .list-group-item:first-child {
+        border-top-left-radius: var(--panel-border-radius);
+        border-top-right-radius: var(--panel-border-radius);
+    }
+
+    > table,
+    > .list-group,
+    > .list-group:last-child > .list-group-item:last-child,
+    > .show-more > a {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+    }
+
+    > .show-more > a {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+    }
+}
+
 .list-group-panel {
     background-color: @panel-bg;
+    border-radius: var(--panel-border-radius);
+    border: var(--panel-border-width) solid var(--panel-default-border);
 
     > .list-group-item {
         border-left: 0;
         border-right: 0;
 
         &:first-child {
-            border-top: 0
+            border-top: 0;
+            border-top-left-radius: var(--panel-border-radius);
+            border-top-right-radius: var(--panel-border-radius);
         }
 
         &:last-child {
-            border-bottom: 0
+            border-bottom: 0;
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
         }
     }
-
-    border: var(--panel-border-width) solid var(--default-border-color);
 }
 
 .field .array-control-container {

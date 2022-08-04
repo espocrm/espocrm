@@ -23,6 +23,6 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div class="list-container notification-list">{{{list}}}</div>
+        <div class="list-container notification-list list-container-panel">{{{list}}}</div>
     </div>
 </div>
