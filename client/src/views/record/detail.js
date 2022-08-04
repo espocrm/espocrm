@@ -3611,7 +3611,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         .first()
                         .focus();
                 }, 50);
+
+                return;
             }
+
+            this.$el
+                .find(`.middle-tabs button[data-tab="${tab}"]`)
+                .focus();
         },
 
         /**
