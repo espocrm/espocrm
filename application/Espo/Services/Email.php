@@ -921,11 +921,97 @@ class Email extends Record implements
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function obtainSendTestEmailPassword(?string $type, ?string $id): ?string
+    {
+        if ($type === 'preferences') {
+            if (!$id) {
+                return null;
+            }
+
+            if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+                throw new Forbidden();
+            }
+
+            $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $id);
+
+            if (!$preferences) {
+                throw new NotFound();
+            }
+
+            return $this->crypt->decrypt($preferences->get('smtpPassword'));
+        }
+
+        if ($type === 'emailAccount') {
+            if (!$this->acl->checkScope(EmailAccount::ENTITY_TYPE)) {
+                throw new Forbidden();
+            }
+
+            if (!$id) {
+                return null;
+            }
+
+            /** @var ?EmailAccount $emailAccount */
+            $emailAccount = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);
+
+            if (!$emailAccount) {
+                throw new NotFound();
+            }
+
+            if (
+                !$this->user->isAdmin() &&
+                $emailAccount->get('assignedUserId') !== $this->user->getId()
+            ) {
+                throw new Forbidden();
+            }
+
+            return $this->crypt->decrypt($emailAccount->get('smtpPassword'));
+        }
+
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        if ($type === 'inboundEmail') {
+            if (!$id) {
+                return null;
+            }
+
+            $emailAccount = $this->entityManager->getEntity(InboundEmail::ENTITY_TYPE, $id);
+
+            if (!$emailAccount) {
+                throw new NotFound();
+            }
+
+            return $this->crypt->decrypt($emailAccount->get('smtpPassword'));
+        }
+
+        return $this->config->get('smtpPassword');
+    }
+
+    /**
+     * @param array{
+     *     type?: ?string,
+     *     id?: ?string,
+     *     username?: ?string,
+     *     password?: ?string,
+     *     auth?: bool,
+     *     authMechanism?: ?string,
+     *     userId?: ?string,
+     *     fromAddress?: ?string,
+     *     fromName?: ?string,
+     *     server: string,
+     *     port: int,
+     *     security: string,
+     *     emailAddress: string,
+     * } $data
      * @throws Forbidden
      * @throws Error
+     * @throws NotFound
      */
-    public function sendTestEmail(array $data): bool
+    public function sendTestEmail(array $data): void
     {
         $smtpParams = $data;
 
@@ -935,8 +1021,14 @@ class Email extends Record implements
             unset($smtpParams['authMechanism']);
         }
 
+        if (($smtpParams['password'] ?? null) === null) {
+            $smtpParams['password'] = $this->obtainSendTestEmailPassword($data['type'] ?? null, $data['id'] ?? null);
+        }
+
         $userId = $data['userId'] ?? null;
         $fromAddress = $data['fromAddress'] ?? null;
+        $type = $data['type'] ?? null;
+        $id = $data['id'] ?? null;
 
         if (
             $userId &&
@@ -946,7 +1038,7 @@ class Email extends Record implements
             throw new Forbidden();
         }
 
-        /** @var EmailEntity */
+        /** @var EmailEntity $email */
         $email = $this->entityManager->getNewEntity(EmailEntity::ENTITY_TYPE);
 
         $email->set([
@@ -955,11 +1047,8 @@ class Email extends Record implements
             'to' => $data['emailAddress'],
         ]);
 
-        $type = $data['type'] ?? null;
-        $id = $data['id'] ?? null;
-
         if ($type === 'emailAccount' && $id) {
-            /** @var ?EmailAccount */
+            /** @var ?EmailAccount $emailAccount */
             $emailAccount = $this->entityManager->getEntityById(EmailAccount::ENTITY_TYPE, $id);
 
             if ($emailAccount && $emailAccount->get('smtpHandler')) {
@@ -968,7 +1057,7 @@ class Email extends Record implements
         }
 
         if ($type === 'inboundEmail' && $id) {
-            /** @var ?InboundEmail */
+            /** @var ?InboundEmail $inboundEmail */
             $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $id);
 
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
@@ -994,8 +1083,6 @@ class Email extends Record implements
 
             throw ErrorSilent::createWithBody('sendingFail', Json::encode($errorData));
         }
-
-        return true;
     }
 
     protected function beforeUpdateEntity(Entity $entity, $data)
