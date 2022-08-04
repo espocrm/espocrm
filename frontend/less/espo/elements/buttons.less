@@ -167,6 +167,7 @@
     //border-radius: 0;
 
     &.btn-default {
+        color: var(--btn-text-color);
         background-color: transparent;
         border-color: transparent;
         &:active,
@@ -236,9 +237,16 @@
         }
     }
 
+    &:focus {
+        > .fas,
+        > .far {
+            color: var(--gray-soft);
+        }
+    }
+
     .far,
     .fas {
-        color: @gray-soft;
+        color: var(--gray-soft);
     }
 
     &,
@@ -262,14 +270,13 @@
         color: var(--btn-text-color);
         text-decoration: none;
         background-color: transparent;
+    }
+
+    &:hover {
         .far,
         .fas {
             color: var(--btn-text-color);
         }
-    }
-
-    &:focus-visible {
-        color: var(--text-gray-color);
     }
 
     &.disabled,
@@ -289,7 +296,6 @@
 
     &.active {
         border-bottom: 1px solid @gray-light;
-
     }
 
     &.btn-text-hoverable {
