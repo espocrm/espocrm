@@ -42,21 +42,32 @@ define('utils', [], function () {
          * Process a view event action.
          *
          * @param {module:view.Class} viewObject A view.
-         * @param {Event} e An event.
+         * @param {JQueryKeyEventObject} e An event.
          * @param {string} [action] An action. If not specified, will be fetched from a target element.
          * @param {string} [handler] A handler name.
          */
         handleAction: function (viewObject, e, action, handler) {
             let $target = $(e.currentTarget);
+
             action = action || $target.data('action');
+
             let fired = false;
 
             if (!action) {
                 return;
             }
 
+            if (e.ctrlKey) {
+                let href = $target.attr('href');
+
+                if (href && href !== 'javascript:') {
+                    return;
+                }
+            }
+
             let data = $target.data();
             let method = 'action' + Espo.Utils.upperCaseFirst(action);
+
             handler = handler || data.handler;
 
             if (typeof viewObject[method] === 'function') {
