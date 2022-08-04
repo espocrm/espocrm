@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -36,6 +37,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Controllers\Record;
 use Espo\Core\Api\Request;
 
+use Espo\Entities\Email as EmailEntity;
 use Espo\Services\Email as Service;
 use Espo\Services\EmailTemplate as EmailTemplateService;
 
@@ -45,6 +47,11 @@ use stdClass;
 
 class Email extends Record
 {
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionGetCopiedAttachments(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -61,6 +68,7 @@ class Email extends Record
     }
 
     /**
+     * @throws Forbidden
      * @todo Move to service.
      */
     public function postActionSendTestEmail(Request $request): bool
@@ -193,6 +201,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -214,6 +225,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsNotImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -235,6 +249,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMoveToTrash(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -256,6 +273,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionRetrieveFromTrash(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -282,6 +302,9 @@ class Email extends Record
         return $this->getEmailService()->getFoldersNotReadCounts();
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMoveToFolder(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -305,9 +328,12 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws Forbidden
+     */
     public function getActionGetInsertFieldData(Request $request): stdClass
     {
-        if (!$this->acl->checkScope('Email', 'create')) {
+        if (!$this->acl->checkScope(EmailEntity::ENTITY_TYPE, Table::ACTION_CREATE)) {
             throw new Forbidden();
         }
 
