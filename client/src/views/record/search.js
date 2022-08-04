@@ -340,6 +340,8 @@ define('views/record/search', ['view'], function (Dep) {
             'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
                 this.search();
                 this.hideApplyFiltersButton();
+
+                this.$el.find('button.search').focus();
             },
 
             'click button[data-action="search"]': function (e) {
@@ -373,7 +375,9 @@ define('views/record/search', ['view'], function (Dep) {
             },
 
             'click a[data-action="selectPreset"]': function (e) {
-                let presetName = $(e.currentTarget).data('name') || null;
+                let $target = $(e.currentTarget);
+
+                let presetName = $target.data('name') || null;
 
                 this.selectPreset(presetName);
             },
@@ -505,7 +509,11 @@ define('views/record/search', ['view'], function (Dep) {
             this.manageLabels();
 
             this.createFilters(() => {
-                this.render();
+                this.reRender()
+                    .then(() => {
+                        this.$el.find('.filters-button')
+                            .get(0).focus({preventScroll: true});
+                    })
             });
 
             this.updateCollection();
@@ -1021,6 +1029,46 @@ define('views/record/search', ['view'], function (Dep) {
             this.toShowResetFiltersText = false;
 
             this.$applyFiltersContainer.addClass('hidden');
+        },
+
+        selectPreviousPreset: function () {
+            let list = Espo.Utils.clone(this.getPresetFilterList());
+
+            list.unshift({name: null});
+
+            if (list.length === 1) {
+                return;
+            }
+
+            let index = list.findIndex(item => item.name === this.presetName) - 1;
+
+            if (index < 0) {
+                return;
+            }
+
+            let preset = list[index];
+
+            this.selectPreset(preset.name);
+        },
+
+        selectNextPreset: function () {
+            let list = Espo.Utils.clone(this.getPresetFilterList());
+
+            list.unshift({name: null});
+
+            if (list.length === 1) {
+                return;
+            }
+
+            let index = list.findIndex(item => item.name === this.presetName) + 1;
+
+            if (index >= list.length) {
+                return;
+            }
+
+            let preset = list[index];
+
+            this.selectPreset(preset.name);
         },
     });
 });

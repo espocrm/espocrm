@@ -66,6 +66,12 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             'Control+Slash': function (e) {
                 this.handleShortcutKeyCtrlSlash(e);
             },
+            'Control+Comma': function (e) {
+                this.handleShortcutKeyCtrlComma(e);
+            },
+            'Control+Period': function (e) {
+                this.handleShortcutKeyCtrlPeriod(e);
+            },
         },
 
         data: function () {
@@ -347,6 +353,14 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
         /**
          * @protected
+         * @return {?module:views/record/search.Class}
+         */
+        getSearchView: function () {
+            return this.getView('search');
+        },
+
+        /**
+         * @protected
          * @param {JQueryKeyEventObject} e
          */
         handleShortcutKeyCtrlSlash: function (e) {
@@ -379,6 +393,30 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             e.stopPropagation();
 
             this.create();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlComma: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectPreviousPreset();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlPeriod: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectNextPreset();
         },
     });
 });

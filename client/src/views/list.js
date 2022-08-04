@@ -156,6 +156,16 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         defaultViewMode: 'list',
 
         /**
+         * @const
+         */
+        MODE_LIST: 'list',
+
+        /**
+         * @const
+         */
+        MODE_KANBAN: 'kanban',
+
+        /**
          * @inheritDoc
          */
         shortcutKeys: {
@@ -164,6 +174,12 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             },
             'Control+Slash': function (e) {
                 this.handleShortcutKeyCtrlSlash(e);
+            },
+            'Control+Comma': function (e) {
+                this.handleShortcutKeyCtrlComma(e);
+            },
+            'Control+Period': function (e) {
+                this.handleShortcutKeyCtrlPeriod(e);
             },
         },
 
@@ -245,11 +261,11 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 this.viewModeList = viewModeList;
             }
             else {
-                this.viewModeList = ['list'];
+                this.viewModeList = [this.MODE_LIST];
 
                 if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
-                    if (!~this.viewModeList.indexOf('kanban')) {
-                        this.viewModeList.push('kanban');
+                    if (!~this.viewModeList.indexOf(this.MODE_KANBAN)) {
+                        this.viewModeList.push(this.MODE_KANBAN);
                     }
                 }
             }
@@ -457,13 +473,29 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
         },
 
         /**
+         * @protected
+         * @return {?module:views/record/search.Class}
+         */
+        getSearchView: function () {
+            return this.getView('search');
+        },
+
+        /**
+         * @protected
+         * @return {?module:view}
+         */
+        getRecordView: function () {
+            return this.getView('list');
+        },
+
+        /**
          * Get a record view name.
          *
          * @returns {string}
          */
         getRecordViewName: function () {
-            if (this.viewMode === 'list') {
-                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+            if (this.viewMode === this.MODE_LIST) {
+                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.MODE_LIST]) ||
                     this.recordView;
             }
 
@@ -790,6 +822,30 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             e.stopPropagation();
 
             $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlComma: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectPreviousPreset();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlPeriod: function (e) {
+            if (!this.getSearchView()) {
+                return;
+            }
+
+            this.getSearchView().selectNextPreset();
         },
     });
 });
