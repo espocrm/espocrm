@@ -139,7 +139,9 @@ define('crm:views/dashlets/sales-by-month', ['crm:views/dashlets/abstract/chart'
                     color: this.textColor,
                     max: this.max + 0.08 * this.max,
                     tickFormatter: (value) => {
-                        if (value === 0 || !value) {
+                        value =  parseFloat(value);
+
+                        if (!value) {
                             return '';
                         }
 

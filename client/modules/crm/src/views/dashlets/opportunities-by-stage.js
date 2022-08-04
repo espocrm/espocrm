@@ -138,7 +138,9 @@ define('crm:views/dashlets/opportunities-by-stage', ['crm:views/dashlets/abstrac
                     color: this.textColor,
                     max: this.max + 0.08 * this.max,
                     tickFormatter: value => {
-                        if (value === 0 || !value) {
+                        value = parseFloat(value);
+
+                        if (!value) {
                             return '';
                         }
 
