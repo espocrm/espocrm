@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
@@ -69,6 +70,8 @@ class Email extends Record
 
     /**
      * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
      * @todo Move to service.
      */
     public function postActionSendTestEmail(Request $request): bool
@@ -142,7 +145,7 @@ class Email extends Record
                 }
 
                 if (is_null($data->password)) {
-                    $data->password = $this->getConfig()->get('smtpPassword');
+                    $data->password = $this->config->get('smtpPassword');
                 }
             }
         }
@@ -152,6 +155,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsRead(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -173,6 +179,9 @@ class Email extends Record
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionMarkAsNotRead(Request $request): bool
     {
         $data = $request->getParsedBody();
