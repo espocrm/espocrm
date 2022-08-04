@@ -343,9 +343,8 @@ define('views/modal', ['view'], function (Dep) {
                     fixedHeaderHeight: this.fixedHeaderHeight,
                     closeButton: !this.noCloseButton,
                     collapseButton: this.isCollapsable,
-                    onRemove: () => {
-                        this.onDialogClose();
-                    },
+                    onRemove: () => this.onDialogClose(),
+                    onBackdropClick: () => this.onBackdropClick(),
                 });
 
                 this.setElement(containerSelector + ' .body');
@@ -511,6 +510,11 @@ define('views/modal', ['view'], function (Dep) {
                 this.remove();
             }
         },
+
+        /**
+         * @protected
+         */
+        onBackdropClick: function () {},
 
         /**
          * A `cancel` action.

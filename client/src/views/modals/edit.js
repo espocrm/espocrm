@@ -231,6 +231,14 @@ define('views/modals/edit', ['views/modal'], function (Dep) {
             return this.getView('edit');
         },
 
+        onBackdropClick: function () {
+            if (this.getRecordView().isChanged) {
+                return;
+            }
+
+            this.close();
+        },
+
         /**
          * @protected
          * @return {string}

@@ -46,8 +46,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
      * @property {number|null} [width] A width.
      * @property {boolean} [removeOnClose=true] To remove on close.
      * @property {boolean} [draggable=false] Is draggable.
-     * @property {Function} [onRemove] An on-remove callback.
-     * @property {Function} [onClose] An on-close callback.
+     * @property {function (): void} [onRemove] An on-remove callback.
+     * @property {function (): void} [onClose] An on-close callback.
+     * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
      * @property {string} [container='body'] A container selector.
      * @property {boolean} [keyboard=false] Enable a keyboard control. The `Esc` key closes a dialog.
      * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
@@ -117,6 +118,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.onClose = function () {};
         /** @private */
         this.options = options;
+        /** @private */
+        this.onBackdropClick = function () {};
 
         this.activeElement = document.activeElement;
 
@@ -139,6 +142,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             'container',
             'onRemove',
             'onClose',
+            'onBackdropClick',
         ];
 
         params.forEach(param => {
@@ -551,14 +555,16 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 return;
             }
 
-            if (this.backdrop === 'static') {
-                return;
-            }
-
             if (
                 this.$mouseDownTarget &&
                 this.$mouseDownTarget.closest('.modal-content').length
             ) {
+                return;
+            }
+
+            this.onBackdropClick();
+
+            if (this.backdrop === 'static') {
                 return;
             }
 
