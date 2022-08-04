@@ -264,8 +264,6 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 else {
                     this.$element.removeClass('hidden');
                 }
-
-                this.$noteEditor = this.$el.find('> .note-editor');
             }
 
             if (this.isReadMode()) {
@@ -520,6 +518,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
+
+            this.$noteEditor = this.$el.find('> .note-editor');
         },
 
         uploadInlineAttachment: function (file) {
@@ -587,9 +587,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         disableWysiwygMode: function () {
             this.destroySummernote();
 
+            this.$noteEditor = null;
+
             if (this.$summernote) {
                 this.$summernote.addClass('hidden');
             }
+
             this.$element.removeClass('hidden');
 
             if (this.$scrollable) {
