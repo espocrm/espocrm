@@ -40,7 +40,7 @@ define('views/email/fields/replies', ['views/fields/link-multiple'], function (D
             return $('<div>')
                 .append(
                     $('<span>')
-                        .addClass('fa fa-arrow-right fa-sm link-multiple-item-icon')
+                        .addClass('fas fa-arrow-right fa-sm link-multiple-item-icon')
                         .addClass(status === 'Draft' ? 'text-warning' : 'text-success')
                 )
                 .append(html)
