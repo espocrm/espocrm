@@ -1,1 +1,36 @@
-{}
+{
+  "fields": {
+    "name": "Nome",
+    "campaign": "Campanha",
+    "isActive": "Está Ativo",
+    "subscribeToTargetList": "Inscrito na Lista de Alvo",
+    "subscribeContactToTargetList": "Inscrever Contato caso existir",
+    "targetList": "Lista de Alvo",
+    "leadSource": "Origem do Lead",
+    "apiKey": "Chave de API",
+    "targetTeam": "Time Alvo",
+    "exampleRequestMethod": "Método",
+    "createLeadBeforeOptInConfirmation": "Criar Lead antes da confirmação",
+    "duplicateCheck": "Verificar Duplicados",
+    "skipOptInConfirmationIfSubscribed": "Pule a confirmação se o lead já estiver na lista de destino",
+    "smtpAccount": "Conta SMTP",
+    "inboundEmail": "Conta de Email do Grupo"
+  },
+  "links": {
+    "targetList": "Lista de Alvo",
+    "campaign": "Campanha",
+    "targetTeam": "Time Alvo",
+    "inboundEmail": "Conta de Email do Grupo"
+  },
+  "labels": {
+    "Create LeadCapture": "Criar Ponto de Entrada",
+    "Generate New API Key": "Gerar Nova Chave de API",
+    "Request": "Solicitação"
+  },
+  "messages": {
+    "generateApiKey": "Criar Nova Chave de API"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown é suportado."
+  }
+}

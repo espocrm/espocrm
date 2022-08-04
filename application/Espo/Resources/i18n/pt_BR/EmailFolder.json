@@ -1,4 +1,7 @@
 {
+  "fields": {
+    "skipNotifications": "Pular notificações"
+  },
   "labels": {
     "Create EmailFolder": "Criar pasta",
     "Manage Folders": "Gerenciar Pastas"

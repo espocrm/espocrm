@@ -18,7 +18,14 @@
     "EmailFilter": "Filtro de Email",
     "PortalRole": "Regra de Portal",
     "Attachment": "Anexo",
+    "EmailFolder": "Pasta de Email",
     "PortalUser": "Usuário do Portal",
+    "ScheduledJobLogRecord": "Registro de Log de Trabalho Agendado",
+    "PasswordChangeRequest": "Solicitação de Alteração de Senha",
+    "ActionHistoryRecord": "Registro de Histórico de Ações",
+    "AuthToken": "Token de Autenticação",
+    "UniqueId": "ID Único",
+    "LastViewed": "Visto por Último",
     "Settings": "Configurações",
     "FieldManager": "Gerenciar Campo",
     "Integration": "Integração",
@@ -26,9 +33,21 @@
     "EntityManager": "Gerenciar de Entidade",
     "Export": "Exportar",
     "DynamicLogic": "Lógica Dinâmica",
+    "DashletOptions": "Opções do painel",
     "Preferences": "Preferências",
     "EmailAddress": "Endereço de Email",
-    "PhoneNumber": "Número de Telefone"
+    "PhoneNumber": "Número de Telefone",
+    "AuthLogRecord": "Registro de Log de Autorização",
+    "AuthFailLogRecord": "Registro de Log de Falha de Autenticação",
+    "EmailTemplateCategory": "Categorias de Modelos de Email",
+    "LeadCapture": "Ponto de Entrada de Captura de Leads",
+    "LeadCaptureLogRecord": "Registro de Log de Captura de Leads",
+    "ArrayValue": "Valor em Array",
+    "ApiUser": "API de Usuário",
+    "DashboardTemplate": "Modelo de Dashboard",
+    "Currency": "Moeda",
+    "LayoutSet": "Conjunto de layout",
+    "Mass Action": "Ação em massa"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -49,7 +68,27 @@
     "Portal": "Portais",
     "PortalRole": "Regras de Portal",
     "Attachment": "Anexos",
-    "PortalUser": "Usuários do Portal"
+    "EmailFolder": "Pastas de Email",
+    "PortalUser": "Usuários do Portal",
+    "ScheduledJobLogRecord": "Registros de Log de Trabalho Agendado",
+    "PasswordChangeRequest": "Solicitações de alteração de senha",
+    "ActionHistoryRecord": "Histórico de Ações",
+    "AuthToken": "Tokens de Autenticação",
+    "UniqueId": "IDs Únicos",
+    "LastViewed": "Visto por Último",
+    "AuthLogRecord": "Log de Autorização",
+    "AuthFailLogRecord": "Log de Falha de Autenticação",
+    "EmailTemplateCategory": "Categorias de Modelos de Email",
+    "Import": "Importar",
+    "LeadCapture": "Captura de Lead",
+    "LeadCaptureLogRecord": "Log de Captura de Lead",
+    "ArrayValue": "Valores em Array",
+    "ApiUser": "API de Usuários",
+    "DashboardTemplate": "Modelos de Dashboard",
+    "EmailAddress": "Endereços de E-mail",
+    "PhoneNumber": "Números de Telefone",
+    "Currency": "Moeda",
+    "LayoutSet": "Conjunto de Layouts"
   },
   "labels": {
     "Merge": "Mesclar",
@@ -94,7 +133,7 @@
     "Overview": "Visão Geral",
     "Details": "Detalhes",
     "Add Field": "Adicionar Campo",
-    "Add Dashlet": "Adicionar Dashlet",
+    "Add Dashlet": "Adicionar Painel",
     "Filter": "Filtro",
     "Edit Dashboard": "Editar Dashboard",
     "Add": "Adicionar",
@@ -141,7 +180,7 @@
     "Post": "Postar",
     "Stream": "Fluxo",
     "Show more": "Exibir mais",
-    "Dashlet Options": "Opções do Dashlet",
+    "Dashlet Options": "Opções do Painel",
     "Full Form": "Formulário Completo",
     "Insert": "Inserir",
     "Person": "Pessoa",
@@ -177,14 +216,39 @@
     "From": "De",
     "To": "Para",
     "Create Post": "Criar Post",
+    "Previous Entry": "Entrada Anterior",
     "Next Entry": "Próxima Entrada",
     "View List": "Visão em lista",
     "Attach File": "Anexar Arquivo",
+    "Skip": "Pular",
+    "Attribute": "Atributo",
+    "Function": "Função",
+    "Return to Application": "Retornar para Aplicação",
     "Select All Results": "Selecionar todos",
     "Expand": "Expandir",
+    "Collapse": "Recolher",
     "New notifications": "Novas notificações",
     "Manage Categories": "Gerenciar Categorias",
-    "Manage Folders": "Gerenciar Pastas"
+    "Manage Folders": "Gerenciar Pastas",
+    "Convert to": "Converter para",
+    "View Personal Data": "Ver dados pessoais",
+    "Personal Data": "Dados Pessoais",
+    "Erase": "Apagar",
+    "Move Over": "Mover Sobre",
+    "Restore": "Restaurar",
+    "View Followers": "Ver Seguidores",
+    "Convert Currency": "Converter Moeda",
+    "Middle Name": "Nome do Meio",
+    "View on Map": "Ver no Mapa",
+    "Proceed": "Prosseguir",
+    "Attached": "Anexado",
+    "Preview": "Pré-visualização",
+    "Up": "Acima",
+    "Save & Continue Editing": "Salvar e Continuar Editando",
+    "Save & New": "Salvar e Novo",
+    "Field": "Campo",
+    "Resolution": "Resolução",
+    "Resolve Conflict": "Resolver Conflito"
   },
   "messages": {
     "pleaseWait": "Por favor aguarde...",
@@ -198,7 +262,8 @@
     "fieldBadPasswordConfirm": "{field} confirmado impropriamente",
     "resetPreferencesDone": "As preferências foram redefinidas para o padrão",
     "confirmation": "Você tem certeza?",
-    "resetPreferencesConfirmation": "Você gostaria mesmo de redefenir as preferências para o padrão?",
+    "unlinkAllConfirmation": "Você tem certeza que quer desvincular todos os registros relacionados?",
+    "resetPreferencesConfirmation": "Você gostaria mesmo de redefinir as preferências para o padrão?",
     "removeRecordConfirmation": "Você gostaria mesmo de remover este registro?",
     "unlinkRecordConfirmation": "Você gostaria mesmo de desfazer este relacionamento?",
     "removeSelectedRecordsConfirmation": "Você gostaria mesmo de remover os registros selecionados?",
@@ -210,22 +275,51 @@
     "noRecordsRemoved": "Nenhum registro foi removido",
     "clickToRefresh": "Clique para atualizar",
     "writeYourCommentHere": "Escreva seu comentário aqui",
+    "writeMessageToUser": "Escreva uma mensagem para {user}",
     "typeAndPressEnter": "Digite & pressione enter",
     "checkForNewNotifications": "Verificar por novas notificações",
     "duplicate": "O registro que você está criando parece estar duplicado",
+    "dropToAttach": "Solte para anexar",
+    "writeMessageToSelf": "Escreva uma mensagem no seu stream",
+    "checkForNewNotes": "Verifique se há atualizações de stream",
+    "internalPost": "A postagem será vista apenas por usuários internos",
+    "done": "Feito",
+    "confirmMassFollow": "Tem certeza de que deseja seguir os registros selecionados?",
+    "confirmMassUnfollow": "Tem certeza de que deseja deixar de seguir os registros selecionados?",
+    "massFollowResult": "{count} registros agora são seguidos",
+    "massUnfollowResult": "{count} registros agora não são seguidos",
+    "massFollowResultSingle": "{count} registro agora é seguido",
+    "massUnfollowResultSingle": "{count} registro agora não é seguido",
+    "massFollowZeroResult": "Nada foi seguido",
+    "massUnfollowZeroResult": "Nada deixou de ser seguido",
     "fieldShouldBeEmail": "{field} deve ser um e-mail válido",
     "fieldShouldBeFloat": "{field} deve ser um float válido",
     "fieldShouldBeInt": "{field} deve ser um valor inteiro",
     "fieldShouldBeDate": "{field} deve ser uma data válida",
     "fieldShouldBeDatetime": "{field} deve ser uma data/hora válida",
+    "internalPostTitle": "A postagem é vista apenas por usuários internos",
     "loading": "Carregando...",
     "saving": "Salvando...",
+    "fieldMaxFileSizeError": "O arquivo não deve exceder {max} Mb",
     "fieldShouldBeLess": "{field} deve ser menos que {value}",
-    "fieldShouldBeGreater": "{field} deve ser maior que {value}"
+    "fieldShouldBeGreater": "{field} deve ser maior que {value}",
+    "fieldIsUploading": "Upload em andamento",
+    "erasePersonalDataConfirmation": "Os campos marcados serão apagados permanentemente. Tem certeza?",
+    "massPrintPdfMaxCountError": "Não é possível imprimir mais de {maxCount} registros.",
+    "fieldValueDuplicate": "Valor Duplicado",
+    "unlinkSelectedRecordsConfirmation": "Tem certeza de que deseja desvincular os registros selecionados?",
+    "recalculateFormulaConfirmation": "Tem certeza de que deseja recalcular a fórmula para os registros selecionados?",
+    "fieldExceedsMaxCount": "A contagem excede o máximo permitido {maxCount}",
+    "notUpdated": "Não atualizado",
+    "maintenanceMode": "O aplicativo está atualmente em modo de manutenção. Somente usuários administradores têm acesso.\n\nO modo de manutenção pode ser desabilitado em Administração → Configurações.",
+    "fieldInvalid": "{field} é inválido",
+    "resolveSaveConflict": "O registro foi modificado. Você precisa resolver o conflito antes de salvar o registro.",
+    "massActionProcessed": "Ação em massa foi processada."
   },
   "boolFilters": {
     "onlyMy": "Meus",
-    "followed": "Seguido"
+    "followed": "Seguido",
+    "onlyMyTeam": "Meu Time"
   },
   "presetFilters": {
     "followed": "Seguido",
@@ -235,15 +329,22 @@
     "remove": "Remover",
     "merge": "Mesclar",
     "massUpdate": "Atualização em Massa",
-    "export": "Exportar"
+    "export": "Exportar",
+    "follow": "Seguir",
+    "unfollow": "Deixar de Seguir",
+    "convertCurrency": "Converter Moeda",
+    "printPdf": "Imprimir para PDF",
+    "unlink": "Desvincular",
+    "recalculateFormula": "Recalcular Fórmula",
+    "update": "Atualizar"
   },
   "fields": {
     "name": "Nome",
     "firstName": "Primeiro Nome",
     "lastName": "Sobrenome",
     "salutationName": "Saudação",
-    "assignedUser": "Atribuido ao usuário",
-    "assignedUsers": "Usuários Atribuídos",
+    "assignedUser": "Usuário Designado",
+    "assignedUsers": "Usuários Designados",
     "emailAddress": "E-mail",
     "assignedUserName": "Nome de Usuário Designado",
     "teams": "Times",
@@ -251,7 +352,7 @@
     "modifiedAt": "Modificado em",
     "createdBy": "Criado por",
     "modifiedBy": "Modificado por",
-    "description": "Descrção",
+    "description": "Descrição",
     "address": "Endereço",
     "phoneNumber": "Telefone",
     "phoneNumberMobile": "Telefone (Móvel)",
@@ -261,10 +362,17 @@
     "phoneNumberOther": "Telefone (Outro)",
     "order": "Pedido",
     "parent": "Pai",
-    "children": "Criança"
+    "children": "Criança",
+    "emailAddressData": "Dados de Endereço de Email",
+    "phoneNumberData": "Dados do Número de Telefone",
+    "names": "Nomes",
+    "targetListIsOptedOut": "É Cancelado (Lista de Alvo)",
+    "type": "Tipo",
+    "types": "Tipos",
+    "middleName": "Nome do Meio"
   },
   "links": {
-    "assignedUser": "Usuário designado",
+    "assignedUser": "Usuário Designado",
     "createdBy": "Criado por",
     "modifiedBy": "Modificado por",
     "team": "Time",
@@ -276,20 +384,33 @@
   },
   "dashlets": {
     "Stream": "Fluxo",
-    "Emails": "Minha Caixa de Entrada"
+    "Emails": "Minha Caixa de Entrada",
+    "Records": "Lista de Registro"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} foi atribuído à você",
-    "emailReceived": "Email recebido de {from}"
+    "emailReceived": "Email recebido de {from}",
+    "entityRemoved": "{user} removido {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} postou em {entityType} {entity}",
     "attach": "{user} anexou em {entityType} {entity}",
     "status": "{user} atualizou {field} em {entityType} {entity}",
     "update": "{user} atualizou {entityType} {entity}",
+    "postTargetTeam": "{user} postou para o time {target}",
+    "postTargetTeams": "{user} postou para os times {target}",
+    "postTargetPortal": "{user} postou para portal {target}",
+    "postTargetPortals": "{user} postou para os portais {target}",
     "postTarget": "{user} postou para {target}",
     "postTargetYou": "{user} postou para você",
+    "postTargetYouAndOthers": "{user} postou para {target} e para você",
+    "postTargetAll": "{user} postou para todos",
     "mentionInPost": "{user} mencionado {mentioned} em {entityType} {entity}",
+    "mentionYouInPost": "{user} mencionou você em {entityType} {entity}",
+    "mentionInPostTarget": "{user} mencionou {mentioned} na postagem",
+    "mentionYouInPostTarget": "{user} mencionou você na postagem para {target}",
+    "mentionYouInPostTargetAll": "{user} mencionou você na postagem para todos",
+    "mentionYouInPostTargetNoTarget": "{user} mencionou você na postagem",
     "create": "{user} criou {entityType} {entity}",
     "createThis": "{user} criou {entityType}",
     "createAssignedThis": "{user} criou {entityType} atribuído a {assignee}",
@@ -302,6 +423,8 @@
     "updateThis": "{user} atualizou {entityType}",
     "createRelatedThis": "{user} criou {relatedEntityType} {relatedEntity} relacionado a {entityType}",
     "createRelated": "{user} criou {relatedEntityType} {relatedEntity} atribuido a {entityType} {entity}",
+    "relate": "{user} vinculado {relatedEntityType} {relatedEntity} com {entityType} {entity}",
+    "relateThis": "{user} vinculado {relatedEntityType} {relatedEntity} com essa {entityType}",
     "emailReceivedFromThis": "O e-mail {email} foi recebido de {from}",
     "emailReceivedInitialFromThis": "O e-mail {email} foi recebido de e {from} e criou um(a) {entityType}",
     "emailReceivedThis": "O e-mail {email} foi recebido",
@@ -312,7 +435,17 @@
     "emailReceived": "O e-mail {email} relacionado a {entityType} {entity} foi recebido",
     "emailReceivedInitial": "O e-mail {email} foi recebido e criou {entityType} {entity}",
     "emailSent": "{by} enviou o e-mail {email} relacionado a {entityType} {entity}",
-    "emailSentThis": "{by} enviou o e-mail {email}"
+    "emailSentThis": "{by} enviou o e-mail {email}",
+    "postTargetSelf": "{user} auto-postado",
+    "postTargetSelfAndOthers": "{user} postaram em {target} neles mesmos",
+    "createAssignedYou": "{user} criou {entityType} {entity} atribuído a você.",
+    "createAssignedThisSelf": "{user} criou este {entityType} auto-atribuído",
+    "createAssignedSelf": "{user} criou {entityType} {entity} auto-atribuído",
+    "assignYou": "{user} atribuiu {entityType} {entity} a você",
+    "assignThisVoid": "{user} cancelou a atribuição deste {entityType}",
+    "assignVoid": "{user} não atribuído {entityType} {entity}",
+    "assignThisSelf": "{user} auto-atribuiu este {entityType}",
+    "assignSelf": "{user} auto-atribuído {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -380,8 +513,8 @@
     "dateSearchRanges": {
       "on": "Em",
       "notOn": "Menos em",
-      "after": "Anterior",
-      "before": "Posterior",
+      "after": "Posterior",
+      "before": "Anterior",
       "between": "Entre",
       "today": "Hoje",
       "past": "Passado",
@@ -395,21 +528,38 @@
       "lastSevenDays": "Últimos 7 Dias",
       "lastXDays": "Últimos X Dias",
       "nextXDays": "Próximos X Dias",
-      "nextMonth": "Próximo Mês"
+      "ever": "Sempre",
+      "isEmpty": "É Vazio",
+      "olderThanXDays": "Mais de X Dias",
+      "afterXDays": "Após X Dias",
+      "nextMonth": "Próximo Mês",
+      "currentFiscalYear": "Ano Fiscal Atual",
+      "lastFiscalYear": "Último Ano Fiscal",
+      "currentFiscalQuarter": "Trimestre Fiscal Atual",
+      "lastFiscalQuarter": "Último Trimestre Fiscal"
     },
     "searchRanges": {
-      "is": "Está",
+      "is": "É",
       "isEmpty": "Está Vazio",
       "isNotEmpty": "Não Está Vazio",
-      "isFromTeams": "É da Equipe"
+      "isFromTeams": "É do Time",
+      "isOneOf": "Qualquer",
+      "anyOf": "Qualquer",
+      "isNot": "Não É",
+      "isNotOneOf": "Nenhum",
+      "noneOf": "Nenhum",
+      "allOf": "Todos De",
+      "any": "Qualquer"
     },
     "varcharSearchRanges": {
       "equals": "Iguais",
+      "like": "É Como (%)",
       "startsWith": "Inicia Com",
       "endsWith": "Termina Com",
       "contains": "Contém",
       "isEmpty": "Está Vazio",
       "isNotEmpty": "Não Está Vazio",
+      "notLike": "Não é Como (%)",
       "notContains": "Não Contém",
       "notEquals": "Não é Igual"
     },
@@ -420,7 +570,9 @@
       "lessThan": "Menor que",
       "greaterThanOrEquals": "Maior ou igual",
       "lessThanOrEquals": "Menor ou igual",
-      "between": "Entre"
+      "between": "Entre",
+      "isEmpty": "É Vazio",
+      "isNotEmpty": "Não Está Vazio"
     },
     "autorefreshInterval": {
       "0": "Nenhum",
@@ -436,8 +588,9 @@
       "Home": "Residencial",
       "Other": "Outro"
     },
-    "language": {
-      "es_MX": "Espanhol (México)"
+    "saveConflictResolution": {
+      "current": "Atual",
+      "actual": "Real"
     }
   },
   "sets": {
@@ -448,6 +601,7 @@
         "underline": "Sublinhado",
         "clear": "Remover estilo da fonte",
         "height": "Altura da linha",
+        "name": "Família da Fonte",
         "size": "Tamanho da fonte"
       },
       "image": {
@@ -528,5 +682,19 @@
         "redo": "Refazer"
       }
     }
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} postou em {target} e em si mesmo"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} postou em {target} e nela mesma"
+  },
+  "listViewModes": {
+    "list": "Lista"
+  },
+  "themes": {
+    "Dark": "Escuro",
+    "Violet": "Violeta",
+    "Hazyblue": "Azul Nebuloso"
   }
 }

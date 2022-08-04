@@ -1,13 +1,23 @@
 {
   "fields": {
     "name": "Nome",
-    "emailAddress": "Endereço de E-mail"
+    "target": "Alvo",
+    "sentAt": "Data enviada",
+    "attemptCount": "Tentativas",
+    "emailAddress": "Endereço de E-mail",
+    "massEmail": "E-mail em Massa",
+    "isTest": "É teste"
+  },
+  "links": {
+    "target": "Alvo",
+    "massEmail": "E-mail em Massa"
   },
   "options": {
     "status": {
       "Pending": "Pendente",
       "Sent": "Enviado",
-      "Failed": "Falhou"
+      "Failed": "Falhou",
+      "Sending": "Enviando"
     }
   },
   "presetFilters": {

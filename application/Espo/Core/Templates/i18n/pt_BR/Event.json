@@ -1,5 +1,32 @@
 {
+  "fields": {
+    "dateStart": "Data de Início",
+    "dateEnd": "Data Final",
+    "duration": "Duração",
+    "dateStartDate": "Data de Início (dia todo)",
+    "dateEndDate": "Data Final (dia todo)",
+    "isAllDay": "É o Dia Todo"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planejado",
+      "Held": "Executar",
+      "Not Held": "Não Executar"
+    }
+  },
   "labels": {
-    "Create {entityType}": "Criar {entityTypeTranslated}"
+    "Create {entityType}": "Criar {entityTypeTranslated}",
+    "Schedule {entityType}": "Agenda {entityTypeTranslated}",
+    "Set Held": "Marcar Realizada",
+    "Set Not Held": "Marcar como Não Realizada"
+  },
+  "massActions": {
+    "setHeld": "Marcar como Realizada",
+    "setNotHeld": "Marcar como Não Realizada"
+  },
+  "presetFilters": {
+    "planned": "Planejado",
+    "held": "Realizada",
+    "todays": "De hoje"
   }
 }

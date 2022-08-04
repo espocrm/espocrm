@@ -20,14 +20,24 @@
     "createdAccount": "Conta",
     "createdContact": "Contato",
     "createdOpportunity": "Oportunidade",
-    "campaign": "Campanha"
+    "campaign": "Campanha",
+    "targetLists": "Listas de Alvo",
+    "targetList": "Lista Alvo",
+    "industry": "Ramo de Atividade",
+    "acceptanceStatus": "Status de Aceitação",
+    "opportunityAmountCurrency": "Moeda do Valor da Oportunidade",
+    "acceptanceStatusCalls": "Status de Aceitação (Ligações)",
+    "convertedAt": "Convertido Em"
   },
   "links": {
     "targetLists": "Lista de Alvos",
     "campaignLogRecords": "Logs das Camapnhas",
     "campaign": "Campanha",
+    "createdAccount": "Conta",
     "createdContact": "Contato",
-    "createdOpportunity": "Oportunidade"
+    "createdOpportunity": "Oportunidade",
+    "cases": "Casos",
+    "documents": "Documentos"
   },
   "options": {
     "status": {
@@ -51,6 +61,7 @@
   },
   "presetFilters": {
     "active": "Ativo",
-    "actual": "Atual"
+    "actual": "Atual",
+    "converted": "Convertido"
   }
 }

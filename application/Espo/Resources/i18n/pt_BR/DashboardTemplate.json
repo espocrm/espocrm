@@ -1,1 +1,7 @@
-{}
+{
+  "labels": {
+    "Create DashboardTemplate": "Criar Modelo",
+    "Deploy to Users": "Distribuir para Usuários",
+    "Deploy to Team": "Distribuir para o Time"
+  }
+}

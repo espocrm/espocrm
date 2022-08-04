@@ -4,9 +4,16 @@
   },
   "labels": {
     "Access": "Acesso",
-    "Create PortalRole": "Criar Regra de Portal"
+    "Create PortalRole": "Criar Regra de Portal",
+    "Scope Level": "Nível do Escopo",
+    "Field Level": "Nível do Campo"
   },
   "fields": {
-    "exportPermission": "Exportar Permissão"
+    "exportPermission": "Exportar Permissão",
+    "massUpdatePermission": "Permissão de Atualização em Massa"
+  },
+  "tooltips": {
+    "exportPermission": "Define se os usuários do portal têm a capacidade de exportar registros.",
+    "massUpdatePermission": "Define se os usuários do portal têm a capacidade de fazer atualização em massa de registros."
   }
 }

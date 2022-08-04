@@ -3,13 +3,19 @@
     "name": "Nome",
     "parent": "Relação",
     "dateStart": "Data de Início",
-    "dateEnd": "Data final",
+    "dateEnd": "Data Final",
     "duration": "Duração",
     "description": "Descrição",
     "users": "Usuários",
     "contacts": "Contatos",
     "reminders": "Lembretes",
-    "account": "Conta"
+    "account": "Conta",
+    "acceptanceStatus": "Status de Aceitação",
+    "dateStartDate": "Data de Início (dia todo)",
+    "dateEndDate": "Data Final (dia todo)",
+    "isAllDay": "É o Dia Todo",
+    "Acceptance": "Aceitação",
+    "sourceEmail": "E-mail de origem"
   },
   "options": {
     "status": {
@@ -24,17 +30,26 @@
       "Tentative": "Tentativa"
     }
   },
+  "massActions": {
+    "setHeld": "Marcar Realizada",
+    "setNotHeld": "Marcar Não Realizada"
+  },
   "labels": {
     "Create Meeting": "Criar Reunião",
-    "Set Held": "Marcar como realizada",
+    "Set Held": "Marcar como Realizada",
     "Set Not Held": "Marcar como não realizada",
     "Send Invitations": "Enviar convites",
     "on time": "na hora",
-    "before": "antes"
+    "before": "antes",
+    "All-Day": "Dia Todo"
   },
   "presetFilters": {
     "planned": "Planejada",
     "held": "Realizada",
     "todays": "Hoje"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nada foi enviado",
+    "selectAcceptanceStatus": "Defina seu status de aceitação."
   }
 }

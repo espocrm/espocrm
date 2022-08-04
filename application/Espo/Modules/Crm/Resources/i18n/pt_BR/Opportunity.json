@@ -13,11 +13,18 @@
     "amountConverted": "Valor (convertido)",
     "amountWeightedConverted": "Valor Quantificado",
     "campaign": "Campanha",
-    "contactRole": "Regra Contato"
+    "originalLead": "Lead Original",
+    "amountCurrency": "Valor em Moeda",
+    "contactRole": "Regra Contato",
+    "lastStage": "Último Estágio",
+    "contact": "Contato (Primário)"
   },
   "links": {
     "contacts": "Contatos",
-    "documents": "Documentos"
+    "documents": "Documentos",
+    "campaign": "Campanha",
+    "originalLead": "Lead Original",
+    "contact": "Contato (Primário)"
   },
   "options": {
     "stage": {
@@ -40,6 +47,7 @@
   },
   "presetFilters": {
     "open": "Aberta",
-    "won": "Ganha"
+    "won": "Ganha",
+    "lost": "Perdida"
   }
 }

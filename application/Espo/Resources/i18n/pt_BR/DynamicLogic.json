@@ -5,15 +5,24 @@
       "notEquals": "Não igual",
       "greaterThan": "Maior que",
       "lessThan": "Menor que",
+      "greaterThanOrEquals": "Maior que ou Igual",
+      "lessThanOrEquals": "Menor ou igual",
       "in": "Em",
       "notIn": "Não em",
+      "inPast": "No passado",
+      "inFuture": "É Futuro",
+      "isToday": "É Hoje",
       "isTrue": "É verdadeiro",
       "isFalse": "É falso",
       "isEmpty": "É vazio",
+      "isNotEmpty": "Não Está Vazio",
       "contains": "Contém",
       "has": "Contém",
       "notContains": "Não contém",
-      "notHas": "Não contém"
+      "notHas": "Não contém",
+      "startsWith": "Começa Com",
+      "endsWith": "Termina Com",
+      "matches": "Correspondências (regex)"
     }
   },
   "labels": {

@@ -6,7 +6,10 @@
     "campaign": "Campanha",
     "parent": "Alvo",
     "object": "Objeto",
-    "application": "Aplicação"
+    "application": "Aplicação",
+    "stringData": "Dados String",
+    "stringAdditionalData": "Dados Adicionais String",
+    "isTest": "É Teste"
   },
   "links": {
     "object": "Assunto",
@@ -27,6 +30,7 @@
   "presetFilters": {
     "sent": "Enviado",
     "opened": "Aberto",
+    "optedOut": "Cancelado",
     "clicked": "Clicado",
     "leadCreated": "Lead criado"
   }

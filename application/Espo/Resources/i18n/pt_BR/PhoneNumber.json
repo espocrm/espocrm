@@ -1,10 +1,6 @@
 {
-  "labels": {
-    "Primary": "Primário",
-    "Opted Out": "Cancelou (opt-out)",
-    "Invalid": "Inválido"
-  },
   "fields": {
+    "type": "Tipo",
     "optOut": "Cancelado",
     "invalid": "Inválido"
   },

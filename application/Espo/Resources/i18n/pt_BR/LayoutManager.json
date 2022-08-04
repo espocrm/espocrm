@@ -1,9 +1,14 @@
 {
   "fields": {
     "width": "Largura (%)",
+    "notSortable": "Não Classificável",
     "align": "Alinhar",
     "panelName": "Nome do Painel",
-    "style": "Estilo"
+    "style": "Estilo",
+    "isLarge": "Tamanho de fonte grande",
+    "dynamicLogicVisible": "Condições que tornam o painel visível",
+    "hidden": "Oculto",
+    "dynamicLogicStyled": "Condições que fazem o estilo aplicado"
   },
   "options": {
     "align": {
@@ -20,5 +25,17 @@
   },
   "labels": {
     "New panel": "Novo Painel"
+  },
+  "tooltips": {
+    "link": "Se marcado, um valor de campo será exibido como um link apontando para a visualização de detalhes do registro. Normalmente é usado para campos *Nome*.",
+    "hiddenPanel": "Precisa clicar em 'mostrar mais' para ver o painel.",
+    "sticked": "O painel será colado no painel acima. Sem folga entre os painéis.",
+    "panelStyle": "Uma cor do painel.",
+    "dynamicLogicVisible": "Se definido, o painel ficará oculto, a menos que a condição seja atendida.",
+    "dynamicLogicStyled": "Uma cor será aplicada se uma condição específica for atendida. A cor é definida pelo parâmetro *Estilo*."
+  },
+  "messages": {
+    "cantBeEmpty": "O layout não pode estar vazio.",
+    "fieldsIncompatible": "Os campos não podem estar juntos no layout: {fields}."
   }
 }

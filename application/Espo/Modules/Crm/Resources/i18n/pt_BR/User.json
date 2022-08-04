@@ -1,5 +1,9 @@
 {
   "links": {
     "targetLists": "Lista de alvos"
+  },
+  "fields": {
+    "acceptanceStatus": "Status de Aceitação",
+    "acceptanceStatusCalls": "Status de Aceitação (Ligações)"
   }
 }

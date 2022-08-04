@@ -1,9 +1,29 @@
 {
   "fields": {
-    "ipAddress": "Endereço IP"
+    "user": "Usuário",
+    "action": "Ação",
+    "createdAt": "Data",
+    "target": "Alvo",
+    "targetType": "Tipo de Alvo",
+    "authToken": "Token de Autenticação",
+    "ipAddress": "Endereço IP",
+    "authLogRecord": "Registro de Log de Autorização",
+    "userType": "Tipo de Usuário"
+  },
+  "links": {
+    "authToken": "Token de Autenticação",
+    "user": "Usuário",
+    "target": "Alvo",
+    "authLogRecord": "Registro de Log de Autorização"
+  },
+  "presetFilters": {
+    "onlyMy": "Apenas Meu"
   },
   "options": {
     "action": {
+      "read": "Ler",
+      "update": "Atualizar",
+      "delete": "Excluir",
       "create": "Criar"
     }
   }

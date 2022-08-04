@@ -1,1 +1,19 @@
-{}
+{
+  "fields": {
+    "fieldList": "Lista de Campos",
+    "exportAllFields": "Exportar todos os campos",
+    "format": "Formato"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Running": "Rodando",
+      "Success": "Sucesso",
+      "Failed": "Falhou"
+    }
+  },
+  "messages": {
+    "exportProcessed": "A exportação foi processada. Baixe o  [file]({url}).",
+    "infoText": "A exportação está sendo processada em modo inativo pelo cron. Pode levar algum tempo para terminar. Fechar esta caixa de diálogo modal não afetará o processo de execução."
+  }
+}

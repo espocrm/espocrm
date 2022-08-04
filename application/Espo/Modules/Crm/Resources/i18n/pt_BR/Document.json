@@ -9,11 +9,15 @@
     "type": "Tipo",
     "publishDate": "Data de Publicação",
     "expirationDate": "Data de expiração",
-    "description": "Descrição"
+    "description": "Descrição",
+    "accounts": "Contas",
+    "folder": "Pasta"
   },
   "links": {
     "accounts": "Contas",
-    "opportunities": "Oportunidades"
+    "opportunities": "Oportunidades",
+    "folder": "Pasta",
+    "contacts": "Contatos"
   },
   "options": {
     "status": {
@@ -21,6 +25,11 @@
       "Draft": "Rascunho",
       "Expired": "Expirado",
       "Canceled": "Cancelado"
+    },
+    "type": {
+      "": "Nenhum",
+      "Contract": "Contrato",
+      "License Agreement": "Contrato de Licença"
     }
   },
   "presetFilters": {

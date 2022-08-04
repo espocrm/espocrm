@@ -1,4 +1,10 @@
 {
+  "labels": {
+    "Dynamic Logic": "Lógica Dinâmica",
+    "Name": "Nome",
+    "Label": "Rótulo",
+    "Type": "Tipo"
+  },
   "options": {
     "dateTimeDefault": {
       "": "Nenhum",
@@ -27,13 +33,55 @@
       "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 semana"
     },
     "dateDefault": {
+      "": "Nenhum",
       "javascript: return this.dateTime.getToday();": "Hoje",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 dia",
       "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dias",
       "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dias",
       "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dias",
-      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dias"
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dias",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 semana",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 semanas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 semanas",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 mês",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 meses",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 ano"
+    },
+    "barcodeType": {
+      "pharmacode": "Código Farmacêutico",
+      "QRcode": "Código QR"
     }
+  },
+  "tooltips": {
+    "audited": "As atualizações serão registradas no stream.",
+    "required": "Campo será obrigatório. Não pode ficar vazio.",
+    "default": "O valor será definido por padrão na criação.",
+    "min": "Valor mínimo aceitável.",
+    "max": "Valor máximo aceitável.",
+    "seeMoreDisabled": "Se não estiver marcado, os textos longos serão encurtados.",
+    "lengthOfCut": "Qual o tamanho do texto antes de ser cortado.",
+    "maxLength": "Comprimento máximo aceitável do texto.",
+    "before": "O valor de data deve ser anterior ao valor de data do campo especificado.",
+    "after": "O valor de data deve ser posterior ao valor de data do campo especificado.",
+    "readOnly": "O valor do campo não pode ser especificado pelo usuário. Mas pode ser calculado pela fórmula.",
+    "maxFileSize": "Se vazio ou 0, não há limite.",
+    "fileAccept": "Quais tipos de arquivo aceitar. É possível adicionar itens personalizados.",
+    "barcodeLastChar": "Para o tipo EAN-13",
+    "conversionDisabled": "A ação de conversão de moeda não será aplicada a este campo."
   },
   "fieldParts": {
     "address": {
@@ -47,15 +95,39 @@
     "personName": {
       "salutation": "Saudação",
       "first": "Primeiro",
-      "last": "Último"
+      "last": "Último",
+      "middle": "Meio"
+    },
+    "currency": {
+      "converted": "(Convertido)",
+      "currency": "(Moeda)"
     },
     "datetimeOptional": {
       "date": "Data"
     }
   },
-  "labels": {
-    "Name": "Nome",
-    "Label": "Etiqueta",
-    "Type": "Tipo"
+  "fieldInfo": {
+    "varchar": "Texto de linha única.",
+    "enum": "Selectbox, só um valor pode ser selecionado.",
+    "text": "Um texto de várias linhas com suporte a markdown.",
+    "date": "Data sem hora.",
+    "datetime": "Data e hora",
+    "currency": "Um valor de moeda. Um número flutuante com um código de moeda.",
+    "int": "Um número inteiro.",
+    "float": "Um número com casa decimal.",
+    "bool": "Um checkbox. Dois valores possíveis: verdadeiro e falso.",
+    "multiEnum": "Uma lista de valores, vários valores podem ser selecionados. A lista está ordenada.",
+    "checklist": "Uma lista de checkboxes.",
+    "address": "Um endereço com rua, cidade, estado, código postal e país.",
+    "url": "Para armazenar links.",
+    "wysiwyg": "Um texto com suporte HTML.",
+    "file": "Para upload de arquivos.",
+    "image": "Para upload de imagens.",
+    "attachmentMultiple": "Permite upload de vários arquivos.",
+    "number": "Um número de incremento automático do tipo de string com um possível prefixo e comprimento determinado.",
+    "autoincrement": "Um número inteiro de incremento automático gerado somente leitura.",
+    "barcode": "Um código de barras. Pode ser impresso em PDF.",
+    "foreign": "Um campo de um registro relacionado. Somente leitura.",
+    "linkMultiple": "Um conjunto de registros relacionados por meio do relacionamento Has-Many (many-to-many ou one-to-manys). Nem todos os relacionamentos têm seus campos de links múltiplos. Somente aqueles fazem isso, onde o(s) parâmetro(s) Link-Multiple está(ão) habilitado(s)."
   }
 }

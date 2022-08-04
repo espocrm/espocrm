@@ -2,16 +2,20 @@
   "fields": {
     "name": "Nome",
     "roles": "Regras",
-    "positionList": "Lista de Posições"
+    "positionList": "Lista de Posições",
+    "layoutSet": "Conjunto de Layout"
   },
   "links": {
     "users": "Usuários",
     "notes": "Notas",
-    "roles": "Regras"
+    "roles": "Regras",
+    "inboundEmails": "Contas de Email do Grupo",
+    "layoutSet": "Conjunto de Layout"
   },
   "tooltips": {
     "roles": "Todos os usuários deste time terão acesso as configurações das regras selecionadas.",
-    "positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente."
+    "positionList": "Posições disponíveis neste time. E.g. Vendedor, Gerente.",
+    "layoutSet": "Fornece a capacidade de ter layouts que diferem dos padrões. O Conjunto de Layout será aplicado aos usuários que têm esse time definido como Time Padrão (Default Team)."
   },
   "labels": {
     "Create Team": "Criar Time"

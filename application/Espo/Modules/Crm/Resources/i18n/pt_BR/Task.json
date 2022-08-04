@@ -3,14 +3,20 @@
     "parent": "Relação",
     "dateStart": "Data de Início",
     "dateEnd": "Até a Data",
+    "dateStartDate": "Data de Início (dia todo)",
+    "dateEndDate": "Data Final (dia todo)",
     "priority": "Prioridade",
     "description": "Descrição",
     "isOverdue": "Atrasada",
     "account": "Conta",
-    "attachments": "Anexos"
+    "attachments": "Anexos",
+    "reminders": "Lembretes",
+    "contact": "Contato"
   },
   "links": {
-    "attachments": "Anexos"
+    "attachments": "Anexos",
+    "account": "Conta",
+    "contact": "Contato"
   },
   "options": {
     "status": {
@@ -28,7 +34,8 @@
   },
   "labels": {
     "Create Task": "Criar Tarefa",
-    "Complete": "Concluída"
+    "Complete": "Concluída",
+    "overdue": "atrasado"
   },
   "presetFilters": {
     "actual": "Atual",
@@ -36,5 +43,8 @@
     "todays": "Hoje",
     "overdue": "Atrasada",
     "deferred": "Adiada"
+  },
+  "nameOptions": {
+    "replyToEmail": "Responder ao e-mail"
   }
 }

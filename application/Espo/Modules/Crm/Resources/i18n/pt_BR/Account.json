@@ -7,12 +7,13 @@
     "shippingAddress": "Endereço de Entrega",
     "description": "Descrição",
     "sicCode": "CNPJ",
-    "industry": "Indústria",
+    "industry": "Ramo de Atividade",
     "type": "Tipo",
     "contactRole": "Regra",
     "campaign": "Campanha",
     "targetLists": "Listas de Alvo",
     "targetList": "Lista de Alvo",
+    "originalLead": "Lead Original",
     "contactIsInactive": "Inativo"
   },
   "links": {
@@ -23,10 +24,13 @@
     "meetingsPrimary": "Reuniões (Interno)",
     "callsPrimary": "Ligações (Interno)",
     "tasksPrimary": "Tarefas (Interno)",
-    "targetLists": "Lista de alvos",
+    "emailsPrimary": "Emails (expandido)",
+    "targetLists": "Lista de Alvos",
     "campaignLogRecords": "Log da Campanha",
     "campaign": "Campanha",
-    "portalUsers": "Usuários de Portal"
+    "portalUsers": "Usuários do Portal",
+    "originalLead": "Lead Original",
+    "contactsPrimary": "Contatos (primário)"
   },
   "options": {
     "type": {
@@ -45,11 +49,44 @@
       "Chemical": "Química",
       "Computer": "Computadores",
       "Education": "Educação",
-      "Electronics": "Electrônicos",
+      "Electronics": "Eletrônicos",
       "Energy": "Energia",
+      "Entertainment & Leisure": "Entretenimento e Laser",
       "Finance": "Finanças",
       "Food & Beverage": "Alimentação",
+      "Grocery": "Mercearia",
       "Healthcare": "Plano de Saúde",
+      "Insurance": "Seguro",
+      "Legal": "Jurídico",
+      "Manufacturing": "Manufatura",
+      "Publishing": "Publicações",
+      "Real Estate": "Imobiliário",
+      "Service": "Serviços",
+      "Sports": "Esportes",
+      "Technology": "Tecnologia",
+      "Telecommunications": "Telecomunicações",
+      "Television": "Televisão",
+      "Transportation": "Transportes",
+      "Venture Capital": "Capital de Risco",
+      "Aerospace": "Aeroespacial",
+      "Architecture": "Arquitetura",
+      "Construction": "Construção",
+      "Defense": "Defesa",
+      "Creative": "Criativa",
+      "Culture": "Cultura",
+      "Consulting": "Consultoria",
+      "Electric Power": "Energia Elétrica",
+      "Hospitality": "Hotelaria",
+      "Mass Media": "Mídia de Massa",
+      "Mining": "Mineração",
+      "Music": "Musica",
+      "Petroleum": "Petróleo",
+      "Retail": "Varejo",
+      "Shipping": "Navegação",
+      "Support": "Suporte",
+      "Testing, Inspection & Certification": "Testes, Inspeção e Certificação",
+      "Wholesale": "Atacado",
+      "Water": "Água",
       "Travel": "Viagem"
     }
   },
@@ -60,6 +97,7 @@
   },
   "presetFilters": {
     "customers": "Clientes",
-    "partners": "Parceiros"
+    "partners": "Parceiros",
+    "recentlyCreated": "Criado Recentemente"
   }
 }

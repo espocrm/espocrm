@@ -1,25 +1,38 @@
 {
   "fields": {
     "name": "Nome",
-    "description": "Descrção",
+    "description": "Descrição",
     "entryCount": "Contagem de entrada",
     "campaigns": "Campanhas",
     "endDate": "Data final",
-    "targetLists": "Lista de alvos"
+    "targetLists": "Lista de alvos",
+    "includingActionList": "Incluindo",
+    "excludingActionList": "Excluindo",
+    "optedOutCount": "Quant. Desistentes",
+    "targetStatus": "Statos do Alvo",
+    "isOptedOut": "É Cancelado"
   },
   "links": {
     "accounts": "Contas",
     "contacts": "Contatos",
-    "campaigns": "Campanhas"
+    "campaigns": "Campanhas",
+    "massEmails": "Emails em Massa"
   },
   "options": {
     "type": {
       "Email": "E-mail",
       "Television": "Televisão",
       "Radio": "Rádio"
+    },
+    "targetStatus": {
+      "Opted Out": "Cancelado",
+      "Listed": "Listado"
     }
   },
   "labels": {
-    "Create TargetList": "Criar Lista de Alvos"
+    "Create TargetList": "Criar Lista de Alvos",
+    "Opted Out": "Cancelado",
+    "Cancel Opt-Out": "Cancelar Cancelamento",
+    "Opt-Out": "Cancelar"
   }
 }

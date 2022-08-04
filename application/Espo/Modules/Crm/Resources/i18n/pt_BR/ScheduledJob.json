@@ -1,7 +1,8 @@
 {
   "options": {
     "job": {
-      "ProcessMassEmail": "Enviar Emails em Massa"
+      "ProcessMassEmail": "Enviar Emails em Massa",
+      "ControlKnowledgeBaseArticleStatus": "Controlar Status dos Artigo da Base de Conhecimento"
     }
   }
 }

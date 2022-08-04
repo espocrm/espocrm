@@ -11,6 +11,7 @@
     "Step5 page title": "Configurações SMTP para envio de e-mails",
     "Errors page title": "Erros",
     "Finish page title": "Instalação completa",
+    "Congratulation! Welcome to EspoCRM": "Parabéns! O EspoCRM foi instalado com sucesso.",
     "Installation Guide": "Guia de Instalação",
     "Locale": "Idioma",
     "Outbound Email Configuration": "Configurações dos e-mails de saída",
@@ -27,7 +28,14 @@
     "SetupConfirmation page title": "Requisitos de sistema",
     "PHP Configuration": "Configurações do PHP",
     "MySQL Configuration": "Configurações do banco de dados",
-    "Permission Requirements": "Permissões"
+    "Permission Requirements": "Permissões",
+    "Success": "Sucesso",
+    "Fail": "Falha",
+    "is recommended": "é recomendado",
+    "extension is missing": "faltando extensão",
+    "headerTitle": "Instalação EspoCRM",
+    "Crontab setup instructions": "Sem executar os trabalhos agendados de emails de entrada as notificações e lembretes não funcionarão. Aqui você pode ler {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "instruções de configuração"
   },
   "fields": {
     "Choose your language": "Escolha seu idioma",
@@ -65,13 +73,39 @@
     "The PHP extension was not found...": "The <b>{extName}</b> PHP extension was not found...",
     "All Settings correct": "Todas as configurações estão corretas",
     "PHP version": "Versão do PHP",
-    "Cannot create user": "Cannot create user"
+    "Cannot create user": "Cannot create user",
+    "Permission denied": "Permissão negada",
+    "Permission denied to": "Permissão negada",
+    "requiredMariadbVersion": "Sua versão do MariaDB não é compatível com o EspoCRM, atualize para o MariaDB {minVersion} pelo menos",
+    "Ajax failed": "Um erro inesperado ocorreu",
+    "Bad init Permission": "Permissão negada para o diretório \"{*}\". Por favor, defina 775 para \"{*}\" ou apenas execute este comando no terminal <pre><b>{C}</b></pre> A operação não é permitida? Experimente este: {CSU}",
+    "permissionInstruction": "<br>Execute este comando no Terminal:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "A operação não é permitida? Experimente este: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "Versão do PHP",
     "requiredMysqlVersion": "Versão do MySQL",
     "host": "Nome de anfitrião",
     "dbname": "Nome do banco de dados",
-    "user": "Nome de Usuário"
+    "user": "Nome de Usuário",
+    "readable": "Permite Leitura",
+    "requiredMariadbVersion": "Versão MariaDB"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>Erro de API: a API do EspoCRM não está disponível.</h3><br>Faça apenas os passos necessários. Após cada etapa, verifique se o problema foi resolvido.",
+      "nginx": "<h3>Erro de API: a API do EspoCRM não está disponível.</h3>",
+      "microsoft-iis": "<h3>Erro de API: a API do EspoCRM não está disponível.</h3><br> Possível problema: \"URL Rewrite\" desabilitado. Por favor, verifique e habilite o módulo \"URL Rewrite\" no servidor IIS",
+      "default": "<h3>Erro de API: a API do EspoCRM não está disponível.</h3><br> Possíveis problemas: Módulo de reescrita desabilitado. Por favor, verifique e habilite o Módulo Rewrite em seu servidor (ex: mod_rewrite no Apache) e suporte .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "\n<br><br><h4>1. Habilite \"mod_rewrite\".</h4>Para habilitar <i>mod_rewrite</i>, execute estes comandos num terminal:<br><br><pre>{APACHE1}</pre><hr><h4>2. Se a etapa anterior não ajudar, tente habilitar o suporte a .htaccess.</h4> Adicionar/editar as configurações do servidor <code>{APACHE2_PATH1}</code> ou <code>{APACHE2_PATH2}</code> (or <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Depois execute este comando em um terminal:<br><br><pre>{APACHE3}</pre><hr><h4>3. Se a etapa anterior não ajudou, tente adicionar o caminho RewriteBase.</h4>Abra um arquivo <code>{API_PATH}.htaccess</code> e substitua a seguinte linha:<br><br><pre>{APACHE4}</pre>To<br><br><pre>{APACHE5}</pre><hr>Para mais informações acesse a diretriz <a href=\"{APACHE_LINK}\" target=\"_blank\">Configuração do servidor Apache para EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Encontre o arquivo httpd.conf.</h4>Normalmente ele pode ser encontrado em uma pasta chamada \"conf\", \"config\" ou algo nesse sentido.<br><br><h4>2. Edite o arquivo httpd.conf.</h4> Dentro do arquivo httpd.conf descomente a linha <code>{WINDOWS_APACHE1}</code> (remova o sinal sustenido '#' da frente da linha).<br><br><h4>3. Verifique outros parâmetros.</h4>Verifique também se a linha <code>ClearModuleList</code> está descomentada e certifique-se de que a linha <code>AddModule mod_rewrite.c</code> não está comentada."
+      },
+      "nginx": {
+        "linux": "<br> Adicione este código ao seu arquivo de configuração do servidor Nginx <code>{NGINX_PATH}</code> na da seção \"server\":<br><br><pre>{NGINX}</pre> <br> Para mais informações acesse a diretriz <a href=\"{NGINX_LINK}\" target=\"_blank\">Configuração do servidor Nginx para EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

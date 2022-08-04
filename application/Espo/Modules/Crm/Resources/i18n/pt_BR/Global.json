@@ -25,9 +25,16 @@
     "Task": "Tarefa",
     "Case": "Atendimento",
     "Document": "Documento",
+    "DocumentFolder": "Pasta de Documentos",
     "Campaign": "Campanha",
     "TargetList": "Lista de Alvos",
-    "Activities": "Atividades"
+    "MassEmail": "E-mail em Massa",
+    "EmailQueueItem": "Item da Fila de Email",
+    "CampaignTrackingUrl": "URL de Rastreamento",
+    "Activities": "Atividades",
+    "KnowledgeBaseArticle": "Artigo da Base de Conhecimento",
+    "KnowledgeBaseCategory": "Categoria da Base de Conhecimento",
+    "CampaignLogRecord": "Registro de Log de Campanha"
   },
   "scopeNamesPlural": {
     "Account": "Contas",
@@ -40,9 +47,16 @@
     "Task": "Tarefas",
     "Case": "Atendimentos",
     "Document": "Documentos",
+    "DocumentFolder": "Pastas de Documentos ",
     "Campaign": "Campaign",
-    "TargetList": "Target List",
-    "Activities": "Atividades"
+    "TargetList": "Listas de Alvo",
+    "MassEmail": "E-mails em Massa",
+    "EmailQueueItem": "Itens da Fila de Email",
+    "CampaignTrackingUrl": "URLs de Rastreamento",
+    "Activities": "Atividades",
+    "KnowledgeBaseArticle": "Base de Conhecimento ",
+    "KnowledgeBaseCategory": "Categorias da base de conhecimento",
+    "CampaignLogRecord": "Registros de Log de Campanha"
   },
   "dashlets": {
     "Leads": "Meus Leads",
@@ -53,7 +67,7 @@
     "Calls": "Minhas Ligações",
     "Meetings": "Minhas Reuniões",
     "OpportunitiesByStage": "Oportunidades por Estágio",
-    "OpportunitiesByLeadSource": "Oportunities por Origem do Lead",
+    "OpportunitiesByLeadSource": "Oportunidades por Origem do Lead",
     "SalesByMonth": "Vendas Por Mês",
     "SalesPipeline": "Funil de Vendas",
     "Activities": "Minhas Atividades"
@@ -70,7 +84,8 @@
     "Log Call": "Logar Ligação",
     "Archive Email": "Arquivar E-mail",
     "Create Task": "Criar Tarefa",
-    "Tasks": "Tarefas"
+    "Tasks": "Tarefas",
+    "Scheduler": "Agendador"
   },
   "fields": {
     "billingAddressCity": "Cidade",
@@ -83,10 +98,13 @@
     "addressState": "Estado",
     "billingAddressStreet": "Logradouro",
     "addressStreet": "Logradouro",
+    "billingAddressMap": "Mapa",
+    "addressMap": "Mapa",
     "shippingAddressCity": "Cidade (Envio)",
     "shippingAddressStreet": "Logradouro (Envio)",
     "shippingAddressCountry": "País (Envio)",
     "shippingAddressState": "Estado (Envio)",
-    "shippingAddressPostalCode": "CEP (Envio)"
+    "shippingAddressPostalCode": "CEP (Envio)",
+    "shippingAddressMap": "Mapa (Envio)"
   }
 }

@@ -8,7 +8,18 @@
     "methodName": "Método",
     "scheduledJob": "Tarefas agendadas",
     "data": "Dado",
-    "scheduledJobJob": "Nome Tarefa Agendada"
+    "method": "Método (obsoleto)",
+    "scheduledJobJob": "Nome Tarefa Agendada",
+    "executedAt": "Executado Em",
+    "startedAt": "Iniciado Em",
+    "targetType": "Tipo de Alvo",
+    "targetId": "ID do Alvo",
+    "number": "Número",
+    "queue": "Fila",
+    "job": "Trabalho (Job)",
+    "group": "Grupo",
+    "className": "Nome da Classe",
+    "targetGroup": "Grupo Alvo"
   },
   "options": {
     "status": {
