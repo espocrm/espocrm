@@ -509,6 +509,8 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
          * @inheritDoc
          */
         afterRender: function () {
+            Espo.Ui.notify(false);
+
             if (!this.hasView('list')) {
                 this.loadList();
             }
