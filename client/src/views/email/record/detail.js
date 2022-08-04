@@ -37,28 +37,38 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         shortcutKeyCtrlEnterAction: 'send',
 
         layoutNameConfigure: function () {
-            if (!this.model.isNew()) {
-                var isRestricted = false;
+            if (this.model.isNew()) {
+                return;
+            }
 
-                if (this.model.get('status') === 'Sent') {
+            let status = this.model.get('status');
+
+            if (status === 'Draft') {
+                this.layoutName = 'composeSmall';
+
+                return;
+            }
+
+            let isRestricted = false;
+
+            if (status === 'Sent') {
+                isRestricted = true;
+            }
+
+            if (status === 'Archived') {
+                if (
+                    this.model.get('createdById') === 'system' ||
+                    !this.model.get('createdById') || this.model.get('isImported')
+                ) {
                     isRestricted = true;
                 }
-
-                if (this.model.get('status') === 'Archived') {
-                    if (
-                        this.model.get('createdById') === 'system' ||
-                        !this.model.get('createdById') || this.model.get('isImported')
-                    ) {
-                        isRestricted = true;
-                    }
-                }
-
-                if (isRestricted) {
-                    this.layoutName += 'Restricted';
-                }
-
-                this.isRestricted = isRestricted;
             }
+
+            if (isRestricted) {
+                this.layoutName += 'Restricted';
+            }
+
+            this.isRestricted = isRestricted;
         },
 
         init: function () {
@@ -189,6 +199,10 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
 
             if (this.model.get('status') === 'Draft') {
                 this.setFieldReadOnly('dateSent');
+
+                this.controlSelectTemplateField();
+
+                this.on('after:mode-change', () => this.controlSelectTemplateField());
             }
 
             if (this.isRestricted) {
@@ -201,6 +215,17 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                 this.handleBccField();
                 this.listenTo(this.model, 'change:bcc', () => this.handleBccField());
             }
+        },
+
+        controlSelectTemplateField: function () {
+            if (this.mode === this.MODE_EDIT) {
+                // Not implemented for detail view yet.
+                this.hideField('selectTemplate');
+
+                return;
+            }
+
+            this.hideField('selectTemplate');
         },
 
         controlSendButton: function ()  {
@@ -453,7 +478,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
                 .then(() => {
                     this.model.set('status', 'Sent');
 
-                    if (!this.isDetailMode()) {
+                    if (this.mode !== this.MODE_DETAIL) {
                         this.setDetailMode();
                         this.setFieldReadOnly('dateSent');
                         this.setFieldReadOnly('name');

@@ -1266,6 +1266,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.mode = this.MODE_EDIT;
 
                 this.trigger('after:set-edit-mode');
+                this.trigger('after:mode-change');
 
                 Promise.all(promiseList).then(() => resolve());
             });
@@ -1303,7 +1304,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
 
                 this.mode = this.MODE_DETAIL;
+
                 this.trigger('after:set-detail-mode');
+                this.trigger('after:mode-change');
 
                 Promise.all(promiseList).then(() => resolve());
             });

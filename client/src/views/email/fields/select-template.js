@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('views/email/fields/select-template', 'views/fields/link', function (Dep) {
+
+define('views/email/fields/select-template', ['views/fields/link'], function (Dep) {
 
     return Dep.extend({
 
@@ -38,12 +39,13 @@ Espo.define('views/email/fields/select-template', 'views/fields/link', function 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.on('change', function () {
-                var id = this.model.get(this.idName);
+            this.on('change', () => {
+                let id = this.model.get(this.idName);
+
                 if (id) {
                     this.loadTemplate(id);
                 }
-            }, this);
+            });
         },
 
         getSelectPrimaryFilterName: function () {
@@ -51,39 +53,37 @@ Espo.define('views/email/fields/select-template', 'views/fields/link', function 
         },
 
         loadTemplate: function (id) {
-            var to = this.model.get('to') || '';
-            var emailAddress = null;
+            let to = this.model.get('to') || '';
+            let emailAddress = null;
+
             to = to.trim();
+
             if (to) {
-                var emailAddress = to.split(';')[0].trim();
+                emailAddress = to.split(';')[0].trim();
             }
 
-            $.ajax({
-                url: 'EmailTemplate/action/parse',
-                data: {
+            Espo.Ajax
+                .getRequest('EmailTemplate/action/parse', {
                     id: id,
                     emailAddress: emailAddress,
                     parentType: this.model.get('parentType'),
                     parentId: this.model.get('parentId'),
                     relatedType: this.model.get('relatedType'),
-                    relatedId: this.model.get('relatedId')
-                },
-                success: function (data) {
+                    relatedId: this.model.get('relatedId'),
+                })
+                .then(data => {
                     this.model.trigger('insert-template', data);
 
                     this.emptyField();
-                }.bind(this),
-                error: function () {
+                })
+                .catch(() => {
                     this.emptyField();
-                }.bind(this)
-            });
+                });
         },
 
         emptyField: function () {
             this.model.set(this.idName, null);
             this.model.set(this.nameName, '');
-        }
-
+        },
     });
-
 });

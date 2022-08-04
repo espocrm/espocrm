@@ -57,6 +57,9 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
 
             if (this.model.get('status') === 'Draft') {
                 this.setFieldReadOnly('dateSent');
+
+                // Not implemented for detail view yet.
+                this.hideField('selectTemplate');
             }
 
             this.handleAttachmentField();
