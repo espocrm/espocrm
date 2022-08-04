@@ -1224,9 +1224,7 @@ section {
 }
 
 @media screen and (min-width: @screen-sm-min) {
-
     #main > .list-container > .list {
-
         > table td:first-child,
         > table th:first-child {
             padding-left: @container-padding;
@@ -1237,6 +1235,7 @@ section {
         }
     }
 
+    .modal-body .categories-container + .list-container,
     .list-categories-column + .list-main-column .list-container,
     .folders-container + .list-container {
         .list {
@@ -1259,7 +1258,19 @@ section {
 
             > .show-more > a {
                 border-bottom-left-radius: var(--panel-border-radius);
-                border-bottom-right-radius: var(--panel-border-radius);
+                border-bottom-right-radius: 0;
+            }
+        }
+    }
+
+    .modal-body .categories-container + .list-container {
+        > .list {
+            margin-right: -@modal-inner-padding;
+
+            > table {
+                td:last-child, th:last-child {
+                    padding-right: @modal-inner-padding;
+                }
             }
         }
     }
@@ -2963,6 +2974,15 @@ table.table-admin-panel {
         .list-container > .list {
             margin-left: -@container-padding;
             margin-right: -@container-padding;
+        }
+    }
+
+    .modal-body {
+        .categories-container + .list-container {
+            .list {
+                margin-left: -@modal-inner-padding;
+                margin-right: -@modal-inner-padding;
+            }
         }
     }
 
