@@ -55,7 +55,7 @@ define('controllers/note', ['controller'], function (Dep) {
                     model = m;
                     model.id = id;
 
-                    return model.fetch();
+                    return model.fetch({main: true});
                 })
                 .then(() => {
                     this.hideLoadingNotification();
