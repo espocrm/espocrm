@@ -197,47 +197,25 @@ define('router', [], function () {
 
             this.history = [];
 
-            let detectBackOrForward = (onBack, onForward) => {
-                let hashHistory = [window.location.hash];
-                let historyLength = window.history.length;
+            let hashHistory = [window.location.hash];
 
-                return function () {
-                    let hash = window.location.hash, length = window.history.length;
+            window.addEventListener('hashchange', () => {
+                let hash = window.location.hash
 
-                    if (hashHistory.length && historyLength === length) {
-                        if (hashHistory[hashHistory.length - 2] === hash) {
-                            hashHistory = hashHistory.slice(0, -1);
+                if (
+                    hashHistory.length > 1 &&
+                    hashHistory[hashHistory.length - 2] === hash
+                ) {
+                    hashHistory = hashHistory.slice(0, -1);
 
-                            if (onBack) {
-                                onBack();
-                            }
-
-                            return;
-                        }
-
-                        hashHistory.push(hash);
-
-                        if (onForward) {
-                            onForward();
-                        }
-
-                        return;
-                    }
-
-                    hashHistory.push(hash);
-                };
-            };
-
-            window.addEventListener(
-                'hashchange',
-                detectBackOrForward(() => {
                     this.backProcessed = true;
+                    setTimeout(() => this.backProcessed = false, 50);
 
-                    setTimeout(() => {
-                        this.backProcessed = false;
-                    }, 50);
-                })
-            );
+                    return;
+                }
+
+                hashHistory.push(hash);
+            });
 
             this.on('route', () => {
                 this.history.push(Backbone.history.fragment);
