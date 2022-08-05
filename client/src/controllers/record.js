@@ -98,26 +98,16 @@ define('controllers/record', ['controller'], function (Dep) {
         },
 
         actionList: function (options) {
-            var isReturn = options.isReturn;
+            let isReturn = options.isReturn || this.getRouter().backProcessed;
 
-            if (this.getRouter().backProcessed) {
-                isReturn = true;
+            let key = this.name + 'List';
+
+            if (!isReturn && this.getStoredMainView(key)) {
+                this.clearStoredMainView(key);
             }
 
-            var key = this.name + 'List';
-
-            if (!isReturn) {
-                var stored = this.getStoredMainView(key);
-
-                if (stored) {
-                    this.clearStoredMainView(key);
-                }
-            }
-
-            this.getCollection(function (collection) {
-                this.listenToOnce(this.baseController, 'action', () => {
-                    collection.abortLastFetch();
-                });
+            this.getCollection(collection => {
+                this.listenToOnce(this.baseController, 'action', () => collection.abortLastFetch());
 
                 this.main(this.getViewName('list'), {
                     scope: this.name,

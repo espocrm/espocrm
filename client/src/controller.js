@@ -140,7 +140,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:models/settings.Class}
+         * @returns {module:models/settings.Class}
          */
         getConfig: function () {
             return this._settings;
@@ -148,7 +148,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:models/user.Class}
+         * @returns {module:models/user.Class}
          */
         getUser: function () {
             return this._user;
@@ -156,7 +156,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:models/preferences.Class}
+         * @returns {module:models/preferences.Class}
          */
         getPreferences: function () {
             return this._preferences;
@@ -164,7 +164,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:acl.Class}
+         * @returns {module:acl.Class}
          */
         getAcl: function () {
             return this._acl;
@@ -172,7 +172,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:cache.Class}
+         * @returns {module:cache.Class}
          */
         getCache: function () {
             return this._cache;
@@ -180,7 +180,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:router.Class}
+         * @returns {module:router.Class}
          */
         getRouter: function () {
             return this._router;
@@ -188,7 +188,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:storage.Class}
+         * @returns {module:storage.Class}
          */
         getStorage: function () {
             return this._storage;
@@ -196,7 +196,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:metadata.Class}
+         * @returns {module:metadata.Class}
          */
         getMetadata: function () {
             return this._metadata;
@@ -204,7 +204,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {modules:date-time.Class}
+         * @returns {module:date-time.Class}
          */
         getDateTime: function () {
             return this._dateTime;
@@ -449,7 +449,7 @@ define('controller', [], function () {
          * @param {Object} options Options for view.
          * @param {module:controller.Class~viewCallback} [callback] A callback with a created view.
          * @param {boolean} [useStored] Use a stored view if available.
-         * @param {boolean} [storedKey] A stored view key.
+         * @param {string} [storedKey] A stored view key.
          */
         main: function (view, options, callback, useStored, storedKey) {
             let isCanceled = false;
