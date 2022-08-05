@@ -1,5 +1,6 @@
 {
     "scopeNames": {
+        "Note": "Note",
         "Email": "Email",
         "User": "User",
         "Team": "Team",
@@ -57,6 +58,7 @@
         "Mass Action": "Mass Action"
     },
     "scopeNamesPlural": {
+        "Note": "Notes",
         "Email": "Emails",
         "User": "Users",
         "Team": "Teams",

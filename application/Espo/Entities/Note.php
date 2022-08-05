@@ -211,4 +211,50 @@ class Note extends Entity
 
         return in_array($userId, $userIdList);
     }
+
+    public function loadAdditionalFields(): void
+    {
+        if (
+            $this->getType() == self::TYPE_POST ||
+            $this->getType() == self::TYPE_EMAIL_RECEIVED
+        ) {
+            $this->loadAttachments();
+        }
+
+        if ($this->getParentId() && $this->getParentType()) {
+            $this->loadParentNameField('parent');
+        }
+
+        if ($this->getRelatedId() && $this->getRelatedType()) {
+            $this->loadParentNameField('related');
+        }
+
+        if (
+            $this->getType() == self::TYPE_POST &&
+            $this->getParentId() === null &&
+            !$this->get('isGlobal')
+        ) {
+            $targetType = $this->getTargetType();
+
+            if (
+                !$targetType ||
+                $targetType === self::TARGET_USERS ||
+                $targetType === self::TARGET_SELF
+            ) {
+                $this->loadLinkMultipleField('users');
+            }
+
+            if (
+                $targetType !== self::TARGET_USERS &&
+                $targetType !== self::TARGET_SELF
+            ) {
+                if (!$targetType || $targetType === self::TARGET_TEAMS) {
+                    $this->loadLinkMultipleField('teams');
+                }
+                else if ($targetType === self::TARGET_PORTALS) {
+                    $this->loadLinkMultipleField('portals');
+                }
+            }
+        }
+    }
 }

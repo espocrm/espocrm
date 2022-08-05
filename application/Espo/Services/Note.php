@@ -383,6 +383,17 @@ class Note extends Record
         parent::unlink($id, $link, $foreignId);
     }
 
+    /**
+     * @param NoteEntity $entity
+     * @return void
+     */
+    public function loadAdditionalFields(Entity $entity)
+    {
+        parent::loadAdditionalFields($entity);
+
+        $entity->loadAdditionalFields();
+    }
+
     private function getUserRepository(): UserRepository
     {
         /** @var UserRepository */

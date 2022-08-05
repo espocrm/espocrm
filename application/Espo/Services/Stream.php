@@ -955,50 +955,9 @@ class Stream
         return $whereClause;
     }
 
-    private function loadNoteAdditionalFields(NoteEntity $e): void
+    private function loadNoteAdditionalFields(NoteEntity $note): void
     {
-        if (
-            $e->getType() == NoteEntity::TYPE_POST ||
-            $e->getType() == NoteEntity::TYPE_EMAIL_RECEIVED
-        ) {
-            $e->loadAttachments();
-        }
-
-        if ($e->getParentId() && $e->getParentType()) {
-            $e->loadParentNameField('parent');
-        }
-
-        if ($e->getRelatedId() && $e->getRelatedType()) {
-            $e->loadParentNameField('related');
-        }
-
-        if (
-            $e->getType() == NoteEntity::TYPE_POST &&
-            $e->getParentId() === null &&
-            !$e->get('isGlobal')
-        ) {
-            $targetType = $e->getTargetType();
-
-            if (
-                !$targetType ||
-                $targetType === NoteEntity::TARGET_USERS ||
-                $targetType === NoteEntity::TARGET_SELF
-            ) {
-                $e->loadLinkMultipleField('users');
-            }
-
-            if (
-                $targetType !== NoteEntity::TARGET_USERS &&
-                $targetType !== NoteEntity::TARGET_SELF
-            ) {
-                if (!$targetType || $targetType === NoteEntity::TARGET_TEAMS) {
-                    $e->loadLinkMultipleField('teams');
-                }
-                else if ($targetType === NoteEntity::TARGET_PORTALS) {
-                    $e->loadLinkMultipleField('portals');
-                }
-            }
-        }
+        $note->loadAdditionalFields();
     }
 
     /**
