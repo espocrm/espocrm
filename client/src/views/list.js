@@ -515,7 +515,7 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                 this.loadList();
             }
 
-            this.$el.focus();
+            this.$el.get(0).focus({preventScroll: true});
         },
 
         /**
