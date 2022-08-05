@@ -212,6 +212,11 @@ class Note extends Entity
         return in_array($userId, $userIdList);
     }
 
+    public function getCreatedById(): ?string
+    {
+        return $this->get('createdById');
+    }
+
     public function loadAdditionalFields(): void
     {
         if (

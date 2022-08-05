@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Note;
 
+use Espo\Entities\Note;
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
@@ -77,6 +78,9 @@ class AccessChecker implements AccessEntityCREDChecker
         $this->config = $config;
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
         $parentId = $entity->get('parentId');
@@ -95,6 +99,62 @@ class AccessChecker implements AccessEntityCREDChecker
         return false;
     }
 
+    /**
+     * @param Note $entity
+     */
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
+
+        if ($parentId && $parentType) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
+
+            if (!$parent) {
+                return false;
+            }
+
+            return $this->aclManager->checkEntityStream($user, $parent);
+        }
+
+        if ($entity->getType() !== Note::TYPE_POST) {
+            return false;
+        }
+
+        if ($entity->getCreatedById() === $user->getId()) {
+            return true;
+        }
+
+        if ($entity->getTargetType() === Note::TARGET_ALL) {
+            return true;
+        }
+
+        if ($entity->getTargetType() === Note::TARGET_TEAMS) {
+            $targetTeamIdList = $entity->getLinkMultipleIdList('teams');
+
+            foreach ($user->getTeamIdList() as $teamId) {
+                if (in_array($teamId, $targetTeamIdList)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if ($entity->getTargetType() === Note::TARGET_USERS) {
+            return in_array($user->getId(), $entity->getLinkMultipleIdList('users'));
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Note $entity
+     */
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
@@ -106,7 +166,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
-            return true;
+            return false;
         }
 
         $createdAt = $entity->get('createdAt');
@@ -134,6 +194,9 @@ class AccessChecker implements AccessEntityCREDChecker
         return true;
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
@@ -145,7 +208,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
-            return true;
+            return false;
         }
 
         $createdAt = $entity->get('createdAt');

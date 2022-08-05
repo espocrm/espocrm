@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\AclPortal\Note;
 
+use Espo\Entities\Note;
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
@@ -77,16 +78,19 @@ class AccessChecker implements AccessEntityCREDChecker
         $this->config = $config;
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
 
         if (!$parentId || !$parentType) {
             return $this->defaultAccessChecker->checkEntityCreate($user, $entity, $data);
         }
 
-        $parent = $this->entityManager->getEntity($parentType, $parentId);
+        $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
         if ($parent && $this->aclManager->checkEntityStream($user, $parent)) {
             return true;
@@ -95,31 +99,42 @@ class AccessChecker implements AccessEntityCREDChecker
         return $this->defaultAccessChecker->checkEntityCreate($user, $entity, $data);
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->get('type') !== 'Post') {
-            return false;
-        }
+        $parentId = $entity->getParentId();
+        $parentType = $entity->getParentType();
 
-        if ($entity->get('type') === 'Post' && $entity->get('targetType')) {
-            return false;
-        }
+        if ($parentId && $parentType) {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
-        if (!$entity->get('parentId') || !$entity->get('parentType')) {
-            return false;
-        }
-
-        $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
-
-        if ($parent) {
-            if ($this->aclManager->checkEntityStream($user, $parent)) {
-                return true;
+            if (!$parent) {
+                return false;
             }
+
+            return $this->aclManager->checkEntityStream($user, $parent);
+        }
+
+        if ($entity->getType() !== Note::TYPE_POST) {
+            return false;
+        }
+
+        if ($entity->getCreatedById() === $user->getId()) {
+            return true;
+        }
+
+        if ($entity->getTargetType() === Note::TARGET_PORTALS) {
+            return in_array($user->getPortalId(), $entity->getLinkMultipleIdList('portals'));
         }
 
         return false;
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
         if (!$this->defaultAccessChecker->checkEntityEdit($user, $entity, $data)) {
@@ -127,7 +142,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
-            return true;
+            return false;
         }
 
         $createdAt = $entity->get('createdAt');
@@ -155,6 +170,9 @@ class AccessChecker implements AccessEntityCREDChecker
         return true;
     }
 
+    /**
+     * @param Note $entity
+     */
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
         if (!$this->defaultAccessChecker->checkEntityDelete($user, $entity, $data)) {
@@ -162,7 +180,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
-            return true;
+            return false;
         }
 
         $createdAt = $entity->get('createdAt');

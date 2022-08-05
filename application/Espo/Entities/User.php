@@ -232,6 +232,14 @@ class User extends Person
         return $value;
     }
 
+    /**
+     * Get a portal ID of the currently logged user.
+     */
+    public function getPortalId(): ?string
+    {
+        return $this->get('portalId');
+    }
+
     public function getAccounts(): LinkMultiple
     {
         /** @var LinkMultiple */
