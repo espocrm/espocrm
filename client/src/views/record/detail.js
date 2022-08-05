@@ -530,7 +530,11 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         focusOnFirstDiv: function () {
-            this.$el.find('> div').focus();
+            let element = this.$el.find('> div').get(0);
+
+            if (element) {
+                element.focus({preventScroll: true});
+            }
         },
 
         /**
