@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
+define('views/dashlets/abstract/base', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -41,11 +41,11 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
         optionsFields: {
             "title": {
                 "type": "varchar",
-                "required": true
+                "required": true,
             },
             "autorefreshInterval": {
                 "type": "enumFloat",
-                "options": [0, 0.5, 1, 2, 5, 10]
+                "options": [0, 0.5, 1, 2, 5, 10],
             }
         },
 
@@ -55,7 +55,8 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             this.name = this.options.name || this.name;
             this.id = this.options.id;
 
-            this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) || this.defaultOptions || {};
+            this.defaultOptions = this.getMetadata().get(['dashlets', this.name, 'options', 'defaults']) ||
+                this.defaultOptions || {};
 
             this.defaultOptions = _.extend({
                 title: this.getLanguage().translate(this.name, 'dashlets'),
@@ -63,56 +64,65 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
 
             this.defaultOptions = Espo.Utils.clone(this.defaultOptions);
 
-            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) || this.optionsFields || {};
+            this.optionsFields = this.getMetadata().get(['dashlets', this.name, 'options', 'fields']) ||
+                this.optionsFields || {};
             this.optionsFields = Espo.Utils.clone(this.optionsFields);
 
             this.setupDefaultOptions();
 
-            var options = Espo.Utils.cloneDeep(this.defaultOptions);
+            let options = Espo.Utils.cloneDeep(this.defaultOptions);
 
-            for (var key in options) {
+            for (let key in options) {
                 if (typeof options[key] == 'function') {
                     options[key] = options[key].call(this);
                 }
             }
 
+            let storedOptions;
+
             if (!this.options.readOnly) {
-                var storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
-            } else {
-                var allOptions = this.getConfig().get('forcedDashletsOptions') || this.getConfig().get('dashletsOptions') || {};
-                var storedOptions = allOptions[this.id] || {};
+                storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
+            }
+            else {
+                let allOptions = this.getConfig().get('forcedDashletsOptions') ||
+                    this.getConfig().get('dashletsOptions') || {};
+
+                storedOptions = allOptions[this.id] || {};
             }
 
             this.optionsData = _.extend(options, storedOptions);
 
-            if (this.optionsData.autorefreshInterval || false) {
-                var interval = this.optionsData.autorefreshInterval * 60000;
+            if (this.optionsData.autorefreshInterval) {
+                let interval = this.optionsData.autorefreshInterval * 60000;
 
-                var t;
-                var process = function () {
-                    t = setTimeout(function () {
+                let t;
+
+                let process = () => {
+                    t = setTimeout(() => {
                         this.actionRefresh();
+
                         process();
-                    }.bind(this), interval);
-                }.bind(this);
+                    }, interval);
+                };
 
                 process();
 
-                this.once('remove', function () {
+                this.once('remove', () => {
                     clearTimeout(t);
-                }, this);
+                });
             }
 
             this.actionList = Espo.Utils.clone(this.actionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
             if (this.options.readOnly) {
-                this.actionList = this.actionList.filter(function(item) {
+                this.actionList = this.actionList.filter(item => {
                     if (~this.disabledForReadOnlyActionList.indexOf(item.name)) {
                         return false;
                     }
+
                     return true;
-                }, this)
+                })
             }
 
             this.setupActionList();
@@ -128,7 +138,7 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
             {
                 name: 'options',
                 label: 'Options',
-                iconHtml: '<span class="fas fa-pencil-alt fa-sm"></span>',
+                iconHtml: '<span class="fas fa-pencil-alt"></span>',
             },
             {
                 name: 'remove',
@@ -154,12 +164,13 @@ Espo.define('views/dashlets/abstract/base', 'view', function (Dep) {
         },
 
         getTitle: function () {
-            var title = this.getOption('title');
+            let title = this.getOption('title');
+
             if (!title) {
                 title = null;
             }
+
             return title;
         },
-
     });
 });
