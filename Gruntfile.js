@@ -267,6 +267,10 @@ module.exports = grunt => {
         cp.execSync("node js/scripts/prepare-lib-original");
     });
 
+    grunt.registerTask('prepare-lib', () => {
+        cp.execSync("node js/scripts/prepare-lib");
+    });
+
     grunt.registerTask('chmod-folders', () => {
         cp.execSync(
             "find . -type d -exec chmod 755 {} +",
@@ -443,6 +447,7 @@ module.exports = grunt => {
         'prepare-lib-original',
         'uglify:bundle',
         'copy:frontendLib',
+        'prepare-lib',
         'uglify:lib',
     ]);
 
