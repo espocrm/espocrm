@@ -849,8 +849,10 @@ define('views/fields/base', ['view'], function (Dep) {
                 tooltipText = this.getHelper()
                     .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
+                let $body = $('body');
+
                 let hidePopover = () => {
-                    $('body').off('click.popover-' + this.cid);
+                    $body.off('click.popover-' + this.cid);
 
                     this.stopListening(this, 'mode-changed', hidePopover);
 
@@ -864,11 +866,11 @@ define('views/fields/base', ['view'], function (Dep) {
                     content: tooltipText,
                 })
                 .on('shown.bs.popover', () => {
-                    $('body').off('click.popover-' + this.cid);
+                    $body.off('click.popover-' + this.cid);
 
                     this.stopListening(this, 'mode-changed', hidePopover);
 
-                    $('body').on('click.popover-' + this.cid , (e) => {
+                    $body.on('click.popover-' + this.cid , e => {
                         if ($(e.target).closest('.popover-content').get(0)) {
                             return;
                         }
