@@ -3,7 +3,9 @@
         <button type="button" class="navbar-toggle" data-action="toggleCollapsable">
             <span class="fas fa-bars"></span>
         </button>
-        <div class="navbar-logo-container"><a class="navbar-brand nav-link" href="#"><img src="{{logoSrc}}" class="logo"></span></a></div>
+        <div class="navbar-logo-container"
+            ><a class="navbar-brand nav-link" href="#"
+                ><img src="{{logoSrc}}" class="logo"></span></a></div>
         <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
@@ -79,7 +81,7 @@
                     id="nav-more-tabs-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    href="javascript:"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList2}}
@@ -162,7 +164,7 @@
                     id="nav-quick-create-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    href="javascript:"
                     title="{{translate 'Create'}}"
                 ><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
@@ -185,7 +187,7 @@
                     id="nav-menu-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="#"
+                    href="javascript:"
                     title="{{translate 'Menu'}}"
                 ><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
