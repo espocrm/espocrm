@@ -4,18 +4,22 @@
     </div>
 </div>
 <div class="row post-control{{#if interactiveMode}} hidden{{/if}}">
-    <div class="col-sm-6 form-group">
-        <div>
+    <div class="col-sm-7 form-group">
+        <div class="floated-row clearfix">
             {{#if interactiveMode}}
-            <button
-                type="button"
-                class="btn btn-primary btn-xs-wide post pull-left"
-            >{{translate 'Post'}}</button>
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-primary btn-xs-wide post pull-left"
+                >{{translate 'Post'}}</button>
+            </div>
             {{/if}}
-            <div class="field" style="display: inline-block;" data-name="attachments">{{{attachmentsField}}}</div>
+            <div>
+                <div class="field" style="display: inline-block;" data-name="attachments">{{{attachmentsField}}}</div>
+            </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-5">
         <div class="form-group">
         <div class="cell" data-name="targetType">
             <div class="field" data-name="targetType">{{{targetTypeField}}}</div>
