@@ -379,21 +379,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 clearTimeout(this.fallbackModeTimeout);
             }
 
-            var draggable = false;
-            var resizable = false;
-            var disableDrag = false;
-            var disableResize = false;
+            let disableDrag = false;
+            let disableResize = false;
 
             if (this.getUser().isPortal()) {
-                draggable = {
-                    handle: '.dashlet-container .panel-heading',
-                };
-
-                resizable = {
-                    handles: 'se',
-                    helper: false,
-                };
-
                 disableDrag = true;
                 disableResize = true;
             }
@@ -473,9 +462,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         fetchLayout: function () {
-            var layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
-                var $el = $(el);
-                var node = $el.data('_gridstack_node') || {};
+            let layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
+                let $el = $(el);
+                let node = $el.data('_gridstack_node') || {};
 
                 return {
                     id: $el.data('id'),
@@ -491,8 +480,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         prepareGridstackItem: function (id, name) {
-            var $item = $('<div></div>');
-            var $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
+            let $item = $('<div></div>');
+            let $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
 
             $container.attr('data-id', id);
             $container.attr('data-name', name);
@@ -506,8 +495,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         prepareFallbackItem: function (o) {
-            var $item = $('<div></div>');
-            var $container = $('<div class="dashlet-container"></div>');
+            let $item = $('<div></div>');
+            let $container = $('<div class="dashlet-container"></div>');
 
             $container.attr('data-id', o.id);
             $container.attr('data-name', o.name);
@@ -539,7 +528,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         removeDashlet: function (id) {
-            var revertToFallback = false;
+            let revertToFallback = false;
 
             if (this.isFallbackMode()) {
                 this.initGridstack();
@@ -547,21 +536,19 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 revertToFallback = true;
             }
 
-            var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
+            let $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
 
             this.grid.removeWidget($item.get(0), true);
 
-            var layout = this.dashboardLayout[this.currentTab].layout;
+            let layout = this.dashboardLayout[this.currentTab].layout;
 
             layout.forEach((o, i) => {
                 if (o.id === id) {
                     layout.splice(i, 1);
-
-                    return;
                 }
             });
 
-            var o = {};
+            let o = {};
 
             o.dashletsOptions = this.getPreferences().get('dashletsOptions') || {};
 
@@ -592,7 +579,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         addDashlet: function (name) {
-            var revertToFallback = false;
+            let revertToFallback = false;
 
             if (this.isFallbackMode()) {
                 this.initGridstack();
@@ -600,9 +587,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 revertToFallback = true;
             }
 
-            var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
+            let id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
-            var $item = this.prepareGridstackItem(id, name);
+            let $item = this.prepareGridstackItem(id, name);
 
             this.grid.addWidget(
                 $item.get(0),
@@ -633,7 +620,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         createDashletView: function (id, name, label, callback, context) {
             context = context || this;
 
-            var o = {
+            let o = {
                 id: id,
                 name: name,
             };
