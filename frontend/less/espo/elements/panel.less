@@ -197,6 +197,16 @@
 }
 
 body {
+    .panel {
+        > .panel-heading {
+            .btn-group.open {
+                > .btn[aria-expanded="true"] {
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+
     .panel-danger,
     .panel-success,
     .panel-primary,
@@ -213,7 +223,6 @@ body {
                             color: var(--btn-text-color);
                         }
                     }
-
                 }
             }
         }
@@ -236,7 +245,8 @@ body {
             background-color: var(--panel-default-bg);
             border-color: transparent;
             .btn,
-            .btn-default {
+            .btn-default,
+            .btn.dropdown-toggle {
                 &:focus:not(:hover),
                 &:active:not(:hover) {
                     color: var(--gray-soft);

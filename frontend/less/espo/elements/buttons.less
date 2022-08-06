@@ -24,6 +24,14 @@
 
 .btn.btn-link {
     height: auto;
+
+    &:focus {
+        color: var(--link-color);
+    }
+
+    &:focus:hover {
+        color: var(--link-hover-color);
+    }
 }
 
 a.btn {
@@ -59,6 +67,15 @@ a.btn {
 
     .input-group-btn .btn.btn-sm {
         height: @input-height-small;
+    }
+}
+
+.btn {
+    &:active:hover,
+    &.active {
+        outline: 0;
+        background-image: none;
+        box-shadow: var(--btn-active-box-shadow);
     }
 }
 
@@ -146,6 +163,13 @@ a.btn {
 .btn-default.disabled > .far,
 .btn-default.disabled > .fas {
     color: @gray-light;
+}
+
+.btn-group.open,
+.open > {
+    .btn.dropdown-toggle:not(.btn-text):not(.btn-link) {
+        box-shadow: var(--btn-active-box-shadow);
+    }
 }
 
 .btn-group > .btn-text {
@@ -257,6 +281,7 @@ a.btn {
     &,
     &:active,
     &.active,
+    &:active:hover,
     &[disabled],
     fieldset[disabled] & {
         background-color: transparent;
@@ -305,8 +330,15 @@ a.btn {
     }
 
     &.btn-text-hoverable {
-        &:hover {
+        &:hover,
+        &:focus:hover {
             text-decoration: underline;
+            color: var(--btn-text-color)
+        }
+
+        &:focus,
+        &:focus:hover {
+            color: var(--btn-text-color)
         }
     }
 

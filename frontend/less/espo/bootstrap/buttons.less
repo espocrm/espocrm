@@ -21,7 +21,7 @@
   .user-select(none);
 
   &,
-  &:active,
+  &:active:hover, // Espo-fix
   &.active {
     &:focus,
     &.focus {
@@ -36,12 +36,16 @@
     text-decoration: none;
   }
 
-  &:active,
+// Espo-fix
+/*
+  &:active:hover,
   &.active {
     outline: 0;
     background-image: none;
+      box-shadow: var(--input-);
     .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
   }
+ */
 
   &.disabled,
   &[disabled],

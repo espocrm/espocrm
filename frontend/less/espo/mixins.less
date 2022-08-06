@@ -29,18 +29,12 @@
         border-color: @hover-border;
     }
 
-    &:active,
-    &.active,
+    &:active:hover,
+    &.active:hover,
     .open > .dropdown-toggle& {
         color: @color;
-        background-color: @hover-bg;
-        border-color: @hover-border;
-
-        &:hover {
-            color: @color;
-            background-color: @active-bg;
-            border-color: @active-border;
-        }
+        background-color: @active-bg;
+        border-color: @active-border;
     }
 
     &:active,
