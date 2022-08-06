@@ -194,9 +194,19 @@ a[href="javascript:"] {
     -webkit-user-drag: none;
 }
 
-a.text-muted:hover,
-a.text-muted:focus {
-    color: var(--text-muted-color);
+a.text-muted {
+    &:hover,
+    &:focus {
+        color: var(--text-muted-color);
+    }
+
+    &:hover,
+    &[aria-describedby]{
+        > .fas,
+        > .far {
+            color: var(--gray-soft);
+        }
+    }
 }
 
 .text-primary {

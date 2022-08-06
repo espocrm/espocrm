@@ -864,6 +864,7 @@ define('views/fields/base', ['view'], function (Dep) {
                     container: 'body',
                     html: true,
                     content: tooltipText,
+                    trigger: 'manual',
                 })
                 .on('shown.bs.popover', () => {
                     $body.off('click.popover-' + this.cid);

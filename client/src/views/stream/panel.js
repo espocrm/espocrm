@@ -517,15 +517,18 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 return '<li>'+ item + '</li>';
             }).join('') + '</ul>';
 
+            let $body = $('body');
+
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
                 content: message,
                 html: true,
+                trigger: 'manual',
             }).on('shown.bs.popover', () => {
-                $('body').off('click.popover-' + this.cid);
+                $body.off('click.popover-' + this.cid);
 
-                $('body').on('click.popover-' + this.cid , (e) => {
+                $body.on('click.popover-' + this.cid , (e) => {
                     if (e.target.classList.contains('popover-content')) {
                         return;
                     }
@@ -538,8 +541,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                         return;
                     }
 
-                    $('body').off('click.popover-' + this.cid);
-
+                    $body.off('click.popover-' + this.cid);
                     $a.popover('hide');
 
                     e.stopPropagation();
@@ -555,7 +557,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     $a.popover('destroy');
                 }
 
-                $('body').off('click.popover-' + this.cid);
+                $body.off('click.popover-' + this.cid);
             });
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
@@ -565,7 +567,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 defs: {
                     name: 'attachments',
                 },
-            }, (view) => {
+            }, view => {
                 view.render();
             });
         },
