@@ -844,6 +844,23 @@ define('views/modal', ['view'], function (Dep) {
         },
 
         /**
+         * Whether an action item is visible and not disabled.
+         *
+         * @param {string} name An action item name.
+         */
+        hasAvailableActionItem: function (name) {
+            let hasButton = this.buttonList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+            if (hasButton) {
+                return true;
+            }
+
+            return this.dropdownItemList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+        },
+
+        /**
          * @private
          * @return {boolean}
          */

@@ -60,6 +60,9 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
          * @inheritDoc
          */
         shortcutKeys: {
+            'Control+Enter': function (e) {
+                this.handleShortcutKeyCtrlEnter(e);
+            },
             'Control+Space': function (e) {
                 this.handleShortcutKeyCtrlSpace(e);
             },
@@ -119,26 +122,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     style: 'danger',
                     label: 'Select',
                     disabled: true,
-                    onClick: (dialog) => {
-                        var listView = this.getView('list');
-
-                        if (listView.allResultIsChecked) {
-                            this.trigger('select', {
-                                massRelate: true,
-                                where: this.collection.getWhere(),
-                                searchParams: this.collection.data,
-                            });
-                        }
-                        else {
-                            var list = listView.getSelected();
-
-                            if (list.length) {
-                                this.trigger('select', list);
-                            }
-                        }
-
-                        dialog.close();
-                    }
+                    title: 'Ctrl+Enter',
                 });
             }
 
@@ -351,6 +335,34 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             });
         },
 
+        actionSelect: function () {
+            if (!this.multiple) {
+                return;
+            }
+
+            let listView = this.getView('list');
+
+            if (listView.allResultIsChecked) {
+                this.trigger('select', {
+                    massRelate: true,
+                    where: this.collection.getWhere(),
+                    searchParams: this.collection.data,
+                });
+
+                this.close();
+
+                return;
+            }
+
+            let list = listView.getSelected();
+
+            if (list.length) {
+                this.trigger('select', list);
+            }
+
+            this.close();
+        },
+
         /**
          * @protected
          * @return {?module:views/record/search.Class}
@@ -378,6 +390,25 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             e.stopPropagation();
 
             $search.focus();
+        },
+
+        /**
+         * @protected
+         * @param {JQueryKeyEventObject} e
+         */
+        handleShortcutKeyCtrlEnter: function (e) {
+            if (!this.multiple) {
+                return;
+            }
+
+            if (!this.hasAvailableActionItem('select')) {
+                return;
+            }
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            this.actionSelect();
         },
 
         /**
