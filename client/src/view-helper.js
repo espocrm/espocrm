@@ -348,9 +348,14 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                     .addClass('btn action')
                     .addClass(options.hash.className || '')
                     .addClass(options.hash.hidden ? 'hidden' : '')
+                    .addClass(options.hash.disabled ? 'disabled' : '')
                     .attr('data-action', name)
                     .addClass('btn-' + style)
                     .html(html);
+
+                if (options.hash.disabled) {
+                    $button.attr('disabled', 'disabled');
+                }
 
                 if (options.hash.title) {
                     $button.attr('title', options.hash.title);

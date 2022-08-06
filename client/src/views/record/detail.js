@@ -122,6 +122,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {'default'|'danger'|'success'|'warning'} [style] A style.
          * @property {boolean} [hidden] Hidden.
          * @property {string} [title] A title (not translatable).
+         * @property {boolean} [disabled] Disabled.
          */
 
         /**
@@ -135,6 +136,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {boolean} [hidden] Hidden.
          * @property {Object.<string,string>} [data] Data attributes.
          * @property {string} [title] A title (not translatable).
+         * @property {boolean} [disabled] Disabled.
          */
 
         /**
@@ -193,6 +195,13 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @type {module:views/record/detail~dropdownItem[]}
          */
         dropdownEditItemList: [],
+
+        /**
+         * All action items disabled;
+         *
+         * @protected
+         */
+        allActionItemsDisabled: false,
 
         /**
          * An DOM element ID. Only for reading.
@@ -888,6 +897,143 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 this.adjustButtons();
             }
+        },
+
+        /**
+         * Disable a button or dropdown action item.
+         *
+         * @param {string} name A name.
+         */
+        disableActionItem: function (name) {
+            for (let i in this.buttonList) {
+                if (this.buttonList[i].name === name) {
+                    this.buttonList[i].disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name === name) {
+                    this.dropdownItemList[i].disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let i in this.dropdownEditItemList) {
+                if (this.dropdownEditItemList[i].name === name) {
+                    this.dropdownEditItemList[i].disabled = true;
+
+                    break;
+                }
+            }
+
+            for (let i in this.buttonEditList) {
+                if (this.buttonEditList[i].name === name) {
+                    this.buttonEditList[i].disabled = true;
+
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer
+                    .find('li > .action[data-action="'+name+'"]')
+                    .parent()
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
+
+                this.$detailButtonContainer
+                    .find('button.action[data-action="'+name+'"]')
+                    .addClass('disabled')
+                    .attr('disabled', 'disabled');
+            }
+        },
+
+        /**
+         * Enable a button or dropdown action item.
+         *
+         * @param {string} name A name.
+         */
+        enableActionItem: function (name) {
+            for (let i in this.buttonList) {
+                if (this.buttonList[i].name === name) {
+                    this.buttonList[i].disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let i in this.dropdownItemList) {
+                if (this.dropdownItemList[i].name === name) {
+                    this.dropdownItemList[i].disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let i in this.dropdownEditItemList) {
+                if (this.dropdownEditItemList[i].name === name) {
+                    this.dropdownEditItemList[i].disabled = false;
+
+                    break;
+                }
+            }
+
+            for (let i in this.buttonEditList) {
+                if (this.buttonEditList[i].name === name) {
+                    this.buttonEditList[i].disabled = false;
+
+                    break;
+                }
+            }
+
+            if (this.isRendered()) {
+                this.$detailButtonContainer
+                    .find('li > .action[data-action="'+name+'"]')
+                    .parent()
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+
+                this.$detailButtonContainer
+                    .find('button.action[data-action="'+name+'"]')
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+            }
+        },
+
+        /**
+         * Whether an action item is visible and not disabled.
+         *
+         * @param {string} name An action item name.
+         */
+        hasAvailableActionItem: function (name) {
+            if (this.allActionItemsDisabled) {
+                return false;
+            }
+
+            if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
+                let hasButton = this.buttonEditList
+                    .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+                if (hasButton) {
+                    return true;
+                }
+
+                return this.dropdownEditItemList
+                    .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+            }
+
+            let hasButton = this.buttonList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+
+            if (hasButton) {
+                return true;
+            }
+
+            return this.dropdownItemList
+                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
         },
 
         /**
@@ -2537,6 +2683,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @deprecated Use `enableActionItems`.
          */
         enableButtons: function () {
+            this.allActionItemsDisabled = false;
+
             this.$el.find(".button-container .actions-btn-group .action")
                 .removeAttr('disabled')
                 .removeClass('disabled');
@@ -2544,12 +2692,52 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             this.$el.find(".button-container .actions-btn-group .dropdown-toggle")
                 .removeAttr('disabled')
                 .removeClass('disabled');
+
+            this.buttonList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`button.action[data-action="${item.name}"]`)
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.buttonEditList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`button.action[data-action="${item.name}"]`)
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.dropdownItemList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`li > .action[data-action="${item.name}"]`)
+                        .parent()
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
+
+            this.dropdownEditItemList
+                .filter(item => item.disabled)
+                .forEach(item => {
+                    this.$detailButtonContainer
+                        .find(`li > .action[data-action="${item.name}"]`)
+                        .parent()
+                        .addClass('disabled')
+                        .attr('disabled', 'disabled');
+                });
         },
 
         /**
          * @deprecated Use `disableActionItems`.
          */
         disableButtons: function () {
+            this.allActionItemsDisabled = true;
+
             this.$el.find(".button-container .actions-btn-group .action")
                 .attr('disabled', 'disabled')
                 .addClass('disabled');
@@ -2574,7 +2762,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         removeButton: function (name) {
-            for (var i in this.buttonList) {
+            for (let i in this.buttonList) {
                 if (this.buttonList[i].name === name) {
                     this.buttonList.splice(i, 1);
 
@@ -2582,7 +2770,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i in this.dropdownItemList) {
+            for (let i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList.splice(i, 1);
 
@@ -3430,6 +3618,26 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
         /**
          * @protected
+         */
+        focusForEdit: function () {
+            this.$el
+                .find('.field:not(.hidden) .form-control:not([disabled])')
+                .first()
+                .focus();
+        },
+
+        /**
+         * @protected
+         */
+        focusForCreate: function () {
+            this.$el
+                .find('.form-control:not([disabled])')
+                .first()
+                .focus();
+        },
+
+        /**
+         * @protected
          * @param {JQueryKeyEventObject} e
          */
         handleShortcutKeyCtrlEnter: function (e) {
@@ -3443,17 +3651,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            if (
-                this.type === this.TYPE_DETAIL &&
-                this.buttonEditList.findIndex(item => item.name === action && !item.hidden) === -1
-            ) {
-                return;
-            }
-
-            if (
-                this.type === this.TYPE_EDIT &&
-                this.buttonList.findIndex(item => item.name === action && !item.hidden) === -1
-            ) {
+            if (!this.hasAvailableActionItem(action)) {
                 return;
             }
 
@@ -3474,6 +3672,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
+            e.preventDefault();
+            e.stopPropagation();
+
             if (this.mode !== this.MODE_EDIT) {
                 return;
             }
@@ -3482,8 +3683,9 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            e.preventDefault();
-            e.stopPropagation();
+            if (!this.hasAvailableActionItem('saveAndContinueEditing')) {
+                return;
+            }
 
             this.actionSaveAndContinueEditing();
         },
@@ -3505,7 +3707,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'edit' && !item.hidden) === -1) {
+            if (!this.hasAvailableActionItem('edit')) {
                 return;
             }
 
@@ -3519,26 +3721,6 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             if (!this.editModeDisabled) {
                 setTimeout(() => this.focusForEdit(), 200);
             }
-        },
-
-        /**
-         * @protected
-         */
-        focusForEdit: function () {
-            this.$el
-                .find('.field:not(.hidden) .form-control:not([disabled])')
-                .first()
-                .focus();
-        },
-
-        /**
-         * @protected
-         */
-        focusForCreate: function () {
-            this.$el
-                .find('.form-control:not([disabled])')
-                .first()
-                .focus();
         },
 
         /**

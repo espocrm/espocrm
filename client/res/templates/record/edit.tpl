@@ -12,6 +12,7 @@
                 hidden=hidden
                 title=title
                 className='btn-xs-wide'
+                disabled=disabled
             }}
         {{/each}}
         {{#if dropdownItemList}}
@@ -25,7 +26,7 @@
             {{#each dropdownItemList}}
             {{#if this}}
             <li
-                class="{{#if hidden}}hidden{{/if}}"
+                class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
             >
                 <a
                     href="javascript:"
