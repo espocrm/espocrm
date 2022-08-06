@@ -4,8 +4,7 @@
 
 <div class="link-group-container hidden">
 
-    <div class="link-container list-group">
-    </div>
+    <div class="link-container list-group"></div>
 
     <div class="input-group add-team">
         <input

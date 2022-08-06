@@ -32,8 +32,7 @@
 </div>
 
 <div class="one-of-container hidden">
-    <div class="link-one-of-container link-container list-group">
-    </div>
+    <div class="link-one-of-container link-container list-group"></div>
 
     <div class="input-group add-team">
         <input
@@ -57,8 +56,7 @@
 </div>
 
 <div class="teams-container hidden">
-    <div class="link-teams-container link-container list-group">
-    </div>
+    <div class="link-teams-container link-container list-group"></div>
     <div class="input-group add-team">
         <input
             class="form-control input-sm element-teams"
