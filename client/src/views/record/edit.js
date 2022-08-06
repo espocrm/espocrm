@@ -277,16 +277,16 @@ define('views/record/edit', ['views/record/detail'], function (Dep) {
                 return;
             }
 
+            e.preventDefault();
+            e.stopPropagation();
+
             if (!this.saveAndNewAction) {
                 return;
             }
 
-            if (this.dropdownItemList.findIndex(item => item.name === 'saveAndNew' && !item.hidden) === -1) {
+            if (!this.hasAvailableActionItem('saveAndNew')) {
                 return;
             }
-
-            e.preventDefault();
-            e.stopPropagation();
 
             this.actionSaveAndNew({focusForCreate: true});
         },
