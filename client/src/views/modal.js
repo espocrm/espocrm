@@ -641,7 +641,7 @@ define('views/modal', ['view'], function (Dep) {
          * @param {boolean} [doNotReRender=false] Do not re-render.
          */
         addDropdownItem: function (o, toBeginning, doNotReRender) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
             if (!o) {
                 this.dropdownItemList[method](false);
@@ -649,14 +649,14 @@ define('views/modal', ['view'], function (Dep) {
                 return;
             }
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -678,7 +678,7 @@ define('views/modal', ['view'], function (Dep) {
 
             this.updateDialog();
 
-            var html = this.dialog.getFooterHtml();
+            let html = this.dialog.getFooterHtml();
 
             this.$el.find('footer.modal-footer').html(html);
 
@@ -692,20 +692,22 @@ define('views/modal', ['view'], function (Dep) {
          * @param {boolean} [doNotReRender=false] Do not re-render.
          */
         removeButton: function (name, doNotReRender) {
-            var index = -1;
+            let index = -1;
 
-            this.buttonList.forEach((item, i) => {
+            for (const [i, item] of this.buttonList.entries()) {
                 if (item.name === name) {
                     index = i;
+
+                    break;
                 }
-            });
+            }
 
             if (~index) {
                 this.buttonList.splice(index, 1);
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (const [i, item] of this.dropdownItemList.entries()) {
+                if (item.name === name) {
                     this.dropdownItemList.splice(i, 1);
 
                     break;
@@ -728,13 +730,13 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name
          */
         showButton: function (name) {
-            this.buttonList.forEach((d) => {
-                if (d.name !== name) {
-                    return;
-                }
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
-                d.hidden = false;
-            });
+                    break;
+                }
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -750,13 +752,13 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name
          */
         hideButton: function (name) {
-            this.buttonList.forEach((d) => {
-                if (d.name !== name) {
-                    return;
-                }
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
-                d.hidden = true;
-            });
+                    break;
+                }
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -773,21 +775,21 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            this.buttonList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
+
+                    break;
                 }
+            }
 
-                d.hidden = false;
-            });
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
-            this.dropdownItemList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+                    break;
                 }
-
-                d.hidden = false;
-            });
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -812,21 +814,21 @@ define('views/modal', ['view'], function (Dep) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            this.buttonList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
+
+                    break;
                 }
+            }
 
-                d.hidden = true;
-            });
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
-            this.dropdownItemList.forEach(d => {
-                if (d.name !== name) {
-                    return;
+                    break;
                 }
-
-                d.hidden = true;
-            });
+            }
 
             if (!this.isRendered()) {
                 return;
@@ -914,7 +916,7 @@ define('views/modal', ['view'], function (Dep) {
                     return;
                 }
 
-                var fontSizePercentage = this.fontSizePercentage -= 4;
+                this.fontSizePercentage -= 4;
 
                 this.$el.find('.modal-title .font-size-flexible')
                     .css('font-size', this.fontSizePercentage + '%');

@@ -569,7 +569,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 var attributesAdditional = this.getSelfAssignAttributes();
 
                 if (attributesAdditional) {
-                    for (var i in attributesAdditional) {
+                    for (let i in attributesAdditional) {
                         attributes[i] = attributesAdditional[i];
                     }
                 }
@@ -595,7 +595,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 this.listenToOnce(view, 'after:update', attributes => {
                     var isChanged = false;
 
-                    for (var a in attributes) {
+                    for (let a in attributes) {
                         if (attributes[a] !== this.model.get(a)) {
                             isChanged = true;
 
@@ -785,33 +785,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         hideActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].hidden = true;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].hidden = true;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].hidden = true;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].hidden = true;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.hidden = true;
 
                     break;
                 }
@@ -845,33 +845,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         showActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].hidden = false;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].hidden = false;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].hidden = false;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].hidden = false;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.hidden = false;
 
                     break;
                 }
@@ -905,33 +905,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         disableActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].disabled = true;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.disabled = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].disabled = true;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.disabled = true;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].disabled = true;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.disabled = true;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].disabled = true;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.disabled = true;
 
                     break;
                 }
@@ -957,33 +957,33 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         enableActionItem: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
-                    this.buttonList[i].disabled = false;
+            for (let item of this.buttonList) {
+                if (item.name === name) {
+                    item.disabled = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
-                    this.dropdownItemList[i].disabled = false;
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
+                    item.disabled = false;
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownEditItemList) {
-                if (this.dropdownEditItemList[i].name === name) {
-                    this.dropdownEditItemList[i].disabled = false;
+            for (let item of this.dropdownEditItemList) {
+                if (item.name === name) {
+                    item.disabled = false;
 
                     break;
                 }
             }
 
-            for (let i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
-                    this.buttonEditList[i].disabled = false;
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
+                    item.disabled = false;
 
                     break;
                 }
@@ -1060,14 +1060,14 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                 }
             }
 
-            for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
+            for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
                 var iType = this.panelSoftLockedTypeList[i];
 
                 if (iType === softLockedType) {
                     continue;
                 }
 
-                var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+                let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
 
                 if (this.recordHelper.getPanelStateParam(name, iParam)) {
                     return;
@@ -1481,7 +1481,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             var attributes = this.model.attributes;
 
-            for (var attr in attributes) {
+            for (let attr in attributes) {
                 if (!(attr in this.attributes)) {
                     this.model.unset(attr);
                 }
@@ -2010,7 +2010,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                     var changedAttributes = model.changedAttributes();
 
-                    for (var attribute in changedAttributes) {
+                    for (let attribute in changedAttributes) {
                         var methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
 
                         if (methodName in dynamicHandler) {
@@ -2270,7 +2270,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
             };
 
             if (data.viewOptions) {
-                for (var item in data.viewOptions) {
+                for (let item in data.viewOptions) {
                     options[item] = data.viewOptions[item];
                 }
             }
@@ -2622,16 +2622,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         addButton: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
+            for (let item of this.buttonList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -2640,38 +2640,40 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         },
 
         addDropdownItem: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
             if (!o) {
                 this.dropdownItemList[method](false);
 
                 return;
             }
-            var name = o.name;
+
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (let item of this.dropdownItemList) {
+                if (item.name === name) {
                     return;
                 }
             }
+
             this.dropdownItemList[method](o);
         },
 
         addButtonEdit: function (o, toBeginning) {
-            var method = toBeginning ? 'unshift' : 'push';
+            let method = toBeginning ? 'unshift' : 'push';
 
-            var name = o.name;
+            let name = o.name;
 
             if (!name) {
                 return;
             }
 
-            for (var i in this.buttonEditList) {
-                if (this.buttonEditList[i].name === name) {
+            for (let item of this.buttonEditList) {
+                if (item.name === name) {
                     return;
                 }
             }
@@ -2762,16 +2764,16 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @param {string} name A name.
          */
         removeButton: function (name) {
-            for (let i in this.buttonList) {
-                if (this.buttonList[i].name === name) {
+            for (const [i, item] of this.buttonList.entries()) {
+                if (item.name === name) {
                     this.buttonList.splice(i, 1);
 
                     break;
                 }
             }
 
-            for (let i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name === name) {
+            for (const [i, item] of this.dropdownItemList.entries()) {
+                if (item.name === name) {
                     this.dropdownItemList.splice(i, 1);
 
                     break;
@@ -2869,12 +2871,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     this.panelFieldListMap[panel.name] = [];
                 }
 
-                for (let i in item[lType]) {
+                for (const [i, itemI] of item[lType].entries()) {
                     let row = [];
 
-                    for (let j in item[lType][i]) {
-                        var cellDefs = item[lType][i][j];
-
+                    for (const cellDefs of itemI) {
                         if (cellDefs === false) {
                             row.push(false);
 
