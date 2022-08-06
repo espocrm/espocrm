@@ -65,8 +65,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                         let dashboardLayout = [];
 
                         (data.dashboardTabList).forEach(name => {
-                            var layout = [];
-                            var id = null;
+                            let layout = [];
+                            let id = null;
 
                             this.dashboardLayout.forEach(d => {
                                 if (d.name === name) {
@@ -79,7 +79,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                                 name = data.renameMap[name];
                             }
 
-                            var o = {
+                            let o = {
                                 name: name,
                                 layout: layout,
                             };
@@ -124,7 +124,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
         setupCurrentTabLayout: function () {
             if (!this.dashboardLayout) {
-                var defaultLayout = [
+                let defaultLayout = [
                     {
                         "name": "My Espo",
                         "layout": [],
@@ -149,13 +149,13 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
             }
 
-            var dashboardLayout = this.dashboardLayout || [];
+            let dashboardLayout = this.dashboardLayout || [];
 
             if (dashboardLayout.length <= this.currentTab) {
                 this.currentTab = 0;
             }
 
-            var tabLayout = dashboardLayout[this.currentTab].layout || [];
+            let tabLayout = dashboardLayout[this.currentTab].layout || [];
 
             tabLayout = GridStack.Utils.sort(tabLayout);
 
@@ -197,7 +197,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.dashletsReadOnly = true;
             }
             else {
-                var forbiddenPreferencesFieldList = this.getAcl()
+                let forbiddenPreferencesFieldList = this.getAcl()
                     .getScopeForbiddenFieldList('Preferences', 'edit');
 
                 if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
@@ -254,14 +254,14 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.preservedDashletElements = {};
 
             this.currentTabLayout.forEach(o => {
-                var key = 'dashlet-' + o.id;
-                var view = this.getView(key);
+                let key = 'dashlet-' + o.id;
+                let view = this.getView(key);
 
                 this.unchainView(key);
 
                 this.preservedDashletViews[o.id] = view;
 
-                var $el = view.$el.children(0);
+                let $el = view.$el.children(0);
 
                 this.preservedDashletElements[o.id] = $el;
 
@@ -270,8 +270,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         addPreservedDashlet: function (id) {
-            var view = this.preservedDashletViews[id];
-            var $el = this.preservedDashletElements[id];
+            let view = this.preservedDashletViews[id];
+            let $el = this.preservedDashletElements[id];
 
             this.$el.find('.dashlet-container[data-id="'+id+'"]').append($el);
 
@@ -297,12 +297,12 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.$dashboard.empty();
 
-            var $dashboard = this.$dashboard;
+            let $dashboard = this.$dashboard;
 
             $dashboard.addClass('fallback');
 
             this.currentTabLayout.forEach(o => {
-                var $item = this.prepareFallbackItem(o);
+                let $item = this.prepareFallbackItem(o);
 
                 $dashboard.append($item);
             });
@@ -340,20 +340,20 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
         fallbackControlHeights: function () {
             this.currentTabLayout.forEach(o => {
-                var $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
+                let $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
 
-                var headerHeight = $container.find('.panel-heading').outerHeight();
+                let headerHeight = $container.find('.panel-heading').outerHeight();
 
-                var $body = $container.find('.dashlet-body');
+                let $body = $container.find('.dashlet-body');
 
-                var bodyEl = $body.get(0);
+                let bodyEl = $body.get(0);
 
                 if (!bodyEl) {
                     return;
                 }
 
                 if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
-                    var height = bodyEl.scrollHeight + headerHeight;
+                    let height = bodyEl.scrollHeight + headerHeight;
 
                     $container.css('height', height + 'px');
                 }
@@ -371,7 +371,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.$dashboard.empty();
 
-            var $gridstack = this.$gridstack = this.$dashboard;
+            let $gridstack = this.$gridstack = this.$dashboard;
 
             $gridstack.removeClass('fallback');
 
@@ -387,7 +387,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 disableResize = true;
             }
 
-            var grid = this.grid = GridStack.init(
+            let grid = this.grid = GridStack.init(
                 {
                     cellHeight: this.getThemeManager().getParam('dashboardCellHeight'),
                     verticalMargin: this.getThemeManager().getParam('dashboardCellMargin'),
@@ -403,7 +403,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             grid.removeAll();
 
             this.currentTabLayout.forEach(o => {
-                var $item = this.prepareGridstackItem(o.id, o.name);
+                let $item = this.prepareGridstackItem(o.id, o.name);
 
                 if (!this.getMetadata().get(['dashlets', o.name])) {
                     return;
@@ -450,8 +450,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             });
 
             this.grid.on('resizestop', (e, ui) => {
-                var id = $(e.target).data('id');
-                var view = this.getView('dashlet-' + id);
+                let id = $(e.target).data('id');
+                let view = this.getView('dashlet-' + id);
 
                 if (!view) {
                     return;
@@ -563,7 +563,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.getPreferences().save(o, {patch: true});
             this.getPreferences().trigger('update');
 
-            var index = this.dashletIdList.indexOf(id);
+            let index = this.dashletIdList.indexOf(id);
 
             if (~index) {
                 this.dashletIdList.splice(index, index);
