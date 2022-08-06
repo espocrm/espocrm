@@ -38,7 +38,7 @@ define('views/note/detail', ['views/main'], (Dep) => {
 
         templateContent: `
             <div class="header page-header">{{{header}}}</div>
-            <div class="record list-container-panel block-center">{{{record}}}</div>
+            <div class="record list-container list-container-panel block-center">{{{record}}}</div>
         `,
 
         /**
