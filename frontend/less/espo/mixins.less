@@ -12,56 +12,56 @@
 }
 
 .button-variant-espo(@color; @background; @border; @hover-bg; @active-bg; @hover-border; @active-border) {
-  color: @color;
-  background-color: @background;
-  border-color: @border;
-
-  &:focus,
-  &.focus {
     color: @color;
     background-color: @background;
     border-color: @border;
-  }
-  &:hover {
-    color: @color;
-    background-color: @hover-bg;
-    border-color: @hover-border;
-  }
-  &:active,
-  &.active,
-  .open > .dropdown-toggle& {
-    color: @color;
-    background-color: @hover-bg;
-    border-color: @hover-border;
 
-    &:hover,
     &:focus,
     &.focus {
-      color: @color;
-      background-color: @active-bg;
-      border-color: @active-border;
+        color: @color;
+        background-color: @background;
+        border-color: @border;
     }
-  }
-  &:active,
-  &.active,
-  .open > .dropdown-toggle& {
-    background-image: none;
-  }
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: @background;
-      border-color: @border;
-    }
-  }
 
-  .badge {
-    color: @background;
-    background-color: @color;
-  }
+    &:hover {
+        color: @color;
+        background-color: @hover-bg;
+        border-color: @hover-border;
+    }
+
+    &:active,
+    &.active,
+    .open > .dropdown-toggle& {
+        color: @color;
+        background-color: @hover-bg;
+        border-color: @hover-border;
+
+        &:hover {
+            color: @color;
+            background-color: @active-bg;
+            border-color: @active-border;
+        }
+    }
+
+    &:active,
+    &.active,
+    .open > .dropdown-toggle& {
+        background-image: none;
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover {
+            background-color: @background;
+            border-color: @border;
+        }
+    }
+
+    .badge {
+        color: @background;
+        background-color: @color;
+    }
 }
 
 .table-row-variant-espo(@state; @background; @background-5) {
