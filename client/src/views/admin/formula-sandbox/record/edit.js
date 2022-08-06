@@ -41,6 +41,7 @@ define('views/admin/formula-sandbox/record/edit', ['views/record/edit'], functio
                 name: 'run',
                 label: 'Run',
                 style: 'danger',
+                title: 'Ctrl+Enter',
             },
         ],
 
