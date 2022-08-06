@@ -19,7 +19,6 @@
             <button
                 class="btn btn-default btn-icon phone-property{{#if primary}} active{{/if}} hidden"
                 type="button"
-                tabindex="-1"
                 data-action="switchPhoneProperty"
                 data-property-type="primary"
                 data-toggle="tooltip"
@@ -31,7 +30,6 @@
             <button
                 class="btn btn-default btn-icon phone-property{{#if optOut}} active{{/if}}"
                 type="button"
-                tabindex="-1"
                 data-action="switchPhoneProperty"
                 data-property-type="optOut"
                 data-toggle="tooltip"
@@ -43,7 +41,6 @@
             <button
                 class="btn btn-default btn-icon radius-right phone-property{{#if invalid}} active{{/if}}"
                 type="button"
-                tabindex="-1"
                 data-action="switchPhoneProperty"
                 data-property-type="invalid"
                 data-toggle="tooltip"
@@ -57,7 +54,6 @@
                 type="button"
                 tabindex="-1"
                 data-action="removePhoneNumber"
-                data-property-type="invalid"
                 data-toggle="tooltip"
                 data-placement="top"
                 title="{{translate 'Remove'}}"

@@ -12,7 +12,6 @@
             <button
                 class="btn btn-default btn-icon email-property{{#if primary}} active{{/if}} hidden"
                 type="button"
-                tabindex="-1"
                 data-action="switchEmailProperty"
                 data-property-type="primary"
                 data-toggle="tooltip"
@@ -24,7 +23,6 @@
             <button
                 class="btn btn-default btn-icon email-property{{#if optOut}} active{{/if}}"
                 type="button"
-                tabindex="-1"
                 data-action="switchEmailProperty"
                 data-property-type="optOut"
                 data-toggle="tooltip"
@@ -36,7 +34,6 @@
             <button
                 class="btn btn-default btn-icon radius-right email-property{{#if invalid}} active{{/if}}"
                 type="button"
-                tabindex="-1"
                 data-action="switchEmailProperty"
                 data-property-type="invalid"
                 data-toggle="tooltip"
@@ -50,7 +47,6 @@
                 type="button"
                 tabindex="-1"
                 data-action="removeEmailAddress"
-                data-property-type="invalid"
                 data-toggle="tooltip"
                 data-placement="top"
                 title="{{translate 'Remove'}}"
