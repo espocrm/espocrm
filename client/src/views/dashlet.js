@@ -106,6 +106,10 @@ define('views/dashlet', ['view'], function (Dep) {
                     }
                 }
             },
+            'mousedown .panel-heading .dropdown-menu': function (e) {
+                // Prevent dragging.
+                e.stopPropagation();
+            },
         },
 
         /**
