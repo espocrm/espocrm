@@ -10,7 +10,7 @@
     <a
         href="javascript:"
         data-action="seeMoreText"
-    ><span class="fas fa-sm fa-chevron-down"></span> {{translate 'See more'}}</a>
+    ><span class="fas fa-sm fa-chevron-down"></span> <span class="text">{{translate 'See more'}}</span></a>
 </div>
 {{/if}}
 {{else}}

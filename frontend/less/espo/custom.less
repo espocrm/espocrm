@@ -2284,8 +2284,13 @@ stream-head-text-container .span {
         &:focus,
         &:hover,
         &:active {
-            //color: var(--gray-soft);
-            //font-weight: 600;
+            text-decoration: none;
+        }
+
+        &:hover {
+            > .text {
+                text-decoration: underline;
+            }
         }
     }
 }
