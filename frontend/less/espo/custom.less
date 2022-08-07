@@ -1348,6 +1348,11 @@ section {
 
 .dashlet-container {
     .dashlet {
+        overflow: hidden;
+        &.has-dropdown-opened {
+            overflow: visible;
+        }
+
         > .dashlet-body {
             .calendar-container > .calendar {
                 margin-left: -1px;

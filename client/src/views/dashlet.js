@@ -110,6 +110,31 @@ define('views/dashlet', ['view'], function (Dep) {
                 // Prevent dragging.
                 e.stopPropagation();
             },
+            'shown.bs.dropdown .panel-heading .btn-group': function (e) {
+                this.controlDropdownShown($(e.currentTarget).parent());
+            },
+            'hide.bs.dropdown .panel-heading .btn-group': function () {
+                this.controlDropdownHide();
+            },
+        },
+
+        controlDropdownShown: function ($dropdownContainer) {
+            let $panel = this.$el.children().first();
+
+            let dropdownBottom = $dropdownContainer.find('.dropdown-menu')
+                .get(0).getBoundingClientRect().bottom;
+
+            let panelBottom = $panel.get(0).getBoundingClientRect().bottom;
+
+            if (dropdownBottom < panelBottom) {
+                return;
+            }
+
+            $panel.addClass('has-dropdown-opened');
+        },
+
+        controlDropdownHide: function () {
+            this.$el.children().first().removeClass('has-dropdown-opened');
         },
 
         /**
