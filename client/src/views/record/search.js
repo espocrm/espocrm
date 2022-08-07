@@ -448,11 +448,16 @@ define('views/record/search', ['view'], function (Dep) {
 
             if (this.isSearchedWithAdvancedFilter) {
                 this.showResetFiltersButton();
+
+                console.log(this.$applyFilters.get(0));
+
+                this.$applyFilters.focus();
+
+                return;
             }
-            else {
-                if (!this.hasAdvancedFilter()) {
-                    this.hideApplyFiltersButton();
-                }
+
+            if (!this.hasAdvancedFilter()) {
+                this.hideApplyFiltersButton();
             }
         },
 
@@ -629,6 +634,7 @@ define('views/record/search', ['view'], function (Dep) {
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
             this.$resetButton = this.$el.find('[data-action="reset"]');
             this.$applyFiltersContainer = this.$el.find('.advanced-filters-apply-container');
+            this.$applyFilters = this.$applyFiltersContainer.find('[data-action="applyFilters"]');
 
             this.updateAddFilterButton();
 
