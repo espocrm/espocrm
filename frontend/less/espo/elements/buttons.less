@@ -39,6 +39,12 @@ a.btn {
     -webkit-user-drag: none;
 }
 
+.btn {
+    > .caret {
+        color: var(--gray-soft);
+    }
+}
+
 .panel-heading .btn-sm {
     height: auto;
 }
@@ -144,6 +150,19 @@ a.btn {
     width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+
+.btn-default.active {
+    &,
+    &:hover,
+    &:focus {
+        > .fa,
+        > .far,
+        > .fas {
+            color: var(--btn-default-color);
+        }
+    }
 }
 
 .btn-default > .fa,
