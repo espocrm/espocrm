@@ -56,22 +56,44 @@
         height: @font-size-h3;
         display: inline-block;
     }
-    opacity: 0.4;
+    opacity: 1;
+    text-shadow: none;
+
+    &,
+    > .fas,
+    > .far {
+        color: var(--text-muted-color);
+    }
+
+    &:hover {
+        opacity: 1;
+        &,
+        > .fas,
+        > .far {
+            color: var(--btn-text-color);
+        }
+    }
 }
 
 .modal-header .collapse-button {
-    opacity: 0.4;
     float: right;
     padding-right: 17px;
     padding-left: 17px;
     top: 3px;
     position: relative;
-    color: var(--gray-soft);
 
-    &:hover,
-    &:focus {
-        color: var(--gray-soft);
-        opacity: 0.8;
+    &,
+    > .fas,
+    > .far {
+        color: var(--text-muted-color);
+    }
+
+    &:hover {
+        &,
+        > .fas,
+        > .far {
+            color: var(--btn-text-color);
+        }
     }
 }
 
