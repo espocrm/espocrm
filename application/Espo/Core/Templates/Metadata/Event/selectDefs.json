@@ -3,6 +3,9 @@
         "duration": [
             "dateStart",
             "dateEnd"
+        ],
+        "dateStart": [
+            "dateEnd"
         ]
     }
 }
