@@ -305,7 +305,9 @@ function (Dep, styleCss) {
 
         cancel: function () {
             this.loadLayout(() => {
-                var countLoaded = 0;
+                let countLoaded = 0;
+
+                this.setIsNotChanged();
 
                 this.setupPanels(() => {
                     countLoaded ++;
