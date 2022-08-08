@@ -44,13 +44,14 @@ class Imap extends \Laminas\Mail\Storage\Imap
     }
 
     /**
+     * @param string $date A date in the `d-M-Y` format.
      * @return int[]
      */
     public function getIdsSinceDate(string $date): array
     {
         assert($this->protocol !== null);
 
-        return $this->protocol->search(['SINCE "' . $date . '"']);
+        return $this->protocol->search(['SINCE ' . $date]);
     }
 
     /**
