@@ -36,6 +36,10 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
 
         template: 'export/modals/export',
 
+        shortcutKeys: {
+            'Control+Enter': 'export',
+        },
+
         data: function () {
             return {};
         },
@@ -46,6 +50,7 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
                     name: 'export',
                     label: 'Export',
                     style: 'danger',
+                    title: 'Ctrl+Enter',
                 },
                 {
                     name: 'cancel',
