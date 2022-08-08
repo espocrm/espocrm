@@ -424,7 +424,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             $list.sortable({
                 connectWith: '.group-column-list',
-                cancel: '.dropdown-menu *',
+                cancel: '.btn-group *',
                 containment: this.getSelector(),
                 scroll: false,
                 over: function (e, ui) {
