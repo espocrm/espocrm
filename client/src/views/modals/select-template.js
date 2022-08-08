@@ -54,5 +54,15 @@ define('views/modals/select-template', ['views/modals/select-records'], function
 
             this.collection.where = this.searchManager.getWhere();
         },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            let firstLinkElement = this.$el.find('a.link').first().get(0);
+
+            if (firstLinkElement) {
+                setTimeout(() => firstLinkElement.focus({preventScroll: true}), 10);
+            }
+        },
     });
 });
