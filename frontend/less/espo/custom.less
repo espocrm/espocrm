@@ -378,31 +378,53 @@ div.list-kanban > div > table {
 
     th.group-header {
         font-weight: normal;
-
         color: var(--text-white-color);
-        background-color: var(--label-default-bg);
-
         position: relative;
         padding: 0;
         margin: 0;
-
         overflow: hidden;
+
+        &:first-child {
+            > div {
+                border-top-left-radius: var(--border-radius);
+                border-bottom-left-radius: var(--border-radius);
+            }
+        }
+
+        &:last-child {
+            > div {
+                width: 100%;
+
+                &:before,
+                &:after {
+                    display: none;
+                    content: "";
+                }
+
+                .create-button {
+                    right: 14px;
+                }
+
+                border-top-right-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
+            }
+        }
 
         > div {
             padding-left: @table-cell-padding;
-            position:relative;
+            position: relative;
             line-height: 28px;
             height: 100%;
-            width: 100%;
+            width: ~"calc(100% - 7px)";
+            background-color: var(--label-default-bg);
 
             .create-button {
                 float: right;
                 position: relative;
-                right: 14px;
-
+                right: 6px;
                 color: var(--text-white-color);
-
-                &:hover, &:active {
+                &:hover,
+                &:active {
                     color: var(--text-white-color);
                 }
             }
@@ -410,101 +432,110 @@ div.list-kanban > div > table {
 
         > div:before,
         > div:after {
-            content:" ";
+            content: " ";
             display: inline-block;
-            border-width: 18px;
-            border-style: solid;
             width: 0;
             height: 0;
+            border-top-width: 14px;
+            border-left-width: 15px;
+            border-bottom-width: 14px;
+            border-right-width: 0;
+            border-color: var(--label-default-bg);
+            border-style: solid;
             position: absolute;
-            margin-top: -4px;
-        }
-
-        > div:after {
-            left: ~"calc(100% - 10px)";
-            border-color: transparent transparent transparent var(--body-bg);
-            background-color: var(--label-default-bg);
         }
 
         > div:before {
-            left: ~"calc(100% - 12px)";
+            left: ~"calc(100%)";
             z-index: 2;
-            border-color: transparent transparent transparent var(--label-default-bg);
+            border-top-color: transparent;
+            border-bottom-color: transparent;
         }
-    }
 
-    th.group-header:last-child {
         > div:after {
-            background-color: transparent;
+            border-left-color: transparent;
+            left: ~"calc(100% + 2px)";
         }
     }
 
-    th.group-header.group-header-success {
-        background-color: @brand-success;
-        > div:before {
-            border-color: transparent transparent transparent @brand-success;
+    th.group-header {
+        &.group-header-success {
+            > div {
+                background-color: var(--brand-success);
+                &:before {
+                    border-left-color: var(--brand-success);
+                }
+            }
         }
-    }
-    th.group-header.group-header-before-success {
-        > div:after {
-            background-color: @brand-success;
+        &.group-header-before-success {
+            > div:after {
+                border-color: var(--brand-success) var(--brand-success) var(--brand-success) transparent;
+            }
+        }
+
+        &.group-header-danger {
+            > div {
+                background-color: var(--brand-danger);
+                &:before {
+                    border-left-color: var(--brand-danger);
+                }
+            }
+        }
+        &.group-header-before-danger {
+            > div:after {
+                border-color: var(--brand-danger) var(--brand-danger) var(--brand-danger) transparent;
+            }
+        }
+
+        &.group-header-warning {
+            > div {
+                background-color: var(--brand-warning);
+                &:before {
+                    border-left-color: var(--brand-warning);
+                }
+            }
+        }
+        &.group-header-before-warning {
+            > div:after {
+                border-color: var(--brand-warning) var(--brand-warning) var(--brand-warning) transparent;
+            }
+        }
+
+        &.group-header-primary {
+            > div {
+                background-color: var(--brand-primary);
+                &:before {
+                    border-left-color: var(--brand-primary);
+                }
+            }
+        }
+        &.group-header-before-primary {
+            > div:after {
+                border-color: var(--brand-primary) var(--brand-primary) var(--brand-primary) transparent;
+            }
+        }
+
+        &.group-header-info {
+            > div {
+                background-color: var(--brand-info);
+                &:before {
+                    border-left-color: var(--brand-info);
+                }
+            }
+        }
+        &.group-header-before-info {
+            > div:after {
+                border-color: var(--brand-info) var(--brand-info) var(--brand-info) transparent;
+            }
         }
     }
 
-    th.group-header.group-header-primary {
-        background-color: @panel-primary-border;
-        > div:before {
-            border-color: transparent transparent transparent @panel-primary-border;
-        }
-    }
-    th.group-header.group-header-before-primary {
-        > div:after {
-            background-color: @panel-primary-border;
-        }
-    }
-
-    th.group-header.group-header-danger {
-        background-color: @brand-danger;
-        > div:before {
-            border-color: transparent transparent transparent @brand-danger;
-        }
-    }
-    th.group-header.group-header-before-danger {
-        > div:after {
-            background-color: @brand-danger;
-        }
-    }
-
-    th.group-header.group-header-warning {
-        background-color: @brand-warning;
-        > div:before {
-            border-color: transparent transparent transparent @brand-warning;
-        }
-    }
-    th.group-header.group-header-before-warning {
-        > div:after {
-            background-color: @brand-warning;
-        }
-    }
-
-    th.group-header.group-header-info {
-        background-color: @brand-info;
-        > div:before {
-            border-color: transparent transparent transparent @brand-info;
-        }
-    }
-    th.group-header.group-header-before-info {
-        > div:after {
-            background-color: @brand-info;
-        }
-    }
-
-    th:last-child {
+    /*th:last-child {
         > div:before,
         > div:after {
             border-color: transparent transparent transparent transparent !important;
         }
-    }
+    }*/
 
     td.group-column {
         vertical-align: top;
@@ -651,8 +682,8 @@ div.list-kanban > div > table {
 
         }
     }
+
     div.list-kanban > div.kanban-head-container {
-        background-color: @gray-light;
         border-radius: var(--border-radius);
         > table {
             > thead {
