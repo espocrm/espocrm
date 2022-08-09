@@ -149,7 +149,7 @@
             }
 
             if (this._isModuleInternal(modulePart)) {
-                return'client/modules/' + modulePart + '/src/' + namePart + '.js';
+                return 'client/modules/' + modulePart + '/src/' + namePart + '.js';
             }
 
             return 'client/custom/modules/' + modulePart + '/src/' + namePart + '.js';
