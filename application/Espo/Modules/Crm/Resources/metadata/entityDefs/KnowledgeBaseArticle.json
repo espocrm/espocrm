@@ -19,7 +19,8 @@
         },
         "type": {
             "type": "enum",
-            "options": ["Article"]
+            "options": ["Article"],
+            "default": "Article"
         },
         "portals": {
             "type": "linkMultiple",
