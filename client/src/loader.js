@@ -187,7 +187,7 @@
                 return;
             }
 
-            (new Function("'use strict'; " + script)).call(root);
+            (new Function("'use strict'; " + script))();
         },
 
         /**
@@ -235,7 +235,7 @@
          * @private
          */
         _defineProceed: function (callback, subject, args) {
-            let o = callback.apply(this, args);
+            let o = callback.apply(root, args);
 
             if (!o) {
                 if (this._cache) {
@@ -300,7 +300,7 @@
                                 args.push(loaded[list[i]]);
                             }
 
-                            callback.apply(this, args);
+                            callback.apply(root, args);
                         }
                     });
                 });
@@ -308,7 +308,7 @@
                 return;
             }
 
-            callback.apply(this);
+            callback.apply(root);
         },
 
         /**
