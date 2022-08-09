@@ -257,7 +257,7 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
             'click [data-action="addPhoneNumber"]': function () {
                 var data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
 
-                o = {
+                let o = {
                     phoneNumber: '',
                     primary: !data.length,
                     type: false,

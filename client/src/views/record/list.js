@@ -1556,7 +1556,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                     view.close();
 
-                    count = o.count;
+                    let count = o.count;
 
                     this.collection
                         .fetch()

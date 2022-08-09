@@ -902,7 +902,7 @@ function (
 
             this.broadcastChannel = null;
 
-            xhr = new XMLHttpRequest;
+            let xhr = new XMLHttpRequest;
 
             xhr.open('GET', this.basePath + this.apiUrl + '/');
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));

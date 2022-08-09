@@ -248,12 +248,12 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             'click [data-action="addEmailAddress"]': function () {
                 var data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
 
-                o = {
+                let o = {
                     emailAddress: '',
                     primary: data.length ? false : true,
                     optOut: this.emailAddressOptedOutByDefault,
                     invalid: false,
-                    lower: ''
+                    lower: '',
                 };
 
                 data.push(o);

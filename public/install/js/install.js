@@ -423,7 +423,7 @@ InstallScript.prototype.checkSett = function(opt) {
 				var errors = data.errors;
 
 				Object.keys(errors).forEach(function (errorName) {
-					errorData = errors[errorName];
+					let errorData = errors[errorName];
 
 					switch(errorName) {
 					    case 'phpRequires':
@@ -467,7 +467,7 @@ InstallScript.prototype.checkSett = function(opt) {
 		opt.success(data);
 	})
 	.fail(function(){
-		msg = self.getLang('Ajax failed', 'messages');
+		let msg = self.getLang('Ajax failed', 'messages');
 		self.showMsg({msg: msg, error: true});
 		opt.error();
 	})
@@ -518,7 +518,7 @@ InstallScript.prototype.validate = function() {
 
 		$('[name="thousandSeparator"]').parent().parent().addClass('has-error');
 		$('[name="decimalMark"]').parent().parent().addClass('has-error');
-		msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
+		let msg = this.getLang('Thousand Separator and Decimal Mark equal', 'messages');
 		this.showMsg({msg: msg, error: true});
 		valid = false;
 	}

@@ -449,7 +449,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                     id: this.model.id,
                 })
                 .then(duplicateAttributes => {
-                    model = this.model.clone();
+                    let model = this.model.clone();
 
                     model.set('body', duplicateAttributes.body);
 
