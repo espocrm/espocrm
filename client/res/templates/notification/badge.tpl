@@ -1,4 +1,4 @@
-<a href="javascript:" class="notifications-button" data-action="showNotifications">
+<a role="button" class="notifications-button" data-action="showNotifications">
     <span class="fas fa-bell icon bell"></span>
     <span class="badge number-badge hidden"></span>
 </a>

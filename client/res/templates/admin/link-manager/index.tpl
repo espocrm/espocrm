@@ -81,13 +81,13 @@
             {{translate entityForeign category='scopeNames'}}
         </td>
         <td align="right" width="10%">
-            <a href="javascript:" data-action="editLink" data-link="{{link}}">
+            <a role="button" data-action="editLink" data-link="{{link}}">
                 {{translate 'Edit'}}
             </a>
         </td>
         <td align="right" width="10%">
             {{#if isRemovable}}
-            <a href="javascript:" data-action="removeLink" data-link="{{link}}">
+            <a role="button" data-action="removeLink" data-link="{{link}}">
                 {{translate 'Remove'}}
             </a>
             {{/if}}

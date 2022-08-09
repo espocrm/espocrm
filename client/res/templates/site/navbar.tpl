@@ -8,7 +8,7 @@
                 class="navbar-brand nav-link"
                 href="#"
             ><img src="{{logoSrc}}" class="logo"></span></a></div>
-        <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
+        <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
     <div class="navbar-collapse navbar-body">
@@ -81,7 +81,7 @@
                     id="nav-more-tabs-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="javascript:"
+                    role="button"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList2}}
@@ -164,7 +164,7 @@
                     id="nav-quick-create-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="javascript:"
+                    role="button"
                     title="{{translate 'Create'}}"
                 ><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
@@ -187,7 +187,7 @@
                     id="nav-menu-dropdown"
                     class="dropdown-toggle"
                     data-toggle="dropdown"
-                    href="javascript:"
+                    role="button"
                     title="{{translate 'Menu'}}"
                 ><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
@@ -206,7 +206,7 @@
             </li>
         </ul>
         </div>
-        <a class="minimizer hidden" href="javascript:">
+        <a class="minimizer hidden" role="button">
             <span class="fas fa-chevron-right right"></span>
             <span class="fas fa-chevron-left left"></span>
         </a>

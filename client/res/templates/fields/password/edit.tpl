@@ -1,6 +1,5 @@
-
 {{#unless isNew}}
-<a href="javascript:" data-action="change">{{translate 'change'}}</a>
+<a role="button" data-action="change">{{translate 'change'}}</a>
 {{/unless}}
 <input
 	type="password"

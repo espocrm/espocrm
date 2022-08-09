@@ -8,7 +8,7 @@
 {{#if isCut}}
 <div class="see-more-container hidden">
     <a
-        href="javascript:"
+        role="button"
         data-action="seeMoreText"
     ><span class="fas fa-sm fa-chevron-down"></span> <span class="text">{{translate 'See more'}}</span></a>
 </div>

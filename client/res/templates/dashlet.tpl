@@ -24,7 +24,7 @@
                     <a
                       data-action="{{name}}"
                       class="action"
-                      href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"
+                      {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
                       {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                     >
                         {{#if iconHtml}}{{{iconHtml}}}

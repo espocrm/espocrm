@@ -4,7 +4,7 @@
             {{#unless invalid}}
             {{#unless erased}}
             <a
-                href="javascript:"
+                role="button"
                 data-email-address="{{emailAddress}}"
                 data-action="mailTo"
                 class="selectable"
@@ -22,7 +22,7 @@
 {{else}}
     {{#if value}}
     <a
-        href="javascript:"
+        role="button"
         data-email-address="{{value}}"
         data-action="mailTo"
         class="selectable"

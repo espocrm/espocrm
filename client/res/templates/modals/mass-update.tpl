@@ -18,7 +18,7 @@
             <li
                 data-name="{{./this}}"
             ><a
-                href="javascript:"
+                role="button"
                 data-name="{{./this}}"
                 data-action="add-field"
             >{{translate this scope=../entityType category='fields'}}</a></li>

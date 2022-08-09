@@ -20,7 +20,7 @@
                     </div>
                     <div class="margin-top-2x">
                         <a
-                            href="javascript:"
+                            role="button"
                             class="btn btn-link pull-right"
                             data-action="backToLogin"
                             tabindex="4"

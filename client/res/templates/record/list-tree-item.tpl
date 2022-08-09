@@ -1,10 +1,10 @@
 <div class="cell">
-    <a href="javascript:"
+    <a role="button"
         class="action{{#unless showFold}} hidden{{/unless}} small"
         data-action="fold"
         data-id="{{model.id}}"><span class="fas fa-chevron-down"></span></a>
 
-    <a href="javascript:"
+    <a role="button"
         class="action{{#unless showUnfold}} hidden{{/unless}} small"
         data-action="unfold"
         data-id="{{model.id}}"><span class="fas fa-chevron-right"></span></a>
@@ -16,7 +16,7 @@
     >{{name}}</a>
 
     {{#unless readOnly}}
-     <a href="javascript:"
+     <a role="button"
         class="action small remove-link hidden"
         data-action="remove" data-id="{{model.id}}"
         title="{{translate 'Remove'}}"

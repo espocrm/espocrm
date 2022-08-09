@@ -23,7 +23,7 @@
             <ul class="dropdown-menu" role="menu">
             {{#each sourceList}}
                 <li><a
-                        href="javascript:"
+                        role="button"
                         class="action"
                         data-action="insertFromSource"
                         data-name="{{./this}}"

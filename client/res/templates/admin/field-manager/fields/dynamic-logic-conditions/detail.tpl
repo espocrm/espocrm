@@ -1,4 +1,3 @@
-
 <div>
     <div class="top-group-string-container">
         {{{conditionGroup}}}

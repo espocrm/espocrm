@@ -20,7 +20,7 @@
             <span class="fas fa-ellipsis-h"></span>
         </button>
         <ul class="dropdown-menu pull-left">
-            <li><a href="javascript:" data-action="removeEntity">{{translate 'Remove'}}</a></li>
+            <li><a role="button" data-action="removeEntity">{{translate 'Remove'}}</a></li>
         </ul>
         {{/if}}
     </div>

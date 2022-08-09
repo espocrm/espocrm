@@ -14,7 +14,7 @@
 <div class="list list-expanded list-tree{{#if noData}} hidden{{/if}}">
     {{#if showRootMenu}}
     <div class="btn-group pull-right">
-        <a href="javascript:" class="small dropdown-toggle btn-link" data-toggle="dropdown">
+        <a role="button" class="small dropdown-toggle btn-link" data-toggle="dropdown">
             <span class="fas fa-ellipsis-h"></span>
         </a>
         <ul class="dropdown-menu">
@@ -32,14 +32,14 @@
             {{#if hasExpandedToggler}}
             <li class="{{#unless isExpanded}}hidden{{/unless}}">
                 <a
-                    href="javascript:"
+                    role="button"
                     class="category-expanded-toggle-link action"
                     data-action="collapse"
                 >{{translate 'Collapse'}}</a>
             </li>
             <li class="{{#if isExpanded}}hidden{{/if}}">
                 <a
-                    href="javascript:"
+                    role="button"
                     class="category-expanded-toggle-link action"
                     data-action="expand"
                 >{{translate 'Expand'}}</a>
@@ -69,7 +69,7 @@
     <li class="list-group-item">
         <div>
             <a
-                href="javascript:"
+                role="button"
                 data-action="create"
                 class="action small"
                 title="{{translate 'Add'}}"

@@ -35,7 +35,7 @@
                 {{#if this}}
                 <li class="{{#if hidden}}hidden{{/if}}">
                 <a
-                    href="javascript:"
+                    role="button"
                     class="action"
                     data-action="{{name}}"
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
@@ -57,7 +57,7 @@
             {{#if this}}
             <li>
                 <a
-                    href="javascript:"
+                    role="button"
                     data-action="{{./this}}"
                     class='mass-action'
                 >{{translate this category="massActions" scope=../scope}}</a></li>
@@ -86,7 +86,7 @@
                 {{#if this}}
                 <li>
                     <a
-                        href="javascript:"
+                        role="button"
                         data-action="{{./this}}"
                         class='mass-action'
                     >{{translate this category="massActions" scope=../scope}}</a>
@@ -128,7 +128,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a
-                                    href="javascript:"
+                                    role="button"
                                     data-action="selectAllResult"
                                 >{{translate 'Select All Results'}}</a>
                             </li>
@@ -146,7 +146,7 @@
                 >
                     {{#if this.isSortable}}
                         <a
-                            href="javascript:"
+                            role="button"
                             class="sort"
                             data-name="{{this.name}}"
                             title="{{translate 'Sort'}}"
@@ -183,7 +183,7 @@
     <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
         <a
             type="button"
-            href="javascript:"
+            role="button"
             class="btn btn-default btn-block"
             data-action="showMore"
             {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}

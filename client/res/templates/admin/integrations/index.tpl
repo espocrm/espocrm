@@ -13,7 +13,7 @@
             <li
                 class="list-group-item"
             ><a
-                href="javascript:"
+                role="button"
                 class="integration-link"
                 data-name="{{./this}}"
             >{{{translate ./this scope='Integration' category='titles'}}}</a></li>

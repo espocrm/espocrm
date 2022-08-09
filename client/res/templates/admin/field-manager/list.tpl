@@ -47,7 +47,7 @@
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
         <td align="right">
             {{#if isCustom}}
-            <a href="javascript:" data-action="removeField" data-name="{{name}}">{{translate 'Remove'}}</a>
+            <a role="button" data-action="removeField" data-name="{{name}}">{{translate 'Remove'}}</a>
             {{/if}}
         </td>
     </tr>

@@ -38,7 +38,7 @@
                     <div class="margin-top-2x">
                         {{#if showForgotPassword}}
                         <a
-                            href="javascript:"
+                            role="button"
                             class="btn btn-link btn-text btn-text-hoverable btn-sm pull-right margin-top-sm"
                             data-action="passwordChangeRequest"
                             tabindex="4"

@@ -1,9 +1,7 @@
 <div class="margin-top margin-bottom-2x">
-
-	<a href="javascript:" data-action="select" class="action btn btn-default" data-value="" style="cursor: pointer;">
+	<a role="button" data-action="select" class="action btn btn-default" data-value="" style="cursor: pointer;">
 		{{translate 'None'}}
 	</a>
-
 </div>
 
 <div class="margin-top margin-bottom-2x">

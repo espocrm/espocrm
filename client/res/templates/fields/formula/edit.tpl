@@ -23,9 +23,9 @@
                 ><span class="fas fa-plus"></span></button>
                 <ul class="dropdown-menu pull-right">
                     {{#if targetEntityType}}
-                    <li><a href="javascript:" data-action="addAttribute">{{translate 'Attribute'}}</a></li>
+                    <li><a role="button" data-action="addAttribute">{{translate 'Attribute'}}</a></li>
                     {{/if}}
-                    <li><a href="javascript:" data-action="addFunction">{{translate 'Function'}}</a></li>
+                    <li><a role="button" data-action="addFunction">{{translate 'Function'}}</a></li>
                 </ul>
                 {{/if}}
             </div>

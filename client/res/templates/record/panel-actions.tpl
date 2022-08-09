@@ -18,7 +18,7 @@
     {{#each actionList}}
     {{#if this}}
     <li><a
-        href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+        {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
         class="action{{#if hidden}} hidden{{/if}}"
         {{#if action}}
             data-panel="{{../defs.name}}"

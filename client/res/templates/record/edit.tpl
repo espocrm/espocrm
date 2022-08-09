@@ -29,7 +29,7 @@
                 class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
             >
                 <a
-                    href="javascript:"
+                    role="button"
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}

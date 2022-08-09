@@ -1,5 +1,5 @@
 {{#unless isErased}}<a
-    href="javascript:"
+    role="button"
     data-email-address="{{value}}"
     data-action="mailTo"
     title="{{value}}"

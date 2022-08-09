@@ -18,7 +18,7 @@
                         <a
                             class="preset"
                             tabindex="0"
-                            href="javascript:"
+                            role="button"
                             data-name=""
                             data-action="selectPreset"
                         ><div>{{translate 'all' category='presetFilters' scope=entityType}}</div></a>
@@ -28,7 +28,7 @@
                         <a
                             class="preset"
                             tabindex="0"
-                            href="javascript:"
+                            role="button"
                             data-name="{{name}}"
                             data-action="selectPreset"
                         >
@@ -41,10 +41,10 @@
                     <li class="divider preset-control hidden"></li>
 
                     <li class="preset-control remove-preset hidden">
-                        <a tabindex="0" href="javascript:" data-action="removePreset">{{translate 'Remove Filter'}}</a>
+                        <a tabindex="0" role="button" data-action="removePreset">{{translate 'Remove Filter'}}</a>
                     </li>
                     <li class="preset-control save-preset hidden">
-                        <a tabindex="0" href="javascript:" data-action="savePreset">{{translate 'Save Filter'}}</a>
+                        <a tabindex="0" role="button" data-action="savePreset">{{translate 'Save Filter'}}</a>
                     </li>
                     {{#if boolFilterList.length}}
                         <li class="divider"></li>
@@ -110,7 +110,7 @@
                             data-name="{{name}}"
                             class="{{#if checked}}hidden{{/if}}"
                         ><a
-                            href="javascript:"
+                            role="button"
                             class="add-filter"
                             data-action="addFilter"
                             data-name="{{name}}"
@@ -147,7 +147,7 @@
 </div>
 
 <div class="advanced-filters-apply-container{{#unless toShowApplyFiltersButton}} hidden{{/unless}}">
-    <a href="javascript:" class="btn btn-default btn-sm" data-action="applyFilters">
+    <a role="button" class="btn btn-default btn-sm" data-action="applyFilters">
         <span class="fas fa-search"></span>
         <span class="text-apply{{#if toShowResetFiltersText}} hidden{{/if}}">{{translate 'Apply'}}</span>
         <span class="text-reset{{#unless toShowResetFiltersText}} hidden{{/unless}}">{{translate 'Reset'}}</span>
