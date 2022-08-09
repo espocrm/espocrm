@@ -147,7 +147,7 @@ define('views/fields/followers', ['views/fields/link-multiple'], function (Dep) 
                 }
 
                 if (list.length >= this.limit) {
-                    str += ', <a href="javascript:" data-action="showMoreFollowers">...</a>';
+                    str += ', <a role="button" data-action="showMoreFollowers">...</a>';
                 }
 
                 return str;

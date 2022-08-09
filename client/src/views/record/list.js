@@ -2240,7 +2240,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                 if (isCustomSorted) {
                     html =
                         $('<a>')
-                            .attr('href', 'javascript:')
+                            .attr('role', 'button')
                             .addClass('reset-custom-order')
                             .attr('title', this.translate('Reset'))
                             .append(

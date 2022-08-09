@@ -400,7 +400,7 @@ define('views/import/step2', 'view', function (Dep) {
             this.notify('Loading...');
             var label = this.translate(name, 'fields', this.scope);
 
-            var removeLink = '<a href="javascript:" class="pull-right" data-action="removeField" data-name="'+name+'">'+
+            var removeLink = '<a role="button" class="pull-right" data-action="removeField" data-name="'+name+'">'+
                 '<span class="fas fa-times"></span></a>';
 
             var html = '<div class="cell form-group">'+removeLink+'<label class="control-label">' + label +

@@ -4,8 +4,10 @@
             <span class="fas fa-bars"></span>
         </button>
         <div class="navbar-logo-container"
-            ><a class="navbar-brand nav-link" href="#"
-                ><img src="{{logoSrc}}" class="logo"></span></a></div>
+            ><a
+                class="navbar-brand nav-link"
+                href="#"
+            ><img src="{{logoSrc}}" class="logo"></span></a></div>
         <a href="javascript:" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
@@ -14,11 +16,9 @@
             {{#each tabDefsList1}}
             <li data-name="{{name}}" class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}">
                 <a
-                    href="{{link}}"
+                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                     class="{{aClassName}}"
-                    {{#if color}}
-                        style="border-color: {{color}}"
-                    {{/if}}
+                    {{#if color}}style="border-color: {{color}}"{{/if}}
                     {{#if isGroup}}
                         id="nav-tab-group-{{name}}"
                         data-toggle="dropdown"
@@ -48,7 +48,7 @@
                     {{#each itemList}}
                     <li data-name="{{name}}" class="in-group tab">
                         <a
-                            href="{{link}}"
+                            {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                             class="{{aClassName}}"
                             {{#if color}}
                                 style="border-color: {{color}}"
@@ -90,7 +90,7 @@
                         class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}"
                     >
                         <a
-                            href="{{link}}"
+                            {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                             class="{{aClassName}}"
                             {{#if color}} style="border-color: {{color}}"{{/if}}
                             {{#if isGroup}}
@@ -122,7 +122,7 @@
                             {{#each itemList}}
                             <li data-name="{{name}}" class="in-group tab">
                                 <a
-                                    href="{{link}}"
+                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                                     class="{{aClassName}}"
                                     {{#if color}}
                                         style="border-color: {{color}}"
@@ -194,7 +194,7 @@
                     {{#each menuDataList}}
                         {{#unless divider}}
                             <li><a
-                                    href="{{#if link}}{{link}}{{else}}javascript:{{/if}}"
+                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                                     class="nav-link{{#if action}} action{{/if}}"{{#if action}}
                                     data-action="{{action}}"{{/if}}
                                 >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>

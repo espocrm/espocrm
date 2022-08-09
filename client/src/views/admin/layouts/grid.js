@@ -61,7 +61,7 @@ function (Dep, styleCss) {
 
         emptyCellTemplate:
             '<li class="empty disabled cell">' +
-            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
+            '<a role="button" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
             '</li>',
 
         events: _.extend({

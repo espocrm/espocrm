@@ -368,7 +368,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             $header.prepend(
                 $('<a />')
                     .addClass('collapse-button')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
                     .attr('data-action', 'collapseModal')
                     .append(
                         $('<span />')
@@ -382,7 +382,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 $('<a />')
                     .addClass('close')
                     .attr('data-dismiss', 'modal')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
                     .append(
                         $('<span />')
                             .attr('aria-hidden', 'true')
@@ -476,7 +476,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
             let $a = $('<a>')
-                .attr('href', 'javascript')
+                .attr('role', 'button')
                 .attr('data-name', o.name);
 
             if (o.text) {

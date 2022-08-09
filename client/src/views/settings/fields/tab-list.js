@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
+define('views/settings/fields/tab-list', ['views/fields/array'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,19 +39,19 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.selected.forEach(function (item) {
+            this.selected.forEach(item => {
                 if (item && typeof item === 'object') {
                     if (!item.id) {
                         item.id = this.generateItemId();
                     }
                 }
-            }, this);
+            });
 
-            this.events['click [data-action="editGroup"]'] = function (e) {
+            this.events['click [data-action="editGroup"]'] = (e) => {
                 var id = $(e.currentTarget).parent().data('value').toString();
 
                 this.editGroup(id);
-            }.bind(this);
+            };
         },
 
         generateItemId: function () {
@@ -60,24 +60,21 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
 
         setupOptions: function () {
             this.params.options = Object.keys(this.getMetadata().get('scopes'))
-                .filter(
-                    function (scope) {
-                        if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
-                            return false;
-                        }
+                .filter(scope => {
+                    if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                        return false;
+                    }
 
-                        if (!this.getAcl().checkScope(scope)) {
-                            return false;
-                        }
+                    if (!this.getAcl().checkScope(scope)) {
+                        return false;
+                    }
 
-                        return this.getMetadata().get('scopes.' + scope + '.tab');
-                    },
-                    this
-                ).sort(
-                    function (v1, v2) {
-                        return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                    }.bind(this)
-                );
+                    return this.getMetadata().get('scopes.' + scope + '.tab');
+                })
+                .sort((v1, v2) => {
+                    return this.translate(v1, 'scopeNamesPlural')
+                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
+                });
 
             if (!this.noDelimiters) {
                 this.params.options.push('_delimiter_');
@@ -86,9 +83,9 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
 
             this.translatedOptions = {};
 
-            this.params.options.forEach(function (item) {
+            this.params.options.forEach(item => {
                 this.translatedOptions[item] = this.translate(item, 'scopeNamesPlural');
-            }, this);
+            });
 
             this.translatedOptions['_delimiter_'] = '. . .';
             this.translatedOptions['_delimiter-ext_'] = '. . .';
@@ -141,13 +138,13 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
             var label = this.escapeValue(item.text || '');
 
             var html = '<div class="list-group-item" data-value="' + item.id + '" style="cursor: default;">' +
-                '<a href="javascript:" class="" data-value="' + item.id + '" ' +
+                '<a role="button" class="" data-value="' + item.id + '" ' +
                     'data-action="editGroup" style="margin-right: 7px;">' +
                 '<span class="fas fa-pencil-alt fa-sm"></span>' +
                 '</a>' +
                 label +
                 '&nbsp;' +
-                '<a href="javascript:" class="pull-right" data-value="' + item.id + '" data-action="removeValue">' +
+                '<a role="button" class="pull-right" data-value="' + item.id + '" data-action="removeValue">' +
                 '<span class="fas fa-times"></span>' +
                 '</a>' +
                 '</div>';
@@ -158,9 +155,8 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
         fetchFromDom: function () {
             var selected = [];
 
-            this.$el.find('.list-group .list-group-item').each(function (i, el) {
+            this.$el.find('.list-group .list-group-item').each((i, el) => {
                 var value = $(el).data('value').toString();
-
                 var groupItem = this.getGroupValueById(value);
 
                 if (groupItem) {
@@ -170,7 +166,7 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
                 }
 
                 selected.push(value);
-            }.bind(this));
+            });
 
             this.selected = selected;
         },
@@ -190,7 +186,7 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
         },
 
         getGroupValueById: function (id) {
-            for (var item of this.selected) {
+            for (let item of this.selected) {
                 if (item && typeof item === 'object') {
                     if (item.id === id) {
                         return item;
@@ -202,20 +198,17 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
         },
 
         editGroup: function (id) {
-            var item = Espo.Utils.cloneDeep(
-                this.getGroupValueById(id) || {}
-            );
+            var item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
 
             var index = this.getGroupIndexById(id);
-
             var tabList = Espo.Utils.cloneDeep(this.selected);
 
             this.createView('dialog', 'views/settings/modals/edit-tab-group', {
                 itemData: item,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'apply', function (itemData) {
+                this.listenToOnce(view, 'apply', (itemData) => {
                     for (var a in itemData) {
                         tabList[index][a] = itemData[a];
                     }
@@ -223,7 +216,7 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
                     this.model.set(this.name, tabList);
 
                     view.close();
-                }, this);
+                });
             });
         },
 
@@ -235,6 +228,5 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
                 }
             );
         },
-
     });
 });

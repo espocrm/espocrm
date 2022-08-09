@@ -196,7 +196,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
             $el.html(name + '&nbsp');
 
             $el.prepend(
-                '<a href="javascript:" class="pull-right" data-id="' + id + '" ' +
+                '<a role="button" class="pull-right" data-id="' + id + '" ' +
                 'data-action="clearLinkTeams"><span class="fas fa-times"></a>'
             );
 

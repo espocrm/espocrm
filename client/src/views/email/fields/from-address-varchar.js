@@ -187,22 +187,22 @@ define(
             '';
 
             if (this.getAcl().check('Contact', 'create')) {
-                html += '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+
+                html += '<li><a role="button" data-action="createContact" data-address="'+address+'">'+
                     this.translate('Create Contact', 'labels', 'Email')+'</a></li>';
             }
 
             if (this.getAcl().check('Lead', 'create')) {
-                html += '<li><a href="javascript:" data-action="createLead" data-address="'+address+'">'+
+                html += '<li><a role="button" data-action="createLead" data-address="'+address+'">'+
                     this.translate('Create Lead', 'labels', 'Email')+'</a></li>';
             }
 
             if (this.getAcl().check('Contact', 'edit')) {
-                html += '<li><a href="javascript:" data-action="addToContact" data-address="'+address+'">'+
+                html += '<li><a role="button" data-action="addToContact" data-address="'+address+'">'+
                     this.translate('Add to Contact', 'labels', 'Email')+'</a></li>';
             }
 
             if (this.getAcl().check('Lead', 'edit')) {
-                html += '<li><a href="javascript:" data-action="addToLead" data-address="'+address+'">'+
+                html += '<li><a role="button" data-action="addToLead" data-address="'+address+'">'+
                     this.translate('Add to Lead', 'labels', 'Email')+'</a></li>';
             }
 
@@ -229,7 +229,7 @@ define(
         },
 
         createPerson: function (scope, address) {
-            var address = address;
+            address = address;
 
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             var name = this.nameHash[address] || null;

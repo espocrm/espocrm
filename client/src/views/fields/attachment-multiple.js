@@ -378,7 +378,7 @@ function (Dep, FileUpload) {
 
             let $attachments = this.$attachments;
 
-            let removeLink = '<a href="javascript:" class="remove-attachment pull-right">'+
+            let removeLink = '<a role="button" class="remove-attachment pull-right">'+
                 '<span class="fas fa-times"></span></a>';
 
             let previewHtml = this.getBoxPreviewHtml(name, type, id);

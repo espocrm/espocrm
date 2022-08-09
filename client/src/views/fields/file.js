@@ -627,7 +627,7 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
 
-            let removeLink = '<a href="javascript:" class="remove-attachment pull-right">' +
+            let removeLink = '<a role="button" class="remove-attachment pull-right">' +
                 '<span class="fas fa-times"></span></a>';
 
             let previewHtml = this.getBoxPreviewHtml(name, type, id);

@@ -32,10 +32,10 @@ define('views/collapsed-modal', ['view'], function (Dep) {
 
         templateContent: `
             <div class="title-container">
-                <a href="javascript:" data-action="expand" class="title">{{title}}</a>
+                <a role="button" data-action="expand" class="title">{{title}}</a>
             </div>
             <div class="close-container">
-                <a href="javascript:" data-action="close"><span class="fas fa-times"></span></a>
+                <a role="button" data-action="close"><span class="fas fa-times"></span></a>
             </div>
         `,
 

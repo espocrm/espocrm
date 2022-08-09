@@ -40,7 +40,7 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
                 <ul class="list-group no-side-margin">
                     {{#each dataList}}
                     <li class="list-group-item clearfix">
-                        <a href="javascript:"
+                        <a role="button"
                             data-action="insert" class="text-bold" data-name="{{name}}" data-type="{{../type}}">
                             {{label}}
                         </a>

@@ -72,7 +72,7 @@ define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], fu
                         .css('vertical-align', 'top')
                         .append(
                             $('<a>')
-                                .attr('href', 'javascript:')
+                                .attr('role', 'button')
                                 .addClass('pull-right')
                                 .attr('data-value', value)
                                 .attr('data-action', 'removeValue')

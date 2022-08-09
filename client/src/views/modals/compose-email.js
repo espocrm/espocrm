@@ -102,7 +102,7 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
             });
 
             this.$header = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
                 .attr('data-action', 'fullFormDraft')
                 .text(this.getLanguage().translate('Compose Email'));
 

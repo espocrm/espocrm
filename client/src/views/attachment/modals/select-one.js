@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/attachment/modals/select-one', 'views/modal', function (Dep) {
+define('views/attachment/modals/select-one', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,7 +35,7 @@ define('views/attachment/modals/select-one', 'views/modal', function (Dep) {
         templateContent:
             '<ul class="list-group no-side-margin">{{#each viewObject.options.dataList}}'+
             '<li class="list-group-item">'+
-            '<a href="javascript:" class="action" data-action="select" data-id="{{id}}">{{name}}</a>'+
+            '<a role="button" class="action" data-action="select" data-id="{{id}}">{{name}}</a>'+
             '</li>'+
             '{{/each}}</ul>',
 
@@ -51,6 +51,5 @@ define('views/attachment/modals/select-one', 'views/modal', function (Dep) {
             this.trigger('select', data.id);
             this.remove();
         },
-
     });
 });

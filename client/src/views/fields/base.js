@@ -827,7 +827,7 @@ define('views/fields/base', ['view'], function (Dep) {
 
             this.once('after:render', () => {
                 $a = $('<a>')
-                    .attr('href', 'javascript:')
+                    .attr('role', 'button')
                     .addClass('text-muted field-info')
                     .append(
                         $('<span>').addClass('fas fa-info-circle')
@@ -979,7 +979,7 @@ define('views/fields/base', ['view'], function (Dep) {
             let $cell = this.get$cell();
 
             let $editLink = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
                 .addClass('pull-right inline-edit-link hidden')
                 .append(
                     $('<span>').addClass('fas fa-pencil-alt fa-sm')
@@ -1222,13 +1222,13 @@ define('views/fields/base', ['view'], function (Dep) {
             let $cell = this.get$cell();
 
             let $saveLink = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
                 .addClass('pull-right inline-save-link')
                 .attr('title', 'Ctrl+Enter')
                 .text(this.translate('Update'));
 
             let $cancelLink = $('<a>')
-                .attr('href', 'javascript:')
+                .attr('role', 'button')
                 .addClass('pull-right inline-cancel-link')
                 .attr('title', 'Esc')
                 .text(this.translate('Cancel'));

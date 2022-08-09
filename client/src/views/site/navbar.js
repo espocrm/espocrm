@@ -963,7 +963,6 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                         tabDefsList.push({
                             name: 'show-more',
-                            link: 'javascript:',
                             isInMore: true,
                             className: 'show-more',
                             html: '<span class="fas fa-ellipsis-h more-icon"></span>',
@@ -1008,7 +1007,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
                 name = 'group-' + i;
 
-                link = 'javascript:';
+                link = null;
 
                 aClassName = 'nav-link-group';
 

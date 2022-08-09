@@ -542,7 +542,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 .append('&nbsp;')
                 .append(
                     $('<a>')
-                        .attr('href', 'javascript:')
+                        .attr('role', 'button')
                         .addClass('pull-right')
                         .attr('data-value', value)
                         .attr('data-action', 'removeValue')
