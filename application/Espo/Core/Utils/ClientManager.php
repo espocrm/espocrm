@@ -107,26 +107,18 @@ class ClientManager
         return $this->config->get('cacheTimestamp', 0);
     }
 
-    public function writeHeaders(Response $response): void
-    {
-        $this->writeContentSecurityPolicyHeader($response);
-        $this->writeStrictTransportSecurityHeader($response);
-
-        /** @var array<string,?string> $headers */
-        $headers = $this->config->get('clientHttpHeaders') ?? [];
-
-        foreach ($headers as $name => $value) {
-            if ($value === null) {
-                continue;
-            }
-
-            $response->setHeader($name, $value);
-        }
-    }
-
     /**
      * @todo Move to a separate class.
      */
+    public function writeHeaders(Response $response): void
+    {
+        $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
+        $response->setHeader('X-Content-Type-Options', 'nosniff');
+
+        $this->writeContentSecurityPolicyHeader($response);
+        $this->writeStrictTransportSecurityHeader($response);
+    }
+
     private function writeContentSecurityPolicyHeader(Response $response): void
     {
         if ($this->config->get('clientCspDisabled')) {
