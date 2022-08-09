@@ -228,6 +228,12 @@ define('views/main', ['view'], function (Dep) {
             if (this.menu) {
                 this.headerActionItemTypeList.forEach(type => {
                     (this.menu[type] || []).forEach(item => {
+                        if (item === false) {
+                            menu[type].push(false);
+
+                            return;
+                        }
+
                         item = Espo.Utils.clone(item);
 
                         menu[type] = menu[type] || [];
