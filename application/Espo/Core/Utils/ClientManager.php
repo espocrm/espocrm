@@ -138,7 +138,7 @@ class ClientManager
 
     private function writeStrictTransportSecurityHeader(Response $response): void
     {
-        $siteUrl =$this->config->get('siteUrl') ?? '';
+        $siteUrl = $this->config->get('siteUrl') ?? '';
 
         if (strpos($siteUrl, 'https://') === 0) {
             $response->setHeader('Strict-Transport-Security', 'max-age=10368000');
