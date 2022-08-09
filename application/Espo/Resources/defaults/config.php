@@ -215,5 +215,11 @@ return [
     'passwordGenerateLength' => 10,
     'massActionIdleCountThreshold' => 100,
     'exportIdleCountThreshold' => 1000,
+    'clientHttpHeaders' => [
+        'X-Frame-Options' => 'SAMEORIGIN',
+        'X-Content-Type-Options' => 'nosniff',
+    ],
+    'clientCspDisabled' => false,
+    'clientCspScriptSourceList' => [],
     'isInstalled' => false,
 ];

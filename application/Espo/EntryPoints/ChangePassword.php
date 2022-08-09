@@ -92,8 +92,8 @@ class ChangePassword implements EntryPoint
             'notFound' => !$passwordChangeRequest,
         ];
 
-        $html = $this->actionRenderer->render('controllers/password-change-request', 'passwordChange', $options);
+        $params = new ActionRenderer\Params('controllers/password-change-request', 'passwordChange', $options);
 
-        $response->writeBody($html);
+        $this->actionRenderer->write($response, $params);
     }
 }

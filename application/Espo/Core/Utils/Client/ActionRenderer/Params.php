@@ -27,55 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
+namespace Espo\Core\Utils\Client\ActionRenderer;
 
-use Espo\Services\LeadCapture as Service;
-
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Exceptions\Error,
-    EntryPoint\EntryPoint,
-    EntryPoint\Traits\NoAuth,
-    Utils\Client\ActionRenderer,
-    Api\Request,
-    Api\Response};
-
-class ConfirmOptIn implements EntryPoint
+class Params
 {
-    use NoAuth;
+    private string $controller;
+    private string $action;
+    /** @var ?array<string,mixed> */
+    private ?array $data;
 
-    private Service $service;
-    private ActionRenderer $actionRenderer;
-
-    public function __construct(Service $service, ActionRenderer $actionRenderer)
+    /**
+     * @param ?array<string,mixed> $data
+     */
+    public function __construct(string $controller, string $action, ?array $data = null)
     {
-        $this->service = $service;
-        $this->actionRenderer = $actionRenderer;
+        $this->controller = $controller;
+        $this->action = $action;
+        $this->data = $data;
+    }
+
+    public function getController(): string
+    {
+        return $this->controller;
+    }
+
+    public function getAction(): string
+    {
+        return $this->action;
     }
 
     /**
-     * @throws BadRequest
-     * @throws Error
-     * @throws \Espo\Core\Exceptions\NotFound
+     * @return ?array<string,mixed>
      */
-    public function run(Request $request, Response $response): void
+    public function getData(): ?array
     {
-        $id = $request->getQueryParam('id');
-
-        if (!$id) {
-            throw new BadRequest();
-        }
-
-        $data = $this->service->confirmOptIn($id);
-
-        $action = 'optInConfirmationExpired';
-
-        if ($data['status'] === 'success') {
-            $action = 'optInConfirmationSuccess';
-        }
-
-        $params = new ActionRenderer\Params('controllers/lead-capture-opt-in-confirmation', $action, $data);
-
-        $this->actionRenderer->write($response, $params);
+        return $this->data;
     }
 }

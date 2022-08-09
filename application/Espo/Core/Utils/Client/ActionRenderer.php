@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils\Client;
 
+use Espo\Core\Api\Response;
+use Espo\Core\Utils\Client\ActionRenderer\Params;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\ClientManager;
 
@@ -45,6 +47,18 @@ class ActionRenderer
     }
 
     /**
+     * Writes to a body.
+     */
+    public function write(Response $response, Params $params): void
+    {
+        $body = $this->render($params->getController(), $params->getAction(), $params->getData());
+
+        $this->clientManager->writeHeaders($response);
+        $response->writeBody($body);
+    }
+
+    /**
+     * @deprecated Use`write`.
      * @param ?array<string,mixed> $data
      */
     public function render(string $controller, string $action, ?array $data = null): string

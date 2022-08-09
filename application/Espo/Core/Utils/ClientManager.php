@@ -30,11 +30,16 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
+    Api\Response,
+    Api\ResponseWrapper,
     Utils\File\Manager as FileManager,
     Utils\Client\DevModeJsFileListProvider,
     Utils\Module,
     Utils\Json,
 };
+
+use Slim\Psr7\Response as Psr7Response;
+use Slim\ResponseEmitter;
 
 /**
  * Renders the main HTML page.
@@ -61,6 +66,8 @@ class ClientManager
 
     private Module $module;
 
+    private string $nonce;
+
     private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
 
     public function __construct(
@@ -77,6 +84,8 @@ class ClientManager
         $this->fileManager = $fileManager;
         $this->devModeJsFileListProvider = $devModeJsFileListProvider;
         $this->module = $module;
+
+        $this->nonce = Util::generateKey();
     }
 
     public function setBasePath(string $basePath): void
@@ -98,12 +107,65 @@ class ClientManager
         return $this->config->get('cacheTimestamp', 0);
     }
 
+    public function writeHeaders(Response $response): void
+    {
+        $this->writeContentSecurityPolicyHeader($response);
+        $this->writeStrictTransportSecurityHeader($response);
+
+        /** @var array<string,?string> $headers */
+        $headers = $this->config->get('clientHttpHeaders') ?? [];
+
+        foreach ($headers as $name => $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            $response->setHeader($name, $value);
+        }
+    }
+
+    /**
+     * @todo Move to a separate class.
+     */
+    private function writeContentSecurityPolicyHeader(Response $response): void
+    {
+        if ($this->config->get('clientCspDisabled')) {
+            return;
+        }
+
+        $scriptSrc = "script-src 'self' 'nonce-{$this->nonce}' 'unsafe-eval'";
+
+        $scriptSourceList = $this->config->get('clientCspScriptSourceList') ?? [];
+
+        foreach ($scriptSourceList as $src) {
+            $scriptSrc .= ' ' . $src;
+        }
+
+        $response->setHeader('Content-Security-Policy', $scriptSrc);
+    }
+
+    private function writeStrictTransportSecurityHeader(Response $response)
+    {
+        $siteUrl =$this->config->get('siteUrl') ?? '';
+
+        if (strpos($siteUrl, 'https://') === 0) {
+            $response->setHeader('Strict-Transport-Security', 'max-age=10368000');
+        }
+    }
+
     /**
      * @param array<string,mixed> $vars
      */
     public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
-        echo $this->render($runScript, $htmlFilePath, $vars);
+        $body = $this->render($runScript, $htmlFilePath, $vars);
+
+        $response = new ResponseWrapper(new Psr7Response());
+
+        $this->writeHeaders($response);
+        $response->writeBody($body);
+
+        (new ResponseEmitter())->emit($response->getResponse());
     }
 
     /**
@@ -205,6 +267,7 @@ class ClientManager
             'libsConfigPath' => $this->libsConfigPath,
             'internalModuleList' => Json::encode($internalModuleList),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
+            'nonce' => $this->nonce,
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);
