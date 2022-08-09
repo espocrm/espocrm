@@ -136,7 +136,7 @@ class ClientManager
         $response->setHeader('Content-Security-Policy', $scriptSrc);
     }
 
-    private function writeStrictTransportSecurityHeader(Response $response)
+    private function writeStrictTransportSecurityHeader(Response $response): void
     {
         $siteUrl =$this->config->get('siteUrl') ?? '';
 
