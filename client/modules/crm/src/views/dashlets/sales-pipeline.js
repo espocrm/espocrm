@@ -122,7 +122,6 @@ function (Dep) {
                         },
                     },
                     tooltipClassName: 'flotr-mouse-value',
-                    tootlipStyleString: tooltipStyleString,
                     tooltipStyleString: tooltipStyleString,
                 },
                 this.chartData
