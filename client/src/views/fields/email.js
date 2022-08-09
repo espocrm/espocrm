@@ -41,21 +41,24 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
         validations: ['required', 'emailData'],
 
         validateEmailData: function () {
-            var data = this.model.get(this.dataFieldName);
-            if (!data || !data.length) return;
+            let data = this.model.get(this.dataFieldName);
 
-            var addressList = [];
+            if (!data || !data.length) {
+                return;
+            }
 
-            var re = /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/;
+            let addressList = [];
 
-            var notValid = false;
+            let re = /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/;
 
-            data.forEach(function (row, i) {
-                var address = row.emailAddress || '';
-                var addressLowerCase = String(address).toLowerCase();
+            let notValid = false;
+
+            data.forEach((row, i) => {
+                let address = row.emailAddress || '';
+                let addressLowerCase = String(address).toLowerCase();
 
                 if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
-                    var msg = this.translate('fieldShouldBeEmail', 'messages')
+                    let msg = this.translate('fieldShouldBeEmail', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.reRender();
@@ -67,19 +70,21 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
                     return;
                 }
+
                 if (~addressList.indexOf(addressLowerCase)) {
-                    var msg = this.translate('fieldValueDuplicate', 'messages')
+                    let msg = this.translate('fieldValueDuplicate', 'messages')
                         .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1)
                         .toString() + ') input');
 
                     notValid = true;
+
                     return;
                 }
 
                 addressList.push(addressLowerCase);
-            }, this);
+            });
 
             if (notValid) {
                 return true;
@@ -137,22 +142,26 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
             if (emailAddressData) {
                 emailAddressData = Espo.Utils.cloneDeep(emailAddressData);
-                emailAddressData.forEach(function (item) {
-                    var address = item.emailAddress || '';
+
+                emailAddressData.forEach(item => {
+                    let address = item.emailAddress || '';
+
                     item.erased = address.indexOf(this.erasedPlaceholder) === 0;
                     item.lineThrough = item.optOut || item.invalid;
-                }, this);
+                });
             }
 
-            var data = _.extend({
-                emailAddressData: emailAddressData
+            let data = _.extend({
+                emailAddressData: emailAddressData,
             }, Dep.prototype.data.call(this));
 
             if (this.isReadMode()) {
                 data.isOptedOut = this.model.get(this.isOptedOutFieldName);
+
                 if (this.model.get(this.name)) {
                     data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0
                 }
+
                 data.valueIsSet = this.model.has(this.name);
             }
 
@@ -165,6 +174,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
@@ -178,9 +188,9 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 var property = $target.data('property-type');
 
 
-                if (property == 'primary') {
+                if (property === 'primary') {
                     if (!$target.hasClass('active')) {
-                        if ($block.find('input.email-address').val() != '') {
+                        if ($block.find('input.email-address').val() !== '') {
                             this.$el.find('button.email-property[data-property-type="primary"]')
                                 .removeClass('active').children().addClass('text-muted');
 
@@ -201,7 +211,7 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
             'click [data-action="removeEmailAddress"]': function (e) {
                 var $block = $(e.currentTarget).closest('div.email-address-block');
 
-                if ($block.parent().children().length == 1) {
+                if ($block.parent().children().length === 1) {
                     $block.find('input.email-address').val('');
                 } else {
                     this.removeEmailAddressBlock($block);
@@ -214,8 +224,8 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                 var $input = $(e.currentTarget);
                 var $block = $input.closest('div.email-address-block');
 
-                if ($input.val() == '') {
-                    if ($block.parent().children().length == 1) {
+                if ($input.val() === '') {
+                    if ($block.parent().children().length === 1) {
                         $block.find('input.email-address').val('');
                     } else {
                         this.removeEmailAddressBlock($block);
@@ -255,9 +265,11 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
         removeEmailAddressBlock: function ($block) {
             var changePrimary = false;
+
             if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
                 changePrimary = true;
             }
+
             $block.remove();
 
             if (changePrimary) {
@@ -277,22 +289,23 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
 
             if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
                 this.$element.autocomplete({
-                    serviceUrl: function (q) {
+                    serviceUrl: (q) => {
                         return 'EmailAddress/action/searchInAddressBook?maxSize=' +
                             this.getAutocompleteMaxCount();
-                    }.bind(this),
+                    },
                     paramName: 'q',
                     minChars: 1,
                     autoSelectFirst: true,
                     triggerSelectOnValidInput: false,
-                    formatResult: function (suggestion) {
+                    formatResult: (suggestion) => {
                         return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
                             this.getHelper().escapeString(suggestion.id) + '&#62;';
-                    }.bind(this),
-                    transformResult: function (response) {
+                    },
+                    transformResult: (response) => {
                         var response = JSON.parse(response);
                         var list = [];
-                        response.forEach(function(item) {
+
+                        response.forEach(item => {
                             list.push({
                                 id: item.emailAddress,
                                 name: item.entityName,
@@ -303,34 +316,40 @@ define('views/fields/email', ['views/fields/varchar'], function (Dep) {
                                 data: item.emailAddress,
                                 value: item.emailAddress
                             });
-                        }, this);
+                        });
+
                         return {
                             suggestions: list
                         };
-                    }.bind(this),
-                    onSelect: function (s) {
+                    },
+                    onSelect: (s) => {
                         this.$element.val(s.emailAddress);
-                    }.bind(this)
+                    },
                 });
             }
         },
 
         manageAddButton: function () {
-            var $input = this.$el.find('input.email-address');
-            c = 0;
-            $input.each(function (i, input) {
-                if (input.value != '') {
+            let $input = this.$el.find('input.email-address');
+            let c = 0;
+
+            $input.each((i, input) => {
+                if (input.value !== '') {
                     c++;
                 }
             });
 
-            if (c == $input.length) {
+            if (c === $input.length) {
                 this.$el.find('[data-action="addEmailAddress"]')
-                    .removeClass('disabled').removeAttr('disabled');
-            } else {
-                this.$el.find('[data-action="addEmailAddress"]')
-                    .addClass('disabled').attr('disabled', 'disabled');
+                    .removeClass('disabled')
+                    .removeAttr('disabled');
+
+                return;
             }
+
+            this.$el.find('[data-action="addEmailAddress"]')
+                .addClass('disabled')
+                .attr('disabled', 'disabled');
         },
 
         manageButtonsVisibility: function () {

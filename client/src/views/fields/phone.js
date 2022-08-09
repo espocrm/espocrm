@@ -298,23 +298,26 @@ define('views/fields/phone', ['views/fields/varchar'], function (Dep) {
         },
 
         manageAddButton: function () {
-            var $input = this.$el.find('input.phone-number');
-            c = 0;
-            $input.each(function (i, input) {
-                if (input.value != '') {
+            let $input = this.$el.find('input.phone-number');
+            let c = 0;
+
+            $input.each((i, input) => {
+                if (input.value !== '') {
                     c++;
                 }
             });
 
-            if (c == $input.length) {
+            if (c === $input.length) {
                 this.$el.find('[data-action="addPhoneNumber"]')
                     .removeClass('disabled')
                     .removeAttr('disabled');
-            } else {
-                this.$el.find('[data-action="addPhoneNumber"]')
-                    .addClass('disabled')
-                    .attr('disabled', 'disabled');
+
+                return;
             }
+
+            this.$el.find('[data-action="addPhoneNumber"]')
+                .addClass('disabled')
+                .attr('disabled', 'disabled');
         },
 
         manageButtonsVisibility: function () {
