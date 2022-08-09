@@ -135,21 +135,33 @@ define('views/settings/fields/tab-list', ['views/fields/array'], function (Dep) 
         },
 
         getGroupItemHtml: function (item) {
-            var label = this.escapeValue(item.text || '');
+            let label = item.text || '';
 
-            var html = '<div class="list-group-item" data-value="' + item.id + '" style="cursor: default;">' +
-                '<a role="button" class="" data-value="' + item.id + '" ' +
-                    'data-action="editGroup" style="margin-right: 7px;">' +
-                '<span class="fas fa-pencil-alt fa-sm"></span>' +
-                '</a>' +
-                label +
-                '&nbsp;' +
-                '<a role="button" class="pull-right" data-value="' + item.id + '" data-action="removeValue">' +
-                '<span class="fas fa-times"></span>' +
-                '</a>' +
-                '</div>';
-
-            return html;
+            return $('<div>')
+                .addClass('list-group-item')
+                .attr('data-value', item.id)
+                .css('cursor', 'default')
+                .append(
+                    $('<a>')
+                        .attr('role', 'button')
+                        .attr('data-value', item.id)
+                        .attr('data-action', 'editGroup')
+                        .css('margin-right', '7px')
+                        .append(
+                            $('<span>').addClass('fas fa-pencil-alt fa-sm')
+                        ),
+                    $('<span>').text(label),
+                    '&nbsp;',
+                    $('<a>')
+                        .addClass('pull-right')
+                        .attr('role', 'button')
+                        .attr('data-value', item.id)
+                        .attr('data-action', 'removeValue')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        )
+                )
+                .get(0).outerHTML;
         },
 
         fetchFromDom: function () {
