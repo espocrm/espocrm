@@ -190,7 +190,9 @@ blockquote {
 }
 
 a[href="javascript:"] {
-    user-select: none;
+    &:not(.selectable) {
+        user-select: none;
+    }
     -webkit-user-drag: none;
 }
 

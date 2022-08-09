@@ -3,7 +3,12 @@
         <div>
             {{#unless invalid}}
             {{#unless erased}}
-            <a href="javascript:" data-email-address="{{emailAddress}}" data-action="mailTo">
+            <a
+                href="javascript:"
+                data-email-address="{{emailAddress}}"
+                data-action="mailTo"
+                class="selectable"
+            >
             {{/unless}}
             {{/unless}}
             <span {{#if lineThrough}}style="text-decoration: line-through"{{/if}}>{{emailAddress}}</span>
@@ -16,7 +21,12 @@
     {{/each}}
 {{else}}
     {{#if value}}
-    <a href="javascript:" data-email-address="{{value}}" data-action="mailTo">{{value}}</a>
+    <a
+        href="javascript:"
+        data-email-address="{{value}}"
+        data-action="mailTo"
+        class="selectable"
+    >{{value}}</a>
     {{else}}
         {{#if valueIsSet}}<span class="none-value">{{translate 'None'}}</span>{{else}}
         <span class="loading-value">...</span>{{/if}}
