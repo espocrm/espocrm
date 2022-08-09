@@ -157,9 +157,37 @@
 
         /**
          * @private
+         * @param {string} script
+         * @param {string} name
          */
-        _execute: function (script) {
-            eval.call(root, script);
+        _execute: function (script, name) {
+            /** @var {?string} */
+            let module = null;
+
+            let colonIndex = name.indexOf(':');
+
+            if (colonIndex > 0) {
+                module = name.substring(0, colonIndex);
+            }
+
+            let noStrictMode = false;
+
+            if (!module && name.indexOf('lib!') === 0) {
+                noStrictMode = true;
+            }
+
+            // For bc.
+            if (module && module !== 'crm') {
+                noStrictMode = true;
+            }
+
+            if (noStrictMode) {
+                (new Function(script)).call(root);
+
+                return;
+            }
+
+            (new Function("'use strict'; " + script)).call(root);
         },
 
         /**
@@ -520,7 +548,7 @@
             }
 
             if (dataType === 'script') {
-                this._execute(cached);
+                this._execute(cached, name);
             }
 
             if (type === 'class') {
@@ -607,7 +635,7 @@
             }
 
             if (dataType === 'script') {
-                this._execute(response);
+                this._execute(response, name);
             }
 
             let data;
