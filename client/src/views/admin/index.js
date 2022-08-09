@@ -150,7 +150,7 @@ define('views/admin/index', 'view', function (Dep) {
             this.$el.find('.admin-content-section').addClass('hidden');
             this.$el.find('.admin-content-row').addClass('hidden');
 
-            anythingMatched = false;
+            let anythingMatched = false;
 
             this.panelDataList.forEach((panel, panelIndex) => {
                 var panelMatched = false;
