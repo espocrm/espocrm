@@ -41,6 +41,8 @@ define('views/login-second-step', ['view'], function (Dep) {
 
         events: {
             'submit #login-form': function (e) {
+                e.preventDefault();
+
                 this.send();
             },
             'click [data-action="backToLogin"]': function () {

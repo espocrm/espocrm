@@ -4,7 +4,7 @@
         <div class="panel-body">
             <di>
                 <p>{{message}}</p>
-                <form id="login-form" onsubmit="return false;">
+                <form id="login-form">
                     <div class="form-group">
                         <label for="field-code" >{{translate 'Code' scope='User'}}</label>
                         <input

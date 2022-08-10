@@ -8,7 +8,7 @@
         </div>
         <div class="panel-body">
             <div>
-                <form id="login-form" onsubmit="return false;">
+                <form id="login-form">
                     <div class="form-group">
                         <label for="field-username">{{translate 'Username'}}</label>
                         <input
