@@ -66,7 +66,7 @@ class ExternalAccount extends RecordBase
                 $entity->get('enabled') &&
                 $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
             ) {
-                /** @var string */
+                /** @var string $id */
                 $id = $entity->getId();
 
                 $userAccountAclScope = $this->metadata
@@ -118,7 +118,7 @@ class ExternalAccount extends RecordBase
 
     public function getActionRead(Request $request, Response $response): stdClass
     {
-        /** @var string */
+        /** @var string $id */
         $id = $request->getRouteParam('id');
 
         if ($id === '') {
@@ -132,7 +132,7 @@ class ExternalAccount extends RecordBase
 
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
-        /** @var string */
+        /** @var string $id */
         $id = $request->getRouteParam('id');
 
         $data = $request->getParsedBody();

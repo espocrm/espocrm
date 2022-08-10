@@ -189,7 +189,7 @@ class InjectableFactory
             !$type->isBuiltin()
         ) {
             try {
-                /** @var class-string */
+                /** @var class-string $dependencyClassName */
                 $dependencyClassName = $type->getName();
 
                 $dependencyClass = new ReflectionClass($dependencyClassName);
@@ -395,7 +395,7 @@ class InjectableFactory
             $type instanceof ReflectionNamedType &&
             !$type->isBuiltin()
         ) {
-            /** @var class-string */
+            /** @var class-string $dependencyClassName */
             $dependencyClassName = $type->getName();
 
             $paramClass = new ReflectionClass($dependencyClassName);

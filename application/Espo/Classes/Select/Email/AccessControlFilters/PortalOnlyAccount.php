@@ -61,7 +61,7 @@ class PortalOnlyAccount implements Filter
             'emailUser.userId' => $this->user->getId(),
         ];
 
-        /** @var string[] */
+        /** @var string[] $accountIdList */
         $accountIdList = $this->user->getLinkMultipleIdList('accounts');
 
         if (count($accountIdList)) {
