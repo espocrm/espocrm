@@ -1377,6 +1377,10 @@ define('views/fields/base', ['view'], function (Dep) {
                 $el = this.$element;
             }
 
+            if (!$el.length) {
+                $el = this.$el;
+            }
+
             if ($el.length) {
                 let rect = $el.get(0).getBoundingClientRect();
 
