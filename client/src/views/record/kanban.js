@@ -64,6 +64,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
         events: {
             'click a.link': function (e) {
+                if (e.ctrlKey) {
+                    return;
+                }
+
                 e.stopPropagation();
 
                 if (!this.scope || this.selectable) {
