@@ -2970,7 +2970,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.$el.find('.total-count-span').text(this.collection.total.toString());
 
-            var index = this.checkedList.indexOf(id);
+            let index = this.checkedList.indexOf(id);
 
             if (index !== -1) {
                 this.checkedList.splice(index, 1);
@@ -2978,11 +2978,11 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             this.removeRowHtml(id);
 
-            var key = id;
+            let key = id;
 
             this.clearView(key);
 
-            var index = this.rowList.indexOf(key);
+            index = this.rowList.indexOf(key);
 
             if (~index) {
                 this.rowList.splice(index, 1);
