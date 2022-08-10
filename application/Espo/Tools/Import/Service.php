@@ -437,7 +437,7 @@ class Service
 
         $stream = Psr7Utils::streamFor($resource);
 
-        /** @var Collection<ImportError> */
+        /** @var Collection<ImportError> $errorList */
         $errorList = $this->entityManager
             ->getRDBRepositoryByClass(ImportEntity::class)
             ->getRelation($import, 'errors')
@@ -449,7 +449,7 @@ class Service
         if ($import->getParams()->headerRow()) {
             $file->seek(0);
 
-            /** @var string|false */
+            /** @var string|false $line */
             $line = $file->current();
 
             if ($line === false) {
@@ -462,7 +462,7 @@ class Service
         foreach ($errorList as $error) {
             $file->seek($error->getRowIndex());
 
-            /** @var string|false */
+            /** @var string|false $line */
             $line = $file->current();
 
             if ($line === false) {

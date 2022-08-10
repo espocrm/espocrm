@@ -54,7 +54,7 @@ class ProcessorFactory
             throw new LogicException("Not supported export format '{$format}'.");
         }
 
-        /** @var ?class-string<Processor> */
+        /** @var ?class-string<Processor> $className */
         $className = $this->metadata->get(['app', 'export', 'processorClassNameMap', $format]);
 
         if (!$className) {

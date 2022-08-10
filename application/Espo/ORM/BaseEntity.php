@@ -137,7 +137,7 @@ class BaseEntity implements Entity
      */
     public function getId(): string
     {
-        /** @var ?string */
+        /** @var ?string $id */
         $id = $this->get('id');
 
         if ($id === null) {
@@ -895,7 +895,7 @@ class BaseEntity implements Entity
             return true;
         }
 
-        /** @var string */
+        /** @var string $type */
         $type = $this->getAttributeType($name);
 
         return !self::areValuesEqual(

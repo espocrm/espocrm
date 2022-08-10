@@ -82,7 +82,7 @@ class InboundEmail extends RecordService implements
 
     public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
-        /** @var ?InboundEmailEntity */
+        /** @var ?InboundEmailEntity $inboundEmail */
         $inboundEmail = $this->entityManager
             ->getRDBRepository('InboundEmail')
             ->where([
@@ -109,7 +109,7 @@ class InboundEmail extends RecordService implements
         }
 
         if ($groupEmailAccountPermission === 'team') {
-            /** @var string[] */
+            /** @var string[] $teamIdList */
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             if (!count($teamIdList)) {
@@ -200,7 +200,7 @@ class InboundEmail extends RecordService implements
      */
     public function applySmtpHandler(InboundEmailEntity $emailAccount, array &$params): void
     {
-        /** @var ?class-string */
+        /** @var ?class-string $handlerClassName */
         $handlerClassName = $emailAccount->get('smtpHandler');
 
         if (!$handlerClassName) {

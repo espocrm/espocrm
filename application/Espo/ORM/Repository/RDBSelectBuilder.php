@@ -67,7 +67,7 @@ class RDBSelectBuilder
     {
         $this->entityManager = $entityManager;
 
-        /** @var RDBRepository<TEntity> */
+        /** @var RDBRepository<TEntity> $repository */
         $repository = $this->entityManager->getRepository($entityType);
 
         $this->repository = $repository;

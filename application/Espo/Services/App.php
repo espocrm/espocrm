@@ -165,7 +165,7 @@ class App
         ];
 
         foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
-            /** @var ?class-string<AppParam> */
+            /** @var ?class-string<AppParam> $className */
             $className = $item['className'] ?? null;
 
             if (!$className) {
@@ -173,7 +173,7 @@ class App
             }
 
             try {
-                /** @var AppParam */
+                /** @var AppParam $obj */
                 $obj = $this->injectableFactory->create($className);
 
                 $itemParams = $obj->get();
@@ -245,7 +245,7 @@ class App
         if (!$this->user->isAdmin()) {
             $data = unserialize(serialize($data));
 
-            /** @var string[] */
+            /** @var string[] $scopeList */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {
@@ -292,7 +292,7 @@ class App
 
         $entityManager = $this->entityManager;
 
-        /** @var string[] */
+        /** @var string[] $teamIdList */
         $teamIdList = $user->getLinkMultipleIdList('teams');
 
         $groupEmailAccountPermission = $this->acl->get('groupEmailAccountPermission');
@@ -427,7 +427,7 @@ class App
      */
     public function jobPopulateArrayValues(): void
     {
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes']));
 
         $query = $this->entityManager->getQueryBuilder()

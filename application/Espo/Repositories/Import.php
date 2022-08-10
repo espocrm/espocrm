@@ -99,7 +99,7 @@ class Import extends Database
                 return $query;
         }
 
-        /** @var \Espo\ORM\Query\SelectBuilder */
+        /** @var \Espo\ORM\Query\SelectBuilder $builder */
         $builder = $this->entityManager->getQueryBuilder()->clone($query);
 
         $builder->join(

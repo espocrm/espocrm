@@ -45,7 +45,7 @@ class Integration extends Database
         $entity = parent::getById($id);
 
         if (!$entity) {
-            /** @var IntegrationEntity */
+            /** @var IntegrationEntity $entity */
             $entity = $this->get();
 
             $entity->set('id', $id);

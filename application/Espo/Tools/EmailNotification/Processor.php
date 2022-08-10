@@ -463,7 +463,7 @@ class Processor
         if (!array_key_exists($key, $this->emailNotificationEntityHandlerHash)) {
             $this->emailNotificationEntityHandlerHash[$key] = null;
 
-            /** @var ?class-string<EmailNotificationHandler> */
+            /** @var ?class-string<EmailNotificationHandler> $className */
             $className = $this->metadata
                 ->get(['notificationDefs', $entityType, 'emailNotificationHandlerClassNameMap', $type]);
 
@@ -600,7 +600,7 @@ class Processor
         if (!array_key_exists($user->getId(), $this->userIdPortalCacheMap)) {
             $this->userIdPortalCacheMap[$user->getId()] = null;
 
-            /** @var string[] */
+            /** @var string[] $portalIdList */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             $defaultPortalId = $this->config->get('defaultPortalId');

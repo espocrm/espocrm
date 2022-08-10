@@ -254,7 +254,7 @@ class Import
             }
         }
 
-        /** @var ?Attachment */
+        /** @var ?Attachment $attachment */
         $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $this->attachmentId);
 
         if (!$attachment) {
@@ -270,7 +270,7 @@ class Import
         $startFromIndex = null;
 
         if ($this->id) {
-            /** @var ?ImportEntity */
+            /** @var ?ImportEntity $import */
             $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $this->id);
 
             if (!$import) {
@@ -284,7 +284,7 @@ class Import
             $import->set('status', ImportEntity::STATUS_IN_PROCESS);
         }
         else {
-            /** @var ImportEntity */
+            /** @var ImportEntity $import */
             $import = $this->entityManager->getNewEntity(ImportEntity::ENTITY_TYPE);
 
             $import->set([
@@ -929,7 +929,7 @@ class Import
     {
         $params = $this->params;
 
-        /** @var non-empty-string */
+        /** @var non-empty-string $decimalMark */
         $decimalMark = $params->getDecimalMark() ?? self::DEFAULT_DECIMAL_MARK;
 
         $dateFormat = DateTimeUtil::convertFormatToSystem(

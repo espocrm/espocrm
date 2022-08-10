@@ -59,7 +59,7 @@ class DataLoaderManager
             $data = Data::create();
         }
 
-        /** @var class-string<DataLoader>[] */
+        /** @var class-string<DataLoader>[] $classNameList */
         $classNameList = $this->metadata->get(['pdfDefs', $entity->getEntityType(), 'dataLoaderClassNameList']) ?? [];
 
         foreach ($classNameList as $className) {

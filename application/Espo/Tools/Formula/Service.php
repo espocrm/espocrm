@@ -74,7 +74,7 @@ class Service
         $syntaxCheckResult = $this->checkSyntax($expression);
 
         if (!$syntaxCheckResult->isSuccess()) {
-            /** @var SyntaxError */
+            /** @var SyntaxError $exception */
             $exception = $syntaxCheckResult->getException();
 
             return RunResult::createSyntaxError($exception);

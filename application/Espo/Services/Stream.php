@@ -203,11 +203,11 @@ class Stream
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
-                /** @var ?string */
+                /** @var ?string $statusField */
                 $statusField = $data['statusField'] ?? null;
 
                 if (!$statusField) {
@@ -1198,7 +1198,7 @@ class Stream
             ->limit($params['offset'] ?? 0, $params['maxSize'])
             ->order('number', 'DESC');
 
-        /** @var iterable<NoteEntity> */
+        /** @var iterable<NoteEntity> $collection */
         $collection = $this->entityManager
             ->getRDBRepository(NoteEntity::ENTITY_TYPE)
             ->clone($builder->build())
@@ -1341,7 +1341,7 @@ class Stream
             return;
         }
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_EMAIL_RECEIVED);
@@ -1394,7 +1394,7 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_EMAIL_SENT);
@@ -1458,7 +1458,7 @@ class Stream
     {
         $entityType = $entity->getEntityType();
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_CREATE);
@@ -1546,7 +1546,7 @@ class Stream
         array $options = []
     ): void {
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $entityType = $entity->getEntityType();
@@ -1598,7 +1598,7 @@ class Stream
             return;
         }
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set([
@@ -1625,7 +1625,7 @@ class Stream
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_ASSIGN);
@@ -1673,7 +1673,7 @@ class Stream
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_STATUS);
@@ -1732,7 +1732,7 @@ class Stream
             return $this->auditedFieldsCache[$entityType];
         }
 
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string,array<string,mixed>> $fields */
         $fields = $this->metadata->get('entityDefs.' . $entityType . '.fields');
 
         $auditedFields = [];
@@ -1746,7 +1746,7 @@ class Stream
                 continue;
             }
 
-            /** @var ?string */
+            /** @var ?string $type */
             $type = $defs['type'] ?? null;
 
             if (!$type) {
@@ -1839,7 +1839,7 @@ class Stream
             return;
         }
 
-        /** @var NoteEntity */
+        /** @var NoteEntity $note */
         $note = $this->entityManager->getNewEntity(NoteEntity::ENTITY_TYPE);
 
         $note->set('type', NoteEntity::TYPE_UPDATE);
@@ -1917,7 +1917,7 @@ class Stream
 
         $query = $builder->build();
 
-        /** @var \Espo\ORM\Collection<User> */
+        /** @var \Espo\ORM\Collection<User> $collection */
         $collection = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
             ->clone($query)
@@ -1978,7 +1978,7 @@ class Stream
         ];
 
         foreach ($userList as $user) {
-            /** @var string */
+            /** @var string $id */
             $id = $user->getId();
 
             $data['idList'][] = $id;
@@ -2236,7 +2236,7 @@ class Stream
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
 
-        /* @var \Espo\ORM\Defs\EntityDefs */
+        /* @var \Espo\ORM\Defs\EntityDefs $defs */
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $userIdList = [];

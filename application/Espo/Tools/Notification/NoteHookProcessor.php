@@ -133,9 +133,9 @@ class NoteHookProcessor
         $userIdList = null;
 
         if (!$skipAclCheck) {
-            /** @var string[] */
+            /** @var string[] $teamIdList */
             $teamIdList = $note->getLinkMultipleIdList('teams');
-            /** @var string[] */
+            /** @var string[] $userIdList */
             $userIdList = $note->getLinkMultipleIdList('users');
         }
 
@@ -396,7 +396,7 @@ class NoteHookProcessor
                 return false;
             }
 
-            /** @var string[] */
+            /** @var string[] $userTeamIdList */
             $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {
@@ -433,7 +433,7 @@ class NoteHookProcessor
                 ->createFromSthCollection($collection);
         }
 
-        /** @var EntityCollection<User> */
+        /** @var EntityCollection<User> $newCollection */
         $newCollection = $this->entityManager
             ->getCollectionFactory()
             ->create(User::ENTITY_TYPE);

@@ -202,7 +202,7 @@ class NameUtil
 
     public function relationshipExists(string $name): bool
     {
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
         foreach ($scopeList as $entityType) {

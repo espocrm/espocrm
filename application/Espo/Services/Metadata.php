@@ -59,7 +59,7 @@ class Metadata
             return $data;
         }
 
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
         foreach ($scopeList as $scope) {
@@ -152,7 +152,7 @@ class Metadata
 
         unset($data->entityDefs->Settings);
 
-        /** @var string[] */
+        /** @var string[] $dashletList */
         $dashletList = array_keys($this->metadata->get(['dashlets'], []));
 
         foreach ($dashletList as $item) {

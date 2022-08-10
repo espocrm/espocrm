@@ -119,7 +119,7 @@ class Layout
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
 
             if ($layout && $layout->get('data') !== null) {
-                /** @var string */
+                /** @var string $data */
                 $data = $layout->get('data');
 
                 $result = Json::decode($data);

@@ -222,7 +222,7 @@ class Settings
     {
         $entityTypeListParamList = $this->metadata->get(['app', 'config', 'entityTypeListParamList']) ?? [];
 
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
         foreach ($scopeList as $scope) {

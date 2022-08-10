@@ -448,7 +448,7 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        /** @var string */
+        /** @var string $foreignEntityType */
         $foreignEntityType = $this->foreignEntityType;
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
@@ -473,7 +473,7 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        /** @var string */
+        /** @var string $foreignEntityType */
         $foreignEntityType = $this->foreignEntityType;
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);
@@ -498,7 +498,7 @@ class RDBRelation
             throw new RuntimeException();
         }
 
-        /** @var string */
+        /** @var string $foreignEntityType */
         $foreignEntityType = $this->foreignEntityType;
 
         $seed = $this->entityManager->getEntityFactory()->create($foreignEntityType);

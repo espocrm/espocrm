@@ -167,7 +167,7 @@ class EmailAccount extends Record implements
      */
     public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params): void
     {
-        /** @var ?class-string */
+        /** @var ?class-string $handlerClassName */
         $handlerClassName = $emailAccount->get('smtpHandler');
 
         if (!$handlerClassName) {

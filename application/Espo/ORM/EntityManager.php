@@ -161,7 +161,7 @@ class EntityManager
             throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
         }
 
-        /** @var QueryComposer */
+        /** @var QueryComposer $queryComposer */
         $queryComposer = new $className(
             $this->pdoProvider->get(),
             $this->entityFactory,
@@ -185,7 +185,7 @@ class EntityManager
             $className = BaseLocker::class;
         }
 
-        /** @var Locker */
+        /** @var Locker $locker */
         $locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
 
         $this->locker = $locker;
@@ -232,7 +232,7 @@ class EntityManager
         if ($name === self::RDB_MAPPER_NAME) {
             $className = $this->getRDBMapperClassName();
 
-            /** @var Mapper */
+            /** @var Mapper $mapper */
             $mapper = new $className(
                 $this->pdoProvider->get(),
                 $this->entityFactory,

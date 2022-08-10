@@ -84,7 +84,7 @@ class AutoFollow implements Job
         }
 
         foreach ($userIdList as $i => $userId) {
-            /** @var User|null */
+            /** @var User|null $user */
             $user = $this->entityManager->getEntity('User', $userId);
 
             if (!$user) {
@@ -121,7 +121,7 @@ class AutoFollow implements Job
 
         $this->service->followEntityMass($entity, $userIdList);
 
-        /** @var iterable<\Espo\Entities\Note> */
+        /** @var iterable<\Espo\Entities\Note> $noteList */
         $noteList = $this->entityManager
             ->getRDBRepository('Note')
             ->where([

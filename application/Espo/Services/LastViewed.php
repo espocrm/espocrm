@@ -88,7 +88,7 @@ class LastViewed
         $offset = $params['offset'] ?? 0;
         $maxSize = $params['maxSize'] ?? 0;
 
-        /** @var \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord> */
+        /** @var \Espo\ORM\Collection<\Espo\Entities\ActionHistoryRecord> $collection */
         $collection = $repository
             ->where([
                 'userId' => $this->user->getId(),

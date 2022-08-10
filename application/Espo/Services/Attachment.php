@@ -311,7 +311,7 @@ class Attachment extends Record
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension) ??
             $attachment->getType();
 
-        /** @var string[] */
+        /** @var string[] $accept */
         $accept = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'accept']) ?? [];
 
         if ($accept === []) {
@@ -348,7 +348,7 @@ class Attachment extends Record
 
         $mimeType = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
 
-        /** @var string[] */
+        /** @var string[] $imageTypeList */
         $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
 
         if (!in_array($mimeType, $imageTypeList)) {
@@ -381,7 +381,7 @@ class Attachment extends Record
             return;
         }
 
-        /** @var ?string */
+        /** @var ?string $contents */
         $contents = $attachment->get('contents');
 
         if (!$contents && !$filePath) {
@@ -481,7 +481,7 @@ class Attachment extends Record
 
         $this->checkAttachmentField($relatedEntityType, $field);
 
-        /** @var AttachmentEntity|null */
+        /** @var AttachmentEntity|null $attachment */
         $attachment = $this->getEntity($data->id);
 
         if (!$attachment) {
@@ -619,7 +619,7 @@ class Attachment extends Record
 
         curl_setopt_array($ch, $opts);
 
-        /** @var string|false */
+        /** @var string|false $response */
         $response = curl_exec($ch);
 
         if ($response === false) {
@@ -650,7 +650,7 @@ class Attachment extends Record
         }
 
         if (!$type) {
-            /** @var string */
+            /** @var string $extension */
             $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
 
             $type = $this->getMimeTypeUtil()->getMimeTypeByExtension($extension);
@@ -662,7 +662,7 @@ class Attachment extends Record
             return null;
         }
 
-        /** @var string[] */
+        /** @var string[] $imageTypeList */
         $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
 
         if (!in_array($type, $imageTypeList)) {
@@ -681,7 +681,7 @@ class Attachment extends Record
      */
     public function getFileData(string $id): stdClass
     {
-       /** @var AttachmentEntity|null */
+       /** @var AttachmentEntity|null $attachment */
         $attachment = $this->getEntity($id);
 
         if (!$attachment) {

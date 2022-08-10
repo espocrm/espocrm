@@ -120,7 +120,7 @@ class Email extends Record implements
 
     public function getUserSmtpParams(string $userId): ?SmtpParams
     {
-        /** @var ?User */
+        /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -307,10 +307,10 @@ class Email extends Record implements
             $parent->getEntityType() == CaseObj::ENTITY_TYPE &&
             $parent->get('inboundEmailId')
         ) {
-            /** @var string */
+            /** @var string $inboundEmailId */
             $inboundEmailId = $parent->get('inboundEmailId');
 
-            /** @var ?InboundEmail */
+            /** @var ?InboundEmail $inboundEmail */
             $inboundEmail = $this->entityManager->getEntityById(InboundEmail::ENTITY_TYPE, $inboundEmailId);
 
             if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
@@ -413,7 +413,7 @@ class Email extends Record implements
             return;
         }
 
-        /** @var class-string<object> */
+        /** @var class-string<object> $handlerClassName */
         $handlerClassName = $smtpHandlers->$emailAddress;
 
         try {
@@ -474,7 +474,7 @@ class Email extends Record implements
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        /** @var EmailEntity */
+        /** @var EmailEntity $entity */
         $entity = parent::create($data, $params);
 
         if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
@@ -812,7 +812,7 @@ class Email extends Record implements
         $fromName = '';
 
         if ($string && stripos($string, '<') !== false) {
-            /** @var string */
+            /** @var string $replasedString */
             $replasedString = preg_replace('/(<.*>)/', '', $string);
 
             $fromName = trim($replasedString, '" ');
@@ -873,11 +873,11 @@ class Email extends Record implements
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
-            /** @var ?Attachment */
+            /** @var ?Attachment $source */
             $source = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $attachmentId);
 
             if ($source) {
-                /** @var Attachment */
+                /** @var Attachment $attachment */
                 $attachment = $this->entityManager->getNewEntity(Attachment::ENTITY_TYPE);
 
                 $attachment->set('role', Attachment::ROLE_ATTACHMENT);

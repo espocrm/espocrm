@@ -45,7 +45,7 @@ class ExternalAccount extends Database
         $entity = parent::getById($id);
 
         if (!$entity) {
-            /** @var ExternalAccountEntity */
+            /** @var ExternalAccountEntity $entity */
             $entity = $this->get();
 
             $entity->set('id', $id);

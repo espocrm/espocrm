@@ -848,7 +848,7 @@ class FieldManager
 
     protected function getHook(string $type): ?object
     {
-        /** @var ?class-string */
+        /** @var ?class-string $className */
         $className = $this->metadata->get(['fields', $type, 'hookClassName']);
 
         if (!$className) {
