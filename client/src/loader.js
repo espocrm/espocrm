@@ -159,8 +159,9 @@
          * @private
          * @param {string} script
          * @param {string} name
+         * @param {string} path
          */
-        _execute: function (script, name) {
+        _execute: function (script, name, path) {
             /** @var {?string} */
             let module = null;
 
@@ -175,6 +176,8 @@
             if (!module && name.indexOf('lib!') === 0) {
                 noStrictMode = true;
             }
+
+            script += `\n//# sourceURL=/${path}`;
 
             // For bc.
             if (module && module !== 'crm') {
@@ -548,7 +551,7 @@
             }
 
             if (dataType === 'script') {
-                this._execute(cached, name);
+                this._execute(cached, name, dto.path);
             }
 
             if (type === 'class') {
@@ -635,7 +638,7 @@
             }
 
             if (dataType === 'script') {
-                this._execute(response, name);
+                this._execute(response, name, dto.path);
             }
 
             let data;
