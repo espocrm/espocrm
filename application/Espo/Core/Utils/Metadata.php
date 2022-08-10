@@ -131,7 +131,7 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->cacheKey) && !$reload) {
-            /** @var array<string,mixed> */
+            /** @var array<string,mixed> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -207,7 +207,7 @@ class Metadata
         }
 
         if ($this->dataCache->has($this->objCacheKey) && !$reload) {
-            /** @var stdClass */
+            /** @var stdClass $data */
             $data = $this->dataCache->get($this->objCacheKey);
 
             $this->objData = $data;
@@ -448,9 +448,9 @@ class Metadata
             ],
         ];
 
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string,array<string,mixed>> $mergedChangedData */
         $mergedChangedData = Util::merge($this->changedData, $newData);
-        /** @var array<string,mixed> */
+        /** @var array<string,mixed> $mergedData */
         $mergedData = Util::merge($this->getData(), $newData);
 
         $this->changedData = $mergedChangedData;
@@ -517,15 +517,15 @@ class Metadata
             ]
         ];
 
-        /** @var array<string,array<string,mixed>> */
+        /** @var array<string,array<string,mixed>> $mergedDeletedData */
         $mergedDeletedData = Util::merge($this->deletedData, $unsetData);
         $this->deletedData = $mergedDeletedData;
 
-        /** @var array<string,array<string,mixed>> */
-        $unsedDeletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
-        $this->deletedData = $unsedDeletedData;
+        /** @var array<string,array<string,mixed>> $unsetDeletedData */
+        $unsetDeletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
+        $this->deletedData = $unsetDeletedData;
 
-        /** @var array<string,mixed> */
+        /** @var array<string,mixed> $data */
         $data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
         $this->data = $data;
     }

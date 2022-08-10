@@ -426,7 +426,7 @@ class Entity extends BaseEntity
     public function removeLinkMultipleId(string $field, string $id): void
     {
         if ($this->hasLinkMultipleId($field, $id)) {
-            /** @var string[] */
+            /** @var string[] $list */
             $list = $this->getLinkMultipleIdList($field);
 
             $index = array_search($id, $list);

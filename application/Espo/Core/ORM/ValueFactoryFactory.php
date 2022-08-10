@@ -83,7 +83,7 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
             ->getEntity($entityType)
             ->getField($field);
 
-        /** @var ?class-string<ValueFactory> */
+        /** @var ?class-string<ValueFactory> $className */
         $className = $fieldDefs->getParam('valueFactoryClassName');
 
         if ($className) {

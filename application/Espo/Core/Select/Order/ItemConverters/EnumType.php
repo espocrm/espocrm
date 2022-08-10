@@ -56,11 +56,11 @@ class EnumType implements ItemConverter
 
     public function convert(Item $item): OrderList
     {
-        /** @var string */
+        /** @var string $orderBy */
         $orderBy = $item->getOrderBy();
         $order = $item->getOrder();
 
-        /** @var ?string[] */
+        /** @var ?string[] $list */
         $list = $this->metadata->get([
             'entityDefs', $this->entityType, 'fields', $orderBy, 'options'
         ]);

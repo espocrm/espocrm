@@ -96,7 +96,7 @@ class Autoload
         $useCache = $this->config->get('useCache');
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
-            /** @var ?array<string,mixed> */
+            /** @var ?array<string,mixed> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;

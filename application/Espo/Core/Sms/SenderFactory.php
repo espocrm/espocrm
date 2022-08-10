@@ -63,7 +63,7 @@ class SenderFactory implements Factory
             throw new RuntimeException("No `smsProvider` in config.");
         }
 
-        /** @var ?class-string<Sender> */
+        /** @var ?class-string<Sender> $className */
         $className = $this->metadata->get(['app', 'smsProviders', $provider, 'senderClassName']);
 
         if (!$className) {

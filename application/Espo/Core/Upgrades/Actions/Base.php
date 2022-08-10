@@ -149,7 +149,7 @@ abstract class Base
         $this->actionManager = $actionManager;
         $this->params = $actionManager->getParams();
 
-        /** @var FileManager */
+        /** @var FileManager $fileManager */
         $fileManager = $container->get('fileManager');
 
         $this->zipUtil = new ZipArchive($fileManager);
@@ -258,7 +258,7 @@ abstract class Base
 
     public function createConfigWriter(): ConfigWriter
     {
-        /** @var \Espo\Core\InjectableFactory */
+        /** @var \Espo\Core\InjectableFactory $injectableFactory */
         $injectableFactory = $this->getContainer()->get('injectableFactory');
 
         return $injectableFactory->create(ConfigWriter::class);
@@ -439,9 +439,9 @@ abstract class Base
             }
         }
 
-        /** @var string */
+        /** @var string $errorMessage */
         $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
-        /** @var string */
+        /** @var string $errorMessage */
         $errorMessage = preg_replace('/\{requiredVersion\}/', $version ?? '', $errorMessage);
 
         $this->throwErrorAndRemovePackage($errorMessage);
@@ -626,7 +626,7 @@ abstract class Base
 
             foreach ($deleteList as $itemPath) {
                 if (is_dir($itemPath)) {
-                    /** @var string[] */
+                    /** @var string[] $fileList */
                     $fileList = $this->getFileManager()->getFileList($itemPath, true, '', true, true);
 
                     $fileList = $this->concatStringWithArray($itemPath, $fileList);
@@ -731,10 +731,10 @@ abstract class Base
 
         foreach ($paths as $filesPath) {
             if (file_exists($filesPath)) {
-                /** @var string[] */
+                /** @var string[] $files */
                 $files = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
 
-                /** @var string[] */
+                /** @var string[] $fileList */
                 $fileList = array_merge($fileList, $files);
             }
         }
@@ -743,7 +743,7 @@ abstract class Base
             $vendorFileList = $this->getVendorFileList('copy');
 
             if (!empty($vendorFileList)) {
-                /** @var string[] */
+                /** @var string[] $fileList */
                 $fileList = array_merge($fileList, $vendorFileList);
             }
         }
@@ -873,13 +873,13 @@ abstract class Base
 
         switch ($type) {
             case 'copy':
-                /** @var string[] */
+                /** @var string[] $list */
                 $list = $this->getFileManager()->getFileList($filesPath, true, '', true, true);
 
                 break;
 
             case 'delete':
-                /** @var string[] */
+                /** @var string[] $list */
                 $list = $this->getFileManager()->getFileList($filesPath, false, '', null, true);
 
                 break;

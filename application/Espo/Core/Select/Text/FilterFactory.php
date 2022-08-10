@@ -51,7 +51,7 @@ class FilterFactory
 
     public function create(string $entityType, User $user): Filter
     {
-        /** @var class-string<Filter> */
+        /** @var class-string<Filter> $className */
         $className = $this->metadata->get(['selectDefs', $entityType, 'textFilterClassName']) ??
             DefaultFilter::class;
 

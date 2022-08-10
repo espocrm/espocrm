@@ -431,7 +431,7 @@ class Language
         }
 
         if ($this->useCache) {
-            /** @var array<string, mixed> */
+            /** @var array<string, mixed> $cachedData */
             $cachedData = $this->dataCache->get($cacheKey);
 
             $this->data[$language] = $cachedData;

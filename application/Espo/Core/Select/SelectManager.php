@@ -862,7 +862,7 @@ class SelectManager
      * @param $params Parameters in front-end format.
      * @param $withAcl To apply ACL.
      * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
-     * @param forbidComplexExpressions To forbid complex expression usage.
+     * @param $forbidComplexExpressions To forbid complex expression usage.
      * @return array Parameters for ORM.
      */
     public function buildSelectParams(

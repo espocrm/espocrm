@@ -114,7 +114,7 @@ class MassFollow implements MassAction
                 continue;
             }
 
-            /** @var string */
+            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;

@@ -70,9 +70,9 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
         }
 
         if ($entity->hasLinkMultipleField('assignedUsers')) {
-            /** @var string[] */
+            /** @var string[] $userIdList */
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-            /** @var ?string[] */
+            /** @var ?string[] $fetchedAssignedUserIdList */
             $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
 
             if (!is_array($fetchedAssignedUserIdList)) {

@@ -122,7 +122,7 @@ class Route
              *     noAuth?:bool,
              *     params?:array<string,mixed>,
              *   }
-             * >
+             * > $data
              */
             $data = $this->dataCache->get($this->cacheKey);
 
