@@ -840,7 +840,7 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
          * @internal Used in extensions.
          */
         transfromMarkdownText: function (text, options) {
-            this.transformMarkdownText(text, options);
+            return this.transformMarkdownText(text, options);
         },
 
         /**
