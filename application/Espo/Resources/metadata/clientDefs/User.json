@@ -123,5 +123,21 @@
     "selectRecords": {
         "orderBy": "userNameOwnFirst"
     },
-    "iconClass": "fas fa-user-circle"
+    "iconClass": "fas fa-user-circle",
+    "dynamicLogic": {
+        "options": {
+            "authMethod": [
+                {
+                    "optionList": ["ApiKey", "Hmac"],
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "type",
+                            "value": "api"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
 }
