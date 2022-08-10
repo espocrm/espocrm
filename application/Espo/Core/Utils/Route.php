@@ -263,32 +263,32 @@ class Route
     private function adjustPath(string $path): string
     {
         // to fast route format
-        /** @var string */
-        $pathFormatteted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
+        /** @var string $pathFormatted */
+        $pathFormatted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
 
-        if (substr($pathFormatteted, 0, 1) !== '/') {
-            return '/' . $pathFormatteted;
+        if (substr($pathFormatted, 0, 1) !== '/') {
+            return '/' . $pathFormatted;
         }
 
-        return $pathFormatteted;
+        return $pathFormatted;
     }
 
     public static function detectBasePath(): string
     {
-        /** @var string */
+        /** @var string $serverScriptName */
         $serverScriptName = $_SERVER['SCRIPT_NAME'];
 
-        /** @var string */
+        /** @var string $serverRequestUri */
         $serverRequestUri = $_SERVER['REQUEST_URI'];
 
-        /** @var string */
+        /** @var string $scriptName */
         $scriptName = parse_url($serverScriptName , PHP_URL_PATH);
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
         $scriptDir = dirname($scriptNameModified);
 
-        /** @var string */
+        /** @var string $uri */
         $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
 
         if (stripos($uri, $scriptName) === 0) {
@@ -306,10 +306,10 @@ class Route
     {
         $basePath = self::detectBasePath();
 
-        /** @var string */
+        /** @var string $serverRequestUri */
         $serverRequestUri = $_SERVER['REQUEST_URI'];
 
-        /** @var string */
+        /** @var string $uri */
         $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
 
         if ($uri === $basePath) {

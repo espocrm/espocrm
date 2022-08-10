@@ -208,7 +208,7 @@ class Permission
             return false;
         }
 
-        /** @var array{mode: mixed}*/
+        /** @var array{mode: mixed} $fileInfo */
         $fileInfo = stat($filePath);
 
         return substr(base_convert((string) $fileInfo['mode'], 10, 8), -4);
@@ -293,7 +293,7 @@ class Permission
 
         $result = $this->chmodReal($path, $dirOctal);
 
-        /** @var string[] */
+        /** @var string[] $allFiles */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {
@@ -347,7 +347,7 @@ class Permission
 
         $result = $this->chownReal($path, $user);
 
-        /** @var string[] */
+        /** @var string[] $allFiles */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {
@@ -401,7 +401,7 @@ class Permission
 
         $result = $this->chgrpReal($path, $group);
 
-        /** @var string[] */
+        /** @var string[] $allFiles */
         $allFiles = $this->fileManager->getFileList($path);
 
         foreach ($allFiles as $item) {

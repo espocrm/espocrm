@@ -143,17 +143,17 @@ class Schema
 
     protected function initFieldTypes(): void
     {
-        /** @var string[] */
+        /** @var string[] $typeList */
         $typeList = $this->fileManager->getFileList($this->fieldTypePath, false, '\.php$');
 
         foreach ($typeList as $name) {
-            /** @var string */
+            /** @var string $typeName */
             $typeName = preg_replace('/Type\.php$/i', '', $name);
             $dbalTypeName = strtolower($typeName);
 
             $filePath = Util::concatPath($this->fieldTypePath, $typeName . 'Type');
 
-            /** @var class-string<\Doctrine\DBAL\Types\Type> */
+            /** @var class-string<\Doctrine\DBAL\Types\Type> $class */
             $class = Util::getClassName($filePath);
 
             if (!Type::hasType($dbalTypeName)) {
@@ -164,7 +164,7 @@ class Schema
             }
 
             if (method_exists($class, 'getDbTypeName')) {
-                /** @var callable */
+                /** @var callable $getDbTypeNameCallable */
                 $getDbTypeNameCallable = [$class, 'getDbTypeName'];
 
                 $dbTypeName = call_user_func($getDbTypeNameCallable);
@@ -279,7 +279,7 @@ class Schema
             'afterRebuild',
         ];
 
-        /** @var array<string,class-string<\Espo\Core\Utils\Database\Schema\BaseRebuildActions>> */
+        /** @var array<string,class-string<\Espo\Core\Utils\Database\Schema\BaseRebuildActions>> $classes */
         $classes = $this->classMap->getData($this->rebuildActionsPath, null, $methodList);
 
         $objects = [

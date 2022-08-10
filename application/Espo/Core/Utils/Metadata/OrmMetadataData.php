@@ -92,7 +92,7 @@ class OrmMetadataData
         }
 
         if ($this->useCache && $this->dataCache->has($this->cacheKey) && !$reload) {
-            /** @var array<string,array<string,mixed>> */
+            /** @var array<string,array<string,mixed>> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;

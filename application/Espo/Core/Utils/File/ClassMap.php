@@ -86,7 +86,7 @@ class ClassMap
             $this->dataCache->has($cacheKey) &&
             $this->config->get('useCache')
         ) {
-            /** @var array<string,class-string> */
+            /** @var array<string,class-string> $data */
             $data = $this->dataCache->get($cacheKey);
         }
 
@@ -142,7 +142,7 @@ class ClassMap
 
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
-                /** @var string[] */
+                /** @var string[] $fileList */
                 $fileList = $this->fileManager->getFileList($dir, $subDirs, '\.php$', true);
 
                 $this->fillHashFromFileList($fileList, $dir, $allowedMethods, $data);

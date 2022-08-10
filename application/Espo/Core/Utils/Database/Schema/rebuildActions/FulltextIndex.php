@@ -83,7 +83,7 @@ class FulltextIndex extends BaseRebuildActions
                     $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
 
                     try {
-                        /** @var array{Type: string, Collation: string} */
+                        /** @var array{Type: string, Collation: string} $row */
                         $row = $connection->fetchAssociative($query);
                     }
                     catch (Exception $e) {

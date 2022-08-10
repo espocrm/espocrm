@@ -507,9 +507,9 @@ class Util
      */
     public static function getClassName(string $filePath): string
     {
-        /** @var string */
+        /** @var string $className */
         $className = preg_replace('/\.php$/i', '', $filePath);
-        /** @var string */
+        /** @var string $className */
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
         $className = static::toFormat($className, '\\');
 
@@ -858,7 +858,7 @@ class Util
         $sanitized = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
 
         foreach ($permittedHtmlTags as $htmlTag) {
-            /** @var string */
+            /** @var string $sanitized */
             $sanitized = preg_replace('/&lt;(\/)?(' . $htmlTag . ')&gt;/i', '<$1$2>', $sanitized);
         }
 
@@ -878,9 +878,9 @@ class Util
             ];
 
             $url = trim($url);
-            /** @var string */
+            /** @var string $url */
             $url = preg_replace('/\/\?$/', '', $url);
-            /** @var string */
+            /** @var string $url */
             $url = preg_replace('/\/$/', '', $url);
 
             return $url . '/?' . http_build_query($params);
@@ -910,9 +910,9 @@ class Util
                 $newUrl = str_replace($urlQuery, http_build_query($params), $url);
 
                 if (empty($params)) {
-                    /** @var string */
+                    /** @var string $newUrl */
                     $newUrl = preg_replace('/\/\?$/', '', $newUrl);
-                    /** @var string */
+                    /** @var string $newUrl */
                     $newUrl = preg_replace('/\/$/', '', $newUrl);
 
                     $newUrl .= $suffix;

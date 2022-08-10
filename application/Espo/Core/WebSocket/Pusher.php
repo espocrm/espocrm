@@ -121,7 +121,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
-        /** @var string */
+        /** @var string $connectionId */
         /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
@@ -180,7 +180,7 @@ class Pusher implements WampServerInterface
             return;
         }
 
-        /** @var string */
+        /** @var string $connectionId */
         /** @phpstan-ignore-next-line */
         $connectionId = $connection->resourceId;
 
@@ -345,7 +345,7 @@ class Pusher implements WampServerInterface
      */
     protected function subscribeUser(ConnectionInterface $connection, $userId)
     {
-        /** @var string */
+        /** @var string $resourceId */
         /** @phpstan-ignore-next-line */
         $resourceId = $connection->resourceId;
 
@@ -440,7 +440,7 @@ class Pusher implements WampServerInterface
      */
     private function getUserIdByAuthToken($authToken)
     {
-        /** @var string|null|false */
+        /** @var string|null|false $result */
         $result = shell_exec($this->phpExecutablePath . " command.php AuthTokenCheck " . $authToken);
 
         if ($result === null || $result === false) {
@@ -551,7 +551,7 @@ class Pusher implements WampServerInterface
                     continue;
                 }
 
-                /** @var \Ratchet\Wamp\WampConnection */
+                /** @var \Ratchet\Wamp\WampConnection $connection */
                 $connection = $this->connections[$connectionId];
 
                 if (in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {

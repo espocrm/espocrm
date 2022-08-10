@@ -789,7 +789,7 @@ class Manager
      */
     public function removeInDir(string $path, bool $removeWithDir = false): bool
     {
-        /** @var string[] */
+        /** @var string[] $fileList */
         $fileList = $this->getFileList($path, false);
 
         $result = true;
@@ -1000,7 +1000,7 @@ class Manager
      */
     public function getDirName(string $path, bool $isFullPath = true, bool $useIsDir = true): string
     {
-        /** @var string */
+        /** @var string $dirName */
         $dirName = preg_replace('/\/$/i', '', $path);
 
         $dirName = ($useIsDir && is_dir($dirName)) ?

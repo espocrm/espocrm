@@ -83,16 +83,16 @@ class Unifier
      */
     private function unifyArray(string $path, bool $noCustom = false)
     {
-        /** @var array<string,mixed> */
+        /** @var array<string,mixed> $data */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            /** @var array<string,mixed> */
+            /** @var array<string,mixed> $newData */
             $newData = $this->unifySingle($filePath, true);
 
-            /** @var array<string,mixed> */
+            /** @var array<string,mixed> $data */
             $data = Util::merge($data, $newData);
         }
 
@@ -102,7 +102,7 @@ class Unifier
 
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
-        /** @var array<string,mixed> */
+        /** @var array<string,mixed> $newData */
         $newData = $this->unifySingle($customFilePath, true);
 
         /** @var array<string,mixed> */
@@ -115,18 +115,18 @@ class Unifier
      */
     private function unifyObject(string $path, bool $noCustom = false, array $forceAppendPathList = [])
     {
-        /** @var \stdClass */
+        /** @var \stdClass $data */
         $data = $this->unifySingle($this->pathProvider->getCore() . $path, true);
 
         foreach ($this->getModuleList() as $moduleName) {
             $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-            /** @var \stdClass */
+            /** @var \stdClass $itemData */
             $itemData = $this->unifySingle($filePath, true);
 
             $this->prepareItemDataObject($itemData, $forceAppendPathList);
 
-            /** @var \stdClass */
+            /** @var \stdClass $data */
             $data = DataUtil::merge($data, $itemData);
         }
 
@@ -136,7 +136,7 @@ class Unifier
 
         $customFilePath = $this->pathProvider->getCustom() . $path;
 
-        /** @var \stdClass */
+        /** @var \stdClass $itemData */
         $itemData = $this->unifySingle($customFilePath, true);
 
         $this->prepareItemDataObject($itemData, $forceAppendPathList);
