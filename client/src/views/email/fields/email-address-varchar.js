@@ -297,25 +297,35 @@ function (Dep, From, EmailAddress) {
         },
 
         addAddressHtml: function (address, name) {
+            let $container = this.$el.find('.link-container');
+
+            let $text = $('<span>');
+
             if (name) {
-                name = this.getHelper().escapeString(name);
+                $text.append(
+                    $('<span>').text(name),
+                    ' ',
+                    $('<span>').addClass('text-muted chevron-right'),
+                    ' '
+                );
             }
 
-            if (address) {
-                address = this.getHelper().escapeString(address);
-            }
+            $text.append(
+                $('<span>').text(address)
+            );
 
-            var container = this.$el.find('.link-container');
+            let $div = $('<div>')
+                .attr('data-address', address)
+                .addClass('list-group-item')
+                .append(
+                    $('<a>')
+                        .attr('data-address', address)
+                        .attr('role', 'button')
+                        .addClass('pull-right'),
+                    $text
+                );
 
-            var html =
-            '<div data-address="'+address+'" class="list-group-item">' +
-                '<a role="button" class="pull-right" data-address="' + address + '" ' +
-                'data-action="clearAddress"><span class="fas fa-times"></a>' +
-                '<span>'+ ((name) ? (name + ' <span class="text-muted chevron-right"></span> ') : '') +
-                '<span>'+address+'</span>'+'</span>' +
-            '</div>';
-
-            container.append(html);
+            $container.append($div);
         },
 
         deleteAddress: function (address) {
