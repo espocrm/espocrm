@@ -226,7 +226,7 @@ class User extends Person
 
     public function getContact(): ?Link
     {
-        /** @var ?Link */
+        /** @var ?Link $value */
         $value = $this->getValueObject('contact');
 
         return $value;
@@ -242,7 +242,7 @@ class User extends Person
 
     public function getAccounts(): LinkMultiple
     {
-        /** @var LinkMultiple */
+        /** @var LinkMultiple $value */
         $value = $this->getValueObject('accounts');
 
         return $value;

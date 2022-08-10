@@ -156,7 +156,7 @@ class Processor
             return;
         }
 
-        /** @var iterable<\Espo\Entities\Attachment> */
+        /** @var iterable<\Espo\Entities\Attachment> $attachmentList */
         $attachmentList = $this->entityManager
             ->getRDBRepository('EmailTemplate')
             ->getRelation($emailTemplate, 'attachments')
@@ -184,7 +184,7 @@ class Processor
                 );
             }
 
-            /** @var \Espo\Services\InboundEmail */
+            /** @var \Espo\Services\InboundEmail $inboundEmailService */
             $inboundEmailService = $this->serviceFactory->create('InboundEmail');
 
             $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
@@ -437,11 +437,11 @@ class Processor
             }
         }
 
-        /** @var CampaignTrackingUrl[] */
+        /** @var CampaignTrackingUrl[] $trackingUrlList */
         $trackingUrlList = [];
 
         if ($campaign) {
-            /** @var \Espo\ORM\Collection<CampaignTrackingUrl> */
+            /** @var \Espo\ORM\Collection<CampaignTrackingUrl> $trackingUrlList */
             $trackingUrlList = $this->entityManager
                 ->getRDBRepository('Campaign')
                 ->getRelation($campaign, 'trackingUrls')
@@ -548,7 +548,7 @@ class Processor
     protected function getEmailTemplateService(): EmailTemplateService
     {
         if (!$this->emailTemplateService) {
-            /** @var EmailTemplateService */
+            /** @var EmailTemplateService $service */
             $service = $this->serviceFactory->create('EmailTemplate');
 
             $this->emailTemplateService = $service;
@@ -560,7 +560,7 @@ class Processor
     protected function getCampaignService(): CampaignService
     {
         if (!$this->campaignService) {
-            /** @var CampaignService */
+            /** @var CampaignService $service */
             $service = $this->serviceFactory->create('Campaign');
 
             $this->campaignService = $service;

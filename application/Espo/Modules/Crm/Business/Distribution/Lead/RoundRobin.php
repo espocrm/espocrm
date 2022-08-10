@@ -62,7 +62,7 @@ class RoundRobin
         }
 
         /**
-         * @var \Espo\ORM\Collection<User>
+         * @var \Espo\ORM\Collection<User> $userList
          */
         $userList = $this->entityManager
             ->getRDBRepository(Team::ENTITY_TYPE)

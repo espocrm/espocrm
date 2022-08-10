@@ -53,7 +53,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
     protected function getStreamService(): StreamService
     {
         if (!$this->streamService) {
-            /** @var StreamService */
+            /** @var StreamService $service */
             $service = $this->serviceFactory->create('Stream');
 
             $this->streamService = $service;

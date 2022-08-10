@@ -100,7 +100,7 @@ class Queue
         $itemList = [];
 
         if (!$isTest) {
-            /** @var \Espo\ORM\Collection<TargetList> */
+            /** @var \Espo\ORM\Collection<TargetList> $excludingTargetListList */
             $excludingTargetListList = $this->entityManager
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'excludingTargetLists')
@@ -128,7 +128,7 @@ class Queue
                 }
             }
 
-            /** @var \Espo\ORM\Collection<TargetList> */
+            /** @var \Espo\ORM\Collection<TargetList> $targetListCollection */
             $targetListCollection = $em
                 ->getRDBRepository(MassEmail::ENTITY_TYPE)
                 ->getRelation($massEmail, 'targetLists')

@@ -955,7 +955,7 @@ class Activities implements
 
         $parts = [];
 
-        /** @var string[] */
+        /** @var string[] $entityTypeList */
         $entityTypeList = $this->config->get('activitiesEntityList', ['Meeting', 'Call']);
 
         foreach ($entityTypeList as $entityType) {
@@ -1014,7 +1014,7 @@ class Activities implements
 
         $parts = [];
 
-        /** @var string[] */
+        /** @var string[] $entityTypeList */
         $entityTypeList = $this->config->get('historyEntityList', ['Meeting', 'Call', 'Email']);
 
         foreach ($entityTypeList as $entityType) {
