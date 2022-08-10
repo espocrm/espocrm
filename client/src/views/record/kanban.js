@@ -804,30 +804,30 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$el.find('.item[data-id="'+id+'"]').remove();
 
-            this.collection.subCollectionList.forEach((collection) => {
+            this.collection.subCollectionList.forEach(collection => {
                 if (collection.get(id)) {
                     collection.remove(id);
                 }
             });
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
+            for (let groupItem of this.groupDataList) {
+                for (let j = 0; j < groupItem.dataList.length; j++) {
+                    let item = groupItem.dataList[j];
 
-                for (var j in groupItem.dataList) {
-                    var item = groupItem.dataList[j];
-
-                    if (item.id === id) {
-                        groupItem.dataList.splice(j, 1);
-
-                        if (groupItem.collection.total > 0) {
-                            groupItem.collection.total--;
-                        }
-
-                        groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
-                            groupItem.collection.total == -1;
-
-                        break;
+                    if (item.id !== id) {
+                        continue;
                     }
+
+                    groupItem.dataList.splice(j, 1);
+
+                    if (groupItem.collection.total > 0) {
+                        groupItem.collection.total--;
+                    }
+
+                    groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
+                        groupItem.collection.total === -1;
+
+                    break;
                 }
             }
         },
@@ -846,13 +846,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             });
 
-            var dataItem;
+            let dataItem;
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
-
-                for (var j in groupItem.dataList) {
-                    var item = groupItem.dataList[j];
+            for (let groupItem of this.groupDataList) {
+                for (let j = 0; j < groupItem.dataList.length; j++) {
+                    let item = groupItem.dataList[j];
 
                     if (item.id === id) {
                         dataItem = item;
@@ -871,9 +869,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            for (var i in this.groupDataList) {
-                var groupItem = this.groupDataList[i];
-
+            for (let groupItem of this.groupDataList) {
                 if (groupItem.name !== group) {
                     continue;
                 }
@@ -889,8 +885,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             }
 
-            var $item = this.$el.find('.item[data-id="'+id+'"]');
-            var $column = this.$el.find('.group-column[data-name="'+group+'"] .group-column-list');
+            let $item = this.$el.find('.item[data-id="' + id + '"]');
+            let $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
 
             if ($column.length) {
                 $column.prepend($item);
