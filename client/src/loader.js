@@ -65,6 +65,12 @@
         this._internalModuleMap = {};
 
         this.isDeveloperMode = false;
+
+        /**
+         * @type {string}
+         * @private
+         */
+        this._baseUrl = window.location.origin + window.location.pathname;
     };
 
     _.extend(Espo.Loader.prototype, /** @lends Espo.Loader.prototype */{
@@ -175,9 +181,21 @@
 
             if (!module && name.indexOf('lib!') === 0) {
                 noStrictMode = true;
+
+                if (!this.isDeveloperMode) {
+                    let readName = name.substring(4);
+
+                    let hasSourceMap = (this._libsConfig[readName] || {}).sourceMap
+
+                    if (hasSourceMap) {
+                        let realPath = path.split('?')[0];
+
+                        script += `\n//# sourceMappingURL=${this._baseUrl + realPath}.map`;
+                    }
+                }
             }
 
-            script += `\n//# sourceURL=/${path}`;
+            script += `\n//# sourceURL=${this._baseUrl + path}`;
 
             // For bc.
             if (module && module !== 'crm') {

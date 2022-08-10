@@ -3,7 +3,8 @@
         "path": "client/lib/flotr2.js",
         "devPath": "client/lib/original/flotr2.js",
         "exportsTo": "window",
-        "exportsAs": "Flotr"
+        "exportsAs": "Flotr",
+        "sourceMap": true
     },
     "Base64": {
         "exportsTo": "window",
@@ -18,7 +19,8 @@
         "path": "client/lib/summernote.js",
         "devPath": "client/lib/original/summernote.js",
         "exportsTo": "$.fn",
-        "exportsAs": "summernote"
+        "exportsAs": "summernote",
+        "sourceMap": true
     },
     "Textcomplete": {
         "exportsTo": "$.fn",
@@ -34,12 +36,14 @@
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",
         "exportsTo": "window",
-        "exportsAs": "cronstrue"
+        "exportsAs": "cronstrue",
+        "sourceMap": true
     },
     "Cropper": {
         "path": "client/lib/cropper.js",
         "exportsTo": "$.fn",
-        "exportsAs": "cropper"
+        "exportsAs": "cropper",
+        "sourceMap": true
     },
     "gridstack": {
         "exportsTo": "window",
@@ -54,13 +58,15 @@
         "path": "client/lib/exif.js",
         "devPath": "client/lib/original/exif.js",
         "exportsTo": "window",
-        "exportsAs": "EXIF"
+        "exportsAs": "EXIF",
+        "sourceMap": true
     },
     "JsBarcode": {
         "path": "client/lib/JsBarcode.all.js",
         "devPath": "client/lib/original/JsBarcode.all.js",
         "exportsTo": "window",
-        "exportsAs": "JsBarcode"
+        "exportsAs": "JsBarcode",
+        "sourceMap": true
     },
     "qrcode": {
         "path": "client/lib/qrcode.js",

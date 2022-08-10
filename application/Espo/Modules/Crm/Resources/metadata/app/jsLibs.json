@@ -3,11 +3,13 @@
         "path": "client/modules/crm/lib/fullcalendar.js",
         "devPath": "client/modules/crm/lib/original/fullcalendar.js",
         "exportsTo": "$.fn",
-        "exportsAs": "fullCalendar"
+        "exportsAs": "fullCalendar",
+        "sourceMap": true
     },
     "vis": {
         "path": "client/modules/crm/lib/vis.js",
         "devPath": "client/modules/crm/lib/original/vis.js",
-        "exportsAs": "vis"
+        "exportsAs": "vis",
+        "sourceMap": true
     }
 }

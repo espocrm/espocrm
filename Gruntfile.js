@@ -47,11 +47,12 @@ module.exports = grunt => {
 
     let minifyLibFileList = copyJsFileList
         .filter(item => item.minify)
-        .reduce((map, item) => {
-            map[item.dest] = item.originalDest;
-
-            return map;
-        }, {});
+        .map(item => {
+            return {
+                dest: item.dest,
+                src: item.originalDest,
+            };
+        });
 
     let currentPath = path.dirname(fs.realpathSync(__filename));
 
