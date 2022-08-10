@@ -105,13 +105,15 @@ class DefaultFilter implements Filter
 
         $attributeType = $this->getAttributeTypeAndApplyJoin($queryBuilder, $attribute);
 
-        if ($attributeType === Entity::INT && is_numeric($filter)) {
-            $orGroupBuilder->add(
-                Cmp::equal(
-                    Expr::column($attribute),
-                    intval($filter)
-                )
-            );
+        if ($attributeType === Entity::INT) {
+            if (is_numeric($filter)) {
+                $orGroupBuilder->add(
+                    Cmp::equal(
+                        Expr::column($attribute),
+                        intval($filter)
+                    )
+                );
+            }
 
             return;
         }
