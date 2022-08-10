@@ -106,7 +106,12 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
             });
 
             this.on('close', () => {
-                if (this.model.get('status') !== 'Pending') {
+                let status = this.model.get('status');
+
+                if (
+                    status !== 'Pending' &&
+                    status !== 'Running'
+                ) {
                     return;
                 }
 
@@ -126,14 +131,15 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
                 .then(response => {
                     let status = response.status;
 
-                    if (status === 'Pending') {
+                    this.model.set('status', status);
+
+                    if (status === 'Pending' || status === 'Running') {
                         setTimeout(() => this.checkStatus(), this.checkInterval);
 
                         return;
                     }
 
                     this.model.set({
-                        status: response.status,
                         attachmentId: response.attachmentId,
                     });
 
