@@ -61,6 +61,9 @@ class DefaultFilter implements Filter
         $this->config = $config;
     }
 
+    /**
+     * @throws Error
+     */
     public function apply(QueryBuilder $queryBuilder, Data $data): void
     {
         $orGroupBuilder = OrGroup::createBuilder();
@@ -100,8 +103,42 @@ class DefaultFilter implements Filter
         $filter = $data->getFilter();
         $skipWildcards = $data->skipWildcards();
 
-        $attributeType = null;
+        $attributeType = $this->getAttributeTypeAndApplyJoin($queryBuilder, $attribute);
 
+        if ($attributeType === Entity::INT && is_numeric($filter)) {
+            $orGroupBuilder->add(
+                Cmp::equal(
+                    Expr::column($attribute),
+                    intval($filter)
+                )
+            );
+
+            return;
+        }
+
+        $expression = $filter;
+
+        if (!$skipWildcards) {
+            $expression = $this->checkWhetherToUseContains($attribute, $filter, $attributeType) ?
+                '%' . $filter . '%' :
+                $filter . '%';
+        }
+
+        $expression = addslashes($expression);
+
+        $orGroupBuilder->add(
+            Cmp::like(
+                Expr::column($attribute),
+                $expression
+            )
+        );
+    }
+
+    /**
+     * @throws Error
+     */
+    private function getAttributeTypeAndApplyJoin(QueryBuilder $queryBuilder, string $attribute): string
+    {
         if (strpos($attribute, '.') !== false) {
             list($link, $foreignField) = explode('.', $attribute);
 
@@ -117,51 +154,20 @@ class DefaultFilter implements Filter
 
             $queryBuilder->leftJoin($link);
 
-            $attributeType = $this->metadataProvider->getAttributeType($foreignEntityType, $foreignField);
+            return $this->metadataProvider->getAttributeType($foreignEntityType, $foreignField);
         }
-        else {
-            $attributeType = $this->metadataProvider->getAttributeType($this->entityType, $attribute);
 
-            if ($attributeType === Entity::FOREIGN) {
-                $link = $this->metadataProvider->getAttributeRelationParam($this->entityType, $attribute);
+        $attributeType = $this->metadataProvider->getAttributeType($this->entityType, $attribute);
 
-                if ($link) {
-                    $queryBuilder->leftJoin($link);
-                }
+        if ($attributeType === Entity::FOREIGN) {
+            $link = $this->metadataProvider->getAttributeRelationParam($this->entityType, $attribute);
+
+            if ($link) {
+                $queryBuilder->leftJoin($link);
             }
         }
 
-        if ($attributeType === Entity::INT) {
-            if (is_numeric($filter)) {
-                $orGroupBuilder->add(
-                    Cmp::equal(
-                        Expr::column($attribute),
-                        intval($filter)
-                    )
-                );
-            }
-
-            return;
-        }
-
-        if (!$skipWildcards) {
-            if ($this->checkWhetherToUseContains($attribute, $filter, $attributeType)) {
-                $expression = '%' . $filter . '%';
-            }
-            else {
-                $expression = $filter . '%';
-            }
-        }
-        else {
-            $expression = $filter;
-        }
-
-        $orGroupBuilder->add(
-            Cmp::like(
-                Expr::column($attribute),
-                $expression
-            )
-        );
+        return $attributeType;
     }
 
     private function checkWhetherToUseContains(string $attribute, string $filter, string $attributeType): bool
