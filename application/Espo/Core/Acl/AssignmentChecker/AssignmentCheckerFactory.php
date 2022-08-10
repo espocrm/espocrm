@@ -75,7 +75,7 @@ class AssignmentCheckerFactory
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string<AssignmentChecker<\Espo\ORM\Entity>> */
+        /** @var ?class-string<AssignmentChecker<\Espo\ORM\Entity>> $className */
         $className = $this->metadata->get(['aclDefs', $scope, 'assignmentCheckerClassName']);
 
         if ($className) {

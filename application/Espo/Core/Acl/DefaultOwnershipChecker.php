@@ -85,7 +85,7 @@ class DefaultOwnershipChecker implements OwnershipOwnChecker, OwnershipTeamCheck
             return false;
         }
 
-        /** @var string[] */
+        /** @var string[] $userTeamIdList */
         $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         if (

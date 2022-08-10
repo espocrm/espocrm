@@ -178,7 +178,7 @@ class Auth
      */
     protected function decodeAuthorizationString(string $string): array
     {
-        /** @var string */
+        /** @var string $stringDecoded */
         $stringDecoded = base64_decode($string);
 
         if (strpos($stringDecoded, ':') === false) {

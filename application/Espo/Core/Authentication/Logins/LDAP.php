@@ -428,7 +428,7 @@ class LDAP implements Login
             '(' . $options['userNameAttribute'] . '=' . $username . ')' .
             $loginFilterString . ')';
 
-        /** @var array<int,array{dn: string}> */
+        /** @var array<int,array{dn: string}> $result */
         $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');

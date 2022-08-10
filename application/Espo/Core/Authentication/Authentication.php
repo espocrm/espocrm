@@ -353,7 +353,7 @@ class Authentication
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
-            /** @var ?Portal */
+            /** @var ?Portal $portal */
             $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
 
             if ($portal) {
@@ -562,7 +562,7 @@ class Authentication
             return null;
         }
 
-        /** @var AuthLogRecord */
+        /** @var AuthLogRecord $authLogRecord */
         $authLogRecord = $this->entityManager->getNewEntity('AuthLogRecord');
 
         $requestUrl =

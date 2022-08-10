@@ -85,7 +85,7 @@ class AccessCheckerFactory
      */
     private function getClassName(string $scope): string
     {
-        /** @var ?class-string<AccessChecker> */
+        /** @var ?class-string<AccessChecker> $className1 */
         $className1 = $this->metadata->get(['aclDefs', $scope, 'accessCheckerClassName']);
 
         if ($className1) {

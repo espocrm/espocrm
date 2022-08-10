@@ -110,7 +110,7 @@ class GlobalRestriction
         $useCache = $config->get('useCache');
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
-            /** @var stdClass */
+            /** @var stdClass $cachedData */
             $cachedData = $this->dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;
@@ -136,15 +136,15 @@ class GlobalRestriction
 
     private function buildData(): void
     {
-        /** @var string[] */
+        /** @var string[] $scopeList */
         $scopeList = array_keys($this->metadata->get(['entityDefs']) ?? []);
 
         $data = (object) [];
 
         foreach ($scopeList as $scope) {
-            /** @var string[] */
+            /** @var string[] $fieldList */
             $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
-            /** @var string[] */
+            /** @var string[] $linkList */
             $linkList = array_keys($this->metadata->get(['entityDefs', $scope, 'links']) ?? []);
 
             $isNotEmpty = false;
