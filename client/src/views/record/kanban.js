@@ -683,7 +683,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.listLayout = listLayout;
 
                 groupList.forEach((item, i) => {
-                    var collection = this.seedCollection.clone();
+                    let collection = this.seedCollection.clone();
+
+                    this.listenTo(collection, 'destroy', (model, attributes, o) => {
+                        if (o.fromList) {
+                            return;
+                        }
+
+                        this.removeRecordFromList(model.id);
+                    });
 
                     collection.total = item.total;
 
@@ -712,7 +720,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     let itemDataList = [];
 
-                    collection.models.forEach((model) => {
+                    collection.models.forEach(model => {
                         count ++;
 
                         itemDataList.push({

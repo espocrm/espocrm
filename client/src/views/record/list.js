@@ -2945,7 +2945,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 this.notify('Removing...');
 
-                model.destroy({wait: true})
+                model.destroy({wait: true, fromList: true})
                     .then(() => {
                         this.notify('Removed', 'success');
 
