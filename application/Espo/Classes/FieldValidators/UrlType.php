@@ -62,7 +62,7 @@ class UrlType
             return true;
         }
 
-        /** @var string */
+        /** @var string $pattern */
         $pattern = $this->metadata->get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
 
         $preparedPattern = '/^' . $pattern . '$/';

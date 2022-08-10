@@ -63,7 +63,7 @@ class Container
             'user',
         ];
 
-        /** @var string[] */
+        /** @var string[] $fileList */
         $fileList = scandir('application/Espo/Core/Loaders');
 
         if (file_exists('custom/Espo/Custom/Core/Loaders')) {

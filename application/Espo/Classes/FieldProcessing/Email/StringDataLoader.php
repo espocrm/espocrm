@@ -104,7 +104,7 @@ class StringDataLoader implements Loader
             return;
         }
 
-        /**  @var ?string */
+        /**  @var ?string $fromEmailAddressId */
         $fromEmailAddressId = $entity->get('fromEmailAddressId');
 
         if (!$fromEmailAddressId) {

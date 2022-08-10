@@ -102,10 +102,10 @@ class EmailType
 
     public function checkMaxLength(Entity $entity, string $field): bool
     {
-        /** @var ?string */
+        /** @var ?string $value */
         $value = $entity->get($field);
 
-        /** @var int */
+        /** @var int $maxLength */
         $maxLength = $this->metadata->get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) ??
             self::DEFAULT_MAX_LENGTH;
 

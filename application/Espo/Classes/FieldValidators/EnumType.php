@@ -63,10 +63,10 @@ class EnumType
             ->getEntity($entity->getEntityType())
             ->getField($field);
 
-        /** @var ?string */
+        /** @var ?string $path */
         $path = $fieldDefs->getParam('optionsPath');
 
-        /** @var string[]|null|false */
+        /** @var string[]|null|false $optionList */
         $optionList = $path ?
             $this->metadata->get($path) :
             $fieldDefs->getParam('options');

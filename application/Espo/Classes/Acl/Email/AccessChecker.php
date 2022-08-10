@@ -104,7 +104,7 @@ class AccessChecker implements AccessEntityCREDSChecker
                 return true;
             }
 
-            /** @var string[] */
+            /** @var string[] $assignedUserIdList */
             $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
 
             if (

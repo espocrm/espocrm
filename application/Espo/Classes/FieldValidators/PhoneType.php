@@ -112,10 +112,10 @@ class PhoneType
 
     public function checkMaxLength(Entity $entity, string $field): bool
     {
-        /** @var ?string */
+        /** @var ?string $value */
         $value = $entity->get($field);
 
-        /** @var int */
+        /** @var int $maxLength */
         $maxLength = $this->metadata->get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']) ??
             self::DEFAULT_MAX_LENGTH;
 
@@ -154,7 +154,7 @@ class PhoneType
             return false;
         }
 
-        /** @var string[]|null|false */
+        /** @var string[]|null|false $typeList */
         $typeList = $this->defs
             ->getEntity($entityType)
             ->getField($field)
