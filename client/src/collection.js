@@ -220,8 +220,8 @@ define('collection', [], function () {
         /**
          * Reset.
          *
-         * @param {module:model.Class[]} models
-         * @param {Object} options
+         * @param {module:model.Class[]} [models]
+         * @param {Object} [options]
          */
         reset: function (models, options) {
             this.lengthCorrection = 0;
