@@ -342,7 +342,7 @@ class Client
             curl_setopt_array($ch, $this->curlOptions);
         }
 
-        /** @var string|false */
+        /** @var string|false $response */
         $response = curl_exec($ch);
 
         if ($response === false) {

@@ -59,7 +59,7 @@ class ScheduleUtil
      */
     public function getActiveScheduledJobList(): Collection
     {
-        /** @var Collection<ScheduledJobEntity> */
+        /** @var Collection<ScheduledJobEntity> $collection */
         $collection = $this->entityManager
             ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
             ->select([

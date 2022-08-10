@@ -147,7 +147,7 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        /** @var DateTime */
+        /** @var DateTime $value */
         $value = $this->getActualValue();
 
         return $value->getHour();
@@ -162,7 +162,7 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        /** @var DateTime */
+        /** @var DateTime $value */
         $value = $this->getActualValue();
 
         return $value->getMinute();
@@ -177,7 +177,7 @@ class DateTimeOptional implements DateTimeable
             return 0;
         }
 
-        /** @var DateTime */
+        /** @var DateTime $value */
         $value = $this->getActualValue();
 
         return $value->getSecond();
@@ -219,7 +219,7 @@ class DateTimeOptional implements DateTimeable
             return self::fromDateTime($dateTime);
         }
 
-        /** @var DateTime */
+        /** @var DateTime $value */
         $value = $this->getActualValue();
 
         $dateTime = $value->withTimezone($timezone)->getDateTime();
@@ -239,7 +239,7 @@ class DateTimeOptional implements DateTimeable
             return self::fromDateTime($dateTime->getDateTime());
         }
 
-        /** @var DateTime */
+        /** @var DateTime $value */
         $value = $this->getActualValue();
 
         $dateTime = $value->withTime($hour, $minute, $second);
@@ -378,7 +378,7 @@ class DateTimeOptional implements DateTimeable
      */
     public static function fromDateTime(DateTimeInterface $dateTime): self
     {
-        /** @var DateTimeImmutable */
+        /** @var DateTimeImmutable $value */
         $value = DateTimeImmutable::createFromFormat(
             self::SYSTEM_FORMAT,
             $dateTime->format(self::SYSTEM_FORMAT),

@@ -89,7 +89,7 @@ class JobFactory
      */
     private function getClassName(string $name): ?string
     {
-        /** @var ?class-string<Job|JobDataLess> */
+        /** @var ?class-string<Job|JobDataLess> $className */
         $className = $this->metadataProvider->getJobClassName($name);
 
         if ($className) {

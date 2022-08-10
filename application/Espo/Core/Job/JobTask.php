@@ -70,7 +70,7 @@ class JobTask extends AsyncTask
             $app->run(JobRunner::class, $params);
         }
         catch (Throwable $e) {
-            /** @var \Espo\Core\Utils\Log */
+            /** @var \Espo\Core\Utils\Log $log */
             $log = $app->getContainer()->get('log');
 
             $log->error(

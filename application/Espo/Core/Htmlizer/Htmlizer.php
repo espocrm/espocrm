@@ -191,7 +191,7 @@ class Htmlizer
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 
         if ($this->entityManager) {
-            /** @var string */
+            /** @var string $html */
             $html = preg_replace_callback(
                 '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
                 function ($matches) {

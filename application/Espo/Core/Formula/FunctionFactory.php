@@ -86,7 +86,7 @@ class FunctionFactory
 
             $typeName = implode('\\', $arr);
 
-            /** @var class-string */
+            /** @var class-string $className */
             $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 

@@ -171,7 +171,7 @@ class ClientManager
             return null;
         }
 
-        /** @var class-string */
+        /** @var class-string $className */
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");
 
         $client = $this->injectableFactory->create($className);
@@ -200,7 +200,7 @@ class ClientManager
         /** @var ExternalAccountEntity|null $externalAccountEntity */
         $externalAccountEntity = $this->entityManager->getEntity('ExternalAccount', $integration . '__' . $userId);
 
-        /** @var class-string */
+        /** @var class-string $className */
         $className = $this->metadata->get("integrations.{$integration}.clientClassName");
 
         $redirectUri = $this->config->get('siteUrl') . '?entryPoint=oauthCallback';

@@ -248,7 +248,7 @@ abstract class OAuth2Abstract implements IClient
 
         if ($response['code'] == 200) {
             if (!empty($response['result'])) {
-                /** @var array<string,mixed> */
+                /** @var array<string,mixed> $result */
                 $result = $response['result'];
 
                 $data = $this->getAccessTokenDataFromResponseResult($result);

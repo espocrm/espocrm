@@ -60,7 +60,7 @@ class DefaultHandlerLoader
             $params['level'] = Logger::toMonologLevel($level);
         }
 
-        /** @var ?class-string<HandlerInterface> */
+        /** @var ?class-string<HandlerInterface> $className */
         $className = $data['className'] ?? null;
 
         if (!$className) {
@@ -95,7 +95,7 @@ class DefaultHandlerLoader
             return null;
         }
 
-        /** @var ?class-string<FormatterInterface> */
+        /** @var ?class-string<FormatterInterface> $className */
         $className = $formatterData['className'] ?? null;
 
         if (!$className) {

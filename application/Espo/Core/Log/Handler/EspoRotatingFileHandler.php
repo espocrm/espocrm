@@ -83,7 +83,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
 
         $filePattern = $this->getFilePattern();
         $dirPath = $this->fileManager->getDirName($this->filename);
-        /** @var string[] */
+        /** @var string[] $logFiles */
         $logFiles = $this->fileManager->getFileList($dirPath, false, $filePattern, true);
 
         if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {

@@ -134,7 +134,7 @@ class Date implements DateTimeable
      */
     public function modify(string $modifier): self
     {
-        /** @var DateTimeImmutable|false */
+        /** @var DateTimeImmutable|false $dateTime */
         $dateTime = $this->dateTime->modify($modifier);
 
         if (!$dateTime) {
