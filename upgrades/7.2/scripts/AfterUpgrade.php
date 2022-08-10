@@ -39,6 +39,7 @@ class AfterUpgrade
     {
         $this->updateEventMetadata($container->get('metadata'), $container->get('fileManager'));
         $this->updateTheme($container->get('entityManager'), $container->get('config'));
+        $this->updateKbArticles($container->get('entityManager'));
     }
 
     private function updateEventMetadata(Metadata $metadata, FileManager $fileManager): void
@@ -161,4 +162,17 @@ class AfterUpgrade
             $entityManager->saveEntity($portal);
         }
     }
+
+     private function updateKbArticles(EntityManager $entityManager): void
+     {
+         $query = $entityManager
+             ->getQueryBuilder()
+             ->update()
+             ->in(\Espo\Modules\Crm\Entities\KnowledgeBaseArticle::ENTITY_TYPE)
+             ->where(['type' => null])
+             ->set(['type' => 'Article'])
+             ->build();
+
+         $entityManager->getQueryExecutor()->execute($query);
+     }
 }
