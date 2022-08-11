@@ -31,11 +31,11 @@ namespace Espo\Core\Authentication;
 
 class AuthenticationData
 {
-    private $username;
+    private ?string $username;
 
-    private $password;
+    private ?string $password;
 
-    private $method;
+    private ?string $method;
 
     public function __construct(
         ?string $username = null,
@@ -52,16 +52,25 @@ class AuthenticationData
         return new self();
     }
 
+    /**
+     * A username.
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /**
+     * A password or auth-token.
+     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    /**
+     * A method.
+     */
     public function getMethod(): ?string
     {
         return $this->method;
