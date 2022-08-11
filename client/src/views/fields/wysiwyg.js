@@ -526,6 +526,16 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.$noteEditor = this.$el.find('> .note-editor');
         },
 
+        focusOnInlineEdit: function () {
+            if (this.$noteEditor)  {
+                this.$summernote.summernote('focus');
+
+                return;
+            }
+
+            Dep.prototype.focusOnInlineEdit.call(this);
+        },
+
         uploadInlineAttachment: function (file) {
             return new Promise((resolve, reject) => {
                 this.getModelFactory().create('Attachment', attachment => {
