@@ -33,8 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
@@ -90,6 +88,18 @@ class Auth
             ->withMethod($authenticationMethod);
 
         $hasAuthData = (bool) ($username || $authenticationMethod);
+
+        if (!$hasAuthData && $this->isEntryPoint) {
+            $password = $this->obtainTokenFromCookies($request);
+
+            if ($password) {
+                $authenticationData = AuthenticationData::create()
+                    ->withPassword($password)
+                    ->withByTokenOnly(true);
+
+                $hasAuthData = true;
+            }
+        }
 
         if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
             $authResult = $this->processAuthNotRequired(
@@ -304,17 +314,6 @@ class Auth
             return [$username, $password];
         }
 
-        if (
-            $request->getCookieParam('auth-username') &&
-            $request->getCookieParam('auth-token')
-        ) {
-
-            $username = $request->getCookieParam('auth-username');
-            $password = $request->getCookieParam('auth-token');
-
-            return [$username, $password];
-        }
-
         $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
             $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
 
@@ -325,5 +324,10 @@ class Auth
         }
 
         return [null, null];
+    }
+
+    private function obtainTokenFromCookies(Request $request): ?string
+    {
+        return $request->getCookieParam('auth-token');
     }
 }

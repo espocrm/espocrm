@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ServiceUnavailable;
 
 use Espo\Repositories\UserData as UserDataRepository;
@@ -43,9 +42,7 @@ use Espo\Entities\{
 };
 
 use Espo\Core\Authentication\{
-    Result,
     Result\FailReason,
-    LoginFactory,
     TwoFactor\LoginFactory as TwoFactorLoginFactory,
     AuthToken\Manager as AuthTokenManager,
     AuthToken\Data as AuthTokenData,
@@ -131,14 +128,14 @@ class Authentication
         $username = $data->getUsername();
         $password = $data->getPassword();
         $authenticationMethod = $data->getMethod();
+        $byTokenOnly = $data->byTokenOnly();
 
         if (
             $authenticationMethod &&
             !$this->configDataProvider->authenticationMethodIsApi($authenticationMethod)
         ) {
-            $this->log->warning(
-                "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
-            );
+            $this->log
+                ->warning("AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'.");
 
             return $this->processFail(
                 Result::fail(FailReason::METHOD_NOT_ALLOWED),
@@ -183,9 +180,13 @@ class Authentication
             }
         }
 
-        $isByTokenOnly = !$authenticationMethod && $request->getHeader('Espo-Authorization-By-Token') === 'true';
+        $byTokenAndUsername = $request->getHeader('Espo-Authorization-By-Token') === 'true';
 
-        if ($isByTokenOnly && !$authToken) {
+        if ($authenticationMethod && $byTokenAndUsername) {
+            return Result::fail(FailReason::DISCREPANT_DATA);
+        }
+
+        if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
             if ($username) {
                 $this->log->info(
                     "AUTH: Trying to login as user '{$username}' by token but token is not found."
@@ -197,6 +198,20 @@ class Authentication
                 $data,
                 $request
             );
+        }
+
+        if ($byTokenOnly) {
+            assert($authToken !== null);
+
+            $username = $this->getUsernameByAuthToken($authToken);
+
+            if (!$username) {
+                return $this->processFail(
+                    Result::fail(FailReason::USER_NOT_FOUND),
+                    $data,
+                    $request
+                );
+            }
         }
 
         if (!$authenticationMethod) {
@@ -694,5 +709,21 @@ class Authentication
     {
         /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+    }
+
+    private function getUsernameByAuthToken(AuthToken $authToken): ?string
+    {
+        /** @var ?User $user */
+        $user = $this->entityManager
+            ->getRDBRepository(User::ENTITY_TYPE)
+            ->select(['userName'])
+            ->where(['id' => $authToken->getUserId()])
+            ->findOne();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $user->getUserName();
     }
 }

@@ -929,11 +929,10 @@ function (
          * @private
          */
         setCookieAuth: function (username, token) {
-            var date = new Date();
+            let date = new Date();
 
             date.setTime(date.getTime() + (1000 * 24*60*60*1000));
 
-            document.cookie = 'auth-username='+username+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
             document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
         },
 
@@ -941,7 +940,6 @@ function (
          * @private
          */
         unsetCookieAuth: function () {
-            document.cookie = 'auth-username' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
             document.cookie = 'auth-token' + '=; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/';
         },
 
