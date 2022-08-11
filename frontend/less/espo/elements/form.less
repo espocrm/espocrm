@@ -192,3 +192,12 @@ select[multiple].input-sm {
 fieldset[disabled] .form-control {
     color: var(--input-color-disabled);
 }
+
+
+.form-inline .form-control {
+    @media screen and (max-width: (@screen-sm-min - 1px)) {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+    }
+}
