@@ -545,3 +545,38 @@ body {
         }
     }
 }
+
+
+// Preventing a shadow being casted on an adjacent panel.
+.panel {
+    &.first,
+    &.in-middle,
+    &.last {
+        position: relative;
+        box-shadow: none;
+
+        &::before {
+            box-shadow: var(--default-box-shadow);
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+        }
+    }
+
+    &.first {
+        &::before {
+            border-top-left-radius: var(--panel-border-radius);
+            border-top-right-radius: var(--panel-border-radius);
+        }
+    }
+    &.last {
+        &::before {
+            border-bottom-left-radius: var(--panel-border-radius);
+            border-bottom-right-radius: var(--panel-border-radius);
+        }
+    }
+}
