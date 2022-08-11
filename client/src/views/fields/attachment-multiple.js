@@ -241,6 +241,10 @@ function (Dep, FileUpload) {
             }, this.events || {});
         },
 
+        focusOnInlineEdit: function () {
+            this.$el.find('.attach-file-label').focus();
+        },
+
         empty: function () {
             this.clearIds();
 

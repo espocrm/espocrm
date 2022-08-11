@@ -299,6 +299,14 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             }
         },
 
+        focusOnInlineEdit: function () {
+            let $element = this.$el.find('.attach-file-label');
+
+            if ($element.length) {
+                $element.focus();
+            }
+        },
+
         handleResize: function () {
             let width = this.$el.width();
 
