@@ -80,11 +80,17 @@ define('views/email/record/edit', ['views/record/edit', 'views/email/record/deta
         },
 
         handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length === 0 && !this.isNew) {
+            if (
+                (this.model.get('attachmentsIds') || []).length === 0 &&
+                !this.isNew &&
+                this.model.get('status') !== 'Draft'
+            ) {
                 this.hideField('attachments');
-            } else {
-                this.showField('attachments');
+
+                return;
             }
+
+            this.showField('attachments');
         },
 
         handleCcField: function () {
