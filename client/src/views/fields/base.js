@@ -1332,22 +1332,27 @@ define('views/fields/base', ['view'], function (Dep) {
                         }
                     });
 
-                    setTimeout(() => {
-                        let $element = this.$element && this.$element.length ?
-                            this.$element :
-                            this.$el.find('.form-control').first();
-
-                        if (!$element) {
-                            return;
-                        }
-
-                        $element.first().focus();
-                    }, 10);
+                    setTimeout(() => this.focusOnInlineEdit(), 10);
                 });
 
             this.trigger('inline-edit-on');
 
             return promise;
+        },
+
+        /**
+         * @protected
+         */
+        focusOnInlineEdit: function () {
+            let $element = this.$element && this.$element.length ?
+                this.$element :
+                this.$el.find('.form-control').first();
+
+            if (!$element) {
+                return;
+            }
+
+            $element.first().focus();
         },
 
         /**

@@ -196,6 +196,10 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
             };
         },
 
+        focusOnInlineEdit: function () {
+            this.$element[0].selectize.focus();
+        },
+
         fetch: function () {
             let list = this.$element.val().split(this.itemDelimiter);
 
