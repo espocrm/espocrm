@@ -215,6 +215,9 @@ class Auth
         $response->writeBody(Json::encode($bodyData));
     }
 
+    /**
+     * @throws Exception
+     */
     protected function handleException(Response $response, Exception $e): void
     {
         if (
