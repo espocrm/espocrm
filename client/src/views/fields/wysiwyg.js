@@ -452,9 +452,13 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             keyMap.pc['CTRL+K'] = 'espoLink.show';
             keyMap.mac['CMD+K'] = 'espoLink.show';
+            keyMap.pc['CTRL+DELETE'] = 'removeFormat';
+            keyMap.mac['CMD+DELETE']  = 'removeFormat';
 
             delete keyMap.pc['CTRL+ENTER'];
             delete keyMap.mac['CMD+ENTER'];
+            delete keyMap.pc['CTRL+BACKSLASH'];
+            delete keyMap.mac['CMD+BACKSLASH'];
 
             let toolbar = this.toolbar;
 
