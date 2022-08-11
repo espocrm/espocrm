@@ -70,12 +70,30 @@
             border-left: 0;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
+
+            &.first::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            &.last::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         }
 
         .side > .panel {
             border-right: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+
+            &.first::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            &.last::before {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
         }
     }
 
@@ -85,6 +103,13 @@
             border-right: 0;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+
+            &.first::before {
+                border-top-right-radius: 0;
+            }
+            &.last::before {
+                border-bottom-right-radius: 0;
+            }
         }
     }
 }
@@ -573,10 +598,23 @@ body {
             border-top-right-radius: var(--panel-border-radius);
         }
     }
+    &.in-middle::before {
+        border-radius: 0;
+    }
     &.last {
         &::before {
             border-bottom-left-radius: var(--panel-border-radius);
             border-bottom-right-radius: var(--panel-border-radius);
+        }
+    }
+}
+
+.modal-content {
+    .panel {
+        &.first,
+        &.in-middle,
+        &.last {
+            z-index: 2;
         }
     }
 }
