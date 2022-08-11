@@ -81,7 +81,7 @@ class Espo implements Login
             return Result::fail(FailReason::WRONG_CREDENTIALS);
         }
 
-        if ($authToken && $user->id !== $authToken->getUserId()) {
+        if ($authToken && $user->getId() !== $authToken->getUserId()) {
             return Result::fail(FailReason::USER_TOKEN_MISMATCH);
         }
 
