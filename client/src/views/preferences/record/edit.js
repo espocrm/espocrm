@@ -219,7 +219,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                 }
             });
 
-            if (this.getAcl().checkScope('EmailAccount') && !this.model.get('smtpServer')) {
+            if (/*this.getAcl().checkScope('EmailAccountScope') && */!this.model.get('smtpServer')) {
                 this.hideField('smtpServer');
                 this.hideField('smtpPort');
                 this.hideField('smtpSecurity');

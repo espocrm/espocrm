@@ -99,6 +99,7 @@
             [{"name": "smtpUsername"}, {"name": "testSend", "customLabel": null, "view": "views/preferences/fields/test-send"}],
             [{"name": "smtpPassword"}, false]
         ],
+        "tabBreak": true,
         "tabLabel": "$label:SMTP"
     }
 ]
