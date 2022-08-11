@@ -69,6 +69,10 @@ class Auth
         $this->isEntryPoint = $isEntryPoint;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Exception
+     */
     public function process(Request $request, Response $response): AuthResult
     {
         $username = null;
@@ -118,6 +122,9 @@ class Auth
         return AuthResult::createNotResolved();
     }
 
+    /**
+     * @throws Exception
+     */
     private function processAuthNotRequired(
         AuthenticationData $data,
         Request $request,
@@ -140,6 +147,9 @@ class Auth
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     private function processWithAuthData(
         AuthenticationData $data,
         Request $request,
