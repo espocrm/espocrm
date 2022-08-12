@@ -8,6 +8,7 @@
             <li>
                 <a
                     role="button"
+                    tabindex="0"
                     class="{{#ifEqual mode ../mode}} active{{/ifEqual}}"
                     data-action="mode"
                     data-mode="{{mode}}"
@@ -21,6 +22,7 @@
             <li>
                 <a
                     role="button"
+                    tabindex="0"
                     data-action="toggleScopeFilter"
                     data-name="{{scope}}"
                 >
@@ -32,7 +34,11 @@
         {{#if isCustomViewAvailable}}
             <li class="divider"></li>
             <li>
-                <a role="button" data-action="createCustomView">{{translate 'Create Shared View' scope='Calendar'}}</a>
+                <a
+                    role="button"
+                    tabindex="0"
+                    data-action="createCustomView"
+                >{{translate 'Create Shared View' scope='Calendar'}}</a>
             </li>
         {{/if}}
     </ul>

@@ -1,5 +1,5 @@
 {{#unless isNew}}
-<a role="button" data-action="change">{{translate 'change'}}</a>
+<a role="button" tabindex="0" data-action="change">{{translate 'change'}}</a>
 {{/unless}}
 <input
 	type="password"

@@ -1,5 +1,5 @@
 {{#if closeButton}}
-<a role="button" class="pull-right close" data-action="close" aria-hidden="true">×</a>
+<a role="button" tabindex="0" class="pull-right close" data-action="close" aria-hidden="true">×</a>
 {{/if}}
 <h4>{{header}}</h4>
 

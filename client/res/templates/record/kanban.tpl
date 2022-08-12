@@ -29,6 +29,7 @@
                         {{#if ../isCreatable}}
                         <a
                             role="button"
+                            tabindex="0"
                             title="{{translate 'Create'}}"
                             class="create-button hidden"
                             data-action="createInGroup"

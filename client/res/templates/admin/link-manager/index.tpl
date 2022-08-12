@@ -17,7 +17,6 @@
     </button>
 </div>
 
-
 {{#if linkDataList.length}}
 <div class="margin-bottom-2x margin-top">
     <input
@@ -81,13 +80,13 @@
             {{translate entityForeign category='scopeNames'}}
         </td>
         <td align="right" width="10%">
-            <a role="button" data-action="editLink" data-link="{{link}}">
+            <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
                 {{translate 'Edit'}}
             </a>
         </td>
         <td align="right" width="10%">
             {{#if isRemovable}}
-            <a role="button" data-action="removeLink" data-link="{{link}}">
+            <a role="button" tabindex="0" data-action="removeLink" data-link="{{link}}">
                 {{translate 'Remove'}}
             </a>
             {{/if}}

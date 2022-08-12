@@ -1,7 +1,7 @@
 
 <div class="group-head" data-level="{{level}}">
     {{#ifNotEqual level 0}}
-    <a class="pull-right" role="button" data-action="remove"><span class="fas fa-times"></span></a>
+    <a class="pull-right" role="button" tabindex="0" data-action="remove"><span class="fas fa-times"></span></a>
     {{/ifNotEqual}}
     {{#ifNotEqual level 0}}
     <div>(</div>
@@ -19,12 +19,33 @@
 
 <div class="group-bottom" data-level="{{level}}">
     <div class="btn-group">
-        <a class="dropdown-toggle small" role="button" data-toggle="dropdown">{{translate groupOperator category='logicalOperators' scope='Admin'}} <span class="fas fa-plus"></span></a>
+        <a
+            class="dropdown-toggle small"
+            role="button"
+            tabindex="0"
+            data-toggle="dropdown"
+        >{{translate groupOperator category='logicalOperators' scope='Admin'}} <span class="fas fa-plus"></span></a>
         <ul class="dropdown-menu">
-            <li><a role="button" data-action="addField">{{translate 'Field' scope='DynamicLogic'}}</a></li>
-            <li><a role="button" data-action="addAnd">(... {{translate 'and' category='logicalOperators' scope='Admin'}} ...)</a></li>
-            <li><a role="button" data-action="addOr">(... {{translate 'or' category='logicalOperators' scope='Admin'}} ...)</a></li>
-            <li><a role="button" data-action="addNot">{{translate 'not' category='logicalOperators' scope='Admin'}} (...)</a></li>
+            <li><a
+                    role="button"
+                    tabindex="0"
+                    data-action="addField"
+                >{{translate 'Field' scope='DynamicLogic'}}</a></li>
+            <li><a
+                    role="button"
+                    tabindex="0"
+                    data-action="addAnd"
+                >(... {{translate 'and' category='logicalOperators' scope='Admin'}} ...)</a></li>
+            <li><a
+                    role="button"
+                    tabindex="0"
+                    data-action="addOr"
+                >(... {{translate 'or' category='logicalOperators' scope='Admin'}} ...)</a></li>
+            <li><a
+                    role="button"
+                    tabindex="0"
+                    data-action="addNot"
+                >{{translate 'not' category='logicalOperators' scope='Admin'}} (...)</a></li>
         </ul>
     </div>
 </div>

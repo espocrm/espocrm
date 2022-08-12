@@ -7,6 +7,7 @@
             {{#each items.buttons}}
                 <a
                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                    tabindex="0"
                     class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} btn-xs-wide action{{#if hidden}} hidden{{/if}}{{#if className}} {{className}}{{/if}}"
                     data-name="{{name}}"
                     data-action="{{action}}"
@@ -28,6 +29,7 @@
                     <li class="{{#if hidden}}hidden{{/if}}">
                         <a
                             {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                            tabindex="0"
                             class="action"
                             data-name="{{name}}"
                             data-action="{{action}}"
@@ -53,6 +55,7 @@
                         <li class="{{#if hidden}}hidden{{/if}}">
                             <a
                                 {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                tabindex="0"
                                 class="action"
                                 data-name="{{name}}"
                                 data-action="{{action}}"

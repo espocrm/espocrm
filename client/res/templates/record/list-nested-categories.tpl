@@ -3,7 +3,7 @@
 
     <div class="clearfix">
         <div class="btn-group pull-right">
-            <a role="button" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
+            <a role="button" tabindex="0" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
                 <span class="fas fa-ellipsis-h"></span>
             </a>
 
@@ -23,6 +23,7 @@
                 <li class="{{#if isExpanded}}hidden{{/if}}">
                     <a
                         role="button"
+                        tabindex="0"
                         class="category-expanded-toggle-link action"
                         data-action="expand"
                     >{{translate 'Expand'}}</a>
@@ -32,6 +33,7 @@
                 <li>
                     <a
                         role="button"
+                        tabindex="0"
                         class="navigation-toggle-link action"
                         data-action="toggleNavigationPanel"
                     >
@@ -80,6 +82,7 @@
                 <span class="category-item-name">
                     <a
                         role="button"
+                        tabindex="0"
                         class="action"
                         data-action="showMore"
                         title="{{translate 'Show more'}}"

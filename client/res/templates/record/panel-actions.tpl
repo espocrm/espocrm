@@ -19,6 +19,7 @@
     {{#if this}}
     <li><a
         {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+        tabindex="0"
         class="action{{#if hidden}} hidden{{/if}}"
         {{#if action}}
             data-panel="{{../defs.name}}"

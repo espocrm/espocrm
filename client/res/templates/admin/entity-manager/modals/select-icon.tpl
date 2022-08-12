@@ -1,5 +1,5 @@
 <div class="margin-top margin-bottom-2x">
-	<a role="button" data-action="select" class="action btn btn-default" data-value="" style="cursor: pointer;">
+	<a role="button" tabindex="0" data-action="select" class="action btn btn-default" data-value="" style="cursor: pointer;">
 		{{translate 'None'}}
 	</a>
 </div>
@@ -26,6 +26,5 @@
 		</span>
 	</div>
 	{{/each}}
-
 {{/each}}
 </div>

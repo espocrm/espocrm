@@ -1,7 +1,7 @@
 {{#each panelList}}
     {{#if isRightAfterDelimiter}}
         <div class="panels-show-more-delimiter">
-            <a role="button" data-action="showMorePanels" title="{{translate 'Show more'}}">
+            <a role="button" tabindex="0" data-action="showMorePanels" title="{{translate 'Show more'}}">
                 <span class="fas fa-ellipsis-h fa-lg"></span>
             </a>
         </div>

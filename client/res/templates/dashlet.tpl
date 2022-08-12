@@ -25,6 +25,7 @@
                       data-action="{{name}}"
                       class="action"
                       {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
+                      tabindex="0"
                       {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                     >
                         {{#if iconHtml}}{{{iconHtml}}}

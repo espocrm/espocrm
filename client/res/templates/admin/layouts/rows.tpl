@@ -18,7 +18,12 @@
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}
-                        <div class="right" style="width: 17px;"><a role="button" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        <div class="right" style="width: 17px;"><a
+                            role="button"
+                            tabindex="0"
+                            data-action="editItem"
+                            class="edit-field"
+                        ><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/unless}}
                         {{/if}}
                     </li>
@@ -31,13 +36,22 @@
             <header>{{translate 'Disabled' scope='Admin'}}</header>
             <ul class="disabled connected">
                 {{#each disabledFields}}
-                    <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
+                    <li
+                        class="cell"
+                        draggable="true"
+                        {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
+                    >
                         <div class="left" style="width: calc(100% - 17px);">
                             <span>{{label}}</span>
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}
-                        <div class="right" style="width: 17px;"><a role="button" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
+                        <div class="right" style="width: 17px;"><a
+                            role="button"
+                            tabindex="0"
+                            data-action="editItem"
+                            class="edit-field"
+                        ><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/unless}}
                         {{/if}}
                     </li>

@@ -14,6 +14,7 @@
                 class="list-group-item"
             ><a
                 role="button"
+                tabindex="0"
                 class="integration-link"
                 data-name="{{./this}}"
             >{{{translate ./this scope='Integration' category='titles'}}}</a></li>

@@ -27,6 +27,7 @@
                     class="{{#if hidden}}hidden{{/if}}{{#if disabled}} disabled{{/if}}"
                 ><a
                     role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}
@@ -94,6 +95,7 @@
             >
                 <a
                     role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}

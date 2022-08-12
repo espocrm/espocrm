@@ -36,6 +36,7 @@
                 <li class="{{#if hidden}}hidden{{/if}}">
                 <a
                     role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
@@ -58,6 +59,7 @@
             <li>
                 <a
                     role="button"
+                    tabindex="0"
                     data-action="{{./this}}"
                     class='mass-action'
                 >{{translate this category="massActions" scope=../scope}}</a></li>
@@ -87,6 +89,7 @@
                 <li>
                     <a
                         role="button"
+                        tabindex="0"
                         data-action="{{./this}}"
                         class='mass-action'
                     >{{translate this category="massActions" scope=../scope}}</a>
@@ -129,6 +132,7 @@
                             <li>
                                 <a
                                     role="button"
+                                    tabindex="0"
                                     data-action="selectAllResult"
                                 >{{translate 'Select All Results'}}</a>
                             </li>
@@ -147,6 +151,7 @@
                     {{#if this.isSortable}}
                         <a
                             role="button"
+                            tabindex="0"
                             class="sort"
                             data-name="{{this.name}}"
                             title="{{translate 'Sort'}}"
@@ -184,6 +189,7 @@
         <a
             type="button"
             role="button"
+            tabindex="0"
             class="btn btn-default btn-block"
             data-action="showMore"
             {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}

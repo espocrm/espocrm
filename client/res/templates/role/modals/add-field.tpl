@@ -5,6 +5,7 @@
         <td>
             <a
                 role="button"
+                tabindex="0"
                 data-action="addField"
                 data-name="{{this}}"
             >{{translate this scope=../../scope category='fields'}}</a>

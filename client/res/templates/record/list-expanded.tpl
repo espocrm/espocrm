@@ -24,6 +24,7 @@
             <li>
                 <a
                     role="button"
+                    tabindex="0"
                     data-action="{{./this}}"
                     class='mass-action'
                 >{{translate this category="massActions" scope=../scope}}</a></li>
@@ -55,6 +56,7 @@
         <a
             type="button"
             role="button"
+            tabindex="0"
             class="btn btn-default btn-block"
             data-action="showMore"
             {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}

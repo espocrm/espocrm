@@ -27,6 +27,7 @@
                                 {{/if}}
                                 <a
                                     {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     {{#if action}} data-action="{{action}}"{{/if}}
                                 >{{label}}</a>
                                 </div>

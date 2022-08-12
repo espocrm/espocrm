@@ -14,6 +14,7 @@
             <li><a
                 role="button"
                 class="action"
+                tabindex="0"
                 data-action="quickEdit"
                 data-id="{{model.id}}"
                 data-no-full-form="true"
@@ -23,6 +24,7 @@
             <li><a
                 role="button"
                 class="action"
+                tabindex="0"
                 data-action="quickRemove"
                 data-id="{{model.id}}"
             >{{translate 'Remove'}}</a></li>

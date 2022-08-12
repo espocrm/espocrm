@@ -30,6 +30,7 @@
             >
                 <a
                     role="button"
+                    tabindex="0"
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}

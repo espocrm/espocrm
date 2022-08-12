@@ -19,12 +19,14 @@
         <div class="pull-left" style="margin-right: 10px;">
             <a
                 role="button"
+                tabindex="0"
                 data-action="showCategory"
                 data-name="{{./this}}"
                 class="action"
             ><span class="fas fa-chevron-down"></span></a>
             <a
                 role="button"
+                tabindex="0"
                 data-action="hideCategory"
                 data-name="{{./this}}"
                 class="hidden action"

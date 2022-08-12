@@ -10,6 +10,7 @@
         <li>
             <a
                 {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                tabindex="0"
                 class="action"
                 {{#if action}}data-action="{{action}}"{{/if}}
                 {{#each data}}

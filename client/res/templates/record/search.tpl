@@ -111,6 +111,7 @@
                             class="{{#if checked}}hidden{{/if}}"
                         ><a
                             role="button"
+                            tabindex="0"
                             class="add-filter"
                             data-action="addFilter"
                             data-name="{{name}}"
@@ -147,7 +148,7 @@
 </div>
 
 <div class="advanced-filters-apply-container{{#unless toShowApplyFiltersButton}} hidden{{/unless}}">
-    <a role="button" class="btn btn-default btn-sm" data-action="applyFilters">
+    <a role="button" tabindex="0" class="btn btn-default btn-sm" data-action="applyFilters">
         <span class="fas fa-search"></span>
         <span class="text-apply{{#if toShowResetFiltersText}} hidden{{/if}}">{{translate 'Apply'}}</span>
         <span class="text-reset{{#unless toShowResetFiltersText}} hidden{{/unless}}">{{translate 'Reset'}}</span>

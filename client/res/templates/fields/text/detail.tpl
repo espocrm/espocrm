@@ -9,6 +9,7 @@
 <div class="see-more-container hidden">
     <a
         role="button"
+        tabindex="0"
         data-action="seeMoreText"
     ><span class="fas fa-sm fa-chevron-down"></span> <span class="text">{{translate 'See more'}}</span></a>
 </div>

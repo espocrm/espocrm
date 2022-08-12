@@ -5,6 +5,7 @@
             {{#unless erased}}
             <a
                 role="button"
+                tabindex="0"
                 data-email-address="{{emailAddress}}"
                 data-action="mailTo"
                 class="selectable"
@@ -23,6 +24,7 @@
     {{#if value}}
     <a
         role="button"
+        tabindex="0"
         data-email-address="{{value}}"
         data-action="mailTo"
         class="selectable"

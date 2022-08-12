@@ -91,6 +91,7 @@
                     >
                         <a
                             {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                            tabindex="0"
                             class="{{aClassName}}"
                             {{#if color}} style="border-color: {{color}}"{{/if}}
                             {{#if isGroup}}
@@ -123,6 +124,7 @@
                             <li data-name="{{name}}" class="in-group tab">
                                 <a
                                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     class="{{aClassName}}"
                                     {{#if color}}
                                         style="border-color: {{color}}"
@@ -165,6 +167,7 @@
                     class="dropdown-toggle"
                     data-toggle="dropdown"
                     role="button"
+                    tabindex="0"
                     title="{{translate 'Create'}}"
                 ><i class="fas fa-plus"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
@@ -188,6 +191,7 @@
                     class="dropdown-toggle"
                     data-toggle="dropdown"
                     role="button"
+                    tabindex="0"
                     title="{{translate 'Menu'}}"
                 ><span class="fas fa-ellipsis-v"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
@@ -195,6 +199,7 @@
                         {{#unless divider}}
                             <li><a
                                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                    tabindex="0"
                                     class="nav-link{{#if action}} action{{/if}}"{{#if action}}
                                     data-action="{{action}}"{{/if}}
                                 >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
@@ -206,7 +211,7 @@
             </li>
         </ul>
         </div>
-        <a class="minimizer hidden" role="button">
+        <a class="minimizer hidden" role="button" tabindex="0">
             <span class="fas fa-chevron-right right"></span>
             <span class="fas fa-chevron-left left"></span>
         </a>

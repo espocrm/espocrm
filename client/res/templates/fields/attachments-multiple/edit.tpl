@@ -24,6 +24,7 @@
             {{#each sourceList}}
                 <li><a
                         role="button"
+                        tabindex="0"
                         class="action"
                         data-action="insertFromSource"
                         data-name="{{./this}}"

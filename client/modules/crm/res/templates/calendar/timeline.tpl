@@ -23,7 +23,7 @@
             <ul class="dropdown-menu">
                 {{#each calendarTypeDataList}}
                     <li>
-                        <a role="button" data-action="toggleCalendarType" data-name="{{type}}">
+                        <a role="button" tabindex="0" data-action="toggleCalendarType" data-name="{{type}}">
                             <span
                                 class="fas fa-check calendar-type-check-icon pull-right{{#if disabled}} hidden{{/if}}"
                             ></span> {{label}}

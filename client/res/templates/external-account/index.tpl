@@ -4,7 +4,12 @@
     <div id="external-account-menu" class="col-sm-3">
     <ul class="list-group list-group-panel">
     {{#each externalAccountList}}
-        <li class="list-group-item"><a role="button" class="external-account-link" data-id="{{id}}">{{id}}</a></li>
+        <li class="list-group-item"><a
+            role="button"
+            tabindex="0"
+            class="external-account-link"
+            data-id="{{id}}"
+        >{{id}}</a></li>
     {{/each}}
     </ul>
     {{#unless externalAccountListCount}}

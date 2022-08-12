@@ -1,6 +1,7 @@
 <div class="form-group">
     <a
         role="button"
+        tabindex="0"
         class="remove-filter pull-right"
         data-name="{{name}}"
     >{{#unless notRemovable}}<i class="fas fa-times"></i>{{/unless}}</a>
