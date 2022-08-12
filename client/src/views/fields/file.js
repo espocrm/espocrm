@@ -430,6 +430,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
+            id = Handlebars.Utils.escapeExpression(id);
+
             var url = this.getBasePath() + '?entryPoint=download&id=' + id;
 
             if (this.getUser().get('portalId')) {
@@ -579,6 +581,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             if (preview === name && id) {
+                id = Handlebars.Utils.escapeExpression(id);
+
                 preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
                     preview + '</a>';
             }

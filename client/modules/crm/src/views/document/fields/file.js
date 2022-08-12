@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/document/fields/file', 'views/fields/file', function (Dep) {
+define('crm:views/document/fields/file', ['views/fields/file'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,12 +40,13 @@ Espo.define('crm:views/document/fields/file', 'views/fields/file', function (Dep
                     return false;
                 }
 
+                id = Handlebars.Utils.escapeExpression(id);
+
                 return '<a title="'+this.getHelper().escapeString(name)+'" href="'+this.getBasePath()+'?entryPoint=download&id=' + id + '" target="_BLANK"><span class="fas fa-paperclip small"></span></a>';
-            } else {
-                return Dep.prototype.getValueForDisplay.call(this);
             }
+
+            return Dep.prototype.getValueForDisplay.call(this);
         },
 
     });
-
 });
