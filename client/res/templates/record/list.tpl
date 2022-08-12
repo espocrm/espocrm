@@ -125,7 +125,12 @@
                     <span class="select-all-container"><input type="checkbox" class="select-all"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
-                        <a class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <a
+                            class="btn btn-link btn-sm dropdown-toggle"
+                            data-toggle="dropdown"
+                            tabindex="0"
+                            role="button"
+                        >
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
