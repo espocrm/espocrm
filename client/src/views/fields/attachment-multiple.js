@@ -283,9 +283,7 @@ function (Dep, FileUpload) {
         },
 
         getDownloadUrl: function (id) {
-            id = Handlebars.Utils.escapeExpression(id);
-
-            var url = this.getBasePath() + '?entryPoint=download&id=' + id;
+            let url = this.getBasePath() + '?entryPoint=download&id=' + id;
 
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');
@@ -297,20 +295,24 @@ function (Dep, FileUpload) {
         removeId: function (id) {
             var arr = _.clone(this.model.get(this.idsName) || []);
             var i = arr.indexOf(id);
+
             arr.splice(i, 1);
+
             this.model.set(this.idsName, arr);
 
             var nameHash = _.clone(this.model.get(this.nameHashName) || {});
             delete nameHash[id];
+
             this.model.set(this.nameHashName, nameHash);
 
             var typeHash = _.clone(this.model.get(this.typeHashName) || {});
             delete typeHash[id];
+
             this.model.set(this.typeHashName, typeHash);
         },
 
         clearIds: function (silent) {
-            var silent = silent || false;
+            silent = silent || false;
 
             this.model.set(this.idsName, [], {silent: silent});
             this.model.set(this.nameHashName, {}, {silent: silent});
@@ -338,14 +340,11 @@ function (Dep, FileUpload) {
         },
 
         getEditPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            id = Handlebars.Utils.escapeExpression(id);
-
             if (!~this.previewTypeList.indexOf(type)) {
                 return name;
             }
 
-            let html = $('<img>')
+            return  $('<img>')
                 .attr('src', this.getImageUrl(id, 'small'))
                 .attr('title', name)
                 .attr('draggable', false)
@@ -355,43 +354,54 @@ function (Dep, FileUpload) {
                 })
                 .get(0)
                 .outerHTML;
-
-            return html;
         },
 
         getBoxPreviewHtml: function (name, type, id) {
-            let preview = name;
+            let $text = $('<span>').text(name);
 
-            if (this.showPreviews && id) {
-                preview = this.getEditPreview(name, type, id);
-            } else {
-                preview = Handlebars.Utils.escapeExpression(preview);
+            if (!id) {
+                return $text.get(0).outerHTML;
             }
 
-            if (preview === name && id) {
-                preview = '<a href="' + this.getBasePath() +
-                    '?entryPoint=download&id=' + id + '" target="_BLANK">' +
-                    name + '</a>';
+            if (this.showPreviews) {
+                let html = this.getEditPreview(name, type, id);
+
+                if (!html) {
+                    return $text.get(0).outerHTML;
+                }
+
+                return html;
             }
 
-            return preview;
+            let url = this.getBasePath() + '?entryPoint=download&id=' + id;
+
+            return $('<a>')
+                .attr('href', url)
+                .attr('target', '_BLANK')
+                .text(name)
+                .get(0).outerHTML;
         },
 
         addAttachmentBox: function (name, type, id) {
-            id = Handlebars.Utils.escapeExpression(id);
-
             let $attachments = this.$attachments;
 
-            let removeLink = '<a role="button" tabindex="0" class="remove-attachment pull-right">'+
-                '<span class="fas fa-times"></span></a>';
+            let $remove = $('<a>')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
+                .addClass('remove-attachment pull-right')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                );
 
             let previewHtml = this.getBoxPreviewHtml(name, type, id);
 
             let $att = $('<div>')
                 .addClass('gray-box')
-                .append(removeLink)
+                .append($remove)
                 .append(
-                    $('<span class="preview">' + previewHtml + '</span>')
+                    $('<span>')
+                        .addClass('preview')
+                        .append(previewHtml)
                 );
 
             let $container = $('<div>').append($att);
@@ -404,8 +414,9 @@ function (Dep, FileUpload) {
                 return $att;
             }
 
-            let $loading = $('<span class="small uploading-message">' +
-                this.translate('Uploading...') + '</span>');
+            let $loading = $('<span>')
+                .addClass('small uploading-message')
+                .text(this.translate('Uploading...'));
 
             $container.append($loading);
 
@@ -656,15 +667,18 @@ function (Dep, FileUpload) {
             return false;
         },
 
+        /**
+         * @return {string}
+         */
         getDetailPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            id = Handlebars.Utils.escapeExpression(id);
-
             if (!this.isTypeIsImage(type)) {
-                return name;
+                return $('<span>')
+                    .text(name)
+                    .get(0)
+                    .outerHTML;
             }
 
-            let html = $('<a>')
+            return $('<a>')
                 .attr('data-action', 'showImagePreview')
                 .attr('data-id', id)
                 .attr('title', name)
@@ -680,64 +694,75 @@ function (Dep, FileUpload) {
                 )
                 .get(0)
                 .outerHTML;
-
-            return html;
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.isListMode()) {
-                var nameHash = this.nameHash;
+            if (this.isDetailMode() || this.isListMode()) {
+                let nameHash = this.nameHash;
+                let typeHash = this.model.get(this.typeHashName) || {};
 
-                var typeHash = this.model.get(this.typeHashName) || {};
+                let previews = [];
+                let names = [];
 
-                var previews = [];
-                var names = [];
-
-                for (var id in nameHash) {
-                    var type = typeHash[id] || false;
-                    var name = nameHash[id];
+                for (let id in nameHash) {
+                    let type = typeHash[id] || false;
+                    let name = nameHash[id];
 
                     if (
-                        this.showPreviews
-                        &&
-                        ~this.previewTypeList.indexOf(type)
-                        &&
-                        (this.mode === 'detail' || this.mode === 'list' && this.showPreviewsInListMode)
+                        this.showPreviews &&
+                        ~this.previewTypeList.indexOf(type) &&
+                        (
+                            this.isDetailMode() ||
+                            this.isListMode() && this.showPreviewsInListMode
+                        )
                     ) {
                         previews.push(
-                            '<div class="attachment-preview">' +
-                            this.getDetailPreview(name, type, id) + '</div>'
+                            $('<div>')
+                                .addClass('attachment-preview')
+                                .append(this.getDetailPreview(name, type, id))
                         );
 
                         continue;
                     }
 
-                    var line = '<div class="attachment-block">' +
-                        '<span class="fas fa-paperclip text-soft small"></span> ' +
-                        '<a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' +
-                        Handlebars.Utils.escapeExpression(name) + '</a></div>';
-
-                    names.push(line);
+                    names.push(
+                        $('<div>')
+                            .addClass('attachment-block')
+                            .append(
+                                $('<span>').addClass('fas fa-paperclip text-soft small'),
+                                ' ',
+                                $('<a>')
+                                    .attr('href', this.getDownloadUrl(id))
+                                    .attr('target', '_BLANK')
+                                    .text(name)
+                            )
+                    );
                 }
 
-                let containerClassName = 'attachment-block-container';
+                let containerClassName = null;
 
                 if (this.previewSize === 'large') {
-                    containerClassName += ' attachment-block-container-large';
+                    containerClassName = 'attachment-block-container-large';
                 }
 
                 if (this.previewSize === 'small') {
-                    containerClassName += ' attachment-block-container-small';
+                    containerClassName = 'attachment-block-container-small';
                 }
 
                 if (names.length === 0 && previews.length === 0) {
                     return '';
                 }
 
-                var string = '<div class="'+ containerClassName + '">' + previews.join('') + '</div>' +
-                    names.join('');
+                let $container = $('<div>')
+                    .append(
+                        $('<div>')
+                            .addClass('attachment-block-container')
+                            .addClass(containerClassName)
+                            .append(previews)
+                    )
+                    .append(names);
 
-                return string;
+                return $container.get(0).innerHTML;
             }
         },
 
@@ -771,17 +796,16 @@ function (Dep, FileUpload) {
                         }
                     }
                 }
-                var boolFilterList = this.getMetadata().get(
-                    ['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']
-                );
+
+                var boolFilterList = this.getMetadata()
+                    .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
 
                 if (('getSelectBoolFilterList' + source) in this) {
                     boolFilterList = this['getSelectBoolFilterList' + source]();
                 }
 
-                var primaryFilterName = this.getMetadata().get(
-                    ['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']
-                );
+                var primaryFilterName = this.getMetadata()
+                    .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
 
                 if (('getSelectPrimaryFilterName' + source) in this) {
                     primaryFilterName = this['getSelectPrimaryFilterName' + source]();
@@ -804,17 +828,15 @@ function (Dep, FileUpload) {
                             modelList = [modelList];
                         }
 
-                        modelList.forEach((model) => {
+                        modelList.forEach(model => {
                             if (model.name === 'Attachment') {
                                 this.pushAttachment(model);
 
                                 return;
                             }
 
-                            this
-                                .ajaxPostRequest(source + '/action/getAttachmentList', {
-                                    id: model.id,
-                                })
+                            Espo.Ajax
+                                .postRequest(source + '/action/getAttachmentList', {id: model.id})
                                 .then(attachmentList => {
                                     attachmentList.forEach(item => {
                                         this.getModelFactory().create('Attachment', attachment => {
@@ -827,8 +849,6 @@ function (Dep, FileUpload) {
                         });
                     });
                 });
-
-                return;
             }
         },
 
@@ -869,28 +889,27 @@ function (Dep, FileUpload) {
         },
 
         fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
+            let type = this.$el.find('select.search-type').val();
 
             if (type === 'isEmpty') {
-                var data = {
+                return {
                     type: 'isNotLinked',
                     data: {
                         type: type,
                     },
                 };
-
-                return data;
             }
-            else if (type === 'isNotEmpty') {
-                var data = {
+
+            if (type === 'isNotEmpty') {
+                return {
                     type: 'isLinked',
                     data: {
                         type: type,
                     },
                 };
-
-                return data;
             }
+
+            return null;
         },
     });
 });

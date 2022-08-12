@@ -313,9 +313,10 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
+        /**
+         * @return {string}
+         */
         getDetailPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-
             if (!~this.previewTypeList.indexOf(type)) {
                 return name;
             }
@@ -329,8 +330,6 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                     previewSize = this.params.listPreviewSize;
                 }
             }
-
-            id = Handlebars.Utils.escapeExpression(id);
 
             let src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
@@ -351,16 +350,14 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             if (this.mode === 'listLink') {
                 let link = '#' + this.model.entityType + '/view/' + this.model.id;
 
-                let html = $('<a>')
+                return $('<a>')
                     .attr('href', link)
                     .append($img)
                     .get(0)
                     .outerHTML;
-
-                return html;
             }
 
-            let html = $('<a>')
+            return $('<a>')
                 .attr('data-action', 'showImagePreview')
                 .attr('data-id', id)
                 .attr('title', name)
@@ -368,19 +365,14 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 .append($img)
                 .get(0)
                 .outerHTML;
-
-            return html;
         },
 
         getEditPreview: function (name, type, id) {
-            name = Handlebars.Utils.escapeExpression(name);
-            id = Handlebars.Utils.escapeExpression(id);
-
             if (!~this.previewTypeList.indexOf(type)) {
                 return null;
             }
 
-            let html = $('<img>')
+            return $('<img>')
                 .attr('src', this.getImageUrl(id, 'small'))
                 .attr('title', name)
                 .attr('draggable', false)
@@ -390,8 +382,6 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 })
                 .get(0)
                 .outerHTML;
-
-            return html;
         },
 
         getValueForDisplay: function () {
@@ -408,15 +398,18 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
             }
 
             if (this.showPreview && ~this.previewTypeList.indexOf(type)) {
-                var classNamePart = '';
+                let className = '';
 
                 if (this.isListMode() && this.params.listPreviewSize) {
-                    classNamePart += ' no-shrink';
+                    className += 'no-shrink';
                 }
 
-                let item = '<div class="attachment-preview' + classNamePart + '">' +
-                    this.getDetailPreview(name, type, id) +
-                    '</div>';
+                let $item = $('<div>')
+                    .addClass('attachment-preview')
+                    .addClass(className)
+                    .append(
+                        this.getDetailPreview(name, type, id)
+                    );
 
                 let containerClassName = 'attachment-block-container';
 
@@ -428,23 +421,30 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                     containerClassName += ' attachment-block-container-small';
                 }
 
-                return '<div class="' + containerClassName + '">' +
-                    '<div class="attachment-block">' +
-                    item +
-                    '</div>' +
-                    '</div>';
+                return $('<div>')
+                    .addClass(containerClassName)
+                    .append(
+                        $('<div>')
+                            .addClass('attachment-block')
+                            .append($item)
+                    )
+                    .get(0).outerHTML;
             }
 
-            return '<span class="fas fa-paperclip text-soft small"></span> ' +
-                '<a href="'+ this.getDownloadUrl(id) +'" target="_BLANK">' +
-                Handlebars.Utils.escapeExpression(name) +
-                '</a>';
+            return $('<span>')
+                .append(
+                    $('<span>').addClass('fas fa-paperclip text-soft small'),
+                    ' ',
+                    $('<a>')
+                        .attr('href', this.getDownloadUrl(id))
+                        .attr('target', '_BLANK')
+                        .text(name)
+                )
+                .get(0).innerHTML;
         },
 
         getImageUrl: function (id, size) {
-            id = Handlebars.Utils.escapeExpression(id);
-
-            var url = this.getBasePath() + '?entryPoint=image&id=' + id;
+            let url = this.getBasePath() + '?entryPoint=image&id=' + id;
 
             if (size) {
                 url += '&size=' + size;
@@ -615,36 +615,50 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
         },
 
         getBoxPreviewHtml: function (name, type, id) {
-            let preview = name;
+            let $text = $('<span>').text(name);
 
-            if (this.showPreview && id) {
-                preview = this.getEditPreview(name, type, id);
-            } else {
-                preview = Handlebars.Utils.escapeExpression(preview);
+            if (!id) {
+                return $text.get(0).outerHTML;
             }
 
-            if (preview === name && id) {
-                preview = '<a href="' + this.getBasePath() +
-                    '?entryPoint=download&id=' + id + '" target="_BLANK">' +
-                    name + '</a>';
+            if (this.showPreview) {
+                let html = this.getEditPreview(name, type, id);
+
+                if (!html) {
+                    return $text.get(0).outerHTML;
+                }
+
+                return html;
             }
 
-            return preview;
+            let url = this.getBasePath() + '?entryPoint=download&id=' + id;
+
+            return $('<a>')
+                .attr('href', url)
+                .attr('target', '_BLANK')
+                .text(name)
+                .get(0).outerHTML;
         },
 
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
 
-            let removeLink = '<a role="button" tabindex="0" class="remove-attachment pull-right">' +
-                '<span class="fas fa-times"></span></a>';
+            let $remove = $('<a>')
+                .attr('role', 'button')
+                .attr('tabindex', '0')
+                .addClass('remove-attachment pull-right')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                );
 
             let previewHtml = this.getBoxPreviewHtml(name, type, id);
 
             let $att = $('<div>')
-                .append(removeLink)
+                .append($remove)
                 .append(
-                    $('<span class="preview">' + previewHtml + '</span>')
-                        .addClass('gray-box')
+                    $('<span>')
+                        .addClass('preview gray-box')
+                        .append(previewHtml)
                 );
 
             let $container = $('<div>').append($att);
@@ -655,8 +669,9 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                 return $att;
             }
 
-            let $loading = $('<span class="small uploading-message">' +
-                this.translate('Uploading...') + '</span>');
+            let $loading = $('<span>')
+                .addClass('small uploading-message')
+                .text(this.translate('Uploading...'));
 
             $container.append($loading);
 
@@ -749,11 +764,10 @@ define('views/fields/file', ['views/fields/link', 'helpers/file-upload'], functi
                                 return;
                             }
 
-                            this.ajaxPostRequest(source + '/action/getAttachmentList', {
-                                id: model.id,
-                            })
-                                .then((attachmentList) => {
-                                    attachmentList.forEach((item) => {
+                            Espo.Ajax
+                                .postRequest(source + '/action/getAttachmentList', {id: model.id})
+                                .then(attachmentList => {
+                                    attachmentList.forEach(item => {
                                         this.getModelFactory().create('Attachment', (attachment) => {
                                             attachment.set(item);
 
