@@ -191,6 +191,7 @@ define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-co
 
             let $a = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-action', 'setPrimary')
                 .attr('data-id', id)
                 .text(this.translate('Set Primary', 'labels', 'Account'));

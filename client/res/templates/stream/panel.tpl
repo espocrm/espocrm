@@ -17,7 +17,7 @@
         <div class="attachments-container">
             {{{attachments}}}
         </div>
-        <a role="button" tabindex="0" class="text-muted pull-right stream-post-info">
+        <a role="button" tabindex="-1" class="text-muted pull-right stream-post-info">
             <span class="fas fa-info-circle"></span>
         </a>
         <a

@@ -201,6 +201,7 @@ define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple']
 
             let $remove = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-id', id)
                 .attr('data-action', 'clearLink')
                 .addClass('pull-right')

@@ -218,6 +218,7 @@ define(
                         .append(
                             $('<a>')
                                 .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .attr('data-action', 'createContact')
                                 .attr('data-address', address)
                                 .text(this.translate('Create Contact', 'labels', 'Email'))
@@ -231,6 +232,7 @@ define(
                         .append(
                             $('<a>')
                                 .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .attr('data-action', 'createLead')
                                 .attr('data-address', address)
                                 .text(this.translate('Create Lead', 'labels', 'Email'))
@@ -244,6 +246,7 @@ define(
                         .append(
                             $('<a>')
                                 .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .attr('data-action', 'addToContact')
                                 .attr('data-address', address)
                                 .text(this.translate('Add to Lead', 'labels', 'Email'))
@@ -257,6 +260,7 @@ define(
                         .append(
                             $('<a>')
                                 .attr('role', 'button')
+                                .attr('tabindex', '0')
                                 .attr('data-action', 'addToLead')
                                 .attr('data-address', address)
                                 .text(this.translate('Add to Lead', 'labels', 'Email'))

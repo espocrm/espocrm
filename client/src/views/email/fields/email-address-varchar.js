@@ -321,6 +321,7 @@ function (Dep, From, EmailAddress) {
                     $('<a>')
                         .attr('data-address', address)
                         .attr('role', 'button')
+                        .attr('tabindex', '0')
                         .addClass('pull-right'),
                     $text
                 );

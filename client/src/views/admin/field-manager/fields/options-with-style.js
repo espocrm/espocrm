@@ -111,6 +111,7 @@ function (Dep) {
                     .append(
                         $('<a>')
                             .attr('role', 'button')
+                            .attr('tabindex', '0')
                             .attr('data-action', 'selectOptionItemStyle')
                             .attr('data-style', item)
                             .attr('data-value', value)

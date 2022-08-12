@@ -828,6 +828,7 @@ define('views/fields/base', ['view'], function (Dep) {
             this.once('after:render', () => {
                 $a = $('<a>')
                     .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .addClass('text-muted field-info')
                     .append(
                         $('<span>').addClass('fas fa-info-circle')
@@ -1223,12 +1224,14 @@ define('views/fields/base', ['view'], function (Dep) {
 
             let $saveLink = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '-1')
                 .addClass('pull-right inline-save-link')
                 .attr('title', 'Ctrl+Enter')
                 .text(this.translate('Update'));
 
             let $cancelLink = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '-1')
                 .addClass('pull-right inline-cancel-link')
                 .attr('title', 'Esc')
                 .text(this.translate('Cancel'));

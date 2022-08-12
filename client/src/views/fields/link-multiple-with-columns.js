@@ -384,6 +384,7 @@ function (Dep, RegExpPattern) {
                 .append(
                     $('<a>')
                         .attr('role', 'button')
+                        .attr('tabindex', '0')
                         .attr('data-action', 'toggleBoolColumn')
                         .attr('data-column', column)
                         .attr('data-id', id)
@@ -417,6 +418,7 @@ function (Dep, RegExpPattern) {
 
             let $remove = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-id', id)
                 .attr('data-action', 'clearLink')
                 .addClass('pull-right')

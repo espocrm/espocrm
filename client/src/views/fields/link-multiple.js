@@ -623,6 +623,7 @@ define('views/fields/link-multiple', ['views/fields/base'], function (Dep) {
                 $('<a>')
                     .addClass('pull-right')
                     .attr('role', 'button')
+                    .attr('tabindex', '0')
                     .attr('data-id', id)
                     .attr('data-action', 'clearLink')
                     .append(

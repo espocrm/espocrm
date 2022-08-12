@@ -366,9 +366,10 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         if (this.collapseButton) {
             $header.prepend(
-                $('<a />')
+                $('<a>')
                     .addClass('collapse-button')
                     .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .attr('data-action', 'collapseModal')
                     .append(
                         $('<span />')
@@ -379,10 +380,11 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         if (this.closeButton) {
             $header.prepend(
-                $('<a />')
+                $('<a>')
                     .addClass('close')
                     .attr('data-dismiss', 'modal')
                     .attr('role', 'button')
+                    .attr('tabindex', '-1')
                     .append(
                         $('<span />')
                             .attr('aria-hidden', 'true')
@@ -477,6 +479,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
             let $a = $('<a>')
                 .attr('role', 'button')
+                .attr('tabindex', '0')
                 .attr('data-name', o.name);
 
             if (o.text) {

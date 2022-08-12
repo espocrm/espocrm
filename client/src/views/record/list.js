@@ -2241,6 +2241,7 @@ function (Dep, MassActionHelper, ExportHelper) {
                     html =
                         $('<a>')
                             .attr('role', 'button')
+                            .attr('tabindex', '0')
                             .addClass('reset-custom-order')
                             .attr('title', this.translate('Reset'))
                             .append(

@@ -543,6 +543,7 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                 .append(
                     $('<a>')
                         .attr('role', 'button')
+                        .attr('tabindex', '0')
                         .addClass('pull-right')
                         .attr('data-value', value)
                         .attr('data-action', 'removeValue')
