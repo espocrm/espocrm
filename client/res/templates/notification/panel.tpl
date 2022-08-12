@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default no-focus-outline" tabindex="-1">
     <div class="panel-heading panel-heading-no-title">
         <div class="link-group">
             <a href="#Notification" data-action="openNotifications">{{translate 'View List'}}</a>

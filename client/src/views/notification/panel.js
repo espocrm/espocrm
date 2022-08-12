@@ -45,6 +45,11 @@ define('views/notification/panel', ['view'], function (Dep) {
             'click [data-action="closePanel"]': function () {
                 this.close();
             },
+            'keydown': function (e) {
+                if (e.code === 'Escape') {
+                    this.close();
+                }
+            }
         },
 
         setup: function () {
@@ -116,6 +121,8 @@ define('views/notification/panel', ['view'], function (Dep) {
             this.processSizing();
 
             $('#navbar li.notifications-badge-container').addClass('open');
+
+            this.$el.find('> .panel').focus();
         },
 
         onRemove: function () {
