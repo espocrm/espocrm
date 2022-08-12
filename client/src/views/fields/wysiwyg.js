@@ -54,6 +54,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         fetchEmptyValueAsNull: false,
 
+        validationElementSelector: '.note-editor',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
