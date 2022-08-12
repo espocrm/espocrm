@@ -1876,6 +1876,14 @@ label.attach-file-label {
 .attachment-preview {
     vertical-align: top;
     margin: 3px 0 3px 0;
+
+    > a[data-action="showImagePreview"] {
+        display: inline-block;
+
+        &:focus-visible {
+            outline-offset: 1px;
+        }
+    }
 }
 
 .field > .attachment-block-container > .attachment-block > .attachment-preview {
