@@ -82,6 +82,7 @@
                     class="dropdown-toggle"
                     data-toggle="dropdown"
                     role="button"
+                    tabindex="0"
                 ><span class="fas fa-ellipsis-h more-icon"></span></a>
                 <ul class="dropdown-menu more-dropdown-menu" role="menu" aria-labelledby="nav-more-tabs-dropdown">
                 {{#each tabDefsList2}}
