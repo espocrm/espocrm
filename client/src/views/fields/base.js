@@ -224,6 +224,14 @@ define('views/fields/base', ['view'], function (Dep) {
         validateCallback: null,
 
         /**
+         * An element selector to point validation popovers to.
+         *
+         * @type {?string}
+         * @protected
+         */
+        validationElementSelector: null,
+
+        /**
          * A view-record helper.
          *
          * @type {module:view-record-helper.Class|null}
