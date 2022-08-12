@@ -151,6 +151,8 @@ function (
 
         this.initCache(options)
             .then(() => this.init(options, callback));
+
+        this.initDomEventListeners();
     };
 
     /**
@@ -1221,6 +1223,26 @@ function (
             });
 
             this.viewHelper.broadcastChannel = this.broadcastChannel;
+        },
+
+        initDomEventListeners: function () {
+            $(document).on('keydown.espo.button', e => {
+                if (
+                    e.code !== 'Enter' ||
+                    e.target.tagName !== 'A' ||
+                    e.target.getAttribute('role') !== 'button' ||
+                    e.target.getAttribute('href') ||
+                    e.ctrlKey ||
+                    e.altKey ||
+                    e.metaKey
+                ) {
+                    return;
+                }
+
+                $(e.target).click();
+
+                e.preventDefault();
+            });
         },
 
     }, Backbone.Events);
