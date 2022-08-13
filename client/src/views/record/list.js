@@ -430,7 +430,7 @@ function (Dep, MassActionHelper, ExportHelper) {
              * @this module:views/record/list.Class
              */
             'click a.link': function (e) {
-                if (e.ctrlKey) {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
                     return;
                 }
 
