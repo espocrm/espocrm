@@ -81,10 +81,6 @@ input[type=checkbox]:focus-visible {
     }
 }
 
-.stick-sub.button-container {
-    box-shadow: none;
-}
-
 .collapsing {
     -webkit-transition: height .1s ease;
     -o-transition: height .1s ease;
@@ -838,9 +834,18 @@ input.global-search-input {
     margin-top: 0;
 }
 
+.stick-sub,
+.sticky-head,
+.sticked-bar {
+    box-shadow: var(--default-box-shadow);
+}
+
 .sticky-head {
     background-color: @body-bg;
     z-index: 4;
+    overflow: hidden;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
 
 .list-container .list-buttons-container {
