@@ -57,7 +57,7 @@ define('utils', [], function () {
                 return;
             }
 
-            if (e.ctrlKey) {
+            if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 let href = $target.attr('href');
 
                 if (href && href !== 'javascript:') {
