@@ -340,7 +340,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $window = $(window);
 
             var $block = $('<div>')
-                .addClass('.kanban-head-paceholder')
+                .addClass('kanban-head-placeholder')
                 .html('&nbsp;')
                 .hide()
                 .insertAfter($container);
@@ -379,7 +379,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 if (scrollTop < edge) {
                     if (scrollTop > stickTop) {
-                        let containerWidth = this.$container.width();
+                        let containerWidth = this.$container.width() - 3;
 
                         $container.children().css('width', width);
 

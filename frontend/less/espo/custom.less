@@ -643,7 +643,7 @@ div.list-kanban > div > table {
         }
     }
 
-    .kanban-head-paceholder {
+    .kanban-head-placeholder {
         height: 28px;
     }
 
@@ -652,6 +652,11 @@ div.list-kanban > div > table {
         top: 0;
         z-index: 4;
         overflow: hidden;
+        box-shadow: var(--default-box-shadow);
+
+        thead {
+            box-shadow: none;
+        }
     }
 }
 
