@@ -122,7 +122,7 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
 
             let $seconds = $('<select>')
                 .attr('name', 'seconds')
-                .addClass('form-control');
+                .addClass('form-control radius-right');
 
             this.secondsList.forEach(seconds => {
                 let $o = $('<option>')
@@ -140,11 +140,11 @@ define('crm:views/meeting/fields/reminders', ['views/fields/base'], function (De
 
             let $remove = $('<button>')
                 .addClass('btn')
-               .addClass('btn-link')
-               .css('margin-left', '5px')
-               .attr('type', 'button')
-               .attr('data-action', 'removeReminder')
-               .html('<span class="fas fa-times"></span>');
+                .addClass('btn-link')
+                .css('margin-left', '5px')
+                .attr('type', 'button')
+                .attr('data-action', 'removeReminder')
+                .html('<span class="fas fa-times"></span>');
 
             $item.append($('<div class="input-group-btn">').append($type))
                  .append($seconds)
