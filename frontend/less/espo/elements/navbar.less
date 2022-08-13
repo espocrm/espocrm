@@ -19,6 +19,12 @@
         > li > a {
             text-align: center;
         }
+
+        &.shadowed:not(.has-sticked-bar) {
+            @media screen and (min-width: @screen-sm-min) {
+                box-shadow: var(--top-bar-box-shadow);
+            }
+        }
     }
 
     .navbar-form.global-search-container {

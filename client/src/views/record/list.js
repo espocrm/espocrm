@@ -618,6 +618,7 @@ function (Dep, MassActionHelper, ExportHelper) {
 
             let $window = $(window);
             let $scrollable = $window;
+            let $navbarRight = $('#navbar .navbar-right');
 
             this.on('render', () => {
                 this.$stickedBar = null;
@@ -654,8 +655,9 @@ function (Dep, MassActionHelper, ExportHelper) {
                 return offsetTop;
             };
 
-            if (this.$el.closest('.modal-body').length) {
+            if (isModal) {
                 $scrollable = this.$el.closest('.modal-body');
+                $navbarRight = $scrollable.parent().find('.modal-footer');
             }
 
             let middleTop = getOffsetTop($middle.get(0));
@@ -696,17 +698,20 @@ function (Dep, MassActionHelper, ExportHelper) {
 
                 if (scrollTop >= edge) {
                     $stickedBar.removeClass('hidden');
+                    $navbarRight.addClass('has-sticked-bar');
 
                     return;
                 }
 
                 if (scrollTop > stickTop) {
                     $stickedBar.removeClass('hidden');
+                    $navbarRight.addClass('has-sticked-bar');
 
                     return;
                 }
 
                 $stickedBar.addClass('hidden');
+                $navbarRight.removeClass('has-sticked-bar');
             };
         },
 

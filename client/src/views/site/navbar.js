@@ -642,6 +642,10 @@ define('views/site/navbar', ['view'], function (Dep) {
             }
 
             $window.on('scroll.navbar', () => {
+                $window.scrollTop() ?
+                    this.$navbarRight.addClass('shadowed') :
+                    this.$navbarRight.removeClass('shadowed');
+
                 $tabs.scrollTop($window.scrollTop());
 
                 if (!this.isMoreDropdownShown) {
@@ -829,6 +833,7 @@ define('views/site/navbar', ['view'], function (Dep) {
 
             this.$navbar = this.$el.find('> .navbar');
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
+            this.$navbarRight = this.$navbarRightContainer.children();
 
             let handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 

@@ -360,6 +360,10 @@ define('views/modal', ['view'], function (Dep) {
                 }
 
                 this.adjustButtons();
+
+                if (!this.noFullHeight) {
+                    this.initBodyScrollListener();
+                }
             });
 
             this.once('remove', () => {
@@ -1008,6 +1012,36 @@ define('views/modal', ['view'], function (Dep) {
 
             $buttonsVisible.first().addClass('radius-left');
             $buttonsVisible.last().addClass('radius-right');
+        },
+
+        /**
+         * @protected
+         */
+        initBodyScrollListener: function () {
+            let $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
+            let $footer = $body.parent().find('> .modal-footer');
+
+            console.log(this.$el.get(0), $body.get(0));
+
+            if (!$footer.length) {
+                return;
+            }
+
+
+
+            $body.off('scroll.footer-shadow');
+
+            $body.on('scroll.footer-shadow', () => {
+
+
+                if ($body.scrollTop()) {
+                    $footer.addClass('shadowed');
+
+                    return;
+                }
+
+                $footer.removeClass('shadowed');
+            });
         },
     });
 });

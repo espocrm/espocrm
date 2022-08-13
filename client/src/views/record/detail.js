@@ -1300,6 +1300,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
             let $middle = this.getView('middle').$el;
             let $window = $(window);
+            let $navbarRight = $('#navbar .navbar-right');
 
             if (this.stickButtonsFormBottomSelector) {
                 var $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
@@ -1317,6 +1318,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
                     $containers.hide();
+                    $navbarRight.removeClass('has-sticked-bar');
                     $block.show();
 
                     return;
@@ -1337,6 +1339,8 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         });
                     }
 
+                    $navbarRight.addClass('has-sticked-bar');
+
                     $containers.show();
 
                     return;
@@ -1344,6 +1348,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
 
                 if ($containers.hasClass('stick-sub')) {
                     $containers.removeClass('stick-sub');
+                    $navbarRight.removeClass('has-sticked-bar');
                     $block.hide();
 
                     $('.popover').each((i, el) => {

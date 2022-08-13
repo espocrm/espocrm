@@ -99,6 +99,10 @@
     padding: @panel-padding @panel-padding @panel-padding;
     background-color: @modal-footer-bg;
 
+    &.shadowed:not(.has-sticked-bar) {
+        box-shadow: var(--top-bar-box-shadow);
+    }
+
     > .main-btn-group {
         float: left;
     }
@@ -133,6 +137,11 @@
 .modal-header {
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+.modal-header + .modal-footer {
+    position: relative;
+    z-index: 4;
 }
 
 .dialog-confirm .modal-footer > .main-btn-group {
