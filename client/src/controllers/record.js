@@ -107,12 +107,18 @@ define('controllers/record', ['controller'], function (Dep) {
             }
 
             this.getCollection(collection => {
-                this.listenToOnce(this.baseController, 'action', () => collection.abortLastFetch());
+                let mediator = {};
+
+                this.listenToOnce(this.baseController, 'action', () => {
+                    collection.abortLastFetch();
+                    mediator.abort = true;
+                });
 
                 this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
                     params: options,
+                    mediator: mediator,
                 }, null, isReturn, key);
             }, this, false);
         },
@@ -391,7 +397,7 @@ define('controllers/record', ['controller'], function (Dep) {
          * Get a collection for the current controller.
          *
          * @protected
-         * @param {Function|null} [callback]
+         * @param {function(module:collection.Class): void|null} [callback]
          * @param {Object|null} [context]
          * @param {boolean} [usePreviouslyFetched=false] Use a previously fetched.
          * @return {Promise<module:collection.Class>}

@@ -608,6 +608,10 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
 
                 if (fetch) {
                     view.getSelectAttributeList(selectAttributeList => {
+                        if (this.options.mediator && this.options.mediator.abort) {
+                            return;
+                        }
+
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
