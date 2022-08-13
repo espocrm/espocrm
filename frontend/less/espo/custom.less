@@ -18,7 +18,6 @@ html {
 .well,
 .admin-content .table.table-admin-panel,
 .admin-content iframe,
-.list-kanban > div > table > thead,
 .list-group-panel,
 .popup-notification {
     box-shadow: var(--default-box-shadow);
@@ -647,16 +646,15 @@ div.list-kanban > div > table {
         height: 28px;
     }
 
+    .kanban-head-container {
+        box-shadow: var(--default-box-shadow);
+    }
+
     .kanban-head-container.sticked {
         position: fixed;
         top: 0;
         z-index: 4;
         overflow: hidden;
-        box-shadow: var(--default-box-shadow);
-
-        thead {
-            box-shadow: none;
-        }
     }
 }
 
