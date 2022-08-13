@@ -1312,7 +1312,9 @@ define('views/fields/base', ['view'], function (Dep) {
                 .then(() => this.addInlineEditLinks())
                 .then(() => {
                     this.$el.on('keydown.inline-edit', e => {
-                        if (e.code === 'Enter' && e.ctrlKey) {
+                        let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                        if (key === 'Control+Enter') {
                             e.stopPropagation();
 
                             this.inlineEditSave();
@@ -1324,7 +1326,7 @@ define('views/fields/base', ['view'], function (Dep) {
                             return;
                         }
 
-                        if (e.code === 'Escape') {
+                        if (key === 'Escape') {
                             e.stopPropagation();
 
                             this.inlineEditClose()
@@ -1335,7 +1337,7 @@ define('views/fields/base', ['view'], function (Dep) {
                             return;
                         }
 
-                        if ((e.code === 'KeyS') && e.ctrlKey) {
+                        if (key === 'Control+KeyS') {
                             e.preventDefault();
                             e.stopPropagation();
 

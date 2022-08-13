@@ -320,7 +320,9 @@ function (Dep, RegExpPattern, /** module:ui/multi-select*/MultiSelect) {
                     $select.on('input', () => this.controlAddItemButton());
 
                     $select.on('keydown', e => {
-                        if (e.code === 'Enter' && !e.ctrlKey) {
+                        let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                        if (key === 'Enter') {
                             let value = $select.val().toString();
 
                             this.addValueFromUi(value);
