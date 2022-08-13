@@ -596,7 +596,9 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                     }
                 });
 
-                view.notify(false);
+                if (!fetch) {
+                    Espo.Ui.notify(false);
+                }
 
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', obj => {
@@ -610,7 +612,11 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
-                        this.collection.fetch();
+                        Espo.Ui.notify(this.translate('loading', 'messages'));
+
+                        this.collection.fetch()
+                            .then(() => Espo.Ui.notify(false));
+
                     });
 
                     return;
