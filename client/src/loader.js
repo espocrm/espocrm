@@ -51,37 +51,58 @@
      * @param {?module:cache.Class} [cache=null]
      * @param {?int} [_cacheTimestamp=null]
      */
-    Espo.Loader = function (cache, _cacheTimestamp) {
+    let Loader = function (cache, _cacheTimestamp) {
         this._cacheTimestamp = _cacheTimestamp || null;
         this._cache = cache || null;
         this._libsConfig = {};
         this._loadCallbacks = {};
         this._pathsBeingLoaded = {};
         this._dataLoaded = {};
+        this._classMap = {};
         this._loadingSubject = null;
         this._responseCache = null;
         this._basePath = '';
+
         this._internalModuleList = [];
         this._internalModuleMap = {};
+        this._isDeveloperMode = false;
 
-        this.isDeveloperMode = false;
-
-        /**
-         * @type {string}
-         * @private
-         */
         this._baseUrl = window.location.origin + window.location.pathname;
+
+        this._isDeveloperModeIsSet = false;
+        this._basePathIsSet = false;
+        this._cacheIsSet = false;
+        this._responseCacheIsSet = false;
+        this._internalModuleListIsSet = false;
+
+        this._addLibsConfigCallCount = 0;
+        this._addLibsConfigCallMaxCount = 2;
     };
 
-    _.extend(Espo.Loader.prototype, /** @lends Espo.Loader.prototype */{
+    _.extend(Loader.prototype, /** @lends Loader.prototype */{
 
-        _classMap: Espo,
+        /**
+         * @param {boolean} isDeveloperMode
+         */
+        setIsDeveloperMode: function (isDeveloperMode) {
+            if (this._isDeveloperModeIsSet) {
+                throw new Error('Is-Developer-Mode is already set.');
+            }
+
+            this._isDeveloperMode = isDeveloperMode;
+            this._isDeveloperModeIsSet = true;
+        },
 
         /**
          * @param {string} basePath
          */
         setBasePath: function (basePath) {
+            if (this._basePathIsSet) {
+                throw new Error('Base path is already set.');
+            }
+
             this._basePath = basePath;
+            this._basePathIsSet = true;
         },
 
         /**
@@ -102,22 +123,37 @@
          * @param {module:cache.Class} cache
          */
         setCache: function (cache) {
+            if (this._cacheIsSet) {
+                throw new Error('Cache is already set');
+            }
+
             this._cache = cache;
+            this._cacheIsSet = true;
         },
 
         /**
          * @param {Cache} responseCache
          */
         setResponseCache: function (responseCache) {
+            if (this._responseCacheIsSet) {
+                throw new Error('Response-Cache is already set');
+            }
+
             this._responseCache = responseCache;
+            this._responseCacheIsSet = true;
         },
 
         /**
          * @param {string[]} internalModuleList
          */
         setInternalModuleList: function (internalModuleList) {
+            if (this._internalModuleListIsSet) {
+                throw new Error('Internal-module-list is already set');
+            }
+
             this._internalModuleList = internalModuleList;
             this._internalModuleMap = {};
+            this._internalModuleListIsSet = true;
         },
 
         /**
@@ -182,7 +218,7 @@
             if (!module && name.indexOf('lib!') === 0) {
                 noStrictMode = true;
 
-                if (!this.isDeveloperMode) {
+                if (!this._isDeveloperMode) {
                     let readName = name.substring(4);
 
                     let hasSourceMap = (this._libsConfig[readName] || {}).sourceMap
@@ -299,7 +335,7 @@
             let totalCount = list.length;
 
             if (totalCount === 1) {
-                this.load(list[0], callback, errorCallback);
+                this._load(list[0], callback, errorCallback);
 
                 return;
             }
@@ -309,7 +345,7 @@
                 let loaded = {};
 
                 list.forEach(name => {
-                    this.load(name, c => {
+                    this._load(name, c => {
                         loaded[name] = c;
 
                         readyCount++;
@@ -347,8 +383,6 @@
          * @private
          */
         _normalizeClassName: function (name) {
-            let normalizedName = name;
-
             if (~name.indexOf('.') && !~name.indexOf('!')) {
                 console.warn(
                     name + ': ' +
@@ -368,10 +402,10 @@
                             .join('/');
                 }
 
-                return normalizedName = this._convertCamelCaseToHyphen(name).split('.').join('/');
+                return this._convertCamelCaseToHyphen(name).split('.').join('/');
             }
 
-            return normalizedName;
+            return name;
         },
 
         /**
@@ -388,7 +422,7 @@
         /**
          * @private
          */
-        load: function (name, callback, errorCallback) {
+        _load: function (name, callback, errorCallback) {
             let dataType, type, path, exportsTo, exportsAs;
 
             let realName = name;
@@ -410,7 +444,7 @@
 
                     path = libData.path || path;
 
-                    if (this.isDeveloperMode) {
+                    if (this._isDeveloperMode) {
                         path = libData.devPath || path;
                     }
 
@@ -687,6 +721,12 @@
          * @internal
          */
         addLibsConfig: function (data) {
+            if (this._addLibsConfigCallCount === this._addLibsConfigCallMaxCount) {
+                throw new Error("Not allowed to call addLibsConfig.");
+            }
+
+            this._addLibsConfigCallCount++;
+
             this._libsConfig = _.extend(this._libsConfig, data);
         },
 
@@ -718,7 +758,105 @@
         },
     });
 
-    Espo.loader = new Espo.Loader();
+    let loader = new Loader();
+
+    Espo.loader = {
+
+        /**
+         * @param {boolean} isDeveloperMode
+         * @internal
+         */
+        setIsDeveloperMode: function (isDeveloperMode) {
+            loader.setIsDeveloperMode(isDeveloperMode);
+        },
+
+        /**
+         * @param {string} basePath
+         * @internal
+         */
+        setBasePath: function (basePath) {
+            loader.setBasePath(basePath);
+        },
+
+        /**
+         * @returns {Number}
+         */
+        getCacheTimestamp: function () {
+            return loader.getCacheTimestamp();
+        },
+
+        /**
+         * @param {Number} cacheTimestamp
+         * @internal
+         */
+        setCacheTimestamp: function (cacheTimestamp) {
+            loader.setCacheTimestamp(cacheTimestamp);
+        },
+
+        /**
+         * @param {module:cache.Class} cache
+         * @internal
+         */
+        setCache: function (cache) {
+            loader.setCache(cache);
+        },
+
+        /**
+         * @param {Cache} responseCache
+         * @internal
+         */
+        setResponseCache: function (responseCache) {
+            loader.setResponseCache(responseCache);
+        },
+
+        /**
+         * @param {string[]} internalModuleList
+         */
+        setInternalModuleList: function (internalModuleList) {
+            loader.setInternalModuleList(internalModuleList);
+        },
+
+        /**
+         * Define a module.
+         *
+         * @param {string} subject A module name to be defined.
+         * @param {string[]} dependency A dependency list.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies
+         *   passed as parameters. Should return a value to define the module.
+         */
+        define: function (subject, dependency, callback) {
+            loader.define(subject, dependency, callback);
+        },
+
+        /**
+         * Require a module or multiple modules.
+         *
+         * @param {string|string[]} subject A module or modules to require.
+         * @param {Espo.Loader~requireCallback} callback A callback with resolved dependencies.
+         * @param {Function|null} [errorCallback] An error callback.
+         */
+        require: function (subject, callback, errorCallback) {
+            loader.require(subject, callback, errorCallback);
+        },
+
+        /**
+         * Require a module or multiple modules.
+         *
+         * @param {string|string[]} subject A module or modules to require.
+         * @returns {Promise<unknown>}
+         */
+        requirePromise: function (subject) {
+            return loader.requirePromise(subject);
+        },
+
+        /**
+         * @param {Object} data
+         * @internal
+         */
+        addLibsConfig: function (data) {
+            loader.addLibsConfig(data);
+        },
+    };
 
     /**
      * Require a module or multiple modules.
@@ -733,7 +871,7 @@
             callback = callback.bind(context);
         }
 
-        Espo.loader.require(subject, callback, errorCallback);
+        loader.require(subject, callback, errorCallback);
     };
 
     /**
@@ -753,7 +891,7 @@
     root.define = Espo.define = function (arg1, arg2, arg3) {
         let subject = null;
         let dependency = null;
-        let callback = null;
+        let callback;
 
         if (typeof arg1 === 'function') {
             callback = arg1;
@@ -768,7 +906,7 @@
             callback = arg3;
         }
 
-        Espo.loader.define(subject, dependency, callback);
+        loader.define(subject, dependency, callback);
     };
 
-}).call(this, _, $);
+}).call(window, _, $);

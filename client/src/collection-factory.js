@@ -35,18 +35,12 @@
      * @name Class
      * @memberOf module:collection-factory
      */
-    var CollectionFactory = function (loader, modelFactory, config) {
-        this.loader = loader;
+    let CollectionFactory = function (modelFactory, config) {
         this.modelFactory = modelFactory;
         this.config = config;
     };
 
     _.extend(CollectionFactory.prototype, /** @lends module:collection-factory.Class# */ {
-
-        /**
-         * @private
-         */
-        loader: null,
 
         /**
          * @private

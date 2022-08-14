@@ -422,7 +422,7 @@ function (
                 this.language.loadDefault()
             ])
             .then(() => {
-                this.loader.isDeveloperMode = this.settings.get('isDeveloperMode');
+                this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();
@@ -435,8 +435,8 @@ function (
                 this.fieldManager.acl = this.acl;
 
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
-                this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
-                this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory, this.settings);
+                this.modelFactory = new ModelFactory(this.metadata, this.user);
+                this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings);
 
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);
@@ -511,7 +511,7 @@ function (
 
                     promiseList.push(
                         new Promise(resolve => {
-                            this.loader.load(implClassName, implClass => {
+                            this.loader.require(implClassName, implClass => {
                                 aclImplementationClassMap[scope] = implClass;
 
                                 resolve();
@@ -822,14 +822,14 @@ function (
                 resources: {
                     loaders: {
                         template: (name, callback) => {
-                            var path = getResourcePath('template', name);
+                            let path = getResourcePath('template', name);
 
-                            this.loader.load('res!' + path, callback);
+                            this.loader.require('res!' + path, callback);
                         },
                         layoutTemplate: (name, callback) => {
-                            var path = getResourcePath('layoutTemplate', name);
+                            let path = getResourcePath('layoutTemplate', name);
 
-                            this.loader.load('res!' + path, callback);
+                            this.loader.require('res!' + path, callback);
                         },
                     },
                 },
