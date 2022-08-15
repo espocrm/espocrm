@@ -452,6 +452,11 @@
                     exportsAs = libData.exportsAs || exportsAs;
                 }
 
+                if (path.indexOf(':') !== -1) {
+                    console.error(`Not allowed path '${path}'.`);
+                    throw new Error();
+                }
+
                 noAppCache = true;
 
                 let obj = this._fetchObject(exportsTo, exportsAs);
@@ -468,6 +473,11 @@
 
                 realName = name.substr(4);
                 path = realName;
+
+                if (path.indexOf(':') !== -1) {
+                    console.error(`Not allowed path '${path}'.`);
+                    throw new Error();
+                }
             }
             else {
                 dataType = 'script';
