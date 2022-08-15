@@ -1021,19 +1021,13 @@ define('views/modal', ['view'], function (Dep) {
             let $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
             let $footer = $body.parent().find('> .modal-footer');
 
-            console.log(this.$el.get(0), $body.get(0));
-
             if (!$footer.length) {
                 return;
             }
 
-
-
             $body.off('scroll.footer-shadow');
 
             $body.on('scroll.footer-shadow', () => {
-
-
                 if ($body.scrollTop()) {
                     $footer.addClass('shadowed');
 
