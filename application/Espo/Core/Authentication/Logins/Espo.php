@@ -43,9 +43,10 @@ use RuntimeException;
 
 class Espo implements Login
 {
-    private $userFinder;
+    public const NAME = 'Espo';
 
-    private $passwordHash;
+    private UserFinder $userFinder;
+    private PasswordHash $passwordHash;
 
     public function __construct(UserFinder $userFinder, PasswordHash $passwordHash)
     {

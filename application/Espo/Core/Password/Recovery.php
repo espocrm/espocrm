@@ -45,6 +45,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Field\DateTime;
 
 use Espo\Core\{
+    Authentication\Logins\Espo as EspoLogin,
     ORM\EntityManager,
     Utils\Config,
     Mail\EmailSender,
@@ -192,7 +193,7 @@ class Recovery
             }
         }
 
-        if (!$user->isAdmin() && $config->get('authenticationMethod', 'Espo') !== 'Espo') {
+        if (!$user->isAdmin() && $config->get('authenticationMethod', EspoLogin::NAME) !== EspoLogin::NAME) {
             $this->fail(
                 "Password recovery: User {$user->id} is not allowed, authentication method is not 'Espo'."
             );
