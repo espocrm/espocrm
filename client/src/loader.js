@@ -220,8 +220,10 @@
 
                 let realName = name.substring(4);
 
+                let libsData = this._libsConfig[realName] || {};
+
                 if (!this._isDeveloperMode) {
-                    let hasSourceMap = (this._libsConfig[realName] || {}).sourceMap
+                    let hasSourceMap = libsData.sourceMap
 
                     if (hasSourceMap) {
                         let realPath = path.split('?')[0];
@@ -230,10 +232,8 @@
                     }
                 }
 
-                let exportVariable = (this._libsConfig[realName] || {}).exportVariable;
-
-                if (exportVariable) {
-                    script += `\nwindow.${exportVariable} = ${exportVariable}\n`;
+                if (libsData.exportsTo === 'window' && libsData.exportsAs) {
+                    script += `\nwindow.${libsData.exportsAs} = ${libsData.exportsAs}\n`;
                 }
             }
 
