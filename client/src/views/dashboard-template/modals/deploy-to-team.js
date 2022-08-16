@@ -38,7 +38,7 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
             this.buttonList = [
                 {
                     name: 'deploy',
-                    html: this.translate('Deploy for Team', 'labels', 'DashboardTemplate'),
+                    text: this.translate('Deploy for Team', 'labels', 'DashboardTemplate'),
                     style: 'danger',
                 },
                 {

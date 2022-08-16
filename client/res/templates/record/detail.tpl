@@ -10,6 +10,7 @@
                     hidden=hidden
                     html=html
                     title=title
+                    text=text
                     className='btn-xs-wide'
                     disabled=disabled
                 }}
@@ -32,7 +33,7 @@
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}
                     {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
-                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
+                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
                 {{else}}
                     {{#unless @first}}
                     {{#unless @last}}
@@ -77,6 +78,7 @@
             hidden=hidden
             html=html
             title=title
+            text=text
             className='btn-xs-wide'
             disabled=disabled
         }}
@@ -99,7 +101,7 @@
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}
-                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a>
+                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
             </li>
             {{else}}
                 {{#unless @first}}

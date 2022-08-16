@@ -646,7 +646,14 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             this.actionList.push({
                 action: 'viewPostList',
-                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note'),
+                html:
+                    $('<span>')
+                        .append(
+                            $('<span>').text(this.translate('View List')),
+                            ' &middot; ',
+                            $('<span>').text(this.translate('posts', 'filters', 'Note')),
+                        )
+                        .get(0).innerHTML,
             });
 
             this.actionList.push(false);
@@ -662,12 +669,19 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
                 this.actionList.push({
                     action: 'selectFilter',
-                    html: '<span class="check-icon fas fa-check pull-right' +
-                        (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') +
-                        '</div>',
+                    html:
+                        $('<span>')
+                            .append(
+                                $('<span>')
+                                    .addClass('check-icon fas fa-check pull-right')
+                                    .addClass(!selected ? ' hidden' : ''),
+                                $('<div>')
+                                    .text(this.translate(item, 'filters', 'Note')),
+                            )
+                            .get(0).innerHTML,
                     data: {
-                        name: item
-                    }
+                        name: item,
+                    },
                 });
             });
         },

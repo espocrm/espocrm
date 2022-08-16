@@ -309,8 +309,8 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    html: '<span class="fas fa-plus fa-sm"></span> ' +
-                        this.translate('Create ' +  this.scope, 'labels', this.scope),
+                    iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+                    text: this.translate('Create ' +  this.scope, 'labels', this.scope),
                     style: 'default',
                     acl: 'create',
                     aclScope: this.entityType || this.scope,
@@ -323,14 +323,13 @@ function (Dep, /** typeof module:search-manager.Class */SearchManager) {
             this.menu.buttons.unshift({
                 link: '#' + this.scope + '/create',
                 action: 'create',
-                html: '<span class="fas fa-plus fa-sm"></span> ' +
-                    this.translate('Create ' +  this.scope,  'labels', this.scope),
+                iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+                text: this.translate('Create ' +  this.scope,  'labels', this.scope),
                 style: 'default',
                 acl: 'create',
                 aclScope: this.entityType || this.scope,
                 title: 'Ctrl+Space',
             });
-
         },
 
         /**

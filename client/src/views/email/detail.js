@@ -95,7 +95,7 @@ define('views/email/detail', ['views/detail', 'email-helper'], function (Dep, Em
                         this.model.getLinkMultipleIdList('attachments').length
                     ) {
                         this.addMenuItem('dropdown', {
-                            html: this.translate('Create Document', 'labels', 'Document'),
+                            text: this.translate('Create Document', 'labels', 'Document'),
                             action: 'createDocument',
                             acl: 'create',
                             aclScope: 'Document',

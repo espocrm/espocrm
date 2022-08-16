@@ -11,6 +11,7 @@
                 html=html
                 hidden=hidden
                 title=title
+                text=text
                 className='btn-xs-wide'
                 disabled=disabled
             }}
@@ -34,7 +35,7 @@
                     class="action"
                     data-action="{{name}}"
                     {{#if title}}title="{{title}}"{{/if}}
-                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a>
+                >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../entityType}}{{/if}}{{/if}}</a></li>
             </li>
             {{else}}
                 {{#unless @first}}

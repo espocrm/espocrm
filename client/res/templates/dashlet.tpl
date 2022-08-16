@@ -32,7 +32,7 @@
                         {{else}}
                         <span class="empty-icon">&nbsp;</span>
                         {{/if}}
-                        <span class="item-text">{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</span>
+                        <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
                     </a>
                 </li>
               {{/each}}

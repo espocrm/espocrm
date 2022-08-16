@@ -93,7 +93,8 @@ define('views/user/detail', 'views/detail', function (Dep) {
 
                 this.menu.buttons.push({
                     name: 'calendar',
-                    html: '<span class="far fa-calendar-alt"></span> ' + this.translate('Calendar', 'scopeNames'),
+                    iconHtml: '<span class="far fa-calendar-alt"></span>',
+                    text: this.translate('Calendar', 'scopeNames'),
                     style: 'default',
                     link: '#Calendar/show/userId=' +
                         this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')),

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/scheduled-job/list', 'views/list', function (Dep) {
+define('views/scheduled-job/list', ['views/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,7 @@ define('views/scheduled-job/list', 'views/list', function (Dep) {
 
             this.menu.buttons.push({
                 link: '#Admin/jobs',
-                html: this.translate('Jobs', 'labels', 'Admin'),
+                text: this.translate('Jobs', 'labels', 'Admin'),
             });
 
             this.createView('search', 'views/base', {
@@ -59,10 +59,11 @@ define('views/scheduled-job/list', 'views/list', function (Dep) {
 
         getHeader: function () {
             return this.buildHeaderHtml([
-                '<a href="#Admin">' + this.translate('Administration', 'labels', 'Admin') + '</a>',
+                $('<a>')
+                    .attr('href', '#Admin')
+                    .text(this.translate('Administration', 'labels', 'Admin')),
                 this.getLanguage().translate(this.scope, 'scopeNamesPlural')
             ]);
         },
-
     });
 });

@@ -51,7 +51,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
             this.dropdownItemList = [
                 {
                     name: 'reset',
-                    html: this.translate('Reset 2FA'),
+                    text: this.translate('Reset 2FA'),
                     hidden: true,
                 },
             ];

@@ -119,6 +119,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} name A name.
          * @property {string} [label] A label.
          * @property {string} [html] An HTML.
+         * @property {string} [text] A text.
          * @property {'default'|'danger'|'success'|'warning'} [style] A style.
          * @property {boolean} [hidden] Hidden.
          * @property {string} [title] A title (not translatable).
@@ -133,6 +134,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
          * @property {string} name A name.
          * @property {string} [label] A label.
          * @property {string} [html] An HTML.
+         * @property {string} [text] A text.
          * @property {boolean} [hidden] Hidden.
          * @property {Object.<string,string>} [data] Data attributes.
          * @property {string} [title] A title (not translatable).

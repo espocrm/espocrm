@@ -79,7 +79,7 @@ define('views/admin/entity-manager/record/edit', 'views/record/edit', function (
             if (!this.isCreate && !this.options.isCustom) {
                 this.buttonList.push({
                     name: 'resetToDefault',
-                    html: this.translate('Reset to Default', 'labels', 'Admin'),
+                    text: this.translate('Reset to Default', 'labels', 'Admin'),
                 });
             }
 
