@@ -218,16 +218,22 @@
             if (!module && name.indexOf('lib!') === 0) {
                 noStrictMode = true;
 
-                if (!this._isDeveloperMode) {
-                    let readName = name.substring(4);
+                let realName = name.substring(4);
 
-                    let hasSourceMap = (this._libsConfig[readName] || {}).sourceMap
+                if (!this._isDeveloperMode) {
+                    let hasSourceMap = (this._libsConfig[realName] || {}).sourceMap
 
                     if (hasSourceMap) {
                         let realPath = path.split('?')[0];
 
                         script += `\n//# sourceMappingURL=${this._baseUrl + realPath}.map`;
                     }
+                }
+
+                let exportVariable = (this._libsConfig[realName] || {}).exportVariable;
+
+                if (exportVariable) {
+                    script += `\nwindow.${exportVariable} = ${exportVariable}\n`;
                 }
             }
 

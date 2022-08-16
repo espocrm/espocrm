@@ -71,7 +71,8 @@
     "qrcode": {
         "path": "client/lib/qrcode.js",
         "exportsTo": "window",
-        "exportsAs": "QRCode"
+        "exportsAs": "QRCode",
+        "exportVariable": "QRCode"
     },
     "ace": {
         "path": "client/lib/ace.js",
