@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/detail', 'views/detail', function (Dep) {
+define('crm:views/meeting/detail', ['views/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -66,26 +66,26 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
                 return;
             }
 
-            var acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+            let acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
-            var html;
-            var style = 'default';
+            let text;
+            let style = 'default';
 
             if (acceptanceStatus && acceptanceStatus !== 'None') {
-                html = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+                text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
 
                 style = this.getMetadata()
                     .get(['entityDefs', this.model.entityType, 'fields',
                         'acceptanceStatus', 'style', acceptanceStatus]);
             }
             else {
-                html = this.translate('Acceptance', 'labels', 'Meeting');
+                text = this.translate('Acceptance', 'labels', 'Meeting');
             }
 
             this.removeMenuItem('setAcceptanceStatus');
 
             this.addMenuItem('buttons', {
-                html: html,
+                text: text,
                 action: 'setAcceptanceStatus',
                 style: style,
             });
@@ -126,7 +126,7 @@ define('crm:views/meeting/detail', 'views/detail', function (Dep) {
 
             if (show) {
                 this.addMenuItem('buttons', {
-                    html: this.translate('Send Invitations', 'labels', 'Meeting'),
+                    text: this.translate('Send Invitations', 'labels', 'Meeting'),
                     action: 'sendInvitations',
                     acl: 'edit',
                 });

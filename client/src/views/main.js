@@ -415,7 +415,7 @@ define('views/main', ['view'], function (Dep) {
          * Remove a menu item.
          *
          * @param {string} name An item name.
-         * @param {boolean} doNotReRender Skip re-render.
+         * @param {boolean} [doNotReRender] Skip re-render.
          */
         removeMenuItem: function (name, doNotReRender) {
             var index = -1;
