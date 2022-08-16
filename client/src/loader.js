@@ -231,7 +231,8 @@
                 }
 
                 if (libsData.exportsTo === 'window' && libsData.exportsAs) {
-                    script += `\nwindow.${libsData.exportsAs} = ${libsData.exportsAs}\n`;
+                    script += `\nwindow.${libsData.exportsAs} = ` +
+                        `window.${libsData.exportsAs} || ${libsData.exportsAs}\n`;
                 }
             }
 
