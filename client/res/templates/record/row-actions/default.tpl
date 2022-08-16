@@ -16,7 +16,7 @@
                 {{#each data}}
                 data-{{@key}}="{{./this}}"
                 {{/each}}
-            >{{#if html}}{{{html}}}{{else}}{{translate label scope=../scope}}{{/if}}
+            >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
             </a>
         </li>
     {{/each}}

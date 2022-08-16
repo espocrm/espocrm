@@ -40,10 +40,10 @@ define('crm:views/record/row-actions/history', 'views/record/row-actions/relatio
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
 
-            if (this.model.name == 'Email') {
+            if (this.model.entityType === 'Email') {
                 list.push({
                     action: 'reply',
-                    html: this.translate('Reply', 'labels', 'Email'),
+                    text: this.translate('Reply', 'labels', 'Email'),
                     data: {
                         id: this.model.id
                     }

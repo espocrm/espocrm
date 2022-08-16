@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/relationship-target', 'views/record/row-actions/relationship-unlink-only', function (Dep) {
+define('crm:views/record/row-actions/relationship-target', ['views/record/row-actions/relationship-unlink-only'], function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,7 @@ define('crm:views/record/row-actions/relationship-target', 'views/record/row-act
                 if (this.model.get('isOptedOut')) {
                     list.push({
                         action: 'cancelOptOut',
-                        html: this.translate('Cancel Opt-Out', 'labels', 'TargetList'),
+                        text: this.translate('Cancel Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id
                         }
@@ -45,7 +45,7 @@ define('crm:views/record/row-actions/relationship-target', 'views/record/row-act
                 } else {
                     list.push({
                         action: 'optOut',
-                        html: this.translate('Opt-Out', 'labels', 'TargetList'),
+                        text: this.translate('Opt-Out', 'labels', 'TargetList'),
                         data: {
                             id: this.model.id
                         }
@@ -55,6 +55,5 @@ define('crm:views/record/row-actions/relationship-target', 'views/record/row-act
 
             return list;
         },
-
     });
 });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/tasks', 'views/record/row-actions/relationship-no-unlink', function (Dep) {
+define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relationship-no-unlink'], function (Dep) {
 
     return Dep.extend({
 
@@ -53,7 +53,7 @@ define('crm:views/record/row-actions/tasks', 'views/record/row-actions/relations
                 if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
                     list.push({
                         action: 'Complete',
-                        html: this.translate('Complete', 'labels', 'Task'),
+                        text: this.translate('Complete', 'labels', 'Task'),
                         data: {
                             id: this.model.id
                         }
@@ -73,6 +73,5 @@ define('crm:views/record/row-actions/tasks', 'views/record/row-actions/relations
 
             return list;
         },
-
     });
 });

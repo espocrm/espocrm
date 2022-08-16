@@ -206,7 +206,7 @@ define('crm:views/record/panels/activities',
 
                 let o = {
                     action: 'createActivity',
-                    html: this.translate(label, 'labels', scope),
+                    text: this.translate(label, 'labels', scope),
                     data: {},
                     acl: 'create',
                     aclScope: scope,
@@ -278,9 +278,15 @@ define('crm:views/record/panels/activities',
 
                 let o = {
                     action: 'viewRelatedList',
-                    html: this.translate('View List') + ' &middot; ' + this.translate(scope, 'scopeNamesPlural') + '',
+                    html: $('<span>')
+                        .append(
+                            $('<span>').text(this.translate('View List')),
+                            ' &middot; ',
+                            $('<span>').text(this.translate(scope, 'scopeNamesPlural')),
+                        )
+                        .get(0).innerHTML,
                     data: {
-                        scope: scope
+                        scope: scope,
                     },
                     acl: 'read',
                     aclScope: scope,
