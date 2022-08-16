@@ -223,9 +223,7 @@
                 let libsData = this._libsConfig[realName] || {};
 
                 if (!this._isDeveloperMode) {
-                    let hasSourceMap = libsData.sourceMap
-
-                    if (hasSourceMap) {
+                    if (libsData.sourceMap) {
                         let realPath = path.split('?')[0];
 
                         script += `\n//# sourceMappingURL=${this._baseUrl + realPath}.map`;
