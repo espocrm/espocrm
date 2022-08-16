@@ -52,14 +52,12 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
         setup: function () {
             var labels = this.options.labels || {};
 
-            var insertLabel = this.getHelper().escapeString(labels.insert);
-
-            this.headerHtml = insertLabel;
+            this.headerHtml = this.getHelper().escapeString(labels.insert);
 
             this.buttonList = [
                 {
                     name: 'insert',
-                    html: this.translate('Insert'),
+                    text: this.translate('Insert'),
                     style: 'primary',
                     disabled: true,
                 }
