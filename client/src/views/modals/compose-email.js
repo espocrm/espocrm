@@ -279,6 +279,8 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
             this.actionSaveDraft()
                 .then(() => {
                     this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
+
+                    this.close();
                 })
                 .catch(reason => {
                     if (reason === 'notModified') {
