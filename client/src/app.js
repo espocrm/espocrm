@@ -648,6 +648,8 @@ function (
         },
 
         /**
+         * @param {string} name
+         * @param {function(module:controller.Class): void} callback
          * @private
          */
         getController: function (name, callback) {
