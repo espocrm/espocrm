@@ -216,6 +216,8 @@ return [
     'massActionIdleCountThreshold' => 100,
     'exportIdleCountThreshold' => 1000,
     'clientCspDisabled' => false,
-    'clientCspScriptSourceList' => [],
+    'clientCspScriptSourceList' => [
+        'https://maps.googleapis.com',
+    ],
     'isInstalled' => false,
 ];
