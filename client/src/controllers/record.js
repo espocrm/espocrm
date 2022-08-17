@@ -109,10 +109,14 @@ define('controllers/record', ['controller'], function (Dep) {
             this.getCollection(collection => {
                 let mediator = {};
 
-                this.listenToOnce(this.baseController, 'action', () => {
+                let abort = () => {
                     collection.abortLastFetch();
                     mediator.abort = true;
-                });
+                };
+
+                this.listenToOnce(this.baseController, 'action', abort);
+                this.listenToOnce(collection, 'sync', () =>
+                    this.stopListening(this.baseController, 'action', abort));
 
                 this.main(this.getViewName('list'), {
                     scope: this.name,
