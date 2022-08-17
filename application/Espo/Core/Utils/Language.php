@@ -415,10 +415,6 @@ class Language
 
             $data = $this->resourceReader->readAsArray($path, $readerParams);
 
-            if (is_array($data)) {
-                $this->sanitizeData($data);
-            }
-
             if ($language != $this->defaultLanguage) {
                 $data = Util::merge($this->getDefaultLanguageData($reload), $data);
             }
@@ -438,21 +434,5 @@ class Language
         }
 
         return $this->data[$language] ?? [];
-    }
-
-    /**
-     * @param array<string,mixed> $data
-     */
-    private function sanitizeData(array &$data): void
-    {
-        foreach ($data as &$subData) {
-            if (is_array($subData)) {
-                $this->sanitizeData($subData);
-            }
-            else if (is_string($subData)) {
-                $subData = str_replace('<', '&lt;', $subData);
-                $subData = str_replace('>', '&gt;', $subData);
-            }
-        }
     }
 }
