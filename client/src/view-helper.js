@@ -250,12 +250,18 @@ function (marked, DOMPurify, /** typeof Handlebars */Handlebars) {
                 }
             });
 
-            Handlebars.registerHelper('var', (name, context) => {
+            Handlebars.registerHelper('var', (name, context, options) => {
                 if (typeof context === 'undefined') {
                     return null;
                 }
 
-                return new Handlebars.SafeString(context[name]);
+                let contents = context[name];
+
+                if (options.hash.trim) {
+                    contents = contents.trim();
+                }
+
+                return new Handlebars.SafeString(contents);
             });
 
             Handlebars.registerHelper('concat', function (left, right) {
