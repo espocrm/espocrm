@@ -369,7 +369,7 @@ class Recovery
                 ->findOne();
 
             if (!$portal) {
-                throw new Error("Portal user does not belong to any potral.");
+                throw new Error("Portal user does not belong to any portal.");
             }
 
             $this->getPortalRepository()->loadUrlField($portal);
