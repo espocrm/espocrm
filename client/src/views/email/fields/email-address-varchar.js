@@ -391,42 +391,50 @@ function (Dep, From, EmailAddress) {
                 return '';
             }
 
-            var name = this.nameHash[address] || null;
-            var entityType = this.typeHash[address] || null;
-            var id = this.idHash[address] || null;
-
-            var addressHtml = this.getHelper().escapeString(address);
-
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-
-            var lineHtml;
+            let name = this.nameHash[address] || null;
+            let entityType = this.typeHash[address] || null;
+            let id = this.idHash[address] || null;
 
             if (id) {
-                lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' +
-                    name + '</a> <span class="text-muted chevron-right"></span> ' + addressHtml + '</div>';
+                return $('<div>')
+                    .append(
+                        $('<a>')
+                            .attr('href', '#' + entityType + '/view/' + id)
+                            .text(name),
+                        ' <span class="text-muted chevron-right"></span> ',
+                        $('<span>').text(address)
+                    )
+                    .get(0).outerHTML;
+            }
+
+            let $div = $('<div>');
+
+            if (name) {
+                $div.append(
+                    $('<span>')
+                        .addClass('email-address-line')
+                        .text(name)
+                        .append(' <span class="text-muted chevron-right"></span> ')
+                        .append(
+                            $('<span>').text(address)
+                        )
+                );
             }
             else {
-                if (name) {
-                    lineHtml = '<span class="email-address-line">' + name +
-                        ' <span class="text-muted chevron-right"></span> <span>' +
-                        addressHtml + '</span></span>';
-                }
-                else {
-                    lineHtml = '<span class="email-address-line">' + addressHtml + '</span>';
-                }
+                $div.append(
+                    $('<span>')
+                        .addClass('email-address-line')
+                        .text(address)
+                );
             }
 
-            if (!id) {
-                if (this.getAcl().check('Contact', 'edit')) {
-                    lineHtml = From.prototype.getCreateHtml.call(this, address) + lineHtml;
-                }
+            if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
+                $div.prepend(
+                    From.prototype.getCreateHtml.call(this, address)
+                );
             }
 
-            lineHtml = '<div>' + lineHtml + '</div>';
-
-            return lineHtml;
+            return $div.get(0).outerHTML;
         },
 
         validateRequired: function () {

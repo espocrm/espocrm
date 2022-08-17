@@ -288,8 +288,6 @@ define(
         },
 
         createPerson: function (scope, address) {
-            address = address;
-
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             var name = this.nameHash[address] || null;
 
@@ -360,8 +358,6 @@ define(
         },
 
         addToPerson: function (scope, address) {
-            var address = address;
-
             var fromString = this.model.get('fromString') || this.model.get('fromName');
             var name = this.nameHash[address] || null;
 
@@ -395,7 +391,7 @@ define(
                 filters['name'] = {
                     type: 'equals',
                     field: 'name',
-                    value: name
+                    value: name,
                 };
             }
 
@@ -466,31 +462,34 @@ define(
             var value = this.$element.val().trim();
 
             if (value) {
-                var data = {
+                return {
                     type: 'equals',
                     value: value,
                 }
-                return data;
             }
 
-            return false;
+            return null;
         },
 
         validateEmail: function () {
             var address = this.model.get(this.name);
-            if (!address) return;
+
+            if (!address) {
+                return;
+            }
+
             var addressLowerCase = String(address).toLowerCase();
 
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
-                var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+                var msg = this.translate('fieldShouldBeEmail', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
 
                 return true;
             }
         },
-
     });
 });
