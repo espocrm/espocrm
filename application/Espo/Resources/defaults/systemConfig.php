@@ -98,6 +98,7 @@ return [
         'webSocketMessager',
         'actualDatabaseType',
         'actualDatabaseVersion',
+        'clientSecurityHeadersDisabled',
         'clientCspDisabled',
         'clientCspScriptSourceList',
     ],

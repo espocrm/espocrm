@@ -112,6 +112,10 @@ class ClientManager
      */
     public function writeHeaders(Response $response): void
     {
+        if ($this->config->get('clientSecurityHeadersDisabled')) {
+            return;
+        }
+
         $response->setHeader('X-Frame-Options', 'SAMEORIGIN');
         $response->setHeader('X-Content-Type-Options', 'nosniff');
 

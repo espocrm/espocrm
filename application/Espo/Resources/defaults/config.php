@@ -215,6 +215,7 @@ return [
     'passwordGenerateLength' => 10,
     'massActionIdleCountThreshold' => 100,
     'exportIdleCountThreshold' => 1000,
+    'clientSecurityHeadersDisabled' => false,
     'clientCspDisabled' => false,
     'clientCspScriptSourceList' => [
         'https://maps.googleapis.com',
