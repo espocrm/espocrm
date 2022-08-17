@@ -322,7 +322,11 @@ function (Dep, From, EmailAddress) {
                         .attr('data-address', address)
                         .attr('role', 'button')
                         .attr('tabindex', '0')
-                        .addClass('pull-right'),
+                        .attr('data-action', 'clearAddress')
+                        .addClass('pull-right')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        ),
                     $text
                 );
 
