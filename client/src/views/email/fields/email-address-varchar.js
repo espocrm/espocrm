@@ -145,9 +145,9 @@ function (Dep, From, EmailAddress) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.on('render', function () {
+            this.on('render', () => {
                 this.initAddressList();
-            }, this);
+            });
         },
 
         initAddressList: function () {
@@ -156,8 +156,9 @@ function (Dep, From, EmailAddress) {
             this.addressList = (this.model.get(this.name) || '')
                 .split(';')
                 .filter((item) => {
-                    return item != '';
-                }).map((item) =>{
+                    return item !== '';
+                })
+                .map(item => {
                     return item.trim();
                 });
 
@@ -177,10 +178,10 @@ function (Dep, From, EmailAddress) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'edit') {
+            if (this.isEditMode()) {
                 this.$input = this.$element = this.$el.find('input');
 
-                this.addressList.forEach((item) => {
+                this.addressList.forEach(item => {
                     this.addAddressHtml(item, this.nameHash[item] || '');
                 });
 
@@ -199,7 +200,7 @@ function (Dep, From, EmailAddress) {
                             this.getHelper().escapeString(suggestion.id) + '&#62;';
                     },
                     transformResult: (response) => {
-                        var response = JSON.parse(response);
+                        response = JSON.parse(response);
                         var list = [];
 
                         response.forEach((item) => {
@@ -211,7 +212,7 @@ function (Dep, From, EmailAddress) {
                                 entityName: item.entityName,
                                 entityType: item.entityType,
                                 data: item.emailAddress,
-                                value: item.emailAddress
+                                value: item.emailAddress,
                             });
                         });
 
@@ -352,7 +353,7 @@ function (Dep, From, EmailAddress) {
         },
 
         fetch: function () {
-            var data = {};
+            let data = {};
 
             data[this.name] = this.addressList.join(';');
 
@@ -360,23 +361,21 @@ function (Dep, From, EmailAddress) {
         },
 
         fetchSearch: function () {
-            var value = this.$element.val().trim();
+            let value = this.$element.val().trim();
 
             if (value) {
-                var data = {
+                return {
                     type: 'equals',
                     value: value,
                 };
-
-                return data;
             }
 
             return false;
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail') {
-                var names = [];
+            if (this.isDetailMode()) {
+                let names = [];
 
                 this.addressList.forEach((address) => {
                     names.push(this.getDetailAddressHtml(address));
@@ -444,6 +443,5 @@ function (Dep, From, EmailAddress) {
 
             return Dep.prototype.validateRequired.call(this);
         },
-
     });
 });
