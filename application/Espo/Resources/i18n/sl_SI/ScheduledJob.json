@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Stanje",
+    "job": "delo",
+    "scheduling": "Razporejanje"
+  },
+  "links": {
+    "log": "Dnevnik"
+  },
+  "labels": {
+    "Create ScheduledJob": "Ustvari načrtovano opravilo",
+    "As often as possible": "Čim pogosteje"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "Pospravi",
+      "CheckInboundEmails": "Preverite skupinske e-poštne račune",
+      "CheckEmailAccounts": "Preverite osebne e-poštne račune",
+      "SendEmailReminders": "Pošlji opomnike po e-pošti",
+      "AuthTokenControl": "Nadzor žetonov za avtorizacijo",
+      "SendEmailNotifications": "Pošlji e-poštna obvestila",
+      "CheckNewVersion": "Preverite novo različico",
+      "ProcessWebhookQueue": "Obdelaj čakalno vrsto Webhook"
+    },
+    "cronSetup": {
+      "linux": "Opomba: Dodajte to vrstico v datoteko crontab za zagon Espo Scheduled Jobs:",
+      "mac": "Opomba: Dodajte to vrstico v datoteko crontab za zagon Espo Scheduled Jobs:",
+      "windows": "Opomba: Ustvarite paketno datoteko z naslednjimi ukazi za zagon Espo Scheduled Jobs z uporabo Windows Scheduled Tasks:",
+      "default": "Opomba: ta ukaz dodajte opravilu Cron (načrtovano opravilo):"
+    },
+    "status": {
+      "Active": "Aktiven",
+      "Inactive": "Neaktiven"
+    }
+  },
+  "tooltips": {
+    "scheduling": "Crontab zapis. Določa pogostost izvajanja opravil. `*/5 * * * *` - vsakih 5 minut `0 */2 * * *` - vsaki 2 uri `30 1 * * *` - ob 01:30 enkrat na dan `0 0 1 * *` - na prvi dan v mesecu"
+  }
+}

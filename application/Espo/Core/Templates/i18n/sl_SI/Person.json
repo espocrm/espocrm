@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "Naslov"
+  },
+  "links": {
+    "meetings": "Srečanja",
+    "calls": "Klici",
+    "tasks": "Naloge"
+  },
+  "labels": {
+    "Create {entityType}": "Ustvari {entityTypeTranslated}"
+  }
+}

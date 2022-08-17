@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Ime",
+    "description": "Opis",
+    "entryCount": "Število vstopov",
+    "campaigns": "Akcije",
+    "endDate": "Končni datum",
+    "targetLists": "Seznami ciljev",
+    "includingActionList": "Vključno z",
+    "excludingActionList": "Izključitev",
+    "optedOutCount": "Izključeno štetje",
+    "targetStatus": "Ciljni status",
+    "isOptedOut": "Je izključen"
+  },
+  "links": {
+    "accounts": "Računi",
+    "contacts": "Kontakti",
+    "leads": "vodi",
+    "campaigns": "Akcije",
+    "massEmails": "Množična e-poštna sporočila"
+  },
+  "options": {
+    "type": {
+      "Email": "E-naslov",
+      "Web": "Splet",
+      "Television": "televizija",
+      "Newsletter": "Glasilo"
+    },
+    "targetStatus": {
+      "Opted Out": "Izključeno",
+      "Listed": "Na seznamu"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Ustvari ciljni seznam",
+    "Opted Out": "Izključeno",
+    "Cancel Opt-Out": "Prekliči zavrnitev",
+    "Opt-Out": "Odjava"
+  }
+}

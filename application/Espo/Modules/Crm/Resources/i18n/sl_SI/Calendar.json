@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "mesec",
+    "week": "teden",
+    "agendaWeek": "teden",
+    "day": "dan",
+    "agendaDay": "dan",
+    "timeline": "Časovnica"
+  },
+  "labels": {
+    "Today": "Danes",
+    "Create": "Ustvari",
+    "Shared": "V skupni rabi",
+    "Add User": "Dodaj uporabnika",
+    "current": "trenutno",
+    "time": "čas",
+    "User List": "Seznam uporabnikov",
+    "Manage Users": "Upravljanje uporabnikov",
+    "View Calendar": "Ogled koledarja",
+    "Create Shared View": "Ustvari pogled v skupni rabi"
+  }
+}

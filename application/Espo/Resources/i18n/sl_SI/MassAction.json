@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "status": "Stanje",
+    "processedCount": "Obdelano štetje"
+  },
+  "options": {
+    "status": {
+      "Pending": "V teku",
+      "Running": "tek",
+      "Success": "Uspeh",
+      "Failed": "Ni uspelo"
+    }
+  },
+  "messages": {
+    "infoText": "Množično dejanje v mirovanju obdeluje cron. Za dokončanje lahko traja nekaj časa. Zapiranje tega modalnega pogovornega okna ne bo vplivalo na postopek izvajanja."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Ime",
+    "logo": "Logotip",
+    "companyLogo": "Logotip",
+    "portalRoles": "Vloge",
+    "isActive": "Je aktiven",
+    "isDefault": "Je privzeto",
+    "tabList": "Seznam zavihkov",
+    "quickCreateList": "Seznam za hitro ustvarjanje",
+    "theme": "Tema",
+    "language": "Jezik",
+    "dashboardLayout": "Postavitev armaturne plošče",
+    "dateFormat": "Format datuma",
+    "timeFormat": "Format časa",
+    "timeZone": "Časovni pas",
+    "weekStart": "Prvi dan v tednu",
+    "defaultCurrency": "Privzeta valuta",
+    "customUrl": "URL po meri",
+    "customId": "ID po meri",
+    "layoutSet": "Nabor postavitve"
+  },
+  "links": {
+    "users": "Uporabniki",
+    "portalRoles": "Vloge",
+    "notes": "Opombe",
+    "layoutSet": "Nabor postavitve"
+  },
+  "tooltips": {
+    "portalRoles": "Določene vloge portala bodo uporabljene za vse uporabnike tega portala.",
+    "layoutSet": "Zagotavlja možnost postavitev, ki se razlikujejo od standardnih."
+  },
+  "labels": {
+    "Create Portal": "Ustvari portal",
+    "User Interface": "Uporabniški vmesnik",
+    "General": "Splošno",
+    "Settings": "nastavitve"
+  }
+}

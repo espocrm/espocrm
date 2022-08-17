@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "from": "Od",
+    "to": "Za",
+    "subject": "Predmet",
+    "bodyContains": "Telo vsebuje",
+    "action": "Akcija",
+    "isGlobal": "Je globalno",
+    "emailFolder": "Mapa"
+  },
+  "labels": {
+    "Create EmailFilter": "Ustvari e-poštni filter",
+    "Emails": "E-poštna sporočila"
+  },
+  "tooltips": {
+    "from": "E-poštna sporočila se pošiljajo z navedenega naslova. Pustite prazno, če ni potrebno. Uporabite lahko nadomestni znak *.",
+    "to": "E-poštna sporočila se pošiljajo na navedeni naslov. Pustite prazno, če ni potrebno. Uporabite lahko nadomestni znak *.",
+    "name": "Filtru dajte opisno ime.",
+    "bodyContains": "Telo e-poštnega sporočila vsebuje katero koli od navedenih besed ali besednih zvez.",
+    "isGlobal": "Ta filter uporabi za vso e-pošto, ki prihaja v sistem.",
+    "subject": "Uporabite nadomestni znak *: * `besedilo*` – začne se z besedilom, * `*besedilo*` – vsebuje besedilo, * `*besedilo` – konča se z besedilom."
+  },
+  "options": {
+    "action": {
+      "Skip": "Ignoriraj",
+      "Move to Folder": "Daj v mapo"
+    }
+  }
+}

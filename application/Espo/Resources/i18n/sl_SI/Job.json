@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "status": "Stanje",
+    "executeTime": "Izvedite At",
+    "attempts": "Poskusi levo",
+    "failedAttempts": "Neuspeli poskusi",
+    "serviceName": "Storitev",
+    "methodName": "Metoda",
+    "scheduledJob": "Načrtovano delo",
+    "data": "podatki",
+    "method": "Metoda (zastarelo)",
+    "scheduledJobJob": "Ime načrtovanega opravila",
+    "executedAt": "Usmrčen na",
+    "startedAt": "Začetek ob",
+    "targetType": "Ciljna vrsta",
+    "targetId": "Ciljni ID",
+    "number": "številka",
+    "queue": "Čakalna vrsta",
+    "job": "delo",
+    "group": "skupina",
+    "className": "Ime razreda",
+    "targetGroup": "Ciljna skupina"
+  },
+  "options": {
+    "status": {
+      "Pending": "V teku",
+      "Success": "Uspeh",
+      "Running": "tek",
+      "Failed": "Ni uspelo"
+    }
+  }
+}

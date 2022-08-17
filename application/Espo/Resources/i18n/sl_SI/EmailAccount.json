@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "Ime",
+    "status": "Stanje",
+    "host": "Gostitelj",
+    "username": "Uporabniško ime",
+    "password": "Geslo",
+    "port": "Pristanišče",
+    "monitoredFolders": "Nadzorovane mape",
+    "fetchSince": "Pridobi od",
+    "emailAddress": "Email naslov",
+    "sentFolder": "Poslana mapa",
+    "storeSentEmails": "Shranjujte poslana e-poštna sporočila",
+    "keepFetchedEmailsUnread": "Ohranite pridobljena e-poštna sporočila neprebrana",
+    "emailFolder": "Daj v mapo",
+    "useSmtp": "Uporabi SMTP",
+    "smtpHost": "Gostitelj SMTP",
+    "smtpPort": "Vrata SMTP",
+    "smtpSecurity": "Varnost SMTP",
+    "smtpUsername": "Uporabniško ime SMTP",
+    "smtpPassword": "Geslo SMTP",
+    "useImap": "Pridobi e-pošto",
+    "smtpAuthMechanism": "Avtoristični mehanizem SMTP",
+    "security": "Varnost"
+  },
+  "links": {
+    "filters": "Filtri",
+    "emails": "E-poštna sporočila"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiven",
+      "Inactive": "Neaktiven"
+    },
+    "smtpAuthMechanism": {
+      "plain": "NAVADNO",
+      "login": "VPIŠI SE"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Ustvari e-poštni račun",
+    "Main": "Glavni",
+    "Test Connection": "Testna povezava",
+    "Send Test Email": "Pošlji testno e-pošto"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Ni bilo mogoče vzpostaviti povezave s strežnikom IMAP",
+    "connectionIsOk": "Povezava je OK"
+  },
+  "tooltips": {
+    "monitoredFolders": "Več map je treba ločiti z vejico. Dodate lahko mapo »Poslano« za sinhronizacijo e-poštnih sporočil, poslanih iz zunanjega e-poštnega odjemalca.",
+    "storeSentEmails": "Poslana e-pošta bo shranjena na strežniku IMAP. Polje za e-poštni naslov se mora ujemati z naslovom, s katerega bodo poslana e-poštna sporočila.",
+    "useSmtp": "Možnost pošiljanja e-pošte.",
+    "emailAddress": "Zapis uporabnika (dodeljeni uporabnik) mora imeti isti e-poštni naslov, da lahko ta e-poštni račun uporablja za pošiljanje."
+  }
+}

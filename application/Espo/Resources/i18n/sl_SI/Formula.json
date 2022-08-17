@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "Preverite sintakso",
+    "Run": "Teči"
+  },
+  "fields": {
+    "target": "Tarča",
+    "targetType": "Ciljna vrsta",
+    "script": "Skripta",
+    "output": "Izhod",
+    "error": "Napaka"
+  },
+  "messages": {
+    "runSuccess": "Uspešno izvedeno.",
+    "runError": "Napaka.",
+    "checkSyntaxSuccess": "Sintaksa je pravilna.",
+    "checkSyntaxError": "Sintaksna napaka.",
+    "emptyScript": "Skript je prazen."
+  },
+  "tooltips": {
+    "output": "Natisnite vrednosti s funkcijo `output\\printLine`."
+  }
+}

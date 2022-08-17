@@ -1,0 +1,100 @@
+{
+  "labels": {
+    "Revert Import": "Razveljavi uvoz",
+    "Return to Import": "Nazaj na uvoz",
+    "Run Import": "Zaženite uvoz",
+    "Back": "Nazaj",
+    "Field Mapping": "Kartiranje polja",
+    "Default Values": "Privzete vrednosti",
+    "Add Field": "Dodaj polje",
+    "Created": "Ustvarjeno",
+    "Updated": "Posodobljeno",
+    "Result": "Rezultat",
+    "Show records": "Prikaži zapise",
+    "Remove Duplicates": "Odstrani dvojnike",
+    "importedCount": "Uvoženo (štetje)",
+    "duplicateCount": "Dvojniki (štetje)",
+    "updatedCount": "Posodobljeno (štetje)",
+    "Create Only": "Ustvari samo",
+    "Create and Update": "Ustvari in posodobi",
+    "Update Only": "Samo posodobitev",
+    "Update by": "Posodobi do",
+    "Set as Not Duplicate": "Nastavi kot Ni podvojeno",
+    "File (CSV)": "Datoteka (CSV)",
+    "First Row Value": "Vrednost prve vrstice",
+    "Skip": "Preskoči",
+    "Header Row Value": "Vrednost vrstice glave",
+    "Field": "Polje",
+    "What to Import?": "Kaj uvoziti?",
+    "Entity Type": "Vrsta entitete",
+    "What to do?": "Kaj storiti?",
+    "Properties": "Lastnosti",
+    "Header Row": "Vrstica glave",
+    "Person Name Format": "Oblika imena osebe",
+    "Field Delimiter": "Ločilo polj",
+    "Date Format": "Format datuma",
+    "Decimal Mark": "Decimalna oznaka",
+    "Text Qualifier": "Kvalifikator besedila",
+    "Time Format": "Format časa",
+    "Currency": "Valuta",
+    "Preview": "Predogled",
+    "Next": "Naslednji",
+    "Step 1": "Korak 1",
+    "Step 2": "2. korak",
+    "Double Quote": "Dvojni citat",
+    "Single Quote": "Enotni citat",
+    "Imported": "Uvoženo",
+    "Duplicates": "Dvojniki",
+    "Skip searching for duplicates": "Preskočite iskanje dvojnikov",
+    "Timezone": "Časovni pas",
+    "Remove Import Log": "Odstrani dnevnik uvoza",
+    "New Import": "Nov uvoz",
+    "Import Results": "Uvozi rezultate",
+    "Silent Mode": "Tihi način",
+    "New import with same params": "Nov uvoz z enakimi parametri",
+    "Run Manually": "Zaženite ročno"
+  },
+  "messages": {
+    "utf8": "Biti mora kodiran z UTF-8",
+    "duplicatesRemoved": "Dvojniki odstranjeni",
+    "inIdle": "Izvedi v mirovanju (za velike podatke; prek crona)",
+    "revert": "S tem boste trajno odstranili vse uvožene zapise.",
+    "removeDuplicates": "S tem boste trajno odstranili vse uvožene zapise, ki so bili prepoznani kot dvojniki.",
+    "confirmRevert": "S tem boste trajno odstranili vse uvožene zapise. Ali si prepričan?",
+    "confirmRemoveDuplicates": "S tem boste trajno odstranili vse uvožene zapise, ki so bili prepoznani kot dvojniki. Ali si prepričan?",
+    "removeImportLog": "S tem boste odstranili dnevnik uvoza. Vse uvožene evidence bodo ohranjene. Uporabite ga, če ste prepričani, da je uvoz v redu.",
+    "confirmRemoveImportLog": "S tem boste odstranili dnevnik uvoza. Vse uvožene evidence bodo ohranjene. Rezultatov uvoza ne boste mogli razveljaviti. Ali si prepričan?"
+  },
+  "fields": {
+    "file": "mapa",
+    "entityType": "Vrsta entitete",
+    "imported": "Uvoženi zapisi",
+    "duplicates": "Podvojeni zapisi",
+    "updated": "Posodobljeni zapisi",
+    "status": "Stanje"
+  },
+  "options": {
+    "status": {
+      "Failed": "Ni uspelo",
+      "In Process": "V teku",
+      "Complete": "Popolna",
+      "Standby": "Ostani v pripravljenosti",
+      "Pending": "V teku"
+    },
+    "personNameFormat": {
+      "f l": "Prvi zadnji",
+      "l f": "Zadnji prvi",
+      "f m l": "Prva srednja zadnja",
+      "l f m": "Zadnja Prva Sredina",
+      "l, f": "Zadnji prvi"
+    }
+  },
+  "strings": {
+    "commandToRun": "Ukaz za zagon (iz CLI)",
+    "saveAsDefault": "Shrani kot privzeto"
+  },
+  "tooltips": {
+    "manualMode": "Če je označeno, boste morali ročno zagnati uvoz iz CLI. Ukaz bo prikazan po nastavitvi uvoza.",
+    "silentMode": "Večina skriptov po shranjevanju bo preskočenih, zapiski toka ne bodo ustvarjeni. Uvoz bo potekal hitreje."
+  }
+}

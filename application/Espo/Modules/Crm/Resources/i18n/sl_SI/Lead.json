@@ -1,0 +1,69 @@
+{
+  "labels": {
+    "Converted To": "Pretvorjeno v",
+    "Create Lead": "Ustvari možno stranko",
+    "Convert": "Pretvorba",
+    "convert": "Pretvorba"
+  },
+  "fields": {
+    "name": "Ime",
+    "emailAddress": "E-naslov",
+    "title": "Naslov",
+    "website": "Spletna stran",
+    "phoneNumber": "Telefon",
+    "accountName": "Ime računa",
+    "doNotCall": "Ne kliči",
+    "address": "Naslov",
+    "status": "Stanje",
+    "source": "Vir",
+    "opportunityAmount": "Priložnostni znesek",
+    "opportunityAmountConverted": "Znesek priložnosti (pretvorjen)",
+    "description": "Opis",
+    "createdAccount": "račun",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Priložnost",
+    "campaign": "Kampanja",
+    "targetLists": "Seznami ciljev",
+    "targetList": "Ciljni seznam",
+    "industry": "Industrija",
+    "acceptanceStatus": "Status sprejema",
+    "opportunityAmountCurrency": "Valuta zneska priložnosti",
+    "acceptanceStatusMeetings": "Status sprejema (sestanki)",
+    "acceptanceStatusCalls": "Stanje sprejema (klici)",
+    "convertedAt": "Pretvorjeno At"
+  },
+  "links": {
+    "targetLists": "Seznami ciljev",
+    "campaignLogRecords": "Dnevnik akcije",
+    "campaign": "Kampanja",
+    "createdAccount": "račun",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Priložnost",
+    "cases": "Primeri",
+    "documents": "Dokumenti"
+  },
+  "options": {
+    "status": {
+      "New": "Novo",
+      "Assigned": "Dodeljeno",
+      "In Process": "V teku",
+      "Converted": "Pretvorjeno",
+      "Recycled": "Reciklirano",
+      "Dead": "Mrtev"
+    },
+    "source": {
+      "Call": "Pokliči",
+      "Email": "E-naslov",
+      "Existing Customer": "Obstoječa stranka",
+      "Public Relations": "Odnosi z javnostjo",
+      "Web Site": "Spletna stran",
+      "Campaign": "Kampanja",
+      "Other": "drugo"
+    }
+  },
+  "presetFilters": {
+    "active": "Aktiven",
+    "actual": "Dejansko",
+    "converted": "Pretvorjeno"
+  }
+}

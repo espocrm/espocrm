@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "type": "Vrsta",
+    "optOut": "Izključeno",
+    "invalid": "Neveljavno"
+  },
+  "presetFilters": {
+    "orphan": "sirota"
+  }
+}

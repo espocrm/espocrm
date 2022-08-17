@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "Stanje",
+    "executionTime": "Čas izvedbe",
+    "target": "Tarča"
+  }
+}

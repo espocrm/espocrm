@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Ime",
+    "body": "Telo",
+    "entityType": "Vrsta entitete",
+    "header": "Glava",
+    "footer": "Noga",
+    "leftMargin": "Levi rob",
+    "topMargin": "Zgornji rob",
+    "rightMargin": "Desni rob",
+    "bottomMargin": "Spodnji rob",
+    "printFooter": "Natisni nogo",
+    "footerPosition": "Položaj noge",
+    "variables": "Razpoložljivi nadomestni znaki",
+    "pageOrientation": "Orientacija strani",
+    "pageFormat": "Papirni format",
+    "fontFace": "Pisava",
+    "pageWidth": "Širina strani (mm)",
+    "pageHeight": "Višina strani (mm)",
+    "headerPosition": "Položaj glave",
+    "printHeader": "Natisni glavo",
+    "title": "Naslov"
+  },
+  "labels": {
+    "Create Template": "Ustvari predlogo"
+  },
+  "tooltips": {
+    "footer": "Uporabite {pageNumber} za tiskanje številke strani.",
+    "variables": "Kopirajte in prilepite potrebno ogrado v glavo, telo ali nogo."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portret",
+      "Landscape": "Pokrajina"
+    },
+    "placeholders": {
+      "today": "Danes (datum)",
+      "now": "Zdaj (datum-čas)",
+      "pagebreak": "Prelom strani"
+    },
+    "fontFace": {
+      "aealarabiya": "AlArabija",
+      "courier": "Kurir",
+      "hysmyeongjostdmedium": "Hysmyeongjostd Srednje",
+      "pdfacourier": "Kurir PDFA",
+      "pdfasymbol": "PDFA simbol",
+      "symbol": "Simbol"
+    },
+    "pageFormat": {
+      "Custom": "Po meri"
+    }
+  }
+}

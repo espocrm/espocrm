@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "name": "Ime",
+    "description": "Opis",
+    "status": "Stanje",
+    "type": "Vrsta",
+    "startDate": "Začetni datum",
+    "endDate": "Končni datum",
+    "targetLists": "Seznami ciljev",
+    "excludingTargetLists": "Izključitev ciljnih seznamov",
+    "sentCount": "Poslano",
+    "openedCount": "Odprto",
+    "clickedCount": "Kliknil",
+    "optedOutCount": "Izključeno",
+    "bouncedCount": "Odbito",
+    "hardBouncedCount": "Trdo odbito",
+    "softBouncedCount": "Mehko odbito",
+    "leadCreatedCount": "Potencialne stranke ustvarjene",
+    "revenue": "Prihodki",
+    "revenueConverted": "Prihodek (pretvorjen)",
+    "budget": "Proračun",
+    "budgetConverted": "Proračun (pretvorjen)",
+    "contactsTemplate": "Predloga stikov",
+    "leadsTemplate": "Predloga potencialnih strank",
+    "accountsTemplate": "Predloga računov",
+    "usersTemplate": "Uporabniška predloga",
+    "mailMergeOnlyWithAddress": "Preskoči zapise brez izpolnjenega naslova",
+    "optedInCount": "Prijavljeno",
+    "budgetCurrency": "Proračunska valuta"
+  },
+  "links": {
+    "targetLists": "Seznami ciljev",
+    "excludingTargetLists": "Izključitev ciljnih seznamov",
+    "accounts": "Računi",
+    "contacts": "Kontakti",
+    "leads": "vodi",
+    "opportunities": "Priložnosti",
+    "campaignLogRecords": "Dnevnik",
+    "massEmails": "Množična e-poštna sporočila",
+    "trackingUrls": "URL-ji za sledenje",
+    "contactsTemplate": "Predloga stikov",
+    "leadsTemplate": "Predloga potencialnih strank",
+    "accountsTemplate": "Predloga računov",
+    "usersTemplate": "Uporabniška predloga"
+  },
+  "options": {
+    "type": {
+      "Email": "E-naslov",
+      "Web": "Splet",
+      "Television": "televizija",
+      "Newsletter": "Glasilo",
+      "Mail": "Pošta"
+    },
+    "status": {
+      "Planning": "Načrtovanje",
+      "Active": "Aktiven",
+      "Inactive": "Neaktiven",
+      "Complete": "Popolna"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Ustvari oglaševalsko akcijo",
+    "Target Lists": "Seznami ciljev",
+    "Statistics": "Statistika",
+    "hard": "težko",
+    "soft": "mehko",
+    "Unsubscribe": "Odjavi se",
+    "Mass Emails": "Množična e-poštna sporočila",
+    "Email Templates": "E-poštne predloge",
+    "Unsubscribe again": "Ponovno se odjavite",
+    "Subscribe again": "Ponovno se naročite",
+    "Create Target List": "Ustvari ciljni seznam",
+    "Mail Merge": "Spajanje dokumentov",
+    "Generate Mail Merge PDF": "Ustvari PDF za spajanje dokumentov"
+  },
+  "presetFilters": {
+    "active": "Aktiven"
+  },
+  "messages": {
+    "unsubscribed": "Odjavljeni ste bili z našega poštnega seznama.",
+    "subscribedAgain": "Ponovno ste naročeni."
+  },
+  "tooltips": {
+    "targetLists": "Tarče, ki bi morale prejemati sporočila.",
+    "excludingTargetLists": "Tarče, ki ne smejo prejemati sporočil."
+  }
+}

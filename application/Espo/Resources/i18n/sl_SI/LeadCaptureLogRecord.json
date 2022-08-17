@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "number": "številka",
+    "data": "podatki",
+    "target": "Tarča",
+    "createdAt": "Vstopil pri",
+    "isCreated": "Je potencialna stranka ustvarjena"
+  },
+  "links": {
+    "target": "Tarča"
+  }
+}

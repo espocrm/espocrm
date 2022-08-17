@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "starš",
+    "dateStart": "Začetek datuma",
+    "dateEnd": "Konec datuma",
+    "duration": "Trajanje",
+    "status": "Stanje",
+    "reminders": "Opomniki",
+    "dateStartDate": "Datum začetka (ves dan)",
+    "dateEndDate": "Konec datuma (ves dan)",
+    "isAllDay": "Je celodnevna"
+  },
+  "links": {
+    "parent": "starš"
+  },
+  "options": {
+    "status": {
+      "Planned": "Načrtovano",
+      "Held": "Zadržano",
+      "Not Held": "Ni zadržano"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Ustvari {entityTypeTranslated}",
+    "Schedule {entityType}": "Razpored {entityTypeTranslated}",
+    "Log {entityType}": "Dnevnik {entityTypeTranslated}",
+    "Set Held": "Nastavitev Zadržano",
+    "Set Not Held": "Set ni zadržan"
+  },
+  "massActions": {
+    "setHeld": "Nastavitev Zadržano",
+    "setNotHeld": "Set ni zadržan"
+  },
+  "presetFilters": {
+    "planned": "Načrtovano",
+    "held": "Zadržano",
+    "todays": "Današnji"
+  }
+}

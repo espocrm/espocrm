@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Ime",
+    "account": "račun",
+    "stage": "Stopnja",
+    "amount": "Znesek",
+    "probability": "Verjetnost, %",
+    "leadSource": "Vodilni vir",
+    "doNotCall": "Ne kliči",
+    "closeDate": "Zaključni datum",
+    "contacts": "Kontakti",
+    "description": "Opis",
+    "amountConverted": "Znesek (pretvorjen)",
+    "amountWeightedConverted": "Uteženi znesek",
+    "campaign": "Kampanja",
+    "originalLead": "Originalni svinec",
+    "amountCurrency": "Znesek Valuta",
+    "contactRole": "Kontaktna vloga",
+    "lastStage": "Zadnja stopnja",
+    "contact": "Kontakt (glavni)"
+  },
+  "links": {
+    "contacts": "Kontakti",
+    "documents": "Dokumenti",
+    "campaign": "Kampanja",
+    "originalLead": "Originalni svinec",
+    "contact": "Kontakt (glavni)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Iskanje",
+      "Qualification": "Kvalifikacija",
+      "Needs Analysis": "Potrebna je analiza",
+      "Value Proposition": "Vrednostna ponudba",
+      "Id. Decision Makers": "Id. Tisti, ki odločajo",
+      "Perception Analysis": "Analiza percepcije",
+      "Proposal/Price Quote": "Ponudba/cena",
+      "Negotiation/Review": "Pogajanje/Pregled",
+      "Closed Won": "Zaprto zmagal",
+      "Closed Lost": "Zaprto Izgubljeno",
+      "Proposal": "Snubitev",
+      "Negotiation": "Pogajanje"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Ustvarite priložnost"
+  },
+  "presetFilters": {
+    "open": "Odprto",
+    "won": "zmagal",
+    "lost": "Izgubljeno"
+  }
+}

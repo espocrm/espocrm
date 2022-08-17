@@ -1,0 +1,84 @@
+{
+  "labels": {
+    "Fields": "Polja",
+    "Relationships": "Odnosi",
+    "Schedule": "Urnik",
+    "Log": "Dnevnik",
+    "Layouts": "Postavitve"
+  },
+  "fields": {
+    "name": "Ime",
+    "type": "Vrsta",
+    "labelSingular": "Oznaka ednina",
+    "labelPlural": "Oznaka množine",
+    "stream": "Tok",
+    "label": "Oznaka",
+    "linkType": "Vrsta povezave",
+    "entityForeign": "Tuji subjekt",
+    "linkForeign": "Tuja povezava",
+    "link": "Povezava",
+    "labelForeign": "Tuja etiketa",
+    "sortBy": "Privzeti vrstni red (polje)",
+    "sortDirection": "Privzeti vrstni red (smer)",
+    "relationName": "Srednje ime tabele",
+    "linkMultipleField": "Poveži več polj",
+    "linkMultipleFieldForeign": "Več polj tujih povezav",
+    "disabled": "Onemogočeno",
+    "textFilterFields": "Polja besedilnega filtra",
+    "audited": "Revidirano",
+    "auditedForeign": "Tuje revidirano",
+    "statusField": "Polje stanja",
+    "beforeSaveCustomScript": "Pred shranjevanjem skripta po meri",
+    "color": "barva",
+    "kanbanViewMode": "Pogled Kanban",
+    "kanbanStatusIgnoreList": "Prezrte skupine v pogledu Kanban",
+    "iconClass": "Ikona",
+    "fullTextSearch": "Iskanje po celotnem besedilu",
+    "countDisabled": "Onemogoči štetje zapisov",
+    "parentEntityTypeList": "Vrste nadrejenih entitet",
+    "foreignLinkEntityTypeList": "Tuje povezave",
+    "entity": "Entiteta",
+    "optimisticConcurrencyControl": "Optimistični nadzor sočasnosti"
+  },
+  "options": {
+    "type": {
+      "": "Noben",
+      "Base": "Osnova",
+      "Person": "Oseba",
+      "CategoryTree": "Drevo kategorije",
+      "Event": "Dogodek",
+      "Company": "Podjetje"
+    },
+    "linkType": {
+      "manyToMany": "Mnogi proti mnogim",
+      "oneToMany": "Eden proti mnogo",
+      "manyToOne": "Več proti enemu",
+      "parentToChildren": "Od staršev do otrok",
+      "childrenToParent": "Otroci staršem",
+      "oneToOneRight": "Pravica ena proti ena",
+      "oneToOneLeft": "Ena proti ena levo"
+    },
+    "sortDirection": {
+      "asc": "Naraščajoče",
+      "desc": "Sestopanje"
+    }
+  },
+  "messages": {
+    "entityCreated": "Entiteta je bila ustvarjena",
+    "linkAlreadyExists": "Konflikt imena povezave.",
+    "linkConflict": "Konflikt imena: povezava ali polje z istim imenom že obstaja.",
+    "confirmRemove": "Ali ste prepričani, da želite odstraniti vrsto entitete iz sistema?"
+  },
+  "tooltips": {
+    "statusField": "Posodobitve tega polja se beležijo v toku.",
+    "textFilterFields": "Polja, uporabljena pri iskanju po besedilu.",
+    "stream": "Ali ima entiteta tok.",
+    "disabled": "Preverite, ali te entitete ne potrebujete v svojem sistemu.",
+    "linkAudited": "Ustvarjanje povezanega zapisa in povezovanje z obstoječim zapisom bo zabeleženo v Stream.",
+    "linkMultipleField": "Polje Več povezav ponuja priročen način za urejanje odnosov. Ne uporabljajte ga, če imate lahko veliko število povezanih zapisov.",
+    "entityType": "Base Plus - ima plošče Dejavnosti, Zgodovina in Opravila. Dogodek – na voljo v plošči Koledar in dejavnosti.",
+    "fullTextSearch": "Zahtevana je zagon obnove.",
+    "countDisabled": "Skupno število ne bo prikazano v pogledu seznama. Lahko zmanjša čas nalaganja, ko je tabela baze podatkov velika.",
+    "optimisticConcurrencyControl": "Preprečuje pisne konflikte."
+  }
+}

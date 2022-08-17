@@ -1,0 +1,28 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Vstavi dokument"
+  },
+  "fields": {
+    "role": "Vloga",
+    "related": "Povezano",
+    "file": "mapa",
+    "type": "Vrsta",
+    "field": "Polje",
+    "sourceId": "ID vira",
+    "storage": "Shranjevanje",
+    "size": "Velikost (bajti)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Priponka",
+      "Inline Attachment": "Vgrajena priloga",
+      "Import File": "Uvozi datoteko",
+      "Export File": "Izvozi datoteko",
+      "Mail Merge": "Spajanje dokumentov",
+      "Mass Pdf": "Masa Pdf"
+    }
+  },
+  "presetFilters": {
+    "orphan": "sirota"
+  }
+}

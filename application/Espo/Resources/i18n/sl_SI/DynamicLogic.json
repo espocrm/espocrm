@@ -1,0 +1,31 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Enako",
+      "notEquals": "Ni enako",
+      "greaterThan": "Večji kot",
+      "lessThan": "Manj kot",
+      "greaterThanOrEquals": "Večje kot ali enako",
+      "lessThanOrEquals": "Manj kot ali enako",
+      "in": "notri",
+      "notIn": "Ni notri",
+      "inPast": "V preteklosti",
+      "inFuture": "Je prihodnost",
+      "isToday": "Je danes",
+      "isTrue": "Je res",
+      "isFalse": "Je False",
+      "isEmpty": "Je prazno",
+      "isNotEmpty": "Ni prazno",
+      "contains": "Vsebuje",
+      "has": "Vsebuje",
+      "notContains": "Ne vsebuje",
+      "notHas": "Ne vsebuje",
+      "startsWith": "Začne se z",
+      "endsWith": "Konča se z",
+      "matches": "Ujemanja (reg exp)"
+    }
+  },
+  "labels": {
+    "Field": "Polje"
+  }
+}

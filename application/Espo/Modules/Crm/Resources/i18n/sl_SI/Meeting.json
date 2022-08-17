@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "Ime",
+    "parent": "starš",
+    "status": "Stanje",
+    "dateStart": "Začetek datuma",
+    "dateEnd": "Konec datuma",
+    "duration": "Trajanje",
+    "description": "Opis",
+    "users": "Uporabniki",
+    "contacts": "Kontakti",
+    "leads": "vodi",
+    "reminders": "Opomniki",
+    "account": "račun",
+    "acceptanceStatus": "Status sprejema",
+    "dateStartDate": "Datum začetka (ves dan)",
+    "dateEndDate": "Konec datuma (ves dan)",
+    "isAllDay": "Je celodnevna",
+    "Acceptance": "Sprejemanje",
+    "sourceEmail": "Izvorni e-poštni naslov"
+  },
+  "options": {
+    "status": {
+      "Planned": "Načrtovano",
+      "Held": "Zadržano",
+      "Not Held": "Ni zadržano"
+    },
+    "acceptanceStatus": {
+      "None": "Noben",
+      "Accepted": "Sprejeto",
+      "Declined": "Zavrnjeno",
+      "Tentative": "Pogojno"
+    }
+  },
+  "massActions": {
+    "setHeld": "Nastavitev Zadržano",
+    "setNotHeld": "Set ni zadržan"
+  },
+  "labels": {
+    "Create Meeting": "Ustvari srečanje",
+    "Set Held": "Nastavitev Zadržano",
+    "Set Not Held": "Set ni zadržan",
+    "Send Invitations": "Pošljite vabila",
+    "on time": "pravočasno",
+    "before": "prej",
+    "All-Day": "Celodnevni"
+  },
+  "presetFilters": {
+    "planned": "Načrtovano",
+    "held": "Zadržano",
+    "todays": "Današnji"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nič ni bilo poslano",
+    "selectAcceptanceStatus": "Nastavite status sprejema."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create Lead": "Ustvari možno stranko",
+    "Create Contact": "Ustvari stik",
+    "Create Task": "Ustvari nalogo",
+    "Create Case": "Ustvari primer",
+    "Add to Contact": "Dodaj v stik",
+    "Add to Lead": "Dodaj v Lead"
+  },
+  "fields": {
+    "tasks": "Naloge"
+  }
+}

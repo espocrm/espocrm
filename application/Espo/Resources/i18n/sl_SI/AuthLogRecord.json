@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "username": "Uporabniško ime",
+    "ipAddress": "IP naslov",
+    "requestTime": "Čas zahteve",
+    "createdAt": "Zahtevano pri",
+    "isDenied": "Je zavrnjeno",
+    "denialReason": "Razlog zavrnitve",
+    "user": "Uporabnik",
+    "authToken": "Auth Token ustvarjen",
+    "requestUrl": "URL zahteve",
+    "requestMethod": "Metoda zahteve",
+    "authTokenIsActive": "Auth Token je aktiven",
+    "authenticationMethod": "Metoda avtentikacije"
+  },
+  "links": {
+    "authToken": "Auth Token ustvarjen",
+    "user": "Uporabnik",
+    "actionHistoryRecords": "Zgodovina dejanj"
+  },
+  "presetFilters": {
+    "denied": "Zavrnjeno",
+    "accepted": "Sprejeto"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Neveljavne poverilnice",
+      "INACTIVE_USER": "Neaktiven uporabnik",
+      "IS_PORTAL_USER": "Uporabnik portala",
+      "IS_NOT_PORTAL_USER": "Ni uporabnik portala",
+      "USER_IS_NOT_IN_PORTAL": "Uporabnik ni povezan s portalom"
+    }
+  }
+}
