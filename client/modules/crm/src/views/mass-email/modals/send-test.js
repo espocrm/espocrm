@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], function (Dep, Model) {
+define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -36,12 +36,15 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
 
         setup: function () {
             Dep.prototype.setup.call(this);
-            this.headerHtml = this.translate('Send Test', 'labels', 'MassEmail');
+
+            this.headerText = this.translate('Send Test', 'labels', 'MassEmail');
 
             var model = new Model();
 
             model.set('usersIds', [this.getUser().id]);
+
             var usersNames = {};
+
             usersNames[this.getUser().id] = this.getUser().get('name');
             model.set('usersNames', usersNames);
 
@@ -54,7 +57,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                     params: {
                     }
                 },
-                mode: 'edit'
+                mode: 'edit',
             });
 
             this.createView('contacts', 'views/fields/link-multiple', {
@@ -66,7 +69,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                     params: {
                     }
                 },
-                mode: 'edit'
+                mode: 'edit',
             });
 
             this.createView('leads', 'views/fields/link-multiple', {
@@ -78,7 +81,7 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                     params: {
                     }
                 },
-                mode: 'edit'
+                mode: 'edit',
             });
 
             this.createView('accounts', 'views/fields/link-multiple', {
@@ -90,18 +93,18 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                     params: {
                     }
                 },
-                mode: 'edit'
+                mode: 'edit',
             });
 
             this.buttonList.push({
                 name: 'sendTest',
                 label: 'Send Test',
-                style: 'danger'
+                style: 'danger',
             });
 
             this.buttonList.push({
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             });
         },
 
@@ -115,18 +118,21 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                     type: 'User'
                 });
             });
+
             this.getView('contacts').fetch().contactsIds.forEach(function (id) {
                 list.push({
                     id: id,
                     type: 'Contact'
                 });
             });
+
             this.getView('leads').fetch().leadsIds.forEach(function (id) {
                 list.push({
                     id: id,
                     type: 'Lead'
                 });
             });
+
             this.getView('accounts').fetch().accountsIds.forEach(function (id) {
                 list.push({
                     id: id,
@@ -134,30 +140,26 @@ Espo.define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], f
                 });
             });
 
-
-            if (list.length == 0) {
+            if (list.length === 0) {
                 alert(this.translate('selectAtLeastOneTarget', 'messages', 'MassEmail'));
+
                 return;
             }
 
             this.disableButton('sendTest');
 
-            $.ajax({
-                url: 'MassEmail/action/sendTest',
-                type: 'POST',
-                data: JSON.stringify({
+            Espo.Ajax
+                .postRequest('MassEmail/action/sendTest', {
                     id: this.model.id,
-                    targetList: list
-                }),
-                error: function () {
+                    targetList: list,
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('testSent', 'messages', 'MassEmail'));
+                    this.close();
+                })
+                .catch(() => {
                     this.enableButton('sendTest');
-                }.bind(this)
-            }).done(function () {
-                Espo.Ui.success(this.translate('testSent', 'messages', 'MassEmail'));
-                this.close();
-            }.bind(this));
-        }
-
+                });
+        },
     });
 });
-

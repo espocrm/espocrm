@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/modals/add-field', 'views/modal', function (Dep) {
+define('views/admin/field-manager/modals/add-field', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
         backdrop: true,
 
         template: 'admin/field-manager/modals/add-field',
-
 
         events: {
             'click a[data-action="addField"]': function (e) {
@@ -50,25 +49,25 @@ define('views/admin/field-manager/modals/add-field', 'views/modal', function (De
         },
 
         setup: function () {
-            this.headerHtml = this.translate('Add Field', 'labels', 'Admin');
+            this.headerText = this.translate('Add Field', 'labels', 'Admin');
 
             this.typeList = [];
 
             var fieldDefs = this.getMetadata().get('fields');
 
-            Object.keys(this.getMetadata().get('fields')).forEach(function (type) {
+            Object.keys(this.getMetadata().get('fields')).forEach(type => {
                 if (type in fieldDefs) {
                     if (!fieldDefs[type].notCreatable) {
                         this.typeList.push(type);
                     }
                 }
-            }, this);
+            });
 
-            this.typeList.sort(function (v1, v2) {
-                return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
-            }.bind(this));
+            this.typeList.sort((v1, v2) => {
+                return this.translate(v1, 'fieldTypes', 'Admin')
+                    .localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
+            });
         },
-
 
         addField: function (type) {
             this.trigger('add-field', type);
@@ -76,7 +75,7 @@ define('views/admin/field-manager/modals/add-field', 'views/modal', function (De
         },
 
         afterRender: function () {
-            this.typeList.forEach(function (type) {
+            this.typeList.forEach(type => {
                 var text = this.translate(type, 'fieldInfo', 'FieldManager');
 
                 var $el = this.$el.find('a.info[data-name="'+type+'"]');
@@ -94,8 +93,7 @@ define('views/admin/field-manager/modals/add-field', 'views/modal', function (De
                     placement: 'left',
                     container: this.$el.find('.modal-body'),
                 }, this);
-            }, this);
+            });
         },
-
     });
 });

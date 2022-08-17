@@ -109,8 +109,6 @@ define('views/modals/compose-email', ['views/modals/edit'], function (Dep) {
 
             this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
 
-            this.headerHtml = this.getLanguage().translate('Compose Email');
-
             if (
                 this.getConfig().get('emailForceUseExternalClient') ||
                 this.getPreferences().get('emailUseExternalClient') ||

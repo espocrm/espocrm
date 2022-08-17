@@ -149,13 +149,18 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
             }
 
-            this.headerHtml = '';
+            this.$header = $('<span>');
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            this.$header.append(
+                $('<span>').text(
+                    this.translate('Select') + ': ' +
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+                )
+            );
 
-            this.headerHtml += this.translate('Select') + ': ';
-            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.$header.prepend(
+                this.getHelper().getScopeColorIconHtml(this.scope)
+            );
 
             this.waitForView('list');
 

@@ -37,7 +37,7 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
         },
 
         setup: function () {
-            this.headerHtml = this.translate('Create Post');
+            this.headerText = this.translate('Create Post');
 
             this.buttonList = [
                 {

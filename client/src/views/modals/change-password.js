@@ -49,7 +49,7 @@ define('views/modals/change-password', ['views/modal'], function (Dep) {
                 },
             ];
 
-            this.headerHtml = this.translate('Change Password', 'labels', 'User');
+            this.headerText = this.translate('Change Password', 'labels', 'User');
 
             this.wait(true);
 

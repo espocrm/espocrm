@@ -50,8 +50,12 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model', 'helpers/m
         ],
 
         setup: function () {
-            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') +
-                ' <span class="chevron-right"></span> ' + this.translate('convertCurrency', 'massActions');
+            this.$header = $('<span>')
+                .append(
+                    $('<span>').text(this.translate(this.options.entityType, 'scopeNamesPlural')),
+                    ' <span class="chevron-right"></span> ',
+                    $('<span>').text(this.translate('convertCurrency', 'massActions'))
+                )
 
             this.addButton({
                 name: 'convert',

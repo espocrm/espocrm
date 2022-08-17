@@ -226,31 +226,40 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 });
             }
 
-            this.headerHtml = '';
+            this.$header = $('<span>');
 
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             if (this.model) {
-                this.headerHtml += Handlebars.Utils.escapeExpression(this.model.get('name'));
-
-                if (this.headerHtml) {
-                    this.headerHtml += ' <span class="chevron-right"></span> ';
+                if (this.model.get('name')) {
+                    this.$header.append(
+                        $('<span>').text(this.model.get('name')),
+                        ' <span class="chevron-right"></span> '
+                    );
                 }
             }
 
-            var title = this.options.title;
-            if (title) {
-                title = Handlebars.Utils.escapeExpression(this.options.title);
+            let title = this.options.title;
 
-                title = title.replace(/@right/, '<span class="chevron-right"></span>');
+            if (title) {
+                title = this.getHelper().escapeString(this.options.title)
+                    .replace(/@right/, '<span class="chevron-right"></span>');
             }
-            this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
+
+            this.$header.append(
+                title ||
+                $('<span>').text(
+                    this.getLanguage().translate(this.link, 'links', this.model.name)
+                )
+            );
 
             if (this.options.listViewUrl) {
-                this.headerHtml = '<a href="'+this.options.listViewUrl+'">' + this.headerHtml + '</a>';
+                this.$header = $('<a>')
+                    .attr('href', this.options.listViewUrl)
+                    .append(this.$header);
             }
 
-            this.headerHtml = iconHtml + this.headerHtml;
+            this.$header.prepend(iconHtml);
 
             this.waitForView('list');
 

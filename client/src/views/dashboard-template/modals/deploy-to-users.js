@@ -47,7 +47,7 @@ define('views/dashboard-template/modals/deploy-to-users', ['views/modal', 'model
                 },
             ];
 
-            this.headerHtml = this.getHelper().escapeString(this.model.get('name'));
+            this.headerText = this.model.get('name');
 
             this.formModel = new Model();
             this.formModel.name = 'None';
@@ -91,14 +91,16 @@ define('views/dashboard-template/modals/deploy-to-users', ['views/modal', 'model
 
         actionDeploy: function () {
             if (this.getView('record').processFetch()) {
-                Espo.Ajax.postRequest('DashboardTemplate/action/deployToUsers', {
-                    id: this.model.id,
-                    userIdList: this.formModel.get('usersIds'),
-                    append: this.formModel.get('append'),
-                }).then(function () {
-                    Espo.Ui.success(this.translate('Done'));
-                    this.close();
-                }.bind(this));
+                Espo.Ajax
+                    .postRequest('DashboardTemplate/action/deployToUsers', {
+                        id: this.model.id,
+                        userIdList: this.formModel.get('usersIds'),
+                        append: this.formModel.get('append'),
+                    })
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                        this.close();
+                    });
             }
         },
     });

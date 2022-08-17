@@ -53,9 +53,7 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
             this.id = this.options.id;
             this.status = 'Pending';
 
-            this.headerHtml = this.getHelper().escapeString(
-                this.translate('Export')
-            );
+            this.headerText = this.translate('Export');
 
             this.model = new Model();
             this.model.name = 'Export';

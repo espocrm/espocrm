@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/wysiwyg/modals/insert-image', 'views/modal', function (Dep) {
+define('views/wysiwyg/modals/insert-image', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -55,9 +55,7 @@ define('views/wysiwyg/modals/insert-image', 'views/modal', function (Dep) {
         setup: function () {
             var labels = this.options.labels || {};
 
-            var insertLabel = this.getHelper().escapeString(labels.insert);
-
-            this.headerHtml = insertLabel;
+            this.headerText = labels.insert;
 
             this.buttonList = [];
         },
@@ -66,17 +64,18 @@ define('views/wysiwyg/modals/insert-image', 'views/modal', function (Dep) {
             var $files = this.$el.find('[data-name="files"]');
 
             $files.replaceWith(
-                $files.clone().on('change', function (e) {
+                $files.clone().on('change', (e) => {
                   this.trigger('upload', e.target.files || e.target.value);
                   this.close();
-                }.bind(this)).val('')
+                }).val('')
             );
         },
 
         toggleInsertButton: function () {
             var value = this.$el.find('[data-name="url"]').val().trim();
 
-            var $button = this.$el.find('[data-name="insert"]')
+            var $button = this.$el.find('[data-name="insert"]');
+
             if (value) {
                 $button.removeClass('disabled').removeAttr('disabled');
             } else {

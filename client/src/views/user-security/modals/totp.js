@@ -49,8 +49,6 @@ define('views/user-security/modals/totp',
                 }
             ];
 
-            this.headerHtml = false;
-
             var model = new Model();
 
             model.name = 'UserSecurity';

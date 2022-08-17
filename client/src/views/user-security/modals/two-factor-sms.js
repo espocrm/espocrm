@@ -56,8 +56,6 @@ define('views/user-security/modals/two-factor-sms',
                 }
             ];
 
-            this.headerHtml = false;
-
             let codeLength = this.getConfig().get('auth2FASmsCodeLength') || 7;
 
             let model = new Model();

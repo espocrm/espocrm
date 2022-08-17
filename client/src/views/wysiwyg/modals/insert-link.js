@@ -52,7 +52,7 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
         setup: function () {
             var labels = this.options.labels || {};
 
-            this.headerHtml = this.getHelper().escapeString(labels.insert);
+            this.headerText = labels.insert;
 
             this.buttonList = [
                 {

@@ -47,7 +47,7 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
                 },
             ];
 
-            this.headerHtml = this.getHelper().escapeString(this.model.get('name'));
+            this.headerText = this.model.get('name');
 
             this.formModel = new Model();
             this.formModel.name = 'None';
@@ -80,7 +80,7 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
                                 {
                                     name: 'append',
                                     labelText: this.translate('append', 'fields', 'DashboardTemplate'),
-                                }
+                                },
                             ]
                         ]
                     }
@@ -90,14 +90,16 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
 
         actionDeploy: function () {
             if (this.getView('record').processFetch()) {
-                Espo.Ajax.postRequest('DashboardTemplate/action/deployToTeam', {
-                    id: this.model.id,
-                    teamId: this.formModel.get('teamId'),
-                    append: this.formModel.get('append'),
-                }).then(function () {
-                    Espo.Ui.success(this.translate('Done'));
-                    this.close();
-                }.bind(this));
+                Espo.Ajax
+                    .postRequest('DashboardTemplate/action/deployToTeam', {
+                        id: this.model.id,
+                        teamId: this.formModel.get('teamId'),
+                        append: this.formModel.get('append'),
+                    })
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                        this.close();
+                    });
             }
         },
     });

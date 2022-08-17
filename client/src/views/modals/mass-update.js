@@ -71,11 +71,11 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
                     name: 'update',
                     label: 'Update',
                     style: 'danger',
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
                 }
             ];
 
@@ -95,8 +95,12 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
 
             this.idle = this.byWhere && this.helper.checkIsIdle(totalCount);
 
-            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
-                ' <span class="chevron-right"></span> ' + this.translate('Mass Update');
+            this.$header = $('<span>')
+                .append(
+                    $('<span>').text(this.translate(this.scope, 'scopeNamesPlural')),
+                    ' <span class="chevron-right"></span> ',
+                    $('<span>').text(this.translate('Mass Update'))
+                )
 
             var forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 

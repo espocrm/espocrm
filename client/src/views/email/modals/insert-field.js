@@ -61,8 +61,9 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
 
         events: {
             'click [data-action="insert"]': function (e) {
-                var name = $(e.currentTarget).data('name');
-                var type = $(e.currentTarget).data('type');
+                let name = $(e.currentTarget).data('name');
+                let type = $(e.currentTarget).data('type');
+
                 this.insert(type, name);
             },
         },
@@ -70,43 +71,49 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.headerHtml = this.translate('Insert Field', 'labels', 'Email');
+            this.headerText = this.translate('Insert Field', 'labels', 'Email');
 
             this.fieldLanguage = new FieldLanguage(this.getMetadata(), this.getLanguage());
 
             this.wait(
-                Espo.Ajax.getRequest('Email/action/getInsertFieldData', {
-                    parentId: this.options.parentId,
-                    parentType: this.options.parentType,
-                    to: this.options.to,
-                }).then(
-                    function (fetchedData) {
+                Espo.Ajax
+                    .getRequest('Email/action/getInsertFieldData', {
+                        parentId: this.options.parentId,
+                        parentType: this.options.parentType,
+                        to: this.options.to,
+                    })
+                    .then(fetchedData => {
                         this.fetchedData = fetchedData;
                         this.prepareData();
-                    }.bind(this)
-                )
+                    })
             );
         },
 
         prepareData: function () {
             this.dataList = [];
+
             var fetchedData = this.fetchedData;
             var typeList = ['parent', 'to'];
 
-            typeList.forEach(function (type) {
-                if (!fetchedData[type]) return;
+            typeList.forEach(type => {
+                if (!fetchedData[type]) {
+                    return;
+                }
 
-                var entityType = fetchedData[type].entityType;
-                var id = fetchedData[type].id;
+                let entityType = fetchedData[type].entityType;
+                let id = fetchedData[type].id;
 
-                for (var it of this.dataList) {
+                for (let it of this.dataList) {
                     if (it.id === id && it.entityType === entityType) {
                         return;
                     }
                 }
 
                 var dataList = this.prepareDisplayValueList(fetchedData[type].entityType, fetchedData[type].values);
-                if (!dataList.length) return;
+
+                if (!dataList.length) {
+                    return;
+                }
 
                 this.dataList.push({
                     type: type,
@@ -116,49 +123,64 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
                     dataList: dataList,
                     label: this.translate(type, 'fields', 'Email'),
                 });
-            }, this);
+            });
         },
 
         prepareDisplayValueList: function (scope, values) {
-            var list = [];
+            let list = [];
 
-            var attributeList = Object.keys(values);
-            var labels = {};
+            let attributeList = Object.keys(values);
+            let labels = {};
 
-            attributeList.forEach(function (item) {
+            attributeList.forEach(item => {
                 labels[item] = this.fieldLanguage.translateAttribute(scope, item);
-            }, this);
+            });
 
-            attributeList = attributeList.sort(function (v1, v2) {
-                return labels[v1].localeCompare(labels[v2]);
-            }.bind(this));
+            attributeList = attributeList
+                .sort((v1, v2) => {
+                    return labels[v1].localeCompare(labels[v2]);
+                });
 
-            var ignoreAttributeList = ['id', 'modifiedAt', 'modifiedByName'];
+            let ignoreAttributeList = ['id', 'modifiedAt', 'modifiedByName'];
 
-            var fm = this.getFieldManager();
+            let fm = this.getFieldManager();
 
-            fm.getEntityTypeFieldList(scope).forEach(function (field) {
-                var type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
+            fm.getEntityTypeFieldList(scope).forEach(field => {
+                let type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
 
                 if (~['link', 'linkOne', 'image', 'filed', 'linkParent'].indexOf(type)) {
                     ignoreAttributeList.push(field + 'Id');
                 }
+
                 if (type === 'linkParent') {
                     ignoreAttributeList.push(field + 'Type');
                 }
-            }, this);
+            });
 
-            attributeList.forEach(function (item) {
-                if (~ignoreAttributeList.indexOf(item)) return;
-                var value = values[item];
-                if (value === null || value === '') return;
-                if (typeof value == 'boolean') return;
+            attributeList.forEach(item => {
+                if (~ignoreAttributeList.indexOf(item)) {
+                    return;
+                }
+
+                let value = values[item];
+
+                if (value === null || value === '') {
+                    return;
+                }
+
+                if (typeof value == 'boolean') {
+                    return;
+                }
+
                 if (Array.isArray(value)) {
                     for (let v in value) {
-                        if (typeof v  !== 'string') return;
+                        if (typeof v  !== 'string') {
+                            return;
+                        }
                     }
+
                     value = value.split(', ');
-                };
+                }
 
                 value = this.getHelper().sanitizeHtml(value);
 
@@ -173,25 +195,31 @@ define('views/email/modals/insert-field', ['views/modal', 'field-language'], fun
                     value: value,
                     valuePreview: valuePreview,
                 });
-            }, this);
+            });
 
             return list;
         },
 
         insert: function (type, name) {
-            for (var g of this.dataList) {
-                if (g.type !== type) continue;
+            for (let g of this.dataList) {
+                if (g.type !== type) {
+                    continue;
+                }
 
-                for (var i of g.dataList) {
-                    if (i.name !== name) continue;
+                for (let i of g.dataList) {
+                    if (i.name !== name) {
+                        continue;
+                    }
+
                     this.trigger('insert', i.value);
+
                     break;
                 }
+
                 break;
             }
 
             this.close();
         },
-
     });
 });

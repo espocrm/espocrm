@@ -215,7 +215,7 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (!this.id) {
-                this.headerHtml = this.translate('Create', 'labels', 'Calendar');
+                this.headerText = this.translate('Create', 'labels', 'Calendar');
             }
 
             if (this.id) {

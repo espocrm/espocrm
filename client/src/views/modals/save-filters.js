@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep, Model) {
+define('views/modals/save-filters', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -54,9 +53,10 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
                 }
             ];
 
-            this.headerHtml = this.translate('Save Filters');
+            this.headerText = this.translate('Save Filters');
 
             var model = new Model();
+
             this.createView('name', 'views/fields/varchar', {
                 el: this.options.el + ' .field[data-name="name"]',
                 defs: {
@@ -66,17 +66,20 @@ Espo.define('views/modals/save-filters', ['views/modal', 'model'], function (Dep
                     }
                 },
                 mode: 'edit',
-                model: model
+                model: model,
             });
         },
 
         actionSave: function () {
             var nameView = this.getView('name');
             nameView.fetchToModel();
+
             if (nameView.validate()) {
                 return;
             }
+
             this.trigger('save', nameView.model.get('name'));
+
             return true;
         },
     });

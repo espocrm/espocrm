@@ -40,10 +40,10 @@ define('views/attachment/modals/select-one', ['views/modal'], function (Dep) {
             '{{/each}}</ul>',
 
         setup: function () {
-            this.headerHtml = this.translate('Select');
+            this.headerText = this.translate('Select');
 
             if (this.options.fieldLabel) {
-                this.headerHtml += ': ' + this.getHelper().sanitizeHtml(this.options.fieldLabel);
+                this.headerText += ': ' + this.options.fieldLabel;
             }
         },
 

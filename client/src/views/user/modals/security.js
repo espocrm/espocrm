@@ -58,8 +58,11 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
             this.userModel = this.options.userModel;
 
-            this.headerHtml = this.translate('Security') + ' <span class="chevron-right"></span> ' +
-                this.getHelper().escapeString(this.userModel.get('userName'));
+            this.$header = $('<span>').append(
+                $('<span>').text(this.translate('Security')),
+                ' <span class="chevron-right"></span> ',
+                $('<span>').text(this.userModel.get('userName'))
+            );
 
             var model = this.model = new Model();
 

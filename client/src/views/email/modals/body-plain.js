@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
+define('views/email/modals/body-plain', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,12 +36,13 @@ Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.buttonList.push({
                 'name': 'cancel',
                 'label': 'Close'
             });
 
-            this.headerHtml = Handlebars.Utils.escapeExpression(this.model.get('name'));
+            this.headerText = this.model.get('name');
 
             this.createView('bodyPlain', 'views/fields/text', {
                 el: this.options.el + ' .field[data-name="bodyPlain"]',
@@ -50,11 +51,10 @@ Espo.define('views/email/modals/body-plain', 'views/modal', function (Dep) {
                     name: 'bodyPlain',
                     params: {
                         readOnly: true,
-                        inlineEditDisabled: true
-                    }
-                }
+                        inlineEditDisabled: true,
+                    },
+                },
             });
-        }
-
+        },
     });
 });

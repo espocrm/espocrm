@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/personal-data/modals/personal-data', ['views/modal'], function (Dep) {
+define('views/personal-data/modals/personal-data', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -46,8 +46,8 @@ Espo.define('views/personal-data/modals/personal-data', ['views/modal'], functio
                 }
             ];
 
-            this.headerHtml = this.getLanguage().translate('Personal Data');
-            this.headerHtml += ': ' + Handlebars.Utils.escapeExpression(this.model.get('name'));
+            this.headerText = this.getLanguage().translate('Personal Data');
+            this.headerText += ': ' + this.model.get('name');
 
             if (this.getAcl().check(this.model, 'edit')) {
                 this.buttonList.unshift({
