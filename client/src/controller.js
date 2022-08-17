@@ -164,7 +164,7 @@ define('controller', [], function () {
 
         /**
          * @protected
-         * @returns {module:acl.Class}
+         * @returns {module:acl-manager.Class}
          */
         getAcl: function () {
             return this._acl;
