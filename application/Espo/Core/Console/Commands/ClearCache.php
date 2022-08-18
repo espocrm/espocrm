@@ -34,16 +34,16 @@ use Espo\Core\{
     Console\Command\Params,
     Console\IO,
     Exceptions\Error,
-    Utils\CacheClearer,
+    DataManager,
 };
 
 class ClearCache implements Command
 {
-    private CacheClearer $cacheClearer;
+    private DataManager $dataManager;
 
-    public function __construct(CacheClearer $cacheClearer)
+    public function __construct(DataManager $dataManager)
     {
-        $this->cacheClearer = $cacheClearer;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -51,7 +51,7 @@ class ClearCache implements Command
      */
     public function run(Params $params, IO $io): void
     {
-        $this->cacheClearer->clear();
+        $this->dataManager->clearCache();
 
         $io->writeLine("Cache has been cleared.");
     }

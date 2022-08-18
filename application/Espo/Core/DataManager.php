@@ -33,7 +33,7 @@ use Espo\Core\Utils\Config\MissingDefaultParamsSaver as ConfigMissingDefaultPara
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManagerProxy;
-use Espo\Core\Utils\CacheClearer;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Config;
@@ -62,7 +62,9 @@ class DataManager
     private Module $module;
     private RebuildActionProcessor $rebuildActionProcessor;
     private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver;
-    private CacheClearer $cacheClearer;
+    private FileManager $fileManager;
+
+    private string $cachePath = 'data/cache';
 
     public function __construct(
         EntityManagerProxy $entityManager,
@@ -76,7 +78,7 @@ class DataManager
         Module $module,
         RebuildActionProcessor $rebuildActionProcessor,
         ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver,
-        CacheClearer $cacheClearer
+        FileManager $fileManager
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -89,7 +91,7 @@ class DataManager
         $this->module = $module;
         $this->rebuildActionProcessor = $rebuildActionProcessor;
         $this->configMissingDefaultParamsSaver = $configMissingDefaultParamsSaver;
-        $this->cacheClearer = $cacheClearer;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -118,7 +120,15 @@ class DataManager
      */
     public function clearCache(): void
     {
-        $this->cacheClearer->clear();
+        $this->module->clearCache();
+
+        $result = $this->fileManager->removeInDir($this->cachePath);
+
+        if (!$result) {
+            throw new Error("Error while clearing cache");
+        }
+
+        $this->updateCacheTimestamp();
     }
 
     /**
