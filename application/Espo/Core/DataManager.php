@@ -40,12 +40,10 @@ use Espo\Core\{
     Utils\Config\ConfigWriter,
     Utils\File\Manager as FileManager,
     Utils\Metadata\OrmMetadataData,
-    HookManager,
     Utils\Database\Schema\SchemaProxy,
     Utils\Log,
     Utils\Module,
-    Rebuild\RebuildActionProcessor,
-};
+    Rebuild\RebuildActionProcessor};
 
 use Throwable;
 
@@ -54,28 +52,17 @@ use Throwable;
  */
 class DataManager
 {
-    private $config;
-
-    private $configWriter;
-
-    private $entityManager;
-
-    private $fileManager;
-
-    private $metadata;
-
-    private $ormMetadataData;
-
-    private $hookManager;
-
-    private $schemaProxy;
-
-    private $log;
-
-    private $module;
-
-    private $rebuildActionProcessor;
-
+    private Config $config;
+    private ConfigWriter $configWriter;
+    private EntityManager $entityManager;
+    private FileManager $fileManager;
+    private Metadata $metadata;
+    private OrmMetadataData $ormMetadataData;
+    private HookManager $hookManager;
+    private SchemaProxy $schemaProxy;
+    private Log $log;
+    private Module $module;
+    private RebuildActionProcessor $rebuildActionProcessor;
     private ConfigMissingDefaultParamsSaver $configMissingDefaultParamsSaver;
 
     private string $cachePath = 'data/cache';
@@ -117,17 +104,13 @@ class DataManager
     public function rebuild(?array $entityList = null): void
     {
         $this->clearCache();
-
         $this->disableHooks();
-
         $this->checkModules();
         $this->populateConfigParameters();
         $this->rebuildMetadata();
         $this->rebuildDatabase($entityList);
-
         $this->rebuildActionProcessor->process();
         $this->configMissingDefaultParamsSaver->process();
-
         $this->enableHooks();
     }
 
@@ -282,6 +265,9 @@ class DataManager
         $this->hookManager->enable();
     }
 
+    /**
+     * @throws Error
+     */
     private function checkModules(): void
     {
         $moduleNameList = $this->module->getList();
