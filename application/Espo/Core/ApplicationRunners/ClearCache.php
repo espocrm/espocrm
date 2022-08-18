@@ -31,7 +31,8 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\Runner,
-    DataManager,
+    Exceptions\Error,
+    Utils\CacheClearer,
 };
 
 /**
@@ -41,15 +42,18 @@ class ClearCache implements Runner
 {
     use Cli;
 
-    private DataManager $dataManager;
+    private CacheClearer $cacheClearer;
 
-    public function __construct(DataManager $dataManager)
+    public function __construct(CacheClearer $cacheClearer)
     {
-        $this->dataManager = $dataManager;
+        $this->cacheClearer = $cacheClearer;
     }
 
+    /**
+     * @throws Error
+     */
     public function run(): void
     {
-        $this->dataManager->clearCache();
+        $this->cacheClearer->clear();
     }
 }

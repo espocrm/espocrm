@@ -27,32 +27,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-    Exceptions\Error,
-    Utils\CacheClearer,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\File\Manager as FileManager;
 
-class ClearCache implements Command
+class CacheClearer
 {
-    private CacheClearer $cacheClearer;
+    private ConfigWriter $configWriter;
+    private FileManager $fileManager;
+    private Module $module;
 
-    public function __construct(CacheClearer $cacheClearer)
-    {
-        $this->cacheClearer = $cacheClearer;
+    private string $cachePath = 'data/cache';
+
+    public function __construct(
+        ConfigWriter $configWriter,
+        FileManager $fileManager,
+        Module $module
+    ){
+        $this->configWriter = $configWriter;
+        $this->fileManager = $fileManager;
+        $this->module = $module;
     }
 
     /**
      * @throws Error
      */
-    public function run(Params $params, IO $io): void
+    public function clear(): void
     {
-        $this->cacheClearer->clear();
+        $this->module->clearCache();
 
-        $io->writeLine("Cache has been cleared.");
+        $result = $this->fileManager->removeInDir($this->cachePath);
+
+        if (!$result) {
+            throw new Error("Error while clearing cache");
+        }
+
+        $this->updateCacheTimestamp();
+    }
+
+    private function updateCacheTimestamp(): void
+    {
+        $this->configWriter->updateCacheTimestamp();
+        $this->configWriter->save();
     }
 }

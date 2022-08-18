@@ -31,18 +31,17 @@ namespace Espo\Core\ORM;
 
 use Espo\ORM\{
     Entity,
+    Metadata,
     Repository\Repository,
     Repository\RDBRepository,
+    SqlExecutor,
 };
 
-use Espo\Core\{
-    Container,
-};
+use Espo\Core\Container;
 
 class EntityManagerProxy
 {
     private ?EntityManager $entityManager = null;
-
     private Container $container;
 
     public function __construct(Container $container)
@@ -102,5 +101,15 @@ class EntityManagerProxy
     public function getRDBRepository(string $entityType): RDBRepository
     {
         return $this->getEntityManager()->getRDBRepository($entityType);
+    }
+
+    public function getMetadata(): Metadata
+    {
+        return $this->getEntityManager()->getMetadata();
+    }
+
+    public function getSqlExecutor(): SqlExecutor
+    {
+        return $this->getEntityManager()->getSqlExecutor();
     }
 }
