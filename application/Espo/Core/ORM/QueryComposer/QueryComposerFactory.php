@@ -31,7 +31,7 @@ namespace Espo\Core\ORM\QueryComposer;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
-use Espo\Core\ORM\QueryComposer\Part\FunctionConverterFactory;
+use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\PDO\PDOProvider;
 use Espo\ORM\QueryComposer\QueryComposer;
