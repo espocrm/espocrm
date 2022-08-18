@@ -254,7 +254,7 @@ class EntityManager
      * @param array<string, mixed> $options Options.
      * @return void
      *
-     * @todo Change return type to void in v7.1.
+     * @todo Change return type to void in v7.4.
      */
     public function saveEntity(Entity $entity, array $options = [])
     {
