@@ -108,6 +108,8 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
 
             let fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
 
+            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(scope);
+
             let fieldList = Object.keys(fields)
                 .sort((v1, v2) => {
                      return this.translate(v1, 'fields', scope)
@@ -115,6 +117,10 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                 })
                 .filter(item => {
                     if (fields[item].disabled || fields[item].listLayoutDisabled) {
+                        return false;
+                    }
+
+                    if (forbiddenFieldList.indexOf(item) !== -1) {
                         return false;
                     }
 
