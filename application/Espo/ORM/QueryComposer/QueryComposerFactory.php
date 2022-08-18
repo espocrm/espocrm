@@ -27,6 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Mapper;
+namespace Espo\ORM\QueryComposer;
 
-class MysqlMapper extends BaseMapper {}
+interface QueryComposerFactory
+{
+    public function create(string $platform): QueryComposer;
+}

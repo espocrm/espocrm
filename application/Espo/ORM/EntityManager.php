@@ -29,8 +29,11 @@
 
 namespace Espo\ORM;
 
+use Espo\Core\ORM\QueryComposer\QueryComposerFactory;
 use Espo\ORM\Defs\Defs;
 
+use Espo\ORM\Locker\MysqlLocker;
+use Espo\ORM\Mapper\BaseMapper;
 use Espo\ORM\QueryComposer\QueryComposer;
 
 use Espo\ORM\Mapper\Mapper;
@@ -50,8 +53,6 @@ use Espo\ORM\Value\AttributeExtractorFactory;
 
 use Espo\ORM\PDO\PDOProvider;
 
-use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
-
 use PDO;
 use RuntimeException;
 use stdClass;
@@ -62,40 +63,24 @@ use stdClass;
 class EntityManager
 {
     private EntityFactory $entityFactory;
-
     private CollectionFactory $collectionFactory;
-
     private RepositoryFactory $repositoryFactory;
-
-    protected EventDispatcher $eventDispatcher;
-
+    private QueryComposerFactory $queryComposerFactory;
     private ?MapperFactory $mapperFactory = null;
-
-    private ?FunctionConverterFactory $functionConverterFactory = null;
-
     private Metadata $metadata;
-
     private DatabaseParams $databaseParams;
-
     private QueryComposer $queryComposer;
-
     private QueryExecutor $queryExecutor;
-
     private QueryBuilder $queryBuilder;
-
     private SqlExecutor $sqlExecutor;
-
     private TransactionManager $transactionManager;
-
     private Locker $locker;
-
     private PDOProvider $pdoProvider;
 
     private const RDB_MAPPER_NAME = 'RDB';
 
     /** @var array<string, Repository<Entity>> */
     private $repositoryHash = [];
-
     /** @var array<string, Mapper> */
     private $mappers = [];
 
@@ -108,21 +93,20 @@ class EntityManager
         Metadata $metadata,
         RepositoryFactory $repositoryFactory,
         EntityFactory $entityFactory,
+        QueryComposerFactory $queryComposerFactory,
         ValueFactoryFactory $valueFactoryFactory,
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
         PDOProvider $pdoProvider,
-        ?MapperFactory $mapperFactory = null,
-        ?FunctionConverterFactory $functionConverterFactory = null
+        ?MapperFactory $mapperFactory = null
     ) {
         $this->databaseParams = $databaseParams;
         $this->metadata = $metadata;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->queryComposerFactory = $queryComposerFactory;
         $this->entityFactory = $entityFactory;
         $this->repositoryFactory = $repositoryFactory;
         $this->pdoProvider = $pdoProvider;
         $this->mapperFactory = $mapperFactory;
-        $this->functionConverterFactory = $functionConverterFactory;
 
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -148,51 +132,30 @@ class EntityManager
         $this->initLocker();
     }
 
-    /**
-     * @todo Use factory.
-     */
     private function initQueryComposer(): void
     {
         $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
 
-        $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
-
-        if (!class_exists($className)) {
-            throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
-        }
-
-        /** @var QueryComposer $queryComposer */
-        $queryComposer = new $className(
-            $this->pdoProvider->get(),
-            $this->entityFactory,
-            $this->metadata,
-            $this->functionConverterFactory
-        );
-
-        $this->queryComposer = $queryComposer;
+        $this->queryComposer = $this->queryComposerFactory->create($platform);
     }
 
-    /**
-     * @todo Use factory.
-     */
     private function initLocker(): void
     {
         $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
 
-        $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
+        $className = BaseLocker::class;
 
-        if (!class_exists($className)) {
-            $className = BaseLocker::class;
+        if ($platform === 'Mysql') {
+            $className = MysqlLocker::class;
         }
 
-        /** @var Locker $locker */
         $locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
 
         $this->locker = $locker;
     }
 
     /**
-     * @todo Remove in v7.0.
+     * @todo Remove in v7.4.
      * @deprecated
      */
     public function getQuery(): QueryComposer
@@ -230,10 +193,7 @@ class EntityManager
     private function loadMapper(string $name): void
     {
         if ($name === self::RDB_MAPPER_NAME) {
-            $className = $this->getRDBMapperClassName();
-
-            /** @var Mapper $mapper */
-            $mapper = new $className(
+            $mapper = new BaseMapper(
                 $this->pdoProvider->get(),
                 $this->entityFactory,
                 $this->collectionFactory,
@@ -252,19 +212,6 @@ class EntityManager
         }
 
         $this->mappers[$name] = $this->mapperFactory->create($name);
-    }
-
-    private function getRDBMapperClassName(): string
-    {
-        $platform = $this->databaseParams->getPlatform() ?? 'Dummy';
-
-        $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
-
-        if (!class_exists($className)) {
-            throw new RuntimeException("Mapper for '{$platform}' does not exist.");
-        }
-
-        return $className;
     }
 
     /**

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\ORM\QueryComposer\QueryComposerFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Binding\BindingContainerBuilder;
@@ -36,6 +37,7 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\ORM\Metadata;
 use Espo\ORM\EventDispatcher;
 use Espo\ORM\DatabaseParams;
+use Espo\ORM\QueryComposer\QueryComposerFactory as QueryComposerFactoryInterface;
 use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 use Espo\ORM\EntityFactory as EntityFactoryInteface;
 use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
@@ -51,11 +53,8 @@ use RuntimeException;
 class EntityManagerFactory
 {
     private Config $config;
-
     private InjectableFactory $injectableFactory;
-
     private MetadataDataProvider $metadataDataProvider;
-
     private EventDispatcher $eventDispatcher;
 
     /**
@@ -114,15 +113,33 @@ class EntityManagerFactory
                 ->build()
         );
 
+        $pdoProvider = $this->injectableFactory->createWithBinding(
+            DefaultPDOProvider::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(DatabaseParams::class, $databaseParams)
+                ->build()
+        );
+
+        $queryComposerFactory = $this->injectableFactory->createWithBinding(
+            QueryComposerFactory::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(PDOProvider::class, $pdoProvider)
+                ->bindInstance(Metadata::class, $metadata)
+                ->bindInstance(EntityFactoryInteface::class, $entityFactory)
+                ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
+                ->build()
+        );
+
         $binding = BindingContainerBuilder::create()
             ->bindInstance(DatabaseParams::class, $databaseParams)
             ->bindInstance(Metadata::class, $metadata)
+            ->bindInstance(QueryComposerFactoryInterface::class, $queryComposerFactory)
             ->bindInstance(RepositoryFactoryInterface::class, $repositoryFactory)
             ->bindInstance(EntityFactoryInteface::class, $entityFactory)
             ->bindInstance(ValueFactoryFactoryInteface::class, $valueFactoryFactory)
             ->bindInstance(AttributeExtractorFactoryInteface::class, $attributeExtractorFactory)
             ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
-            ->bindImplementation(PDOProvider::class, DefaultPDOProvider::class)
+            ->bindInstance(PDOProvider::class, $pdoProvider)
             ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
             ->build();
 
