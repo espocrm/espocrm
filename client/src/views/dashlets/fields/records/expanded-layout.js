@@ -91,27 +91,6 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
 
                 MultiSelect.init($input, multiSelectOptions);
 
-                /*$input.selectize({
-                    options: fieldDataList,
-                    delimiter: this.delimiter,
-                    labelField: 'label',
-                    valueField: 'value',
-                    highlight: false,
-                    searchField: ['label'],
-                    plugins: ['remove_button', 'drag_drop'],
-                    score: function (search) {
-                        let score = this.getScoreFunction(search);
-                        search = search.toLowerCase();
-                        return function (item) {
-                            if (item.label.toLowerCase().indexOf(search) === 0) {
-                                return score(item);
-                            }
-
-                            return 0;
-                        };
-                    }
-                });*/
-
                 $input.on('change', () => {
                     this.trigger('change');
                     this.reRender();
