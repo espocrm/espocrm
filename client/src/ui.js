@@ -783,7 +783,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
          * @typedef {Object} Espo.Ui~PopoverOptions
          *
          * @property {'bottom'|'top'} [placement='bottom'] A placement.
-         * @property {string} [container='body'] A container selector.
+         * @property {string|JQuery} [container] A container selector.
          * @property {string} [content] An HTML content.
          * @property {string} [text] A text.
          * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
@@ -805,10 +805,18 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
             let isShown = false;
 
+            let container = o.container;
+
+            if (!container) {
+                let $modalBody = $el.closest('.modal-body');
+
+                container = $modalBody.length ? $modalBody : 'body';
+            }
+
             $el
                 .popover({
                     placement: o.placement || 'bottom',
-                    container: o.container || 'body',
+                    container: container,
                     html: true,
                     content: content,
                     trigger: o.trigger || 'manual',

@@ -91,7 +91,6 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
                 Espo.Ui.popover($el, {
                     content: text,
                     placement: 'left',
-                    container: this.$el.find('.modal-body'),
                 }, this);
             });
         },

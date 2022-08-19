@@ -1335,10 +1335,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                         $containers.addClass('stick-sub');
                         $block.show();
 
-                        $('.popover').each((i, el) => {
+                        /*$('.popover').each((i, el) => {
                             let $el = $(el);
                             $el.css('top', ($el.position().top - blockHeight) + 'px');
-                        });
+                        });*/
                     }
 
                     $navbarRight.addClass('has-sticked-bar');
@@ -1353,10 +1353,10 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
                     $navbarRight.removeClass('has-sticked-bar');
                     $block.hide();
 
-                    $('.popover').each((i, el) => {
+                    /*$('.popover').each((i, el) => {
                         let $el = $(el);
                         $el.css('top', ($el.position().top + blockHeight) + 'px');
-                    });
+                    });*/
                 }
 
                 $containers.show();
