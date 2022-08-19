@@ -516,48 +516,9 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 this.getHelper().transformMarkdownInlineText(text2) + ':<br>' +
                 $ul.get(0).outerHTML;
 
-            let $body = $('body');
-
-            $a.popover({
-                placement: 'bottom',
-                container: 'body',
+            Espo.Ui.popover($a, {
                 content: messageHtml,
-                html: true,
-                trigger: 'manual',
-            }).on('shown.bs.popover', () => {
-                $body.off('click.popover-' + this.cid);
-
-                $body.on('click.popover-' + this.cid , (e) => {
-                    if (e.target.classList.contains('popover-content')) {
-                        return;
-                    }
-
-                    if ($(e.target).closest('.popover-content').get(0)) {
-                        return;
-                    }
-
-                    if ($.contains($a.get(0), e.target)) {
-                        return;
-                    }
-
-                    $body.off('click.popover-' + this.cid);
-                    $a.popover('hide');
-
-                    e.stopPropagation();
-                });
-            });
-
-            $a.on('click', function () {
-                $(this).popover('toggle');
-            });
-
-            this.on('remove', () => {
-                if ($a) {
-                    $a.popover('destroy');
-                }
-
-                $body.off('click.popover-' + this.cid);
-            });
+            }, this);
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,

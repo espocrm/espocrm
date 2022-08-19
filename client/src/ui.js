@@ -778,13 +778,19 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
 
         /**
+         * Popover options.
+         *
          * @typedef {Object} Espo.Ui~PopoverOptions
-         * @property {'bottom'|'top'} placement A placement.
+         *
+         * @property {'bottom'|'top'} [placement='bottom'] A placement.
          * @property {string} [container='body'] A container selector.
          * @property {string} [content] An HTML content.
          * @property {string} [text] A text.
          * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
          * @property {boolean} [noToggleInit=false] Skip init toggle on click.
+         * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
+         * @property {function(): void} [onShow] On-show callback.
+         * @property {function(): void} [onHide] On-hide callback.
          */
 
         /**
@@ -796,56 +802,88 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
          */
         popover: function ($el, o, view) {
             let $body = $('body')
-
             let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+            let isShown = false;
 
-            $el.popover({
-                placement: o.placement || 'bottom',
-                container: o.container || 'body',
-                html: true,
-                content: content,
-                trigger: o.trigger || 'manual',
-            }).on('shown.bs.popover', () => {
-                if (!view) {
-                    return;
-                }
+            $el
+                .popover({
+                    placement: o.placement || 'bottom',
+                    container: o.container || 'body',
+                    html: true,
+                    content: content,
+                    trigger: o.trigger || 'manual',
+                })
+                .on('shown.bs.popover', () => {
+                    isShown = true;
 
-                $body.off('click.popover-' + view.cid);
-
-                $body.on('click.popover-' + view.cid, e => {
-                    if ($(e.target).closest('.popover-content').get(0)) {
-                        return;
-                    }
-
-                    if ($.contains($el.get(0), e.target)) {
-                        return;
-                    }
-
-                    if ($el.get(0) === e.target) {
+                    if (!view) {
                         return;
                     }
 
                     $body.off('click.popover-' + view.cid);
-                    $el.popover('hide');
+
+                    $body.on('click.popover-' + view.cid, e => {
+                        if ($(e.target).closest('.popover-content').get(0)) {
+                            return;
+                        }
+
+                        if ($.contains($el.get(0), e.target)) {
+                            return;
+                        }
+
+                        if ($el.get(0) === e.target) {
+                            return;
+                        }
+
+                        $body.off('click.popover-' + view.cid);
+                        $el.popover('hide');
+                    });
+
+                    if (o.onShow) {
+                        o.onShow();
+                    }
+                })
+                .on('hidden.bs.popover', () => {
+                    isShown = false;
+
+                    if (o.onHide) {
+                        o.onHide();
+                    }
                 });
-            });
 
             if (!o.noToggleInit) {
-                $el.on('click', function () {
-                    $(this).popover('toggle');
+                $el.on('click', () => {
+                    $el.popover('toggle');
                 });
             }
 
             if (view) {
-                view.on('remove', () => {
-                    $el.popover('destroy');
-                    $body.off('click.popover-' + view.cid);
-                });
+                let hide = () => {
+                    if (!isShown) {
+                        return;
+                    }
 
-                view.on('render', () => {
+                    $el.popover('hide');
+                };
+
+                let destroy = () => {
                     $el.popover('destroy');
                     $body.off('click.popover-' + view.cid);
-                });
+
+                    view.off('remove', destroy);
+                    view.off('render', destroy);
+                    view.off('render', hide);
+                };
+
+                view.once('remove', destroy);
+
+                if (!o.preventDestroyOnRender) {
+                    view.once('render', destroy);
+                }
+
+                if (o.preventDestroyOnRender) {
+                    view.on('render', hide);
+                }
             }
         },
 

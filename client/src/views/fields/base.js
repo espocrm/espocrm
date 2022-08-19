@@ -858,6 +858,14 @@ define('views/fields/base', ['view'], function (Dep) {
                 tooltipText = this.getHelper()
                     .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
+                Espo.Ui.popover($a, {
+                    placement: 'bottom',
+                    content: tooltipText,
+                    preventDestroyOnRender: true,
+                }, this);
+
+                return;
+
                 let $body = $('body');
 
                 let hidePopover = () => {
