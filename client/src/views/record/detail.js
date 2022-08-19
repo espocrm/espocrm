@@ -3408,7 +3408,7 @@ function (Dep, ViewRecordHelper, ActionItemSetup) {
         selectMiddleTab: function (tab) {
             this.currentMiddleTab = tab;
 
-            $('body > .popover').remove();
+            $('.popover.in').removeClass('in');
 
             this.$el.find('.middle-tabs > button').removeClass('active');
             this.$el.find(`.middle-tabs > button[data-tab="${tab}"]`).addClass('active');
